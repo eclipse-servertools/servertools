@@ -43,8 +43,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IPluginDescriptor;
-import org.eclipse.core.runtime.IPluginRegistry;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -60,6 +58,7 @@ import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.core.search.ITypeNameRequestor;
 import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.osgi.framework.Bundle;
 public class TestProject {
 	public IProject project;
 	public IJavaProject javaProject;
@@ -166,9 +165,8 @@ public class TestProject {
 	}
 	private Path findFileInPlugin(String plugin, String file)
 			throws MalformedURLException, IOException {
-		IPluginRegistry registry = Platform.getPluginRegistry();
-		IPluginDescriptor descriptor = registry.getPluginDescriptor(plugin);
-		URL pluginURL = descriptor.getInstallURL();
+		Bundle bundle = Platform.getBundle(plugin);
+		URL pluginURL = bundle.getEntry("/");
 		URL jarURL = new URL(pluginURL, file);
 		URL localJarURL = Platform.asLocalURL(jarURL);
 		return new Path(localJarURL.getPath());
