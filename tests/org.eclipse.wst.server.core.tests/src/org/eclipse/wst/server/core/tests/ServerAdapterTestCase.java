@@ -18,7 +18,6 @@ public class ServerAdapterTestCase extends TestCase {
 	public void testListener() {
 		ServerAdapter listener = new ServerAdapter();
 		
-		listener.configurationSyncStateChange(null);
 		listener.restartStateChange(null);
 		listener.serverStateChange(null);
 		listener.modulesChanged(null);
