@@ -32,6 +32,8 @@ public abstract class ServerPerformanceTestCase extends PerformanceTestCase {
 	}
 
 	protected IRuntimeWorkingCopy createRuntime(String runtimeTypeId, String runtimeTypeLocation) throws CoreException {
+		if (runtimeTypeId == null)
+			throw new IllegalArgumentException();
 		IRuntimeWorkingCopy runtimeCopy = ServerCore.findRuntimeType(runtimeTypeId).createRuntime(runtimeTypeId, null);
 		runtimeCopy.setLocation(new Path(runtimeTypeLocation));
 		runtimeCopy.setLocked(false);
@@ -40,6 +42,8 @@ public abstract class ServerPerformanceTestCase extends PerformanceTestCase {
 	}
 
 	protected IServer createServer(String serverTypeId) throws CoreException {
+		if (serverTypeId == null)
+			throw new IllegalArgumentException();
 		NullProgressMonitor monitor = new NullProgressMonitor();
 		IServerType serverType = ServerCore.findServerType(serverTypeId);
 		IServerWorkingCopy serverCopy = serverType.createServer(serverTypeId, null, monitor);

@@ -21,35 +21,37 @@ import org.eclipse.jst.server.tomcat.core.ITomcatRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.tests.performance.common.AbstractGetDelegateTestCase;
-
 public class GetDelegateTestCase extends AbstractGetDelegateTestCase {
-  public static Test suite() {
-    return new TestSuite(GetDelegateTestCase.class, "GetDelegateTestCase");
-  }
+	public static Test suite() {
+		return new TestSuite(GetDelegateTestCase.class, "GetDelegateTestCase");
+	}
 
-  protected IRuntimeWorkingCopy createRuntime(String runtimeTypeId, String runtimeTypeLocaiton) throws CoreException {
-    IRuntimeWorkingCopy runtimeCopy = ServerCore.findRuntimeType(runtimeTypeId).createRuntime(runtimeTypeId, null);
-    runtimeCopy.setLocation(new Path(runtimeTypeLocaiton));
-    runtimeCopy.setLocked(false);
-    IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
-	 ITomcatRuntimeWorkingCopy rwc = (ITomcatRuntimeWorkingCopy) runtimeCopy.getAdapter(ITomcatRuntimeWorkingCopy.class);
-	 rwc.setVMInstall(vmInstall);
-    runtimeCopy.save(false, null);
-    return runtimeCopy;
-  }
+	protected IRuntimeWorkingCopy createRuntime(String runtimeTypeId, String runtimeTypeLocaiton) throws CoreException {
+		if (runtimeTypeId == null)
+			throw new IllegalArgumentException();
+		IRuntimeWorkingCopy runtimeCopy = ServerCore.findRuntimeType(runtimeTypeId).createRuntime(runtimeTypeId, null);
+		runtimeCopy.setLocation(new Path(runtimeTypeLocaiton));
+		runtimeCopy.setLocked(false);
+		IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
+		ITomcatRuntimeWorkingCopy rwc = (ITomcatRuntimeWorkingCopy) runtimeCopy
+				.getAdapter(ITomcatRuntimeWorkingCopy.class);
+		rwc.setVMInstall(vmInstall);
+		runtimeCopy.save(false, null);
+		return runtimeCopy;
+	}
 
-  protected String getRuntimeTypeId() {
-    return "org.eclipse.jst.server.tomcat.50.runtime";
-  }
+	protected String getRuntimeTypeId() {
+		return "org.eclipse.jst.server.tomcat.50.runtime";
+	}
 
-  protected String getRuntimeTypeLocation() {
-    String location = System.getProperty("org.eclipse.jst.server.tomcat.50");
-    assertNotNull(location);
-    assertTrue((new File(location)).exists());
-    return location;
-  }
+	protected String getRuntimeTypeLocation() {
+		String location = System.getProperty("org.eclipse.jst.server.tomcat.50");
+		assertNotNull(location);
+		assertTrue((new File(location)).exists());
+		return location;
+	}
 
-  protected String getServerTypeId() {
-    return "org.eclipse.jst.server.tomcat.50";
-  }
+	protected String getServerTypeId() {
+		return "org.eclipse.jst.server.tomcat.50";
+	}
 }
