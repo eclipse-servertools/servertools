@@ -72,7 +72,7 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 		if (element instanceof ModuleServer) {
 			ModuleServer ms = (ModuleServer) element;
 			if (columnIndex == 0)
-				ServerUICore.getLabelProvider().getImage(ms.module);
+				return ServerUICore.getLabelProvider().getImage(ms.module[ms.module.length - 1]);
 			if (columnIndex == 1)
 				return getStateImage(ms.server.getServerType(), ms.server.getModuleState(ms.module), null);
 			return null;
@@ -110,7 +110,7 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 			else if (columnIndex == 1)
 				return getStateLabel(ms.server.getServerType(), ms.server.getModuleState(ms.module), null);
 			else if (columnIndex == 2)
-				return "-";
+				return "";
 		}
 		IServer server = (IServer) element;
 		if (columnIndex == 0)
