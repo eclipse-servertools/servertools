@@ -8,6 +8,8 @@ package org.eclipse.jst.server.tomcat.core.tests;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jst.server.tomcat.core.ITomcatRuntime;
+import org.eclipse.jst.server.tomcat.core.ITomcatRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.*;
 
 import junit.framework.Test;
@@ -21,6 +23,7 @@ public class TomcatRuntimeTestCase extends TestCase {
 	private static final String RUNTIME_TYPE_ID_55 = "org.eclipse.jst.server.tomcat.runtime.55";
 
 	protected static IRuntime runtime;
+	protected static ITomcatRuntime tomcatRuntime;
 
 	public static Test suite() {
 		return new OrderedTestSuite(TomcatRuntimeTestCase.class, "TomcatRuntimeTestCase");
@@ -37,15 +40,48 @@ public class TomcatRuntimeTestCase extends TestCase {
 		runtime = createRuntime(RUNTIME_TYPE_ID_32).save(false, null);
 		assertTrue(!runtime.isWorkingCopy());
 	}
-
-	public void test01ValidateRuntime() throws Exception {
+	
+	protected void validateRuntime() throws Exception {
 		IStatus status = runtime.validate(null);
 		assertTrue(!status.isOK());
 	}
-
-	public void test02DeleteRuntime() throws Exception {
+	
+	protected void adaptRuntime() throws Exception {
+		tomcatRuntime = (ITomcatRuntime) runtime.getAdapter(ITomcatRuntime.class);
+		assertNotNull(tomcatRuntime);
+		assertNotNull(tomcatRuntime.getVMInstall());
+		assertNotNull(tomcatRuntime.getRuntimeClasspath());
+	}
+	
+	protected void modifyRuntime() throws Exception {
+		IRuntimeWorkingCopy wc = runtime.createWorkingCopy();
+		ITomcatRuntimeWorkingCopy trwc = (ITomcatRuntimeWorkingCopy) wc.getAdapter(ITomcatRuntimeWorkingCopy.class);
+		trwc.setVMInstall(null);
+		wc.save(true, null);
+		tomcatRuntime = (ITomcatRuntime) runtime.getAdapter(ITomcatRuntime.class);
+		assertNull(tomcatRuntime.getVMInstall());
+	}
+	
+	protected void deleteRuntime() throws Exception {
 		runtime.delete();
 		runtime = null;
+		tomcatRuntime = null;
+	}
+
+	public void test01ValidateRuntime() throws Exception {
+		validateRuntime();
+	}
+	
+	public void test02AdaptRuntime() throws Exception {
+		adaptRuntime();
+	}
+	
+	public void test03ModifyRuntime() throws Exception {
+		modifyRuntime();
+	}
+
+	public void test04DeleteRuntime() throws Exception {
+		deleteRuntime();
 	}
 	
 	public void test10CreateRuntime() throws Exception {
@@ -54,13 +90,19 @@ public class TomcatRuntimeTestCase extends TestCase {
 	}
 
 	public void test11ValidateRuntime() throws Exception {
-		IStatus status = runtime.validate(null);
-		assertTrue(!status.isOK());
+		validateRuntime();
+	}
+	
+	public void test12AdaptRuntime() throws Exception {
+		adaptRuntime();
+	}
+	
+	public void test13ModifyRuntime() throws Exception {
+		modifyRuntime();
 	}
 
-	public void test12DeleteRuntime() throws Exception {
-		runtime.delete();
-		runtime = null;
+	public void test14DeleteRuntime() throws Exception {
+		deleteRuntime();
 	}
 	
 	public void test20CreateRuntime() throws Exception {
@@ -69,13 +111,19 @@ public class TomcatRuntimeTestCase extends TestCase {
 	}
 
 	public void test21ValidateRuntime() throws Exception {
-		IStatus status = runtime.validate(null);
-		assertTrue(!status.isOK());
+		validateRuntime();
+	}
+	
+	public void test22AdaptRuntime() throws Exception {
+		adaptRuntime();
+	}
+	
+	public void test23ModifyRuntime() throws Exception {
+		modifyRuntime();
 	}
 
-	public void test22DeleteRuntime() throws Exception {
-		runtime.delete();
-		runtime = null;
+	public void test24DeleteRuntime() throws Exception {
+		deleteRuntime();
 	}
 	
 	public void test30CreateRuntime() throws Exception {
@@ -84,13 +132,19 @@ public class TomcatRuntimeTestCase extends TestCase {
 	}
 
 	public void test31ValidateRuntime() throws Exception {
-		IStatus status = runtime.validate(null);
-		assertTrue(!status.isOK());
+		validateRuntime();
+	}
+	
+	public void test32AdaptRuntime() throws Exception {
+		adaptRuntime();
+	}
+	
+	public void test33ModifyRuntime() throws Exception {
+		modifyRuntime();
 	}
 
-	public void test32DeleteRuntime() throws Exception {
-		runtime.delete();
-		runtime = null;
+	public void test34DeleteRuntime() throws Exception {
+		deleteRuntime();
 	}
 	
 	public void test40CreateRuntime() throws Exception {
@@ -99,12 +153,18 @@ public class TomcatRuntimeTestCase extends TestCase {
 	}
 
 	public void test41ValidateRuntime() throws Exception {
-		IStatus status = runtime.validate(null);
-		assertTrue(!status.isOK());
+		validateRuntime();
+	}
+	
+	public void test42AdaptRuntime() throws Exception {
+		adaptRuntime();
+	}
+	
+	public void test43ModifyRuntime() throws Exception {
+		modifyRuntime();
 	}
 
-	public void test42DeleteRuntime() throws Exception {
-		runtime.delete();
-		runtime = null;
+	public void test44DeleteRuntime() throws Exception {
+		deleteRuntime();
 	}
 }
