@@ -30,12 +30,11 @@
 
 package org.eclipse.jst.server.generic.tests;
 
-import java.util.Iterator;
-import java.util.List;
 import junit.framework.TestCase;
+
 import org.eclipse.jst.server.generic.core.CorePlugin;
 import org.eclipse.jst.server.generic.internal.core.ServerTypeDefinitionManager;
-import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinition;
+import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 
 /**
  * @author naci
@@ -72,7 +71,7 @@ public class ServerDefinitionTypeTest extends TestCase {
 		ServerTypeDefinitionManager serverTypeDefinitionManager = CorePlugin
 				.getDefault().getServerTypeDefinitionManager();
 		assertNotNull(serverTypeDefinitionManager);
-		ServerTypeDefinition[] types = serverTypeDefinitionManager
+		ServerRuntime[] types = serverTypeDefinitionManager
 				.getServerTypeDefinitions();
 		assertNotNull(types);
 		assertEquals(3, types.length);
@@ -82,22 +81,15 @@ public class ServerDefinitionTypeTest extends TestCase {
 		ServerTypeDefinitionManager serverTypeDefinitionManager = CorePlugin
 				.getDefault().getServerTypeDefinitionManager();
 		assertNotNull(serverTypeDefinitionManager);
-		ServerTypeDefinition[] types = serverTypeDefinitionManager
+		ServerRuntime[] types = serverTypeDefinitionManager
 				.getServerTypeDefinitions();
 		assertNotNull(types);
 		assertTrue(types.length > 0);
 		for (int i = 0; i < types.length; i++) {
-			ServerTypeDefinition definition = types[i];
-
-			definition.setPropertyValue("classPath", "/home/test/nowhere");
-			List aList = definition.getServerClassPath();
-			assertNotNull(aList);
-			Iterator iterator = aList.iterator();
-			while (iterator.hasNext()) {
-				String cpItem = (String) iterator.next();
-				assertNotNull(cpItem);
-				assertTrue(cpItem.indexOf("/home/test/nowhere") >= 0);
-				}
-			}
+			ServerRuntime definition = types[i];
+			String wd = definition.getStart().getWorkingDirectory();
+			String resolved = definition.getResolver().resolveProperties(wd);
+			assertFalse(resolved.indexOf("${") >= 0);
+		}
 	}
 }
