@@ -13,7 +13,9 @@ package org.eclipse.jst.server.tomcat.core.internal;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -38,6 +40,8 @@ import org.eclipse.wst.server.core.model.RuntimeDelegate;
 public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, ITomcatRuntimeWorkingCopy {
 	protected static final String PROP_VM_INSTALL_TYPE_ID = "vm-install-type-id";
 	protected static final String PROP_VM_INSTALL_ID = "vm-install-id";
+	
+	protected static Map sdkMap = new HashMap(2);
 
 	public TomcatRuntime() {
 		// do nothing
@@ -89,6 +93,9 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 		return getVersionHandler().verifyInstallPath(getRuntime().getLocation());
 	}
 	
+	/*
+	 * Validate the runtime
+	 */
 	public IStatus validate() {
 		IStatus status = super.validate();
 		if (!status.isOK())
@@ -99,6 +106,8 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 		else if (getVMInstall() == null)
 			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorJRE"), null);
 
+		// check for tools.jar (contains the javac compiler on Windows & Linux) to see whether
+		// Tomcat will be able to compile JSPs.
 		boolean found = false;
 		File file = getVMInstall().getInstallLocation();
 		if (file != null) {
@@ -106,11 +115,11 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 			if (toolsJar.exists())
 				found = true;
 		}
-		if (!found) {
-			File javaHome = getVMInstall().getInstallLocation();
-			File javaExecutable = StandardVMType.findJavaExecutable(javaHome);
-			found = checkForCompiler(javaHome, javaExecutable);
-		}
+		
+		// on Mac, tools.jar is merged into classes.zip. if tools.jar wasn't found,
+		// try loading the javac class by running a check inside the VM
+		if (!found)
+			found = checkForCompiler(getVMInstall().getInstallLocation());
 		
 		if (!found)
 			return new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%warningJRE"), null);
@@ -154,10 +163,19 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 	 * 
 	 * @return true if the compiler was found
 	 */	
-	protected boolean checkForCompiler(File javaHome, File javaExecutable) {
-		// locate the JSP support jar - it contains the main program to run
+	protected boolean checkForCompiler(File javaHome) {
+		// first try the cache
+		try {
+			Boolean b = (Boolean) sdkMap.get(javaHome);
+			return b.booleanValue();
+		} catch (Exception e) {
+			// ignore
+		}
+
+		// locate tomcatcore.jar - it contains the class detector main program
 		File file = TomcatPlugin.getFileInPlugin(new Path("tomcatcore.jar"));
 		if (file != null && file.exists()) {	
+			File javaExecutable = StandardVMType.findJavaExecutable(javaHome);
 			String javaExecutablePath = javaExecutable.getAbsolutePath();
 			String[] cmdLine = new String[] {javaExecutablePath, "-classpath", file.getAbsolutePath(), "org.eclipse.jst.server.tomcat.core.internal.ClassDetector", "com.sun.tools.javac.Main"};
 			Process p = null;
@@ -179,12 +197,15 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 				String text = null;
 				if (streamsProxy != null) {
 					text = streamsProxy.getOutputStreamMonitor().getContents();
-				}
-				if (text != null && text.length() > 0) {
-					if ("true".equals(text))
-						return true;
-					else if ("false".equals(text))
-						return false;
+				
+					if (text != null && text.length() > 0) {
+						boolean found = false;
+						if ("true".equals(text))
+							found = true;
+						
+						sdkMap.put(javaHome, new Boolean(found));
+						return found;
+					}
 				}
 			} catch (IOException ioe) {
 				TomcatPlugin.log(ioe);
@@ -195,8 +216,8 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 			}
 		}
 		
-		// log error that we were unable to check the JSP support
-		TomcatPlugin.log(MessageFormat.format("Failed to check JSP compile support for {0}", new String[]{javaHome.getAbsolutePath()}));
+		// log error that we were unable to check for the compiler
+		TomcatPlugin.log(MessageFormat.format("Failed compiler check for {0}", new String[] { javaHome.getAbsolutePath() }));
 		return false;
 	}
 }
