@@ -112,6 +112,33 @@ public class ServerUtil {
 	}
 	
 	/**
+	 * Returns a list of all servers that this module is configured on.
+	 *
+	 * @param module org.eclipse.wst.server.core.model.IModule
+	 * @return java.util.List
+	 */
+	public static IServer[] getServersByModule(IModule module, IProgressMonitor monitor) {
+		if (module == null)
+			return new IServer[0];
+
+		// do it the slow way - go through all servers and
+		// see if this module is configured in it
+		List list = new ArrayList();
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				if (containsModule(servers[i], module, monitor))
+					list.add(servers[i]);
+			}
+		}
+		
+		IServer[] allServers = new IServer[list.size()];
+		list.toArray(allServers);
+		return allServers;
+	}
+	
+	/**
 	 * Returns the project modules attached to a project.
 	 */
 	public static IModule[] getModules(IProject project) {
