@@ -33,8 +33,6 @@ package org.eclipse.jst.server.generic.tests;
 import java.util.HashMap;
 
 import junit.framework.TestCase;
-
-import org.eclipse.jst.server.generic.internal.core.GenericServer;
 import org.eclipse.jst.server.generic.internal.core.GenericServerRuntime;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
@@ -44,9 +42,7 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.internal.RuntimeType;
-import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
-import org.eclipse.wst.server.core.model.ServerDelegate;
 
 public class ServerCreationTest extends TestCase {
 
@@ -67,7 +63,6 @@ public class ServerCreationTest extends TestCase {
 					j2eeRuntimeType = (RuntimeType) runtimeType;
 			}
 		}
-
 	}
 
 	/*
@@ -169,16 +164,6 @@ public class ServerCreationTest extends TestCase {
 				found = true;
 		}
 		assertTrue(found);
-	}
-
-  
-
-	private ServerDelegate getDelegate(
-			IServerWorkingCopy serverWC, IServerType serverType) {
-	
-		GenericServer server = new GenericServer();
-		server.initialize((ServerWorkingCopy)serverWC);
-		return server;
 	}
 
 }
