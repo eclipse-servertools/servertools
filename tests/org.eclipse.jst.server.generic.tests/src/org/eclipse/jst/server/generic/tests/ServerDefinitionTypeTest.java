@@ -101,7 +101,7 @@ public class ServerDefinitionTypeTest extends TestCase {
 				assertNotNull(cpItem);
 				String unresolved = cpItem.getClasspath();
 				if (unresolved.indexOf("${classPath}") >= 0) {
-					String resolved = definition.resolveProperties(unresolved);
+					String resolved = cpItem.getResolvedClasspath(definition);
 					assertTrue(resolved.indexOf("/home/test/nowhere") >= 0);
 				}
 			}
