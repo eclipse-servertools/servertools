@@ -147,9 +147,12 @@ public class ServerCore {
 	}
 
 	/**
-	 * Returns an array of all runtime locators.
-	 *
-	 * @return
+	 * Returns an array of all known runtime locator instances.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return a possibly-empty array of runtime locator instances {@link IRuntimeLocator}
 	 */
 	public static IRuntimeLocator[] getRuntimeLocators() {
 		if (runtimeLocators == null)
@@ -160,9 +163,13 @@ public class ServerCore {
 	}
 
 	/**
-	 * Returns an array of all runtime target handlers.
-	 *
-	 * @return
+	 * Returns an array of all known runtime target handler instances.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return a possibly-empty array of runtime target handler instances
+	 *    {@link IRuntimeTargetHandler}
 	 */
 	public static IRuntimeTargetHandler[] getRuntimeTargetHandlers() {
 		if (runtimeTargetHandlers == null)
@@ -287,9 +294,12 @@ public class ServerCore {
 	}
 
 	/**
-	 * Returns an array of all launchable adapters.
-	 *
-	 * @return
+	 * Returns an array of all known launchable adapters.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return a possibly-empty array of launchable adapters {@link ILaunchableAdapter}
 	 */
 	public static ILaunchableAdapter[] getLaunchableAdapters() {
 		if (launchableAdapters == null)
@@ -300,9 +310,12 @@ public class ServerCore {
 	}
 
 	/**
-	 * Returns an array of all launchable clients.
-	 *
-	 * @return
+	 * Returns an array of all known client instances.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return a possibly-empty array of client instances {@link IClient}
 	 */
 	public static IClient[] getClients() {
 		if (clients == null)
@@ -313,9 +326,12 @@ public class ServerCore {
 	}
 
 	/**
-	 * Returns an array of all server tasks.
-	 *
-	 * @return
+	 * Returns an array of all known server tasks.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return a possibly-empty array of server tasks instances {@link IServerTask}
 	 */
 	public static IServerTask[] getServerTasks() {
 		if (serverTasks == null)
@@ -326,9 +342,12 @@ public class ServerCore {
 	}
 
 	/**
-	 * Returns an array of all server monitors.
-	 *
-	 * @return
+	 * Returns an array of all known server monitor instances.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return a possibly-empty array of server monitor instances {@link IServerMonitor}
 	 */
 	public static IServerMonitor[] getServerMonitors() {
 		if (monitors == null)
@@ -339,7 +358,7 @@ public class ServerCore {
 	}
 
 	/**
-	 * Load the server startups.
+	 * Execute the server startup extension points.
 	 */
 	private static synchronized void executeStartups() {
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .startup extension point ->-");
@@ -416,7 +435,7 @@ public class ServerCore {
 	}
 	
 	/**
-	 * Load the runtime target listeners.
+	 * Load the runtime target handlers.
 	 */
 	private static synchronized void loadRuntimeTargetHandlers() {
 		if (runtimeTargetHandlers != null)
@@ -516,7 +535,7 @@ public class ServerCore {
 	}
 
 	/**
-	 * Load the launchable client extension point.
+	 * Load the client extension point.
 	 */
 	private static synchronized void loadClients() {
 		if (clients != null)
@@ -694,7 +713,7 @@ public class ServerCore {
 	public static IRuntime getDefaultRuntime() {
 		return getResourceManager().getDefaultRuntime();
 	}
-	
+
 	/**
 	 * Sets the default runtime.
 	 * <p>
@@ -717,7 +736,7 @@ public class ServerCore {
 	public static void addModuleEventsListener(IModuleEventsListener listener) {
 		getResourceManager().addModuleEventsListener(listener);
 	}
-	
+
 	/**
 	 * Removes an existing module events listener.
 	 * Has no effect if the listener is not registered.

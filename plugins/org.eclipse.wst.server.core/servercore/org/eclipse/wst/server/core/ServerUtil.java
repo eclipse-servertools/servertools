@@ -185,11 +185,10 @@ public class ServerUtil {
 
 	/**
 	 * Return all the available modules from all factories whose
-	 * type includes the given id.
+	 * type matches the given module types.
 	 * 
-	 * @param type java.lang.String
-	 * @param onlyProjectModules boolean
-	 * @return java.util.List
+	 * @param moduleTypes
+	 * @return a possibly empty array of modules
 	 */
 	public static IModule[] getModules(IModuleType[] moduleTypes) {
 		List list = new ArrayList();
@@ -213,6 +212,13 @@ public class ServerUtil {
 		return modules;
 	}
 	
+	/**
+	 * Return all the available modules from all factories whose
+	 * type matches the given module type id.
+	 * 
+	 * @param type
+	 * @return a possibly empty array of modules
+	 */
 	public static IModule[] getModules(String type) {
 		List list = new ArrayList();
 
@@ -235,16 +241,20 @@ public class ServerUtil {
 		return modules;
 	}
 	
-	/*public static boolean isSupportedModule(IServerType serverType, IModuleType moduleType) {
-		IRuntimeType runtimeType = serverType.getRuntimeType();
-		return isSupportedModule(runtimeType.getModuleTypes(), moduleType.getId(), moduleType.getVersion());
-	}*/
-	
-	public static boolean isSupportedModule(IModuleType[] moduleTypes, String type, String version) {
+	/**
+	 * Returns <code>true</code> if any of the given moduleTypes have the given
+	 * module type id and version id.
+	 * 
+	 * @param moduleTypes
+	 * @param typeId
+	 * @param versionId
+	 * @return
+	 */
+	public static boolean isSupportedModule(IModuleType[] moduleTypes, String typeId, String versionId) {
 		if (moduleTypes != null) {
 			int size = moduleTypes.length;
 			for (int i = 0; i < size; i++) {
-				if (isSupportedModule(moduleTypes[i], type, version))
+				if (isSupportedModule(moduleTypes[i], typeId, versionId))
 					return true;
 			}
 		}
@@ -262,6 +272,14 @@ public class ServerUtil {
 		return false;
 	}
 
+	/**
+	 * Returns <code>true</code> if any of the given moduleTypes match the given
+	 * module type.
+	 * 
+	 * @param moduleTypes
+	 * @param mt
+	 * @return
+	 */
 	public static boolean isSupportedModule(IModuleType[] moduleTypes, IModuleType mt) {
 		if (moduleTypes != null) {
 			int size = moduleTypes.length;
@@ -283,6 +301,13 @@ public class ServerUtil {
 		return false;
 	}
 
+	/**
+	 * Returns true if the two given module types are compatible.
+	 * 
+	 * @param moduleType
+	 * @param mt
+	 * @return
+	 */
 	public static boolean isSupportedModule(IModuleType moduleType, IModuleType mt) {
 		String type2 = moduleType.getId();
 		if (matches(mt.getId(), type2)) {
@@ -302,7 +327,7 @@ public class ServerUtil {
 	/**
 	 * Return all the available modules from all factories.
 	 * 
-	 * @return java.util.List
+	 * @return IModule[]
 	 */
 	protected static IModule[] getModules() {
 		List list = new ArrayList();
@@ -402,8 +427,8 @@ public class ServerUtil {
 	 * Returns true if the given server is already started in the given
 	 * mode, or could be (re)started in the start mode.
 	 * 
-	 * @param server org.eclipse.wst.server.core.IServer
-	 * @param launchMode java.lang.String
+	 * @param server
+	 * @param launchMode
 	 * @return boolean
 	 */
 	public static boolean isCompatibleWithLaunchMode(IServer server, String launchMode) {
@@ -420,7 +445,7 @@ public class ServerUtil {
 	}
 
 	/**
-	 * Visit all the modules in the server configuration.
+	 * Visit all the modules in the server with the given module visitor.
 	 */
 	public static void visit(IServerAttributes server, IModuleVisitor visitor, IProgressMonitor monitor) {
 		if (server == null)
@@ -463,6 +488,11 @@ public class ServerUtil {
 		return true;
 	}
 
+	/**
+	 * Sets a default name on the given runtime.
+	 * 
+	 * @param wc
+	 */
 	public static void setRuntimeDefaultName(IRuntimeWorkingCopy wc) {
 		String typeName = wc.getRuntimeType().getName();
 		
@@ -475,6 +505,11 @@ public class ServerUtil {
 		wc.setName(name);
 	}
 
+	/**
+	 * Sets a default name on the given server.
+	 * 
+	 * @param wc
+	 */
 	public static void setServerDefaultName(IServerWorkingCopy wc) {
 		String typeName = wc.getServerType().getName();
 		String host = wc.getHost();
@@ -518,6 +553,13 @@ public class ServerUtil {
 		return name;
 	}
 
+	/**
+	 * Returns an unused file in the given project.
+	 * 
+	 * @param project
+	 * @param type
+	 * @return
+	 */
 	public static IFile getUnusedServerFile(IProject project, IServerType type) {
 		String typeName = getValidFileName(type.getName());
 		String name = ServerPlugin.getResource("%defaultServerName3", new String[] {typeName})+ "."  + IServerAttributes.FILE_EXTENSION;
@@ -530,7 +572,7 @@ public class ServerUtil {
 	}
 
 	/**
-	 * Returns true if an element exists with the given name.
+	 * Returns true if a server or runtime exists with the given name.
 	 *
 	 * @param name java.lang.String
 	 * @return boolean
@@ -569,7 +611,8 @@ public class ServerUtil {
 	/**
 	 * Returns true if an element exists with the given name.
 	 *
-	 * @param name java.lang.String
+	 * @param project
+	 * @param name
 	 * @return boolean
 	 */
 	private static boolean isFileNameInUse(IProject project, String name) {
