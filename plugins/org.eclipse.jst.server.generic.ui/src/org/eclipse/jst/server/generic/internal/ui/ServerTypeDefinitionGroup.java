@@ -37,6 +37,7 @@ import java.util.Map;
 
 import org.eclipse.jst.server.generic.servertype.definition.Property;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
+import org.eclipse.jst.server.generic.ui.GenericServerUIMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -237,7 +238,7 @@ public class ServerTypeDefinitionGroup
     	fText.setText(value);
     	fText.addModifyListener(new PropertyModifyListener());
     	Button fButton = new Button(defPanel, SWT.PUSH);
-    	fButton.setText("...");
+    	fButton.setText(GenericServerUIMessages.getString("serverTypeGroup.label.browse"));
     	fButton.setLayoutData(new GridData());
     	fButton.addSelectionListener(new SelectionListener() {
     		public void widgetSelected(SelectionEvent e) {
@@ -272,7 +273,7 @@ public class ServerTypeDefinitionGroup
     	fText.setText(value);
     	fText.addModifyListener(new PropertyModifyListener());
     	Button fButton = new Button(parent, SWT.PUSH);
-    	fButton.setText("...");
+    	fButton.setText(GenericServerUIMessages.getString("serverTypeGroup.label.browse"));
     	fButton.setLayoutData(new GridData());
     	fButton.addSelectionListener(new SelectionListener() {
     		public void widgetSelected(SelectionEvent e) {
