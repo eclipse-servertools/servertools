@@ -180,14 +180,17 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		
 		server.setInternal(this);
 		server.doSave(monitor);
-		IFolder folder = getServerConfiguration();
-		IProject project = folder.getProject();
-		if (project != null && !project.exists()) {
-			project.create(null);
-			project.open(null);
-		}
-		if (folder != null && !folder.exists()) {
-			folder.create(IResource.FORCE, true, null);
+		if (getServerType().hasServerConfiguration()) {
+			IFolder folder = getServerConfiguration();
+			if (folder != null) {
+				IProject project = folder.getProject();
+				if (project != null && !project.exists()) {
+					project.create(null);
+					project.open(null);
+				}
+				if (!folder.exists())
+					folder.create(IResource.FORCE, true, null);
+			}
 		}
 		//ResourcesPlugin.getWorkspace().getRoot().g
 		getDelegate().saveConfiguration(monitor);
