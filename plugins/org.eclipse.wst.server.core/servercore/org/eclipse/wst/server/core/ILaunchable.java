@@ -14,6 +14,8 @@ package org.eclipse.wst.server.core;
  * module artifact is the actual resource on the server; the
  * launchable is the information necessary to access that
  * resource. Examples may include HTTP requests and JNDI names.
+ * 
+ * [issue: rename to avoid confusion with debug.ui.ILaunchable]
  */
 public interface ILaunchable {
 	/**

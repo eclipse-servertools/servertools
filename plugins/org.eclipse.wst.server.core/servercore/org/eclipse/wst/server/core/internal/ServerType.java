@@ -12,11 +12,7 @@ package org.eclipse.wst.server.core.internal;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -158,14 +154,8 @@ public class ServerType implements IServerType, IOrdered {
 		swc.setRuntime(runtime);
 		
 		// TODO
-		if (swc.getServerType().hasServerConfiguration()) {
-			IFolder folder = getServerProject().getFolder(swc.getName() + "-config");
-			if (!folder.exists())
-				folder.create(true, true, null);
-			swc.setServerConfiguration(folder);
-			
+		if (swc.getServerType().hasServerConfiguration())
 			((Server)swc).importConfiguration(runtime, null);
-		}
 		
 		return swc;
 	}
@@ -228,27 +218,8 @@ public class ServerType implements IServerType, IOrdered {
 		if (runtime != null)
 			swc.setRuntime(runtime);
 		
-		if (swc.getServerType().hasServerConfiguration()) {
-			// TODO: config
-			IFolder folder = getServerProject().getFolder(swc.getName() + "-config");
-			if (!folder.exists())
-				folder.create(true, true, null);
-			swc.setServerConfiguration(folder);
-			
+		if (swc.getServerType().hasServerConfiguration())
 			((Server)swc).importConfiguration(runtime, null);
-		}
-		
-		//TODO: import server config
-		/* IServerConfigurationWorkingCopy config = null;
-		if (hasServerConfiguration()) {
-			if (runtime != null)
-				config = getServerConfigurationType().importFromRuntime(id + "-config", file, runtime, monitor);
-			if (config == null)
-				config = getServerConfigurationType().createServerConfiguration(id + "-config", file, monitor);
-			ServerUtil.setServerConfigurationDefaultName(config);
-			if (config != null)
-				swc.setServerConfiguration(config);
-		}*/
 		
 		swc.setDefaults(monitor);
 		
@@ -269,6 +240,7 @@ public class ServerType implements IServerType, IOrdered {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(s);
 		project.create(null);
 		project.open(null);
+		ServerCore.getProjectProperties(project).setServerProject(true, null);
 		return project;
 	}
 

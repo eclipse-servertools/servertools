@@ -14,7 +14,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
@@ -133,12 +132,6 @@ public class NewManualServerComposite extends Composite {
 					runtime = runtimes[runtimeCombo.getSelectionIndex()];
 					if (server != null) {
 						server.setRuntime(runtime);
-						if (server.getServerType().hasServerConfiguration()) {
-							// TODO: config
-							((Server)server).importConfiguration(runtime, null);
-							IFolder folder = WizardUtil.getServerProject().getFolder(server.getName() + "-config");
-							server.setServerConfiguration(folder);
-						}
 						wizard.update();
 					}
 				} catch (Exception ex) {
@@ -206,10 +199,7 @@ public class NewManualServerComposite extends Composite {
 							server.setRuntime(runtime);
 							
 							if (server.getServerType().hasServerConfiguration()) {
-								// TODO: config
 								((Server)server).importConfiguration(runtime, null);
-								IFolder folder = WizardUtil.getServerProject().getFolder(server.getName() + "-config");
-								server.setServerConfiguration(folder);
 							}
 						}
 					}

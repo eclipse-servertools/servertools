@@ -15,13 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.wizard.page.NewServerComposite;
-import org.eclipse.wst.server.ui.internal.wizard.page.WizardUtil;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 /**
@@ -148,23 +146,12 @@ public class NewServerWizardFragment extends WizardFragment {
 			if (server != null) {
 				// createConfiguration(server);
 				if (server.getServerType().hasServerConfiguration()) {
-					// TODO: config
 					((Server)server).importConfiguration(runtime, null);
-					IFolder folder = WizardUtil.getServerProject().getFolder(server.getName() + "-config");
-					server.setServerConfiguration(folder);
 				}
 				WizardFragment sub = getWizardFragment(server.getServerType().getId());
 				if (sub != null)
 					list.add(sub);
-			
-				/*IServerConfiguration serverConfiguration = server.getServerConfiguration();
-				if (serverConfiguration != null) {
-					sub = getWizardFragment(serverConfiguration.getServerConfigurationType().getId());
-					if (sub != null)
-						list.add(sub);
-				}*/
 			}
-			//list.add(new TasksWizardFragment());
 		} else if (b != null && b.byteValue() == MODE_EXISTING) {
 			/*if (comp != null) {
 				IServer server = comp.getServer();

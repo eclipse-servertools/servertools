@@ -215,6 +215,16 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			server.serverListeners = serverListeners;
 		}
 		
+		if (getServerType().hasServerConfiguration()) {
+			IFolder folder = getServerConfiguration();
+			if (folder == null) {
+				folder = ServerType.getServerProject().getFolder(getName() + "-config");
+				if (!folder.exists())
+					folder.create(true, true, null);
+				setServerConfiguration(folder);
+			}
+		}
+		
 		server.setInternal(this);
 		server.doSave(monitor);
 		if (getServerType().hasServerConfiguration()) {

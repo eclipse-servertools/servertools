@@ -235,6 +235,8 @@ public class TaskWizard implements IWizard {
 			t = e;
 		}
 		
+		// TODO: show better error dialog, e.g. when Tomcat config is corrupt while doing Add/Remove
+		// it currently displays the error message twice
 		if (t instanceof CoreException) {
 			EclipseUtil.openError(t.getLocalizedMessage(), ((CoreException)t).getStatus());
 		} else

@@ -151,10 +151,21 @@ public class ServerPublishInfo {
 		while (iterator.hasNext()) {
 			ModulePublishInfo mpi = (ModulePublishInfo) iterator.next();
 			IModule[] parents2 = getParents(mpi.getParentsId());
-			IModule module2 = ServerUtil.getModule(mpi.getModuleId());
-			parentList.add(parents2);
-			moduleList.add(module2);
-			kindList.add(new Integer(IServer.REMOVED));
+			String moduleId = mpi.getModuleId();
+			IModule module2 = ServerUtil.getModule(moduleId);
+			if (module2 == null) {
+				module2 = new DeletedModule(moduleId);
+				/*int index = moduleId.indexOf(":");
+				if (index > 0) {
+					String moduleSubId = moduleId.substring(index+1);
+					module2 = new DeletedModule(moduleSubId);
+				}*/
+			}
+			if (module2 != null) {
+				parentList.add(parents2);
+				moduleList.add(module2);
+				kindList.add(new Integer(IServer.REMOVED));
+			}
 		}
 	}
 
