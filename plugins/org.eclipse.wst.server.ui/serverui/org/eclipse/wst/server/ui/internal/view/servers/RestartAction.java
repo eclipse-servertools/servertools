@@ -45,10 +45,10 @@ public class RestartAction extends AbstractServerAction {
 	 * @param server org.eclipse.wst.server.core.model.IServer
 	 */
 	public boolean accept(IServer server) {
-		if (mode == null)
-			mode = server.getMode();
-		
-		return server.getServerType() != null && server.getServerType().getServerStateSet() == IServerType.SERVER_STATE_SET_MANAGED && server.canRestart(mode);
+		String mode2 = mode;
+		if (mode2 == null)
+			mode2 = server.getMode();
+		return server.getServerType() != null && server.getServerType().getServerStateSet() == IServerType.SERVER_STATE_SET_MANAGED && server.canRestart(mode2);
 	}
 
 	/**
@@ -67,6 +67,9 @@ public class RestartAction extends AbstractServerAction {
 				return;
 		}
 		
-		server.restart(mode);
+		String mode2 = mode;
+		if (mode2 == null)
+			mode2 = server.getMode();
+		server.restart(mode2);
 	}
 }
