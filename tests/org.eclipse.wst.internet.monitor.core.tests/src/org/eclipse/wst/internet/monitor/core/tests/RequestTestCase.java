@@ -48,10 +48,10 @@ public class RequestTestCase extends TestCase {
 		}
 		
 		public void testProtected() {
-			setName("test");
-			setRequest(null);
-			setResponse(null);
-			fireChangedEvent();
+			super.setName("test");
+			super.setRequest(null);
+			super.setResponse(null);
+			super.fireChangedEvent();
 		}
 	}
 

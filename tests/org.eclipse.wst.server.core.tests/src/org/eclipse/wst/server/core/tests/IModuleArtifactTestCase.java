@@ -10,16 +10,21 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests;
 
-import org.eclipse.wst.server.core.TaskModel;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IModuleArtifact;
 
 import junit.framework.TestCase;
 
-public class TaskModelTestCase extends TestCase {
-	protected static TaskModel taskModel;
+public class IModuleArtifactTestCase extends TestCase {
+	protected static IModuleArtifact artifact;
 
 	public void testCreate() {
-		taskModel = new TaskModel();		
-		taskModel.getObject("test");
-		taskModel.putObject("test", "test");
+		artifact = new IModuleArtifact() {
+			public IModule getModule() {
+				return null;
+			}
+		};
+		
+		artifact.getModule();
 	}
 }

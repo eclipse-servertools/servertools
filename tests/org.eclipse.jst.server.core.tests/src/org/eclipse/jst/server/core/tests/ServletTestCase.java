@@ -36,4 +36,8 @@ public class ServletTestCase extends TestCase {
 	public void test02GetAlias() {
 		assertEquals(servlet.getAlias(), "alias");
 	}
+	
+	public void test03ToString() {
+		servlet.toString();
+	}
 }

@@ -131,6 +131,7 @@ public abstract class AbstractServerTestCase extends TestCase {
 				ports[i].getName();
 				ports[i].getPort();
 				ports[i].getProtocol();
+				ports[i].isAdvanced();
 			}
 		}
 	}

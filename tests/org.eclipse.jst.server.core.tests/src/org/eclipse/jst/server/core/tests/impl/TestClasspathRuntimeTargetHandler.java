@@ -40,4 +40,8 @@ public class TestClasspathRuntimeTargetHandler extends ClasspathRuntimeTargetHan
 			// ignore
 		}
 	}
+
+	public void testResolveList() {
+		resolveList(null);
+	}
 }

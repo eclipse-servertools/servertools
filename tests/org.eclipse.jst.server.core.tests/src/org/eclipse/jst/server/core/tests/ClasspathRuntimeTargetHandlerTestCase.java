@@ -45,4 +45,24 @@ public class ClasspathRuntimeTargetHandlerTestCase extends TestCase {
 	public void test05TestAddMethods() {
 		((TestClasspathRuntimeTargetHandler) handler).testAddMethods();
 	}
+	
+	public void test06SetRuntimeTarget() throws Exception {
+		handler.setRuntimeTarget(null, null, null);
+	}
+	
+	public void test07RemoveRuntimeTarget() {
+		handler.removeRuntimeTarget(null, null, null);
+	}
+
+	public void test08ResolveList() {
+		((TestClasspathRuntimeTargetHandler) handler).testResolveList();
+	}
+	
+	public void test09GetDelegateClasspathEntries() {
+		handler.getDelegateClasspathEntries(null, null);
+	}
+	
+	public void test10RequestClasspathContainerUpdate() {
+		handler.requestClasspathContainerUpdate(null, null, null);
+	}
 }

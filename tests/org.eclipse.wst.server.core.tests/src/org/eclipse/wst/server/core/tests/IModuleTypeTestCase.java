@@ -10,16 +10,30 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests;
 
-import org.eclipse.wst.server.core.TaskModel;
+import org.eclipse.wst.server.core.IModuleType;
 
 import junit.framework.TestCase;
 
-public class TaskModelTestCase extends TestCase {
-	protected static TaskModel taskModel;
+public class IModuleTypeTestCase extends TestCase {
+	protected static IModuleType type;
 
 	public void testCreate() {
-		taskModel = new TaskModel();		
-		taskModel.getObject("test");
-		taskModel.putObject("test", "test");
+		type = new IModuleType() {
+			public String getId() {
+				return null;
+			}
+
+			public String getName() {
+				return null;
+			}
+
+			public String getVersion() {
+				return null;
+			}
+		};
+		
+		type.getId();
+		type.getName();
+		type.getVersion();
 	}
 }

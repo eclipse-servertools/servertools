@@ -60,6 +60,11 @@ public class AllTests {
 		suite.addTest(new OrderedTestSuite(ProjectPropertiesTestCase.class));
 		suite.addTest(new OrderedTestSuite(ServerPreferencesTestCase.class));
 		
+		suite.addTestSuite(IModuleTestCase.class);
+		suite.addTestSuite(IModuleArtifactTestCase.class);
+		suite.addTestSuite(IModuleTypeTestCase.class);
+		suite.addTestSuite(ITaskTestCase.class);
+		suite.addTestSuite(IOptionalTaskTestCase.class);
 		suite.addTestSuite(TaskModelTestCase.class);
 		
 		suite.addTestSuite(RuntimeLifecycleListenerTestCase.class);
