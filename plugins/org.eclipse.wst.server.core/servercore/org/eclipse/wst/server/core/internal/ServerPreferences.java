@@ -26,7 +26,7 @@ public class ServerPreferences implements IServerPreferences {
 	private static final String PREF_RESTART_MODULE_TIMEOUT = "restart-module-timeout";
 	private static final String PREF_MODULE_START_TIMEOUT = "module-start-timeout";
 
-	public static final String DEFAULT_PUBLISH_MANAGER = "com.ibm.wtp.server.core.publish.smart";
+	public static final String DEFAULT_PUBLISH_MANAGER = "org.eclipse.wst.server.core.publish.smart";
 
 	private Preferences preferences;
 
