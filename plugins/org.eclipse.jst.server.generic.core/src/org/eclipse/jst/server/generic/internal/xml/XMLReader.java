@@ -29,7 +29,6 @@
  * <http://www.eteration.com/>.
  ***************************************************************************/
 package org.eclipse.jst.server.generic.internal.xml;
-import java.io.CharArrayReader;
 import java.io.CharArrayWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
