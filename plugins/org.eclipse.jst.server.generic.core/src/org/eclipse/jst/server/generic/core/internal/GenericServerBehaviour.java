@@ -147,7 +147,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 	
 			wc.setAttribute(
 					IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
-					getServerDefinition().getResolver().resolveProperties(this.getServerDefinition().getStop().getClass_()));
+					getServerDefinition().getResolver().resolveProperties(this.getServerDefinition().getStop().getMainClass()));
 
 			GenericServerRuntime runtime = (GenericServerRuntime) getRuntimeDelegate();
 
@@ -180,7 +180,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     }
 
     public String getStartClassName() {
-    	return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getClass_());
+    	return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getMainClass());
     }
 
     public ServerRuntime getServerDefinition() {
