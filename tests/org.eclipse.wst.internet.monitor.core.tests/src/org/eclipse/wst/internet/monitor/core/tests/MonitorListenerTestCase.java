@@ -21,6 +21,8 @@ public class MonitorListenerTestCase extends TestCase {
 	protected static IMonitor changeEvent;
 	protected static IMonitor removeEvent;
 	protected static int count;
+	
+	protected static IMonitorListener listener2;
 
 	protected static IMonitorListener listener = new IMonitorListener() {
 		public void monitorAdded(IMonitor monitor2) {
@@ -97,5 +99,25 @@ public class MonitorListenerTestCase extends TestCase {
 	
 	public void test6RemoveListener() throws Exception {
 		MonitorCore.removeMonitorListener(listener);
+	}
+	
+	public void test7CheckListener() throws Exception {
+		listener2 = new IMonitorListener() {
+			public void monitorAdded(IMonitor monitor2) {
+				// ignore
+			}
+
+			public void monitorChanged(IMonitor monitor2) {
+				// ignore
+			}
+
+			public void monitorRemoved(IMonitor monitor2) {
+				// ignore
+			}
+		};
+		
+		listener2.monitorAdded(null);
+		listener2.monitorChanged(null);
+		listener2.monitorRemoved(null);
 	}
 }
