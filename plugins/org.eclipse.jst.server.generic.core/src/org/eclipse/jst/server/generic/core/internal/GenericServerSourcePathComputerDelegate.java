@@ -78,6 +78,6 @@ public class GenericServerSourcePathComputerDelegate implements ISourcePathCompu
 		System.arraycopy(projectEntries,0,entries,unresolvedEntries.length,projectEntries.length);
 		
 		IRuntimeClasspathEntry[] resolved = JavaRuntime.resolveSourceLookupPath(entries, configuration);
-		return JavaSourceLookupUtil.translate(resolved, true);
+		return JavaSourceLookupUtil.translate(resolved);
 	}
 }
