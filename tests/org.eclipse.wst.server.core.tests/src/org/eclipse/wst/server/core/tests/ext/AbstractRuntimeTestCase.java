@@ -82,14 +82,14 @@ public abstract class AbstractRuntimeTestCase extends TestCase {
 
 	public void test0006Validate() throws Exception {
 		IStatus status = getRuntime().validate(null);
-		assert(status.isOK());
+		assertTrue(status.isOK());
 	}
 	
 	public void test0007Validate() throws Exception {
 		IRuntimeWorkingCopy wc = getRuntime().createWorkingCopy();
 		wc.setLocation(null);
 		IStatus status = wc.validate(null);
-		assert(!status.isOK());
+		assertTrue(!status.isOK());
 	}
 
 	public void test0008ModifyRuntime() throws Exception {
