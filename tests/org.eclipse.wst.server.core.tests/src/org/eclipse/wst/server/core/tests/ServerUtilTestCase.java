@@ -17,7 +17,7 @@ import junit.framework.TestSuite;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.core.internal.ResourceManager;
 
 public class ServerUtilTestCase extends TestCase {
 	public static Test suite() {
@@ -26,7 +26,7 @@ public class ServerUtilTestCase extends TestCase {
 	
 	public void testFindServer0Extension() throws Exception {
 		try {
-			ServerUtil.findServer(null);
+			ResourceManager.findServer(null);
 			assertTrue("Should throw exception", false);
 		} catch (Exception e) {
 			// ignore
@@ -35,6 +35,6 @@ public class ServerUtilTestCase extends TestCase {
 
 	public void testFindServer1Extension() throws Exception {
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path("missingproject/test"));
-		assertTrue(ServerUtil.findServer(file) == null);
+		assertTrue(ResourceManager.findServer(file) == null);
 	}
 }

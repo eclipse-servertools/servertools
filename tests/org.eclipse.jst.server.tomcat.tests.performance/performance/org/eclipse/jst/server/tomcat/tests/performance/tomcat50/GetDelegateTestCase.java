@@ -31,7 +31,7 @@ public class GetDelegateTestCase extends AbstractGetDelegateTestCase {
 			throw new IllegalArgumentException();
 		IRuntimeWorkingCopy runtimeCopy = ServerCore.findRuntimeType(runtimeTypeId).createRuntime(runtimeTypeId, null);
 		runtimeCopy.setLocation(new Path(runtimeTypeLocaiton));
-		runtimeCopy.setLocked(false);
+		runtimeCopy.setReadOnly(false);
 		IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
 		ITomcatRuntimeWorkingCopy rwc = (ITomcatRuntimeWorkingCopy) runtimeCopy
 				.getAdapter(ITomcatRuntimeWorkingCopy.class);

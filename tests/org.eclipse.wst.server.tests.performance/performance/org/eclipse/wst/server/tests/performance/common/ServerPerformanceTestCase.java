@@ -36,7 +36,7 @@ public abstract class ServerPerformanceTestCase extends PerformanceTestCase {
 			throw new IllegalArgumentException();
 		IRuntimeWorkingCopy runtimeCopy = ServerCore.findRuntimeType(runtimeTypeId).createRuntime(runtimeTypeId, null);
 		runtimeCopy.setLocation(new Path(runtimeTypeLocation));
-		runtimeCopy.setLocked(false);
+		runtimeCopy.setReadOnly(false);
 		runtimeCopy.save(false, null);
 		return runtimeCopy;
 	}
