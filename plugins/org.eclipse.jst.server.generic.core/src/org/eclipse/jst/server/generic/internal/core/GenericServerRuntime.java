@@ -36,7 +36,6 @@ import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.IGenericRuntime;
 import org.eclipse.jst.server.generic.core.CorePlugin;
-import org.eclipse.jst.server.internal.core.JavaServerPlugin;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.ServerUtil;
 /**
@@ -93,7 +92,7 @@ public class GenericServerRuntime implements IGenericRuntime
 //		else 
 		if (getVMInstall() == null)
 			return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, CorePlugin.getResourceString("%errorJRE"), null);
-		return new Status(IStatus.OK, JavaServerPlugin.PLUGIN_ID, 0, "", null);
+		return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "", null);
 	}
 
 	/* (non-Javadoc)
