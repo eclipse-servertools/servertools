@@ -142,7 +142,8 @@ public abstract class ProjectModule extends ModuleDelegate {
 	 * @see ModuleDelegate#getId()
 	 */
 	public String getId() {
-		return getModule().getId();
+		return getProject().getName();
+		//return getModule().getId();
 	}
 
 	/*
@@ -203,7 +204,8 @@ public abstract class ProjectModule extends ModuleDelegate {
 	 * @see ModuleDelegate#getName()
 	 */
 	public String getName() {
-		return getModule().getName();
+		return getProject().getName();
+		//return getModule().getName();
 	}
 	
 	/**
