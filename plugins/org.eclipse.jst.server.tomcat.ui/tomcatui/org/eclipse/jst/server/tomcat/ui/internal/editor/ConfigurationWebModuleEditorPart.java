@@ -278,6 +278,8 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 		
 		TomcatServer ts = (TomcatServer) server.getAdapter(TomcatServer.class);
 		configuration = ts.getTomcatConfiguration();
+		if (configuration != null)
+			addChangeListener();
 		
 		if (server != null)
 			server2 = (ITomcatServerWorkingCopy) server.getAdapter(ITomcatServerWorkingCopy.class);
