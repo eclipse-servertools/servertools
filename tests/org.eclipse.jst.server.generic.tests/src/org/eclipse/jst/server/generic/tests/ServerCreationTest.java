@@ -66,7 +66,6 @@ public class ServerCreationTest extends TestCase {
 		List listAll = ServerCore.getRuntimeTypes();
 		if( listAll != null){
 			Iterator iterator = listAll.iterator();
-			boolean found = false;
 			while (iterator.hasNext()) {
 				RuntimeType runtimeType = (RuntimeType) iterator.next();
 				if("J2EE Runtime Library".equals(runtimeType.getName()))
@@ -130,11 +129,13 @@ public class ServerCreationTest extends TestCase {
 		server.setRuntime(runtime);
 		IServerWorkingCopyDelegate wcd = getWorkingCopyDelegate(server,serverType);
 		IServerConfigurationWorkingCopy serverConfiguration = getServerConfiguration(serverType.getServerConfigurationType(), null, runtime);
-		server.setServerConfiguration(serverConfiguration);
+		if(serverConfiguration!=null)
+		    server.setServerConfiguration(serverConfiguration);
 		wcd.modifyModules(new IModule[0], new IModule[0], null);
 		runtime.save(new NullProgressMonitor());
 		server.save(new NullProgressMonitor());
-		serverConfiguration.save(new NullProgressMonitor());
+		if(serverConfiguration!=null)
+		    serverConfiguration.save(new NullProgressMonitor());
 	
 	}
 	
@@ -147,7 +148,8 @@ public class ServerCreationTest extends TestCase {
 	}	
 
 	private IServerConfigurationWorkingCopy getServerConfiguration(IServerConfigurationType type, IFile file, IRuntime runtime) throws CoreException {
-
+	    if(type==null)
+	        return null;
 		IServerConfigurationWorkingCopy serverConfiguration = type.importFromRuntime(null, file, runtime, new NullProgressMonitor());
 		ServerUtil.setServerConfigurationDefaultName(serverConfiguration);
 		return serverConfiguration;
