@@ -7,6 +7,8 @@ import java.util.Map;
 import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinition;
 import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinitionProperty;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -35,6 +37,18 @@ public class ServerTypeDefinitionGroup
     private Map fPropertyMap =new HashMap();
     private String fContext="undefined";
     private Group fDefinitionGroup;
+    private ServerDefinitionTypeAwareWizardFragment fAwareWizardFragment;
+    private class PropertyModifyListener implements ModifyListener
+    {
+        /* (non-Javadoc)
+         * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+         */
+        public void modifyText(ModifyEvent e) {
+            fAwareWizardFragment.serverDefinitionTypePropertiesChanged();
+            
+        }
+        
+    }
     
     /**
      * Construct a composite for the given ServerTypeDefinition
@@ -44,8 +58,9 @@ public class ServerTypeDefinitionGroup
      * @param parent
      * @param style
      */
-    public ServerTypeDefinitionGroup(ServerTypeDefinition definition, String context, Map initialProperties, Composite parent, int style) 
+    public ServerTypeDefinitionGroup(ServerDefinitionTypeAwareWizardFragment fragment, ServerTypeDefinition definition, String context, Map initialProperties, Composite parent) 
     {
+        fAwareWizardFragment = fragment;
         initServerTypeDefinition(definition,context,initialProperties);
         createControl(parent);
     }
@@ -108,7 +123,7 @@ public class ServerTypeDefinitionGroup
 		for(int i = 0; i<properties.size(); i++)
 		{
 		    ServerTypeDefinitionProperty property = (ServerTypeDefinitionProperty)properties.get(i);		    
-//		    if(this.fContext.equals(property.getContext()))
+		    if(this.fContext.equals(property.getContext()))
 		        createPropertyControl(definitionComposite,property);
 		}
         
@@ -158,13 +173,25 @@ public class ServerTypeDefinitionGroup
     	gridData = new GridData();
     	label.setLayoutData(gridData);
     	label.setText(title);
-    
+
     	Button fButton = new Button(defPanel, SWT.CHECK);
+    	
     	gridData = new GridData(GridData.FILL_HORIZONTAL
     			| GridData.GRAB_HORIZONTAL);
     	gridData.horizontalSpan = 2;
     	fButton.setLayoutData(gridData);
     	fButton.setSelection(value);
+    	fButton.addSelectionListener(new SelectionListener() {
+            public void widgetSelected(SelectionEvent e) {
+               fAwareWizardFragment.serverDefinitionTypePropertiesChanged();
+            }
+
+            public void widgetDefaultSelected(SelectionEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+    	
     	return fButton;
     }
     protected Text createLabeledFile(String title, String value,
@@ -181,7 +208,7 @@ public class ServerTypeDefinitionGroup
     	gridData.horizontalSpan = 1;
     	fText.setLayoutData(gridData);
     	fText.setText(value);
-    
+    	fText.addModifyListener(new PropertyModifyListener());
     	Button fButton = new Button(defPanel, SWT.PUSH);
     	fButton.setText("...");
     	fButton.setLayoutData(new GridData());
@@ -212,11 +239,11 @@ public class ServerTypeDefinitionGroup
     	label.setText(title);
     
     	final Text fText = new Text(parent, SWT.SHADOW_IN | SWT.BORDER);
-    	gridData = new GridData(GridData.FILL_HORIZONTAL
-    			| GridData.GRAB_HORIZONTAL);
+    	gridData = new GridData(GridData.FILL_HORIZONTAL);
     	gridData.horizontalSpan = 1;
     	fText.setLayoutData(gridData);
     	fText.setText(value);
+    	fText.addModifyListener(new PropertyModifyListener());
     	Button fButton = new Button(parent, SWT.PUSH);
     	fButton.setText("...");
     	fButton.setLayoutData(new GridData());
@@ -252,6 +279,7 @@ public class ServerTypeDefinitionGroup
     	gridData.horizontalSpan = 2;
     	fText.setLayoutData(gridData);
     	fText.setText(value);
+    	fText.addModifyListener(new PropertyModifyListener());
     	return fText;
     }
     public Map getProperties()
