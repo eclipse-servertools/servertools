@@ -47,7 +47,7 @@ import org.eclipse.jst.server.generic.core.GenericServerCoreMessages;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.Port;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
-import org.eclipse.jst.server.j2ee.IWebModule;
+import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
@@ -159,25 +159,6 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.server.core.model.IServerDelegate#getParentModules(org.eclipse.wst.server.core.model.IModule)
-	 */
-	public IModule[] getParentModules(IModule module) throws CoreException {
-			//FIXME This is valid for only web modules. A generic server should support any 
-			// kind of j2ee module. Fix this after the server architectures are determined.
-        IWebModule webModule  = (IWebModule)module.getAdapter(IWebModule.class);
-        if (webModule!=null) {
-			IStatus status = canModifyModules(new IModule[] { module }, null);
-			if (status == null || !status.isOK())
-				throw new CoreException(status);
-			return new IModule[] { module };
-		}
-		return null;
-	
-	}
-
 	/**
 	 * @return
 	 */
@@ -274,5 +255,24 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
     }
 
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.wst.server.core.model.ServerDelegate#getRootModules(org.eclipse.wst.server.core.IModule)
+     */
+    public IModule[] getRootModules(IModule module) throws CoreException {
+        // FIXME This is valid for only web modules. A generic server should
+        // support any
+        // kind of j2ee module. Fix this after the server architectures are
+        // determined.
+        IWebModule webModule = (IWebModule) module.getAdapter(IWebModule.class);
+        if (webModule != null) {
+            IStatus status = canModifyModules(new IModule[] { module }, null);
+            if (status == null || !status.isOK())
+                throw new CoreException(status);
+            return new IModule[] { module };
+        }
+        return null;
+    }
 
 }

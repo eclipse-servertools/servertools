@@ -44,7 +44,7 @@ import org.eclipse.jst.server.generic.core.CorePlugin;
 import org.eclipse.jst.server.generic.internal.core.util.FileUtil;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.PublisherData;
-import org.eclipse.jst.server.j2ee.IWebModule;
+import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.osgi.framework.Bundle;
 /**

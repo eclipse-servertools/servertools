@@ -56,7 +56,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     /* (non-Javadoc)
      * @see org.eclipse.wst.server.core.model.ServerBehaviourDelegate#publishServer(org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void publishServer(IProgressMonitor monitor) throws CoreException {
+    public void publishServer(int kind, IProgressMonitor monitor) throws CoreException {
         // TODO Auto-generated method stub
 
     }
@@ -64,7 +64,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     /* (non-Javadoc)
      * @see org.eclipse.wst.server.core.model.ServerBehaviourDelegate#publishModule(org.eclipse.wst.server.core.IModule[], org.eclipse.wst.server.core.IModule, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void publishModule(IModule[] parents, IModule module,
+    public void publishModule(int kind, int deltaKind, IModule[] parents, IModule module,
             IProgressMonitor monitor) throws CoreException {
  
         Module m = getServerDefinition().getModule(module.getModuleType().getId());
@@ -387,6 +387,4 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     	String cpRef = getServerDefinition().getStop().getClasspathReference();
     	return serverClasspath(cpRef);
     }
-    
-
 }
