@@ -56,7 +56,8 @@ import org.osgi.framework.Bundle;
 
 public class AntPublisher extends GenericPublisher{
 
-    private static final String MODULE_TARGET_PREFIX = "target.";
+    private static final String MODULE_PUBLISH_TARGET_PREFIX = "target.publish.";
+    private static final String MODULE_UNPUBLISH_TARGET_PREFIX = "target.unpublish.";
     public static final String PUBLISHER_ID="org.eclipse.jst.server.generic.antpublisher"; 
     private static final String DATA_NAME_BUILD_FILE="build.file";
 
@@ -66,10 +67,9 @@ public class AntPublisher extends GenericPublisher{
 	public IStatus[] publish(IModuleArtifact[] resource,
 			IProgressMonitor monitor){
         
-        Bundle bundle = Platform.getBundle(fServerRuntime.getConfigurationElementNamespace());
-        File file = FileUtil.resolveFileFrom(bundle,getBuildFile());
+        File file = computeBuildFile();
         try{
-            runAnt(file.toString(),getTargetsForModule(),getPublishProperties(resource),monitor);
+            runAnt(file.toString(),getPublishTargetsForModule(),getPublishProperties(),monitor);
         }
         catch(CoreException e){
             IStatus s = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,"Publish failed using Ant publisher",e);
@@ -77,12 +77,32 @@ public class AntPublisher extends GenericPublisher{
         }
 		return null;
 	}
-    
+
+
     /**
      * @return
      */
-    private String[] getTargetsForModule() {
-        String dataname = MODULE_TARGET_PREFIX+getModuleTypeId();
+    private File computeBuildFile() {
+        Bundle bundle = Platform.getBundle(fServerRuntime.getConfigurationElementNamespace());
+        File file = FileUtil.resolveFileFrom(bundle,getBuildFile());
+        return file;
+    }
+    
+   
+    /**
+     * @return
+     */
+    private String[] getPublishTargetsForModule() {
+        String dataname = MODULE_PUBLISH_TARGET_PREFIX+getModuleTypeId();
+        return doGetTargets(dataname);
+    }
+
+
+    /**
+     * @param dataname
+     * @return
+     */
+    private String[] doGetTargets(String dataname) {
         ArrayList list = new ArrayList();
         Iterator iterator = fServerRuntime.getPublisher(PUBLISHER_ID).getPublisherdata().iterator();
         while(iterator.hasNext()){
@@ -94,6 +114,15 @@ public class AntPublisher extends GenericPublisher{
         return (String[])list.toArray(new String[list.size()]);
     }
 
+    /**
+     * @return
+     */
+    private String[] getUnpublishTargetsForModule() {
+        
+        return doGetTargets(MODULE_UNPUBLISH_TARGET_PREFIX+getModuleTypeId());
+    }
+    
+    
     private String getModuleTypeId()
     {
         return fModule.getModuleType().getId();
@@ -110,7 +139,7 @@ public class AntPublisher extends GenericPublisher{
         }
         return null;
     }
-	private Map getPublishProperties(IModuleArtifact[] resource)
+	private Map getPublishProperties()
 	{
         Map props = new HashMap();
         //publish dir
@@ -163,4 +192,22 @@ public class AntPublisher extends GenericPublisher{
 		runner.addUserProperties(properties);
 		runner.run(monitor);
 	}
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jst.server.generic.internal.core.GenericPublisher#unpublish(org.eclipse.wst.server.core.IModule, org.eclipse.core.runtime.IProgressMonitor)
+     */
+    public IStatus[] unpublish(IProgressMonitor monitor) {
+        File file = computeBuildFile();
+        try {
+            runAnt(file.toString(),getUnpublishTargetsForModule(),getPublishProperties(),monitor);
+        } catch (CoreException e) {
+            IStatus s = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,"Remove module failed using Ant publisher",e);
+            return new IStatus[] {s};
+ 
+        }
+        return null;
+    }
+
+
+
 }

@@ -8,7 +8,8 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 
 /**
- * The abstract publisher interface.
+ * The abstract publisher. This is intended to be subclassed by
+ * clients implementing the genericpublisher extension point.
  *
  * @author Gorkem Ercan
  */
@@ -18,12 +19,19 @@ public abstract class GenericPublisher
     IModule fModule;
     ServerRuntime fServerRuntime;
     
-    public void initialize(IModule[] parents, IModule module, ServerRuntime serverDefinition)
+    protected void initialize(IModule[] parents, IModule module, ServerRuntime serverDefinition)
     {
         fModule = module;
         fParents = parents;
         fServerRuntime = serverDefinition;
     }
+   /**
+    * 
+    * @param module
+    * @param monitor
+    * @return
+    */ 
+   public abstract IStatus[] unpublish(IProgressMonitor monitor);
     
     /**
      * 

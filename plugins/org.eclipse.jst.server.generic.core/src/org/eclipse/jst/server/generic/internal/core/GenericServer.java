@@ -118,12 +118,27 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
         {
             for (int i = 0; i < remove.length; i++) {
                 modules.remove(createModuleId(remove[i]));
-            }
+                removeFromServer(remove[i],monitor);
+             }
         }
         if(modules!=null)    
             setAttribute(ATTR_GENERIC_SERVER_MODULES,modules);
         
     }
+    private void removeFromServer(IModule module, IProgressMonitor monitor) throws CoreException
+    {
+        Module m = getServerDefinition().getModule(module.getModuleType().getId());
+        String publisherId = m.getPublisherReference();
+        GenericPublisher publisher = PublishManager.getPublisher(publisherId);  
+        if(publisher==null){
+            IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,"Unable to create publisher to remove module",null);
+            throw new CoreException(status);
+        }
+        publisher.initialize(null,module,getServerDefinition());
+        publisher.unpublish(monitor);
+    }
+    
+    
 	/*
 	 * (non-Javadoc)
 	 * 
