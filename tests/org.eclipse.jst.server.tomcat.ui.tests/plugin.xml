@@ -19,7 +19,6 @@
       <import plugin="org.eclipse.wst.server.core"/>
       <import plugin="org.eclipse.wst.server.ui"/>
       <import plugin="org.eclipse.jst.server.tomcat.ui"/>
-      <import plugin="org.eclipse.wst.server.ui.tests"/>
    </requires>
 
 </plugin>
