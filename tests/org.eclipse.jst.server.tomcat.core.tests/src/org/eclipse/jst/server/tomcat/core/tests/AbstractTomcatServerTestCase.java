@@ -12,8 +12,8 @@ package org.eclipse.jst.server.tomcat.core.tests;
 
 import junit.framework.Test;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
-import org.eclipse.jst.server.tomcat.core.ITomcatServer;
+import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfigurationWorkingCopy;
+import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.tests.ext.AbstractServerTestCase;
 
@@ -62,7 +62,7 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 		IServerWorkingCopy wc = st.createServer(null, null, runtime, null);
 		
 		IServerPort[] ports = wc.getServerPorts();
-		ITomcatServer tomcatServer = (ITomcatServer) wc.getAdapter(ITomcatServer.class);
+		TomcatServer tomcatServer = (TomcatServer) wc.getAdapter(TomcatServer.class);
 		ITomcatConfigurationWorkingCopy configuration = (ITomcatConfigurationWorkingCopy) tomcatServer.getServerConfiguration();
 		if (ports != null) {
 			int size = ports.length;
