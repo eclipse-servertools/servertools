@@ -187,7 +187,7 @@ public class ServerType implements IServerType, IOrdered {
 		if (swc.getServerType().hasServerConfiguration()) {
 			// TODO: config
 			((Server)swc).importConfiguration(runtime, null);
-			IFolder folder = getServerProject().getFolder("cfg");
+			IFolder folder = getServerProject().getFolder(swc.getName() + "-config");
 			swc.setServerConfiguration(folder);
 		}
 		

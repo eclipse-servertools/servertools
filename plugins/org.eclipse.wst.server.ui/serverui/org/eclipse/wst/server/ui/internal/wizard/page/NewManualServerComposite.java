@@ -134,7 +134,7 @@ public class NewManualServerComposite extends Composite {
 						if (server.getServerType().hasServerConfiguration()) {
 							// TODO: config
 							((Server)server).importConfiguration(runtime, null);
-							IFolder folder = WizardUtil.getServerProject().getFolder("cfg");
+							IFolder folder = WizardUtil.getServerProject().getFolder(server.getName() + "-config");
 							server.setServerConfiguration(folder);
 						}
 					}
@@ -205,7 +205,7 @@ public class NewManualServerComposite extends Composite {
 							if (server.getServerType().hasServerConfiguration()) {
 								// TODO: config
 								((Server)server).importConfiguration(runtime, null);
-								IFolder folder = WizardUtil.getServerProject().getFolder("cfg");
+								IFolder folder = WizardUtil.getServerProject().getFolder(server.getName() + "-config");
 								server.setServerConfiguration(folder);
 							}
 						}
