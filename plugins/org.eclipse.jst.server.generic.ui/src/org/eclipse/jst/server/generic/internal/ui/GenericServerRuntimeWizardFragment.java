@@ -31,7 +31,10 @@
 package org.eclipse.jst.server.generic.internal.ui;
 
 import java.util.Map;
+
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jst.server.generic.internal.core.GenericServerRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
@@ -195,8 +198,13 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	 * @see org.eclipse.wst.server.ui.wizard.IWizardFragment#exit()
 	 */
 	public void exit() {
-
+	    try {
+	        getRuntimeDelegate().getRuntimeWorkingCopy().save(true,new NullProgressMonitor());
+	    }
+	    catch(CoreException e){//unhandled
+	    }
         fRuntimeDelegate=null;
+        
 	}
 	protected String getSelectedServerType(){
 	   return  fSelectedServerType;
@@ -233,8 +241,9 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	{
 		if(fRuntimeDelegate == null)
 		{	
-		    
 		    IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy)getTaskModel().getObject(ITaskModel.TASK_RUNTIME);
+		    if(wc==null)
+		        return null;
 		    fRuntimeDelegate = (RuntimeDelegate)wc.getAdapter(RuntimeDelegate.class);
 		}
 		return fRuntimeDelegate;
@@ -264,6 +273,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 		dl.setAttribute(GenericServerRuntime.SERVER_DEFINITION_ID, selected);
 		dl.setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,properties);
 		dl.getRuntimeWorkingCopy().setName(createName());
+		
 		validate();
    }
     
