@@ -98,21 +98,12 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	
 	private void swapBody() 
 	{
+	    this.fRuntimeWC=null;
         String selected = fServerCombo == null ? null : fServerCombo
                 .getItem(fServerCombo.getSelectionIndex());
-        if (getServerDefinitionId() != null)
-            selected = getServerDefinitionId();
         Map properties = null;
-        if (getRuntimeWorkingCopy() != null)
-            properties = getRuntimeWorkingCopy()
-                    .getAttribute(
-                            GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,
-                            (Map) null);
-        ServerRuntime definition = getServerTypeDefinition(selected,
-                properties);
-
-        fServerPanel.reset(definition,
-                ServerTypeDefinitionGroup.CONTEXT_RUNTIME, properties);
+        ServerRuntime definition = getServerTypeDefinition(selected,properties);
+        fServerPanel.reset(definition,ServerTypeDefinitionGroup.CONTEXT_RUNTIME, properties);
     }
 	/**
      * @param selected
@@ -141,8 +132,13 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 		}
 		fServerCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
 		if(fServerCombo.getItemCount()>0)
-			fServerCombo.select(0);
-		
+		{
+		    if(getServerDefinitionId()!=null)
+		    {
+		        selectServerDefinition();
+		    }
+		    fServerCombo.select(0);
+		}
 		fServerCombo.addSelectionListener(
 				new SelectionListener() {
 					public void widgetSelected(SelectionEvent e) {
@@ -189,7 +185,12 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 		if(serverDefinition!=null && serverDefinition.length()>0)
 		{
 			selectServerDefinition();
-			swapBody();
+	        Map properties = null;
+	        if (getRuntimeWorkingCopy() != null) {
+	            properties = getRuntimeWorkingCopy().getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map) null);
+	        }
+	        ServerRuntime definition = getServerTypeDefinition(serverDefinition,properties);
+	        fServerPanel.reset(definition,ServerTypeDefinitionGroup.CONTEXT_RUNTIME, properties);
 		}
 	}
 	
