@@ -11,11 +11,10 @@
 package org.eclipse.wst.server.core.tests.impl;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.IServerLocator.Listener;
 import org.eclipse.wst.server.core.model.ServerLocatorDelegate;
 
 public class TestServerLocatorDelegate extends ServerLocatorDelegate {
-	public void searchForServers(String host, Listener listener, IProgressMonitor monitor) {
+	public void searchForServers(String host, IServerSearchListener listener, IProgressMonitor monitor) {
 		// ignore
 	}
 }

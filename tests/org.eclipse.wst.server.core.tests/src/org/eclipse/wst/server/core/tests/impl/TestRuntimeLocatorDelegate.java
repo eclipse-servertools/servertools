@@ -12,11 +12,10 @@ package org.eclipse.wst.server.core.tests.impl;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.IRuntimeLocator.RuntimeSearchListener;
 import org.eclipse.wst.server.core.model.RuntimeLocatorDelegate;
 
 public class TestRuntimeLocatorDelegate extends RuntimeLocatorDelegate {
-	public void searchForRuntimes(IPath path, RuntimeSearchListener listener, IProgressMonitor monitor) {
+	public void searchForRuntimes(IPath path, IRuntimeSearchListener listener, IProgressMonitor monitor) {
 		// do nothing
 	}
 }

@@ -21,8 +21,7 @@ public class AllTests {
 		suite.addTest(new OrderedTestSuite(TomcatRuntimeTestCase.class));
 		
 		String s = System.getProperty("org.eclipse.jst.server.tomcat.32"); 
-		//System.getProperty("tomcat32Dir");
-		s = "D:\\Tools\\tomcat\\jakarta-tomcat-3.2.4";
+		//s = "D:\\Tools\\tomcat\\jakarta-tomcat-3.2.4";
 		if (s != null && s.length() > 0) {
 			RuntimeLocation.runtimeLocation = s;
 			suite.addTest(new OrderedTestSuite(Tomcat32RuntimeTestCase.class));

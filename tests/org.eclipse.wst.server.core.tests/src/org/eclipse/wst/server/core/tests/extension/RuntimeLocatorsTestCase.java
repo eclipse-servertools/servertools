@@ -14,8 +14,8 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.wst.server.core.IRuntimeLocator;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.IRuntimeLocator;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 
 public class RuntimeLocatorsTestCase extends TestCase {
 	public static Test suite() {
@@ -23,7 +23,7 @@ public class RuntimeLocatorsTestCase extends TestCase {
 	}
 
 	public void testRuntimeLocatorsExtension() throws Exception {
-		IRuntimeLocator[] runtimeLocators = ServerCore.getRuntimeLocators();
+		IRuntimeLocator[] runtimeLocators = ServerPlugin.getRuntimeLocators();
 		if (runtimeLocators != null) {
 			int size = runtimeLocators.length;
 			for (int i = 0; i < size; i++) {
