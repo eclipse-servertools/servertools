@@ -12,6 +12,7 @@ package org.eclipse.wst.server.ui.tests;
 
 import org.eclipse.wst.server.ui.tests.dialog.DialogsTestCase;
 import org.eclipse.wst.server.ui.tests.dialog.PreferencesTestCase;
+import org.eclipse.wst.server.ui.tests.dialog.ViewTestCase;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -20,9 +21,11 @@ public class AllTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.wst.server.ui.tests");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(ExistenceTest.class);
+		suite.addTestSuite(ServerUIPreferencesTestCase.class);
 		
 		suite.addTestSuite(DialogsTestCase.class);
 		suite.addTestSuite(PreferencesTestCase.class);
+		suite.addTestSuite(ViewTestCase.class);
 		//$JUnit-END$
 		return suite;
 	}
