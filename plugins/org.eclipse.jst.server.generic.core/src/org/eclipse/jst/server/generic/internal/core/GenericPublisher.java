@@ -1,6 +1,5 @@
 package org.eclipse.jst.server.generic.internal.core;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
@@ -15,9 +14,9 @@ import org.eclipse.wst.server.core.IModuleArtifact;
  */
 public abstract class GenericPublisher 
 {
-    IModule[] fParents;
-    IModule fModule;
-    ServerRuntime fServerRuntime;
+    private IModule[] fParents;
+    private IModule fModule;
+    private ServerRuntime fServerRuntime;
     
     protected void initialize(IModule[] parents, IModule module, ServerRuntime serverDefinition)
     {
@@ -26,6 +25,9 @@ public abstract class GenericPublisher
         fServerRuntime = serverDefinition;
     }
    /**
+    * Called by the generic server implementation when a module is 
+    * removed form the server instance. 
+    * Subclasses may extend this method to perform their own module removal
     * 
     * @param module
     * @param monitor
@@ -34,12 +36,24 @@ public abstract class GenericPublisher
    public abstract IStatus[] unpublish(IProgressMonitor monitor);
     
     /**
+     * Called by the generic server implementation when a publish module 
+     * event occurs. 
+     * Subclasses may extend this method to perform their own publishing
      * 
      * @param resource
      * @param monitor
      * @return
-     * @throws CoreException
      */
     public abstract IStatus[] publish(IModuleArtifact[] resource,
             IProgressMonitor monitor);
+   
+    public IModule getModule() {
+        return fModule;
+    }
+    public IModule[] getParents() {
+        return fParents;
+    }
+    public ServerRuntime getServerRuntime() {
+        return fServerRuntime;
+    }
 }
