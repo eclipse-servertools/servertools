@@ -234,15 +234,6 @@ public interface IServer extends IServerAttributes, IAdaptable {
 	public IServerWorkingCopy createWorkingCopy();
 
 	/**
-	 * Returns an array of the modules that have not been published
-	 * since the last modification. (i.e. the modules that are
-	 * out of sync with the server.
-	 *
-	 * @return org.eclipse.wst.server.model.IModule[]
-	 */
-	public IModule[] getUnpublishedModules();
-
-	/**
 	 * Adds the given server state listener to this server.
 	 * Once registered, a listener starts receiving notification of 
 	 * state changes to this server. The listener continues to receive

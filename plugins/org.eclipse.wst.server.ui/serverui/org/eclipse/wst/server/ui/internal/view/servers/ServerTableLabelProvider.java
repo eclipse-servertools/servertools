@@ -153,10 +153,6 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 			// republish
 			if (server.getServerPublishState() != IServer.PUBLISH_STATE_NONE)
 				i += 2;
-			else {
-				if (server.getUnpublishedModules().length != 0)
-					i += 2;
-			}
 			
 			IServerType serverType = server.getServerType();
 			if (serverType.getServerStateSet() == IServerType.SERVER_STATE_SET_MANAGED)
