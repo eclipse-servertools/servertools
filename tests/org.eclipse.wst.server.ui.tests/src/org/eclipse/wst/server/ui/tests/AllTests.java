@@ -13,9 +13,8 @@ package org.eclipse.wst.server.ui.tests;
 import org.eclipse.wst.server.ui.tests.dialog.DialogsTestCase;
 import org.eclipse.wst.server.ui.tests.dialog.PreferencesTestCase;
 import org.eclipse.wst.server.ui.tests.dialog.ViewTestCase;
-import org.eclipse.wst.server.ui.tests.editor.ICommandManagerTestCase;
-import org.eclipse.wst.server.ui.tests.editor.IServerEditorPartInputTestCase;
-import org.eclipse.wst.server.ui.tests.editor.IServerEditorSectionTestCase;
+import org.eclipse.wst.server.ui.tests.editor.*;
+import org.eclipse.wst.server.ui.tests.wizard.IWizardHandleTestCase;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -36,6 +35,13 @@ public class AllTests {
 		suite.addTestSuite(DialogsTestCase.class);
 		suite.addTestSuite(PreferencesTestCase.class);
 		suite.addTestSuite(ViewTestCase.class);
+		
+		suite.addTestSuite(IOrderedTestCase.class);
+		suite.addTestSuite(ServerEditorActionFactoryDelegateTestCase.class);
+		suite.addTestSuite(ServerEditorPageSectionFactoryDelegateTestCase.class);
+		suite.addTestSuite(ServerEditorPartFactoryDelegateTestCase.class);
+		
+		suite.addTestSuite(IWizardHandleTestCase.class);
 		//$JUnit-END$
 		return suite;
 	}
