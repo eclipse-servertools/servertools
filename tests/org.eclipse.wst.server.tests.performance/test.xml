@@ -9,6 +9,7 @@
   <property name="plugin-name" value="org.eclipse.wst.server.tests.performance"/>
   <property name="library-file"
             value="${eclipse-home}/plugins/org.eclipse.test_3.1.0/library.xml"/>
+  <property name="perf-tests-file" value="${testDir}/performance-tests.xml"/>
 
   <property name="workspace" value="${eclipse-home}/workspace_server_performance"/>
 
@@ -26,14 +27,14 @@
   <target name="performance_suite">
 
     <delete dir="${workspace}" quiet="true"/>
-    <ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
+    <ant target="core-test" antfile="${perf-tests-file}" dir="${eclipse-home}">
       <property name="data-dir" value="${workspace}"/>
       <property name="plugin-name" value="${plugin-name}"/>
       <property name="classname" value="org.eclipse.wst.server.tests.performance.StartupExtensionTestCase"/>
     </ant>
 
     <delete dir="${workspace}" quiet="true"/>
-    <ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
+    <ant target="core-test" antfile="${perf-tests-file}" dir="${eclipse-home}">
       <property name="data-dir" value="${workspace}"/>
       <property name="plugin-name" value="${plugin-name}"/>
       <property name="classname" value="org.eclipse.wst.server.tests.performance.ModuleFactoriesExtensionTestCase"/>
