@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.wst.server.core.*;
@@ -180,6 +181,11 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		server.setInternal(this);
 		server.doSave(monitor);
 		IFolder folder = getServerConfiguration();
+		IProject project = folder.getProject();
+		if (project != null && !project.exists()) {
+			project.create(null);
+			project.open(null);
+		}
 		if (folder != null && !folder.exists()) {
 			folder.create(IResource.FORCE, true, null);
 		}
