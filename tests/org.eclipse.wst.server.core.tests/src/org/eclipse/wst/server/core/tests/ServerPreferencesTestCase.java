@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,18 +13,17 @@ package org.eclipse.wst.server.core.tests;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.wst.server.core.IServerPreferences;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.ServerPreferences;
 
 public class ServerPreferencesTestCase extends TestCase {
-	protected static IServerPreferences prefs;	
+	protected static ServerPreferences prefs;	
 
 	public static Test suite() {
 		return new OrderedTestSuite(ServerPreferencesTestCase.class, "ServerPreferencesTestCase");
 	}
 
 	public void test00GetProperties() throws Exception {
-		prefs = ServerCore.getServerPreferences();
+		prefs = ServerPreferences.getInstance();
 	}
 
 	public void test01GetPref() throws Exception {
