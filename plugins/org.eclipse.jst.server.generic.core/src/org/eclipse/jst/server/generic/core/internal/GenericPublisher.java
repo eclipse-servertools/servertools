@@ -14,14 +14,13 @@ import org.eclipse.wst.server.core.IModuleArtifact;
  */
 public abstract class GenericPublisher 
 {
-    private IModule[] fParents;
-    private IModule fModule;
+    
+    private IModule[] fModule;
     private ServerRuntime fServerRuntime;
     
-    protected void initialize(IModule[] parents, IModule module, ServerRuntime serverDefinition)
+    protected void initialize(IModule[] module, ServerRuntime serverDefinition)
     {
         fModule = module;
-        fParents = parents;
         fServerRuntime = serverDefinition;
     }
    /**
@@ -47,12 +46,10 @@ public abstract class GenericPublisher
     public abstract IStatus[] publish(IModuleArtifact[] resource,
             IProgressMonitor monitor);
    
-    public IModule getModule() {
+    public IModule[] getModule() {
         return fModule;
     }
-    public IModule[] getParents() {
-        return fParents;
-    }
+
     public ServerRuntime getServerRuntime() {
         return fServerRuntime;
     }

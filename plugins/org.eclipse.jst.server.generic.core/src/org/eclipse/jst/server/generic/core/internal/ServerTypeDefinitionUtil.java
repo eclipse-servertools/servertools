@@ -58,7 +58,7 @@ public class ServerTypeDefinitionUtil
 	public static ServerRuntime getServerTypeDefinition(IRuntime runtime)
 	{
 	    RuntimeDelegate delegate = (RuntimeDelegate)runtime.getAdapter(RuntimeDelegate.class);
-		String serverType = delegate.getAttribute(GenericServerRuntime.SERVER_DEFINITION_ID,(String)null);
+		String serverType = delegate.getRuntime().getRuntimeType().getId();
 		Map properties = delegate.getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map)null);
 		ServerRuntime definition = 
 			CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(serverType,properties);

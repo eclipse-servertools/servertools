@@ -30,7 +30,6 @@
 package org.eclipse.jst.server.generic.core.internal;
 
 import java.net.URL;
-import org.eclipse.wst.server.core.ILaunchable;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.*;
@@ -48,7 +47,7 @@ public class GenericServerLaunchableAdapterDelegate extends LaunchableAdapterDel
 	/*
 	 * @see ILaunchableAdapterDelegate#getLaunchable(IServer, IModuleObject)
 	 */
-	public ILaunchable getLaunchable(IServer server, IModuleArtifact moduleObject) {
+	public Object getLaunchable(IServer server, IModuleArtifact moduleObject) {
 		ServerDelegate delegate = (ServerDelegate)server.getAdapter(ServerDelegate.class);
 		if (!(delegate instanceof GenericServer))
 			return null;
@@ -60,7 +59,7 @@ public class GenericServerLaunchableAdapterDelegate extends LaunchableAdapterDel
 		return null;
 	}
 
-    private ILaunchable prepareJndiLaunchable(IModuleArtifact moduleObject, ServerDelegate delegate) {
+    private Object prepareJndiLaunchable(IModuleArtifact moduleObject, ServerDelegate delegate) {
         JndiLaunchable launchable = null;
         if(moduleObject instanceof EJBBean)
         {
@@ -80,7 +79,7 @@ public class GenericServerLaunchableAdapterDelegate extends LaunchableAdapterDel
      * @param delegate
      * @return
      */
-    private ILaunchable prepareHttpLaunchable(IModuleArtifact moduleObject, ServerDelegate delegate) {
+    private Object prepareHttpLaunchable(IModuleArtifact moduleObject, ServerDelegate delegate) {
         try {
 			URL url = ((IURLProvider) delegate).getModuleRootURL(moduleObject.getModule());
 			

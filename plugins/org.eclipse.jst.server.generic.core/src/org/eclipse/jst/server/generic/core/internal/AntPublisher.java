@@ -135,7 +135,7 @@ public class AntPublisher extends GenericPublisher{
     
     private String getModuleTypeId()
     {
-        return getModule().getModuleType().getId();
+        return getModule()[0].getModuleType().getId();
     }
     
 	private String getBuildFile()
@@ -166,8 +166,8 @@ public class AntPublisher extends GenericPublisher{
 		String modDir = module.getPublishDir();
 		modDir = getServerRuntime().getResolver().resolveProperties(modDir);
 
-		IWebModule webModule = (IWebModule)getModule().getAdapter(IWebModule.class);
-        IEJBModule ejbModule = (IEJBModule)getModule().getAdapter(IEJBModule.class);
+		IWebModule webModule = (IWebModule)getModule()[0].getAdapter(IWebModule.class);
+        IEJBModule ejbModule = (IEJBModule)getModule()[0].getAdapter(IEJBModule.class);
 		String moduleName="unknownmodule";
         String moduleDir="";
         if(webModule!=null){    
@@ -175,7 +175,7 @@ public class AntPublisher extends GenericPublisher{
             moduleDir = webModule.getLocation().toString();
         }
         if(ejbModule!=null){  
-            moduleName = getModule().getName();
+            moduleName = getModule()[0].getName();
             moduleDir= ejbModule.getLocation().toString();
         }
 		props.put("module.name",moduleName);
@@ -189,7 +189,7 @@ public class AntPublisher extends GenericPublisher{
 	 * @return
 	 */
 	private String guessModuleName(IWebModule webModule) {
-		String moduleName = getModule().getName(); 
+		String moduleName = getModule()[0].getName(); 
 		//Default to project name but not a good guess
 		//may have blanks etc.
 		

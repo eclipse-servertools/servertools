@@ -49,13 +49,6 @@ public class GenericServerRuntimeTargetHandler extends
 		ClasspathRuntimeTargetHandler {
 
 	/* (non-Javadoc)
-	 * @see ClasspathRuntimeTargetHandler#getId()
-	 */
-	public String getId() {
-		return "org.eclipse.jst.server.generic.runtimeTarget";
-	}          
-
-	/* (non-Javadoc)
 	 * @see ClasspathRuntimeTargetHandler#getClasspathContainerLabel(IRuntime, java.lang.String)
 	 */
 	public String getClasspathContainerLabel(IRuntime runtime, String id) {
@@ -66,18 +59,13 @@ public class GenericServerRuntimeTargetHandler extends
 	/* (non-Javadoc)
 	 * @see ClasspathRuntimeTargetHandler#resolveClasspathContainer(IRuntime, java.lang.String)
 	 */
-	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime,
-			String id) 
-	{		
+	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime,String id){		
 		return ServerTypeDefinitionUtil.getServerClassPathEntry(runtime);
 	}
-	
-	public String[] getClasspathEntryIds(IRuntime runtime) {
-		// Values do not realy have any use but the number of entries give the number of
-		// containers you have.
-		return new String[1];
-	}
-
+    
+	/*
+     * @see ClasspathRuntimeTargetHandler#getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor)
+	 */
 	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
 		GenericServerRuntime genericRuntime = (GenericServerRuntime)runtime.getAdapter(RuntimeDelegate.class);
 		IVMInstall vmInstall = genericRuntime.getVMInstall();

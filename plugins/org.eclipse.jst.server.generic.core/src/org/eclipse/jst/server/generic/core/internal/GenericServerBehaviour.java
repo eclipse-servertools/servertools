@@ -61,37 +61,37 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     /* (non-Javadoc)
      * @see org.eclipse.wst.server.core.model.ServerBehaviourDelegate#publishModule(org.eclipse.wst.server.core.IModule[], org.eclipse.wst.server.core.IModule, org.eclipse.core.runtime.IProgressMonitor)
      */
-    public void publishModule(int kind, int deltaKind, IModule[] parents, IModule module,
+    public void publishModule(int kind, int deltaKind, IModule[] module,
             IProgressMonitor monitor) throws CoreException {
  
         if(IServer.REMOVED == deltaKind){
             removeFromServer(module,monitor);
         }
         else{
-            Module m = getServerDefinition().getModule(module.getModuleType().getId());
+            Module m = getServerDefinition().getModule(module[0].getModuleType().getId());
             String publisherId = m.getPublisherReference();
             GenericPublisher publisher = PublishManager.getPublisher(publisherId);
             if(publisher==null){
                 IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,"Unable to create publisher",null);
                 throw new CoreException(status);
             }
-            publisher.initialize(parents,module,getServerDefinition());
+            publisher.initialize(module,getServerDefinition());
             IStatus[] status= publisher.publish(null,monitor);
             if(status==null)
-                setModulePublishState(module,IServer.PUBLISH_STATE_NONE);
+                setModulePublishState(module, IServer.PUBLISH_STATE_NONE);
         }
     }
 
-    private void removeFromServer(IModule module, IProgressMonitor monitor) throws CoreException
+    private void removeFromServer(IModule[] module, IProgressMonitor monitor) throws CoreException
     {
-        Module m = getServerDefinition().getModule(module.getModuleType().getId());
+        Module m = getServerDefinition().getModule(module[0].getModuleType().getId());
         String publisherId = m.getPublisherReference();
         GenericPublisher publisher = PublishManager.getPublisher(publisherId);  
         if(publisher==null){
             IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,"Unable to create publisher to remove module",null);
             throw new CoreException(status);
         }
-        publisher.initialize(null,module,getServerDefinition());
+        publisher.initialize(module,getServerDefinition());
         publisher.unpublish(monitor);
     }
     
@@ -240,6 +240,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     									IRuntimeClasspathEntry.BOOTSTRAP_CLASSES)
     							.getMemento());
     		} catch (Exception e) {
+				// ignore
     		}
     
     		IPath jrePath = new Path(vmInstall.getInstallLocation()
@@ -251,7 +252,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     					cp.add(JavaRuntime.newArchiveRuntimeClasspathEntry(
     							toolsPath).getMemento());
     				} catch (CoreException e1) {
-
+						// ignore
     				}
     			}
     		}
@@ -415,7 +416,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
         IModule[] modules = this.getServer().getModules();
         boolean allpublished= true;
         for (int i = 0; i < modules.length; i++) {
-            if(this.getServer().getModulePublishState(modules[i])!=IServer.PUBLISH_STATE_NONE)
+            if(this.getServer().getModulePublishState(modules)!=IServer.PUBLISH_STATE_NONE)
                 allpublished=false;
         }
         if(allpublished)

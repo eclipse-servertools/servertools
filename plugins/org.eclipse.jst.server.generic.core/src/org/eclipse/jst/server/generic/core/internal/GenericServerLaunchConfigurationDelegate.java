@@ -45,6 +45,7 @@ import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMRunner;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerAttributes;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 /**
@@ -60,7 +61,7 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		
-		String serverId = configuration.getAttribute(IServer.ATTR_SERVER_ID, (String) null);
+		String serverId = configuration.getAttribute(IServerAttributes.ATTR_SERVER_ID, (String) null);
 
 		IServer server = ServerCore.findServer(serverId);
 		if (server == null) 

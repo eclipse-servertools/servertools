@@ -55,8 +55,9 @@ public class ServerTypeDefinitionManager
 
 	public ServerRuntime getServerRuntimeDefinition(String id, Map properties)
 	{
-		ServerRuntime definition =  fXmlUtils.getServerTypeDefinitionNamed(id);
-		definition.setPropertyValues(properties);
+		ServerRuntime definition =  fXmlUtils.getServerTypeDefinition(id);
+		if(definition !=null)
+            definition.setPropertyValues(properties);
 		return definition;
 	}
 	

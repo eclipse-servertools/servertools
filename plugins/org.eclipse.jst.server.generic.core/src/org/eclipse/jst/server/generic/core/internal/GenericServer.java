@@ -142,7 +142,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 		    IProject project =ResourcesPlugin.getWorkspace().getRoot().getProject(moduleId.substring(0,sep));
 		    IModule[] ms = ServerUtil.getModules(project);
 		    for (int i = 0; i < ms.length; i++) {
-                if(ms[i].getId().equals(moduleId.substring(sep+1)));
+                if(ms[i].getId().equals(moduleId.substring(sep+1)))
                 	imodules.add(ms[i]);
             }
 	
@@ -157,11 +157,11 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.server.core.model.IServerDelegate#getChildModules(org.eclipse.wst.server.core.model.IModule)
+	 * @see org.eclipse.wst.server.core.model.IServerDelegate#getChildModules(org.eclipse.wst.server.core.model.IModule[])
 	 */
-	public IModule[] getChildModules(IModule module) {
+	public IModule[] getChildModules(IModule[] module) {
 		// TODO Auto-generated method stub
-		return null;
+		return new IModule[0];
 	}
 
 	/**

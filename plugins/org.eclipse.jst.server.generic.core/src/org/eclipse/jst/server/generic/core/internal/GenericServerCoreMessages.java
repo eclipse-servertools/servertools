@@ -16,6 +16,7 @@ public class GenericServerCoreMessages {
 	private static ResourceBundle fResourceBundle= ResourceBundle.getBundle(RESOURCE_BUNDLE);
 
 	private GenericServerCoreMessages() {
+		// do nothing
 	}
 
 	/**

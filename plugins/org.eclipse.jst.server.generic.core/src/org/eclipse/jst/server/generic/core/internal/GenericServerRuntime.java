@@ -114,7 +114,7 @@ public class GenericServerRuntime extends RuntimeDelegate implements IGenericRun
 	 */
 	public ServerRuntime getServerTypeDefinition()
 	{
-	   String id=  getAttribute(SERVER_DEFINITION_ID,(String)null);
+	   String id=  getRuntime().getRuntimeType().getId();
 	   Map properties = getAttribute(SERVER_INSTANCE_PROPERTIES,(Map)null);
 	   if(id==null)
 	       return null;
