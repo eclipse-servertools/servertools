@@ -5,7 +5,8 @@
    name="%pluginName"
    version="1.0.0"
    provider-name="%providerName"
-   class="org.eclipse.jst.server.generic.ui.GenericUiPlugin">
+   class="org.eclipse.jst.server.generic.ui.GenericUiPlugin"
+   description="%pluginDescription">
 
    <runtime>
       <library name="genericui.jar">
@@ -32,13 +33,13 @@
         class="org.eclipse.jst.server.generic.internal.ui.GenericServerRuntimeWizardFragment"/>       
  </extension>
 
-<!-- <extension
+<extension
        point="org.eclipse.wst.server.ui.wizardFragments">
      <fragment
         id="org.eclipse.jst.server.generic.server"
-        typeIds="org.eclipse.jst.server.generic.configuration"
+        typeIds="org.eclipse.jst.server.generic"
         class="org.eclipse.jst.server.generic.internal.ui.GenericServerWizardFragment"/>       
- </extension>-->
+ </extension>
   <extension point="org.eclipse.wst.server.ui.editorPages">
       <page
          id="org.eclipse.jst.server.generic.configuration.editor.webmodule"
