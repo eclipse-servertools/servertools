@@ -1,17 +1,16 @@
-package org.eclipse.wst.server.ui.internal.publish;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.publish;
+
 import java.lang.reflect.InvocationTargetException;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,15 +24,9 @@ import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.operation.ModalContext;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.wst.server.core.IPublishManager;
-import org.eclipse.wst.server.core.IPublishStatus;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IPublishListener;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerPreferences;
-import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IPublishListener;
-import org.eclipse.wst.server.core.resources.IModuleResource;
-import org.eclipse.wst.server.core.resources.IRemoteResource;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -399,66 +392,64 @@ public class PublishDialog extends Dialog implements IRunnableContext {
 				IStatus status = children[i];
 	
 				if (status != null) {
-	
-				if (status instanceof IPublishStatus) {
-					IPublishStatus ps = (IPublishStatus) status;
-					createPublishStatusDetails(ps, infoArea);
-				} else {
-					String title = null;
-					title = status.getMessage();
+					/*if (status instanceof IStatus) {
+						createPublishStatusDetails(status, null, infoArea);
+					} else {*/
+						String title = null;
+						title = status.getMessage();
+				
+						Label label = new Label(infoArea, SWT.NONE);
+						label.setBackground(bg);
+		
+						label = new Label(infoArea, SWT.NONE);
+						label.setText(title);
+						label.setFont(font);
+						label.setBackground(bg);
+		
+						IStatus[] status2 = status.getChildren();
+						if (status2 != null && status2.length > 0) {
+							label = new Label(infoArea, SWT.NONE); // spacer
 			
-					Label label = new Label(infoArea, SWT.NONE);
-					label.setBackground(bg);
-	
-					label = new Label(infoArea, SWT.NONE);
-					label.setText(title);
-					label.setFont(font);
-					label.setBackground(bg);
-	
-					IStatus[] status2 = status.getChildren();
-					if (status2 != null && status2.length > 0) {
+							StyledText styledText = new StyledText(infoArea, SWT.MULTI | SWT.READ_ONLY);
+							styledText.setCursor(null);
+							styledText.getCaret().setVisible(false);
+							styledText.setBackground(bg);
+		
+							StringBuffer sb = new StringBuffer();
+							int size2 = status2.length;
+							for (int j = 0; j < size2; j++)
+								if (status2[j] != null)
+									sb.append(status2[j].getMessage() + "\n");
+		
+							styledText.setText(sb.toString());
+							data = new GridData(GridData.FILL_HORIZONTAL);
+							styledText.setLayoutData(data);
+						}
+		
+						// add final status, indented
 						label = new Label(infoArea, SWT.NONE); // spacer
+			
+						Composite statusComp = new Composite(infoArea, SWT.NONE);
+						layout = new GridLayout();
+						layout.numColumns = 2;
+						layout.marginHeight = 4;
+						layout.marginWidth = 0;
+						layout.verticalSpacing = 0;
+						layout.horizontalSpacing = 4;
+						statusComp.setLayout(layout);
+						statusComp.setBackground(bg);
 		
-						StyledText styledText = new StyledText(infoArea, SWT.MULTI | SWT.READ_ONLY);
-						styledText.setCursor(null);
-						styledText.getCaret().setVisible(false);
-						styledText.setBackground(bg);
-	
-						StringBuffer sb = new StringBuffer();
-						int size2 = status2.length;
-						for (int j = 0; j < size2; j++)
-							if (status2[j] != null)
-								sb.append(status2[j].getMessage() + "\n");
-	
-						styledText.setText(sb.toString());
-						data = new GridData(GridData.FILL_HORIZONTAL);
-						styledText.setLayoutData(data);
+						label = new Label(statusComp, SWT.NONE);
+						label.setBackground(bg);
+						label.setImage(getStatusImage(status));
+		
+						label = new Label(statusComp, SWT.NONE);
+						label.setBackground(bg);
+						label.setText(getStatusText(status));
+			//		}
 					}
-	
-					// add final status, indented
-					label = new Label(infoArea, SWT.NONE); // spacer
-		
-					Composite statusComp = new Composite(infoArea, SWT.NONE);
-					layout = new GridLayout();
-					layout.numColumns = 2;
-					layout.marginHeight = 4;
-					layout.marginWidth = 0;
-					layout.verticalSpacing = 0;
-					layout.horizontalSpacing = 4;
-					statusComp.setLayout(layout);
-					statusComp.setBackground(bg);
-	
-					label = new Label(statusComp, SWT.NONE);
-					label.setBackground(bg);
-					label.setImage(getStatusImage(status));
-	
-					label = new Label(statusComp, SWT.NONE);
-					label.setBackground(bg);
-					label.setText(getStatusText(status));
-				}
 				}
 			}
-		}
 		}
 	
 		detailsVisible = true;
@@ -541,14 +532,14 @@ public class PublishDialog extends Dialog implements IRunnableContext {
 	 * 
 	 * @param comp org.eclipse.swt.widgets.Composite
 	 */
-	protected void createPublishStatusDetails(IPublishStatus status, Composite infoArea) {
+	protected void createPublishStatusDetails(IStatus status, IModule module, Composite infoArea) {
 		Color bg = getShell().getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
 		Font font = JFaceResources.getFontRegistry().get(JFaceResources.BANNER_FONT);
 	
 		String title = null;
 		Image image = null;
 		title = status.getMessage();
-		image = ServerUICore.getLabelProvider().getImage(status.getModule());
+		image = ServerUICore.getLabelProvider().getImage(module);
 	
 		Label label = new Label(infoArea, SWT.NONE);
 		label.setImage(image);
@@ -613,20 +604,6 @@ public class PublishDialog extends Dialog implements IRunnableContext {
 		label = new Label(statusComp, SWT.NONE);
 		label.setBackground(bg);
 		label.setImage(getStatusImage(status));
-	
-		label = new Label(statusComp, SWT.NONE);
-		label.setBackground(bg);
-		String text = getStatusText(status);
-	
-		long time = status.getTime();
-		if (time > 5) {
-			NumberFormat format = NumberFormat.getNumberInstance();
-			format.setMinimumFractionDigits(2);
-			format.setMaximumFractionDigits(2);
-			text += " (" + ServerUIPlugin.getResource("%publishingTime", format.format(time / 1000.0)) + ")";
-		}
-	
-		label.setText(text);
 	}
 
 	/**
@@ -717,27 +694,19 @@ public class PublishDialog extends Dialog implements IRunnableContext {
 			final PublishDialog dialog = new PublishDialog(shell, keepOpen);
 	
 			listener = new IPublishListener() {
-				public void moduleStateChange(IServer server, List parents, IModule module) { }
-	
-				public void publishStarting(IServer server, List[] parents, IModule[] modules) { }
-				
-				public void publishStarted(IServer server, IPublishStatus status) {
-					dialog.addPublishEvent(null, status);
+				public void publishStarted(IServer server) {
+					dialog.addPublishEvent(null, null);
 				}
 	
-				public void moduleStarting(IServer server, List parents, IModule module) {
+				public void publishModuleStarted(IServer server, IModule[] parents, IModule module) {
 					dialog.addPublishEvent(module, null);
 				}
 	
-				public void moduleResourcesPublished(IServer server, List parents, IModule module, IModuleResource[] published, IPublishStatus[] status) { }
-				
-				public void moduleResourcesDeleted(IServer server, List parents, IModule module, IRemoteResource[] deleted, IPublishStatus[] status) { }
-	
-				public void moduleFinished(IServer server, List parents, IModule module, IPublishStatus status) {
+				public void publishModuleFinished(IServer server, IModule[] parents, IModule module, IStatus status) {
 					dialog.addPublishEvent(module, status);
 				}
 	
-				public void publishFinished(IServer server, IPublishStatus globalStatus2) {
+				public void publishFinished(IServer server, IStatus globalStatus2) {
 					dialog.addPublishEvent(null, globalStatus2);
 				}
 			};
@@ -746,12 +715,7 @@ public class PublishDialog extends Dialog implements IRunnableContext {
 	
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) {
-					IServerPreferences preferences = ServerCore.getServerPreferences();
-					IPublishManager publisher = (IPublishManager) ServerCore.getPublishManagers().get(preferences.getPublishManager());
-					if (publisher == null)
-						publisher = (IPublishManager) ServerCore.getPublishManagers().get(preferences.getDefaultPublishManager());
-	
-					globalStatus = server2.publish(publisher, monitor);
+					globalStatus = server2.publish(monitor);
 					Trace.trace(Trace.FINEST, "Publishing done: " + globalStatus);
 				}
 			};
@@ -759,7 +723,7 @@ public class PublishDialog extends Dialog implements IRunnableContext {
 			dialog.run(true, true, runnable);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error in publishing dialog", e);
-			return new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerUIPlugin.getResource("%errorPublishing"), e);
+			return new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, ServerUIPlugin.getResource("%errorPublishing"), e);
 		} finally {
 			server2.removePublishListener(listener);
 		}
@@ -779,7 +743,7 @@ public class PublishDialog extends Dialog implements IRunnableContext {
 			ModalContext.run(runnable, fork, getProgressMonitor(), getShell().getDisplay());
 		} finally {	
 			runningRunnables--;
-			if (remainOpen || ServerUICore.getPreferences().getShowPublishingDetails()) {
+			if (remainOpen) {
 				try {
 					updateTaskLabel();
 					cancel.setEnabled(showCancel);

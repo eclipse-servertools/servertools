@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,8 +19,7 @@ import org.eclipse.wst.server.core.*;
 public class ServerPreferences implements IServerPreferences {
 	private static final String PREF_AUTO_RESTART = "auto-restart";
 	private static final String PREF_AUTO_PUBLISH = "auto-publish";
-	private static final String PREF_AUTO_REPAIR_MODULES = "auto-repair-modules";
-	private static final String PREF_PUBLISHER = "publisher";
+	//private static final String PREF_AUTO_REPAIR_MODULES = "auto-repair-modules";
 	private static final String PREF_CREATE_IN_WORKSPACE = "create-workspace";
 	private static final String PREF_STARTUP_TIMEOUT = "start-timeout";
 	private static final String PREF_RESTART_MODULE_TIMEOUT = "restart-module-timeout";
@@ -118,24 +117,6 @@ public class ServerPreferences implements IServerPreferences {
 	}
 
 	/**
-	 * Returns the publisher preference.
-	 *
-	 * @return String
-	 */
-	public String getPublishManager() {
-		return preferences.getString(PREF_PUBLISHER);
-	}
-
-	/**
-	 * Returns the publisher preference.
-	 *
-	 * @return String
-	 */
-	public String getDefaultPublishManager() {
-		return DEFAULT_PUBLISH_MANAGER;
-	}
-
-	/**
 	 * Set whether servers will be automatically restarted when
 	 * they need a restart.
 	 *
@@ -156,35 +137,6 @@ public class ServerPreferences implements IServerPreferences {
 		ServerPlugin.getInstance().savePluginPreferences();
 	}
 
-	/**
-	 * Sets the publisher to use.
-	 *
-	 * @param String id
-	 */
-	public void setPublishManager(String id) {
-		preferences.setValue(PREF_PUBLISHER, id);
-		ServerPlugin.getInstance().savePluginPreferences();
-	}
-	
-	/**
-	 * Returns whether changes to modules should be automatically fixed
-	 * in the server configurations.
-	 *
-	 * @return byte
-	 */
-	public byte getModuleRepairStatus() {
-		return (byte) preferences.getInt(PREF_AUTO_REPAIR_MODULES);
-	}
-
-	/**
-	 * Returns the default auto module fix state.
-	 *
-	 * @return byte
-	 */
-	public byte getDefaultModuleRepairStatus() {
-		return REPAIR_PROMPT;
-	}
-
 	public int getStartupTimeout() {
 		return preferences.getInt(PREF_STARTUP_TIMEOUT);
 	}
@@ -197,22 +149,10 @@ public class ServerPreferences implements IServerPreferences {
 		return preferences.getInt(PREF_MODULE_START_TIMEOUT);
 	}
 
-	/**
-	 * Sets whether changes to modules should be automatically fixed
-	 * in the server configurations.
-	 *
-	 * @return byte
-	 */
-	public void setModuleRepairStatus(byte b) {
-		preferences.setValue(PREF_AUTO_REPAIR_MODULES, b);
-		ServerPlugin.getInstance().savePluginPreferences();
-	}
-
 	public void setDefaults() {
 		preferences.setDefault(PREF_AUTO_PUBLISH, isDefaultAutoPublishing());
 		preferences.setDefault(PREF_AUTO_RESTART, isDefaultAutoRestarting());
-		preferences.setDefault(PREF_PUBLISHER, getDefaultPublishManager());
-		preferences.setDefault(PREF_AUTO_REPAIR_MODULES, getDefaultModuleRepairStatus());
+		//preferences.setDefault(PREF_AUTO_REPAIR_MODULES, getDefaultModuleRepairStatus());
 		preferences.setDefault(PREF_STARTUP_TIMEOUT, 210001);
 		preferences.setDefault(PREF_RESTART_MODULE_TIMEOUT, 120001);
 		preferences.setDefault(PREF_MODULE_START_TIMEOUT, 300001);

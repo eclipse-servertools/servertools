@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.view.servers;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,12 +8,13 @@ package org.eclipse.wst.server.ui.internal.view.servers;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.view.servers;
+
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.swt.widgets.Shell;
-
 /**
  * Publish to a server.
  */
@@ -23,7 +23,9 @@ public class PublishAction extends AbstractServerAction {
 		super(shell, selectionProvider, name);
 		try {
 			selectionChanged((IStructuredSelection) selectionProvider.getSelection());
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 
 	/**
@@ -46,6 +48,6 @@ public class PublishAction extends AbstractServerAction {
 		if (!ServerUIUtil.saveEditors())
 			return;
 
-		ServerUIUtil.publishWithDialog(server, true);
+		ServerUIUtil.publishWithDialog(shell, server, true);
 	}
 }

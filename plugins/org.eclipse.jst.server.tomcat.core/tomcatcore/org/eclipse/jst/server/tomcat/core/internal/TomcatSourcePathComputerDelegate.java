@@ -1,6 +1,6 @@
 /**********************************************************************
  * Copyright (c) 2004 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -24,10 +24,9 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.launching.JavaSourceLookupUtil;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IProjectModule;
 /**
  *
  */
@@ -40,21 +39,22 @@ public class TomcatSourcePathComputerDelegate implements ISourcePathComputerDele
 
 		String serverId = configuration.getAttribute(IServer.ATTR_SERVER_ID, (String) null);
 
-		IServer server = ServerCore.getResourceManager().getServer(serverId);
+		IServer server = ServerCore.findServer(serverId);
 		if (server != null) {
 			List list = new ArrayList();
 			List pathList = new ArrayList();
-			IModule[] modules = server.getModules();
+			IModule[] modules = server.getModules(monitor);
 			for (int i = 0; i < modules.length; i++) {
-				if (modules[i] instanceof IProjectModule) {
-					IProjectModule dp = (IProjectModule) modules[i];
-					IProject project = dp.getProject();
+				IProject project = modules[i].getProject();
+				if (project != null) {
 					try {
 						if (project.hasNature(JavaCore.NATURE_ID)) {
 							IJavaProject javaProject = (IJavaProject) project.getNature(JavaCore.NATURE_ID);
 							list.add(javaProject);
 						}
-					} catch (Exception e) { }
+					} catch (Exception e) {
+						// ignore
+					}
 					
 					IPath path = server.getRuntime().getLocation().append("work").append("Catalina").append("localhost").append(modules[i].getName());
 					pathList.add(path);

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,10 +20,6 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.*;
-
-import org.eclipse.wst.server.core.IElementWorkingCopy;
-import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.util.ProgressUtil;
 /**
  * 
  */
@@ -34,8 +30,6 @@ public abstract class Base {
 	protected static final String PROP_ID = "id";
 
 	protected Map map = new HashMap();
-	
-	protected List workingCopies;
 	
 	// file loaded from, or null if it is saved in metadata
 	protected IFile file;
@@ -64,7 +58,9 @@ public abstract class Base {
 			if (obj == null)
 				return defaultValue;
 			return (String) obj;
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		return defaultValue;
 	}
 
@@ -74,7 +70,9 @@ public abstract class Base {
 			if (obj == null)
 				return defaultValue;
 			return Integer.parseInt((String) obj);
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		return defaultValue;
 	}
 
@@ -84,7 +82,9 @@ public abstract class Base {
 			if (obj == null)
 				return defaultValue;
 			return Boolean.valueOf((String) obj).booleanValue();
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		return defaultValue;
 	}
 	
@@ -96,7 +96,9 @@ public abstract class Base {
 			List list = (List) obj;
 			if (list != null)
 				return list;
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		return defaultValue;
 	}
 	
@@ -108,7 +110,9 @@ public abstract class Base {
 			Map map2 = (Map) obj;
 			if (map2 != null)
 				return map2;
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		return defaultValue;
 	}
 
@@ -154,7 +158,6 @@ public abstract class Base {
 				saveList(child, key, list);
 			} else if (obj instanceof Map) {
 				Map vMap = (Map) obj;
-				//FIXME: ASSUMPTION MAP STORES STRINGS ONLY
 				saveMap(child,key,vMap);
 				
 			}
@@ -194,7 +197,7 @@ public abstract class Base {
 				file.create(in, true, ProgressUtil.getSubMonitorFor(monitor, 1000));
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not save " + getXMLRoot(), e);
-			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorSaving", getFile().toString()), e));
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorSaving", getFile().toString()), e));
 		}
 	}
 	
@@ -303,11 +306,13 @@ public abstract class Base {
 			load(memento);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not load from file" + e.getMessage(), e);
-			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLoading", getFile().toString()), e));
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLoading", getFile().toString()), e));
 		} finally {
 			try {
 				in.close();
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 		}
 	}
 	
@@ -326,40 +331,14 @@ public abstract class Base {
 			load(memento);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not load from path: " + e.getMessage(), e);
-			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLoading", path.toString()), e));
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLoading", path.toString()), e));
 		} finally {
 			try {
 				fin.close();
-			} catch (Exception e) {}
+			} catch (Exception e) {
+				// ignore
+			}
 		}
-	}
-	
-	public boolean isWorkingCopiesExist() {
-		return (workingCopies != null && workingCopies.size() > 0);
-	}
-
-	public boolean isAWorkingCopyDirty() {
-		if (workingCopies == null)
-			return false;
-
-		Iterator iterator = workingCopies.iterator();
-		while (iterator.hasNext()) {
-			IElementWorkingCopy wc = (IElementWorkingCopy) iterator.next();
-			if (wc.isDirty())
-				return true;
-		}
-		return false;
-	}
-	
-	protected void addWorkingCopy(IElementWorkingCopy wc) {
-		if (workingCopies == null)
-			workingCopies = new ArrayList(2);
-		workingCopies.add(wc);
-	}
-
-	protected void release(IElementWorkingCopy wc) {
-		if (workingCopies != null)
-			workingCopies.remove(wc);
 	}
 	
 	public IStatus validateEdit(Object context) {

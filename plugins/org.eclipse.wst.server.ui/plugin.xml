@@ -3,7 +3,7 @@
 
 <plugin id="org.eclipse.wst.server.ui"
   name="%pluginName"
-  version="3.0.0"
+  version="1.0.0"
   provider-name="%providerName"
   class="org.eclipse.wst.server.ui.internal.ServerUIPlugin">
 
@@ -13,8 +13,6 @@
   <import plugin="org.eclipse.core.expressions"/>
   <import plugin="org.eclipse.ui"/>
   <import plugin="org.eclipse.ui.ide"/>
-  <import plugin="org.eclipse.ui.views"/>
-  <import plugin="org.eclipse.ui.editors"/>
   <import plugin="org.eclipse.ui.forms"/>
   <import plugin="org.eclipse.ui.workbench.texteditor"/>
   <import plugin="org.eclipse.debug.core"/>
@@ -25,7 +23,6 @@
 <runtime>
   <library name="serverui.jar">
     <export name="*"/>
-    <packages prefixes="org.eclipse.wst.server.ui"/>
   </library>
 </runtime>
 
@@ -47,16 +44,6 @@
   <category
     id="org.eclipse.wst.server.ui"
     name="%wizardCategoryTitle"/>
-  <wizard
-      id="org.eclipse.wst.server.ui.new.server.project"
-      name="%newServerProject"
-      project="true"
-      finalPerspective="org.eclipse.wst.server.ui.perspective"
-      class="org.eclipse.wst.server.ui.internal.wizard.NewServerProjectWizard"
-      category="org.eclipse.wst.server.ui"
-      icon="icons/ctool16/wiz_new_server_project.gif">
-    <description>%newServerProjectDescription</description>
-  </wizard>
 
   <wizard
       id="org.eclipse.wst.server.ui.new.server"
@@ -68,6 +55,7 @@
   </wizard>
 </extension>
 
+<!--
 <extension point="org.eclipse.ui.importWizards">
   <wizard
       id="org.eclipse.wst.server.ui.import.configuration"
@@ -77,6 +65,7 @@
     <description>%importServerConfigurationDescription</description>
   </wizard>
 </extension>
+-->
 
 <extension point="org.eclipse.ui.views"> 
   <category
@@ -150,14 +139,6 @@
       tooltip="%actionSetNewServer"
       icon="icons/ctool16/wiz_new_server.gif"
       class="org.eclipse.wst.server.ui.internal.actions.NewServerAction"/>
-
-    <action
-      id="org.eclipse.wst.server.ui.action.new.server.project"
-      toolbarPath="servers"
-      label="%actionSetNewServerProject"
-      tooltip="%actionSetNewServerProject"
-      icon="icons/ctool16/wiz_new_server_project.gif"
-      class="org.eclipse.wst.server.ui.internal.actions.NewServerProjectAction"/>
   </actionSet>
 </extension>
 
@@ -208,14 +189,6 @@
       type="java.lang.Object"
       class="org.eclipse.wst.server.ui.internal.ServerPropertyTester">
    </propertyTester>
-</extension>
-
-<extension point="org.eclipse.wst.server.core.publish">
-  <publish
-    id="org.eclipse.wst.server.ui.publish.visual"
-    name="%publisherVisualName"
-    description="%publisherVisualDescription"
-    class="org.eclipse.wst.server.ui.internal.publish.VisualPublisher"/>
 </extension>
 
 <extension point="org.eclipse.wst.server.ui.serverActions">

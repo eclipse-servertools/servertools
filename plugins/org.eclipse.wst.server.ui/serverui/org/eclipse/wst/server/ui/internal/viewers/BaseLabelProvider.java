@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -34,7 +34,9 @@ public abstract class BaseLabelProvider implements ILabelProvider {
 	 *
 	 * @param listener a label provider listener
 	 */
-	public void addListener(ILabelProviderListener listener) { }
+	public void addListener(ILabelProviderListener listener) {
+		// do nothing
+	}
 
 	/**
 	 * Disposes of this label provider.  When a label provider is
@@ -44,7 +46,9 @@ public abstract class BaseLabelProvider implements ILabelProvider {
 	 * responsibility to ensure that this method is called when the
 	 * provider is no longer needed.
 	 */
-	public void dispose() { }
+	public void dispose() {
+		// do nothing
+	}
 
 	/**
 	 * Returns the label image for the given column of the given element.
@@ -93,7 +97,9 @@ public abstract class BaseLabelProvider implements ILabelProvider {
 	 *
 	 * @param listener a label provider listener
 	 */
-	public void removeListener(ILabelProviderListener listener) { }
+	public void removeListener(ILabelProviderListener listener) {
+		// do nothing
+	}
 	
 	protected String notNull(String s) {
 		if (s == null)

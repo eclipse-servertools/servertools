@@ -59,11 +59,11 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;IModuleFactoryDelegate&lt;/samp&gt;.
+                  specifies the fully qualified name of the Java class that extends &lt;samp&gt;ModuleFactoryDelegate&lt;/samp&gt;.
 Module factory instances of this type will delegate to instances of this class.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.IStartup"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.StartupDelegate"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -74,7 +74,7 @@ Module factory instances of this type will delegate to instances of this class.
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="index" type="string">
+         <attribute name="order" type="string">
             <annotation>
                <documentation>
                   
@@ -123,7 +123,7 @@ Module factory instances of this type will delegate to instances of this class.
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.server.core.model.IModuleFactoryDelegate&lt;/b&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;b&gt;org.eclipse.wst.server.core.model.ModuleFactoryDelegate&lt;/b&gt; and contains a public 0-arg constructor.
       </documentation>
    </annotation>
 

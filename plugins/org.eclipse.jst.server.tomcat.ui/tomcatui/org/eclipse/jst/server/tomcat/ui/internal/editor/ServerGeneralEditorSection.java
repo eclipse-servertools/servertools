@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.ui.internal.editor;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.jst.server.tomcat.ui.internal.editor;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.tomcat.ui.internal.editor;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -37,7 +38,7 @@ import org.eclipse.wst.server.ui.editor.*;
 /**
  * Tomcat server general editor page.
  */
-public class ServerGeneralEditorSection extends ServerResourceEditorSection {
+public class ServerGeneralEditorSection extends ServerEditorSection {
 	protected ITomcatServerWorkingCopy tomcatServer;
 
 	protected Button secure;
@@ -50,7 +51,9 @@ public class ServerGeneralEditorSection extends ServerResourceEditorSection {
 	/**
 	 * ServerGeneralEditorPart constructor comment.
 	 */
-	protected ServerGeneralEditorSection() { }
+	protected ServerGeneralEditorSection() {
+		// do nothing
+	}
 
 	/**
 	 * 
@@ -164,7 +167,7 @@ public class ServerGeneralEditorSection extends ServerResourceEditorSection {
 		super.init(site, input);
 		
 		if (server != null) {
-			tomcatServer = (ITomcatServerWorkingCopy) server.getWorkingCopyDelegate();
+			tomcatServer = (ITomcatServerWorkingCopy) server.getAdapter(ITomcatServerWorkingCopy.class);
 			addChangeListener();
 		}
 		initialize();
@@ -194,6 +197,4 @@ public class ServerGeneralEditorSection extends ServerResourceEditorSection {
 		
 		updating = false;
 	}
-	
-	protected void validate() { }
 }

@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.core.internal.xml;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,18 +8,19 @@ package org.eclipse.jst.server.tomcat.core.internal.xml;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-import java.io.Serializable;
+package org.eclipse.jst.server.tomcat.core.internal.xml;
+
 import org.w3c.dom.*;
 /**
  * An XML element.
  */
-public class XMLElement implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class XMLElement {
 	private Element xmlElement;
 	protected Factory factory;
 
-	public XMLElement() { }
+	public XMLElement() {
+		// do nothing
+	}
 
 	public Attr addAttribute(String s, String s1) {
 		Attr attr = factory.createAttribute(s, xmlElement);
@@ -34,9 +34,6 @@ public class XMLElement implements Serializable {
 
 	public XMLElement createElement(String s) {
 		return factory.createElement(s, xmlElement);
-	}
-
-	public void createEmptyBody() {
 	}
 
 	public XMLElement findElement(String s) {

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.util;
 
-import org.eclipse.wst.server.core.model.IServerPort;
+import org.eclipse.wst.server.core.IServerPort;
 /**
  * A port on a server configuration.
  */
@@ -115,5 +115,9 @@ public class ServerPort implements IServerPort {
 	
 	public int hashCode() {
 		return port;
+	}
+	
+	public String toString() {
+		return "ServerPort [" + getName() + ", " + getId() + ", " + getPort() + ", " + getProtocol() + "]";
 	}
 }

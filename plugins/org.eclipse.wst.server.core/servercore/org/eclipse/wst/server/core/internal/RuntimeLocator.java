@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,16 +11,16 @@
 package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.IRuntimeLocator;
-import org.eclipse.wst.server.core.model.IRuntimeLocatorDelegate;
-import org.eclipse.wst.server.core.model.IRuntimeLocatorListener;
+import org.eclipse.wst.server.core.model.RuntimeLocatorDelegate;
 /**
  * 
  */
 public class RuntimeLocator implements IRuntimeLocator {
 	private IConfigurationElement element;
-	private IRuntimeLocatorDelegate delegate;
+	private RuntimeLocatorDelegate delegate;
 
 	public RuntimeLocator(IConfigurationElement element) {
 		super();
@@ -31,37 +31,49 @@ public class RuntimeLocator implements IRuntimeLocator {
 		return element;
 	}
 
-	/**
-	 * 
-	 * @return
+	/*
+	 * @see IRuntimeLocator#getId()
 	 */
 	public String getId() {
 		return element.getAttribute("id");
 	}
 
-	/**
-	 * 
-	 * @return
+	/*
+	 * @see IRuntimeLocator#getName()
 	 */
 	public String getName() {
 		return element.getAttribute("name");
 	}
 
-	/**
-	 * 
-	 * @return
+	/*
+	 * @see IRuntimeLocator#getDescription()
 	 */
 	public String getDescription() {
 		return element.getAttribute("description");
 	}
-	
+
 	/*
-	 * @see IPublishManager#getDelegate()
+	 * @see IRuntimeLocator
 	 */
-	protected IRuntimeLocatorDelegate getDelegate() {
+	protected String[] getTypeIds() {
+		try {
+			return ServerPlugin.tokenize(element.getAttribute("typeIds"), ",");
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	/*
+	 * @see IRuntimeLocator
+	 */
+	public boolean supportsType(String id) {
+		return ServerPlugin.supportsType(getTypeIds(), id);
+	}
+
+	protected RuntimeLocatorDelegate getDelegate() {
 		if (delegate == null) {
 			try {
-				delegate = (IRuntimeLocatorDelegate) element.createExecutableExtension("class");
+				delegate = (RuntimeLocatorDelegate) element.createExecutableExtension("class");
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + e.getMessage());
 			}
@@ -69,12 +81,12 @@ public class RuntimeLocator implements IRuntimeLocator {
 		return delegate;
 	}
 
-	/**
-	 * 
+	/*
+	 * @see IRuntimeLocator#searchForRuntimes()
 	 */
-	public void searchForRuntimes(IRuntimeLocatorListener found, IProgressMonitor monitor) {
+	public void searchForRuntimes(IPath path, RuntimeSearchListener found, IProgressMonitor monitor) {
 		try {
-			getDelegate().searchForRuntimes(found, monitor);
+			getDelegate().searchForRuntimes(path, found, monitor);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
 		}

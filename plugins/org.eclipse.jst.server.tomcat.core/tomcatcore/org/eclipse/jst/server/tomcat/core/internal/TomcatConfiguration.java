@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.core.internal;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,31 +8,34 @@ package org.eclipse.jst.server.tomcat.core.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.tomcat.core.internal;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.j2ee.IWebModule;
 import org.eclipse.jst.server.tomcat.core.ITomcatConfiguration;
+import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
+import org.eclipse.jst.server.tomcat.core.ITomcatWebModule;
 import org.eclipse.jst.server.tomcat.core.WebModule;
 
-import org.eclipse.wst.server.core.model.IServerPort;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IServerPort;
+import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.util.FileUtil;
-import org.eclipse.wst.server.core.util.ProgressUtil;
-import org.eclipse.wst.server.core.util.ServerConfigurationDelegate;
 /**
  * Generic Tomcat server configuration.
  */
-public abstract class TomcatConfiguration extends ServerConfigurationDelegate implements ITomcatConfiguration {
+public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomcatConfigurationWorkingCopy {
 	public static final String NAME_PROPERTY = "name";
 	public static final String PORT_PROPERTY = "port";
 	public static final String MODIFY_PORT_PROPERTY = "modifyPort";
@@ -44,12 +46,27 @@ public abstract class TomcatConfiguration extends ServerConfigurationDelegate im
 	public static final String MODIFY_WEB_MODULE_PROPERTY = "modifyWebModule";
 	public static final String ADD_WEB_MODULE_PROPERTY = "addWebModule";
 	public static final String REMOVE_WEB_MODULE_PROPERTY = "removeWebModule";
+	
+	protected IFolder configPath;
+
+	// property change listeners
+	private transient List propertyListeners;
 
 	/**
 	 * TomcatConfiguration constructor comment.
 	 */
-	public TomcatConfiguration() {
+	public TomcatConfiguration(IFolder path) {
 		super();
+		this.configPath = path;
+		/*try {
+			load(configPath, new NullProgressMonitor());
+		} catch (Exception e) {
+			// ignore
+		}*/
+	}
+	
+	protected IFolder getFolder() {
+		return configPath;
 	}
 
 	/**
@@ -76,14 +93,15 @@ public abstract class TomcatConfiguration extends ServerConfigurationDelegate im
 			
 			confDir = confDir.append("conf");
 	
-			IFolder folder = configuration.getConfigurationDataFolder();
+			/*IServerConfiguration config = getServerConfiguration();
+			IFolder folder = config.getConfigurationDataFolder();
 			if (folder != null)
 				backupFolder(folder, confDir, backup, ms, monitor);
 			else {
-				IPath path = configuration.getConfigurationDataPath();
-				backupPath(path, confDir, backup, ms, monitor);
-			}
-			
+				IPath path = config.getConfigurationDataPath();
+				backupPath(configPath, confDir, backup, ms, monitor);*/
+				backupFolder(getFolder(), confDir, backup, ms, monitor);
+			//}
 		} catch (Exception e) {
 			Trace.trace("backupAndPublish() error", e);
 			IStatus s = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPublishConfiguration", new String[] {e.getLocalizedMessage()}), e);
@@ -190,12 +208,13 @@ public abstract class TomcatConfiguration extends ServerConfigurationDelegate im
 	 * @return java.lang.String
 	 * @param module IWebModule
 	 */
-	protected String getWebModuleURL(IWebModule webModule) {
+	protected String getWebModuleURL(IModule webModule) {
 		WebModule module = getWebModule(webModule);
 		if (module != null)
 			return module.getPath();
 		
-		return webModule.getContextRoot();
+		IWebModule webModule2 = (IWebModule) webModule.getAdapter(IWebModule.class);
+		return webModule2.getContextRoot();
 	}
 
 	/**
@@ -204,11 +223,11 @@ public abstract class TomcatConfiguration extends ServerConfigurationDelegate im
 	 * @return java.lang.String
 	 * @param project org.eclipse.core.resources.IProject
 	 */
-	protected WebModule getWebModule(IWebModule webModule) {
+	protected WebModule getWebModule(IModule webModule) {
 		if (webModule == null)
 			return null;
 	
-		String memento = webModule.getFactoryId() + ":" + webModule.getId();
+		String memento = webModule.getId();
 	
 		List modules = getWebModules();
 		int size = modules.size();
@@ -234,11 +253,66 @@ public abstract class TomcatConfiguration extends ServerConfigurationDelegate im
 	 * @param forceSave boolean
 	 * @exception java.io.IOException
 	 */
-	protected abstract void save(IPath path, boolean forceSave, IProgressMonitor monitor) throws CoreException;
+	//protected abstract void save(IPath path, boolean forceSave, IProgressMonitor monitor) throws CoreException;
+	
+	protected abstract void save(IFolder folder, IProgressMonitor monitor) throws CoreException;
 	
 	protected void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue) {
-		configuration.getWorkingCopy().firePropertyChangeEvent(propertyName, oldValue, newValue);
+		if (propertyListeners == null)
+			return;
+	
+		PropertyChangeEvent event = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
+		try {
+			Iterator iterator = propertyListeners.iterator();
+			while (iterator.hasNext()) {
+				try {
+					PropertyChangeListener listener = (PropertyChangeListener) iterator.next();
+					listener.propertyChange(event);
+				} catch (Exception e) {
+					Trace.trace("Error firing property change event", e);
+				}
+			}
+		} catch (Exception e) {
+			Trace.trace("Error in property event", e);
+		}
 	}
+
+	/**
+	 * Adds a property change listener to this server.
+	 *
+	 * @param listener java.beans.PropertyChangeListener
+	 */
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		if (propertyListeners == null)
+			propertyListeners = new ArrayList();
+		propertyListeners.add(listener);
+	}
+
+	/**
+	 * Removes a property change listener from this server.
+	 *
+	 * @param listener java.beans.PropertyChangeListener
+	 */
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		if (propertyListeners != null)
+			propertyListeners.remove(listener);
+	}
+
+	/*public void importFromPath(IPath path, IProgressMonitor monitor) throws CoreException {
+		load(path, monitor);
+	}
+
+	public void importFromRuntime(IRuntime runtime, IProgressMonitor monitor) throws CoreException {
+		load(runtime.getLocation().append("conf"), monitor);
+	}*/
+	
+	protected abstract void load(IPath path, IProgressMonitor monitor) throws CoreException;
+	
+	protected abstract void load(IFolder folder, IProgressMonitor monitor) throws CoreException;
+	
+	public abstract void addWebModule(int index, ITomcatWebModule module);
+	
+	public abstract void removeWebModule(int index);
 
 	/**
 	 * Return a string representation of this object.

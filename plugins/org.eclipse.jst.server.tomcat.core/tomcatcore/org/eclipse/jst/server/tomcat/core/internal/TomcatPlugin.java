@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.core.internal;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.jst.server.tomcat.core.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.tomcat.core.internal;
+
 import java.io.File;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -151,7 +152,9 @@ public class TomcatPlugin extends Plugin {
 	}
 	
 	public static ITomcatVersionHandler getTomcatVersionHandler(String id) {
-		id = id.substring(0, id.length() - 8);
+		if (id.indexOf("runtime") > 0)
+			id = id.substring(0, 30) + id.substring(38);
+		//id = id.substring(0, id.length() - 8);
 		if (TOMCAT_32.equals(id))
 			return new Tomcat32Handler();
 		else if (TOMCAT_40.equals(id))
@@ -176,6 +179,13 @@ public class TomcatPlugin extends Plugin {
 		if (verify32 != null)
 			return;
 	
+		// backup (empty) values
+		verify32 = new String[0];
+		verify40 = new String[0];
+		verify41 = new String[0];
+		verify50 = new String[0];
+		verify55 = new String[0];
+		
 		try {
 			URL url = getInstance().getBundle().getEntry(VERIFY_INSTALL_FILE);
 			url = Platform.resolve(url);
@@ -242,11 +252,6 @@ public class TomcatPlugin extends Plugin {
 			list.toArray(verify55);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not load installation verification properties", e);
-			verify32 = new String[0];
-			verify40 = new String[0];
-			verify41 = new String[0];
-			verify50 = new String[0];
-			verify55 = new String[0];
 		}
 	}
 

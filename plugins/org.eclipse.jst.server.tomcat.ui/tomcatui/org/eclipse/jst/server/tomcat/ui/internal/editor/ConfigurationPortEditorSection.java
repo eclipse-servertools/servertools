@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.ui.internal.editor;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,10 +8,12 @@ package org.eclipse.jst.server.tomcat.ui.internal.editor;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.tomcat.ui.internal.editor;
+
 import java.beans.*;
 import java.util.Iterator;
 
-import org.eclipse.wst.server.core.model.IServerPort;
+import org.eclipse.wst.server.core.IServerPort;
 import org.eclipse.wst.server.core.util.ServerPort;
 import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.swt.SWT;
@@ -24,8 +25,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.jface.viewers.*;
-import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatConfiguration;
+import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.command.*;
 import org.eclipse.jst.server.tomcat.ui.internal.ContextIds;
 import org.eclipse.jst.server.tomcat.ui.internal.TomcatUIPlugin;
@@ -37,8 +38,8 @@ import org.eclipse.ui.help.WorkbenchHelp;
 /**
  * Tomcat configuration port editor page.
  */
-public class ConfigurationPortEditorSection extends ServerResourceEditorSection {
-	protected ITomcatConfigurationWorkingCopy tomcatConfiguration;
+public class ConfigurationPortEditorSection extends ServerEditorSection {
+	protected TomcatConfiguration tomcatConfiguration;
 
 	protected boolean updating;
 
@@ -67,7 +68,7 @@ public class ConfigurationPortEditorSection extends ServerResourceEditorSection 
 				}
 			}
 		};
-		serverConfiguration.addPropertyChangeListener(listener);
+		tomcatConfiguration.addPropertyChangeListener(listener);
 	}
 	
 	/**
@@ -167,7 +168,9 @@ public class ConfigurationPortEditorSection extends ServerResourceEditorSection 
 					IServerPort sp = (IServerPort) item.getData();
 					int port = Integer.parseInt((String) value);
 					commandManager.executeCommand(new ModifyPortCommand(tomcatConfiguration, sp.getId(), port));
-				} catch (Exception ex) { }
+				} catch (Exception ex) {
+					// ignore
+				}
 			}
 		};
 		viewer.setCellModifier(cellModifier);
@@ -180,38 +183,28 @@ public class ConfigurationPortEditorSection extends ServerResourceEditorSection 
 					try {
 						int n = ports.getSelectionIndex();
 						viewer.editElement(ports.getItem(n).getData(), 1);
-					} catch (Exception e) { }
+					} catch (Exception e) {
+						// ignore
+					}
 				}
 			});
 		}
 	}
 	
 	public void dispose() {
-		if (serverConfiguration != null)
-			serverConfiguration.removePropertyChangeListener(listener);
+		if (tomcatConfiguration != null)
+			tomcatConfiguration.removePropertyChangeListener(listener);
 	}
 	
 	/* (non-Javadoc)
 	 * Initializes the editor part with a site and input.
-	 * <p>
-	 * Subclasses of <code>EditorPart</code> must implement this method.  Within
-	 * the implementation subclasses should verify that the input type is acceptable
-	 * and then save the site and input.  Here is sample code:
-	 * </p>
-	 * <pre>
-	 *		if (!(input instanceof IFileEditorInput))
-	 *			throw new PartInitException("Invalid Input: Must be IFileEditorInput");
-	 *		setSite(site);
-	 *		setInput(editorInput);
-	 * </pre>
 	 */
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 		
-		if (serverConfiguration != null) {
-			tomcatConfiguration = (ITomcatConfigurationWorkingCopy) serverConfiguration.getWorkingCopyDelegate();
-			addChangeListener();
-		}
+		TomcatServer ts = (TomcatServer) server.getAdapter(TomcatServer.class);
+		tomcatConfiguration = ts.getTomcatConfiguration(); 
+		addChangeListener();
 		initialize();
 	}
 
@@ -241,6 +234,4 @@ public class ConfigurationPortEditorSection extends ServerResourceEditorSection 
 			setupPortEditors();
 		}
 	}
-	
-	protected void validate() { }
 }

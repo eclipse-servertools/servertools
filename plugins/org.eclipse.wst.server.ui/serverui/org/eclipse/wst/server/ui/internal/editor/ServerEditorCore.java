@@ -1,25 +1,24 @@
-package org.eclipse.wst.server.ui.internal.editor;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.editor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.ui.ServerUICore;
+import org.eclipse.wst.server.ui.editor.IOrdered;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
-
 /**
  * 
  */
@@ -57,7 +56,7 @@ public class ServerEditorCore {
 	private static void loadEditorPageFactories() {
 		Trace.trace(Trace.CONFIG, "->- Loading .editorPages extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUICore.PLUGIN_ID, "editorPages");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "editorPages");
 
 		int size = cf.length;
 		editorPageFactories = new ArrayList(size);
@@ -71,7 +70,7 @@ public class ServerEditorCore {
 		}
 		
 		// sort pages
-		ServerUtil.sortOrderedList(editorPageFactories);
+		sortOrderedList(editorPageFactories);
 		Trace.trace(Trace.CONFIG, "-<- Done loading .editorPages extension point -<-");
 	}
 	
@@ -81,7 +80,7 @@ public class ServerEditorCore {
 	private static void loadEditorPageSectionFactories() {
 		Trace.trace(Trace.CONFIG, "->- Loading .editorPageSections extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUICore.PLUGIN_ID, "editorPageSections");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "editorPageSections");
 
 		int size = cf.length;
 		editorPageSectionFactories = new ArrayList(size);
@@ -95,7 +94,7 @@ public class ServerEditorCore {
 		}
 		
 		// sort sections
-		ServerUtil.sortOrderedList(editorPageSectionFactories);
+		sortOrderedList(editorPageSectionFactories);
 		Trace.trace(Trace.CONFIG, "-<- Done loading .editorPageSections extension point -<-");
 	}
 
@@ -116,7 +115,7 @@ public class ServerEditorCore {
 	private static void loadEditorActionFactories() {
 		Trace.trace(Trace.CONFIG, "->- Loading .editorActions extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUICore.PLUGIN_ID, "editorActions");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "editorActions");
 
 		int size = cf.length;
 		editorActionFactories = new ArrayList(size);
@@ -130,7 +129,33 @@ public class ServerEditorCore {
 		}
 		
 		// sort pages
-		ServerUtil.sortOrderedList(editorActionFactories);
+		sortOrderedList(editorActionFactories);
 		Trace.trace(Trace.CONFIG, "-<- Done loading .editorActions extension point -<-");
+	}
+	
+	/**
+	 * Sort the given list of IOrdered items into indexed order. This method
+	 * modifies the original list, but returns the value for convenience.
+	 *
+	 * @param list java.util.List
+	 * @return java.util.List
+	 */
+	public static List sortOrderedList(List list) {
+		if (list == null)
+			return null;
+
+		int size = list.size();
+		for (int i = 0; i < size - 1; i++) {
+			for (int j = i + 1; j < size; j++) {
+				IOrdered a = (IOrdered) list.get(i);
+				IOrdered b = (IOrdered) list.get(j);
+				if (a.getOrder() > b.getOrder()) {
+					Object temp = a;
+					list.set(i, b);
+					list.set(j, temp);
+				}
+			}
+		}
+		return list;
 	}
 }

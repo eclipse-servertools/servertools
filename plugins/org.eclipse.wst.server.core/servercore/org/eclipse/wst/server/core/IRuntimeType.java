@@ -10,8 +10,6 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 /**
@@ -44,14 +42,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * be tied to the particular servers involved.]
  * </p>
  * <p>
- * [issue: It is notoriously difficult to place any kind of
- * useful order on objects that are contributed independently by
- * non-collaborating parties. The IOrdered mechanism is weak, and
- * can't really solve the problem. Issues of presentation are usually
- * best left to the UI, which can sort objects based on arbitrary
- * properties.]
- * </p>
- * <p>
  * [issue: Equality/identify for runtime types? Are IRuntimeType
  * instances guaranteed to be canonical (client can use ==),
  * or is it possible for there to be non-identical IRuntimeType
@@ -65,8 +55,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * 
  * @since 1.0
  */
-public interface IRuntimeType extends IOrdered {
-
+public interface IRuntimeType {
 	/**
 	 * Returns the id of this runtime type.
 	 * Each known server runtime type has a distinct id. 
@@ -98,13 +87,10 @@ public interface IRuntimeType extends IOrdered {
 	public String getDescription();
 	
 	/**
-	 * Returns the displayable vendor name for this runtime type.
+	 * Returns the displayable vendor name for this runtime type. If the
+	 * runtime type did not specific a vendor, an empty string is returned.
 	 * <p>
 	 * Note that this description is appropriate for the current locale.
-	 * </p>
-	 * <p>
-	 * [issue: "vendor" attribute is optional. What is expected return
-	 * when omitted? Should be empty string.]
 	 * </p>
 	 *
 	 * @return a displayable vendor name for this runtime type
@@ -112,14 +98,10 @@ public interface IRuntimeType extends IOrdered {
 	public String getVendor();
 	
 	/**
-	 * Returns the displayable version name for this runtime type.
+	 * Returns the displayable version name for this runtime type. If the
+	 * runtime type did not specific a vendor, an empty string is returned.
 	 * <p>
 	 * Note that this description is appropriate for the current locale.
-	 * </p>
-	 * <p>
-	 * [issue: "versionId" attribute is optional. What is expected return
-	 * when omitted? Should be empty string.]
-	 * </p>
 	 * </p>
 	 *
 	 * @return a displayable version name for this runtime type
@@ -127,24 +109,14 @@ public interface IRuntimeType extends IOrdered {
 	public String getVersion();
 
 	/**
-	 * Returns the list of module types that this runtime type 
-	 * can support.
+	 * Returns an array of module types that this runtime type can support.
 	 * <p>
-	 * [issue: The list returned is precious. You would not want a client
-	 * to accidentally or malicously whack it. Normal practice is to
-	 * return an array instead of a List, and to return a new copy each call.
-	 * This allows the spec to say that the client can do what they want
-	 * with the result, and that it won't change under foot.
-	 * Another alternative is to return a UnmodifiableList implementation
-	 * so that clients cannot modify. But if you don't copy, you still
-	 * have the problem of the list chaning under foot if a new plug-in
-	 * is installed that happens to define a module kind (a scenario that
-	 * Eclipse should support).]
+	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
 	 * 
-	 * @return the list of module types (element type: {@link IModuleType})
+	 * @return the array of module types {@link IModuleType}
 	 */
-	public List getModuleTypes();
+	public IModuleType[] getModuleTypes();
 	
 	/**
 	 * Returns whether this runtime type can be instantiated.
@@ -178,5 +150,5 @@ public interface IRuntimeType extends IOrdered {
 	 * @return a new runtime working copy with the given id
 	 * @throws CoreException [missing]
 	 */
-	public IRuntimeWorkingCopy createRuntime(String id) throws CoreException;
+	public IRuntimeWorkingCopy createRuntime(String id, IProgressMonitor monitor) throws CoreException;
 }

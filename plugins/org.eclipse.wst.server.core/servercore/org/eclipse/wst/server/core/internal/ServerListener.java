@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,14 +11,13 @@
 package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.*;
-import org.eclipse.wst.server.core.util.ServerResourceAdapter;
+import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
 /**
  * Listens for messages from the servers. This class keeps
  * track of server instances current state and any clients
  * that are waiting to run on the server. 
  */
-public class ServerListener extends ServerResourceAdapter implements IServerListener {
+public class ServerListener extends ServerLifecycleAdapter implements IServerListener {
 	// static instance
 	protected static ServerListener listener;
 
@@ -45,28 +44,36 @@ public class ServerListener extends ServerResourceAdapter implements IServerList
 	 *
 	 * @param server org.eclipse.wst.server.model.IServer
 	 */
-	public void configurationSyncStateChange(IServer server) { }
+	public void configurationSyncStateChange(IServer server) {
+		// do nothing
+	}
 
 	/**
 	 * Notification when the server state has changed.
 	 *
 	 * @param server org.eclipse.wst.server.model.IServer
 	 */
-	public void serverStateChange(IServer server) { }
+	public void serverStateChange(IServer server) {
+		// do nothing
+	}
 
 	/**
 	 * Notification when the server state has changed.
 	 *
 	 * @param server org.eclipse.wst.server.model.IServer
 	 */
-	public void modulesChanged(IServer server) { }
+	public void modulesChanged(IServer server) {
+		// do nothing
+	}
 
 	/**
 	 * Notification when the state of a module has changed.
 	 *
 	 * @param server org.eclipse.wst.server.model.IServer
 	 */
-	public void moduleStateChange(IServer server, IModule module) { }
+	public void moduleStateChange(IServer server, IModule module) {
+		// do nothing
+	}
 
 	/**
 	 * Called when the server isRestartNeeded() property changes.
@@ -78,7 +85,7 @@ public class ServerListener extends ServerResourceAdapter implements IServerList
 			return;
 		
 		byte state = server.getServerState();
-		if (state != IServer2.SERVER_STARTED && state != IServer2.SERVER_STARTED_DEBUG && state != IServer.SERVER_STARTED_PROFILE)
+		if (state != IServer2.STATE_STARTED && state != IServer2.STATE_STARTED_DEBUG && state != IServer.STATE_STARTED_PROFILE)
 			return;
 	
 		if (ServerCore.getServerPreferences().isAutoRestarting()) {
@@ -106,5 +113,12 @@ public class ServerListener extends ServerResourceAdapter implements IServerList
 	 */
 	public void serverRemoved(IServer server) {
 		server.removeServerListener(this);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.server.core.model.IPublishListener#moduleStateChange(org.eclipse.wst.server.core.IServer2, java.util.List, org.eclipse.wst.server.core.model.IModule)
+	 */
+	public void moduleStateChange(IServer server, IModule[] parents, IModule module) {
+		// do nothing
 	}
 }

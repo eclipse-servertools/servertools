@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,13 +18,13 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IRuntimeTargetHandlerDelegate;
+import org.eclipse.wst.server.core.model.RuntimeTargetHandlerDelegate;
 /**
  * 
  */
-public class RuntimeTargetHandler implements IRuntimeTargetHandler {
+public class RuntimeTargetHandler implements IRuntimeTargetHandler, IOrdered {
 	private IConfigurationElement element;
-	private IRuntimeTargetHandlerDelegate delegate;
+	private RuntimeTargetHandlerDelegate delegate;
 
 	public RuntimeTargetHandler(IConfigurationElement element) {
 		super();
@@ -107,10 +107,10 @@ public class RuntimeTargetHandler implements IRuntimeTargetHandler {
 	/*
 	 * @see IPublishManager#getDelegate()
 	 */
-	public IRuntimeTargetHandlerDelegate getDelegate() {
+	public RuntimeTargetHandlerDelegate getDelegate() {
 		if (delegate == null) {
 			try {
-				delegate = (IRuntimeTargetHandlerDelegate) element.createExecutableExtension("class");
+				delegate = (RuntimeTargetHandlerDelegate) element.createExecutableExtension("class");
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + e.getMessage());
 			}
@@ -139,8 +139,18 @@ public class RuntimeTargetHandler implements IRuntimeTargetHandler {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+	 */
+	public Object getAdapter(Class adapter) {
+		RuntimeTargetHandlerDelegate delegate2 = getDelegate();
+		if (adapter.isInstance(delegate2))
+			return delegate;
+		return null;
+	}
 
 	public String toString() {
-		return "RuntimeTargetListener[" + getId() + "]";
+		return "RuntimeTargetHandler[" + getId() + "]";
 	}
 }

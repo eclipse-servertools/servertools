@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2003 IBM Corporation and others.
+/**********************************************************************
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,13 +7,12 @@
  *
  * Contributors:
  *    IBM - Initial API and implementation
- */
+ **********************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.swt.graphics.Image;
-
 /**
  * Server type label provider.
  */

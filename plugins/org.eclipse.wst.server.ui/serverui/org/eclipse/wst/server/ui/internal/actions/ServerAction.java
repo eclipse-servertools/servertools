@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.actions;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.wst.server.ui.internal.actions;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.actions;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -21,16 +22,14 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.wst.server.core.IOrdered;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
-import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.actions.IServerAction;
+import org.eclipse.wst.server.ui.editor.IOrdered;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.wst.server.ui.internal.editor.ServerEditorCore;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-
 /**
  *
  */
@@ -39,20 +38,18 @@ public class ServerAction implements IOrdered {
 		protected Shell shell;
 		protected ServerAction action;
 		protected IServer server;
-		protected IServerConfiguration configuration;
 		
-		public RealServerAction(Shell shell, ServerAction action, IServer server, IServerConfiguration configuration) {
+		public RealServerAction(Shell shell, ServerAction action, IServer server) {
 			super(action.getLabel());
 			this.shell = shell;
 			this.action = action;
 			this.server = server;
-			this.configuration = configuration;
 			setImageDescriptor(action.getImageDescriptor());
-			setEnabled(action.getDelegate().supports(server, configuration));
+			setEnabled(action.getDelegate().supports(server));
 		}
 		
 		public void run() {
-			action.getDelegate().run(shell, server, configuration);
+			action.getDelegate().run(shell, server);
 		}
 	}
 	
@@ -213,7 +210,7 @@ public class ServerAction implements IOrdered {
 	private static void loadServerActions() {
 		Trace.trace(Trace.CONFIG, "->- Loading .serverActions extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUICore.PLUGIN_ID, "serverActions");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "serverActions");
 
 		int size = cf.length;
 		serverActions = new ArrayList(size);
@@ -227,18 +224,14 @@ public class ServerAction implements IOrdered {
 		}
 
 		// sort actions
-		ServerUtil.sortOrderedList(serverActions);
+		ServerEditorCore.sortOrderedList(serverActions);
 		Trace.trace(Trace.CONFIG, "-<- Done loading .serverActions extension point -<-");
 	}
 
-	public static void addServerMenuItems(Shell shell, IMenuManager menu, IServer server) {
-		addServerMenuItems(shell, menu, server, server.getServerConfiguration());
-	}
-	
 	/**
 	 * 
 	 */
-	public static void addServerMenuItems(Shell shell, IMenuManager menu, IServer server, IServerConfiguration configuration) {
+	public static void addServerMenuItems(Shell shell, IMenuManager menu, IServer server) {
 		boolean addedSeparator = false;
 		String category = null;
 		
@@ -252,14 +245,13 @@ public class ServerAction implements IOrdered {
 				menu.add(new Separator());
 			}
 			long time = System.currentTimeMillis();
-			if ((server != null && server.getServerType() != null && serverAction.supportsServerResource(server.getServerType().getId())) ||
-					(configuration != null && serverAction.supportsServerResource(configuration.getServerConfigurationType().getId()))) {
+			if (server != null && server.getServerType() != null && serverAction.supportsServerResource(server.getServerType().getId())) {
 				if (!addedSeparator) {
 					addedSeparator = true;
 					menu.add(new Separator());
 				}
 				try {
-					Action action = new RealServerAction(shell, serverAction, server, configuration);
+					Action action = new RealServerAction(shell, serverAction, server);
 					Trace.trace(Trace.PERFORMANCE, "ServerAction.supports(): " + (System.currentTimeMillis() - time) + " " + serverAction.getId() + "/" + serverAction.getLabel());
 					menu.add(action);
 				} catch (Exception e) {

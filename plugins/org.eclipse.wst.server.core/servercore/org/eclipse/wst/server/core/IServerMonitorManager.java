@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,11 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
-
-import org.eclipse.wst.server.core.model.IServerPort;
 /**
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
@@ -25,7 +21,7 @@ public interface IServerMonitorManager {
 	 *  
 	 * @return
 	 */
-	public IServerMonitor getCurrentServerMonitor();
+	//public IServerMonitor getCurrentServerMonitor();
 	
 	/**
 	 * Switch to use a different server monitor. All existing monitors will be
@@ -34,15 +30,14 @@ public interface IServerMonitorManager {
 	 * @param newMonitor
 	 * @throws CoreException
 	 */
-	public void setServerMonitor(IServerMonitor newMonitor) throws CoreException;
+	//public void setServerMonitor(IServerMonitor newMonitor) throws CoreException;
 
 	/**
-	 * Returns the list of ports that are currently being monitored. The elements in the
-	 * array are of type IMonitoredServerPorts.
+	 * Returns the array of ports that are currently being monitored.
 	 *
 	 * @return
 	 */
-	public List getMonitoredPorts(IServer server);
+	public IMonitoredServerPort[] getMonitoredPorts(IServer server);
 
 	/**
 	 * Starts monitoring the given port, and returns the new port # to use that will

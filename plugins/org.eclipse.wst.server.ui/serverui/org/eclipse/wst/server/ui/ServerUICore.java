@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -22,18 +22,16 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 
 import org.eclipse.wst.server.ui.internal.ServerLabelProvider;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.ServerUIPreferences;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
-import org.eclipse.wst.server.ui.wizard.IWizardFragment;
+import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * Server UI core.
  */
 public class ServerUICore {
-	// server UI plugin id
-	public static final String PLUGIN_ID = "org.eclipse.wst.server.ui";
-
-	protected static ServerLabelProvider labelProvider;
+	private static ServerLabelProvider labelProvider;
 
 	// cached copy of all runtime wizards
 	private static Map wizardFragments;
@@ -41,7 +39,7 @@ public class ServerUICore {
 	static class WizardFragmentData {
 		String id;
 		IConfigurationElement ce;
-		IWizardFragment fragment;
+		WizardFragment fragment;
 		
 		public WizardFragmentData(String id, IConfigurationElement ce) {
 			this.id = id;
@@ -70,7 +68,7 @@ public class ServerUICore {
 	 *
 	 * @return
 	 */
-	public static IWizardFragment getWizardFragment(String typeId) {
+	public static WizardFragment getWizardFragment(String typeId) {
 		if (typeId == null)
 			return null;
 
@@ -89,14 +87,14 @@ public class ServerUICore {
 	}
 
 	/**
-	 * Load the server startups.
+	 * Load the wizard fragments.
 	 */
 	private static synchronized void loadWizardFragments() {
 		if (wizardFragments != null)
 			return;
 		Trace.trace(Trace.CONFIG, "->- Loading .wizardFragments extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUICore.PLUGIN_ID, "wizardFragments");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "wizardFragments");
 
 		int size = cf.length;
 		wizardFragments = new HashMap(size);
@@ -112,14 +110,14 @@ public class ServerUICore {
 		
 		Trace.trace(Trace.CONFIG, "-<- Done loading .wizardFragments extension point -<-");
 	}
-	
-	protected static IWizardFragment getWizardFragment(WizardFragmentData fragment) {
+
+	protected static WizardFragment getWizardFragment(WizardFragmentData fragment) {
 		if (fragment == null)
 			return null;
 	
 		if (fragment.fragment == null) {
 			try {
-				fragment.fragment = (IWizardFragment) fragment.ce.createExecutableExtension("class");
+				fragment.fragment = (WizardFragment) fragment.ce.createExecutableExtension("class");
 			} catch (Exception cex) {
 				Trace.trace(Trace.SEVERE, "Could not create wizardFragment: " + fragment.ce.getAttribute("id"), cex);
 			}
@@ -132,10 +130,12 @@ public class ServerUICore {
 			labelProvider = new ServerLabelProvider();
 		return labelProvider;
 	}
-	
+
 	public static void runOnServer(Object object, String launchMode) {
 		RunOnServerActionDelegate delegate = new RunOnServerActionDelegate();
-		Action action = new Action() { };
+		Action action = new Action() {
+			// dummy action
+		};
 		if (object != null) {
 			StructuredSelection sel = new StructuredSelection(object);
 			delegate.selectionChanged(action, sel);

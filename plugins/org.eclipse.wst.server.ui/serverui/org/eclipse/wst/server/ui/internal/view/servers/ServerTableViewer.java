@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.view.servers;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,24 +8,21 @@ package org.eclipse.wst.server.ui.internal.view.servers;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.view.servers;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.*;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IPublishListener;
-import org.eclipse.wst.server.core.model.IServerListener;
-import org.eclipse.wst.server.core.model.IServerResourceListener;
 import org.eclipse.wst.server.core.util.PublishAdapter;
-import org.eclipse.wst.server.core.util.ServerResourceAdapter;
 import org.eclipse.wst.server.ui.internal.ServerStartupListener;
 import org.eclipse.wst.server.ui.internal.ServerTree;
 import org.eclipse.wst.server.ui.internal.Trace;
@@ -38,18 +34,17 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionFactory;
-
 /**
  * Tree view showing servers and their associations.
  */
 public class ServerTableViewer extends TableViewer {
 	protected static final String ROOT = "root";
 
-	protected IServerResourceListener serverResourceListener;
+	protected IServerLifecycleListener serverResourceListener;
 	protected IPublishListener publishListener;
 	protected IServerListener serverListener;
 
-	protected static IElement deletedElement = null;
+	protected static Object deletedElement = null;
 
 	// servers that are currently publishing and starting
 	protected static List publishing = new ArrayList();
@@ -65,18 +60,24 @@ public class ServerTableViewer extends TableViewer {
 	public class ServerContentProvider implements IStructuredContentProvider {
 		public Object[] getElements(Object inputElement) {
 			List list = new ArrayList();
-			Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
-			while (iterator.hasNext()) {
-				IServer server = (IServer) iterator.next();
-				if (!server.isPrivate())
-					list.add(server);
+			IServer[] servers = ServerCore.getServers();
+			if (servers != null) {
+				int size = servers.length;
+				for (int i = 0; i < size; i++) {
+					if (!servers[i].isPrivate())
+						list.add(servers[i]);
+				}
 			}
 			return list.toArray();
 		}
 
-		public void inputChanged(Viewer theViewer, Object oldInput, Object newInput) { }
+		public void inputChanged(Viewer theViewer, Object oldInput, Object newInput) {
+			// do nothing
+		}
 		
-		public void dispose() { }
+		public void dispose() {
+			// do nothing
+		}
 	}
 
 	/*protected void createHover(Shell parent, Point p) {
@@ -168,7 +169,9 @@ public class ServerTableViewer extends TableViewer {
 		setContentProvider(new ServerContentProvider());
 		labelProvider = new ServerTableLabelProvider();
 		setLabelProvider(labelProvider);
-		setSorter(new ViewerSorter() { });
+		setSorter(new ViewerSorter() {
+			// empty
+		});
 	
 		setInput(ROOT);
 	
@@ -193,7 +196,9 @@ public class ServerTableViewer extends TableViewer {
 						IResource res = (IResource) Platform.getAdapterManager().getAdapter(obj, IResource.class);
 						if (res != null)
 							proj = res.getProject();
-					} catch (Exception e) { }
+					} catch (Exception e) {
+						// ignore
+					}
 				}
 				if (proj != null) {
 					final IProject project = proj;
@@ -226,7 +231,7 @@ public class ServerTableViewer extends TableViewer {
 	}
 
 	protected void addListeners() {
-		serverResourceListener = new ServerResourceAdapter() {
+		serverResourceListener = new IServerLifecycleListener() {
 			public void serverAdded(IServer server) {
 				addServer(server);
 				server.addServerListener(serverListener);
@@ -241,28 +246,28 @@ public class ServerTableViewer extends TableViewer {
 				server.removePublishListener(publishListener);
 			}
 		};
-		ServerCore.getResourceManager().addResourceListener(serverResourceListener);
+		ServerCore.addServerLifecycleListener(serverResourceListener);
 		
 		publishListener = new PublishAdapter() {
-			public void moduleStateChange(IServer server, List parents, IModule module) {
-				refreshServer(server);
-			}
-			
-			public void publishStarting(IServer server, List[] parents, IModule[] module) {
+			public void publishStarted(IServer server) {
 				handlePublishChange(server, true);
 			}
 			
-			public void publishFinished(IServer server, IPublishStatus globalStatus) {
+			public void publishFinished(IServer server, IStatus status) {
 				handlePublishChange(server, false);
 			}
 		};
 		
 		serverListener = new IServerListener() {
+			public void moduleStateChange(IServer server, IModule[] parents, IModule module) {
+				refreshServer(server);
+			}
+		
 			public void serverStateChange(IServer server) {
 				refreshServer(server);
 				int state = server.getServerState();
 				String id = server.getId();
-				if (state == IServer.SERVER_STARTING || state == IServer.SERVER_STOPPING) {
+				if (state == IServer.STATE_STARTING || state == IServer.STATE_STOPPING) {
 					if (!starting.contains(id)) {
 						if (starting.isEmpty())
 							startThread();
@@ -285,39 +290,44 @@ public class ServerTableViewer extends TableViewer {
 			public void modulesChanged(IServer server) {
 				handleServerModulesChanged(server);
 			}
-			public void moduleStateChange(IServer server, IModule module) { }
+			public void moduleStateChange(IServer server, IModule module) {
+				// do nothing
+			}
 		};
 		
 		// add listeners to servers
-		Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
-		while (iterator.hasNext()) {
-			IServer server = (IServer) iterator.next();
-			server.addServerListener(serverListener);
-			server.addPublishListener(publishListener);
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				servers[i].addServerListener(serverListener);
+				servers[i].addPublishListener(publishListener);
+			}
 		}
 	}
-	
+
 	/**
 	 * Respond to a configuration being added or deleted.
 	 * @param configuration org.eclipse.wst.server.core.model.IServerConfiguration
 	 * @param add boolean
 	 */
-	protected void configurationChange(IServerConfiguration configuration, boolean add) {
+	/*protected void configurationChange(IServerConfiguration configuration, boolean add) {
 		if (configuration == null)
 			return;
 
 		if (!add)
 			deletedElement = configuration;
 	
-		List servers = ServerCore.getResourceManager().getServers();
-		Iterator iterator = servers.iterator();
-		while (iterator.hasNext()) {
-			IServer server = (IServer) iterator.next();
-			if (configuration.equals(server.getServerConfiguration()))
-				refresh(server);
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				if (configuration.equals(servers[i].getServerConfiguration()))
+					refresh(servers[i]);
+			}
 		}
 		deletedElement = null;
-	}
+	}*/
 	
 	protected void refreshServer(final IServer server) {
 		Display.getDefault().asyncExec(new Runnable() {
@@ -326,7 +336,9 @@ public class ServerTableViewer extends TableViewer {
 					refresh(server);
 					ISelection sel = ServerTableViewer.this.getSelection();
 					ServerTableViewer.this.setSelection(sel);
-				} catch (Exception e) { }
+				} catch (Exception e) {
+					// ignore
+				}
 			}
 		});
 	}
@@ -335,16 +347,16 @@ public class ServerTableViewer extends TableViewer {
 		stopThread();
 		view.getViewSite().getPage().removeSelectionListener(dsListener);
 
-		IResourceManager rm = ServerCore.getResourceManager();
-		rm.removeResourceListener(serverResourceListener);
+		ServerCore.removeServerLifecycleListener(serverResourceListener);
 		
 		// remove listeners from server
-		List servers = rm.getServers();
-		Iterator iterator = servers.iterator();
-		while (iterator.hasNext()) {
-			IServer server = (IServer) iterator.next();
-			server.removeServerListener(serverListener);
-			server.removePublishListener(publishListener);
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				servers[i].removeServerListener(serverListener);
+				servers[i].removePublishListener(publishListener);
+			}
 		}
 	
 		super.handleDispose(event);
@@ -371,11 +383,13 @@ public class ServerTableViewer extends TableViewer {
 		if (server2 == null)
 			return;
 
-		Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
-		while (iterator.hasNext()) {
-			IServer server = (IServer) iterator.next();
-			if (server2.equals(server))
-				refresh(server);
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				if (server2.equals(servers[i]))
+					refresh(servers[i]);
+			}
 		}
 	}
 	
@@ -383,53 +397,50 @@ public class ServerTableViewer extends TableViewer {
 	 * Called when an element is added.
 	 * @param element org.eclipse.wst.server.core.model.IServerResource
 	 */
-	protected void handleServerResourceAdded(IElement element) {
-		if (element instanceof IServer) {
-			IServer server = (IServer) element;
-			add(server);
-
-		} else if (element instanceof IServerConfiguration) {
-			IServerConfiguration configuration = (IServerConfiguration) element;
-			configurationChange(configuration, true);
-		}
+	protected void handleServerResourceAdded(IServer server) {
+		add(server);
 	}
+	
+	/*protected void handleServerResourceAdded(IServerConfiguration configuration) {
+		configurationChange(configuration, true);
+	}*/
 	
 	/**
 	 * Called when an element is changed.
 	 * @param element org.eclipse.wst.server.core.model.IServerResource
 	 */
-	protected void handleServerResourceChanged(IElement element) {
-		if (element instanceof IServer) {
-			refresh(element);
-		} else if (element instanceof IServerConfiguration) {
-			Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
-			while (iterator.hasNext()) {
-				IServer server = (IServer) iterator.next();
-				IServerConfiguration config = server.getServerConfiguration();
-				if (element.equals(config))
-					refresh(server);
+	protected void handleServerResourceChanged(IServer server) {
+		refresh(server);
+	}
+	
+	/*protected void handleServerResourceChanged(IServerConfiguration configuration) {
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				IServerConfiguration config = servers[i].getServerConfiguration();
+				if (configuration.equals(config))
+					refresh(servers[i]);
 			}
 		}
-	}
+	}*/
 	
 	/**
 	 * Called when an element is removed.
 	 * @param element org.eclipse.wst.server.core.model.IServerResource
 	 */
-	protected void handleServerResourceRemoved(IElement element) {
-		if (element instanceof IServer) {
-			IServer server = (IServer) element;
-			remove(server);
-	
-			String serverId = server.getId();
-			publishing.remove(serverId);
-	
-			view.getViewSite().getActionBars().getStatusLineManager().setMessage(null, null);
-		} else if (element instanceof IServerConfiguration) {
-			IServerConfiguration configuration = (IServerConfiguration) element;
-			configurationChange(configuration, false);
-		}
+	protected void handleServerResourceRemoved(IServer server) {
+		remove(server);
+
+		String serverId = server.getId();
+		publishing.remove(serverId);
+
+		view.getViewSite().getActionBars().getStatusLineManager().setMessage(null, null);
 	}
+	
+	/*protected void handleServerResourceRemoved(IServerConfiguration configuration) {
+		configurationChange(configuration, false);
+	}*/
 	
 	/**
 	 * Register a startup listener.

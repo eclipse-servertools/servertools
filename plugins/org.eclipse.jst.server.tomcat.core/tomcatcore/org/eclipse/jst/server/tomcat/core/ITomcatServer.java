@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.core;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,23 +8,20 @@ package org.eclipse.jst.server.tomcat.core;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.model.IProcess;
+package org.eclipse.jst.server.tomcat.core;
 
-import org.eclipse.wst.server.core.model.IServerDelegate;
 import org.eclipse.wst.server.core.model.IURLProvider;
 /**
  * 
  */
-public interface ITomcatServer extends IServerDelegate, IURLProvider {
+public interface ITomcatServer extends IURLProvider {
 	public static final String PROPERTY_SECURE = "secure";
 	public static final String PROPERTY_DEBUG = "debug";
 	public static final String PROPERTY_TEST_ENVIRONMENT = "testEnvironment";
 
 	/**
-	 * Returns true if the process is set to run in debug mode.
+	 * Returns <code>true</code> if the server is set to run in Tomcat debug mode, and
+	 * <code>false</code> otherwise.
 	 * This feature only works with Tomcat v4.0.
 	 *
 	 * @return boolean
@@ -38,36 +34,26 @@ public interface ITomcatServer extends IServerDelegate, IURLProvider {
 	 * @return boolean
 	 */
 	public boolean isSecure();
-	
+
 	/**
-	 * Returns true if this is a test (run code out of the workbench) environment server.
+	 * Returns true if this is a test (publish and run code out of the
+	 * workbench) environment server.
 	 *
 	 * @return boolean
 	 */
 	public boolean isTestEnvironment();
-	
+
 	/**
 	 * Returns the main class that is used to launch the Tomcat server.
 	 * 
 	 * @return
 	 */
 	public String getRuntimeClass();
-
-	/**
-	 * Set the process that is monitored for Tomcat startup and shutdown.
-	 * Warning: Do not call this method unless you know what you're doing;
-	 * it should only be used in rare cases.
-	 * 
-	 * @param newProcess
-	 */
-	public void setProcess(IProcess newProcess);
 	
 	/**
-	 * Setup for starting the server.
+	 * Return the Tomcat configuration model.
 	 * 
-	 * @param launch ILaunch
-	 * @param launchMode String
-	 * @param monitor IProgressMonitor
+	 * @return
 	 */
-	public void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException;
+	public ITomcatConfiguration getServerConfiguration();
 }

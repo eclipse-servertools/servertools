@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.editor;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,27 +8,26 @@ package org.eclipse.wst.server.ui.internal.editor;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.editor;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
-import org.eclipse.wst.server.ui.editor.IServerEditorActionFactory;
-import org.eclipse.wst.server.ui.editor.IServerEditorActionFactoryDelegate;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.ui.editor.ServerEditorActionFactoryDelegate;
 import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.ui.IEditorSite;
-
 /**
  * A default server that can be created for a set of given
  * natures.
  */
 public class ServerEditorActionFactory implements IServerEditorActionFactory {
 	private IConfigurationElement element;
-	private IServerEditorActionFactoryDelegate delegate;
+	private ServerEditorActionFactoryDelegate delegate;
 
 	/**
 	 * ServerEditorActionFactory constructor comment.
@@ -131,10 +129,10 @@ public class ServerEditorActionFactory implements IServerEditorActionFactory {
 	/*
 	 * @see IPublishManager#getDelegate()
 	 */
-	public IServerEditorActionFactoryDelegate getDelegate() {
+	public ServerEditorActionFactoryDelegate getDelegate() {
 		if (delegate == null) {
 			try {
-				delegate = (IServerEditorActionFactoryDelegate) element.createExecutableExtension("class");
+				delegate = (ServerEditorActionFactoryDelegate) element.createExecutableExtension("class");
 			} catch (Exception e) {
 				Trace.trace("Could not create server editorpage delegate", e);
 			}
@@ -144,16 +142,13 @@ public class ServerEditorActionFactory implements IServerEditorActionFactory {
 	
 	/**
 	 * Returns true if this editor page should be visible with the given
-	 * server instance and configuration combination. This allows (for
+	 * server instance. This allows (for
 	 * instance) complex configuration pages to only be shown when used
 	 * with non-unittest servers.
-	 *
-	 * <p>If the instance or configuration is being opened by itself, the
-	 * other value (instance or configuration) will be null.
 	 */
-	public boolean shouldDisplay(IServer server, IServerConfiguration serverConfiguration) {
+	public boolean shouldDisplay(IServerWorkingCopy server) {
 		try {
-			return getDelegate().shouldDisplay(server, serverConfiguration);
+			return getDelegate().shouldDisplay(server);
 		} catch (Exception e) {
 			Trace.trace("Error calling delegate", e);
 			return false;

@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.view.servers;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,8 +8,9 @@ package org.eclipse.wst.server.ui.internal.view.servers;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.view.servers;
+
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.IDebugUIConstants;
@@ -18,12 +18,10 @@ import org.eclipse.debug.ui.IDebugView;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.actions.ServerAction;
 import org.eclipse.wst.server.ui.internal.view.tree.DisabledMenuManager;
-import org.eclipse.wst.server.ui.internal.view.tree.SwitchConfigurationAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -37,7 +35,6 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.*;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.ui.part.ViewPart;
-
 /**
  * View of server, their configurations and status.
  */
@@ -131,7 +128,7 @@ public class ServersView extends ViewPart {
 				try {
 					TableItem item = table.getSelection()[0];
 					IServer server = (IServer) item.getData();
-					ServerUIUtil.editServer(server, server.getServerConfiguration());
+					ServerUIUtil.editServer(server);
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Could not open server", e);
 				}
@@ -317,22 +314,23 @@ public class ServersView extends ViewPart {
 			}
 		
 			// switch config
-			if (server.getServerType() != null && server.getServerType().hasServerConfiguration()) {
+			/*if (server.getServerType() != null && server.getServerType().hasServerConfiguration()) {
 				MenuManager menuManager = new MenuManager(ServerUIPlugin.getResource("%actionSwitchConfiguration"));
 				menuManager.add(new SwitchConfigurationAction(shell, ServerUIPlugin.getResource("%viewNoConfiguration"), server, null));
 	
-				List configs = ServerUtil.getSupportedServerConfigurations(server);
-				Iterator iterator = configs.iterator();
-				while (iterator.hasNext()) {
-					IServerConfiguration config = (IServerConfiguration) iterator.next();
-					menuManager.add(new SwitchConfigurationAction(shell, config.getName(), server, config));
+				IServerConfiguration[] configs = getSupportedServerConfigurations(server);
+				if (configs != null) {
+					int size = configs.length;
+					for (int i = 0; i < size; i++) {
+						menuManager.add(new SwitchConfigurationAction(shell, configs[i].getName(), server, configs[i]));
+					}
 				}
 	
 				menu.add(menuManager);
-			}
+			}*/
 			
 			// monitor
-			if (server.getServerType() != null && server.getServerType().isMonitorable()) {
+			if (server.getServerType() != null) {
 				final MenuManager menuManager = new MenuManager(ServerUIPlugin.getResource("%actionMonitor"));
 				
 				final IServer server2 = server;
@@ -341,14 +339,12 @@ public class ServersView extends ViewPart {
 					public void menuAboutToShow(IMenuManager manager) {
 						menuManager.removeAll();
 						if (server2.isDelegatePluginActivated()) {
-							IServerDelegate delegate = server2.getDelegate();
-							if (delegate instanceof IMonitorableServer) {
-								Iterator iterator = ((IMonitorableServer) delegate).getServerPorts().iterator();
-								while (iterator.hasNext()) {
-									IServerPort port = (IServerPort) iterator.next();
-									if (!port.isAdvanced()) {
-										menuManager.add(new MonitorServerPortAction(shell2, server2, port));
-									}
+							IServerPort[] ports = server2.getServerPorts();
+							if (ports != null) {
+								int size = ports.length;
+								for (int i = 0; i < size; i++) {
+									if (!ports[i].isAdvanced())
+										menuManager.add(new MonitorServerPortAction(shell2, server2, ports[i]));
 								}
 							}
 						}
@@ -364,26 +360,24 @@ public class ServersView extends ViewPart {
 		}
 	
 		if (server != null && server.isDelegateLoaded()) {
-			IServerDelegate delegate = server.getDelegate();
-			if (delegate instanceof IRestartableModule) {
-				menu.add(new Separator());
-		
-				MenuManager restartProjectMenu = new MenuManager(ServerUIPlugin.getResource("%actionRestartProject"));
-				IRestartableModule restartable = (IRestartableModule) delegate;
-		
-				if (server != null) {
-					Iterator iterator = ServerUtil.getAllContainedModules(server).iterator();
-					while (iterator.hasNext()) {
-						IModule module = (IModule) iterator.next();
-						Action action = new RestartModuleAction(restartable, module);
+			menu.add(new Separator());
+	
+			MenuManager restartProjectMenu = new MenuManager(ServerUIPlugin.getResource("%actionRestartProject"));
+	
+			if (server != null) {
+				IModule[] modules = ServerUtil.getAllContainedModules(server, null);
+				if (modules != null) {
+					int size = modules.length;
+					for (int i = 0; i < size; i++) {
+						Action action = new RestartModuleAction(server, modules[i]);
 						restartProjectMenu.add(action);
 					}
 				}
-				if (restartProjectMenu.isEmpty())
-					menu.add(new DisabledMenuManager(ServerUIPlugin.getResource("%actionRestartProject")));
-				else
-					menu.add(restartProjectMenu);
 			}
+			if (restartProjectMenu.isEmpty())
+				menu.add(new DisabledMenuManager(ServerUIPlugin.getResource("%actionRestartProject")));
+			else
+				menu.add(restartProjectMenu);
 		}
 		
 		if (server != null) {
@@ -393,6 +387,34 @@ public class ServersView extends ViewPart {
 		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS+"-end"));
 	}
+	
+	/**
+	 * Returns a list of configurations that are supported by this
+	 * server.
+	 *
+	 * @param server org.eclipse.wst.server.core.IServer
+	 * @return java.util.List
+	 */
+	/*protected static IServerConfiguration[] getSupportedServerConfigurations(IServer server) {
+		if (server == null)
+			return new IServerConfiguration[0];
+	
+		List list = new ArrayList();
+	
+		IServerConfiguration[] configs = ServerCore.getServerConfigurations();
+		if (configs != null) {
+			int size = configs.length;
+			for (int i = 0; i < size; i++) {
+				//Trace.trace("Is supported configuration: " + getName(server) + " " + getName(configuration) + " " + server.isSupportedConfiguration(configuration));
+				if (server.isSupportedConfiguration(configs[i]))
+					list.add(configs[i]);
+			}
+		}
+		
+		IServerConfiguration[] sc = new IServerConfiguration[list.size()];
+		list.toArray(sc);
+		return sc;
+	}*/
 	
 	/**
 	 * 

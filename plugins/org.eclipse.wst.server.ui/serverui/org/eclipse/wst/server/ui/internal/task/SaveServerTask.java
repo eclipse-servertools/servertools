@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -17,14 +17,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ITaskModel;
-import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.util.Task;
-
+import org.eclipse.wst.server.ui.internal.EclipseUtil;
 /**
  * 
  */
 public class SaveServerTask extends Task {
-	public SaveServerTask() { }
+	public SaveServerTask() {
+		// do nothing
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.ui.internal.task.ITask#doTask()
@@ -37,12 +38,9 @@ public class SaveServerTask extends Task {
 				IFile file = workingCopy.getFile();
 				if (file != null && !file.getProject().exists()) {
 					IProject project = file.getProject();
-					ServerCore.createServerProject(project.getName(), null, monitor);
+					EclipseUtil.createNewServerProject(null, project.getName(), null, monitor);
 				}
-				getTaskModel().putObject(ITaskModel.TASK_SERVER, workingCopy.save(monitor));
-			} else {
-				workingCopy.release();
-				getTaskModel().putObject(ITaskModel.TASK_SERVER, workingCopy.getOriginal());
+				getTaskModel().putObject(ITaskModel.TASK_SERVER, workingCopy.save(false, monitor));
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -11,11 +11,10 @@
 package org.eclipse.jst.server.j2ee;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.model.IModule;
 /**
  *
  */
@@ -23,22 +22,25 @@ public class J2EEUtil {
 	/**
 	 * Returns the enterprise applications that the module is contained within.
 	 * 
-	 * @param module org.eclipse.jst.server.j2ee.IJ2EEModule
-	 * @return org.eclipse.jst.server.j2ee.IEnterpriseApplication
+	 * @param module
+	 * @return
 	 */
 	public static IEnterpriseApplication[] getEnterpriseApplications(IJ2EEModule module) {
-		Iterator iterator = ServerUtil.getModules("j2ee.ear", "*", false).iterator();
 		List list = new ArrayList();
-		while (iterator.hasNext()) {
-			IModule module2 = (IModule) iterator.next();
-			if (module2 instanceof IEnterpriseApplication) {
-				IEnterpriseApplication ear = (IEnterpriseApplication) module2;
-				IJ2EEModule[] modules = ear.getModules();
-				if (modules != null) {
-					int size = modules.length;
-					for (int i = 0; i < size; i++) {
-						if (modules[i].equals(module))
-							list.add(ear);
+		IModule[] modules = ServerUtil.getModules("j2ee.ear");
+		if (modules != null) {
+			int size = modules.length;
+			for (int i = 0; i < size; i++) {
+				IModule module2 = modules[i];
+				IEnterpriseApplication ear = (IEnterpriseApplication) module2.getAdapter(IEnterpriseApplication.class);
+				if (ear != null) {
+					IJ2EEModule[] modules2 = ear.getModules();
+					if (modules2 != null) {
+						int size2 = modules2.length;
+						for (int j = 0; j < size2; j++) {
+							if (modules2[j].equals(module))
+								list.add(ear);
+						}
 					}
 				}
 			}

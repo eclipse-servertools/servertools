@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -58,7 +58,9 @@ public class SocketUtil {
 		while (inUse && count > 0) {
 			try {
 				Thread.sleep(500);
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 			inUse = isPortInUse(port);
 			count --;
 		}
@@ -86,7 +88,9 @@ public class SocketUtil {
 			if (s != null) {
 				try {
 					s.close();
-				} catch (Exception e) { }
+				} catch (Exception e) {
+					// ignore
+				}
 			}
 		}
 

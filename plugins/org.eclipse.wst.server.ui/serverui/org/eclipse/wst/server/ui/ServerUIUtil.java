@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.wst.server.ui;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui;
+
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -36,7 +37,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-
 /**
  * Server UI utility methods.
  */
@@ -49,68 +49,48 @@ public class ServerUIUtil {
 	}
 
 	/**
-	 * Open the passed server resources in the server editor.
+	 * Open the passed server in the server editor.
 	 *
-	 * @param resource org.eclipse.core.resources.IServerResource
+	 * @param server
 	 */
-	public static void editServer(IServer server, IServerConfiguration configuration) {
-		if (server == null && configuration == null)
+	public static void editServer(IServer server) {
+		if (server == null)
 			return;
 
 		String serverId = null;
 		if (server != null)
 			serverId = server.getId();
-		String configurationId = null;
-		if (configuration != null)
-			configurationId = configuration.getId();
-		editServer(serverId, configurationId);
+		editServer(serverId);
 	}
 
 	/**
-	 * Open the passed resources in the server editor.
+	 * Open the passed server id into the server editor.
 	 *
-	 * @param resource org.eclipse.core.resources.IServerResource
+	 * @param serverId
 	 */
-	public static void editServer(String serverId, String configurationId) {
-		if (serverId == null && configurationId == null)
+	public static void editServer(String serverId) {
+		if (serverId == null)
 			return;
 
 		IWorkbenchWindow workbenchWindow = ServerUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow();
 		IWorkbenchPage page = workbenchWindow.getActivePage();
 
 		try {
-			IServerEditorInput input = new ServerEditorInput(serverId, configurationId);
+			IServerEditorInput input = new ServerEditorInput(serverId);
 			page.openEditor(input, IServerEditorInput.EDITOR_ID);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error opening server editor", e);
 		}
 	}
-	
-	/**
-	 * Publish with the given server control, and display
-	 * the publishing in a dialog. If keepOpen is true, the publish
-	 * dialog will remain open after publishing. If false, it will
-	 * only remain open if there was an error, info, or warning
-	 * message.
-	 *
-	 * @param control org.eclipse.wst.server.core.IServerControl
-	 * @param keepOpen boolean
-	 * @return IStatus
-	 */
-	public static IStatus publishWithDialog(IServer server, boolean keepOpen) {
-		Shell shell = ServerUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
-		return PublishDialog.publish(shell, server, keepOpen);
-	}
 
 	/**
-	 * Publish with the given server control, and display
-	 * the publishing in a dialog. If keepOpen is true, the publish
-	 * dialog will remain open after publishing. If false, it will
-	 * only remain open if there was an error, info, or warning
-	 * message.
+	 * Publish the given server, and display the publishing in a dialog.
+	 * If keepOpen is true, the publish dialog will remain open after
+	 * publishing. If false, it will only remain open if there was an
+	 * error, info, or warning message.
 	 *
-	 * @param control org.eclipse.wst.server.core.IServerControl
-	 * @param keepOpen boolean
+	 * @param server
+	 * @param keepOpen
 	 * @return IStatus
 	 */
 	public static IStatus publishWithDialog(Shell shell, IServer server, boolean keepOpen) {
@@ -125,12 +105,13 @@ public class ServerUIUtil {
 	 * @return boolean
 	 */
 	public static boolean promptIfDirty(Shell shell, IServer server) {
-		if (server == null)
+		if (server == null || !(server instanceof IServerWorkingCopy))
 			return false;
 
 		String title = ServerUIPlugin.getResource("%resourceDirtyDialogTitle");
 		
-		if (server != null && server.isAWorkingCopyDirty()) {
+		IServerWorkingCopy wc = (IServerWorkingCopy) server;
+		if (wc.isDirty()) {
 			String message = ServerUIPlugin.getResource("%resourceDirtyDialogMessage", server.getName());
 			String[] labels = new String[] {ServerUIPlugin.getResource("%resourceDirtyDialogContinue"), IDialogConstants.CANCEL_LABEL};
 			MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.INFORMATION, labels, 0);
@@ -139,33 +120,6 @@ public class ServerUIUtil {
 				return false;
 		}
 	
-		IServerConfiguration config = server.getServerConfiguration();
-		if (config != null)
-			return promptIfDirty(shell, config);
-		return true;
-	}
-
-	/**
-	 * Prompts the user if the server configuration is dirty. Returns true if the server was
-	 * not dirty or if the user decided to continue anyway. Returns false if
-	 * the server is dirty and the user chose to cancel the operation.
-	 *
-	 * @return boolean
-	 */
-	public static boolean promptIfDirty(Shell shell, IServerConfiguration configuration) {
-		if (configuration == null)
-			return false;
-
-		String title = ServerUIPlugin.getResource("%resourceDirtyDialogTitle");
-
-		if (configuration != null && configuration.isAWorkingCopyDirty()) {
-			String message = ServerUIPlugin.getResource("%resourceDirtyDialogMessage", configuration.getName());
-			String[] labels = new String[] {ServerUIPlugin.getResource("%resourceDirtyDialogContinue"), IDialogConstants.CANCEL_LABEL};
-			MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.INFORMATION, labels, 0);
-
-			if (dialog.open() != 0)
-				return false;
-		}
 		return true;
 	}
 
@@ -186,10 +140,10 @@ public class ServerUIUtil {
 	 * 
 	 * @return boolean - Returns false if the user cancelled the operation.
 	 */
-	public static boolean publish(IServer server) {
+	public static boolean publish(Shell shell, IServer server) {
 		if (ServerCore.getServerPreferences().isAutoPublishing() && server.shouldPublish()) {
 			// publish first
-			IStatus status = publishWithDialog(server, false);
+			IStatus status = publishWithDialog(shell, server, false);
 
 			if (status == null || status.getSeverity() == IStatus.ERROR) // user cancelled
 				return false;
@@ -217,17 +171,28 @@ public class ServerUIUtil {
 		return result[0];
 	}
 
+	/**
+	 * 
+	 * @param shell
+	 * @return
+	 */
 	public static boolean showNewRuntimeWizard(Shell shell) {
 		return showNewRuntimeWizard(shell, null, null);
 	}
-	
+
+	/**
+	 * 
+	 * @param shell
+	 * @param runtimeTypeId
+	 * @return
+	 */
 	public static boolean showNewRuntimeWizard(Shell shell, final String runtimeTypeId) {
-		IRuntimeType runtimeType = ServerCore.getRuntimeType(runtimeTypeId);
+		IRuntimeType runtimeType = ServerCore.findRuntimeType(runtimeTypeId);
 		if (runtimeType != null) {
 			try {
-				final IRuntimeWorkingCopy runtime = runtimeType.createRuntime(null);
-				IWizardFragment fragment = new WizardFragment() {
-					public void createSubFragments(List list) {
+				final IRuntimeWorkingCopy runtime = runtimeType.createRuntime(null, null);
+				WizardFragment fragment = new WizardFragment() {
+					protected void createChildFragments(List list) {
 						list.add(new InputWizardFragment(ITaskModel.TASK_RUNTIME, runtime));
 						list.add(ServerUICore.getWizardFragment(runtimeTypeId));
 						list.add(new FinishWizardFragment(new SaveRuntimeTask()));
@@ -244,13 +209,28 @@ public class ServerUIUtil {
 		return showNewRuntimeWizard(shell, null, null, runtimeTypeId);
 	}
 
+	/**
+	 * 
+	 * @param shell
+	 * @param type
+	 * @param version
+	 * @return
+	 */
 	public static boolean showNewRuntimeWizard(Shell shell, final String type, final String version) {
 		return showNewRuntimeWizard(shell, type, version, null);
 	}
 
+	/**
+	 * 
+	 * @param shell
+	 * @param type
+	 * @param version
+	 * @param runtimeTypeId
+	 * @return
+	 */
 	public static boolean showNewRuntimeWizard(Shell shell, final String type, final String version, final String runtimeTypeId) {
-		IWizardFragment fragment = new WizardFragment() {
-			public void createSubFragments(List list) {
+		WizardFragment fragment = new WizardFragment() {
+			protected void createChildFragments(List list) {
 				list.add(new NewRuntimeWizardFragment(type, version, runtimeTypeId));
 				list.add(new FinishWizardFragment(new SaveRuntimeTask()));
 			}

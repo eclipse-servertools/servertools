@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.wizard.page;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.wst.server.ui.internal.wizard.page;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.wizard.page;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +26,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
-
 /**
  * 
  */
@@ -89,14 +89,18 @@ public class NewRuntimeComposite extends Composite {
 			try {
 				runtime = null;
 				runtime = (IRuntimeWorkingCopy) runtimeMap.get(runtimeType);
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 			if (runtime == null) {
 				try {
-					runtime = runtimeType.createRuntime(null);
+					runtime = runtimeType.createRuntime(null, null);
 					ServerUtil.setRuntimeDefaultName(runtime);
 					if (runtime != null)
 						runtimeMap.put(runtimeType, runtime);
-				} catch (Exception e) { }
+				} catch (Exception e) {
+					// ignore
+				}
 			}
 		}
 

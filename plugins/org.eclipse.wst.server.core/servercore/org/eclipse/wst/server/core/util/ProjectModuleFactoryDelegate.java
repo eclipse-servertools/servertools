@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,11 +15,10 @@ import java.util.*;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IPath;
 
-import org.eclipse.wst.server.core.IResourceManager;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.internal.ResourceManager;
 import org.eclipse.wst.server.core.internal.Trace;
-import org.eclipse.wst.server.core.model.*;
+import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
 /**
  * 
  */
@@ -81,10 +80,12 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * @param project org.eclipse.core.resources.IProject
 	 * @return org.eclipse.wst.server.core.model.IModuleProject
 	 */
-	public IProjectModule getModuleProject(IProject project) {
+	public IModule getModuleProject(IProject project) {
 		try {
-			return (IProjectModule) projects.get(project);
-		} catch (Exception e) { }
+			return (IModule) projects.get(project);
+		} catch (Exception e) {
+			// ignore
+		}
 		return null;
 	}
 
@@ -102,7 +103,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 					IResourceDelta delta = event.getDelta();
 					
 					//if (delta.getFlags() == IResourceDelta.MARKERS || delta.getFlags() == IResourceDelta.NO_CHANGE)
-					//	return; // TODO
+					//	return;
 				
 					delta.accept(new IResourceDeltaVisitor() {
 						public boolean visit(IResourceDelta visitorDelta) {
@@ -172,21 +173,19 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 			factory.fireEvents();
 		}
 		
-		IResourceManager rm = ServerCore.getResourceManager();
-		((ResourceManager) rm).syncModuleEvents();
+		ResourceManager.getInstance().syncModuleEvents();
 	}
-	
+
 	/**
 	 * Temporary to make sure that all project modules are updated.
 	 */
 	private void updateProjects() {
-		List modules2 = getModules();
+		IModule[] modules2 = getModules();
 		if (modules2 != null) {
-			Iterator iterator = modules2.iterator();
-			while (iterator.hasNext()) {
-				IModule module = (IModule) iterator.next();
-				if (module instanceof ProjectModule)
-					((ProjectModule) module).update();
+			int size = modules2.length;
+			for (int i = 0; i < size; i++) {
+				if (modules2[i] instanceof ProjectModule)
+					((ProjectModule) modules2[i]).update();
 			}
 		}
 	}
@@ -263,16 +262,11 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * @param project org.eclipse.core.resources.IProject
 	 */
 	protected void addModuleProject(IProject project) {
-		if (!cached) {
-			cached = true;
-			cacheModules();
-		}
-
-		IProjectModule module = createModule(project);
+		IModule module = createModule(project);
 		if (module == null)
 			return;
 		projects.put(project, module);
-		modules.put(module.getId(), module);
+		//modules.put(module.getId(), module);
 		if (added == null)
 			added = new ArrayList(2);
 		added.add(module);
@@ -284,15 +278,10 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * @param project org.eclipse.core.resources.IProject
 	 */
 	protected void removeModuleProject(IProject project) {
-		if (!cached) {
-			cached = true;
-			cacheModules();
-		}
-
 		try {
-			IProjectModule module = (IProjectModule) projects.get(project);
+			IModule module = (IModule) projects.get(project);
 			projects.remove(project);
-			modules.remove(module.getId());
+			//modules.remove(module.getId());
 			if (removed == null)
 				removed = new ArrayList(2);
 			removed.add(module);
@@ -339,7 +328,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * @param project org.eclipse.core.resources.IProject
 	 * @return org.eclipse.wst.server.core.model.IModuleProject
 	 */
-	protected abstract IProjectModule createModule(IProject project);
+	protected abstract IModule createModule(IProject project);
 
 	/**
 	 * Returns the list of resources that the module should listen to

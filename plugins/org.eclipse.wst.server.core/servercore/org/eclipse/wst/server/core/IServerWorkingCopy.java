@@ -10,20 +10,13 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IServerWorkingCopyDelegate;
 /**
  * A working copy server object used for formulating changes
  * to a server instance ({@link IServer}).
- * <p>
- * [issue: The default value of host name should be specified
- * here (or in IServerType.createServer). If the initial value is null (or
- * something simularly unsuitable for actual use), then IServer.getHostname
- * needs to be spec'd to allow null return, and save needs to deal with the
- * case where the client forgets to initialize this property.]
- * </p>
  * <p>
  * [issue: The default value of runtime should be specified
  * here (or in IServerType.createServer). If the initial value is null (or
@@ -40,11 +33,6 @@ import org.eclipse.wst.server.core.model.IServerWorkingCopyDelegate;
  * to initialize this property.]
  * </p>
  * <p>
- * [issue: There can be other server-type-specific properties.
- * The default values for these need to be specified somewhere
- * too (probably in the API subclass of IServerWorkingCopyDelegate).]
- * </p>
- * <p>
  * [issue: IElementWorkingCopy and IElement support an open-ended set
  * of attribute-value pairs. What is relationship between these
  * attributes and (a) the get/setXXX methods found on this interface,
@@ -52,7 +40,7 @@ import org.eclipse.wst.server.core.model.IServerWorkingCopyDelegate;
  * Is it the case that these attribute-values pairs are the only
  * information about a server instance that can be preserved
  * between workbench sessions? That is, any information recorded
- * just in instance fields of an IServerDelegate implementation
+ * just in instance fields of an ServerDelegate implementation
  * will be lost when the session ends.]
  * </p>
  * <p>
@@ -72,8 +60,7 @@ import org.eclipse.wst.server.core.model.IServerWorkingCopyDelegate;
  * 
  * @since 1.0
  */
-public interface IServerWorkingCopy extends IServer, IElementWorkingCopy {
-	
+public interface IServerWorkingCopy extends IServerAttributes, IElementWorkingCopy {
 	/**
 	 * Sets the server configuration associated with this server working copy.
 	 * <p>
@@ -91,14 +78,14 @@ public interface IServerWorkingCopy extends IServer, IElementWorkingCopy {
 	 * 
 	 * @param configuration the server configuration, or <code>null</code> if none
 	 */
-	public void setServerConfiguration(IServerConfiguration configuration);
+	public void setServerConfiguration(IFolder configuration);
 	
 	/**
 	 * Returns the server instance that this working copy is
 	 * associated with.
 	 * <p>
 	 * For a server working copy created by a call to
-	 * {@link IServer#getWorkingCopy()},
+	 * {@link IServer#createWorkingCopy()},
 	 * <code>this.getOriginal()</code> returns the original
 	 * server object. For a server working copy just created by
 	 * a call to {@link IServerType#createServer(String, IFile, IProgressMonitor)},
@@ -110,30 +97,16 @@ public interface IServerWorkingCopy extends IServer, IElementWorkingCopy {
 	public IServer getOriginal();
 	
 	/**
-	 * Returns the delegate for this server working copy.
-	 * The server working copy delegate is a
+	 * Returns the extension for this server working copy.
+	 * The server working copy extension is a
 	 * server-type-specific object. By casting the server working copy
-	 * delegate to the type prescribed in the API documentation for that
+	 * extension to the type prescribed in the API documentation for that
 	 * particular server working copy type, the client can access
 	 * server-type-specific properties and methods.
-	 * <p>
-	 * [issue: Exposing IServerWorkingCopyDelegate to clients
-	 * of IServerWorkingCopy is same problem as exposing
-	 * IServerDelegate to clients of IServer. The suggested fix 
-	 * is to replace this method with something like
-	 * getServerWorkingCopyExtension() which
-	 * returns an IServerWorkingCopyExtension.]
-	 * </p>
-	 * <p>
-	 * [issue: serverTypes schema, workingCopyClass attribute is optional.
-	 * This suggests that a server need not provide a working copy
-	 * delegate class. Like the class attribute, this seems implausible.
-	 * I've spec'd this method as if working copy delegate is mandatory.]
-	 * </p>
 	 * 
-	 * @return the delegate for the server working copy
+	 * @return the extension for the server working copy
 	 */
-	public IServerWorkingCopyDelegate getWorkingCopyDelegate();
+	//public IServerExtension getWorkingCopyExtension(IProgressMonitor monitor);
 
 	/**
 	 * Commits the changes made in this working copy. If there is
@@ -155,11 +128,7 @@ public interface IServerWorkingCopy extends IServer, IElementWorkingCopy {
 	 * more smoothly.]
 	 * </p>
 	 * <p>
-	 * [issue: What if this object has already been saved
-	 * or released?]
-	 * </p>
-	 * <p>
-	 * [issue: What is lifecycle for IServerWorkingCopyDelegate
+	 * [issue: What is lifecycle for ServerWorkingCopyDelegate
 	 * associated with this working copy?]
 	 * </p>
 	 * <p>
@@ -175,7 +144,7 @@ public interface IServerWorkingCopy extends IServer, IElementWorkingCopy {
 	 * @return a new server instance
 	 * @throws CoreException [missing]
 	 */
-	public IServer save(IProgressMonitor monitor) throws CoreException;
+	public IServer save(boolean force, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Commits the changes made in this server working copy after
@@ -208,7 +177,17 @@ public interface IServerWorkingCopy extends IServer, IElementWorkingCopy {
 	 * @return a new server instance
 	 * @throws CoreException [missing]
 	 */
-	public IServer saveAll(IProgressMonitor monitor) throws CoreException;
+	public IServer saveAll(boolean force, IProgressMonitor monitor) throws CoreException;
+
+	/**
+	 * Sets the file where this server instance is serialized.
+	 * 
+	 * @param the file in the workspace where the server instance
+	 * is serialized, or <code>null</code> if the information is
+	 * instead to be persisted with the workspace but not with any
+	 * particular workspace resource
+	 */
+	public void setFile(IFile file);
 
 	/**
 	 * Sets the runtime associated with this server working copy.
@@ -230,13 +209,10 @@ public interface IServerWorkingCopy extends IServer, IElementWorkingCopy {
 	public void setRuntime(IRuntime runtime);
 
 	/**
-	 * Changes the host for the running server.
-	 * The format of the host must conform to RFC 2732.
-	 * <p>
-	 * [issue: Consider renaming to "setHost" to bring in line
-	 * with terminology used in java.net.URL. The host name can be
-	 * either a host name or octets.]
-	 * </p>
+	 * Changes the host for the server.
+	 * The format of the host can be either a qualified or unqualified hostname,
+	 * or an IP address and must conform to RFC 2732.
+	 * 
 	 * <p>
 	 * [issue: This is a questionable operation if there is a running
 	 * server associated with the original. When a host name
@@ -245,10 +221,10 @@ public interface IServerWorkingCopy extends IServer, IElementWorkingCopy {
 	 * </p>
 	 * 
 	 * @param host a host string conforming to RFC 2732
-	 * @see IServer#getHostname()
+	 * @see IServer#getHost()
 	 * @see java.net.URL.getHost()
 	 */
-	public void setHostname(String host);
+	public void setHost(String host);
 
 	/**
 	 * Modifies the list of modules associated with the server.
@@ -259,7 +235,7 @@ public interface IServerWorkingCopy extends IServer, IElementWorkingCopy {
 	 * must be associated with the server, but may or may not exist
 	 * in the workspace.
 	 * <p>
-	 * [issue: How do formulate what it means
+	 * [issue: How to formulate what it means
 	 * to say "the module must exist in the workspace"?]
 	 * </p>
 	 * <p>

@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -26,12 +26,11 @@ import org.eclipse.jst.server.core.internal.JavaServerPlugin;
 import org.eclipse.jst.server.core.internal.RuntimeClasspathContainer;
 import org.eclipse.jst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.model.IRuntimeTargetHandlerDelegate;
-
+import org.eclipse.wst.server.core.model.RuntimeTargetHandlerDelegate;
 /**
  * 
  */
-public abstract class ClasspathRuntimeTargetHandler implements IRuntimeTargetHandlerDelegate {
+public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandlerDelegate {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IRuntimeTargetDelegate#setRuntimeTarget(org.eclipse.core.resources.IProject, org.eclipse.wst.server.core.IRuntime)
 	 */
@@ -62,7 +61,7 @@ public abstract class ClasspathRuntimeTargetHandler implements IRuntimeTargetHan
 			}
 			
 			List add = new ArrayList();
-			IClasspathEntry[] entries = getDelegateClasspathEntries(runtime);
+			IClasspathEntry[] entries = getDelegateClasspathEntries(runtime, monitor);
 			if (entries != null) {
 				size = entries.length;
 				for (int i = 0; i < size; i++)
@@ -73,7 +72,8 @@ public abstract class ClasspathRuntimeTargetHandler implements IRuntimeTargetHan
 			if (ids != null) {
 				size = ids.length;
 				for (int i = 0; i < size; i++) {
-					IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER).append(getId()).append(runtime.getId());
+					String id2 = getRuntimeTargetHandler().getId();
+					IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER).append(id2).append(runtime.getId());
 					if (ids[i] != null)
 						path.append(ids[i]);
 					add.add(JavaCore.newContainerEntry(path));
@@ -223,7 +223,7 @@ public abstract class ClasspathRuntimeTargetHandler implements IRuntimeTargetHan
 			return;
 		
 		try {
-			IClasspathEntry[] delegates = getDelegateClasspathEntries(runtime);
+			IClasspathEntry[] delegates = getDelegateClasspathEntries(runtime, monitor);
 			int delegateSize = 0;
 			if (delegates != null)
 				delegateSize = delegates.length;
@@ -298,9 +298,7 @@ public abstract class ClasspathRuntimeTargetHandler implements IRuntimeTargetHan
 		return entries;
 	}
 
-	public abstract String getId();
-
-	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime) {
+	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
 		return null;
 	}
 	

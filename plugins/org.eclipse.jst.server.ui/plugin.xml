@@ -3,17 +3,13 @@
 
 <plugin id="org.eclipse.jst.server.ui"
   name="%pluginName"
-  version="3.0.0"
+  version="1.0.0"
   provider-name="%providerName"
   class="org.eclipse.jst.server.internal.ui.JavaServerUIPlugin">
 
 <requires>
   <import plugin="org.eclipse.core.runtime"/>
-  <import plugin="org.eclipse.core.resources"/>
   <import plugin="org.eclipse.ui"/>
-  <import plugin="org.eclipse.ui.ide"/>
-  <import plugin="org.eclipse.ui.views"/>
-  <import plugin="org.eclipse.ui.editors"/>
   <import plugin="org.eclipse.jdt.core"/>
   <import plugin="org.eclipse.jdt.launching"/>
   <import plugin="org.eclipse.wst.server.core"/>
@@ -24,7 +20,6 @@
   <runtime>
     <library name="sjavaui.jar">
       <export name="*"/>
-      <packages prefixes="org.eclipse.jst.server.ui"/>
     </library>
   </runtime>
 

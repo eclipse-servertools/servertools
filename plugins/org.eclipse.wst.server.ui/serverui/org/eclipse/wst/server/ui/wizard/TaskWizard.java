@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,13 +37,11 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ITask;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.core.model.IRunningActionServer;
-import org.eclipse.wst.server.core.model.IServerDelegate;
 import org.eclipse.wst.server.core.util.TaskModel;
-import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.wizard.page.WorkspaceRunnableAdapter;
-
 /**
  * A wizard used to execute tasks.
  */
@@ -72,8 +70,8 @@ public class TaskWizard implements IWizard {
 	
 	private IDialogSettings dialogSettings = null;
 	
-	private IWizardFragment rootFragment;
-	private IWizardFragment currentFragment;
+	private WizardFragment rootFragment;
+	private WizardFragment currentFragment;
 	
 	private static TaskWizard current;
 
@@ -82,7 +80,7 @@ public class TaskWizard implements IWizard {
 		public ITask finishTask;
 		public ITask cancelTask;
 		
-		public FragmentData(IWizardFragment fragment) {
+		public FragmentData(WizardFragment fragment) {
 			finishTask = fragment.createFinishTask();
 			if (finishTask != null)
 				finishTask.setTaskModel(taskModel);
@@ -108,7 +106,7 @@ public class TaskWizard implements IWizard {
 	/**
 	 * TaskWizard constructor comment.
 	 */
-	public TaskWizard(IWizardFragment rootFragment) {
+	public TaskWizard(WizardFragment rootFragment) {
 		this();
 		this.rootFragment = rootFragment;
 	}
@@ -118,16 +116,16 @@ public class TaskWizard implements IWizard {
 		setWindowTitle(title);
 	}
 	
-	public TaskWizard(String title, IWizardFragment rootFragment) {
+	public TaskWizard(String title, WizardFragment rootFragment) {
 		this(rootFragment);
 		setWindowTitle(title);
 	}
 	
-	public void setRootFragment(IWizardFragment rootFragment) {
+	public void setRootFragment(WizardFragment rootFragment) {
 		this.rootFragment = rootFragment;
 	}
 	
-	public IWizardFragment getRootFragment() {
+	public WizardFragment getRootFragment() {
 		return rootFragment;
 	}
 
@@ -143,7 +141,7 @@ public class TaskWizard implements IWizard {
 				try {
 					Iterator iterator = list.iterator();
 					while (iterator.hasNext())
-						executeTask((IWizardFragment) iterator.next(), CANCEL, monitor);
+						executeTask((WizardFragment) iterator.next(), CANCEL, monitor);
 				} catch (CoreException ce) {
 					throw new InvocationTargetException(ce);
 				}
@@ -177,7 +175,7 @@ public class TaskWizard implements IWizard {
 		if (currentFragment != null)
 			currentFragment.exit();
 		
-		final IWizardFragment cFragment = currentFragment;
+		final WizardFragment cFragment = currentFragment;
 
 		final List list = getAllWizardFragments();
 		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
@@ -185,7 +183,7 @@ public class TaskWizard implements IWizard {
 				// enter & exit the remaining pages
 				int index = list.indexOf(cFragment);
 				while (index > 0 && index < list.size() - 1) {
-					IWizardFragment fragment = (IWizardFragment) list.get(++index);
+					WizardFragment fragment = (WizardFragment) list.get(++index);
 					try {
 						fragment.enter();
 						fragment.exit();
@@ -197,10 +195,12 @@ public class TaskWizard implements IWizard {
 				boolean useJob = false;
 				try {
 					IServer server = (IServer) taskModel.getObject(ITaskModel.TASK_SERVER);
-					IServerDelegate delegate = server.getDelegate();
-					if (delegate instanceof IRunningActionServer)
+					Object obj = server.getAdapter(IRunningActionServer.class);
+					if (obj != null)
 						useJob = true;
-				} catch (Exception e) { }
+				} catch (Exception e) {
+					// ignore
+				}
 				
 				if (useJob) {
 					class FinishWizardJob extends Job {
@@ -212,12 +212,12 @@ public class TaskWizard implements IWizard {
 							try {
 								Iterator iterator = list.iterator();
 								while (iterator.hasNext())
-									executeTask((IWizardFragment) iterator.next(), FINISH, monitor2);
+									executeTask((WizardFragment) iterator.next(), FINISH, monitor2);
 							} catch (CoreException ce) {
 								Trace.trace(Trace.SEVERE, "Error finishing wizard job", ce);
-								return new Status(IStatus.ERROR, ServerUICore.PLUGIN_ID, 0, ce.getLocalizedMessage(), null);
+								return new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, ce.getLocalizedMessage(), null);
 							}
-							return new Status(IStatus.OK, ServerUICore.PLUGIN_ID, 0, "", null);
+							return new Status(IStatus.OK, ServerUIPlugin.PLUGIN_ID, 0, "", null);
 						}
 					}
 					
@@ -227,7 +227,7 @@ public class TaskWizard implements IWizard {
 				} else {
 					Iterator iterator = list.iterator();
 					while (iterator.hasNext())
-						executeTask((IWizardFragment) iterator.next(), FINISH, monitor);
+						executeTask((WizardFragment) iterator.next(), FINISH, monitor);
 				}
 			}
 		};
@@ -259,7 +259,7 @@ public class TaskWizard implements IWizard {
 		page.setWizard(this);
 	}
 	
-	protected void executeTask(IWizardFragment fragment, byte type, IProgressMonitor monitor) throws CoreException {
+	protected void executeTask(WizardFragment fragment, byte type, IProgressMonitor monitor) throws CoreException {
 		if (fragment == null)
 			return;
 		
@@ -270,11 +270,11 @@ public class TaskWizard implements IWizard {
 			data.cancelTask.execute(monitor);
 	}
 	
-	protected IWizardFragment getCurrentWizardFragment() {
+	protected WizardFragment getCurrentWizardFragment() {
 		return currentFragment;
 	}
 	
-	protected void switchWizardFragment(IWizardFragment newFragment) {
+	protected void switchWizardFragment(WizardFragment newFragment) {
 		List list = getAllWizardFragments();
 		int oldIndex = list.indexOf(currentFragment);
 		int newIndex = list.indexOf(newFragment);
@@ -291,7 +291,7 @@ public class TaskWizard implements IWizard {
 			oldIndex --;
 		
 		while (oldIndex != newIndex) {
-			IWizardFragment fragment = (IWizardFragment) list.get(oldIndex);
+			WizardFragment fragment = (WizardFragment) list.get(oldIndex);
 			//safeExecuteTask(fragment, ARRIVAL);
 			//safeExecuteTask(fragment, DEPARTURE);
 			fragment.enter();
@@ -314,17 +314,17 @@ public class TaskWizard implements IWizard {
 		
 		Iterator iterator = list.iterator();
 		while (iterator.hasNext()) {
-			IWizardFragment fragment = (IWizardFragment) iterator.next();
+			WizardFragment fragment = (WizardFragment) iterator.next();
 			if (!taskModel.equals(fragment.getTaskModel()))
 				fragment.setTaskModel(taskModel);
 		}
 		return list;
 	}
 
-	protected void addSubWizardFragments(IWizardFragment fragment, List list) {
+	protected void addSubWizardFragments(WizardFragment fragment, List list) {
 		Iterator iterator = fragment.getChildFragments().iterator();
 		while (iterator.hasNext()) {
-			IWizardFragment child = (IWizardFragment) iterator.next();
+			WizardFragment child = (WizardFragment) iterator.next();
 			list.add(child);
 			addSubWizardFragments(child, list);
 		}
@@ -342,7 +342,7 @@ public class TaskWizard implements IWizard {
 			pages = new ArrayList();
 			Iterator iterator = getAllWizardFragments().iterator();
 			while (iterator.hasNext()) {
-				IWizardFragment fragment = (IWizardFragment) iterator.next();
+				WizardFragment fragment = (WizardFragment) iterator.next();
 				FragmentData data = getFragmentData(fragment);
 				if (fragment.hasComposite()) {
 					if (data.page != null)
@@ -370,7 +370,7 @@ public class TaskWizard implements IWizard {
 		}
 	}
 	
-	protected FragmentData getFragmentData(IWizardFragment fragment) {
+	protected FragmentData getFragmentData(WizardFragment fragment) {
 		try {
 			FragmentData data = (FragmentData) fragmentData.get(fragment);
 			if (data != null)

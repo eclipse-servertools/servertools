@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,21 +13,18 @@ package org.eclipse.wst.server.core.util;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.internal.Trace;
-import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.core.model.IModuleListener;
-import org.eclipse.wst.server.core.model.IProjectModule;
-import org.eclipse.wst.server.core.resources.*;
+import org.eclipse.wst.server.core.model.ModuleDelegate;
 /**
  * A simple IModuleProject that maps a folder within a project
  * (or the root of the project itself) to the module.
  */
-public abstract class ProjectModule implements IProjectModule {
+public abstract class ProjectModule extends ModuleDelegate {
 	protected IProject project;
 	protected IPath root;
 	
@@ -35,6 +32,7 @@ public abstract class ProjectModule implements IProjectModule {
 	private transient List listeners;
 
 	public ProjectModule() {
+		// do nothing
 	}
 
 	public ProjectModule(IProject project) {
@@ -58,7 +56,7 @@ public abstract class ProjectModule implements IProjectModule {
 	/*
 	 * @see IModuleProject#getModuleResourceDelta(IResourceDelta)
 	 */
-	public IModuleResourceDelta getModuleResourceDelta(IResourceDelta delta) {
+	/*public IModuleResourceDelta getModuleResourceDelta(IResourceDelta delta) {
 		Trace.trace(Trace.FINEST, "> getModuleResourceDelta");
 		IPath root2 = null;
 		try {
@@ -93,12 +91,12 @@ public abstract class ProjectModule implements IProjectModule {
 		}
 		Trace.trace(Trace.FINEST, "< getModuleResourceDelta null");
 		return null;
-	}
+	}*/
 	
 	/**
 	 * 
 	 */
-	protected IModuleResourceDelta convertChildren(IResourceDelta delta, IModuleFolder parent) {
+	/*protected IModuleResourceDelta convertChildren(IResourceDelta delta, IModuleFolder parent) {
 		int flags = delta.getKind();
 		int kind = IModuleResourceDelta.NO_CHANGE;
 		if (flags == IResourceDelta.ADDED)
@@ -131,7 +129,7 @@ public abstract class ProjectModule implements IProjectModule {
 			}
 		}
 		return deployDelta;
-	}
+	}*/
 
 	/*
 	 * @see IModule#getMemento()
@@ -157,7 +155,7 @@ public abstract class ProjectModule implements IProjectModule {
 	/*
 	 * @see IModule#members()
 	 */
-	public IModuleResource[] members() throws CoreException {
+	/*public IModuleResource[] members() throws CoreException {
 		IPath root2 = null;
 		try {
 			root2 = getRootFolder();
@@ -171,9 +169,9 @@ public abstract class ProjectModule implements IProjectModule {
 		} catch (CoreException e) {
 			throw e;
 		}
-	}
+	}*/
 	
-	protected IModuleResource getModuleResources(IFile file) {
+	/*protected IModuleResource getModuleResources(IFile file) {
 		return new ProjectModuleFile(this, null, file);
 	}
 
@@ -198,7 +196,7 @@ public abstract class ProjectModule implements IProjectModule {
 	 	IModuleResource[] moduleResources = new IModuleResource[list.size()];
 	 	list.toArray(moduleResources);
 	 	return moduleResources;
-	}
+	}*/
 
 	/*
 	 * @see IModule#getName()
@@ -225,18 +223,22 @@ public abstract class ProjectModule implements IProjectModule {
 			return false;
 
 		ProjectModule dp = (ProjectModule) obj;
-		if (getFactoryId() != null && !getFactoryId().equals(dp.getFactoryId()))
-			return false;
+		//if (getFactoryId() != null && !getFactoryId().equals(dp.getFactoryId()))
+		//	return false;
 			
 		IPath root2 = null;
 		try {
 			root2 = getRootFolder();
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		
 		IPath root3 = null;
 		try {
 			root3 = dp.getRootFolder();
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		
 		if (project != null && project.exists() && !project.equals(dp.getProject()))
 			return false;
@@ -289,7 +291,7 @@ public abstract class ProjectModule implements IProjectModule {
 		IModuleListener[] dcl = new IModuleListener[size];
 		listeners.toArray(dcl);
 		
-		ModuleEvent event = new ModuleEvent(this, isChange, added, changed, removed);
+		ModuleEvent event = new ModuleEvent(getModule(), isChange, added, changed, removed);
 	
 		for (int i = 0; i < size; i++) {
 			try {
@@ -307,6 +309,7 @@ public abstract class ProjectModule implements IProjectModule {
 	 * Use this method to recache information about the module.
 	 */
 	protected void update() {
+		// do nothing
 	}
 
 	/**

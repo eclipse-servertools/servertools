@@ -65,7 +65,7 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;IRuntimeTargetHandlerDelegate&lt;/samp&gt;.
+                  specifies the fully qualified name of the Java class that extends &lt;samp&gt;RuntimeTargetHandlerDelegate&lt;/samp&gt;.
 Runtime target handler instances of this type will delegate to instances of this class.
                </documentation>
                <appInfo>
@@ -108,7 +108,7 @@ Runtime target handler instances of this type will delegate to instances of this
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.server.core.model.IRuntimeTargetHandlerDelegate&lt;/b&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;b&gt;org.eclipse.wst.server.core.model.RuntimeTargetHandlerDelegate&lt;/b&gt; and contains a public 0-arg constructor.
       </documentation>
    </annotation>
 

@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.ui.internal.editor;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.jst.server.tomcat.ui.internal.editor;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.tomcat.ui.internal.editor;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Iterator;
@@ -19,10 +20,10 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jst.server.j2ee.IWebModule;
-import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.ITomcatServerWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.WebModule;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatConfiguration;
+import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.command.AddWebModuleCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.ModifyWebModuleCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.RemoveWebModuleCommand;
@@ -47,17 +48,17 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.help.WorkbenchHelp;
 
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.editor.ICommandManager;
-import org.eclipse.wst.server.ui.editor.ServerResourceEditorPart;
+import org.eclipse.wst.server.ui.editor.ServerEditorPart;
 /**
  * Tomcat configuration web module editor page.
  */
-public class ConfigurationWebModuleEditorPart extends ServerResourceEditorPart {
+public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 	protected ITomcatServerWorkingCopy server2;
-	protected ITomcatConfigurationWorkingCopy configuration;
+	protected TomcatConfiguration configuration;
 
 	protected Table webAppTable;
 	protected int selection = -1;
@@ -90,7 +91,7 @@ public class ConfigurationWebModuleEditorPart extends ServerResourceEditorPart {
 				}
 			}
 		};
-		serverConfiguration.addPropertyChangeListener(listener);
+		configuration.addPropertyChangeListener(listener);
 	}
 	
 	protected ICommandManager getCommandManager() {
@@ -188,7 +189,7 @@ public class ConfigurationWebModuleEditorPart extends ServerResourceEditorPart {
 		else {
 			addProject.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
-					WebModuleDialog dialog = new WebModuleDialog(getEditorSite().getShell(), server2, configuration, true);
+					WebModuleDialog dialog = new WebModuleDialog(getEditorSite().getShell(), getServer(), server2, configuration, true);
 					dialog.open();
 					if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
 						getCommandManager().executeCommand(new AddWebModuleCommand(configuration, dialog.getWebModule()));
@@ -202,7 +203,7 @@ public class ConfigurationWebModuleEditorPart extends ServerResourceEditorPart {
 		addExtProject.setLayoutData(data);
 		addExtProject.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				WebModuleDialog dialog = new WebModuleDialog(getEditorSite().getShell(), server2, configuration, false);
+				WebModuleDialog dialog = new WebModuleDialog(getEditorSite().getShell(), getServer(), server2, configuration, false);
 				dialog.open();
 				if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
 					getCommandManager().executeCommand(new AddWebModuleCommand(configuration, dialog.getWebModule()));
@@ -220,7 +221,7 @@ public class ConfigurationWebModuleEditorPart extends ServerResourceEditorPart {
 				if (selection < 0)
 					return;
 				WebModule module = (WebModule) configuration.getWebModules().get(selection);
-				WebModuleDialog dialog = new WebModuleDialog(getEditorSite().getShell(), server2, configuration, module);
+				WebModuleDialog dialog = new WebModuleDialog(getEditorSite().getShell(), getServer(), server2, configuration, module);
 				dialog.open();
 				if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
 					getCommandManager().executeCommand(new ModifyWebModuleCommand(configuration, selection, dialog.getWebModule()));
@@ -247,50 +248,40 @@ public class ConfigurationWebModuleEditorPart extends ServerResourceEditorPart {
 
 		initialize();
 	}
-	
+
 	protected boolean canAddWebModule() {
-		Iterator iterator = ServerUtil.getModules("j2ee.web", "*", false).iterator();
-		while (iterator.hasNext()) {
-			Object module = iterator.next();
-			if (module instanceof IWebModule) {
-				IStatus status = server.canModifyModules(new IModule[] { (IWebModule) module }, null);
-				if (status != null && status.isOK())
-					return true;
+		IModule[] modules = ServerUtil.getModules(server.getServerType().getRuntimeType().getModuleTypes());
+		if (modules != null) {
+			int size = modules.length;
+			for (int i = 0; i < size; i++) {
+				IWebModule webModule = (IWebModule) modules[i].getAdapter(IWebModule.class);
+				if (webModule != null) {
+					IStatus status = server.canModifyModules(new IModule[] { modules[i] }, null, null);
+					if (status != null && status.isOK())
+						return true;
+				}
 			}
 		}
 		return false;
 	}
-	
+
 	public void dispose() {
-		if (serverConfiguration != null)
-			serverConfiguration.removePropertyChangeListener(listener);
+		if (configuration != null)
+			configuration.removePropertyChangeListener(listener);
 	}
 		
 	/* (non-Javadoc)
 	 * Initializes the editor part with a site and input.
-	 * <p>
-	 * Subclasses of <code>EditorPart</code> must implement this method.  Within
-	 * the implementation subclasses should verify that the input type is acceptable
-	 * and then save the site and input.  Here is sample code:
-	 * </p>
-	 * <pre>
-	 *		if (!(input instanceof IFileEditorInput))
-	 *			throw new PartInitException("Invalid Input: Must be IFileEditorInput");
-	 *		setSite(site);
-	 *		setInput(editorInput);
-	 * </pre>
 	 */
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 		
-		if (serverConfiguration != null) {
-			configuration = (ITomcatConfigurationWorkingCopy) serverConfiguration.getWorkingCopyDelegate();
-			addChangeListener();
-		}
+		TomcatServer ts = (TomcatServer) server.getAdapter(TomcatServer.class);
+		configuration = ts.getTomcatConfiguration();
 		
-		if (server != null) {
-			server2 = (ITomcatServerWorkingCopy) server.getWorkingCopyDelegate();
-		}
+		if (server != null)
+			server2 = (ITomcatServerWorkingCopy) server.getAdapter(ITomcatServerWorkingCopy.class);
+		
 		initialize();
 	}
 
@@ -316,16 +307,10 @@ public class ConfigurationWebModuleEditorPart extends ServerResourceEditorPart {
 			if (memento != null && memento.length() > 0) {
 				projectName = TomcatUIPlugin.getResource("%configurationEditorProjectMissing", new String[] {memento});
 				projectImage = TomcatUIPlugin.getImage(TomcatUIPlugin.IMG_PROJECT_MISSING);
-				int index = memento.indexOf(":");
-				if (index > 0) {
-					String factoryId = memento.substring(0, index);
-					String mem = memento.substring(index + 1);
-					projectName = TomcatUIPlugin.getResource("%configurationEditorProjectMissing", new String[] {mem});
-					IModule module2 = ServerUtil.getModule(factoryId, mem);
-					if (module != null) {
-						projectName = ServerUICore.getLabelProvider().getText(module2);
-						projectImage = ServerUICore.getLabelProvider().getImage(module2);
-					}
+				IModule module2 = ServerUtil.getModule(memento);
+				if (module != null) {
+					projectName = ServerUICore.getLabelProvider().getText(module2);
+					projectImage = ServerUICore.getLabelProvider().getImage(module2);
 				}
 			}
 	

@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -14,10 +14,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.wst.server.core.IElement;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
-import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.ServerLabelProvider;
 import org.eclipse.ui.model.IWorkbenchAdapter;
@@ -27,11 +25,11 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
 public class ServerElementAdapter implements IAdaptable, IWorkbenchAdapter, IServerElementTag {
 	private static final Object[] NO_CHILDREN = new Object[0];
 
-	protected IElement resource;
+	protected Object resource;
 	protected Object parent;
 	protected byte flags;
 
-	public ServerElementAdapter(Object parent, IElement resource) {
+	public ServerElementAdapter(Object parent, Object resource) {
 		this.parent = parent;
 		this.resource = resource;
 	}
@@ -70,13 +68,8 @@ public class ServerElementAdapter implements IAdaptable, IWorkbenchAdapter, ISer
 	public Object[] getChildren() {
 		if (resource instanceof IServer) {
 			IServer server = (IServer) resource;
-			IServerConfiguration configuration = server.getServerConfiguration();
-			if (configuration == null)
-				//return new Object[] { new TextResourceAdapter(this, TextResourceAdapter.STYLE_NO_CONFIGURATION) };
-				return new Object[] { new ConfigurationProxyResourceAdapter(this, server) };
-				//return NO_CHILDREN;
-
-			IModule[] modules = server.getModules();
+			
+			IModule[] modules = server.getModules(null);
 			if (modules == null || modules.length == 0) {
 				//return new Object[] { new TextResourceAdapter(this, TextResourceAdapter.STYLE_NO_MODULES)};
 				return NO_CHILDREN;
@@ -138,17 +131,14 @@ public class ServerElementAdapter implements IAdaptable, IWorkbenchAdapter, ISer
 		return parent;
 	}
 
-	public IElement getServerResource() {
+	public Object getObject() {
 		return resource;
 	}
 
 	protected IFile getFile() {
 		if (resource instanceof IServer)
 			return ((IServer) resource).getFile();
-		else if (resource instanceof IServerConfiguration)
-			return ((IServerConfiguration) resource).getFile();
-		else
-			return null;
+		return null;
 	}
 	
 	public boolean equals(Object obj) {

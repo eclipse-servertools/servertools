@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.core.internal;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.jst.server.tomcat.core.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.tomcat.core.internal;
+
 import java.io.File;
 import java.util.Map;
 
@@ -32,14 +33,14 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		String serverId = configuration.getAttribute(IServer.ATTR_SERVER_ID, (String) null);
 
-		IServer server = ServerCore.getResourceManager().getServer(serverId);
+		IServer server = ServerCore.findServer(serverId);
 		if (server == null) {
 			Trace.trace(Trace.FINEST, "Launch configuration could not find server");
 			// throw CoreException();
 			return;
 		}
 
-		TomcatServer tomcatServer = (TomcatServer) server.getDelegate();
+		TomcatServerBehaviour tomcatServer = (TomcatServerBehaviour) server.getAdapter(TomcatServerBehaviour.class);
 		tomcatServer.setupLaunch(launch, mode, monitor);
 		
 		String mainTypeName = tomcatServer.getRuntimeClass();

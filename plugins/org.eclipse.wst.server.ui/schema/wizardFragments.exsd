@@ -62,7 +62,7 @@
 Launch configuration instances of this type will delegate to instances of this class to perform launching.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.IStartup"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.StartupDelegate"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -101,7 +101,7 @@ Launch configuration instances of this type will delegate to instances of this c
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.server.ui.wizard.IWizardFragment&lt;/b&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.server.ui.wizard.WizardFragment&lt;/b&gt;.
       </documentation>
    </annotation>
 

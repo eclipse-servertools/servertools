@@ -1,15 +1,15 @@
-package org.eclipse.wst.server.ui.internal;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,9 +21,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IDialogConstants;
 
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.model.IServerListener;
-import org.eclipse.wst.server.core.model.IStartableServer;
+import org.eclipse.wst.server.core.IServerListener;
 import org.eclipse.wst.server.core.util.ServerAdapter;
 import org.eclipse.wst.server.ui.IServerUIPreferences;
 import org.eclipse.wst.server.ui.ServerUICore;
@@ -32,7 +30,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-
 /**
  * The server UI plugin class.
  */
@@ -47,8 +44,8 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	protected Map imageDescriptors = new HashMap();
 
 	protected static List terminationWatches = new ArrayList();
-	
-	protected ModuleRepairSupport moduleRepairSupport;
+	// server UI plugin id
+	public static final String PLUGIN_ID = "org.eclipse.wst.server.ui";
 
 	/**
 	 * Create the ServerUIPlugin.
@@ -128,9 +125,6 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		Trace.trace(Trace.CONFIG, "----->----- Server UI plugin start ----->-----");
 		super.start(context);
 	
-		moduleRepairSupport = new ModuleRepairSupport();
-		ServerCore.getResourceManager().addServerLifecycleEventHandler(1000, moduleRepairSupport);
-		
 		IServerUIPreferences prefs = ServerUICore.getPreferences();
 		((ServerUIPreferences) prefs).setDefaults();
 	}
@@ -144,8 +138,6 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		Trace.trace(Trace.CONFIG, "-----<----- Server UI plugin stop -----<-----");
 		super.stop(context);
 		
-		ServerCore.getResourceManager().removeServerLifecycleEventHandler(moduleRepairSupport);
-	
 		ImageResource.dispose();
 	}
 
@@ -168,17 +160,22 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	
 			public void run() {
 				while (alive) {
-					final IStartableServer startable = (IStartableServer) server.getDelegate();
-					int delay = startable.getStartTimeout();
+					int delay = server.getServerType().getStartTimeout();
 					if (mode == 1)
-						delay = startable.getStopTimeout();
+						delay = server.getServerType().getStopTimeout();
 					else if (mode == 2)
-						delay += startable.getStopTimeout();
+						delay += server.getServerType().getStopTimeout();
+					
+					if (delay < 0)
+						return;
+					
 					try {
 						Thread.sleep(delay);
-					} catch (InterruptedException e) { }
+					} catch (InterruptedException e) {
+						// ignore
+					}
 					
-					if (server.getServerState() == IServer.SERVER_STOPPED)
+					if (server.getServerState() == IServer.STATE_STOPPED)
 						alive = false;
 	
 					if (alive) {
@@ -189,8 +186,8 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 								if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
 									// only try calling terminate once. Also, make sure that it didn't stop while
 									// the dialog was open
-									if (server.getServerState() != IServer.SERVER_STOPPED)
-										server.terminate();
+									if (server.getServerState() != IServer.STATE_STOPPED)
+										server.stop(true);
 									alive = false;
 								}
 							}
@@ -212,7 +209,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		// add listener to stop the thread if/when the server stops
 		IServerListener listener = new ServerAdapter() {
 			public void serverStateChange(IServer server2) {
-				if (server2.getServerState() == IServer.SERVER_STOPPED && t != null)
+				if (server2.getServerState() == IServer.STATE_STOPPED && t != null)
 					t.alive = false;
 			}
 		};

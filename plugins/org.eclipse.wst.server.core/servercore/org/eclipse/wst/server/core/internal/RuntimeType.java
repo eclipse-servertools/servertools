@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,11 +13,12 @@ package org.eclipse.wst.server.core.internal;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.*;
 /**
  * 
  */
-public class RuntimeType implements IRuntimeType {
+public class RuntimeType implements IRuntimeType, IOrdered {
 	private IConfigurationElement element;
 	private List moduleTypes;
 
@@ -53,7 +54,7 @@ public class RuntimeType implements IRuntimeType {
 	public String getDescription() {
 		return element.getAttribute("description");
 	}
-	
+
 	/**
 	 * Returns the order.
 	 *
@@ -86,22 +87,23 @@ public class RuntimeType implements IRuntimeType {
 	 * 
 	 * @return
 	 */
-	public List getModuleTypes() {
+	public IModuleType[] getModuleTypes() {
 		if (moduleTypes == null)
 			moduleTypes = ServerPlugin.getModuleTypes(element.getChildren("moduleType"));
 
-		return moduleTypes;
+		IModuleType[] mt = new IModuleType[moduleTypes.size()];
+		moduleTypes.toArray(mt);
+		return mt;
 	}
 	
 	public boolean canCreate() {
 		String a = element.getAttribute("class");
-		String b = element.getAttribute("workingCopyClass");
-		return a != null && b != null && a.length() > 0 && b.length() > 0;
+		return a != null && a.length() > 0;
 	}
 
-	public IRuntimeWorkingCopy createRuntime(String id) {
+	public IRuntimeWorkingCopy createRuntime(String id, IProgressMonitor monitor) {
 		RuntimeWorkingCopy rwc = new RuntimeWorkingCopy(null, id, this);
-		rwc.setDefaults();
+		rwc.setDefaults(monitor);
 		return rwc;
 	}
 

@@ -62,11 +62,11 @@
 Server task instances of this type will delegate to instances of this class.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.IStartup"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.StartupDelegate"/>
                </appInfo>
             </annotation>
          </attribute>
-         <attribute name="typeIds" type="string">
+         <attribute name="typeIds" type="string" use="required">
             <annotation>
                <documentation>
                   a comma separated list of server type ids that this task may apply to. Used for memory &amp; performance reasons
@@ -96,7 +96,7 @@ Server task instances of this type will delegate to instances of this class.
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.server.core.model.IServerTaskDelegate&lt;/b&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.server.core.model.ServerTaskDelegate&lt;/b&gt;.
       </documentation>
    </annotation>
 

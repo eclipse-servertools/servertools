@@ -1,35 +1,36 @@
-package org.eclipse.wst.server.ui.internal.actions;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.actions;
+
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.model.IProjectModule;
-import org.eclipse.wst.server.core.model.IRestartableModule;
-import org.eclipse.wst.server.core.model.IServerDelegate;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
-
 /**
  * Action delegate for restarting a project within a running
  * server.
@@ -62,20 +63,18 @@ public class RestartProjectActionDelegate implements IActionDelegate {
 				dialog.setBlockOnOpen(false);
 				dialog.open();
 	
-				IProjectModule module = ServerUtil.getModuleProject(project);
-				if (module != null) {
-					IServer[] servers = ServerUtil.getServersByModule(module);
+				IModule[] modules = ServerUtil.getModules(project);
+				if (modules != null && modules.length > 0) {
+					IModule module = modules[0];
+					IServer[] servers = getServersByModule(module, null);
 					if (servers != null) {
 						int size2 = servers.length;
 						for (int j = 0; j < size2; j++) {
-							byte state = servers[j].getServerState();
-							IServerDelegate delegate = servers[j].getDelegate();
-							if ((state == IServer.SERVER_STARTED || state == IServer.SERVER_STARTED_DEBUG) &&
-								(delegate instanceof IRestartableModule)) {
-								IRestartableModule restartable = (IRestartableModule)delegate;
-								if (restartable.canRestartModule(module)) {
+							int state = servers[j].getServerState();
+							if (state == IServer.STATE_STARTED) {
+								if (servers[j].canRestartModule(module)) {
 									try {
-										restartable.restartModule(module, new NullProgressMonitor());
+										servers[j].restartModule(module, new NullProgressMonitor());
 									} catch (Exception e) {
 										Trace.trace("Error restarting project", e);
 									}
@@ -125,18 +124,16 @@ public class RestartProjectActionDelegate implements IActionDelegate {
 			return;
 		}
 	
-		IProjectModule module = ServerUtil.getModuleProject(project);
-		if (module != null) {
-			IServer[] servers = ServerUtil.getServersByModule(module);
+		IModule[] modules = ServerUtil.getModules(project);
+		if (modules != null && modules.length > 0) {
+			IModule module = modules[0];
+			IServer[] servers = getServersByModule(module, null);
 			if (servers != null) {
 				int size2 = servers.length;
 				for (int j = 0; j < size2; j++) {
-					byte state = servers[j].getServerState();
-					IServerDelegate delegate = servers[j].getDelegate();
-					if ((state == IServer.SERVER_STARTED || state == IServer.SERVER_STARTED_DEBUG) &&
-						(delegate instanceof IRestartableModule)) {
-						IRestartableModule restartable = (IRestartableModule)delegate;
-						if (restartable.canRestartModule(module)) {
+					int state = servers[j].getServerState();
+					if (state == IServer.STATE_STARTED) {
+						if (servers[j].canRestartModule(module)) {
 							action.setEnabled(true);
 							return;
 						}
@@ -146,5 +143,32 @@ public class RestartProjectActionDelegate implements IActionDelegate {
 		}
 
 		action.setEnabled(false);
+	}
+	
+	/**
+	 * Returns a list of all servers that this module is configured on.
+	 *
+	 * @param module org.eclipse.wst.server.core.IModule
+	 * @return java.util.List
+	 */
+	protected static IServer[] getServersByModule(IModule module, IProgressMonitor monitor) {
+		if (module == null)
+			return new IServer[0];
+
+		// do it the slow way - go through all servers and
+		// see if this module is configured in it
+		List list = new ArrayList();
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				if (ServerUtil.containsModule(servers[i], module, monitor))
+					list.add(servers[i]);
+			}
+		}
+		
+		IServer[] allServers = new IServer[list.size()];
+		list.toArray(allServers);
+		return allServers;
 	}
 }

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,70 +18,129 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.ITask;
 import org.eclipse.wst.server.core.ITaskModel;
 /**
- * 
+ * A wizard fragment is a 
  */
-public class WizardFragment implements IWizardFragment {
-	protected List listImpl;
+public abstract class WizardFragment {
+	private ITaskModel taskModel;
 	private boolean isComplete = true;
-	private ITaskModel model;
+	private List listImpl;
 
+	/**
+	 * Returns <code>true</code> if this fragment has an associated UI,
+	 * and <code>false</code> otherwise.
+	 * @return
+	 */
 	public boolean hasComposite() {
 		return false;
 	}
 
+	/**
+	 * Creates the composite associated with this fragment. 
+	 * This method is only called when hasComposite() returns true.
+	 * 
+	 * @param parent
+	 * @param handle
+	 * @return
+	 */
 	public Composite createComposite(Composite parent, IWizardHandle handle) {
 		return null;
 	}
 
-	public void setTaskModel(ITaskModel model) {
-		this.model = model;
+	/**
+	 * Sets the wizard task model. The task model is shared by all fragments
+	 * in the wizard and is used to share data.
+	 * 
+	 * @param model
+	 */
+	public void setTaskModel(ITaskModel taskModel) {
+		this.taskModel = taskModel;
 	}
 
+	/**
+	 * Returns the wizard task model.
+	 * 
+	 * @return
+	 */
 	public ITaskModel getTaskModel() {
-		return model;
+		return taskModel;
 	}
 
-	public void enter() { }
+	/**
+	 * The fragment has been entered.
+	 */
+	public void enter() {
+		// do nothing
+	}
 
-	public void exit() { }
+	/**
+	 * The fragment has been left.
+	 */
+	public void exit() {
+		// do nothing
+	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.ui.internal.task.IWizardFragment#createFinishTask()
+	/**
+	 * Create a task to run when the wizard finishes.
+	 * 
+	 * @return
 	 */
 	public ITask createFinishTask() {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.ui.internal.task.IWizardFragment#createCancelTask()
+	/**
+	 * Create a task to run when the wizard is cancelled.
+	 * 
+	 * @return
 	 */
 	public ITask createCancelTask() {
 		return null;
 	}
 
-	public void createSubFragments(List list) {
-		// add to list
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.ui.internal.task.IWizardFragment#getChildren()
+	/**
+	 * Returns the child fragments. Child fragments come directly after this fragment
+	 * in the wizard flow.
+	 * 
+	 * @return
 	 */
 	public List getChildFragments() {
 		if (listImpl == null) {
 			listImpl = new ArrayList();
-			createSubFragments(listImpl);
+			createChildFragments(listImpl);
 		}
 		return listImpl;
 	}
 
-	public void updateSubFragments() {
+	/**
+	 * Gives the fragment a chance to update it's child fragments.
+	 */
+	protected void updateChildFragments() {
 		listImpl = null;
 	}
 
+	/**
+	 * Called to allow the fragment to update it's children.
+	 * 
+	 * @param list
+	 */	
+	protected void createChildFragments(List list) {
+		// do nothing
+	}
+
+	/**
+	 * Returns true if this fragment is complete (can finish).
+	 * 
+	 * @return
+	 */
 	public boolean isComplete() {
 		return isComplete;
 	}
 
+	/**
+	 * Set the isComplete state.
+	 * 
+	 * @param complete
+	 */
 	protected void setComplete(boolean complete) {
 		this.isComplete = complete;
 	}

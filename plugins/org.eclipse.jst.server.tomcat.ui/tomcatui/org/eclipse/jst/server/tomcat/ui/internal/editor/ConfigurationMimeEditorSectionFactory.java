@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.ui.internal.editor;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,22 +8,25 @@ package org.eclipse.jst.server.tomcat.ui.internal.editor;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
+package org.eclipse.jst.server.tomcat.ui.internal.editor;
+
+import org.eclipse.jst.server.tomcat.core.ITomcatServer;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.editor.*;
 /**
  *
  */
-public class ConfigurationMimeEditorSectionFactory implements IServerEditorPageSectionFactoryDelegate {
+public class ConfigurationMimeEditorSectionFactory extends ServerEditorPageSectionFactoryDelegate {
 	/*
-	 * @see IServerEditorPartFactoryDelegate#shouldDisplay(IServer, IServerConfiguration)
+	 * @see ServerEditorPartFactoryDelegate#shouldDisplay(IServer)
 	 */
-	public boolean shouldCreateSection(IServer server, IServerConfiguration configuration) {
-		return (configuration != null);
+	public boolean shouldCreateSection(IServerWorkingCopy server) {
+		ITomcatServer tomcatServer = (ITomcatServer) server.getAdapter(ITomcatServer.class);
+		return tomcatServer.getServerConfiguration() != null;
 	}
 
 	/*
-	 * @see IServerEditorPartFactoryDelegate#createPage()
+	 * @see ServerEditorPartFactoryDelegate#createPage()
 	 */
 	public IServerEditorSection createSection() {
 		return new ConfigurationMimeEditorSection();

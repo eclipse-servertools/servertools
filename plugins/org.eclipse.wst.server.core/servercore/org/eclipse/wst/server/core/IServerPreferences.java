@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,10 +15,6 @@ package org.eclipse.wst.server.core;
  * <p>This interface is not intended to be implemented by clients.</p>
  */
 public interface IServerPreferences {
-	public static final byte REPAIR_NEVER = 0;
-	public static final byte REPAIR_PROMPT = 1;
-	public static final byte REPAIR_ALWAYS = 2;
-
 	/**
 	 * Returns whether servers will be automatically restarted when
 	 * required.
@@ -44,23 +40,22 @@ public interface IServerPreferences {
 	public void setAutoRestarting(boolean b);
 
 	/**
-	 * Returns whether automatic publishing should occur before
-	 * starting a server.
+	 * Returns whether publishing should automatically occur when necessary.
 	 *
 	 * @return boolean
 	 */
 	public boolean isAutoPublishing();
 	
 	/**
-	 * Returns whether automatic publishing should occur before
-	 * starting a server.
+	 * Returns the default setting of whether publishing should automatically
+	 * occur when necessary.
 	 *
 	 * @return boolean
 	 */
 	public boolean isDefaultAutoPublishing();
 
 	/**
-	 * Set whether publishing should happen before the server starts.
+	 * Set whether publishing should occur automatically.
 	 *
 	 * @param boolean
 	 */
@@ -89,49 +84,4 @@ public interface IServerPreferences {
 	 * @param boolean
 	 */
 	public void setCreateResourcesInWorkspace(boolean b);
-
-	/**
-	 * Returns the default publish manager preference.
-	 *
-	 * @return String
-	 */
-	public String getDefaultPublishManager();
-
-	/**
-	 * Returns the publish manager preference.
-	 *
-	 * @return String
-	 */
-	public String getPublishManager();
-
-	/**
-	 * Sets the publish manager preference.
-	 *
-	 * @param String
-	 */
-	public void setPublishManager(String id);
-
-	/**
-	 * Returns whether changes to modules should be automatically fixed
-	 * in the server configurations. Returns one of the REPAIR_* constants.
-	 *
-	 * @return byte
-	 */
-	public byte getModuleRepairStatus();
-
-	/**
-	 * Returns the default module fix state. Returns one of the
-	 * REPAIR_* constants.
-	 *
-	 * @return byte
-	 */
-	public byte getDefaultModuleRepairStatus();
-
-	/**
-	 * Sets whether changes to modules should be automatically fixed
-	 * in the server configurations. Use one of the REPAIR_* constants.
-	 *
-	 * @return byte
-	 */
-	public void setModuleRepairStatus(byte b);
 }

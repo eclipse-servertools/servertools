@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,6 +41,11 @@ public class ServerPlugin extends Plugin {
 
 	// temp directories - String key to TempDir
 	protected Map tempDirHash;
+
+	/**
+	 * server core plugin id
+	 */
+	public static final String PLUGIN_ID = "org.eclipse.wst.server.core";
 
 	/**
 	 * Create the ServerPlugin.
@@ -133,7 +138,9 @@ public class ServerPlugin extends Plugin {
 				dir.age = 0;
 				return statePath.append(dir.path);
 			}
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 	
 		// otherwise, create a new directory
 	
@@ -350,5 +357,29 @@ public class ServerPlugin extends Plugin {
 		s = s.replace('/', '_');
 		s = s.replace('\\', '_');
 		return s;
+	}
+
+	/**
+	 * Returns true if ids contains id.
+	 * @param ids
+	 * @param id
+	 * @return
+	 */
+	public static boolean supportsType(String[] ids, String id) {
+		if (id == null || id.length() == 0)
+			return false;
+
+		if (ids == null)
+			return true;
+		
+		int size = ids.length;
+		for (int i = 0; i < size; i++) {
+			if (ids[i].endsWith("*")) {
+				if (id.length() >= ids[i].length() && id.startsWith(ids[i].substring(0, ids[i].length() - 1)))
+					return true;
+			} else if (id.equals(ids[i]))
+				return true;
+		}
+		return false;
 	}
 }

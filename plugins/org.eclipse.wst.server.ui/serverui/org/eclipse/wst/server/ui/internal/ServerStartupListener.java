@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.wst.server.ui.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -16,15 +17,9 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wst.server.core.IClient;
-import org.eclipse.wst.server.core.ILaunchableAdapter;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.ServerPreferences;
-import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.core.util.ServerAdapter;
-import org.eclipse.wst.server.ui.ServerUICore;
-
 /**
  * A class that listens to the startup of a server. To use
  * it, just create an instance using one of the two constructors.
@@ -42,7 +37,7 @@ public class ServerStartupListener {
 
 	protected IClient client;
 	protected ILaunchableAdapter launchableAdapter;
-	protected IModuleObject moduleObject;
+	protected IModuleArtifact moduleObject;
 	protected String launchMode;
 	protected IModule module;
 
@@ -75,7 +70,7 @@ public class ServerStartupListener {
 	/**
 	 * ServerStartupListener constructor comment.
 	 */
-	public ServerStartupListener(Shell shell, IServer server, IClient client, ILaunchableAdapter launchableAdapter, IModuleObject moduleObject, String launchMode, IModule module) {
+	public ServerStartupListener(Shell shell, IServer server, IClient client, ILaunchableAdapter launchableAdapter, IModuleArtifact moduleObject, String launchMode, IModule module) {
 		this(shell, server);
 		this.client = client;
 		this.launchableAdapter = launchableAdapter;
@@ -87,7 +82,7 @@ public class ServerStartupListener {
 	/**
 	 * ServerStartupListener constructor comment.
 	 */
-	public ServerStartupListener(Shell shell, IServer server, IClient client, ILaunchableAdapter launchableAdapter, IModuleObject moduleObject, String launchMode, IModule module, boolean ignoreShutdown) {
+	public ServerStartupListener(Shell shell, IServer server, IClient client, ILaunchableAdapter launchableAdapter, IModuleArtifact moduleObject, String launchMode, IModule module, boolean ignoreShutdown) {
 		this(shell, server, client, launchableAdapter, moduleObject, launchMode, module);
 		this.ignoreShutdown = ignoreShutdown;
 	}
@@ -127,24 +122,22 @@ public class ServerStartupListener {
 	 *
 	 * @param state byte
 	 */
-	protected void handleStateChange(byte state) {
+	protected void handleStateChange(int state) {
 		switch (state) {
-			case IServer.SERVER_STARTED:
-			case IServer.SERVER_STARTED_DEBUG:
-			case IServer.SERVER_STARTED_PROFILE: {
+			case IServer.STATE_STARTED: {
 				dispose();
 				openClient();
 				break;
 			}
-			case IServer.SERVER_STOPPED:
-			case IServer.SERVER_STOPPING: {
+			case IServer.STATE_STOPPED:
+			case IServer.STATE_STOPPING: {
 				if (!ignoreShutdown) {
 					dispose();
 					if (isEnabled)
 						displayError();
 					else
 						isError = true;
-				} else if (ignoreShutdown && state == IServer.SERVER_STOPPED) {
+				} else if (ignoreShutdown && state == IServer.STATE_STOPPED) {
 					ignoreShutdown = false;
 				}
 				break;
@@ -177,29 +170,31 @@ public class ServerStartupListener {
 			dispose();
 	}
 
-	public static void launchClientUtil(final IServer server, final IModule module, final ILaunchableAdapter la, final IModuleObject mo, final String launchMode, final IClient client) {
+	public static void launchClientUtil(final IServer server, final IModule module, final ILaunchableAdapter la, final IModuleArtifact mo, final String launchMode, final IClient client) {
 		if (client == null || server == null)
 			return;
 	
 		// initial implementation - should just wait for a module state change event
-		if (server.getModuleState(module) == IServer.MODULE_STATE_STARTING) {
+		if (server.getModuleState(module) == IServer.STATE_STARTING) {
 			class DisplayClientJob extends Job {
 				public DisplayClientJob() {
 					super(ServerUIPlugin.getResource("%viewStatusStarting3"));
 				}
 
 				public IStatus run(IProgressMonitor monitor) {
-					IStatus status = new Status(IStatus.OK, ServerUICore.PLUGIN_ID, 0, "", null);
+					IStatus status = new Status(IStatus.OK, ServerUIPlugin.PLUGIN_ID, 0, "", null);
 
 					// wait for up to 5 minutes
-					byte state = server.getModuleState(module);
+					int state = server.getModuleState(module);
 					int count = ((ServerPreferences)ServerCore.getServerPreferences()).getModuleStartTimeout();
-					while (state == IServer.MODULE_STATE_STARTING && count > 0) {
+					while (state == IServer.STATE_STARTING && count > 0) {
 						if (monitor.isCanceled())
 							return status;
 						try {
 							Thread.sleep(2000);
-						} catch (Exception e) { }
+						} catch (Exception e) {
+							// ignore
+						}
 						count -= 2000;
 						state = server.getModuleState(module);
 					}
@@ -207,7 +202,7 @@ public class ServerStartupListener {
 					if (monitor.isCanceled())
 						return status;
 					
-					if (state != IServer.MODULE_STATE_STARTED)
+					if (state != IServer.STATE_STARTED)
 						return status;
 					
 					// display client on UI thread

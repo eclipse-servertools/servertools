@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.wizard.page;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,8 +8,9 @@ package org.eclipse.wst.server.ui.internal.wizard.page;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.wizard.page;
+
 import java.lang.reflect.InvocationTargetException;
-import java.util.Iterator;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -29,20 +29,20 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.server.core.IModuleKind;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerAttributes;
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.viewers.ServerComposite;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
-
 /**
  * A wizard page used to select a server client.
  */
@@ -299,7 +299,8 @@ public class NewServerComposite extends Composite {
 		detectHostComp = createHostComposite(detectComp2);
 		
 		detectComp = new NewDetectServerComposite(detectComp2, new NewDetectServerComposite.IServerSelectionListener() {
-			public void serverSelected(IServer server) {
+			public void serverSelected(IServerAttributes server) {
+				// do nothing
 			}
 		});
 
@@ -321,12 +322,10 @@ public class NewServerComposite extends Composite {
 				// check for compatibility
 				if (server != null && module != null) {
 					IServerType serverType = server.getServerType();
-					if (!ServerUtil.isSupportedModule(serverType, module)) {
-						IModuleKind mk = ServerCore.getModuleKind(module.getType());
-						String type = null;
-						if (mk != null)
-							type = mk.getName();
-						wizard.setMessage(ServerUIPlugin.getResource("%errorVersionLevel", new Object[] { type, module.getVersion() }), IMessageProvider.ERROR);
+					IModuleType mt = module.getModuleType();
+					if (!ServerUtil.isSupportedModule(serverType.getRuntimeType().getModuleTypes(), mt)) {
+						String type = mt.getName();
+						wizard.setMessage(ServerUIPlugin.getResource("%errorVersionLevel", new Object[] { type, mt.getVersion() }), IMessageProvider.ERROR);
 						server = null;
 					}
 				}
@@ -334,11 +333,10 @@ public class NewServerComposite extends Composite {
 				if (existingWC != null) {
 					if (server != null && server.equals(existingWC.getOriginal()))
 						return;
-					existingWC.release();
 					existingWC = null;
 				}
 				if (server != null)
-					existingWC = server.getWorkingCopy();
+					existingWC = server.createWorkingCopy();
 				updateTaskModel();
 			}
 		}, module, launchMode);
@@ -353,12 +351,15 @@ public class NewServerComposite extends Composite {
 		if (module == null || launchMode == null)
 			return false;
 		
-		Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
-		while (iterator.hasNext()) {
-			IServer server = (IServer) iterator.next();
-			if (ServerUtil.isCompatibleWithLaunchMode(server, launchMode) &&
-				ServerUtil.isSupportedModule(server.getServerType().getRuntimeType().getModuleTypes(), module.getType(), module.getVersion()))
-					return true;
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				IModuleType mt = module.getModuleType();
+				if (ServerUtil.isCompatibleWithLaunchMode(servers[i], launchMode) &&
+					ServerUtil.isSupportedModule(servers[i].getServerType().getRuntimeType().getModuleTypes(), mt))
+						return true;
+			}
 		}
 		return false;
 	}
@@ -374,14 +375,10 @@ public class NewServerComposite extends Composite {
 		manualComp2.setLayout(layout);
 		
 		manualHostComp = createHostComposite(manualComp2);
+		IModuleType mt = null;
+		if (module != null)
+			mt = module.getModuleType();
 		
-		String type = null;
-		String version = null;
-		if (module != null) {
-			type = module.getType();
-			version = module.getVersion();
-		}
-
 		manualComp = new NewManualServerComposite(manualComp2, new NewManualServerComposite.IWizardHandle2() {
 			public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable) throws InterruptedException, InvocationTargetException {
 				wizard.run(fork, cancelable, runnable);
@@ -392,8 +389,8 @@ public class NewServerComposite extends Composite {
 			public void setMessage(String newMessage, int newType) {
 				wizard.setMessage(newMessage, newType);
 			}
-		}, type, version, new NewManualServerComposite.ServerSelectionListener() {
-			public void serverSelected(IServer server) {
+		}, mt, new NewManualServerComposite.ServerSelectionListener() {
+			public void serverSelected(IServerAttributes server) {
 				updateTaskModel();
 			}
 		});
@@ -411,7 +408,7 @@ public class NewServerComposite extends Composite {
 
 	protected void updateTaskModel() {
 		if (taskModel != null) {
-			IServer server = getServer();
+			IServerWorkingCopy server = getServer();
 			if (server != null) {
 				taskModel.putObject(ITaskModel.TASK_SERVER, server);
 				taskModel.putObject(ITaskModel.TASK_RUNTIME, server.getRuntime());
@@ -429,7 +426,7 @@ public class NewServerComposite extends Composite {
 		updateTaskModel();
 	}
 
-	public IServer getServer() {
+	public IServerWorkingCopy getServer() {
 		if (mode == MODE_EXISTING)
 			return existingWC; //existingComp.getSelectedServer();
 		else if (mode == MODE_DETECT)

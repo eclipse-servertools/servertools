@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,9 +10,11 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.internal;
 
-import java.util.List;
-
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -24,7 +26,7 @@ import org.eclipse.wst.server.core.*;
 /**
  * 
  */
-public class ServerType implements IServerType {
+public class ServerType implements IServerType, IOrdered {
 	protected IConfigurationElement element;
 
 	/**
@@ -57,7 +59,7 @@ public class ServerType implements IServerType {
 	}
 	
 	public IRuntimeType getRuntimeType() {
-		return ServerCore.getRuntimeType(element.getAttribute("runtimeTypeId"));
+		return ServerCore.findRuntimeType(element.getAttribute("runtimeTypeId"));
 	}
 	
 	public boolean hasRuntime() {
@@ -106,45 +108,28 @@ public class ServerType implements IServerType {
 		return configType.supportsMode(launchMode);
 	}
 
-	public IServerConfigurationType getServerConfigurationType() {
+	/*public IServerConfigurationType getServerConfigurationType() {
 		String configurationTypeId = element.getAttribute("configurationTypeId");
-		return ServerCore.getServerConfigurationType(configurationTypeId);
-	}
-	
-	public boolean supportsLocalhost() {
-		String hosts = element.getAttribute("hosts");
-		return (hosts == null || hosts.toLowerCase().indexOf("localhost") >= 0 
-				|| hosts.indexOf("127.0.0.1") >= 0);
-	}
-	
-	public boolean supportsRemoteHosts() {
-		String hosts = element.getAttribute("hosts");
-		return (hosts == null || hosts.toLowerCase().indexOf("remote") >= 0);
-	}
-	
-	public byte getInitialState() {
-		String stateString = element.getAttribute("initialState");
-		if ("stopped".equals(stateString))
-			return IServer.SERVER_STOPPED;
-		else if ("started".equals(stateString))
-			return IServer.SERVER_STARTED;
-		return IServer.SERVER_UNKNOWN;
-	}
-
-	/**
-	 * Returns an IStatus message to verify if a server of this type will be able
-	 * to run the module immediately after being created, without any user
-	 * interaction. If OK, this server may be used as a default server. This
-	 * method should return ERROR if the user must supply any information to
-	 * configure the server correctly, or if the module is not supported.
-	 *
-	 * @return org.eclipse.core.resources.IStatus
-	 */
-	/*public IStatus isDefaultAvailable(IModule module) {
-		return null;
+		return ServerCore.findServerConfigurationType(configurationTypeId);
 	}*/
 	
-	public byte getServerStateSet() {
+	public boolean supportsRemoteHosts() {
+		String hosts = element.getAttribute("supportsRemoteHosts");
+		return (hosts != null && hosts.toLowerCase().equals("true"));
+	}
+
+	public byte getInitialState() {
+		String stateString = element.getAttribute("initialState");
+		if (stateString != null)
+			stateString = stateString.toLowerCase();
+		if ("stopped".equals(stateString))
+			return IServer.STATE_STOPPED;
+		else if ("started".equals(stateString))
+			return IServer.STATE_STARTED;
+		return IServer.STATE_UNKNOWN;
+	}
+	
+	public int getServerStateSet() {
 		String stateSet = element.getAttribute("stateSet");
 		if (stateSet == null)
 			return SERVER_STATE_SET_MANAGED;
@@ -157,23 +142,14 @@ public class ServerType implements IServerType {
 	}
 
 	public boolean hasServerConfiguration() {
-		String configurationTypeId = element.getAttribute("configurationTypeId");
-		return configurationTypeId != null && configurationTypeId.length() > 0;
+		return ("true".equalsIgnoreCase(element.getAttribute("hasConfiguration")));
 	}
-	
-	public boolean isMonitorable() {
-		return "true".equalsIgnoreCase(element.getAttribute("monitorable"));
-	}
-	
-	public boolean isTestEnvironment() {
-		return "true".equalsIgnoreCase(element.getAttribute("testEnvironment"));
-	}
-	
-	public IServerWorkingCopy createServer(String id, IFile file, IRuntime runtime) {
+
+	public IServerWorkingCopy createServer(String id, IFile file, IRuntime runtime, IProgressMonitor monitor) {
 		if (id == null || id.length() == 0)
 			id = ServerPlugin.generateId();
 		ServerWorkingCopy swc = new ServerWorkingCopy(id, file, runtime, this);
-		swc.setDefaults();
+		swc.setDefaults(monitor);
 		return swc;
 	}
 
@@ -185,13 +161,13 @@ public class ServerType implements IServerType {
 		if (hasRuntime()) {
 			// look for existing runtime
 			IRuntimeType runtimeType = getRuntimeType();
-			List list = ServerCore.getResourceManager().getRuntimes(runtimeType);
-			if (!list.isEmpty()) {
-				runtime = (IRuntime) list.get(0);
-			} else {
+			IRuntime[] runtimes = ServerUtil.getRuntimes(runtimeType);
+			if (runtimes != null && runtimes.length > 0)
+				runtime = runtimes[0];
+			else {
 				// create runtime
 				try {
-					IRuntimeWorkingCopy runtimeWC = runtimeType.createRuntime(id + "-runtime");
+					IRuntimeWorkingCopy runtimeWC = runtimeType.createRuntime(id + "-runtime", monitor);
 					ServerUtil.setRuntimeDefaultName(runtimeWC);
 					runtime = runtimeWC;
 				} catch (Exception e) {
@@ -205,7 +181,15 @@ public class ServerType implements IServerType {
 		if (runtime != null)
 			swc.setRuntime(runtime);
 		
-		IServerConfigurationWorkingCopy config = null;
+		if (swc.getServerType().hasServerConfiguration()) {
+			// TODO: config
+			((Server)swc).importConfiguration(runtime, null);
+			IFolder folder = getServerProject().getFolder("cfg");
+			swc.setServerConfiguration(folder);
+		}
+		
+		//TODO: import server config
+		/* IServerConfigurationWorkingCopy config = null;
 		if (hasServerConfiguration()) {
 			if (runtime != null)
 				config = getServerConfigurationType().importFromRuntime(id + "-config", file, runtime, monitor);
@@ -214,11 +198,68 @@ public class ServerType implements IServerType {
 			ServerUtil.setServerConfigurationDefaultName(config);
 			if (config != null)
 				swc.setServerConfiguration(config);
-		}
+		}*/
 		
-		swc.setDefaults();
+		swc.setDefaults(monitor);
 		
 		return swc;
+	}
+	
+	public static IProject getServerProject() {
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		if (projects != null) {
+			int size = projects.length;
+			for (int i = 0; i < size; i++) {
+				if (ServerCore.getProjectProperties(projects[i]).isServerProject())
+					return projects[i];
+			}
+		}
+		
+		String s = findUnusedServerProjectName();
+		return ResourcesPlugin.getWorkspace().getRoot().getProject(s);
+	}
+	
+	/**
+	 * Finds an unused project name to use as a server project.
+	 * 
+	 * @return java.lang.String
+	 */
+	protected static String findUnusedServerProjectName() {
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		String name = ServerPlugin.getResource("%defaultServerProjectName", "");
+		int count = 1;
+		while (root.getProject(name).exists()) {
+			name = ServerPlugin.getResource("%defaultServerProjectName", ++count + "");
+		}
+		return name;
+	}
+	
+	/**
+	 * Return the timeout (in ms) that should be used to wait for the server to start.
+	 * Returns -1 if there is no timeout.
+	 * 
+	 * @return
+	 */
+	public int getStartTimeout() {
+		try {
+			return Integer.parseInt(element.getAttribute("startTimeout"));
+		} catch (NumberFormatException e) {
+			return -1;
+		}
+	}
+
+	/**
+	 * Return the timeout (in ms) to wait before assuming that the server
+	 * has failed to stop. Returns -1 if there is no timeout.
+	 *  
+	 * @return
+	 */
+	public int getStopTimeout() {
+		try {
+			return Integer.parseInt(element.getAttribute("stopTimeout"));
+		} catch (NumberFormatException e) {
+			return -1;
+		}
 	}
 
 	/**

@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.ui.internal.editor;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.jst.server.tomcat.ui.internal.editor;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.tomcat.ui.internal.editor;
+
 import java.beans.*;
 import java.util.HashMap;
 import java.util.List;
@@ -23,9 +24,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.internal.MimeMapping;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatConfiguration;
+import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.command.*;
 import org.eclipse.jst.server.tomcat.ui.internal.ContextIds;
 import org.eclipse.jst.server.tomcat.ui.internal.TomcatUIPlugin;
@@ -37,8 +38,8 @@ import org.eclipse.ui.help.WorkbenchHelp;
 /**
  * Tomcat configuration mime editor section.
  */
-public class ConfigurationMimeEditorSection extends ServerResourceEditorSection {
-	protected ITomcatConfigurationWorkingCopy tomcatConfiguration;
+public class ConfigurationMimeEditorSection extends ServerEditorSection {
+	protected TomcatConfiguration tomcatConfiguration;
 
 	protected boolean updating;
 
@@ -78,7 +79,7 @@ public class ConfigurationMimeEditorSection extends ServerResourceEditorSection 
 				}
 			}
 		};
-		serverConfiguration.addPropertyChangeListener(listener);
+		tomcatConfiguration.addPropertyChangeListener(listener);
 	}
 
 	public void createSection(Composite parent) {
@@ -183,17 +184,16 @@ public class ConfigurationMimeEditorSection extends ServerResourceEditorSection 
 	}
 	
 	public void dispose() {
-		if (serverConfiguration != null)
-			serverConfiguration.removePropertyChangeListener(listener);
+		if (tomcatConfiguration != null)
+			tomcatConfiguration.removePropertyChangeListener(listener);
 	}
 
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 		
-		if (serverConfiguration != null) {
-			tomcatConfiguration = (ITomcatConfigurationWorkingCopy) serverConfiguration.getWorkingCopyDelegate();
-			addChangeListener();
-		}
+		TomcatServer ts = (TomcatServer) server.getAdapter(TomcatServer.class);
+		tomcatConfiguration = ts.getTomcatConfiguration();
+		addChangeListener();
 		initialize();
 	}
 
@@ -257,9 +257,6 @@ public class ConfigurationMimeEditorSection extends ServerResourceEditorSection 
 			add.setEnabled(true);
 			selectMimeMapping();
 		}
-	}
-	
-	protected void validate() {
 	}
 	
 	/**

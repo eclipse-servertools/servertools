@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,7 @@ import java.io.*;
 import java.util.zip.*;
 import java.net.URL;
 import org.eclipse.core.runtime.*;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.ProgressUtil;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.Trace;
 /**
@@ -94,19 +94,23 @@ public class FileUtil {
 				out.write(buf, 0, avail);
 				avail = in.read(buf);
 			}
-			return new Status(IStatus.OK, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%copyingTask", new String[] {to}), null);
+			return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%copyingTask", new String[] {to}), null);
 		} catch (Exception e) {
 			Trace.trace("Error copying file", e);
-			return new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
 		} finally {
 			try {
 				if (in != null)
 					in.close();
-			} catch (Exception ex) { }
+			} catch (Exception ex) {
+				// ignore
+			}
 			try {
 				if (out != null)
 					out.close();
-			} catch (Exception ex) { }
+			} catch (Exception ex) {
+				// ignore
+			}
 		}
 	}
 
@@ -121,7 +125,7 @@ public class FileUtil {
 			return copyFile(new FileInputStream(from), to);
 		} catch (Exception e) {
 			Trace.trace("Error copying file", e);
-			return new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
 		}
 	}
 
@@ -136,7 +140,7 @@ public class FileUtil {
 			return copyFile(from.openStream(), to);
 		} catch (Exception e) {
 			Trace.trace("Error copying file", e);
-			return new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
 		}
 	}
 	/**
@@ -219,7 +223,9 @@ public class FileUtil {
 					try {
 						if (out != null)
 							out.close();
-					} catch (Exception e) { }
+					} catch (Exception e) {
+						// ignore
+					}
 				}
 				ze = zis.getNextEntry();
 				monitor.worked(1);
@@ -234,6 +240,7 @@ public class FileUtil {
 				if (zis != null)
 					zis.close();
 			} catch (Exception ex) {
+				// ignore
 			}
 		}
 	}

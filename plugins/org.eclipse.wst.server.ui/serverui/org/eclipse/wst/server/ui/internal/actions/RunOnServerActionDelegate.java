@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.actions;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.wst.server.ui.internal.actions;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.actions;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.action.IAction;
@@ -29,14 +31,12 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Trace;
-import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.wizard.*;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-
 /**
  * Support for starting/stopping server and clients for resources running on a server.
  */
@@ -133,7 +133,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		String launchMode = getLaunchMode();
 		firePropertyChangeEvent("launchMode", null, launchMode);
 
-		List moduleObjects = ServerUtil.getModuleObjects(selection);
+		IModuleArtifact[] moduleObjects = ServerUtil.getModuleObjects(selection);
 		
 		Shell shell;
 		if (window != null)
@@ -141,17 +141,17 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		else
 			shell = ServerUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
 
-		if (moduleObjects == null || moduleObjects.isEmpty()) {
+		if (moduleObjects == null || moduleObjects.length == 0) {
 			EclipseUtil.openError(ServerUIPlugin.getResource("%errorNoModules"));
 			Trace.trace(Trace.FINEST, "No modules");
 			return;
 		}
-		IModule module = ((IModuleObject) moduleObjects.get(0)).getModule();
-		if (moduleObjects.size() > 1) {
+		IModule module = moduleObjects[0].getModule();
+		if (moduleObjects.length > 1) {
 			// check if the modules are all in the same module
-			int size = moduleObjects.size();
+			int size = moduleObjects.length;
 			for (int i = 0; i < size; i++) {
-				IModule module2 = ((IModuleObject) moduleObjects.get(i)).getModule();
+				IModule module2 = moduleObjects[i].getModule();
 				if (!module.equals(module2)) {
 					EclipseUtil.openError("Too many module objects");
 					Trace.trace(Trace.SEVERE, "Too many module objects! Unsupported!");
@@ -161,29 +161,36 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		}
 
 		// check for servers with the given start mode
-		Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
+		IServer[] servers = ServerCore.getServers();
 		boolean found = false;
-		while (!found && iterator.hasNext()) {
-			IServer server = (IServer) iterator.next();
-			if (ServerUtil.isCompatibleWithLaunchMode(server, launchMode)) {
-				try {
-					List parents = server.getParentModules(module);
-					if (parents != null && parents.size() > 0)
-						found = true;
-				} catch (Exception e) { }
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size && !found; i++) {
+				if (ServerUtil.isCompatibleWithLaunchMode(servers[i], launchMode)) {
+					try {
+						IModule[] parents = servers[i].getParentModules(module, monitor);
+						if (parents != null && parents.length > 0)
+							found = true;
+					} catch (Exception e) {
+						// ignore
+					}
+				}
 			}
 		}
 
 		if (!found) {
 			// no existing server supports the project and start mode!
 			// check if there might be another one that can be created
-			iterator = ServerCore.getServerTypes().iterator();
+			IServerType[] serverTypes = ServerCore.getServerTypes();
 			boolean found2 = false;
-			while (!found2 && iterator.hasNext()) {
-				IServerType type = (IServerType) iterator.next();
-				List moduleTypes = type.getRuntimeType().getModuleTypes();
-				if (type.supportsLaunchMode(launchMode) && ServerUtil.isSupportedModule(moduleTypes, module.getType(), module.getVersion())) {
-					found2 = true;
+			if (serverTypes != null) {
+				int size = serverTypes.length;
+				for (int i = 0; i < size && !found2; i++) {
+					IServerType type = serverTypes[i];
+					IModuleType[] moduleTypes = type.getRuntimeType().getModuleTypes();
+					if (type.supportsLaunchMode(launchMode) && ServerUtil.isSupportedModule(moduleTypes, module.getModuleType())) {
+						found2 = true;
+					}
 				}
 			}
 			if (!found2) {
@@ -197,10 +204,10 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			return;
 
 		IServer server = null;
-		if (module instanceof IProjectModule) {
-			IProjectModule dp = (IProjectModule) module;
-			server = ServerCore.getProjectProperties(dp.getProject()).getDefaultServer();
-		}
+		IProject project = module.getProject();
+		if (project != null)
+			server = ServerCore.getProjectProperties(project).getDefaultServer();
+		
 		
 		// ignore preference if the server doesn't support this mode.
 		if (server != null && !ServerUtil.isCompatibleWithLaunchMode(server, launchMode))
@@ -220,10 +227,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			tasksRun = true;
 
 			// set preferred server if requested
-			if (server != null && preferred && module instanceof IProjectModule) {
+			if (server != null && preferred && project != null) {
 				try {
-					IProjectModule dp = (IProjectModule) module;
-					ServerCore.getProjectProperties(dp.getProject()).setDefaultServer(server, new NullProgressMonitor());
+					ServerCore.getProjectProperties(project).setDefaultServer(server, new NullProgressMonitor());
 				} catch (CoreException ce) {
 					String message = ServerUIPlugin.getResource("%errorCouldNotSavePreference");
 					ErrorDialog.openError(shell, ServerUIPlugin.getResource("%errorDialogTitle"), message, ce.getStatus());
@@ -243,6 +249,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		
 		if (!tasksRun) {
 			SelectTasksWizard wizard = new SelectTasksWizard(server);
+			wizard.addPages();
 			if (wizard.hasTasks() && wizard.hasOptionalTasks()) {
 				WizardDialog dialog = new WizardDialog(shell, wizard);
 				if (dialog.open() == Window.CANCEL)
@@ -253,44 +260,50 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		
 		// get the launchable adapter and module object
 		ILaunchableAdapter launchableAdapter = null;
-		IModuleObject moduleObject = null;
+		IModuleArtifact moduleObject = null;
 		ILaunchable launchable = null;
-		iterator = moduleObjects.iterator();
-		while (moduleObject == null && iterator.hasNext()) {
-			IModuleObject moduleObject2 = (IModuleObject) iterator.next();
-			
-			Iterator iterator2 = ServerCore.getLaunchableAdapters().iterator();
-			while (moduleObject == null && iterator2.hasNext()) {
-				ILaunchableAdapter adapter = (ILaunchableAdapter) iterator2.next();
-				try {
-					ILaunchable launchable2 = adapter.getLaunchable(server, moduleObject2);
-					Trace.trace(Trace.FINEST, "adapter= " + adapter + ", launchable= " + launchable2);
-					if (launchable2 != null) {
-						launchableAdapter = adapter;
-						moduleObject = moduleObject2;
-						launchable = launchable2;
+		//IModuleArtifact[] mo = moduleObjects.iterator();
+		if (moduleObjects != null) {
+			int size = moduleObjects.length;
+			for (int i = 0; i < size; i++) {
+				IModuleArtifact moduleObject2 = moduleObjects[i];
+				
+				ILaunchableAdapter[] adapters = ServerCore.getLaunchableAdapters();
+				if (adapters != null) {
+					int size2 = adapters.length;
+					for (int j = 0; j < size2 && moduleObject == null; j++) {
+						ILaunchableAdapter adapter = adapters[j];
+						try {
+							ILaunchable launchable2 = adapter.getLaunchable(server, moduleObject2);
+							Trace.trace(Trace.FINEST, "adapter= " + adapter + ", launchable= " + launchable2);
+							if (launchable2 != null) {
+								launchableAdapter = adapter;
+								moduleObject = moduleObject2;
+								launchable = launchable2;
+							}
+						} catch (Exception e) {
+							Trace.trace(Trace.SEVERE, "Error in launchable adapter", e);
+						}
 					}
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error in launchable adapter", e);
 				}
 			}
 		}
 		
-		List list = new ArrayList();
+		IClient[] clients = new IClient[0];
 		if (launchable != null)
-			list = ServerUtil.getLaunchableClients(server, launchable, launchMode);
+			clients = getClients(server, launchable, launchMode);
 
-		Trace.trace(Trace.FINEST, "Launchable clients: " + list);
+		Trace.trace(Trace.FINEST, "Launchable clients: " + clients);
 
 		IClient client = null;
-		if (list == null || list.isEmpty()) {
+		if (clients == null || clients.length == 0) {
 			EclipseUtil.openError(ServerUIPlugin.getResource("%errorNoClient"));
 			Trace.trace(Trace.SEVERE, "No launchable clients!");
 			return;
-		} else if (list.size() == 1) {
-			client = (IClient) list.get(0);
+		} else if (clients.length == 1) {
+			client = clients[0];
 		} else {
-			SelectClientWizard wizard = new SelectClientWizard(list);
+			SelectClientWizard wizard = new SelectClientWizard(clients);
 			ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
 			dialog.open();
 			client = wizard.getSelectedClient();
@@ -304,67 +317,80 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 
 		// start server if it's not already started
 		// and cue the client to start
-		byte state = server.getServerState();
-		if (state == IServer.SERVER_STARTING) {
+		int state = server.getServerState();
+		if (state == IServer.STATE_STARTING) {
 			ServerStartupListener listener = new ServerStartupListener(shell, server, client, launchableAdapter, moduleObject, launchMode, module);
 			listener.setEnabled(true);
-		} else if (state == IServer.SERVER_STARTED || state == IServer.SERVER_STARTED_DEBUG || state == IServer.SERVER_STARTED_PROFILE) {
+		} else if (state == IServer.STATE_STARTED) {
 			boolean restart = false;
-			if (state != IServer.SERVER_STARTED_DEBUG && ILaunchManager.DEBUG_MODE.equals(launchMode)) {
+			String mode = server.getMode();
+			if (!ILaunchManager.DEBUG_MODE.equals(mode) && ILaunchManager.DEBUG_MODE.equals(launchMode)) {
 				int result = openWarningDialog(shell, ServerUIPlugin.getResource("%dialogModeWarningDebug"));
-				if (result == 1) {
-					if (state == IServer.SERVER_STARTED)
-						launchMode = ILaunchManager.RUN_MODE;
-					else
-						launchMode = ILaunchManager.PROFILE_MODE;
-				} else if (result == 0)
+				if (result == 1)
+					launchMode = mode;
+				else if (result == 0)
 					restart = true;
 				else
 					return;
-			} else if (state != IServer.SERVER_STARTED_PROFILE && ILaunchManager.PROFILE_MODE.equals(launchMode)) {
+			} else if (!ILaunchManager.PROFILE_MODE.equals(mode) && ILaunchManager.PROFILE_MODE.equals(launchMode)) {
 				int result = openWarningDialog(shell, ServerUIPlugin.getResource("%dialogModeWarningProfile"));
-				if (result == 1) {
-					if (state == IServer.SERVER_STARTED)
-						launchMode = ILaunchManager.RUN_MODE;
-					else
-						launchMode = ILaunchManager.DEBUG_MODE;
-				} else if (result == 0)
+				if (result == 1)
+					launchMode = mode;
+				else if (result == 0)
 					restart = true;
 				else
 					return;
 			}
 			if (restart) {
-				IServerDelegate delegate = server.getDelegate();
-				if (delegate instanceof IRestartableServer) {
-					new ServerStartupListener(shell, server, client, launchableAdapter, moduleObject, launchMode, module, true);
-					((IRestartableServer) delegate).restart(launchMode);
-				} else {
-					server.synchronousStop();
+				server.restart(launchMode);
 				
-					ServerStartupListener listener = new ServerStartupListener(shell, server, client, launchableAdapter, moduleObject, launchMode, module);
-					if (preferences.isAutoPublishing() && !autoPublish(server))
-						return;
-	
-					try {
-						EclipseUtil.startServer(shell, server, launchMode, listener);
-					} catch (CoreException e) { }
-				}
+				if (preferences.isAutoPublishing() && !autoPublish(shell, server))
+					return;
+				ServerStartupListener.launchClientUtil(server, module, launchableAdapter, moduleObject, launchMode, client);
 			} else {
-				if (preferences.isAutoPublishing() && !autoPublish(server))
+				if (preferences.isAutoPublishing() && !autoPublish(shell, server))
 					return;
 	
 				// open client
 				ServerStartupListener.launchClientUtil(server, module, launchableAdapter, moduleObject, launchMode, client);
 			}
-		} else if (state != IServer.SERVER_STOPPING) {
+		} else if (state != IServer.STATE_STOPPING) {
 			ServerStartupListener listener = new ServerStartupListener(shell, server, client, launchableAdapter, moduleObject, launchMode, module);
-			if (preferences.isAutoPublishing() && !autoPublish(server))
+			if (preferences.isAutoPublishing() && !autoPublish(shell, server))
 				return;
 
 			try {
 				EclipseUtil.startServer(shell, server, launchMode, listener);
-			} catch (CoreException e) { }
+			} catch (CoreException e) {
+				// ignore
+			}
 		}
+	}
+	
+	/**
+	 * Returns the launchable clients for the given server and launchable
+	 * object.
+	 *
+	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param moduleObject org.eclipse.wst.server.core.IModuleArtifact
+	 * @param launchMode String
+	 * @return java.util.List
+	 */
+	public static IClient[] getClients(IServer server, ILaunchable launchable, String launchMode) {
+		ArrayList list = new ArrayList();
+		IClient[] clients = ServerCore.getClients();
+		if (clients != null) {
+			int size = clients.length;
+			for (int i = 0; i < size; i++) {
+				Trace.trace(Trace.FINEST, "client= " + clients[i]);
+				if (clients[i].supports(server, launchable, launchMode))
+					list.add(clients[i]);
+			}
+		}
+		
+		IClient[] clients2 = new IClient[list.size()];
+		list.toArray(clients2);
+		return clients2;
 	}
 
 	/**
@@ -373,10 +399,10 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * @param server
 	 * @return boolean - false if the current operation should be stopped
 	 */
-	protected boolean autoPublish(IServer server) {
+	protected boolean autoPublish(Shell shell, IServer server) {
 		// publish first
 		if (server.shouldPublish()) {
-			IStatus publishStatus = ServerUIUtil.publishWithDialog(server, false);
+			IStatus publishStatus = ServerUIUtil.publishWithDialog(shell, server, false);
 	
 			if (publishStatus == null || publishStatus.getSeverity() == IStatus.ERROR)
 				return false;
@@ -410,17 +436,20 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		if (!initialized) {
 			initialized = true;
 			
-			Iterator iterator = ServerCore.getModuleFactories().iterator();
-			while (iterator.hasNext()) {
-				IModuleFactory factory = (IModuleFactory) iterator.next();
-				factory.getModules();
-			}
+			/*IModuleFactory[] factories = ServerCore.getModuleFactories();
+			if (factories != null) {
+				int size = factories.length;
+				for (int i = 0; i < size; i++)
+					factories[i].getModules();
+			}*/
 			
 			try {
 				IModule module = ServerUtil.getModule(globalSelection, true);
 				findGlobalLaunchModes(module);
 				action.setEnabled(isEnabled());
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 			if (!isEnabled()) {
 				EclipseUtil.openError(ServerUIPlugin.getResource("%errorNoServer"));
 				Trace.trace(Trace.FINEST, "Uninitialized");
@@ -439,7 +468,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		try {
 			Boolean b = (Boolean) globalLaunchMode.get(getLaunchMode());
 			return b.booleanValue();
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		return false;
 	}
 
@@ -505,13 +536,16 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * and the various start modes.
 	 */
 	protected boolean findGlobalLaunchModes(IModule module) {
-		Iterator iterator = ServerCore.getServerTypes().iterator();
-		while (iterator.hasNext()) {
-			IServerType type = (IServerType) iterator.next();
-			if (isValidServerType(type, module)) {
-				for (byte b = 0; b < launchModes.length; b++) {
-					if (type.supportsLaunchMode(launchModes[b])) {
-						globalLaunchMode.put(launchModes[b], new Boolean(true));
+		IServerType[] serverTypes = ServerCore.getServerTypes();
+		if (serverTypes != null) {
+			int size = serverTypes.length;
+			for (int i = 0; i < size; i++) {
+				IServerType type = serverTypes[i];
+				if (isValidServerType(type, module)) {
+					for (byte b = 0; b < launchModes.length; b++) {
+						if (type.supportsLaunchMode(launchModes[b])) {
+							globalLaunchMode.put(launchModes[b], new Boolean(true));
+						}
 					}
 				}
 			}
@@ -525,7 +559,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	protected boolean isValidServerType(IServerType type, IModule module) {
 		try {
 			IRuntimeType runtimeType = type.getRuntimeType();
-			ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), module.getType(), module.getVersion());
+			ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), module.getModuleType());
 		} catch (Exception e) {
 			return false;
 		}

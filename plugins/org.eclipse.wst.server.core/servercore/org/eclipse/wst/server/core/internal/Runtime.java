@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,7 @@ package org.eclipse.wst.server.core.internal;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.*;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IRuntimeDelegate;
+import org.eclipse.wst.server.core.model.RuntimeDelegate;
 import org.osgi.framework.Bundle;
 /**
  * 
@@ -22,9 +22,10 @@ public class Runtime extends Base implements IRuntime {
 	protected static final String PROP_RUNTIME_TYPE_ID = "runtime-type-id";
 	protected static final String PROP_LOCATION = "location";
 	protected static final String PROP_TEST_ENVIRONMENT = "test-environment";
+	protected static final String PROP_STUB = "stub";
 
 	protected IRuntimeType runtimeType;
-	protected IRuntimeDelegate delegate;
+	protected RuntimeDelegate delegate;
 
 	public Runtime(IFile file) {
 		super(file);
@@ -48,16 +49,16 @@ public class Runtime extends Base implements IRuntime {
 	 * 
 	 * @return
 	 */
-	public IStatus validate() {
+	public IStatus validate(IProgressMonitor monitor) {
 		try {
-			return getDelegate().validate();
+			return getDelegate(monitor).validate();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate validate() " + toString(), e);
 			return null;
 		}
 	}
 
-	public IRuntimeDelegate getDelegate() {
+	public RuntimeDelegate getDelegate(IProgressMonitor monitor) {
 		if (delegate != null)
 			return delegate;
 		
@@ -66,7 +67,7 @@ public class Runtime extends Base implements IRuntime {
 				try {
 					long time = System.currentTimeMillis();
 					RuntimeType runtimeType2 = (RuntimeType) runtimeType;
-					delegate = (IRuntimeDelegate) runtimeType2.getElement().createExecutableExtension("class");
+					delegate = (RuntimeDelegate) runtimeType2.getElement().createExecutableExtension("class");
 					delegate.initialize(this);
 					Trace.trace(Trace.PERFORMANCE, "Runtime.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getRuntimeType().getId());
 				} catch (Exception e) {
@@ -91,12 +92,10 @@ public class Runtime extends Base implements IRuntime {
 			delegate.dispose();
 	}
 	
-	public IRuntimeWorkingCopy getWorkingCopy() {
-		IRuntimeWorkingCopy wc = new RuntimeWorkingCopy(this); 
-		addWorkingCopy(wc);
-		return wc;
+	public IRuntimeWorkingCopy createWorkingCopy() {
+		return new RuntimeWorkingCopy(this); 
 	}
-	
+
 	public boolean isWorkingCopy() {
 		return false;
 	}
@@ -118,22 +117,24 @@ public class Runtime extends Base implements IRuntime {
 	}
 	
 	protected void deleteFromMetadata() {
-		ResourceManager rm = (ResourceManager) ServerCore.getResourceManager();
-		rm.removeRuntime(this);
+		ResourceManager.getInstance().removeRuntime(this);
 	}
 
 	protected void saveToMetadata(IProgressMonitor monitor) {
 		super.saveToMetadata(monitor);
-		ResourceManager rm = (ResourceManager) ServerCore.getResourceManager();
-		rm.addRuntime(this);
+		ResourceManager.getInstance().addRuntime(this);
 	}
 
 	protected String getXMLRoot() {
 		return "runtime";
 	}
-	
+
 	public boolean isTestEnvironment() {
 		return getAttribute(PROP_TEST_ENVIRONMENT, false);
+	}
+
+	public boolean isStub() {
+		return getAttribute(PROP_STUB, false);
 	}
 
 	protected void setInternal(RuntimeWorkingCopy wc) {
@@ -148,7 +149,7 @@ public class Runtime extends Base implements IRuntime {
 
 	protected void loadState(IMemento memento) {
 		String runtimeTypeId = memento.getString(PROP_RUNTIME_TYPE_ID);
-		runtimeType = ServerCore.getRuntimeType(runtimeTypeId);
+		runtimeType = ServerCore.findRuntimeType(runtimeTypeId);
 	}
 
 	protected void saveState(IMemento memento) {
@@ -162,6 +163,16 @@ public class Runtime extends Base implements IRuntime {
 		
 		Runtime runtime = (Runtime) obj;
 		return runtime.getId().equals(getId());
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+	 */
+	public Object getAdapter(Class adapter) {
+		RuntimeDelegate delegate2 = getDelegate(null);
+		if (adapter.isInstance(delegate2))
+			return delegate;
+		return null;
 	}
 	
 	public String toString() {

@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -13,20 +13,18 @@ package org.eclipse.wst.server.ui.internal.wizard.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IModuleVisitor;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ITask;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IModuleVisitor;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.task.ModifyModulesTask;
 import org.eclipse.wst.server.ui.internal.wizard.page.ModifyModulesComposite;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
-
 /**
  * 
  */
@@ -36,7 +34,9 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 	
 	protected IModule module;
 
-	public ModifyModulesWizardFragment() { }
+	public ModifyModulesWizardFragment() {
+		// do nothing
+	}
 	
 	public ModifyModulesWizardFragment(IModule module) {
 		this.module = module;
@@ -92,22 +92,22 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 			final Helper help = new Helper();
 			if (server != null) {
 				ServerUtil.visit(server, new IModuleVisitor() {
-					public boolean visit(List parents2, IModule module2) {
+					public boolean visit(IModule[] parents2, IModule module2) {
 						help.parentList.add(parents2);
 						help.moduleList.add(module2);
 						return true;
 					}
-				});
+				}, null);
 			}
 			
 			// add module
 			IModule parent = null;
 			try {
-				List parents = server.getParentModules(module);
+				IModule[] parents = server.getParentModules(module, null);
 				List list = new ArrayList();
 				
-				if (parents != null && parents.size() > 0) {
-					parent = (IModule) parents.get(0);
+				if (parents != null && parents.length > 0) {
+					parent = parents[0];
 					list.add(parent);
 				}
 				if (!help.moduleList.contains(module)) {

@@ -23,7 +23,9 @@ public class DefaultServerLabelDecorator implements ILabelDecorator {
 			Image img = (Image) map.get(element);
 			if (img != null)
 				return img;
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		
 		DefaultServerImageDescriptor dsid = new DefaultServerImageDescriptor(image);
 		Image image2 = dsid.createImage();
@@ -41,7 +43,9 @@ public class DefaultServerLabelDecorator implements ILabelDecorator {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
 	 */
-	public void addListener(ILabelProviderListener listener) { }
+	public void addListener(ILabelProviderListener listener) {
+		// do nothing
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
@@ -68,5 +72,7 @@ public class DefaultServerLabelDecorator implements ILabelDecorator {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
 	 */
-	public void removeListener(ILabelProviderListener listener) { }
+	public void removeListener(ILabelProviderListener listener) {
+		// do nothing
+	}
 }

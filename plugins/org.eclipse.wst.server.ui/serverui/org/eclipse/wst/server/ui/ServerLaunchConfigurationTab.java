@@ -1,17 +1,16 @@
-package org.eclipse.wst.server.ui;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+package org.eclipse.wst.server.ui;
+
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -97,14 +96,16 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		runtimeLocation.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		// initialize
-		List servers2 = ServerCore.getResourceManager().getServers();
+		IServer[] servers2 = ServerCore.getServers();
 		servers = new ArrayList();
-		Iterator iterator = servers2.iterator();
-		while (iterator.hasNext()) {
-			IServer server2 = (IServer) iterator.next();
-			if (isSupportedServer(server2.getServerType().getId())) {
-				serverCombo.add(server2.getName());
-				servers.add(server2);
+		if (servers2 != null) {
+			int size = servers2.length;
+			for (int i = 0; i < size; i++) {
+				IServer server2 = servers2[i];
+				if (isSupportedServer(server2.getServerType().getId())) {
+					serverCombo.add(server2.getName());
+					servers.add(server2);
+				}
 			}
 		}
 
@@ -145,18 +146,18 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		IRuntime runtime = null;
 		if (server != null) {
 			runtime = server.getRuntime();
-			runtimeLocation.setText("Location: " + server.getHostname());
+			runtimeLocation.setText(ServerUIPlugin.getResource("%serverLaunchHost") + " " + server.getHost());
 		} else
-			runtimeLocation.setText("Location:");
+			runtimeLocation.setText(ServerUIPlugin.getResource("%serverLaunchHost"));
 			
 		if (runtime != null)
-			runtimeLabel.setText("Runtime: " + runtime.getName());
+			runtimeLabel.setText(ServerUIPlugin.getResource("%serverLaunchRuntime") + " " + runtime.getName());
 		else
-			runtimeLabel.setText("Runtime:");
+			runtimeLabel.setText(ServerUIPlugin.getResource("%serverLaunchRuntime"));
 
 		if (server == null)
-			setErrorMessage(ServerUIPlugin.getResource("%noServerSelected"));
-		else if (server.getServerState() != IServer.SERVER_STOPPED)
+			setErrorMessage(ServerUIPlugin.getResource("%errorNoServerSelected"));
+		else if (server.getServerState() != IServer.STATE_STOPPED)
 			setErrorMessage(ServerUIPlugin.getResource("%errorServerAlreadyRunning"));
 		else
 			setErrorMessage(null);
@@ -188,7 +189,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		if (servers != null) {
 			server = (IServer) servers.get(serverCombo.getSelectionIndex());
 			if (server != null) {
-				server.setLaunchDefaults(configuration);
+				server.setLaunchDefaults(configuration, null);
 			}
 		}
 	}
@@ -204,7 +205,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		try {
 			String serverId = configuration.getAttribute(IServer.ATTR_SERVER_ID, "");
 			if (!serverId.equals("")) {
-				server = ServerCore.getResourceManager().getServer(serverId);
+				server = ServerCore.findServer(serverId);
 
 				if (server == null) { //server no longer exists				
 					setErrorMessage(ServerUIPlugin.getResource("%errorInvalidServer"));
@@ -214,7 +215,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 				}
 
 				serverCombo.setText(server.getName());
-				if (server.getServerState() != IServer.SERVER_STOPPED)
+				if (server.getServerState() != IServer.STATE_STOPPED)
 					setErrorMessage(ServerUIPlugin.getResource("%errorServerAlreadyRunning"));
 			} else {
 				if (serverCombo.getItemCount() > 0)
@@ -224,6 +225,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 			if (configuration.getAttribute(READ_ONLY, false))
 				serverCombo.setEnabled(false);
 		} catch (CoreException e) {
+			// ignore
 		}
 	}
 
@@ -253,13 +255,15 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		try {
 			String id = launchConfig.getAttribute(IServer.ATTR_SERVER_ID, "");
 			if (!id.equals("")) {
-				IServer server2 = ServerCore.getResourceManager().getServer(id);
+				IServer server2 = ServerCore.findServer(id);
 				if (server2 == null)
 					return false;
-				if (server2.getServerState() == IServer.SERVER_STOPPED)
+				if (server2.getServerState() == IServer.STATE_STOPPED)
 					return true;
 			}
-		} catch (CoreException e) { }
+		} catch (CoreException e) {
+			// ignore
+		}
 		return false;
 	}
 

@@ -1,15 +1,15 @@
-package org.eclipse.wst.server.ui.internal.editor;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.editor;
+
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.ui.IElementFactory;
 import org.eclipse.ui.IMemento;
@@ -21,12 +21,12 @@ import org.eclipse.ui.IMemento;
 public class ServerEditorInputFactory implements IElementFactory {
 	protected final static String FACTORY_ID = "org.eclipse.wst.server.ui.editor.input.factory";
 	protected final static String SERVER_ID = "server-id";
-	protected final static String SERVER_CONFIGURATION_ID = "server-configuration-id";
 
 	/**
 	 * ServerEditorInputFactory constructor comment.
 	 */
 	public ServerEditorInputFactory() {
+		// do nothing
 	}
 
 	/**
@@ -39,9 +39,8 @@ public class ServerEditorInputFactory implements IElementFactory {
 	public IAdaptable createElement(IMemento memento) {
 		// get the resource names
 		String serverId = memento.getString(SERVER_ID);
-		String configurationId = memento.getString(SERVER_CONFIGURATION_ID);
-
-		return new ServerEditorInput(serverId, configurationId);
+		
+		return new ServerEditorInput(serverId);
 	}
 
 	/**
@@ -55,7 +54,5 @@ public class ServerEditorInputFactory implements IElementFactory {
 			
 		if (input.getServerId() != null)
 			memento.putString(SERVER_ID, input.getServerId());
-		if (input.getServerConfigurationId() != null)
-			memento.putString(SERVER_CONFIGURATION_ID, input.getServerConfigurationId());
 	}
 }

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,28 +11,19 @@
 package org.eclipse.wst.server.core;
 
 import java.util.List;
-
-import org.eclipse.wst.server.core.model.*;
 /**
  * A task for a server.
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
  */
-public interface IServerTask extends ITask, IServerTaskDelegate, IOrdered {
+public interface IServerTask {
 	/**
 	 * Returns the id of the adapter.
 	 *
 	 * @return java.lang.String
 	 */
 	public String getId();
-	
-	/**
-	 * Return the type ids that may be supported.
-	 * 
-	 * @return java.lang.String[]
-	 */
-	public String[] getTypeIds();
-	
+
 	/**
 	 * Returns true if the given type (given by the id) can use this task. This
 	 * result is based on the result of the getTypeIds() method.
@@ -46,17 +37,9 @@ public interface IServerTask extends ITask, IServerTaskDelegate, IOrdered {
 	 * be used to clean out any previously cached information, or start to
 	 * create a new cache.
 	 * 
-	 * @param server org.eclipse.wst.server.core.model.IServer
-	 * @param configuration org.eclipse.wst.server.core.model.IServerConfiguration
+	 * @param server org.eclipse.wst.server.core.IServer
 	 * @param parents java.util.List[]
-	 * @param modules org.eclipse.wst.server.core.model.IModule[]
+	 * @param modules org.eclipse.wst.server.core.IModule[]
 	 */
-	public void init(IServer server, IServerConfiguration configuration, List[] parents, IModule[] modules);
-
-	/**
-	 * Returns the status of this task.
-	 * 
-	 * @return byte
-	 */
-	public byte getTaskStatus();
+	public IOptionalTask[] getTasks(IServer server, List[] parents, IModule[] modules);
 }

@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.core.internal;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,13 @@ package org.eclipse.jst.server.tomcat.core.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.tomcat.core.internal;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
@@ -21,9 +27,9 @@ import org.eclipse.wst.server.core.IRuntime;
 /**
  * 
  */
-public abstract class TomcatRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
-	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime) {
-		ITomcatRuntime tomcatRuntime = (ITomcatRuntime) runtime.getDelegate();
+public class TomcatRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
+	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
+		ITomcatRuntime tomcatRuntime = (ITomcatRuntime) runtime.getAdapter(ITomcatRuntime.class);
 		IVMInstall vmInstall = tomcatRuntime.getVMInstall();
 		if (vmInstall != null) {
 			String name = vmInstall.getName();
@@ -31,23 +37,55 @@ public abstract class TomcatRuntimeTargetHandler extends ClasspathRuntimeTargetH
 		}
 		return null;
 	}
-	
+
 	public String[] getClasspathEntryIds(IRuntime runtime) {
 		return new String[1];
 	}
 
+	/**
+	 * Return a label for the classpath container.
+	 *  
+	 * @return
+	 */
 	public String getClasspathContainerLabel(IRuntime runtime, String id) {
-		return getLabel();
+		String id2 = runtime.getId();
+		if (id2.indexOf("32") > 0)
+			return TomcatPlugin.getResource("%target32runtime");
+		else if (id2.indexOf("40") > 0)
+			return TomcatPlugin.getResource("%target40runtime");
+		else if (id2.indexOf("41") > 0)
+			return TomcatPlugin.getResource("%target41runtime");
+		else if (id2.indexOf("50") > 0)
+			return TomcatPlugin.getResource("%target50runtime");
+		
+		return TomcatPlugin.getResource("%target55runtime");
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.target.IServerTargetDelegate#getClasspathEntries()
+	 * @see org.eclipse.jst.server
 	 */
 	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime, String id) {
 		return resolveClasspathContainer(runtime);
 	}
 
-	public abstract String getLabel();
-
-	public abstract IClasspathEntry[] resolveClasspathContainer(IRuntime runtime);
+	/**
+	 * Resolve the classpath entries.
+	 */
+	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime) {
+		IPath installPath = runtime.getLocation();
+		
+		if (installPath == null)
+			return new IClasspathEntry[0];
+		
+		List list = new ArrayList();
+		if (runtime.getId().indexOf("32") > 0) {
+			IPath path = installPath.append("lib");
+			addLibraryEntries(list, path.toFile(), true);
+		} else {
+			IPath path = installPath.append("common");
+			addLibraryEntries(list, path.append("lib").toFile(), true);
+			addLibraryEntries(list, path.append("endorsed").toFile(), true);
+		}
+		return resolveList(list);
+	}
 }

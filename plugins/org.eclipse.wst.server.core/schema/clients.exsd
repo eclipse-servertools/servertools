@@ -58,11 +58,11 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;IClientDelegate&lt;/samp&gt;.
+                  specifies the fully qualified name of the Java class that extend &lt;samp&gt;ClientDelegate&lt;/samp&gt;.
 Clieint instances of this type will delegate to instances of this class to launch.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.IStartup"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.StartupDelegate"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -109,7 +109,7 @@ Clieint instances of this type will delegate to instances of this class to launc
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.server.core.model.IClientDelegate&lt;/b&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;b&gt;org.eclipse.wst.server.core.model.ClientDelegate&lt;/b&gt; and contains a public 0-arg constructor.
       </documentation>
    </annotation>
 

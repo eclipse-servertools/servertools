@@ -1,15 +1,15 @@
-package org.eclipse.wst.server.ui.internal.wizard.page;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.wizard.page;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +17,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerAttributes;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
 import org.eclipse.swt.SWT;
@@ -48,23 +49,31 @@ public class NewDetectServerComposite extends Composite {
 	protected Label hostLabel;
 
 	public interface IServerSelectionListener {
-		public void serverSelected(IServer server);
+		public void serverSelected(IServerAttributes server);
 	}
 	
 	public class ServerContentProvider implements IStructuredContentProvider {
-		public void dispose() { }
+		public void dispose() {
+			// do nothing
+		}
 
 		public Object[] getElements(Object inputElement) {
 			return servers.toArray();
 		}
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+			// do nothing
+		}
 	}
 	
 	public class ServerLabelProvider implements ITableLabelProvider {
-		public void addListener(ILabelProviderListener listener2) { }
+		public void addListener(ILabelProviderListener listener2) {
+			// do nothing
+		}
 
-		public void dispose() { }
+		public void dispose() {
+			// do nothing
+		}
 
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
@@ -83,7 +92,9 @@ public class NewDetectServerComposite extends Composite {
 			return false;
 		}
 
-		public void removeListener(ILabelProviderListener listener2) { }
+		public void removeListener(ILabelProviderListener listener2) {
+			// do nothing
+		}
 	}
 
 	/**
@@ -170,7 +181,7 @@ public class NewDetectServerComposite extends Composite {
 		// listeners
 		detect.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				
+				// do nothing
 			}
 		});
 

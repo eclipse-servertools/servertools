@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.core;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,9 +8,9 @@ package org.eclipse.jst.server.tomcat.core;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-import org.eclipse.wst.server.core.model.IServerConfigurationWorkingCopyDelegate;
+package org.eclipse.jst.server.tomcat.core;
 
-public interface ITomcatConfigurationWorkingCopy extends ITomcatConfiguration, IServerConfigurationWorkingCopyDelegate {
+public interface ITomcatConfigurationWorkingCopy extends ITomcatConfiguration {
 	/**
 	 * Add a web module.
 	 *
@@ -22,6 +21,7 @@ public interface ITomcatConfigurationWorkingCopy extends ITomcatConfiguration, I
 	
 	/**
 	 * Change a web module.
+	 * 
 	 * @param index int
 	 * @param docBase java.lang.String
 	 * @param path java.lang.String
@@ -30,7 +30,8 @@ public interface ITomcatConfigurationWorkingCopy extends ITomcatConfiguration, I
 	public void modifyWebModule(int index, String docBase, String path, boolean reloadable);
 
 	/**
-	 * Removes a web module.
+	 * Remove a web module.
+	 * 
 	 * @param index int
 	 */
 	public void removeWebModule(int index);
@@ -45,6 +46,7 @@ public interface ITomcatConfigurationWorkingCopy extends ITomcatConfiguration, I
 
 	/**
 	 * Change a mime mapping.
+	 * 
 	 * @param index int
 	 * @param map MimeMapping
 	 */
@@ -59,7 +61,8 @@ public interface ITomcatConfigurationWorkingCopy extends ITomcatConfiguration, I
 	public void modifyServerPort(String id, int port);
 
 	/**
-	 * Removes a mime mapping.
+	 * Remove a mime mapping.
+	 * 
 	 * @param index int
 	 */
 	public void removeMimeMapping(int index);

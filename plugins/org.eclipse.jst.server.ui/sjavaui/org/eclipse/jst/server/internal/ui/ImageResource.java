@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.internal.ui;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.jst.server.internal.ui;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.internal.ui;
+
 import java.net.URL;
 import java.util.Map;
 import java.util.HashMap;
@@ -55,7 +56,9 @@ public class ImageResource {
 	/**
 	 * Cannot construct an ImageResource. Use static methods only.
 	 */
-	private ImageResource() {}
+	private ImageResource() {
+		// do nothing
+	}
 
 	/**
 	 * Dispose of element images that were created.

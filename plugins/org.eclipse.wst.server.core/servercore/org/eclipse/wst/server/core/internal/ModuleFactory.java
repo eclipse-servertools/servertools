@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,22 +10,25 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.internal;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 
-import org.eclipse.wst.server.core.IModuleFactory;
-import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IModuleFactoryDelegate;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IModuleType;
+import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
 import org.eclipse.wst.server.core.model.IModuleFactoryListener;
 /**
  * 
  */
-public class ModuleFactory implements IModuleFactory {
+public class ModuleFactory implements IOrdered {
 	private IConfigurationElement element;
-	private IModuleFactoryDelegate delegate;
+	private ModuleFactoryDelegate delegate;
 	private List moduleTypes;
+	
+	private List modules;
 
 	/**
 	 * ModuleFactory constructor comment.
@@ -51,7 +54,7 @@ public class ModuleFactory implements IModuleFactory {
 	 */
 	public int getOrder() {
 		try {
-			return Integer.parseInt(element.getAttribute("index"));
+			return Integer.parseInt(element.getAttribute("order"));
 		} catch (NumberFormatException e) {
 			return -1;
 		}
@@ -61,11 +64,13 @@ public class ModuleFactory implements IModuleFactory {
 	 * 
 	 * @return
 	 */
-	public List getModuleTypes() {
+	public IModuleType[] getModuleTypes() {
 		if (moduleTypes == null)
 			moduleTypes = ServerPlugin.getModuleTypes(element.getChildren("moduleType"));
 
-		return moduleTypes;
+		IModuleType[] mt = new IModuleType[moduleTypes.size()];
+		moduleTypes.toArray(mt);
+		return mt;
 	}
 	
 	/**
@@ -78,14 +83,14 @@ public class ModuleFactory implements IModuleFactory {
 	}
 
 	/*
-	 * @see IPublishManager#getDelegate()
+	 * @see IModuleFactoryDelegate#getDelegate()
 	 */
-	public IModuleFactoryDelegate getDelegate() {
+	public ModuleFactoryDelegate getDelegate() {
 		if (delegate == null) {
 			try {
-				delegate = (IModuleFactoryDelegate) element.createExecutableExtension("class");
-				ResourceManager rm = (ResourceManager) ServerCore.getResourceManager();
-				rm.addModuleFactoryListener(delegate);
+				delegate = (ModuleFactoryDelegate) element.createExecutableExtension("class");
+				delegate.initialize(this);
+				ResourceManager.getInstance().addModuleFactoryListener(delegate);
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + e.getMessage());
 			}
@@ -93,36 +98,43 @@ public class ModuleFactory implements IModuleFactory {
 		return delegate;
 	}
 
-	/**
-	 * Gets a module from a memento.
-	 * 
-	 * @param memento java.lang.String
-	 * @return org.eclipse.wst.server.core.model.IModule
+	/*
+	 * @see
 	 */
-	public IModule getModule(String memento) {
-		try {
-			return getDelegate().getModule(memento);
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
-			return null;
+	public IModule getModule(String id) {
+		if (modules == null)
+			getModules();
+		Iterator iterator = modules.iterator();
+		while (iterator.hasNext()) {
+			IModule module = (IModule) iterator.next();
+			if (id.equals(module.getId()))
+				return module;
 		}
+		return null;
 	}
 	
-	/**
-	 * Return all modules that are available to be added
-	 * to servers. This method might look through projects
-	 * to find modules or may return modules from
-	 * other sources.
-	 *
-	 * @return org.eclipse.wst.server.core.model.IModule[]
+	/*
+	 * @see
 	 */
-	public List getModules() {
-		try {
-			return getDelegate().getModules();
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
-			return null;
+	public IModule[] getModules() {
+		if (modules == null) {
+			try {
+				modules = new ArrayList();
+				IModule[] modules2 = getDelegate().getModules();
+				if (modules2 != null) {
+					int size = modules2.length;
+					for (int i = 0; i < size; i++)
+						modules.add(modules2[i]);
+				}
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
+				return null;
+			}
 		}
+		
+		IModule[] m = new IModule[modules.size()];
+		modules.toArray(m);
+		return m;
 	}
 	
 	/**

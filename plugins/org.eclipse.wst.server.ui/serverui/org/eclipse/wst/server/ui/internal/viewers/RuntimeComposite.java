@@ -1,6 +1,5 @@
 package org.eclipse.wst.server.ui.internal.viewers;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -72,18 +71,22 @@ public class RuntimeComposite extends AbstractTableComposite {
 				if (e.character == 'l') {
 					try {
 						IRuntime runtime = getSelectedRuntime();
-						IRuntimeWorkingCopy wc = runtime.getWorkingCopy();
+						IRuntimeWorkingCopy wc = runtime.createWorkingCopy();
 						wc.setLocked(!runtime.isLocked());
-						wc.save(new NullProgressMonitor());
+						wc.save(false, null);
 						refresh(runtime);
-					} catch (Exception ex) { }
+					} catch (Exception ex) {
+						// ignore
+					}
 				}
 			}
 
-			public void keyReleased(KeyEvent e) { }
+			public void keyReleased(KeyEvent e) {
+				// do nothing
+			}
 		});
 		
-		defaultRuntime = ServerCore.getResourceManager().getDefaultRuntime();
+		defaultRuntime = ServerCore.getDefaultRuntime();
 		if (defaultRuntime != null)
 			((CheckboxTableViewer)tableViewer).setChecked(defaultRuntime, true);
 
@@ -92,12 +95,12 @@ public class RuntimeComposite extends AbstractTableComposite {
 				try {
 					IRuntime runtime = (IRuntime) event.getElement();
 					if (event.getChecked()) {
-						if (defaultRuntime != null)
+						if (defaultRuntime != null && !runtime.equals(defaultRuntime))
 							((CheckboxTableViewer)tableViewer).setChecked(defaultRuntime, false);
-						ServerCore.getResourceManager().setDefaultRuntime(runtime);
+						ServerCore.setDefaultRuntime(runtime);
 						defaultRuntime = runtime;
 					} else
-						ServerCore.getResourceManager().setDefaultRuntime(null);
+						ServerCore.setDefaultRuntime(null);
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Error setting default runtime", e);
 				}

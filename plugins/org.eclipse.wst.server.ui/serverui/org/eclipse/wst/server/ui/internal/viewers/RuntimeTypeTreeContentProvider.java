@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -11,14 +11,9 @@
 package org.eclipse.wst.server.ui.internal.viewers;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.wst.server.core.IModuleKind;
-import org.eclipse.wst.server.core.IModuleType;
-import org.eclipse.wst.server.core.IRuntimeType;
-import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.core.*;
 /**
  * Runtime type content provider.
  */
@@ -54,52 +49,66 @@ public class RuntimeTypeTreeContentProvider extends AbstractTreeContentProvider 
 		clean();
 		List list = new ArrayList();
 		if (style != STYLE_FLAT) {
-			Iterator iterator = ServerUtil.getRuntimeTypes(type, version, runtimeTypeId).iterator();
-			while (iterator.hasNext()) {
-				IRuntimeType runtimeType = (IRuntimeType) iterator.next();
-				if (!creation || runtimeType.canCreate()) {
-					if (runtimeType.getOrder() > initialSelectionOrder) {
-						initialSelection = runtimeType;
-						initialSelectionOrder = runtimeType.getOrder();
-					}
-					TreeElement ele = null;
-					if (style == STYLE_VENDOR) {
-						ele = getOrCreate(list, runtimeType.getVendor());
-						ele.contents.add(runtimeType);
-						elementToParentMap.put(runtimeType, ele);
-					} else if (style == STYLE_VERSION) {
-						ele = getOrCreate(list, runtimeType.getVersion());
-						ele.contents.add(runtimeType);
-						elementToParentMap.put(runtimeType, ele);
-					} else if (style == STYLE_MODULE_TYPE) {
-						Iterator iterator2 = runtimeType.getModuleTypes().iterator();
-						while (iterator2.hasNext()) {
-							IModuleType mb = (IModuleType) iterator2.next();
-							IModuleKind mt = ServerCore.getModuleKind(mb.getType());
-							if (mt != null) {
-								ele = getOrCreate(list, mt.getName());
-								TreeElement ele2 = getOrCreate(ele.contents, mt.getName() + "/" + mb.getVersion(), mb.getVersion());
-								ele2.contents.add(runtimeType);
-								elementToParentMap.put(runtimeType, ele2);
-								elementToParentMap.put(ele2, ele);
+			IRuntimeType[] runtimeTypes = ServerUtil.getRuntimeTypes(type, version, runtimeTypeId);
+			if (runtimeTypes != null) {
+				int size = runtimeTypes.length;
+				for (int i = 0; i < size; i++) {
+					IRuntimeType runtimeType = runtimeTypes[i];
+					if (!creation || runtimeType.canCreate()) {
+						int order = getRuntimeOrder(runtimeType);
+						if (order > initialSelectionOrder) {
+							initialSelection = runtimeType;
+							initialSelectionOrder = order;
+						}
+						TreeElement ele = null;
+						if (style == STYLE_VENDOR) {
+							ele = getOrCreate(list, runtimeType.getVendor());
+							ele.contents.add(runtimeType);
+							elementToParentMap.put(runtimeType, ele);
+						} else if (style == STYLE_VERSION) {
+							ele = getOrCreate(list, runtimeType.getVersion());
+							ele.contents.add(runtimeType);
+							elementToParentMap.put(runtimeType, ele);
+						} else if (style == STYLE_MODULE_TYPE) {
+							IModuleType[] moduleTypes = runtimeType.getModuleTypes();
+							if (moduleTypes != null) {
+								int size2 = moduleTypes.length;
+								for (int j = 0; j < size2; j++) {
+									IModuleType mb = moduleTypes[j];
+									if (mb != null) {
+										ele = getOrCreate(list, mb.getName());
+										TreeElement ele2 = getOrCreate(ele.contents, mb.getName() + "/" + mb.getVersion(), mb.getVersion());
+										ele2.contents.add(runtimeType);
+										elementToParentMap.put(runtimeType, ele2);
+										elementToParentMap.put(ele2, ele);
+									}
+								}
 							}
 						}
 					}
 				}
 			}
 		} else {
-			Iterator iterator = ServerUtil.getRuntimeTypes(type, version, runtimeTypeId).iterator();
-			while (iterator.hasNext()) {
-				IRuntimeType runtimeType = (IRuntimeType) iterator.next();
-				if (!creation || runtimeType.canCreate()) {
-					if (runtimeType.getOrder() > initialSelectionOrder) {
-						initialSelection = runtimeType;
-						initialSelectionOrder = runtimeType.getOrder();
+			IRuntimeType[] runtimeTypes = ServerUtil.getRuntimeTypes(type, version, runtimeTypeId);
+			if (runtimeTypes != null) {
+				int size = runtimeTypes.length;
+				for (int i = 0; i < size; i++) {
+					IRuntimeType runtimeType = runtimeTypes[i];
+					if (!creation || runtimeType.canCreate()) {
+						int order = getRuntimeOrder(runtimeType);
+						if (order > initialSelectionOrder) {
+							initialSelection = runtimeType;
+							initialSelectionOrder = order;
+						}
+						list.add(runtimeType);
 					}
-					list.add(runtimeType);
 				}
 			}
 		}
 		elements = list.toArray();
+	}
+	
+	private int getRuntimeOrder(IRuntimeType runtimeType) {
+		return 0;
 	}
 }

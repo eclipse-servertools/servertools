@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -28,19 +28,19 @@ public class RuntimeClasspathContainerInitializer extends ClasspathContainerInit
 	public void initialize(IPath containerPath, IJavaProject project) throws CoreException {
 		if (containerPath.segmentCount() > 0) {
 			if (containerPath.segment(0).equals(RuntimeClasspathContainer.SERVER_CONTAINER)) {
-				ClasspathRuntimeTargetHandler delegate = null;
+				ClasspathRuntimeTargetHandler crth = null;
 				IRuntime runtime = null;
 				String id = "";
 				if (containerPath.segmentCount() > 2) {
 					IRuntimeTargetHandler handler = ServerCore.getRuntimeTargetHandler(containerPath.segment(1));
 					if (handler != null)
-						delegate = (ClasspathRuntimeTargetHandler) handler.getDelegate();
+						crth = (ClasspathRuntimeTargetHandler) handler.getAdapter(ClasspathRuntimeTargetHandler.class);
 					String runtimeId = containerPath.segment(2);
-					runtime = ServerCore.getResourceManager().getRuntime(runtimeId);
+					runtime = ServerCore.findRuntime(runtimeId);
 					if (containerPath.segmentCount() > 3)
 						id = containerPath.segment(3);
 				}
-				RuntimeClasspathContainer container = new RuntimeClasspathContainer(containerPath, delegate, runtime, id);
+				RuntimeClasspathContainer container = new RuntimeClasspathContainer(containerPath, crth, runtime, id);
 				JavaCore.setClasspathContainer(containerPath, new IJavaProject[] {project}, new IClasspathContainer[] {container}, null);
 			}
 		}

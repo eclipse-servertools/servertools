@@ -1,17 +1,14 @@
-package org.eclipse.wst.server.ui.internal.wizard.page;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
-import java.util.Iterator;
-import java.util.List;
+package org.eclipse.wst.server.ui.internal.wizard.page;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -32,7 +29,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.help.WorkbenchHelp;
-
 /**
  * A wizard page used to select a server client.
  */
@@ -40,7 +36,7 @@ public class SelectClientComposite extends Composite {
 	protected IWizardHandle wizard;
 
 	// the list of elements to select from
-	protected List elements;
+	protected IClient[] clients;
 
 	// the currently selected element
 	protected IClient selectedClient;
@@ -56,10 +52,10 @@ public class SelectClientComposite extends Composite {
 	 *
 	 * @param elements java.util.List
 	 */
-	public SelectClientComposite(Composite parent, IWizardHandle wizard, List elements) {
+	public SelectClientComposite(Composite parent, IWizardHandle wizard, IClient[] clients) {
 		super(parent, SWT.NONE);
 		this.wizard = wizard;
-		this.elements = elements;
+		this.clients = clients;
 	
 		wizard.setTitle(ServerUIPlugin.getResource("%wizSelectClientTitle"));
 		wizard.setDescription(ServerUIPlugin.getResource("%wizSelectClientDescription"));
@@ -111,13 +107,14 @@ public class SelectClientComposite extends Composite {
 		});
 		WorkbenchHelp.setHelp(elementTable, ContextIds.SELECT_CLIENT);
 	
-		Iterator iterator = elements.iterator();
-		while (iterator.hasNext()) {
-			IClient element = (IClient) iterator.next();
-			TableItem item = new TableItem(elementTable, SWT.NONE);
-			item.setText(0, ServerUICore.getLabelProvider().getText(element));
-			item.setImage(0, ServerUICore.getLabelProvider().getImage(element));
-			item.setData(element);
+		if (clients != null) {
+			int size = clients.length;
+			for (int i = 0; i < size; i++) {
+				TableItem item = new TableItem(elementTable, SWT.NONE);
+				item.setText(0, ServerUICore.getLabelProvider().getText(clients[i]));
+				item.setImage(0, ServerUICore.getLabelProvider().getImage(clients[i]));
+				item.setData(clients[i]);
+			}
 		}
 	
 		description = new Label(this, SWT.WRAP);
@@ -146,7 +143,7 @@ public class SelectClientComposite extends Composite {
 		if (index < 0)
 			selectedClient = null;
 		else
-			selectedClient = (IClient) elements.get(index);
+			selectedClient = clients[index];
 		
 		if (selectedClient != null)
 			wizard.setMessage(null, IMessageProvider.NONE);

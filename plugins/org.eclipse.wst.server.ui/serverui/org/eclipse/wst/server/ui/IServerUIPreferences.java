@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -19,27 +19,6 @@ public interface IServerUIPreferences {
 	public static final byte SAVE_EDITORS_NEVER = 0;
 	public static final byte SAVE_EDITORS_PROMPT = 1;
 	public static final byte SAVE_EDITORS_AUTO = 2;
-
-	/**
-	 * Returns whether the publishing details should be shown.
-	 *
-	 * @return boolean
-	 */
-	public boolean getShowPublishingDetails();
-
-	/**
-	 * Returns whether the publishing details should be shown by default.
-	 *
-	 * @return boolean
-	 */
-	public boolean getDefaultShowPublishingDetails();
-
-	/**
-	 * Sets whether the publishing details should be shown.
-	 *
-	 * @return boolean
-	 */
-	public void setShowPublishingDetails(boolean b);
 
 	/**
 	 * Returns whether the user should be prompted before making an
@@ -64,7 +43,7 @@ public interface IServerUIPreferences {
 	 * @return boolean
 	 */
 	public void setPromptBeforeIrreversibleChange(boolean b);
-	
+
 	/**
 	 * Returns the default setting for saving editors before launching.
 	 * 

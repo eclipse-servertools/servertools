@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,8 +9,6 @@
  *     IBM Corporation - Initial API and implementation
  **********************************************************************/
 package org.eclipse.wst.server.core.internal;
-
-import org.eclipse.wst.server.core.ServerCore;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -63,7 +61,7 @@ public class Trace {
 	 * @param t java.lang.Throwable
 	 */
 	public static void trace(int level, String s, Throwable t) {
-		trace(ServerCore.PLUGIN_ID, level, s, t);
+		trace(ServerPlugin.PLUGIN_ID, level, s, t);
 	}
 
 	/**

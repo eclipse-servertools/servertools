@@ -1,6 +1,6 @@
 /**********************************************************************
  * Copyright (c) 2004 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -11,8 +11,6 @@
 package org.eclipse.wst.server.core;
 
 import java.beans.PropertyChangeListener;
-import java.util.List;
-import java.util.Map;
 /**
  * Provides additional methods common to working copies of an element.
  * <p>
@@ -22,62 +20,7 @@ import java.util.Map;
  * @since 1.0
  */
 public interface IElementWorkingCopy extends IElement {
-	
-	/**
-	 * Sets the value of the specified integer-valued attribute of this
-	 * element.
-	 * 
-	 * @param id the attribute id
-	 * @param value the value of the specified attribute
-	 * @see IElement#getAttribute(String, int)
-	 */
-	public void setAttribute(String id, int value);
-
-	/**
-	 * Sets the value of the specified boolean-valued attribute of this
-	 * element.
-	 * 
-	 * @param id the attribute id
-	 * @param value the value of the specified attribute
-	 * @see IElement#getAttribute(String, boolean)
-	 */
-	public void setAttribute(String id, boolean value);
-
-	/**
-	 * Sets the value of the specified string-valued attribute of this
-	 * element.
-	 * 
-	 * @param id the attribute id
-	 * @param value the value of the specified attribute
-	 * @see IElement#getAttribute(String, String)
-	 */
-	public void setAttribute(String id, String value);
-
-	/**
-	 * Sets the value of the specified list-valued attribute of this
-	 * element.
-	 * <p>
-	 * [issue: Serialization/deserialization]
-	 * </p>
-	 * 
-	 * @param id the attribute id
-	 * @param value the value of the specified attribute
-	 * @see IElement#getAttribute(String, List)
-	 */
-	public void setAttribute(String id, List value);
-
-	/**
-	 * Sets the value of the specified map-valued attribute of this
-	 * element.
-	 * <p>
-	 * [issue: Serialization/deserialization]
-	 * </p>
-	 * 
-	 * @param id the attribute id
-	 * @param value the value of the specified attribute
-	 * @see IElement#getAttribute(String, Map)
-	 */
-	public void setAttribute(String id, Map value);
+	public static final int TIMESTAMP_ERROR = 5;
 
 	/**
 	 * Sets the displayable name for this element.
@@ -127,15 +70,6 @@ public interface IElementWorkingCopy extends IElement {
 	 * changes, and <code>false</code> otherwise
 	 */
 	public boolean isDirty();
-	
-	/**
-	 * Releases this working copy.
-	 * <p>
-	 * Element implementations retain internal references to
-	 * extant working copies. Calling this method drop that reference.
-	 * </p>
-	 */
-	public void release();
 
 	/**
 	 * Adds a property change listener to this server.

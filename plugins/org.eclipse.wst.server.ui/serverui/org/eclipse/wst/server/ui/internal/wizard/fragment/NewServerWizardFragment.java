@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,25 +10,16 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.wizard.fragment;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.ui.ServerUICore;
-import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.wizard.page.NewServerComposite;
-import org.eclipse.wst.server.ui.internal.wizard.page.WizardUtil;
-import org.eclipse.wst.server.ui.wizard.IWizardFragment;
-import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
+import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 /**
  * 
  */
@@ -45,7 +36,9 @@ public class NewServerWizardFragment extends WizardFragment {
 	protected Map fragmentMap = new HashMap();
 	protected Map configMap = new HashMap();
 	
-	public NewServerWizardFragment() { }
+	public NewServerWizardFragment() {
+		// do nothing
+	}
 	
 	public NewServerWizardFragment(IModule module, String launchMode) {
 		this.module = module;
@@ -71,7 +64,7 @@ public class NewServerWizardFragment extends WizardFragment {
 		return comp;
 	}
 
-	protected void createConfiguration(IServerWorkingCopy server) {
+	/*protected void createConfiguration(IServerWorkingCopy server) {
 		ITaskModel model = getTaskModel();
 		IRuntime runtime = (IRuntime) model.getObject(ITaskModel.TASK_RUNTIME);
 		
@@ -80,15 +73,13 @@ public class NewServerWizardFragment extends WizardFragment {
 			server.setServerConfiguration(null);
 			IStatus status = null;
 			if (runtime != null)
-				status = runtime.validate();
+				status = runtime.validate(null);
 			if (status == null || status.isOK()) {
 				try {
 					IFile file = null;
 					if (ServerCore.getServerPreferences().isCreateResourcesInWorkspace())
-						file = ServerUtil.getUnusedServerConfigurationFile(WizardUtil.getServerProject(), type.getServerConfigurationType());
+						file = ServerUtil.getUnusedServerConfigurationFile(WizardUtil.getServerProject(), null);
 					
-					/*IServerConfigurationWorkingCopy serverConfiguration = type.getServerConfigurationType().importFromRuntime(null, file, runtime, new NullProgressMonitor());
-					ServerUtil.setServerConfigurationDefaultName(serverConfiguration);*/
 					IServerConfigurationWorkingCopy serverConfiguration = getServerConfiguration(type.getServerConfigurationType(), file, runtime);
 					model.putObject(ITaskModel.TASK_SERVER_CONFIGURATION, serverConfiguration);
 					server.setServerConfiguration(serverConfiguration);
@@ -97,42 +88,40 @@ public class NewServerWizardFragment extends WizardFragment {
 				}
 			}
 		}
-	}
+	}*/
 	
-	protected IServerConfigurationWorkingCopy getServerConfiguration(IServerConfigurationType type, IFile file, IRuntime runtime) throws CoreException {
+	/*protected IServerConfigurationWorkingCopy getServerConfiguration(IServerConfigurationType type, IFile file, IRuntime runtime) throws CoreException {
 		Object key = type.getId() + "|" + file + "|" + runtime;
 		try {
 			IServerConfigurationWorkingCopy serverConfiguration = (IServerConfigurationWorkingCopy) configMap.get(key);
 			if (serverConfiguration != null)
 				return serverConfiguration;
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 
 		IServerConfigurationWorkingCopy serverConfiguration = type.importFromRuntime(null, file, runtime, new NullProgressMonitor());
 		ServerUtil.setServerConfigurationDefaultName(serverConfiguration);
 		configMap.put(key, serverConfiguration);
 		return serverConfiguration;
-	}
+	}*/
 
-	protected IWizardFragment getWizardFragment(String typeId) {
+	protected WizardFragment getWizardFragment(String typeId) {
 		try {
-			IWizardFragment fragment = (IWizardFragment) fragmentMap.get(typeId);
+			WizardFragment fragment = (WizardFragment) fragmentMap.get(typeId);
 			if (fragment != null)
 				return fragment;
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		
-		IWizardFragment fragment = ServerUICore.getWizardFragment(typeId);
+		WizardFragment fragment = ServerUICore.getWizardFragment(typeId);
 		if (fragment != null)
 			fragmentMap.put(typeId, fragment);
 		return fragment;
 	}
-	
-	public List getChildFragments() {
-		listImpl = new ArrayList();
-		createSubFragments(listImpl);
-		return listImpl;
-	}
 
-	public void createSubFragments(List list) {
+	protected void createChildFragments(List list) {
 		if (getTaskModel() == null)
 			return;
 
@@ -140,15 +129,15 @@ public class NewServerWizardFragment extends WizardFragment {
 		if (b != null && b.byteValue() == MODE_MANUAL) {
 			IRuntime runtime = (IRuntime) getTaskModel().getObject(ITaskModel.TASK_RUNTIME);
 			if (runtime != null && runtime instanceof IRuntimeWorkingCopy) {
-				IWizardFragment sub = getWizardFragment(runtime.getRuntimeType().getId());
+				WizardFragment sub = getWizardFragment(runtime.getRuntimeType().getId());
 				if (sub != null)
 					list.add(sub);
 			}
 			
 			IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
 			if (server != null) {
-				createConfiguration(server);
-				IWizardFragment sub = getWizardFragment(server.getServerType().getId());
+				/*createConfiguration(server);
+				WizardFragment sub = getWizardFragment(server.getServerType().getId());
 				if (sub != null)
 					list.add(sub);
 			
@@ -157,7 +146,7 @@ public class NewServerWizardFragment extends WizardFragment {
 					sub = getWizardFragment(serverConfiguration.getServerConfigurationType().getId());
 					if (sub != null)
 						list.add(sub);
-				}
+				}*/
 			}
 			//list.add(new TasksWizardFragment());
 		} else if (b != null && b.byteValue() == MODE_EXISTING) {
@@ -169,7 +158,7 @@ public class NewServerWizardFragment extends WizardFragment {
 		}
 	}
 	
-	public IServer getServer() {
+	public IServerWorkingCopy getServer() {
 		if (comp == null)
 			return null;
 		return comp.getServer();

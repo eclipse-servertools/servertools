@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,15 +14,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerMonitor;
-import org.eclipse.wst.server.core.model.IServerMonitorDelegate;
-import org.eclipse.wst.server.core.model.IServerPort;
+import org.eclipse.wst.server.core.IServerPort;
+import org.eclipse.wst.server.core.model.ServerMonitorDelegate;
 /**
  * 
  */
 public class ServerMonitor implements IServerMonitor {
 	private IConfigurationElement element;
-	private IServerMonitorDelegate delegate;
+	private ServerMonitorDelegate delegate;
 
 	/**
 	 * Monitor constructor comment.
@@ -61,10 +60,10 @@ public class ServerMonitor implements IServerMonitor {
 	/*
 	 * @see IMonitor#getDelegate()
 	 */
-	public IServerMonitorDelegate getDelegate() {
+	public ServerMonitorDelegate getDelegate() {
 		if (delegate == null) {
 			try {
-				delegate = (IServerMonitorDelegate) element.createExecutableExtension("class");
+				delegate = (ServerMonitorDelegate) element.createExecutableExtension("class");
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString() + ": " + e.getMessage());
 			}

@@ -3,23 +3,22 @@
 
 <plugin id="org.eclipse.jst.server.core"
   name="%pluginName"
-  version="3.0.0"
+  version="1.0.0"
   provider-name="%providerName"
   class="org.eclipse.jst.server.core.internal.JavaServerPlugin">
 
   <requires>
-    <import plugin="org.eclipse.core.resources" />
-    <import plugin="org.eclipse.debug.core" />
-    <import plugin="org.eclipse.wst.server.core" />
-    <import plugin="org.eclipse.jdt.core" />
-    <import plugin="org.eclipse.jdt.launching" />
+    <import plugin="org.eclipse.core.resources"/>
+    <import plugin="org.eclipse.debug.core"/>
+    <import plugin="org.eclipse.wst.server.core"/>
+    <import plugin="org.eclipse.jdt.core"/>
+    <import plugin="org.eclipse.jdt.launching"/>
     <import plugin="org.eclipse.core.runtime"/>
   </requires>
 
   <runtime>
     <library name="sjavacore.jar">
       <export name="*"/>
-      <packages prefixes="org.eclipse.jst.server.core,org.eclipse.jst.server.j2ee"/>
     </library>
   </runtime>
 
@@ -28,15 +27,15 @@
       id="org.eclipse.jst.server.core.container"
       class="org.eclipse.jst.server.core.internal.RuntimeClasspathContainerInitializer"/>
   </extension>
-  
-  <extension point="org.eclipse.wst.server.core.moduleKinds">
-    <moduleKind
+
+  <extension point="org.eclipse.wst.server.core.moduleTypes">
+    <moduleType
        id="j2ee.web"
        name="%moduleTypeJ2EEWebName"/>
-    <moduleKind
+    <moduleType
        id="j2ee.ejb"
        name="%moduleTypeJ2EEEJBName"/>
-    <moduleKind
+    <moduleType
        id="j2ee.ear"
        name="%moduleTypeJ2EEEARName"/>
   </extension>
@@ -46,8 +45,7 @@
        id="org.eclipse.jst.server.core.runtimeType"
        name="%runtimeTypeName"
        description="%runtimeTypeDescription"
-       class="org.eclipse.jst.server.core.internal.GenericRuntime"
-       workingCopyClass="org.eclipse.jst.server.core.internal.GenericRuntimeWorkingCopy">
+       class="org.eclipse.jst.server.core.internal.GenericRuntime">
        <moduleType
          types="j2ee"
          versions="*"/>

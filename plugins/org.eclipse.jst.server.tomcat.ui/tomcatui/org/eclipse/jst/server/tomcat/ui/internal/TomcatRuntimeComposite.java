@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.ui.internal;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.jst.server.tomcat.ui.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.tomcat.ui.internal;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,6 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jst.server.tomcat.core.ITomcatRuntimeWorkingCopy;
-import org.eclipse.jst.server.tomcat.core.internal.TomcatRuntimeWorkingCopy;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.ModifyEvent;
@@ -82,7 +82,7 @@ public class TomcatRuntimeComposite extends Composite {
 			runtime = null;
 		} else {
 			runtimeWC = newRuntime;
-			runtime = (TomcatRuntimeWorkingCopy) newRuntime.getWorkingCopyDelegate();
+			runtime = (ITomcatRuntimeWorkingCopy) newRuntime.getAdapter(ITomcatRuntimeWorkingCopy.class);
 		}
 		
 		init();
@@ -164,7 +164,7 @@ public class TomcatRuntimeComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				int sel = combo.getSelectionIndex();
 				IVMInstall vmInstall = (IVMInstall) installedJREs.get(sel);
-				runtime.setVMInstall(vmInstall.getVMInstallType().getId(), vmInstall.getId());
+				runtime.setVMInstall(vmInstall);
 				validate();
 			}
 
@@ -256,8 +256,7 @@ public class TomcatRuntimeComposite extends Composite {
 		int size = installedJREs.size();
 		for (int i = 0; i < size; i++) {
 			IVMInstall vmInstall = (IVMInstall) installedJREs.get(i);
-			if (vmInstall.getVMInstallType().getId().equals(runtime.getVMInstallTypeId())
-					&& vmInstall.getId().equals(runtime.getVMInstallId())) {
+			if (vmInstall.equals(runtime.getVMInstall())) {
 				combo.select(i);
 				found = true;
 			}
@@ -272,7 +271,7 @@ public class TomcatRuntimeComposite extends Composite {
 			return;
 		}
 
-		IStatus status = runtime.validate();
+		IStatus status = runtimeWC.validate(null);
 		if (status == null || status.isOK())
 			wizard.setMessage(null, IMessageProvider.NONE);
 		else

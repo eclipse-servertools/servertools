@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
@@ -26,8 +27,8 @@ import org.eclipse.wst.server.core.IRuntime;
  * 
  */
 public class GenericRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
-	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime) {
-		GenericRuntime genericRuntime = (GenericRuntime) runtime.getDelegate();
+	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
+		GenericRuntime genericRuntime = (GenericRuntime) runtime.getAdapter(GenericRuntime.class);
 		IVMInstall vmInstall = genericRuntime.getVMInstall();
 		if (vmInstall != null) {
 			String name = vmInstall.getName();
@@ -37,7 +38,7 @@ public class GenericRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
 	}
 
 	public String getClasspathContainerLabel(IRuntime runtime, String id) {
-		return JavaServerPlugin.getResource("%runtimeTargetContainer");
+		return JavaServerPlugin.getResource("%runtimeTypeName");
 	}
 	
 	public String[] getClasspathEntryIds(IRuntime runtime) {

@@ -1,29 +1,27 @@
-package org.eclipse.wst.server.ui.internal.view.tree;
-/**
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+/**********************************************************************
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
- *    IBM - Initial API and implementation
- */
+ *     IBM Corporation - Initial API and implementation
+ **********************************************************************/
+package org.eclipse.wst.server.ui.internal.view.tree;
+
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.util.MissingModule;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.ServerLabelProvider;
 import org.eclipse.ui.model.IWorkbenchAdapter;
-
 /**
  *
  */
@@ -57,15 +55,15 @@ public class ModuleResourceAdapter implements IAdaptable, IWorkbenchAdapter, ISe
 	 * @see IWorkbenchAdapter#getChildren(Object)
 	 */
 	public Object[] getChildren(Object o) {
-		List childModules = server.getChildModules(module);
+		IModule[] childModules = server.getChildModules(module, null);
 		if (childModules == null)
 			return NO_CHILDREN;
-		Iterator iterator = childModules.iterator();
-
+		
 		List child = new ArrayList();
-		while (iterator.hasNext()) {
-			IModule module2 = (IModule) iterator.next();
-			child.add(new ModuleResourceAdapter(this, server, module2));
+		if (childModules != null) {
+			int size = childModules.length;
+			for (int i = 0; i < size; i++)
+				child.add(new ModuleResourceAdapter(this, server, childModules[i]));
 		}
 
 		ModuleResourceAdapter[] adapters = new ModuleResourceAdapter[child.size()];
@@ -86,10 +84,8 @@ public class ModuleResourceAdapter implements IAdaptable, IWorkbenchAdapter, ISe
 	public String getLabel(Object o) {
 		if (module == null)
 			return "";
-		else if (module instanceof MissingModule)
-			return "(" + module.getName() + ")";
-		else
-			return module.getName();
+		
+		return module.getName();
 	}
 
 	/*

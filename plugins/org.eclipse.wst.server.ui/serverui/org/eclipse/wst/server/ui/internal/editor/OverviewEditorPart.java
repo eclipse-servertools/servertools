@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.editor;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,8 +8,11 @@ package org.eclipse.wst.server.ui.internal.editor;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.editor;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -31,22 +33,21 @@ import org.eclipse.wst.server.core.util.SocketUtil;
 import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.command.SetServerConfigurationNameCommand;
 import org.eclipse.wst.server.ui.internal.command.SetServerHostnameCommand;
 import org.eclipse.wst.server.ui.internal.command.SetServerNameCommand;
 import org.eclipse.wst.server.ui.internal.command.SetServerRuntimeCommand;
 /**
  * Server general editor page.
  */
-public class OverviewEditorPart extends ServerResourceEditorPart {
+public class OverviewEditorPart extends ServerEditorPart {
 	protected Text serverName;
-	protected Text serverConfigurationName;
+	protected Label serverConfigurationName;
 	protected Text hostname;
 	protected Combo runtimeCombo;
 	
 	protected boolean updating;
 	
-	protected List runtimes;
+	protected IRuntime[] runtimes;
 
 	protected PropertyChangeListener listener;
 
@@ -59,14 +60,6 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 	
 	protected ICommandManager getCommandManager() {
 		return commandManager;
-	}
-	
-	protected IServerWorkingCopy getServer() {
-		return server;
-	}
-	
-	protected IServerConfigurationWorkingCopy getServerConfiguration() {
-		return serverConfiguration;
 	}
 
 	/**
@@ -88,15 +81,11 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 		};
 		if (server != null)
 			server.addPropertyChangeListener(listener);
-		if (serverConfiguration != null)
-			serverConfiguration.addPropertyChangeListener(listener);
 	}
 
 	protected void updateNames() {
 		if (serverName != null)
 			serverName.setText(server.getName());
-		if (serverConfigurationName != null)
-			serverConfigurationName.setText(serverConfiguration.getName());
 	}
 
 	/**
@@ -168,29 +157,11 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 			});
 		}
 		
-		// server configuration name
-		if (serverConfiguration != null) {
-			createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewServerConfigurationName"));
-			
-			serverConfigurationName = toolkit.createText(composite, serverConfiguration.getName());
-			GridData data = new GridData(GridData.FILL_HORIZONTAL);
-			serverConfigurationName.setLayoutData(data);
-			serverConfigurationName.addModifyListener(new ModifyListener() {
-				public void modifyText(ModifyEvent e) {
-					if (updating)
-						return;
-					updating = true;
-					getCommandManager().executeCommand(new SetServerConfigurationNameCommand(getServerConfiguration(), serverConfigurationName.getText()));
-					updating = false;
-				}
-			});
-		}
-		
 		// hostname
 		if (server != null) {
 			createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewServerHostname"));
 			
-			hostname = toolkit.createText(composite, server.getHostname());
+			hostname = toolkit.createText(composite, server.getHost());
 			GridData data = new GridData(GridData.FILL_HORIZONTAL);
 			hostname.setLayoutData(data);
 			hostname.addModifyListener(new ModifyListener() {
@@ -204,27 +175,38 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 			});
 		}
 		
+		// server configuration path
+		if (server != null && server.getServerType().hasServerConfiguration()) {
+			createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewServerConfigurationPath"));
+			
+			serverConfigurationName = toolkit.createLabel(composite, "" + server.getServerConfiguration());
+			GridData data = new GridData(GridData.FILL_HORIZONTAL);
+			serverConfigurationName.setLayoutData(data);
+		}
+		
+		// runtime
 		if (server != null && server.getServerType() != null && server.getServerType().hasRuntime()) {
 			IRuntime runtime = server.getRuntime();
 			createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewRuntime"));
 			
 			IRuntimeType runtimeType = server.getServerType().getRuntimeType();
-			runtimes = ServerCore.getResourceManager().getRuntimes(runtimeType);
+			runtimes = ServerUtil.getRuntimes(runtimeType);
 			
-			if (runtimes.size() < 2) {
-				if (runtime == null)
-					toolkit.createLabel(composite, "");
-				else
-					toolkit.createLabel(composite, runtime.getName());
-			} else {
+			if (runtimes == null || runtimes.length == 0)
+				toolkit.createLabel(composite, "");
+			else if (runtimes.length == 1)
+				toolkit.createLabel(composite, runtime.getName());
+			else {
 				runtimeCombo = new Combo(composite, SWT.READ_ONLY);
 				GridData data = new GridData(GridData.FILL_HORIZONTAL);
 				runtimeCombo.setLayoutData(data);
 				updateRuntimeCombo();
 				
-				int index = runtimes.indexOf(runtime);
-				if (index >= 0)
-					runtimeCombo.select(index);
+				int size = runtimes.length;
+				for (int i = 0; i < size; i++) {
+					if (runtimes[i].equals(runtime))
+						runtimeCombo.select(i);
+				}
 				
 				runtimeCombo.addSelectionListener(new SelectionListener() {
 					public void widgetSelected(SelectionEvent e) {
@@ -232,10 +214,12 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 							if (updating)
 								return;
 							updating = true;
-							IRuntime newRuntime = (IRuntime) runtimes.get(runtimeCombo.getSelectionIndex());
+							IRuntime newRuntime = runtimes[runtimeCombo.getSelectionIndex()];
 							getCommandManager().executeCommand(new SetServerRuntimeCommand(getServer(), newRuntime));
 							updating = false;
-						} catch (Exception ex) { }
+						} catch (Exception ex) {
+							// ignore
+						}
 					}
 					public void widgetDefaultSelected(SelectionEvent e) {
 						widgetSelected(e);
@@ -263,27 +247,25 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 	
 	protected void updateRuntimeCombo() {
 		IRuntimeType runtimeType = server.getServerType().getRuntimeType();
-		runtimes = ServerCore.getResourceManager().getRuntimes(runtimeType);
+		runtimes = ServerUtil.getRuntimes(runtimeType);
 		
-		if (SocketUtil.isLocalhost(server.getHostname())) {
-			int size = runtimes.size();
-			int i = 0;
-			while (i < size) {
-				IRuntime runtime2 = (IRuntime) runtimes.get(i);
-				if (runtime2.getAttribute("stub", false)) {
-					size --;
-					runtimes.remove(i);
-				} else
-					i++;
+		if (SocketUtil.isLocalhost(server.getHost()) && runtimes != null) {
+			List runtimes2 = new ArrayList();
+			int size = runtimes.length;
+			for (int i = 0; i < size; i++) {
+				IRuntime runtime2 = runtimes[i];
+				if (!runtime2.isStub())
+					runtimes2.add(runtime2);
 			}
+			runtimes = new IRuntime[runtimes2.size()];
+			runtimes2.toArray(runtimes);
 		}
 		
-		int size = runtimes.size();
+		int size = runtimes.length;
 		String[] items = new String[size];
-		for (int i = 0; i < size; i++) {
-			IRuntime runtime2 = (IRuntime) runtimes.get(i);
-			items[i] = runtime2.getName();
-		}
+		for (int i = 0; i < size; i++)
+			items[i] = runtimes[i].getName();
+		
 		runtimeCombo.setItems(items);
 	}
 
@@ -298,8 +280,6 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 		
 		if (server != null)
 			server.removePropertyChangeListener(listener);
-		if (serverConfiguration != null)
-			serverConfiguration.removePropertyChangeListener(listener);
 	}
 	
 	/* (non-Javadoc)
@@ -327,18 +307,11 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 			else
 				serverName.setEnabled(true);
 		}
-		if (serverConfiguration != null) {
-			serverConfigurationName.setText(serverConfiguration.getName());
-			if (readOnly)
-				serverConfigurationName.setEnabled(false);
-			else
-				serverConfigurationName.setEnabled(true);
-		}
 		
 		updating = false;
 	}
 	
-	protected void validate() { }
+	//protected void validate() { }
 
 	/**
 	 * @see IWorkbenchPart#setFocus()

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,6 @@ package org.eclipse.wst.server.core;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.model.IProjectPropertiesListener;
 /**
  * This interface holds information on the properties of a given project.
  *
@@ -55,7 +54,30 @@ public interface IProjectProperties {
 	 */
 	public void setRuntimeTarget(IRuntime runtime, IProgressMonitor monitor) throws CoreException;
 
+	/**
+	 * 
+	 */
+	public boolean isServerProject();
+
+	/**
+	 * 
+	 * @param b
+	 */
+	public void setServerProject(boolean b, IProgressMonitor monitor) throws CoreException;
+
+	/**
+	 * Adds a new project properties listener.
+	 * Has no effect if an identical listener is already registered.
+	 * 
+	 * @param listener
+	 */
 	public void addProjectPropertiesListener(IProjectPropertiesListener listener);
 
+	/**
+	 * Removes an existing project properties listener.
+	 * Has no effect if the listener is not registered.
+	 * 
+	 * @param listener
+	 */
 	public void removeProjectPropertiesListener(IProjectPropertiesListener listener);
 }

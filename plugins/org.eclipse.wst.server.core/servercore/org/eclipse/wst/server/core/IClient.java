@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -12,9 +12,6 @@ package org.eclipse.wst.server.core;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunch;
-
-import org.eclipse.wst.server.core.model.IClientDelegate;
-import org.eclipse.wst.server.core.model.ILaunchable;
 /**
  * A launchable client is a client side application or test
  * harness that can be launched (run) against a resource
@@ -24,38 +21,39 @@ import org.eclipse.wst.server.core.model.ILaunchable;
  */
 public interface IClient {
 	/**
-	 * Returns the id of the adapter.
-	 *
-	 * @return java.lang.String
+	 * Returns the id of this client. Each known client has a distinct id. 
+	 * Ids are intended to be used internally as keys; they are not
+	 * intended to be shown to end users.
+	 * 
+	 * @return the client id
 	 */
 	public String getId();
 
 	/**
-	 * Returns the label (name) of this client.
-	 * 
-	 * @return java.lang.String
+	 * Returns the displayable name for this client.
+	 * <p>
+	 * Note that this name is appropriate for the current locale.
+	 * </p>
+	 *
+	 * @return a displayable name for this client
 	 */
 	public String getName();
 
 	/**
-	 * Returns the description of this client.
-	 * 
-	 * @return java.lang.String
+	 * Returns the displayable description for this client.
+	 * <p>
+	 * Note that this description is appropriate for the current locale.
+	 * </p>
+	 *
+	 * @return a displayable description for this client
 	 */
 	public String getDescription();
 
 	/**
-	 * Returns the delegate for this launchable client
-	 * 
-	 * @return org.eclipse.wst.server.core.model.ILaunchableClientDelegate
-	 */
-	public IClientDelegate getDelegate();
-
-	/**
 	 * Returns true if this launchable can be run by this client.
 	 * 
-	 * @param server org.eclipse.wst.server.core.model.IServer
-	 * @param launchable org.eclipse.wst.server.core.model.ILaunchable
+	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param launchable org.eclipse.wst.server.core.ILaunchable
 	 * @param launchMode String
 	 * @return boolean
 	 */
@@ -64,11 +62,11 @@ public interface IClient {
 	/**
 	 * Launches the client.
 	 * 
-	 * @param server org.eclipse.wst.server.core.model.IServer
-	 * @param launchable org.eclipse.wst.server.core.model.ILaunchable
-	 * @param launchMode String
-	 * @param launch org.eclipse.debug.core.ILaunch
-	 * @return org.eclipse.core.runtime.IStatus
+	 * @param server
+	 * @param launchable
+	 * @param launchMode
+	 * @param launch
+	 * @return
 	 */
 	public IStatus launch(IServer server, ILaunchable launchable, String launchMode, ILaunch launch);
 }

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,15 +15,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunch;
 
 import org.eclipse.wst.server.core.IClient;
+import org.eclipse.wst.server.core.ILaunchable;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.model.IClientDelegate;
-import org.eclipse.wst.server.core.model.ILaunchable;
+import org.eclipse.wst.server.core.model.ClientDelegate;
 /**
  * 
  */
 public class Client implements IClient {
 	private IConfigurationElement element;
-	private IClientDelegate delegate;
+	private ClientDelegate delegate;
 
 	/**
 	 * LaunchableClient constructor comment.
@@ -62,10 +62,10 @@ public class Client implements IClient {
 	/*
 	 * @see IPublishManager#getDelegate()
 	 */
-	public IClientDelegate getDelegate() {
+	public ClientDelegate getDelegate() {
 		if (delegate == null) {
 			try {
-				delegate = (IClientDelegate) element.createExecutableExtension("class");
+				delegate = (ClientDelegate) element.createExecutableExtension("class");
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString() + ": " + e.getMessage());
 			}
@@ -103,6 +103,6 @@ public class Client implements IClient {
 	 * @return java.lang.String
 	 */
 	public String toString() {
-		return "LaunchableClient[" + getId() + "]";
+		return "Client[" + getId() + "]";
 	}
 }

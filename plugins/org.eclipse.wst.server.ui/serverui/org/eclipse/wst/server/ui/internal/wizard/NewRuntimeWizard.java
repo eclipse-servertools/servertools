@@ -1,15 +1,15 @@
-package org.eclipse.wst.server.ui.internal.wizard;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.wizard;
+
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -30,7 +30,7 @@ public class NewRuntimeWizard extends TaskWizard implements INewWizard {
 	 */
 	public NewRuntimeWizard() {
 		super(ServerUIPlugin.getResource("%wizNewRuntimeWizardTitle"), new WizardFragment() {
-			public void createSubFragments(List list) {
+			protected void createChildFragments(List list) {
 				list.add(new NewRuntimeWizardFragment());
 				list.add(new FinishWizardFragment(new SaveRuntimeTask()));
 			}
@@ -39,5 +39,7 @@ public class NewRuntimeWizard extends TaskWizard implements INewWizard {
 		setForcePreviousAndNextButtons(true);
 	}
 	
-	public void init(IWorkbench newWorkbench, IStructuredSelection newSelection) { }
+	public void init(IWorkbench newWorkbench, IStructuredSelection newSelection) {
+		// do nothing
+	}
 }

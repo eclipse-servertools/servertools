@@ -1,15 +1,15 @@
-package org.eclipse.wst.server.ui.internal.view.servers;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.view.servers;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -17,19 +17,20 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-
 /**
  * Stop (terminate) a server.
  */
 public class StopAction extends AbstractServerAction {
-	protected byte serverStateSet;
+	protected int serverStateSet;
 
-	public StopAction(Shell shell, ISelectionProvider selectionProvider, String name, byte serverStateSet) {
+	public StopAction(Shell shell, ISelectionProvider selectionProvider, String name, int serverStateSet) {
 		super(shell, selectionProvider, name);
 		this.serverStateSet = serverStateSet;
 		try {
 			selectionChanged((IStructuredSelection) selectionProvider.getSelection());
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 
 	/**
@@ -59,7 +60,7 @@ public class StopAction extends AbstractServerAction {
 				dialog.setBlockOnOpen(false);
 				dialog.open();
 	
-				server.stop();
+				server.stop(false);
 				dialog.close();
 			}
 		});

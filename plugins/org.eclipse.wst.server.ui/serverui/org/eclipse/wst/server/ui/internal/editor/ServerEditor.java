@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.editor;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.wst.server.ui.internal.editor;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.editor;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
@@ -27,11 +28,6 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.internal.ServerConfigurationWorkingCopy;
-import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
-import org.eclipse.wst.server.core.model.IServerResourceListener;
-import org.eclipse.wst.server.core.util.ProgressUtil;
-import org.eclipse.wst.server.core.util.ServerResourceAdapter;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.wst.server.ui.internal.*;
@@ -51,15 +47,21 @@ public class ServerEditor extends MultiPageEditorPart {
 			handleActivation();
 		}
 
-		public void partBroughtToTop(IWorkbenchPart part) { }
+		public void partBroughtToTop(IWorkbenchPart part) {
+			// do nothing
+		}
 
-		public void partClosed(IWorkbenchPart part) { }
+		public void partClosed(IWorkbenchPart part) {
+			// do nothing
+		}
 
 		public void partDeactivated(IWorkbenchPart part) {
 			fActivePart = null;
 		}
 
-		public void partOpened(IWorkbenchPart part) { }
+		public void partOpened(IWorkbenchPart part) {
+			// do nothing
+		}
 
 		public void shellActivated(ShellEvent e) {
 			handleActivation();
@@ -79,11 +81,22 @@ public class ServerEditor extends MultiPageEditorPart {
 			}
 		}
 	}
+	
+	class LifecycleListener implements IServerLifecycleListener {
+		public void serverAdded(IServer oldServer) {
+			// do nothing
+		}
+		public void serverChanged(IServer oldServer) {
+			// do nothing
+		}
+		public void serverRemoved(IServer oldServer) {
+			if (oldServer.equals(server) && !isDirty())
+				closeEditor();
+		}
+	}
 
 	protected IServerWorkingCopy server;
-	protected IServerConfigurationWorkingCopy serverConfiguration;
 	protected String serverId;
-	protected String serverConfigurationId;
 
 	protected GlobalCommandManager commandManager;
 
@@ -112,7 +125,7 @@ public class ServerEditor extends MultiPageEditorPart {
 	protected StatusLineContributionItem statusItem;
 	
 	private ActivationListener activationListener = new ActivationListener();
-	protected IServerResourceListener resourceListener;
+	protected LifecycleListener resourceListener;
 	
 	// Used for disabling resource change check when saving through editor.
 	protected boolean isSaving = false;
@@ -127,7 +140,7 @@ public class ServerEditor extends MultiPageEditorPart {
 
 		undoAction = new Action() {
 			public void run() {
-				getCommandManager().undo(serverId, serverConfigurationId);
+				getCommandManager().undo(serverId);
 			}
 		};
 		undoAction.setEnabled(false);
@@ -137,7 +150,7 @@ public class ServerEditor extends MultiPageEditorPart {
 	
 		redoAction = new Action() {
 			public void run() {
-				getCommandManager().redo(serverId, serverConfigurationId);
+				getCommandManager().redo(serverId);
 			}
 		};
 		redoAction.setEnabled(false);
@@ -166,18 +179,7 @@ public class ServerEditor extends MultiPageEditorPart {
 			String id = server.getServerType().getId();
 			while (iterator.hasNext()) {
 				ServerEditorActionFactory factory = (ServerEditorActionFactory) iterator.next();
-				if (factory.supportsServerElementType(id) && factory.shouldDisplay(server, serverConfiguration))
-					actionList.add(factory.createAction(getEditorSite(), editorPartInput));
-			}
-		}
-		
-		// add server configuration actions
-		if (serverConfiguration != null && serverConfiguration.getServerConfigurationType() != null) {
-			Iterator iterator = ServerEditorCore.getServerEditorActionFactories().iterator();
-			String id = serverConfiguration.getServerConfigurationType().getId();
-			while (iterator.hasNext()) {
-				ServerEditorActionFactory factory = (ServerEditorActionFactory) iterator.next();
-				if (factory.supportsServerElementType(id) && factory.shouldDisplay(server, serverConfiguration))
+				if (factory.supportsServerElementType(id) && factory.shouldDisplay(server))
 					actionList.add(factory.createAction(getEditorSite(), editorPartInput));
 			}
 		}
@@ -201,23 +203,18 @@ public class ServerEditor extends MultiPageEditorPart {
 			int pageCount = 0;
 			
 			String serverTypeId = null;
-			String serverConfigurationTypeId = null;
 			if (server != null && server.getServerType() != null)
 				serverTypeId = server.getServerType().getId();
-			if (serverConfiguration != null && serverConfiguration.getServerConfigurationType() != null)
-				serverConfigurationTypeId = serverConfiguration.getServerConfigurationType().getId();
-	
+			
 			Iterator iterator = ServerEditorCore.getServerEditorPageFactories().iterator();
 			while (iterator.hasNext()) {
 				IServerEditorPartFactory factory = (IServerEditorPartFactory) iterator.next();
-				if (((serverTypeId != null && factory.supportsType(serverTypeId)) || 
-						(serverConfigurationTypeId != null && factory.supportsType(serverConfigurationTypeId)))
-						&& factory.shouldCreatePage(server, serverConfiguration)) {
+				if (serverTypeId != null && factory.supportsType(serverTypeId) && factory.shouldCreatePage(server)) {
 					Trace.trace(Trace.FINEST, "Adding page: " + factory.getId() + " " + editorPartInput);
 					try {
 						IEditorPart page = factory.createPage();
-						if (page instanceof ServerResourceEditorPart) {
-							ServerResourceEditorPart srep = (ServerResourceEditorPart) page;
+						if (page instanceof ServerEditorPart) {
+							ServerEditorPart srep = (ServerEditorPart) page;
 							srep.setPageFactory(factory);
 						}
 						index = addPage(page, editorPartInput);
@@ -257,7 +254,7 @@ public class ServerEditor extends MultiPageEditorPart {
 		}
 		
 		if (resourceListener != null)
-			ServerCore.getResourceManager().removeResourceListener(resourceListener);
+			ServerCore.removeServerLifecycleListener(resourceListener);
 
 		super.dispose();
 		if (commandManager != null)
@@ -265,9 +262,6 @@ public class ServerEditor extends MultiPageEditorPart {
 
 		if (serverId != null)
 			commandManager.releaseCommandManager(serverId);
-			
-		if (serverConfigurationId != null)
-			commandManager.releaseCommandManager(serverConfigurationId);
 	}
 
 	/* (non-Javadoc)
@@ -289,8 +283,8 @@ public class ServerEditor extends MultiPageEditorPart {
 		int count = 0;
 		while (iterator.hasNext()) {
 			IEditorPart part = (IEditorPart) iterator.next();
-			if (part instanceof ServerResourceEditorPart) {
-				IStatus[] status2 = ((ServerResourceEditorPart) part).getSaveStatus();
+			if (part instanceof ServerEditorPart) {
+				IStatus[] status2 = ((ServerEditorPart) part).getSaveStatus();
 				if (status2 != null) {
 					int size = status2.length;
 					for (int i = 0; i < size; i++)
@@ -319,29 +313,19 @@ public class ServerEditor extends MultiPageEditorPart {
 			String name = "";
 			if (server != null)
 				name = server.getName();
-			else
-				name = serverConfiguration.getName();
 			monitor.beginTask(ServerUIPlugin.getResource("%savingTask", name), ticks);
-			if (server != null && serverConfiguration != null)
+			if (server != null)
 				ticks /= 2;
 
 			if (server != null)  {
-				((ServerWorkingCopy)server).save(ProgressUtil.getSubMonitorFor(monitor, ticks), false);
+				server.save(false, ProgressUtil.getSubMonitorFor(monitor, ticks));
 				getCommandManager().resourceSaved(serverId);
 				commandManager.updateTimestamps(serverId);
-			}
-
-			if (serverConfiguration != null) {
-				((ServerConfigurationWorkingCopy)serverConfiguration).save(ProgressUtil.getSubMonitorFor(monitor, ticks), false);
-				getCommandManager().resourceSaved(serverConfigurationId);
-				commandManager.updateTimestamps(serverConfigurationId);
 			}
 			
 			ILabelProvider labelProvider = ServerUICore.getLabelProvider();
 			if (server != null)
 				setPartName(labelProvider.getText(server));
-			else
-				setPartName(labelProvider.getText(serverConfiguration));
 		} catch (Exception e) {
 			Trace.trace("Error saving from configuration editor", e);
 	
@@ -366,7 +350,9 @@ public class ServerEditor extends MultiPageEditorPart {
 	 *
 	 * @see IEditorPart
 	 */
-	public void doSaveAs() { }
+	public void doSaveAs() {
+		// do nothing
+	}
 
 	/**
 	 * Fire a property change event.
@@ -374,7 +360,7 @@ public class ServerEditor extends MultiPageEditorPart {
 	 * @param i int
 	 */
 	protected void firePropertyChange(int i) {
-		if (i == ServerResourceEditorPart.PROP_ERROR)
+		if (i == ServerEditorPart.PROP_ERROR)
 			updateStatusError();
 		super.firePropertyChange(i);
 	}
@@ -413,7 +399,9 @@ public class ServerEditor extends MultiPageEditorPart {
 	 *
 	 * @see IEditorPart
 	 */
-	public void gotoMarker(IMarker marker) { }
+	public void gotoMarker(IMarker marker) {
+		// do nothing
+	}
 
 	/**
 	 * Update the cut, copy, and paste actions.
@@ -448,8 +436,6 @@ public class ServerEditor extends MultiPageEditorPart {
 			boolean readOnly = false;
 			if (server != null && commandManager.isReadOnly(serverId))
 				readOnly = true;
-			else if (serverConfiguration != null && commandManager.areFilesReadOnly(serverConfigurationId))
-				readOnly = true;
 			
 			if (readOnly)
 				statusItem.setText(ServerUIPlugin.getResource("%editorReadOnly"));
@@ -469,7 +455,7 @@ public class ServerEditor extends MultiPageEditorPart {
 					first = false;
 				}
 			}
-			if (serverConfiguration != null) {
+			/*if (serverConfiguration != null) {
 				IFile[] files = commandManager.getReadOnlyFiles(serverConfigurationId);
 				for (int i = 0; i < files.length; i++) {
 					if (!first)
@@ -477,7 +463,7 @@ public class ServerEditor extends MultiPageEditorPart {
 					sb.append(files[i].getName());
 					first = false;
 				}
-			}
+			}*/
 			if (sb.length() > 1)
 				status.setMessage(ServerUIPlugin.getResource("%editorReadOnlyFiles", sb.toString()));
 			else
@@ -494,15 +480,15 @@ public class ServerEditor extends MultiPageEditorPart {
 
 		String error = null;
 		IEditorPart part = getActiveEditor();
-		if (part instanceof ServerResourceEditorPart)
-			error = ((ServerResourceEditorPart) part).getErrorMessage();
+		if (part instanceof ServerEditorPart)
+			error = ((ServerEditorPart) part).getErrorMessage();
 		
 		Iterator iterator = serverPages.iterator();
 		int count = 0;
 		while (error == null && iterator.hasNext()) {
 			part = (IEditorPart) iterator.next();
-			if (part instanceof ServerResourceEditorPart) {
-				error = ((ServerResourceEditorPart) part).getErrorMessage();
+			if (part instanceof ServerEditorPart) {
+				error = ((ServerEditorPart) part).getErrorMessage();
 				if (error != null)
 					error = "[" + getPageText(count) + "] " + error;
 			}
@@ -551,7 +537,9 @@ public class ServerEditor extends MultiPageEditorPart {
 				}
 			});
 			control.addMouseListener(new MouseListener() {
-				public void mouseDown(MouseEvent event) { }
+				public void mouseDown(MouseEvent event) {
+					// do nothing
+				}
 				public void mouseUp(MouseEvent event) {
 					updateActionsImpl();
 				}
@@ -633,24 +621,15 @@ public class ServerEditor extends MultiPageEditorPart {
 			IFileEditorInput fei = (IFileEditorInput) input;
 			IFile file = fei.getFile();
 			if (file != null && file.exists()) {
-				IResourceManager rm = ServerCore.getResourceManager();
-				IServer server2 = rm.getServer(file);
-				if (server2 != null) {
+				IServer server2 = ServerUtil.findServer(file);
+				if (server2 != null)
 					serverId = server2.getId();
-					if (server2.getServerConfiguration() != null)
-						serverConfigurationId = server2.getServerConfiguration().getId();
-				} else {
-					IServerConfiguration configuration = rm.getServerConfiguration(file);
-					if (configuration != null)
-						serverConfigurationId = configuration.getId();
-				}
 			}
-			if (serverId == null && serverConfigurationId == null)
+			if (serverId == null)
 				throw new PartInitException(ServerUIPlugin.getResource("%errorEditor", file.getName()));
 		} else if (input instanceof IServerEditorInput) {
 			IServerEditorInput sei = (IServerEditorInput) input;
 			serverId = sei.getServerId();
-			serverConfigurationId = sei.getServerConfigurationId();
 		}
 
 		if (serverId != null) {
@@ -658,23 +637,13 @@ public class ServerEditor extends MultiPageEditorPart {
 			server = (IServerWorkingCopy) commandManager.getServerResource(serverId);
 		}
 
-		if (serverConfigurationId != null) {
-			commandManager.getCommandManager(serverConfigurationId);
-			serverConfiguration = (IServerConfigurationWorkingCopy) commandManager.getServerResource(serverConfigurationId);
-		}
-
 		ILabelProvider labelProvider = ServerUICore.getLabelProvider();
 		if (server != null) {
 			setPartName(labelProvider.getText(server));
 			setTitleImage(labelProvider.getImage(server));
 			setTitleToolTip(serverId);
-		} else if (serverConfiguration != null) {
-			setPartName(labelProvider.getText(serverConfiguration));
-			setTitleImage(labelProvider.getImage(serverConfiguration));
-			setTitleToolTip(serverConfigurationId);
-		} else {
-			setPartName("-");	
-		}
+		} else
+			setPartName("-");
 
 		cutAction = new TextAction(site.getShell().getDisplay(), TextAction.CUT_ACTION);
 		copyAction = new TextAction(site.getShell().getDisplay(), TextAction.COPY_ACTION);
@@ -684,30 +653,26 @@ public class ServerEditor extends MultiPageEditorPart {
 			public void propertyChange(PropertyChangeEvent event) {
 				if (GlobalCommandManager.PROP_DIRTY.equals(event.getPropertyName())) {
 					Object obj = event.getOldValue();
-					if (obj == serverId || obj == serverConfigurationId)
+					if (obj == serverId)
 						firePropertyChange(PROP_DIRTY);
 				} else if (GlobalCommandManager.PROP_UNDO.equals(event.getPropertyName())) {
 					Object obj = event.getOldValue();
-					if (obj == serverId || obj == serverConfigurationId)
+					if (obj == serverId)
 						updateUndoAction();
 				} else if (GlobalCommandManager.PROP_REDO.equals(event.getPropertyName())) {
 					Object obj = event.getOldValue();
-					if (obj == serverId || obj == serverConfigurationId)
+					if (obj == serverId)
 						updateRedoAction();
 				} else if (GlobalCommandManager.PROP_RELOAD.equals(event.getPropertyName())) {
 					Object obj = event.getOldValue();
 					if (obj == serverId) {
 						server = (IServerWorkingCopy) commandManager.getServerResource(serverId);
 						refresh();
-					} else if (obj == serverConfigurationId) {
-						serverConfiguration = (IServerConfigurationWorkingCopy) commandManager.getServerResource(serverConfigurationId);
-						refresh();
 					}
 				}
 			}
 		};
-		if ((server != null && commandManager.isDirty(serverId)) ||
-			(serverConfiguration != null && commandManager.isDirty(serverConfigurationId)))
+		if (server != null && commandManager.isDirty(serverId))
 			firePropertyChange(PROP_DIRTY);
 
 		commandManager.addPropertyChangeListener(listener);
@@ -716,25 +681,13 @@ public class ServerEditor extends MultiPageEditorPart {
 		ICommandManager serverCommandManager = null;
 		if (server != null)
 			serverCommandManager = new ServerResourceCommandManager(this, serverId, commandManager);
-		ICommandManager configurationCommandManager = null;
-		if (serverConfiguration != null)
-			configurationCommandManager = new ServerResourceCommandManager(this, serverConfigurationId, commandManager);
-		editorPartInput = commandManager.getPartInput(serverId, serverCommandManager, serverConfigurationId, configurationCommandManager);
+		editorPartInput = commandManager.getPartInput(serverId, serverCommandManager);
 		
 		createActions();
 		
 		// add resource listener
-		ServerCore.getResourceManager().addResourceListener(new ServerResourceAdapter() {
-			public void serverRemoved(IServer oldServer) {
-				if (oldServer.equals(server) && !isDirty())
-					closeEditor();
-			}
-
-			public void serverConfigurationRemoved(IServerConfiguration oldServerConfiguration) {
-				if (oldServerConfiguration.equals(serverConfiguration) && !isDirty())
-					closeEditor();
-			}
-		});
+		resourceListener = new LifecycleListener();
+		ServerCore.addServerLifecycleListener(resourceListener);
 		
 		IWorkbenchWindow window = getSite().getWorkbenchWindow();
 		window.getPartService().addPartListener(activationListener);
@@ -754,8 +707,6 @@ public class ServerEditor extends MultiPageEditorPart {
 	public boolean isDirty() {
 		if (commandManager != null) {
 			if (server != null && commandManager.isDirty(serverId))
-				return true;
-			if (serverConfiguration != null && commandManager.isDirty(serverConfigurationId))
 				return true;
 		}
 		return false;
@@ -778,7 +729,7 @@ public class ServerEditor extends MultiPageEditorPart {
 	 * Update the undo action.
 	 */
 	protected void updateUndoAction() {
-		ITask command = commandManager.getUndoCommand(serverId, serverConfigurationId);
+		ITask command = commandManager.getUndoCommand(serverId);
 		if (command == null) {
 			undoAction.setText(ServerUIPlugin.getResource("%editorUndoDisabled"));
 			undoAction.setToolTipText("");
@@ -797,7 +748,7 @@ public class ServerEditor extends MultiPageEditorPart {
 	 * Update the redo action.
 	 */
 	protected void updateRedoAction() {
-		ITask command = commandManager.getRedoCommand(serverId, serverConfigurationId);
+		ITask command = commandManager.getRedoCommand(serverId);
 		if (command == null) {
 			redoAction.setText(ServerUIPlugin.getResource("%editorRedoDisabled"));
 			redoAction.setToolTipText("");
@@ -856,10 +807,7 @@ public class ServerEditor extends MultiPageEditorPart {
 		ICommandManager serverCommandManager = null;
 		if (server != null)
 			serverCommandManager = new ServerResourceCommandManager(this, serverId, commandManager);
-		ICommandManager configurationCommandManager = null;
-		if (serverConfiguration != null)
-			configurationCommandManager = new ServerResourceCommandManager(this, serverConfigurationId, commandManager);
-		editorPartInput = commandManager.getPartInput(serverId, serverCommandManager, serverConfigurationId, configurationCommandManager);
+		editorPartInput = commandManager.getPartInput(serverId, serverCommandManager);
 		
 		Iterator iterator = serverPages.iterator();
 		while (iterator.hasNext()) {
@@ -885,18 +833,14 @@ public class ServerEditor extends MultiPageEditorPart {
 	/**
 	 * 
 	 */
-	protected void promptReloadServerFile(String id, IElement serverFile2) {
+	protected void promptReloadServerFile(String id, IServerWorkingCopy wc) {
 		String title = ServerUIPlugin.getResource("%editorResourceModifiedTitle");
-		String message = null;
-		if (serverFile2 instanceof IServer)
-			message = ServerUIPlugin.getResource("%editorServerModifiedMessage");
-		else
-			message = ServerUIPlugin.getResource("%editorServerConfigurationModifiedMessage");
+		String message = ServerUIPlugin.getResource("%editorServerModifiedMessage");
 
 		if (MessageDialog.openQuestion(getEditorSite().getShell(), title, message)) {
 			try {
-				//file.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
-				//TODO
+				//wc.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
+				//TODO: refresh local server
 			} catch (Exception e) {
 				Trace.trace("Error refreshing server", e);
 			}
@@ -925,12 +869,8 @@ public class ServerEditor extends MultiPageEditorPart {
 		if (resourceDeleted) {
 			String title = ServerUIPlugin.getResource("%editorResourceDeleteTitle");
 			String message = null;
-			if (server != null && serverConfiguration != null)
-				message = ServerUIPlugin.getResource("%editorResourceDeleteBothMessage", new String[] {server.getName(), serverConfiguration.getName()});
-			else if (server != null)
+			if (server != null)
 				message = ServerUIPlugin.getResource("%editorResourceDeleteServerMessage", server.getName());
-			else
-				message = ServerUIPlugin.getResource("%editorResourceDeleteServerConfigurationMessage", serverConfiguration.getName());
 			String[] labels = new String[] {ServerUIPlugin.getResource("%editorResourceDeleteSave"), IDialogConstants.CLOSE_LABEL};
 			MessageDialog dialog = new MessageDialog(getEditorSite().getShell(), title, null, message, MessageDialog.INFORMATION, labels, 0);
 
@@ -958,22 +898,6 @@ public class ServerEditor extends MultiPageEditorPart {
 			commandManager.updateTimestamps(serverId);
 		}
 
-		// check for server configuration changes
-		if (serverConfigurationId != null) {
-			if (!commandManager.isDirty(serverConfigurationId)) {
-				if (commandManager.hasChanged(serverConfigurationId))
-					promptReloadServerFile(serverConfigurationId, serverConfiguration);
-			} else {
-				if (commandManager.hasChanged(serverConfigurationId) && !commandManager.areFilesReadOnly(serverConfigurationId))
-					promptReloadServerFile(serverConfigurationId, serverConfiguration);
-				else if (commandManager.areFilesReadOnly(serverConfigurationId) && !commandManager.isReadOnly(serverConfigurationId))
-					promptReadOnlyServerFile(serverConfigurationId);
-			}		
-			if (commandManager.isReadOnly(serverConfigurationId) && !commandManager.areFilesReadOnly(serverConfigurationId))
-				commandManager.setReadOnly(serverConfigurationId, false);
-			commandManager.updateTimestamps(serverConfigurationId);
-		}
-
 		updateStatusLine();
 	}
 	
@@ -983,12 +907,8 @@ public class ServerEditor extends MultiPageEditorPart {
 	public String getTitleToolTip() {
 		if (server != null && server.getFile() != null)
 			return server.getFile().getFullPath().toString();
-		else if (serverConfiguration != null && serverConfiguration.getFile() != null)
-			return serverConfiguration.getFile().getFullPath().toString();
 		else if (server != null)
 			return server.getName();
-		else if (serverConfiguration != null)
-			return serverConfiguration.getName();
 		else
 			return "error";
 	}

@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.view.servers;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,16 +8,14 @@ package org.eclipse.wst.server.ui.internal.view.servers;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-import java.util.Iterator;
+package org.eclipse.wst.server.ui.internal.view.servers;
 
 import org.eclipse.jface.action.Action;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IServerPort;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.swt.widgets.Shell;
-
 /**
  * Monitor a server port.
  */
@@ -36,12 +33,14 @@ public class MonitorServerPortAction extends Action {
 		this.server = server;
 		this.port = port;
 		
-		Iterator iterator = ServerCore.getServerMonitorManager().getMonitoredPorts(server).iterator();
-		while (iterator.hasNext()) {
-			IMonitoredServerPort msp = (IMonitoredServerPort) iterator.next();
-			if (port.equals(msp.getServerPort()) && msp.isStarted() &&
-					(msp.getContentTypes() == null || (port.getContentTypes() != null && msp.getContentTypes().length == port.getContentTypes().length)))
-				monitoredPort = msp;
+		IMonitoredServerPort[] msps = ServerCore.getServerMonitorManager().getMonitoredPorts(server);
+		if (msps != null) {
+			int size = msps.length;
+			for (int i = 0; i < size; i++) {
+				if (port.equals(msps[i].getServerPort()) && msps[i].isStarted() &&
+						(msps[i].getContentTypes() == null || (port.getContentTypes() != null && msps[i].getContentTypes().length == port.getContentTypes().length)))
+					monitoredPort = msps[i];
+			}
 		}
 
 		checked = monitoredPort != null && monitoredPort.isStarted();

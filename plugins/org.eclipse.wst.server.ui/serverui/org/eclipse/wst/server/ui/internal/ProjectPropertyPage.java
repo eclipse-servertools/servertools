@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,13 +8,16 @@ package org.eclipse.wst.server.ui.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal;
+
+import java.util.ArrayList;
+import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IProjectModule;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -28,13 +30,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.dialogs.PropertyPage;
-
 /**
  * PropertyPage for IProjects. It shows the server and runtime preference for the project.
  */
 public class ProjectPropertyPage extends PropertyPage {
 	protected IProject project;
-	protected IProjectModule module;
+	protected IModule module;
 	protected IServer server;
 	
 	protected RuntimeTargetComposite rtComp;
@@ -74,7 +75,7 @@ public class ProjectPropertyPage extends PropertyPage {
 			data.widthHint = 200;
 			label.setLayoutData(data);
 
-			module = ServerUtil.getModuleProject(project);
+			module = ServerUtil.getModules(project)[0];
 
 			if (module == null) {
 				label = new Label(composite, SWT.NONE);
@@ -83,8 +84,8 @@ public class ProjectPropertyPage extends PropertyPage {
 				data.horizontalSpan = 3;
 				label.setLayoutData(data);
 			} else {
-				IModuleKind mk = ServerCore.getModuleKind(module.getType());
-				if (mk != null) {
+				IModuleType mt = module.getModuleType();
+				if (mt != null) {
 					label = new Label(composite, SWT.NONE);
 					label.setText(ServerUIPlugin.getResource("%prefProject"));
 					data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -94,7 +95,7 @@ public class ProjectPropertyPage extends PropertyPage {
 					data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 					data.horizontalSpan = 2;
 					moduleKind.setLayoutData(data);
-					moduleKind.setText(module.getName() + " (" + mk.getName() + ")");
+					moduleKind.setText(module.getName() + " (" + mt.getName() + ")");
 				}
 				
 				rtComp = new RuntimeTargetComposite(composite, project);
@@ -107,7 +108,7 @@ public class ProjectPropertyPage extends PropertyPage {
 				data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING);
 				label.setLayoutData(data);
 				
-				final IServer[] servers = ServerUtil.getServersBySupportedModule(module);
+				final IServer[] servers = getServersBySupportedModule(module);
 				if (servers == null || servers.length == 0) {
 					label = new Label(composite, SWT.WRAP);
 					label.setText(ServerUIPlugin.getResource("%prefProjectNotConfigured"));
@@ -159,6 +160,33 @@ public class ProjectPropertyPage extends PropertyPage {
 			Trace.trace("Error creating project property page", e);
 			return null;
 		}
+	}
+
+	/**
+	 * Returns a list of all servers that this module is configured on.
+	 *
+	 * @param module org.eclipse.wst.server.core.IModule
+	 * @return java.util.List
+	 */
+	protected static IServer[] getServersBySupportedModule(IModule module) {
+		if (module == null)
+			return new IServer[0];
+
+		// do it the slow way - go through all servers and
+		// see if this module is configured in it
+		List list = new ArrayList();
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				if (ServerUtil.isSupportedModule(servers[i].getServerType().getRuntimeType().getModuleTypes(), module.getModuleType()))
+					list.add(servers[i]);
+			}
+		}
+		
+		IServer[] allServers = new IServer[list.size()];
+		list.toArray(allServers);
+		return allServers;
 	}
 
 	/** 

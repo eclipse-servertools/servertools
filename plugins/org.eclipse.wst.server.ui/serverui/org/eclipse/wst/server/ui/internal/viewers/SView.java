@@ -1,15 +1,15 @@
-package org.eclipse.wst.server.ui.internal.viewers;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.viewers;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.ACC;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
@@ -87,8 +87,10 @@ public class SView extends Canvas {
 				//changeTwistie(!isOpen);
 			}
 			public void mouseUp(MouseEvent e) {
+				// do nothing
 			}
 			public void mouseDoubleClick(MouseEvent e) {
+				// do nothing
 			}
 		});
 		addMouseTrackListener(new MouseTrackListener() {
@@ -101,6 +103,7 @@ public class SView extends Canvas {
 				SView.this.redraw();
 			}
 			public void mouseHover(MouseEvent e) {
+				// do nothing
 			}
 		});
 		addSelectionListener(new SelectionAdapter() {

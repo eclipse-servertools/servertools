@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -16,9 +16,8 @@ import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.wizard.page.NewRuntimeComposite;
-import org.eclipse.wst.server.ui.wizard.IWizardFragment;
-import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
+import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Composite;
@@ -35,7 +34,9 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 	// filter by partial runtime type id
 	protected String runtimeTypeId;
 	
-	public NewRuntimeWizardFragment() { }
+	public NewRuntimeWizardFragment() {
+		// do nothing
+	}
 	
 	public NewRuntimeWizardFragment(String type, String version, String runtimeTypeId) {
 		this.type = type;
@@ -59,13 +60,13 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 		if (page != null) {
 			if (page.getRuntime() == null)
 				return false;
-			IStatus status = page.getRuntime().validate();
+			IStatus status = page.getRuntime().validate(null);
 			return status == null || status.isOK();
 		}
 		return true;
 	}
 
-	public void createSubFragments(List list) {
+	protected void createChildFragments(List list) {
 		if (getTaskModel() == null)
 			return;
 	
@@ -73,7 +74,7 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 		if (runtime == null)
 			return;
 
-		IWizardFragment sub = ServerUICore.getWizardFragment(runtime.getRuntimeType().getId());
+		WizardFragment sub = ServerUICore.getWizardFragment(runtime.getRuntimeType().getId());
 		if (sub != null)
 			list.add(sub);
 	}

@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -20,7 +20,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.model.IServerPort;
+import org.eclipse.wst.server.core.IServerPort;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 /**
  * Dialog that prompts a user to add or edit a server monitor.
@@ -216,7 +216,9 @@ public class MonitorDialog extends Dialog {
 				Object obj = tableViewer.getElementAt(0);
 				if (obj != null)
 				tableViewer.setSelection(new StructuredSelection(obj));
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 		}
 		
 		portChanged = false;

@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,12 +8,18 @@ package org.eclipse.wst.server.ui.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal;
+
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -24,7 +29,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
-import org.eclipse.wst.server.core.IElement;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
 /**
@@ -37,6 +41,52 @@ public class EclipseUtil {
 	private EclipseUtil() {
 		super();
 	}
+	
+	/**
+	 * Creates a new server project with the given name. If path is
+	 * null, it will be created in the default location.
+	 *
+	 * @param name java.lang.String
+	 * @param path org.eclipse.core.resource.IPath
+	 * @param monitor
+	 * @return org.eclipse.core.runtime.IStatus
+	 */
+	private static IStatus createServerProject(String name, IPath path, IProgressMonitor monitor) {
+		//monitor = ProgressUtil.getMonitorFor(monitor);
+		//monitor.beginTask(ServerPlugin.getResource("%createServerProjectTask"), 3000);
+
+		try {
+			IWorkspace workspace = ResourcesPlugin.getWorkspace();
+			IProject project = workspace.getRoot().getProject(name);
+	
+			// get a project descriptor
+			IProjectDescription description = workspace.newProjectDescription(name);
+			description.setLocation(path);
+	
+			project.create(description, ProgressUtil.getSubMonitorFor(monitor, 1000));
+			if (monitor.isCanceled())
+				return null;
+			project.open(ProgressUtil.getSubMonitorFor(monitor, 1000));
+			if (monitor.isCanceled())
+				return null;
+
+			// add the server project nature
+			ServerCore.getProjectProperties(project).setServerProject(true, monitor);
+	
+			if (monitor.isCanceled())
+				return null;
+	
+			return new Status(IStatus.OK, ServerUIPlugin.PLUGIN_ID, 0, ServerUIPlugin.getResource("%serverProjectCreated"), null);
+		} catch (CoreException ce) {
+			Trace.trace(Trace.SEVERE, "Could not create server project named " + name, ce);
+			return new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, ServerUIPlugin.getResource("%errorCouldNotCreateServerProjectStatus", ce.getMessage()), ce);
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Could not create server project (2) named " + name, e);
+			return new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, ServerUIPlugin.getResource("%errorCouldNotCreateServerProject"), e);
+		} finally {
+			monitor.done();
+		}
+	}
 
 	/**
 	 * Creates a new server project with the given name. If path is
@@ -47,11 +97,14 @@ public class EclipseUtil {
 	 * @return org.eclipse.core.resources.IProject
 	 */
 	public static IStatus createNewServerProject(final Shell shell, String name, IPath path, IProgressMonitor monitor) {
-		final IStatus status = ServerCore.createServerProject(name, path, monitor);
+		final IStatus status = createServerProject(name, path, monitor);
 		if (!status.isOK()) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					openError(shell, ServerUIPlugin.getResource("%errorCouldNotCreateServerProject"), status);
+					Shell shell2 = shell;
+					if (shell == null)
+						shell2 = getShell();
+					openError(shell2, ServerUIPlugin.getResource("%errorCouldNotCreateServerProject"), status);
 				}
 			});
 		}
@@ -170,27 +223,14 @@ public class EclipseUtil {
 	}
 
 	/**
-	 * Do a validateEdit() on the given server element.
+	 * Do a validateEdit() on the given server.
 	 */
-	public static boolean validateEdit(Shell shell, IElement element) {
-		/*IFile file = null;
-		if (element instanceof IServer)
-			file = ((IServer) element).getFile();
-		else if (element instanceof IServerConfiguration)
-			file = ((IServerConfiguration) element).getFile();
-
-		IFile[] files = GlobalCommandManager.getReadOnlyFiles(element);
-		if (files.length == 0)
-			return true;
+	public static boolean validateEdit(Shell shell, IServer server) {
+		IStatus status = server.validateEdit(shell);
+		return validateEdit(shell, status);
+	}
 		
-		int size = files.length;
-		long[] timestamps = new long[size];
-		for (int i = 0; i < size; i++) {
-			timestamps[i] = files[i].getFullPath().toFile().lastModified();
-		}
-		IStatus status = file.getWorkspace().validateEdit(files, shell);*/
-		IStatus status = element.validateEdit(shell);
-		
+	protected static boolean validateEdit(Shell shell, IStatus status) {
 		if (status != null && status.getSeverity() == IStatus.ERROR) {
 			// inform user
 			String message = ServerUIPlugin.getResource("%editorValidateEditFailureMessage");
@@ -198,21 +238,7 @@ public class EclipseUtil {
 
 			// do not execute command
 			return false;
-		}/* else {
-			boolean reload = false;
-			for (int i = 0; !reload && i < size; i++) {
-				if (timestamps[i] != files[i].getFullPath().toFile().lastModified())
-					reload = true;
-			}
-			if (reload) {
-				try {
-					file.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
-				} catch (Exception e) { }
-			}
-			
-			// allow edit
-			return true;
-		}*/
+		}
 		return true;
 	}
 }

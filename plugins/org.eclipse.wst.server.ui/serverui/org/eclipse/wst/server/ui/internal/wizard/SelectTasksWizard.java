@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.wizard;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.wst.server.ui.internal.wizard;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.wizard;
+
 import java.util.List;
 
 import org.eclipse.wst.server.core.IServer;
@@ -20,7 +21,6 @@ import org.eclipse.wst.server.ui.internal.task.SaveServerTask;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
 import org.eclipse.wst.server.ui.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
-
 /**
  * A wizard used to select server and module tasks.
  */
@@ -34,7 +34,7 @@ public class SelectTasksWizard extends TaskWizard {
 		super(ServerUIPlugin.getResource("%wizTaskWizardTitle"));
 		
 		setRootFragment(new WizardFragment() {
-			public void createSubFragments(List list) {
+			protected void createChildFragments(List list) {
 				list.add(new InputWizardFragment(new String[] { ITaskModel.TASK_SERVER }, new Object[] { server }));
 				fragment = new TasksWizardFragment();
 				list.add(fragment);

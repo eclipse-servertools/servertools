@@ -75,7 +75,7 @@
                   specifies the fully qualified name of the Java class that implements &lt;samp&gt;IMonitor&lt;/samp&gt;
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.IStartup"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.StartupDelegate"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -102,7 +102,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.server.core.model.IServerMonitorDelegate&lt;/b&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.server.core.model.ServerMonitorDelegate&lt;/b&gt;.
       </documentation>
    </annotation>
 

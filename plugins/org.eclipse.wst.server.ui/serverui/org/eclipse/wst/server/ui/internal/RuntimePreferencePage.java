@@ -1,15 +1,15 @@
-package org.eclipse.wst.server.ui.internal;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -40,16 +40,14 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IRuntimeLocatorListener;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
 import org.eclipse.wst.server.ui.internal.task.SaveRuntimeTask;
 import org.eclipse.wst.server.ui.internal.viewers.RuntimeComposite;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewRuntimeWizardFragment;
-import org.eclipse.wst.server.ui.wizard.IWizardFragment;
-import org.eclipse.wst.server.ui.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
+import org.eclipse.wst.server.ui.wizard.TaskWizard;
 /**
  * The preference page that holds server runtimes.
  */
@@ -138,12 +136,14 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 			public void widgetSelected(SelectionEvent e) {
 				IRuntime runtime = runtimeComp.getSelectedRuntime();
 				if (runtime != null) {
-					IRuntimeWorkingCopy runtimeWorkingCopy = runtime.getWorkingCopy();
+					IRuntimeWorkingCopy runtimeWorkingCopy = runtime.createWorkingCopy();
 					if (showWizard(runtimeWorkingCopy) != Window.CANCEL) {
 						try {
-							runtimeWorkingCopy.save(new NullProgressMonitor());
+							runtimeWorkingCopy.save(false, new NullProgressMonitor());
 							runtimeComp.refresh(runtime);
-						} catch (Exception ex) { }
+						} catch (Exception ex) {
+							// ignore
+						}
 					}
 				}
 			}
@@ -158,7 +158,9 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					try {
 						runtime.delete();
 						runtimeComp.remove(runtime);
-					} catch (Exception ex) { }
+					} catch (Exception ex) {
+						// ignore
+					}
 			}
 		});
 		
@@ -171,11 +173,12 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					dialog.setCancelable(true);
 					dialog.open();
 					final IProgressMonitor monitor = dialog.getProgressMonitor();
-					monitor.beginTask(ServerUIPlugin.getResource("%search"), 100 * ServerCore.getRuntimeLocators().size() + 10);
+					final IRuntimeLocator[] locators = ServerCore.getRuntimeLocators();
+					monitor.beginTask(ServerUIPlugin.getResource("%search"), 100 * locators.length + 10);
 					final List list = new ArrayList();
 					
-					final IRuntimeLocatorListener listener = new IRuntimeLocatorListener() {
-						public void runtimeFound(final IRuntime runtime) {
+					final IRuntimeLocator.RuntimeSearchListener listener = new IRuntimeLocator.RuntimeSearchListener() {
+						public void runtimeFound(final IRuntimeWorkingCopy runtime) {
 							dialog.getShell().getDisplay().syncExec(new Runnable() {
 								public void run() {
 									monitor.subTask(runtime.getName());
@@ -187,17 +190,18 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					
 					IRunnableWithProgress runnable = new IRunnableWithProgress() {
 						public void run(IProgressMonitor monitor2) {
-							Iterator iterator = ServerCore.getRuntimeLocators().iterator();
-							while (iterator.hasNext()) {
-								IRuntimeLocator locator = (IRuntimeLocator) iterator.next();
-								if (!monitor2.isCanceled())
-									try {
-										locator.searchForRuntimes(listener, monitor2);
-									} catch (CoreException ce) {
-										Trace.trace(Trace.WARNING, "Error locating runtimes: " + locator.getId(), ce);
-									}
+							if (locators != null) {
+								int size = locators.length;
+								for (int i = 0; i < size; i++) {
+									if (!monitor2.isCanceled())
+										try {
+											locators[i].searchForRuntimes(null, listener, monitor2);
+										} catch (CoreException ce) {
+											Trace.trace(Trace.WARNING, "Error locating runtimes: " + locators[i].getId(), ce);
+										}
+								}
 							}
-							System.out.println("done");
+							Trace.trace(Trace.INFO, "Done search");
 						}
 					};
 					dialog.run(true, true, runnable);
@@ -205,6 +209,10 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					Trace.trace(Trace.FINER, "Found runtimes: " + list.size());
 					
 					if (!monitor.isCanceled()) {
+						if (list.isEmpty()) {
+							EclipseUtil.openError(getShell(), ServerUIPlugin.getResource("%infoNoRuntimesFound"));
+							return;
+						}
 						monitor.worked(5);
 						// remove duplicates from list (based on location)
 						Trace.trace(Trace.FINER, "Removing duplicates");
@@ -214,11 +222,13 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 							boolean dup = false;
 							IRuntime wc = (IRuntime) iterator2.next();
 							
-							Iterator iterator = ServerCore.getResourceManager().getRuntimes().iterator();
-							while (iterator.hasNext()) {
-								IRuntime runtime = (IRuntime) iterator.next();
-								if (runtime.getLocation().equals(wc.getLocation()))
-									dup = true;
+							IRuntime[] runtimes = ServerCore.getRuntimes();
+							if (runtimes != null) {
+								int size = runtimes.length;
+								for (int i = 0; i < size; i++) {
+									if (runtimes[i].getLocation().equals(wc.getLocation()))
+										dup = true;
+								}
 							}
 							if (!dup)
 								good.add(wc);
@@ -230,7 +240,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 						Iterator iterator = good.iterator();
 						while (iterator.hasNext()) {
 							IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy) iterator.next();
-							wc.save(monitor);
+							wc.save(false, monitor);
 						}
 						monitor.done();
 					}
@@ -257,11 +267,13 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		// check for use
 		boolean inUse = false;
 	
-		Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
-		while (iterator.hasNext()) {
-			IServer server = (IServer) iterator.next();
-			if (runtime.equals(server.getRuntime()))
-				inUse = true;
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				if (runtime.equals(servers[i].getRuntime()))
+					inUse = true;
+			}
 		}
 		
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
@@ -284,24 +296,24 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 	
 	protected int showWizard(final IRuntimeWorkingCopy runtimeWorkingCopy) {
 		String title = null;
-		IWizardFragment fragment = null;
+		WizardFragment fragment = null;
 		if (runtimeWorkingCopy == null) {
 			title = ServerUIPlugin.getResource("%wizNewRuntimeWizardTitle");
 			fragment = new WizardFragment() {
-				public void createSubFragments(List list) {
+				protected void createChildFragments(List list) {
 					list.add(new NewRuntimeWizardFragment());
 					list.add(new FinishWizardFragment(new SaveRuntimeTask()));
 				}
 			};
 		} else {
 			title = ServerUIPlugin.getResource("%wizEditRuntimeWizardTitle");
-			final IWizardFragment fragment2 = ServerUICore.getWizardFragment(runtimeWorkingCopy.getRuntimeType().getId());
+			final WizardFragment fragment2 = ServerUICore.getWizardFragment(runtimeWorkingCopy.getRuntimeType().getId());
 			if (fragment2 == null) {
 				edit.setEnabled(false);
 				return Window.CANCEL;
 			}
 			fragment = new WizardFragment() {
-				public void createSubFragments(List list) {
+				protected void createChildFragments(List list) {
 					list.add(new WizardFragment() {
 						public void enter() {
 							getTaskModel().putObject(ITaskModel.TASK_RUNTIME, runtimeWorkingCopy);
@@ -328,7 +340,9 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 	 *
 	 * @param desktop the current desktop
 	 */
-	public void init(IWorkbench workbench) { }
+	public void init(IWorkbench workbench) {
+		// do nothing
+	}
 
 	/**
 	 * Performs special processing when this page's Defaults button has been pressed.

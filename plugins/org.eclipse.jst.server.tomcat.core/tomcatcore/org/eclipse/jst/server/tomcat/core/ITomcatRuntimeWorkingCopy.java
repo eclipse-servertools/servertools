@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.core;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,10 +8,18 @@ package org.eclipse.jst.server.tomcat.core;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-import org.eclipse.wst.server.core.model.IRuntimeWorkingCopyDelegate;
+package org.eclipse.jst.server.tomcat.core;
+
+import org.eclipse.jdt.launching.IVMInstall;
+
 /**
  *
  */
-public interface ITomcatRuntimeWorkingCopy extends ITomcatRuntime, IRuntimeWorkingCopyDelegate {
-	public void setVMInstall(String typeId, String id);
+public interface ITomcatRuntimeWorkingCopy extends ITomcatRuntime {
+	/**
+	 * Set the VM install (installed JRE) that this runtime is using.
+	 * 
+	 * @param vmInstall the VM install to use
+	 */
+	public void setVMInstall(IVMInstall vmInstall);
 }

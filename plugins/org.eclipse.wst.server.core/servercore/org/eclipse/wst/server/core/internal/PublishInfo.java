@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,8 @@ import java.util.*;
 import java.io.File;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.model.IModule;
 /**
  * Helper to obtain and store the global publish information.
  * (what files were published and when) Delegates to PublishState
@@ -58,16 +58,15 @@ public class PublishInfo {
 		return instance;
 	}
 
-	protected String getPublishControlRef(IServer server, List parents, IModule module) {
+	protected String getPublishControlRef(IServer server, IModule[] parents, IModule module) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(server.getId());
-		
+
 		if (parents != null) {
-			Iterator iterator = parents.iterator();
-			while (iterator.hasNext()) {
-				IModule parent = (IModule) iterator.next();
+			int size = parents.length;
+			for (int i = 0; i < size; i++) {
 				sb.append("#");
-				sb.append(parent.getId());
+				sb.append(parents[i].getId());
 			}
 		}
 		
@@ -90,32 +89,31 @@ public class PublishInfo {
 		return sb.toString();
 	}
 	
-	protected String getParentsMemento(List parents) {
+	protected String getParentsMemento(IModule[] parents) {
 		StringBuffer sb = new StringBuffer();
 		boolean first = true;
 		
 		if (parents != null) {
-			Iterator iterator = parents.iterator();
-			while (iterator.hasNext()) {
-				IModule parent = (IModule) iterator.next();
+			int size = parents.length;
+			for (int i = 0; i < size; i++) {
 				if (!first)
 					sb.append("#");
 				else
 					first = false;
-				sb.append(parent.getId());
+				sb.append(parents[i].getId());
 			}
 		}
 		
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Return the publish state.
 	 * 
 	 * @return org.eclipse.wst.server.core.internal.PublishState
 	 * @param server org.eclipse.wst.server.core.model.IServer
 	 */
-	public PublishControl getPublishControl(IServer server, List parents, IModule module) {
+	public PublishControl getPublishControl(IServer server, IModule[] parents, IModule module) {
 		String controlRef = getPublishControlRef(server, parents, module);
 		
 		// have we tried loading yet?

@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -12,9 +12,7 @@ package org.eclipse.wst.server.ui.internal.editor;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.wst.server.core.IResourceManager;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.ui.editor.IServerEditorInput;
 import org.eclipse.wst.server.ui.internal.ImageResource;
@@ -42,15 +40,13 @@ import org.eclipse.ui.IPersistableElement;
  */
 public class ServerEditorInput implements IServerEditorInput, IPersistableElement {
 	private String serverId;
-	private String configurationId;
 
 	/**
 	 * ServerEditorInput constructor comment.
 	 */
-	public ServerEditorInput(String serverId, String configurationId) {
+	public ServerEditorInput(String serverId) {
 		super();
 		this.serverId = serverId;
-		this.configurationId = configurationId;
 	}
 	
 	/**
@@ -59,14 +55,6 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 	 */
 	public String getServerId() {
 		return serverId;
-	}
-
-	/**
-	 * Returns the server configuration id.
-	 * @return org.eclipse.core.resources.IResource
-	 */
-	public String getServerConfigurationId() {
-		return configurationId;
 	}
 
 	/**
@@ -84,11 +72,6 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 				return false;	
 		} else if (!serverId.equals(other.serverId))
 			return false;
-		if (configurationId == null) {
-			if (other.configurationId != null)
-				return false;	
-		} else if (!configurationId.equals(other.configurationId))
-			return false;
 		return true;
 	}
 
@@ -104,13 +87,10 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 	 *		otherwise
 	 */
 	public boolean exists() {
-		IResourceManager rm = ServerCore.getResourceManager();
-		if (serverId != null && rm.getServer(serverId) == null)
+		if (serverId != null && ServerCore.findServer(serverId) == null)
 			return false;
-		else if (configurationId != null && rm.getServerConfiguration(configurationId) == null)
-			return false;
-		else
-			return true;
+		
+		return true;
 	}
 
 	/**
@@ -155,19 +135,13 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 	 * @return the file name string
 	 */
 	public String getName() {
-		IResourceManager rm = ServerCore.getResourceManager();
 		if (serverId != null) {
-			IServer server = rm.getServer(serverId);
+			IServer server = ServerCore.findServer(serverId);
 			if (server != null)
 				return server.getName();
 			return serverId;
-		} else if (configurationId != null) {
-			IServerConfiguration configuration = rm.getServerConfiguration(configurationId);
-			if (configuration != null)
-				return configuration.getName();
-			return configurationId;
-		} else
-			return "";
+		}
+		return "";
 	}
 
 	/*
@@ -182,9 +156,8 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 
 	public String getToolTipText() {
 		String s = null;
-		IResourceManager rm = ServerCore.getResourceManager();
 		if (serverId != null) {
-			IServer server = rm.getServer(serverId);
+			IServer server = ServerCore.findServer(serverId);
 			if (server != null) {
 				if (server.getFile() != null) {
 					s = server.getFile().getFullPath().makeRelative().toString();
@@ -192,17 +165,6 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 						s = s.substring(1);
 				} else
 					s = server.getName();
-			}
-		}
-		if (s == null && configurationId != null) {
-			IServerConfiguration configuration = rm.getServerConfiguration(configurationId);
-			if (configuration != null) {
-				if (configuration.getFile() != null) {
-					s = configuration.getFile().getFullPath().makeRelative().toString();
-					if (s.startsWith("/"))
-						s = s.substring(1);
-				} else
-					s = configuration.getName();
 			}
 		}
 		if (s == null)

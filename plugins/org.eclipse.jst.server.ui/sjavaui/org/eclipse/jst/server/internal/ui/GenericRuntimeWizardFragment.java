@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.internal.ui;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.jst.server.internal.ui;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.internal.ui;
+
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
@@ -21,7 +22,9 @@ import org.eclipse.swt.widgets.Composite;
 public class GenericRuntimeWizardFragment extends WizardFragment {
 	protected GenericRuntimeComposite comp;
 	
-	public GenericRuntimeWizardFragment() { }
+	public GenericRuntimeWizardFragment() {
+		// do nothing
+	}
 
 	public boolean hasComposite() {
 		return true;
@@ -37,7 +40,7 @@ public class GenericRuntimeWizardFragment extends WizardFragment {
 		
 		if (runtime == null)
 			return false;
-		IStatus status = runtime.validate();
+		IStatus status = runtime.validate(null);
 		return (status != null && status.isOK());
 	}
 

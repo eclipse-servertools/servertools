@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.actions;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.wst.server.ui.actions;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.actions;
+
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -41,7 +42,7 @@ public class NewServerAction extends LaunchWizardAction {
 	 *
 	 * @return org.eclipse.ui.IWorkbenchWizard
 	 */
-	public IWorkbenchWizard getWizard() {
+	protected IWorkbenchWizard getWizard() {
 		return new NewServerWizard(ids, values);
 	}
 }
