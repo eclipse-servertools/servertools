@@ -179,7 +179,8 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	 * @see org.eclipse.wst.server.ui.wizard.IWizardFragment#enter()
 	 */
 	public void enter() {
-		String serverDefinition = getServerDefinitionId();
+		
+        String serverDefinition = getServerDefinitionId();
 		if(serverDefinition!=null && serverDefinition.length()>0)
 		{
 			selectServerDefinition();
@@ -190,6 +191,10 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	        ServerRuntime definition = getServerTypeDefinition(serverDefinition,properties);
 	        fServerPanel.reset(definition,ServerTypeDefinitionGroup.CONTEXT_RUNTIME, properties);
 		}
+        else{
+            populateRuntimeDelegateProperties();
+        }
+        validate();
 	}
 	
 	/* (non-Javadoc)
@@ -202,9 +207,9 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	    catch(Exception e){//unhandled
 	    }
         fRuntimeDelegate=null;
-        
-	}
-	protected String getSelectedServerType(){
+   }
+
+    protected String getSelectedServerType(){
 	   return  fSelectedServerType;
 	}
 	protected Map getServerRuntimeProperties(){
@@ -263,17 +268,22 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
      * @see org.eclipse.jst.server.generic.internal.ui.ServerDefinitionTypeAwareWizardFragment#serverDefinitionTypePropertiesChanged()
      */
     public void serverDefinitionTypePropertiesChanged() {
-		fSelectedServerType = fServerCombo.getItem(fServerCombo.getSelectionIndex());
-        fServerRuntimeProperties = fServerPanel.getProperties();
-   		String selected = getSelectedServerType();
-		Map properties = getServerRuntimeProperties();
-		RuntimeDelegate dl = getRuntimeDelegate();       		
-		dl.setAttribute(GenericServerRuntime.SERVER_DEFINITION_ID, selected);
-		dl.setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,properties);
-		dl.getRuntimeWorkingCopy().setName(createName());
-		
+		populateRuntimeDelegateProperties();
 		validate();
    }
+    /**
+     * 
+     */
+    private void populateRuntimeDelegateProperties() {
+        fSelectedServerType = fServerCombo.getItem(fServerCombo.getSelectionIndex());
+        fServerRuntimeProperties = fServerPanel.getProperties();
+        String selected = getSelectedServerType();
+        Map properties = getServerRuntimeProperties();
+        RuntimeDelegate dl = getRuntimeDelegate();
+        dl.setAttribute(GenericServerRuntime.SERVER_DEFINITION_ID, selected);
+        dl.setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,properties);
+        dl.getRuntimeWorkingCopy().setName(createName());
+    }
     
     private void validate()
     {
