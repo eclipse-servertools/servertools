@@ -83,9 +83,8 @@ public class XMLUtil {
 		return element;
 	}
 
-	/**
+	/*
 	 * Set the value of the given node to the given text.
-	 * @param n org.w3c.dom.Node
 	 */
 	public static void createTextChildElement(Document doc, Node node, String name, String value) {
 		Element element = createChildElement(doc, node, name);
@@ -169,19 +168,18 @@ public class XMLUtil {
 		return "";
 	}
 
-	/**
+	/*
 	 * Get the value of a subnode.
+
 	 * @return java.lang.String
-	 * @param node org.w3c.dom.Node
 	 */
 	public static String getSubNodeValue(Element element, String name) {
 		NodeList nodeList = element.getElementsByTagName(name);
 		return getNodeValue(nodeList.item(0)).trim();
 	}
 
-	/**
+	/*
 	 * Insert the given text.
-	 * @param n org.w3c.dom.Node
 	 */
 	public static void insertText(Document doc, Node node, String text) {
 		node.appendChild(doc.createCDATASection(text));
@@ -340,10 +338,9 @@ public class XMLUtil {
 		}
 	}
 
-	/**
+	/*
 	 * Set the value of the subnode
 	 *
-	 * @param element org.w3c.dom.Element
 	 * @param name java.lang.String
 	 * @param value java.lang.String
 	 */

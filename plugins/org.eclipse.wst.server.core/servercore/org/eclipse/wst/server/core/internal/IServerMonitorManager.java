@@ -68,7 +68,7 @@ public interface IServerMonitorManager {
 	 * 
 	 * @param server
 	 * @param port
-	 * @param content
+	 * @param contentType
 	 * @return the monitored port number
 	 */
 	public int getMonitoredPort(IServer server, int port, String contentType);

@@ -203,7 +203,8 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 	/**
 	 * Rebuild any projects that are targetted to this runtime.
 	 * 
-	 * @param id
+	 * @param runtime
+	 * @param add
 	 */
 	protected static void rebuildRuntime(final IRuntime runtime, final boolean add) {
 		if (runtime == null)

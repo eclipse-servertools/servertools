@@ -111,7 +111,6 @@ public interface IServerAttributes extends IAdaptable {
 	 * [issue: This feels like an implementation detail. If it is to
 	 * remain API, need to explain how a client uses this attribute.]
 	 * </p>
-	 * @see ILaunchConfiguration
 	 */
 	public static final String ATTR_SERVER_ID = "server-id";
 	
@@ -171,7 +170,8 @@ public interface IServerAttributes extends IAdaptable {
 	/**
 	 * Returns true if the delegate has been loaded.
 	 * 
-	 * @return
+	 * @return <code>true</code> if the delegate has been loaded, and
+	 *    <code>false</code> otherwise
 	 */
 	public boolean isDelegateLoaded();
 
@@ -308,7 +308,7 @@ public interface IServerAttributes extends IAdaptable {
 	 * </p>
 	 * 
 	 * @return a possibly-empty array of modules
-	 * @see IServer.getServerModules()
+	 * @see IServer#getServerModules()
 	 */
 	public IModule[] getModules();
 

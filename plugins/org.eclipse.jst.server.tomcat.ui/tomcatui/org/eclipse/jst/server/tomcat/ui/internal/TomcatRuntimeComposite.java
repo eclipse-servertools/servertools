@@ -62,7 +62,9 @@ public class TomcatRuntimeComposite extends Composite {
 
 	/**
 	 * TomcatRuntimeWizardPage constructor comment.
-	 * @param runtime
+	 * 
+	 * @param parent the parent composite
+	 * @param wizard the wizard handle
 	 */
 	protected TomcatRuntimeComposite(Composite parent, IWizardHandle wizard) {
 		super(parent, SWT.NONE);
@@ -90,9 +92,6 @@ public class TomcatRuntimeComposite extends Composite {
 
 	/**
 	 * Provide a wizard page to change the Tomcat installation directory.
-	 *
-	 * @param parent the parent composite
-	 * @return the new control
 	 */
 	protected void createControl() {
 		GridLayout layout = new GridLayout();

@@ -105,8 +105,8 @@ public class Tomcat50Handler implements ITomcatVersionHandler {
 	 * Returns true if the given project is supported by this
 	 * server, and false otherwise.
 	 *
-	 * @param project org.eclipse.core.resources.IProject
-	 * @return boolean
+	 * @param module a web module
+	 * @return the status
 	 */
 	public IStatus canAddModule(IWebModule module) {
 		if ("1.2".equals(module.getJ2EESpecificationVersion()) || "1.3".equals(module.getJ2EESpecificationVersion()) || "1.4".equals(module.getJ2EESpecificationVersion()))

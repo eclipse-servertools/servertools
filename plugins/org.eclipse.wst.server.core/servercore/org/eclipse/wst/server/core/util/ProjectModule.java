@@ -203,7 +203,6 @@ public abstract class ProjectModule extends ModuleDelegate {
 
 	/**
 	 * Helper method - returns the module's name.
-	 * @see ModuleDelegate#getName()
 	 */
 	public String getName() {
 		return getProject().getName();

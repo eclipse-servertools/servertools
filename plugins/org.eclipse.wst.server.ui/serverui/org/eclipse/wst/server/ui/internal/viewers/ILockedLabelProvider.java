@@ -12,8 +12,6 @@ package org.eclipse.wst.server.ui.internal.viewers;
 /**
  * Extends <code>ITableLabelProvider</code> with methods to provide
  * lock information.
- *
- * @see TableViewer
  */
 public interface ILockedLabelProvider {
 	/**

@@ -92,7 +92,7 @@ public class RestartProjectActionDelegate implements IActionDelegate {
 	 * </p>
 	 *
 	 * @param action the action proxy that handles presentation portion of the action
-	 * @param selection the current selection in the workbench
+	 * @param sel the current selection in the workbench
 	 */
 	public void selectionChanged(IAction action, ISelection sel) {
 		if (sel.isEmpty() || !(sel instanceof IStructuredSelection)) {

@@ -204,10 +204,10 @@ public interface IServerWorkingCopy extends IServerAttributes {
 	/**
 	 * Sets the file where this server instance is serialized.
 	 * 
-	 * @param the file in the workspace where the server instance
-	 * is serialized, or <code>null</code> if the information is
-	 * instead to be persisted with the workspace but not with any
-	 * particular workspace resource
+	 * @param file the file in the workspace where the server instance
+	 *    is serialized, or <code>null</code> if the information is
+	 *    instead to be persisted with the workspace but not with any
+	 *    particular workspace resource
 	 */
 	public void setFile(IFile file);
 

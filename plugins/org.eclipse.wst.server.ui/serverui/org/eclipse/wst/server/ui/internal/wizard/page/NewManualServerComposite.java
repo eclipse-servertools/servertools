@@ -75,7 +75,7 @@ public class NewManualServerComposite extends Composite {
 	 * resource selection contains exactly one container resource then it will be
 	 * used as the default container resource.
 	 *
-	 * @param org.eclipse.jface.wizard.IWizard parent
+	 * @param parent
 	 */
 	public NewManualServerComposite(Composite parent, IWizardHandle2 wizard, IModuleType moduleType, ServerSelectionListener listener) {
 		super(parent, SWT.NONE);
@@ -90,9 +90,6 @@ public class NewManualServerComposite extends Composite {
 
 	/**
 	 * Returns this page's initial visual components.
-	 *
-	 * @param parent a <code>Composite</code> that is to be used as the parent of this
-	 *     page's collection of visual components
 	 */
 	protected void createControl() {
 		// top level group
@@ -227,9 +224,7 @@ public class NewManualServerComposite extends Composite {
 	/**
 	 * Look for test environment runtime first. Otherwise, pick any runtime.
 	 * 
-	 * @param runtimeType
-	 * @param serverType
-	 * @return
+	 * @return the default runtime
 	 */
 	protected IRuntime getDefaultRuntime() {
 		if (runtimes == null || runtimes.length == 0)
@@ -334,14 +329,6 @@ public class NewManualServerComposite extends Composite {
 		wizard.update();
 	}
 
-	/**
-	 * Sets the default container.
-	 * @param org.eclipse.core.resources.IContainer
-	 */
-	/*public void setDefaultContainer(IContainer container) {
-		defaultContainer = container;
-	}*/
-	
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 	

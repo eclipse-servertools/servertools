@@ -139,8 +139,8 @@ public class WizardUtil {
 	/**
 	 * Returns the selected container from this selection.
 	 *
-	 * @param sel org.eclipse.jface.viewers.IStructuredSelection
-	 * @return org.eclipse.core.resources.IContainer
+	 * @param selection the selection
+	 * @return the container
 	 */
 	public static IContainer getSelectionContainer(IStructuredSelection selection) {
 		if (selection == null || selection.isEmpty())
@@ -157,8 +157,7 @@ public class WizardUtil {
 	 * Return true if the container is a valid server project
 	 * folder and is not "within" a server instance or configuration.
 	 *
-	 * @return String
-	 * @param container IContainer
+	 * @param name a container name 
 	 */
 	public static String validateContainer(String name) {
 		IContainer container = WizardUtil.findContainer(name);

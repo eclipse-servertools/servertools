@@ -29,7 +29,7 @@ public class DebugOnServerAction extends Action {
 	/**
 	 * DebugOnServerAction constructor comment.
 	 * 
-	 * @param the object to attempt to debug
+	 * @param object the object to attempt to debug
 	 */
 	public DebugOnServerAction(Object object) {
 		super(ServerUIPlugin.getResource("%actionDebugOnServer"));

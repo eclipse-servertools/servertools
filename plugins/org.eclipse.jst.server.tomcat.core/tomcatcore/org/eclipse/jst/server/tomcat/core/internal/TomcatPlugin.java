@@ -64,8 +64,8 @@ public class TomcatPlugin extends Plugin {
 	/**
 	 * Return the install location preference.
 	 * 
-	 * @param id
-	 * @return
+	 * @param id a runtime type id
+	 * @return the install location
 	 */
 	public static String getPreference(String id) {
 		return getInstance().getPluginPreferences().getString(id);
@@ -74,8 +74,8 @@ public class TomcatPlugin extends Plugin {
 	/**
 	 * Set the install location preference.
 	 * 
-	 * @param id
-	 * @return
+	 * @param id the runtimt type id
+	 * @param value the location
 	 */
 	public static void setPreference(String id, String value) {
 		getInstance().getPluginPreferences().setValue(id, value);
@@ -85,7 +85,7 @@ public class TomcatPlugin extends Plugin {
 	/**
 	 * Convenience method for logging.
 	 *
-	 * @param status org.eclipse.core.runtime.IStatus
+	 * @param status a status object
 	 */
 	public static void log(IStatus status) {
 		getInstance().getLog().log(status);
@@ -93,8 +93,9 @@ public class TomcatPlugin extends Plugin {
 
 	/**
 	 * Returns the translated String found with the given key.
-	 * @return java.lang.String
-	 * @param key java.lang.String
+	 * 
+	 * @param key a key
+	 * @return a translated string
 	 */
 	public static String getResource(String key) {
 		try {
@@ -107,9 +108,10 @@ public class TomcatPlugin extends Plugin {
 	/**
 	 * Returns the translated String found with the given key,
 	 * and formatted with the given object.
-	 * @return java.lang.String
-	 * @param key java.lang.String
-	 * @param obj java.lang.Object[]
+	 * 
+	 * @param key a key
+	 * @param obj substitution arguments
+	 * @return a translated string
 	 */
 	public static String getResource(String key, Object[] obj) {
 		try {
@@ -122,9 +124,10 @@ public class TomcatPlugin extends Plugin {
 	/**
 	 * Returns the translated String found with the given key,
 	 * and formatted with the given object.
-	 * @return java.lang.String
-	 * @param key java.lang.String
-	 * @param obj java.lang.Object[]
+	 * 
+	 * @param key a key
+	 * @param arg an argument
+	 * @return a translated string
 	 */
 	public static String getResource(String key, String arg) {
 		return getResource(key, new String[] { arg });
@@ -133,9 +136,11 @@ public class TomcatPlugin extends Plugin {
 	/**
 	 * Returns the translated String found with the given key,
 	 * and formatted with the given object.
-	 * @return java.lang.String
-	 * @param key java.lang.String
-	 * @param obj java.lang.Object[]
+	 * 
+	 * @param key a key
+	 * @param arg1 an argument
+	 * @param arg2 another argument
+	 * @return a translated string
 	 */
 	public static String getResource(String key, String arg1, String arg2) {
 		return getResource(key, new String[] { arg1, arg2 });
@@ -172,10 +177,7 @@ public class TomcatPlugin extends Plugin {
 	}
 	
 	/**
-	 * Returns the file with which to verify the Tomcat installation.
-	 *
-	 * @param boolean
-	 * @return java.lang.String[]
+	 * Loads the files to verify the Tomcat installation.
 	 */
 	public static void loadVerifyFiles() {
 		if (verify32 != null)

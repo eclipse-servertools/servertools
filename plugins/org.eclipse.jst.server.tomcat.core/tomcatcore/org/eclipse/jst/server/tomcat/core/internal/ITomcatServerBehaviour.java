@@ -22,7 +22,7 @@ public interface ITomcatServerBehaviour {
 	/**
 	 * Returns the main class that is used to launch the Tomcat server.
 	 * 
-	 * @return
+	 * @return the main runtime class
 	 */
 	public String getRuntimeClass();
 

@@ -271,8 +271,8 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	/**
 	 * Reload a Tomcat configuration from the given resource.
 	 *
-	 * @param resource
-	 * @return org.eclipse.jst.server.tomcat.core.Tomcat32Configuration
+	 * @param folder a folder
+	 * @param monitor a progress monitor
 	 */
 	public void load(IFolder folder, IProgressMonitor monitor) throws CoreException {
 		try {
@@ -337,11 +337,12 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	
 	/**
 	 * Save the information held by this object to the given directory.
-	 * @param dir
+	 * 
+	 * @param path a path
 	 * @param forceDirty if true, the files will be saved, regardless
-	 * of whether they have been modified
-	 * @param org.eclipse.core.runtime.IProgressMonitor monitor
-	 * @throws java.io.IOException
+	 *  of whether they have been modified
+	 * @param monitor a progress monitor
+	 * @throws CoreException
 	 */
 	protected void save(IPath path, boolean forceDirty, IProgressMonitor monitor) throws CoreException {
 		try {
@@ -390,11 +391,10 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	
 	/**
 	 * Save the information held by this object to the given directory.
-	 * @param dir
-	 * @param forceDirty if true, the files will be saved, regardless
-	 * of whether they have been modified
-	 * @param org.eclipse.core.runtime.IProgressMonitor monitor
-	 * @throws java.io.IOException
+	 * 
+	 * @param folder a folder
+	 * @param monitor a progress monitor
+	 * @throws CoreException
 	 */
 	public void save(IFolder folder, IProgressMonitor monitor) throws CoreException {
 		try {
@@ -484,8 +484,8 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	/**
 	 * Localize the web projects in this configuration.
 	 *
-	 * @param file java.io.File
-	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
+	 * @param path a path
+	 * @param monitor a progress monitor
 	 */
 	public void localizeConfiguration(IPath path, TomcatServer serverType, IRuntime runtime, IProgressMonitor monitor) {
 		try {
@@ -544,8 +544,9 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	
 	/**
 	 * Change the extension of a mime mapping.
-	 * @param index int
-	 * @param newExtension java.lang.String
+	 * 
+	 * @param index
+	 * @param map
 	 */
 	public void modifyMimeMapping(int index, IMimeMapping map) {
 		webAppDocument.modifyMimeMapping(index, map);

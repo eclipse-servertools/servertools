@@ -27,7 +27,7 @@ public class RestartProjectAction extends Action {
 	/**
 	 * RestartProjectAction constructor comment.
 	 * 
-	 * @param the project to restart
+	 * @param project the project to restart
 	 */
 	public RestartProjectAction(IProject project) {
 		super(ServerUIPlugin.getResource("%actionRestartProject"));

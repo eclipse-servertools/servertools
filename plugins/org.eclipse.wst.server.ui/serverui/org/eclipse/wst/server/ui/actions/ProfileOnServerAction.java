@@ -29,7 +29,7 @@ public class ProfileOnServerAction extends Action {
 	/**
 	 * Profile an object on server.
 	 * 
-	 * @param the object to attempt to debug
+	 * @param object the object to attempt to debug
 	 */
 	public ProfileOnServerAction(Object object) {
 		super(ServerUIPlugin.getResource("%actionProfileOnServer"));

@@ -239,9 +239,9 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	}
 	
 	/**
-	 * Initializes this preference page using the passed desktop.
+	 * Initializes this preference page using the passed workbench.
 	 *
-	 * @param desktop the current desktop
+	 * @param workbench the current workbench
 	 */
 	public void init(IWorkbench workbench) {
 		// do nothing
@@ -249,11 +249,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	
 	/**
 	 * Performs special processing when this page's Defaults button has been pressed.
-	 * <p>
-	 * This is a framework hook method for sublcasses to do special things when
-	 * the Defaults button has been pressed.
-	 * Subclasses may override, but should call <code>super.performDefaults</code>.
-	 * </p>
 	 */
 	protected void performDefaults() {
 		autoRestart.setSelection(preferences.isDefaultAutoRestarting());

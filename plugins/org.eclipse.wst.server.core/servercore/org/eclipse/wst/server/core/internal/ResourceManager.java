@@ -406,7 +406,7 @@ public class ResourceManager {
 	/**
 	 * Deregister an existing runtime.
 	 *
-	 * @param resource org.eclipse.core.resources.IResource
+	 * @param runtime
 	 */
 	protected void deregisterRuntime(IRuntime runtime) {
 		if (runtime == null)
@@ -422,7 +422,7 @@ public class ResourceManager {
 	/**
 	 * Deregister an existing server resource.
 	 *
-	 * @param resource org.eclipse.core.resources.IResource
+	 * @param server
 	 */
 	protected void deregisterServer(IServer server) {
 		if (server == null)
@@ -639,7 +639,7 @@ public class ResourceManager {
 	/**
 	 * Returns an array of all runtimes.
 	 *
-	 * @return
+	 * @return an array of runtimes
 	 */
 	public IRuntime[] getRuntimes() {
 		List list = new ArrayList(runtimes);
@@ -838,7 +838,8 @@ public class ResourceManager {
 	 * Tries to load a new server resource from the given resource.
 	 * Returns true if the load and register were successful.
 	 *
-	 * @param resource org.eclipse.core.resources.IResource
+	 * @param file
+	 * @param monitor
 	 * @return boolean
 	 */
 	protected boolean handleNewFile(IFile file, IProgressMonitor monitor) {
@@ -870,9 +871,9 @@ public class ResourceManager {
 	 * servers ({@link #getServers()}) for the one with a matching
 	 * location ({@link IServer#getFile()}). The file may not be null.
 	 *
-	 * @param a server file
+	 * @param file a server file
 	 * @return the server instance, or <code>null</code> if 
-	 * there is no server associated with the given file
+	 *    there is no server associated with the given file
 	 */
 	public static IServer findServer(IFile file) {
 		if (file == null)
@@ -893,7 +894,8 @@ public class ResourceManager {
 	 * Tries to handle a resource change. Returns true if the reload
 	 * was successful.
 	 *
-	 * @param resource org.eclipse.core.resources.IResource
+	 * @param file a file
+	 * @param monitor
 	 * @return boolean
 	 */
 	protected boolean handleChangedFile(IFile file, IProgressMonitor monitor) {
@@ -925,7 +927,7 @@ public class ResourceManager {
 	 * Tries to remove a current resource. Returns true if the
 	 * deregistering was successful.
 	 *
-	 * @param resource org.eclipse.core.resources.IResource
+	 * @param file a file
 	 * @return boolean
 	 */
 	protected boolean handleRemovedFile(IFile file) {

@@ -163,7 +163,7 @@ public class ServerType implements IServerType, IOrdered {
 	/**
 	 * Returns an array of all known runtime instances of
 	 * the given runtime type. This convenience method filters the list of known
-	 * runtime ({@link #getRuntimes()}) for ones with a matching
+	 * runtime ({@link ServerCore#getRuntimes()}) for ones with a matching
 	 * runtime type ({@link IRuntime#getRuntimeType()}). The array will not
 	 * contain any working copies.
 	 * <p>

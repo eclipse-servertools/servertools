@@ -42,8 +42,8 @@ import org.eclipse.wst.server.core.internal.ServerPlugin;
  * likely to change significantly before the initial release.</it>
  * </p>
  * 
- * @see IServer
- * @see IServerWorkingCopy
+ * @see org.eclipse.wst.server.core.IServer
+ * @see org.eclipse.wst.server.core.IServerWorkingCopy
  * @since 1.0
  */
 public abstract class ServerBehaviourDelegate {
@@ -63,7 +63,7 @@ public abstract class ServerBehaviourDelegate {
 	 * Clients should never call this method.
 	 * </p>
 	 * 
-	 * @param server the server instance
+	 * @param newServer the server instance
 	 */
 	public final void initialize(Server newServer) {
 		server = newServer;

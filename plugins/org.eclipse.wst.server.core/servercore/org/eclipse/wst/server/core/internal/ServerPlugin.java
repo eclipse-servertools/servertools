@@ -88,8 +88,8 @@ public class ServerPlugin extends Plugin {
 	/**
 	 * Returns the translated String found with the given key.
 	 *
-	 * @param key java.lang.String
-	 * @return java.lang.String
+	 * @param key a key
+	 * @return a translated string
 	 */
 	public static String getResource(String key) {
 		try {
@@ -103,14 +103,14 @@ public class ServerPlugin extends Plugin {
 	 * Returns the translated String found with the given key,
 	 * and formatted with the given arguments using java.text.MessageFormat.
 	 *
-	 * @param key java.lang.String
-	 * @param arguments java.lang.Object[]
-	 * @return java.lang.String
+	 * @param key a key
+	 * @param args substitution arguments
+	 * @return a translated string
 	 */
-	public static String getResource(String key, Object[] arguments) {
+	public static String getResource(String key, Object[] args) {
 		try {
 			String text = getResource(key);
-			return MessageFormat.format(text, arguments);
+			return MessageFormat.format(text, args);
 		} catch (Exception e) {
 			return key;
 		}
@@ -120,9 +120,9 @@ public class ServerPlugin extends Plugin {
 	 * Returns the translated String found with the given key,
 	 * and formatted with the given arguments using java.text.MessageFormat.
 	 *
-	 * @param key java.lang.String
-	 * @param arguments java.lang.Object[]
-	 * @return java.lang.String
+	 * @param key a key
+	 * @param arg an argument
+	 * @return a translated string
 	 */
 	public static String getResource(String key, String arg) {
 		return getResource(key, new String[] { arg });
@@ -352,9 +352,10 @@ public class ServerPlugin extends Plugin {
 
 	/**
 	 * Returns true if ids contains id.
+	 * 
 	 * @param ids
 	 * @param id
-	 * @return
+	 * @return true if the id is supported
 	 */
 	public static boolean supportsType(String[] ids, String id) {
 		if (id == null || id.length() == 0)
@@ -558,7 +559,7 @@ public class ServerPlugin extends Plugin {
 	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
 	 * 
-	 * @return the array of module factories {@link IModuleFactory}
+	 * @return the array of module factories {@link ModuleFactory}
 	 */
 	public static ModuleFactory[] getModuleFactories() {
 		if (moduleFactories == null)
@@ -573,9 +574,9 @@ public class ServerPlugin extends Plugin {
 	 * Returns the module factory with the given id, or <code>null</code>
 	 * if none. This convenience method searches the list of known
 	 * module factories ({@link #getModuleFactories()}) for the one a matching
-	 * module factory id ({@link IModuleFactory#getId()}). The id may not be null.
+	 * module factory id ({@link ModuleFactory#getId()}). The id may not be null.
 	 *
-	 * @param the module factory id
+	 * @param id the module factory id
 	 * @return the module factory, or <code>null</code> if there is no module factory
 	 * with the given id
 	 */
@@ -823,7 +824,7 @@ public class ServerPlugin extends Plugin {
 	 * Returns a module artifact if one can be found without loading plugins.
 	 * 
 	 * @param obj
-	 * @return
+	 * @return a module artifact, or null
 	 * @throws Exception
 	 */
 	public static IModuleArtifact getModuleArtifact(Object obj) {
@@ -854,7 +855,7 @@ public class ServerPlugin extends Plugin {
 	 * Returns a module artifact if possible, loading any plugins required.
 	 * 
 	 * @param obj
-	 * @return
+	 * @return a module artifact, or null
 	 */
 	public static IModuleArtifact loadModuleArtifact(Object obj) {
 		Trace.trace(Trace.FINEST, "ServerUIPlugin.loadModuleArtifact() " + obj);

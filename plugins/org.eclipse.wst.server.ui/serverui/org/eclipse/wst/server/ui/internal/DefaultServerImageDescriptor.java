@@ -26,7 +26,6 @@ public class DefaultServerImageDescriptor extends CompositeImageDescriptor {
 	 * Create a new OverlayImageDescriptor.
 	 * 
 	 * @param baseImage an image descriptor used as the base image
-	 * @param flags flags indicating which adornments are to be rendered
 	 */
 	public DefaultServerImageDescriptor(Image baseImage) {
 		setBaseImage(baseImage);

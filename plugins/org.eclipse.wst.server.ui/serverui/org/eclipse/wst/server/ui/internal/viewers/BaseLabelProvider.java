@@ -56,8 +56,6 @@ public abstract class BaseLabelProvider implements ILabelProvider {
 	 * @param element the object representing the entire row, or 
 	 *    <code>null</code> indicating that no input object is set
 	 *    in the viewer
-	 * @param columnIndex the zero-based index of the column in which
-	 *   the label appears
 	 */
 	public Image getImage(Object element) {
 		return null;
@@ -69,7 +67,6 @@ public abstract class BaseLabelProvider implements ILabelProvider {
 	 * @param element the object representing the entire row, or
 	 *   <code>null</code> indicating that no input object is set
 	 *   in the viewer
-	 * @param columnIndex the zero-based index of the column in which the label appears
 	 */
 	public String getText(Object element) {
 		return "";

@@ -129,7 +129,7 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 	 * These elements can be presented as rows in a table, items in a list, etc.
 	 * The result is not modified by the viewer.
 	 *
-	 * @param inputElement the input element
+	 * @param element the input element
 	 * @return the array of elements to display in the viewer
 	 */
 	public Object[] getElements(Object element) {

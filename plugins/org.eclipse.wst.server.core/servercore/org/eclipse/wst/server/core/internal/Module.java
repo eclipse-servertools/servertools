@@ -69,7 +69,7 @@ public class Module implements IModule {
 	/**
 	 * Returns the type of this module.
 	 * 
-	 * @return
+	 * @return the module type
 	 */
 	public IModuleType getModuleType() {
 		return new ModuleType(type, version);
@@ -79,7 +79,7 @@ public class Module implements IModule {
 	 * Returns the workbench project that this module is contained in,
 	 * or null if the module is outside of the workspace.
 	 * 
-	 * @return org.eclipse.core.resources.IProject
+	 * @return the project that the module is contained in
 	 */
 	public IProject getProject() {
 		return project;

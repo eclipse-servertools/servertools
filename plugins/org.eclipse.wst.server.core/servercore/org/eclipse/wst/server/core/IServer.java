@@ -384,7 +384,7 @@ public interface IServer extends IServerAttributes {
 	 * be restarted in the given mode. Note that only servers
 	 * that are currently running can be restarted.
 	 *
-	 * @param launchMode a mode in which a server can be launched,
+	 * @param mode a mode in which a server can be launched,
 	 *    one of the mode constants defined by
 	 *    {@link org.eclipse.debug.core.ILaunchManager}
 	 * @return a status object with code <code>IStatus.OK</code> if the server can
@@ -410,7 +410,7 @@ public interface IServer extends IServerAttributes {
 
 	/**
 	 * Asynchronously restarts this server. This operation does
-	 * nothing if this server cannot be stopped ({@link #canRestart()}
+	 * nothing if this server cannot be stopped ({@link #canRestart(String)}
 	 * returns <code>false</code>.
 	 * This method cannot be used to start the server from a stopped state.
 	 * <p>
@@ -420,9 +420,9 @@ public interface IServer extends IServerAttributes {
 	 * to be diagnosed.]
 	 * </p>
 	 *
-	 * @param launchMode a mode in which a server can be launched,
-	 * one of the mode constants defined by
-	 * {@link org.eclipse.debug.core.ILaunchManager}
+	 * @param mode a mode in which a server can be launched,
+	 *    one of the mode constants defined by
+	 *    {@link org.eclipse.debug.core.ILaunchManager}
 	 */
 	public void restart(String mode);
 	
@@ -588,7 +588,7 @@ public interface IServer extends IServerAttributes {
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return a possibly-empty array of modules
-	 * @see IServerAttributes.getModules()
+	 * @see IServerAttributes#getModules()
 	 */
 	public IModule[] getServerModules(IProgressMonitor monitor);
 }

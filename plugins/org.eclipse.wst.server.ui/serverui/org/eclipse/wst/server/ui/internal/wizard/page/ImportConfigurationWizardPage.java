@@ -447,7 +447,8 @@ public class ImportConfigurationWizardPage extends WizardPage {
 	
 	/**
 	 * Sets the default container.
-	 * @param org.eclipse.core.resources.IContainer
+	 * 
+	 * @param container
 	 */
 	public void setDefaultContainer(IContainer container) {
 		//defaultContainer = container;

@@ -100,7 +100,7 @@ public class WebModuleDialog extends Dialog {
 	 * standard margins and spacing. Subclasses should override.
 	 * </p>
 	 *
-	 * @param the parent composite to contain the dialog area
+	 * @param parent the parent composite to contain the dialog area
 	 * @return the dialog area control
 	 */
 	protected Control createDialogArea(Composite parent) {

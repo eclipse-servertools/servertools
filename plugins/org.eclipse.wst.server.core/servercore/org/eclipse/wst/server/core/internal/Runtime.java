@@ -46,7 +46,7 @@ public class Runtime extends Base implements IRuntime {
 	/**
 	 * Return the validation status of the runtime.
 	 * 
-	 * @return
+	 * @return the status
 	 */
 	public IStatus validate(IProgressMonitor monitor) {
 		try {
@@ -80,7 +80,8 @@ public class Runtime extends Base implements IRuntime {
 	/**
 	 * Returns true if the delegate has been loaded.
 	 * 
-	 * @return
+	 * @return <code>true</code> if the delegate has been loaded, and
+	 *    <code>false</code> otherwise
 	 */
 	public boolean isDelegateLoaded() {
 		return delegate != null;

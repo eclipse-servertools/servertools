@@ -268,8 +268,8 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 	/**
 	 * Add a mime mapping.
 	 * 
-	 * @param index int
-	 * @param map org.eclipse.jst.server.tomcat.MimeMapping
+	 * @param index2
+	 * @param map
 	 */
 	protected void addMimeMapping(int index2, MimeMapping map) {
 		mappings.add(index2, map);
@@ -316,8 +316,8 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 	
 	/**
 	 * 
-	 * @param index int
-	 * @param map org.eclipse.jst.server.tomcat.MimeMapping
+	 * @param index2
+	 * @param map
 	 */
 	protected void modifyMimeMapping(int index2, MimeMapping map) {
 		MimeMapping oldMap = (MimeMapping) mappings.get(index2);
@@ -354,7 +354,8 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 	
 	/**
 	 * Remove the mime mapping at the given index.
-	 * @param i int
+	 * 
+	 * @param index2
 	 */
 	protected void removeMimeMapping(int index2) {
 		mappings.remove(index2);

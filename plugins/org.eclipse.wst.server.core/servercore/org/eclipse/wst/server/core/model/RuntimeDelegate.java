@@ -115,11 +115,11 @@ public abstract class RuntimeDelegate {
 
 	/**
 	 * Validates this runtime instance. See the specification of
-	 * {@link IRuntime#validate()} for further details. Subclasses should
+	 * {@link IRuntime#validate(IProgressMonitor)} for further details. Subclasses should
 	 * override and call super.validate() for basic validation. 
 	 * <p>
 	 * This method is called by the web server core framework,
-	 * in response to a call to <code>IRuntime.validate()</code>.
+	 * in response to a call to <code>IRuntime.validate(IProgressMonitor)</code>.
 	 * Clients should never call this method.
 	 * </p>
 	 *

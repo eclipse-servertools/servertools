@@ -29,7 +29,7 @@ public class RunOnServerAction extends Action {
 	/**
 	 * Run on server action.
 	 * 
-	 * @param the object to attempt to debug
+	 * @param object the object to attempt to debug
 	 */
 	public RunOnServerAction(Object object) {
 		super(ServerUIPlugin.getResource("%actionRunOnServer"));

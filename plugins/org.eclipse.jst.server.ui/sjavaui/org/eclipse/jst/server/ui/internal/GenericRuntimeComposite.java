@@ -78,10 +78,7 @@ public class GenericRuntimeComposite extends Composite {
 	}
 
 	/**
-	 * Provide a wizard page to change the Tomcat installation directory.
-	 *
-	 * @param parent the parent composite
-	 * @return the new control
+	 * Provide a wizard page to change the root directory.
 	 */
 	protected void createControl() {
 		GridLayout layout = new GridLayout();

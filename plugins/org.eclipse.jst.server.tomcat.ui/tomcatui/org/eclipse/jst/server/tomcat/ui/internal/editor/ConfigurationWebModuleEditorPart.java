@@ -363,7 +363,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 		}
 	}
 	
-	/**
+	/*
 	 * @see IWorkbenchPart#setFocus()
 	 */
 	public void setFocus() {

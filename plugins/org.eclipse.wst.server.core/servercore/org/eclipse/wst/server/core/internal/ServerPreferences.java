@@ -109,7 +109,7 @@ public class ServerPreferences {
 	 * Set whether servers and configurations should be created in the
 	 * workspace (as opposed to in metadata).
 	 *
-	 * @param boolean
+	 * @param b
 	 */
 	public void setCreateResourcesInWorkspace(boolean b) {
 		preferences.setValue(PREF_CREATE_IN_WORKSPACE, b);
@@ -120,7 +120,7 @@ public class ServerPreferences {
 	 * Set whether servers will be automatically restarted when
 	 * they need a restart.
 	 *
-	 * @param boolean
+	 * @param value
 	 */
 	public void setAutoRestarting(boolean value) {
 		preferences.setValue(PREF_AUTO_RESTART, value);
@@ -130,7 +130,7 @@ public class ServerPreferences {
 	/**
 	 * Set whether publishing should happen before the server starts.
 	 *
-	 * @param boolean
+	 * @param value
 	 */
 	public void setAutoPublishing(boolean value) {
 		preferences.setValue(PREF_AUTO_PUBLISH, value);
@@ -170,7 +170,7 @@ public class ServerPreferences {
 	/**
 	 * Sets the value for local auto-publishing.
 	 * 
-	 * @param int
+	 * @param auto
 	 */
 	public void setAutoPublishLocal(boolean auto) {
 		preferences.setValue(PREF_AUTO_PUBLISH_LOCAL, auto);
@@ -198,7 +198,7 @@ public class ServerPreferences {
 	/**
 	 * Sets the value for local auto-publishing.
 	 * 
-	 * @param int
+	 * @param auto
 	 */
 	public void setAutoPublishLocalTime(int auto) {
 		preferences.setValue(PREF_AUTO_PUBLISH_LOCAL_TIME, auto);
@@ -226,7 +226,7 @@ public class ServerPreferences {
 	/**
 	 * Sets the value for remote auto-publishing.
 	 * 
-	 * @param int
+	 * @param auto
 	 */
 	public void setAutoPublishRemote(boolean auto) {
 		preferences.setValue(PREF_AUTO_PUBLISH_REMOTE, auto);
@@ -254,7 +254,7 @@ public class ServerPreferences {
 	/**
 	 * Sets the value for remote auto-publishing.
 	 * 
-	 * @param int
+	 * @param auto
 	 */
 	public void setAutoPublishRemoteTime(int auto) {
 		preferences.setValue(PREF_AUTO_PUBLISH_REMOTE_TIME, auto);

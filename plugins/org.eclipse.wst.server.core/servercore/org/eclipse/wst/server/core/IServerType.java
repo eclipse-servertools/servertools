@@ -230,7 +230,7 @@ public interface IServerType {
 	/**
 	 * Creates an working copy instance of this server type.
 	 * After setting various properties of the working copy,
-	 * the client should call {@link IServerWorkingCopy#save(IProgressMonitor)}
+	 * the client should call {@link IServerWorkingCopy#save(boolean, IProgressMonitor)}
 	 * to bring the server instance into existence.
 	 * <p>
 	 * [issue: Why is a runtime passed in? 

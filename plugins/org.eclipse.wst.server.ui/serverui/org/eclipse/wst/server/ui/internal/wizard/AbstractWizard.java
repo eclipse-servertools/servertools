@@ -30,7 +30,7 @@ public abstract class AbstractWizard extends Wizard {
 	/**
 	 * Return the current workbench.
 	 * 
-	 * @return org.eclipse.ui.IWorkbench
+	 * @return the workbench
 	 */
 	public IWorkbench getWorkbench() {
 		return workbench;
@@ -39,8 +39,8 @@ public abstract class AbstractWizard extends Wizard {
 	/**
 	 * Initialize the workbench and current selection.
 	 * 
-	 * @param org.eclipse.ui.IWorkbench
-	 * @param org.eclipse.jface.viewers.IStructuredSelection
+	 * @param newWorkbench
+	 * @param newSelection
 	 */
 	public void init(IWorkbench newWorkbench, IStructuredSelection newSelection) {
 		workbench = newWorkbench;

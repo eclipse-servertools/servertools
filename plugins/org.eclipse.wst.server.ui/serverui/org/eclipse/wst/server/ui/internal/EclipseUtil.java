@@ -148,7 +148,6 @@ public class EclipseUtil {
 	/**
 	 * Open a dialog window.
 	 *
-	 * @param title java.lang.String
 	 * @param message java.lang.String
 	 */
 	public static void openError(final String message) {
@@ -178,8 +177,8 @@ public class EclipseUtil {
 	/**
 	 * Open a dialog window.
 	 *
-	 * @param title java.lang.String
-	 * @param message java.lang.String
+	 * @param shell the shell
+	 * @param message the message
 	 */
 	public static void openError(Shell shell, String message) {
 		MessageDialog.openError(shell, ServerUIPlugin.getResource("%errorDialogTitle"), message);

@@ -40,7 +40,7 @@ public interface IViewerManager {
 	 * 
 	 * @param request the request
 	 */
-	public void setRequest(Request rr);
+	public void setRequest(Request request);
 	
 	/**
 	 * Returns an array of the available TCP/IP request viewer ids

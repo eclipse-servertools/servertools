@@ -135,8 +135,6 @@ public class NewServerComposite extends Composite {
 
 	/**
 	 * Creates the UI of the page.
-	 *
-	 * @param org.eclipse.swt.widgets.Composite parent
 	 */
 	protected void createControl() {
 		GridLayout layout = new GridLayout();

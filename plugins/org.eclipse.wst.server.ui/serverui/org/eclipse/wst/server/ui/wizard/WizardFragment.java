@@ -30,7 +30,8 @@ public abstract class WizardFragment {
 	/**
 	 * Returns <code>true</code> if this fragment has an associated UI,
 	 * and <code>false</code> otherwise.
-	 * @return
+	 * 
+	 * @return true if the fragment has a composite
 	 */
 	public boolean hasComposite() {
 		return false;
@@ -42,7 +43,7 @@ public abstract class WizardFragment {
 	 * 
 	 * @param parent
 	 * @param handle
-	 * @return
+	 * @return the created composite
 	 */
 	public Composite createComposite(Composite parent, IWizardHandle handle) {
 		return null;
@@ -52,7 +53,7 @@ public abstract class WizardFragment {
 	 * Sets the wizard task model. The task model is shared by all fragments
 	 * in the wizard and is used to share data.
 	 * 
-	 * @param model
+	 * @param taskModel the task model
 	 */
 	public void setTaskModel(TaskModel taskModel) {
 		this.taskModel = taskModel;
@@ -61,7 +62,7 @@ public abstract class WizardFragment {
 	/**
 	 * Returns the wizard task model.
 	 * 
-	 * @return
+	 * @return the task model
 	 */
 	public TaskModel getTaskModel() {
 		return taskModel;
@@ -84,7 +85,7 @@ public abstract class WizardFragment {
 	/**
 	 * Create a task to run when the wizard finishes.
 	 * 
-	 * @return
+	 * @return the task
 	 */
 	public ITask createFinishTask() {
 		return null;
@@ -93,7 +94,7 @@ public abstract class WizardFragment {
 	/**
 	 * Create a task to run when the wizard is cancelled.
 	 * 
-	 * @return
+	 * @return the task
 	 */
 	public ITask createCancelTask() {
 		return null;
@@ -103,7 +104,7 @@ public abstract class WizardFragment {
 	 * Returns the child fragments. Child fragments come directly after this fragment
 	 * in the wizard flow.
 	 * 
-	 * @return
+	 * @return a list of child fragments
 	 */
 	public List getChildFragments() {
 		if (listImpl == null) {
@@ -132,7 +133,7 @@ public abstract class WizardFragment {
 	/**
 	 * Returns true if this fragment is complete (can finish).
 	 * 
-	 * @return
+	 * @return true if the fragment is complete
 	 */
 	public boolean isComplete() {
 		return isComplete;

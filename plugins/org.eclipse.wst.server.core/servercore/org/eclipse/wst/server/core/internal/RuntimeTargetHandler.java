@@ -37,7 +37,7 @@ public class RuntimeTargetHandler implements IRuntimeTargetHandler, IOrdered {
 
 	/**
 	 * 
-	 * @return
+	 * @return the id
 	 */
 	public String getId() {
 		return element.getAttribute("id");
@@ -46,7 +46,7 @@ public class RuntimeTargetHandler implements IRuntimeTargetHandler, IOrdered {
 	/**
 	 * Returns the order.
 	 *
-	 * @return int
+	 * @return the order
 	 */
 	public int getOrder() {
 		try {

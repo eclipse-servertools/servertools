@@ -30,8 +30,6 @@ public abstract class AbstractTreeLabelProvider extends BaseLabelProvider {
 	 * @param element the object representing the entire row, or 
 	 *    <code>null</code> indicating that no input object is set
 	 *    in the viewer
-	 * @param columnIndex the zero-based index of the column in which
-	 *   the label appears
 	 */
 	public Image getImage(Object element) {
 		if (element instanceof ServerTreeContentProvider.TreeElement) {
@@ -49,7 +47,6 @@ public abstract class AbstractTreeLabelProvider extends BaseLabelProvider {
 	 * @param element the object representing the entire row, or
 	 *   <code>null</code> indicating that no input object is set
 	 *   in the viewer
-	 * @param columnIndex the zero-based index of the column in which the label appears
 	 */
 	public String getText(Object element) {
 		if (element instanceof ServerTreeContentProvider.TreeElement) {

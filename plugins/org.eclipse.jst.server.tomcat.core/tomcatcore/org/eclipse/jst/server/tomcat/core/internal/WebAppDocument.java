@@ -37,7 +37,7 @@ public class WebAppDocument {
 	/**
 	 * Loads a web.xml from the given URL.
 	 *
-	 * @param url java.net.URL
+	 * @param path a path
 	 */
 	public WebAppDocument(IPath path) throws Exception {
 		webAppDocument = XMLUtil.getDocumentBuilder().parse(new InputSource(new FileInputStream(path.toFile())));
@@ -46,7 +46,7 @@ public class WebAppDocument {
 	/**
 	 * Loads a web.xml from the given resource.
 	 *
-	 * @param resource org.eclipse.core.resources.IResource
+	 * @param file a file
 	 */
 	public WebAppDocument(IFile file) throws Exception {
 		webAppDocument = XMLUtil.getDocumentBuilder().parse(new InputSource(file.getContents()));
@@ -56,7 +56,7 @@ public class WebAppDocument {
 	 * Adds a MimeMapping.
 	 *
 	 * @param index int
-	 * @param map org.eclipse.jst.server.tomcat.MimeMapping
+	 * @param map org.eclipse.jst.server.tomcat.IMimeMapping
 	 */
 	public void addMimeMapping(int index, IMimeMapping map) {
 		Trace.trace(Trace.FINER, "Adding mime mapping " + index + " " + map.getMimeType() + " " + map.getExtension());
@@ -95,8 +95,8 @@ public class WebAppDocument {
 	/**
 	 * Modifies a mime mapping.
 	 *
-	 * @param index int
-	 * @param mapping org.eclipse.jst.server.tomcat.MimeMapping
+	 * @param index
+	 * @param map
 	 */
 	public void modifyMimeMapping(int index, IMimeMapping map) {
 		Element element = webAppDocument.getDocumentElement();
@@ -124,7 +124,8 @@ public class WebAppDocument {
 	/**
 	 * Saves the Web app document.
 	 *
-	 * @param filename java.lang.String
+	 * @param path a path
+	 * @param forceDirty true to force a save
 	 */
 	public void save(String path, boolean forceDirty) throws IOException {
 		if (forceDirty || isWebAppDirty)
@@ -134,7 +135,8 @@ public class WebAppDocument {
 	/**
 	 * Saves the Web app document.
 	 *
-	 * @param filename java.lang.String
+	 * @param file a file
+	 * @param monitor a progress monitor
 	 */
 	public void save(IFile file, IProgressMonitor monitor) throws Exception {
 		byte[] data = XMLUtil.getContents(webAppDocument);

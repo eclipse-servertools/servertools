@@ -41,8 +41,9 @@ public class ElementCreationCache {
 	/**
 	 * Return the key to use for the given factory.
 	 *
-	 * @param factory
-	 * @return
+	 * @param type the server type
+	 * @param host the server host
+	 * @return the key
 	 */
 	protected String getKey(IServerType type, String host) {
 		return type.getId() + "|" + host + "|";
@@ -51,8 +52,8 @@ public class ElementCreationCache {
 	/**
 	 * Returns a server. 
 	 *
-	 * @param type org.eclipse.wst.server.core.IServerType
-	 * @return org.eclipse.wst.server.core.IServerWorkingCopy
+	 * @param type
+	 * @return a server working copy
 	 */
 	public IServerWorkingCopy getServer(IServerType type, String host, IProgressMonitor monitor) throws CoreException {
 		try {
@@ -79,8 +80,8 @@ public class ElementCreationCache {
 	/**
 	 * Returns a cached server resource. 
 	 *
-	 * @param factory org.eclipse.wst.server.core.IServerType
-	 * @return org.eclipse.wst.server.core.IServerWorkingCopy
+	 * @param type the server type
+	 * @return a working copy
 	 */
 	public IServerWorkingCopy getCachedServer(IServerType type, String host) {
 		try {

@@ -383,7 +383,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 	
 	//protected void validate() { }
 
-	/**
+	/*
 	 * @see IWorkbenchPart#setFocus()
 	 */
 	public void setFocus() {

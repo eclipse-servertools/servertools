@@ -232,7 +232,7 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 	/**
 	 * Updates a server in the tree.
 	 *
-	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param server2 a server
 	 */
 	protected void handleServerModulesChanged(IServer server2) {
 		if (viewer != null) {

@@ -78,7 +78,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	/**
 	 * Return the runtime class name.
 	 *
-	 * @return java.lang.String
+	 * @return the class name
 	 */
 	public String getRuntimeClass() {
 		return getTomcatVersionHandler().getRuntimeClass();
@@ -87,8 +87,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	/**
 	 * Return the program's runtime arguments to start or stop.
 	 *
-	 * @param boolean starting
-	 * @return java.lang.String
+	 * @param starting true if starting
+	 * @return an array of runtime program arguments
 	 */
 	protected String[] getRuntimeProgramArguments(boolean starting) {
 		IPath configPath = null;
@@ -100,7 +100,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	/**
 	 * Return the runtime (VM) arguments.
 	 *
-	 * @return java.lang.String
+	 * @return an array of runtime arguments
 	 */
 	protected String[] getRuntimeVMArguments() {
 		IPath installPath = getServer().getRuntime().getLocation();

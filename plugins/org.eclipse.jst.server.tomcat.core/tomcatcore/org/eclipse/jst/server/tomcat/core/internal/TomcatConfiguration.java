@@ -67,9 +67,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	 * Copies all files from the given directory in the workbench
 	 * to the given location.  Can be overridden by version specific
 	 * class to modify or enhance what publish does.
-	 *
-	 * @param from java.io.File
-	 * @param to java.io.File
+	 * 
 	 * @return org.eclipse.core.runtime.IStatus
 	 */
 	protected IStatus backupAndPublish(IPath confDir, boolean doBackup, IProgressMonitor monitor) {
@@ -212,9 +210,9 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 
 	/**
 	 * Returns the partial URL applicable to this module.
-	 *
-	 * @return java.lang.String
-	 * @param module IWebModule
+	 * 
+	 * @param webModule a web module
+	 * @return the partial URL
 	 */
 	protected String getWebModuleURL(IModule webModule) {
 		WebModule module = getWebModule(webModule);
@@ -226,10 +224,10 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	}
 
 	/**
-	 * Returns the partial URL applicable to this project.
+	 * Returns the given module from the config.
 	 *
-	 * @return java.lang.String
-	 * @param project org.eclipse.core.resources.IProject
+	 * @param module a web module
+	 * @return a web module
 	 */
 	protected WebModule getWebModule(IModule module) {
 		if (module == null)
@@ -255,14 +253,6 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	 */
 	protected abstract String getROOTModuleDocBase();
 
-	/**
-	 * Save to the given directory.
-	 * @param f java.io.File
-	 * @param forceSave boolean
-	 * @exception java.io.IOException
-	 */
-	//protected abstract void save(IPath path, boolean forceSave, IProgressMonitor monitor) throws CoreException;
-	
 	protected abstract void save(IFolder folder, IProgressMonitor monitor) throws CoreException;
 	
 	protected void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue) {

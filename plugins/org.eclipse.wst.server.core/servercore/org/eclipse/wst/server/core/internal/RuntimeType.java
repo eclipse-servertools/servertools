@@ -33,7 +33,7 @@ public class RuntimeType implements IRuntimeType, IOrdered {
 
 	/**
 	 * 
-	 * @return
+	 * @return the id
 	 */
 	public String getId() {
 		return element.getAttribute("id");
@@ -41,7 +41,7 @@ public class RuntimeType implements IRuntimeType, IOrdered {
 
 	/**
 	 * 
-	 * @return
+	 * @return the name
 	 */
 	public String getName() {
 		return element.getAttribute("name");
@@ -49,7 +49,7 @@ public class RuntimeType implements IRuntimeType, IOrdered {
 
 	/**
 	 * 
-	 * @return
+	 * @return the description
 	 */
 	public String getDescription() {
 		return element.getAttribute("description");
@@ -58,7 +58,7 @@ public class RuntimeType implements IRuntimeType, IOrdered {
 	/**
 	 * Returns the order.
 	 *
-	 * @return int
+	 * @return the order
 	 */
 	public int getOrder() {
 		try {
@@ -84,8 +84,9 @@ public class RuntimeType implements IRuntimeType, IOrdered {
 	}
 	
 	/**
+	 * Return the supported module types.
 	 * 
-	 * @return
+	 * @return an array of module types
 	 */
 	public IModuleType[] getModuleTypes() {
 		if (moduleTypes == null)

@@ -69,10 +69,10 @@ public class ModuleType implements IModuleType {
 	/**
 	 * Returns the module type with the given id, or <code>null</code>
 	 * if none. This convenience method searches the list of known
-	 * module types ({@link #getModuleTypes()}) for the one a matching
-	 * module type id ({@link ModuleKind#getId()}). The id may not be null.
+	 * module types for the one a matching
+	 * module type id ({@link ModuleType#getId()}). The id may not be null.
 	 *
-	 * @param the module type id
+	 * @param id the module type id
 	 * @return the module type, or <code>null</code> if there is no module type
 	 * with the given id
 	 */

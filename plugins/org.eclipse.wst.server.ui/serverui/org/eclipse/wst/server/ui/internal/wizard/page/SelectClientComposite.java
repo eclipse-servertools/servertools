@@ -46,9 +46,7 @@ public class SelectClientComposite extends Composite {
 	protected Label description;
 
 	/**
-	 * Create a new SelectClientWizardPage.
-	 *
-	 * @param elements java.util.List
+	 * Create a new SelectClientComposite.
 	 */
 	public SelectClientComposite(Composite parent, IWizardHandle wizard, IClient[] clients) {
 		super(parent, SWT.NONE);
@@ -71,8 +69,6 @@ public class SelectClientComposite extends Composite {
 
 	/**
 	 * Creates the UI of the page.
-	 *
-	 * @param org.eclipse.swt.widgets.Composite parent
 	 */
 	protected void createControl() {
 		GridLayout layout = new GridLayout();

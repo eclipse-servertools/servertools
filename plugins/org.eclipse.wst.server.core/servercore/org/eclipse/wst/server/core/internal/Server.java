@@ -204,7 +204,8 @@ public class Server extends Base implements IServer {
 	/**
 	 * Returns true if the delegate has been loaded.
 	 * 
-	 * @return
+	 * @return <code>true</code> if the delegate has been loaded, and
+	 *    <code>false</code> otherwise
 	 */
 	public boolean isDelegateLoaded() {
 		return delegate != null;
@@ -656,8 +657,6 @@ public class Server extends Base implements IServer {
 
 	/**
 	 * Fire a publish state change event.
-	 *
-	 * @param 
 	 */
 	protected void firePublishStateChange(IModule[] parents, IModule module) {
 		Trace.trace(Trace.FINEST, "->- Firing publish state change event: " + module + " ->-");
@@ -1117,7 +1116,7 @@ public class Server extends Base implements IServer {
 	 * Returns true if the server is in a state that it can
 	 * be started, and supports the given mode.
 	 *
-	 * @param mode
+	 * @param mode2
 	 * @return status
 	 */
 	public IStatus canStart(String mode2) {
@@ -1224,9 +1223,9 @@ public class Server extends Base implements IServer {
 	/**
 	 * Start the server in the given mode.
 	 *
-	 * @param launchMode String
-	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
-	 * @return org.eclispe.core.runtime.IStatus
+	 * @param mode2 
+	 * @param monitor a progress monitor
+	 * @return a launch
 	 */
 	public ILaunch start(String mode2, IProgressMonitor monitor) throws CoreException {
 		Trace.trace(Trace.FINEST, "Starting server: " + toString() + ", launchMode: " + mode2);
@@ -1243,9 +1242,7 @@ public class Server extends Base implements IServer {
 	}
 
 	/**
-	 * Clean up any launch configurations with the given server ref.
-	 * 
-	 * @param serverRef java.lang.String
+	 * Clean up any old launch configurations with the current server's id.
 	 */
 	protected void deleteLaunchConfigurations() {
 		if (getServerType() == null)
@@ -1403,8 +1400,8 @@ public class Server extends Base implements IServer {
 	 * Start the server in the given start mode and waits until the server
 	 * has finished started.
 	 *
-	 * @param mode java.lang.String
-	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
+	 * @param mode2 the launch mode
+	 * @param monitor a progress monitor
 	 * @exception org.eclipse.core.runtime.CoreException - thrown if an error occurs while trying to start the server
 	 */
 	public ILaunch synchronousStart(String mode2, IProgressMonitor monitor) throws CoreException {

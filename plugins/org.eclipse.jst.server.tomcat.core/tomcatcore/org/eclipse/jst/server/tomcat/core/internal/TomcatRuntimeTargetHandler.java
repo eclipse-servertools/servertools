@@ -40,7 +40,7 @@ public class TomcatRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
 	/**
 	 * Return a label for the classpath container.
 	 *  
-	 * @return
+	 * @return the classpath container label
 	 */
 	public String getClasspathContainerLabel(IRuntime runtime, String id) {
 		String id2 = runtime.getRuntimeType().getId();

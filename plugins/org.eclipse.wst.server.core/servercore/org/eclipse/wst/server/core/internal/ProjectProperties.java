@@ -178,7 +178,7 @@ public class ProjectProperties implements IProjectProperties {
 	/**
 	 * Returns the current runtime target type for the given project.
 	 * 
-	 * @return
+	 * @return the runtime target
 	 */
 	public IRuntime getRuntimeTarget() {
 		loadPreferences();
@@ -190,8 +190,8 @@ public class ProjectProperties implements IProjectProperties {
 	/**
 	 * Sets the runtime target for the project.
 	 * 
-	 * @param target
-	 * @param monitor
+	 * @param runtime the target runtime
+	 * @param monitor a progress monitor
 	 */
 	public void setRuntimeTarget(IRuntime runtime, IProgressMonitor monitor) throws CoreException {
 		loadPreferences();

@@ -42,8 +42,9 @@ public class MonitorDialog extends Dialog {
 
 	/**
 	 * MonitorDialog constructor comment.
-	 * @param parentShell org.eclipse.swt.widgets.Shell
-	 * @
+	 * 
+	 * @param parentShell the shell
+	 * @param server the server
 	 */
 	public MonitorDialog(Shell parentShell, IServer server) {
 		super(parentShell);

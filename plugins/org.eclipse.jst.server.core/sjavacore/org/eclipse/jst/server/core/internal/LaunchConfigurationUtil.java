@@ -34,7 +34,8 @@ public class LaunchConfigurationUtil {
 	 *
 	 * @param server
 	 * @param create
-	 * @return
+	 * @param monitor a progress monitor
+	 * @return an array containing runtime classpath entries
 	 * @throws CoreException
 	 */
 	public static IRuntimeClasspathEntry[] getClasspath(IServer server, boolean create, IProgressMonitor monitor) throws CoreException {

@@ -17,30 +17,25 @@ package org.eclipse.wst.internet.monitor.core.internal;
  * Protocol adapters are registered via the <code>protocolAdapaters</code>
  * extension point in the <code>org.eclipse.wst.internet.monitor.core</code>
  * plug-in. The global list of known protocol adapters is available via
- * {@link MonitorCore.getProtocolAdapters()}. Standard protocol
+ * {@link MonitorPlugin#getProtocolAdapters()}. Standard protocol
  * adapters for {@linkplain #HTTP_PROTOCOL_ID HTTP} and
  * {@linkplain #TCPIP_PROTOCOL_ID TCP/IP} are built-in.
  * <p>
  * This interface is not intended to be implemented by clients.
  * </p>
  * 
- * @see IMonitorWorkingCopy#setProtocolAdapter(IProtocolAdapter)
  * @since 1.0
  */
 public interface IProtocolAdapter {
 	/**
 	 * Protocol adapter id (value {@value}) for TCP/IP.
 	 * The TCP/IP protocol adapter is standard.
-	 * 
-	 * @see MonitorCore#findProtocolAdapter(String)
 	 */
 	public static String TCPIP_PROTOCOL_ID = "TCP/IP";
 
 	/**
 	 * Protocol adapter id (value {@value}) for HTTP.
 	 * The HTTP protocol adapter is standard.
-	 * 
-	 * @see MonitorCore#findProtocolAdapter(String)
 	 */
 	public static String HTTP_PROTOCOL_ID = "HTTP";
 

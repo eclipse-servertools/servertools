@@ -60,8 +60,9 @@ public class ModuleFactory implements IOrdered {
 	}
 	
 	/**
+	 * Return the supported module types.
 	 * 
-	 * @return
+	 * @return an array of module types
 	 */
 	public IModuleType[] getModuleTypes() {
 		if (moduleTypes == null)

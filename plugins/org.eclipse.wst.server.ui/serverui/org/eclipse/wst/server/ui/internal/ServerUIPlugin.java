@@ -376,10 +376,10 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the server that came from the given file, or <code>null</code>
 	 * if none. This convenience method searches the list of known
-	 * servers ({@link #getServers()}) for the one with a matching
+	 * servers ({@link ServerCore#getServers()}) for the one with a matching
 	 * location ({@link IServer#getFile()}). The file may not be null.
 	 *
-	 * @param a server file
+	 * @param file a server file
 	 * @return the server instance, or <code>null</code> if 
 	 * there is no server associated with the given file
 	 */
@@ -401,7 +401,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns an array of all known runtime instances of
 	 * the given runtime type. This convenience method filters the list of known
-	 * runtime ({@link #getRuntimes()}) for ones with a matching
+	 * runtime ({@link ServerCore#getRuntimes()}) for ones with a matching
 	 * runtime type ({@link IRuntime#getRuntimeType()}). The array will not
 	 * contain any working copies.
 	 * <p>
@@ -554,7 +554,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	 * @param type
 	 * @param version
 	 * @param runtimeTypeId
-	 * @return
+	 * @return true if a new runtime was created
 	 */
 	public static boolean showNewRuntimeWizard(Shell shell, final String type, final String version, final String runtimeTypeId) {
 		WizardFragment fragment = new WizardFragment() {
@@ -574,7 +574,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	 * 
 	 * @param shell
 	 * @param runtimeTypeId
-	 * @return
+	 * @return true if a new runtime was created
 	 */
 	public static boolean showNewRuntimeWizard(Shell shell, final String runtimeTypeId) {
 		IRuntimeType runtimeType = null;
@@ -604,7 +604,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	/**
 	 * Open the new runtime wizard.
 	 * @param shell
-	 * @return
+	 * @return true if a new runtime was created
 	 */
 	public static boolean showNewRuntimeWizard(Shell shell) {
 		return ServerUIUtil.showNewRuntimeWizard(shell, null, null);

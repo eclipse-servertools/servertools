@@ -26,8 +26,8 @@ public abstract class LaunchableAdapterDelegate {
 	/**
 	 * Returns a launchable object from this module artifact.
 	 * 
-	 * @param server
-	 * @param moduleObject
+	 * @param server the server
+	 * @param moduleArtifact a module artifact
 	 * @return the launchable object
 	 * @exception if there was an error doing the conversion
 	 */

@@ -25,7 +25,7 @@ public abstract class RuntimeTargetHandlerDelegate {
 	/**
 	 * Initializes the runtime target handler.
 	 * 
-	 * @param handler2
+	 * @param newHandler the new handler
 	 */
 	public final void initialize(IRuntimeTargetHandler newHandler) {
 		handler = newHandler;

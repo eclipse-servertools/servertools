@@ -116,8 +116,9 @@ public class TomcatUIPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns the translated String found with the given key.
-	 * @return java.lang.String
-	 * @param key java.lang.String
+	 * 
+	 * @param key a key
+	 * @return a translated string
 	 */
 	public static String getResource(String key) {
 		try {
@@ -130,9 +131,10 @@ public class TomcatUIPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the translated String found with the given key,
 	 * and formatted with the given object.
-	 * @return java.lang.String
-	 * @param key java.lang.String
-	 * @param obj java.lang.Object[]
+	 * 
+	 * @param key a key
+	 * @param obj substitution arguments
+	 * @return a translated string
 	 */
 	public static String getResource(String key, Object[] obj) {
 		try {
@@ -145,9 +147,10 @@ public class TomcatUIPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the translated String found with the given key,
 	 * and formatted with the given object.
-	 * @return java.lang.String
-	 * @param key java.lang.String
-	 * @param obj java.lang.Object[]
+	 * 
+	 * @param key a key
+	 * @param arg an argument
+	 * @return a translated string
 	 */
 	public static String getResource(String key, String arg) {
 		return getResource(key, new String[] { arg });
@@ -156,9 +159,11 @@ public class TomcatUIPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the translated String found with the given key,
 	 * and formatted with the given object.
-	 * @return java.lang.String
-	 * @param key java.lang.String
-	 * @param obj java.lang.Object[]
+	 * 
+	 * @param key a key
+	 * @param arg1 an argument
+	 * @param arg2 another argument
+	 * @return a translated string
 	 */
 	public static String getResource(String key, String arg1, String arg2) {
 		return getResource(key, new String[] { arg1, arg2 });

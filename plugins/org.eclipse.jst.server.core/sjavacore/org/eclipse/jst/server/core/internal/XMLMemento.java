@@ -50,8 +50,8 @@ public final class XMLMemento implements IMemento {
 		element = el;
 	}
 
-	/**
-	 * @see IMemento.
+	/*
+	 * @see IMemento
 	 */
 	public IMemento createChild(String type) {
 		Element child = factory.createElement(type);
@@ -59,8 +59,8 @@ public final class XMLMemento implements IMemento {
 		return new XMLMemento(factory, child);
 	}
 
-	/**
-	 * @see IMemento.
+	/*
+	 * @see IMemento
 	 */
 	public IMemento createChild(String type, String id) {
 		Element child = factory.createElement(type);
@@ -109,8 +109,8 @@ public final class XMLMemento implements IMemento {
 		}
 	}
 	
-	/**
-	 * @see IMemento.
+	/*
+	 * @see IMemento
 	 */
 	public IMemento getChild(String type) {
 		// Get the nodes.
@@ -133,8 +133,8 @@ public final class XMLMemento implements IMemento {
 		return null;
 	}
 
-	/**
-	 * @see IMemento.
+	/*
+	 * @see IMemento
 	 */
 	public IMemento [] getChildren(String type) {
 		// Get the nodes.
@@ -185,8 +185,8 @@ public final class XMLMemento implements IMemento {
 		return new ByteArrayInputStream(out.toByteArray());
 	}
 
-	/**
-	 * @see IMemento.
+	/*
+	 * @see IMemento
 	 */
 	public Float getFloat(String key) {
 		Attr attr = element.getAttributeNode(key);
@@ -200,22 +200,22 @@ public final class XMLMemento implements IMemento {
 		}
 	}
 
-	/**
-	 * @see IMemento.
+	/*
+	 * @see IMemento
 	 */
 	public String getId() {
 		return element.getAttribute(TAG_ID);
 	}
 	
-	/**
-	 * @see IMemento.
+	/*
+	 * @see IMemento
 	 */
 	public String getName() {
 		return element.getNodeName();
 	}
 
-	/**
-	 * @see IMemento.
+	/*
+	 * @see IMemento
 	 */
 	public Integer getInteger(String key) {
 		Attr attr = element.getAttributeNode(key);
@@ -229,8 +229,8 @@ public final class XMLMemento implements IMemento {
 		}
 	}
 
-	/**
-	 * @see IMemento.
+	/*
+	 * @see IMemento
 	 */
 	public String getString(String key) {
 		Attr attr = element.getAttributeNode(key);
@@ -312,8 +312,8 @@ public final class XMLMemento implements IMemento {
 		return XMLMemento.createReadRoot(new InputStreamReader(url.openStream()));
 	}
 
-	/**
-	 * @see IMemento.
+	/*
+	 * @see IMemento
 	 */
 	private void putElement(Element element2) {
 		NamedNodeMap nodeMap = element2.getAttributes();
@@ -334,30 +334,30 @@ public final class XMLMemento implements IMemento {
 		}
 	}
 
-	/**
-	 * @see IMemento.
+	/*
+	 * @see IMemento
 	 */
 	public void putFloat(String key, float f) {
 		element.setAttribute(key, String.valueOf(f));
 	}
 
-	/**
-	 * @see IMemento.
+	/*
+	 * @see IMemento
 	 */
 	public void putInteger(String key, int n) {
 		element.setAttribute(key, String.valueOf(n));
 	}
 
-	/**
-	 * @see IMemento.
+	/*
+	 * @see IMemento
 	 */
 	public void putMemento(IMemento memento) {
 		XMLMemento xmlMemento = (XMLMemento) memento;
 		putElement(xmlMemento.element);
 	}
 
-	/**
-	 * @see IMemento.
+	/*
+	 * @see IMemento
 	 */
 	public void putString(String key, String value) {
 		if (value == null)

@@ -71,7 +71,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	/**
 	 * Initializes this action delegate with the workbench window it will work in.
 	 *
-	 * @param window the window that provides the context for this delegate
+	 * @param newWindow the window that provides the context for this delegate
 	 */
 	public void init(IWorkbenchWindow newWindow) {
 		window = newWindow;
@@ -312,9 +312,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * object.
 	 *
 	 * @param server org.eclipse.wst.server.core.IServer
-	 * @param moduleObject org.eclipse.wst.server.core.IModuleArtifact
+	 * @param launchable
 	 * @param launchMode String
-	 * @return java.util.List
+	 * @return an array of clients
 	 */
 	public static IClient[] getClients(IServer server, ILaunchable launchable, String launchMode) {
 		ArrayList list = new ArrayList();
@@ -338,7 +338,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * 
 	 * @param shell
 	 * @param message
-	 * @return
+	 * @return a dialog return constant
 	 */
 	protected int openWarningDialog(Shell shell, String message) {
 		MessageDialog dialog = new MessageDialog(shell, ServerUIPlugin.getResource("%errorDialogTitle"), null,
@@ -384,8 +384,8 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * Determine which clients can act on the current selection.
 	 *
 	 * @param action action proxy that handles presentation
-	 * portion of the plugin action
-	 * @param selection current selection in the desktop
+	 *    portion of the plugin action
+	 * @param sel current selection in the desktop
 	 */
 	public void selectionChanged(IAction action, ISelection sel) {
 		Trace.trace(Trace.FINEST, "> selectionChanged");

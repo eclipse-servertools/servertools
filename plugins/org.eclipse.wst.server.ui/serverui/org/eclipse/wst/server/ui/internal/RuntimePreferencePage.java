@@ -359,9 +359,9 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 	}
 	
 	/**
-	 * Initializes this preference page using the passed desktop.
+	 * Initializes this preference page using the passed workbench.
 	 *
-	 * @param desktop the current desktop
+	 * @param workbench the current workbench
 	 */
 	public void init(IWorkbench workbench) {
 		// do nothing

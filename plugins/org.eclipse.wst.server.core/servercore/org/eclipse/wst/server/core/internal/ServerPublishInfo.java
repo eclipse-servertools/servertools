@@ -110,8 +110,6 @@ public class ServerPublishInfo {
 
 	/**
 	 * Return the publish state.
-	 * 
-	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	public ModulePublishInfo getModulePublishInfo(IModule[] parents, IModule module) {
 		String key = getKey(parents, module);

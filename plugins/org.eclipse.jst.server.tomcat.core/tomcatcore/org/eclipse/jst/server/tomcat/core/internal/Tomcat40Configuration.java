@@ -208,8 +208,8 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	}
 	
 	/**
-	 * @param java.lang.String
-	 * @return org.eclipse.jst.server.tomcat.internal.Tomcat40Configuration
+	 * @param path a path
+	 * @param monitor a progress monitor
 	 */
 	public void load(IPath path, IProgressMonitor monitor) throws CoreException {
 		try {
@@ -261,7 +261,10 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	}
 
 	/**
-	 * Reload the configuration.
+	 * Load the configuration.
+	 * 
+	 * @param folder a folder
+	 * @param monitor a progress monitor
 	 */
 	public void load(IFolder folder, IProgressMonitor monitor) throws CoreException {
 		try {
@@ -324,10 +327,11 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	
 	/**
 	 * Save to the given directory.
-	 * @param dir java.io.File
+	 * 
+	 * @param path a path
 	 * @param forceDirty boolean
-	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
-	 * @exception java.io.IOException
+	 * @param monitor a progress monitor
+	 * @exception CoreException
 	 */
 	protected void save(IPath path, boolean forceDirty, IProgressMonitor monitor) throws CoreException {
 		try {
@@ -381,9 +385,9 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	/**
 	 * Save the information held by this object to the given directory.
 	 *
-	 * @param dir
-	 * @param org.eclipse.core.runtime.IProgressMonitor monitor
-	 * @throws java.io.IOException
+	 * @param folder a folder
+	 * @param monitor a progress monitor
+	 * @throws CoreException
 	 */
 	public void save(IFolder folder, IProgressMonitor monitor) throws CoreException {
 		try {
@@ -435,8 +439,9 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	
 	/**
 	 * Adds a mime mapping.
-	 * @param extension java.lang.String
-	 * @param mimeType java.lang.String
+	 * 
+	 * @param index
+	 * @param map
 	 */
 	public void addMimeMapping(int index, IMimeMapping map) {
 		webAppDocument.addMimeMapping(index, map);
@@ -474,8 +479,8 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	/**
 	 * Localize the web projects in this configuration.
 	 *
-	 * @param file java.io.File
-	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
+	 * @param path a path
+	 * @param monitor a progress monitor
 	 */
 	public void localizeConfiguration(IPath path, TomcatServer server2, IProgressMonitor monitor) {
 		try {
@@ -531,8 +536,9 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 
 	/**
 	 * Change the extension of a mime mapping.
-	 * @param index int
-	 * @param newExtension java.lang.String
+	 * 
+	 * @param index
+	 * @param map
 	 */
 	public void modifyMimeMapping(int index, IMimeMapping map) {
 		webAppDocument.modifyMimeMapping(index, map);

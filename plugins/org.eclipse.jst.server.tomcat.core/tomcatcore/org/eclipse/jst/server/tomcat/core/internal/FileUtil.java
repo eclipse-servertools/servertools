@@ -177,9 +177,9 @@ public class FileUtil {
 	 * Copys a directory from a to b, only modifying as needed
 	 * and deleting old files and directories.
 	 *
-	 * @param from java.lang.String
-	 * @param to java.lang.String
-	 * @param IProgressMonitor
+	 * @param from a directory
+	 * @param to a directory
+	 * @param monitor a progress monitor
 	 */
 	public static void smartCopyDirectory(String from, String to, IProgressMonitor monitor) {
 		try {

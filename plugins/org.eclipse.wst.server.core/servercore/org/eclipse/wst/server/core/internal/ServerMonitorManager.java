@@ -264,7 +264,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	/**
 	 * Start the monitor. If the msp port is -1, it will be updated to the port that is actually in use.
 	 * 
-	 * @param port
+	 * @param msp
 	 * @throws CoreException
 	 */
 	public void startMonitor(IMonitoredServerPort msp) throws CoreException {
@@ -279,7 +279,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	/**
 	 * Stop monitoring.
 	 * 
-	 * @param port
+	 * @param msp
 	 */
 	public void stopMonitor(IMonitoredServerPort msp) {
 		if (msp == null || !msp.isStarted())

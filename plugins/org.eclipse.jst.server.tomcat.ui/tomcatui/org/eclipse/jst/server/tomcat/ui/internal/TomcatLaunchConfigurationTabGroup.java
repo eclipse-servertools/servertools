@@ -24,7 +24,7 @@ import org.eclipse.wst.server.ui.ServerLaunchConfigurationTab;
  * 
  */
 public class TomcatLaunchConfigurationTabGroup extends AbstractLaunchConfigurationTabGroup {
-	/**
+	/*
 	 * @see ILaunchConfigurationTabGroup#createTabs(ILaunchConfigurationDialog, String)
 	 */
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {

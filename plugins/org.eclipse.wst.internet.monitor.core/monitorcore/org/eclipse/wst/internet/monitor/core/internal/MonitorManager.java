@@ -157,8 +157,9 @@ public class MonitorManager {
 	
 	/**
 	 * Fire a monitor event.
-	 * @param rr
-	 * @param type
+	 * 
+	 * @param monitor the monitor
+	 * @param type the type of event
 	 */
 	protected void fireMonitorEvent(IMonitor monitor, int type) {
 		Object[] obj = monitorListeners.toArray();

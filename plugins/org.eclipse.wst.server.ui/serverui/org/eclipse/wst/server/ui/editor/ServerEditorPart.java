@@ -57,35 +57,35 @@ public abstract class ServerEditorPart extends EditorPart {
 		this.pageFactory = pageFactory;
 	}
 
-	/**
+	/*
 	 * @see IEditorPart#doSave(IProgressMonitor)
 	 */
 	public void doSave(IProgressMonitor monitor) {
 		// do nothing
 	}
 
-	/**
+	/*
 	 * @see IEditorPart#doSaveAs()
 	 */
 	public void doSaveAs() {
 		// do nothing
 	}
 
-	/**
+	/*
 	 * @see IEditorPart#gotoMarker(IMarker)
 	 */
 	public void gotoMarker(IMarker marker) {
 		// do nothing
 	}
 
-	/**
+	/*
 	 * @see IEditorPart#isDirty()
 	 */
 	public boolean isDirty() {
 		return false;
 	}
 
-	/**
+	/*
 	 * @see IEditorPart#isSaveAsAllowed()
 	 */
 	public boolean isSaveAsAllowed() {
@@ -230,7 +230,7 @@ public abstract class ServerEditorPart extends EditorPart {
 	/**
 	 * Return the server that is being editted.
 	 * 
-	 * @return
+	 * @return a server working copy
 	 */
 	public IServerWorkingCopy getServer() {
 		return server;

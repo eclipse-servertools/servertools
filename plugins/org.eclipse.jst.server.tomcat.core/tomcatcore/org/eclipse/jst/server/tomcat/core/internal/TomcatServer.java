@@ -254,8 +254,9 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	 * Returns true if the given project is supported by this
 	 * server, and false otherwise.
 	 *
-	 * @param project org.eclipse.core.resources.IProject
-	 * @return boolean
+	 * @param add modules
+	 * @param remove modules
+	 * @return the status
 	 */
 	public IStatus canModifyModules(IModule[] add, IModule[] remove) {
 		if (add != null) {
@@ -325,7 +326,9 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	 * has already been verified using isSupportedProject() and
 	 * does not already exist in the configuration.
 	 *
-	 * @param ref java.lang.String
+	 * @param add modules
+	 * @param remove modules
+	 * @param monitor a progress monitor
 	 */
 	public void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
 		IStatus status = canModifyModules(add, remove);

@@ -121,7 +121,7 @@ public class ServerUIPreferences {
 	/**
 	 * Sets the value for saving editors before launching.
 	 * 
-	 * @param byte
+	 * @param b
 	 */
 	public void setSaveEditors(byte b) {
 		preferences.setValue(PREF_SAVE_EDITORS, b);
@@ -149,7 +149,7 @@ public class ServerUIPreferences {
 	/**
 	 * Sets the value for opening the servers view on activity.
 	 * 
-	 * @param boolean
+	 * @param b
 	 */
 	public void setShowOnActivity(boolean b) {
 		preferences.setValue(PREF_SHOW_ON_ACTIVITY, b);
@@ -159,7 +159,7 @@ public class ServerUIPreferences {
 	/**
 	 * Return the list of most recently used hostnames.
 	 * 
-	 * @return
+	 * @return the hostnames
 	 */
 	public List getHostnames() {
 		String s = preferences.getString(PREF_HOST_NAMES);

@@ -43,9 +43,7 @@ public class TasksComposite extends Composite {
 	protected List tasks;
 
 	/**
-	 * Create a new TasksWizardPage.
-	 *
-	 * @param elements java.util.List
+	 * Create a new TasksComposite.
 	 */
 	public TasksComposite(Composite parent, IWizardHandle wizard) {
 		super(parent, SWT.NONE);
@@ -73,8 +71,6 @@ public class TasksComposite extends Composite {
 
 	/**
 	 * Creates the UI of the page.
-	 *
-	 * @param org.eclipse.swt.widgets.Composite parent
 	 */
 	protected void createControl() {
 		GridLayout layout = new GridLayout();

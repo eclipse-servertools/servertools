@@ -16,7 +16,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.model.IModuleListener;
-
+/**
+ * 
+ * @since 1.0
+ */
 public class DeletedModule implements IModule {
 	protected String id;
 	
