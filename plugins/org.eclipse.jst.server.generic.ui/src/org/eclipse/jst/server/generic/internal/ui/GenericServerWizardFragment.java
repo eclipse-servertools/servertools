@@ -35,6 +35,7 @@ import org.eclipse.jst.server.generic.internal.core.GenericServerRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.generic.ui.GenericServerUIMessages;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
@@ -47,16 +48,16 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
 {
 
     private ServerTypeDefinitionGroup fComposite;
-    private boolean flag=false;
     private Map fProperties; 
 	/* (non-Javadoc)
 	 * @see com.ibm.wtp.server.ui.wizard.IWizardFragment#isComplete()
 	 */
 	public boolean isComplete() {
-//		IServerWorkingCopy serverWorkingCopy = (IServerWorkingCopy)getTaskModel().getObject(ITaskModel.TASK_SERVER);
-		
-		//TODO implement
-		return flag;
+	    
+		ServerRuntime serverRuntime = getServerTypeDefinitionFor(getServer());
+		if(serverRuntime==null)
+		    return false;
+		return true;
 	}
 
 	public void createContent(Composite parent, IWizardHandle handle){
@@ -70,7 +71,7 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
 		IServerWorkingCopy server = getServer();
 		ServerRuntime definition = getServerTypeDefinitionFor(server);
 		fComposite = new ServerTypeDefinitionGroup(this, definition,ServerTypeDefinitionGroup.CONTEXT_SERVER, null,parent);
-		flag=true;
+
 	}
 
 	/**
@@ -78,9 +79,17 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
      * @return
      */
     private ServerRuntime getServerTypeDefinitionFor(IServerWorkingCopy server) {
-        String ID = server.getRuntime().getAttribute(GenericServerRuntime.SERVER_DEFINITION_ID,(String)null);
-		Map runtimeProperties = server.getRuntime().getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map)null);
-		ServerRuntime definition = getServerTypeDefinition(ID,runtimeProperties);
+        
+        IRuntime runtime = server.getRuntime();
+        if(runtime==null){    
+            runtime= (IRuntime)getTaskModel().getObject(ITaskModel.TASK_RUNTIME);
+        }        
+        String id = runtime.getAttribute(GenericServerRuntime.SERVER_DEFINITION_ID,(String)null);
+        if(id==null){   
+            return null;
+        }
+        Map runtimeProperties = server.getRuntime().getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map)null);
+		ServerRuntime definition = getServerTypeDefinition(id,runtimeProperties);
         return definition;
     }
 
@@ -95,11 +104,12 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
     public void enter() {
         IServerWorkingCopy server = getServer();
         ServerRuntime definition = getServerTypeDefinitionFor(server);
-        fComposite.reset(definition,ServerTypeDefinitionGroup.CONTEXT_SERVER,null);
+        if(definition != null && fComposite!=null)
+            fComposite.reset(definition,ServerTypeDefinitionGroup.CONTEXT_SERVER,null);
 	}
 	public void exit(){
-	    fProperties = fComposite.getProperties();
-	    serverDefinitionTypePropertiesChanged();
+	        fProperties = fComposite.getProperties();
+	        serverDefinitionTypePropertiesChanged();
 	}
 	
 	protected Map getServerProperties(){

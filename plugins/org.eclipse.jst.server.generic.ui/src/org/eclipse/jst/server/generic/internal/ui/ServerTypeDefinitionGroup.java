@@ -118,7 +118,9 @@ public class ServerTypeDefinitionGroup
         }
         fPropertyControls.clear();
         createPropertyControls(fDefinitionGroup);
+        
         fDefinitionGroup.layout(true);
+        
     }
     
     /**
@@ -137,10 +139,14 @@ public class ServerTypeDefinitionGroup
     private void createControl(Composite parent) {
 
         fDefinitionGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
-        fDefinitionGroup.setText(fServerTypeDefinition.getName());
-		fDefinitionGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
-		fDefinitionGroup.setLayout(new GridLayout(3,false));
-		createPropertyControls(fDefinitionGroup);
+        fDefinitionGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
+        fDefinitionGroup.setLayout(new GridLayout(3,false));
+        if(fServerTypeDefinition!=null)
+        {   
+            fDefinitionGroup.setText(fServerTypeDefinition.getName());
+
+            createPropertyControls(fDefinitionGroup);
+        }
     }
     /**
      * @param defPanel
