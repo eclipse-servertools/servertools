@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.jface.dialogs.IDialogConstants;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.util.ServerAdapter;
 
 import org.eclipse.swt.widgets.Display;
@@ -301,7 +300,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleArtifactAdapters extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleArtifactAdapters");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "moduleArtifactAdapters");
 
 		int size = cf.length;
 		moduleArtifactAdapters = new ArrayList(size);

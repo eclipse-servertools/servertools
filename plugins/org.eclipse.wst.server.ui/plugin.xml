@@ -154,9 +154,7 @@
            <with variable="selection">
              <count value="1"/>
              <iterate>
-                <and>
-                  <test property="org.eclipse.wst.server.ui.isRunnable" value="true"/>
-                </and>
+                <test property="org.eclipse.wst.server.ui.isRunnable" value="true"/>
              </iterate>
            </with>
          </enablement>
