@@ -34,7 +34,9 @@ public class DeleteActionDelegate implements IWorkbenchWindowActionDelegate {
 	/**
 	 * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
 	 */
-	public void dispose() { }
+	public void dispose() {
+		// do nothing
+	}
 
 	/**
 	 * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(IWorkbenchWindow)

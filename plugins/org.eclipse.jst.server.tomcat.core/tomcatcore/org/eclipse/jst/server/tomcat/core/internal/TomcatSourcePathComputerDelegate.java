@@ -1,6 +1,6 @@
 /**********************************************************************
  * Copyright (c) 2004 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -54,7 +54,9 @@ public class TomcatSourcePathComputerDelegate implements ISourcePathComputerDele
 							IJavaProject javaProject = (IJavaProject) project.getNature(JavaCore.NATURE_ID);
 							list.add(javaProject);
 						}
-					} catch (Exception e) { }
+					} catch (Exception e) {
+						// ignore
+					}
 					
 					IPath path = server.getRuntime().getLocation().append("work").append("Catalina").append("localhost").append(modules[i].getName());
 					pathList.add(path);

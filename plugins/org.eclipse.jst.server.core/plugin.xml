@@ -19,7 +19,6 @@
   <runtime>
     <library name="sjavacore.jar">
       <export name="*"/>
-      <packages prefixes="org.eclipse.jst.server.core,org.eclipse.jst.server.j2ee"/>
     </library>
   </runtime>
 

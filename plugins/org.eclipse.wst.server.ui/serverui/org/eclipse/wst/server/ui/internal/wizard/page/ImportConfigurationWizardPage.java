@@ -81,7 +81,9 @@ public class ImportConfigurationWizardPage extends WizardPage {
 					sleep(DELAY);
 					b = false;
 					thread = null;
-				} catch (InterruptedException ie) { }
+				} catch (InterruptedException ie) {
+					// ignore
+				}
 			}
 			try {
 				performLoadConfiguration(file, filename2);
@@ -280,13 +282,17 @@ public class ImportConfigurationWizardPage extends WizardPage {
 				if (!"metadata".equals(projectName))
 					file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(projectName).append(theName));
 				thread.file = file;
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 		} else {
 			// try to avoid multiple threads
 			if (!threadDone) {
 				try {
 					Thread.sleep(200);
-				} catch (Exception e) { }
+				} catch (Exception e) {
+					// ignore
+				}
 			}
 			if (validationErrors[INVALID_TYPE] != null || validationErrors[INVALID_FILENAME] != null)
 				return;

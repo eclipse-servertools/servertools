@@ -21,7 +21,9 @@ import org.eclipse.swt.widgets.Composite;
 public class GenericRuntimeWizardFragment extends WizardFragment {
 	protected GenericRuntimeComposite comp;
 	
-	public GenericRuntimeWizardFragment() { }
+	public GenericRuntimeWizardFragment() {
+		// do nothing
+	}
 
 	public boolean hasComposite() {
 		return true;

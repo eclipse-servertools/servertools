@@ -143,7 +143,9 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 						try {
 							runtimeWorkingCopy.save(false, new NullProgressMonitor());
 							runtimeComp.refresh(runtime);
-						} catch (Exception ex) { }
+						} catch (Exception ex) {
+							// ignore
+						}
 					}
 				}
 			}
@@ -158,7 +160,9 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					try {
 						runtime.delete();
 						runtimeComp.remove(runtime);
-					} catch (Exception ex) { }
+					} catch (Exception ex) {
+						// ignore
+					}
 			}
 		});
 		
@@ -199,7 +203,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 										}
 								}
 							}
-							System.out.println("done");
+							Trace.trace(Trace.INFO, "Done search");
 						}
 					};
 					dialog.run(true, true, runnable);
@@ -207,6 +211,10 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					Trace.trace(Trace.FINER, "Found runtimes: " + list.size());
 					
 					if (!monitor.isCanceled()) {
+						if (list.isEmpty()) {
+							EclipseUtil.openError(getShell(), ServerUIPlugin.getResource("%infoNoRuntimesFound"));
+							return;
+						}
 						monitor.worked(5);
 						// remove duplicates from list (based on location)
 						Trace.trace(Trace.FINER, "Removing duplicates");
@@ -334,7 +342,9 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 	 *
 	 * @param desktop the current desktop
 	 */
-	public void init(IWorkbench workbench) { }
+	public void init(IWorkbench workbench) {
+		// do nothing
+	}
 
 	/**
 	 * Performs special processing when this page's Defaults button has been pressed.

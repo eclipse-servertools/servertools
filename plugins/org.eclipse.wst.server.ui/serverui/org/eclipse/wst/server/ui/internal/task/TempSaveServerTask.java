@@ -25,7 +25,9 @@ import org.eclipse.wst.server.core.util.Task;
  * 
  */
 public class TempSaveServerTask extends Task {
-	public TempSaveServerTask() { }
+	public TempSaveServerTask() {
+		// do nothing
+	}
 
 	/* (non-Javadoc)
 	 * @see com.ibm.wtp.server.ui.internal.task.ITask#doTask()

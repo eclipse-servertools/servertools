@@ -59,7 +59,9 @@ public class NewServerWizard extends TaskWizard implements INewWizard {
 						try {
 							IServer server = (IServer) getTaskModel().getObject(ITaskModel.TASK_SERVER);
 							((ServerUIPreferences)ServerUICore.getPreferences()).addHostname(server.getHost());
-						} catch (Exception e) { }
+						} catch (Exception e) {
+							// ignore
+						}
 					}
 				}));
 			}
@@ -68,5 +70,7 @@ public class NewServerWizard extends TaskWizard implements INewWizard {
 		setForcePreviousAndNextButtons(true);
 	}
 	
-	public void init(IWorkbench newWorkbench, IStructuredSelection newSelection) { }
+	public void init(IWorkbench newWorkbench, IStructuredSelection newSelection) {
+		// do nothing
+	}
 }

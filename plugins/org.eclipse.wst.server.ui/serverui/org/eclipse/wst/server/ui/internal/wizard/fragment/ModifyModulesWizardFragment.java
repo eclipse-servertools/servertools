@@ -34,7 +34,9 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 	
 	protected IModule module;
 
-	public ModifyModulesWizardFragment() { }
+	public ModifyModulesWizardFragment() {
+		// do nothing
+	}
 	
 	public ModifyModulesWizardFragment(IModule module) {
 		this.module = module;

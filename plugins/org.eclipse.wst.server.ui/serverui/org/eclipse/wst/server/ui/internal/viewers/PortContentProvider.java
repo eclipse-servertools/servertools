@@ -24,11 +24,15 @@ public class PortContentProvider implements IStructuredContentProvider {
 		this.server = server;
 	}
 
-	public void dispose() { }
+	public void dispose() {
+		// do nothing
+	}
 
 	public Object[] getElements(Object inputElement) {
 		return server.getServerPorts().toArray();
 	}
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		// do nothing
+	}
 }

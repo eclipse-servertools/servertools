@@ -74,9 +74,13 @@ public class ServerTableViewer extends TableViewer {
 			return list.toArray();
 		}
 
-		public void inputChanged(Viewer theViewer, Object oldInput, Object newInput) { }
+		public void inputChanged(Viewer theViewer, Object oldInput, Object newInput) {
+			// do nothing
+		}
 		
-		public void dispose() { }
+		public void dispose() {
+			// do nothing
+		}
 	}
 
 	/*protected void createHover(Shell parent, Point p) {
@@ -168,7 +172,9 @@ public class ServerTableViewer extends TableViewer {
 		setContentProvider(new ServerContentProvider());
 		labelProvider = new ServerTableLabelProvider();
 		setLabelProvider(labelProvider);
-		setSorter(new ViewerSorter() { });
+		setSorter(new ViewerSorter() {
+			// empty
+		});
 	
 		setInput(ROOT);
 	
@@ -193,7 +199,9 @@ public class ServerTableViewer extends TableViewer {
 						IResource res = (IResource) Platform.getAdapterManager().getAdapter(obj, IResource.class);
 						if (res != null)
 							proj = res.getProject();
-					} catch (Exception e) { }
+					} catch (Exception e) {
+						// ignore
+					}
 				}
 				if (proj != null) {
 					final IProject project = proj;
@@ -285,7 +293,9 @@ public class ServerTableViewer extends TableViewer {
 			public void modulesChanged(IServer server) {
 				handleServerModulesChanged(server);
 			}
-			public void moduleStateChange(IServer server, IModule module) { }
+			public void moduleStateChange(IServer server, IModule module) {
+				// do nothing
+			}
 		};
 		
 		// add listeners to servers
@@ -329,7 +339,9 @@ public class ServerTableViewer extends TableViewer {
 					refresh(server);
 					ISelection sel = ServerTableViewer.this.getSelection();
 					ServerTableViewer.this.setSelection(sel);
-				} catch (Exception e) { }
+				} catch (Exception e) {
+					// ignore
+				}
 			}
 		});
 	}

@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.core.internal.xml;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.jst.server.tomcat.core.internal.xml;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.tomcat.core.internal.xml;
+
 import java.io.*;
 
 import org.w3c.dom.*;
@@ -18,15 +19,13 @@ import org.eclipse.jst.server.tomcat.core.internal.Trace;
 /**
  * Factory for reading and writing from XML files.
  */
-public class Factory implements Serializable {
-
-
-	private static final long serialVersionUID = 1L;
-	
+public class Factory {
 	protected String packageName;
 	protected Document document;
 
-	public Factory() { }
+	public Factory() {
+		// do nothing
+	}
 	
 	protected Attr createAttribute(String s, Element element) {
 		Attr attr = document.createAttribute(s);
@@ -106,11 +105,13 @@ public class Factory implements Serializable {
 				s = packageName + "." + s;
 			Class class1 = Class.forName(s);
 	
-			XMLElement ibmxmlelement = (XMLElement) class1.newInstance();
-			ibmxmlelement.setElement(element);
-			ibmxmlelement.setFactory(this);
-			return ibmxmlelement;
-		} catch (Exception exception) { }
+			XMLElement xmlElement = (XMLElement) class1.newInstance();
+			xmlElement.setElement(element);
+			xmlElement.setFactory(this);
+			return xmlElement;
+		} catch (Exception exception) {
+			// ignore
+		}
 		return null;
 	}
 	

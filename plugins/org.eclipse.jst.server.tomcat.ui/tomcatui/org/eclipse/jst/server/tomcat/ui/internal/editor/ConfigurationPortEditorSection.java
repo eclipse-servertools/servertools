@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.ui.internal.editor;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.jst.server.tomcat.ui.internal.editor;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.tomcat.ui.internal.editor;
+
 import java.beans.*;
 import java.util.Iterator;
 
@@ -167,7 +168,9 @@ public class ConfigurationPortEditorSection extends ServerResourceEditorSection 
 					IServerPort sp = (IServerPort) item.getData();
 					int port = Integer.parseInt((String) value);
 					commandManager.executeCommand(new ModifyPortCommand(tomcatConfiguration, sp.getId(), port));
-				} catch (Exception ex) { }
+				} catch (Exception ex) {
+					// ignore
+				}
 			}
 		};
 		viewer.setCellModifier(cellModifier);
@@ -180,7 +183,9 @@ public class ConfigurationPortEditorSection extends ServerResourceEditorSection 
 					try {
 						int n = ports.getSelectionIndex();
 						viewer.editElement(ports.getItem(n).getData(), 1);
-					} catch (Exception e) { }
+					} catch (Exception e) {
+						// ignore
+					}
 				}
 			});
 		}
@@ -241,6 +246,4 @@ public class ConfigurationPortEditorSection extends ServerResourceEditorSection 
 			setupPortEditors();
 		}
 	}
-	
-	protected void validate() { }
 }

@@ -103,7 +103,9 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 		super();
 	}
 
-	public void addListener(ILabelProviderListener listener) { }
+	public void addListener(ILabelProviderListener listener) {
+		// do nothing
+	}
 
 	public void dispose() {
 		decorator.dispose();
@@ -168,11 +170,11 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 				return syncState[4];
 			
 			int i = 0;
-			if (server.getServerSyncState() == IServer.SYNC_STATE_RESTART)
+			if (server.getServerRestartState())
 				i = 1;
 			
 			// republish
-			if (server.getServerSyncState() != IServer.SYNC_STATE_IN_SYNC)
+			if (server.getServerPublishState() != IServer.PUBLISH_STATE_NONE)
 				i += 2;
 			else {
 				if (!server.getUnpublishedModules().isEmpty())
@@ -197,7 +199,9 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 		return false;
 	}
 
-	public void removeListener(ILabelProviderListener listener) { }
+	public void removeListener(ILabelProviderListener listener) {
+		// do nothing
+	}
 
 	/**
 	 * Returns an image representing the server's state.

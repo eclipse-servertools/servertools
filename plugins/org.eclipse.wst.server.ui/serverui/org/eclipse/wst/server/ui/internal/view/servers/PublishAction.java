@@ -23,7 +23,9 @@ public class PublishAction extends AbstractServerAction {
 		super(shell, selectionProvider, name);
 		try {
 			selectionChanged((IStructuredSelection) selectionProvider.getSelection());
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 
 	/**

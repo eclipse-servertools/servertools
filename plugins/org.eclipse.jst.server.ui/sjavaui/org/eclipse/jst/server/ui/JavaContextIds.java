@@ -14,4 +14,5 @@ import org.eclipse.jst.server.internal.ui.ContextIds;
  * Java Context Ids
  */
 public interface JavaContextIds extends ContextIds {
+	// helper interface
 }

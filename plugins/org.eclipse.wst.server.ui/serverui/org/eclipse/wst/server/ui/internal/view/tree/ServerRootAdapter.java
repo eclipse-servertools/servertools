@@ -19,7 +19,9 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
 public class ServerRootAdapter implements IAdaptable, IWorkbenchAdapter {
 	protected Object[] children;
 
-	public ServerRootAdapter() { }
+	public ServerRootAdapter() {
+		// do nothing
+	}
 	
 	public void setChildren(Object[] obj) {
 		children = obj;

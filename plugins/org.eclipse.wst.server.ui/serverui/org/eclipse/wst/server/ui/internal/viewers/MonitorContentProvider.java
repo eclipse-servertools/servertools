@@ -26,11 +26,15 @@ public class MonitorContentProvider implements IStructuredContentProvider {
 		this.server = server;
 	}
 
-	public void dispose() { }
+	public void dispose() {
+		// do nothing
+	}
 
 	public Object[] getElements(Object inputElement) {
 		return ServerCore.getServerMonitorManager().getMonitoredPorts(server).toArray();
 	}
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		// do nothing
+	}
 }

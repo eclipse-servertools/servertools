@@ -36,7 +36,9 @@ public class WizardUtil {
 	/**
 	 * Use static methods.
 	 */
-	private WizardUtil() { }
+	private WizardUtil() {
+		// do nothing
+	}
 
 	/**
 	 * Fill the combo box with all server project folders in
@@ -100,13 +102,17 @@ public class WizardUtil {
 			IProject project = root.getProject(containerName);
 			if (project != null && project.exists())
 				return project;
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 	
 		try {
 			IFolder folder = root.getFolder(new Path(containerName));
 			if (folder != null && folder.exists())
 				return folder;
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		return null;
 	}
 

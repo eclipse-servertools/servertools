@@ -25,7 +25,6 @@
 <runtime>
   <library name="serverui.jar">
     <export name="*"/>
-    <packages prefixes="org.eclipse.wst.server.ui"/>
   </library>
 </runtime>
 

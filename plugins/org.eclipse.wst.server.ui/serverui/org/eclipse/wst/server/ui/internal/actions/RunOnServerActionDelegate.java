@@ -171,7 +171,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 						List parents = servers[i].getParentModules(module, monitor);
 						if (parents != null && parents.size() > 0)
 							found = true;
-					} catch (Exception e) { }
+					} catch (Exception e) {
+						// ignore
+					}
 				}
 			}
 		}
@@ -248,6 +250,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		
 		if (!tasksRun) {
 			SelectTasksWizard wizard = new SelectTasksWizard(server);
+			wizard.addPages();
 			if (wizard.hasTasks() && wizard.hasOptionalTasks()) {
 				WizardDialog dialog = new WizardDialog(shell, wizard);
 				if (dialog.open() == Window.CANCEL)
@@ -356,7 +359,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 
 			try {
 				EclipseUtil.startServer(shell, server, launchMode, listener);
-			} catch (CoreException e) { }
+			} catch (CoreException e) {
+				// ignore
+			}
 		}
 	}
 
@@ -414,7 +419,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				IModule module = ServerUtil.getModule(globalSelection, true);
 				findGlobalLaunchModes(module);
 				action.setEnabled(isEnabled());
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 			if (!isEnabled()) {
 				EclipseUtil.openError(ServerUIPlugin.getResource("%errorNoServer"));
 				Trace.trace(Trace.FINEST, "Uninitialized");
@@ -433,7 +440,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		try {
 			Boolean b = (Boolean) globalLaunchMode.get(getLaunchMode());
 			return b.booleanValue();
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		return false;
 	}
 

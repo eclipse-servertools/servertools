@@ -116,7 +116,7 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 				return false;
 		}
 		
-		if (serverType.supportsRemoteHosts())
+		if (localhost || serverType.supportsRemoteHosts())
 			return true;
 		
 		return false;

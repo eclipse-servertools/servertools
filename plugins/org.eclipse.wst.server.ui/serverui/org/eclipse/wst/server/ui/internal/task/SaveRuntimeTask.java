@@ -20,7 +20,9 @@ import org.eclipse.wst.server.core.util.Task;
  * 
  */
 public class SaveRuntimeTask extends Task {
-	public SaveRuntimeTask() { }
+	public SaveRuntimeTask() {
+		// do nothing
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.ui.internal.task.ITask#doTask()

@@ -55,7 +55,9 @@ public class SelectServerWizard extends TaskWizard {
 						try {
 							IServer server = (IServer) getTaskModel().getObject(ITaskModel.TASK_SERVER);
 							((ServerUIPreferences)ServerUICore.getPreferences()).addHostname(server.getHost());
-						} catch (Exception e) { }
+						} catch (Exception e) {
+							// ignore
+						}
 					}
 				}));
 			}

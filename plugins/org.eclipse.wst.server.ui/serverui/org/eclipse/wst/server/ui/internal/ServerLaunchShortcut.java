@@ -36,7 +36,9 @@ public class ServerLaunchShortcut implements ILaunchShortcut {
 				return mode;
 			}
 		};
-		IAction action = new Action() { };
+		IAction action = new Action() {
+			// dummy action
+		};
 		del.selectionChanged(action, selection);
 		del.run(action);
 	}

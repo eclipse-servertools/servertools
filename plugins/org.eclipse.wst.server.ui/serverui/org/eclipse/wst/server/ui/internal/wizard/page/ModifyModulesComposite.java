@@ -163,7 +163,9 @@ public class ModifyModulesComposite extends Composite {
 			try {
 				List children = server.getChildModules(module, null);
 				childModuleMap.put(module, children);
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 		}
 
 		iterator = modules.iterator();
@@ -172,7 +174,9 @@ public class ModifyModulesComposite extends Composite {
 			try {
 				List children = server.getChildModules(module, null);
 				childModuleMap.put(module, children);
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 		}
 		
 		if (availableTree != null)
@@ -183,7 +187,9 @@ public class ModifyModulesComposite extends Composite {
 						fillTree(availableTree, modules);
 						fillTree(deployedTree, deployed);
 						setEnablement();
-					} catch (Exception e) { }
+					} catch (Exception e) {
+						// ignore
+					}
 				}
 			});
 		updateTaskModel();
@@ -327,7 +333,9 @@ public class ModifyModulesComposite extends Composite {
 					else if (status.getSeverity() == IStatus.INFO)
 						wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
 				}
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 		}
 		add.setEnabled(enabled);
 		addAll.setEnabled(availableTree.getItemCount() > 0);
@@ -340,7 +348,9 @@ public class ModifyModulesComposite extends Composite {
 				IModule module = (IModule) item.getData();
 				if (deployed.contains(module) && !module.equals(newModule))
 					enabled = true;
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 		}
 		remove.setEnabled(enabled);
 		if (newModule == null)
@@ -362,7 +372,9 @@ public class ModifyModulesComposite extends Composite {
 				parentTreeItemMap.put(childItem, item);
 				addChildren(childItem, child);
 			}
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 
 	protected void fillTree(Tree tree, List modules2) {

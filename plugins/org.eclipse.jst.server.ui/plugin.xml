@@ -24,7 +24,6 @@
   <runtime>
     <library name="sjavaui.jar">
       <export name="*"/>
-      <packages prefixes="org.eclipse.jst.server.ui"/>
     </library>
   </runtime>
 

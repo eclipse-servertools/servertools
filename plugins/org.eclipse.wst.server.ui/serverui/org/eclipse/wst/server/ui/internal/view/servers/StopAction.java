@@ -29,7 +29,9 @@ public class StopAction extends AbstractServerAction {
 		this.serverStateSet = serverStateSet;
 		try {
 			selectionChanged((IStructuredSelection) selectionProvider.getSelection());
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 
 	/**

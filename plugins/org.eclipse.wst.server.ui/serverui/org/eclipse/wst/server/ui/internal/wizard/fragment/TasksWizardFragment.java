@@ -31,7 +31,6 @@ import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.wizard.page.TasksComposite;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
-
 /**
  * 
  */
@@ -112,7 +111,9 @@ public class TasksWizardFragment extends WizardFragment {
 	//protected List selectedTasks = new ArrayList(2);
 	protected Map selectedTaskMap = new HashMap();
 	
-	public TasksWizardFragment() { }
+	public TasksWizardFragment() {
+		// do nothing
+	}
 	
 	public void enter() {
 		updateTasks();
@@ -177,18 +178,28 @@ public class TasksWizardFragment extends WizardFragment {
 	}
 	
 	protected void createTasks(IServer server, IServerConfiguration configuration, List[] parents, IModule[] modules) {
+		String serverTypeId = null;
+		String serverConfigurationTypeId = null;
+		if (server != null)
+			serverTypeId = server.getServerType().getId();
+		if (configuration != null)
+			serverConfigurationTypeId = configuration.getServerConfigurationType().getId();
+		
 		// server tasks
 		IServerTask[] serverTasks = ServerCore.getServerTasks();
 		if (serverTasks != null) {
 			int size = serverTasks.length;
 			for (int i = 0; i < size; i++) {
 				IServerTask task = serverTasks[i];
-				task.init(server, configuration, parents, modules);
-				byte status = task.getTaskStatus();
-				if (status != ServerTaskDelegate.TASK_UNNECESSARY) {
-					if (status == ServerTaskDelegate.TASK_READY || status == ServerTaskDelegate.TASK_PREFERRED)
-						hasOptionalTasks = true;
-					addServerTask(server, configuration, parents, modules, task);
+				if ((serverTypeId != null && task.supportsType(serverTypeId)) || 
+						(serverConfigurationTypeId != null && task.supportsType(serverConfigurationTypeId))) {
+					task.init(server, configuration, parents, modules);
+					byte status = task.getTaskStatus();
+					if (status != ServerTaskDelegate.TASK_UNNECESSARY) {
+						if (status == ServerTaskDelegate.TASK_READY || status == ServerTaskDelegate.TASK_PREFERRED)
+							hasOptionalTasks = true;
+						addServerTask(server, configuration, parents, modules, task);
+					}
 				}
 			}
 		}
@@ -201,12 +212,15 @@ public class TasksWizardFragment extends WizardFragment {
 				int size2 = moduleTasks.length;
 				for (int j = 0; j < size2; j++) {
 					IModuleTask task = moduleTasks[j];
-					task.init(server, configuration, parents[i], modules[i]);
-					byte status = task.getTaskStatus();
-					if (status != ServerTaskDelegate.TASK_UNNECESSARY) {
-						if (status == ServerTaskDelegate.TASK_READY || status == ServerTaskDelegate.TASK_PREFERRED)
-							hasOptionalTasks = true;
-						addModuleTask(server, configuration, parents[i], modules[i], task);
+					if ((serverTypeId != null && task.supportsType(serverTypeId)) || 
+							(serverConfigurationTypeId != null && task.supportsType(serverConfigurationTypeId))) {
+						task.init(server, configuration, parents[i], modules[i]);
+						byte status = task.getTaskStatus();
+						if (status != ServerTaskDelegate.TASK_UNNECESSARY) {
+							if (status == ServerTaskDelegate.TASK_READY || status == ServerTaskDelegate.TASK_PREFERRED)
+								hasOptionalTasks = true;
+							addModuleTask(server, configuration, parents[i], modules[i], task);
+						}
 					}
 				}
 			}

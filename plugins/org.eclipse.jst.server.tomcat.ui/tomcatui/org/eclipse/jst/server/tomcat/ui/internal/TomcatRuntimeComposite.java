@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.ui.internal;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.jst.server.tomcat.ui.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.tomcat.ui.internal;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,6 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jst.server.tomcat.core.ITomcatRuntimeWorkingCopy;
-import org.eclipse.jst.server.tomcat.core.internal.TomcatRuntimeWorkingCopy;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.ModifyEvent;
@@ -82,7 +82,7 @@ public class TomcatRuntimeComposite extends Composite {
 			runtime = null;
 		} else {
 			runtimeWC = newRuntime;
-			runtime = (TomcatRuntimeWorkingCopy) newRuntime.getWorkingCopyExtension(null);
+			runtime = (ITomcatRuntimeWorkingCopy) newRuntime.getWorkingCopyExtension(null);
 		}
 		
 		init();

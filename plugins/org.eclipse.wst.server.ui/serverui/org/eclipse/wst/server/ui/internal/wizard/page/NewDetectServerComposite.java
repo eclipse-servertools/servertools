@@ -52,19 +52,27 @@ public class NewDetectServerComposite extends Composite {
 	}
 	
 	public class ServerContentProvider implements IStructuredContentProvider {
-		public void dispose() { }
+		public void dispose() {
+			// do nothing
+		}
 
 		public Object[] getElements(Object inputElement) {
 			return servers.toArray();
 		}
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+			// do nothing
+		}
 	}
 	
 	public class ServerLabelProvider implements ITableLabelProvider {
-		public void addListener(ILabelProviderListener listener2) { }
+		public void addListener(ILabelProviderListener listener2) {
+			// do nothing
+		}
 
-		public void dispose() { }
+		public void dispose() {
+			// do nothing
+		}
 
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
@@ -83,7 +91,9 @@ public class NewDetectServerComposite extends Composite {
 			return false;
 		}
 
-		public void removeListener(ILabelProviderListener listener2) { }
+		public void removeListener(ILabelProviderListener listener2) {
+			// do nothing
+		}
 	}
 
 	/**
@@ -170,7 +180,7 @@ public class NewDetectServerComposite extends Composite {
 		// listeners
 		detect.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				
+				// do nothing
 			}
 		});
 

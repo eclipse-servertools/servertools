@@ -44,7 +44,9 @@ public class NewServerWizardFragment extends WizardFragment {
 	protected Map fragmentMap = new HashMap();
 	protected Map configMap = new HashMap();
 	
-	public NewServerWizardFragment() { }
+	public NewServerWizardFragment() {
+		// do nothing
+	}
 	
 	public NewServerWizardFragment(IModule module, String launchMode) {
 		this.module = module;
@@ -104,7 +106,9 @@ public class NewServerWizardFragment extends WizardFragment {
 			IServerConfigurationWorkingCopy serverConfiguration = (IServerConfigurationWorkingCopy) configMap.get(key);
 			if (serverConfiguration != null)
 				return serverConfiguration;
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 
 		IServerConfigurationWorkingCopy serverConfiguration = type.importFromRuntime(null, file, runtime, new NullProgressMonitor());
 		ServerUtil.setServerConfigurationDefaultName(serverConfiguration);
@@ -117,7 +121,9 @@ public class NewServerWizardFragment extends WizardFragment {
 			IWizardFragment fragment = (IWizardFragment) fragmentMap.get(typeId);
 			if (fragment != null)
 				return fragment;
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		
 		IWizardFragment fragment = ServerUICore.getWizardFragment(typeId);
 		if (fragment != null)

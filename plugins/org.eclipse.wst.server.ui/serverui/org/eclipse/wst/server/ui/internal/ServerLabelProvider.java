@@ -21,7 +21,9 @@ import org.eclipse.wst.server.core.*;
  * A label provider for all server related objects.
  */
 public class ServerLabelProvider implements ILabelProvider {
-	public ServerLabelProvider() { }
+	public ServerLabelProvider() {
+		// do nothing
+	}
 
 	protected Image getModuleImage(String typeId) {
 		if (typeId == null)
@@ -156,7 +158,9 @@ public class ServerLabelProvider implements ILabelProvider {
 	/*
 	 * @see IBaseLabelProvider#addListener(ILabelProviderListener)
 	 */
-	public void addListener(ILabelProviderListener listener) { }
+	public void addListener(ILabelProviderListener listener) {
+		// do nothing
+	}
 
 	/*
 	 * @see IBaseLabelProvider#isLabelProperty(Object, String)
@@ -168,10 +172,14 @@ public class ServerLabelProvider implements ILabelProvider {
 	/*
 	 * @see IBaseLabelProvider#removeListener(ILabelProviderListener)
 	 */
-	public void removeListener(ILabelProviderListener listener) { }
+	public void removeListener(ILabelProviderListener listener) {
+		// do nothing
+	}
 	
 	/*
 	 * @see IBaseLabelProvider#dispose()
 	 */
-	public void dispose() { }
+	public void dispose() {
+		// do nothing
+	}
 }

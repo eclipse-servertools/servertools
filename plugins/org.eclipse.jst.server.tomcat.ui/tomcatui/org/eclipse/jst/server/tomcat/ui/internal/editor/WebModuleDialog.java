@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.ui.internal.editor;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.jst.server.tomcat.ui.internal.editor;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.tomcat.ui.internal.editor;
+
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IStatus;
@@ -227,7 +228,9 @@ public class WebModuleDialog extends Dialog {
 							contextRoot = "/" + contextRoot;
 						module = new WebModule(contextRoot, module2.getLocation().toOSString(), module2.getFactoryId() + ":" + module2.getId(), module.isReloadable());
 						docBase.setText(module2.getLocation().toOSString());
-					} catch (Exception e) { }
+					} catch (Exception e) {
+						// ignore
+					}
 					validate();
 				}
 			});

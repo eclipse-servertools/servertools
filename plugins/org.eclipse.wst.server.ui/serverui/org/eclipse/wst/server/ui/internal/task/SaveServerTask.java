@@ -23,7 +23,9 @@ import org.eclipse.wst.server.core.util.Task;
  * 
  */
 public class SaveServerTask extends Task {
-	public SaveServerTask() { }
+	public SaveServerTask() {
+		// do nothing
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.ui.internal.task.ITask#doTask()

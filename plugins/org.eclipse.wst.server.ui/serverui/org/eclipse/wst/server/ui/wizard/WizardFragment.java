@@ -41,9 +41,13 @@ public class WizardFragment implements IWizardFragment {
 		return model;
 	}
 
-	public void enter() { }
+	public void enter() {
+		// do nothing
+	}
 
-	public void exit() { }
+	public void exit() {
+		// do nothing
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.ui.internal.task.IWizardFragment#createFinishTask()

@@ -49,15 +49,21 @@ public class ServerEditor extends MultiPageEditorPart {
 			handleActivation();
 		}
 
-		public void partBroughtToTop(IWorkbenchPart part) { }
+		public void partBroughtToTop(IWorkbenchPart part) {
+			// do nothing
+		}
 
-		public void partClosed(IWorkbenchPart part) { }
+		public void partClosed(IWorkbenchPart part) {
+			// do nothing
+		}
 
 		public void partDeactivated(IWorkbenchPart part) {
 			fActivePart = null;
 		}
 
-		public void partOpened(IWorkbenchPart part) { }
+		public void partOpened(IWorkbenchPart part) {
+			// do nothing
+		}
 
 		public void shellActivated(ShellEvent e) {
 			handleActivation();
@@ -364,7 +370,9 @@ public class ServerEditor extends MultiPageEditorPart {
 	 *
 	 * @see IEditorPart
 	 */
-	public void doSaveAs() { }
+	public void doSaveAs() {
+		// do nothing
+	}
 
 	/**
 	 * Fire a property change event.
@@ -411,7 +419,9 @@ public class ServerEditor extends MultiPageEditorPart {
 	 *
 	 * @see IEditorPart
 	 */
-	public void gotoMarker(IMarker marker) { }
+	public void gotoMarker(IMarker marker) {
+		// do nothing
+	}
 
 	/**
 	 * Update the cut, copy, and paste actions.
@@ -549,7 +559,9 @@ public class ServerEditor extends MultiPageEditorPart {
 				}
 			});
 			control.addMouseListener(new MouseListener() {
-				public void mouseDown(MouseEvent event) { }
+				public void mouseDown(MouseEvent event) {
+					// do nothing
+				}
 				public void mouseUp(MouseEvent event) {
 					updateActionsImpl();
 				}

@@ -14,4 +14,5 @@ package org.eclipse.wst.server.ui.internal.view.tree;
  * Tagging interface for identifying elements on a server tree.
  */
 public interface IServerElementTag {
+	// marker
 }

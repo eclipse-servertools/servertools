@@ -27,6 +27,7 @@ public class ServerEditorInputFactory implements IElementFactory {
 	 * ServerEditorInputFactory constructor comment.
 	 */
 	public ServerEditorInputFactory() {
+		// do nothing
 	}
 
 	/**

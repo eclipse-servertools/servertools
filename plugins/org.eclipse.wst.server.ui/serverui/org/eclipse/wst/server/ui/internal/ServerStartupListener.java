@@ -200,7 +200,9 @@ public class ServerStartupListener {
 							return status;
 						try {
 							Thread.sleep(2000);
-						} catch (Exception e) { }
+						} catch (Exception e) {
+							// ignore
+						}
 						count -= 2000;
 						state = server.getModuleState(module);
 					}

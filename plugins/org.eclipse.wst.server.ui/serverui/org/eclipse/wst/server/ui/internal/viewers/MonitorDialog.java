@@ -216,7 +216,9 @@ public class MonitorDialog extends Dialog {
 				Object obj = tableViewer.getElementAt(0);
 				if (obj != null)
 				tableViewer.setSelection(new StructuredSelection(obj));
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 		}
 		
 		portChanged = false;

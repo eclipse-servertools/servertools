@@ -25,7 +25,9 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
  * 
  */
 public class ServerConfigurationWizardFragment extends WizardFragment {
-	public ServerConfigurationWizardFragment() { }
+	public ServerConfigurationWizardFragment() {
+		// do nothing
+	}
 
 	public boolean hasComposite() {
 		return false;

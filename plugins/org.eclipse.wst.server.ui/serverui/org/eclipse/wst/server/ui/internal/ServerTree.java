@@ -47,7 +47,9 @@ public class ServerTree {
 	public static final byte ACTION_DELETE = 1;
 	public static final byte ACTION_BOOKMARK = 2;
 
-	private ServerTree() { }
+	private ServerTree() {
+		// do nothing
+	}
 	
 	public static void fillContextMenu(Shell shell, ISelection selection, IMenuManager menu) {
 		MenuManager newMenu = new MenuManager(ServerUIPlugin.getResource("%actionNew"));
@@ -189,12 +191,18 @@ public class ServerTree {
 	protected static void addServerActions(Shell shell, IMenuManager menu, IServer server) {
 		final ISelection selection = new StructuredSelection(server);
 		ISelectionProvider provider = new ISelectionProvider() {
-			public void addSelectionChangedListener(ISelectionChangedListener listener) { }
+			public void addSelectionChangedListener(ISelectionChangedListener listener) {
+				// do nothing
+			}
 			public ISelection getSelection() {
 				return selection;
 			}
-			public void removeSelectionChangedListener(ISelectionChangedListener listener) { }
-			public void setSelection(ISelection sel) { }
+			public void removeSelectionChangedListener(ISelectionChangedListener listener) {
+				// do nothing
+			}
+			public void setSelection(ISelection sel) {
+				// do nothing
+			}
 		};
 	
 		// create the debug action

@@ -57,17 +57,23 @@ public abstract class ServerResourceEditorPart extends EditorPart {
 	/**
 	 * @see IEditorPart#doSave(IProgressMonitor)
 	 */
-	public void doSave(IProgressMonitor monitor) { }
+	public void doSave(IProgressMonitor monitor) {
+		// do nothing
+	}
 
 	/**
 	 * @see IEditorPart#doSaveAs()
 	 */
-	public void doSaveAs() { }
+	public void doSaveAs() {
+		// do nothing
+	}
 
 	/**
 	 * @see IEditorPart#gotoMarker(IMarker)
 	 */
-	public void gotoMarker(IMarker marker) { }
+	public void gotoMarker(IMarker marker) {
+		// do nothing
+	}
 
 	/**
 	 * @see IEditorPart#isDirty()

@@ -75,11 +75,15 @@ public class RuntimeComposite extends AbstractTableComposite {
 						wc.setLocked(!runtime.isLocked());
 						wc.save(false, null);
 						refresh(runtime);
-					} catch (Exception ex) { }
+					} catch (Exception ex) {
+						// ignore
+					}
 				}
 			}
 
-			public void keyReleased(KeyEvent e) { }
+			public void keyReleased(KeyEvent e) {
+				// do nothing
+			}
 		});
 		
 		defaultRuntime = ServerCore.getResourceManager().getDefaultRuntime();

@@ -170,7 +170,9 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 					
 					try {
 						Thread.sleep(delay);
-					} catch (InterruptedException e) { }
+					} catch (InterruptedException e) {
+						// ignore
+					}
 					
 					if (server.getServerState() == IServer.STATE_STOPPED)
 						alive = false;

@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -52,9 +52,6 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer {
 	 */
 	public TomcatServer() {
 		super();
-	}
-
-	public void initialize() {
 	}
 
 	public TomcatRuntime getTomcatRuntime() {
@@ -248,7 +245,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer {
 		if (status != null && !status.isOK())
 			throw new CoreException(status);
 		
-		setServerSyncState(IServer.SYNC_STATE_IN_SYNC);
+		setServerPublishState(IServer.PUBLISH_STATE_NONE);
 	}
 
 	/**
@@ -397,7 +394,9 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer {
 		if (vmInstall != null) {
 			try {
 				cp.add(JavaRuntime.newRuntimeContainerClasspathEntry(new Path(JavaRuntime.JRE_CONTAINER).append("org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType").append(vmInstall.getName()), IRuntimeClasspathEntry.BOOTSTRAP_CLASSES));
-			} catch (Exception e) { }			
+			} catch (Exception e) {
+				// ignore
+			}			
 			
 			IPath jrePath = new Path(vmInstall.getInstallLocation().getAbsolutePath());
 			if (jrePath != null) {

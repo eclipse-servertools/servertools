@@ -34,7 +34,9 @@ public abstract class BaseLabelProvider implements ILabelProvider {
 	 *
 	 * @param listener a label provider listener
 	 */
-	public void addListener(ILabelProviderListener listener) { }
+	public void addListener(ILabelProviderListener listener) {
+		// do nothing
+	}
 
 	/**
 	 * Disposes of this label provider.  When a label provider is
@@ -44,7 +46,9 @@ public abstract class BaseLabelProvider implements ILabelProvider {
 	 * responsibility to ensure that this method is called when the
 	 * provider is no longer needed.
 	 */
-	public void dispose() { }
+	public void dispose() {
+		// do nothing
+	}
 
 	/**
 	 * Returns the label image for the given column of the given element.
@@ -93,7 +97,9 @@ public abstract class BaseLabelProvider implements ILabelProvider {
 	 *
 	 * @param listener a label provider listener
 	 */
-	public void removeListener(ILabelProviderListener listener) { }
+	public void removeListener(ILabelProviderListener listener) {
+		// do nothing
+	}
 	
 	protected String notNull(String s) {
 		if (s == null)

@@ -200,7 +200,9 @@ public class TaskWizard implements IWizard {
 					IServerExtension extension = server.getExtension(monitor);
 					if (extension instanceof IRunningActionServer)
 						useJob = true;
-				} catch (Exception e) { }
+				} catch (Exception e) {
+					// ignore
+				}
 				
 				if (useJob) {
 					class FinishWizardJob extends Job {

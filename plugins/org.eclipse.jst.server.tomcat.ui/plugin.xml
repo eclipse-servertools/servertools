@@ -10,7 +10,6 @@
    <runtime>
       <library name="tomcatui.jar">
          <export name="*"/>
-         <packages prefixes="org.eclipse.jst.server.tomcat.ui"/>
       </library>
    </runtime>
 

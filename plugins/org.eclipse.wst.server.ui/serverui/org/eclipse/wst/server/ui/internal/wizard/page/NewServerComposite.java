@@ -299,6 +299,7 @@ public class NewServerComposite extends Composite {
 		
 		detectComp = new NewDetectServerComposite(detectComp2, new NewDetectServerComposite.IServerSelectionListener() {
 			public void serverSelected(IServer server) {
+				// do nothing
 			}
 		});
 

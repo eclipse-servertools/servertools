@@ -19,5 +19,7 @@ public class CompositeTask extends Task {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.ui.internal.task.Task#doTask(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public void execute(IProgressMonitor monitor) { }
+	public void execute(IProgressMonitor monitor) {
+		// do nothing
+	}
 }

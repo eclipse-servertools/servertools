@@ -34,7 +34,9 @@ public abstract class NewWizardAction implements IWorkbenchWindowActionDelegate 
 	 * Disposes this action delegate.  The implementor should unhook any references
 	 * to itself so that garbage collection can occur.
 	 */
-	public void dispose() {}
+	public void dispose() {
+		// do nothing
+	}
 
 	/**
 	 * Initializes this action delegate with the workbench window it will work in.

@@ -229,7 +229,9 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 							IRuntime newRuntime = runtimes[runtimeCombo.getSelectionIndex()];
 							getCommandManager().executeCommand(new SetServerRuntimeCommand(getServer(), newRuntime));
 							updating = false;
-						} catch (Exception ex) { }
+						} catch (Exception ex) {
+							// ignore
+						}
 					}
 					public void widgetDefaultSelected(SelectionEvent e) {
 						widgetSelected(e);
@@ -330,7 +332,7 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 		updating = false;
 	}
 	
-	protected void validate() { }
+	//protected void validate() { }
 
 	/**
 	 * @see IWorkbenchPart#setFocus()

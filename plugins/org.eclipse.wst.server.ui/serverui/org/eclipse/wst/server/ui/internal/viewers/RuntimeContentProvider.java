@@ -33,7 +33,9 @@ public class RuntimeContentProvider implements IStructuredContentProvider {
 	 * Disposes of this content provider.  
 	 * This is called by the viewer when it is disposed.
 	 */
-	public void dispose() { }
+	public void dispose() {
+		// do nothing
+	}
 
 	/**
 	 * Returns the elements to display in the viewer 
@@ -56,5 +58,7 @@ public class RuntimeContentProvider implements IStructuredContentProvider {
 	 * Notifies this content provider that the given viewer's input
 	 * has been switched to a different element.
 	 */
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		// do nothing
+	}
 }

@@ -153,7 +153,9 @@ public class ImageResource {
 	/**
 	 * Cannot construct an ImageResource. Use static methods only.
 	 */
-	private ImageResource() { }
+	private ImageResource() {
+		// do nothing
+	}
 	
 	/**
 	 * Dispose of element images that were created.

@@ -88,14 +88,18 @@ public class NewRuntimeComposite extends Composite {
 			try {
 				runtime = null;
 				runtime = (IRuntimeWorkingCopy) runtimeMap.get(runtimeType);
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 			if (runtime == null) {
 				try {
 					runtime = runtimeType.createRuntime(null, null);
 					ServerUtil.setRuntimeDefaultName(runtime);
 					if (runtime != null)
 						runtimeMap.put(runtimeType, runtime);
-				} catch (Exception e) { }
+				} catch (Exception e) {
+					// ignore
+				}
 			}
 		}
 

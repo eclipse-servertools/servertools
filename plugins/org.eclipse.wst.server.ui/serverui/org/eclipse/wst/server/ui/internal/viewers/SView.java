@@ -87,8 +87,10 @@ public class SView extends Canvas {
 				//changeTwistie(!isOpen);
 			}
 			public void mouseUp(MouseEvent e) {
+				// do nothing
 			}
 			public void mouseDoubleClick(MouseEvent e) {
+				// do nothing
 			}
 		});
 		addMouseTrackListener(new MouseTrackListener() {
@@ -101,6 +103,7 @@ public class SView extends Canvas {
 				SView.this.redraw();
 			}
 			public void mouseHover(MouseEvent e) {
+				// do nothing
 			}
 		});
 		addSelectionListener(new SelectionAdapter() {

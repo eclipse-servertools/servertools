@@ -24,7 +24,9 @@ import org.eclipse.wst.server.core.util.Task;
  * 
  */
 public class TempSaveServerConfigurationTask extends Task {
-	public TempSaveServerConfigurationTask() { }
+	public TempSaveServerConfigurationTask() {
+		// do nothing
+	}
 
 	/* (non-Javadoc)
 	 * @see com.ibm.wtp.server.ui.internal.task.ITask#doTask()
@@ -48,7 +50,9 @@ public class TempSaveServerConfigurationTask extends Task {
 				IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
 				if (server.getServerType().hasServerConfiguration() &&server != null)
 					server.setServerConfiguration(workingCopy);
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 			getTaskModel().putObject(ITaskModel.TASK_SERVER_CONFIGURATION, workingCopy);
 		}
 	}

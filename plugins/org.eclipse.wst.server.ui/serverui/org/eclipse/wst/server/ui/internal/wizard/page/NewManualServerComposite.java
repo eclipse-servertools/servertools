@@ -134,7 +134,9 @@ public class NewManualServerComposite extends Composite {
 					runtime = runtimes[runtimeCombo.getSelectionIndex()];
 					if (server != null)
 						server.setRuntime(runtime);
-				} catch (Exception ex) { }
+				} catch (Exception ex) {
+					// ignore
+				}
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {
 				widgetSelected(e);
@@ -258,7 +260,7 @@ public class NewManualServerComposite extends Composite {
 		IRuntimeType runtimeType = serverType.getRuntimeType();
 		runtimes = ServerCore.getResourceManager().getRuntimes(runtimeType);
 		
-		if (SocketUtil.isLocalhost(server.getHost()) && runtimes != null) {
+		if (server != null && SocketUtil.isLocalhost(server.getHost()) && runtimes != null) {
 			List runtimes2 = new ArrayList();
 			int size = runtimes.length;
 			for (int i = 0; i < size; i++) {

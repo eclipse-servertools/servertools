@@ -39,5 +39,7 @@ public class NewRuntimeWizard extends TaskWizard implements INewWizard {
 		setForcePreviousAndNextButtons(true);
 	}
 	
-	public void init(IWorkbench newWorkbench, IStructuredSelection newSelection) { }
+	public void init(IWorkbench newWorkbench, IStructuredSelection newSelection) {
+		// do nothing
+	}
 }

@@ -62,6 +62,7 @@ public class RestartModuleAction extends Action {
 		try {
 			server.restartModule(module, new NullProgressMonitor());
 		} catch (CoreException e) {
+			// ignore
 		}
 	}
 }

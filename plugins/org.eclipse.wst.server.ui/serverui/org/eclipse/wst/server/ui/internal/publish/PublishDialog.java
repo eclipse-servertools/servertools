@@ -712,9 +712,13 @@ public class PublishDialog extends Dialog implements IRunnableContext {
 			final PublishDialog dialog = new PublishDialog(shell, keepOpen);
 	
 			listener = new IPublishListener() {
-				public void moduleStateChange(IServer server, List parents, IModule module) { }
+				public void moduleStateChange(IServer server, List parents, IModule module) {
+					// do nothing
+				}
 	
-				public void publishStarting(IServer server, List[] parents, IModule[] modules) { }
+				public void publishStarting(IServer server, List[] parents, IModule[] modules) {
+					// do nothing
+				}
 				
 				public void publishStarted(IServer server) {
 					dialog.addPublishEvent(null, null);

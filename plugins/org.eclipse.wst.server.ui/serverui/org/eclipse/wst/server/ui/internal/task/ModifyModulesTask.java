@@ -32,7 +32,9 @@ public class ModifyModulesTask extends Task {
 	protected List add;
 	protected List remove;
 	
-	public ModifyModulesTask() { }
+	public ModifyModulesTask() {
+		// do nothing
+	}
 	
 	public void setAddModules(List add) {
 		this.add = add;

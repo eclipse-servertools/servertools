@@ -118,7 +118,9 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 	 * Disposes of this content provider.  
 	 * This is called by the viewer when it is disposed.
 	 */
-	public void dispose() { }
+	public void dispose() {
+		// do nothing
+	}
 
 	/**
 	 * Returns the elements to display in the viewer 
@@ -179,7 +181,9 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 	 * @param newInput the new input element, or <code>null</code> if the viewer
 	 *   does not have an input
 	 */
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) { }
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		// do nothing
+	}
 	
 	public Object getInitialSelection() {
 		return initialSelection;

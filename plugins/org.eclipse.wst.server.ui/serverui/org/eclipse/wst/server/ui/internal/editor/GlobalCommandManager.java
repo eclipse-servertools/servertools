@@ -139,8 +139,12 @@ public class GlobalCommandManager {
 			for (int i = 0; i < size; i++)
 				try {
 					pcl[i].propertyChange(event);
-				} catch (Exception e) { }
-		} catch (Exception e) { }
+				} catch (Exception e) {
+					// ignore
+				}
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 
 	/**
@@ -301,7 +305,9 @@ public class GlobalCommandManager {
 				Shell shell = d.getActiveShell();
 				if (!MessageDialog.openConfirm(shell, ServerUIPlugin.getResource("%editorServerEditor"), ServerUIPlugin.getResource("%editorPromptIrreversible")))
 					return;
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 		}
 		
 		ServerResourceCommand src = new ServerResourceCommand();

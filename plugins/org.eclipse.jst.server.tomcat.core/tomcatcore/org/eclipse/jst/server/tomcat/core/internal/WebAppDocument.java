@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.core.internal;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.jst.server.tomcat.core.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.tomcat.core.internal;
+
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -122,16 +123,6 @@ public class WebAppDocument {
 		element.removeChild(node);
 		isWebAppDirty = true;
 	}
-
-	/**
-	 * Saves the Web app document.
-	 *
-	 * @param filename java.lang.String
-	 */
-	/*public void save(String dirPath, boolean forceDirty) throws IOException {
-		if (forceDirty || isWebAppDirty)
-			XMLUtil.save(dirPath + "web.xml", webAppDocument);
-	}*/
 	
 	/**
 	 * Saves the Web app document.
@@ -158,11 +149,13 @@ public class WebAppDocument {
 			else
 				file.create(in, true, ProgressUtil.getSubMonitorFor(monitor, 200));
 		} catch (Exception e) {
+			// ignore
 		} finally {
 			try {
 				in.close();
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 		}
-		
 	}
 }

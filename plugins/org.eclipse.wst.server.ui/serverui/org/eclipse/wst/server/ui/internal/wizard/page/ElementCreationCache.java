@@ -64,7 +64,9 @@ public class ElementCreationCache {
 			IServerConfigurationWorkingCopy configuration = getCachedServerConfiguration(type);
 			if (configuration != null)
 				return configuration;
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 
 		try {
 			IFile file = null;
@@ -91,7 +93,9 @@ public class ElementCreationCache {
 			IServerWorkingCopy server = getCachedServer(type, host);
 			if (server != null)
 				return server;
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 	
 		try {
 			IFile file = null;
@@ -117,7 +121,9 @@ public class ElementCreationCache {
 			IServerWorkingCopy server = (IServerWorkingCopy) elementCache.get(getKey(type, host));
 			if (server != null)
 				return server;
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 
 		return null;
 	}
@@ -133,7 +139,9 @@ public class ElementCreationCache {
 			IServerConfigurationWorkingCopy wc = (IServerConfigurationWorkingCopy) elementCache.get(getKey(type));
 			if (wc != null)
 				return wc;
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 
 		return null;
 	}

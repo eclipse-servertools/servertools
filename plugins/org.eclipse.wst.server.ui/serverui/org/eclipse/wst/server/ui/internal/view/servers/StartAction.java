@@ -30,7 +30,9 @@ public class StartAction extends AbstractServerAction {
 		this.launchMode = launchMode;
 		try {
 			selectionChanged((IStructuredSelection) selectionProvider.getSelection());
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 
 	/**
@@ -59,6 +61,8 @@ public class StartAction extends AbstractServerAction {
 		ServerStartupListener listener = new ServerStartupListener(shell, server);
 		try {
 			EclipseUtil.startServer(shell, server, launchMode, listener);
-		} catch (CoreException e) { }
+		} catch (CoreException e) {
+			// ignore
+		}
 	}
 }

@@ -1,6 +1,5 @@
-package org.eclipse.jst.server.tomcat.core.internal;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,9 +8,10 @@ package org.eclipse.jst.server.tomcat.core.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.tomcat.core.internal;
+
 import java.util.List;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
@@ -21,9 +21,7 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.tomcat.core.ITomcatRuntime;
 import org.eclipse.jst.server.tomcat.core.ITomcatRuntimeWorkingCopy;
 
-import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
-import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 /**
  * 
@@ -32,7 +30,9 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 	protected static final String PROP_VM_INSTALL_TYPE_ID = "vm-install-type-id";
 	protected static final String PROP_VM_INSTALL_ID = "vm-install-id";
 
-	public TomcatRuntime() { }
+	public TomcatRuntime() {
+		// do nothing
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IRuntime#getLocation()
@@ -60,7 +60,9 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 				if (id.equals(vmInstalls[i].getId()))
 					return vmInstalls[i];
 			}
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		return null;
 	}
 
@@ -79,22 +81,16 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 	}
 	
 	public IStatus validate() {
-		IRuntime runtime = getRuntime();
-		if (runtime.getName() == null || runtime.getName().length() == 0)
-			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorRuntimeName"), null);
-
-		if (runtime.isWorkingCopy() && ServerUtil.isNameInUse(runtime))
-			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorDuplicateRuntimeName"), null);
+		IStatus status = super.validate();
+		if (!status.isOK())
+			return status;
 	
-		IPath path = runtime.getLocation();
-		if (path == null || path.isEmpty())
-			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, "", null);
-		else if (!verifyLocation())
+		if (!verifyLocation())
 			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorInstallDir"), null);
-		else if (getVMInstall() == null) {
+		else if (getVMInstall() == null)
 			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorJRE"), null);
-		} else
-			return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, "", null);
+		
+		return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, "", null);
 	}
 
 	public void setDefaults() {

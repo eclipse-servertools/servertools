@@ -40,15 +40,10 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	protected Button promptIrreversible;
 	
 	protected byte saveEditors;
-	protected byte repairServers;
 	
 	protected Button saveNever;
 	protected Button savePrompt;
 	protected Button saveAuto;
-	
-	protected Button repairNever;
-	protected Button repairPrompt;
-	protected Button repairAlways;
 	
 	protected Button createInWorkspace;
 
@@ -166,46 +161,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		
 		setSaveEditorStatus(uiPreferences.getSaveEditors());
 		
-		// repair group
-		Group repairGroup = new Group(composite, SWT.NONE);
-		repairGroup.setText(ServerUIPlugin.getResource("%prefRepairModuleGroup"));
-
-		layout = new GridLayout();
-		layout.numColumns = 3;
-		repairGroup.setLayout(layout);
-		data = new GridData(GridData.FILL_HORIZONTAL);
-		data.horizontalSpan = 3;
-		repairGroup.setLayoutData(data);
-
-		repairNever = new Button(repairGroup, SWT.RADIO);
-		repairNever.setText(ServerUIPlugin.getResource("%prefRepairModuleNever"));
-		repairNever.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				repairServers = IServerPreferences.REPAIR_NEVER;
-			}
-		});
-		WorkbenchHelp.setHelp(repairNever, ContextIds.PREF_GENERAL_REPAIR);
-
-		repairPrompt = new Button(repairGroup, SWT.RADIO);
-		repairPrompt.setText(ServerUIPlugin.getResource("%prefRepairModulePrompt"));
-		repairPrompt.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				repairServers = IServerPreferences.REPAIR_PROMPT;
-			}
-		});
-		WorkbenchHelp.setHelp(repairPrompt, ContextIds.PREF_GENERAL_REPAIR);
-
-		repairAlways = new Button(repairGroup, SWT.RADIO);
-		repairAlways.setText(ServerUIPlugin.getResource("%prefRepairModuleAutomatic"));
-		repairAlways.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				repairServers = IServerPreferences.REPAIR_ALWAYS;
-			}
-		});
-		WorkbenchHelp.setHelp(repairAlways, ContextIds.PREF_GENERAL_REPAIR);
 		
-		setRepairStatus(preferences.getModuleRepairStatus());
-			
 		Dialog.applyDialogFont(composite);
 	
 		return composite;
@@ -218,19 +174,14 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		saveAuto.setSelection(saveEditors == IServerUIPreferences.SAVE_EDITORS_AUTO); 
 	}
 	
-	protected void setRepairStatus(byte status) {
-		repairServers = status;
-		repairNever.setSelection(repairServers == IServerPreferences.REPAIR_NEVER);
-		repairPrompt.setSelection(repairServers == IServerPreferences.REPAIR_PROMPT);
-		repairAlways.setSelection(repairServers == IServerPreferences.REPAIR_ALWAYS);
-	}
-	
 	/**
 	 * Initializes this preference page using the passed desktop.
 	 *
 	 * @param desktop the current desktop
 	 */
-	public void init(IWorkbench workbench) { }
+	public void init(IWorkbench workbench) {
+		// do nothing
+	}
 	
 	/**
 	 * Performs special processing when this page's Defaults button has been pressed.
@@ -247,7 +198,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		promptIrreversible.setSelection(uiPreferences.getDefaultPromptBeforeIrreversibleChange());
 		createInWorkspace.setSelection(preferences.isDefaultCreateResourcesInWorkspace());
 		
-		setRepairStatus(preferences.getDefaultModuleRepairStatus());
 		setSaveEditorStatus(uiPreferences.getDefaultSaveEditors());
 	
 		super.performDefaults();
@@ -261,7 +211,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		uiPreferences.setShowPublishingDetails(publishDetailsButton.getSelection());
 		preferences.setAutoPublishing(publishBeforeStart.getSelection());
 		preferences.setAutoRestarting(autoRestart.getSelection());
-		preferences.setModuleRepairStatus(repairServers);
 		uiPreferences.setSaveEditors(saveEditors);
 		uiPreferences.setPromptBeforeIrreversibleChange(promptIrreversible.getSelection());
 		preferences.setCreateResourcesInWorkspace(createInWorkspace.getSelection());
@@ -284,7 +233,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
 				IServer server = servers[i];
-				if (server.getServerSyncState() == IServer.SYNC_STATE_RESTART) {
+				if (server.getServerRestartState()) {
 					String mode = server.getMode();
 					if (server.canRestart(mode))
 						try {

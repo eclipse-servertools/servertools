@@ -32,7 +32,9 @@ public class RestartAction extends AbstractServerAction {
 		super(shell, selectionProvider, name);
 		try {
 			selectionChanged((IStructuredSelection) selectionProvider.getSelection());
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		this.mode = mode;
 	}
 

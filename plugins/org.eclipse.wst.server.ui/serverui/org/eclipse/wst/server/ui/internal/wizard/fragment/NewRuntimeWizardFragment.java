@@ -35,7 +35,9 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 	// filter by partial runtime type id
 	protected String runtimeTypeId;
 	
-	public NewRuntimeWizardFragment() { }
+	public NewRuntimeWizardFragment() {
+		// do nothing
+	}
 	
 	public NewRuntimeWizardFragment(String type, String version, String runtimeTypeId) {
 		this.type = type;
