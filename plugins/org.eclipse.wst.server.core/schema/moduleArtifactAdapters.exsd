@@ -61,10 +61,10 @@
          <attribute name="class" type="string">
             <annotation>
                <documentation>
-                  
+                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;org.eclipse.wst.server.core.model.ModuleArtifactAdapterDelegate&lt;/samp&gt;.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.ui.IServerAdapter"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.ModuleArtifactAdapterDelegate"/>
                </appInfo>
             </annotation>
          </attribute>

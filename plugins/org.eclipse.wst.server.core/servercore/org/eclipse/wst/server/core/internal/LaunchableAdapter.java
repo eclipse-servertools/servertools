@@ -40,9 +40,6 @@ public class LaunchableAdapter implements ILaunchableAdapter {
 		return element.getAttribute("id");
 	}
 
-	/*
-	 * @see IPublishManager#getDelegate()
-	 */
 	public LaunchableAdapterDelegate getDelegate() {
 		if (delegate == null) {
 			try {

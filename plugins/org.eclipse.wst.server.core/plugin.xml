@@ -28,6 +28,7 @@
   <extension-point id="serverTypes" name="%extensionPointServerTypes" schema="schema/serverTypes.exsd"/>
   <extension-point id="serverLocators" name="%extensionPointServerLocators" schema="schema/serverLocators.exsd"/>
   <extension-point id="moduleFactories" name="%extensionPointModuleFactories" schema="schema/moduleFactories.exsd"/>
+  <extension-point id="moduleArtifactAdapters" name="%extensionPointModuleArtifactAdapters" schema="schema/moduleArtifactAdapters.exsd"/>
   <extension-point id="launchableAdapters" name="%extensionPointLaunchableAdapters" schema="schema/launchableAdapters.exsd"/>
   <extension-point id="clients" name="%extensionPointClients" schema="schema/clients.exsd"/>
   <extension-point id="serverTasks" name="%extensionPointServerTasks" schema="schema/serverTasks.exsd"/>

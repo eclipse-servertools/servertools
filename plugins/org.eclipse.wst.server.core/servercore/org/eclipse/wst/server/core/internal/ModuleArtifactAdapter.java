@@ -8,12 +8,14 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.ui.internal;
+package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.expressions.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.wst.server.core.IModuleArtifact;
+import org.eclipse.wst.server.core.model.ModuleArtifactAdapterDelegate;
 import org.osgi.framework.Bundle;
 /**
  * 
@@ -21,6 +23,7 @@ import org.osgi.framework.Bundle;
 public class ModuleArtifactAdapter {
 	private IConfigurationElement element;
 	private Expression fContextualLaunchExpr = null;
+	private ModuleArtifactAdapterDelegate delegate;
 
 	/**
 	 * ModuleArtifactAdapter constructor comment.
@@ -128,6 +131,33 @@ public class ModuleArtifactAdapter {
 		IEvaluationContext context = new EvaluationContext(null, obj);
 		context.addVariable("selection", obj);
 		return evalEnablementExpression(context, getContextualLaunchEnablementExpression());
+	}
+
+	public ModuleArtifactAdapterDelegate getDelegate() {
+		if (delegate == null) {
+			try {
+				delegate = (ModuleArtifactAdapterDelegate) element.createExecutableExtension("class");
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString() + ": " + t.getMessage());
+			}
+		}
+		return delegate;
+	}
+	
+	public boolean isDelegateLoaded() {
+		return (delegate != null);
+	}
+
+	/**
+	 * 
+	 */
+	public IModuleArtifact getModuleArtifact(Object obj) {
+		try {
+			return getDelegate().getModuleArtifact(obj);
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
+			return null;
+		}
 	}
 	
 	/**

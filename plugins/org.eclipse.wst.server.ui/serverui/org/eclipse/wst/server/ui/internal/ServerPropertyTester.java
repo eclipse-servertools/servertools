@@ -11,6 +11,7 @@
 package org.eclipse.wst.server.ui.internal;
 
 import org.eclipse.core.expressions.PropertyTester;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 /**
  * 
  */
@@ -19,6 +20,6 @@ public class ServerPropertyTester extends PropertyTester {
 	 * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[], java.lang.Object)
 	 */
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-		return ServerUIPlugin.hasModuleArtifact(receiver);
+		return ServerPlugin.hasModuleArtifact(receiver);
 	}
 }

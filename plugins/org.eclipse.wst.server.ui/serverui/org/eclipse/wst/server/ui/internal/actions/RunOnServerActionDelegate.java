@@ -138,7 +138,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 */
 	protected void run(IProgressMonitor monitor) {
 		String launchMode = getLaunchMode();
-		IModuleArtifact moduleArtifact = ServerUIPlugin.loadModuleArtifact(selection);
+		IModuleArtifact moduleArtifact = ServerPlugin.loadModuleArtifact(selection);
 		
 		Shell shell;
 		if (window != null)
@@ -413,13 +413,13 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				Trace.trace(Trace.FINEST, "Selection type: " + selection.getClass().getName());
 			globalSelection = selection;
 			globalLaunchMode = new HashMap();
-			if (!ServerUIPlugin.hasModuleArtifact(globalSelection)) {
+			if (!ServerPlugin.hasModuleArtifact(globalSelection)) {
 				action.setEnabled(false);
 				return;
 			}
 			
 			Trace.trace(Trace.FINEST, "checking for module artifact");
-			IModuleArtifact moduleArtifact = ServerUIPlugin.getModuleArtifact(globalSelection);
+			IModuleArtifact moduleArtifact = ServerPlugin.getModuleArtifact(globalSelection);
 			IModule module = null;
 			if (moduleArtifact != null)
 				module = moduleArtifact.getModule();

@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.wst.server.core" id="launchableAdapters" name="Launchable Adapters"/>
       </appInfo>
       <documentation>
-         This extension point provides a way to invoke code during the server core plugin startup. Use sparingly.
+         This extension point provides a way for a server to support the Run on Server scenario.
       </documentation>
    </annotation>
 
@@ -64,6 +64,13 @@ Launchable adapter instances of this type will delegate to instances of this cla
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.LaunchableAdapterDelegate"/>
                </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="typeIds" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
             </annotation>
          </attribute>
       </complexType>

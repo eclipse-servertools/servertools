@@ -54,7 +54,6 @@ import org.osgi.framework.BundleContext;
  * The server UI plugin class.
  */
 public class ServerUIPlugin extends AbstractUIPlugin {
-	private static final String MODULE_ARTIFACT_CLASS = "org.eclipse.wst.server.core.IModuleArtifact";
 	protected static final String VIEW_ID = "org.eclipse.wst.server.ui.ServersView";
 	
 	// server UI plugin id
@@ -373,113 +372,6 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		
 		return null;
 	}*/
-
-	// cached copy of all module artifact adapters
-	private static List moduleArtifactAdapters;
-
-	/**
-	 * Returns an array of all module artifact adapters.
-	 *
-	 * @return
-	 */
-	protected static ModuleArtifactAdapter[] getModuleArtifactAdapters() {
-		if (moduleArtifactAdapters == null)
-			loadModuleArtifactAdapters();
-		
-		ModuleArtifactAdapter[] moa = new ModuleArtifactAdapter[moduleArtifactAdapters.size()];
-		moduleArtifactAdapters.toArray(moa);
-		return moa;
-	}
-	
-	/**
-	 * Load the module artifact adapters extension point.
-	 */
-	private static synchronized void loadModuleArtifactAdapters() {
-		if (moduleArtifactAdapters != null)
-			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleArtifactAdapters extension point ->-");
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "moduleArtifactAdapters");
-
-		int size = cf.length;
-		moduleArtifactAdapters = new ArrayList(size);
-		for (int i = 0; i < size; i++) {
-			try {
-				moduleArtifactAdapters.add(new ModuleArtifactAdapter(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded moduleArtifactAdapter: " + cf[i].getAttribute("id"));
-			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load moduleArtifactAdapter: " + cf[i].getAttribute("id"), t);
-			}
-		}
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleArtifactAdapters extension point -<-");
-	}
-	
-	/**
-	 * Returns a module artifact for the given object.
-	 *
-	 * @return IModuleArtifact
-	 */
-	public static boolean hasModuleArtifact(Object obj) {
-		Trace.trace(Trace.FINEST, "ServerUIPlugin.hasModuleArtifact() " + obj);
-		ModuleArtifactAdapter[] adapters = getModuleArtifactAdapters();
-		if (adapters != null) {
-			int size = adapters.length;
-			for (int i = 0; i < size; i++) {
-				try {
-					if (adapters[i].isEnabled(obj)) {
-						Trace.trace(Trace.FINER, "Run On Server for " + obj + " is enabled by " + adapters[i].getId());
-						return true;
-					}
-				} catch (CoreException ce) {
-					Trace.trace(Trace.WARNING, "Could not use moduleArtifactAdapter", ce);
-				}
-			}
-		}
-		
-		return false;
-	}
-
-	public static IModuleArtifact getModuleArtifact(Object obj) {
-		Trace.trace(Trace.FINEST, "ServerUIPlugin.getModuleArtifact() " + obj);
-		ModuleArtifactAdapter[] adapters = getModuleArtifactAdapters();
-		if (adapters != null) {
-			int size = adapters.length;
-			for (int i = 0; i < size; i++) {
-				try {
-					if (adapters[i].isEnabled(obj)) {
-						if (Platform.getAdapterManager().hasAdapter(obj, MODULE_ARTIFACT_CLASS)) {
-							return (IModuleArtifact) Platform.getAdapterManager().getAdapter(obj, MODULE_ARTIFACT_CLASS);
-						}
-					}
-				} catch (Exception e) {
-					Trace.trace(Trace.WARNING, "Could not use moduleArtifactAdapter " + adapters[i], e);
-				}
-			}
-		}
-		
-		return null;
-	}
-
-	public static IModuleArtifact loadModuleArtifact(Object obj) {
-		Trace.trace(Trace.FINEST, "ServerUIPlugin.loadModuleArtifact() " + obj);
-		ModuleArtifactAdapter[] adapters = getModuleArtifactAdapters();
-		if (adapters != null) {
-			int size = adapters.length;
-			for (int i = 0; i < size; i++) {
-				try {
-					if (adapters[i].isEnabled(obj)) {
-						if (Platform.getAdapterManager().hasAdapter(obj, MODULE_ARTIFACT_CLASS)) {
-							return (IModuleArtifact) Platform.getAdapterManager().loadAdapter(obj, MODULE_ARTIFACT_CLASS);
-						}
-					}
-				} catch (Exception e) {
-					Trace.trace(Trace.WARNING, "Could not use moduleArtifactAdapter " + adapters[i], e);
-				}
-			}
-		}
-		
-		return null;
-	}
 	
 	/**
 	 * Returns the server that came from the given file, or <code>null</code>

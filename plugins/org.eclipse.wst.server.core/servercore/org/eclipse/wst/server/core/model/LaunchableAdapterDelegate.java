@@ -24,12 +24,12 @@ import org.eclipse.wst.server.core.IServer;
  */
 public abstract class LaunchableAdapterDelegate {
 	/**
-	 * Returns a launchable object from this module object.
+	 * Returns a launchable object from this module artifact.
 	 * 
 	 * @param server
 	 * @param moduleObject
 	 * @return the launchable object
 	 * @exception if there was an error doing the conversion
 	 */
-	public abstract ILaunchable getLaunchable(IServer server, IModuleArtifact moduleObject) throws CoreException;
+	public abstract ILaunchable getLaunchable(IServer server, IModuleArtifact moduleArtifact) throws CoreException;
 }

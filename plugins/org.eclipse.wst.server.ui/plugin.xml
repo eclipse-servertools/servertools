@@ -31,7 +31,6 @@
   <extension-point id="editorActions" name="%extensionPointEditorActions" schema="schema/editorActions.exsd"/>
   <extension-point id="serverImages" name="%extensionPointServerImages" schema="schema/serverImages.exsd"/>
   <extension-point id="wizardFragments" name="%extensionPointWizardFragments" schema="schema/wizardFragments.exsd"/>
-  <extension-point id="moduleArtifactAdapters" name="%extensionPointModuleArtifactAdapters" schema="schema/moduleArtifactAdapters.exsd"/>
 
 <extension point="org.eclipse.ui.ide.projectNatureImages">
   <image
