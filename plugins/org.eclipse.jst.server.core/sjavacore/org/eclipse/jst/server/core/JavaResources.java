@@ -10,7 +10,7 @@
  **********************************************************************/
 package org.eclipse.jst.server.core;
 
-import org.eclipse.jst.server.internal.core.JavaServerPlugin;
+import org.eclipse.jst.server.core.internal.JavaServerPlugin;
 /**
  * 
  */

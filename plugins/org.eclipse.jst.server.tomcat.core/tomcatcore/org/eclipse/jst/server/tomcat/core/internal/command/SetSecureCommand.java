@@ -10,7 +10,7 @@ package org.eclipse.jst.server.tomcat.core.internal.command;
  *    IBM - Initial API and implementation
  **********************************************************************/
 import org.eclipse.jst.server.tomcat.core.ITomcatServerWorkingCopy;
-import org.eclipse.jst.server.tomcat.internal.core.TomcatPlugin;
+import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
 /**
  * Command to change the server security option.
  */

@@ -14,7 +14,7 @@ import java.io.*;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 
-import org.eclipse.jst.server.tomcat.internal.core.Trace;
+import org.eclipse.jst.server.tomcat.core.internal.Trace;
 /**
  * Factory for reading and writing from XML files.
  */

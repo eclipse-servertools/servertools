@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jst.server.tomcat.core.ITomcatConfiguration;
 import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.WebModule;
-import org.eclipse.jst.server.tomcat.internal.core.TomcatPlugin;
+import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
 
 import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;

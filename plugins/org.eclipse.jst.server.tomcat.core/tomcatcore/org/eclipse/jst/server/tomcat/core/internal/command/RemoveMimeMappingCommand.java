@@ -10,8 +10,8 @@ package org.eclipse.jst.server.tomcat.core.internal.command;
  *    IBM - Initial API and implementation
  **********************************************************************/
 import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
-import org.eclipse.jst.server.tomcat.internal.core.MimeMapping;
-import org.eclipse.jst.server.tomcat.internal.core.TomcatPlugin;
+import org.eclipse.jst.server.tomcat.core.internal.MimeMapping;
+import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
 /**
  * Command to remove a mime mapping.
  */

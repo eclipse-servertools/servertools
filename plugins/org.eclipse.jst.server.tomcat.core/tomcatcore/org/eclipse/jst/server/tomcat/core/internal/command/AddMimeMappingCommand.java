@@ -10,7 +10,7 @@ package org.eclipse.jst.server.tomcat.core.internal.command;
  *    IBM - Initial API and implementation
  **********************************************************************/
 import org.eclipse.jst.server.tomcat.core.*;
-import org.eclipse.jst.server.tomcat.internal.core.*;
+import org.eclipse.jst.server.tomcat.core.internal.*;
 /**
  * Command to add a mime mapping.
  */

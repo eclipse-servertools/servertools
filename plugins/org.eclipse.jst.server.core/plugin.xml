@@ -5,7 +5,7 @@
   name="%pluginName"
   version="3.0.0"
   provider-name="%providerName"
-  class="org.eclipse.jst.server.internal.core.JavaServerPlugin">
+  class="org.eclipse.jst.server.core.internal.JavaServerPlugin">
 
   <requires>
     <import plugin="org.eclipse.core.resources" />
@@ -19,13 +19,14 @@
   <runtime>
     <library name="sjavacore.jar">
       <export name="*"/>
+      <packages prefixes="org.eclipse.jst.server.core,org.eclipse.jst.server.j2ee"/>
     </library>
   </runtime>
 
   <extension point="org.eclipse.jdt.core.classpathContainerInitializer">
     <classpathContainerInitializer
       id="org.eclipse.jst.server.core.container"
-      class="org.eclipse.jst.server.internal.core.RuntimeClasspathContainerInitializer"/>
+      class="org.eclipse.jst.server.core.internal.RuntimeClasspathContainerInitializer"/>
   </extension>
   
   <extension point="org.eclipse.wst.server.core.moduleKinds">
@@ -45,8 +46,8 @@
        id="org.eclipse.jst.server.core.runtimeType"
        name="%runtimeTypeName"
        description="%runtimeTypeDescription"
-       class="org.eclipse.jst.server.internal.core.GenericRuntime"
-       workingCopyClass="org.eclipse.jst.server.internal.core.GenericRuntimeWorkingCopy">
+       class="org.eclipse.jst.server.core.internal.GenericRuntime"
+       workingCopyClass="org.eclipse.jst.server.core.internal.GenericRuntimeWorkingCopy">
        <moduleType
          types="j2ee"
          versions="*"/>
@@ -60,7 +61,7 @@
     <runtimeTargetHandler
       id="org.eclipse.jst.server.core.runtimeTarget"
       runtimeTypeIds="org.eclipse.jst.server.core.runtimeType"
-      class="org.eclipse.jst.server.internal.core.GenericRuntimeTargetHandler"/>
+      class="org.eclipse.jst.server.core.internal.GenericRuntimeTargetHandler"/>
   </extension>
 
 </plugin>

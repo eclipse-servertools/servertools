@@ -12,7 +12,7 @@ package org.eclipse.jst.server.tomcat.ui.internal;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jst.server.tomcat.core.ITomcatRuntimeWorkingCopy;
-import org.eclipse.jst.server.tomcat.internal.core.TomcatPlugin;
+import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
 import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;

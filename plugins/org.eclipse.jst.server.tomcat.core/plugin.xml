@@ -5,7 +5,7 @@
   name="%pluginName"
   version="3.0.0"
   provider-name="%providerName"
-  class="org.eclipse.jst.server.tomcat.internal.core.TomcatPlugin">
+  class="org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin">
 
   <runtime>
      <library name="tomcatcore.jar">
@@ -33,8 +33,8 @@
        vendor="%apache"
        version="3.2"
        order="50"
-       class="org.eclipse.jst.server.tomcat.internal.core.TomcatRuntime"
-       workingCopyClass="org.eclipse.jst.server.tomcat.internal.core.TomcatRuntimeWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime"
+       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntimeWorkingCopy">
        <moduleType
          types="j2ee.web"
          versions="1.2"/>
@@ -47,8 +47,8 @@
        vendor="%apache"
        version="4.0"
        order="52"
-       class="org.eclipse.jst.server.tomcat.internal.core.TomcatRuntime"
-       workingCopyClass="org.eclipse.jst.server.tomcat.internal.core.TomcatRuntimeWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime"
+       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntimeWorkingCopy">
        <moduleType
          types="j2ee.web"
          versions="1.2, 1.3"/>
@@ -61,8 +61,8 @@
        vendor="%apache"
        version="4.1"
        order="54"
-       class="org.eclipse.jst.server.tomcat.internal.core.TomcatRuntime"
-       workingCopyClass="org.eclipse.jst.server.tomcat.internal.core.TomcatRuntimeWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime"
+       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntimeWorkingCopy">
        <moduleType
          types="j2ee.web"
          versions="1.2, 1.3"/>
@@ -75,8 +75,8 @@
        vendor="%apache"
        version="5.0"
        order="56"
-       class="org.eclipse.jst.server.tomcat.internal.core.TomcatRuntime"
-       workingCopyClass="org.eclipse.jst.server.tomcat.internal.core.TomcatRuntimeWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime"
+       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntimeWorkingCopy">
        <moduleType
          types="j2ee.web"
          versions="1.2, 1.3, 1.4"/>
@@ -89,8 +89,8 @@
        vendor="%apache"
        version="5.5"
        order="58"
-       class="org.eclipse.jst.server.tomcat.internal.core.TomcatRuntime"
-       workingCopyClass="org.eclipse.jst.server.tomcat.internal.core.TomcatRuntimeWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime"
+       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntimeWorkingCopy">
        <moduleType
          types="j2ee.web"
          versions="1.2, 1.3, 1.4"/>
@@ -103,30 +103,30 @@
        id="org.eclipse.jst.server.tomcat.runtime.locator"
        name="%runtimeLocatorLabel"
        description="%runtimeLocatorDescription"
-       class="org.eclipse.jst.server.tomcat.internal.core.TomcatRuntimeLocator"/>
+       class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntimeLocator"/>
   </extension>
   
   <extension point="org.eclipse.wst.server.core.runtimeTargetHandlers">
      <runtimeTargetHandler
         id="org.eclipse.jst.server.tomcat.runtimeTarget.v32"
         runtimeTypeIds="org.eclipse.jst.server.tomcat.32.runtime"
-        class="org.eclipse.jst.server.tomcat.internal.core.Tomcat32RuntimeTargetHandler"/>
+        class="org.eclipse.jst.server.tomcat.core.internal.Tomcat32RuntimeTargetHandler"/>
      <runtimeTargetHandler
         id="org.eclipse.jst.server.tomcat.runtimeTarget.v40"
         runtimeTypeIds="org.eclipse.jst.server.tomcat.40.runtime"
-        class="org.eclipse.jst.server.tomcat.internal.core.Tomcat40RuntimeTargetHandler"/>
+        class="org.eclipse.jst.server.tomcat.core.internal.Tomcat40RuntimeTargetHandler"/>
      <runtimeTargetHandler
         id="org.eclipse.jst.server.tomcat.runtimeTarget.v41"
         runtimeTypeIds="org.eclipse.jst.server.tomcat.41.runtime"
-        class="org.eclipse.jst.server.tomcat.internal.core.Tomcat41RuntimeTargetHandler"/>
+        class="org.eclipse.jst.server.tomcat.core.internal.Tomcat41RuntimeTargetHandler"/>
      <runtimeTargetHandler
         id="org.eclipse.jst.server.tomcat.runtimeTarget.v50"
         runtimeTypeIds="org.eclipse.jst.server.tomcat.50.runtime"
-        class="org.eclipse.jst.server.tomcat.internal.core.Tomcat50RuntimeTargetHandler"/>
+        class="org.eclipse.jst.server.tomcat.core.internal.Tomcat50RuntimeTargetHandler"/>
      <runtimeTargetHandler
         id="org.eclipse.jst.server.tomcat.runtimeTarget.v55"
         runtimeTypeIds="org.eclipse.jst.server.tomcat.55.runtime"
-        class="org.eclipse.jst.server.tomcat.internal.core.Tomcat55RuntimeTargetHandler"/>
+        class="org.eclipse.jst.server.tomcat.core.internal.Tomcat55RuntimeTargetHandler"/>
    </extension>
 
   <extension point="org.eclipse.wst.server.core.serverTypes">
@@ -142,8 +142,8 @@
        configurationTypeId="org.eclipse.jst.server.tomcat.32"
        launchConfigId="org.eclipse.jst.server.tomcat.core.launchConfigurationType"
        runtimeTypeId="org.eclipse.jst.server.tomcat.32.runtime"
-       class="org.eclipse.jst.server.tomcat.internal.core.TomcatServer"
-       workingCopyClass="org.eclipse.jst.server.tomcat.internal.core.TomcatServerWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.TomcatServer"
+       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatServerWorkingCopy">
      </serverType>
      <serverType
        id="org.eclipse.jst.server.tomcat.40"
@@ -157,8 +157,8 @@
        configurationTypeId="org.eclipse.jst.server.tomcat.40"
        launchConfigId="org.eclipse.jst.server.tomcat.core.launchConfigurationType"
        runtimeTypeId="org.eclipse.jst.server.tomcat.40.runtime"
-       class="org.eclipse.jst.server.tomcat.internal.core.TomcatServer"
-       workingCopyClass="org.eclipse.jst.server.tomcat.internal.core.TomcatServerWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.TomcatServer"
+       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatServerWorkingCopy">
      </serverType>
      <serverType
        id="org.eclipse.jst.server.tomcat.41"
@@ -172,8 +172,8 @@
        configurationTypeId="org.eclipse.jst.server.tomcat.41"
        launchConfigId="org.eclipse.jst.server.tomcat.core.launchConfigurationType"
        runtimeTypeId="org.eclipse.jst.server.tomcat.41.runtime"
-       class="org.eclipse.jst.server.tomcat.internal.core.TomcatServer"
-       workingCopyClass="org.eclipse.jst.server.tomcat.internal.core.TomcatServerWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.TomcatServer"
+       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatServerWorkingCopy">
      </serverType>
      <serverType
        id="org.eclipse.jst.server.tomcat.50"
@@ -187,8 +187,8 @@
        configurationTypeId="org.eclipse.jst.server.tomcat.50"
        launchConfigId="org.eclipse.jst.server.tomcat.core.launchConfigurationType"
        runtimeTypeId="org.eclipse.jst.server.tomcat.50.runtime"
-       class="org.eclipse.jst.server.tomcat.internal.core.TomcatServer"
-       workingCopyClass="org.eclipse.jst.server.tomcat.internal.core.TomcatServerWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.TomcatServer"
+       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatServerWorkingCopy">
      </serverType>
      <serverType
        id="org.eclipse.jst.server.tomcat.55"
@@ -202,8 +202,8 @@
        configurationTypeId="org.eclipse.jst.server.tomcat.55"
        launchConfigId="org.eclipse.jst.server.tomcat.core.launchConfigurationType"
        runtimeTypeId="org.eclipse.jst.server.tomcat.55.runtime"
-       class="org.eclipse.jst.server.tomcat.internal.core.TomcatServer"
-       workingCopyClass="org.eclipse.jst.server.tomcat.internal.core.TomcatServerWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.TomcatServer"
+       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatServerWorkingCopy">
      </serverType>
    </extension>
    
@@ -213,7 +213,7 @@
        name="%serverLocatorLabel"
        description="%serverLocatorDescription"
        hosts="local"
-       class="org.eclipse.jst.server.tomcat.internal.core.TomcatServerLocator"/>
+       class="org.eclipse.jst.server.tomcat.core.internal.TomcatServerLocator"/>
   </extension>
    
    <extension point="org.eclipse.wst.server.core.serverConfigurationTypes">
@@ -222,60 +222,60 @@
        name="%tomcat32ConfigurationType"
        description="%tomcat32ConfigurationDescription"
        isFolder="true"
-       class="org.eclipse.jst.server.tomcat.internal.core.Tomcat32Configuration"
-       workingCopyClass="org.eclipse.jst.server.tomcat.internal.core.Tomcat32ConfigurationWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.Tomcat32Configuration"
+       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.Tomcat32ConfigurationWorkingCopy">
      </serverConfigurationType>
      <serverConfigurationType
        id="org.eclipse.jst.server.tomcat.40"
        name="%tomcat40ConfigurationType"
        description="%tomcat40ConfigurationDescription"
        isFolder="true"
-       class="org.eclipse.jst.server.tomcat.internal.core.Tomcat40Configuration"
-       workingCopyClass="org.eclipse.jst.server.tomcat.internal.core.Tomcat40ConfigurationWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.Tomcat40Configuration"
+       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.Tomcat40ConfigurationWorkingCopy">
      </serverConfigurationType>
      <serverConfigurationType
        id="org.eclipse.jst.server.tomcat.41"
        name="%tomcat41ConfigurationType"
        description="%tomcat41ConfigurationDescription"
        isFolder="true"
-       class="org.eclipse.jst.server.tomcat.internal.core.Tomcat41Configuration"
-       workingCopyClass="org.eclipse.jst.server.tomcat.internal.core.Tomcat41ConfigurationWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.Tomcat41Configuration"
+       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.Tomcat41ConfigurationWorkingCopy">
      </serverConfigurationType>
      <serverConfigurationType
        id="org.eclipse.jst.server.tomcat.50"
        name="%tomcat50ConfigurationType"
        description="%tomcat50ConfigurationDescription"
        isFolder="true"
-       class="org.eclipse.jst.server.tomcat.internal.core.Tomcat50Configuration"
-       workingCopyClass="org.eclipse.jst.server.tomcat.internal.core.Tomcat50ConfigurationWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.Tomcat50Configuration"
+       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.Tomcat50ConfigurationWorkingCopy">
      </serverConfigurationType>
      <serverConfigurationType
        id="org.eclipse.jst.server.tomcat.55"
        name="%tomcat55ConfigurationType"
        description="%tomcat55ConfigurationDescription"
        isFolder="true"
-       class="org.eclipse.jst.server.tomcat.internal.core.Tomcat55Configuration"
-       workingCopyClass="org.eclipse.jst.server.tomcat.internal.core.Tomcat55ConfigurationWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.Tomcat55Configuration"
+       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.Tomcat55ConfigurationWorkingCopy">
      </serverConfigurationType>
    </extension>
 
    <extension point="org.eclipse.wst.server.core.launchableAdapters">
       <launchableAdapter
-         class="org.eclipse.jst.server.tomcat.internal.core.TomcatLaunchableAdapterDelegate"
+         class="org.eclipse.jst.server.tomcat.core.internal.TomcatLaunchableAdapterDelegate"
          id="org.eclipse.jst.server.tomcat.web"/>
    </extension>
    
    <extension point="org.eclipse.debug.core.sourcePathComputers">
      <sourcePathComputer
         id="org.eclipse.jst.server.tomcat.core.sourcePathComputer"
-        class="org.eclipse.jst.server.tomcat.internal.core.TomcatSourcePathComputerDelegate"/>
+        class="org.eclipse.jst.server.tomcat.core.internal.TomcatSourcePathComputerDelegate"/>
    </extension>
    
    <extension point="org.eclipse.debug.core.launchConfigurationTypes">
      <launchConfigurationType
         id="org.eclipse.jst.server.tomcat.core.launchConfigurationType"
         name="%tomcatLaunchConfigurationType"
-        delegate="org.eclipse.jst.server.tomcat.internal.core.TomcatLaunchConfigurationDelegate"
+        delegate="org.eclipse.jst.server.tomcat.core.internal.TomcatLaunchConfigurationDelegate"
         modes="run, debug"
         sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
         sourcePathComputerId="org.eclipse.jst.server.tomcat.core.sourcePathComputer"/>

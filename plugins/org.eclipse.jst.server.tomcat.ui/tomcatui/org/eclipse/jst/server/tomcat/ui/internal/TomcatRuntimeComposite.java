@@ -24,7 +24,7 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jst.server.tomcat.core.ITomcatRuntimeWorkingCopy;
-import org.eclipse.jst.server.tomcat.internal.core.TomcatRuntimeWorkingCopy;
+import org.eclipse.jst.server.tomcat.core.internal.TomcatRuntimeWorkingCopy;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.ModifyEvent;

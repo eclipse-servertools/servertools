@@ -12,7 +12,7 @@ package org.eclipse.jst.server.tomcat.core.internal.command;
 import java.util.Iterator;
 
 import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
-import org.eclipse.jst.server.tomcat.internal.core.TomcatPlugin;
+import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
 import org.eclipse.wst.server.core.model.IServerPort;
 /**
  * Command to change the configuration port.

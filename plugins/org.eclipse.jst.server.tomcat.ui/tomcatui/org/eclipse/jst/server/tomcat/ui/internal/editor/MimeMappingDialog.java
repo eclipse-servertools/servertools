@@ -11,7 +11,7 @@ package org.eclipse.jst.server.tomcat.ui.internal.editor;
  **********************************************************************/
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jst.server.tomcat.internal.core.MimeMapping;
+import org.eclipse.jst.server.tomcat.core.internal.MimeMapping;
 import org.eclipse.jst.server.tomcat.ui.internal.ContextIds;
 import org.eclipse.jst.server.tomcat.ui.internal.TomcatUIPlugin;
 import org.eclipse.swt.SWT;

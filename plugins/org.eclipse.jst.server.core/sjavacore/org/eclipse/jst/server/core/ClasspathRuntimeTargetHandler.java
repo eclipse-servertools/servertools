@@ -22,9 +22,9 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jst.server.internal.core.JavaServerPlugin;
-import org.eclipse.jst.server.internal.core.RuntimeClasspathContainer;
-import org.eclipse.jst.server.internal.core.Trace;
+import org.eclipse.jst.server.core.internal.JavaServerPlugin;
+import org.eclipse.jst.server.core.internal.RuntimeClasspathContainer;
+import org.eclipse.jst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.model.IRuntimeTargetHandlerDelegate;
 

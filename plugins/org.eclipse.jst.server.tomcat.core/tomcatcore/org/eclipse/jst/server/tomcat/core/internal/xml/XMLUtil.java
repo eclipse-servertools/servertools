@@ -15,7 +15,7 @@ import java.util.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.eclipse.jst.server.tomcat.internal.core.Trace;
+import org.eclipse.jst.server.tomcat.core.internal.Trace;
 import org.w3c.dom.*;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
