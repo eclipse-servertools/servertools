@@ -1,6 +1,6 @@
 
 <serverDefinition 
-	 name="JBOSS 3.2.x"
+	 name="JBOSS 3.2.3"
 	 ejbModules="true"
 	 webModules="true"
 	 earModules="true">
@@ -89,16 +89,28 @@
 	<jar type="variable">${classPath}/server/${serverConfig}/lib/bcel.jar</jar>
 </projectClassPath>
 <adminTool>
-	<web><deploy /><undeploy />
+	<web>
+		<deploy>
+		<![CDATA[
+			
+				<project name="deployextension"  default="deploy"  basedir=".">
+				    <target name="deploy">
+						<jar destfile="${deploymentUnitName}.war"> 
+							<zipfileset dir="${moduleDir}">
+	        					<include name="**/*.*"/>
+						        <exclude name="**/*.war"/>
+							</zipfileset>
+						</jar>
+  				  		<move file="${deploymentUnitName}.war" todir="${deployDir}"/>
+  					  </target>
+				</project>
+				
+		]]>
+		
+        </deploy>
+		<undeploy>
+        </undeploy>
 	</web>
-	<ejb><deploy /><undeploy />
-	</ejb>
-	<ear><deploy /><undeploy />
-		<webModule><deploy /><undeploy />
-		</webModule>
-		<ejbModule><deploy /><undeploy />
-		</ejbModule>
-	</ear>
 </adminTool>
 <adminToolPath>
 </adminToolPath>
