@@ -280,7 +280,7 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 	
 	private static void addJarFiles(File dir, List list, int depth) {
 		if (dir == null)
-			return;
+			throw new IllegalArgumentException();
 		
 		File[] files = dir.listFiles();
 		if (files != null) {
@@ -297,19 +297,30 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 	}
 	
 	protected static void addLibraryEntries(List list, File dir, boolean includeSubdirectories) {
+		if (dir == null)
+			throw new IllegalArgumentException();
 		addJarFiles(dir, list, includeSubdirectories);
 	}
 	
 	protected static void addLibraryEntry(List list, File dir) {
+		if (dir == null)
+			throw new IllegalArgumentException();
+		
 		IPath path = new Path(dir.getAbsolutePath());
 		list.add(JavaCore.newLibraryEntry(path, null, null));
 	}
 	
 	protected static void addLibraryEntry(List list, IPath path) {
+		if (path == null)
+			throw new IllegalArgumentException();
+		
 		list.add(JavaCore.newLibraryEntry(path, null, null));
 	}
 	
 	protected static void addLibraryEntry(List list, IPath path, IPath source, IPath root) {
+		if (path == null)
+			throw new IllegalArgumentException();
+		
 		list.add(JavaCore.newLibraryEntry(path, source, root));
 	}
 
@@ -445,12 +456,13 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 	}
 
 	private void load() {
+		sourceAttachments = new ArrayList();
+		
 		if (getRuntimeTargetHandler() == null)
 			return;
 		String id = getRuntimeTargetHandler().getId();
 		String filename = JavaServerPlugin.getInstance().getStateLocation().append(id + ".xml").toOSString();
 		
-		sourceAttachments = new ArrayList();
 		try {
 			IMemento memento = XMLMemento.loadMemento(filename);
 			

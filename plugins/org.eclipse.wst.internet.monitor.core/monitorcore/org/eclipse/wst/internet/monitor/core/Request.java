@@ -327,8 +327,12 @@ public class Request implements IAdaptable {
 		return monitor;
 	}
 
+	/**
+	 * Fire a change event to notify monitor listeners that the request has changed.
+	 */
 	protected void fireChangedEvent() {
-		monitor.requestChanged(this);
+		if (monitor != null)
+			monitor.requestChanged(this);
 	}
 
 	/* (non-Javadoc)
