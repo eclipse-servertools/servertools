@@ -321,6 +321,9 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			getWorkingCopyDelegate(monitor).modifyModules(add, remove, monitor);
 			wch.setDirty(true);
 			
+			// trigger load of modules list
+			getModules();
+			
 			if (add != null) {
 				int size = add.length;
 				for (int i = 0; i < size; i++) {
