@@ -10,6 +10,7 @@
  */
 package org.eclipse.wst.server.ui.internal.view.servers;
 
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 
@@ -24,16 +25,6 @@ import org.eclipse.swt.graphics.Image;
  * Server table label provider.
  */
 public class ServerTableLabelProvider implements ITableLabelProvider {
-	private static final Image[] serverStateImage = new Image[] {
-		null,
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_1),
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTED),
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTED_DEBUG),
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTED_PROFILE),
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_1),
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPED),
-		null};
-	
 	private static final Image[] startingImages = new Image[] {
 		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_1),
 		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_2),
@@ -45,26 +36,13 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_2),
 		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_2)
 	};
-	
-	private static final String[] serverState = new String[] {
-		"",
-		ServerUIPlugin.getResource("%viewStatusStarting"),
-		ServerUIPlugin.getResource("%viewStatusStarted"),
-		ServerUIPlugin.getResource("%viewStatusStartedDebug"),
-		ServerUIPlugin.getResource("%viewStatusStartedProfile"),
-		ServerUIPlugin.getResource("%viewStatusStopping"),
-		ServerUIPlugin.getResource("%viewStatusStopped"),
-		ServerUIPlugin.getResource("%viewStatusUnsupported")};
 		
 	private static final String[] serverStateUnmanaged = new String[] {
 		"",
 		ServerUIPlugin.getResource("%viewStatusStarting4"),
 		ServerUIPlugin.getResource("%viewStatusStarted2"),
-		ServerUIPlugin.getResource("%viewStatusStartedDebug2"),
-		ServerUIPlugin.getResource("%viewStatusStartedProfile2"),
 		ServerUIPlugin.getResource("%viewStatusStopping4"),
-		ServerUIPlugin.getResource("%viewStatusStopped2"),
-		ServerUIPlugin.getResource("%viewStatusUnsupported2")};
+		ServerUIPlugin.getResource("%viewStatusStopped2")};
 
 	public static final String[] syncState = new String[] {
 		ServerUIPlugin.getResource("%viewSyncOkay"),
@@ -159,8 +137,8 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 			if (server.getServerType() == null)
 				return "";
 			
-			if (server.getServerType().hasServerConfiguration() && server.getServerConfiguration() == null)
-				return ServerUIPlugin.getResource("%viewNoConfiguration");
+			//if (server.getServerType().hasServerConfiguration() && server.getServerConfiguration() == null)
+			//	return ServerUIPlugin.getResource("%viewNoConfiguration");
 			
 			if (server.getServerState() == IServer.STATE_UNKNOWN)
 				return "";
@@ -210,12 +188,23 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 	 */
 	protected Image getServerStateImage(IServer server) {
 		int state = server.getServerState();
-		if (state == IServer.STATE_STARTING)
+		if (state == IServer.STATE_UNKNOWN)
+			return null;
+		else if (state == IServer.STATE_STARTING)
 			return startingImages[count];
 		else if (state == IServer.STATE_STOPPING)
 			return stoppingImages[count];
-		else
-			return serverStateImage[server.getServerState()];
+		else if (state == IServer.STATE_STOPPED)
+			return ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPED);
+		else { //if (state == IServer.STATE_STARTED) {
+			String mode = server.getMode();
+			if (ILaunchManager.DEBUG_MODE.equals(mode))
+				return ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTED_DEBUG);
+			else if (ILaunchManager.PROFILE_MODE.equals(mode))
+				return ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTED_PROFILE);
+			else
+				return ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTED);
+		}
 	}
 	
 	/**
@@ -225,19 +214,30 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 	 * @param server org.eclipse.wst.server.core.model.IServer
 	 */
 	protected String getServerStateLabel(IServer server, int stateSet) {
-		if (stateSet == IServerType.SERVER_STATE_SET_PUBLISHED) {
+		if (stateSet == IServerType.SERVER_STATE_SET_PUBLISHED)
 			return "";
-		}
+		
+		int state = server.getServerState();
 		if (stateSet == IServerType.SERVER_STATE_SET_MANAGED) {
-			int state = server.getServerState();
-			if (state == IServer.STATE_STARTING)
+			if (state == IServer.STATE_UNKNOWN)
+				return "";
+			else if (state == IServer.STATE_STARTING)
 				return startingText[count];
 			else if (state == IServer.STATE_STOPPING)
 				return stoppingText[count];
-			else
-				return serverState[server.getServerState()];
+			else if (state == IServer.STATE_STARTED) {
+				String mode = server.getMode();
+				if (ILaunchManager.DEBUG_MODE.equals(mode))
+					return ServerUIPlugin.getResource("%viewStatusStartedDebug");
+				else if (ILaunchManager.PROFILE_MODE.equals(mode))
+					return ServerUIPlugin.getResource("%viewStatusStartedProfile");
+				else
+					return ServerUIPlugin.getResource("%viewStatusStarted");
+			} else if (state == IServer.STATE_STOPPED)
+				return ServerUIPlugin.getResource("%viewStatusStopped");
 		}
-		return serverStateUnmanaged[server.getServerState()];
+		
+		return serverStateUnmanaged[state];
 	}
 	
 	protected void animate() {

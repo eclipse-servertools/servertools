@@ -23,7 +23,7 @@ import org.eclipse.wst.server.core.model.IModuleFactoryListener;
 /**
  * 
  */
-public class ModuleFactory {
+public class ModuleFactory implements IOrdered {
 	private IConfigurationElement element;
 	private ModuleFactoryDelegate delegate;
 	private List moduleTypes;

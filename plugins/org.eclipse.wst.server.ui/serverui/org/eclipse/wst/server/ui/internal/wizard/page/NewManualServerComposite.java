@@ -233,7 +233,7 @@ public class NewManualServerComposite extends Composite {
 			int size = runtimes.length;
 			for (int i = 0; i < size; i++) {
 				if (!runtimes[i].isStub())
-					return runtime;
+					return runtimes[i];
 			}
 		}
 		return runtimes[0];

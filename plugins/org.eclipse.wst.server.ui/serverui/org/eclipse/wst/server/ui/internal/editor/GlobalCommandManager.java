@@ -27,8 +27,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.wst.server.core.IElement;
 import org.eclipse.wst.server.core.IElementWorkingCopy;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
-import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ITask;
 import org.eclipse.wst.server.core.ServerCore;
@@ -39,8 +37,9 @@ import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-
-
+/**
+ * 
+ */
 public class GlobalCommandManager {
 	// maximum number of commands in the history
 	private static final int MAX_HISTORY = 200;
@@ -168,11 +167,6 @@ public class GlobalCommandManager {
 			IServer server = ServerCore.findServer(id);
 			if (server != null)
 				info.wc = server.createWorkingCopy();
-			else {
-				IServerConfiguration config = ServerCore.findServerConfiguration(id);
-				if (config != null)
-					info.wc = config.createWorkingCopy();
-			}
 			info.isDirty = false;
 			info.isReadOnly = false;
 			commandManagers.put(id, info);
@@ -213,11 +207,6 @@ public class GlobalCommandManager {
 				IServer server = ServerCore.findServer(id);
 				if (server != null)
 					info.wc = server.createWorkingCopy();
-				else {
-					IServerConfiguration config = ServerCore.findServerConfiguration(id);
-					if (config != null)
-						info.wc = config.createWorkingCopy();
-				}
 				//info.serverElement = ServerCore.getResourceManager().getServer()
 				//info.serverElement = ServerCore.getEditManager().reloadEditModel(info.file, monitor);
 				firePropertyChangeEvent(PROP_RELOAD, id, null);
@@ -247,7 +236,7 @@ public class GlobalCommandManager {
 		return (info != null && info.count == 1);
 	}
 	
-	protected IServerEditorPartInput getPartInput(String serverId, ICommandManager serverCommandManager, String configurationId, ICommandManager configurationCommandManager) {
+	protected IServerEditorPartInput getPartInput(String serverId, ICommandManager serverCommandManager) {
 		CommandManagerInfo serverInfo = null;
 		IServerWorkingCopy server = null;
 		boolean serverReadOnly = false;
@@ -259,21 +248,8 @@ public class GlobalCommandManager {
 			server = (IServerWorkingCopy) serverInfo.wc;
 			serverReadOnly = serverInfo.isReadOnly;
 		}
-		
-		CommandManagerInfo configurationInfo = null;
-		IServerConfigurationWorkingCopy configuration = null;
-		boolean configurationReadOnly = false;
-		if (configurationId != null) {
-			configurationInfo = getExistingCommandManagerInfo(configurationId);
-			if (configurationInfo == null)
-				return null;
-			
-			configuration = (IServerConfigurationWorkingCopy) configurationInfo.wc;
-			configurationReadOnly = configurationInfo.isReadOnly;
-		}
 
-		return new ServerEditorPartInput(serverCommandManager, server, serverReadOnly,
-			configurationCommandManager, configuration, configurationReadOnly);
+		return new ServerEditorPartInput(serverCommandManager, server, serverReadOnly);
 	}
 	
 	/**
@@ -418,11 +394,11 @@ public class GlobalCommandManager {
 	 * 
 	 * @return org.eclipse.wst.server.ui.editor.ICommand
 	 */
-	public ITask getUndoCommand(String a, String b) {
+	public ITask getUndoCommand(String a) {
 		int size = undoList.size();
 		for (int i = size - 1; i >= 0; i--) {
 			ServerResourceCommand src = (ServerResourceCommand) undoList.get(i);
-			if (src.id == a || src.id == b)
+			if (src.id == a)
 				return src.command;
 		}
 		return null;
@@ -433,11 +409,11 @@ public class GlobalCommandManager {
 	 * 
 	 * @return org.eclipse.wst.server.ui.editor.ICommand
 	 */
-	public ITask getRedoCommand(String a, String b) {
+	public ITask getRedoCommand(String a) {
 		int size = redoList.size();
 		for (int i = size - 1; i >= 0; i--) {
 			ServerResourceCommand src = (ServerResourceCommand) redoList.get(i);
-			if (src.id == a || src.id == b)
+			if (src.id == a)
 				return src.command;
 		}
 		return null;
@@ -510,12 +486,12 @@ public class GlobalCommandManager {
 	/**
 	 * Undo the last command.
 	 */
-	protected void undo(String a, String b) {
+	protected void undo(String a) {
 		ServerResourceCommand src = null;
 		Iterator iterator = undoList.iterator();
 		while (iterator.hasNext()) {
 			ServerResourceCommand src2 = (ServerResourceCommand) iterator.next();
-			if (src2.id == a || src2.id == b)
+			if (src2.id == a)
 				src = src2;
 		}
 		if (src == null)
@@ -528,19 +504,19 @@ public class GlobalCommandManager {
 		firePropertyChangeEvent(PROP_REDO, src.id, null);
 
 		CommandManagerInfo info = getExistingCommandManagerInfo(src.id);
-		if (info.canCompletelyUndo && getUndoCommand(src.id, null) == null)
+		if (info.canCompletelyUndo && getUndoCommand(src.id) == null)
 			setDirtyState(src.id, false);
 	}
 
 	/**
 	 * Redo the last command.
 	 */
-	protected void redo(String a, String b) {
+	protected void redo(String a) {
 		ServerResourceCommand src = null;
 		Iterator iterator = redoList.iterator();
 		while (iterator.hasNext()) {
 			ServerResourceCommand src2 = (ServerResourceCommand) iterator.next();
-			if (src2.id == a || src2.id == b)
+			if (src2.id == a)
 				src = src2;
 		}
 		if (src == null)
@@ -579,15 +555,13 @@ public class GlobalCommandManager {
 			IFile file = null;
 			if (element instanceof IServer)
 				file = ((IServer) element).getFile();
-			else if (element instanceof IServerConfiguration)
-				file = ((IServerConfiguration) element).getFile();
 			
 			if (file != null)
 				list.add(file);
 			
 			//if ()
 			//IServerConfiguration config = (IServerConfiguration) element;
-			// TODO
+			// TODO: get read-only files
 			IFile[] files = new IFile[list.size()];
 			list.toArray(files);
 			return files;
@@ -656,8 +630,6 @@ public class GlobalCommandManager {
 		IElement element2 = null;
 		if (element instanceof IServer)
 			element2 = ((IServerWorkingCopy) element).getOriginal();
-		else if (element instanceof IServerConfiguration)
-			element2 = ((IServerConfigurationWorkingCopy) element).getOriginal();
 
 		if (element2 != null)
 			return element2.getTimestamp();

@@ -31,7 +31,6 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.IServerPort;
 import org.eclipse.wst.server.core.util.ServerPort;
 /**
@@ -57,8 +56,8 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	/**
 	 * Tomcat32Configuration constructor comment.
 	 */
-	public Tomcat32Configuration() {
-		super();
+	public Tomcat32Configuration(IPath path) {
+		super(path);
 	}
 	
 	/**
@@ -495,7 +494,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 			monitor = ProgressUtil.getMonitorFor(monitor);
 			monitor.beginTask(TomcatPlugin.getResource("%updatingConfigurationTask"), 100);
 	
-			Tomcat32Configuration config = new Tomcat32Configuration();
+			Tomcat32Configuration config = new Tomcat32Configuration(path);
 			config.load(path, ProgressUtil.getSubMonitorFor(monitor, 30));
 	
 			if (monitor.isCanceled())
@@ -505,9 +504,9 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 				config.server.getContextManager().setHome(runtime.getLocation().toOSString());
 				config.isServerDirty = true;
 			} else {
-				IServerConfigurationWorkingCopy scwc = config.getServerConfiguration().createWorkingCopy();
-				Tomcat32Configuration cfg = (Tomcat32Configuration) scwc.getAdapter(Tomcat32Configuration.class);
-				cfg.localizeWebModules();
+				//IServerConfigurationWorkingCopy scwc = config.getServerConfiguration().createWorkingCopy();
+				//Tomcat32Configuration cfg = (Tomcat32Configuration) scwc.getAdapter(Tomcat32Configuration.class);
+				config.localizeWebModules();
 			}
 	
 			monitor.worked(40);

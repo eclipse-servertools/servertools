@@ -38,9 +38,8 @@ public interface IServerTask {
 	 * create a new cache.
 	 * 
 	 * @param server org.eclipse.wst.server.core.IServer
-	 * @param configuration org.eclipse.wst.server.core.IServerConfiguration
 	 * @param parents java.util.List[]
 	 * @param modules org.eclipse.wst.server.core.IModule[]
 	 */
-	public IOptionalTask[] getTasks(IServer server, IServerConfiguration configuration, List[] parents, IModule[] modules);
+	public IOptionalTask[] getTasks(IServer server, List[] parents, IModule[] modules);
 }

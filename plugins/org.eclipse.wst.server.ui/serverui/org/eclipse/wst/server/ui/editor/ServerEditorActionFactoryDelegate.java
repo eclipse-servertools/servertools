@@ -25,7 +25,9 @@ public abstract class ServerEditorActionFactoryDelegate {
 	 * 
 	 * @param server
 	 */
-	public abstract boolean shouldDisplay(IServerWorkingCopy server);
+	public boolean shouldDisplay(IServerWorkingCopy server) {
+		return true;
+	}
 
 	/**
 	 * Create the action.

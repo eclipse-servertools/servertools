@@ -14,12 +14,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IProcess;
-
-import org.eclipse.wst.server.core.model.IURLProvider;
 /**
  * 
  */
-public interface ITomcatServerBehaviour extends IURLProvider {
+public interface ITomcatServerBehaviour {
 	/**
 	 * Returns the main class that is used to launch the Tomcat server.
 	 * 

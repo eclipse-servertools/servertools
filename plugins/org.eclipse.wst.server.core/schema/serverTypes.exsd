@@ -80,10 +80,10 @@ Server instances of this type will delegate to instances of this class.
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="configurationTypeId" type="string">
+         <attribute name="hasConfiguration" type="boolean">
             <annotation>
                <documentation>
-                  the id of the server configuration type that this server requires
+                  true if this server has server configuration files
                </documentation>
             </annotation>
          </attribute>

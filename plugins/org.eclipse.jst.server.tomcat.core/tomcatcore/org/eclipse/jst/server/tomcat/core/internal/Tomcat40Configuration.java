@@ -34,7 +34,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
-import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.IServerPort;
 import org.eclipse.wst.server.core.util.ServerPort;
 /**
@@ -61,8 +60,8 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	/**
 	 * Tomcat40Configuration constructor comment.
 	 */
-	public Tomcat40Configuration() {
-		super();
+	public Tomcat40Configuration(IPath path) {
+		super(path);
 	}
 		
 	/**
@@ -490,16 +489,16 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 			monitor = ProgressUtil.getMonitorFor(monitor);
 			monitor.beginTask(TomcatPlugin.getResource("%updatingConfigurationTask"), 100);
 			
-			Tomcat40Configuration config = new Tomcat40Configuration();
+			Tomcat40Configuration config = new Tomcat40Configuration(path);
 			config.load(path, ProgressUtil.getSubMonitorFor(monitor, 40));
 	
 			if (monitor.isCanceled())
 				return;
 	
 			if (!server2.isTestEnvironment()) {
-				IServerConfigurationWorkingCopy scwc = config.getServerConfiguration().createWorkingCopy();
-				Tomcat40Configuration cfg = (Tomcat40Configuration) scwc.getAdapter(Tomcat40Configuration.class);
-				cfg.localizeWebModules();
+				//IServerConfigurationWorkingCopy scwc = config.getServerConfiguration().createWorkingCopy();
+				//Tomcat40Configuration cfg = (Tomcat40Configuration) scwc.getAdapter(Tomcat40Configuration.class);
+				config.localizeWebModules();
 			}
 	
 			monitor.worked(20);

@@ -37,7 +37,7 @@ public class Server extends Base implements IServer {
 	protected ServerBehaviourDelegate behaviourDelegate;
 
 	protected IRuntime runtime;
-	protected IServerConfiguration configuration;
+	protected IPath configuration;
 	protected String mode;
 
 	protected int serverState = STATE_UNKNOWN;
@@ -114,7 +114,7 @@ public class Server extends Base implements IServer {
 	/* (non-Javadoc)
 	 * @see com.ibm.wtp.server.core.IServer2#getServerConfiguration()
 	 */
-	public IServerConfiguration getServerConfiguration() {
+	public IPath getServerConfiguration() {
 		return configuration;
 	}
 
@@ -186,13 +186,19 @@ public class Server extends Base implements IServer {
 	 * Returns true if this is a configuration that is
 	 * applicable to (can be used with) this server.
 	 *
-	 * @param configuration org.eclipse.wst.server.core.model.IServerConfiguration
+	 * @param configuration
 	 * @return boolean
 	 */
-	public boolean isSupportedConfiguration(IServerConfiguration configuration2) {
-		if (!getServerType().hasServerConfiguration() || configuration2 == null)
+	public boolean isSupportedConfiguration(IPath configuration2) {
+		/*if (!getServerType().hasServerConfiguration() || configuration2 == null)
 			return false;
-		return getServerType().getServerConfigurationType().equals(configuration2.getServerConfigurationType());
+		return getServerType().getServerConfigurationType().equals(configuration2.getServerConfigurationType());*/
+		try {
+			return getDelegate().isSupportedConfiguration(configuration2);
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error calling delegate getModules() " + toString(), e);
+			return false;
+		}
 	}
 
 	public String getHost() {
@@ -391,7 +397,7 @@ public class Server extends Base implements IServer {
 		//Trace.trace(Trace.FINEST, "> handleDeployableProjectChange() " + server + " " + delta + " " + moduleProjects);
 		final int size = moduleProjects.length;
 		//final IModuleResourceDelta[] deployableDelta = new IModuleResourceDelta[size];
-		// TODO
+		// TODO: module changes
 		IModuleVisitor visitor = new IModuleVisitor() {
 			public boolean visit(IModule[] parents, IModule module) {
 				if (module.getProject() == null)
@@ -874,17 +880,14 @@ public class Server extends Base implements IServer {
 		List tasks = new ArrayList();
 		
 		String serverTypeId = getServerType().getId();
-		String serverConfigurationTypeId = null;
-		if (configuration != null)
-			serverConfigurationTypeId = configuration.getServerConfigurationType().getId();
 		
 		IServerTask[] serverTasks = ServerCore.getServerTasks();
 		if (serverTasks != null) {
 			int size = serverTasks.length;
 			for (int i = 0; i < size; i++) {
 				IServerTask task = serverTasks[i];
-				if ((task.supportsType(serverTypeId)) || (serverConfigurationTypeId != null && task.supportsType(serverConfigurationTypeId))) {
-					IOptionalTask[] tasks2 = task.getTasks(this, configuration, parents, modules);
+				if (task.supportsType(serverTypeId)) {
+					IOptionalTask[] tasks2 = task.getTasks(this, parents, modules);
 					if (tasks2 != null) {
 						int size2 = tasks2.length;
 						for (int j = 0; j < size2; j++) {
@@ -1025,7 +1028,15 @@ public class Server extends Base implements IServer {
 			Trace.trace(Trace.SEVERE, "Error calling delegate setLaunchDefaults() " + toString(), e);
 		}
 	}
-	
+
+	public void importConfiguration(IRuntime runtime2, IProgressMonitor monitor) {
+		try {
+			getDelegate().importConfiguration(runtime2, monitor);
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error calling delegate setLaunchDefaults() " + toString(), e);
+		}
+	}
+
 	public ILaunchConfiguration getLaunchConfiguration(boolean create, IProgressMonitor monitor) throws CoreException {
 		ILaunchConfigurationType launchConfigType = ((ServerType) getServerType()).getLaunchConfigurationType();
 		
@@ -1331,7 +1342,7 @@ public class Server extends Base implements IServer {
 	 * @see IServer#synchronousRestart(String, IProgressMonitor)
 	 */
 	public void synchronousRestart(String mode2, IProgressMonitor monitor) throws CoreException {
-		// TODO
+		// TODO: synchronousRestart
 	}
 
 	/*
@@ -1532,10 +1543,12 @@ public class Server extends Base implements IServer {
 		String runtimeId = getAttribute(RUNTIME_ID, (String)null);
 		runtime = ServerCore.findRuntime(runtimeId);
 		
-		String configurationId = getAttribute(CONFIGURATION_ID, (String)null);
-		configuration = ServerCore.findServerConfiguration(configurationId);
+		String configPath = getAttribute(CONFIGURATION_ID, (String)null);
+		configuration = null;
+		if (configPath != null)
+			configuration = new Path(configPath);
 	}
-	
+
 	protected void setInternal(ServerWorkingCopy wc) {
 		map = wc.map;
 		configuration = wc.configuration;
@@ -1554,7 +1567,7 @@ public class Server extends Base implements IServer {
 			memento.putString("server-type", serverType.getId());
 
 		if (configuration != null)
-			memento.putString(CONFIGURATION_ID, configuration.getId());
+			memento.putString(CONFIGURATION_ID, configuration.toPortableString());
 		else
 			memento.putString(CONFIGURATION_ID, null);
 		

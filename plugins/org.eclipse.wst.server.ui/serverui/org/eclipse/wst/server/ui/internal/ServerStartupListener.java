@@ -37,7 +37,7 @@ public class ServerStartupListener {
 
 	protected IClient client;
 	protected ILaunchableAdapter launchableAdapter;
-	protected IModuleObject moduleObject;
+	protected IModuleArtifact moduleObject;
 	protected String launchMode;
 	protected IModule module;
 
@@ -70,7 +70,7 @@ public class ServerStartupListener {
 	/**
 	 * ServerStartupListener constructor comment.
 	 */
-	public ServerStartupListener(Shell shell, IServer server, IClient client, ILaunchableAdapter launchableAdapter, IModuleObject moduleObject, String launchMode, IModule module) {
+	public ServerStartupListener(Shell shell, IServer server, IClient client, ILaunchableAdapter launchableAdapter, IModuleArtifact moduleObject, String launchMode, IModule module) {
 		this(shell, server);
 		this.client = client;
 		this.launchableAdapter = launchableAdapter;
@@ -82,7 +82,7 @@ public class ServerStartupListener {
 	/**
 	 * ServerStartupListener constructor comment.
 	 */
-	public ServerStartupListener(Shell shell, IServer server, IClient client, ILaunchableAdapter launchableAdapter, IModuleObject moduleObject, String launchMode, IModule module, boolean ignoreShutdown) {
+	public ServerStartupListener(Shell shell, IServer server, IClient client, ILaunchableAdapter launchableAdapter, IModuleArtifact moduleObject, String launchMode, IModule module, boolean ignoreShutdown) {
 		this(shell, server, client, launchableAdapter, moduleObject, launchMode, module);
 		this.ignoreShutdown = ignoreShutdown;
 	}
@@ -170,7 +170,7 @@ public class ServerStartupListener {
 			dispose();
 	}
 
-	public static void launchClientUtil(final IServer server, final IModule module, final ILaunchableAdapter la, final IModuleObject mo, final String launchMode, final IClient client) {
+	public static void launchClientUtil(final IServer server, final IModule module, final ILaunchableAdapter la, final IModuleArtifact mo, final String launchMode, final IClient client) {
 		if (client == null || server == null)
 			return;
 	

@@ -145,7 +145,7 @@ public interface IModule extends IAdaptable {
 	/**
 	 * Returns whether this module currently exists.
 	 * <p>
-	 * [issue: The method touches on the important issue
+	 * [issue: The method touches on the important problem
 	 * of when a module ceases to exist. Need to explain
 	 * the full lifecycle of a module.
 	 * Should it be synonymous with the module root 

@@ -55,6 +55,7 @@
   </wizard>
 </extension>
 
+<!--
 <extension point="org.eclipse.ui.importWizards">
   <wizard
       id="org.eclipse.wst.server.ui.import.configuration"
@@ -64,6 +65,7 @@
     <description>%importServerConfigurationDescription</description>
   </wizard>
 </extension>
+-->
 
 <extension point="org.eclipse.ui.views"> 
   <category

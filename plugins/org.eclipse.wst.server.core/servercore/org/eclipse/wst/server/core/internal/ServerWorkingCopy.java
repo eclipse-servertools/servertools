@@ -111,12 +111,12 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		setAttribute(PROP_HOSTNAME, host);
 	}
 	
-	public void setServerConfiguration(IServerConfiguration config) {
+	public void setServerConfiguration(IPath config) {
 		this.configuration = config;
 		if (configuration == null)
 			setAttribute(CONFIGURATION_ID, (String)null);
 		else
-			setAttribute(CONFIGURATION_ID, configuration.getId());
+			setAttribute(CONFIGURATION_ID, configuration.toPortableString());
 	}
 
 	public void setFile(IFile file) {
@@ -185,11 +185,6 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	public IServer saveAll(boolean force, IProgressMonitor monitor) throws CoreException {
 		if (runtime != null && runtime.isWorkingCopy()) {
 			IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy) runtime;
-			wc.save(force, monitor);
-		}
-		
-		if (configuration != null && configuration.isWorkingCopy()) {
-			IServerConfigurationWorkingCopy wc = (IServerConfigurationWorkingCopy) configuration;
 			wc.save(force, monitor);
 		}
 		

@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 /**
  * 
@@ -26,7 +25,6 @@ public abstract class ServerEditorSection implements IServerEditorSection {
 	private String errorMessage = null;
 
 	public IServerWorkingCopy server;
-	public IServerConfigurationWorkingCopy serverConfiguration;
 	public ICommandManager commandManager;
 	protected boolean readOnly;
 	protected Composite parentComp;
@@ -39,7 +37,6 @@ public abstract class ServerEditorSection implements IServerEditorSection {
 		if (input instanceof IServerEditorPartInput) {
 			IServerEditorPartInput sepi = (IServerEditorPartInput) input;
 			server = sepi.getServer();
-			serverConfiguration = sepi.getServerConfiguration();
 			commandManager = sepi.getServerCommandManager();
 			readOnly = sepi.isServerReadOnly();
 		}

@@ -177,7 +177,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					monitor.beginTask(ServerUIPlugin.getResource("%search"), 100 * locators.length + 10);
 					final List list = new ArrayList();
 					
-					final IRuntimeLocator.Listener listener = new IRuntimeLocator.Listener() {
+					final IRuntimeLocator.RuntimeSearchListener listener = new IRuntimeLocator.RuntimeSearchListener() {
 						public void runtimeFound(final IRuntimeWorkingCopy runtime) {
 							dialog.getShell().getDisplay().syncExec(new Runnable() {
 								public void run() {
@@ -195,7 +195,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 								for (int i = 0; i < size; i++) {
 									if (!monitor2.isCanceled())
 										try {
-											locators[i].searchForRuntimes(listener, monitor2);
+											locators[i].searchForRuntimes(null, listener, monitor2);
 										} catch (CoreException ce) {
 											Trace.trace(Trace.WARNING, "Error locating runtimes: " + locators[i].getId(), ce);
 										}

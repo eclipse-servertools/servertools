@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.view.tree;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,13 +8,15 @@ package org.eclipse.wst.server.ui.internal.view.tree;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.view.tree;
+
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.ServerUICore;
@@ -25,26 +26,25 @@ import org.eclipse.wst.server.ui.internal.ProgressUtil;
 import org.eclipse.wst.server.ui.internal.ServerLabelProvider;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.swt.widgets.Shell;
-
 /**
  * Action to add or remove configuration to/from a server.
  */
 public class SwitchConfigurationAction extends Action {
 	protected IServer server;
-	protected IServerConfiguration config;
+	protected IPath config;
 	protected Shell shell;
 	protected IStatus status;
 
 	/**
 	 * SwitchConfigurationAction constructor comment.
 	 */
-	public SwitchConfigurationAction(Shell shell, String label, IServer server, IServerConfiguration config) {
+	public SwitchConfigurationAction(Shell shell, String label, IServer server, IPath config) {
 		super(label);
 		this.shell = shell;
 		this.server = server;
 		this.config = config;
 
-		IServerConfiguration tempConfig = server.getServerConfiguration();
+		IPath tempConfig = server.getServerConfiguration();
 		if ((tempConfig == null && config == null) || (tempConfig != null && tempConfig.equals(config)))
 			setChecked(true);
 
@@ -60,7 +60,7 @@ public class SwitchConfigurationAction extends Action {
 	}
 	
 	public void run() {
-		IServerConfiguration tempConfig = server.getServerConfiguration();
+		IPath tempConfig = server.getServerConfiguration();
 		if ((tempConfig == null && config == null) || (tempConfig != null && tempConfig.equals(config)))
 			return;
 			

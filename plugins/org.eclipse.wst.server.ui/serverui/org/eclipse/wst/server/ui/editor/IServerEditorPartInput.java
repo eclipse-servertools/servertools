@@ -12,7 +12,6 @@ package org.eclipse.wst.server.ui.editor;
 
 import org.eclipse.ui.IEditorInput;
 
-import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 /**
  *
@@ -40,27 +39,4 @@ public interface IServerEditorPartInput extends IEditorInput {
 	 * @param commandManager ICommandManager
 	 */
 	public ICommandManager getServerCommandManager();
-
-	/**
-	 * Returns the server configuration to be edited.
-	 * 
-	 * @return IServerConfigurationWorkingCopy
-	 */
-	public IServerConfigurationWorkingCopy getServerConfiguration();
-
-	/**
-	 * Returns true if the server configuration is read-only.
-	 * 
-	 * @return boolean
-	 */
-	public boolean isServerConfigurationReadOnly();
-	
-	/**
-	 * Gets the command manager. The editor is only responsible for creating an
-	 * ICommand and passing it to the command manager, which actually performs
-	 * the action and updates the server configuration.
-	 *
-	 * @param commandManager ICommandManager
-	 */
-	public ICommandManager getServerConfigurationCommandManager();
 }

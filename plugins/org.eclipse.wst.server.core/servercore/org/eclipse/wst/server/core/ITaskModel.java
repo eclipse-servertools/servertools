@@ -16,7 +16,6 @@ package org.eclipse.wst.server.core;
 public interface ITaskModel {
 	public static final String TASK_RUNTIME = "runtime";
 	public static final String TASK_SERVER = "server";
-	public static final String TASK_SERVER_CONFIGURATION = "server-configuration";
 	
 	public static final String TASK_MODULE_PARENTS = "module-parents";
 	public static final String TASK_MODULES = "modules";

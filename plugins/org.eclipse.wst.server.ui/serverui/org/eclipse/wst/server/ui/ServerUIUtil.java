@@ -53,17 +53,14 @@ public class ServerUIUtil {
 	 *
 	 * @param server
 	 */
-	public static void editServer(IServer server, IServerConfiguration configuration) {
-		if (server == null && configuration == null)
+	public static void editServer(IServer server) {
+		if (server == null)
 			return;
 
 		String serverId = null;
 		if (server != null)
 			serverId = server.getId();
-		String configurationId = null;
-		if (configuration != null)
-			configurationId = configuration.getId();
-		editServer(serverId, configurationId);
+		editServer(serverId);
 	}
 
 	/**
@@ -71,15 +68,15 @@ public class ServerUIUtil {
 	 *
 	 * @param serverId
 	 */
-	public static void editServer(String serverId, String configurationId) {
-		if (serverId == null && configurationId == null)
+	public static void editServer(String serverId) {
+		if (serverId == null)
 			return;
 
 		IWorkbenchWindow workbenchWindow = ServerUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow();
 		IWorkbenchPage page = workbenchWindow.getActivePage();
 
 		try {
-			IServerEditorInput input = new ServerEditorInput(serverId, configurationId);
+			IServerEditorInput input = new ServerEditorInput(serverId);
 			page.openEditor(input, IServerEditorInput.EDITOR_ID);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error opening server editor", e);
@@ -123,34 +120,6 @@ public class ServerUIUtil {
 				return false;
 		}
 	
-		IServerConfiguration config = server.getServerConfiguration();
-		if (config != null)
-			return promptIfDirty(shell, config);
-		return true;
-	}
-
-	/**
-	 * Prompts the user if the server configuration is dirty. Returns true if the server was
-	 * not dirty or if the user decided to continue anyway. Returns false if
-	 * the server is dirty and the user chose to cancel the operation.
-	 *
-	 * @return boolean
-	 */
-	public static boolean promptIfDirty(Shell shell, IServerConfiguration configuration) {
-		if (configuration == null || !(configuration instanceof IServerConfigurationWorkingCopy))
-			return false;
-
-		String title = ServerUIPlugin.getResource("%resourceDirtyDialogTitle");
-
-		IServerConfigurationWorkingCopy wc = (IServerConfigurationWorkingCopy) configuration;
-		if (wc.isDirty()) {
-			String message = ServerUIPlugin.getResource("%resourceDirtyDialogMessage", configuration.getName());
-			String[] labels = new String[] {ServerUIPlugin.getResource("%resourceDirtyDialogContinue"), IDialogConstants.CANCEL_LABEL};
-			MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.INFORMATION, labels, 0);
-
-			if (dialog.open() != 0)
-				return false;
-		}
 		return true;
 	}
 

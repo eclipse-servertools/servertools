@@ -29,7 +29,7 @@ public class PingThread {
 	private static final int PING_INTERVAL = 250;
 
 	// maximum number of pings before giving up
-	private static final int MAX_PINGS = 56; // total: 16 seconds
+	private int maxPings = 56; // total: 16 seconds + connection time
 
 	private boolean stop = false;
 	private String url;
@@ -44,14 +44,15 @@ public class PingThread {
 	 * @param url
 	 * @param mode
 	 */
-	public PingThread(IServer server2, ServerBehaviourDelegate server, String url) {
+	public PingThread(IServer server2, ServerBehaviourDelegate server, String url, int maxPings) {
 		super();
 		this.server = server;
 		this.server2 = server2;
 		this.url = url;
+		this.maxPings = maxPings;
 		Thread t = new Thread() {
 			public void run() {
-				run();
+				ping();
 			}
 		};
 		t.setDaemon(true);
@@ -62,7 +63,7 @@ public class PingThread {
 	 * Ping the server until it is started. Then set the server
 	 * state to STATE_STARTED.
 	 */
-	protected void run() {
+	protected void ping() {
 		int count = 0;
 		try {
 			Thread.sleep(PING_DELAY);
@@ -71,16 +72,17 @@ public class PingThread {
 		}
 		while (!stop) {
 			try {
-				if (count == MAX_PINGS) {
+				if (count == maxPings) {
 					server2.stop(false);
 					stop = true;
 					break;
 				}
+				count++;
+				
 				Trace.trace(Trace.FINEST, "Ping: pinging");
 				URL pingUrl = new URL(url);
 				URLConnection conn = pingUrl.openConnection();
 				((HttpURLConnection)conn).getResponseCode();
-				count++;
 	
 				// ping worked - server is up
 				if (!stop) {

@@ -17,7 +17,6 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.wst.server.core.IElement;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ITask;
 import org.eclipse.wst.server.ui.editor.ICommandManager;
@@ -94,8 +93,6 @@ public class ServerResourceCommandManager implements ICommandManager {
 		if (commandManager.hasChanged(id)) {
 			if (serverfile instanceof IServer)
 				editor.promptReloadServerFile(id, (IServerWorkingCopy) serverfile);
-			else
-				editor.promptReloadServerConfigurationFile(id, (IServerConfiguration) serverfile);
 		}
 		
 		// allow edit

@@ -24,9 +24,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.internal.MimeMapping;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatConfiguration;
+import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.command.*;
 import org.eclipse.jst.server.tomcat.ui.internal.ContextIds;
 import org.eclipse.jst.server.tomcat.ui.internal.TomcatUIPlugin;
@@ -39,7 +39,7 @@ import org.eclipse.ui.help.WorkbenchHelp;
  * Tomcat configuration mime editor section.
  */
 public class ConfigurationMimeEditorSection extends ServerEditorSection {
-	protected ITomcatConfigurationWorkingCopy tomcatConfiguration;
+	protected TomcatConfiguration tomcatConfiguration;
 
 	protected boolean updating;
 
@@ -79,7 +79,7 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 				}
 			}
 		};
-		serverConfiguration.addPropertyChangeListener(listener);
+		tomcatConfiguration.addPropertyChangeListener(listener);
 	}
 
 	public void createSection(Composite parent) {
@@ -184,17 +184,16 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 	}
 	
 	public void dispose() {
-		if (serverConfiguration != null)
-			serverConfiguration.removePropertyChangeListener(listener);
+		if (tomcatConfiguration != null)
+			tomcatConfiguration.removePropertyChangeListener(listener);
 	}
 
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 		
-		if (serverConfiguration != null) {
-			tomcatConfiguration = (ITomcatConfigurationWorkingCopy) serverConfiguration.getAdapter(ITomcatConfigurationWorkingCopy.class);
-			addChangeListener();
-		}
+		TomcatServer ts = (TomcatServer) server.getAdapter(TomcatServer.class);
+		tomcatConfiguration = ts.getTomcatConfiguration();
+		addChangeListener();
 		initialize();
 	}
 

@@ -23,7 +23,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.ui.actions.IServerAction;
 import org.eclipse.wst.server.ui.editor.IOrdered;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -229,14 +228,10 @@ public class ServerAction implements IOrdered {
 		Trace.trace(Trace.CONFIG, "-<- Done loading .serverActions extension point -<-");
 	}
 
-	public static void addServerMenuItems(Shell shell, IMenuManager menu, IServer server) {
-		addServerMenuItems(shell, menu, server, server.getServerConfiguration());
-	}
-	
 	/**
 	 * 
 	 */
-	public static void addServerMenuItems(Shell shell, IMenuManager menu, IServer server, IServerConfiguration configuration) {
+	public static void addServerMenuItems(Shell shell, IMenuManager menu, IServer server) {
 		boolean addedSeparator = false;
 		String category = null;
 		
@@ -250,8 +245,7 @@ public class ServerAction implements IOrdered {
 				menu.add(new Separator());
 			}
 			long time = System.currentTimeMillis();
-			if ((server != null && server.getServerType() != null && serverAction.supportsServerResource(server.getServerType().getId())) ||
-					(configuration != null && serverAction.supportsServerResource(configuration.getServerConfigurationType().getId()))) {
+			if (server != null && server.getServerType() != null && serverAction.supportsServerResource(server.getServerType().getId())) {
 				if (!addedSeparator) {
 					addedSeparator = true;
 					menu.add(new Separator());

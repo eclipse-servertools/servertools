@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.ui.internal.editor;
 
+import org.eclipse.jst.server.tomcat.core.ITomcatServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.editor.*;
 /**
@@ -20,7 +21,8 @@ public class ConfigurationMimeEditorSectionFactory extends ServerEditorPageSecti
 	 * @see ServerEditorPartFactoryDelegate#shouldDisplay(IServer)
 	 */
 	public boolean shouldCreateSection(IServerWorkingCopy server) {
-		return (server.getServerConfiguration() != null);
+		ITomcatServer tomcatServer = (ITomcatServer) server.getAdapter(ITomcatServer.class);
+		return tomcatServer.getServerConfiguration() != null;
 	}
 
 	/*

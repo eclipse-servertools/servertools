@@ -15,10 +15,8 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.ui.ServerImageResource;
-import org.eclipse.wst.server.ui.internal.ServerTreeContentProvider;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -34,12 +32,8 @@ public class TextResourceAdapter implements IAdaptable, IWorkbenchAdapter, IServ
 	public static Object deleted;
 	
 	public final static byte STYLE_SERVERS = 0;
-	public final static byte STYLE_CONFIGURATIONS = 1;
-	//public final static byte STYLE_SERVERS_AND_CONFIGURATIONS = 2;
-	//public final static byte STYLE_NO_CONFIGURATION = 3;
 	public final static byte STYLE_NO_MODULES = 4;
 	public final static byte STYLE_NO_SERVERS = 5;
-	public final static byte STYLE_LOOSE_CONFIGURATIONS = 6;
 
 	public TextResourceAdapter(Object parent, byte thisStyle) {
 		this.parent = parent;
@@ -72,16 +66,6 @@ public class TextResourceAdapter implements IAdaptable, IWorkbenchAdapter, IServ
 	public Object[] getChildren(Object o) {
 		if (thisStyle == STYLE_NO_MODULES || thisStyle == STYLE_NO_SERVERS)
 			return new Object[0];
-		if (thisStyle == STYLE_LOOSE_CONFIGURATIONS) {
-			IServerConfiguration[] looseCfg = ServerTreeContentProvider.getLooseConfigurations();
-			int size = looseCfg.length;
-			Object[] obj = new Object[size];
-			for (int i = 0; i < size; i++) {
-				obj[i] = new ServerElementAdapter(this, looseCfg[i]);
-			}
-			
-			return obj;
-		}
 		/*else if (thisStyle == STYLE_SERVERS_AND_CONFIGURATIONS) 
 			return new Object[] {
 				new TextResourceAdapter(this, STYLE_SERVERS),
@@ -91,8 +75,6 @@ public class TextResourceAdapter implements IAdaptable, IWorkbenchAdapter, IServ
 		Object[] elements = null;
 		if (thisStyle == STYLE_SERVERS)
 			elements = ServerCore.getServers();
-		else if (thisStyle == STYLE_CONFIGURATIONS)
-			elements = ServerCore.getServerConfigurations();
 
 		List list = new ArrayList();
 		if (elements != null) {
@@ -111,8 +93,6 @@ public class TextResourceAdapter implements IAdaptable, IWorkbenchAdapter, IServ
 	public ImageDescriptor getImageDescriptor(Object object) {
 		if (thisStyle == STYLE_SERVERS)
 			return ServerImageResource.getImageDescriptor(ServerImageResource.IMG_SERVER_FOLDER);
-		else if (thisStyle == STYLE_CONFIGURATIONS || thisStyle == STYLE_LOOSE_CONFIGURATIONS)
-			return ServerImageResource.getImageDescriptor(ServerImageResource.IMG_SERVER_CONFIGURATION_FOLDER);
 		//else if (thisStyle == STYLE_SERVERS_AND_CONFIGURATIONS)
 		//	return ServerImageResource.getImageDescriptor(ServerImageResource.IMG_SERVER_PROJECT);
 		//else if (thisStyle == STYLE_NO_CONFIGURATION)
@@ -133,8 +113,6 @@ public class TextResourceAdapter implements IAdaptable, IWorkbenchAdapter, IServ
 	public String getLabel(Object o) {
 		if (thisStyle == STYLE_SERVERS)
 			return ServerUIPlugin.getResource("%viewServers");
-		else if (thisStyle == STYLE_CONFIGURATIONS)
-			return ServerUIPlugin.getResource("%viewConfigurations");
 		//else if (thisStyle == STYLE_SERVERS_AND_CONFIGURATIONS)
 		//	return "Server Info";
 		//else if (thisStyle == STYLE_NO_CONFIGURATION)
@@ -143,8 +121,6 @@ public class TextResourceAdapter implements IAdaptable, IWorkbenchAdapter, IServ
 			return ServerUIPlugin.getResource("%viewNoModules");
 		else if (thisStyle == STYLE_NO_SERVERS)
 			return ServerUIPlugin.getResource("%viewConfigurationUnused");
-		else if (thisStyle == STYLE_LOOSE_CONFIGURATIONS)
-			return ServerUIPlugin.getResource("%viewLooseConfigurations");
 		else
 			return "n/a";
 	}

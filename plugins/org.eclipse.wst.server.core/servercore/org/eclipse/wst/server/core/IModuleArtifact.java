@@ -14,7 +14,7 @@ package org.eclipse.wst.server.core;
  * which can be launched on the server. Examples of module
  * objects could include servlets, HTML pages, or EJB beans.
  */
-public interface IModuleObject {
+public interface IModuleArtifact {
 	/**
 	 * Returns the id of this module object. Each known
 	 * module object has a distinct id. 

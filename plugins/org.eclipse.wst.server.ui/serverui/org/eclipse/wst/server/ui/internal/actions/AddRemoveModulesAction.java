@@ -13,12 +13,12 @@ package org.eclipse.wst.server.ui.internal.actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.ui.actions.IServerAction;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -32,7 +32,7 @@ public class AddRemoveModulesAction implements IServerAction {
 	public boolean supports(IServer server) {
 		if (server == null)
 			return false;
-		IServerConfiguration configuration = server.getServerConfiguration();
+		IPath configuration = server.getServerConfiguration();
 		return (!server.getServerType().hasServerConfiguration() || configuration != null);
 	}
 

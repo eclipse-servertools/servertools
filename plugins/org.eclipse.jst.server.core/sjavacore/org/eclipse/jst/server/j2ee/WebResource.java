@@ -13,11 +13,11 @@ package org.eclipse.jst.server.j2ee;
 import org.eclipse.core.runtime.IPath;
 
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IModuleObject;
+import org.eclipse.wst.server.core.IModuleArtifact;
 /**
  * 
  */
-public class WebResource implements IModuleObject {
+public class WebResource implements IModuleArtifact {
 	public static final String ID = "org.eclipse.jst.server.j2ee.webresource";
 
 	private IModule module;

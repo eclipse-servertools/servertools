@@ -16,7 +16,7 @@ package org.eclipse.wst.server.core;
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
  */
-public interface IModuleObjectAdapter {
+public interface IModuleArtifactAdapter {
 	/**
 	 * Returns the id of this adapter. Each known adapter has a distinct id. 
 	 * Ids are intended to be used internally as keys; they are not
@@ -41,10 +41,10 @@ public interface IModuleObjectAdapter {
 	public boolean isPluginActivated();	
 
 	/**
-	 * Converts from a model object to an IModuleObject.
+	 * Converts from a model object to an IModuleArtifact.
 	 * 
 	 * @param obj
 	 * @return
 	 */
-	public IModuleObject getModuleObject(Object obj);
+	public IModuleArtifact getModuleObject(Object obj);
 }

@@ -78,7 +78,6 @@ public class ServerCore {
 
 	//	cached copy of all server and configuration types
 	private static List serverTypes;
-	private static List serverConfigurationTypes;
 	
 	//	cached copy of all monitors
 	private static List monitors;
@@ -266,51 +265,6 @@ public class ServerCore {
 		}
 		return null;
 	}
-	
-	/**
-	 * Returns an array of all known server configuration types.
-	 * <p>
-	 * A new array is returned on each call, so clients may store or modify the result.
-	 * </p>
-	 * 
-	 * @return the array of server configuration types {@link IServerConfigurationType}
-	 */
-	public static IServerConfigurationType[] getServerConfigurationTypes() {
-		if (serverConfigurationTypes == null)
-			loadServerConfigurationTypes();
-
-		IServerConfigurationType[] sct = new IServerConfigurationType[serverConfigurationTypes.size()];
-		serverConfigurationTypes.toArray(sct);
-		return sct;
-	}
-
-	/**
-	 * Returns the server configuration type with the given id, 
-	 * or <code>null</code> if none. This convenience method searches
-	 * the list of known server configuration types
-	 * ({@link #getServerConfigurationTypes()}) for the one a matching
-	 * server id ({@link IServerConfigurationType#getId()}). The id may not
-	 * be null.
-	 *
-	 * @param the server configuration type id
-	 * @return the server configuration type, or <code>null</code> if
-	 * there is no server configuration type with the given id
-	 */
-	public static IServerConfigurationType findServerConfigurationType(String id) {
-		if (id == null)
-			throw new IllegalArgumentException();
-
-		if (serverConfigurationTypes == null)
-			loadServerConfigurationTypes();
-		
-		Iterator iterator = serverConfigurationTypes.iterator();
-		while (iterator.hasNext()) {
-			IServerConfigurationType serverConfigurationType = (IServerConfigurationType) iterator.next();
-			if (id.equals(serverConfigurationType.getId()))
-				return serverConfigurationType;
-		}
-		return null;
-	}
 
 	/**
 	 * Returns an array of all known module module factories.
@@ -356,15 +310,15 @@ public class ServerCore {
 	}*/
 
 	/**
-	 * Returns an array of all module object adapters.
+	 * Returns an array of all module artifact adapters.
 	 *
 	 * @return
 	 */
-	public static IModuleObjectAdapter[] getModuleObjectAdapters() {
+	public static IModuleArtifactAdapter[] getModuleArtifactAdapters() {
 		if (moduleObjectAdapters == null)
 			loadModuleObjectAdapters();
 		
-		IModuleObjectAdapter[] moa = new IModuleObjectAdapter[moduleObjectAdapters.size()];
+		IModuleArtifactAdapter[] moa = new IModuleArtifactAdapter[moduleObjectAdapters.size()];
 		moduleObjectAdapters.toArray(moa);
 		return moa;
 	}
@@ -548,32 +502,6 @@ public class ServerCore {
 		sortOrderedList(serverTypes);
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .serverTypes extension point -<-");
-	}
-
-	/**
-	 * Load the server configuration types.
-	 */
-	private static synchronized void loadServerConfigurationTypes() {
-		if (serverConfigurationTypes != null)
-			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .serverConfigurationTypes extension point ->-");
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "serverConfigurationTypes");
-
-		int size = cf.length;
-		serverConfigurationTypes = new ArrayList(size);
-		for (int i = 0; i < size; i++) {
-			try {
-				ServerConfigurationType serverConfigurationType = new ServerConfigurationType(cf[i]);
-				serverConfigurationTypes.add(serverConfigurationType);
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded serverConfigurationType: " + cf[i].getAttribute("id"));
-			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load serverConfigurationType: " + cf[i].getAttribute("id"), t);
-			}
-		}
-		sortOrderedList(serverConfigurationTypes);
-		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .serverConfigurationTypes extension point -<-");
 	}
 
 	/**
@@ -762,34 +690,6 @@ public class ServerCore {
 	}
 
 	/**
-	 * Returns the server configuration with the given id, or <code>null</code>
-	 * if none. This convenience method searches the list of known
-	 * server configurations ({@link #getServerConfigurations()}) for the one
-	 * with a matching server configuration id
-	 * ({@link IServerConfiguration#getId()}). The id must not be null.
-	 *
-	 * @param the server configuration id
-	 * @return the server configuration instance, or <code>null</code> if
-	 * there is no server configuration with the given id
-	 */
-	public static IServerConfiguration findServerConfiguration(String id) {
-		return getResourceManager().getServerConfiguration(id);
-	}
-
-	/**
-	 * Returns an array of all known server configuration instances. The array will not
-	 * include any working copies.
-	 * <p>
-	 * A new array is returned on each call, so clients may store or modify the result.
-	 * </p>
-	 * 
-	 * @return a possibly-empty array of server configuration instances {@link IServerConfiguration}
-	 */
-	public static IServerConfiguration[] getServerConfigurations() {
-		return getResourceManager().getServerConfigurations();
-	}
-
-	/**
 	 * Returns an array of all known server instances. The array will not include any
 	 * working copies.
 	 * <p>
@@ -840,26 +740,6 @@ public class ServerCore {
 	 */
 	public static void removeServerLifecycleListener(IServerLifecycleListener listener) {
 		getResourceManager().removeServerLifecycleListener(listener);
-	}
-	
-	/**
-	 * Adds a new server configuration lifecycle listener.
-	 * Has no effect if an identical listener is already registered.
-	 *
-	 * @param listener org.eclipse.wst.server.IServerConfigurationLifecycleListener
-	 */
-	public static void addServerConfigurationLifecycleListener(IServerConfigurationLifecycleListener listener) {
-		getResourceManager().addServerConfigurationLifecycleListener(listener);
-	}
-
-	/**
-	 * Removes a server configuration lifecycle listener.
-	 * Has no effect if the listener is not registered.
-	 *
-	 * @param listener org.eclipse.wst.server.IServerConfigurationLifecycleListener
-	 */
-	public static void removeServerConfigurationLifecycleListener(IServerConfigurationLifecycleListener listener) {
-		getResourceManager().removeServerConfigurationLifecycleListener(listener);
 	}
 
 	/**

@@ -14,16 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.ui.ServerUICore;
-import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.wizard.page.NewServerComposite;
-import org.eclipse.wst.server.ui.internal.wizard.page.WizardUtil;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 /**
@@ -70,7 +64,7 @@ public class NewServerWizardFragment extends WizardFragment {
 		return comp;
 	}
 
-	protected void createConfiguration(IServerWorkingCopy server) {
+	/*protected void createConfiguration(IServerWorkingCopy server) {
 		ITaskModel model = getTaskModel();
 		IRuntime runtime = (IRuntime) model.getObject(ITaskModel.TASK_RUNTIME);
 		
@@ -84,10 +78,8 @@ public class NewServerWizardFragment extends WizardFragment {
 				try {
 					IFile file = null;
 					if (ServerCore.getServerPreferences().isCreateResourcesInWorkspace())
-						file = ServerUtil.getUnusedServerConfigurationFile(WizardUtil.getServerProject(), type.getServerConfigurationType());
+						file = ServerUtil.getUnusedServerConfigurationFile(WizardUtil.getServerProject(), null);
 					
-					/*IServerConfigurationWorkingCopy serverConfiguration = type.getServerConfigurationType().importFromRuntime(null, file, runtime, new NullProgressMonitor());
-					ServerUtil.setServerConfigurationDefaultName(serverConfiguration);*/
 					IServerConfigurationWorkingCopy serverConfiguration = getServerConfiguration(type.getServerConfigurationType(), file, runtime);
 					model.putObject(ITaskModel.TASK_SERVER_CONFIGURATION, serverConfiguration);
 					server.setServerConfiguration(serverConfiguration);
@@ -96,9 +88,9 @@ public class NewServerWizardFragment extends WizardFragment {
 				}
 			}
 		}
-	}
+	}*/
 	
-	protected IServerConfigurationWorkingCopy getServerConfiguration(IServerConfigurationType type, IFile file, IRuntime runtime) throws CoreException {
+	/*protected IServerConfigurationWorkingCopy getServerConfiguration(IServerConfigurationType type, IFile file, IRuntime runtime) throws CoreException {
 		Object key = type.getId() + "|" + file + "|" + runtime;
 		try {
 			IServerConfigurationWorkingCopy serverConfiguration = (IServerConfigurationWorkingCopy) configMap.get(key);
@@ -112,7 +104,7 @@ public class NewServerWizardFragment extends WizardFragment {
 		ServerUtil.setServerConfigurationDefaultName(serverConfiguration);
 		configMap.put(key, serverConfiguration);
 		return serverConfiguration;
-	}
+	}*/
 
 	protected WizardFragment getWizardFragment(String typeId) {
 		try {
@@ -144,7 +136,7 @@ public class NewServerWizardFragment extends WizardFragment {
 			
 			IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
 			if (server != null) {
-				createConfiguration(server);
+				/*createConfiguration(server);
 				WizardFragment sub = getWizardFragment(server.getServerType().getId());
 				if (sub != null)
 					list.add(sub);
@@ -154,7 +146,7 @@ public class NewServerWizardFragment extends WizardFragment {
 					sub = getWizardFragment(serverConfiguration.getServerConfigurationType().getId());
 					if (sub != null)
 						list.add(sub);
-				}
+				}*/
 			}
 			//list.add(new TasksWizardFragment());
 		} else if (b != null && b.byteValue() == MODE_EXISTING) {

@@ -202,7 +202,7 @@ public class ServerUtil {
 		if (obj == null)
 			return null;
 		Trace.trace(Trace.FINEST, "ServerUtil.getModule()");
-		IModuleObjectAdapter[] adapters = ServerCore.getModuleObjectAdapters();
+		IModuleArtifactAdapter[] adapters = ServerCore.getModuleArtifactAdapters();
 		if (adapters != null) {
 			int size = adapters.length;
 			for (int i = 0; i < size; i++) {
@@ -211,7 +211,7 @@ public class ServerUtil {
 						Trace.trace(Trace.FINEST, "getModule(): " + obj.getClass() + " " + adapters[i].getObjectClassName());
 						throw new Exception();
 					}
-					IModuleObject moduleObject = adapters[i].getModuleObject(obj);
+					IModuleArtifact moduleObject = adapters[i].getModuleObject(obj);
 					if (moduleObject != null)
 						return moduleObject.getModule();
 				}
@@ -225,15 +225,15 @@ public class ServerUtil {
 	 *
 	 * @return java.util.List
 	 */
-	public static IModuleObject[] getModuleObjects(Object obj) {
+	public static IModuleArtifact[] getModuleObjects(Object obj) {
 		List list = new ArrayList();
 		Trace.trace(Trace.FINEST, "ServerUtil.getModuleObjects()");
-		IModuleObjectAdapter[] adapters = ServerCore.getModuleObjectAdapters();
+		IModuleArtifactAdapter[] adapters = ServerCore.getModuleArtifactAdapters();
 		if (adapters != null) {
 			int size = adapters.length;
 			for (int i = 0; i < size; i++) {
 				if (isEnabled(obj.getClass(), adapters[i].getObjectClassName())) {
-					IModuleObject moduleObject = adapters[i].getModuleObject(obj);
+					IModuleArtifact moduleObject = adapters[i].getModuleObject(obj);
 					Trace.trace(Trace.FINEST, "moduleObject: " + moduleObject);
 					if (moduleObject != null)
 						list.add(moduleObject);
@@ -241,7 +241,7 @@ public class ServerUtil {
 			}
 		}
 		
-		IModuleObject[] mo = new IModuleObject[list.size()];
+		IModuleArtifact[] mo = new IModuleArtifact[list.size()];
 		list.toArray(mo);
 		return mo;
 	}
@@ -254,7 +254,7 @@ public class ServerUtil {
 	 * @param moduleObject
 	 * @return ILaunchable
 	 */
-	/*public static ILaunchable getLaunchable(IServer server, IModuleObject moduleObject) {
+	/*public static ILaunchable getLaunchable(IServer server, IModuleArtifact moduleObject) {
 		ILaunchableAdapter[] adapters = ServerCore.getLaunchableAdapters();
 		if (adapters != null) {
 			int size = adapters.length;
@@ -283,7 +283,7 @@ public class ServerUtil {
 	/*public static ILaunchable getLaunchable(IServer server, List moduleObjects) {
 		Iterator iterator = moduleObjects.iterator();
 		while (iterator.hasNext()) {
-			IModuleObject moduleObject = (IModuleObject) iterator.next();
+			IModuleArtifact moduleObject = (IModuleArtifact) iterator.next();
 			ILaunchable launchable = getLaunchable(server, moduleObject);
 			if (launchable != null)
 				return launchable;
@@ -641,18 +641,6 @@ public class ServerUtil {
 		wc.setName(name);
 	}
 
-	public static void setServerConfigurationDefaultName(IServerConfigurationWorkingCopy wc) {
-		String typeName = wc.getServerConfigurationType().getName();
-		
-		String name = ServerPlugin.getResource("%defaultServerConfigurationName", new String[] {typeName});
-		int i = 2;
-		while (isNameInUse(name)) {
-			name = ServerPlugin.getResource("%defaultServerConfigurationName2", new String[] {typeName, i + ""});
-			i++;
-		}
-		wc.setName(name);
-	}
-
 	private static boolean isValidFilename(String name) {
 		IStatus status = ResourcesPlugin.getWorkspace().validateName(name, IResource.FILE);
 		if (status != null && !status.isOK())
@@ -694,17 +682,6 @@ public class ServerUtil {
 		return project.getFile(name);
 	}
 
-	public static IFile getUnusedServerConfigurationFile(IProject project, IServerConfigurationType type) {
-		String typeName = getValidFileName(type.getName());
-		String name = ServerPlugin.getResource("%defaultServerConfigurationName", new String[] {typeName}) + "."  + IServerConfiguration.FILE_EXTENSION;
-		int i = 2;
-		while (isFileNameInUse(project, name)) {
-			name = ServerPlugin.getResource("%defaultServerConfigurationName2", new String[] {typeName, i + ""}) + "."  + IServerConfiguration.FILE_EXTENSION;
-			i++;
-		}
-		return project.getFile(name);
-	}
-
 	/**
 	 * Returns true if an element exists with the given name.
 	 *
@@ -719,7 +696,6 @@ public class ServerUtil {
 		
 		addAll(list, ServerCore.getRuntimes());
 		addAll(list, ServerCore.getServers());
-		addAll(list, ServerCore.getServerConfigurations());
 
 		Iterator iterator = list.iterator();
 		while (iterator.hasNext()) {
@@ -1004,66 +980,4 @@ public class ServerUtil {
 		list.toArray(s);
 		return s;
 	}*/
-
-	/**
-	 * Returns an array of all known server configuration instances of
-	 * the given server configuration type. This convenience method filters
-	 * the list of known server configurations
-	 * ({@link #getServerConfigurations()}) for ones with a matching
-	 * server configuration type
-	 * ({@link IServerConfiguration#getServerConfigurationType()}). The array will
-	 * not contain any working copies.
-	 * <p>
-	 * A new array is returned on each call, so clients may store or modify the result.
-	 * </p>
-	 * 
-	 * @param configType the server configuration type
-	 * @return a possibly-empty list of server configuration instances
-	 * {@link IServerConfiguration) of the given server configuration type
-	 */
-	/*public static IServerConfiguration[] getServerConfigurations(IServerConfigurationType configType) {
-		List list = new ArrayList();
-		IServerConfiguration[] configs = ServerCore.getServerConfigurations();
-		if (configs != null) {
-			int size = configs.length;
-			for (int i = 0; i < size; i++) {
-				if (configs[i].getServerConfigurationType().equals(configType))
-					list.add(configs[i]);
-			}
-		}
-		
-		IServerConfiguration[] sc = new IServerConfiguration[list.size()];
-		list.toArray(sc);
-		return sc;
-	}*/
-
-	/**
-	 * Returns the server configuration that came from the given file, 
-	 * or <code>null</code> if none. This convenience method searches the list
-	 * of known server configurations ({@link #getServerConfigurations()}) for
-	 * the one with a matching location ({@link IServerConfiguration#getFile()}).
-	 * The id may not be null.
-	 * <p>
-	 * [issue: Is this convenience method really necessary?
-	 * It's straightforward enough for a client to do.]
-	 * </p>
-	 *
-	 * @param a server configuration file
-	 * @return the server configuration instance, or <code>null</code> if 
-	 * there is no server configuration associated with the given file
-	 */
-	public static IServerConfiguration findServerConfiguration(IFile file) {
-		if (file == null)
-			throw new IllegalArgumentException();
-		
-		IServerConfiguration[] configs = ServerCore.getServerConfigurations();
-		if (configs != null) {
-			int size = configs.length;
-			for (int i = 0; i < size; i++) {
-				if (file.equals(configs[i].getFile()))
-					return configs[i];
-			}
-		}
-		return null;
-	}
 }

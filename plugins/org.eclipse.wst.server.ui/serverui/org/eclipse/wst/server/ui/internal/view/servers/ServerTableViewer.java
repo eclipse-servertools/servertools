@@ -311,7 +311,7 @@ public class ServerTableViewer extends TableViewer {
 	 * @param configuration org.eclipse.wst.server.core.model.IServerConfiguration
 	 * @param add boolean
 	 */
-	protected void configurationChange(IServerConfiguration configuration, boolean add) {
+	/*protected void configurationChange(IServerConfiguration configuration, boolean add) {
 		if (configuration == null)
 			return;
 
@@ -327,7 +327,7 @@ public class ServerTableViewer extends TableViewer {
 			}
 		}
 		deletedElement = null;
-	}
+	}*/
 	
 	protected void refreshServer(final IServer server) {
 		Display.getDefault().asyncExec(new Runnable() {
@@ -401,9 +401,9 @@ public class ServerTableViewer extends TableViewer {
 		add(server);
 	}
 	
-	protected void handleServerResourceAdded(IServerConfiguration configuration) {
+	/*protected void handleServerResourceAdded(IServerConfiguration configuration) {
 		configurationChange(configuration, true);
-	}
+	}*/
 	
 	/**
 	 * Called when an element is changed.
@@ -413,7 +413,7 @@ public class ServerTableViewer extends TableViewer {
 		refresh(server);
 	}
 	
-	protected void handleServerResourceChanged(IServerConfiguration configuration) {
+	/*protected void handleServerResourceChanged(IServerConfiguration configuration) {
 		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;
@@ -423,7 +423,7 @@ public class ServerTableViewer extends TableViewer {
 					refresh(servers[i]);
 			}
 		}
-	}
+	}*/
 	
 	/**
 	 * Called when an element is removed.
@@ -438,9 +438,9 @@ public class ServerTableViewer extends TableViewer {
 		view.getViewSite().getActionBars().getStatusLineManager().setMessage(null, null);
 	}
 	
-	protected void handleServerResourceRemoved(IServerConfiguration configuration) {
+	/*protected void handleServerResourceRemoved(IServerConfiguration configuration) {
 		configurationChange(configuration, false);
-	}
+	}*/
 	
 	/**
 	 * Register a startup listener.

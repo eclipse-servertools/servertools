@@ -21,7 +21,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.EditorPart;
-import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.internal.editor.IServerEditorPageSectionFactory;
 import org.eclipse.wst.server.ui.internal.editor.IServerEditorPartFactory;
@@ -43,7 +42,6 @@ public abstract class ServerEditorPart extends EditorPart {
 	
 	protected IServerEditorPartFactory pageFactory;
 	protected IServerWorkingCopy server;
-	protected IServerConfigurationWorkingCopy serverConfiguration;
 	protected ICommandManager commandManager;
 	protected boolean readOnly;
 	
@@ -169,11 +167,7 @@ public abstract class ServerEditorPart extends EditorPart {
 					String serverTypeId = null;
 					if (server != null) 
 						serverTypeId = server.getServerType().getId();
-					String serverConfigurationTypeId = null;
-					if (serverConfiguration != null) 
-						serverConfigurationTypeId = serverConfiguration.getServerConfigurationType().getId();
-					if (((serverTypeId != null && factory.supportsType(serverTypeId)) || 
-							(serverConfigurationTypeId != null && factory.supportsType(serverConfigurationTypeId)))
+					if (serverTypeId != null && factory.supportsType(serverTypeId)
 							&& factory.shouldCreateSection(server)) {
 						IServerEditorSection section = factory.createSection();
 						if (section instanceof ServerEditorSection)
@@ -209,7 +203,6 @@ public abstract class ServerEditorPart extends EditorPart {
 		if (input instanceof IServerEditorPartInput) {
 			IServerEditorPartInput sepi = (IServerEditorPartInput) input;
 			server = sepi.getServer();
-			serverConfiguration = sepi.getServerConfiguration();
 			commandManager = sepi.getServerCommandManager();
 			readOnly = sepi.isServerReadOnly();
 		}
@@ -223,10 +216,6 @@ public abstract class ServerEditorPart extends EditorPart {
 	
 	public IServerWorkingCopy getServer() {
 		return server;
-	}
-	
-	public IServerConfigurationWorkingCopy getServerConfiguration() {
-		return serverConfiguration;
 	}
 
 	public void insertSections(Composite parent, String id) {

@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.model;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.IRuntimeLocator;
 /**
@@ -27,11 +28,14 @@ public abstract class RuntimeLocatorDelegate {
 	/**
 	 * Searches for local runtimes. 
 	 * It uses the callback listener to report runtimes that are found.
+	 * The path contains the absolute path of the folder to search in,
+	 * or <code>null</code> to search the entire machine.
 	 * 
+	 * @param path the path to search for runtimes in
 	 * @param listener a listener to report status to
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
-	 * @see IRuntimeLocator.searchForRuntimes(IRuntimeLocator.Listener, IProgressMonitor)
+	 * @see IRuntimeLocator.searchForRuntimes(IPath, IRuntimeLocator.RuntimeSearchListener, IProgressMonitor)
 	 */
-	public abstract void searchForRuntimes(IRuntimeLocator.Listener listener, IProgressMonitor monitor);
+	public abstract void searchForRuntimes(IPath path, IRuntimeLocator.RuntimeSearchListener listener, IProgressMonitor monitor);
 }

@@ -49,4 +49,11 @@ public interface ITomcatServer extends IURLProvider {
 	 * @return
 	 */
 	public String getRuntimeClass();
+	
+	/**
+	 * Return the Tomcat configuration model.
+	 * 
+	 * @return
+	 */
+	public ITomcatConfiguration getServerConfiguration();
 }

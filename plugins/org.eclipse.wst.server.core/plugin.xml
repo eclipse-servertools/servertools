@@ -26,9 +26,8 @@
   <extension-point id="runtimeLocators" name="%extensionPointRuntimeLocators" schema="schema/runtimeLocators.exsd"/>
   <extension-point id="serverTypes" name="%extensionPointServerTypes" schema="schema/serverTypes.exsd"/>
   <extension-point id="serverLocators" name="%extensionPointServerLocators" schema="schema/serverLocators.exsd"/>
-  <extension-point id="serverConfigurationTypes" name="%extensionPointServerConfigurationTypes" schema="schema/serverConfigurationTypes.exsd"/>
   <extension-point id="moduleFactories" name="%extensionPointModuleFactories" schema="schema/moduleFactories.exsd"/>
-  <extension-point id="moduleObjectAdapters" name="%extensionPointModuleObjectAdapters" schema="schema/moduleObjectAdapters.exsd"/>
+  <extension-point id="moduleArtifactAdapters" name="%extensionPointModuleArtifactAdapters" schema="schema/moduleArtifactAdapters.exsd"/>
   <extension-point id="launchableAdapters" name="%extensionPointLaunchableAdapters" schema="schema/launchableAdapters.exsd"/>
   <extension-point id="clients" name="%extensionPointClients" schema="schema/clients.exsd"/>
   <extension-point id="serverTasks" name="%extensionPointServerTasks" schema="schema/serverTasks.exsd"/>
@@ -38,13 +37,5 @@
     <moduleType
        id="*"
        name="%moduleTypeUnknown"/>
-  </extension>
-
-  <extension point="org.eclipse.wst.server.core.moduleFactories">
-     <moduleFactory
-           projects="false"
-           class="org.eclipse.wst.server.core.util.MissingModuleFactoryDelegate"
-           id="org.eclipse.wst.server.core.missingModuleFactory">
-     </moduleFactory>
   </extension>
 </plugin>

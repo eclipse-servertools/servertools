@@ -108,7 +108,7 @@ public class WizardUtil {
 	
 			if (resource instanceof IFile) {
 				IFile file = (IFile) resource;
-				if (ServerUtil.findServerConfiguration(file) != null || ServerUtil.findServer(file) != null)
+				if (ServerUtil.findServer(file) != null)
 				return null;
 			}
 	
@@ -197,7 +197,7 @@ public class WizardUtil {
 			while (temp != null && !(temp instanceof IProject)) {
 				if (temp instanceof IFile) {
 					IFile file = (IFile) temp;
-					if (ServerUtil.findServerConfiguration(file) != null || ServerUtil.findServer(file) != null)
+					if (ServerUtil.findServer(file) != null)
 						return error;
 				}
 				temp = temp.getParent();

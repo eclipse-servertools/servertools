@@ -104,10 +104,10 @@ public class ServerType implements IServerType, IOrdered {
 		return configType.supportsMode(launchMode);
 	}
 
-	public IServerConfigurationType getServerConfigurationType() {
+	/*public IServerConfigurationType getServerConfigurationType() {
 		String configurationTypeId = element.getAttribute("configurationTypeId");
 		return ServerCore.findServerConfigurationType(configurationTypeId);
-	}
+	}*/
 	
 	public boolean supportsRemoteHosts() {
 		String hosts = element.getAttribute("supportsRemoteHosts");
@@ -138,10 +138,9 @@ public class ServerType implements IServerType, IOrdered {
 	}
 
 	public boolean hasServerConfiguration() {
-		String configurationTypeId = element.getAttribute("configurationTypeId");
-		return configurationTypeId != null && configurationTypeId.length() > 0;
+		return ("true".equalsIgnoreCase(element.getAttribute("hasConfiguration")));
 	}
-	
+
 	public IServerWorkingCopy createServer(String id, IFile file, IRuntime runtime, IProgressMonitor monitor) {
 		if (id == null || id.length() == 0)
 			id = ServerPlugin.generateId();
@@ -178,7 +177,8 @@ public class ServerType implements IServerType, IOrdered {
 		if (runtime != null)
 			swc.setRuntime(runtime);
 		
-		IServerConfigurationWorkingCopy config = null;
+		//TODO: import server config
+		/* IServerConfigurationWorkingCopy config = null;
 		if (hasServerConfiguration()) {
 			if (runtime != null)
 				config = getServerConfigurationType().importFromRuntime(id + "-config", file, runtime, monitor);
@@ -187,7 +187,7 @@ public class ServerType implements IServerType, IOrdered {
 			ServerUtil.setServerConfigurationDefaultName(config);
 			if (config != null)
 				swc.setServerConfiguration(config);
-		}
+		}*/
 		
 		swc.setDefaults(monitor);
 		

@@ -68,12 +68,6 @@ public class ServerLabelProvider implements ILabelProvider {
 			} else if (element instanceof IServer) {
 				IServer server = (IServer) element;
 				return ImageResource.getImageDescriptor(server.getServerType().getId());
-			} else if (element instanceof IServerConfigurationType) {
-				IServerConfigurationType configType = (IServerConfigurationType) element;
-				return ImageResource.getImageDescriptor(configType.getId());
-			} else if (element instanceof IServerConfiguration) {
-				IServerConfiguration config = (IServerConfiguration) element;
-				return ImageResource.getImageDescriptor(config.getServerConfigurationType().getId());
 			} else if (element instanceof IModule) {
 				IModule module = (IModule) element;
 				IModuleType mt = module.getModuleType();
@@ -107,12 +101,6 @@ public class ServerLabelProvider implements ILabelProvider {
 					return null;
 				
 				return ImageResource.getImage(server.getServerType().getId());
-			} else if (element instanceof IServerConfigurationType) {
-				IServerConfigurationType configType = (IServerConfigurationType) element;
-				return ImageResource.getImage(configType.getId());
-			} else if (element instanceof IServerConfiguration) {
-				IServerConfiguration config = (IServerConfiguration) element;
-				return ImageResource.getImage(config.getServerConfigurationType().getId());
 			} else if (element instanceof IModule) {
 				IModule module = (IModule) element;
 				IModuleType mt = module.getModuleType();
@@ -142,14 +130,10 @@ public class ServerLabelProvider implements ILabelProvider {
 			return getString(((IRuntime) element).getName());
 		} else if (element instanceof IServer) {
 			return getString(((IServer) element).getName());
-		} else if (element instanceof IServerConfiguration) {
-			return getString(((IServerConfiguration) element).getName());
 		} else if (element instanceof IRuntimeType) {
 			return ((IRuntimeType) element).getName();
 		} else if (element instanceof IServerType) {
 			return ((IServerType) element).getName();
-		} else if (element instanceof IServerConfigurationType) {
-			return ((IServerConfigurationType) element).getName();
 		} else if (element instanceof IClient) {
 			return ((IClient) element).getName();
 		} else if (element instanceof IModule) {

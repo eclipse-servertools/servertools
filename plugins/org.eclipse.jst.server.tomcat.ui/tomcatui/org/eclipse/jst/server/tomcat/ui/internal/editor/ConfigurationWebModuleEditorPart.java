@@ -19,10 +19,10 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jst.server.j2ee.IWebModule;
-import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.ITomcatServerWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.WebModule;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatConfiguration;
+import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.command.AddWebModuleCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.ModifyWebModuleCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.RemoveWebModuleCommand;
@@ -57,7 +57,7 @@ import org.eclipse.wst.server.ui.editor.ServerEditorPart;
  */
 public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 	protected ITomcatServerWorkingCopy server2;
-	protected ITomcatConfigurationWorkingCopy configuration;
+	protected TomcatConfiguration configuration;
 
 	protected Table webAppTable;
 	protected int selection = -1;
@@ -90,7 +90,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 				}
 			}
 		};
-		serverConfiguration.addPropertyChangeListener(listener);
+		configuration.addPropertyChangeListener(listener);
 	}
 	
 	protected ICommandManager getCommandManager() {
@@ -265,8 +265,8 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 	}
 
 	public void dispose() {
-		if (serverConfiguration != null)
-			serverConfiguration.removePropertyChangeListener(listener);
+		if (configuration != null)
+			configuration.removePropertyChangeListener(listener);
 	}
 		
 	/* (non-Javadoc)
@@ -275,10 +275,8 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 		
-		if (serverConfiguration != null) {
-			configuration = (ITomcatConfigurationWorkingCopy) serverConfiguration.getAdapter(ITomcatConfigurationWorkingCopy.class);
-			addChangeListener();
-		}
+		TomcatServer ts = (TomcatServer) server.getAdapter(TomcatServer.class);
+		configuration = ts.getTomcatConfiguration();
 		
 		if (server != null)
 			server2 = (ITomcatServerWorkingCopy) server.getAdapter(ITomcatServerWorkingCopy.class);

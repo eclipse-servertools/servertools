@@ -19,7 +19,7 @@ import org.eclipse.wst.server.core.model.ServerLocatorDelegate;
  */
 public class TomcatServerLocator extends ServerLocatorDelegate {
 	public void searchForServers(String host, final IServerLocator.Listener listener, final IProgressMonitor monitor) {
-		IRuntimeLocator.Listener listener2 = new IRuntimeLocator.Listener() {
+		IRuntimeLocator.RuntimeSearchListener listener2 = new IRuntimeLocator.RuntimeSearchListener() {
 			public void runtimeFound(IRuntimeWorkingCopy runtime) {
 				String runtimeTypeId = runtime.getRuntimeType().getId();
 				String serverTypeId = runtimeTypeId.substring(0, runtimeTypeId.length() - 8);
@@ -32,6 +32,6 @@ public class TomcatServerLocator extends ServerLocatorDelegate {
 				}
 			}
 		};
-		TomcatRuntimeLocator.searchForRuntimes2(listener2, monitor);
+		TomcatRuntimeLocator.searchForRuntimes2(null, listener2, monitor);
 	}
 }

@@ -10,8 +10,12 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -20,18 +24,18 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.j2ee.IWebModule;
 import org.eclipse.jst.server.tomcat.core.ITomcatConfiguration;
+import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
+import org.eclipse.jst.server.tomcat.core.ITomcatWebModule;
 import org.eclipse.jst.server.tomcat.core.WebModule;
 
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.IServerPort;
-import org.eclipse.wst.server.core.model.ServerConfigurationDelegate;
+import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.util.FileUtil;
 /**
  * Generic Tomcat server configuration.
  */
-public abstract class TomcatConfiguration extends ServerConfigurationDelegate implements ITomcatConfiguration {
+public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomcatConfigurationWorkingCopy {
 	public static final String NAME_PROPERTY = "name";
 	public static final String PORT_PROPERTY = "port";
 	public static final String MODIFY_PORT_PROPERTY = "modifyPort";
@@ -42,12 +46,27 @@ public abstract class TomcatConfiguration extends ServerConfigurationDelegate im
 	public static final String MODIFY_WEB_MODULE_PROPERTY = "modifyWebModule";
 	public static final String ADD_WEB_MODULE_PROPERTY = "addWebModule";
 	public static final String REMOVE_WEB_MODULE_PROPERTY = "removeWebModule";
+	
+	protected IPath configPath;
+
+	// property change listeners
+	private transient List propertyListeners;
 
 	/**
 	 * TomcatConfiguration constructor comment.
 	 */
-	public TomcatConfiguration() {
+	public TomcatConfiguration(IPath path) {
 		super();
+		this.configPath = path;
+		/*try {
+			load(configPath, new NullProgressMonitor());
+		} catch (Exception e) {
+			// ignore
+		}*/
+	}
+	
+	protected IPath getPath() {
+		return configPath;
 	}
 
 	/**
@@ -74,14 +93,14 @@ public abstract class TomcatConfiguration extends ServerConfigurationDelegate im
 			
 			confDir = confDir.append("conf");
 	
-			IServerConfiguration config = getServerConfiguration();
+			/*IServerConfiguration config = getServerConfiguration();
 			IFolder folder = config.getConfigurationDataFolder();
 			if (folder != null)
 				backupFolder(folder, confDir, backup, ms, monitor);
 			else {
-				IPath path = config.getConfigurationDataPath();
-				backupPath(path, confDir, backup, ms, monitor);
-			}
+				IPath path = config.getConfigurationDataPath();*/
+				backupPath(configPath, confDir, backup, ms, monitor);
+			//}
 			
 		} catch (Exception e) {
 			Trace.trace("backupAndPublish() error", e);
@@ -237,16 +256,61 @@ public abstract class TomcatConfiguration extends ServerConfigurationDelegate im
 	protected abstract void save(IPath path, boolean forceSave, IProgressMonitor monitor) throws CoreException;
 	
 	protected void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue) {
-		getServerConfiguration().createWorkingCopy().firePropertyChangeEvent(propertyName, oldValue, newValue);
-	}
+		if (propertyListeners == null)
+			return;
 	
-	public void importFromPath(IPath path, IProgressMonitor monitor) throws CoreException {
+		PropertyChangeEvent event = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
+		try {
+			Iterator iterator = propertyListeners.iterator();
+			while (iterator.hasNext()) {
+				try {
+					PropertyChangeListener listener = (PropertyChangeListener) iterator.next();
+					listener.propertyChange(event);
+				} catch (Exception e) {
+					Trace.trace("Error firing property change event", e);
+				}
+			}
+		} catch (Exception e) {
+			Trace.trace("Error in property event", e);
+		}
+	}
+
+	/**
+	 * Adds a property change listener to this server.
+	 *
+	 * @param listener java.beans.PropertyChangeListener
+	 */
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		if (propertyListeners == null)
+			propertyListeners = new ArrayList();
+		propertyListeners.add(listener);
+	}
+
+	/**
+	 * Removes a property change listener from this server.
+	 *
+	 * @param listener java.beans.PropertyChangeListener
+	 */
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		if (propertyListeners != null)
+			propertyListeners.remove(listener);
+	}
+
+	/*public void importFromPath(IPath path, IProgressMonitor monitor) throws CoreException {
 		load(path, monitor);
 	}
 
 	public void importFromRuntime(IRuntime runtime, IProgressMonitor monitor) throws CoreException {
 		load(runtime.getLocation().append("conf"), monitor);
-	}
+	}*/
+	
+	public abstract void load(IPath path, IProgressMonitor monitor) throws CoreException;
+	
+	//public abstract void load(IFolder folder, IProgressMonitor monitor) throws CoreException;
+	
+	public abstract void addWebModule(int index, ITomcatWebModule module);
+	
+	public abstract void removeWebModule(int index);
 
 	/**
 	 * Return a string representation of this object.

@@ -21,7 +21,9 @@ public abstract class ServerEditorPageSectionFactoryDelegate {
 	 * instance) complex configuration pages to only be shown when used
 	 * with non-unittest servers.
 	 */
-	public abstract boolean shouldCreateSection(IServerWorkingCopy server);
+	public boolean shouldCreateSection(IServerWorkingCopy server) {
+		return true;
+	}
 
 	/**
 	 * Create the editor page section.

@@ -9,16 +9,17 @@ package org.eclipse.wst.server.ui.internal.wizard.page;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-import org.eclipse.core.resources.IContainer;
+/*import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.Dialog;*/
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.SWT;
+/*import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.ModifyEvent;
@@ -28,32 +29,29 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Combo;*/
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DirectoryDialog;
+/*import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.server.core.IServerConfiguration;
-import org.eclipse.wst.server.core.IServerConfigurationType;
-import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
-import org.eclipse.wst.server.ui.ServerUICore;
+import org.eclipse.wst.server.ui.ServerUICore;*/
 import org.eclipse.wst.server.ui.internal.*;
-import org.eclipse.wst.server.ui.internal.viewers.ServerConfigurationTypeComposite;
 /**
  * Wizard page to import a configuration.
  */
 public class ImportConfigurationWizardPage extends WizardPage {
-	protected IServerConfigurationType selectedConfigType;
-	protected IServerConfigurationWorkingCopy configuration;
+	/*
+	//protected IServerConfigurationType selectedConfigType;
+	//protected IServerConfigurationWorkingCopy configuration;
 	protected Combo serverProject;
 	protected Button create;
 	protected Text name;
 	protected Text filename;
-	protected ServerConfigurationTypeComposite configTypeComposite;
+	//protected ServerConfigurationTypeComposite configTypeComposite;
 	private Label description;
 	protected Button browse;
 	private IContainer defaultContainer;
@@ -66,9 +64,9 @@ public class ImportConfigurationWizardPage extends WizardPage {
 	private static final int INVALID_IMPORT = 4;
 	
 	protected LoadThread thread;
-	protected boolean threadDone;
+	protected boolean threadDone;*/
 
-	class LoadThread extends Thread {
+	/*class LoadThread extends Thread {
 		final int DELAY = 800;
 		String filename2;
 		IFile file;
@@ -95,7 +93,7 @@ public class ImportConfigurationWizardPage extends WizardPage {
 			}
 			threadDone = true;
 		}
-	}
+	}*/
 
 	/**
 	 * ImportConfigurationWizardPage constructor comment.
@@ -114,7 +112,8 @@ public class ImportConfigurationWizardPage extends WizardPage {
 	 */
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
-	
+	}
+	/*
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 3;
@@ -264,9 +263,9 @@ public class ImportConfigurationWizardPage extends WizardPage {
 	
 		setControl(composite);
 		Dialog.applyDialogFont(composite);
-	}
+	}*/
 	
-	protected void loadConfiguration() {
+	/*protected void loadConfiguration() {
 		if (thread != null) {
 			try {
 				thread.interrupt();
@@ -307,12 +306,12 @@ public class ImportConfigurationWizardPage extends WizardPage {
 			threadDone = false;
 			thread.start();
 		}
-	}
+	}*/
 	
 	/**
 	 * Handle the server factory selection.
 	 */
-	protected void handleFactorySelection(IServerConfigurationType type) {
+	/*protected void handleFactorySelection(IServerConfigurationType type) {
 		validationErrors[INVALID_IMPORT] = null;
 		configuration = null;
 		selectedConfigType = type;
@@ -369,13 +368,13 @@ public class ImportConfigurationWizardPage extends WizardPage {
 			validationErrors[INVALID_IMPORT] = ServerUIPlugin.getResource("%wizErrorImport");
 			Trace.trace(Trace.SEVERE, "Could not import from " + filename, e);
 		}
-	}
+	}*/
 	
 	/**
 	 * Return true if this page is complete.
 	 * @return boolean
 	 */
-	public boolean isPageComplete() {
+	/*public boolean isPageComplete() {
 		// check for validation first
 		for (int i = 0; i < validationErrors.length; i++) {
 			if (validationErrors[i] != null)
@@ -390,7 +389,7 @@ public class ImportConfigurationWizardPage extends WizardPage {
 	
 		// otherwise, defer to superclass
 		return super.isPageComplete();
-	}
+	}*/
 	
 	/**
 	 * Finish the wizard by saving the configuration into
@@ -398,6 +397,9 @@ public class ImportConfigurationWizardPage extends WizardPage {
 	 * @return boolean
 	 */
 	public boolean performFinish() {
+		return true;
+	}
+	/*
 		if (configuration == null)
 			return false;
 			
@@ -419,7 +421,7 @@ public class ImportConfigurationWizardPage extends WizardPage {
 			Trace.trace(Trace.SEVERE, "Error saving imported configuration", e);
 			return false;
 		}
-	}
+	}*/
 	
 	/**
 	 * Save the element to the given file name.
@@ -427,7 +429,7 @@ public class ImportConfigurationWizardPage extends WizardPage {
 	 * @param name java.lang.String
 	 * @param org.eclipse.core.runtime.IProgressMonitor monitor
 	 */
-	protected void saveConfiguration(IServerConfigurationWorkingCopy config, String theName, IProgressMonitor monitor) throws CoreException {
+	/*protected void saveConfiguration(IServerConfigurationWorkingCopy config, String theName, IProgressMonitor monitor) throws CoreException {
 		// save the element
 		try {
 			IFile file = config.getFile();
@@ -441,17 +443,17 @@ public class ImportConfigurationWizardPage extends WizardPage {
 			Trace.trace(Trace.SEVERE, "Error saving created element", e);
 			throw new CoreException(new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, "Could not create server project", null));
 		}
-	}
+	}*/
 	
 	/**
 	 * Sets the default container.
 	 * @param org.eclipse.core.resources.IContainer
 	 */
 	public void setDefaultContainer(IContainer container) {
-		defaultContainer = container;
+		//defaultContainer = container;
 	}
 	
-	public void setVisible(boolean visible) {
+	/*public void setVisible(boolean visible) {
 		super.setVisible(visible);
 	
 		if (visible) {
@@ -463,12 +465,12 @@ public class ImportConfigurationWizardPage extends WizardPage {
 	
 			name.forceFocus();
 		}
-	}
+	}*/
 	
 	/**
 	 * Validates the folder.
 	 */
-	protected void validateFolder() {
+	/*protected void validateFolder() {
 		String text = serverProject.getText();
 		if (text == null || text.length() == 0) {
 			validationErrors[INVALID_FOLDER] = "";
@@ -476,12 +478,12 @@ public class ImportConfigurationWizardPage extends WizardPage {
 		}
 	
 		validationErrors[INVALID_FOLDER] = WizardUtil.validateContainer(text);
-	}
+	}*/
 	
 	/**
 	 * Validates the name.
 	 */
-	protected void validateName() {
+	/*protected void validateName() {
 		String text = name.getText();
 		if (text == null || text.length() == 0) {
 			validationErrors[INVALID_NAME] = "";
@@ -509,14 +511,14 @@ public class ImportConfigurationWizardPage extends WizardPage {
 			} else
 				validationErrors[INVALID_NAME] = null;
 		}
-	}
+	}*/
 	
 	/**
 	 * Display the correct error message and enable/disable
 	 * the Finish or Next button.
 	 * @param x the current control (error message gets precedence)
 	 */
-	protected void validatePage(int x) {
+	/*protected void validatePage(int x) {
 		if (x >= 0 && validationErrors[x] != null && validationErrors[x].length() > 0) {
 			setErrorMessage(validationErrors[x]);
 			getContainer().updateButtons();
@@ -532,5 +534,5 @@ public class ImportConfigurationWizardPage extends WizardPage {
 		}
 		setErrorMessage(null);
 		getContainer().updateButtons();
-	}
+	}*/
 }

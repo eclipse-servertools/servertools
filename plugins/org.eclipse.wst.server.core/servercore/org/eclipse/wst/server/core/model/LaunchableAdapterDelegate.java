@@ -12,11 +12,11 @@ package org.eclipse.wst.server.core.model;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.server.core.ILaunchable;
-import org.eclipse.wst.server.core.IModuleObject;
+import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IServer;
 /**
  * This interface, typically implemented by the server code, converts from
- * an IModuleObject to an ILaunchable.
+ * an IModuleArtifact to an ILaunchable.
  * 
  * <p>This is the implementation of a launchableAdapter extension point.</p>
  */
@@ -29,5 +29,5 @@ public abstract class LaunchableAdapterDelegate {
 	 * @return 
 	 * @exception 
 	 */
-	public abstract ILaunchable getLaunchable(IServer server, IModuleObject moduleObject) throws CoreException;
+	public abstract ILaunchable getLaunchable(IServer server, IModuleArtifact moduleObject) throws CoreException;
 }

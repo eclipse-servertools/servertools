@@ -13,7 +13,6 @@ package org.eclipse.wst.server.ui.internal.editor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IPersistableElement;
 
-import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.editor.ICommandManager;
 import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
@@ -25,21 +24,12 @@ public class ServerEditorPartInput implements IServerEditorPartInput {
 	protected boolean serverReadOnly;
 	protected ICommandManager serverCommandManager;
 	
-	protected IServerConfigurationWorkingCopy configuration;
-	protected boolean configurationReadOnly;
-	protected ICommandManager configurationCommandManager;
-	
 	public ServerEditorPartInput(
-			ICommandManager serverCommandManager, IServerWorkingCopy server,  boolean serverReadOnly,
-			ICommandManager configurationCommandManager, IServerConfigurationWorkingCopy configuration,  boolean configurationReadOnly) {
+			ICommandManager serverCommandManager, IServerWorkingCopy server,  boolean serverReadOnly) {
 		
 		this.server = server;
 		this.serverReadOnly = serverReadOnly;
 		this.serverCommandManager = serverCommandManager;
-		
-		this.configuration = configuration;
-		this.configurationReadOnly = configurationReadOnly;
-		this.configurationCommandManager = configurationCommandManager;
 	}
 	
 	public String getName() {
@@ -87,30 +77,8 @@ public class ServerEditorPartInput implements IServerEditorPartInput {
 	public ICommandManager getServerCommandManager() {
 		return serverCommandManager;
 	}
-
-	/**
-	 * Returns the server configuration to be edited.
-	 * 
-	 * @return IServerConfiguration
-	 */
-	public IServerConfigurationWorkingCopy getServerConfiguration() {
-		return configuration;
-	}
-
-	/**
-	 * Returns true if the server configuration is read-only.
-	 * 
-	 * @return boolean
-	 */
-	public boolean isServerConfigurationReadOnly() {
-		return configurationReadOnly;
-	}
-	
-	public ICommandManager getServerConfigurationCommandManager() {
-		return configurationCommandManager;
-	}
 	
 	public String toString() {
-		return "ServerEditorPartInput [" + server + ", " + configuration + "]";
+		return "ServerEditorPartInput [" + server + "]";
 	}
 }

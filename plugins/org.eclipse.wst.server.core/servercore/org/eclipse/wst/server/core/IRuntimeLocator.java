@@ -11,6 +11,7 @@
 package org.eclipse.wst.server.core;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * A runtime locator provides the ability to locate or search for additional
@@ -21,7 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @since 1.0
  */
 public interface IRuntimeLocator {
-	public interface Listener {
+	public interface RuntimeSearchListener {
 		/**
 		 * Called when a new runtime is found by the locator.
 		 * The runtime must never be null.
@@ -73,11 +74,14 @@ public interface IRuntimeLocator {
 	/**
 	 * Searches for local runtimes. 
 	 * It uses the callback listener to report runtimes that are found.
+	 * The path contains the absolute path of the folder to search in,
+	 * or <code>null</code> to search the entire machine.
 	 * 
+	 * @param path the path to search for runtimes in
 	 * @param listener a listener to report status to
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @throws CoreException
 	 */
-	public void searchForRuntimes(Listener listener, IProgressMonitor monitor) throws CoreException;
+	public void searchForRuntimes(IPath path, RuntimeSearchListener listener, IProgressMonitor monitor) throws CoreException;
 }

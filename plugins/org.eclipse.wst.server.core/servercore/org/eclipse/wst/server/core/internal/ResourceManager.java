@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,7 +31,6 @@ import org.eclipse.wst.server.core.model.*;
  */
 public class ResourceManager {
 	private static final String SERVER_DATA_FILE = "servers.xml";
-	private static final String SERVER_CONFIGURATION_DATA_FILE = "configurations.xml";
 	
 	private static final byte EVENT_ADDED = 0;
 	private static final byte EVENT_CHANGED = 1;
@@ -242,7 +241,6 @@ public class ResourceManager {
 		configurations = new ArrayList();
 		loadRuntimesList();
 		loadServersList();
-		loadServerConfigurationsList();
 		
 		pcl = new Preferences.IPropertyChangeListener() {
 			public void propertyChange(Preferences.PropertyChangeEvent event) {
@@ -409,27 +407,6 @@ public class ResourceManager {
 			serverListeners.remove(listener);
 	}
 	
-	/*
-	 * 
-	 */
-	public void addServerConfigurationLifecycleListener(IServerConfigurationLifecycleListener listener) {
-		Trace.trace(Trace.LISTENERS, "Adding server configuration listener " + listener + " to " + this);
-	
-		if (serverConfigurationListeners == null)
-			serverConfigurationListeners = new ArrayList(3);
-		serverConfigurationListeners.add(listener);
-	}
-	
-	/*
-	 *
-	 */
-	public void removeServerConfigurationLifecycleListener(IServerConfigurationLifecycleListener listener) {
-		Trace.trace(Trace.LISTENERS, "Removing server configuration listener " + listener + " from " + this);
-	
-		if (serverConfigurationListeners != null)
-			serverConfigurationListeners.remove(listener);
-	}
-	
 	/**
 	 * Deregister an existing runtime.
 	 *
@@ -463,23 +440,6 @@ public class ResourceManager {
 		((Server)server).dispose();
 		fireServerEvent(server, EVENT_REMOVED);
 		servers.remove(server);
-	}
-
-	/**
-	 * Deregister an existing server resource.
-	 *
-	 * @param resource org.eclipse.core.resources.IResource
-	 */
-	protected void deregisterServerConfiguration(IServerConfiguration configuration) {
-		if (configuration == null)
-			return;
-	
-		Trace.trace(Trace.RESOURCES, "Deregistering server configuration: " + configuration.getName());
-
-		((ServerConfiguration)configuration).dispose();
-		resolveServers();
-		fireServerConfigurationEvent(configuration, EVENT_REMOVED);
-		configurations.remove(configuration);
 	}
 
 	/**
@@ -538,69 +498,8 @@ public class ResourceManager {
 			}
 		}
 		Trace.trace(Trace.LISTENERS, "-<- Done firing server event -<-");
-	}
-	
-	/**
-	 * Fire a server configuration event.
-	 */
-	private void fireServerConfigurationEvent(final IServerConfiguration config, byte b) {
-		Trace.trace(Trace.LISTENERS, "->- Firing server config event: " + config.getName() + " ->-");
-		
-		if (serverConfigurationListeners == null || serverConfigurationListeners.isEmpty())
-			return;
-	
-		int size = serverConfigurationListeners.size();
-		IServerConfigurationLifecycleListener[] srl = new IServerConfigurationLifecycleListener[size];
-		serverListeners.toArray(srl);
-	
-		for (int i = 0; i < size; i++) {
-			Trace.trace(Trace.LISTENERS, "  Firing server config event to " + srl[i]);
-			try {
-				if (b == EVENT_ADDED)
-					srl[i].serverConfigurationAdded(config);
-				else if (b == EVENT_CHANGED)
-					srl[i].serverConfigurationChanged(config);
-				else
-					srl[i].serverConfigurationRemoved(config);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing server config event to " + srl[i], e);
-			}
-		}
-		Trace.trace(Trace.LISTENERS, "-<- Done firing server config event -<-");
-	}
+	}	
 
-	/**
-	 * Returns an array of all currently active server configurations.
-	 *
-	 * @return
-	 */
-	public IServerConfiguration[] getServerConfigurations() {
-		List list = new ArrayList(configurations);
-		List list2 = ServerPlugin.sortServerResourceList(list);
-		
-		IServerConfiguration[] sc = new IServerConfiguration[list2.size()];
-		list2.toArray(sc);
-		return sc;
-	}
-	
-	/**
-	 * Returns a list of all servers.
-	 *
-	 * @return java.util.List
-	 */
-	public IServerConfiguration getServerConfiguration(String id) {
-		if (id == null)
-			throw new IllegalArgumentException();
-	
-		Iterator iterator = configurations.iterator();
-		while (iterator.hasNext()) {
-			IServerConfiguration config = (IServerConfiguration) iterator.next();
-			if (id.equals(config.getId()))
-				return config;
-		}
-		return null;
-	}
-	
 	protected void saveRuntimesList() {
 		try {
 			ignorePreferenceChanges = true;
@@ -647,26 +546,6 @@ public class ResourceManager {
 			memento.saveToFile(filename);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not save servers", e);
-		}
-	}
-	
-	protected void saveServerConfigurationsList() {
-		String filename = ServerPlugin.getInstance().getStateLocation().append(SERVER_CONFIGURATION_DATA_FILE).toOSString();
-		
-		try {
-			XMLMemento memento = XMLMemento.createWriteRoot("server-configurations");
-
-			Iterator iterator = configurations.iterator();
-			while (iterator.hasNext()) {
-				ServerConfiguration config = (ServerConfiguration) iterator.next();
-
-				IMemento child = memento.createChild("configuration");
-				config.save(child);
-			}
-
-			memento.saveToFile(filename);
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not save server configurations", e);
 		}
 	}
 	
@@ -723,26 +602,6 @@ public class ResourceManager {
 		}
 	}
 	
-	protected void loadServerConfigurationsList() {
-		Trace.trace(Trace.FINEST, "Loading server configuration info");
-		String filename = ServerPlugin.getInstance().getStateLocation().append(SERVER_CONFIGURATION_DATA_FILE).toOSString();
-		
-		try {
-			IMemento memento = XMLMemento.loadMemento(filename);
-			
-			IMemento[] children = memento.getChildren("configuration");
-			int size = children.length;
-			
-			for (int i = 0; i < size; i++) {
-				ServerConfiguration config = new ServerConfiguration(null);
-				config.loadFromMemento(children[i], new NullProgressMonitor());
-				configurations.add(config);
-			}
-		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not load server configurations: " + e.getMessage());
-		}
-	}
-	
 	protected void addRuntime(IRuntime runtime) {
 		if (runtime == null)
 			return;
@@ -777,23 +636,6 @@ public class ResourceManager {
 		if (servers.contains(server)) {
 			deregisterServer(server);
 			saveServersList();
-			resolveServers();
-		}
-	}
-
-	protected void addServerConfiguration(IServerConfiguration config) {
-		if (!configurations.contains(config))
-			registerServerConfiguration(config);
-		else
-			fireServerConfigurationEvent(config, EVENT_CHANGED);
-		saveServerConfigurationsList();
-		resolveServers();
-	}
-
-	protected void removeServerConfiguration(IServerConfiguration config) {
-		if (configurations.contains(config)) {
-			deregisterServerConfiguration(config);
-			saveServerConfigurationsList();
 			resolveServers();
 		}
 	}
@@ -908,26 +750,6 @@ public class ResourceManager {
 	}
 
 	/**
-	 * Handle a change to the child projects of this configuration.
-	 *
-	 * @param configuration org.eclipse.wst.server.core.model.IServerConfiguration
-	 */
-	protected void handleConfigurationChildProjectsChange(IServerConfiguration configuration) {
-		/*String configRef = ServerCore.getServerConfigurationRef(configuration);
-		if (configRef == null || configRef.length() == 0)
-			return;
-	
-		Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
-		while (iterator.hasNext()) {
-			IServer2 server = (IServer2) iterator.next();
-			if (server.getServerConfiguration().equals(configuration)) {
-				ServerControl control = (ServerControl) ServerCore.getServerControl(server);
-				control.handleConfigurationChildProjectChange(configuration);
-			}
-		}*/
-	}
-
-	/**
 	 * Returns true if the resource change was handled.
 	 *
 	 * @param delta org.eclipse.core.resources.IResourceDelta
@@ -997,12 +819,6 @@ public class ResourceManager {
 		return server;
 	}
 	
-	protected IServerConfiguration loadServerConfiguration(IFile file, IProgressMonitor monitor) throws CoreException {
-		ServerConfiguration config = new ServerConfiguration(file);
-		config.loadFromFile(monitor);
-		return config;
-	}
-	
 	/**
 	 * Tries to load a new server resource from the given resource.
 	 * Returns true if the load and register were successful.
@@ -1026,19 +842,6 @@ public class ResourceManager {
 				}
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Error loading server", e);
-			}
-		} else if (file.getFileExtension().equals(IServerConfiguration.FILE_EXTENSION)) {
-	
-			// try loading a server configuration
-			try {
-				IServerConfiguration config = loadServerConfiguration(file, ProgressUtil.getSubMonitorFor(monitor, 1000));
-				if (config != null) {
-					registerServerConfiguration(config);
-					monitor.done();
-					return true;
-				}
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error loading configuration", e);
 			}
 		}
 	
@@ -1071,29 +874,6 @@ public class ResourceManager {
 				deregisterServer(server);
 			}
 		}
-		
-		IServerConfiguration configuration = ServerUtil.findServerConfiguration(file);
-		if (configuration != null) {
-			found = true;
-			try {
-				Trace.trace(Trace.RESOURCES, "Reloading configuration: " + configuration);
-				((ServerConfiguration) configuration).loadFromFile(monitor);
-				fireServerConfigurationEvent(configuration, EVENT_CHANGED);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error reloading configuration " + configuration.getName() + " from " + file + ": " + e.getMessage());
-				deregisterServerConfiguration(configuration);
-			}
-
-			// TODO find any running servers that contain this configuration
-			// notify the servers with this configuration
-			/*Iterator iterator = getServers().iterator();
-			while (iterator.hasNext()) {
-				IServer server2 = (IServer) iterator.next();
-				if (server2.getServerConfiguration().equals(configuration))
-					server2.updateConfiguration();
-			}*/
-			fireServerConfigurationEvent(configuration, EVENT_CHANGED);
-		}
 
 		Trace.trace(Trace.RESOURCES, "No server resource found at: " + file);
 	
@@ -1116,12 +896,7 @@ public class ResourceManager {
 			deregisterServer(server);
 			return true;
 		}
-		IServerConfiguration config = ServerUtil.findServerConfiguration(file);
-		if (config != null) {
-			deregisterServerConfiguration(config);
-			return true;
-		}
-	
+
 		Trace.trace(Trace.RESOURCES, "No server resource found at: " + file);
 		return false;
 	}
@@ -1218,23 +993,6 @@ public class ResourceManager {
 	
 		servers.add(server);
 		fireServerEvent(server, EVENT_ADDED);
-	}
-
-	/**
-	 * Registers a new server configuration resource.
-	 *
-	 * @param resource org.eclipse.core.resources.IResource
-	 * @param element org.eclipse.wst.server.core.model.IServerResource
-	 */
-	protected void registerServerConfiguration(IServerConfiguration config) {
-		if (config == null)
-			return;
-	
-		Trace.trace(Trace.RESOURCES, "Registering server configuration: " + config.getName());
-	
-		configurations.add(config);
-		resolveServers();
-		fireServerConfigurationEvent(config, EVENT_ADDED);
 	}
 
 	/**

@@ -13,7 +13,7 @@ package org.eclipse.wst.server.core;
 import org.eclipse.core.runtime.CoreException;
 /**
  * This interface, typically implemented by the server
- * code, converts from an IModuleObject to an
+ * code, converts from an IModuleArtifact to an
  * ILaunchable.
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
@@ -36,5 +36,5 @@ public interface ILaunchableAdapter {
 	 * @return
 	 * @exception
 	 */
-	public ILaunchable getLaunchable(IServer server, IModuleObject moduleObject) throws CoreException;
+	public ILaunchable getLaunchable(IServer server, IModuleArtifact moduleObject) throws CoreException;
 }

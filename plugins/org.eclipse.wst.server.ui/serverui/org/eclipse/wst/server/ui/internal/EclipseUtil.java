@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.ServerCore;
 /**
  * Eclipse utility methods.
@@ -228,14 +227,6 @@ public class EclipseUtil {
 	 */
 	public static boolean validateEdit(Shell shell, IServer server) {
 		IStatus status = server.validateEdit(shell);
-		return validateEdit(shell, status);
-	}
-	
-	/**
-	 * Do a validateEdit() on the given server element.
-	 */
-	public static boolean validateEdit(Shell shell, IServerConfiguration config) {
-		IStatus status = config.validateEdit(shell);
 		return validateEdit(shell, status);
 	}
 		

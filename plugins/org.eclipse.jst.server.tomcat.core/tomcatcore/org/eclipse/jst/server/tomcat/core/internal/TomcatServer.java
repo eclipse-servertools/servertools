@@ -24,7 +24,6 @@ import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.j2ee.IWebModule;
 import org.eclipse.jst.server.tomcat.core.ITomcatConfiguration;
-import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.ITomcatRuntime;
 import org.eclipse.jst.server.tomcat.core.ITomcatServer;
 import org.eclipse.jst.server.tomcat.core.ITomcatServerWorkingCopy;
@@ -43,6 +42,8 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	protected transient PingThread ping = null;
 	protected transient IProcess process;
 	protected transient IDebugEventSetListener processListener;
+	
+	protected transient TomcatConfiguration configuration;
 
 	/**
 	 * TomcatServer.
@@ -57,20 +58,69 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		
 		return (TomcatRuntime) getServer().getAdapter(TomcatRuntime.class);
 	}
-	
+
 	public ITomcatVersionHandler getTomcatVersionHandler() {
 		if (getServer().getRuntime() == null)
 			return null;
 
 		return getTomcatRuntime().getVersionHandler();
 	}
-	
+
+	public ITomcatConfiguration getServerConfiguration() {
+		return getTomcatConfiguration();
+	}
+
 	public TomcatConfiguration getTomcatConfiguration() {
-		IServerConfiguration configuration = getServer().getServerConfiguration();
-		if (configuration == null)
-			return null;
+		if (configuration == null) {
+			//IPath path = getServer().getServerConfiguration();
+			//if (path == null)
+			IPath path = null;
+			if (getServerWC() != null && getServerWC().getRuntime() != null)
+				path = getServerWC().getRuntime().getLocation().append("conf");
+			else if (getServer() != null && getServer().getRuntime() != null)
+				path = getServer().getRuntime().getLocation().append("conf");
+			else
+				return null;
+			
+			String id = getServer().getServerType().getId();
+			if (id.indexOf("32") > 0)
+				configuration = new Tomcat32Configuration(path);
+			else if (id.indexOf("40") > 0)
+				configuration = new Tomcat40Configuration(path);
+			else if (id.indexOf("41") > 0)
+				configuration = new Tomcat41Configuration(path);
+			else if (id.indexOf("50") > 0)
+				configuration = new Tomcat50Configuration(path);
+			else if (id.indexOf("55") > 0)
+				configuration = new Tomcat55Configuration(path);
+			try {
+				configuration.load(path, null);
+			} catch (CoreException ce) {
+				// ignore
+			}
+		}
+		return configuration;
+	}
+
+	public void importConfiguration(IRuntime runtime, IProgressMonitor monitor) {
+		IPath path = runtime.getLocation().append("conf");
 		
-		return (TomcatConfiguration) configuration.getAdapter(TomcatConfiguration.class);
+		String id = getServer().getServerType().getId();
+		if (id.indexOf("32") > 0)
+			configuration = new Tomcat32Configuration(path);
+		else if (id.indexOf("40") > 0)
+			configuration = new Tomcat40Configuration(path);
+		else if (id.indexOf("41") > 0)
+			configuration = new Tomcat41Configuration(path);
+		else if (id.indexOf("50") > 0)
+			configuration = new Tomcat50Configuration(path);
+		else if (id.indexOf("55") > 0)
+			configuration = new Tomcat55Configuration(path);
+		try {
+			configuration.load(path, monitor);
+		} catch (CoreException ce) {
+			// ignore
+		}
 	}
 
 	/**
@@ -83,11 +133,11 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			if (module == null || !(module instanceof IWebModule))
 				return null;
 	
-			IServerConfiguration serverConfig = getServer().getServerConfiguration();
+			IPath serverConfig = getServer().getServerConfiguration();
 			if (serverConfig == null)
 				return null;
 	
-			TomcatConfiguration config = (TomcatConfiguration) serverConfig.getAdapter(TomcatConfiguration.class);
+			TomcatConfiguration config = getTomcatConfiguration();
 			if (config == null)
 				return null;
 	
@@ -415,10 +465,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		if (status == null || !status.isOK())
 			throw new CoreException(status);
 		
-		IServerConfigurationWorkingCopy scwc = getServer().getServerConfiguration().createWorkingCopy();
-		// TODO
-		ITomcatConfigurationWorkingCopy wc = (ITomcatConfigurationWorkingCopy) scwc.getAdapter(ITomcatConfigurationWorkingCopy.class);
-		boolean change = false;
+		TomcatConfiguration config = getTomcatConfiguration();
 
 		if (add != null) {
 			int size = add.length;
@@ -430,8 +477,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 					contextRoot = "/" + contextRoot;
 				WebModule module2 = new WebModule(contextRoot,
 						module.getLocation().toOSString(), module3.getId(), true);
-				wc.addWebModule(-1, module2);
-				change = true;
+				config.addWebModule(-1, module2);
 			}
 		}
 		
@@ -444,14 +490,11 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 				int size = modules.size();
 				for (int i = 0; i < size; i++) {
 					WebModule module = (WebModule) modules.get(i);
-					if (memento.equals(module.getMemento())) {
-						wc.removeWebModule(i);
-						change = true;
-					}
+					if (memento.equals(module.getMemento()))
+						config.removeWebModule(i);
 				}
 			}
 		}
-		if (change)
-			scwc.save(false, monitor);
+		config.save(config.getPath(), true, monitor);
 	}
 }

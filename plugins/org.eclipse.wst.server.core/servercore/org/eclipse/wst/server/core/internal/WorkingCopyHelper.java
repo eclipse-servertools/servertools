@@ -127,7 +127,7 @@ public class WorkingCopyHelper {
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		if (propertyListeners == null)
-			propertyListeners = new ArrayList();
+			propertyListeners = new ArrayList(2);
 		propertyListeners.add(listener);
 	}
 	

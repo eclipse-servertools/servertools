@@ -48,12 +48,10 @@ public class NewServerWizard extends TaskWizard implements INewWizard {
 				list.add(new NewServerWizardFragment());
 				list.add(new FinishWizardFragment(new TempSaveRuntimeTask()));
 				list.add(new FinishWizardFragment(new TempSaveServerTask()));
-				list.add(new FinishWizardFragment(new TempSaveServerConfigurationTask()));
 				list.add(new ModifyModulesWizardFragment());
 				list.add(new TasksWizardFragment());
 				list.add(new FinishWizardFragment(new SaveRuntimeTask()));
 				list.add(new FinishWizardFragment(new SaveServerTask()));
-				list.add(new FinishWizardFragment(new SaveServerConfigurationTask()));
 				list.add(new FinishWizardFragment(new Task() {
 					public void execute(IProgressMonitor monitor) throws CoreException {
 						try {

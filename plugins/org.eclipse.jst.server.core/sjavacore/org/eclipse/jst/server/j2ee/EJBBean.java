@@ -11,9 +11,9 @@
 package org.eclipse.jst.server.j2ee;
 
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IModuleObject;
+import org.eclipse.wst.server.core.IModuleArtifact;
 
-public class EJBBean implements IModuleObject {
+public class EJBBean implements IModuleArtifact {
 	public static final String ID = "org.eclipse.jst.server.j2ee.ejb";
 
 	private IModule module;
@@ -39,14 +39,14 @@ public class EJBBean implements IModuleObject {
 	}
 
 	/*
-	 * @see IModuleObject#getId()
+	 * @see IModuleArtifact#getId()
 	 */
 	public String getId() {
 		return ID;
 	}
 
 	/*
-	 * @see IModuleObject#getModule()
+	 * @see IModuleArtifact#getModule()
 	 */
 	public IModule getModule() {
 		return module;

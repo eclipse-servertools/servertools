@@ -27,7 +27,6 @@ import org.eclipse.jst.server.tomcat.core.internal.xml.server40.*;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.IServerPort;
 import org.eclipse.wst.server.core.util.ServerPort;
 /**
@@ -49,8 +48,8 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 	/**
 	 * Tomcat50Configuration constructor comment.
 	 */
-	public Tomcat50Configuration() {
-		super();
+	public Tomcat50Configuration(IPath path) {
+		super(path);
 	}
 	
 	/**
@@ -487,16 +486,16 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 			monitor = ProgressUtil.getMonitorFor(monitor);
 			monitor.beginTask(TomcatPlugin.getResource("%updatingConfigurationTask"), 100);
 			
-			Tomcat50Configuration config = new Tomcat50Configuration();
+			Tomcat50Configuration config = new Tomcat50Configuration(path);
 			config.load(path, ProgressUtil.getSubMonitorFor(monitor, 40));
 	
 			if (monitor.isCanceled())
 				return;
 	
 			if (!server2.isTestEnvironment()) {
-				IServerConfigurationWorkingCopy scwc = config.getServerConfiguration().createWorkingCopy();
-				Tomcat50Configuration cfg = (Tomcat50Configuration) scwc.getAdapter(Tomcat50Configuration.class);
-				cfg.localizeWebModules();
+				//IServerConfigurationWorkingCopy scwc = config.getServerConfiguration().createWorkingCopy();
+				//Tomcat50Configuration cfg = (Tomcat50Configuration) scwc.getAdapter(Tomcat50Configuration.class);
+				config.localizeWebModules();
 			}
 			monitor.worked(20);
 	

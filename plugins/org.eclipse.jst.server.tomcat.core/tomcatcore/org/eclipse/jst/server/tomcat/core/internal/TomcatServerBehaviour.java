@@ -11,7 +11,6 @@
 package org.eclipse.jst.server.tomcat.core.internal;
 
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -51,12 +50,16 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	public TomcatServerBehaviour() {
 		super();
 	}
+	
+	public void initialize() {
+		setMode(ILaunchManager.RUN_MODE);
+	}
 
 	public TomcatRuntime getTomcatRuntime() {
 		if (getServer().getRuntime() == null)
 			return null;
 		
-		return (TomcatRuntime) getServer().getAdapter(TomcatRuntime.class);
+		return (TomcatRuntime) getServer().getRuntime().getAdapter(TomcatRuntime.class);
 	}
 	
 	public ITomcatVersionHandler getTomcatVersionHandler() {
@@ -67,51 +70,11 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	}
 	
 	public TomcatConfiguration getTomcatConfiguration() {
-		IServerConfiguration configuration = getServer().getServerConfiguration();
-		if (configuration == null)
-			return null;
-		
-		return (TomcatConfiguration) configuration.getAdapter(TomcatConfiguration.class);
+		return getTomcatServer().getTomcatConfiguration();
 	}
-	
+
 	public TomcatServer getTomcatServer() {
-		return null; // TODO
-	}
-
-	/**
-	 * Return the root URL of this module.
-	 * @param module org.eclipse.wst.server.core.model.IModule
-	 * @return java.net.URL
-	 */
-	public URL getModuleRootURL(IModule module) {
-		try {
-			if (module == null || !(module instanceof IWebModule))
-				return null;
-	
-			IServerConfiguration serverConfig = getServer().getServerConfiguration();
-			if (serverConfig == null)
-				return null;
-	
-			TomcatConfiguration config = (TomcatConfiguration) serverConfig.getAdapter(TomcatConfiguration.class);
-			if (config == null)
-				return null;
-	
-			String url = "http://localhost";
-			int port = config.getMainPort().getPort();
-			port = ServerCore.getServerMonitorManager().getMonitoredPort(getServer(), port, "web");
-			if (port != 80)
-				url += ":" + port;
-
-			url += config.getWebModuleURL(module);
-			
-			if (!url.endsWith("/"))
-				url += "/";
-
-			return new URL(url);
-		} catch (Exception e) {
-			Trace.trace("Could not get root URL", e);
-			return null;
-		}
+		return (TomcatServer) getServer().getAdapter(TomcatServer.class);
 	}
 
 	/**
@@ -267,7 +230,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			int port = configuration.getMainPort().getPort();
 			if (port != 80)
 				url += ":" + port;
-			ping = new PingThread(getServer(), this, url);
+			ping = new PingThread(getServer(), this, url, 50);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Can't ping for Tomcat startup.");
 		}

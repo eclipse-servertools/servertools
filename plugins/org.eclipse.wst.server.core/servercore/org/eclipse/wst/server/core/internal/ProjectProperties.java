@@ -314,7 +314,7 @@ public class ProjectProperties implements IProjectProperties {
 	 */
 	public boolean isServerProject() {
 		loadPreferences();
-		return false;
+		return serverProject;
 	}
 
 	/**

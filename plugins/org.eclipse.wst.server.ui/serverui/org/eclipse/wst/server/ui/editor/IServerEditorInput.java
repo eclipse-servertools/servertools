@@ -28,11 +28,4 @@ public interface IServerEditorInput extends IEditorInput {
 	 * @return java.lang.String
 	 */
 	public String getServerId();
-
-	/**
-	 * Returns the server configuration id.
-	 *
-	 * @return java.lang.String
-	 */
-	public String getServerConfigurationId();
 }

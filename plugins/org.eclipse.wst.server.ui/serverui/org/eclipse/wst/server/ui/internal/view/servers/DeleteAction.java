@@ -14,9 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
-import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.ui.internal.DeleteServerDialog;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.swt.widgets.Shell;
@@ -47,12 +44,10 @@ public class DeleteAction extends Action {
 			deleteList.add(serverResources[i]);
 		}
 		
-		for (int i = 0; i < size; i++) {
+		// TODO: delete server config
+		/*for (int i = 0; i < size; i++) {
 			if (serverResources[i] instanceof IServer) {
 				IServer server = (IServer) serverResources[i];
-				IServerConfiguration config = server.getServerConfiguration();
-				if (config != null && !deleteList.contains(config))
-					deleteExtraList.add(config);
 			}
 		}
 		
@@ -67,7 +62,7 @@ public class DeleteAction extends Action {
 						deleteExtraList.remove(config);
 				}
 			}
-		}
+		}*/
 	}
 
 	/**

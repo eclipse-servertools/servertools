@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.ui.internal.editor;
 
+import org.eclipse.jst.server.tomcat.core.ITomcatServer;
 import org.eclipse.ui.IEditorPart;
 
 import org.eclipse.wst.server.core.IServerWorkingCopy;
@@ -22,7 +23,8 @@ public class ConfigurationWebModuleEditorFactory extends ServerEditorPartFactory
 	 * @see ServerEditorPartFactoryDelegate#shouldDisplay(IServer)
 	 */
 	public boolean shouldCreatePage(IServerWorkingCopy server) {
-		return (server.getServerConfiguration() != null);
+		ITomcatServer tomcatServer = (ITomcatServer) server.getAdapter(ITomcatServer.class);
+		return tomcatServer.getServerConfiguration() != null;
 	}
 
 	/*

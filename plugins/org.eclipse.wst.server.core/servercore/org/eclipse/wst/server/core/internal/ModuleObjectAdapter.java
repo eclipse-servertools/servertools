@@ -14,13 +14,13 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
 
-import org.eclipse.wst.server.core.IModuleObject;
-import org.eclipse.wst.server.core.IModuleObjectAdapter;
+import org.eclipse.wst.server.core.IModuleArtifact;
+import org.eclipse.wst.server.core.IModuleArtifactAdapter;
 import org.eclipse.wst.server.core.model.ModuleObjectAdapterDelegate;
 /**
  * 
  */
-public class ModuleObjectAdapter implements IModuleObjectAdapter {
+public class ModuleObjectAdapter implements IModuleArtifactAdapter {
 	private IConfigurationElement element;
 	private ModuleObjectAdapterDelegate delegate;
 
@@ -75,9 +75,9 @@ public class ModuleObjectAdapter implements IModuleObjectAdapter {
 	}
 
 	/**
-	 * Converts from a model object to an IModuleObject.
+	 * Converts from a model object to an IModuleArtifact.
 	 */
-	public IModuleObject getModuleObject(Object obj) {
+	public IModuleArtifact getModuleObject(Object obj) {
 		try {
 			return getDelegate().getModuleObject(obj);
 		} catch (Exception e) {

@@ -19,7 +19,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.ui.internal.view.servers.DeleteAction;
 import org.eclipse.wst.server.ui.internal.view.tree.ServerElementAdapter;
 import org.eclipse.swt.widgets.Shell;
@@ -77,8 +76,6 @@ public class DeleteActionDelegate implements IWorkbenchWindowActionDelegate {
 			if (obj instanceof IRuntime)
 				list.add(obj);
 			else if (obj instanceof IServer)
-				list.add(obj);
-			else if (obj instanceof IServerConfiguration)
 				list.add(obj);
 			else if (obj instanceof ServerElementAdapter)
 				list.add(((ServerElementAdapter) obj).getObject());

@@ -175,7 +175,7 @@ public interface IServerAttributes extends IElement, IAdaptable {
 	 * 
 	 * @return the server configuration, or <code>null</code> if none
 	 */
-	public IServerConfiguration getServerConfiguration();
+	public IPath getServerConfiguration();
 
 	/**
 	 * Returns the server extension for this server.
@@ -242,7 +242,7 @@ public interface IServerAttributes extends IElement, IAdaptable {
 	 * @return <code>true</code> if this server supports the given server
 	 * configuration, and <code>false/code> otherwise
 	 */
-	public boolean isSupportedConfiguration(IServerConfiguration configuration);
+	public boolean isSupportedConfiguration(IPath configuration);
 
 	/**
 	 * Returns a temporary directory that the requestor can use

@@ -110,10 +110,6 @@ public class TasksWizardFragment extends WizardFragment {
 
 		IServer server = (IServer) getTaskModel().getObject(ITaskModel.TASK_SERVER);
 		
-		IServerConfiguration configuration = null;
-		if (server != null)
-			configuration = server.getServerConfiguration();
-		
 		List[] parents = (List[]) getTaskModel().getObject(ITaskModel.TASK_MODULE_PARENTS);
 		IModule[] modules = (IModule[]) getTaskModel().getObject(ITaskModel.TASK_MODULES);
 		
@@ -140,7 +136,7 @@ public class TasksWizardFragment extends WizardFragment {
 		
 		if (server != null && parents != null || modules != null) {
 			tasks = new ArrayList();
-			createTasks(server, configuration, parents, modules);
+			createTasks(server, parents, modules);
 		}
 		
 		if (comp != null)
@@ -151,13 +147,10 @@ public class TasksWizardFragment extends WizardFragment {
 			});
 	}
 	
-	protected void createTasks(IServer server, IServerConfiguration configuration, List[] parents, IModule[] modules) {
+	protected void createTasks(IServer server, List[] parents, IModule[] modules) {
 		String serverTypeId = null;
-		String serverConfigurationTypeId = null;
 		if (server != null)
 			serverTypeId = server.getServerType().getId();
-		if (configuration != null)
-			serverConfigurationTypeId = configuration.getServerConfigurationType().getId();
 		
 		// server tasks
 		IServerTask[] serverTasks = ServerCore.getServerTasks();
@@ -165,9 +158,8 @@ public class TasksWizardFragment extends WizardFragment {
 			int size = serverTasks.length;
 			for (int i = 0; i < size; i++) {
 				IServerTask task = serverTasks[i];
-				if ((serverTypeId != null && task.supportsType(serverTypeId)) || 
-						(serverConfigurationTypeId != null && task.supportsType(serverConfigurationTypeId))) {
-					IOptionalTask[] tasks2 = task.getTasks(server, configuration, parents, modules);
+				if (serverTypeId != null && task.supportsType(serverTypeId)) {
+					IOptionalTask[] tasks2 = task.getTasks(server, parents, modules);
 					if (tasks2 != null) {
 						int size2 = tasks2.length;
 						for (int j = 0; j < size2; j++) {
@@ -176,7 +168,7 @@ public class TasksWizardFragment extends WizardFragment {
 								if (status == IOptionalTask.TASK_READY || status == IOptionalTask.TASK_PREFERRED)
 									hasOptionalTasks = true;
 								tasks2[i].setTaskModel(getTaskModel());
-								addServerTask(server, configuration, tasks2[j]);
+								addServerTask(server, tasks2[j]);
 							}
 						}
 					}
@@ -185,13 +177,11 @@ public class TasksWizardFragment extends WizardFragment {
 		}
 	}
 
-	public void addServerTask(IServer server, IServerConfiguration configuration, IOptionalTask task2) {
+	public void addServerTask(IServer server, IOptionalTask task2) {
 		TaskInfo sti = new TaskInfo();
 		sti.task2 = task2;
 		sti.status = task2.getStatus();
 		String id = server.getId();
-		if (configuration != null)
-			id += "|" + configuration.getId();
 		sti.id = id + "|" + task2.getName();
 		if (sti.status == IOptionalTask.TASK_PREFERRED || sti.status == IOptionalTask.TASK_MANDATORY)
 			sti.setDefaultSelected(true);
@@ -244,13 +234,10 @@ public class TasksWizardFragment extends WizardFragment {
 		
 		// get most recent server/configuration
 		boolean createdServerWC = false;
-		boolean createdConfigWC = false;
 		ITaskModel taskModel = getTaskModel();
 		IServer server = (IServer) taskModel.getObject(ITaskModel.TASK_SERVER);
 		if (server == null)
 			return;
-		IServerConfiguration configuration = null;
-		configuration = server.getServerConfiguration();
 
 		// get working copies
 		IServerWorkingCopy serverWC = null;
@@ -261,17 +248,7 @@ public class TasksWizardFragment extends WizardFragment {
 			createdServerWC = true;
 		}
 		
-		IServerConfigurationWorkingCopy configWC = null;
-		if (configuration != null) {
-			if (configuration instanceof IServerConfigurationWorkingCopy)
-				configWC = (IServerConfigurationWorkingCopy) configuration;
-			else {
-				configWC = configuration.createWorkingCopy();
-				createdConfigWC = true;
-			}
-		}
 		taskModel.putObject(ITaskModel.TASK_SERVER, serverWC);
-		taskModel.putObject(ITaskModel.TASK_SERVER_CONFIGURATION, configWC);
 		
 		// begin task
 		monitor.beginTask(ServerUIPlugin.getResource("%performingTasks"), performTasks.size() * 1000);
@@ -307,19 +284,7 @@ public class TasksWizardFragment extends WizardFragment {
 			} else
 				taskModel.putObject(ITaskModel.TASK_SERVER, serverWC.getOriginal());
 		}
-		
-		if (createdConfigWC) {
-			if (configWC.isDirty()) {
-				IFile file = configWC.getFile();
-				if (file != null && !file.getProject().exists()) {
-					IProject project = file.getProject();
-					EclipseUtil.createNewServerProject(null, project.getName(), null, monitor);
-				}
-				taskModel.putObject(ITaskModel.TASK_SERVER_CONFIGURATION, configWC.save(false, monitor));
-			} else
-				taskModel.putObject(ITaskModel.TASK_SERVER_CONFIGURATION, configWC.getOriginal());
-		}
-		
+				
 		monitor.done();
 	}
 

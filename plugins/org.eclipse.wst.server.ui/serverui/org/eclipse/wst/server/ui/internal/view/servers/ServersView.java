@@ -10,9 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.IDebugUIConstants;
@@ -24,7 +22,6 @@ import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.actions.ServerAction;
 import org.eclipse.wst.server.ui.internal.view.tree.DisabledMenuManager;
-import org.eclipse.wst.server.ui.internal.view.tree.SwitchConfigurationAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -131,7 +128,7 @@ public class ServersView extends ViewPart {
 				try {
 					TableItem item = table.getSelection()[0];
 					IServer server = (IServer) item.getData();
-					ServerUIUtil.editServer(server, server.getServerConfiguration());
+					ServerUIUtil.editServer(server);
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Could not open server", e);
 				}
@@ -317,7 +314,7 @@ public class ServersView extends ViewPart {
 			}
 		
 			// switch config
-			if (server.getServerType() != null && server.getServerType().hasServerConfiguration()) {
+			/*if (server.getServerType() != null && server.getServerType().hasServerConfiguration()) {
 				MenuManager menuManager = new MenuManager(ServerUIPlugin.getResource("%actionSwitchConfiguration"));
 				menuManager.add(new SwitchConfigurationAction(shell, ServerUIPlugin.getResource("%viewNoConfiguration"), server, null));
 	
@@ -330,7 +327,7 @@ public class ServersView extends ViewPart {
 				}
 	
 				menu.add(menuManager);
-			}
+			}*/
 			
 			// monitor
 			if (server.getServerType() != null) {
@@ -398,7 +395,7 @@ public class ServersView extends ViewPart {
 	 * @param server org.eclipse.wst.server.core.IServer
 	 * @return java.util.List
 	 */
-	protected static IServerConfiguration[] getSupportedServerConfigurations(IServer server) {
+	/*protected static IServerConfiguration[] getSupportedServerConfigurations(IServer server) {
 		if (server == null)
 			return new IServerConfiguration[0];
 	
@@ -417,7 +414,7 @@ public class ServersView extends ViewPart {
 		IServerConfiguration[] sc = new IServerConfiguration[list.size()];
 		list.toArray(sc);
 		return sc;
-	}
+	}*/
 	
 	/**
 	 * 

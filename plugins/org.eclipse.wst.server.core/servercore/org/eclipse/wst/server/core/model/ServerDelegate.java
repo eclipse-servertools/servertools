@@ -14,9 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerPort;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
@@ -309,4 +311,19 @@ public abstract class ServerDelegate {
 	 * @throws CoreException [missing]
 	 */
 	public abstract void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException;
+
+	/**
+	 * Returns true if this is a configuration that is
+	 * applicable to (can be used with) this server.
+	 *
+	 * @param configuration
+	 * @return boolean
+	 */
+	public boolean isSupportedConfiguration(IPath configuration2) {
+		return true;
+	}
+
+	public void importConfiguration(IRuntime runtime, IProgressMonitor monitor) {
+		// do nothing
+	}
 }

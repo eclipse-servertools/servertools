@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.view.servers;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.wst.server.ui.internal.view.servers;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.view.servers;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -48,8 +49,8 @@ public class StartAction extends AbstractServerAction {
 	 * @param server org.eclipse.wst.server.core.model.IServer
 	 */
 	public void perform(final IServer server) {
-		if (!ServerUIUtil.promptIfDirty(shell, server))
-			return;				
+		//if (!ServerUIUtil.promptIfDirty(shell, server))
+		//	return;				
 	
 		if (!ServerUIUtil.saveEditors())
 			return;

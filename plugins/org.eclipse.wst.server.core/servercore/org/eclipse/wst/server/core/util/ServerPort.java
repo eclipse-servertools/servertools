@@ -116,4 +116,8 @@ public class ServerPort implements IServerPort {
 	public int hashCode() {
 		return port;
 	}
+	
+	public String toString() {
+		return "ServerPort [" + getName() + ", " + getId() + ", " + getPort() + ", " + getProtocol() + "]";
+	}
 }

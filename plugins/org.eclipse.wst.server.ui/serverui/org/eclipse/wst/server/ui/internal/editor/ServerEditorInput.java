@@ -13,7 +13,6 @@ package org.eclipse.wst.server.ui.internal.editor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.ui.editor.IServerEditorInput;
 import org.eclipse.wst.server.ui.internal.ImageResource;
@@ -41,15 +40,13 @@ import org.eclipse.ui.IPersistableElement;
  */
 public class ServerEditorInput implements IServerEditorInput, IPersistableElement {
 	private String serverId;
-	private String configurationId;
 
 	/**
 	 * ServerEditorInput constructor comment.
 	 */
-	public ServerEditorInput(String serverId, String configurationId) {
+	public ServerEditorInput(String serverId) {
 		super();
 		this.serverId = serverId;
-		this.configurationId = configurationId;
 	}
 	
 	/**
@@ -58,14 +55,6 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 	 */
 	public String getServerId() {
 		return serverId;
-	}
-
-	/**
-	 * Returns the server configuration id.
-	 * @return org.eclipse.core.resources.IResource
-	 */
-	public String getServerConfigurationId() {
-		return configurationId;
 	}
 
 	/**
@@ -82,11 +71,6 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 			if (other.serverId != null)
 				return false;	
 		} else if (!serverId.equals(other.serverId))
-			return false;
-		if (configurationId == null) {
-			if (other.configurationId != null)
-				return false;	
-		} else if (!configurationId.equals(other.configurationId))
 			return false;
 		return true;
 	}
@@ -105,10 +89,8 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 	public boolean exists() {
 		if (serverId != null && ServerCore.findServer(serverId) == null)
 			return false;
-		else if (configurationId != null && ServerCore.findServerConfiguration(configurationId) == null)
-			return false;
-		else
-			return true;
+		
+		return true;
 	}
 
 	/**
@@ -158,13 +140,8 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 			if (server != null)
 				return server.getName();
 			return serverId;
-		} else if (configurationId != null) {
-			IServerConfiguration configuration = ServerCore.findServerConfiguration(configurationId);
-			if (configuration != null)
-				return configuration.getName();
-			return configurationId;
-		} else
-			return "";
+		}
+		return "";
 	}
 
 	/*
@@ -188,17 +165,6 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 						s = s.substring(1);
 				} else
 					s = server.getName();
-			}
-		}
-		if (s == null && configurationId != null) {
-			IServerConfiguration configuration = ServerCore.findServerConfiguration(configurationId);
-			if (configuration != null) {
-				if (configuration.getFile() != null) {
-					s = configuration.getFile().getFullPath().makeRelative().toString();
-					if (s.startsWith("/"))
-						s = s.substring(1);
-				} else
-					s = configuration.getName();
 			}
 		}
 		if (s == null)

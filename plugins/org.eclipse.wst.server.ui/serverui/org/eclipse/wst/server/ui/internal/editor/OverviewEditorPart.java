@@ -32,7 +32,6 @@ import org.eclipse.wst.server.core.util.SocketUtil;
 import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.command.SetServerConfigurationNameCommand;
 import org.eclipse.wst.server.ui.internal.command.SetServerHostnameCommand;
 import org.eclipse.wst.server.ui.internal.command.SetServerNameCommand;
 import org.eclipse.wst.server.ui.internal.command.SetServerRuntimeCommand;
@@ -41,7 +40,7 @@ import org.eclipse.wst.server.ui.internal.command.SetServerRuntimeCommand;
  */
 public class OverviewEditorPart extends ServerEditorPart {
 	protected Text serverName;
-	protected Text serverConfigurationName;
+	protected Label serverConfigurationName;
 	protected Text hostname;
 	protected Combo runtimeCombo;
 	
@@ -81,15 +80,11 @@ public class OverviewEditorPart extends ServerEditorPart {
 		};
 		if (server != null)
 			server.addPropertyChangeListener(listener);
-		if (serverConfiguration != null)
-			serverConfiguration.addPropertyChangeListener(listener);
 	}
 
 	protected void updateNames() {
 		if (serverName != null)
 			serverName.setText(server.getName());
-		if (serverConfigurationName != null)
-			serverConfigurationName.setText(serverConfiguration.getName());
 	}
 
 	/**
@@ -161,24 +156,6 @@ public class OverviewEditorPart extends ServerEditorPart {
 			});
 		}
 		
-		// server configuration name
-		if (serverConfiguration != null) {
-			createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewServerConfigurationName"));
-			
-			serverConfigurationName = toolkit.createText(composite, serverConfiguration.getName());
-			GridData data = new GridData(GridData.FILL_HORIZONTAL);
-			serverConfigurationName.setLayoutData(data);
-			serverConfigurationName.addModifyListener(new ModifyListener() {
-				public void modifyText(ModifyEvent e) {
-					if (updating)
-						return;
-					updating = true;
-					getCommandManager().executeCommand(new SetServerConfigurationNameCommand(getServerConfiguration(), serverConfigurationName.getText()));
-					updating = false;
-				}
-			});
-		}
-		
 		// hostname
 		if (server != null) {
 			createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewServerHostname"));
@@ -197,6 +174,16 @@ public class OverviewEditorPart extends ServerEditorPart {
 			});
 		}
 		
+		// server configuration path
+		if (server != null && server.getServerType().hasServerConfiguration()) {
+			createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewServerConfigurationPath"));
+			
+			serverConfigurationName = toolkit.createLabel(composite, "" + server.getServerConfiguration());
+			GridData data = new GridData(GridData.FILL_HORIZONTAL);
+			serverConfigurationName.setLayoutData(data);
+		}
+		
+		// runtime
 		if (server != null && server.getServerType() != null && server.getServerType().hasRuntime()) {
 			IRuntime runtime = server.getRuntime();
 			createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewRuntime"));
@@ -292,8 +279,6 @@ public class OverviewEditorPart extends ServerEditorPart {
 		
 		if (server != null)
 			server.removePropertyChangeListener(listener);
-		if (serverConfiguration != null)
-			serverConfiguration.removePropertyChangeListener(listener);
 	}
 	
 	/* (non-Javadoc)
@@ -320,13 +305,6 @@ public class OverviewEditorPart extends ServerEditorPart {
 				serverName.setEnabled(false);
 			else
 				serverName.setEnabled(true);
-		}
-		if (serverConfiguration != null) {
-			serverConfigurationName.setText(serverConfiguration.getName());
-			if (readOnly)
-				serverConfigurationName.setEnabled(false);
-			else
-				serverConfigurationName.setEnabled(true);
 		}
 		
 		updating = false;

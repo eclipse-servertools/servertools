@@ -15,7 +15,6 @@ import java.util.List;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IOptionalTask;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
 /**
  * A server task delegate.
  * 
@@ -27,5 +26,5 @@ public abstract class ServerTaskDelegate {
 	 * 
 	 * @return the tasks that should be performed on the server.
 	 */
-	public abstract IOptionalTask[] getTasks(IServer server, IServerConfiguration configuration, List[] parents, IModule[] modules);
+	public abstract IOptionalTask[] getTasks(IServer server, List[] parents, IModule[] modules);
 }

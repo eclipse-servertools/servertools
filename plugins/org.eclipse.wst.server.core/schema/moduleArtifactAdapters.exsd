@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.wst.server.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.wst.server.core" id="moduleObjectAdapters" name="Module Object Adapters"/>
+         <meta.schema plugin="org.eclipse.wst.server.core" id="moduleArtifactAdapters" name="Module Artifact Adapters"/>
       </appInfo>
       <documentation>
          
@@ -13,7 +13,7 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="moduleObjectAdapter" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="moduleArtifactAdapter" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -39,7 +39,7 @@
       </complexType>
    </element>
 
-   <element name="moduleObjectAdapter">
+   <element name="moduleArtifactAdapter">
       <annotation>
          <appInfo>
             <meta.element labelAttribute="name"/>
@@ -58,7 +58,7 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of the Java class that extends &lt;samp&gt;ModuleObjectAdapterDelegate&lt;/samp&gt;.
+                  specifies the fully qualified name of the Java class that extends &lt;samp&gt;ModuleArtifactAdapterDelegate&lt;/samp&gt;.
 Module object adapter instances of this type will delegate to instances of this class.
                </documentation>
                <appInfo>
@@ -96,7 +96,7 @@ Module object adapter instances of this type will delegate to instances of this 
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;b&gt;org.eclipse.wst.server.core.model.ModuleObjectAdapterDelegate&lt;/b&gt; and contains a public 0-arg constructor.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;b&gt;org.eclipse.wst.server.core.model.ModuleArtifactAdapterDelegate&lt;/b&gt; and contains a public 0-arg constructor.
       </documentation>
    </annotation>
 

@@ -25,8 +25,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.jface.viewers.*;
-import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatConfiguration;
+import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.command.*;
 import org.eclipse.jst.server.tomcat.ui.internal.ContextIds;
 import org.eclipse.jst.server.tomcat.ui.internal.TomcatUIPlugin;
@@ -39,7 +39,7 @@ import org.eclipse.ui.help.WorkbenchHelp;
  * Tomcat configuration port editor page.
  */
 public class ConfigurationPortEditorSection extends ServerEditorSection {
-	protected ITomcatConfigurationWorkingCopy tomcatConfiguration;
+	protected TomcatConfiguration tomcatConfiguration;
 
 	protected boolean updating;
 
@@ -68,7 +68,7 @@ public class ConfigurationPortEditorSection extends ServerEditorSection {
 				}
 			}
 		};
-		serverConfiguration.addPropertyChangeListener(listener);
+		tomcatConfiguration.addPropertyChangeListener(listener);
 	}
 	
 	/**
@@ -192,8 +192,8 @@ public class ConfigurationPortEditorSection extends ServerEditorSection {
 	}
 	
 	public void dispose() {
-		if (serverConfiguration != null)
-			serverConfiguration.removePropertyChangeListener(listener);
+		if (tomcatConfiguration != null)
+			tomcatConfiguration.removePropertyChangeListener(listener);
 	}
 	
 	/* (non-Javadoc)
@@ -202,10 +202,9 @@ public class ConfigurationPortEditorSection extends ServerEditorSection {
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 		
-		if (serverConfiguration != null) {
-			tomcatConfiguration = (ITomcatConfigurationWorkingCopy) serverConfiguration.getAdapter(ITomcatConfigurationWorkingCopy.class);
-			addChangeListener();
-		}
+		TomcatServer ts = (TomcatServer) server.getAdapter(TomcatServer.class);
+		tomcatConfiguration = ts.getTomcatConfiguration(); 
+		addChangeListener();
 		initialize();
 	}
 

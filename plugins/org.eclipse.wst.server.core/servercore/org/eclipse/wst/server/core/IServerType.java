@@ -203,39 +203,6 @@ public interface IServerType {
 	public int getServerStateSet();
 
 	/**
-	 * Returns the type of server configuration that this type
-	 * of server requires.
-	 * <p>
-	 * [issue: configurationTypeId is optional according the
-	 * serverTypes schema. This suggests that some types
-	 * of servers do not take a server configuration.
-	 * Is this correct?
-	 * ]
-	 * </p>
-	 * <p>
-	 * [issue: Does it really make sense for
-	 * serverConfigurationTypes and serverTypes be separate extension
-	 * points? Would it not be sufficient to have the party declaring
-	 * the server type also declare the server configuration type?
-	 * Having serverConfigurationType as a separate extension point
-	 * only makes sense if it would be possible in principle to 
-	 * declare a server configuration type that could actually be
-	 * used on serveral server types. If server configurations
-	 * always end up being server-type specific, it would be better
-	 * to combine them.]
-	 * </p>
-	 * <p>
-	 * [issue: What should happen when a server type mentions
-	 * the id of a server configuration type that is not known
-	 * to the system?]
-	 * </p>
-	 * 
-	 * @return a server configuration type, or <code>null</code>
-	 * if this server does not require any 
-	 */
-	public IServerConfigurationType getServerConfigurationType();
-
-	/**
 	 * Returns whether this type of server requires a server
 	 * configuration.
 	 * <p>

@@ -133,7 +133,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		String launchMode = getLaunchMode();
 		firePropertyChangeEvent("launchMode", null, launchMode);
 
-		IModuleObject[] moduleObjects = ServerUtil.getModuleObjects(selection);
+		IModuleArtifact[] moduleObjects = ServerUtil.getModuleObjects(selection);
 		
 		Shell shell;
 		if (window != null)
@@ -260,13 +260,13 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		
 		// get the launchable adapter and module object
 		ILaunchableAdapter launchableAdapter = null;
-		IModuleObject moduleObject = null;
+		IModuleArtifact moduleObject = null;
 		ILaunchable launchable = null;
-		//IModuleObject[] mo = moduleObjects.iterator();
+		//IModuleArtifact[] mo = moduleObjects.iterator();
 		if (moduleObjects != null) {
 			int size = moduleObjects.length;
 			for (int i = 0; i < size; i++) {
-				IModuleObject moduleObject2 = moduleObjects[i];
+				IModuleArtifact moduleObject2 = moduleObjects[i];
 				
 				ILaunchableAdapter[] adapters = ServerCore.getLaunchableAdapters();
 				if (adapters != null) {
@@ -372,7 +372,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * object.
 	 *
 	 * @param server org.eclipse.wst.server.core.IServer
-	 * @param moduleObject org.eclipse.wst.server.core.IModuleObject
+	 * @param moduleObject org.eclipse.wst.server.core.IModuleArtifact
 	 * @param launchMode String
 	 * @return java.util.List
 	 */
