@@ -28,7 +28,7 @@ public abstract class ModuleDelegate {
 	/**
 	 * 
 	 */
-	protected IModule getModule() {
+	public IModule getModule() {
 		return module;
 	}
 

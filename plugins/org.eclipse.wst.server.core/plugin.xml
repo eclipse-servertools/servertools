@@ -3,7 +3,7 @@
 
 <plugin id="org.eclipse.wst.server.core"
   name="%pluginName"
-  version="3.0.0"
+  version="1.0.0"
   provider-name="%providerName"
   class="org.eclipse.wst.server.core.internal.ServerPlugin">
 
