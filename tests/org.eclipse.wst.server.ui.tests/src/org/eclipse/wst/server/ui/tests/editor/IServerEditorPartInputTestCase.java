@@ -27,7 +27,7 @@ public class IServerEditorPartInputTestCase extends TestCase {
 		input = new TestServerEditorPartInput();
 	}
 	
-	public void test01Execute() {
+	public void test01GetServer() {
 		input.getServer();
 	}
 	

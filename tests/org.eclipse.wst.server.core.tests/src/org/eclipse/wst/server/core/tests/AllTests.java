@@ -72,7 +72,7 @@ public class AllTests {
 		suite.addTestSuite(ServerListenerTestCase.class);
 		suite.addTestSuite(RuntimeLifecycleAdapterTestCase.class);
 		suite.addTestSuite(ServerLifecycleAdapterTestCase.class);
-		suite.addTestSuite(ServerAdapterTestCase.class);
+		suite.addTest(new OrderedTestSuite(ServerEventTestCase.class));
 		
 		suite.addTest(new OrderedTestSuite(ClientDelegateTestCase.class));
 		suite.addTest(new OrderedTestSuite(RuntimeLocatorDelegateTestCase.class));

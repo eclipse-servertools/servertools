@@ -27,7 +27,7 @@ public class ICommandManagerTestCase extends TestCase {
 		commandManager = new TestCommandManager();
 	}
 	
-	public void test01Execute() {
+	public void test01ExecuteCommand() {
 		commandManager.executeCommand(null);
 	}
 }

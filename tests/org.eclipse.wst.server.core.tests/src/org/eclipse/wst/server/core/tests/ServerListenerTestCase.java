@@ -10,35 +10,18 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests;
 
-import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerListener;
+import org.eclipse.wst.server.core.util.ServerEvent;
 
 import junit.framework.TestCase;
 
 public class ServerListenerTestCase extends TestCase {
 	public void testListener() {
 		IServerListener listener = new IServerListener() {
-			public void restartStateChange(IServer server) {
-				// ignore
-			}
-
-			public void serverStateChange(IServer server) {
-				// ignore
-			}
-
-			public void modulesChanged(IServer server) {
-				// ignore
-			}
-
-			public void moduleStateChange(IServer server, IModule[] module) {
-				// ignore
+			public void serverChanged(ServerEvent event) {
+				// do nothing
 			}
 		};
-		
-		listener.restartStateChange(null);
-		listener.serverStateChange(null);
-		listener.modulesChanged(null);
-		listener.moduleStateChange(null, null);
+		listener.serverChanged(null);
 	}
 }

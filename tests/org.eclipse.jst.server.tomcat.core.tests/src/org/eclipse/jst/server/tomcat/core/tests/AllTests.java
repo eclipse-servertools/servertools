@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.core.tests;
 
+import org.eclipse.jst.tomcat.core.tests.internal.UtilTestCase;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -56,6 +57,8 @@ public class AllTests {
 			suite.addTest(new OrderedTestSuite(Tomcat55RuntimeTestCase.class));
 			suite.addTest(new OrderedTestSuite(Tomcat55ServerTestCase.class));
 		}
+		
+		suite.addTest(new UtilTestCase());
 		//$JUnit-END$
 		return suite;
 	}

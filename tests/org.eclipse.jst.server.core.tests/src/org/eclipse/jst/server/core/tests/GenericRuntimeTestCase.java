@@ -13,8 +13,8 @@ package org.eclipse.jst.server.core.tests;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.server.core.GenericRuntimeUtil;
-import org.eclipse.jst.server.core.IGenericRuntime;
-import org.eclipse.jst.server.core.IGenericRuntimeWorkingCopy;
+import org.eclipse.jst.server.core.internal.IGenericRuntime;
+import org.eclipse.jst.server.core.internal.IGenericRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.*;
 
 import junit.framework.Test;

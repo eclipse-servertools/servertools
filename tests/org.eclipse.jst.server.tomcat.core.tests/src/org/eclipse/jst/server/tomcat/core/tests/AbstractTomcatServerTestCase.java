@@ -61,7 +61,7 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 		IRuntime runtime = createRuntime();
 		IServerWorkingCopy wc = st.createServer(null, null, runtime, null);
 		
-		IServerPort[] ports = wc.getServerPorts();
+		ServerPort[] ports = wc.getServerPorts();
 		TomcatServer tomcatServer = (TomcatServer) wc.getAdapter(TomcatServer.class);
 		ITomcatConfigurationWorkingCopy configuration = (ITomcatConfigurationWorkingCopy) tomcatServer.getServerConfiguration();
 		if (ports != null) {

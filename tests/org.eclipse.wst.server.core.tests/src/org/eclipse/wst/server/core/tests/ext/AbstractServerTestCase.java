@@ -122,7 +122,7 @@ public abstract class AbstractServerTestCase extends TestCase {
 	}
 	
 	public void test0016GetServerPorts() throws Exception {
-		IServerPort[] ports = getServer().getServerPorts();
+		ServerPort[] ports = getServer().getServerPorts();
 		if (ports != null) {
 			int size = ports.length;
 			for (int i = 0; i < size; i++) {
