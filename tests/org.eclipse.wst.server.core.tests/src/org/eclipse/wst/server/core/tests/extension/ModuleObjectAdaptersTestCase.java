@@ -8,24 +8,26 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.server.tests.performance;
+package org.eclipse.wst.server.core.tests.extension;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.eclipse.test.performance.PerformanceTestCase;
+
+import org.eclipse.wst.server.core.IModuleArtifactAdapter;
 import org.eclipse.wst.server.core.ServerCore;
 
-public class StartupExtensionTestCase extends PerformanceTestCase {
+public class ModuleObjectAdaptersTestCase extends TestCase {
 	public static Test suite() {
-		return new TestSuite(StartupExtensionTestCase.class, "StartupExtensionTestCase");
+		return new TestSuite(ModuleObjectAdaptersTestCase.class, "ModuleObjectAdaptersTestCase");
 	}
 
-	public void testStartupExtension() throws Exception {
-		// startup
-		startMeasuring();
-		ServerCore.getServers();
-		stopMeasuring();
-		commitMeasurements();
-		assertPerformance();
+	public void testModuleObjectAdaptersExtension() throws Exception {
+		IModuleArtifactAdapter[] moa = ServerCore.getModuleArtifactAdapters();
+		if (moa != null) {
+			int size = moa.length;
+			for (int i = 0; i < size; i++)
+				System.out.println(moa[i].getId() + " - " + moa[i].getObjectClassName());
+		}
 	}
 }

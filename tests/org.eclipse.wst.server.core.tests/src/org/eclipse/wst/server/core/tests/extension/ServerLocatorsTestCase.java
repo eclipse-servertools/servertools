@@ -8,24 +8,23 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.server.tests.performance;
+package org.eclipse.wst.server.core.tests.extension;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.eclipse.test.performance.PerformanceTestCase;
-import org.eclipse.wst.server.core.ServerCore;
 
-public class StartupExtensionTestCase extends PerformanceTestCase {
+public class ServerLocatorsTestCase extends TestCase {
 	public static Test suite() {
-		return new TestSuite(StartupExtensionTestCase.class, "StartupExtensionTestCase");
+		return new TestSuite(ServerLocatorsTestCase.class, "ServerLocatorsTestCase");
 	}
 
-	public void testStartupExtension() throws Exception {
-		// startup
-		startMeasuring();
-		ServerCore.getServers();
-		stopMeasuring();
-		commitMeasurements();
-		assertPerformance();
+	public void testServerLocatorsExtension() throws Exception {
+		/*IServerLocator[] serverLocators = ServerCore.getser();
+		if (runtimeLocators != null) {
+			int size = runtimeLocators.length;
+			for (int i = 0; i < size; i++)
+				System.out.println(runtimeLocators[i].getId() + " - " + runtimeLocators[i].getName());
+		}*/
 	}
 }

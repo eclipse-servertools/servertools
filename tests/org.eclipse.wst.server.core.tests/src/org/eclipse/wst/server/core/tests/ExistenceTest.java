@@ -33,10 +33,8 @@ import org.eclipse.wst.server.core.internal.ServerPlugin;
 
 import junit.framework.TestCase;
 
-
 public class ExistenceTest extends TestCase {
-
-	public void testPluginExists(){
+	public void testPluginExists() {
 		assertNotNull(ServerPlugin.getInstance());
 	}
 }

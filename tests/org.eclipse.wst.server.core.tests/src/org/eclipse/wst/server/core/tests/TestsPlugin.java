@@ -29,12 +29,10 @@
 ***************************************************************************/
 package org.eclipse.wst.server.core.tests;
 
-import org.eclipse.ui.plugin.*;
-import org.osgi.framework.BundleContext;
+import org.eclipse.core.runtime.Plugin;
 import java.util.*;
 
-
-public class TestsPlugin extends AbstractUIPlugin {
+public class TestsPlugin extends Plugin {
 	//The shared instance.
 	private static TestsPlugin plugin;
 	//Resource bundle.
@@ -51,20 +49,6 @@ public class TestsPlugin extends AbstractUIPlugin {
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		}
-	}
-
-	/**
-	 * This method is called upon plug-in activation
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-	}
-
-	/**
-	 * This method is called when the plug-in is stopped
-	 */
-	public void stop(BundleContext context) throws Exception {
-		super.stop(context);
 	}
 
 	/**

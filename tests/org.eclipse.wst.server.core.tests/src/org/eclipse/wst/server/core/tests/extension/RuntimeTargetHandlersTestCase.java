@@ -8,24 +8,26 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.server.tests.performance;
+package org.eclipse.wst.server.core.tests.extension;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.eclipse.test.performance.PerformanceTestCase;
+
+import org.eclipse.wst.server.core.IRuntimeTargetHandler;
 import org.eclipse.wst.server.core.ServerCore;
 
-public class StartupExtensionTestCase extends PerformanceTestCase {
+public class RuntimeTargetHandlersTestCase extends TestCase {
 	public static Test suite() {
-		return new TestSuite(StartupExtensionTestCase.class, "StartupExtensionTestCase");
+		return new TestSuite(RuntimeTargetHandlersTestCase.class, "RuntimeTargetHandlersTestCase");
 	}
 
-	public void testStartupExtension() throws Exception {
-		// startup
-		startMeasuring();
-		ServerCore.getServers();
-		stopMeasuring();
-		commitMeasurements();
-		assertPerformance();
+	public void testRuntimeTargetHandlersExtension() throws Exception {
+		IRuntimeTargetHandler[] rth = ServerCore.getRuntimeTargetHandlers();
+		if (rth != null) {
+			int size = rth.length;
+			for (int i = 0; i < size; i++)
+				System.out.println(rth[i].getId());
+		}
 	}
 }

@@ -8,24 +8,26 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.server.tests.performance;
+package org.eclipse.wst.server.core.tests.extension;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.eclipse.test.performance.PerformanceTestCase;
+
+import org.eclipse.wst.server.core.IClient;
 import org.eclipse.wst.server.core.ServerCore;
 
-public class StartupExtensionTestCase extends PerformanceTestCase {
+public class ClientsTestCase extends TestCase {
 	public static Test suite() {
-		return new TestSuite(StartupExtensionTestCase.class, "StartupExtensionTestCase");
+		return new TestSuite(ClientsTestCase.class, "ClientsTestCase");
 	}
 
-	public void testStartupExtension() throws Exception {
-		// startup
-		startMeasuring();
-		ServerCore.getServers();
-		stopMeasuring();
-		commitMeasurements();
-		assertPerformance();
+	public void testClientsExtension() throws Exception {
+		IClient[] clients = ServerCore.getClients();
+		if (clients != null) {
+			int size = clients.length;
+			for (int i = 0; i < size; i++)
+				System.out.println(clients[i].getId() + " - " + clients[i].getName());
+		}
 	}
 }

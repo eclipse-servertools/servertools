@@ -29,19 +29,29 @@
 ***************************************************************************/
 package org.eclipse.wst.server.core.tests;
 
+import org.eclipse.wst.server.core.tests.extension.*;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-
 public class AllTests {
-
 	public static Test suite() {
-		TestSuite suite = new TestSuite(
-				"Test for org.eclipse.wtp.wst.server.core.tests");
+		TestSuite suite = new TestSuite("Test for org.eclipse.wtp.wst.server.core.tests");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(ExistenceTest.class);
+		suite.addTestSuite(StartupExtensionTestCase.class);
+		suite.addTestSuite(ModuleFactoriesTestCase.class);
+		suite.addTestSuite(RuntimeTypesTestCase.class);
+		suite.addTestSuite(RuntimeTargetHandlersTestCase.class);
+		suite.addTestSuite(RuntimeLocatorsTestCase.class);
+		suite.addTestSuite(ServerTypesTestCase.class);
+		suite.addTestSuite(ServerTasksTestCase.class);
+		suite.addTestSuite(ServerLocatorsTestCase.class);
+		suite.addTestSuite(ModuleObjectAdaptersTestCase.class);
+		suite.addTestSuite(LaunchableAdaptersTestCase.class);
+		suite.addTestSuite(ClientsTestCase.class);
+		suite.addTestSuite(ServerCoreTestCase.class);
+		suite.addTestSuite(ServerUtilTestCase.class);
 		//$JUnit-END$
 		return suite;
 	}
 }
-
