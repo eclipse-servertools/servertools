@@ -105,13 +105,32 @@ public class AntPublisher{
 		String modDir = module.getPublishDir();
 		modDir = serverTypeDefinition.getResolver().resolveProperties(modDir);
 
-		props.put("module.name",this.module.getName());
 		IWebModule webModule = (IWebModule)this.module.getAdapter(IWebModule.class);
+		String moduleName = this.guessModuleName(webModule);
+		props.put("module.name",moduleName);
 		props.put("module.dir",webModule.getLocation().toString());
 		props.put("server.publish.dir",modDir);
 		return props;
 		
 		
+	}
+	/**
+	 * @param module2
+	 * @param webModule
+	 * @return
+	 */
+	private String guessModuleName(IWebModule webModule) {
+		String moduleName = this.module.getName(); 
+		//Default to project name but not a good guess
+		//may have blanks etc.
+		
+		// A better choice is to use the context root
+		// For wars most appservers use the module name
+		// as the context root
+		String contextRoot = webModule.getContextRoot();
+		if(contextRoot.charAt(0) == '/')
+			moduleName = contextRoot.substring(1);
+		return moduleName;
 	}
 	private void runAnt(String buildFile,String[] targets,Map properties ,IProgressMonitor monitor)throws CoreException
 	{
