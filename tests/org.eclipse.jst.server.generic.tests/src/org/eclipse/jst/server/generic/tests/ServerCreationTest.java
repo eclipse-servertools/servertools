@@ -142,7 +142,7 @@ public class ServerCreationTest extends TestCase {
 	
 			GenericServerWorkingCopy workingCopyDelegate = new GenericServerWorkingCopy();
 			workingCopyDelegate.initialize((IServerState) server);
-			workingCopyDelegate.initialize((IServerWorkingCopy) server);
+			workingCopyDelegate.initialize(server);
 			return workingCopyDelegate;
 	}	
 
