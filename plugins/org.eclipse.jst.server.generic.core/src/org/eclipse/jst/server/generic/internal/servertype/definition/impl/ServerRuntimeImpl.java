@@ -28,18 +28,16 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerRuntimeImpl.java,v 1.1 2005/03/14 20:54:15 gercan Exp $
+ * $Id: ServerRuntimeImpl.java,v 1.2 2005/03/16 17:58:36 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
 import java.util.Collection;
 import java.util.List;
-
 import java.util.Iterator;
 import java.util.Map;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -226,6 +224,7 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
 	 */
 	protected Resolver resolver = new Resolver(this);
 	private String declaringConfigurationElementNamespace;
+    private String id =null;
     /**
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -885,6 +884,15 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
      */
     public void setConfigurationElementNamespace(String namespace) {
         this.declaringConfigurationElementNamespace=namespace;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+        
     }
 	
 	

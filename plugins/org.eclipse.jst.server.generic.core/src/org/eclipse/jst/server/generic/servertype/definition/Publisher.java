@@ -28,16 +28,12 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Publisher.java,v 1.3 2005/03/14 20:54:14 gercan Exp $
+ * $Id: Publisher.java,v 1.4 2005/03/16 17:59:53 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
 import java.util.List;
-
-import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**

@@ -28,18 +28,13 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerRuntime.java,v 1.3 2005/03/14 20:54:14 gercan Exp $
+ * $Id: ServerRuntime.java,v 1.4 2005/03/16 17:59:53 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
 import java.util.List;
-
 import java.util.Map;
-
-import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.jst.server.generic.internal.xml.Resolver;
 
@@ -404,11 +399,27 @@ public interface ServerRuntime extends EObject{
 	 */
 	Classpath getClasspath(String cpRef);
 
+    
+    /**
+     * @generated NOT
+     */
+    String getId();
+    
+    /**
+     * @generated NOT
+     * @param id
+     */
+    void setId(String id);
+    
+    
+    
+    
 	/**
 	 * @generated NOT
 	 */
 	String getFilename();
 
+    
 	/**
 	 * @generated NOT
 	 */
