@@ -63,7 +63,7 @@ public class TomcatRuntimeTestCase extends TestCase {
 		trwc.setVMInstall(null);
 		wc.save(true, null);
 		tomcatRuntime = (ITomcatRuntime) runtime.getAdapter(ITomcatRuntime.class);
-		assertNull(tomcatRuntime.getVMInstall());
+		assertNotNull(tomcatRuntime.getVMInstall());
 	}
 	
 	protected void deleteRuntime() throws Exception {

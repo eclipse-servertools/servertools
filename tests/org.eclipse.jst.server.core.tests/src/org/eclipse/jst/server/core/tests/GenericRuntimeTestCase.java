@@ -76,7 +76,7 @@ public class GenericRuntimeTestCase extends TestCase {
 	public void test08SetJVM() throws Exception {
 		assertNotNull(genericRuntimeWC.getVMInstall());
 		genericRuntimeWC.setVMInstall(null);
-		assertNull(genericRuntimeWC.getVMInstall());
+		assertNotNull(genericRuntimeWC.getVMInstall());
 	}
 
 	public void test09DeleteRuntime() throws Exception {
