@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.eclipse.jst.server.tomcat.core.tests"
+   name="org.eclipse.jst.server.tomcat.core.tests"
+   version="1.0.0"
+   provider-name="IBM"
+   class="org.eclipse.jst.server.tomcat.core.tests.TestsPlugin">
+
+   <runtime>
+      <library name="tests.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.junit"/>
+      <import plugin="org.eclipse.wst.server.core"/>
+      <import plugin="org.eclipse.jst.server.core"/>
+      <import plugin="org.eclipse.jst.server.tomcat.core"/>
+   </requires>
+
+</plugin>
