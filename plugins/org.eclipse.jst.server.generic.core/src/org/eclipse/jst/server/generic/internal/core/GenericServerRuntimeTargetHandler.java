@@ -30,11 +30,19 @@
  ***************************************************************************/
 package org.eclipse.jst.server.generic.internal.core;
 
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.launching.IVMInstall;
+import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.ClasspathRuntimeTargetHandler;
-
+import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinition;
 import org.eclipse.wst.server.core.IRuntime;
-
+/**
+ * Provides the Classpath containers to be added into project classpaths.
+ *
+ * @author Gorkem Ercan
+ */
 public class GenericServerRuntimeTargetHandler extends
 		ClasspathRuntimeTargetHandler {
 
@@ -42,24 +50,39 @@ public class GenericServerRuntimeTargetHandler extends
 	 * @see com.ibm.wtp.server.java.core.ClasspathRuntimeTargetHandler#getId()
 	 */
 	public String getId() {
-		return "org.eclipse.jst.server.generic.runtime";
+		return "org.eclipse.jst.server.generic.runtimeTarget";
 	}          
 
 	/* (non-Javadoc)
 	 * @see com.ibm.wtp.server.java.core.ClasspathRuntimeTargetHandler#getClasspathContainerLabel(com.ibm.wtp.server.core.IRuntime, java.lang.String)
 	 */
 	public String getClasspathContainerLabel(IRuntime runtime, String id) {
-		// TODO Auto-generated method stub
-		return null;
+		ServerTypeDefinition definition= ServerTypeDefinitionUtil.getServerTypeDefinition(runtime);
+		return definition.getName();
 	}
 
 	/* (non-Javadoc)
 	 * @see com.ibm.wtp.server.java.core.ClasspathRuntimeTargetHandler#resolveClasspathContainer(com.ibm.wtp.server.core.IRuntime, java.lang.String)
 	 */
 	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime,
-			String id) {
-		// TODO Auto-generated method stub
-		return null;
+			String id) 
+	{		
+		return ServerTypeDefinitionUtil.getServerClassPathEntry(runtime);
+	}
+	
+	public String[] getClasspathEntryIds(IRuntime runtime) {
+		// Values do not realy have any use but the number of entries give the number of
+		// containers you have.
+		return new String[1];
 	}
 
+	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime) {
+		GenericServerRuntime genericRuntime = (GenericServerRuntime)runtime.getDelegate();
+		IVMInstall vmInstall = genericRuntime.getVMInstall();
+		if (vmInstall != null) {
+			String name = vmInstall.getName();
+			return new IClasspathEntry[] { JavaCore.newContainerEntry(new Path(JavaRuntime.JRE_CONTAINER).append("org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType").append(name)) };
+		}
+		return null;
+	}
 }

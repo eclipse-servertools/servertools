@@ -31,12 +31,9 @@
 package org.eclipse.jst.server.generic.internal.core;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinition;
-import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinitionProperty;
 import org.eclipse.jst.server.generic.internal.xml.XMLUtils;
 /**
  * Manages the retrieaval of ServerTypeDefinitions.
@@ -54,27 +51,15 @@ public class ServerTypeDefinitionManager
 		fXmlUtils = new XMLUtils(serverDefinitionURL); 
 	}
 
-	public ServerTypeDefinition getServerRuntimeDefinition(String id)
-	{
-		return fXmlUtils.getServerTypeDefinitionNamed(id);
-	}
+//	public ServerTypeDefinition getServerRuntimeDefinition(String id)
+//	{
+//		return fXmlUtils.getServerTypeDefinitionNamed(id);
+//	}
 	
 	public ServerTypeDefinition getServerRuntimeDefinition(String id, Map properties)
 	{
 		ServerTypeDefinition definition =  fXmlUtils.getServerTypeDefinitionNamed(id);
-		
-		// FIXME workaround revisit how properties are kept in ServerDefinitions.
-		ArrayList list = new ArrayList(properties.size());
-		Iterator iterator = properties.keySet().iterator();
-		while(iterator.hasNext())
-		{
-			String key = (String)iterator.next();
-			ServerTypeDefinitionProperty property = new ServerTypeDefinitionProperty();
-			property.setId(key);
-			property.setDefaultValue((String)properties.get(key));
-			list.add(property);
-		}
-		definition.setProperties(list);
+		definition.setPropertyValues(properties);
 		return definition;
 	}
 	
