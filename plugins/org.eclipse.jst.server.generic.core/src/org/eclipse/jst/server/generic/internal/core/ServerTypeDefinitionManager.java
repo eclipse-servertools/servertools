@@ -33,8 +33,9 @@ package org.eclipse.jst.server.generic.internal.core;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinition;
+
 import org.eclipse.jst.server.generic.internal.xml.XMLUtils;
+import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 /**
  * Manages the retrieaval of ServerTypeDefinitions.
  * 
@@ -51,21 +52,17 @@ public class ServerTypeDefinitionManager
 		fXmlUtils = new XMLUtils(serverDefinitionURL); 
 	}
 
-//	public ServerTypeDefinition getServerRuntimeDefinition(String id)
-//	{
-//		return fXmlUtils.getServerTypeDefinitionNamed(id);
-//	}
-	
-	public ServerTypeDefinition getServerRuntimeDefinition(String id, Map properties)
+
+	public ServerRuntime getServerRuntimeDefinition(String id, Map properties)
 	{
-		ServerTypeDefinition definition =  fXmlUtils.getServerTypeDefinitionNamed(id);
+		ServerRuntime definition =  fXmlUtils.getServerTypeDefinitionNamed(id);
 		definition.setPropertyValues(properties);
 		return definition;
 	}
 	
-	public ServerTypeDefinition[] getServerTypeDefinitions()
+	public ServerRuntime[] getServerTypeDefinitions()
 	{
 		 List definitionList = fXmlUtils.getServerTypeDefinitions();
-		 return (ServerTypeDefinition[])definitionList.toArray(new ServerTypeDefinition[definitionList.size()]);
+		 return (ServerRuntime[])definitionList.toArray(new ServerRuntime[definitionList.size()]);
 	}
 }

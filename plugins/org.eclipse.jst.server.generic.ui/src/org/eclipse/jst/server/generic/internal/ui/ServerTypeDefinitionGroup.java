@@ -1,11 +1,42 @@
+/*******************************************************************************
+ * Copyright (c) 2004 Eteration Bilisim A.S.
+ * All rights reserved.   This program and the accompanying materials
+ * are made available under the terms of the Common Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/cpl-v10.html
+ * 
+ * Contributors:
+ *     Gorkem Ercan - initial API and implementation
+ *     Naci M. Dai
+ * 
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL ETERATION A.S. OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Eteration Bilisim A.S.  For more
+ * information on eteration, please see
+ * <http://www.eteration.com/>.
+ ***************************************************************************/
 package org.eclipse.jst.server.generic.internal.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinition;
-import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinitionProperty;
+
+import org.eclipse.jst.server.generic.servertype.definition.Property;
+import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -22,17 +53,13 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-/**
- *  Renders a ServerTypeDefinion inside a Group. 
- *
- * @author Gorkem Ercan
- */
+
 public class ServerTypeDefinitionGroup 
 {
-    public static final String CONTEXT_SERVER = ServerTypeDefinitionProperty.CONTEXT_SERVER;
-    public static final String CONTEXT_RUNTIME = ServerTypeDefinitionProperty.CONTEXT_RUNTIME;
+    public static final String CONTEXT_SERVER = Property.CONTEXT_SERVER;
+    public static final String CONTEXT_RUNTIME = Property.CONTEXT_RUNTIME;
 
-    private ServerTypeDefinition fServerTypeDefinition;
+    private ServerRuntime fServerTypeDefinition;
     private List fPropertyControls = new ArrayList();
     private Map fPropertyMap =new HashMap();
     private String fContext="undefined";
@@ -58,7 +85,7 @@ public class ServerTypeDefinitionGroup
      * @param parent
      * @param style
      */
-    public ServerTypeDefinitionGroup(ServerDefinitionTypeAwareWizardFragment fragment, ServerTypeDefinition definition, String context, Map initialProperties, Composite parent) 
+    public ServerTypeDefinitionGroup(ServerDefinitionTypeAwareWizardFragment fragment, ServerRuntime definition, String context, Map initialProperties, Composite parent) 
     {
         fAwareWizardFragment = fragment;
         initServerTypeDefinition(definition,context,initialProperties);
@@ -79,7 +106,7 @@ public class ServerTypeDefinitionGroup
      * @param context
      * @param initialProperties
      */
-    public void reset(ServerTypeDefinition definition, String context, Map initialProperties)
+    public void reset(ServerRuntime definition, String context, Map initialProperties)
     {
         initServerTypeDefinition(definition, context, initialProperties);
         fDefinitionGroup.setText(definition.getName());
@@ -99,7 +126,7 @@ public class ServerTypeDefinitionGroup
      * @param context
      * @param initialProperties
      */
-    private void initServerTypeDefinition(ServerTypeDefinition definition, String context, Map initialProperties) {
+    private void initServerTypeDefinition(ServerRuntime definition, String context, Map initialProperties) {
         fServerTypeDefinition = definition;
         initProperties(initialProperties);
         this.fContext = context;
@@ -119,49 +146,43 @@ public class ServerTypeDefinitionGroup
      * @param defPanel
      */
     private void createPropertyControls(Composite definitionComposite) {
-		List properties = fServerTypeDefinition.getProperties();
+		List properties = fServerTypeDefinition.getProperty();
 		for(int i = 0; i<properties.size(); i++)
 		{
-		    ServerTypeDefinitionProperty property = (ServerTypeDefinitionProperty)properties.get(i);		    
+		    Property property = (Property)properties.get(i);		    
 		    if(this.fContext.equals(property.getContext()))
 		        createPropertyControl(definitionComposite,property);
 		}
         
     }
      
-    private void createPropertyControl(Composite parent, ServerTypeDefinitionProperty property)
+    private void createPropertyControl(Composite parent, Property property)
     {
-    	switch (property.getType()) {
-    	case ServerTypeDefinitionProperty.TYPE_DIRECTORY :
+    	if( "directory".equals(property.getType())) {
     		Text path = createLabeledPath(property.getLabel(),getPropertyValue(property),parent);
     		path.setData(property);
     		fPropertyControls.add(path);
-    		break;
-    	case ServerTypeDefinitionProperty.TYPE_FILE :
-    		Text file = createLabeledFile(property.getLabel(),getPropertyValue(property),parent);
+    	} else if( "file".equals(property.getType())) {
+    	    Text file = createLabeledFile(property.getLabel(),getPropertyValue(property),parent);
     		file.setData(property);
     		fPropertyControls.add(file);
-    		break;
-    	case ServerTypeDefinitionProperty.TYPE_STRING :
-    		Text str = createLabeledText(property.getLabel(),getPropertyValue(property),parent);
+    	} else if( "string".equals(property.getType())) {
+    	    Text str = createLabeledText(property.getLabel(),getPropertyValue(property),parent);
     		str.setData(property);
     		fPropertyControls.add(str);
-    		break;
-    	case ServerTypeDefinitionProperty.TYPE_BOOLEAN :
-    		Button bool =createLabeledCheck(property.getLabel(),("true".equals( getPropertyValue(property))),	parent);
+    	} else if( "boolean".equals(property.getType())) {
+    	    Button bool =createLabeledCheck(property.getLabel(),("true".equals( getPropertyValue(property))),	parent);
     		bool.setData(property);
     		fPropertyControls.add(bool);
-    		break;
-    	default :
-    		Text defaultText= createLabeledText(property.getLabel(),getPropertyValue(property),parent);
+    	} else  {
+    	    Text defaultText= createLabeledText(property.getLabel(),getPropertyValue(property),parent);
     		defaultText.setData(property);
     		fPropertyControls.add(defaultText);
-    		break;
-    	}
+     	}
     }
-	private String getPropertyValue(ServerTypeDefinitionProperty property)
+	private String getPropertyValue(Property property)
 	{
-		String value = property.getDefaultValue();
+		String value = property.getDefault();
 		if(fPropertyMap!=null && fPropertyMap.isEmpty()==false)
 			value=(String)fPropertyMap.get(property.getId()); 
 		return value;
@@ -289,13 +310,13 @@ public class ServerTypeDefinitionGroup
     		if(fPropertyControls.get(i)instanceof Button)
     		{
     			Button button = (Button)fPropertyControls.get(i);
-    			ServerTypeDefinitionProperty prop = (ServerTypeDefinitionProperty)button.getData();
+    			Property prop = (Property)button.getData();
     			fPropertyMap.put(prop.getId(),Boolean.toString(button.getSelection()));
     		}
     		else
     		{
     			Text text = (Text)fPropertyControls.get(i);
-    			ServerTypeDefinitionProperty prop = (ServerTypeDefinitionProperty)text.getData();
+    			Property prop = (Property)text.getData();
     			fPropertyMap.put(prop.getId(),text.getText());
     		}
     	}

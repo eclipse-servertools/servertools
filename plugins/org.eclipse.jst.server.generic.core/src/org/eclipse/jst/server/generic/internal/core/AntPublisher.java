@@ -42,8 +42,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.generic.core.CorePlugin;
-import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinition;
 import org.eclipse.jst.server.generic.modules.WebModule;
+import org.eclipse.jst.server.generic.servertype.definition.Module;
+import org.eclipse.jst.server.generic.servertype.definition.PublishType;
+import org.eclipse.jst.server.generic.servertype.definition.Publisher;
+import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.core.model.IPublisher;
 import org.eclipse.wst.server.core.resources.IModuleFolder;
@@ -64,9 +67,9 @@ public class AntPublisher implements IPublisher {
 	 */
 	private List parents;
 	private IModule module;
-	private ServerTypeDefinition serverTypeDefinition;
+	private ServerRuntime serverTypeDefinition;
 	
-	public AntPublisher(List parents, IModule module, ServerTypeDefinition serverDefinition) {
+	public AntPublisher(List parents, IModule module, ServerRuntime serverDefinition) {
 		this.parents = parents;
 		this.module = module;
 		this.serverTypeDefinition = serverDefinition;
@@ -111,7 +114,11 @@ public class AntPublisher implements IPublisher {
 	 */
 	public IStatus[] publish(IModuleResource[] resource,
 			IProgressMonitor monitor) throws CoreException {
-		String deployAnt = serverTypeDefinition.getAdminTool().getWeb().getDeploy();
+		Module sModule =  serverTypeDefinition.getModule(this.module.getType());
+		Publisher publisher =  serverTypeDefinition.getPublisher(sModule.getPublisherReference());
+		String deployAnt = ((PublishType)publisher.getPublish().get(0)).getTask();
+		deployAnt = serverTypeDefinition.getResolver().resolveProperties(deployAnt);
+		
 		if(deployAnt == null || deployAnt.length()<1)
 			return new IStatus[]{new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,"AntBuildFileDoesNotExist",null)};
 		
@@ -133,10 +140,15 @@ public class AntPublisher implements IPublisher {
 	}
 	private Map getPublishProperties(IModuleResource[] resource)
 	{
+		Module module =  serverTypeDefinition.getModule(this.module.getType());
+
 		Map props = new HashMap();
+		String modDir = module.getPublishDir();
+		modDir = serverTypeDefinition.getResolver().resolveProperties(modDir);
+
 		props.put("deploymentUnitName",this.module.getName());
 		props.put("moduleDir",((WebModule)this.module).getLocation().toString());
-		props.put("deployDir",serverTypeDefinition.getWebModulesDeployDirectory());
+		props.put("deployDir",modDir);
 		return props;
 		
 		

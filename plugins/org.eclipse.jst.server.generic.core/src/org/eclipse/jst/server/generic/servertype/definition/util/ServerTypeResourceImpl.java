@@ -1,14 +1,11 @@
-/*******************************************************************************
+/**
+ * <copyright>
+ *******************************************************************************
  * Copyright (c) 2004 Eteration Bilisim A.S.
  * All rights reserved.   This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
- * 
- * Contributors:
- *     Gorkem Ercan - initial API and implementation 
- *     Naci M. Dai
- *     
  * 
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -28,14 +25,34 @@
  * individuals on behalf of the Eteration Bilisim A.S.  For more
  * information on eteration, please see
  * <http://www.eteration.com/>.
- ***************************************************************************/
-package org.eclipse.jst.server.generic.internal.xml;
+ ***************************************************************************
+ * </copyright>
+ *
+ * $Id: ServerTypeResourceImpl.java,v 1.1 2004/11/20 21:18:10 ndai Exp $
+ */
+package org.eclipse.jst.server.generic.servertype.definition.util;
 
-import org.xml.sax.Attributes;
+import org.eclipse.emf.common.util.URI;
 
-public interface IXMLTagProcessor
-{
-	public void assesTagEnd(String tagName, String content);
-	public void assesTagStart(String tagName, Attributes attributes);
-	public Object getConfigObject();
-}
+import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
+
+/**
+ * <!-- begin-user-doc -->
+ * The <b>Resource </b> associated with the package.
+ * <!-- end-user-doc -->
+ * @see org.eclipse.jst.server.generic.servertype.definition.util.ServerTypeResourceFactoryImpl
+ * @generated
+ */
+public class ServerTypeResourceImpl extends XMLResourceImpl {
+	/**
+	 * Creates an instance of the resource.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param uri the URI of the new resource.
+	 * @generated
+	 */
+	public ServerTypeResourceImpl(URI uri) {
+		super(uri);
+	}
+
+} //ServerTypeResourceFactoryImpl

@@ -37,7 +37,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jst.server.generic.internal.core.GenericServerRuntime;
-import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinition;
+import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.generic.ui.GenericServerUIMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -108,7 +108,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
                     .getAttribute(
                             GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,
                             (Map) null);
-        ServerTypeDefinition definition = getServerTypeDefinition(selected,
+        ServerRuntime definition = getServerTypeDefinition(selected,
                 properties);
 
         fServerPanel.reset(definition,
@@ -124,7 +124,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
         Map properties= null;
         if(getRuntimeWorkingCopy()!=null)
             properties = getRuntimeWorkingCopy().getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map)null);
-		ServerTypeDefinition definition = getServerTypeDefinition(selected,properties);
+        ServerRuntime definition = getServerTypeDefinition(selected,properties);
         fServerPanel = new ServerTypeDefinitionGroup(this,definition,ServerTypeDefinitionGroup.CONTEXT_RUNTIME,properties,parent);
     }
     private void createSelectionBar(Composite content) {
@@ -135,7 +135,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 		label.setText(GenericServerUIMessages.getString("runtimeWizard.label.serverType"));
 		label.setLayoutData(new GridData());
 		fServerCombo = new Combo(selectionBar, SWT.BORDER |SWT.READ_ONLY);
-		ServerTypeDefinition[] servers = getAllServerDefinitionTypes();
+		ServerRuntime[] servers = getAllServerDefinitionTypes();
 		for(int i=0; i<servers.length; i++){
 			fServerCombo.add(servers[i].getName());
 		}

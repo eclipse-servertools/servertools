@@ -59,8 +59,11 @@ import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.generic.core.CorePlugin;
 import org.eclipse.jst.server.generic.core.GenericServerCoreMessages;
-import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinition;
 import org.eclipse.jst.server.generic.modules.J2eeSpecModuleFactoryDelegate;
+import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
+import org.eclipse.jst.server.generic.servertype.definition.Classpath;
+import org.eclipse.jst.server.generic.servertype.definition.Port;
+import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.j2ee.IWebModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerConfiguration;
@@ -94,7 +97,7 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 	protected transient IProcess process;
 	protected transient IDebugEventSetListener processListener;
 	
-	private ServerTypeDefinition fServerDefinition;
+	private ServerRuntime fServerDefinition;
 
 	/*
 	 * (non-Javadoc)
@@ -277,7 +280,7 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 				IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_NAME,
 				vmInstall.getName());
 
-		setupLaunchClasspath(workingCopy, vmInstall);
+		setupLaunchClasspath(workingCopy, vmInstall, getStartClasspath());
 
 
 		workingCopy.setAttribute(
@@ -291,13 +294,29 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 				getVmArguments());
 	}
 
-	private List getClasspathMementos() {
-	    List classpathList = getServerDefinition().getServerClassPath();
-	    List mementoList = new ArrayList(classpathList.size());
-	    Iterator iterator= classpathList.iterator();
+	
+	private List getStartClasspath() {
+		String cpRef = getServerDefinition().getStart().getClasspathReference();
+		return serverClasspath(cpRef);
+	}
+	private List getStopClasspath() {
+		String cpRef = getServerDefinition().getStop().getClasspathReference();
+		return serverClasspath(cpRef);
+	}
+
+	/**
+	 * @param cpRef
+	 * @return
+	 */
+	private List serverClasspath(String cpRef) {
+		Classpath classpath = getServerDefinition().getClasspath(cpRef);
+		
+	    List mementoList = new ArrayList(classpath.getArchive().size());
+	    Iterator iterator= classpath.getArchive().iterator();
 	    while(iterator.hasNext())
 	    {
-	        String cpath = (String)iterator.next();
+	    	ArchiveType archive = (ArchiveType)iterator.next();
+	    	String cpath = getServerDefinition().getResolver().resolveProperties(archive.getPath());
 			try {
 				mementoList.add(JavaRuntime.newArchiveRuntimeClasspathEntry(
 						new Path(cpath)).getMemento());
@@ -309,19 +328,19 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 	}
 
 	private String getVmArguments() {
-		return getServerDefinition().getStartVmParameters();
+		return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getVmParameters());
 	}
 
 	private String getProgramArguments() {
-		return getServerDefinition().getStartProgramArguments();
+		return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getProgramArguments());
 	}
 
 	private String getWorkingDirectory() {
-		return getServerDefinition().getStartWorkingDirectory();
+		return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getWorkingDirectory());
 	}
 
 	public String getStartClassName() {
-		return getServerDefinition().getStartClass();
+		return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getClass_());
 	}
 
 	/**
@@ -337,7 +356,7 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 		return instanceProperties;
 	}
 
-	public ServerTypeDefinition getServerDefinition() {
+	public ServerRuntime getServerDefinition() {
 		if (fServerDefinition == null)
 			fServerDefinition = CorePlugin.getDefault()
 					.getServerTypeDefinitionManager()
@@ -359,14 +378,14 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 	 */
 	public List getServerPorts() {
 		List ports = new ArrayList();
-
-	
-		try {
-			int port = Integer.parseInt(this.getServerDefinition().getPort());
-			ports.add(new ServerPort("server", "Server port", port, "TCPIP"));
-		} catch (Exception e) {
+					
+		Iterator pIter = this.getServerDefinition().getPort().iterator();
+		while (pIter.hasNext()) {
+			Port element = (Port) pIter.next();
+			int port = Integer.parseInt(getServerDefinition().getResolver().resolveProperties(element.getNo()));
+			ports.add(new ServerPort("server", element.getName(), port, element.getProtocol()));		
 		}
-
+	
 		return ports;
 	}
 
@@ -461,7 +480,7 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 	
 			wc.setAttribute(
 					IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
-					this.getServerDefinition().getStopClass());
+					getServerDefinition().getResolver().resolveProperties(this.getServerDefinition().getStop().getClass_()));
 
 			GenericServerRuntime runtime = (GenericServerRuntime) fLiveServer
 					.getRuntime().getDelegate();
@@ -474,17 +493,17 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 					IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_NAME,
 					vmInstall.getName());
 
-			setupLaunchClasspath(wc, vmInstall);
+			setupLaunchClasspath(wc, vmInstall, getStopClasspath());
 
 			wc.setAttribute(
 					IJavaLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY,
-					getWorkingDirectory());
+					getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getWorkingDirectory()));
 			wc.setAttribute(
 					IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
-							getServerDefinition().getStopProgramArguments());
+					getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getProgramArguments()));
 			wc.setAttribute(
 					IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
-							getServerDefinition().getStopVmParameters());				
+					getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getVmParameters()));				
 			wc.setAttribute(ATTR_STOP, "true");
 			wc.launch(ILaunchManager.RUN_MODE, new NullProgressMonitor());
 		} catch (Exception e) {
@@ -497,14 +516,11 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 	 * @param wc
 	 * @param vmInstall
 	 */
-	private void setupLaunchClasspath(ILaunchConfigurationWorkingCopy wc, IVMInstall vmInstall) {
-		List cp = getClasspathMementos();
-
+	private void setupLaunchClasspath(ILaunchConfigurationWorkingCopy wc, IVMInstall vmInstall, List cp) {
 		// add tools.jar to the path
 		if (vmInstall != null) {
 			try {
-				cp
-						.add(JavaRuntime
+				cp.add(JavaRuntime
 								.newRuntimeContainerClasspathEntry(
 										new Path(JavaRuntime.JRE_CONTAINER)
 												.append(
@@ -612,7 +628,10 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 				return null;
 
 			String url = "http://localhost";
-			int port = Integer.parseInt(getServerDefinition().getPort());
+			int port = 0;
+			
+			port = getHttpPort();
+			
 			port = ServerCore.getServerMonitorManager().getMonitoredPort(
 					fLiveServer, port, "web");
 			if (port != 80)
@@ -629,6 +648,24 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 			return null;
 		}
 
+	}
+
+	/**
+	 * @return
+	 */
+	private int getHttpPort() {
+		int port=-1;
+		Iterator pIter = this.getServerDefinition().getPort().iterator();
+		while (pIter.hasNext()) {
+			Port aPort = (Port) pIter.next();
+			if(port== -1)
+				port = Integer.parseInt(getServerDefinition().getResolver().resolveProperties(aPort.getNo()));
+			else if( "http".equals(aPort.getProtocol() ) )
+				port = Integer.parseInt(aPort.getNo());	
+		}
+		if( port == -1)
+			port = 8080;
+		return port;
 	}
 
 }

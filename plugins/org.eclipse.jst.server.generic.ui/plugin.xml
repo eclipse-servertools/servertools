@@ -23,6 +23,9 @@
       <import plugin="org.eclipse.jst.server.generic.core"/>
       <import plugin="org.eclipse.wst.server.core" />
       <import plugin="org.eclipse.jst.server.core"/>
+      <import plugin="org.eclipse.emf"/>
+      <import plugin="org.eclipse.emf.ecore"/>
+      <import plugin="org.eclipse.emf.ecore.xmi"/>
    </requires>
 
  <extension

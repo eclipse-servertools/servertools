@@ -8,7 +8,7 @@ package org.eclipse.jst.server.generic.internal.ui;
 
 import java.util.Map;
 import org.eclipse.jst.server.generic.core.CorePlugin;
-import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinition;
+import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.generic.ui.GenericUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -60,12 +60,12 @@ public abstract class ServerDefinitionTypeAwareWizardFragment extends WizardFrag
 
 	public abstract void serverDefinitionTypePropertiesChanged();
 	
-	protected ServerTypeDefinition getServerTypeDefinition(String definitionID, Map properties)
+	protected ServerRuntime getServerTypeDefinition(String definitionID, Map properties)
 	{
 	    return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(definitionID,properties);
 	}
 	
-	protected ServerTypeDefinition[] getAllServerDefinitionTypes()
+	protected ServerRuntime[] getAllServerDefinitionTypes()
 	{
 	    return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerTypeDefinitions();
 	}

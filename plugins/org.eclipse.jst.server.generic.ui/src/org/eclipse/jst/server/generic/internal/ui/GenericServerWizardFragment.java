@@ -32,7 +32,7 @@ package org.eclipse.jst.server.generic.internal.ui;
 
 import java.util.Map;
 import org.eclipse.jst.server.generic.internal.core.GenericServerRuntime;
-import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinition;
+import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.generic.ui.GenericServerUIMessages;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
@@ -68,7 +68,7 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
 	private void createBody(Composite parent, IWizardHandle handle) 
 	{
 		IServerWorkingCopy server = getServer();
-		ServerTypeDefinition definition = getServerTypeDefinitionFor(server);
+		ServerRuntime definition = getServerTypeDefinitionFor(server);
 		fComposite = new ServerTypeDefinitionGroup(this, definition,ServerTypeDefinitionGroup.CONTEXT_SERVER, null,parent);
 		flag=true;
 	}
@@ -77,10 +77,10 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
      * @param server
      * @return
      */
-    private ServerTypeDefinition getServerTypeDefinitionFor(IServerWorkingCopy server) {
+    private ServerRuntime getServerTypeDefinitionFor(IServerWorkingCopy server) {
         String ID = server.getRuntime().getAttribute(GenericServerRuntime.SERVER_DEFINITION_ID,(String)null);
 		Map runtimeProperties = server.getRuntime().getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map)null);
-		ServerTypeDefinition definition = getServerTypeDefinition(ID,runtimeProperties);
+		ServerRuntime definition = getServerTypeDefinition(ID,runtimeProperties);
         return definition;
     }
 
@@ -94,7 +94,7 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
 
     public void enter() {
         IServerWorkingCopy server = getServer();
-        ServerTypeDefinition definition = getServerTypeDefinitionFor(server);
+        ServerRuntime definition = getServerTypeDefinitionFor(server);
         fComposite.reset(definition,ServerTypeDefinitionGroup.CONTEXT_SERVER,null);
 	}
 	public void exit(){
@@ -126,7 +126,7 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
     public void serverDefinitionTypePropertiesChanged() {
         fProperties = fComposite.getProperties();
         IServerWorkingCopy serverWorkingCopy = getServer();
-        ServerTypeDefinition definition = getServerTypeDefinitionFor(serverWorkingCopy);
+        ServerRuntime definition = getServerTypeDefinitionFor(serverWorkingCopy);
         
         serverWorkingCopy.setName(GenericServerUIMessages.getFormattedString("serverName",new String[] {definition.getName()}));
         serverWorkingCopy.setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,getServerProperties());

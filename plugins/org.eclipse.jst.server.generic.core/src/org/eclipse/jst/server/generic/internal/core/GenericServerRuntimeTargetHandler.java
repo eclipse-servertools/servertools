@@ -36,7 +36,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.ClasspathRuntimeTargetHandler;
-import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinition;
+import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.IRuntime;
 /**
  * Provides the Classpath containers to be added into project classpaths.
@@ -57,7 +57,7 @@ public class GenericServerRuntimeTargetHandler extends
 	 * @see com.ibm.wtp.server.java.core.ClasspathRuntimeTargetHandler#getClasspathContainerLabel(com.ibm.wtp.server.core.IRuntime, java.lang.String)
 	 */
 	public String getClasspathContainerLabel(IRuntime runtime, String id) {
-		ServerTypeDefinition definition= ServerTypeDefinitionUtil.getServerTypeDefinition(runtime);
+		ServerRuntime definition= ServerTypeDefinitionUtil.getServerTypeDefinition(runtime);
 		return definition.getName();
 	}
 

@@ -31,8 +31,9 @@
 package org.eclipse.jst.server.generic.internal.core;
 
 import java.io.File;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.launching.IVMInstall;
@@ -40,7 +41,9 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.IGenericRuntime;
 import org.eclipse.jst.server.generic.core.CorePlugin;
 import org.eclipse.jst.server.generic.core.GenericServerCoreMessages;
-import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinition;
+import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
+import org.eclipse.jst.server.generic.servertype.definition.Classpath;
+import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.ServerUtil;
 /**
@@ -90,17 +93,26 @@ public class GenericServerRuntime implements IGenericRuntime
 		if (getVMInstall() == null)
 			return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.getString("errorJRE"), null);
 		
-		ServerTypeDefinition serverTypeDefinition = getServerTypeDefinition();
+		ServerRuntime serverTypeDefinition = getServerTypeDefinition();
         if(serverTypeDefinition == null)
 		    return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.getString("errorNoServerType"), null);
-		List cpList  = serverTypeDefinition.getServerClassPath();
-        if(cpList== null || cpList.size()<1)
+        if(serverTypeDefinition.getClasspath()== null || serverTypeDefinition.getClasspath().size()<1)
             return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,GenericServerCoreMessages.getString("errorNoClasspath"),null);
-        for (int i = 0; i < cpList.size(); i++) {
-            File f = new File((String)cpList.get(i));
-            if(f.exists()==false)
-                return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,GenericServerCoreMessages.getFormattedString("errorMissingClasspathEntry",new String[]{f.getPath()} ),null);
-        }
+		Iterator cpList  = serverTypeDefinition.getClasspath().iterator();
+        while (cpList.hasNext()) {
+			Classpath cpth = (Classpath) cpList.next();
+	        if(cpth.getArchive()== null || cpth.getArchive().size()<1)
+	            return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,GenericServerCoreMessages.getString("errorNoClasspath"),null);
+			Iterator archIter = cpth.getArchive().iterator();
+			while (archIter.hasNext()) {
+				ArchiveType arch = (ArchiveType) archIter.next();
+				String arcPath = serverTypeDefinition.getResolver().resolveProperties((String)arch.getPath());
+		           File f = new File(arcPath);
+		            if(f.exists()==false)
+		                return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,GenericServerCoreMessages.getFormattedString("errorMissingClasspathEntry",new String[]{f.getPath()} ),null);	
+			}
+ 			
+		}
         return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "", null);
 	}
 	/**
@@ -109,7 +121,7 @@ public class GenericServerRuntime implements IGenericRuntime
 	 * 
 	 * @return populated ServerTypeDefinition
 	 */
-	public ServerTypeDefinition getServerTypeDefinition()
+	public ServerRuntime getServerTypeDefinition()
 	{
 	   String id=  fRuntime.getAttribute(SERVER_DEFINITION_ID,(String)null);
 	   Map properties = fRuntime.getAttribute(SERVER_INSTANCE_PROPERTIES,(Map)null);
