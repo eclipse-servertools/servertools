@@ -24,7 +24,7 @@ public class MonitorTestCase extends TestCase {
 	}
 
 	public static Test suite() {
-		return new OrderedTestSuite(MonitorListenerTestCase.class, "MonitorListenerTestCase");
+		return new OrderedTestSuite(MonitorListenerTestCase.class, "MonitorTestCase");
 	}
 	
 	public void test00GetMonitors() throws Exception {

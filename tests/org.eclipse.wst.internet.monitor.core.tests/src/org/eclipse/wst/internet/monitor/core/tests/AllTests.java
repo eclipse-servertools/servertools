@@ -22,6 +22,7 @@ public class AllTests {
 		suite.addTestSuite(ContentFiltersTestCase.class);
 		suite.addTest(new OrderedTestSuite(MonitorTestCase.class));
 		suite.addTest(new OrderedTestSuite(MonitorListenerTestCase.class));
+		suite.addTest(new OrderedTestSuite(RequestTestCase.class));
 		//$JUnit-END$
 		return suite;
 	}
