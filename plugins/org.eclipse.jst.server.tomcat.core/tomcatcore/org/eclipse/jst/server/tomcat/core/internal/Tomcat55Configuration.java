@@ -209,8 +209,6 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 			serverFactory = new Factory();
 			serverFactory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server40");
 			server = (Server) serverFactory.loadDocument(new FileInputStream(path.append("server.xml").toFile()));
-			if (!TomcatConfigurationUtil.verifyConfiguration(this, TomcatConfigurationUtil.CONFIGURATION_V55))
-				throw new CoreException(null);
 			monitor.worked(1);
 
 			webAppDocument = new WebAppDocument(path.append("web.xml"));
@@ -265,8 +263,6 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 			serverFactory = new Factory();
 			serverFactory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server40");
 			server = (Server) serverFactory.loadDocument(in);
-			if (!TomcatConfigurationUtil.verifyConfiguration(this, TomcatConfigurationUtil.CONFIGURATION_V41))
-				throw new Exception("Not a Tomcat v5.5 configuration");
 			monitor.worked(200);
 	
 			// load web.xml
