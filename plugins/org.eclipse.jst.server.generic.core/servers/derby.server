@@ -1,0 +1,57 @@
+<serverDefinition 
+	 name="Apache Derby Network Server"
+	 ejbModules="false"
+	 webModules="false"
+	 earModules="false">
+<property id="serverRootDirectory"
+	label="Derby Directory:"
+	type="directory"
+	context="runtime"
+	default="/your_server_root/apache-derby-10.0" />
+<property id="serverAddress"
+	label="Host:"
+	type="string"
+	context="server"
+	default="127.0.0.1" />
+<property id="port"
+	label="Port:"
+	type="string"
+	context="server"
+	default="1527" />
+<serverHome>${serverRootDirectory}</serverHome>
+<webModulesDeployDirectory>${serverRootDirectory}</webModulesDeployDirectory>
+<ejbModulesDeployDirectory>${serverRootDirectory}</ejbModulesDeployDirectory>
+<earModulesDeployDirectory>${serverRootDirectory}</earModulesDeployDirectory>
+<jndiInitialContextFactory></jndiInitialContextFactory>
+<jndiProviderUrl></jndiProviderUrl>
+<startClass>org.apache.derby.drda.NetworkServerControl</startClass>
+<startWorkingDirectory>${serverRootDirectory}</startWorkingDirectory>
+<startVmParameters></startVmParameters>
+<startProgramArguments>start -h ${serverAddress} -p ${port}</startProgramArguments>
+<stopClass>org.apache.derby.drda.NetworkServerControl</stopClass>
+<stopWorkingDirectory>${serverRootDirectory}</stopWorkingDirectory>
+<stopVmParameters></stopVmParameters>
+<stopProgramArguments>shutdown -h ${serverAddress} -p ${port}</stopProgramArguments>
+<serverClassPath>
+	<jar type="variable">${serverRootDirectory}/lib/derby.jar</jar>
+	<jar type="variable">${serverRootDirectory}/lib/derbytools.jar</jar>
+	<jar type="variable">${serverRootDirectory}/lib/derbynet.jar</jar>
+</serverClassPath>
+<clientClassPath>
+	<jar type="variable">${serverRootDirectory}/lib/derby.jar</jar>
+	<jar type="variable">${serverRootDirectory}/lib/derbytools.jar</jar>
+	<jar type="variable">${serverRootDirectory}/lib/derbynet.jar</jar>
+</clientClassPath>
+<projectClassPath>
+	<jar type="variable">${serverRootDirectory}/lib/derby.jar</jar>
+	<jar type="variable">${serverRootDirectory}/lib/derbytools.jar</jar>
+	<jar type="variable">${serverRootDirectory}/lib/derbynet.jar</jar>
+</projectClassPath>
+<adminTool>
+</adminTool>
+<adminToolPath>
+	<jar type="variable">${serverRootDirectory}/lib/derby.jar</jar>
+	<jar type="variable">${serverRootDirectory}/lib/derbytools.jar</jar>
+	<jar type="variable">${serverRootDirectory}/lib/derbynet.jar</jar>
+</adminToolPath>
+</serverDefinition>
