@@ -13,8 +13,8 @@ package org.eclipse.wst.server.ui.internal;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerPreferences;
 import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.ServerPreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -46,7 +46,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	
 	protected Button createInWorkspace;
 
-	protected IServerPreferences preferences;
+	protected ServerPreferences preferences;
 	protected ServerUIPreferences uiPreferences;
 	
 	protected Combo autoPublishLocal;
@@ -58,7 +58,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	public ServerPreferencePage() {
 		super();
 	
-		preferences = ServerCore.getServerPreferences();
+		preferences = ServerPreferences.getInstance();
 		uiPreferences = ServerUIPlugin.getPreferences();
 	}
 	

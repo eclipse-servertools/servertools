@@ -11,12 +11,10 @@
 package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.*;
-
-import org.eclipse.wst.server.core.*;
 /**
  * Helper class that stores preference information for server tools.
  */
-public class ServerPreferences implements IServerPreferences {
+public class ServerPreferences {
 	private static final String PREF_AUTO_RESTART = "auto-restart";
 	private static final String PREF_AUTO_PUBLISH = "auto-publish";
 	private static final String PREF_CREATE_IN_WORKSPACE = "create-workspace";
@@ -45,7 +43,7 @@ public class ServerPreferences implements IServerPreferences {
 		preferences = ServerPlugin.getInstance().getPluginPreferences();
 	}
 
-	public static ServerPreferences getServerPreferences() {
+	public static ServerPreferences getInstance() {
 		if (instance == null)
 			instance = new ServerPreferences();
 		return instance;

@@ -54,7 +54,7 @@ public class LaunchClientJob extends Job {
 
 		// wait for up to 5 minutes
 		int state = server.getModuleState(module);
-		int count = ((ServerPreferences)ServerCore.getServerPreferences()).getModuleStartTimeout();
+		int count = ServerPreferences.getInstance().getModuleStartTimeout();
 		while (state == IServer.STATE_STARTING && count > 0) {
 			if (monitor.isCanceled())
 				return status;

@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.ServerPreferences;
 /**
  * 
  */
@@ -32,7 +32,7 @@ public class PublishServerJob extends Job {
 	 * Returns whether this job should be run.
 	 */
 	public boolean shouldRun() {
-		return ServerCore.getServerPreferences().isAutoPublishing() && server.shouldPublish();
+		return ServerPreferences.getInstance().isAutoPublishing() && server.shouldPublish();
 	}
 
 	/* (non-Javadoc)

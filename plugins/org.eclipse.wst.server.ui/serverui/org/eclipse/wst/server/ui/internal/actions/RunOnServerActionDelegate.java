@@ -165,6 +165,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				return;
 			}
 
+			// TODO - this can't be called until the wizard's job finishes!!
 			server = wizard.getServer();
 			boolean preferred = wizard.isPreferredServer();
 			tasksRun = true;

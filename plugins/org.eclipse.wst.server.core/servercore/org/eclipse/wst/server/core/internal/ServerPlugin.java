@@ -253,7 +253,7 @@ public class ServerPlugin extends Plugin {
 	}
 	
 	protected void initializeDefaultPluginPreferences() {
-		ServerPreferences.getServerPreferences().setDefaults();
+		ServerPreferences.getInstance().setDefaults();
 	}
 
 	/**

@@ -107,15 +107,6 @@ public class ServerCore {
 	public static IServerMonitorManager getServerMonitorManager() {
 		return ServerMonitorManager.getInstance();
 	}
-
-	/**
-	 * Returns the preference information for the server core plugin.
-	 *
-	 * @return org.eclipse.wst.server.core.IServerPreferences
-	 */
-	public static IServerPreferences getServerPreferences() {
-		return ServerPreferences.getServerPreferences();
-	}
 	
 	/**
 	 * Returns the preference information for the project. The project may not
