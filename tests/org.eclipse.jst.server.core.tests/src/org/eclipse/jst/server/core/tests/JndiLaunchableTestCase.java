@@ -32,12 +32,4 @@ public class JndiLaunchableTestCase extends TestCase {
 	public void test02GetJNDIName() {
 		assertEquals(launch.getJNDIName(), "test");
 	}
-	
-	public void test03GetServer() {
-		assertNull(launch.getServer());
-	}
-	
-	public void test04GetHTTPPort() {
-		assertEquals(launch.getHTTPPort(), 0);
-	}
 }
