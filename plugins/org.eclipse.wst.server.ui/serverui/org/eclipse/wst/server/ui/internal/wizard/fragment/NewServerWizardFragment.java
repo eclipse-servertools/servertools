@@ -136,12 +136,12 @@ public class NewServerWizardFragment extends WizardFragment {
 			
 			IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
 			if (server != null) {
-				/*createConfiguration(server);
+//				createConfiguration(server);
 				WizardFragment sub = getWizardFragment(server.getServerType().getId());
 				if (sub != null)
 					list.add(sub);
 			
-				IServerConfiguration serverConfiguration = server.getServerConfiguration();
+				/*IServerConfiguration serverConfiguration = server.getServerConfiguration();
 				if (serverConfiguration != null) {
 					sub = getWizardFragment(serverConfiguration.getServerConfigurationType().getId());
 					if (sub != null)
