@@ -21,7 +21,9 @@
       <import plugin="org.eclipse.wst.server.ui"/>
       <import plugin="org.eclipse.jst.server.tomcat.core"/>
       <import plugin="org.eclipse.jst.server.tomcat.ui"/>
+      <import plugin="org.eclipse.wst.server.core.tests"/>
       <import plugin="org.eclipse.wst.server.ui.tests"/>
+      <import plugin="org.eclipse.jst.server.tomcat.core.tests"/>
    </requires>
 
 </plugin>

@@ -26,8 +26,9 @@ public class RuntimeLocatorsTestCase extends TestCase {
 		IRuntimeLocator[] runtimeLocators = ServerCore.getRuntimeLocators();
 		if (runtimeLocators != null) {
 			int size = runtimeLocators.length;
-			for (int i = 0; i < size; i++)
-				System.out.println(runtimeLocators[i].getId() + " - " + runtimeLocators[i].getName());
+			for (int i = 0; i < size; i++) {
+				System.out.println(runtimeLocators[i]);
+			}
 		}
 	}
 }

@@ -15,9 +15,20 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
+import org.eclipse.wst.server.core.model.ServerDelegate;
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
-
+/**
+ * Abstract server test case. Use this harness to test a specific server.
+ * All you have to do is extend this class, implement the abstract
+ * method(s) and add the test case to your suite.
+ * <p>
+ * You are welcome to add type-specific tests to this method. The test
+ * method numbers (i.e. the XX in testXX()) should be between 200 and 1000.
+ * </p>
+ */
 public abstract class AbstractServerTestCase extends TestCase {
 	protected static IProject project;
 	protected static IProjectProperties props;
@@ -28,16 +39,18 @@ public abstract class AbstractServerTestCase extends TestCase {
 		return new OrderedTestSuite(AbstractServerTestCase.class, "AbstractServerTestCase");
 	}
 	
-	protected IServer getServer() {
+	protected IServer getServer() throws Exception {
 		if (server == null)
 			server = createServer();
 		
 		return server;
 	}
 
-	protected abstract IServer createServer();
+	public abstract IServer createServer() throws Exception;
+	
+	public abstract void deleteServer(IServer server2) throws Exception;
 
-	public void test00GetProperties() throws Exception {
+	public void test0000GetProperties() throws Exception {
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject("test");
 		if (project != null && !project.exists()) {
 			project.create(null);
@@ -46,21 +59,70 @@ public abstract class AbstractServerTestCase extends TestCase {
 		props = ServerCore.getProjectProperties(project);
 	}
 
-	public void test01GetServer() throws Exception {
+	public void test0001GetServer() throws Exception {
 		assertNull(props.getDefaultServer());
 	}
 
-	public void test02SetServer() throws Exception {
+	public void test0002SetServer() throws Exception {
 		props.setDefaultServer(getServer(), null);
 		assertEquals(props.getDefaultServer(), getServer());
 	}
 
-	public void test03UnSetServer() throws Exception {
+	public void test0003UnSetServer() throws Exception {
 		props.setDefaultServer(null, null);
 		assertNull(props.getDefaultServer());
 	}
 
-	public void test04End() throws Exception {
+	public void test0004End() throws Exception {
 		project.delete(true, true, null);
+	}
+
+	public void test0005Delegate() throws Exception {
+		getServer().getAdapter(ServerDelegate.class);
+	}
+
+	public void test0006Delegate() throws Exception {
+		getServer().getAdapter(ServerBehaviourDelegate.class);
+	}
+	
+	public void test0007Publish() throws Exception {
+		getServer().publish(IServer.PUBLISH_FULL, null);
+	}
+	
+	public void test0008CanRun() throws Exception {
+		assertTrue(getServer().canStart(ILaunchManager.RUN_MODE));
+	}
+	
+	public void test0009Run() throws Exception {
+		getServer().synchronousStart(ILaunchManager.RUN_MODE, null);
+	}
+	
+	public void test0010CanStop() throws Exception {
+		assertTrue(getServer().canStop());
+	}
+	
+	public void test0011Stop() throws Exception {
+		getServer().synchronousStop(false);
+	}
+	
+	public void test0012CanDebug() throws Exception {
+		assertTrue(getServer().canStart(ILaunchManager.DEBUG_MODE));
+	}
+	
+	public void test0013Debug() throws Exception {
+		getServer().synchronousStart(ILaunchManager.DEBUG_MODE, null);
+	}
+	
+	public void test0014CanStop() throws Exception {
+		assertTrue(getServer().canStop());
+	}
+	
+	public void test0015Stop() throws Exception {
+		getServer().synchronousStop(false);
+	}
+
+	public void test1001Delete() throws Exception {
+		deleteServer(getServer());
+		server = null;
 	}
 }

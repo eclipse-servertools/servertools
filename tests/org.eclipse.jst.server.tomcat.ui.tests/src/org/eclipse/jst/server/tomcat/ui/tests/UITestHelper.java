@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/cpl-v10.html
  * 
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ *    IBM - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.ui.tests;
 
