@@ -97,10 +97,10 @@ public class ServerUIUtil {
 	 * @param keepOpen boolean
 	 * @return IStatus
 	 */
-	public static IStatus publishWithDialog(IServer server, boolean keepOpen) {
+	/*public static IStatus publishWithDialog(IServer server, boolean keepOpen) {
 		Shell shell = ServerUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
 		return PublishDialog.publish(shell, server, keepOpen);
-	}
+	}*/
 
 	/**
 	 * Publish with the given server control, and display
@@ -188,10 +188,10 @@ public class ServerUIUtil {
 	 * 
 	 * @return boolean - Returns false if the user cancelled the operation.
 	 */
-	public static boolean publish(IServer server) {
+	public static boolean publish(Shell shell, IServer server) {
 		if (ServerCore.getServerPreferences().isAutoPublishing() && server.shouldPublish()) {
 			// publish first
-			IStatus status = publishWithDialog(server, false);
+			IStatus status = publishWithDialog(shell, server, false);
 
 			if (status == null || status.getSeverity() == IStatus.ERROR) // user cancelled
 				return false;

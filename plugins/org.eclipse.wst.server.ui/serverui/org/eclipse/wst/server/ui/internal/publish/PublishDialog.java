@@ -749,7 +749,7 @@ public class PublishDialog extends Dialog implements IRunnableContext {
 			dialog.run(true, true, runnable);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error in publishing dialog", e);
-			return new Status(IStatus.ERROR, ServerUICore.PLUGIN_ID, 0, ServerUIPlugin.getResource("%errorPublishing"), e);
+			return new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, ServerUIPlugin.getResource("%errorPublishing"), e);
 		} finally {
 			server2.removePublishListener(listener);
 		}

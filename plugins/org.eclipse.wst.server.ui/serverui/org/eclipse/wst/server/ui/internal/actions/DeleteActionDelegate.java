@@ -1,15 +1,15 @@
-package org.eclipse.wst.server.ui.internal.actions;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.actions;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -17,18 +17,19 @@ import java.util.List;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.wst.server.core.IElement;
+import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.ui.internal.view.servers.DeleteAction;
 import org.eclipse.wst.server.ui.internal.view.tree.ServerElementAdapter;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-
 /**
  * 
  */
 public class DeleteActionDelegate implements IWorkbenchWindowActionDelegate {
-	protected IElement[] resources;
+	protected Object[] resources;
 	protected Shell shell;
 
 	/**
@@ -73,17 +74,21 @@ public class DeleteActionDelegate implements IWorkbenchWindowActionDelegate {
 		
 		while (iterator.hasNext()) {
 			Object obj = iterator.next();
-			if (obj instanceof IElement) {
+			if (obj instanceof IRuntime)
 				list.add(obj);
-			} else if (obj instanceof ServerElementAdapter) {
+			else if (obj instanceof IServer)
+				list.add(obj);
+			else if (obj instanceof IServerConfiguration)
+				list.add(obj);
+			else if (obj instanceof ServerElementAdapter)
 				list.add(((ServerElementAdapter) obj).getServerResource());
-			} else {
+			else {
 				action.setEnabled(false);
 				return;
 			}
 		}
 		
-		resources = new IElement[list.size()];
+		resources = new Object[list.size()];
 		list.toArray(resources);
 		action.setEnabled(true);
 	}

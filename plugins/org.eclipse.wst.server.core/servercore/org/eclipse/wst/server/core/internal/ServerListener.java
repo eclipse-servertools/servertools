@@ -11,14 +11,13 @@
 package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.*;
-import org.eclipse.wst.server.core.util.ServerResourceAdapter;
+import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
 /**
  * Listens for messages from the servers. This class keeps
  * track of server instances current state and any clients
  * that are waiting to run on the server. 
  */
-public class ServerListener extends ServerResourceAdapter implements IServerListener {
+public class ServerListener extends ServerLifecycleAdapter implements IServerListener {
 	// static instance
 	protected static ServerListener listener;
 

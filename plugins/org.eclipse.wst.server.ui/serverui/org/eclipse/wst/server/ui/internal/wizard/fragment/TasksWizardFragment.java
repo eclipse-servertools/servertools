@@ -23,8 +23,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.util.ProgressUtil;
 import org.eclipse.wst.server.core.util.Task;
+import org.eclipse.wst.server.ui.internal.EclipseUtil;
+import org.eclipse.wst.server.ui.internal.ProgressUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.wizard.page.TasksComposite;
@@ -298,7 +299,7 @@ public class TasksWizardFragment extends WizardFragment {
 				IFile file = serverWC.getFile();
 				if (file != null && !file.getProject().exists()) {
 					IProject project = file.getProject();
-					ServerCore.createServerProject(project.getName(), null, monitor);
+					EclipseUtil.createNewServerProject(null, project.getName(), null, monitor);
 				}
 				taskModel.putObject(ITaskModel.TASK_SERVER, serverWC.save(false, monitor));
 			} else
@@ -310,7 +311,7 @@ public class TasksWizardFragment extends WizardFragment {
 				IFile file = configWC.getFile();
 				if (file != null && !file.getProject().exists()) {
 					IProject project = file.getProject();
-					ServerCore.createServerProject(project.getName(), null, monitor);
+					EclipseUtil.createNewServerProject(null, project.getName(), null, monitor);
 				}
 				taskModel.putObject(ITaskModel.TASK_SERVER_CONFIGURATION, configWC.save(false, monitor));
 			} else

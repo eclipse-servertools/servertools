@@ -16,6 +16,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.wst.server.core.IElement;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.ITask;
 import org.eclipse.wst.server.ui.editor.ICommandManager;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -56,8 +58,8 @@ public class ServerResourceCommandManager implements ICommandManager {
 	}
 
 	protected void warnReadOnly() {
-		String title = ServerUIPlugin.getResource("%editorfileWarnTitle");
-		String message = ServerUIPlugin.getResource("%editorfileWarnMessage");
+		String title = ServerUIPlugin.getResource("%editorResourceWarnTitle");
+		String message = ServerUIPlugin.getResource("%editorResourceWarnMessage");
 		
 		MessageDialog.openWarning(editor.getEditorSite().getShell(), title, message);
 	}
@@ -88,8 +90,12 @@ public class ServerResourceCommandManager implements ICommandManager {
 		}
 		// check file timestamp
 		IElement serverfile = commandManager.getServerResource(id);
-		if (commandManager.hasChanged(id))
-			editor.promptReloadServerFile(id, serverfile);
+		if (commandManager.hasChanged(id)) {
+			if (serverfile instanceof IServer)
+				editor.promptReloadServerFile(id, (IServer) serverfile);
+			else
+				editor.promptReloadServerConfigurationFile(id, (IServerConfiguration) serverfile);
+		}
 		
 		// allow edit
 		return true;

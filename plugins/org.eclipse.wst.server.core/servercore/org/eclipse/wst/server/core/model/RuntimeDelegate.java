@@ -16,7 +16,6 @@ import java.util.Map;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.wst.server.core.IElement;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.ServerUtil;
@@ -214,7 +213,6 @@ public abstract class RuntimeDelegate {
 	 * 
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
-	 * @see IElement#getAttribute(String, int)
 	 */
 	public final void setAttribute(String id, int value) {
 		runtimeWC.setAttribute(id, value);
@@ -226,7 +224,6 @@ public abstract class RuntimeDelegate {
 	 * 
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
-	 * @see IElement#getAttribute(String, boolean)
 	 */
 	public final void setAttribute(String id, boolean value) {
 		runtimeWC.setAttribute(id, value);
@@ -238,7 +235,6 @@ public abstract class RuntimeDelegate {
 	 * 
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
-	 * @see IElement#getAttribute(String, String)
 	 */
 	public final void setAttribute(String id, String value) {
 		runtimeWC.setAttribute(id, value);
@@ -253,7 +249,6 @@ public abstract class RuntimeDelegate {
 	 * 
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
-	 * @see IElement#getAttribute(String, List)
 	 */
 	public final void setAttribute(String id, List value) {
 		runtimeWC.setAttribute(id, value);
@@ -268,7 +263,6 @@ public abstract class RuntimeDelegate {
 	 * 
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
-	 * @see IElement#getAttribute(String, Map)
 	 */
 	public final void setAttribute(String id, Map value) {
 		runtimeWC.setAttribute(id, value);

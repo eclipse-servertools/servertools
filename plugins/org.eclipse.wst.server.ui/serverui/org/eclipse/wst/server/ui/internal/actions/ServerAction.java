@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.actions;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.wst.server.ui.internal.actions;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.actions;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,12 +26,11 @@ import org.eclipse.wst.server.core.IOrdered;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.actions.IServerAction;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-
 /**
  *
  */
@@ -213,7 +213,7 @@ public class ServerAction implements IOrdered {
 	private static void loadServerActions() {
 		Trace.trace(Trace.CONFIG, "->- Loading .serverActions extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUICore.PLUGIN_ID, "serverActions");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "serverActions");
 
 		int size = cf.length;
 		serverActions = new ArrayList(size);

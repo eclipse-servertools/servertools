@@ -18,7 +18,6 @@ import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.ServerStartupListener;
 import org.eclipse.swt.widgets.Shell;
-
 /**
  * Start a server.
  */
@@ -55,7 +54,7 @@ public class StartAction extends AbstractServerAction {
 		if (!ServerUIUtil.saveEditors())
 			return;
 		
-		if (!ServerUIUtil.publish(server))
+		if (!ServerUIUtil.publish(shell, server))
 			return;
 		
 		ServerStartupListener listener = new ServerStartupListener(shell, server);

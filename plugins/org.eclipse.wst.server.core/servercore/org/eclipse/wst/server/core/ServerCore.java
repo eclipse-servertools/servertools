@@ -15,7 +15,6 @@ import java.util.*;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.wst.server.core.model.*;
-import org.eclipse.wst.server.core.util.ProgressUtil;
 import org.eclipse.wst.server.core.internal.*;
 /**
  * Main class for server core API.
@@ -449,157 +448,6 @@ public class ServerCore {
 	}
 
 	/**
-	 * Returns a list of all open server projects (IServerProjects)
-	 * in the workbench.
-	 *
-	 * @return java.util.List
-	 */
-	public static List getServerNatures() {
-		try {
-			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-	
-			List list = new ArrayList();
-			int size = projects.length;
-			for (int i = 0; i < size; i++) {
-				try {
-					if (projects[i].isOpen() && projects[i].hasNature(IServerProject.NATURE_ID))
-						list.add(projects[i].getNature(IServerProject.NATURE_ID));
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error adding server nature", e);
-				}
-			}
-	
-			return list;
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error getting server natures", e);
-			return new ArrayList();
-		}
-	}
-
-	/**
-	 * Returns a list of all server projects (IProjects) in
-	 * the workbench.
-	 *
-	 * @return java.util.List
-	 */
-	public static List getServerProjects() {
-		try {
-			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-	
-			List list = new ArrayList();
-			int size = projects.length;
-			for (int i = 0; i < size; i++) {
-				try {
-					if (projects[i].hasNature(IServerProject.NATURE_ID))
-						list.add(projects[i]);
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error adding server nature project", e);
-				}
-			}
-
-			return list;
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error getting server nature projects", e);
-			return new ArrayList();
-		}
-	}
-	
-	/**
-	 * Add the given nature to the project.
-	 *
-	 * @param monitor
-	 * @param project org.eclipse.core.resources.IProject
-	 */
-	private static boolean addNature(IProject project, String natureId, IProgressMonitor monitor) {
-		if (project == null)
-			return false;
-
-		try {
-			monitor = ProgressUtil.getMonitorFor(monitor);
-
-			// make sure the project is open
-			if (!project.isOpen()) {
-				monitor.beginTask(ServerPlugin.getResource("%createServerProjectTask"), 2000);
-				project.open(ProgressUtil.getSubMonitorFor(monitor, 1000));
-			} else
-				monitor.beginTask(ServerPlugin.getResource("%createServerProjectTask"), 1000);
-		
-			// get the current natures
-			IProjectDescription desc = project.getDescription();
-			String[] natureIds = desc.getNatureIds();
-			if (natureIds == null)
-				natureIds = new String[0];
-	
-			// check that the nature isn't already there..
-			int size = natureIds.length;
-			for (int i = 0; i < size; i++) {
-				if (natureId.equals(natureIds[i]))
-					return true;
-			}
-	
-			// otherwise, add the new nature
-			String[] newNatureIds = new String[size + 1];
-			System.arraycopy(natureIds, 0, newNatureIds, 0, size);
-			newNatureIds[size] = natureId;
-			desc.setNatureIds(newNatureIds);
-	
-			project.setDescription(desc, ProgressUtil.getSubMonitorFor(monitor, 1000));
-			return true;
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not add nature to " + project.getName(), e);
-			return false;
-		} finally {
-			monitor.done();
-		}
-	}
-
-	/**
-	 * Creates a new server project with the given name. If path is
-	 * null, it will be created in the default location.
-	 *
-	 * @param name java.lang.String
-	 * @param path org.eclipse.core.resource.IPath
-	 * @param monitor
-	 * @return org.eclipse.core.runtime.IStatus
-	 */
-	public static IStatus createServerProject(String name, IPath path, IProgressMonitor monitor) {
-		monitor = ProgressUtil.getMonitorFor(monitor);
-		monitor.beginTask(ServerPlugin.getResource("%createServerProjectTask"), 3000);
-
-		try {
-			IWorkspace workspace = ResourcesPlugin.getWorkspace();
-			IProject project = workspace.getRoot().getProject(name);
-	
-			// get a project descriptor
-			IProjectDescription description = workspace.newProjectDescription(name);
-			description.setLocation(path);
-	
-			project.create(description, ProgressUtil.getSubMonitorFor(monitor, 1000));
-			if (monitor.isCanceled())
-				return null;
-			project.open(ProgressUtil.getSubMonitorFor(monitor, 1000));
-			if (monitor.isCanceled())
-				return null;
-
-			// add the server project nature
-			addNature(project, IServerProject.NATURE_ID, ProgressUtil.getSubMonitorFor(monitor, 1000));
-	
-			if (monitor.isCanceled())
-				return null;
-	
-			return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%serverProjectCreated"), null);
-		} catch (CoreException ce) {
-			Trace.trace(Trace.SEVERE, "Could not create server project named " + name, ce);
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCouldNotCreateServerProjectStatus", ce.getMessage()), ce);
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not create server project (2) named " + name, e);
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCouldNotCreateServerProject"), e);
-		} finally {
-			monitor.done();
-		}
-	}
-
-	/**
 	 * Load the server startups.
 	 */
 	private static synchronized void executeStartups() {
@@ -991,23 +839,63 @@ public class ServerCore {
 	}
 	
 	/**
-	 * Adds a new server resource listener.
+	 * Adds a new runtime lifecycle listener.
 	 * Has no effect if an identical listener is already registered.
 	 *
-	 * @param listener org.eclipse.wst.server.model.IServerResourceListener
+	 * @param listener org.eclipse.wst.server.IRuntimeLifecycleListener
 	 */
-	public static void addResourceListener(IServerResourceListener listener) {
-		getResourceManager().addResourceListener(listener);
+	public static void addRuntimeLifecycleListener(IRuntimeLifecycleListener listener) {
+		getResourceManager().addRuntimeLifecycleListener(listener);
 	}
 
 	/**
-	 * Removes a server resource listener.
+	 * Removes a runtime lifecycle listener.
 	 * Has no effect if the listener is not registered.
 	 *
-	 * @param listener org.eclipse.wst.server.model.IServerResourceListener
+	 * @param listener org.eclipse.wst.server.IRuntimeLifecycleListener
 	 */
-	public static void removeResourceListener(IServerResourceListener listener) {
-		getResourceManager().removeResourceListener(listener);
+	public static void removeRuntimeLifecycleListener(IRuntimeLifecycleListener listener) {
+		getResourceManager().removeRuntimeLifecycleListener(listener);
+	}
+	
+	/**
+	 * Adds a new server lifecycle listener.
+	 * Has no effect if an identical listener is already registered.
+	 *
+	 * @param listener org.eclipse.wst.server.IServerLifecycleListener
+	 */
+	public static void addServerLifecycleListener(IServerLifecycleListener listener) {
+		getResourceManager().addServerLifecycleListener(listener);
+	}
+
+	/**
+	 * Removes a server lifecycle listener.
+	 * Has no effect if the listener is not registered.
+	 *
+	 * @param listener org.eclipse.wst.server.IServerLifecycleListener
+	 */
+	public static void removeServerLifecycleListener(IServerLifecycleListener listener) {
+		getResourceManager().removeServerLifecycleListener(listener);
+	}
+	
+	/**
+	 * Adds a new server configuration lifecycle listener.
+	 * Has no effect if an identical listener is already registered.
+	 *
+	 * @param listener org.eclipse.wst.server.IServerConfigurationLifecycleListener
+	 */
+	public static void addServerConfigurationLifecycleListener(IServerConfigurationLifecycleListener listener) {
+		getResourceManager().addServerConfigurationLifecycleListener(listener);
+	}
+
+	/**
+	 * Removes a server configuration lifecycle listener.
+	 * Has no effect if the listener is not registered.
+	 *
+	 * @param listener org.eclipse.wst.server.IServerConfigurationLifecycleListener
+	 */
+	public static void removeServerConfigurationLifecycleListener(IServerConfigurationLifecycleListener listener) {
+		getResourceManager().removeServerConfigurationLifecycleListener(listener);
 	}
 
 	/**

@@ -146,17 +146,17 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		IRuntime runtime = null;
 		if (server != null) {
 			runtime = server.getRuntime();
-			runtimeLocation.setText("Location: " + server.getHost());
+			runtimeLocation.setText(ServerUIPlugin.getResource("%serverLaunchHost") + " " + server.getHost());
 		} else
-			runtimeLocation.setText("Location:");
+			runtimeLocation.setText(ServerUIPlugin.getResource("%serverLaunchHost"));
 			
 		if (runtime != null)
-			runtimeLabel.setText("Runtime: " + runtime.getName());
+			runtimeLabel.setText(ServerUIPlugin.getResource("%serverLaunchRuntime") + " " + runtime.getName());
 		else
-			runtimeLabel.setText("Runtime:");
+			runtimeLabel.setText(ServerUIPlugin.getResource("%serverLaunchRuntime"));
 
 		if (server == null)
-			setErrorMessage(ServerUIPlugin.getResource("%noServerSelected"));
+			setErrorMessage(ServerUIPlugin.getResource("%errorNoServerSelected"));
 		else if (server.getServerState() != IServer.STATE_STOPPED)
 			setErrorMessage(ServerUIPlugin.getResource("%errorServerAlreadyRunning"));
 		else

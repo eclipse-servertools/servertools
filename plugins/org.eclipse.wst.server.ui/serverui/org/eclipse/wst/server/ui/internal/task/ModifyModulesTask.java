@@ -21,9 +21,9 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ITaskModel;
-import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.model.IRunningActionServer;
 import org.eclipse.wst.server.core.util.Task;
+import org.eclipse.wst.server.ui.internal.EclipseUtil;
 /**
  * 
  */
@@ -80,7 +80,7 @@ public class ModifyModulesTask extends Task {
 		IFile file = workingCopy.getFile();
 		if (file != null && !file.getProject().exists()) {
 			IProject project = file.getProject();
-			ServerCore.createServerProject(project.getName(), null, monitor);
+			EclipseUtil.createNewServerProject(null, project.getName(), null, monitor);
 		}
 		
 		workingCopy.modifyModules(add2, remove2, monitor);

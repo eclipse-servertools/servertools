@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IDialogConstants;
 
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.model.IServerListener;
+import org.eclipse.wst.server.core.IServerListener;
 import org.eclipse.wst.server.core.util.ServerAdapter;
 import org.eclipse.wst.server.ui.IServerUIPreferences;
 import org.eclipse.wst.server.ui.ServerUICore;
@@ -45,6 +45,8 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	protected Map imageDescriptors = new HashMap();
 
 	protected static List terminationWatches = new ArrayList();
+	// server UI plugin id
+	public static final String PLUGIN_ID = "org.eclipse.wst.server.ui";
 
 	/**
 	 * Create the ServerUIPlugin.

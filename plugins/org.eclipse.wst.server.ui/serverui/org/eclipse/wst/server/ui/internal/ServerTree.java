@@ -77,8 +77,8 @@ public class ServerTree {
 		//Object first = sel.getFirstElement();
 
 		// open menu
-		/*if (singleSelect && first instanceof ServerResourceAdapter) {
-			ServerResourceAdapter adapter = (ServerResourceAdapter) first;
+		/*if (singleSelect && first instanceof ServerLifecycleAdapter) {
+			ServerLifecycleAdapter adapter = (ServerLifecycleAdapter) first;
 			IServerResource resource = adapter.getServerResource();
 			menu.add(new OpenAction(resource));
 			menu.add(new Separator());
@@ -91,8 +91,8 @@ public class ServerTree {
 		while (iterator2.hasNext()) {
 			Object obj = iterator2.next();
 			
-			if (obj instanceof ServerResourceAdapter)
-				list.add(((ServerResourceAdapter) obj).getServerResource());
+			if (obj instanceof ServerLifecycleAdapter)
+				list.add(((ServerLifecycleAdapter) obj).getServerResource());
 			else
 				canDelete = false;
 		}
@@ -105,8 +105,8 @@ public class ServerTree {
 		if (singleSelect && first instanceof IServerElementTag)
 			menu.add(new Separator());
 
-		if (singleSelect && first instanceof ServerResourceAdapter) {
-			ServerResourceAdapter adapter = (ServerResourceAdapter) first;
+		if (singleSelect && first instanceof ServerLifecycleAdapter) {
+			ServerLifecycleAdapter adapter = (ServerLifecycleAdapter) first;
 			IServerResource resource = adapter.getServerResource();
 
 			IServer server = null;
@@ -171,8 +171,8 @@ public class ServerTree {
 				menu.add(new ModifyConfigurationModulesAction(shell, configuration, module, false));
 		}
 		
-		if (singleSelect && first instanceof ServerResourceAdapter) {
-			ServerResourceAdapter adapter = (ServerResourceAdapter) first;
+		if (singleSelect && first instanceof ServerLifecycleAdapter) {
+			ServerLifecycleAdapter adapter = (ServerLifecycleAdapter) first;
 			IServerResource resource = adapter.getServerResource();
 
 			IServer server = null;

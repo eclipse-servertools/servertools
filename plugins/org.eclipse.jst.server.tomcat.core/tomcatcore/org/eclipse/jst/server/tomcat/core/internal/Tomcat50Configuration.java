@@ -29,7 +29,6 @@ import org.xml.sax.InputSource;
 
 import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.IServerPort;
-import org.eclipse.wst.server.core.util.ProgressUtil;
 import org.eclipse.wst.server.core.util.ServerPort;
 /**
  * Tomcat v5.0 server configuration.

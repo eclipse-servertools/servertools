@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,6 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IProjectPropertiesListener;
 /**
  * Helper class that stores preference information for the server tools.
  */
@@ -29,6 +28,7 @@ public class ProjectProperties implements IProjectProperties {
 	
 	protected String serverId;
 	protected String runtimeId;
+	protected boolean serverProject = false;
 	
 	// project properties listeners
 	protected transient List listeners;
@@ -40,7 +40,6 @@ public class ProjectProperties implements IProjectProperties {
 		super();
 		this.project = project;
 	}
-
 	
 	/**
 	 * Load the preferences.
@@ -64,6 +63,11 @@ public class ProjectProperties implements IProjectProperties {
 			
 			serverId = memento.getString("server-id");
 			runtimeId = memento.getString("runtime-id");
+			String s = memento.getString("servers");
+			if (s != null && "true".equals(s))
+				serverProject = true;
+			else
+				serverProject = false;
 		} catch (Exception e) {
 			Trace.trace("Could not load preferences: " + e.getMessage());
 		} finally {
@@ -94,6 +98,10 @@ public class ProjectProperties implements IProjectProperties {
 					memento.putString("runtime-id", runtimeId);
 				if (serverId != null)
 					memento.putString("server-id", serverId);
+				if (serverProject)
+					memento.putString("servers", "true");
+				else
+					memento.putString("servers", "false");
 				in = memento.getInputStream();
 				
 				if (file.exists())
@@ -124,6 +132,9 @@ public class ProjectProperties implements IProjectProperties {
 	public IServer getDefaultServer() {
 		loadPreferences();
 
+		if (serverId == null || serverId.length() == 0)
+			return null;
+		
 		IServer server = ServerCore.getServer(serverId);
 		/*if (server != null && ServerUtil.containsModule(server, module))
 			return server;
@@ -135,7 +146,7 @@ public class ProjectProperties implements IProjectProperties {
 	/**
 	 * Sets the preferred runtime server for the project.
 	 *
-	 * @param server org.eclipse.wst.server.core.model.IServer
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	public void setDefaultServer(IServer server, IProgressMonitor monitor) throws CoreException {
 		loadPreferences();
@@ -294,6 +305,24 @@ public class ProjectProperties implements IProjectProperties {
 		}
 	
 		Trace.trace(Trace.LISTENERS, "-<- Done firing runtimeTargetChanged event -<-");
+	}
+	
+	/**
+	 * 
+	 */
+	public boolean isServerProject() {
+		loadPreferences();
+		return false;
+	}
+
+	/**
+	 * 
+	 * @param b
+	 */
+	public void setServerProject(boolean b, IProgressMonitor monitor) throws CoreException {
+		loadPreferences();
+		serverProject = b;
+		savePreferences(monitor);
 	}
 	
 	public String toString() {

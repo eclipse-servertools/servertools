@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.wst.server.core.IElement;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.ServerCore;
@@ -32,14 +31,14 @@ public class DeleteAction extends Action {
 	/**
 	 * DeleteAction constructor comment.
 	 */
-	public DeleteAction(Shell shell, IElement serverResource) {
-		this(shell, new IElement[] { serverResource });
+	public DeleteAction(Shell shell, Object serverResource) {
+		this(shell, new Object[] { serverResource });
 	}
 
 	/**
 	 * DeleteAction constructor comment.
 	 */
-	public DeleteAction(Shell shell, IElement[] serverResources) {
+	public DeleteAction(Shell shell, Object[] serverResources) {
 		super(ServerUIPlugin.getResource("%actionDelete"));
 		this.shell = shell;
 		

@@ -138,8 +138,12 @@ public class ServerLabelProvider implements ILabelProvider {
 		if (element == null)
 			return "";
 
-		if (element instanceof IElement) {
-			return getString(((IElement) element).getName());
+		if (element instanceof IRuntime) {
+			return getString(((IRuntime) element).getName());
+		} else if (element instanceof IServer) {
+			return getString(((IServer) element).getName());
+		} else if (element instanceof IServerConfiguration) {
+			return getString(((IServerConfiguration) element).getName());
 		} else if (element instanceof IRuntimeType) {
 			return ((IRuntimeType) element).getName();
 		} else if (element instanceof IServerType) {

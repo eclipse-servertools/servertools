@@ -12,7 +12,6 @@ package org.eclipse.wst.server.core;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.model.IProjectPropertiesListener;
 /**
  * This interface holds information on the properties of a given project.
  *
@@ -54,6 +53,17 @@ public interface IProjectProperties {
 	 * @param monitor
 	 */
 	public void setRuntimeTarget(IRuntime runtime, IProgressMonitor monitor) throws CoreException;
+
+	/**
+	 * 
+	 */
+	public boolean isServerProject();
+
+	/**
+	 * 
+	 * @param b
+	 */
+	public void setServerProject(boolean b, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Adds a new project properties listener.

@@ -39,12 +39,10 @@ import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.IServerConfigurationType;
 import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
-import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.viewers.ServerConfigurationTypeComposite;
-
 /**
  * Wizard page to import a configuration.
  */
@@ -152,7 +150,6 @@ public class ImportConfigurationWizardPage extends WizardPage {
 		// choose a server project
 		new Label(composite, SWT.NONE).setText(ServerUIPlugin.getResource("%wizFolder"));
 		serverProject = new Combo(composite, SWT.BORDER);
-		WizardUtil.fillComboWithServerProjectFolders(serverProject);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 2;
 		serverProject.setLayoutData(data);
@@ -436,13 +433,13 @@ public class ImportConfigurationWizardPage extends WizardPage {
 			IFile file = config.getFile();
 			if (file != null && !file.getProject().exists()) {
 				IProject project = file.getProject();
-				ServerCore.createServerProject(project.getName(), null, monitor);
+				EclipseUtil.createNewServerProject(getShell(), project.getName(), null, monitor);
 			}
 			config.setName(theName);
 			config.save(false, monitor);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error saving created element", e);
-			throw new CoreException(new Status(IStatus.ERROR, ServerUICore.PLUGIN_ID, 0, "Could not create server project", null));
+			throw new CoreException(new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, "Could not create server project", null));
 		}
 	}
 	

@@ -21,10 +21,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.*;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IServerListener;
-import org.eclipse.wst.server.core.model.IServerResourceListener;
 import org.eclipse.wst.server.core.util.PublishAdapter;
-import org.eclipse.wst.server.core.util.ServerResourceAdapter;
 import org.eclipse.wst.server.ui.internal.ServerStartupListener;
 import org.eclipse.wst.server.ui.internal.ServerTree;
 import org.eclipse.wst.server.ui.internal.Trace;
@@ -36,14 +33,13 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionFactory;
-
 /**
  * Tree view showing servers and their associations.
  */
 public class ServerTableViewer extends TableViewer {
 	protected static final String ROOT = "root";
 
-	protected IServerResourceListener serverResourceListener;
+	protected IServerLifecycleListener serverResourceListener;
 	protected IPublishListener publishListener;
 	protected IServerListener serverListener;
 
@@ -234,7 +230,7 @@ public class ServerTableViewer extends TableViewer {
 	}
 
 	protected void addListeners() {
-		serverResourceListener = new ServerResourceAdapter() {
+		serverResourceListener = new IServerLifecycleListener() {
 			public void serverAdded(IServer server) {
 				addServer(server);
 				server.addServerListener(serverListener);
@@ -249,7 +245,7 @@ public class ServerTableViewer extends TableViewer {
 				server.removePublishListener(publishListener);
 			}
 		};
-		ServerCore.addResourceListener(serverResourceListener);
+		ServerCore.addServerLifecycleListener(serverResourceListener);
 		
 		publishListener = new PublishAdapter() {
 			public void moduleStateChange(IServer server, List parents, IModule module) {
@@ -350,7 +346,7 @@ public class ServerTableViewer extends TableViewer {
 		stopThread();
 		view.getViewSite().getPage().removeSelectionListener(dsListener);
 
-		ServerCore.removeResourceListener(serverResourceListener);
+		ServerCore.removeServerLifecycleListener(serverResourceListener);
 		
 		// remove listeners from server
 		IServer[] servers = ServerCore.getServers();
@@ -400,33 +396,30 @@ public class ServerTableViewer extends TableViewer {
 	 * Called when an element is added.
 	 * @param element org.eclipse.wst.server.core.model.IServerResource
 	 */
-	protected void handleServerResourceAdded(IElement element) {
-		if (element instanceof IServer) {
-			IServer server = (IServer) element;
-			add(server);
-
-		} else if (element instanceof IServerConfiguration) {
-			IServerConfiguration configuration = (IServerConfiguration) element;
-			configurationChange(configuration, true);
-		}
+	protected void handleServerResourceAdded(IServer server) {
+		add(server);
+	}
+	
+	protected void handleServerResourceAdded(IServerConfiguration configuration) {
+		configurationChange(configuration, true);
 	}
 	
 	/**
 	 * Called when an element is changed.
 	 * @param element org.eclipse.wst.server.core.model.IServerResource
 	 */
-	protected void handleServerResourceChanged(IElement element) {
-		if (element instanceof IServer) {
-			refresh(element);
-		} else if (element instanceof IServerConfiguration) {
-			IServer[] servers = ServerCore.getServers();
-			if (servers != null) {
-				int size = servers.length;
-				for (int i = 0; i < size; i++) {
-					IServerConfiguration config = servers[i].getServerConfiguration();
-					if (element.equals(config))
-						refresh(servers[i]);
-				}
+	protected void handleServerResourceChanged(IServer server) {
+		refresh(server);
+	}
+	
+	protected void handleServerResourceChanged(IServerConfiguration configuration) {
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				IServerConfiguration config = servers[i].getServerConfiguration();
+				if (configuration.equals(config))
+					refresh(servers[i]);
 			}
 		}
 	}
@@ -435,19 +428,17 @@ public class ServerTableViewer extends TableViewer {
 	 * Called when an element is removed.
 	 * @param element org.eclipse.wst.server.core.model.IServerResource
 	 */
-	protected void handleServerResourceRemoved(IElement element) {
-		if (element instanceof IServer) {
-			IServer server = (IServer) element;
-			remove(server);
+	protected void handleServerResourceRemoved(IServer server) {
+		remove(server);
+
+		String serverId = server.getId();
+		publishing.remove(serverId);
+
+		view.getViewSite().getActionBars().getStatusLineManager().setMessage(null, null);
+	}
 	
-			String serverId = server.getId();
-			publishing.remove(serverId);
-	
-			view.getViewSite().getActionBars().getStatusLineManager().setMessage(null, null);
-		} else if (element instanceof IServerConfiguration) {
-			IServerConfiguration configuration = (IServerConfiguration) element;
-			configurationChange(configuration, false);
-		}
+	protected void handleServerResourceRemoved(IServerConfiguration configuration) {
+		configurationChange(configuration, false);
 	}
 	
 	/**

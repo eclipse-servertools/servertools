@@ -31,7 +31,7 @@ public class TomcatLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
 	 */
 	public ILaunchable getLaunchable(IServer server, IModuleObject moduleObject) {
 		Trace.trace("TomcatLaunchableAdapter " + server + "-" + moduleObject);
-		if (server.getAdapter(TomcatServer.class) == null)			
+		if (server.getAdapter(TomcatServer.class) == null)
 			return null;
 		if (!(moduleObject instanceof Servlet) &&
 			!(moduleObject instanceof WebResource) &&

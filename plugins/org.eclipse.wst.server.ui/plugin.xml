@@ -46,16 +46,6 @@
   <category
     id="org.eclipse.wst.server.ui"
     name="%wizardCategoryTitle"/>
-  <wizard
-      id="org.eclipse.wst.server.ui.new.server.project"
-      name="%newServerProject"
-      project="true"
-      finalPerspective="org.eclipse.wst.server.ui.perspective"
-      class="org.eclipse.wst.server.ui.internal.wizard.NewServerProjectWizard"
-      category="org.eclipse.wst.server.ui"
-      icon="icons/ctool16/wiz_new_server_project.gif">
-    <description>%newServerProjectDescription</description>
-  </wizard>
 
   <wizard
       id="org.eclipse.wst.server.ui.new.server"
@@ -149,14 +139,6 @@
       tooltip="%actionSetNewServer"
       icon="icons/ctool16/wiz_new_server.gif"
       class="org.eclipse.wst.server.ui.internal.actions.NewServerAction"/>
-
-    <action
-      id="org.eclipse.wst.server.ui.action.new.server.project"
-      toolbarPath="servers"
-      label="%actionSetNewServerProject"
-      tooltip="%actionSetNewServerProject"
-      icon="icons/ctool16/wiz_new_server_project.gif"
-      class="org.eclipse.wst.server.ui.internal.actions.NewServerProjectAction"/>
   </actionSet>
 </extension>
 

@@ -10,38 +10,12 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.util;
 
-import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerConfiguration;
-import org.eclipse.wst.server.core.model.IServerResourceListener;
+import org.eclipse.wst.server.core.IServerConfigurationLifecycleListener;
 /**
  * 
  */
-public class ServerResourceAdapter implements IServerResourceListener {
-	public void runtimeAdded(IRuntime runtime) {
-		// do nothing
-	}
-
-	public void runtimeChanged(IRuntime runtime) {
-		// do nothing
-	}
-
-	public void runtimeRemoved(IRuntime runtime) {
-		// do nothing
-	}
-
-	public void serverAdded(IServer server) {
-		// do nothing
-	}
-
-	public void serverChanged(IServer server) {
-		// do nothing
-	}
-
-	public void serverRemoved(IServer server) {
-		// do nothing
-	}
-
+public class ServerConfigurationLifecycleAdapter implements IServerConfigurationLifecycleListener {
 	public void serverConfigurationAdded(IServerConfiguration serverConfiguration) {
 		// do nothing
 	}

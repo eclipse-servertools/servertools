@@ -51,7 +51,7 @@ public class ModuleFactory implements IModuleFactory {
 	 */
 	public int getOrder() {
 		try {
-			return Integer.parseInt(element.getAttribute("index"));
+			return Integer.parseInt(element.getAttribute("order"));
 		} catch (NumberFormatException e) {
 			return -1;
 		}

@@ -20,14 +20,14 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.server.core.IElement;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerConfiguration;
+import org.eclipse.wst.server.core.IServerConfigurationLifecycleListener;
+import org.eclipse.wst.server.core.IServerListener;
+import org.eclipse.wst.server.core.IServerLifecycleListener;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.model.IModuleEvent;
 import org.eclipse.wst.server.core.model.IModuleEventsListener;
 import org.eclipse.wst.server.core.model.IModuleFactoryEvent;
-import org.eclipse.wst.server.core.model.IServerListener;
-import org.eclipse.wst.server.core.model.IServerResourceListener;
 import org.eclipse.wst.server.core.util.ServerAdapter;
-import org.eclipse.wst.server.core.util.ServerResourceAdapter;
 import org.eclipse.wst.server.ui.internal.view.tree.ConfigurationProxyResourceAdapter;
 import org.eclipse.wst.server.ui.internal.view.tree.ModuleResourceAdapter;
 import org.eclipse.wst.server.ui.internal.view.tree.ServerElementAdapter;
@@ -42,10 +42,57 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 	protected TreeViewer viewer;
 	
 	// listeners
-	protected IServerResourceListener listener;
+	protected LifecycleListener listener;
 	protected IServerListener serverListener;
 	protected IResourceChangeListener resourceChangeListener;
 	protected IModuleEventsListener moduleEventsListener;
+	
+	class LifecycleListener implements IServerLifecycleListener, IServerConfigurationLifecycleListener {
+		public void serverAdded(final IServer server) {
+			server.addServerListener(serverListener);
+			Display.getDefault().syncExec(new Runnable() {
+				public void run() {
+					handleServerResourceAdded(server);
+				}
+			});
+		}
+		public void serverRemoved(final IServer server) {
+			server.removeServerListener(serverListener);
+			Display.getDefault().syncExec(new Runnable() {
+				public void run() {
+					handleServerResourceRemoved(server);
+				}
+			});
+		}
+		public void serverChanged(final IServer server) {
+			Display.getDefault().syncExec(new Runnable() {
+				public void run() {
+					handleServerResourceChanged(server);
+				}
+			});
+		}
+		public void serverConfigurationAdded(final IServerConfiguration configuration) {
+			Display.getDefault().syncExec(new Runnable() {
+				public void run() {
+					handleServerResourceAdded(configuration);
+				}
+			});
+		}
+		public void serverConfigurationRemoved(final IServerConfiguration configuration) {
+			Display.getDefault().syncExec(new Runnable() {
+				public void run() {
+					handleServerResourceRemoved(configuration);
+				}
+			});
+		}
+		public void serverConfigurationChanged(final IServerConfiguration configuration) {
+			Display.getDefault().syncExec(new Runnable() {
+				public void run() {
+					handleServerResourceChanged(configuration);
+				}
+			});
+		}
+	}
 
 	/**
 	 * 
@@ -78,7 +125,8 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 				servers[i].removeServerListener(serverListener);
 		}
 
-		ServerCore.removeResourceListener(listener);
+		ServerCore.removeServerLifecycleListener(listener);
+		ServerCore.removeServerConfigurationLifecycleListener(listener);
 		
 		if (moduleEventsListener != null)
 			ServerCore.removeModuleEventsListener(moduleEventsListener);
@@ -189,53 +237,9 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 	 */
 	private void addServerResourceListener() {
 		// add a listener for resources being added or removed
-		listener = new ServerResourceAdapter() {
-			public void serverAdded(final IServer server) {
-				server.addServerListener(serverListener);
-				Display.getDefault().syncExec(new Runnable() {
-					public void run() {
-						handleServerResourceAdded(server);
-					}
-				});
-			}
-			public void serverRemoved(final IServer server) {
-				server.removeServerListener(serverListener);
-				Display.getDefault().syncExec(new Runnable() {
-					public void run() {
-						handleServerResourceRemoved(server);
-					}
-				});
-			}
-			public void serverChanged(final IServer server) {
-				Display.getDefault().syncExec(new Runnable() {
-					public void run() {
-						handleServerResourceChanged(server);
-					}
-				});
-			}
-			public void serverConfigurationAdded(final IServerConfiguration configuration) {
-				Display.getDefault().syncExec(new Runnable() {
-					public void run() {
-						handleServerResourceAdded(configuration);
-					}
-				});
-			}
-			public void serverConfigurationRemoved(final IServerConfiguration configuration) {
-				Display.getDefault().syncExec(new Runnable() {
-					public void run() {
-						handleServerResourceRemoved(configuration);
-					}
-				});
-			}
-			public void serverConfigurationChanged(final IServerConfiguration configuration) {
-				Display.getDefault().syncExec(new Runnable() {
-					public void run() {
-						handleServerResourceChanged(configuration);
-					}
-				});
-			}
-		};
-		ServerCore.addResourceListener(listener);
+		listener = new LifecycleListener();
+		ServerCore.addServerLifecycleListener(listener);
+		ServerCore.addServerConfigurationLifecycleListener(listener);
 	}
 	
 	/**
@@ -310,7 +314,7 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 			}
 			
 			/*if (!used) {
-				ServerResourceAdapter adapter2 = new ServerResourceAdapter(null, configuration);
+				ServerLifecycleAdapter adapter2 = new ServerLifecycleAdapter(null, configuration);
 				adapter2.setFlags((byte) 1);
 				viewer.add(new TextResourceAdapter(null, TextResourceAdapter.STYLE_LOOSE_CONFIGURATIONS), adapter2);
 			}*/
@@ -391,7 +395,7 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 				}
 			}
 			if (!used) {
-				ServerResourceAdapter adapter2 = new ServerResourceAdapter(null, configuration);
+				ServerLifecycleAdapter adapter2 = new ServerLifecycleAdapter(null, configuration);
 				adapter2.setFlags((byte) 1);
 				viewer.add(new TextResourceAdapter(null, TextResourceAdapter.STYLE_LOOSE_CONFIGURATIONS), adapter2);
 			}*/
@@ -402,7 +406,7 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 			/*Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
 			while (iterator.hasNext()) {
 				IServer server = (IServer) iterator.next();
-				ServerResourceAdapter adapter2 = new ServerResourceAdapter(null, server);
+				ServerLifecycleAdapter adapter2 = new ServerLifecycleAdapter(null, server);
 				adapter2.setFlags((byte) 1);
 				viewer.refresh(adapter2);
 			}*/

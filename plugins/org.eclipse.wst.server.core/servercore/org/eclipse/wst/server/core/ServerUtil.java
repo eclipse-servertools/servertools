@@ -192,39 +192,6 @@ public class ServerUtil {
 		list.toArray(sc);
 		return sc;
 	}
-
-	/**
-	 * Returns true if the given project is a server project.
-	 *
-	 * @param project org.eclipse.core.resources.IProject
-	 * @return boolean
-	 */
-	public static boolean isServerProject(IProject project) {
-		try {
-			return project.hasNature(IServerProject.NATURE_ID);
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
-	/**
-	 * Returns the project modules attached to a project.
-	 */
-	/*public static IProjectModule getModuleProject(IProject project) {
-		if (project == null)
-			return null;
-
-		Iterator iterator = getModules(null, null, true).iterator();
-		while (iterator.hasNext()) {
-			IModule module = (IModule) iterator.next();
-			if (module != null && module instanceof IProjectModule) {
-				IProjectModule moduleProject = (IProjectModule) module;
-				if (project.equals(moduleProject.getProject()))
-					return moduleProject;
-			}
-		}
-		return null;
-	}*/
 	
 	/**
 	 * Returns the project modules attached to a project.
@@ -750,18 +717,6 @@ public class ServerUtil {
 		}
 		wc.setName(name);
 	}
-	
-	public static IProject getDefaultServerProject() {
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		if (projects != null) {
-			int size = projects.length;
-			for (int i = 0; i < size; i++) {
-				if (ServerUtil.isServerProject(projects[i]))
-					return projects[i];
-			}
-		}
-		return ResourcesPlugin.getWorkspace().getRoot().getProject(findUnusedServerProjectName());
-	}
 
 	private static boolean isValidFilename(String name) {
 		IStatus status = ResourcesPlugin.getWorkspace().validateName(name, IResource.FILE);
@@ -874,7 +829,7 @@ public class ServerUtil {
 	 * 
 	 * @return java.lang.String
 	 */
-	private static String findUnusedServerProjectName() {
+	public static String findUnusedServerProjectName() {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		String name = ServerPlugin.getResource("%defaultServerProjectName", "");
 		int count = 1;

@@ -14,6 +14,7 @@ import java.io.*;
 import java.util.zip.*;
 import java.net.URL;
 import org.eclipse.core.runtime.*;
+import org.eclipse.wst.server.core.internal.ProgressUtil;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.Trace;
 /**

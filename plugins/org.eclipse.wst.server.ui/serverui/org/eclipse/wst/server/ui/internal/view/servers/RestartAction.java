@@ -61,7 +61,7 @@ public class RestartAction extends AbstractServerAction {
 	
 		if (ServerCore.getServerPreferences().isAutoPublishing() && server.shouldPublish()) {
 			// publish first
-			IStatus status = status = ServerUIUtil.publishWithDialog(server, false);
+			IStatus status = status = ServerUIUtil.publishWithDialog(shell, server, false);
 	
 			if (status == null || status.getSeverity() == IStatus.ERROR) // user cancelled
 				return;

@@ -20,7 +20,6 @@ import org.osgi.framework.Bundle;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.*;
-import org.eclipse.wst.server.core.util.ProgressUtil;
 import org.eclipse.wst.server.core.util.ServerAdapter;
 /**
  * 
@@ -1312,11 +1311,11 @@ public class Server extends Base implements IServer {
 		removeServerListener(listener);
 		
 		if (timer.timeout)
-			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorInstanceStartFailed", getName()), null));
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStartFailed", getName()), null));
 		timer.alreadyDone = true;
 		
 		if (getServerState() == IServer.STATE_STOPPED)
-			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorInstanceStartFailed", getName()), null));
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStartFailed", getName()), null));
 	
 		Trace.trace(Trace.FINEST, "synchronousStart 4");
 	}
@@ -1396,12 +1395,12 @@ public class Server extends Base implements IServer {
 		/*
 		//can't throw exceptions
 		if (timer.timeout)
-			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorInstanceStartFailed", getName()), null));
+			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStartFailed", getName()), null));
 		else
 			timer.alreadyDone = true;
 		
 		if (getServerState() == IServer.STATE_STOPPED)
-			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorInstanceStartFailed", getName()), null));*/
+			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStartFailed", getName()), null));*/
 	}
 	
 	/**

@@ -8,11 +8,9 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.server.core.model;
+package org.eclipse.wst.server.core;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.IServer;
 /**
  * A project properties listener. Fires events when the default server or
  * runtime target changes. Note that this interface should be used for

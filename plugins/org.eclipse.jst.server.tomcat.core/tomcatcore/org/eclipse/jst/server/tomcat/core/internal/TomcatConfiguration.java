@@ -17,12 +17,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.j2ee.IWebModule;
 import org.eclipse.jst.server.tomcat.core.ITomcatConfiguration;
 import org.eclipse.jst.server.tomcat.core.WebModule;
@@ -33,7 +28,6 @@ import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.IServerPort;
 import org.eclipse.wst.server.core.model.ServerConfigurationDelegate;
 import org.eclipse.wst.server.core.util.FileUtil;
-import org.eclipse.wst.server.core.util.ProgressUtil;
 /**
  * Generic Tomcat server configuration.
  */

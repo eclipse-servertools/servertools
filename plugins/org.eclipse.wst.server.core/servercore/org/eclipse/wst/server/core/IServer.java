@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.wst.server.core.model.*;
 /**
  * Represents a server instance. Every server is an instance of a
  * particular, fixed server type.

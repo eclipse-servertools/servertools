@@ -59,7 +59,7 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;ModuleFactoryDelegate&lt;/samp&gt;.
+                  specifies the fully qualified name of the Java class that extends &lt;samp&gt;ModuleFactoryDelegate&lt;/samp&gt;.
 Module factory instances of this type will delegate to instances of this class.
                </documentation>
                <appInfo>
@@ -74,7 +74,7 @@ Module factory instances of this type will delegate to instances of this class.
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="index" type="string">
+         <attribute name="order" type="string">
             <annotation>
                <documentation>
                   

@@ -345,11 +345,11 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			if (restart) {
 				server.restart(launchMode);
 				
-				if (preferences.isAutoPublishing() && !autoPublish(server))
+				if (preferences.isAutoPublishing() && !autoPublish(shell, server))
 					return;
 				ServerStartupListener.launchClientUtil(server, module, launchableAdapter, moduleObject, launchMode, client);
 			} else {
-				if (preferences.isAutoPublishing() && !autoPublish(server))
+				if (preferences.isAutoPublishing() && !autoPublish(shell, server))
 					return;
 	
 				// open client
@@ -357,7 +357,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			}
 		} else if (state != IServer.STATE_STOPPING) {
 			ServerStartupListener listener = new ServerStartupListener(shell, server, client, launchableAdapter, moduleObject, launchMode, module);
-			if (preferences.isAutoPublishing() && !autoPublish(server))
+			if (preferences.isAutoPublishing() && !autoPublish(shell, server))
 				return;
 
 			try {
@@ -374,10 +374,10 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * @param server
 	 * @return boolean - false if the current operation should be stopped
 	 */
-	protected boolean autoPublish(IServer server) {
+	protected boolean autoPublish(Shell shell, IServer server) {
 		// publish first
 		if (server.shouldPublish()) {
-			IStatus publishStatus = ServerUIUtil.publishWithDialog(server, false);
+			IStatus publishStatus = ServerUIUtil.publishWithDialog(shell, server, false);
 	
 			if (publishStatus == null || publishStatus.getSeverity() == IStatus.ERROR)
 				return false;

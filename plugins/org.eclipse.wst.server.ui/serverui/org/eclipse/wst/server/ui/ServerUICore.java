@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 
 import org.eclipse.wst.server.ui.internal.ServerLabelProvider;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.ServerUIPreferences;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
@@ -30,10 +31,7 @@ import org.eclipse.wst.server.ui.wizard.IWizardFragment;
  * Server UI core.
  */
 public class ServerUICore {
-	// server UI plugin id
-	public static final String PLUGIN_ID = "org.eclipse.wst.server.ui";
-
-	protected static ServerLabelProvider labelProvider;
+	private static ServerLabelProvider labelProvider;
 
 	// cached copy of all runtime wizards
 	private static Map wizardFragments;
@@ -89,14 +87,14 @@ public class ServerUICore {
 	}
 
 	/**
-	 * Load the server startups.
+	 * Load the wizard fragments.
 	 */
 	private static synchronized void loadWizardFragments() {
 		if (wizardFragments != null)
 			return;
 		Trace.trace(Trace.CONFIG, "->- Loading .wizardFragments extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUICore.PLUGIN_ID, "wizardFragments");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "wizardFragments");
 
 		int size = cf.length;
 		wizardFragments = new HashMap(size);

@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.wst.server.ui.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -16,18 +17,9 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wst.server.core.IClient;
-import org.eclipse.wst.server.core.ILaunchable;
-import org.eclipse.wst.server.core.ILaunchableAdapter;
-import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IModuleObject;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.ServerPreferences;
-import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.core.util.ServerAdapter;
-import org.eclipse.wst.server.ui.ServerUICore;
-
 /**
  * A class that listens to the startup of a server. To use
  * it, just create an instance using one of the two constructors.
@@ -190,7 +182,7 @@ public class ServerStartupListener {
 				}
 
 				public IStatus run(IProgressMonitor monitor) {
-					IStatus status = new Status(IStatus.OK, ServerUICore.PLUGIN_ID, 0, "", null);
+					IStatus status = new Status(IStatus.OK, ServerUIPlugin.PLUGIN_ID, 0, "", null);
 
 					// wait for up to 5 minutes
 					int state = server.getModuleState(module);

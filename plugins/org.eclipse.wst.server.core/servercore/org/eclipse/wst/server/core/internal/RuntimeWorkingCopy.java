@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
-import org.eclipse.wst.server.core.util.ProgressUtil;
 /**
  * 
  */

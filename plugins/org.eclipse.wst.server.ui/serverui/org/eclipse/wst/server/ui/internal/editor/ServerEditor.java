@@ -27,9 +27,6 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IServerResourceListener;
-import org.eclipse.wst.server.core.util.ProgressUtil;
-import org.eclipse.wst.server.core.util.ServerResourceAdapter;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.wst.server.ui.internal.*;
@@ -83,6 +80,30 @@ public class ServerEditor extends MultiPageEditorPart {
 			}
 		}
 	}
+	
+	class LifecycleListener implements IServerLifecycleListener, IServerConfigurationLifecycleListener {
+		public void serverAdded(IServer oldServer) {
+			// do nothing
+		}
+		public void serverChanged(IServer oldServer) {
+			// do nothing
+		}
+		public void serverRemoved(IServer oldServer) {
+			if (oldServer.equals(server) && !isDirty())
+				closeEditor();
+		}
+
+		public void serverConfigurationAdded(IServerConfiguration oldServerConfiguration) {
+			// do nothing
+		}
+		public void serverConfigurationChanged(IServerConfiguration oldServerConfiguration) {
+			// do nothing
+		}
+		public void serverConfigurationRemoved(IServerConfiguration oldServerConfiguration) {
+			if (oldServerConfiguration.equals(serverConfiguration) && !isDirty())
+				closeEditor();
+		}
+	}
 
 	protected IServerWorkingCopy server;
 	protected IServerConfigurationWorkingCopy serverConfiguration;
@@ -116,7 +137,7 @@ public class ServerEditor extends MultiPageEditorPart {
 	protected StatusLineContributionItem statusItem;
 	
 	private ActivationListener activationListener = new ActivationListener();
-	protected IServerResourceListener resourceListener;
+	protected LifecycleListener resourceListener;
 	
 	// Used for disabling resource change check when saving through editor.
 	protected boolean isSaving = false;
@@ -260,8 +281,10 @@ public class ServerEditor extends MultiPageEditorPart {
 			activationListener = null;
 		}
 		
-		if (resourceListener != null)
-			ServerCore.removeResourceListener(resourceListener);
+		if (resourceListener != null) {
+			ServerCore.removeServerLifecycleListener(resourceListener);
+			ServerCore.removeServerConfigurationLifecycleListener(resourceListener);
+		}
 
 		super.dispose();
 		if (commandManager != null)
@@ -733,17 +756,9 @@ public class ServerEditor extends MultiPageEditorPart {
 		createActions();
 		
 		// add resource listener
-		ServerCore.addResourceListener(new ServerResourceAdapter() {
-			public void serverRemoved(IServer oldServer) {
-				if (oldServer.equals(server) && !isDirty())
-					closeEditor();
-			}
-
-			public void serverConfigurationRemoved(IServerConfiguration oldServerConfiguration) {
-				if (oldServerConfiguration.equals(serverConfiguration) && !isDirty())
-					closeEditor();
-			}
-		});
+		resourceListener = new LifecycleListener();
+		ServerCore.addServerLifecycleListener(resourceListener);
+		ServerCore.addServerConfigurationLifecycleListener(resourceListener);
 		
 		IWorkbenchWindow window = getSite().getWorkbenchWindow();
 		window.getPartService().addPartListener(activationListener);
@@ -894,13 +909,24 @@ public class ServerEditor extends MultiPageEditorPart {
 	/**
 	 * 
 	 */
-	protected void promptReloadServerFile(String id, IElement serverFile2) {
+	protected void promptReloadServerFile(String id, IServer serverFile2) {
 		String title = ServerUIPlugin.getResource("%editorResourceModifiedTitle");
-		String message = null;
-		if (serverFile2 instanceof IServer)
-			message = ServerUIPlugin.getResource("%editorServerModifiedMessage");
-		else
-			message = ServerUIPlugin.getResource("%editorServerConfigurationModifiedMessage");
+		String message = ServerUIPlugin.getResource("%editorServerModifiedMessage");
+
+		if (MessageDialog.openQuestion(getEditorSite().getShell(), title, message)) {
+			try {
+				//file.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
+				//TODO
+			} catch (Exception e) {
+				Trace.trace("Error refreshing server", e);
+			}
+			commandManager.reload(id, new NullProgressMonitor());
+		}
+	}
+	
+	protected void promptReloadServerConfigurationFile(String id, IServerConfiguration serverFile2) {
+		String title = ServerUIPlugin.getResource("%editorResourceModifiedTitle");
+		String message = ServerUIPlugin.getResource("%editorServerConfigurationModifiedMessage");
 
 		if (MessageDialog.openQuestion(getEditorSite().getShell(), title, message)) {
 			try {
@@ -971,10 +997,10 @@ public class ServerEditor extends MultiPageEditorPart {
 		if (serverConfigurationId != null) {
 			if (!commandManager.isDirty(serverConfigurationId)) {
 				if (commandManager.hasChanged(serverConfigurationId))
-					promptReloadServerFile(serverConfigurationId, serverConfiguration);
+					promptReloadServerConfigurationFile(serverConfigurationId, serverConfiguration);
 			} else {
 				if (commandManager.hasChanged(serverConfigurationId) && !commandManager.areFilesReadOnly(serverConfigurationId))
-					promptReloadServerFile(serverConfigurationId, serverConfiguration);
+					promptReloadServerConfigurationFile(serverConfigurationId, serverConfiguration);
 				else if (commandManager.areFilesReadOnly(serverConfigurationId) && !commandManager.isReadOnly(serverConfigurationId))
 					promptReadOnlyServerFile(serverConfigurationId);
 			}		

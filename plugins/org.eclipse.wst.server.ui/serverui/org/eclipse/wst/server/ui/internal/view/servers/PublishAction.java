@@ -14,7 +14,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.swt.widgets.Shell;
-
 /**
  * Publish to a server.
  */
@@ -48,6 +47,6 @@ public class PublishAction extends AbstractServerAction {
 		if (!ServerUIUtil.saveEditors())
 			return;
 
-		ServerUIUtil.publishWithDialog(server, true);
+		ServerUIUtil.publishWithDialog(shell, server, true);
 	}
 }

@@ -10,10 +10,6 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.wizard.page;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -21,12 +17,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.wst.server.core.IServerProject;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Shell;
 /**
  * A helper class for wizards.
@@ -39,51 +33,18 @@ public class WizardUtil {
 		// do nothing
 	}
 
-	/**
-	 * Fill the combo box with all server project folders in
-	 * the workbench.
-	 *
-	 * @param combo org.eclipse.swt.widgets.Combo
-	 */
-	public static void fillComboWithServerProjectFolders(Combo combo) {
-		List list = new ArrayList();
-		Iterator iterator = ServerCore.getServerNatures().iterator();
-		while (iterator.hasNext()) {
-			IServerProject project = (IServerProject) iterator.next();
-			if (project.getProject().isOpen()) {
-				Iterator iter = project.getAvailableFolders().iterator();
-				while (iter.hasNext())
-					list.add(iter.next());
-			}
-		}
-	
-		// convert to strings
-		int size = list.size();
-		for (int i = 0; i < size; i++){
-			IContainer container = (IContainer) list.get(i);
-			list.set(i, getContainerText(container));
-		}
-	
-		// sort results
-		for (int i = 0; i < size - 1; i++) {
-			for (int j = i + 1; j < size; j++) {
-				String s1 = (String) list.get(i);
-				String s2 = (String) list.get(j);
-				if (s1.compareTo(s2) > 0) {
-					list.set(j, s1);
-					list.set(i, s2);
-				}
+	public static IProject getServerProject() {
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		if (projects != null) {
+			int size = projects.length;
+			for (int i = 0; i < size; i++) {
+				if (ServerCore.getProjectProperties(projects[i]).isServerProject())
+					return projects[i];
 			}
 		}
 		
-		list.add(0, "metadata");
-		size++;
-	
-		String[] s = new String[size];
-		list.toArray(s);
-		combo.setItems(s);
-		if (s.length > 0)
-			combo.select(0);
+		String s = ServerUtil.findUnusedServerProjectName();
+		return ResourcesPlugin.getWorkspace().getRoot().getProject(s);
 	}
 
 	/**
@@ -136,7 +97,7 @@ public class WizardUtil {
 			}
 	
 			if (resource instanceof IProject) {
-				if (ServerUtil.isServerProject((IProject) resource) && ((IProject)resource).isOpen())
+				if (resource.getProject().isOpen())
 					return container;
 			}
 			resource = resource.getParent();
@@ -212,7 +173,7 @@ public class WizardUtil {
 			if (project != null && !project.isOpen())
 				return ServerUIPlugin.getResource("%wizErrorClosedProject");
 
-			if (project == null || !project.exists() || !project.isOpen() || !ServerUtil.isServerProject(project))
+			if (project == null || !project.exists() || !project.isOpen())
 				return error;
 	
 			// make sure we're not embedding in another server element
@@ -229,19 +190,6 @@ public class WizardUtil {
 			return error;
 		}
 		return null;
-	}
-
-	/**
-	 * Returns true if no server projects exist.
-	 *
-	 * @return boolean
-	 */
-	public static boolean noServerProjectsExist() {
-		return (ServerCore.getServerProjects().isEmpty());
-	}
-	
-	public static IProject getServerProject() {
-		return ServerUtil.getDefaultServerProject();
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,8 +38,8 @@ import org.eclipse.wst.server.core.ITask;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.core.model.IRunningActionServer;
 import org.eclipse.wst.server.core.util.TaskModel;
-import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.wizard.page.WorkspaceRunnableAdapter;
 /**
@@ -215,9 +215,9 @@ public class TaskWizard implements IWizard {
 									executeTask((IWizardFragment) iterator.next(), FINISH, monitor2);
 							} catch (CoreException ce) {
 								Trace.trace(Trace.SEVERE, "Error finishing wizard job", ce);
-								return new Status(IStatus.ERROR, ServerUICore.PLUGIN_ID, 0, ce.getLocalizedMessage(), null);
+								return new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, ce.getLocalizedMessage(), null);
 							}
-							return new Status(IStatus.OK, ServerUICore.PLUGIN_ID, 0, "", null);
+							return new Status(IStatus.OK, ServerUIPlugin.PLUGIN_ID, 0, "", null);
 						}
 					}
 					

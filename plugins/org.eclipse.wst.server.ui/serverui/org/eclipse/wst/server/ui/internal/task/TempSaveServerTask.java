@@ -14,13 +14,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
-import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.core.ITaskModel;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.util.Task;
+import org.eclipse.wst.server.ui.internal.EclipseUtil;
 /**
  * 
  */
@@ -42,7 +38,7 @@ public class TempSaveServerTask extends Task {
 			IFile file = workingCopy.getFile();
 			if (file != null && !file.getProject().exists()) {
 				IProject project = file.getProject();
-				ServerCore.createServerProject(project.getName(), null, monitor);
+				EclipseUtil.createNewServerProject(null, project.getName(), null, monitor);
 			}
 			IRuntime runtime = workingCopy.getRuntime();
 			IServerConfiguration config = workingCopy.getServerConfiguration();

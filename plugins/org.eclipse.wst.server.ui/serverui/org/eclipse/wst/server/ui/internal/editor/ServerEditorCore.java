@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.editor;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -10,6 +9,8 @@ package org.eclipse.wst.server.ui.internal.editor;
  *    IBM - Initial API and implementation
  *
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.editor;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +18,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.ui.ServerUICore;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
-
 /**
  * 
  */
@@ -57,7 +57,7 @@ public class ServerEditorCore {
 	private static void loadEditorPageFactories() {
 		Trace.trace(Trace.CONFIG, "->- Loading .editorPages extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUICore.PLUGIN_ID, "editorPages");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "editorPages");
 
 		int size = cf.length;
 		editorPageFactories = new ArrayList(size);
@@ -81,7 +81,7 @@ public class ServerEditorCore {
 	private static void loadEditorPageSectionFactories() {
 		Trace.trace(Trace.CONFIG, "->- Loading .editorPageSections extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUICore.PLUGIN_ID, "editorPageSections");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "editorPageSections");
 
 		int size = cf.length;
 		editorPageSectionFactories = new ArrayList(size);
@@ -116,7 +116,7 @@ public class ServerEditorCore {
 	private static void loadEditorActionFactories() {
 		Trace.trace(Trace.CONFIG, "->- Loading .editorActions extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUICore.PLUGIN_ID, "editorActions");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "editorActions");
 
 		int size = cf.length;
 		editorActionFactories = new ArrayList(size);

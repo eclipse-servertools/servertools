@@ -28,8 +28,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-
-import org.eclipse.wst.server.core.util.ProgressUtil;
 /**
  * Helper class to access a web.xml file.
  */

@@ -12,7 +12,7 @@ package org.eclipse.wst.server.core.util;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.model.IServerListener;
+import org.eclipse.wst.server.core.IServerListener;
 /**
  * Helper class which implements all of the IServerListener
  * interface with empty methods.
