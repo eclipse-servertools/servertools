@@ -31,8 +31,6 @@
 package org.eclipse.jst.server.generic.internal.ui;
 
 import java.util.Map;
-
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -201,7 +199,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	    try {
 	        getRuntimeDelegate().getRuntimeWorkingCopy().save(true,new NullProgressMonitor());
 	    }
-	    catch(CoreException e){//unhandled
+	    catch(Exception e){//unhandled
 	    }
         fRuntimeDelegate=null;
         

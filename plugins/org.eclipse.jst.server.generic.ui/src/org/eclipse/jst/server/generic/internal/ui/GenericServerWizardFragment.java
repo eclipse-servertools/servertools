@@ -35,7 +35,6 @@ import org.eclipse.jst.server.generic.internal.core.GenericServerRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.generic.ui.GenericServerUIMessages;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ITaskModel;
