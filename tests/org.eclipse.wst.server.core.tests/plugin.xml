@@ -4,7 +4,7 @@
    id="org.eclipse.wst.server.core.tests"
    name="org.eclipse.wst.server.core.tests"
    version="1.0.0"
-   provider-name="Eteration.com"
+   provider-name="Eclipse.org"
    class="org.eclipse.wst.server.core.tests.TestsPlugin">
 
    <runtime>

@@ -27,7 +27,7 @@ public class ModuleObjectAdaptersTestCase extends TestCase {
 		if (moa != null) {
 			int size = moa.length;
 			for (int i = 0; i < size; i++)
-				System.out.println(moa[i].getId() + " - " + moa[i].getObjectClassName());
+				System.out.println(moa[i].getId() + " - " + moa[i].getClass());
 		}
 	}
 }
