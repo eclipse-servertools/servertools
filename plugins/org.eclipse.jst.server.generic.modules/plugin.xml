@@ -21,7 +21,7 @@
       <import plugin="org.eclipse.jst.server.core"/>
    </requires>
 
-   <extension point="org.eclipse.wst.server.core.moduleFactories">
+ <!--  <extension point="org.eclipse.wst.server.core.moduleFactories">
       <moduleFactory
             projects="true"
             class="org.eclipse.jst.server.generic.modules.J2eeSpecModuleFactoryDelegate"
@@ -38,5 +38,5 @@
          id="org.eclipse.jst.server.generic.modules.j2eeSpecModuleObjectAdapter"
          class="org.eclipse.jst.server.generic.modules.J2EESpecModuleObjectAdapter"
          objectClass="org.eclipse.core.resources.IResource"/>
-   </extension>
+   </extension>-->
 </plugin>

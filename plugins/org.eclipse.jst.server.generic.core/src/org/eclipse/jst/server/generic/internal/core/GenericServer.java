@@ -167,14 +167,12 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	public IModule[] getParentModules(IModule module) throws CoreException {
 			//FIXME This is valid for only web modules. A generic server should support any 
 			// kind of j2ee module. Fix this after the server architectures are determined.
-		if (module instanceof IWebModule) {
-			IWebModule webModule = (IWebModule) module;
+        IWebModule webModule  = (IWebModule)module.getAdapter(IWebModule.class);
+        if (webModule!=null) {
 			IStatus status = canModifyModules(new IModule[] { module }, null);
 			if (status == null || !status.isOK())
 				throw new CoreException(status);
-			ArrayList l = new ArrayList();
-			l.add(webModule);
-			return (IModule[])l.toArray(new IModule[l.size()]);
+			return new IModule[] { module };
 		}
 		return null;
 	
