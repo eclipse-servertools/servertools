@@ -243,6 +243,9 @@ public abstract class ProjectModule extends ModuleDelegate {
 		
 		if (project != null && project.exists() && !project.equals(dp.getProject()))
 			return false;
+		
+		if (getId() != null && !getId().equals(dp.getId()))
+			return false;
 
 		if (root2 == null && root3 != null)
 			return false;
