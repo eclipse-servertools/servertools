@@ -87,6 +87,9 @@ public class Tomcat40Handler implements ITomcatVersionHandler {
 	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isSecure) {
 		List list = new ArrayList();
 		list.add("-Dcatalina.home=\"" + installPath.toOSString() + "\"");
+		String endorsed = installPath.append("bin").toOSString() +
+			installPath.append("common").append("lib").toOSString();
+		list.add("-Djava.endorsed.dirs=\"" + endorsed + "\"");
 		
 		// run in secure mode
 		if (isSecure) {
