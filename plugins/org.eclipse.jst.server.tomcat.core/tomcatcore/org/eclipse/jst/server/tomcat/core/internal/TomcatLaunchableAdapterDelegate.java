@@ -14,12 +14,12 @@ import java.net.URL;
 
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.core.Servlet;
-import org.eclipse.jst.server.core.WebResource;
 import org.eclipse.wst.server.core.ILaunchable;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.core.util.HttpLaunchable;
+import org.eclipse.wst.server.core.util.WebResource;
 /**
  * Launchable adapter delegate for Web resources in Tomcat.
  */

@@ -24,8 +24,6 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.Launch;
 import org.eclipse.debug.core.model.IStreamsProxy;
 import org.eclipse.jdt.launching.*;
-import org.eclipse.jst.server.tomcat.core.ITomcatRuntime;
-import org.eclipse.jst.server.tomcat.core.ITomcatRuntimeWorkingCopy;
 
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
@@ -98,6 +96,9 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 	
 		if (!verifyLocation())
 			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorInstallDir"), null);
+		// don't accept trailing space since that can cause startup problems
+		if (getRuntime().getLocation().hasTrailingSeparator())
+			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorInstallDirTrailingSlash"), null);
 		if (getVMInstall() == null)
 			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorJRE"), null);
 

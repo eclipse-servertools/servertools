@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal.command;
 
-import org.eclipse.jst.server.tomcat.core.ITomcatServerWorkingCopy;
+import org.eclipse.jst.server.tomcat.core.internal.ITomcatServerWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
 /**
  * Command to change the server security option.

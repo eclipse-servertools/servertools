@@ -8,15 +8,20 @@
  * Contributors:
  *    IBM Corporation - Initial API and implementation
  **********************************************************************/
-package org.eclipse.jst.server.tomcat.core;
+package org.eclipse.jst.server.tomcat.core.internal;
+
+import org.eclipse.wst.server.core.model.IURLProvider;
 /**
  * 
+ * @since 1.0
  */
-public interface ITomcatServerWorkingCopy extends ITomcatServer {
+public interface ITomcatServer extends IURLProvider {
+	public static final String PROPERTY_TEST_ENVIRONMENT = "testEnvironment";
 	/**
-	 * Sets this server to test environment mode.
-	 * 
-	 * @param b boolean
+	 * Returns true if this is a test (publish and run code out of the
+	 * workbench) environment server.
+	 *
+	 * @return boolean
 	 */
-	public void setTestEnvironment(boolean b);
+	public boolean isTestEnvironment();
 }

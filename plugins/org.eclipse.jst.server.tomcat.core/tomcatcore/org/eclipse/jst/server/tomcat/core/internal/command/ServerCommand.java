@@ -11,7 +11,7 @@
 package org.eclipse.jst.server.tomcat.core.internal.command;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jst.server.tomcat.core.ITomcatServerWorkingCopy;
+import org.eclipse.jst.server.tomcat.core.internal.ITomcatServerWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.wst.server.core.util.Task;
 /**

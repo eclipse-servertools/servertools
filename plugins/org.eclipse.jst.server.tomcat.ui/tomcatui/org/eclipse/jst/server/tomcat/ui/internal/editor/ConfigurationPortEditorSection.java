@@ -154,6 +154,8 @@ public class ConfigurationPortEditorSection extends ServerEditorSection {
 		ICellModifier cellModifier = new ICellModifier() {
 			public Object getValue(Object element, String property) {
 				IServerPort sp = (IServerPort) element;
+				if (sp.getPort() < 0)
+					return "-";
 				return sp.getPort() + "";
 			}
 	
@@ -227,7 +229,10 @@ public class ConfigurationPortEditorSection extends ServerEditorSection {
 		while (iterator.hasNext()) {
 			IServerPort port = (IServerPort) iterator.next();
 			TableItem item = new TableItem(ports, SWT.NONE);
-			String[] s = new String[] {port.getName(), port.getPort() + ""};
+			String portStr = "-";
+			if (port.getPort() >= 0)
+				portStr = port.getPort() + ""; 
+			String[] s = new String[] {port.getName(), portStr};
 			item.setText(s);
 			item.setImage(TomcatUIPlugin.getImage(TomcatUIPlugin.IMG_PORT));
 			item.setData(port);

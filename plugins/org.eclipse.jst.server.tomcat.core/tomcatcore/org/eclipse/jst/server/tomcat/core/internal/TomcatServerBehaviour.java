@@ -26,8 +26,6 @@ import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.IWebModule;
-import org.eclipse.jst.server.tomcat.core.ITomcatRuntime;
-import org.eclipse.jst.server.tomcat.core.ITomcatServerBehaviour;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.*;
@@ -38,8 +36,6 @@ import org.eclipse.wst.server.core.util.SocketUtil;
  */
 public class TomcatServerBehaviour extends ServerBehaviourDelegate implements ITomcatServerBehaviour {
 	private static final String ATTR_STOP = "stop-server";
-	
-	protected transient IPath tempDirectory;
 
 	// the thread used to ping the server to check for startup
 	protected transient PingThread ping = null;
@@ -114,17 +110,6 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		else
 			configPath = installPath;
 		return getTomcatVersionHandler().getRuntimeVMArguments(installPath, configPath, getTomcatServer().isSecure());
-	}
-
-	/**
-	 * Obtain a temporary directory if this server doesn't
-	 * already have one. Otherwise, return the existing one.
-	 * @return IPath
-	 */
-	public IPath getTempDirectory() {
-		if (tempDirectory == null)
-			tempDirectory = getServer().getTempDirectory();
-		return tempDirectory;
 	}
 	
 	protected static String renderCommandLine(String[] commandLine, String separator) {
@@ -207,7 +192,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		if (getTomcatServer().isTestEnvironment())
 			return;
 
-		IPath path = getServer().getTempDirectory().append("publish.txt");
+		IPath path = getTempDirectory().append("publish.txt");
 		Properties p = new Properties();
 		try {
 			p.load(new FileInputStream(path.toFile()));
@@ -260,6 +245,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		List usedPorts = new ArrayList();
 		while (iterator.hasNext()) {
 			IServerPort sp = (IServerPort) iterator.next();
+			if (sp.getPort() < 0)
+				throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPortInvalid"), null));
 			if (SocketUtil.isPortInUse(sp.getPort(), 5)) {
 				usedPorts.add(sp);
 			}

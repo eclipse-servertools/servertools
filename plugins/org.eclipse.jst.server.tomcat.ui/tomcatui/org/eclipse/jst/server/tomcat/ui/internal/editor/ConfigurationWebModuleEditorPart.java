@@ -20,7 +20,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jst.server.core.IWebModule;
-import org.eclipse.jst.server.tomcat.core.ITomcatServerWorkingCopy;
+import org.eclipse.jst.server.tomcat.core.internal.ITomcatServerWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatConfiguration;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.WebModule;

@@ -13,7 +13,7 @@ package org.eclipse.jst.server.tomcat.ui.internal.editor;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import org.eclipse.jst.server.tomcat.core.ITomcatServer;
+import org.eclipse.jst.server.tomcat.core.internal.ITomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.command.SetDebugModeCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.SetSecureCommand;

@@ -16,8 +16,6 @@ import java.util.List;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.core.IWebModule;
-import org.eclipse.jst.server.tomcat.core.ITomcatServer;
-import org.eclipse.jst.server.tomcat.core.ITomcatServerWorkingCopy;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.*;
@@ -58,13 +56,8 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	public TomcatConfiguration getTomcatConfiguration() throws CoreException {
 		if (configuration == null) {
 			IFolder folder = getServer().getServerConfiguration();
-			/*IPath path = null;
-			if (getServerWC() != null && getServerWC().getRuntime() != null)
-				path = getServerWC().getRuntime().getLocation().append("conf");
-			else if (getServer() != null && getServer().getRuntime() != null)
-				path = getServer().getRuntime().getLocation().append("conf");
-			else
-				return null;*/
+			if (!folder.exists())
+				throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorNoConfiguration", folder.getFullPath().toOSString()), null));
 			
 			String id = getServer().getServerType().getId();
 			if (id.indexOf("32") > 0)

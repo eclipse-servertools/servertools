@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.server.tomcat.core;
+package org.eclipse.jst.server.tomcat.core.internal;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -16,6 +16,7 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IProcess;
 /**
  * 
+ * @since 1.0
  */
 public interface ITomcatServerBehaviour {
 	/**

@@ -11,12 +11,8 @@
 package org.eclipse.jst.server.tomcat.core.internal;
 
 import java.io.*;
-import java.util.zip.*;
 import java.net.URL;
 import org.eclipse.core.runtime.*;
-import org.eclipse.wst.server.core.internal.ProgressUtil;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
-import org.eclipse.wst.server.core.internal.Trace;
 /**
  * Utility class with an assortment of useful file methods.
  */
@@ -52,7 +48,7 @@ public class FileUtil {
 			// cycle through files
 			int size = files.length;
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(ServerPlugin.getResource("%copyingTask", new String[] {from, to}), size * 50);
+			monitor.beginTask(TomcatPlugin.getResource("%copyingTask", new String[] {from, to}), size * 50);
 	
 			for (int i = 0; i < size; i++) {
 				File current = files[i];
@@ -65,7 +61,7 @@ public class FileUtil {
 					copyFile(fromFile, toFile);
 					monitor.worked(50);
 				} else if (current.isDirectory()) {
-					monitor.subTask(ServerPlugin.getResource("%copyingTask", new String[] {fromFile, toFile}));
+					monitor.subTask(TomcatPlugin.getResource("%copyingTask", new String[] {fromFile, toFile}));
 					copyDirectory(fromFile, toFile, ProgressUtil.getSubMonitorFor(monitor, 50));
 				}
 				if (monitor.isCanceled())
@@ -94,10 +90,10 @@ public class FileUtil {
 				out.write(buf, 0, avail);
 				avail = in.read(buf);
 			}
-			return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%copyingTask", new String[] {to}), null);
+			return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%copyingTask", new String[] {to}), null);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error copying file", e);
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
+			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
 		} finally {
 			try {
 				if (in != null)
@@ -125,7 +121,7 @@ public class FileUtil {
 			return copyFile(new FileInputStream(from), to);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error copying file", e);
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
+			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
 		}
 	}
 
@@ -140,7 +136,7 @@ public class FileUtil {
 			return copyFile(from.openStream(), to);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error copying file", e);
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
+			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
 		}
 	}
 
@@ -157,7 +153,7 @@ public class FileUtil {
 			File[] files = dir.listFiles();
 			int size = files.length;
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(ServerPlugin.getResource("%deletingTask", new String[] {dir.getAbsolutePath()}), size * 10);
+			monitor.beginTask(TomcatPlugin.getResource("%deletingTask", new String[] {dir.getAbsolutePath()}), size * 10);
 	
 			// cycle through files
 			for (int i = 0; i < size; i++) {
@@ -166,7 +162,7 @@ public class FileUtil {
 					current.delete();
 					monitor.worked(10);
 				} else if (current.isDirectory()) {
-					monitor.subTask(ServerPlugin.getResource("%deletingTask", new String[] {current.getAbsolutePath()}));
+					monitor.subTask(TomcatPlugin.getResource("%deletingTask", new String[] {current.getAbsolutePath()}));
 					deleteDirectory(current, ProgressUtil.getSubMonitorFor(monitor, 10));
 				}
 			}
@@ -174,75 +170,6 @@ public class FileUtil {
 			monitor.done();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error deleting directory " + dir.getAbsolutePath(), e);
-		}
-	}
-
-	/**
-	 * Expand a zip file to a given directory.
-	 *
-	 * @param zipFile java.io.File
-	 * @param dir java.io.File
-	 */
-	public static void expandZip(File zipFile, File dir, IProgressMonitor monitor) {
-		ZipInputStream zis = null;
-	
-		try {
-			// first, count number of items in zip file
-			zis = new ZipInputStream(new FileInputStream(zipFile));
-			int count = 0;
-			while (zis.getNextEntry() != null)
-				count++;
-	
-			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(ServerPlugin.getResource("%unZippingTask", new String[] {zipFile.getName()}), count);
-			
-			zis = new ZipInputStream(new FileInputStream(zipFile));
-			ZipEntry ze = zis.getNextEntry();
-	
-			FileOutputStream out = null;
-	
-			while (ze != null) {
-				try {
-					monitor.subTask(ServerPlugin.getResource("%expandingTask", new String[] {ze.getName()}));
-					File f = new File(dir, ze.getName());
-	
-					if (ze.isDirectory()) {
-						out = null;
-						f.mkdirs();
-					} else {
-						out = new FileOutputStream(f);
-	
-						int avail = zis.read(buf);
-						while (avail > 0) {
-							out.write(buf, 0, avail);
-							avail = zis.read(buf);
-						}
-					}
-				} catch (FileNotFoundException ex) {
-					Trace.trace(Trace.SEVERE, "Error extracting " + ze.getName() + " from zip " + zipFile.getAbsolutePath(), ex);
-				} finally {
-					try {
-						if (out != null)
-							out.close();
-					} catch (Exception e) {
-						// ignore
-					}
-				}
-				ze = zis.getNextEntry();
-				monitor.worked(1);
-				if (monitor.isCanceled())
-					return;
-			}
-			monitor.done();
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error expanding zip file " + zipFile.getAbsolutePath(), e);
-		} finally {
-			try {
-				if (zis != null)
-					zis.close();
-			} catch (Exception ex) {
-				// ignore
-			}
 		}
 	}
 
@@ -263,7 +190,7 @@ public class FileUtil {
 			int fromSize = fromFiles.length;
 	
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(ServerPlugin.getResource("%copyingTask", new String[] {from, to}), 550);
+			monitor.beginTask(TomcatPlugin.getResource("%copyingTask", new String[] {from, to}), 550);
 	
 			File[] toFiles = null;
 	
@@ -331,7 +258,7 @@ public class FileUtil {
 						copyFile(fromFile, toFile);
 						monitor.worked(dw);
 					} else if (current.isDirectory()) {
-						monitor.subTask(ServerPlugin.getResource("%copyingTask", new String[] {fromFile, toFile}));
+						monitor.subTask(TomcatPlugin.getResource("%copyingTask", new String[] {fromFile, toFile}));
 						smartCopyDirectory(fromFile, toFile, ProgressUtil.getSubMonitorFor(monitor, dw));
 					}
 				}

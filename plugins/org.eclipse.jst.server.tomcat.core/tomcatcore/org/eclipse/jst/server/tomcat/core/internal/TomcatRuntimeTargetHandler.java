@@ -21,7 +21,6 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.ClasspathRuntimeTargetHandler;
-import org.eclipse.jst.server.tomcat.core.ITomcatRuntime;
 
 import org.eclipse.wst.server.core.IRuntime;
 /**

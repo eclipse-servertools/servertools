@@ -213,7 +213,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	
 	/**
 	 * Load a Tomcat configuration from the given directory.
-	 * @param dir
+	 * @param path
 	 * @return org.eclipse.jst.server.tomcat.internal.Tomcat32Configuration
 	 */
 	public void load(IPath path, IProgressMonitor monitor) throws CoreException {
@@ -330,7 +330,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not reload Tomcat v3.2 configuration from: " + folder.getFullPath() + ": " + e.getMessage());
+			Trace.trace(Trace.SEVERE, "Could not load Tomcat v3.2 configuration from: " + folder.getFullPath() + ": " + e.getMessage());
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotLoadConfiguration", folder.getFullPath().toOSString()), e));
 		}
 	}

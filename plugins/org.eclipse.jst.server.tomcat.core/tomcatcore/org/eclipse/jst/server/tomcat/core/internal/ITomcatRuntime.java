@@ -8,17 +8,28 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.server.tomcat.core;
+package org.eclipse.jst.server.tomcat.core.internal;
+
+import java.util.List;
 
 import org.eclipse.jdt.launching.IVMInstall;
 /**
- *
+ * 
+ * 
+ * @since 1.0
  */
-public interface ITomcatRuntimeWorkingCopy extends ITomcatRuntime {
+public interface ITomcatRuntime {
 	/**
-	 * Set the VM install (installed JRE) that this runtime is using.
+	 * Return the VM install (installed JRE) that this runtime is using.
 	 * 
-	 * @param vmInstall the VM install to use
+	 * @return the current VM install
 	 */
-	public void setVMInstall(IVMInstall vmInstall);
+	public IVMInstall getVMInstall();
+
+	/**
+	 * Returns the runtime classpath that is used by this runtime.
+	 * 
+	 * @return the runtime classpath
+	 */
+	public List getRuntimeClasspath();
 }

@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jst.server.tomcat.core.ITomcatRuntimeWorkingCopy;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.RuntimeLocatorDelegate;
