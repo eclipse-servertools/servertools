@@ -8,7 +8,7 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.monitor.core.tests;
+package org.eclipse.wst.internet.monitor.core.tests;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;

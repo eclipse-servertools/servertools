@@ -8,9 +8,9 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.monitor.core.tests;
+package org.eclipse.wst.internet.monitor.core.tests;
 
-import org.eclipse.wst.monitor.core.MonitorCore;
+import org.eclipse.wst.internet.monitor.core.MonitorCore;
 
 import junit.framework.TestCase;
 

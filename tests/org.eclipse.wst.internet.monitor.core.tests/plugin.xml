@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin
-   id="org.eclipse.wst.monitor.core.tests"
-   name="org.eclipse.wst.monitor.core.tests"
+   id="org.eclipse.wst.internet.monitor.core.tests"
+   name="org.eclipse.wst.internet.monitor.core.tests"
    version="1.0.0"
    provider-name="IBM"
-   class="org.eclipse.wst.monitor.core.tests.TestsPlugin">
+   class="org.eclipse.wst.internet.monitor.core.tests.TestsPlugin">
 
    <runtime>
       <library name="monitortests.jar">
@@ -16,7 +16,7 @@
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.junit"/>
-      <import plugin="org.eclipse.wst.monitor.core"/>
+      <import plugin="org.eclipse.wst.internet.monitor.core"/>
    </requires>
 
 </plugin>

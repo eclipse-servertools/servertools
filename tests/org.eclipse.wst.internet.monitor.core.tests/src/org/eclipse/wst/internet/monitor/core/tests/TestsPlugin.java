@@ -8,7 +8,7 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.monitor.core.tests;
+package org.eclipse.wst.internet.monitor.core.tests;
 
 import org.eclipse.core.runtime.Plugin;
 import java.util.*;
@@ -26,7 +26,7 @@ public class TestsPlugin extends Plugin {
 		super();
 		plugin = this;
 		try {
-			resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.monitor.core.tests.TestsPluginResources");
+			resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.internet.monitor.core.tests.TestsPluginResources");
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		}

@@ -8,25 +8,25 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.monitor.core.tests.extension;
+package org.eclipse.wst.internet.monitor.core.tests.extension;
 
-import org.eclipse.wst.monitor.core.IContentFilter;
-import org.eclipse.wst.monitor.core.MonitorCore;
+import org.eclipse.wst.internet.monitor.core.IProtocolAdapter;
+import org.eclipse.wst.internet.monitor.core.MonitorCore;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-public class ContentFiltersTestCase extends TestCase {
+public class ProtocolAdaptersTestCase extends TestCase {
 	public static Test suite() {
-		return new TestSuite(ContentFiltersTestCase.class, "MonitorTestCase");
+		return new TestSuite(ProtocolAdaptersTestCase.class, "ProtocolAdaptersTestCase");
 	}
 
-	public void testContentFiltersExtension() throws Exception {
-		IContentFilter[] cf = MonitorCore.getContentFilters();
-		if (cf != null) {
-			int size = cf.length;
+	public void testProtocolAdaptersExtension() throws Exception {
+		IProtocolAdapter[] pa = MonitorCore.getProtocolAdapters();
+		if (pa != null) {
+			int size = pa.length;
 			for (int i = 0; i < size; i++)
-				System.out.println(cf[i].getId() + " - " + cf[i].getName());
+				System.out.println(pa[i].getId() + " - " + pa[i].getName());
 		}
 	}
 }

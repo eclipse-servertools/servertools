@@ -8,15 +8,15 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.monitor.core.tests;
+package org.eclipse.wst.internet.monitor.core.tests;
 
-import org.eclipse.wst.monitor.core.tests.extension.*;
+import org.eclipse.wst.internet.monitor.core.tests.extension.*;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 public class AllTests {
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.wst.monitor.core.tests");
+		TestSuite suite = new TestSuite("Test for org.eclipse.wst.internet.monitor.core.tests");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(ExistenceTest.class);
 		suite.addTestSuite(ProtocolAdaptersTestCase.class);
