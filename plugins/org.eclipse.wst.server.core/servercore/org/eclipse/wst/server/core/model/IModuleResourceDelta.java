@@ -16,9 +16,32 @@ import org.eclipse.core.runtime.IPath;
  * @since 1.0
  */
 public interface IModuleResourceDelta {
+	/**
+	 * Kind constant (value 0) for no change.
+	 * 
+	 * @see #getKind()
+	 */
 	public static final int NO_CHANGE = 0;
+
+	/**
+	 * Kind constant (value 1) for added resources.
+	 * 
+	 * @see #getKind()
+	 */
 	public static final int ADDED = 1;
+
+	/**
+	 * Kind constant (value 2) for changed resources.
+	 * 
+	 * @see #getKind()
+	 */
 	public static final int CHANGED = 2;
+
+	/**
+	 * Kind constant (value 3) for removed resources.
+	 * 
+	 * @see #getKind()
+	 */
 	public static final int REMOVED = 3;
 
 	/**

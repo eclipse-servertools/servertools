@@ -77,6 +77,12 @@ public class Request implements IAdaptable {
 
 	/**
 	 * Create a new Request.
+	 * 
+	 * @param monitor a monitor
+	 * @param protocolId the protocol id
+	 * @param localPort a local port number
+	 * @param remoteHost a remote hostname
+	 * @param remotePort a remote port number
 	 */
 	public Request(Monitor monitor, String protocolId, int localPort, String remoteHost, int remotePort) {
 		super();
@@ -335,7 +341,7 @@ public class Request implements IAdaptable {
 			monitor.requestChanged(this);
 	}
 
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
 	public Object getAdapter(Class adapter) {

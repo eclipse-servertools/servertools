@@ -477,7 +477,7 @@ public interface IServer extends IServerAttributes {
 	/**
 	 * Asynchronously restarts the given module on the server.
 	 * See the specification of 
-	 * {@link IServer#synchronousRestartModule(IModule, IProgressMonitor)}
+	 * {@link IServer#synchronousRestartModule(IModule[], IProgressMonitor)}
 	 * for further details. 
 	 * <p>
 	 * The implementation should update the module sync state and fire

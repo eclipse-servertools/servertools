@@ -124,13 +124,9 @@ public abstract class ModuleFactoryDelegate {
 	public abstract ModuleDelegate getModuleDelegate(IModule module);
 
 	/**
-	 * Return all modules created by this factory.
-	 * See the specification of
-	 * {@link org.eclipse.wst.server.core.IModuleFactory#getModules()}
-	 * for further details. 
+	 * Return all modules created by this factory. 
 	 * <p>
-	 * This method is normally called by the web server core framework,
-	 * in response to a call to {@link IModuleFactory#getModules()}.
+	 * This method is normally called by the web server core framework.
 	 * Clients (other than the delegate) should never call this method.
 	 * </p>
 	 * <p>
@@ -148,9 +144,7 @@ public abstract class ModuleFactoryDelegate {
 	 * notifications until it is removed.
 	 * Has no effect if an identical listener is already registered.
 	 * <p>
-	 * This method is normally called by the web server core framework,
-	 * in response to a call to
-	 * {@link IModuleFactory#addModuleFactoryListener(IModuleFactoryListener)}.
+	 * This method is normally called by the web server core framework.
 	 * Clients (other than the delegate) should never call this method.
 	 * </p>
 	 *
@@ -171,9 +165,7 @@ public abstract class ModuleFactoryDelegate {
 	 * Removes the given listener from this module factory.
 	 * Has no effect if the listener is not registered.
 	 * <p>
-	 * This method is normally called by the web server core framework,
-	 * in response to a call to
-	 * {@link IModuleFactory#removeModuleFactoryListener(IModuleFactoryListener)}.
+	 * This method is normally called by the web server core framework.
 	 * Clients (other than the delegate) should never call this method.
 	 * </p>
 	 *

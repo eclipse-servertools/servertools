@@ -24,6 +24,9 @@ import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
  * @since 1.0
  */
 public abstract class RuntimeLocatorDelegate {
+	/**
+	 * A callback listener used to report progress.
+	 */
 	public interface IRuntimeSearchListener {
 		/**
 		 * Called when a new runtime is found by the locator.

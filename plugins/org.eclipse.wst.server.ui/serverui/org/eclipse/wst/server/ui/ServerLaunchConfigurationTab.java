@@ -54,16 +54,24 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	// after the user requests a launch, they cannot change it
 	private static final String READ_ONLY = "read-only";
 
+	/**
+	 * Create a new server launch configuration tab.
+	 */
 	public ServerLaunchConfigurationTab() {
 		this(new String[] {"*"});
 	}
 
+	/**
+	 * Create a new server launch configuration tab with the given server type ids.
+	 * 
+	 * @param serverTypeIds an array of server type ids
+	 */
 	public ServerLaunchConfigurationTab(String[] serverTypeIds) {
 		this.serverTypeIds = serverTypeIds;
 	}
 
-	/*
-	 * @see ILaunchConfigurationTab#createControl(Composite)
+	/**
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#createControl(Composite)
 	 */
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
@@ -176,8 +184,8 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		super.updateLaunchConfigurationDialog();
 	}
 
-	/*
-	 * @see ILaunchConfigurationTab#setDefaults(ILaunchConfigurationWorkingCopy)
+	/**
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#setDefaults(ILaunchConfigurationWorkingCopy)
 	 */
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 		setErrorMessage(null);
@@ -198,8 +206,8 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		}
 	}
 
-	/*
-	 * @see ILaunchConfigurationTab#initializeFrom(ILaunchConfiguration)
+	/**
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#initializeFrom(ILaunchConfiguration)
 	 */
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		serverCombo.setEnabled(true);
@@ -233,8 +241,8 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		}
 	}
 
-	/*
-	 * @see ILaunchConfigurationTab#performApply(ILaunchConfigurationWorkingCopy)
+	/**
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#performApply(ILaunchConfigurationWorkingCopy)
 	 */
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		if (server != null)
@@ -243,17 +251,8 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 			configuration.setAttribute(Server.ATTR_SERVER_ID, (String)null);
 	}
 
-	/*
-	 * @see ILaunchConfigurationTab#isValid() 
-	 */
-	public boolean isValid() {
-		if (serverCombo.getSelectionIndex() != -1)
-			return true;
-		return false;
-	}
-
-	/*
-	 * @see ILaunchConfigurationTab#isValid(ILaunchConfiguration) 
+	/**
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#isValid(ILaunchConfiguration) 
 	 */
 	public boolean isValid(ILaunchConfiguration launchConfig) {
 		try {
@@ -271,12 +270,15 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		return false;
 	}
 
+	/**
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#getImage()
+	 */
 	public Image getImage() {
 		return ImageResource.getImage(ImageResource.IMG_SERVER);
 	}
 
-	/*
-	 * @see ILaunchConfigurationTab#getName()
+	/**
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#getName()
 	 */
 	public String getName() {
 		return ServerUIPlugin.getResource("%serverLaunchConfigurationTab");

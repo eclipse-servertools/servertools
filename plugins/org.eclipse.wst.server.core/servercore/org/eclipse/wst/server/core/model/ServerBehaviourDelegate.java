@@ -50,11 +50,31 @@ public abstract class ServerBehaviourDelegate {
 	private Server server;
 	
 	/**
-	 * Publish kind constants
+	 * Publish kind constant (value 0) for no change.
+	 * 
+	 * @see #publishModule(int, int, IModule[], IProgressMonitor)
 	 */
 	public static final int NO_CHANGE = 0;
+	
+	/**
+	 * Publish kind constant (value 1) for added resources.
+	 * 
+	 * @see #publishModule(int, int, IModule[], IProgressMonitor)
+	 */
 	public static final int ADDED = 1;
+	
+	/**
+	 * Publish kind constant (value 2) for changed resources.
+	 * 
+	 * @see #publishModule(int, int, IModule[], IProgressMonitor)
+	 */
 	public static final int CHANGED = 2;
+
+	/**
+	 * Publish kind constant (value 3) for removed resources.
+	 * 
+	 * @see #publishModule(int, int, IModule[], IProgressMonitor)
+	 */
 	public static final int REMOVED = 3;
 
 	/**
@@ -312,6 +332,10 @@ public abstract class ServerBehaviourDelegate {
 	 * This method is used if there is a quick/better way to restart
 	 * the server. If it throws a CoreException, the normal stop/start
 	 * actions will be used.
+	 * 
+	 * @param launchMode the mode to restart in, one of the mode constants
+	 *    defined by {@link org.eclipse.debug.core.ILaunchManager}
+	 * @throws CoreException if there was a problem restarting
 	 */
 	public void restart(String launchMode) throws CoreException {
 		 throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, "Could not restart", null));
@@ -337,7 +361,7 @@ public abstract class ServerBehaviourDelegate {
 	/**
 	 * Asynchronously restarts the given module on the server.
 	 * See the specification of 
-	 * {@link IServer#synchronousRestartModule(IModule, IProgressMonitor)}
+	 * {@link IServer#synchronousRestartModule(IModule[], IProgressMonitor)}
 	 * for further details. 
 	 * <p>
 	 * The implementation should update the module sync state and fire
@@ -394,8 +418,7 @@ public abstract class ServerBehaviourDelegate {
 	 * will be thrown.
 	 * </p>
 	 * 
-	 * @param parents
-	 * @param module
+	 * @param module the module
 	 * @return an array containing the published module resource
 	 */
 	public IModuleResource[] getPublishedResources(IModule[] module) {
@@ -406,8 +429,7 @@ public abstract class ServerBehaviourDelegate {
 	 * Returns the delta of the current module resources that have been
 	 * published compared to the current state of the module.
 	 *
-	 * @param parents
-	 * @param module
+	 * @param module the module
 	 * @return an array containing the publish resource delta
 	 */
 	public IModuleResourceDelta[] getPublishedResourceDelta(IModule[] module) {

@@ -85,12 +85,10 @@ public abstract class ModuleDelegate {
 	}
 
 	/**
-	 * Validates this module instance. See the specification of
-	 * {@link IModule#validate(IProgressMonitor)} for further details. Subclasses should
+	 * Validates this module instance. Subclasses should
 	 * override and call super.validate() for basic validation. 
 	 * <p>
-	 * This method is called by the web server core framework,
-	 * in response to a call to <code>IModule.validate(IProgressMonitor)</code>.
+	 * This method is called by the web server core framework.
 	 * Clients should never call this method.
 	 * </p>
 	 *

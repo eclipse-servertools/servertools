@@ -67,8 +67,6 @@ public class TaskWizard implements IWizard {
 	
 	private WizardFragment rootFragment;
 	private WizardFragment currentFragment;
-	
-	//private static TaskWizard current;
 
 	class FragmentData {
 		public TaskWizardPage page;
@@ -94,8 +92,6 @@ public class TaskWizard implements IWizard {
 		
 		setNeedsProgressMonitor(true);
 		setForcePreviousAndNextButtons(true);
-		
-		//current = this;
 	}
 
 	/**

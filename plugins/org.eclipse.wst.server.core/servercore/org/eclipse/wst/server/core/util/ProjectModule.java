@@ -33,16 +33,26 @@ public abstract class ProjectModule extends ModuleDelegate {
 	// change listeners
 	private transient List listeners;
 
+	/**
+	 * Create a new project module.
+	 */
 	public ProjectModule() {
 		// do nothing
 	}
 
+	/**
+	 * Create a new project module in the given project.
+	 * 
+	 * @param project the project containing the module
+	 */
 	public ProjectModule(IProject project) {
 		this.project = project;
 	}
 
-	/*
-	 * @see IModuleProject#getProject()
+	/**
+	 * Returns the project that the module is contained in.
+	 * 
+	 * @return the project that the module is contained in
 	 */
 	public IProject getProject() {
 		return project;
@@ -138,24 +148,24 @@ public abstract class ProjectModule extends ModuleDelegate {
 		return deployDelta;
 	}*/
 
-	/*
+	/**
 	 * Helper method - returns the module's id.
 	 * 
-	 * @see ModuleDelegate#getId()
+	 * @return the module id
 	 */
 	public String getId() {
 		return getProject().getName();
 		//return getModule().getId();
 	}
 
-	/*
+	/**
 	 * @see ModuleDelegate#validate()
 	 */
 	public IStatus validate() {
 		return null;
 	}
 
-	/*
+	/**
 	 * @see ModuleDelegate#members()
 	 */
 	public IModuleResource[] members() throws CoreException {
@@ -203,6 +213,8 @@ public abstract class ProjectModule extends ModuleDelegate {
 
 	/**
 	 * Helper method - returns the module's name.
+	 * 
+	 * @return the module name
 	 */
 	public String getName() {
 		return getProject().getName();
@@ -220,7 +232,7 @@ public abstract class ProjectModule extends ModuleDelegate {
 	}
 	
 	/**
-	 * 
+	 * @see Object#equals(Object)
 	 */
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof ProjectModule))

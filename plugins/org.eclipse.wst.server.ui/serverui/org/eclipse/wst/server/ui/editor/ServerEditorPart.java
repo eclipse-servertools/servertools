@@ -12,7 +12,6 @@ package org.eclipse.wst.server.ui.editor;
 
 import java.util.*;
 
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Composite;
@@ -35,6 +34,9 @@ import org.eclipse.wst.server.ui.internal.editor.ServerEditorCore;
  * @since 1.0
  */
 public abstract class ServerEditorPart extends EditorPart {
+	/**
+	 * Property change id for the error message.
+	 */
 	public static final int PROP_ERROR = 5;
 	
 	private String errorMessage = null;
@@ -49,44 +51,45 @@ public abstract class ServerEditorPart extends EditorPart {
 	
 	private FormToolkit toolkit;
 
+	/**
+	 * Create a new server editor part.
+	 */
 	public ServerEditorPart() {
 		super();
 	}
 
+	/**
+	 * Sets the editor part factory for this page.
+	 * 
+	 * @param pageFactory the part factory
+	 */
 	public void setPageFactory(IServerEditorPartFactory pageFactory) {
 		this.pageFactory = pageFactory;
 	}
 
-	/*
-	 * @see IEditorPart#doSave(IProgressMonitor)
+	/**
+	 * @see org.eclipse.ui.IEditorPart#doSave(IProgressMonitor)
 	 */
 	public void doSave(IProgressMonitor monitor) {
 		// do nothing
 	}
 
-	/*
-	 * @see IEditorPart#doSaveAs()
+	/**
+	 * @see org.eclipse.ui.IEditorPart#doSaveAs()
 	 */
 	public void doSaveAs() {
 		// do nothing
 	}
 
-	/*
-	 * @see IEditorPart#gotoMarker(IMarker)
-	 */
-	public void gotoMarker(IMarker marker) {
-		// do nothing
-	}
-
-	/*
-	 * @see IEditorPart#isDirty()
+	/**
+	 * @see org.eclipse.ui.IEditorPart#isDirty()
 	 */
 	public boolean isDirty() {
 		return false;
 	}
 
-	/*
-	 * @see IEditorPart#isSaveAsAllowed()
+	/**
+	 * @see org.eclipse.ui.IEditorPart#isSaveAsAllowed()
 	 */
 	public boolean isSaveAsAllowed() {
 		return false;
@@ -107,7 +110,10 @@ public abstract class ServerEditorPart extends EditorPart {
 		errorMessage = error;
 		super.firePropertyChange(PROP_ERROR);
 	}
-	
+
+	/**
+	 * Updates the error message shown in the editor.
+	 */
 	public void updateErrorMessage() {
 		super.firePropertyChange(PROP_ERROR);
 	}
@@ -210,6 +216,9 @@ public abstract class ServerEditorPart extends EditorPart {
 		return list;
 	}
 
+	/**
+	 * @see org.eclipse.ui.IEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
+	 */
 	public void init(IEditorSite site, IEditorInput input) {
 		setSite(site);
 		setInput(input);
@@ -236,6 +245,12 @@ public abstract class ServerEditorPart extends EditorPart {
 		return server;
 	}
 
+	/**
+	 * Inserts editor sections into the given composite.
+	 * 
+	 * @param parent the composite to add the section(s) to
+	 * @param id the section insertion id
+	 */
 	public void insertSections(Composite parent, String id) {
 		if (id == null)
 			return;
@@ -247,6 +262,9 @@ public abstract class ServerEditorPart extends EditorPart {
 		}
 	}
 	
+	/**
+	 * Dispose of the editor.
+	 */
 	public void dispose() {
 		super.dispose();
 

@@ -24,6 +24,11 @@ public class ServerPort {
 	
 	/**
 	 * Create a new server port.
+	 * 
+	 * @param id a server-specific port id
+	 * @param name a human-readable name for the port
+	 * @param port the number number
+	 * @param protocol the port's protocol
 	 */
 	public ServerPort(String id, String name, int port, String protocol) {
 		this(id, name, port, protocol, null, true);
@@ -31,13 +36,14 @@ public class ServerPort {
 
 	/**
 	 * Create a new server port.
-	 */
-	public ServerPort(String id, String name, int port, String protocol, boolean advanced) {
-		this(id, name, port, protocol, null, advanced);
-	}
-
-	/**
-	 * Create a new server port.
+	 * 
+	 * @param id a server-specific port id
+	 * @param name a human-readable name for the port
+	 * @param port the number number
+	 * @param protocol the port's protocol
+	 * @param contentTypes the content types that the port supports
+	 * @param advanced <code>true</code> if the port is "advanced" and should only
+	 *    be shown to advanced users, <code>false</code> otherwise
 	 */
 	public ServerPort(String id, String name, int port, String protocol, String[] contentTypes, boolean advanced) {
 		super();
@@ -47,13 +53,6 @@ public class ServerPort {
 		this.protocol = protocol;
 		this.contentTypes = contentTypes;
 		this.advanced = advanced;
-	}
-
-	/**
-	 * Create a new server port.
-	 */
-	public ServerPort(String name, int port, String protocol) {
-		this(null, name, port, protocol);
 	}
 
 	/**

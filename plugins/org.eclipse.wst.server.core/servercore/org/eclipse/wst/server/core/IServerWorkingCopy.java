@@ -115,7 +115,7 @@ public interface IServerWorkingCopy extends IServerAttributes {
 	 * {@link IServer#createWorkingCopy()},
 	 * <code>this.getOriginal()</code> returns the original
 	 * server object. For a server working copy just created by
-	 * a call to {@link IServerType#createServer(String, IFile, IProgressMonitor)},
+	 * a call to {@link IServerType#createServer(String, org.eclipse.core.resources.IFile, IProgressMonitor)},
 	 * <code>this.getOriginal()</code> returns <code>null</code>.
 	 * </p>
 	 * 

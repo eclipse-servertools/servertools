@@ -21,6 +21,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
  * @since 1.0
  */
 public interface IWizardHandle extends IMessageProvider {
+	/**
+	 * Updates the wizard error messages and buttons.
+	 */
 	public void update();
 
 	/**

@@ -114,8 +114,7 @@ public abstract class RuntimeDelegate {
 	}
 
 	/**
-	 * Validates this runtime instance. See the specification of
-	 * {@link IRuntime#validate(IProgressMonitor)} for further details. Subclasses should
+	 * Validates this runtime instance. Subclasses should
 	 * override and call super.validate() for basic validation. 
 	 * <p>
 	 * This method is called by the web server core framework,
@@ -142,8 +141,10 @@ public abstract class RuntimeDelegate {
 	}
 
 	/**
+	 * Returns <code>true</code> if the current name is already in use.
 	 * 
-	 * @return
+	 * @return <code>true</code> if the name is in use, and <code>false</code>
+	 *    otherwise
 	 */
 	private boolean isNameInUse() {
 		IRuntime orig = runtime;
@@ -162,29 +163,63 @@ public abstract class RuntimeDelegate {
 	}
 
 	/**
+	 * Returns the value of the specified int-valued attribute.
 	 * 
-	 * @param attributeName
-	 * @param defaultValue
-	 * @return
+	 * @param id the attribute id
+	 * @param defaultValue the default value of the specified attribute
+	 * @return the attribute value
+	 * @see #setAttribute(String, int)
 	 */
-	public int getAttribute(String attributeName, int defaultValue) {
-		return runtime.getAttribute(attributeName, defaultValue);
+	public int getAttribute(String id, int defaultValue) {
+		return runtime.getAttribute(id, defaultValue);
 	}
 
-	public boolean getAttribute(String attributeName, boolean defaultValue) {
-		return runtime.getAttribute(attributeName, defaultValue);
-	}
-	
-	public String getAttribute(String attributeName, String defaultValue) {
-		return runtime.getAttribute(attributeName, defaultValue);
+	/**
+	 * Returns the value of the specified boolean-valued attribute.
+	 * 
+	 * @param id the attribute id
+	 * @param defaultValue the default value of the specified attribute
+	 * @return the attribute value
+	 * @see #setAttribute(String, boolean)
+	 */
+	public boolean getAttribute(String id, boolean defaultValue) {
+		return runtime.getAttribute(id, defaultValue);
 	}
 
-	public List getAttribute(String attributeName, List defaultValue) {
-		return runtime.getAttribute(attributeName, defaultValue);
+	/**
+	 * Returns the value of the specified String-valued attribute.
+	 * 
+	 * @param id the attribute id
+	 * @param defaultValue the default value of the specified attribute
+	 * @return the attribute value
+	 * @see #setAttribute(String, String)
+	 */
+	public String getAttribute(String id, String defaultValue) {
+		return runtime.getAttribute(id, defaultValue);
 	}
 
-	public Map getAttribute(String attributeName, Map defaultValue) {
-		return runtime.getAttribute(attributeName, defaultValue);
+	/**
+	 * Returns the value of the specified List-valued attribute.
+	 * 
+	 * @param id the attribute id
+	 * @param defaultValue the default value of the specified attribute
+	 * @return the attribute value
+	 * @see #setAttribute(String, List)
+	 */
+	public List getAttribute(String id, List defaultValue) {
+		return runtime.getAttribute(id, defaultValue);
+	}
+
+	/**
+	 * Returns the value of the specified Map-valued attribute.
+	 * 
+	 * @param id the attribute id
+	 * @param defaultValue the default value of the specified attribute
+	 * @return the attribute value
+	 * @see #setAttribute(String, Map)
+	 */
+	public Map getAttribute(String id, Map defaultValue) {
+		return runtime.getAttribute(id, defaultValue);
 	}
 	
 	/**
@@ -217,6 +252,7 @@ public abstract class RuntimeDelegate {
 	 * 
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
+	 * @see #getAttribute(String, int)
 	 */
 	public void setAttribute(String id, int value) {
 		runtimeWC.setAttribute(id, value);
@@ -228,6 +264,7 @@ public abstract class RuntimeDelegate {
 	 * 
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
+	 * @see #getAttribute(String, boolean)
 	 */
 	public void setAttribute(String id, boolean value) {
 		runtimeWC.setAttribute(id, value);
@@ -239,6 +276,7 @@ public abstract class RuntimeDelegate {
 	 * 
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
+	 * @see #getAttribute(String, String)
 	 */
 	public void setAttribute(String id, String value) {
 		runtimeWC.setAttribute(id, value);
@@ -250,6 +288,7 @@ public abstract class RuntimeDelegate {
 	 * 
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
+	 * @see #getAttribute(String, List)
 	 */
 	public void setAttribute(String id, List value) {
 		runtimeWC.setAttribute(id, value);
@@ -261,6 +300,7 @@ public abstract class RuntimeDelegate {
 	 * 
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
+	 * @see #getAttribute(String, Map)
 	 */
 	public void setAttribute(String id, Map value) {
 		runtimeWC.setAttribute(id, value);

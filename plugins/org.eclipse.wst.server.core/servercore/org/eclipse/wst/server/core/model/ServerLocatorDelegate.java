@@ -23,6 +23,9 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
  * @since 1.0
  */
 public abstract class ServerLocatorDelegate {
+	/**
+	 * A callback listener used to report progress.
+	 */
 	public interface IServerSearchListener {
 		/**
 		 * Called when a new server is found by the locator.

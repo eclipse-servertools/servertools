@@ -26,13 +26,21 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
 public abstract class ServerEditorSection implements IServerEditorSection {
 	private String errorMessage = null;
 
+	/**
+	 * The server working copy.
+	 */
 	public IServerWorkingCopy server;
+
+	/**
+	 * The command manager.
+	 */
 	public ICommandManager commandManager;
+
 	protected boolean readOnly;
 	protected Composite parentComp;
 	protected ServerEditorPart editor;
 
-	/* (non-Javadoc)
+	/**
 	 * @see org.eclipse.wst.server.ui.editor.IServerEditorSection#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
 	 */
 	public void init(IEditorSite site, IEditorInput input) {
@@ -44,18 +52,28 @@ public abstract class ServerEditorSection implements IServerEditorSection {
 		}
 	}
 
+	/**
+	 * Create the section.
+	 * 
+	 * @param parent the parent composite
+	 */
 	public void createSection(Composite parent) {
 		this.parentComp = parent;
 	}
 
+	/**
+	 * Return the shell of the section.
+	 * 
+	 * @return the shell
+	 */
 	public Shell getShell() {
 		return parentComp.getShell();
 	}
-	
+
 	/**
 	 * Return the error message for this page.
 	 * 
-	 * @return java.lang.String
+	 * @return the error message
 	 */
 	public String getErrorMessage() {
 		return errorMessage;
@@ -72,6 +90,11 @@ public abstract class ServerEditorSection implements IServerEditorSection {
 		return null;
 	}
 
+	/**
+	 * Set the editor part that this section belongs to.
+	 * 
+	 * @param editor the editor
+	 */
 	public void setServerResourceEditorPart(ServerEditorPart editor) {
 		this.editor = editor;
 	}

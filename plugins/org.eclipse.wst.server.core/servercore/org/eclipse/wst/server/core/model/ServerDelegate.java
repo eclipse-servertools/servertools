@@ -111,24 +111,64 @@ public abstract class ServerDelegate {
 		return serverWC;
 	}
 
-	public int getAttribute(String attributeName, int defaultValue) {
-		return server.getAttribute(attributeName, defaultValue);
+	/**
+	 * Returns the value of the specified int-valued attribute.
+	 * 
+	 * @param id the attribute id
+	 * @param defaultValue the default value of the specified attribute
+	 * @return the attribute value
+	 * @see #setAttribute(String, int)
+	 */
+	public int getAttribute(String id, int defaultValue) {
+		return server.getAttribute(id, defaultValue);
 	}
 
-	public boolean getAttribute(String attributeName, boolean defaultValue) {
-		return server.getAttribute(attributeName, defaultValue);
-	}
-	
-	public String getAttribute(String attributeName, String defaultValue) {
-		return server.getAttribute(attributeName, defaultValue);
+	/**
+	 * Returns the value of the specified boolean-valued attribute.
+	 * 
+	 * @param id the attribute id
+	 * @param defaultValue the default value of the specified attribute
+	 * @return the attribute value
+	 * @see #setAttribute(String, boolean)
+	 */
+	public boolean getAttribute(String id, boolean defaultValue) {
+		return server.getAttribute(id, defaultValue);
 	}
 
-	public List getAttribute(String attributeName, List defaultValue) {
-		return server.getAttribute(attributeName, defaultValue);
+	/**
+	 * Returns the value of the specified String-valued attribute.
+	 * 
+	 * @param id the attribute id
+	 * @param defaultValue the default value of the specified attribute
+	 * @return the attribute value
+	 * @see #setAttribute(String, String)
+	 */
+	public String getAttribute(String id, String defaultValue) {
+		return server.getAttribute(id, defaultValue);
 	}
 
-	public Map getAttribute(String attributeName, Map defaultValue) {
-		return server.getAttribute(attributeName, defaultValue);
+	/**
+	 * Returns the value of the specified List-valued attribute.
+	 * 
+	 * @param id the attribute id
+	 * @param defaultValue the default value of the specified attribute
+	 * @return the attribute value
+	 * @see #setAttribute(String, List)
+	 */
+	public List getAttribute(String id, List defaultValue) {
+		return server.getAttribute(id, defaultValue);
+	}
+
+	/**
+	 * Returns the value of the specified Map-valued attribute.
+	 * 
+	 * @param id the attribute id
+	 * @param defaultValue the default value of the specified attribute
+	 * @return the attribute value
+	 * @see #setAttribute(String, Map)
+	 */
+	public Map getAttribute(String id, Map defaultValue) {
+		return server.getAttribute(id, defaultValue);
 	}
 
 	/**
@@ -178,7 +218,8 @@ public abstract class ServerDelegate {
 	 * recursively called on the children.</p>
 	 *
 	 * @param module a module
-	 * @see org.eclipse.wst.server.core.IServerAttributes#getChildModules(IModule, IProgressMonitor)
+	 * @return the child modules
+	 * @see IServerAttributes#getChildModules(IModule[], IProgressMonitor)
 	 */
 	public abstract IModule[] getChildModules(IModule[] module);
 
