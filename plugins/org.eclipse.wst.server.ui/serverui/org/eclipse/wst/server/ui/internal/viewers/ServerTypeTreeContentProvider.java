@@ -27,19 +27,17 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 	protected boolean localhost;
 	protected boolean includeTestEnvironments = true;
 	
-	protected String type;
-	protected String version;
+	protected IModuleType moduleType;
 	protected boolean includeIncompatibleVersions;
 
 	/**
 	 * ServerTypeTreeContentProvider constructor comment.
 	 */
-	public ServerTypeTreeContentProvider(byte style, String type, String version) {
+	public ServerTypeTreeContentProvider(byte style, IModuleType moduleType) {
 		super(style, false);
 		localhost = true;
 		
-		this.type = type;
-		this.version = version;
+		this.moduleType = moduleType;
 		
 		fillTree();
 	}
@@ -103,10 +101,10 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 		if (runtimeType == null)
 			return false;
 		if (includeIncompatibleVersions) {
-			if (!ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), type, null))
+			if (!ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), moduleType.getId(), null))
 				return false;
 		} else {
-			if (!ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), type, version))
+			if (!ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), moduleType.getId(), moduleType.getVersion()))
 				return false;
 		}
 		

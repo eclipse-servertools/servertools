@@ -18,9 +18,10 @@ import org.eclipse.wst.server.core.IServer;
  * A launchable client is a client side application or test
  * harness that can be launched (run) against a resource
  * running on a server.
- * 
- * <p>This is the implementation of a launchableClient
- * extension point.</p>
+ * <p>
+ * This abstract class is intended to be extended only by clients
+ * to extend the <code>clients</code> extension point.
+ * </p>
  */
 public abstract class ClientDelegate {
 	/**

@@ -71,7 +71,7 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="class" type="string">
+         <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
                   specifies the fully qualified name of the Java class that implements &lt;samp&gt;IServerDelegate&lt;/samp&gt;.

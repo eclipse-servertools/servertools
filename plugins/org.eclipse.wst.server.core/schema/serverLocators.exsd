@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.wst.server.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.wst.server.core" id="serverLocator" name="Server Locator"/>
+         <meta.schema plugin="org.eclipse.wst.server.core" id="serverLocators" name="Server Locators"/>
       </appInfo>
       <documentation>
          This extension point is used to locate new servers on the local or remote machines.
@@ -75,10 +75,17 @@ Runtime locator instances of this type will delegate to instances of this class.
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="hosts" type="string">
+         <attribute name="supportsRemoteHosts" type="string" use="required">
             <annotation>
                <documentation>
                   local and/or remote
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="typeIds" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
                </documentation>
             </annotation>
          </attribute>

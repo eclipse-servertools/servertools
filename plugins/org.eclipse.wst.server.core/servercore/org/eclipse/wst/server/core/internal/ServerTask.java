@@ -31,19 +31,15 @@ public class ServerTask implements IServerTask {
 		this.element = element;
 	}
 
-	/**
-	 * Returns the id of this default server.
-	 *
-	 * @return java.lang.String
+	/*
+	 * @see
 	 */
 	public String getId() {
 		return element.getAttribute("id");
 	}
 
-	/**
-	 * Return the type ids that may be supported.
-	 * 
-	 * @return java.lang.String[]
+	/*
+	 * @see
 	 */
 	protected String[] getTypeIds() {
 		try {
@@ -52,34 +48,16 @@ public class ServerTask implements IServerTask {
 			return null;
 		}
 	}
-	
-	/**
-	 * Returns true if the given type (given by the id) can use this task. This
-	 * result is based on the result of the getTypeIds() method.
-	 *
-	 * @return boolean
+
+	/*
+	 * @see
 	 */
 	public boolean supportsType(String id) {
-		if (id == null || id.length() == 0)
-			return false;
-
-		String[] s = getTypeIds();
-		if (s == null)
-			return true;
-		
-		int size = s.length;
-		for (int i = 0; i < size; i++) {
-			if (s[i].endsWith("*")) {
-				if (id.length() >= s[i].length() && id.startsWith(s[i].substring(0, s[i].length() - 1)))
-					return true;
-			} else if (id.equals(s[i]))
-				return true;
-		}
-		return false;
+		return ServerPlugin.supportsType(getTypeIds(), id);
 	}
 
 	/*
-	 * @see IPublishManager#getDelegate()
+	 * @see IServerTask#getDelegate()
 	 */
 	public ServerTaskDelegate getDelegate() {
 		if (delegate == null) {
@@ -92,10 +70,8 @@ public class ServerTask implements IServerTask {
 		return delegate;
 	}
 	
-	/**
-	 * Lets the task know that it is about to be used. This method should
-	 * be used to clean out any previously cached information, or start to
-	 * create a new cache.
+	/*
+	 * @see
 	 */
 	public IOptionalTask[] getTasks(IServer server, IServerConfiguration configuration, List[] parents, IModule[] modules) {
 		try {

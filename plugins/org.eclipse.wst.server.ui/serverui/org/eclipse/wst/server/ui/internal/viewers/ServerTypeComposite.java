@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.widgets.Composite;
 
+import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 /**
@@ -29,8 +30,7 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 	protected ServerTypeTreeContentProvider contentProvider;
 	protected boolean initialSelection = true;
 	
-	protected String type;
-	protected String version;
+	protected IModuleType moduleType;
 	
 	protected boolean includeTestEnvironments = true;
 	protected boolean isLocalhost;
@@ -40,13 +40,13 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 		public void serverTypeSelected(IServerType type);
 	}
 	
-	public ServerTypeComposite(Composite parent, int style, String type, String version, ServerTypeSelectionListener listener2) {
+	public ServerTypeComposite(Composite parent, int style, IModuleType moduleType, ServerTypeSelectionListener listener2) {
 		super(parent, style);
 		this.listener = listener2;
-		this.type = type;
-		this.version = version;
+		
+		this.moduleType = moduleType;
 	
-		contentProvider = new ServerTypeTreeContentProvider(ServerTypeTreeContentProvider.STYLE_VENDOR, type, version);
+		contentProvider = new ServerTypeTreeContentProvider(ServerTypeTreeContentProvider.STYLE_VENDOR, moduleType);
 		treeViewer.setContentProvider(contentProvider);
 		treeViewer.setLabelProvider(new ServerTypeTreeLabelProvider());
 		treeViewer.setInput(AbstractTreeContentProvider.ROOT);
@@ -140,7 +140,7 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 
 	protected void viewOptionSelected(byte option) {
 		ISelection sel = treeViewer.getSelection();
-		contentProvider = new ServerTypeTreeContentProvider(option, type, version);
+		contentProvider = new ServerTypeTreeContentProvider(option, moduleType);
 		contentProvider.setLocalhost(isLocalhost);
 		contentProvider.setIncludeTestEnvironments(includeTestEnvironments);
 		contentProvider.setIncludeIncompatibleVersions(includeIncompatibleVersions);

@@ -19,10 +19,14 @@ import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.internal.ServerConfiguration;
 import org.eclipse.wst.server.core.internal.ServerConfigurationWorkingCopy;
-/*
+/**
  * A server configuration. Server configurations usually contain
  * directories (the resources to be run on the server) and configuration
  * information. (i.e. mime types, data sources, etc.)
+ * <p>
+ * This abstract class is intended to be extended only by clients
+ * to extend the <code>serverConfigurationTypes</code> extension point.
+ * </p>
  */
 public abstract class ServerConfigurationDelegate {
 	private ServerConfiguration configuration;

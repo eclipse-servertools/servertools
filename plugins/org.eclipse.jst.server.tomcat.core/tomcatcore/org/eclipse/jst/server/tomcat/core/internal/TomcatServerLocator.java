@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -13,15 +13,13 @@ package org.eclipse.jst.server.tomcat.core.internal;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IRuntimeLocatorListener;
 import org.eclipse.wst.server.core.model.ServerLocatorDelegate;
-import org.eclipse.wst.server.core.model.IServerLocatorListener;
 /**
  * 
  */
 public class TomcatServerLocator extends ServerLocatorDelegate {
-	public void searchForServers(final IServerLocatorListener listener, final IProgressMonitor monitor) {
-		IRuntimeLocatorListener listener2 = new IRuntimeLocatorListener() {
+	public void searchForServers(String host, final IServerLocator.Listener listener, final IProgressMonitor monitor) {
+		IRuntimeLocator.Listener listener2 = new IRuntimeLocator.Listener() {
 			public void runtimeFound(IRuntime runtime) {
 				String runtimeTypeId = runtime.getRuntimeType().getId();
 				String serverTypeId = runtimeTypeId.substring(0, runtimeTypeId.length() - 8);

@@ -64,7 +64,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @since 1.0
  */
 public interface IRuntimeType extends IOrdered {
-
 	/**
 	 * Returns the id of this runtime type.
 	 * Each known server runtime type has a distinct id. 
@@ -96,13 +95,10 @@ public interface IRuntimeType extends IOrdered {
 	public String getDescription();
 	
 	/**
-	 * Returns the displayable vendor name for this runtime type.
+	 * Returns the displayable vendor name for this runtime type. If the
+	 * runtime type did not specific a vendor, an empty string is returned.
 	 * <p>
 	 * Note that this description is appropriate for the current locale.
-	 * </p>
-	 * <p>
-	 * [issue: "vendor" attribute is optional. What is expected return
-	 * when omitted? Should be empty string.]
 	 * </p>
 	 *
 	 * @return a displayable vendor name for this runtime type
@@ -110,14 +106,10 @@ public interface IRuntimeType extends IOrdered {
 	public String getVendor();
 	
 	/**
-	 * Returns the displayable version name for this runtime type.
+	 * Returns the displayable version name for this runtime type. If the
+	 * runtime type did not specific a vendor, an empty string is returned.
 	 * <p>
 	 * Note that this description is appropriate for the current locale.
-	 * </p>
-	 * <p>
-	 * [issue: "versionId" attribute is optional. What is expected return
-	 * when omitted? Should be empty string.]
-	 * </p>
 	 * </p>
 	 *
 	 * @return a displayable version name for this runtime type

@@ -64,4 +64,12 @@ public class ServerAdapter implements IServerListener {
 	public void modulesChanged(IServer server) {
 		// do nothing
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.server.core.model.IPublishListener#moduleStateChange(org.eclipse.wst.server.core.IServer2, java.util.List, org.eclipse.wst.server.core.model.IModule)
+	 */
+	public void moduleStateChange(IServer server, IModule[] parents, IModule module) {
+		// do nothing
+	}
+
 }

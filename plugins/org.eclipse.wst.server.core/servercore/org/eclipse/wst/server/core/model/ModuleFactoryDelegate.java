@@ -48,7 +48,6 @@ import org.eclipse.wst.server.core.util.ModuleFactoryEvent;
  * likely to change significantly before the initial release.</it>
  * </p>
  * 
- * @see org.eclipse.wst.server.core.IModuleFactory#getDelegate()
  * @since 1.0
  */
 public abstract class ModuleFactoryDelegate {
@@ -59,6 +58,14 @@ public abstract class ModuleFactoryDelegate {
 
 	public final void initialize(ModuleFactory newFactory) {
 		factory = newFactory;
+	}
+
+	protected String getId() {
+		return factory.getId();
+	}
+	
+	protected IModule createModule(String type) {
+		return null;
 	}
 
 	/**
@@ -76,7 +83,9 @@ public abstract class ModuleFactoryDelegate {
 	 * @return the module with the given id, or <code>null</code>
 	 * if none
 	 */
-	public abstract IModule getModule(String memento);
+	//public abstract IModule getModule(String memento);
+
+	public abstract ModuleDelegate getModuleDelegate(IModule module);
 
 	/**
 	 * Return all modules created by this factory.

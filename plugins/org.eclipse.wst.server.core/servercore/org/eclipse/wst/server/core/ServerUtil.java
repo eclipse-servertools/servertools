@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 
+import org.eclipse.wst.server.core.internal.ModuleFactory;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.Trace;
 /**
@@ -222,13 +223,19 @@ public class ServerUtil {
 	 * @param java.lang.String memento
 	 * @return org.eclipse.wst.server.core.IModule
 	 */
-	public static IModule getModule(String factoryId, String memento) {
-		IModuleFactory[] moduleFactory = ServerCore.getModuleFactories();
+	public static IModule getModule(String moduleId) {
+		ModuleFactory[] moduleFactory = ServerCore.getModuleFactories();
+		int index = moduleId.indexOf("/");
+		if (index < 0)
+			return null;
+		
+		String factoryId = moduleId.substring(0, index);
+		String moduleSubId = moduleId.substring(index+1);
 		if (moduleFactory != null) {
 			int size = moduleFactory.length;
 			for (int i = 0; i < size; i++) {
 				if (moduleFactory[i].getId().equals(factoryId)) {
-					IModule module = moduleFactory[i].getModule(memento);
+					IModule module = moduleFactory[i].getModule(moduleSubId);
 					if (module != null) {
 						return module;
 					}
@@ -427,7 +434,7 @@ public class ServerUtil {
 	public static IModule[] getModules(String type, String version, boolean onlyProjectModules) {
 		List list = new ArrayList();
 
-		IModuleFactory[] factories = ServerCore.getModuleFactories();
+		ModuleFactory[] factories = ServerCore.getModuleFactories();
 		if (factories != null) {
 			int size = factories.length;
 			for (int i = 0; i < size; i++) {
@@ -488,7 +495,7 @@ public class ServerUtil {
 	public static IModule[] getModules() {
 		List list = new ArrayList();
 		
-		IModuleFactory[] factories = ServerCore.getModuleFactories();
+		ModuleFactory[] factories = ServerCore.getModuleFactories();
 		if (factories != null) {
 			int size = factories.length;
 			for (int i = 0; i < size; i++) {

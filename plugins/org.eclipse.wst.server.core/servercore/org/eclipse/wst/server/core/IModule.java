@@ -24,8 +24,8 @@ import org.eclipse.wst.server.core.model.IModuleListener;
  * "kinds") is open-ended.
  * </p>
  * <p>
- * All modules are created by module factories
- * ({@link org.eclipse.wst.server.core.IModuleFactory}).
+ * All modules are created by module factories using the moduleFactories
+ * extension point.
  * </p>
  * <p>
  * The content of a module is a collection of file and folder

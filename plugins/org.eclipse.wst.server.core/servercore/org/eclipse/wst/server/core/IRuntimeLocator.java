@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,35 +12,72 @@ package org.eclipse.wst.server.core;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.model.*;
 /**
+ * A runtime locator provides the ability to locate or search for additional
+ * runtimes of a particular type.
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
+ * 
+ * @since 1.0
  */
 public interface IRuntimeLocator {
+	public interface Listener {
+		/**
+		 * Called when a new runtime is found by the locator.
+		 * The runtime must never be null.
+		 * 
+		 * @param runtime the runtime that was found.
+		 */
+		public void runtimeFound(IRuntime runtime);
+	}
+
 	/**
+	 * Returns the id of this runtime locator.
+	 * Each known runtime locator has a distinct id. 
+	 * Ids are intended to be used internally as keys; they are not
+	 * intended to be shown to end users.
 	 * 
-	 * @return
+	 * @return the runtime locator id
 	 */
 	public String getId();
 
 	/**
-	 * 
-	 * @return
+	 * Returns the displayable name for this runtime locator.
+	 * <p>
+	 * Note that this name is appropriate for the current locale.
+	 * </p>
+	 *
+	 * @return a displayable name for this runtime locator
 	 */
 	public String getName();
 
 	/**
-	 * 
-	 * @return
+	 * Returns the displayable description for this runtime locator.
+	 * <p>
+	 * Note that this description is appropriate for the current locale.
+	 * </p>
+	 *
+	 * @return a displayable description for this runtime locator
 	 */
 	public String getDescription();
 
 	/**
+	 * Returns true if the runtime locator can find runtimes of the given type.
+	 * The id should never be null.
 	 * 
-	 * @param listener
-	 * @param monitor
+	 * @param runtimeTypeId the id of a runtime type
+	 * @return boolean
+	 */
+	public boolean supportsType(String runtimeTypeId);
+
+	/**
+	 * Searches for local runtimes. 
+	 * It uses the callback listener to report runtimes that are found.
+	 * 
+	 * @param listener a listener to report status to
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 * @throws CoreException
 	 */
-	public void searchForRuntimes(IRuntimeLocatorListener listener, IProgressMonitor monitor) throws CoreException;
+	public void searchForRuntimes(Listener listener, IProgressMonitor monitor) throws CoreException;
 }

@@ -358,4 +358,28 @@ public class ServerPlugin extends Plugin {
 		s = s.replace('\\', '_');
 		return s;
 	}
+
+	/**
+	 * Returns true if ids contains id.
+	 * @param ids
+	 * @param id
+	 * @return
+	 */
+	public static boolean supportsType(String[] ids, String id) {
+		if (id == null || id.length() == 0)
+			return false;
+
+		if (ids == null)
+			return true;
+		
+		int size = ids.length;
+		for (int i = 0; i < size; i++) {
+			if (ids[i].endsWith("*")) {
+				if (id.length() >= ids[i].length() && id.startsWith(ids[i].substring(0, ids[i].length() - 1)))
+					return true;
+			} else if (id.equals(ids[i]))
+				return true;
+		}
+		return false;
+	}
 }

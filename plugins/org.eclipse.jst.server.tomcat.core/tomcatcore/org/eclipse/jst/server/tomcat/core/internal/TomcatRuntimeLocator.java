@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.core.internal;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.jst.server.tomcat.core.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.tomcat.core.internal;
+
 import java.io.File;
 import java.io.FileFilter;
 
@@ -19,11 +20,11 @@ import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.tomcat.core.ITomcatRuntimeWorkingCopy;
 
+import org.eclipse.wst.server.core.IRuntimeLocator;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.model.RuntimeLocatorDelegate;
-import org.eclipse.wst.server.core.model.IRuntimeLocatorListener;
 /**
  * 
  */
@@ -38,11 +39,11 @@ public class TomcatRuntimeLocator extends RuntimeLocatorDelegate {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IRuntimeFactoryDelegate#getKnownRuntimes()
 	 */
-	public void searchForRuntimes(IRuntimeLocatorListener listener, IProgressMonitor monitor) {
+	public void searchForRuntimes(IRuntimeLocator.Listener listener, IProgressMonitor monitor) {
 		searchForRuntimes2(listener, monitor);
 	}
 
-	protected static void searchForRuntimes2(IRuntimeLocatorListener listener, IProgressMonitor monitor) {
+	protected static void searchForRuntimes2(IRuntimeLocator.Listener listener, IProgressMonitor monitor) {
 		File[] files = File.listRoots();
 		if (files != null) {
 			int size = files.length;
@@ -60,7 +61,7 @@ public class TomcatRuntimeLocator extends RuntimeLocatorDelegate {
 			monitor.worked(100);
 	}
 
-	protected static void searchDir(IRuntimeLocatorListener listener, File dir, int depth, IProgressMonitor monitor) {
+	protected static void searchDir(IRuntimeLocator.Listener listener, File dir, int depth, IProgressMonitor monitor) {
 		if ("conf".equals(dir.getName())) {
 			IRuntimeWorkingCopy runtime = getRuntimeFromDir(dir.getParentFile(), monitor);
 			if (runtime != null) {

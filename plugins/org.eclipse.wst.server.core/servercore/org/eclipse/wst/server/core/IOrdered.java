@@ -12,6 +12,15 @@ package org.eclipse.wst.server.core;
 /**
  * An object that has an absolute ordering, and can be ordered against other objects.
  * 
+ * <p>
+ * [issue: It is notoriously difficult to place any kind of
+ * useful order on objects that are contributed independently by
+ * non-collaborating parties. The IOrdered mechanism is weak, and
+ * can't really solve the problem. Issues of presentation are usually
+ * best left to the UI, which can sort objects based on arbitrary
+ * properties.]
+ * </p>
+ * 
  * <p>This interface is not intended to be implemented by clients.</p>
  */
 public interface IOrdered {

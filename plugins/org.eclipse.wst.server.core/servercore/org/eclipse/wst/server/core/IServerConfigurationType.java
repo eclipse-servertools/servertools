@@ -102,10 +102,9 @@ public interface IServerConfigurationType extends IOrdered {
 
 	/**
 	 * Returns whether this type of server configuration requires
-	 * requires it's own data in a folder in the workspace.
-	 * <p>
-	 * [issue: What does it mean when isFolder returns false?]
-	 * </p>
+	 * requires it's own data in a folder in the workspace. If false,
+	 * this server configuration does not store any files and all data
+	 * is contained within the actual server configuration.
 	 * 
 	 * @return <code>true</code> if this type of server configuration
 	 * needs a folder, and <code>false</code> if it does not

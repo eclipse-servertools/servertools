@@ -445,33 +445,6 @@ public class Server extends Base implements IServer {
 		if (publishListeners != null)
 			publishListeners.remove(listener);
 	}
-
-	/**
-	 * Fire a publish start event.
-	 *
-	 * @param 
-	 */
-	private void firePublishStarting(List[] parents, IModule[] targets) {
-		Trace.trace(Trace.FINEST, "->- Firing publish starting event: " + targets + " ->-");
-	
-		if (publishListeners == null || publishListeners.isEmpty())
-			return;
-
-		int size = publishListeners.size();
-		IPublishListener[] srl = new IPublishListener[size];
-		publishListeners.toArray(srl);
-
-		for (int i = 0; i < size; i++) {
-			Trace.trace(Trace.FINEST, "  Firing publish starting event to " + srl[i]);
-			try {
-				srl[i].publishStarting(this, parents, targets);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing publish starting event to " + srl[i], e);
-			}
-		}
-
-		Trace.trace(Trace.FINEST, "-<- Done firing publish starting event -<-");
-	}
 	
 	/**
 	 * Fire a publish start event.
@@ -505,8 +478,8 @@ public class Server extends Base implements IServer {
 	 *
 	 * @param 
 	 */
-	private void fireModulePublishStarting(IModule[] parents, IModule module) {
-		Trace.trace(Trace.FINEST, "->- Firing module starting event: " + module + " ->-");
+	private void fireModulePublishStarted(IModule[] parents, IModule module) {
+		Trace.trace(Trace.FINEST, "->- Firing module publish started event: " + module + " ->-");
 	
 		if (publishListeners == null || publishListeners.isEmpty())
 			return;
@@ -516,15 +489,15 @@ public class Server extends Base implements IServer {
 		publishListeners.toArray(srl);
 
 		for (int i = 0; i < size; i++) {
-			Trace.trace(Trace.FINEST, "  Firing module starting event to " + srl[i]);
+			Trace.trace(Trace.FINEST, "  Firing module publish started event to " + srl[i]);
 			try {
-				srl[i].moduleStarting(this, parents, module);
+				srl[i].publishModuleStarted(this, parents, module);
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing module starting event to " + srl[i], e);
+				Trace.trace(Trace.SEVERE, "  Error firing module publish started event to " + srl[i], e);
 			}
 		}
 
-		Trace.trace(Trace.FINEST, "-<- Done firing module starting event -<-");
+		Trace.trace(Trace.FINEST, "-<- Done firing module publish started event -<-");
 	}
 	
 	/**
@@ -532,7 +505,7 @@ public class Server extends Base implements IServer {
 	 *
 	 * @param 
 	 */
-	private void fireModulePublishFinished(IModule[] parents, IModule module, IPublishStatus status) {
+	private void fireModulePublishFinished(IModule[] parents, IModule module, IStatus status) {
 		Trace.trace(Trace.FINEST, "->- Firing module finished event: " + module + " " + status + " ->-");
 	
 		if (publishListeners == null || publishListeners.isEmpty())
@@ -545,7 +518,7 @@ public class Server extends Base implements IServer {
 		for (int i = 0; i < size; i++) {
 			Trace.trace(Trace.FINEST, "  Firing module finished event to " + srl[i]);
 			try {
-				srl[i].moduleFinished(this, parents, module, status);
+				srl[i].publishModuleFinished(this, parents, module, status);
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "  Error firing module finished event to " + srl[i], e);
 			}
@@ -559,7 +532,7 @@ public class Server extends Base implements IServer {
 	 *
 	 * @param 
 	 */
-	private void firePublishFinished(IPublishStatus status) {
+	private void firePublishFinished(IStatus status) {
 		Trace.trace(Trace.FINEST, "->- Firing publishing finished event: " + status + " ->-");
 	
 		if (publishListeners == null || publishListeners.isEmpty())
@@ -589,19 +562,19 @@ public class Server extends Base implements IServer {
 	protected void firePublishStateChange(IModule[] parents, IModule module) {
 		Trace.trace(Trace.FINEST, "->- Firing publish state change event: " + module + " ->-");
 	
-		if (publishListeners == null || publishListeners.isEmpty())
+		if (serverListeners == null || serverListeners.isEmpty())
 			return;
 
-		int size = publishListeners.size();
-		IPublishListener[] srl = new IPublishListener[size];
-		publishListeners.toArray(srl);
+		int size = serverListeners.size();
+		IServerListener[] sl = new IServerListener[size];
+		serverListeners.toArray(sl);
 
 		for (int i = 0; i < size; i++) {
-			Trace.trace(Trace.FINEST, "  Firing publish state change event to " + srl[i]);
+			Trace.trace(Trace.FINEST, "  Firing publish state change event to " + sl[i]);
 			try {
-				srl[i].moduleStateChange(this, parents, module);
+				sl[i].moduleStateChange(this, parents, module);
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing publish state change event to " + srl[i], e);
+				Trace.trace(Trace.SEVERE, "  Error firing publish state change event to " + sl[i], e);
 			}
 		}
 
@@ -769,15 +742,12 @@ public class Server extends Base implements IServer {
 		// start publishing
 		Trace.trace(Trace.FINEST, "Opening connection to the remote server");
 		firePublishStarted();
-		long time = System.currentTimeMillis();
 		//boolean connectionOpen = false;
 		try {
-			firePublishStarting(parents, modules);
 			getDelegate(monitor).publishStart(ProgressUtil.getSubMonitorFor(monitor, 1000));
 		} catch (CoreException ce) {
 			Trace.trace(Trace.SEVERE, "Error starting publish to " + toString(), ce);
-			PublishStatus ps = new PublishStatus(ServerPlugin.PLUGIN_ID, ServerPlugin.getResource("%xxx"), null); // TODO
-			ps.setTime(System.currentTimeMillis() - time);
+			Status ps = new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%xxx"), null); // TODO
 			firePublishFinished(ps);
 			return ce.getStatus();
 		}
@@ -812,9 +782,9 @@ public class Server extends Base implements IServer {
 			multi.add(status);
 		}
 
-		PublishStatus ps = new PublishStatus(ServerPlugin.PLUGIN_ID, ServerPlugin.getResource("%publishingStop"), null);
-		ps.addChild(multi);
-		firePublishFinished(ps);
+		MultiStatus ps = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%publishingStop"), null);
+		ps.add(multi);
+		firePublishFinished(multi);
 		
 		PublishInfo.getPublishInfo().save(this);
 
@@ -827,21 +797,19 @@ public class Server extends Base implements IServer {
 	/**
 	 * Publish a single module.
 	 */
-	protected IPublishStatus publishModule(IModule[] parents, IModule module, IProgressMonitor monitor) {
+	protected IStatus publishModule(IModule[] parents, IModule module, IProgressMonitor monitor) {
 		Trace.trace(Trace.FINEST, "Publishing module: " + module);
 		
 		monitor.beginTask(ServerPlugin.getResource("%publishingProject", module.getName()), 1000);
 		
-		fireModulePublishStarting(parents, module);
-		long time = System.currentTimeMillis();
+		fireModulePublishStarted(parents, module);
 		
-		PublishStatus multi = new PublishStatus(ServerPlugin.PLUGIN_ID, ServerPlugin.getResource("%publishingProject", module.getName()), module);
+		Status multi = new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%publishingProject", module.getName()), null);
 		try {
 			getDelegate(monitor).publishModule(parents, module, monitor);
 		} catch (CoreException ce) {
 			// ignore
 		}
-		multi.setTime(System.currentTimeMillis() - time);
 		fireModulePublishFinished(parents, module, multi);
 		
 		monitor.done();
@@ -911,8 +879,7 @@ public class Server extends Base implements IServer {
 		if (tasks.isEmpty())
 			return null;
 		
-		long time = System.currentTimeMillis();
-		PublishStatus multi = new PublishStatus(ServerPlugin.PLUGIN_ID, ServerPlugin.getResource("%taskPerforming"), null);
+		Status multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%taskPerforming"), null);
 
 		Iterator iterator = tasks.iterator();
 		while (iterator.hasNext()) {
@@ -936,7 +903,6 @@ public class Server extends Base implements IServer {
 			multi.addChild(se.getStatus());
 		}*/
 
-		multi.setTime(System.currentTimeMillis() - time);
 		return multi;
 	}
 	
@@ -1320,13 +1286,15 @@ public class Server extends Base implements IServer {
 		Trace.trace(Trace.FINEST, "synchronousStart 4");
 	}
 	
+	/*
+	 * @see IServer#synchronousRestart(String, IProgressMonitor)
+	 */
 	public void synchronousRestart(String mode2, IProgressMonitor monitor) throws CoreException {
 		// TODO
 	}
 
-	/**
-	 * Stop the server and wait until the
-	 * server has completely stopped.
+	/*
+	 * @see IServer#synchronousStop()
 	 */
 	public void synchronousStop() {
 		if (getServerState() == IServer.STATE_STOPPED)
@@ -1616,7 +1584,7 @@ public class Server extends Base implements IServer {
 	}
 
 	/*
-	 * @see IServerConfigurationFactory#getChildModule(IModule)
+	 * @see IServer#getChildModule(IModule)
 	 */
 	public IModule[] getChildModules(IModule module, IProgressMonitor monitor) {
 		try {
@@ -1628,7 +1596,7 @@ public class Server extends Base implements IServer {
 	}
 
 	/*
-	 * @see IServerConfigurationFactory#getParentModules(IModule)
+	 * @see IServer#getParentModules(IModule)
 	 */
 	public IModule[] getParentModules(IModule module, IProgressMonitor monitor) throws CoreException {
 		try {
@@ -1689,40 +1657,8 @@ public class Server extends Base implements IServer {
 		return false;
 	}
 
-	/**
-	 * Asynchronously restarts the given module on the server.
-	 * See the specification of 
-	 * {@link IServer#synchronousRestartModule(IModule, IProgressMonitor)}
-	 * for further details. 
-	 * <p>
-	 * The implementation should update the module sync state and fire
-	 * an event for the module.
-	 * </p>
-	 * <p>
-	 * [issue: It should probably be spec'd to throw an exception error if the
-	 * given module is not associated with the server.]
-	 * </p>
-	 * <p>
-	 * [issue: Since this method is ascynchronous, is there
-	 * any need for the progress monitor?]
-	 * </p>
-	 * <p>
-	 * [issue: Since this method is ascynchronous, how can
-	 * it return a meaningful IStatus? 
-	 * And IServer.synchronousModuleRestart throws CoreException
-	 * if anything goes wrong.]
-	 * </p>
-	 * <p>
-	 * [issue: If the module was just published to the server
-	 * and had never been started, would is be ok to "start"
-	 * the module using this method?]
-	 * </p>
-	 * 
-	 * @param module the module to be started
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @return status object
-	 * @exception CoreException if an error occurs while trying to restart the module
+	/*
+	 * @see IServer#restartModule(IModule, IProgressMonitor)
 	 */
 	public void restartModule(IModule module, IProgressMonitor monitor) throws CoreException {
 		try {

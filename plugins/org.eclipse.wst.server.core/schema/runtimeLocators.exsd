@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.wst.server.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.wst.server.core" id="runtimeLocator" name="Runtime Locator"/>
+         <meta.schema plugin="org.eclipse.wst.server.core" id="runtimeLocators" name="Runtime Locators"/>
       </appInfo>
       <documentation>
          This extension point is used to locate new runtimes on the local machine.
@@ -72,6 +72,13 @@
                <documentation>
                   specifies the fully qualified name of the Java class that extends &lt;samp&gt;RuntimeLocatorDelegate&lt;/samp&gt;.
 Runtime locator instances of this type will delegate to instances of this class.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="typeIds" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
                </documentation>
             </annotation>
          </attribute>

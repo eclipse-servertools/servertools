@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,30 +10,14 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.util;
 
-import java.util.List;
-
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IPublishListener;
-import org.eclipse.wst.server.core.IPublishStatus;
 import org.eclipse.wst.server.core.IServer;
 /**
  *
  */
 public class PublishAdapter implements IPublishListener {
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.model.IPublishListener#moduleStateChange(org.eclipse.wst.server.core.IServer2, java.util.List, org.eclipse.wst.server.core.model.IModule)
-	 */
-	public void moduleStateChange(IServer server, IModule[] parents, IModule module) {
-		// do nothing
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.model.IPublishListener#publishStarting(org.eclipse.wst.server.core.IServer2, java.util.List[], org.eclipse.wst.server.core.model.IModule[])
-	 */
-	public void publishStarting(IServer server, List[] parents, IModule[] module) {
-		// do nothing
-	}
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IPublishListener#publishStarted(org.eclipse.wst.server.core.IServer2)
 	 */
@@ -44,21 +28,21 @@ public class PublishAdapter implements IPublishListener {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IPublishListener#moduleStarting(org.eclipse.wst.server.core.IServer2, java.util.List, org.eclipse.wst.server.core.model.IModule)
 	 */
-	public void moduleStarting(IServer server, IModule[] parents, IModule module) {
+	public void publishModuleStarted(IServer server, IModule[] parents, IModule module) {
 		// do nothing
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IPublishListener#moduleFinished(org.eclipse.wst.server.core.IServer2, java.util.List, org.eclipse.wst.server.core.model.IModule, org.eclipse.wst.server.core.IPublishStatus)
 	 */
-	public void moduleFinished(IServer server, IModule[] parents, IModule module, IPublishStatus status) {
+	public void publishModuleFinished(IServer server, IModule[] parents, IModule module, IStatus status) {
 		// do nothing
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IPublishListener#publishFinished(org.eclipse.wst.server.core.IServer, org.eclipse.wst.server.core.IPublishStatus)
 	 */
-	public void publishFinished(IServer server, IPublishStatus status) {
+	public void publishFinished(IServer server, IStatus status) {
 		// do nothing
 	}
 }

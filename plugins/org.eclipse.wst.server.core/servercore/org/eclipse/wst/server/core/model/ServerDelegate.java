@@ -47,25 +47,7 @@ import org.eclipse.wst.server.core.internal.Server;
  * to support attributes that are server-type-specific.]
  * </p>
  * <p>
- * [issue: Since service providers must implement this class, it is
- * more flexible to provide an abstract class than an interface. It is
- * not a breaking change to add non-abstract methods to an abstract class.]
- * </p>
- * <p>
- * [issue: As mentioned on IServer.getDelegate(), 
- * exposing ServerDelegate to clients of IServer
- * is confusing and dangerous. Instead, replace IServer.getDelegate()
- * with something like IServer.getServerExtension() which
- * returns an IServerExtension. The implementation of
- * IServer.getServerExtension() should forward to getServerExtension()
- * declared here. IServerExtension is an * "marker" interface that
- * server providers would implement or extend only if they want to expose
- * additional API for their server type. That way ServerDelegate
- * can be kept entirely on the SPI side, out of view from 
- * clients.]
- * </p>
- * <p>
- * This interface is intended to be implemented only by clients
+ * This abstract class is intended to be extended only by clients
  * to extend the <code>serverTypes</code> extension point.
  * </p>
  * <p>

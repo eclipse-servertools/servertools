@@ -32,7 +32,6 @@
   <extension-point id="launchableAdapters" name="%extensionPointLaunchableAdapters" schema="schema/launchableAdapters.exsd"/>
   <extension-point id="clients" name="%extensionPointClients" schema="schema/clients.exsd"/>
   <extension-point id="serverTasks" name="%extensionPointServerTasks" schema="schema/serverTasks.exsd"/>
-  <extension-point id="moduleTasks" name="%extensionPointModuleTasks" schema="schema/moduleTasks.exsd"/>
   <extension-point id="serverMonitors" name="%extensionPointServerMonitors" schema="schema/serverMonitors.exsd"/>
   
   <extension point="org.eclipse.wst.server.core.moduleTypes">

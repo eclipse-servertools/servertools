@@ -12,12 +12,6 @@ package org.eclipse.wst.server.core;
 /**
  * Represents the type of a module.
  * <p>
- * [issue: It's confusing to have a type named IModuleType as well.
- * The terminology should be "module types", to make it consistent with
- * server types, etc. On that reading, this interface would be named
- * IModuleType, and the existing one something else (if still needed).]
- * </p>
- * <p>
  * This interface is not intended to be implemented by clients.
  * </p>
  * <p>
@@ -30,10 +24,6 @@ package org.eclipse.wst.server.core;
 public interface IModuleType {
 	/**
 	 * Returns the module type id.
-	 * <p>
-	 * [issue: Are these strings "module kind ids"? I.e., the same as those returned by 
-	 * IModuleType.getId()?]
-	 * </p>
 	 * 
 	 * @return the module type id
 	 */

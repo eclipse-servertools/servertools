@@ -319,16 +319,10 @@ public class ConfigurationWebModuleEditorPart extends ServerResourceEditorPart {
 			if (memento != null && memento.length() > 0) {
 				projectName = TomcatUIPlugin.getResource("%configurationEditorProjectMissing", new String[] {memento});
 				projectImage = TomcatUIPlugin.getImage(TomcatUIPlugin.IMG_PROJECT_MISSING);
-				int index = memento.indexOf(":");
-				if (index > 0) {
-					String factoryId = memento.substring(0, index);
-					String mem = memento.substring(index + 1);
-					projectName = TomcatUIPlugin.getResource("%configurationEditorProjectMissing", new String[] {mem});
-					IModule module2 = ServerUtil.getModule(factoryId, mem);
-					if (module != null) {
-						projectName = ServerUICore.getLabelProvider().getText(module2);
-						projectImage = ServerUICore.getLabelProvider().getImage(module2);
-					}
+				IModule module2 = ServerUtil.getModule(memento);
+				if (module != null) {
+					projectName = ServerUICore.getLabelProvider().getText(module2);
+					projectImage = ServerUICore.getLabelProvider().getImage(module2);
 				}
 			}
 	

@@ -447,16 +447,15 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer {
 	 * @return java.util.List
 	 */
 	public IModule[] getParentModules(IModule module) throws CoreException {
-		if (module instanceof IWebModule) {
-			IWebModule webModule = (IWebModule) module;
+		if (module.getAdapter(IWebModule.class) != null) {
 			IStatus status = canModifyModules(new IModule[] { module }, null);
 			if (status == null || !status.isOK())
 				throw new CoreException(status);
-			return new IModule[] { webModule };
+			return new IModule[] { module };
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Returns the project references for projects that are in
 	 * this configuration.
@@ -475,14 +474,9 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer {
 				
 				String memento = module.getMemento();
 				if (memento != null) {
-					int index = memento.indexOf(":");
-					if (index > 0) {
-						String factoryId = memento.substring(0, index);
-						String mem = memento.substring(index + 1);
-						IModule module2 = ServerUtil.getModule(factoryId, mem);
-						if (module2 != null)
-							list.add(module2);
-					}
+					IModule module2 = ServerUtil.getModule(memento);
+					if (module2 != null)
+						list.add(module2);
 				}
 			}
 		}

@@ -33,11 +33,11 @@ public abstract class ModuleDelegate {
 	 * wrong with it
 	 */
 	public abstract IStatus validate();
-	
+
 	/**
 	 * Returns the child modules of this module.
 	 *
-	 * @return org.eclipse.wst.server.core.model.IModule[]
+	 * @return org.eclipse.wst.server.core.IModule[]
 	 */
 	public abstract IModule[] getChildModules();
 }

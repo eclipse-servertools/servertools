@@ -48,25 +48,7 @@ import org.eclipse.wst.server.core.internal.ServerPlugin;
  * to support attributes that are runtime-type-specific.]
  * </p>
  * <p>
- * [issue: Since service providers must implement this class, it is
- * more flexible to provide an abstract class than an interface. It is
- * not a breaking change to add non-abstract methods to an abstract class.]
- * </p>
- * <p>
- * [issue: As mentioned on IRuntime.getDelegate(), 
- * exposing RuntimeDelegate to clients of IRuntime
- * is confusing and dangerous. Instead, replace IRuntime.getDelegate()
- * with something like IRuntime.getRuntimeExtension() which
- * returns an IRuntimeExtension. The implementation of
- * IRuntime.getRuntimeExtension() should forward to getRuntimeExtension()
- * declared here. IRuntimeExtension is an * "marker" interface that
- * runtime providers would implement or extend only if they want to expose
- * additional API for their runtime type. That way RuntimeDelegate
- * can be kept entirely on the SPI side, out of view from 
- * clients.]
- * </p>
- * <p>
- * This interface is intended to be implemented only by clients
+ * This abstract class is intended to be extended only by clients
  * to extend the <code>runtimeTypes</code> extension point.
  * </p>
  * <p>
@@ -74,7 +56,7 @@ import org.eclipse.wst.server.core.internal.ServerPlugin;
  * likely to change significantly before the initial release.</it>
  * </p>
  * 
- * @see IRuntime#getExtension()
+ * @see IRuntime
  * @since 1.0
  */
 public abstract class RuntimeDelegate {

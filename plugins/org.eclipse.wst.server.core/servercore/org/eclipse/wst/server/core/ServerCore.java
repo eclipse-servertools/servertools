@@ -337,11 +337,11 @@ public class ServerCore {
 	 * 
 	 * @return the array of module factories {@link IModuleFactory}
 	 */
-	public static IModuleFactory[] getModuleFactories() {
+	protected static ModuleFactory[] getModuleFactories() {
 		if (moduleFactories == null)
 			loadModuleFactories();
 		
-		IModuleFactory[] mf = new IModuleFactory[moduleFactories.size()];
+		ModuleFactory[] mf = new ModuleFactory[moduleFactories.size()];
 		moduleFactories.toArray(mf);
 		return mf;
 	}
@@ -365,7 +365,7 @@ public class ServerCore {
 	 * @return the module factory, or <code>null</code> if there is no module factory
 	 * with the given id
 	 */
-	public static IModuleFactory getModuleFactory(String id) {
+	/*public static IModuleFactory getModuleFactory(String id) {
 		if (id == null)
 			throw new IllegalArgumentException();
 
@@ -379,7 +379,7 @@ public class ServerCore {
 				return factory;
 		}
 		return null;
-	}
+	}*/
 
 	/**
 	 * Returns an array of all module object adapters.

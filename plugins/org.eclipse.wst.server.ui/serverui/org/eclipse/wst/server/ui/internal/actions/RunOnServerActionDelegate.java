@@ -411,12 +411,12 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		if (!initialized) {
 			initialized = true;
 			
-			IModuleFactory[] factories = ServerCore.getModuleFactories();
+			/*IModuleFactory[] factories = ServerCore.getModuleFactories();
 			if (factories != null) {
 				int size = factories.length;
 				for (int i = 0; i < size; i++)
 					factories[i].getModules();
-			}
+			}*/
 			
 			try {
 				IModule module = ServerUtil.getModule(globalSelection, true);

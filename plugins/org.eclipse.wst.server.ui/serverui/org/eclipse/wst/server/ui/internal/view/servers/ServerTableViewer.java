@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.*;
 
 import org.eclipse.wst.server.core.*;
@@ -248,20 +249,20 @@ public class ServerTableViewer extends TableViewer {
 		ServerCore.addServerLifecycleListener(serverResourceListener);
 		
 		publishListener = new PublishAdapter() {
-			public void moduleStateChange(IServer server, List parents, IModule module) {
-				refreshServer(server);
-			}
-			
-			public void publishStarting(IServer server, List[] parents, IModule[] module) {
+			public void publishStarted(IServer server) {
 				handlePublishChange(server, true);
 			}
 			
-			public void publishFinished(IServer server, IPublishStatus globalStatus) {
+			public void publishFinished(IServer server, IStatus status) {
 				handlePublishChange(server, false);
 			}
 		};
 		
 		serverListener = new IServerListener() {
+			public void moduleStateChange(IServer server, IModule[] parents, IModule module) {
+				refreshServer(server);
+			}
+		
 			public void serverStateChange(IServer server) {
 				refreshServer(server);
 				int state = server.getServerState();

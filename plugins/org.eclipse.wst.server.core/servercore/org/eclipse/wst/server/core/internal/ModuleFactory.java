@@ -10,22 +10,25 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.internal;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IModuleFactory;
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
 import org.eclipse.wst.server.core.model.IModuleFactoryListener;
 /**
  * 
  */
-public class ModuleFactory implements IModuleFactory {
+public class ModuleFactory {
 	private IConfigurationElement element;
 	private ModuleFactoryDelegate delegate;
 	private List moduleTypes;
+	
+	private List modules;
 
 	/**
 	 * ModuleFactory constructor comment.
@@ -95,36 +98,43 @@ public class ModuleFactory implements IModuleFactory {
 		return delegate;
 	}
 
-	/**
-	 * Gets a module from a memento.
-	 * 
-	 * @param memento java.lang.String
-	 * @return org.eclipse.wst.server.core.model.IModule
+	/*
+	 * @see
 	 */
-	public IModule getModule(String memento) {
-		try {
-			return getDelegate().getModule(memento);
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
-			return null;
+	public IModule getModule(String id) {
+		if (modules == null)
+			getModules();
+		Iterator iterator = modules.iterator();
+		while (iterator.hasNext()) {
+			IModule module = (IModule) iterator.next();
+			if (id.equals(module.getId()))
+				return module;
 		}
+		return null;
 	}
 	
-	/**
-	 * Return all modules that are available to be added
-	 * to servers. This method might look through projects
-	 * to find modules or may return modules from
-	 * other sources.
-	 *
-	 * @return org.eclipse.wst.server.core.model.IModule[]
+	/*
+	 * @see
 	 */
 	public IModule[] getModules() {
-		try {
-			return getDelegate().getModules();
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
-			return null;
+		if (modules == null) {
+			try {
+				modules = new ArrayList();
+				IModule[] modules2 = getDelegate().getModules();
+				if (modules2 != null) {
+					int size = modules2.length;
+					for (int i = 0; i < size; i++)
+						modules.add(modules2[i]);
+				}
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
+				return null;
+			}
 		}
+		
+		IModule[] m = new IModule[modules.size()];
+		modules.toArray(m);
+		return m;
 	}
 	
 	/**

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,9 +20,11 @@ import org.eclipse.core.runtime.CoreException;
  */
 public interface ILaunchableAdapter {
 	/**
-	 * Returns the id of the adapter.
-	 *
-	 * @return java.lang.String
+	 * Returns the id of this adapter. Each known adapter has a distinct id. 
+	 * Ids are intended to be used internally as keys; they are not
+	 * intended to be shown to end users.
+	 * 
+	 * @return the adapter id
 	 */
 	public String getId();
 

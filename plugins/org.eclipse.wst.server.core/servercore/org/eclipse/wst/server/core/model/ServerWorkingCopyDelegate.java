@@ -60,11 +60,6 @@ import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
  * ]
  * </p>
  * <p>
- * [issue: Since service providers must implement this class, it is
- * more flexible to provide an abstract class than an interface. It is
- * not a breaking change to add non-abstract methods to an abstract class.]
- * </p>
- * <p>
  * [issue: As mentioned on IServerWorkingCopy.getWorkingCopyDelegate(), 
  * exposing ServerWorkingCopyDelegate to clients of IServerWorkingCopy
  * is confusing and dangerous. Instead, replace IServerWorkingCopy.getWorkingCopyDelegate()
@@ -79,7 +74,7 @@ import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
  * out of view from clients.]
  * </p>
  * <p>
- * This interface is intended to be implemented only by clients
+ * This abstract class is intended to be extended only by clients
  * to extend the <code>serverTypes</code> extension point.
  * </p>
  * <p>

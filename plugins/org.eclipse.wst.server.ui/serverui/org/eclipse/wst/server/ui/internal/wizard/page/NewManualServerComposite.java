@@ -66,8 +66,9 @@ public class NewManualServerComposite extends Composite {
 	
 	protected String host;
 	
-	protected String type;
-	protected String version;
+	//protected String type;
+	//protected String version;
+	protected IModuleType moduleType;
 
 	protected ElementCreationCache cache = new ElementCreationCache();
 
@@ -78,13 +79,12 @@ public class NewManualServerComposite extends Composite {
 	 *
 	 * @param org.eclipse.jface.wizard.IWizard parent
 	 */
-	public NewManualServerComposite(Composite parent, IWizardHandle2 wizard, String type, String version, ServerSelectionListener listener) {
+	public NewManualServerComposite(Composite parent, IWizardHandle2 wizard, IModuleType moduleType, ServerSelectionListener listener) {
 		super(parent, SWT.NONE);
 		this.wizard = wizard;
 		this.listener = listener;
 		
-		this.type = type;
-		this.version = version;
+		this.moduleType = moduleType;
 
 		createControl();
 		wizard.setMessage("", IMessageProvider.ERROR);
@@ -109,7 +109,7 @@ public class NewManualServerComposite extends Composite {
 		this.setFont(getParent().getFont());
 		WorkbenchHelp.setHelp(this, ContextIds.NEW_SERVER_WIZARD);
 		
-		serverTypeComposite = new ServerTypeComposite(this, SWT.NONE, type, version, new ServerTypeComposite.ServerTypeSelectionListener() {
+		serverTypeComposite = new ServerTypeComposite(this, SWT.NONE, moduleType, new ServerTypeComposite.ServerTypeSelectionListener() {
 			public void serverTypeSelected(IServerType type2) {
 				handleTypeSelection(type2);
 				//WizardUtil.defaultSelect(parent, CreateServerWizardPage.this);
@@ -310,9 +310,9 @@ public class NewManualServerComposite extends Composite {
 	 */
 	protected void handleTypeSelection(IServerType serverType) {
 		boolean wrong = false;
-		if (serverType != null && type != null) {
+		if (serverType != null && moduleType != null) {
 			IRuntimeType runtimeType = serverType.getRuntimeType();
-			if (!ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), type, version)) {
+			if (!ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), moduleType.getId(), moduleType.getVersion())) {
 				serverType = null;
 				wrong = true;
 				//wizard.setMessage("Not the right spec level2", IMessageProvider.ERROR);
@@ -321,9 +321,7 @@ public class NewManualServerComposite extends Composite {
 		
 		updateRuntimeCombo(serverType);
 		if (wrong) {
-			//IModuleType mk = ServerCore.getModuleType(type);
-			String type2 = type.getName();
-			wizard.setMessage(ServerUIPlugin.getResource("%errorVersionLevel", new Object[] { type2, version }), IMessageProvider.ERROR);
+			wizard.setMessage(ServerUIPlugin.getResource("%errorVersionLevel", new Object[] { moduleType.getName(), moduleType.getVersion() }), IMessageProvider.ERROR);
 		} else if (serverType == null)
 			wizard.setMessage("", IMessageProvider.ERROR);
 		else {

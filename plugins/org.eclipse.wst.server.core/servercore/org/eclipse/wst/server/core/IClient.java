@@ -12,7 +12,6 @@ package org.eclipse.wst.server.core;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunch;
-
 /**
  * A launchable client is a client side application or test
  * harness that can be launched (run) against a resource
@@ -22,23 +21,31 @@ import org.eclipse.debug.core.ILaunch;
  */
 public interface IClient {
 	/**
-	 * Returns the id of the adapter.
-	 *
-	 * @return java.lang.String
+	 * Returns the id of this client. Each known client has a distinct id. 
+	 * Ids are intended to be used internally as keys; they are not
+	 * intended to be shown to end users.
+	 * 
+	 * @return the client id
 	 */
 	public String getId();
 
 	/**
-	 * Returns the label (name) of this client.
-	 * 
-	 * @return java.lang.String
+	 * Returns the displayable name for this client.
+	 * <p>
+	 * Note that this name is appropriate for the current locale.
+	 * </p>
+	 *
+	 * @return a displayable name for this client
 	 */
 	public String getName();
 
 	/**
-	 * Returns the description of this client.
-	 * 
-	 * @return java.lang.String
+	 * Returns the displayable description for this client.
+	 * <p>
+	 * Note that this description is appropriate for the current locale.
+	 * </p>
+	 *
+	 * @return a displayable description for this client
 	 */
 	public String getDescription();
 

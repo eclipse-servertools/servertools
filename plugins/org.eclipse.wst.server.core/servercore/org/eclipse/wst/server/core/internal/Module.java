@@ -26,7 +26,7 @@ import org.eclipse.wst.server.core.util.ModuleEvent;
 public class Module implements IModule {
 	protected String id;
 	protected String name;
-	protected IModuleFactory factory;
+	protected ModuleFactory factory;
 	protected String type;
 	protected String version;
 	protected IProject project;

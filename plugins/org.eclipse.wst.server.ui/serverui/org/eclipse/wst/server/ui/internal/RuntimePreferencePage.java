@@ -40,7 +40,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IRuntimeLocatorListener;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
 import org.eclipse.wst.server.ui.internal.task.SaveRuntimeTask;
@@ -179,7 +178,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					monitor.beginTask(ServerUIPlugin.getResource("%search"), 100 * locators.length + 10);
 					final List list = new ArrayList();
 					
-					final IRuntimeLocatorListener listener = new IRuntimeLocatorListener() {
+					final IRuntimeLocator.Listener listener = new IRuntimeLocator.Listener() {
 						public void runtimeFound(final IRuntime runtime) {
 							dialog.getShell().getDisplay().syncExec(new Runnable() {
 								public void run() {

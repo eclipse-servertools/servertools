@@ -9,7 +9,6 @@
  *     IBM Corporation - Initial API and implementation
  **********************************************************************/
 package org.eclipse.wst.server.core;
-
 /**
  * An monitored port on a server.
  * 

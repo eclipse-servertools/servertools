@@ -26,7 +26,7 @@
 
   <extension point="org.eclipse.wst.server.core.runtimeTypes">
     <runtimeType
-       id="org.eclipse.jst.server.tomcat.32.runtime"
+       id="org.eclipse.jst.server.tomcat.runtime.32"
        name="%runtimeTypeTomcat32Label"
        description="%runtimeTypeTomcat32Description"
        vendor="%apache"
@@ -39,7 +39,7 @@
     </runtimeType>
 
     <runtimeType
-       id="org.eclipse.jst.server.tomcat.40.runtime"
+       id="org.eclipse.jst.server.tomcat.runtime.40"
        name="%runtimeTypeTomcat40Label"
        description="%runtimeTypeTomcat40Description"
        vendor="%apache"
@@ -52,7 +52,7 @@
     </runtimeType>
 
     <runtimeType
-       id="org.eclipse.jst.server.tomcat.41.runtime"
+       id="org.eclipse.jst.server.tomcat.runtime.41"
        name="%runtimeTypeTomcat41Label"
        description="%runtimeTypeTomcat41Description"
        vendor="%apache"
@@ -65,7 +65,7 @@
     </runtimeType>
 
     <runtimeType
-       id="org.eclipse.jst.server.tomcat.50.runtime"
+       id="org.eclipse.jst.server.tomcat.runtime.50"
        name="%runtimeTypeTomcat50Label"
        description="%runtimeTypeTomcat50Description"
        vendor="%apache"
@@ -78,7 +78,7 @@
     </runtimeType>
 
     <runtimeType
-       id="org.eclipse.jst.server.tomcat.55.runtime"
+       id="org.eclipse.jst.server.tomcat.runtime.55"
        name="%runtimeTypeTomcat55Label"
        description="%runtimeTypeTomcat55Description"
        vendor="%apache"
@@ -97,29 +97,30 @@
        id="org.eclipse.jst.server.tomcat.runtime.locator"
        name="%runtimeLocatorLabel"
        description="%runtimeLocatorDescription"
+       typeIds="org.eclipse.jst.server.tomcat.runtime.*"
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntimeLocator"/>
   </extension>
   
   <extension point="org.eclipse.wst.server.core.runtimeTargetHandlers">
      <runtimeTargetHandler
         id="org.eclipse.jst.server.tomcat.runtimeTarget.v32"
-        runtimeTypeIds="org.eclipse.jst.server.tomcat.32.runtime"
+        runtimeTypeIds="org.eclipse.jst.server.tomcat.runtime.32"
         class="org.eclipse.jst.server.tomcat.core.internal.Tomcat32RuntimeTargetHandler"/>
      <runtimeTargetHandler
         id="org.eclipse.jst.server.tomcat.runtimeTarget.v40"
-        runtimeTypeIds="org.eclipse.jst.server.tomcat.40.runtime"
+        runtimeTypeIds="org.eclipse.jst.server.tomcat.runtime.40"
         class="org.eclipse.jst.server.tomcat.core.internal.Tomcat40RuntimeTargetHandler"/>
      <runtimeTargetHandler
         id="org.eclipse.jst.server.tomcat.runtimeTarget.v41"
-        runtimeTypeIds="org.eclipse.jst.server.tomcat.41.runtime"
+        runtimeTypeIds="org.eclipse.jst.server.tomcat.runtime.41"
         class="org.eclipse.jst.server.tomcat.core.internal.Tomcat41RuntimeTargetHandler"/>
      <runtimeTargetHandler
         id="org.eclipse.jst.server.tomcat.runtimeTarget.v50"
-        runtimeTypeIds="org.eclipse.jst.server.tomcat.50.runtime"
+        runtimeTypeIds="org.eclipse.jst.server.tomcat.runtime.50"
         class="org.eclipse.jst.server.tomcat.core.internal.Tomcat50RuntimeTargetHandler"/>
      <runtimeTargetHandler
         id="org.eclipse.jst.server.tomcat.runtimeTarget.v55"
-        runtimeTypeIds="org.eclipse.jst.server.tomcat.55.runtime"
+        runtimeTypeIds="org.eclipse.jst.server.tomcat.runtime.55"
         class="org.eclipse.jst.server.tomcat.core.internal.Tomcat55RuntimeTargetHandler"/>
    </extension>
 
@@ -216,7 +217,8 @@
        id="org.eclipse.jst.server.tomcat.server.locator"
        name="%serverLocatorLabel"
        description="%serverLocatorDescription"
-       hosts="local"
+       supportsRemoteHosts="false"
+       typeIds="org.eclipse.jst.server.tomcat.*"
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatServerLocator"/>
   </extension>
 

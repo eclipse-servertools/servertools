@@ -19,9 +19,11 @@ package org.eclipse.wst.server.core;
  */
 public interface IModuleObjectAdapter {
 	/**
-	 * Returns the id of the adapter.
-	 *
-	 * @return java.lang.String
+	 * Returns the id of this adapter. Each known adapter has a distinct id. 
+	 * Ids are intended to be used internally as keys; they are not
+	 * intended to be shown to end users.
+	 * 
+	 * @return the adapter id
 	 */
 	public String getId();
 	
@@ -38,13 +40,6 @@ public interface IModuleObjectAdapter {
 	 * @return boolean
 	 */
 	public boolean isPluginActivated();	
-
-	/**
-	 * Returns the delegate for this module object adapter.
-	 * 
-	 * @return org.eclipse.wst.server.core.model.ModuleObjectAdapterDelegate
-	 */
-	//public ModuleObjectAdapterDelegate getDelegate();
 
 	/**
 	 * Converts from a model object to an IModuleObject.

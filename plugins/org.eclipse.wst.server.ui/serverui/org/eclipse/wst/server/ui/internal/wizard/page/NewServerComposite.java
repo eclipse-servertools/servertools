@@ -375,14 +375,6 @@ public class NewServerComposite extends Composite {
 		
 		manualHostComp = createHostComposite(manualComp2);
 		
-		String type = null;
-		String version = null;
-		if (module != null) {
-			IModuleType mt = module.getModuleType();
-			type = mt.getId();
-			version = mt.getVersion();
-		}
-
 		manualComp = new NewManualServerComposite(manualComp2, new NewManualServerComposite.IWizardHandle2() {
 			public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable) throws InterruptedException, InvocationTargetException {
 				wizard.run(fork, cancelable, runnable);
@@ -393,7 +385,7 @@ public class NewServerComposite extends Composite {
 			public void setMessage(String newMessage, int newType) {
 				wizard.setMessage(newMessage, newType);
 			}
-		}, type, version, new NewManualServerComposite.ServerSelectionListener() {
+		}, module.getModuleType(), new NewManualServerComposite.ServerSelectionListener() {
 			public void serverSelected(IServer server) {
 				updateTaskModel();
 			}

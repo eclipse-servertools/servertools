@@ -18,10 +18,11 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.internal.ResourceManager;
 import org.eclipse.wst.server.core.internal.Trace;
+import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
 /**
  * 
  */
-public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate2 {
+public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate {
 	protected static IResourceChangeListener listener;
 	
 	protected static List factories = new ArrayList();
@@ -261,11 +262,6 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * @param project org.eclipse.core.resources.IProject
 	 */
 	protected void addModuleProject(IProject project) {
-		if (!cached) {
-			cached = true;
-			cacheModules();
-		}
-
 		IModule module = createModule(project);
 		if (module == null)
 			return;
@@ -282,11 +278,6 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * @param project org.eclipse.core.resources.IProject
 	 */
 	protected void removeModuleProject(IProject project) {
-		if (!cached) {
-			cached = true;
-			cacheModules();
-		}
-
 		try {
 			IModule module = (IModule) projects.get(project);
 			projects.remove(project);

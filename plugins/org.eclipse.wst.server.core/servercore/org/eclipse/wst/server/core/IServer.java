@@ -469,8 +469,8 @@ public interface IServer extends IElement, IAdaptable {
 	 * Returns the debug launch object that can be used in a debug
 	 * session.
 	 * <p>
-	 * [issue: This method should specify what it does if
-	 * canStart(launchMode) returns false.]
+	 * If canStart(launchMode) is false, this method will throw an
+	 * exception.
 	 * </p>
 	 * <p>
 	 * [issue: There is no way to communicate failure to the
@@ -528,15 +528,11 @@ public interface IServer extends IElement, IAdaptable {
 	
 	/**
 	 * Returns whether this server is out of sync and needs to be
-	 * restarted.
+	 * restarted. This method will return false when the
+	 * server is not running.
 	 * <p>
 	 * [issue: Need to explain what is it that can get out of
 	 * "out of sync" here, and how this can happen.]
-	 * </p>
-	 * <p>
-	 * [issue: Rather than have an unspecified result when the
-	 * server is not running, this method should be spec'd to
-	 * return false whenever canRestart() returns false.]
 	 * </p>
 	 * 
 	 * @return <code>true</code> if this server is out of sync and needs to be
@@ -550,6 +546,7 @@ public interface IServer extends IElement, IAdaptable {
 	 * Asynchronously restarts this server. This operation does
 	 * nothing if this server cannot be stopped ({@link #canRestart()}
 	 * returns <code>false</code>.
+	 * This method cannot be used to start the server from a stopped state.
 	 * <p>
 	 * [issue: There is no way to communicate failure to the
 	 * client. Given that this operation can go awry, there probably
@@ -666,11 +663,8 @@ public interface IServer extends IElement, IAdaptable {
 	 * for further details. 
 	 * <p>
 	 * The implementation should update the module sync state and fire
-	 * an event for the module.
-	 * </p>
-	 * <p>
-	 * [issue: It should probably be spec'd to throw an exception error if the
-	 * given module is not associated with the server.]
+	 * an event for the module. If the module does not exist on the server,
+	 * an exception will be thrown.
 	 * </p>
 	 * <p>
 	 * [issue: Since this method is ascynchronous, is there
@@ -698,18 +692,9 @@ public interface IServer extends IElement, IAdaptable {
 
 	/**
 	 * Restarts the given module and waits until it has finished restarting.
+	 * If the module does not exist on the server, an exception will be thrown.
 	 * <p>
-	 * [issue: Lack of symmetry. Why is there no moduleRestart? start, restart,
-	 * and stop all have assynchronous equivalents.]
-	 * </p>
-	 * <p>
-	 * [issue: It should probably be spec'd to throw an exception error if the
-	 * given module is not associated with the server.]
-	 * </p>
-	 * <p>
-	 * [issue: If the module was just published to the server
-	 * and had never been started, would is be ok to "start"
-	 * the module using this method?]
+	 * This method may not be used to initially start a module.
 	 * </p>
 	 * 
 	 * @param module the module to be restarted
@@ -735,7 +720,6 @@ public interface IServer extends IElement, IAdaptable {
 	 * should have a backup plan to refill the directory
 	 * in case it has been deleted since last use.</p>
 	 *
-	 * @param serverResource org.eclipse.wst.server.core.model.IServerResource
 	 * @return org.eclipse.core.runtime.IPath
 	 */
 	public IPath getTempDirectory();

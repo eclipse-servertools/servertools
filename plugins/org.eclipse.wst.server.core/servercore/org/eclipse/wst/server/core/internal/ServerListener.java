@@ -114,4 +114,11 @@ public class ServerListener extends ServerLifecycleAdapter implements IServerLis
 	public void serverRemoved(IServer server) {
 		server.removeServerListener(this);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.server.core.model.IPublishListener#moduleStateChange(org.eclipse.wst.server.core.IServer2, java.util.List, org.eclipse.wst.server.core.model.IModule)
+	 */
+	public void moduleStateChange(IServer server, IModule[] parents, IModule module) {
+		// do nothing
+	}
 }
