@@ -18,6 +18,8 @@ public class AllTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.jst.server.tomcat.ui.tests");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(ExistenceTest.class);
+		
+		suite.addTestSuite(DialogsTestCase.class);
 		//$JUnit-END$
 		return suite;
 	}
