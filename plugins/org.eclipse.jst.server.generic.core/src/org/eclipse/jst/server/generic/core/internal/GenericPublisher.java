@@ -1,4 +1,4 @@
-package org.eclipse.jst.server.generic.internal.core;
+package org.eclipse.jst.server.generic.core.internal;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;

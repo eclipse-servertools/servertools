@@ -28,7 +28,7 @@
  * information on eteration, please see
  * <http://www.eteration.com/>.
  ***************************************************************************/
-package org.eclipse.jst.server.generic.internal.core;
+package org.eclipse.jst.server.generic.core.internal;
 
 import java.io.File;
 import java.util.Iterator;
@@ -38,8 +38,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.IGenericRuntime;
-import org.eclipse.jst.server.generic.core.CorePlugin;
-import org.eclipse.jst.server.generic.core.GenericServerCoreMessages;
 import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;

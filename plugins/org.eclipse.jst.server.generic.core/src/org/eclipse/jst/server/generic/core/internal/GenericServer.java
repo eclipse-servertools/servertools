@@ -28,7 +28,7 @@
  * information on eteration, please see
  * <http://www.eteration.com/>.
  ***************************************************************************/
-package org.eclipse.jst.server.generic.internal.core;
+package org.eclipse.jst.server.generic.core.internal;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -42,8 +42,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jst.server.generic.core.CorePlugin;
-import org.eclipse.jst.server.generic.core.GenericServerCoreMessages;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.Port;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
@@ -51,8 +49,8 @@ import org.eclipse.jst.server.core.IEJBModule;
 import org.eclipse.jst.server.core.IEnterpriseApplication;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.core.internal.ServerMonitorManager;
 import org.eclipse.wst.server.core.model.IURLProvider;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 import org.eclipse.wst.server.core.model.ServerDelegate;
@@ -211,7 +209,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 			int port = 0;
 			
 			port = getHttpPort();
-			port = ServerCore.getServerMonitorManager().getMonitoredPort(getServer(), port, "web");
+			port =ServerMonitorManager.getInstance().getMonitoredPort(getServer(), port, "web");
 			if (port != 80)
 				url += ":" + port;
 

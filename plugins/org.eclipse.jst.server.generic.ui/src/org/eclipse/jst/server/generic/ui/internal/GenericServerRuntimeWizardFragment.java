@@ -28,15 +28,14 @@
  * information on eteration, please see
  * <http://www.eteration.com/>.
  ***************************************************************************/
-package org.eclipse.jst.server.generic.internal.ui;
+package org.eclipse.jst.server.generic.ui.internal;
 
 import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jst.server.generic.internal.core.GenericServerRuntime;
+import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
-import org.eclipse.jst.server.generic.ui.GenericServerUIMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -49,8 +48,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
-import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 
@@ -244,7 +243,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	{
 		if(fRuntimeDelegate == null)
 		{	
-		    IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy)getTaskModel().getObject(ITaskModel.TASK_RUNTIME);
+		    IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy)getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 		    if(wc==null)
 		        return null;
 		    fRuntimeDelegate = (RuntimeDelegate)wc.getAdapter(RuntimeDelegate.class);

@@ -29,7 +29,7 @@
  * <http://www.eteration.com/>.
  ***************************************************************************/
 
-package org.eclipse.jst.server.generic.internal.core;
+package org.eclipse.jst.server.generic.core.internal;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -37,7 +37,6 @@ import java.util.Map;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jst.server.generic.core.CorePlugin;
 import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;

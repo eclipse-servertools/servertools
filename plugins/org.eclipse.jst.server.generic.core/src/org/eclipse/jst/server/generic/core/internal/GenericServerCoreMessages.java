@@ -1,4 +1,4 @@
-package org.eclipse.jst.server.generic.ui;
+package org.eclipse.jst.server.generic.core.internal;
 
 import java.text.MessageFormat;
 import java.util.MissingResourceException;
@@ -9,13 +9,13 @@ import java.util.ResourceBundle;
  * 
  * @author Gorkem Ercan
  */
-public class GenericServerUIMessages {
+public class GenericServerCoreMessages {
 
-	private static final String RESOURCE_BUNDLE= "org.eclipse.jst.server.generic.ui.GenericServerUIMessages";//$NON-NLS-1$
+	private static final String RESOURCE_BUNDLE= "org.eclipse.jst.server.generic.core.internal.GenericServerCoreMessages";//$NON-NLS-1$
 
 	private static ResourceBundle fResourceBundle= ResourceBundle.getBundle(RESOURCE_BUNDLE);
 
-	private GenericServerUIMessages() {
+	private GenericServerCoreMessages() {
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class GenericServerUIMessages {
 		}
 		if (arg == null)
 			arg= new Object[0];
-		return MessageFormat.format(format,arg );
+		return MessageFormat.format(format,  arg);
 	}
 	
 	/**

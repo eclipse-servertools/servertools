@@ -28,7 +28,7 @@
  * information on eteration, please see
  * <http://www.eteration.com/>.
  ***************************************************************************/
-package org.eclipse.jst.server.generic.internal.core;
+package org.eclipse.jst.server.generic.core.internal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,4 +79,5 @@ public class GenericServerSourcePathComputerDelegate implements ISourcePathCompu
 		
 		IRuntimeClasspathEntry[] resolved = JavaRuntime.resolveSourceLookupPath(entries, configuration);
 		return JavaSourceLookupUtil.translate(resolved, true);
-	}}
+	}
+}

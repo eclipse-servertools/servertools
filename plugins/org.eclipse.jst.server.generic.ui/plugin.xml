@@ -29,7 +29,7 @@
      <fragment
         id="org.eclipse.jst.server.generic.runtime"
         typeIds="org.eclipse.jst.server.generic.runtime"
-        class="org.eclipse.jst.server.generic.internal.ui.GenericServerRuntimeWizardFragment"/>       
+        class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>       
  </extension>
 
 <extension
@@ -37,7 +37,7 @@
      <fragment
         id="org.eclipse.jst.server.generic.server"
         typeIds="org.eclipse.jst.server.generic"
-        class="org.eclipse.jst.server.generic.internal.ui.GenericServerWizardFragment"/>       
+        class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>       
  </extension>
   <extension point="org.eclipse.wst.server.ui.editorPages">
       <page
@@ -45,7 +45,7 @@
          order="20"
          name="Lomboz server Edit"
          typeIds="org.eclipse.jst.server.generic.*"
-         class="org.eclipse.jst.server.generic.internal.ui.GenericServerEditorPartFactory"/>
+         class="org.eclipse.jst.server.generic.ui.internal.GenericServerEditorPartFactory"/>
    </extension>
    
     <extension point="org.eclipse.wst.server.ui.editorPageSections">
@@ -54,7 +54,7 @@
          order="0"
          insertionId="org.eclipse.wst.server.editor.overview.left"
          typeIds="org.eclipse.jst.server.generic.*"
-         class="org.eclipse.jst.server.generic.internal.ui.GenericServerEditorSectionFactory"/>       
+         class="org.eclipse.jst.server.generic.ui.internal.GenericServerEditorSectionFactory"/>       
    </extension>
    <extension point="org.eclipse.wst.server.ui.serverImages">
       <image
@@ -76,9 +76,9 @@
   
   <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
     <launchConfigurationTabGroup
-      id="org.eclipse.jst.server.generic.internal.ui.launchConfigurationTabGroup"
+      id="org.eclipse.jst.server.generic.ui.internal.launchConfigurationTabGroup"
       type="org.eclipse.jst.server.generic.core.launchConfigurationType"
-      class="org.eclipse.jst.server.generic.internal.ui.GenericLaunchConfigurationTabGroup">
+      class="org.eclipse.jst.server.generic.ui.internal.GenericLaunchConfigurationTabGroup">
     </launchConfigurationTabGroup>
   </extension>
    

@@ -28,12 +28,14 @@
  * information on eteration, please see
  * <http://www.eteration.com/>.
  ***************************************************************************/
-package org.eclipse.jst.server.generic.ui;
+package org.eclipse.jst.server.generic.core.internal;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.ImageRegistry;
+
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.plugin.*;
 import org.osgi.framework.BundleContext;
+import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -41,22 +43,23 @@ import java.util.*;
  * 
  * @author Gorkem Ercan
  */
-public class GenericUiPlugin extends AbstractUIPlugin {
-	
-    public static final String WIZBAN_IMAGE = "genericlogo";
-    //The shared instance.
-	private static GenericUiPlugin plugin;
+public class CorePlugin extends AbstractUIPlugin {
+
+	public static final String PLUGIN_ID = "org.eclipse.jst.server.generic.core";
+
+	//The shared instance.
+	private static CorePlugin plugin;
 	//Resource bundle.
 	private ResourceBundle resourceBundle;
-	
+	private ServerTypeDefinitionManager fServerTypeDefinitionManager;
 	/**
 	 * The constructor.
 	 */
-	public GenericUiPlugin() {
+	public CorePlugin() {
 		super();
 		plugin = this;
 		try {
-			resourceBundle = ResourceBundle.getBundle("org.eclipse.jst.server.generic.ui.GenericUiPluginResources");
+			resourceBundle = ResourceBundle.getBundle("org.eclipse.jst.server.generic.core.CorePluginResources");
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		}
@@ -79,7 +82,7 @@ public class GenericUiPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the shared instance.
 	 */
-	public static GenericUiPlugin getDefault() {
+	public static CorePlugin getDefault() {
 		return plugin;
 	}
 
@@ -88,7 +91,7 @@ public class GenericUiPlugin extends AbstractUIPlugin {
 	 * or 'key' if not found.
 	 */
 	public static String getResourceString(String key) {
-		ResourceBundle bundle = GenericUiPlugin.getDefault().getResourceBundle();
+		ResourceBundle bundle = CorePlugin.getDefault().getResourceBundle();
 		try {
 			return (bundle != null) ? bundle.getString(key) : key;
 		} catch (MissingResourceException e) {
@@ -96,19 +99,31 @@ public class GenericUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
-    protected ImageRegistry createImageRegistry() {
-        ImageRegistry registry = new ImageRegistry();
-        ImageDescriptor desc = ImageDescriptor.createFromURL(getDefault().getBundle().getEntry("/icons/wizban/logo.gif"));
-        registry.put(WIZBAN_IMAGE,desc);
-        return registry;
-    }
-  	public ImageDescriptor imageDescriptor(String key){
-		return getImageRegistry().getDescriptor(key);
-	}
 	/**
 	 * Returns the plugin's resource bundle,
 	 */
 	public ResourceBundle getResourceBundle() {
 		return resourceBundle;
 	}
+	/**
+	 * 
+	 * @return
+	 */
+	public ServerTypeDefinitionManager getServerTypeDefinitionManager()
+	{
+		if(fServerTypeDefinitionManager==null)
+			fServerTypeDefinitionManager = new ServerTypeDefinitionManager(getInstallUrl());
+		return fServerTypeDefinitionManager;
+	}
+	
+	private URL getInstallUrl()
+	{
+		try {
+			return Platform.resolve(this.getBundle().getEntry("/"));
+		} catch (IOException e) {
+			return null;
+		}	
+	}
+	
+	
 }

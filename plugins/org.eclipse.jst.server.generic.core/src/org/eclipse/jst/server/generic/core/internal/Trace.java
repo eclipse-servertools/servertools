@@ -1,6 +1,5 @@
-package org.eclipse.jst.server.generic.internal.core;
+package org.eclipse.jst.server.generic.core.internal;
 
-import org.eclipse.jst.server.generic.core.CorePlugin;
 
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.

@@ -4,12 +4,12 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package org.eclipse.jst.server.generic.internal.ui;
+package org.eclipse.jst.server.generic.ui.internal;
 
 import java.util.Map;
-import org.eclipse.jst.server.generic.core.CorePlugin;
+
+import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
-import org.eclipse.jst.server.generic.ui.GenericUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;

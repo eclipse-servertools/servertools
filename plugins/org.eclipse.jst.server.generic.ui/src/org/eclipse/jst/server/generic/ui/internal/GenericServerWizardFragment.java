@@ -28,16 +28,16 @@
  * information on eteration, please see
  * <http://www.eteration.com/>.
  ***************************************************************************/
-package org.eclipse.jst.server.generic.internal.ui;
+package org.eclipse.jst.server.generic.ui.internal;
 
 import java.util.Map;
-import org.eclipse.jst.server.generic.internal.core.GenericServerRuntime;
+
+import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
-import org.eclipse.jst.server.generic.ui.GenericServerUIMessages;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.core.ITaskModel;
+import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 import org.eclipse.wst.server.core.model.ServerDelegate;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
@@ -84,7 +84,7 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
         
         RuntimeDelegate runtime = (RuntimeDelegate)server.getRuntime().getAdapter(RuntimeDelegate.class);
         if(runtime==null){
-            IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy)getTaskModel().getObject(ITaskModel.TASK_RUNTIME);
+            IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy)getTaskModel().getObject(TaskModel.TASK_RUNTIME);
             
             runtime= (RuntimeDelegate)wc.getAdapter(RuntimeDelegate.class);
         }        
@@ -101,7 +101,7 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
      * @return
      */
     private IServerWorkingCopy getServer() {
-        IServerWorkingCopy server = (IServerWorkingCopy)getTaskModel().getObject(ITaskModel.TASK_SERVER);
+        IServerWorkingCopy server = (IServerWorkingCopy)getTaskModel().getObject(TaskModel.TASK_SERVER);
         return server;
     }
 

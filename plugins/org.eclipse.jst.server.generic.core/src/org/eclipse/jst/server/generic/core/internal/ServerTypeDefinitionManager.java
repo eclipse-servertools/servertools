@@ -28,30 +28,41 @@
  * information on eteration, please see
  * <http://www.eteration.com/>.
  ***************************************************************************/
-package org.eclipse.jst.server.generic.internal.ui;
+package org.eclipse.jst.server.generic.core.internal;
 
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.ui.editor.ServerEditorPartFactoryDelegate;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
+import org.eclipse.jst.server.generic.internal.xml.XMLUtils;
+import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
+/**
+ * Manages the retrieaval of ServerTypeDefinitions.
+ * 
+ * @author Gorkem Ercan
+ */
 
-public class GenericServerEditorPartFactory extends
-		ServerEditorPartFactoryDelegate {
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.ui.editor.IServerEditorPartFactoryDelegate#shouldCreatePage(org.eclipse.wst.server.core.IServer, org.eclipse.wst.server.core.IServerConfiguration)
-	 */
-	public boolean shouldCreatePage(IServer server) {
-		// TODO Auto-generated method stub
-		return true;
+public class ServerTypeDefinitionManager 
+{
+	private XMLUtils fXmlUtils;
+	
+	public ServerTypeDefinitionManager(URL serverDefinitionURL)
+	{
+		super();
+		fXmlUtils = new XMLUtils(); 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.ui.editor.IServerEditorPartFactoryDelegate#createPage()
-	 */
-	public IEditorPart createPage() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
+	public ServerRuntime getServerRuntimeDefinition(String id, Map properties)
+	{
+		ServerRuntime definition =  fXmlUtils.getServerTypeDefinitionNamed(id);
+		definition.setPropertyValues(properties);
+		return definition;
+	}
+	
+	public ServerRuntime[] getServerTypeDefinitions()
+	{
+		 List definitionList = fXmlUtils.getServerTypeDefinitions();
+		 return (ServerRuntime[])definitionList.toArray(new ServerRuntime[definitionList.size()]);
+	}
 }
