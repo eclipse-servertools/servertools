@@ -129,7 +129,7 @@ public class Tomcat41Configuration extends TomcatConfiguration {
 		// first add server port
 		try {
 			int port = Integer.parseInt(server.getPort());
-			ports.add(new ServerPort("server", "Server port", port, "TCPIP"));
+			ports.add(new ServerPort("server", TomcatPlugin.getResource("%portServer"), port, "TCPIP"));
 		} catch (Exception e) {
 			// ignore
 		}

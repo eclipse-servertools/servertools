@@ -125,7 +125,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 		// first add server port
 		try {
 			int port = Integer.parseInt(server.getPort());
-			ports.add(new ServerPort("server", "Server port", port, "TCPIP"));
+			ports.add(new ServerPort("server", TomcatPlugin.getResource("%portServer"), port, "TCPIP"));
 		} catch (Exception e) {
 			// ignore
 		}
@@ -139,7 +139,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 				for (int j = 0; j < size2; j++) {
 					Connector connector = service.getConnector(j);
 					String className = connector.getClassName();
-					String name = "unknown port";
+					String name = TomcatPlugin.getResource("%portUnknown");
 					String protocol = "TCPIP";
 					boolean advanced = true;
 					String[] contentTypes = null;

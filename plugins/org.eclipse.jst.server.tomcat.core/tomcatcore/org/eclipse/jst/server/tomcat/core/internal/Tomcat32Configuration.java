@@ -136,7 +136,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 				Connector connector = server.getContextManager().getConnector(i);
 				int paramCount = connector.getParameterCount();
 				String handler = null;
-				String name = "unknown";
+				String name = TomcatPlugin.getResource("%portUnknown");
 				String socketFactory = null;
 				String protocol = "TCPIP";
 				boolean advanced = true;
