@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.core.tests.extension;
 
-import org.eclipse.wst.internet.monitor.core.IContentFilter;
-import org.eclipse.wst.internet.monitor.core.MonitorCore;
+import org.eclipse.wst.internet.monitor.core.internal.IContentFilter;
+import org.eclipse.wst.internet.monitor.core.internal.MonitorPlugin;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -22,7 +22,7 @@ public class ContentFiltersTestCase extends TestCase {
 	}
 
 	public void test1ContentFiltersExtension() throws Exception {
-		IContentFilter[] cf = MonitorCore.getContentFilters();
+		IContentFilter[] cf = MonitorPlugin.getInstance().getContentFilters();
 		if (cf != null) {
 			int size = cf.length;
 			for (int i = 0; i < size; i++)
@@ -32,7 +32,7 @@ public class ContentFiltersTestCase extends TestCase {
 	
 	public void test2ContentFiltersExtension() throws Exception {
 		try {
-			MonitorCore.findContentFilter(null);
+			MonitorPlugin.getInstance().findContentFilter(null);
 			assertTrue("Should throw exception", false);
 		} catch (Exception e) {
 			// ignore
@@ -40,7 +40,7 @@ public class ContentFiltersTestCase extends TestCase {
 	}
 
 	public void test3ContentFiltersExtension() throws Exception {
-		IContentFilter cf = MonitorCore.findContentFilter("abc.xyz");
+		IContentFilter cf = MonitorPlugin.getInstance().findContentFilter("abc.xyz");
 		assertTrue(cf == null);
 	}
 }
