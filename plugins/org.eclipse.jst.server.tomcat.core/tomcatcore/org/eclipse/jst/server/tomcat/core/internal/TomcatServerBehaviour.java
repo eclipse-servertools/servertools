@@ -358,6 +358,9 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		if (vmArgs == null)
 			return originalArg;
 		
+		if (originalArg == null)
+			originalArg = "";
+		
 		// replace and null out all vmargs that already exist
 		int size = vmArgs.length;
 		for (int i = 0; i < size; i++) {

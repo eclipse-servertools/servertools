@@ -297,6 +297,9 @@ public abstract class Base {
 	}
 	
 	public void delete() throws CoreException {
+		if (isWorkingCopy())
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, "Cannot delete a working copy", null));
+		
 		if (file != null)
 			file.delete(true, true, new NullProgressMonitor());
 		else

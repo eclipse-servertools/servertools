@@ -103,6 +103,7 @@ public interface IServerAttributes extends IAdaptable {
 	 * Deletes the persistent representation of this server.
 	 * 
 	 * @throws CoreException if there was any error received while deleting the server
+	 *    or if this method is called on a working copy
 	 */
 	public void delete() throws CoreException;
 
