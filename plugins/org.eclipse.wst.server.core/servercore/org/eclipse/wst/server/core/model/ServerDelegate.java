@@ -323,7 +323,22 @@ public abstract class ServerDelegate {
 		// do nothing
 	}
 
+	/**
+	 * This method is called whenever the server configuration should be saved.
+	 * 
+	 * @param monitor
+	 * @throws CoreException
+	 */
 	public void saveConfiguration(IProgressMonitor monitor) throws CoreException {
+		// do nothing
+	}
+
+	/**
+	 * This method is called whenever the server configuration folder has changed.
+	 * It gives the server a chance to throw out any old data and be ready to
+	 * reload the server configuration when it is needed next.
+	 */
+	public void configurationChanged() {
 		// do nothing
 	}
 }

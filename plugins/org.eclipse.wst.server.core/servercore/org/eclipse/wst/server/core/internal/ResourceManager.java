@@ -779,6 +779,19 @@ public class ResourceManager {
 			monitor.done();
 			return false;
 		}
+		IFolder folder = (IFolder) resource2;
+		Iterator iterator = servers.iterator();
+		while (iterator.hasNext()) {
+			IServer server = (IServer) iterator.next();
+			if (server.getServerType().hasServerConfiguration() && folder.equals(server.getServerConfiguration())
+					&& server.isDelegateLoaded()) {
+				try {
+					((Server)server).getDelegate().configurationChanged();
+				} catch (Exception e) {
+					Trace.trace(Trace.WARNING, "Server failed on configuration change");
+				}
+			}
+		}
 		return true;
 	
 		/*IProgressMonitor monitor = new NullProgressMonitor();

@@ -117,6 +117,10 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		config.save(getServer().getServerConfiguration(), monitor);
 	}
 
+	public void configurationChanged() {
+		configuration = null;
+	}
+
 	/**
 	 * Return the root URL of this module.
 	 * @param module org.eclipse.wst.server.core.model.IModule

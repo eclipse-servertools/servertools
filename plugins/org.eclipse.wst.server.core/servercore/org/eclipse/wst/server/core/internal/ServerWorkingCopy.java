@@ -220,7 +220,6 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 					folder.create(IResource.FORCE, true, null);
 			}
 		}
-		//ResourcesPlugin.getWorkspace().getRoot().g
 		getDelegate().saveConfiguration(monitor);
 		wch.setDirty(false);
 		
