@@ -100,10 +100,10 @@ public interface IServer extends IElement {
 	 * </p>
 	 */
 	public static final String FILE_EXTENSION = "server";
-	
+
 	/**
 	 * Server id attribute (value "server-id") of launch configurations.
-	 * This attribute is used to tag a launch configuration with the
+	 * This attribute is used to tag a launch configuration with th
 	 * id of the corresponding server.
 	 * <p>
 	 * [issue: This feels like an implementation detail. If it is to
@@ -118,6 +118,7 @@ public interface IServer extends IElement {
 	 * server is in an unknown state.
 	 * 
 	 * @see #getServerState()
+	 * @see #getModuleState(IModule)
 	 */
 	public static final int STATE_UNKNOWN = 0;
 
@@ -126,6 +127,7 @@ public interface IServer extends IElement {
 	 * server is starting, but not yet ready to serve content.
 	 * 
 	 * @see #getServerState()
+	 * @see #getModuleState(IModule)
 	 */
 	public static final int STATE_STARTING = 1;
 
@@ -134,6 +136,7 @@ public interface IServer extends IElement {
 	 * server is ready to serve content.
 	 * 
 	 * @see #getServerState()
+	 * @see #getModuleState(IModule)
 	 */
 	public static final int STATE_STARTED = 2;
 
@@ -142,6 +145,7 @@ public interface IServer extends IElement {
 	 * server is shutting down.
 	 * 
 	 * @see #getServerState()
+	 * @see #getModuleState(IModule)
 	 */
 	public static final int STATE_STOPPING = 3;
 
@@ -150,30 +154,45 @@ public interface IServer extends IElement {
 	 * server is stopped.
 	 * 
 	 * @see #getServerState()
+	 * @see #getModuleState(IModule)
 	 */
 	public static final int STATE_STOPPED = 4;
 
-	public static final int STATE_RESTART = 8;
+	/**
+	 * Publish state constant (value 0) indicating that it's
+	 * in an unknown state.
+	 * 
+	 * @see #getServerPublishState()
+	 * @see #getModulePublishState(IModule)
+	 */
+	public static final int PUBLISH_STATE_UNKNOWN = 0;
 
-	public static final int STATE_REPUBLISH = 9;
+	/**
+	 * Publish state constant (value 1) indicating that there
+	 * is no publish required.
+	 * 
+	 * @see #getServerPublishState()
+	 * @see #getModulePublishState(IModule)
+	 */
+	public static final int PUBLISH_STATE_NONE = 1;
 
-	public static final int STATE_REINSTALL_MODULE = 10;
+	/**
+	 * Publish state constant (value 2) indicating that an
+	 * incremental publish is required.
+	 * 
+	 * @see #getServerPublishState()
+	 * @see #getModulePublishState(IModule)
+	 */
+	public static final int PUBLISH_STATE_INCREMENTAL = 2;
 
-
-	// --- Sync State Constants ---
-	// (returned from the isXxxInSnyc() methods)
-
-	// the state of the server's contents are unknown
-	public static final int SYNC_STATE_UNKNOWN = 0;
-
-	// the local contents exactly match the server's contents
-	public static final int SYNC_STATE_IN_SYNC = 1;
-
-	// the local contents do not match the server's contents
-	public static final int SYNC_STATE_REPUBLISH = 2;
-	
-	// the local content changes require a restart
-	public static final int SYNC_STATE_RESTART = 3;
+	/**
+	 * Publish state constant (value 1) indicating that a
+	 * full publish is required.
+	 * 
+	 * @see #getServerPublishState()
+	 * @see #getModulePublishState(IModule)
+	 */
+	public static final int PUBLISH_STATE_FULL = 3;
 
 	/**
 	 * Returns the current state of this server.
@@ -187,7 +206,7 @@ public interface IServer extends IElement {
 	 * constants declared on {@link IServer}
 	 */
 	public int getServerState();
-	
+
 	/**
 	 * Returns the ILaunchManager mode that the server is in. This method will
 	 * return null if the server is not running.
@@ -201,13 +220,13 @@ public interface IServer extends IElement {
 	 *
 	 * @return int
 	 */
-	public int getServerSyncState();
+	public int getServerPublishState();
 	
 	/**
 	 * Returns the module's sync state.
 	 * @return
 	 */
-	public int getModuleSyncState(IModule module);
+	public int getModulePublishState(IModule module);
 	
 	/**
 	 * Returns the host for the server.
@@ -528,7 +547,7 @@ public interface IServer extends IElement {
 	 * not been modified and the server process is still in sync); the
 	 * result is unspecified if the server is not currently running
 	 */
-	//public boolean isRestartNeeded();
+	public boolean getServerRestartState();
 
 	/**
 	 * Asynchronously restarts this server. This operation does
@@ -641,7 +660,7 @@ public interface IServer extends IElement {
 	 * @param module org.eclipse.wst.server.core.model.IModule
 	 * @return boolean
 	 */
-	public boolean isModuleRestartNeeded(IModule module);
+	public boolean getModuleRestartState(IModule module);
 
 	/**
 	 * Asynchronously restarts the given module on the server.

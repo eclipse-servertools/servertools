@@ -38,26 +38,21 @@ public class Server extends Base implements IServer {
 
 	protected IRuntime runtime;
 	protected IServerConfiguration configuration;
-	protected int serverState = STATE_UNKNOWN;
 	protected String mode;
+
+	protected int serverState = STATE_UNKNOWN;
+	protected int serverSyncState;
+	protected boolean serverRestartNeeded;
 	
 	protected Map moduleState = new HashMap();
-
-	// the configuration sync state
-	protected int serverSyncState;
-	
-	protected Map moduleSyncState = new HashMap();
+	protected Map modulePublishState = new HashMap();
+	protected Map moduleRestartState = new HashMap();
 
 /*	private static final String[] stateStrings = new String[] {
 		"unknown", "starting", "started", "started_debug",
 		"stopping", "stopped", "started_unsupported", "started_profile"
 	};*/
 	
-	// the current restart value
-	//protected boolean restartNeeded;
-	
-	//protected String lastMode = ILaunchManager.DEBUG_MODE;
-
 	// publish listeners
 	protected transient List publishListeners;
 	
@@ -392,9 +387,15 @@ public class Server extends Base implements IServer {
 		fireServerModuleStateChangeEvent(module);
 	}
 	
-	public void setModuleSyncState(IModule module, int state) {
+	public void setModulePublishState(IModule module, int state) {
 		Integer in = new Integer(state);
-		moduleSyncState.put(module.getId(), in);
+		modulePublishState.put(module.getId(), in);
+		//fireServerModuleStateChangeEvent(module);
+	}
+
+	public void setModuleRestartState(IModule module, boolean r) {
+		Boolean b = new Boolean(r);
+		moduleState.put(module.getId(), b);
 		//fireServerModuleStateChangeEvent(module);
 	}
 
@@ -439,7 +440,7 @@ public class Server extends Base implements IServer {
 	 *
 	 * @return int
 	 */
-	public int getServerSyncState() {
+	public int getServerPublishState() {
 		return serverSyncState;
 	}
 
@@ -448,7 +449,7 @@ public class Server extends Base implements IServer {
 	 *
 	 * @param state int
 	 */
-	public void setServerSyncState(int state) {
+	public void setServerPublishState(int state) {
 		if (state == serverSyncState)
 			return;
 		serverSyncState = state;
@@ -660,7 +661,7 @@ public class Server extends Base implements IServer {
 			return false;
 	
 		// return true if the configuration can be published
-		if (getServerSyncState() != SYNC_STATE_IN_SYNC)
+		if (getServerPublishState() != PUBLISH_STATE_NONE)
 			return true;
 
 		// return true if any modules can be published
@@ -671,7 +672,7 @@ public class Server extends Base implements IServer {
 	
 		IModuleVisitor visitor = new IModuleVisitor() {
 			public boolean visit(List parents, IModule module) {
-				if (getModuleSyncState(module) == IServer.SYNC_STATE_REPUBLISH) {
+				if (getModulePublishState(module) != PUBLISH_STATE_NONE) {
 					temp.found = true;
 					return false;
 				}
@@ -693,7 +694,7 @@ public class Server extends Base implements IServer {
 		if (!canPublish())
 			return false;
 	
-		if (getServerSyncState() != SYNC_STATE_IN_SYNC)
+		if (getServerPublishState() != PUBLISH_STATE_NONE)
 			return true;
 	
 		if (!getUnpublishedModules().isEmpty())
@@ -718,7 +719,7 @@ public class Server extends Base implements IServer {
 		
 		IModuleVisitor visitor = new IModuleVisitor() {
 			public boolean visit(List parents, IModule module) {
-				if (getModuleSyncState(module) == IServer.SYNC_STATE_REPUBLISH && !modules.contains(module)) {
+				if (getModulePublishState(module) != PUBLISH_STATE_NONE && !modules.contains(module)) {
 					PublishControl control = PublishInfo.getPublishInfo().getPublishControl(Server.this, parents, module);
 					if (control.isDirty)
 						modules.add(module);
@@ -1145,23 +1146,23 @@ public class Server extends Base implements IServer {
 	 *
 	 * @return boolean
 	 */
-	/*public boolean isRestartNeeded() {
+	public boolean getServerRestartState() {
 		if (getServerState() == STATE_STOPPED)
 			return false;
-		return restartNeeded;
-	}*/
-	
+		return serverRestartNeeded;
+	}
+
 	/**
 	 * Sets the server restart state.
 	 *
 	 * @param state boolean
 	 */
-	/*public synchronized void setRestartNeeded(boolean state) {
-		if (state == restartNeeded)
+	public synchronized void setServerRestartState(boolean state) {
+		if (state == serverRestartNeeded)
 			return;
-		restartNeeded = state;
+		serverRestartNeeded = state;
 		fireRestartStateChangeEvent();
-	}*/
+	}
 
 	/**
 	 * Restart the server with the given debug mode.
@@ -1632,19 +1633,19 @@ public class Server extends Base implements IServer {
 		}
 		return STATE_UNKNOWN;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.IServer#getModuleState()
 	 */
-	public int getModuleSyncState(IModule module) {
+	public int getModulePublishState(IModule module) {
 		try {
-			Integer in = (Integer) moduleSyncState.get(module.getId());
+			Integer in = (Integer) modulePublishState.get(module.getId());
 			if (in != null)
 				return in.intValue();
 		} catch (Exception e) {
 			// ignore
 		}
-		return SYNC_STATE_UNKNOWN;
+		return PUBLISH_STATE_UNKNOWN;
 	}
 
 	/*
@@ -1710,13 +1711,15 @@ public class Server extends Base implements IServer {
 	 * @param module org.eclipse.wst.server.core.model.IModule
 	 * @return boolean
 	 */
-	public boolean isModuleRestartNeeded(IModule module) {
+	public boolean getModuleRestartState(IModule module) {
 		try {
-			return getDelegate(null).isModuleRestartNeeded(module);
+			Boolean b = (Boolean) moduleRestartState.get(module.getId());
+			if (b != null)
+				return b.booleanValue();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate isModuleRestartNeeded() " + toString(), e);
-			return false;
+			// ignore
 		}
+		return false;
 	}
 
 	/**

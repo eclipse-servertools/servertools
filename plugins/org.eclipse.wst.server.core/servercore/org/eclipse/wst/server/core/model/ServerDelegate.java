@@ -128,17 +128,17 @@ public abstract class ServerDelegate implements IServerExtension {
 	 *
 	 * @param state boolean
 	 */
-	/*public final void setRestartNeeded(boolean state) {
-		server.setRestartNeeded(state);
-	}*/
+	public final void setServerRestartState(boolean state) {
+		server.setServerRestartState(state);
+	}
 
 	/**
-	 * Sets the configuration sync state.
+	 * Sets the server publish state.
 	 *
 	 * @param state int
 	 */
-	public final void setServerSyncState(int state) {
-		server.setServerSyncState(state);
+	public final void setServerPublishState(int state) {
+		server.setServerPublishState(state);
 	}
 
 	/**
@@ -149,6 +149,24 @@ public abstract class ServerDelegate implements IServerExtension {
 	 */
 	public final void setModuleState(IModule module, int state) {
 		server.setModuleState(module, state);
+	}
+
+	/**
+	 * Sets the module publish state.
+	 *
+	 * @param state int
+	 */
+	public final void setModulePublishState(IModule module, int state) {
+		server.setModulePublishState(module, state);
+	}
+	
+	/**
+	 * Sets the module restart state.
+	 *
+	 * @param state int
+	 */
+	public final void setModuleRestartState(IModule module, boolean state) {
+		server.setModuleRestartState(module, state);
 	}
 
 	public final int getAttribute(String attributeName, int defaultValue) {
@@ -378,9 +396,9 @@ public abstract class ServerDelegate implements IServerExtension {
 	 * @param module org.eclipse.wst.server.core.model.IModule
 	 * @return boolean
 	 */
-	public boolean isModuleRestartNeeded(IModule module) {
+	/*public boolean isModuleRestartNeeded(IModule module) {
 		return false;
-	}
+	}*/
 
 	/**
 	 * Asynchronously restarts the given module on the server.

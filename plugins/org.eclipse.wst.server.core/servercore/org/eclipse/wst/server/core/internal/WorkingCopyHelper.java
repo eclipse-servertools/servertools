@@ -113,6 +113,9 @@ public class WorkingCopyHelper {
 	}
 	
 	protected void validateTimestamp(IElement element) throws CoreException {
+		if (element == null) // newly created
+			return;
+
 		if (base.getTimestamp() != element.getTimestamp())
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, IElementWorkingCopy.TIMESTAMP_ERROR, ServerPlugin.getResource("%errorWorkingCopyTimestamp"), null));
 	}

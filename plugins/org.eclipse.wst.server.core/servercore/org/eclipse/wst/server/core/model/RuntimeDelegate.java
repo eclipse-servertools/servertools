@@ -104,7 +104,7 @@ public abstract class RuntimeDelegate implements IServerExtension {
 		// do nothing
 	}
 
-	public void initialize(Runtime newRuntime) {
+	public final void initialize(Runtime newRuntime) {
 		runtime = newRuntime;
 	}
 	
@@ -131,7 +131,7 @@ public abstract class RuntimeDelegate implements IServerExtension {
 	 * 
 	 * @param workingCopy the runtime working copy
 	 */
-	public void initialize(RuntimeWorkingCopy workingCopy) {
+	public final void initialize(RuntimeWorkingCopy workingCopy) {
 		runtime = workingCopy;
 		runtimeWC = workingCopy;
 		initialize();
