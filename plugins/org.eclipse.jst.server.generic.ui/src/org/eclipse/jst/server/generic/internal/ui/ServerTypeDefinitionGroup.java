@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wst.server.ui.internal.SWTUtil;
 
 
 public class ServerTypeDefinitionGroup 
@@ -237,9 +238,8 @@ public class ServerTypeDefinitionGroup
     	fText.setLayoutData(gridData);
     	fText.setText(value);
     	fText.addModifyListener(new PropertyModifyListener());
-    	Button fButton = new Button(defPanel, SWT.PUSH);
-    	fButton.setText(GenericServerUIMessages.getString("serverTypeGroup.label.browse"));
-    	fButton.setLayoutData(new GridData());
+    	Button fButton = SWTUtil.createButton(defPanel,GenericServerUIMessages.getString("serverTypeGroup.label.browse") );
+    	
     	fButton.addSelectionListener(new SelectionListener() {
     		public void widgetSelected(SelectionEvent e) {
     			FileDialog dlg = new FileDialog(fDefinitionGroup.getShell());
@@ -272,9 +272,7 @@ public class ServerTypeDefinitionGroup
     	fText.setLayoutData(gridData);
     	fText.setText(value);
     	fText.addModifyListener(new PropertyModifyListener());
-    	Button fButton = new Button(parent, SWT.PUSH);
-    	fButton.setText(GenericServerUIMessages.getString("serverTypeGroup.label.browse"));
-    	fButton.setLayoutData(new GridData());
+    	Button fButton = SWTUtil.createButton(parent,GenericServerUIMessages.getString("serverTypeGroup.label.browse"));
     	fButton.addSelectionListener(new SelectionListener() {
     		public void widgetSelected(SelectionEvent e) {
     			DirectoryDialog dlg = new DirectoryDialog(fDefinitionGroup.getShell());
