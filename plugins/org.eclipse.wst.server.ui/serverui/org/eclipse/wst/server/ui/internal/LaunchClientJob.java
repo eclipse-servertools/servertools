@@ -49,6 +49,7 @@ public class LaunchClientJob extends Job {
 	 * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	protected IStatus run(IProgressMonitor monitor) {
+		Trace.trace(Trace.FINER, "LaunchClient job");
 		IStatus status = new Status(IStatus.OK, ServerUIPlugin.PLUGIN_ID, 0, "", null);
 
 		// wait for up to 5 minutes
@@ -66,11 +67,15 @@ public class LaunchClientJob extends Job {
 			state = server.getModuleState(module);
 		}
 		
+		Trace.trace(Trace.FINER, "LaunchClient job 2 " + state);
+		
 		if (monitor.isCanceled())
 			return status;
 		
-		if (state != IServer.STATE_STARTED)
+		if (state == IServer.STATE_STARTING)
 			return status;
+		
+		Trace.trace(Trace.FINER, "LaunchClient job 3");
 		
 		// display client on UI thread
 		Display.getDefault().asyncExec(new Runnable() {
@@ -84,6 +89,7 @@ public class LaunchClientJob extends Job {
 				}
 			}
 		});
+		Trace.trace(Trace.FINER, "LaunchClient job 4");
 		return status;
 	}
 }

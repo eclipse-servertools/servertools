@@ -326,7 +326,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	 * @return IModuleArtifact
 	 */
 	public static boolean hasModuleArtifact(Object obj) {
-		Trace.trace(Trace.FINEST, "ServerUtil.hasModuleArtifact()");
+		Trace.trace(Trace.FINEST, "ServerUIPlugin.hasModuleArtifact() " + obj);
 		ModuleArtifactAdapter[] adapters = getModuleArtifactAdapters();
 		if (adapters != null) {
 			int size = adapters.length;
@@ -348,7 +348,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	protected static final String MODULE_ARTIFACT_CLASS = "org.eclipse.wst.server.core.IModuleArtifact";
 
 	public static IModuleArtifact getModuleArtifact(Object obj) {
-		Trace.trace(Trace.FINEST, "ServerUtil.loadModuleArtifact()");
+		Trace.trace(Trace.FINEST, "ServerUIPlugin.getModuleArtifact() " + obj);
 		ModuleArtifactAdapter[] adapters = getModuleArtifactAdapters();
 		if (adapters != null) {
 			int size = adapters.length;
@@ -359,8 +359,8 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 							return (IModuleArtifact) Platform.getAdapterManager().getAdapter(obj, MODULE_ARTIFACT_CLASS);
 						}
 					}
-				} catch (CoreException ce) {
-					Trace.trace(Trace.WARNING, "Could not use moduleArtifactAdapter", ce);
+				} catch (Exception e) {
+					Trace.trace(Trace.WARNING, "Could not use moduleArtifactAdapter " + adapters[i], e);
 				}
 			}
 		}
@@ -369,7 +369,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	}
 
 	public static IModuleArtifact loadModuleArtifact(Object obj) {
-		Trace.trace(Trace.FINEST, "ServerUtil.loadModuleArtifact()");
+		Trace.trace(Trace.FINEST, "ServerUIPlugin.loadModuleArtifact() " + obj);
 		ModuleArtifactAdapter[] adapters = getModuleArtifactAdapters();
 		if (adapters != null) {
 			int size = adapters.length;
@@ -380,8 +380,8 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 							return (IModuleArtifact) Platform.getAdapterManager().loadAdapter(obj, MODULE_ARTIFACT_CLASS);
 						}
 					}
-				} catch (CoreException ce) {
-					Trace.trace(Trace.WARNING, "Could not use moduleArtifactAdapter", ce);
+				} catch (Exception e) {
+					Trace.trace(Trace.WARNING, "Could not use moduleArtifactAdapter " + adapters[i], e);
 				}
 			}
 		}

@@ -108,8 +108,8 @@ public class ServerUICore {
 		if (fragment.fragment == null) {
 			try {
 				fragment.fragment = (WizardFragment) fragment.ce.createExecutableExtension("class");
-			} catch (Exception cex) {
-				Trace.trace(Trace.SEVERE, "Could not create wizardFragment: " + fragment.ce.getAttribute("id"), cex);
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "Could not create wizardFragment: " + fragment.ce.getAttribute("id"), t);
 			}
 		}
 		return fragment.fragment;

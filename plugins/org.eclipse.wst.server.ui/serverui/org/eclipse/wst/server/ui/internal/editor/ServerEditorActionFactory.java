@@ -133,8 +133,8 @@ public class ServerEditorActionFactory implements IServerEditorActionFactory {
 		if (delegate == null) {
 			try {
 				delegate = (ServerEditorActionFactoryDelegate) element.createExecutableExtension("class");
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Could not create server editorpage delegate", e);
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "Could not create server action factory delegate", t);
 			}
 		}
 		return delegate;

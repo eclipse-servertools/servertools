@@ -130,8 +130,8 @@ public class ServerEditorPageSectionFactory implements IServerEditorPageSectionF
 		if (delegate == null) {
 			try {
 				delegate = (ServerEditorPageSectionFactoryDelegate) element.createExecutableExtension("class");
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Could not create server editorpage delegate", e);
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "Could not create server editorpage delegate", t);
 			}
 		}
 		return delegate;

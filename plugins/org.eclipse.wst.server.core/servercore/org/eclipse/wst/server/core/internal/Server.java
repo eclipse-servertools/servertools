@@ -143,8 +143,8 @@ public class Server extends Base implements IServer {
 						delegate = (ServerDelegate) element.createExecutableExtension("class");
 						delegate.initialize(this);
 						Trace.trace(Trace.PERFORMANCE, "Server.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
-					} catch (Exception e) {
-						Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);
+					} catch (Throwable t) {
+						Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
 					}
 				}
 			}
@@ -165,8 +165,8 @@ public class Server extends Base implements IServer {
 						behaviourDelegate = (ServerBehaviourDelegate) element.createExecutableExtension("behaviourClass");
 						behaviourDelegate.initialize(this);
 						Trace.trace(Trace.PERFORMANCE, "Server.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
-					} catch (Exception e) {
-						Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);
+					} catch (Throwable t) {
+						Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
 					}
 				}
 			}

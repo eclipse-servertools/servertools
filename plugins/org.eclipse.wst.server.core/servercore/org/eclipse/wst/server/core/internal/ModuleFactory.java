@@ -90,8 +90,8 @@ public class ModuleFactory implements IOrdered {
 				delegate = (ModuleFactoryDelegate) element.createExecutableExtension("class");
 				delegate.initialize(this);
 				ResourceManager.getInstance().addModuleFactoryListener(delegate);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + e.getMessage());
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + t.getMessage());
 			}
 		}
 		return delegate;

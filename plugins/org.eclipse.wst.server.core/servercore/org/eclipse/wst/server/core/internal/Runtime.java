@@ -70,8 +70,8 @@ public class Runtime extends Base implements IRuntime {
 					delegate = (RuntimeDelegate) runtimeType2.getElement().createExecutableExtension("class");
 					delegate.initialize(this);
 					Trace.trace(Trace.PERFORMANCE, "Runtime.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getRuntimeType().getId());
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);
+				} catch (Throwable t) {
+					Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
 				}
 			}
 		}

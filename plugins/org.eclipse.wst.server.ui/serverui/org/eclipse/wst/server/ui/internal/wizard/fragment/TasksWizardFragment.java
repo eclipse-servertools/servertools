@@ -121,7 +121,12 @@ public class TasksWizardFragment extends WizardFragment {
 			final Helper help = new Helper();
 			ServerUtil.visit(server, new IModuleVisitor() {
 				public boolean visit(IModule[] parents2, IModule module2) {
-					help.parentList.add(parents2);
+					int size = parents2.length;
+					List list = new ArrayList(size);
+					for (int i = 0; i < size; i++)
+						list.add(parents2[i]);
+					
+					help.parentList.add(list);
 					help.moduleList.add(module2);
 					return true;
 				}

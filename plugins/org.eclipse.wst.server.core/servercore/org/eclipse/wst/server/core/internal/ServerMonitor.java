@@ -64,8 +64,8 @@ public class ServerMonitor implements IServerMonitor {
 		if (delegate == null) {
 			try {
 				delegate = (ServerMonitorDelegate) element.createExecutableExtension("class");
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString() + ": " + e.getMessage());
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString() + ": " + t.getMessage());
 			}
 		}
 		return delegate;
