@@ -65,6 +65,8 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 		wc.setRuntime(runtime);
 		
 		IFolder folder = getServerProject().getFolder(wc.getName() + "-config");
+		if (!folder.exists())
+			folder.create(true, true, null);
 		wc.setServerConfiguration(folder);
 		
 		((Server)wc).importConfiguration(runtime, null);
@@ -72,7 +74,7 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 		return wc;
 	}
 	
-	public static IProject getServerProject() {
+	public static IProject getServerProject() throws Exception {
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		if (projects != null) {
 			int size = projects.length;
@@ -83,6 +85,9 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 		}
 		
 		String s = "Servers";
-		return ResourcesPlugin.getWorkspace().getRoot().getProject(s);
+		IProject project2 = ResourcesPlugin.getWorkspace().getRoot().getProject(s);
+		project2.create(null);
+		project2.open(null);
+		return project2;
 	}
 }

@@ -44,6 +44,7 @@ public class AllTests {
 		}
 		
 		s = System.getProperty("org.eclipse.jst.server.tomcat.50");
+		//s = "D:\\Tools\\tomcat\\jakarta-tomcat-5.0.19";
 		if (s != null && s.length() > 0) {
 			RuntimeLocation.runtimeLocation = s;
 			suite.addTest(new OrderedTestSuite(Tomcat50RuntimeTestCase.class));

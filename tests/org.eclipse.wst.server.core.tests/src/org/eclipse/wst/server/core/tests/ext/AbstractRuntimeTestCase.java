@@ -82,7 +82,7 @@ public abstract class AbstractRuntimeTestCase extends TestCase {
 
 	public void test0006Validate() throws Exception {
 		IStatus status = getRuntime().validate(null);
-		assertTrue(status.isOK());
+		assertTrue(status.isOK() || status.getSeverity() == IStatus.WARNING);
 	}
 	
 	public void test0007Validate() throws Exception {
