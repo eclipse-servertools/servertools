@@ -171,7 +171,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 					ports.add(new ServerPort(i + "", name, port, protocol, contentTypes, advanced));
 			}
 		} catch (Exception e) {
-			Trace.trace("Error getting server ports", e);
+			Trace.trace(Trace.SEVERE, "Error getting server ports", e);
 		}
 	
 		return ports;
@@ -208,7 +208,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 				list.add(module);
 			}
 		} catch (Exception e) {
-			Trace.trace("Error getting project refs", e);
+			Trace.trace(Trace.SEVERE, "Error getting project refs", e);
 		}
 	
 		return list;
@@ -254,7 +254,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 				}
 				br.close();
 			} catch (Exception e) {
-				Trace.trace("Could not load policy file", e);
+				Trace.trace(Trace.SEVERE, "Could not load policy file", e);
 			} finally {
 				if (br != null)
 					br.close();
@@ -266,7 +266,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace("Could not load Tomcat v3.2 configuration from " + path.toOSString() + ": " + e.getMessage());
+			Trace.trace(Trace.SEVERE, "Could not load Tomcat v3.2 configuration from " + path.toOSString() + ": " + e.getMessage());
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotLoadConfiguration"), e));
 		}
 	}
@@ -321,7 +321,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 				}
 				br.close();
 			} catch (Exception e) {
-				Trace.trace("Could not load policy file", e);
+				Trace.trace(Trace.SEVERE, "Could not load policy file", e);
 			} finally {
 				if (br != null)
 					br.close();
@@ -333,7 +333,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace("Could not reload Tomcat v3.2 configuration from: " + folder.getFullPath() + ": " + e.getMessage());
+			Trace.trace(Trace.SEVERE, "Could not reload Tomcat v3.2 configuration from: " + folder.getFullPath() + ": " + e.getMessage());
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotLoadConfiguration"), e));
 		}
 	}
@@ -382,7 +382,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 				return;
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace("Could not save Tomcat v3.2 configuration to " + path, e);
+			Trace.trace(Trace.SEVERE, "Could not save Tomcat v3.2 configuration to " + path, e);
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotSaveConfiguration", new String[] {e.getLocalizedMessage()}), e));
 		}
 	}
@@ -448,7 +448,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 				return;
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace("Could not save Tomcat v3.2 configuration to " + folder.getFullPath(), e);
+			Trace.trace(Trace.SEVERE, "Could not save Tomcat v3.2 configuration to " + folder.getFullPath(), e);
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotSaveConfiguration", new String[] {e.getLocalizedMessage()}), e));
 		}
 	}
@@ -480,7 +480,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 			isServerDirty = true;
 			firePropertyChangeEvent(ADD_WEB_MODULE_PROPERTY, null, module);
 		} catch (Exception e) {
-			Trace.trace("Error adding web module", e);
+			Trace.trace(Trace.SEVERE, "Error adding web module", e);
 		}
 	}
 	
@@ -520,7 +520,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 			if (!monitor.isCanceled())
 				monitor.done();
 		} catch (Exception e) {
-			Trace.trace("Error localizing configuration", e);
+			Trace.trace(Trace.SEVERE, "Error localizing configuration", e);
 		}
 	}
 	
@@ -577,7 +577,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace("Error modifying server port " + id, e);
+			Trace.trace(Trace.SEVERE, "Error modifying server port " + id, e);
 		}
 	}
 	
@@ -599,7 +599,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 			WebModule module = new WebModule(path, docBase, null, reloadable);
 			firePropertyChangeEvent(MODIFY_WEB_MODULE_PROPERTY, new Integer(index), module);
 		} catch (Exception e) {
-			Trace.trace("Error modifying web module " + index, e);
+			Trace.trace(Trace.SEVERE, "Error modifying web module " + index, e);
 		}
 	}
 	
@@ -623,7 +623,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 			isServerDirty = true;
 			firePropertyChangeEvent(REMOVE_WEB_MODULE_PROPERTY, null, new Integer(index));
 		} catch (Exception e) {
-			Trace.trace("Error removing web module " + index, e);
+			Trace.trace(Trace.SEVERE, "Error removing web module " + index, e);
 		}
 	}
 }
