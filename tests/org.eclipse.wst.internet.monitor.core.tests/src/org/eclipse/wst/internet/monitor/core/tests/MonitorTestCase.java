@@ -33,7 +33,7 @@ public class MonitorTestCase extends TestCase {
 
 	public void test01CreateMonitor() throws Exception {
 		IMonitorWorkingCopy wc = MonitorCore.createMonitor();
-		wc.setLocalPort(22100);
+		wc.setLocalPort(22150);
 		wc.setRemoteHost("www.eclipse.org");
 		wc.setRemotePort(80);
 		monitor = wc.save();
