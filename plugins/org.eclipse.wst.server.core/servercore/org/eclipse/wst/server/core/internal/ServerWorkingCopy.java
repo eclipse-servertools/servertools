@@ -38,6 +38,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		
 		map = new HashMap(server.map);
 		wch = new WorkingCopyHelper(this);
+		
 		resolve();
 	}
 	
@@ -68,11 +69,37 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		return serverState;
 	}
 
-	public void setServerState(byte state) {
+	public void setServerState(int state) {
 		if (server != null)
 			server.setServerState(state);
 		else
 			super.setServerState(state);
+	}
+	
+	public int getServerPublishState() {
+		if (server != null)
+			return server.getServerPublishState();
+		return serverState;
+	}
+
+	public void setServerPublishState(int state) {
+		if (server != null)
+			server.setServerPublishState(state);
+		else
+			super.setServerPublishState(state);
+	}
+	
+	public String getMode() {
+		if (server != null)
+			return server.getMode();
+		return mode;
+	}
+
+	public void setMode(String mode) {
+		if (server != null)
+			server.setMode(mode);
+		else
+			super.setMode(mode);
 	}
 
 	public void setAttribute(String attributeName, int value) {

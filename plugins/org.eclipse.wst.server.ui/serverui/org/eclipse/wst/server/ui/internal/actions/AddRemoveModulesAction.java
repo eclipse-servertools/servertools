@@ -60,7 +60,7 @@ public class AddRemoveModulesAction implements IServerAction {
 				IModule module = modules2[i];
 				if (!deployed.contains(module)) {
 					IStatus status = server.canModifyModules(new IModule[] { module }, null, null);
-					if (status != null && status.isOK())
+					if (status != null && status.getSeverity() != IStatus.ERROR)
 						modules.add(module);
 				}
 			}

@@ -52,7 +52,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	}
 	
 	public void initialize() {
-		setMode(ILaunchManager.RUN_MODE);
+		// do nothing
 	}
 
 	public TomcatRuntime getTomcatRuntime() {
@@ -210,7 +210,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		if ("true".equals(launch.getLaunchConfiguration().getAttribute(ATTR_STOP, "false")))
 			return;
 		IStatus status = getTomcatRuntime().validate();
-		if (status != null && !status.isOK())
+		if (status != null && status.getSeverity() == IStatus.ERROR)
 			throw new CoreException(status);
 
 		//setRestartNeeded(false);
@@ -225,6 +225,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		}
 		
 		setServerState(IServer.STATE_STARTING);
+		setMode(launchMode);
 	
 		// ping server to check for startup
 		try {

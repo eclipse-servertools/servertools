@@ -40,7 +40,7 @@ public class Server extends Base implements IServer {
 
 	protected IRuntime runtime;
 	protected IFolder configuration;
-	protected String mode;
+	protected String mode = ILaunchManager.RUN_MODE;
 
 	protected int serverState = STATE_UNKNOWN;
 	protected int serverSyncState;

@@ -240,11 +240,12 @@ public class TaskWizard implements IWizard {
 				runnable.run(new NullProgressMonitor());
 			return true;
 		} catch (InvocationTargetException te) {
+			Trace.trace(Trace.SEVERE, "Error finishing task wizard", te);
 			t = te.getCause();
 		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error finishing task wizard 2", e);
 			t = e;
 		}
-		Trace.trace(Trace.SEVERE, "Error finishing task wizard", t);
 		
 		if (t instanceof CoreException) {
 			EclipseUtil.openError(t.getLocalizedMessage(), ((CoreException)t).getStatus());

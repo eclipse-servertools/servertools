@@ -45,7 +45,7 @@ public class Trace {
 		if (!TomcatPlugin.getInstance().isDebugging())
 			return;
 
-		System.out.println(s);
+		System.out.println(TomcatPlugin.PLUGIN_ID + " " + s);
 		if (t != null)
 			t.printStackTrace();
 	}

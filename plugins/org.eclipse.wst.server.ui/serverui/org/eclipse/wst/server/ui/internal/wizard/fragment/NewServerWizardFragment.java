@@ -10,14 +10,18 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.wizard.fragment;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.wizard.page.NewServerComposite;
+import org.eclipse.wst.server.ui.internal.wizard.page.WizardUtil;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 /**
@@ -121,6 +125,12 @@ public class NewServerWizardFragment extends WizardFragment {
 		return fragment;
 	}
 
+	public List getChildFragments() {
+		List listImpl = new ArrayList();
+		createChildFragments(listImpl);
+		return listImpl;
+	}
+
 	protected void createChildFragments(List list) {
 		if (getTaskModel() == null)
 			return;
@@ -136,7 +146,13 @@ public class NewServerWizardFragment extends WizardFragment {
 			
 			IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
 			if (server != null) {
-//				createConfiguration(server);
+				// createConfiguration(server);
+				if (server.getServerType().hasServerConfiguration()) {
+					// TODO: config
+					((Server)server).importConfiguration(runtime, null);
+					IFolder folder = WizardUtil.getServerProject().getFolder(server.getName() + "-config");
+					server.setServerConfiguration(folder);
+				}
 				WizardFragment sub = getWizardFragment(server.getServerType().getId());
 				if (sub != null)
 					list.add(sub);

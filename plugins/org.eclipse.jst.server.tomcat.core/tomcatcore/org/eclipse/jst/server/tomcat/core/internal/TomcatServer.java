@@ -97,6 +97,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 				configuration.load(folder, null);
 			} catch (CoreException ce) {
 				// ignore
+				configuration = null;
 			}
 		}
 		return configuration;
@@ -106,25 +107,29 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		IPath path = runtime.getLocation().append("conf");
 		
 		String id = getServer().getServerType().getId();
+		IFolder folder = getServer().getServerConfiguration();
 		if (id.indexOf("32") > 0)
-			configuration = new Tomcat32Configuration(null);
+			configuration = new Tomcat32Configuration(folder);
 		else if (id.indexOf("40") > 0)
-			configuration = new Tomcat40Configuration(null);
+			configuration = new Tomcat40Configuration(folder);
 		else if (id.indexOf("41") > 0)
-			configuration = new Tomcat41Configuration(null);
+			configuration = new Tomcat41Configuration(folder);
 		else if (id.indexOf("50") > 0)
-			configuration = new Tomcat50Configuration(null);
+			configuration = new Tomcat50Configuration(folder);
 		else if (id.indexOf("55") > 0)
-			configuration = new Tomcat55Configuration(null);
+			configuration = new Tomcat55Configuration(folder);
 		try {
 			configuration.load(path, monitor);
 		} catch (CoreException ce) {
 			// ignore
+			configuration = null;
 		}
 	}
 
 	public void saveConfiguration(IProgressMonitor monitor) throws CoreException {
 		TomcatConfiguration config = getTomcatConfiguration();
+		if (config == null)
+			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotSaveConfiguration", "null"), null));
 		config.save(getServer().getServerConfiguration(), monitor);
 	}
 
