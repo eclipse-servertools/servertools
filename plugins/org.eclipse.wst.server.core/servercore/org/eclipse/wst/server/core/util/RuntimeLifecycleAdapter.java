@@ -20,14 +20,23 @@ import org.eclipse.wst.server.core.IRuntimeLifecycleListener;
  * @since 1.0
  */
 public class RuntimeLifecycleAdapter implements IRuntimeLifecycleListener {
+	/**
+	 * @see IRuntimeLifecycleListener#runtimeAdded(IRuntime)
+	 */
 	public void runtimeAdded(IRuntime runtime) {
 		// do nothing
 	}
 
+	/**
+	 * @see IRuntimeLifecycleListener#runtimeChanged(IRuntime)
+	 */
 	public void runtimeChanged(IRuntime runtime) {
 		// do nothing
 	}
 
+	/**
+	 * @see IRuntimeLifecycleListener#runtimeRemoved(IRuntime)
+	 */
 	public void runtimeRemoved(IRuntime runtime) {
 		// do nothing
 	}

@@ -21,22 +21,30 @@ import org.eclipse.wst.server.core.IServerListener;
  * @since 1.0
  */
 public class ServerAdapter implements IServerListener {
-	public void configurationSyncStateChange(IServer server) {
-		// do nothing
-	}
-
+	/**
+	 * @see IServerListener#restartStateChange(IServer)
+	 */
 	public void restartStateChange(IServer server) {
 		// do nothing
 	}
 
+	/**
+	 * @see IServerListener#serverStateChange(IServer)
+	 */
 	public void serverStateChange(IServer server) {
 		// do nothing
 	}
 
+	/**
+	 * @see IServerListener#modulesChanged(IServer)
+	 */
 	public void modulesChanged(IServer server) {
 		// do nothing
 	}
-	
+
+	/**
+	 * @see IServerListener#moduleStateChange(IServer, IModule[])
+	 */
 	public void moduleStateChange(IServer server, IModule[] module) {
 		// do nothing
 	}

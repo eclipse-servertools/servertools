@@ -40,50 +40,50 @@ public abstract class Task implements ITask {
 		this.description = description;
 	}
 	
-	/*
-	 * @see org.eclipse.wst.server.core.ITask.getName()
+	/**
+	 * @see ITask#getName()
 	 */
 	public String getName() {
 		return name;
 	}
 
-	/*
-	 * @see org.eclipse.wst.server.core.ITask.getDescription()
+	/**
+	 * @see ITask#getDescription()
 	 */
 	public String getDescription() {
 		return description;
 	}
 
-	/*
-	 * @see org.eclipse.wst.server.core.ITask.getTaskModel()
+	/**
+	 * @see ITask#getTaskModel()
 	 */
 	public TaskModel getTaskModel() {
 		return model;
 	}
 	
-	/*
-	 * @see org.eclipse.wst.server.core.ITask.setTaskModel(org.eclipse.wst.server.core.TaskModel)
+	/**
+	 * @see ITask#setTaskModel(TaskModel)
 	 */
 	public void setTaskModel(TaskModel taskModel) {
 		this.model = taskModel;
 	}
 
-	/*
-	 * @see org.eclipse.wst.server.core.ITask.canExecute()
+	/**
+	 * @see ITask#canExecute()
 	 */
 	public boolean canExecute() {
 		return true;
 	}
 	
-	/*
-	 * @see org.eclipse.wst.server.core.ITask.canUndo()
+	/**
+	 * @see ITask#canUndo()
 	 */
 	public boolean canUndo() {
 		return false;
 	}
 	
-	/*
-	 * @see org.eclipse.wst.server.core.ITask.undo()
+	/**
+	 * @see ITask#undo()
 	 */
 	public void undo() {
 		// do nothing

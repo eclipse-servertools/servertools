@@ -19,7 +19,7 @@ import org.eclipse.wst.server.core.IModuleArtifact;
 public class JndiObject implements IModuleArtifact {
 	private IModule module;
 	private String jndiName;
-	
+
 	/**
 	 * Create a reference to an object in JNDI.
 	 * 
@@ -31,7 +31,7 @@ public class JndiObject implements IModuleArtifact {
 		this.jndiName = jndiName;
 	}
 
-	/*
+	/**
 	 * @see IModuleArtifact#getModule()
 	 */
 	public IModule getModule() {

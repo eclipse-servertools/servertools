@@ -111,6 +111,7 @@ public abstract class ModuleDelegate {
 	 * Returns the current array of module artifacts.
 	 * 
 	 * @return a possibly empty array containing the module resources
+	 * @throws CoreException thrown if there is a problem getting the members
 	 */
 	public abstract IModuleResource[] members() throws CoreException;
 }

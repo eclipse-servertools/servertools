@@ -36,7 +36,7 @@ public class HttpLaunchable {
 		return url;
 	}
 
-	/*
+	/**
 	 * @see Object#toString()
 	 */
 	public String toString() {

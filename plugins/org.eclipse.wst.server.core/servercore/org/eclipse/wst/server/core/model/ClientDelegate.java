@@ -27,9 +27,9 @@ public abstract class ClientDelegate {
 	/**
 	 * Returns true if this launchable can be run by this client.
 	 * 
-	 * @param server
-	 * @param launchable
-	 * @param launchMode
+	 * @param server the server that the client is being run against
+	 * @param launchable the object to run on the server
+	 * @param launchMode the launch mode
 	 * @return <code>true</code> if the client supports this combination, and <code>false</code>
 	 *    otherwise
 	 */
@@ -38,10 +38,10 @@ public abstract class ClientDelegate {
 	/**
 	 * Opens or executes on the launchable.
 	 * 
-	 * @param server
-	 * @param launchable
-	 * @param launchMode
-	 * @param launch
+	 * @param server the server that the client is being run against
+	 * @param launchable the object to run on the server
+	 * @param launchMode the launch mode
+	 * @param launch the launch of the server, if available
 	 * @return status indicating what (if anything) went wrong
 	 */
 	public abstract IStatus launch(IServer server, Object launchable, String launchMode, ILaunch launch);

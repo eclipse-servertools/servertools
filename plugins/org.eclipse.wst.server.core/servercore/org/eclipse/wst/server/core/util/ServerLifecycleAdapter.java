@@ -20,14 +20,23 @@ import org.eclipse.wst.server.core.IServerLifecycleListener;
  * @since 1.0
  */
 public class ServerLifecycleAdapter implements IServerLifecycleListener {
+	/**
+	 * @see IServerLifecycleListener#serverAdded(IServer)
+	 */
 	public void serverAdded(IServer server) {
 		// do nothing
 	}
 
+	/**
+	 * @see IServerLifecycleListener#serverChanged(IServer)
+	 */
 	public void serverChanged(IServer server) {
 		// do nothing
 	}
 
+	/**
+	 * @see IServerLifecycleListener#serverRemoved(IServer)
+	 */
 	public void serverRemoved(IServer server) {
 		// do nothing
 	}

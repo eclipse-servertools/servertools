@@ -48,11 +48,12 @@ public interface IRuntimeTargetHandler extends IAdaptable {
 
 	/**
 	 * Set the runtime target on the given project.
-	 *  
-	 * @param project
-	 * @param runtime
-	 * @param monitor
-	 * @throws CoreException
+	 * 
+	 * @param project the project to set the runtime on
+	 * @param runtime the target runtime
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException thrown if there is a problem setting the runtime
 	 */
 	public void setRuntimeTarget(IProject project, IRuntime runtime, IProgressMonitor monitor) throws CoreException;
 
@@ -60,10 +61,11 @@ public interface IRuntimeTargetHandler extends IAdaptable {
 	 * Remove the runtime target from the given project. This method will undo
 	 * all changes made in setRuntimeTarget().
 	 * 
-	 * @param project
-	 * @param runtime
-	 * @param monitor
-	 * @throws CoreException
+	 * @param project the project to remove the runtime from
+	 * @param runtime the target runtime
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException thrown if there is a problem removing the runtime
 	 */
 	public void removeRuntimeTarget(IProject project, IRuntime runtime, IProgressMonitor monitor) throws CoreException;
 }

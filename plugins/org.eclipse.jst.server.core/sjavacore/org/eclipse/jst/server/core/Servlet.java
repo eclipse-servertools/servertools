@@ -34,7 +34,7 @@ public class Servlet implements IModuleArtifact {
 		this.alias = alias;
 	}
 
-	/*
+	/**
 	 * @see IModuleArtifact#getModule()
 	 */
 	public IModule getModule() {
@@ -59,7 +59,7 @@ public class Servlet implements IModuleArtifact {
 		return alias;
 	}
 
-	/*
+	/**
 	 * @see Object#toString()
 	 */
 	public String toString() {
