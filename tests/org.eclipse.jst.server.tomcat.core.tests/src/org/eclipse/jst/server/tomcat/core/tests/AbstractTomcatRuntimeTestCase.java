@@ -14,16 +14,12 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.tests.ext.AbstractRuntimeTestCase;
 
-public class TomcatRuntimeTestCase2 extends AbstractRuntimeTestCase {
-	private static final String RUNTIME_TYPE_ID_32 = "org.eclipse.jst.server.tomcat.runtime.32";
+public abstract class AbstractTomcatRuntimeTestCase extends AbstractRuntimeTestCase {
+	protected abstract String getRuntimeTypeId();
 
-	/*public static Test suite() {
-		return new OrderedTestSuite(TomcatRuntimeTestCase2.class, "TomcatRuntimeTestCase");
-	}*/
-	
-	public IRuntime createRuntime() {
+	public IRuntime createRuntime() throws Exception {
 		try {
-			IRuntimeWorkingCopy wc = createRuntime(RUNTIME_TYPE_ID_32);
+			IRuntimeWorkingCopy wc = createRuntime(getRuntimeTypeId());
 			return wc.save(true, null);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -31,10 +27,14 @@ public class TomcatRuntimeTestCase2 extends AbstractRuntimeTestCase {
 		}
 	}
 
-	protected IRuntimeWorkingCopy createRuntime(String runtimeTypeId) throws Exception {
+	public void deleteRuntime(IRuntime runtime2) throws Exception {
+		runtime2.delete();
+	}
+
+	protected static IRuntimeWorkingCopy createRuntime(String runtimeTypeId) throws Exception {
 		IRuntimeType rt = ServerCore.findRuntimeType(runtimeTypeId);
-		IRuntimeWorkingCopy wc = rt.createRuntime("a", null);
-		wc.setLocation(new Path("c://test"));
+		IRuntimeWorkingCopy wc = rt.createRuntime(null, null);
+		wc.setLocation(new Path(RuntimeLocation.runtimeLocation));
 		return wc;
 	}
 }

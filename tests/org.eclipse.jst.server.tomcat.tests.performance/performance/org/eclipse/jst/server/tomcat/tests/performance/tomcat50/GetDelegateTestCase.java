@@ -26,11 +26,11 @@ public class GetDelegateTestCase extends AbstractGetDelegateTestCase {
 		return new TestSuite(GetDelegateTestCase.class, "GetDelegateTestCase");
 	}
 
-	protected IRuntimeWorkingCopy createRuntime(String runtimeTypeId, String runtimeTypeLocaiton) throws CoreException {
+	protected IRuntimeWorkingCopy createRuntime(String runtimeTypeId, String runtimeTypeLocation) throws CoreException {
 		if (runtimeTypeId == null)
 			throw new IllegalArgumentException();
 		IRuntimeWorkingCopy runtimeCopy = ServerCore.findRuntimeType(runtimeTypeId).createRuntime(runtimeTypeId, null);
-		runtimeCopy.setLocation(new Path(runtimeTypeLocaiton));
+		runtimeCopy.setLocation(new Path(runtimeTypeLocation));
 		runtimeCopy.setReadOnly(false);
 		IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
 		ITomcatRuntimeWorkingCopy rwc = (ITomcatRuntimeWorkingCopy) runtimeCopy

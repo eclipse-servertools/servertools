@@ -19,8 +19,43 @@ public class AllTests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(ExistenceTest.class);
 		suite.addTest(new OrderedTestSuite(TomcatRuntimeTestCase.class));
-		suite.addTest(new OrderedTestSuite(TomcatRuntimeTestCase2.class));
-		suite.addTest(new OrderedTestSuite(TomcatServerTestCase2.class));
+		
+		String s = System.getProperty("org.eclipse.jst.server.tomcat.32"); 
+		//System.getProperty("tomcat32Dir");
+		//s = "D:\\Tools\\tomcat\\jakarta-tomcat-3.2.4";
+		if (s != null && s.length() > 0) {
+			RuntimeLocation.runtimeLocation = s;
+			suite.addTest(new OrderedTestSuite(Tomcat32RuntimeTestCase.class));
+			suite.addTest(new OrderedTestSuite(Tomcat32ServerTestCase.class));
+		}
+		
+		s = System.getProperty("org.eclipse.jst.server.tomcat.40");
+		if (s != null && s.length() > 0) {
+			RuntimeLocation.runtimeLocation = s;
+			suite.addTest(new OrderedTestSuite(Tomcat40RuntimeTestCase.class));
+			suite.addTest(new OrderedTestSuite(Tomcat40ServerTestCase.class));
+		}
+		
+		s = System.getProperty("org.eclipse.jst.server.tomcat.41");
+		if (s != null && s.length() > 0) {
+			RuntimeLocation.runtimeLocation = s;
+			suite.addTest(new OrderedTestSuite(Tomcat41RuntimeTestCase.class));
+			suite.addTest(new OrderedTestSuite(Tomcat41ServerTestCase.class));
+		}
+		
+		s = System.getProperty("org.eclipse.jst.server.tomcat.50");
+		if (s != null && s.length() > 0) {
+			RuntimeLocation.runtimeLocation = s;
+			suite.addTest(new OrderedTestSuite(Tomcat50RuntimeTestCase.class));
+			suite.addTest(new OrderedTestSuite(Tomcat50ServerTestCase.class));
+		}
+		
+		s = System.getProperty("org.eclipse.jst.server.tomcat.55");
+		if (s != null && s.length() > 0) {
+			RuntimeLocation.runtimeLocation = s;
+			suite.addTest(new OrderedTestSuite(Tomcat55RuntimeTestCase.class));
+			suite.addTest(new OrderedTestSuite(Tomcat55ServerTestCase.class));
+		}
 		//$JUnit-END$
 		return suite;
 	}

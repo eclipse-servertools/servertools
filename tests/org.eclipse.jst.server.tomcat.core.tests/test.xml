@@ -9,6 +9,7 @@
   <!-- sets the properties plugin-name, and library-file -->
   <property name="plugin-name" value="org.eclipse.jst.server.tomcat.core.tests"/>
   <property name="library-file" value="${eclipse-home}/plugins/org.eclipse.test_3.1.0/library.xml"/>
+  <property name="extraVMargs" value="-Dorg.eclipse.jst.server.tomcat.50=${testDir}/${tomcat50Dir}"/>
 
   <!-- This target holds all initialization code that needs to be done for -->
   <!-- all tests that are to be run. Initialization for individual tests -->
@@ -24,11 +25,12 @@
   <target name="suite">
     <property name="wst-folder" value="${eclipse-home}/wst_folder"/>
     <delete dir="${wst-folder}" quiet="true"/>
-    <ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
+    <ant target="ui-test" antfile="${library-file}" dir="${eclipse-home}">
       <property name="data-dir" value="${wst-folder}"/>
       <property name="plugin-name" value="${plugin-name}"/>
-      <property name="classname" value="org.eclipse.jst.server.tomcat.core.tests.AllTests" />
+      <property name="classname" value="org.eclipse.jst.server.tomcat.core.tests.AllTests"/>
    	<property name="plugin-path" value="${eclipse-home}/plugins/${plugin-name}"/>
+   	<property name="extraVMargs" value="${extraVMargs}"/>
     </ant>
   </target>
 
