@@ -29,6 +29,7 @@ import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jst.server.core.internal.GenericRuntime;
 import org.eclipse.jst.server.core.internal.IGenericRuntimeWorkingCopy;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -234,7 +235,7 @@ public class GenericRuntimeComposite extends Composite {
 			installDir.setText("");
 		
 		// set selection
-		if (runtime.isUsingDefaultJRE())
+		if (((GenericRuntime)runtime).isUsingDefaultJRE())
 			combo.select(0);
 		else {
 			boolean found = false;
