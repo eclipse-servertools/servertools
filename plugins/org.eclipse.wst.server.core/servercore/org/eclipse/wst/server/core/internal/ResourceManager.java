@@ -1059,7 +1059,7 @@ public class ResourceManager {
 		monitor.beginTask("", 1000);
 		boolean found = false;
 	
-		IServer server = ServerUtil.getServer(file);
+		IServer server = ServerUtil.findServer(file);
 		if (server != null) {
 			found = true;
 			try {
@@ -1072,7 +1072,7 @@ public class ResourceManager {
 			}
 		}
 		
-		IServerConfiguration configuration = ServerUtil.getServerConfiguration(file);
+		IServerConfiguration configuration = ServerUtil.findServerConfiguration(file);
 		if (configuration != null) {
 			found = true;
 			try {
@@ -1111,12 +1111,12 @@ public class ResourceManager {
 	protected boolean handleRemovedFile(IFile file) {
 		Trace.trace(Trace.RESOURCES, "handleRemovedServerResource: " + file);
 	
-		IServer server = ServerUtil.getServer(file);
+		IServer server = ServerUtil.findServer(file);
 		if (server != null) {
 			deregisterServer(server);
 			return true;
 		}
-		IServerConfiguration config = ServerUtil.getServerConfiguration(file);
+		IServerConfiguration config = ServerUtil.findServerConfiguration(file);
 		if (config != null) {
 			deregisterServerConfiguration(config);
 			return true;

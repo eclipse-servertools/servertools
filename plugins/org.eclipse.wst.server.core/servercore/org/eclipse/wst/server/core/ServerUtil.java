@@ -32,8 +32,7 @@ public class ServerUtil {
 	}
 
 	/**
-	 * Returns true if the given configuration currently contains
-	 * the given object.
+	 * Returns true if the given server currently contains the given module.
 	 *
 	 * @param server org.eclipse.wst.server.core.IServer
 	 * @param module org.eclipse.wst.server.core.IModule
@@ -111,88 +110,6 @@ public class ServerUtil {
 		modules.toArray(modules2);
 		return modules2;
 	}
-
-	/**
-	 * Returns a list of all servers that this module is configured on.
-	 *
-	 * @param module org.eclipse.wst.server.core.IModule
-	 * @return java.util.List
-	 */
-	public static IServer[] getServersByModule(IModule module, IProgressMonitor monitor) {
-		if (module == null)
-			return new IServer[0];
-
-		// do it the slow way - go through all servers and
-		// see if this module is configured in it
-		List list = new ArrayList();
-		IServer[] servers = ServerCore.getServers();
-		if (servers != null) {
-			int size = servers.length;
-			for (int i = 0; i < size; i++) {
-				if (containsModule(servers[i], module, monitor))
-					list.add(servers[i]);
-			}
-		}
-		
-		IServer[] allServers = new IServer[list.size()];
-		list.toArray(allServers);
-		return allServers;
-	}
-	
-	/**
-	 * Returns a list of all servers that this module is configured on.
-	 *
-	 * @param module org.eclipse.wst.server.core.IModule
-	 * @return java.util.List
-	 */
-	public static IServer[] getServersBySupportedModule(IModule module) {
-		if (module == null)
-			return new IServer[0];
-
-		// do it the slow way - go through all servers and
-		// see if this module is configured in it
-		List list = new ArrayList();
-		IServer[] servers = ServerCore.getServers();
-		if (servers != null) {
-			int size = servers.length;
-			for (int i = 0; i < size; i++) {
-				if (isSupportedModule(servers[i].getServerType(), module.getModuleType()))
-					list.add(servers[i]);
-			}
-		}
-		
-		IServer[] allServers = new IServer[list.size()];
-		list.toArray(allServers);
-		return allServers;
-	}
-
-	/**
-	 * Returns a list of configurations that are supported by this
-	 * server.
-	 *
-	 * @param server org.eclipse.wst.server.core.IServer
-	 * @return java.util.List
-	 */
-	public static IServerConfiguration[] getSupportedServerConfigurations(IServer server) {
-		if (server == null)
-			return new IServerConfiguration[0];
-	
-		List list = new ArrayList();
-	
-		IServerConfiguration[] configs = ServerCore.getServerConfigurations();
-		if (configs != null) {
-			int size = configs.length;
-			for (int i = 0; i < size; i++) {
-				//Trace.trace("Is supported configuration: " + getName(server) + " " + getName(configuration) + " " + server.isSupportedConfiguration(configuration));
-				if (server.isSupportedConfiguration(configs[i]))
-					list.add(configs[i]);
-			}
-		}
-		
-		IServerConfiguration[] sc = new IServerConfiguration[list.size()];
-		list.toArray(sc);
-		return sc;
-	}
 	
 	/**
 	 * Returns the project modules attached to a project.
@@ -202,7 +119,7 @@ public class ServerUtil {
 			return null;
 
 		List list = new ArrayList();
-		IModule[] modules = getModules(null, null, true);
+		IModule[] modules = getModules();
 		if (modules != null) {
 			int size = modules.length;
 			for (int i = 0; i < size; i++) {
@@ -217,11 +134,10 @@ public class ServerUtil {
 	}
 
 	/**
-	 * Returns a module from the given factoryId and memento.
+	 * Returns a module from the given moduleId.
 	 * 
-	 * @param java.lang.String factoryId
-	 * @param java.lang.String memento
-	 * @return org.eclipse.wst.server.core.IModule
+	 * @param java.lang.String moduleId
+	 * @return the module
 	 */
 	public static IModule getModule(String moduleId) {
 		ModuleFactory[] moduleFactory = ServerCore.getModuleFactories();
@@ -338,7 +254,7 @@ public class ServerUtil {
 	 * @param moduleObject
 	 * @return ILaunchable
 	 */
-	public static ILaunchable getLaunchable(IServer server, IModuleObject moduleObject) {
+	/*public static ILaunchable getLaunchable(IServer server, IModuleObject moduleObject) {
 		ILaunchableAdapter[] adapters = ServerCore.getLaunchableAdapters();
 		if (adapters != null) {
 			int size = adapters.length;
@@ -354,33 +270,7 @@ public class ServerUtil {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Returns the launchable clients for the given server and launchable
-	 * object.
-	 *
-	 * @param server org.eclipse.wst.server.core.IServer
-	 * @param moduleObject org.eclipse.wst.server.core.IModuleObject
-	 * @param launchMode String
-	 * @return java.util.List
-	 */
-	public static IClient[] getClients(IServer server, ILaunchable launchable, String launchMode) {
-		ArrayList list = new ArrayList();
-		IClient[] clients = ServerCore.getClients();
-		if (clients != null) {
-			int size = clients.length;
-			for (int i = 0; i < size; i++) {
-				Trace.trace(Trace.FINEST, "client= " + clients[i]);
-				if (clients[i].supports(server, launchable, launchMode))
-					list.add(clients[i]);
-			}
-		}
-		
-		IClient[] clients2 = new IClient[list.size()];
-		list.toArray(clients2);
-		return clients2;
-	}
+	}*/
 
 	/**
 	 * Returns the first launchable object for the given server and module
@@ -390,7 +280,7 @@ public class ServerUtil {
 	 * @param moduleObject
 	 * @return ILaunchable
 	 */
-	public static ILaunchable getLaunchable(IServer server, List moduleObjects) {
+	/*public static ILaunchable getLaunchable(IServer server, List moduleObjects) {
 		Iterator iterator = moduleObjects.iterator();
 		while (iterator.hasNext()) {
 			IModuleObject moduleObject = (IModuleObject) iterator.next();
@@ -399,7 +289,7 @@ public class ServerUtil {
 				return launchable;
 		}
 		return null;
-	}
+	}*/
 
 	/**
 	 * Returns the factory that created the given module.
@@ -431,15 +321,14 @@ public class ServerUtil {
 	 * @param onlyProjectModules boolean
 	 * @return java.util.List
 	 */
-	public static IModule[] getModules(String type, String version, boolean onlyProjectModules) {
+	public static IModule[] getModules(IModuleType[] moduleTypes) {
 		List list = new ArrayList();
 
 		ModuleFactory[] factories = ServerCore.getModuleFactories();
 		if (factories != null) {
 			int size = factories.length;
 			for (int i = 0; i < size; i++) {
-				//if (!(onlyProjectModules && factory.isProjectModuleFactory())) {
-				if (isSupportedModule(factories[i].getModuleTypes(), type, version)) {
+				if (isSupportedModule(factories[i].getModuleTypes(), moduleTypes)) {
 					IModule[] modules = factories[i].getModules();
 					if (modules != null) {
 						int size2 = modules.length;
@@ -447,7 +336,6 @@ public class ServerUtil {
 							list.add(modules[j]);
 					}
 				}
-				//}
 			}
 		}
 		IModule[] modules = new IModule[list.size()];
@@ -455,10 +343,32 @@ public class ServerUtil {
 		return modules;
 	}
 	
-	public static boolean isSupportedModule(IServerType serverType, IModuleType moduleType) {
+	public static IModule[] getModules(String type) {
+		List list = new ArrayList();
+
+		ModuleFactory[] factories = ServerCore.getModuleFactories();
+		if (factories != null) {
+			int size = factories.length;
+			for (int i = 0; i < size; i++) {
+				if (isSupportedModule(factories[i].getModuleTypes(), type, null)) {
+					IModule[] modules = factories[i].getModules();
+					if (modules != null) {
+						int size2 = modules.length;
+						for (int j = 0; j < size2; j++)
+							list.add(modules[j]);
+					}
+				}
+			}
+		}
+		IModule[] modules = new IModule[list.size()];
+		list.toArray(modules);
+		return modules;
+	}
+	
+	/*public static boolean isSupportedModule(IServerType serverType, IModuleType moduleType) {
 		IRuntimeType runtimeType = serverType.getRuntimeType();
 		return isSupportedModule(runtimeType.getModuleTypes(), moduleType.getId(), moduleType.getVersion());
-	}
+	}*/
 	
 	public static boolean isSupportedModule(IModuleType[] moduleTypes, String type, String version) {
 		if (moduleTypes != null) {
@@ -470,12 +380,44 @@ public class ServerUtil {
 		}
 		return false;
 	}
+
+	protected static boolean isSupportedModule(IModuleType[] moduleTypes, IModuleType[] mt) {
+		if (mt != null) {
+			int size = mt.length;
+			for (int i = 0; i < size; i++) {
+				if (isSupportedModule(moduleTypes, mt[i]))
+					return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isSupportedModule(IModuleType[] moduleTypes, IModuleType mt) {
+		if (moduleTypes != null) {
+			int size = moduleTypes.length;
+			for (int i = 0; i < size; i++) {
+				if (isSupportedModule(moduleTypes[i], mt))
+					return true;
+			}
+		}
+		return false;
+	}
 	
-	public static boolean isSupportedModule(IModuleType moduleType, String type, String version) {
+	protected static boolean isSupportedModule(IModuleType moduleType, String type, String version) {
 		String type2 = moduleType.getId();
 		if (matches(type, type2)) {
 			String version2 = moduleType.getVersion();
 			if (matches(version, version2))
+				return true;
+		}
+		return false;
+	}
+
+	public static boolean isSupportedModule(IModuleType moduleType, IModuleType mt) {
+		String type2 = moduleType.getId();
+		if (matches(mt.getId(), type2)) {
+			String version2 = moduleType.getVersion();
+			if (matches(mt.getVersion(), version2))
 				return true;
 		}
 		return false;
@@ -492,7 +434,7 @@ public class ServerUtil {
 	 * 
 	 * @return java.util.List
 	 */
-	public static IModule[] getModules() {
+	protected static IModule[] getModules() {
 		List list = new ArrayList();
 		
 		ModuleFactory[] factories = ServerCore.getModuleFactories();
@@ -615,7 +557,7 @@ public class ServerUtil {
 	 * @param launchMode java.lang.String
 	 * @return org.eclipse.wst.server.core.IServer[]
 	 */
-	public static IServer[] filterServersByLaunchMode(IServer[] servers, String launchMode) {
+	/*public static IServer[] filterServersByLaunchMode(IServer[] servers, String launchMode) {
 		if (servers == null || servers.length == 0)
 			return servers;
 		
@@ -628,8 +570,8 @@ public class ServerUtil {
 		IServer[] temp = new IServer[list.size()];
 		list.toArray(temp);
 		return temp;
-	}
-	
+	}*/
+
 	/**
 	 * Visit all the modules in the server configuration.
 	 */
@@ -672,20 +614,6 @@ public class ServerUtil {
 		}
 			
 		return true;
-	}
-
-	public static boolean isNameInUse(IRuntime runtime) {
-		IRuntime[] runtimes = ServerCore.getRuntimes();
-		if (runtimes != null) {
-			int size = runtimes.length;
-			for (int i = 0; i < size; i++) {
-				if (!runtime.equals(runtimes[i]) && runtime.getName().equals(runtimes[i].getName())) {
-					if (!runtime.isWorkingCopy() || !runtimes[i].equals(((IRuntimeWorkingCopy)runtime).getOriginal()))
-						return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	public static void setRuntimeDefaultName(IRuntimeWorkingCopy wc) {
@@ -832,21 +760,6 @@ public class ServerUtil {
 	}
 
 	/**
-	 * Finds an unused project name to use as a server project.
-	 * 
-	 * @return java.lang.String
-	 */
-	public static String findUnusedServerProjectName() {
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		String name = ServerPlugin.getResource("%defaultServerProjectName", "");
-		int count = 1;
-		while (root.getProject(name).exists()) {
-			name = ServerPlugin.getResource("%defaultServerProjectName", ++count + "");
-		}
-		return name;
-	}
-
-	/**
 	 * Return a list of all runtime targets that match the given type and version.
 	 * If type or version is null, it matches all of that type or version.
 	 * 
@@ -933,7 +846,7 @@ public class ServerUtil {
 	 * @param module com.ibm.etools.server.core.IModule
 	 * @return com.ibm.etools.server.core.IServer[]
 	 */
-	public static IServer[] getAvailableServersForModule(IModule module, boolean includeErrors, IProgressMonitor monitor) {
+	/*public static IServer[] getAvailableServersForModule(IModule module, boolean includeErrors, IProgressMonitor monitor) {
 		if (module == null)
 			return new IServer[0];
 
@@ -971,16 +884,16 @@ public class ServerUtil {
 		}
 		
 		// make sure that the preferred server is the first one
-		/*IServer server = ServerCore.getServerPreferences().getDeployableServerPreference(deployable);
-		if (server != null && list.contains(server) && list.indexOf(server) != 0) {
-			list.remove(server);
-			list.add(0, server);
-		}*/
+		//IServer server = ServerCore.getServerPreferences().getDeployableServerPreference(deployable);
+		//if (server != null && list.contains(server) && list.indexOf(server) != 0) {
+		//	list.remove(server);
+		//	list.add(0, server);
+		//}
 
 		IServer[] allServers = new IServer[list.size()];
 		list.toArray(allServers);
 		return allServers;
-	}
+	}*/
 
 	/*public static boolean isDefaultAvailable(IServerType serverType, IModuleType moduleType) {
 		if (!isSupportedModule(serverType, moduleType))
@@ -1042,16 +955,12 @@ public class ServerUtil {
 	 * [issue: Is this convenience method really necessary?
 	 * It's straightforward enough for a client to do.]
 	 * </p>
-	 * <p>
-	 * [issue: Consider renaming this method findServer to make
-	 * it clear that it is searching.]
-	 * </p>
 	 *
 	 * @param a server file
 	 * @return the server instance, or <code>null</code> if 
 	 * there is no server associated with the given file
 	 */
-	public static IServer getServer(IFile file) {
+	public static IServer findServer(IFile file) {
 		if (file == null)
 			throw new IllegalArgumentException();
 		
@@ -1075,16 +984,12 @@ public class ServerUtil {
 	 * <p>
 	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
-	 * <p>
-	 * [issue: Is this convenience method really necessary?
-	 * It's straightforward enough for a client to do.]
-	 * </p>
 	 * 
 	 * @param serverType the server type
 	 * @return a possibly-empty array of server instances {@link IServer}
 	 * of the given server type
 	 */
-	public static IServer[] getServers(IServerType serverType) {
+	/*public static IServer[] getServers(IServerType serverType) {
 		List list = new ArrayList();
 		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
@@ -1098,7 +1003,7 @@ public class ServerUtil {
 		IServer[] s = new IServer[list.size()];
 		list.toArray(s);
 		return s;
-	}
+	}*/
 
 	/**
 	 * Returns an array of all known server configuration instances of
@@ -1111,16 +1016,12 @@ public class ServerUtil {
 	 * <p>
 	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
-	 * <p>
-	 * [issue: Is this convenience method really necessary?
-	 * It's straightforward enough for a client to do.]
-	 * </p>
 	 * 
 	 * @param configType the server configuration type
 	 * @return a possibly-empty list of server configuration instances
 	 * {@link IServerConfiguration) of the given server configuration type
 	 */
-	public static IServerConfiguration[] getServerConfigurations(IServerConfigurationType configType) {
+	/*public static IServerConfiguration[] getServerConfigurations(IServerConfigurationType configType) {
 		List list = new ArrayList();
 		IServerConfiguration[] configs = ServerCore.getServerConfigurations();
 		if (configs != null) {
@@ -1134,7 +1035,7 @@ public class ServerUtil {
 		IServerConfiguration[] sc = new IServerConfiguration[list.size()];
 		list.toArray(sc);
 		return sc;
-	}
+	}*/
 
 	/**
 	 * Returns the server configuration that came from the given file, 
@@ -1146,16 +1047,12 @@ public class ServerUtil {
 	 * [issue: Is this convenience method really necessary?
 	 * It's straightforward enough for a client to do.]
 	 * </p>
-	 * <p>
-	 * [issue: Consider renaming this method findServerConfiguration to make
-	 * it clear that it is searching.]
-	 * </p>
 	 *
 	 * @param a server configuration file
 	 * @return the server configuration instance, or <code>null</code> if 
 	 * there is no server configuration associated with the given file
 	 */
-	public static IServerConfiguration getServerConfiguration(IFile file) {
+	public static IServerConfiguration findServerConfiguration(IFile file) {
 		if (file == null)
 			throw new IllegalArgumentException();
 		

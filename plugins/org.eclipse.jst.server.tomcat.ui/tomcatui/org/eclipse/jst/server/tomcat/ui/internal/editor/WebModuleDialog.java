@@ -130,7 +130,7 @@ public class WebModuleDialog extends Dialog {
 			WorkbenchHelp.setHelp(projTable, ContextIds.CONFIGURATION_EDITOR_WEBMODULE_DIALOG_PROJECT);
 	
 			// fill table with web module projects
-			IModule[] modules = ServerUtil.getModules("j2ee.web", "*", false);
+			IModule[] modules = ServerUtil.getModules(server2.getServerType().getRuntimeType().getModuleTypes());
 			if (modules != null) {
 				int size = modules.length;
 				for (int i = 0; i < size; i++) {

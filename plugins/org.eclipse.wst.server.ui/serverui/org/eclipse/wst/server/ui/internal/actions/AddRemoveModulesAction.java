@@ -53,7 +53,7 @@ public class AddRemoveModulesAction implements IServerAction {
 		}
 
 		// get remaining modules
-		IModule[] modules2 = ServerUtil.getModules();
+		IModule[] modules2 = ServerUtil.getModules(server.getServerType().getRuntimeType().getModuleTypes());
 		if (modules != null) {
 			int size = modules2.length;
 			for (int i = 0; i < size; i++) {

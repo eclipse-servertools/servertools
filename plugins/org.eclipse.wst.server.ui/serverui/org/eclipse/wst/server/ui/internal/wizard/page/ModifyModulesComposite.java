@@ -129,7 +129,7 @@ public class ModifyModulesComposite extends Composite {
 
 		// get remaining modules
 		errorMap = new HashMap();
-		IModule[] modules2 = ServerUtil.getModules();
+		IModule[] modules2 = ServerUtil.getModules(server.getServerType().getRuntimeType().getModuleTypes());
 		if (modules2 != null) {
 			int size = modules2.length;
 			for (int i = 0; i < size; i++) {

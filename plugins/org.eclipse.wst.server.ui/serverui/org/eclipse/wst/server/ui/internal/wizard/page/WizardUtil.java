@@ -19,6 +19,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -43,8 +44,23 @@ public class WizardUtil {
 			}
 		}
 		
-		String s = ServerUtil.findUnusedServerProjectName();
+		String s = findUnusedServerProjectName();
 		return ResourcesPlugin.getWorkspace().getRoot().getProject(s);
+	}
+	
+	/**
+	 * Finds an unused project name to use as a server project.
+	 * 
+	 * @return java.lang.String
+	 */
+	protected static String findUnusedServerProjectName() {
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		String name = ServerPlugin.getResource("%defaultServerProjectName", "");
+		int count = 1;
+		while (root.getProject(name).exists()) {
+			name = ServerPlugin.getResource("%defaultServerProjectName", ++count + "");
+		}
+		return name;
 	}
 
 	/**
@@ -92,7 +108,7 @@ public class WizardUtil {
 	
 			if (resource instanceof IFile) {
 				IFile file = (IFile) resource;
-				if (ServerUtil.getServerConfiguration(file) != null || ServerUtil.getServer(file) != null)
+				if (ServerUtil.findServerConfiguration(file) != null || ServerUtil.findServer(file) != null)
 				return null;
 			}
 	
@@ -181,7 +197,7 @@ public class WizardUtil {
 			while (temp != null && !(temp instanceof IProject)) {
 				if (temp instanceof IFile) {
 					IFile file = (IFile) temp;
-					if (ServerUtil.getServerConfiguration(file) != null || ServerUtil.getServer(file) != null)
+					if (ServerUtil.findServerConfiguration(file) != null || ServerUtil.findServer(file) != null)
 						return error;
 				}
 				temp = temp.getParent();

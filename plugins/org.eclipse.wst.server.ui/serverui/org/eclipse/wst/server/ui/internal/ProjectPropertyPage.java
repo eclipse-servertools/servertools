@@ -10,6 +10,8 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -106,7 +108,7 @@ public class ProjectPropertyPage extends PropertyPage {
 				data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING);
 				label.setLayoutData(data);
 				
-				final IServer[] servers = ServerUtil.getServersBySupportedModule(module);
+				final IServer[] servers = getServersBySupportedModule(module);
 				if (servers == null || servers.length == 0) {
 					label = new Label(composite, SWT.WRAP);
 					label.setText(ServerUIPlugin.getResource("%prefProjectNotConfigured"));
@@ -158,6 +160,33 @@ public class ProjectPropertyPage extends PropertyPage {
 			Trace.trace("Error creating project property page", e);
 			return null;
 		}
+	}
+
+	/**
+	 * Returns a list of all servers that this module is configured on.
+	 *
+	 * @param module org.eclipse.wst.server.core.IModule
+	 * @return java.util.List
+	 */
+	protected static IServer[] getServersBySupportedModule(IModule module) {
+		if (module == null)
+			return new IServer[0];
+
+		// do it the slow way - go through all servers and
+		// see if this module is configured in it
+		List list = new ArrayList();
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				if (ServerUtil.isSupportedModule(servers[i].getServerType().getRuntimeType().getModuleTypes(), module.getModuleType()))
+					list.add(servers[i]);
+			}
+		}
+		
+		IServer[] allServers = new IServer[list.size()];
+		list.toArray(allServers);
+		return allServers;
 	}
 
 	/** 

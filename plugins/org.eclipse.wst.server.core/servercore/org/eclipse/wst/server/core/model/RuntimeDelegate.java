@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
-import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.Runtime;
 import org.eclipse.wst.server.core.internal.RuntimeWorkingCopy;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
@@ -135,7 +135,7 @@ public abstract class RuntimeDelegate {
 		if (runtime.getName() == null || runtime.getName().length() == 0)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorRuntimeName"), null);
 
-		if (runtime.isWorkingCopy() && ServerUtil.isNameInUse(runtime))
+		if (runtime.isWorkingCopy() && isNameInUse(runtime))
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorDuplicateRuntimeName"), null);
 	
 		IPath path = runtime.getLocation();
@@ -143,6 +143,20 @@ public abstract class RuntimeDelegate {
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, "", null);
 		
 		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null);
+	}
+	
+	protected static boolean isNameInUse(IRuntime runtime) {
+		IRuntime[] runtimes = ServerCore.getRuntimes();
+		if (runtimes != null) {
+			int size = runtimes.length;
+			for (int i = 0; i < size; i++) {
+				if (!runtime.equals(runtimes[i]) && runtime.getName().equals(runtimes[i].getName())) {
+					if (!runtime.isWorkingCopy() || !runtimes[i].equals(((IRuntimeWorkingCopy)runtime).getOriginal()))
+						return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public final int getAttribute(String attributeName, int defaultValue) {

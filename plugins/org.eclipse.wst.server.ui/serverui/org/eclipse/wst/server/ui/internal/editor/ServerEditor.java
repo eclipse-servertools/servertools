@@ -666,13 +666,13 @@ public class ServerEditor extends MultiPageEditorPart {
 			IFileEditorInput fei = (IFileEditorInput) input;
 			IFile file = fei.getFile();
 			if (file != null && file.exists()) {
-				IServer server2 = ServerUtil.getServer(file);
+				IServer server2 = ServerUtil.findServer(file);
 				if (server2 != null) {
 					serverId = server2.getId();
 					if (server2.getServerConfiguration() != null)
 						serverConfigurationId = server2.getServerConfiguration().getId();
 				} else {
-					IServerConfiguration configuration = ServerUtil.getServerConfiguration(file);
+					IServerConfiguration configuration = ServerUtil.findServerConfiguration(file);
 					if (configuration != null)
 						serverConfigurationId = configuration.getId();
 				}

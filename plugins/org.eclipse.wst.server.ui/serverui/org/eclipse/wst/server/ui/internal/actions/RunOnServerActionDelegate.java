@@ -188,8 +188,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				for (int i = 0; i < size && !found2; i++) {
 					IServerType type = serverTypes[i];
 					IModuleType[] moduleTypes = type.getRuntimeType().getModuleTypes();
-					IModuleType mt = module.getModuleType();
-					if (type.supportsLaunchMode(launchMode) && ServerUtil.isSupportedModule(moduleTypes, mt.getId(), mt.getVersion())) {
+					if (type.supportsLaunchMode(launchMode) && ServerUtil.isSupportedModule(moduleTypes, module.getModuleType())) {
 						found2 = true;
 					}
 				}
@@ -292,7 +291,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		
 		IClient[] clients = new IClient[0];
 		if (launchable != null)
-			clients = ServerUtil.getClients(server, launchable, launchMode);
+			clients = getClients(server, launchable, launchMode);
 
 		Trace.trace(Trace.FINEST, "Launchable clients: " + clients);
 
@@ -366,6 +365,32 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				// ignore
 			}
 		}
+	}
+	
+	/**
+	 * Returns the launchable clients for the given server and launchable
+	 * object.
+	 *
+	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param moduleObject org.eclipse.wst.server.core.IModuleObject
+	 * @param launchMode String
+	 * @return java.util.List
+	 */
+	public static IClient[] getClients(IServer server, ILaunchable launchable, String launchMode) {
+		ArrayList list = new ArrayList();
+		IClient[] clients = ServerCore.getClients();
+		if (clients != null) {
+			int size = clients.length;
+			for (int i = 0; i < size; i++) {
+				Trace.trace(Trace.FINEST, "client= " + clients[i]);
+				if (clients[i].supports(server, launchable, launchMode))
+					list.add(clients[i]);
+			}
+		}
+		
+		IClient[] clients2 = new IClient[list.size()];
+		list.toArray(clients2);
+		return clients2;
 	}
 
 	/**
@@ -534,8 +559,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	protected boolean isValidServerType(IServerType type, IModule module) {
 		try {
 			IRuntimeType runtimeType = type.getRuntimeType();
-			IModuleType mt = module.getModuleType();
-			ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), mt.getId(), mt.getVersion());
+			ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), module.getModuleType());
 		} catch (Exception e) {
 			return false;
 		}

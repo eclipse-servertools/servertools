@@ -323,7 +323,7 @@ public class NewServerComposite extends Composite {
 				if (server != null && module != null) {
 					IServerType serverType = server.getServerType();
 					IModuleType mt = module.getModuleType();
-					if (!ServerUtil.isSupportedModule(serverType, mt)) {
+					if (!ServerUtil.isSupportedModule(serverType.getRuntimeType().getModuleTypes(), mt)) {
 						String type = mt.getName();
 						wizard.setMessage(ServerUIPlugin.getResource("%errorVersionLevel", new Object[] { type, mt.getVersion() }), IMessageProvider.ERROR);
 						server = null;
@@ -357,7 +357,7 @@ public class NewServerComposite extends Composite {
 			for (int i = 0; i < size; i++) {
 				IModuleType mt = module.getModuleType();
 				if (ServerUtil.isCompatibleWithLaunchMode(servers[i], launchMode) &&
-					ServerUtil.isSupportedModule(servers[i].getServerType().getRuntimeType().getModuleTypes(), mt.getId(), mt.getVersion()))
+					ServerUtil.isSupportedModule(servers[i].getServerType().getRuntimeType().getModuleTypes(), mt))
 						return true;
 			}
 		}

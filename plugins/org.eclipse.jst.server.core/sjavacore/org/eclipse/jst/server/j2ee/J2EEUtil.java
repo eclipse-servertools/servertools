@@ -27,7 +27,7 @@ public class J2EEUtil {
 	 */
 	public static IEnterpriseApplication[] getEnterpriseApplications(IJ2EEModule module) {
 		List list = new ArrayList();
-		IModule[] modules = ServerUtil.getModules("j2ee.ear", "*", false);
+		IModule[] modules = ServerUtil.getModules("j2ee.ear");
 		if (modules != null) {
 			int size = modules.length;
 			for (int i = 0; i < size; i++) {

@@ -249,7 +249,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 	}
 
 	protected boolean canAddWebModule() {
-		IModule[] modules = ServerUtil.getModules("j2ee.web", "*", false);
+		IModule[] modules = ServerUtil.getModules(server.getServerType().getRuntimeType().getModuleTypes());
 		if (modules != null) {
 			int size = modules.length;
 			for (int i = 0; i < size; i++) {

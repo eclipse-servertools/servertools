@@ -308,7 +308,7 @@ public class NewManualServerComposite extends Composite {
 		boolean wrong = false;
 		if (serverType != null && moduleType != null) {
 			IRuntimeType runtimeType = serverType.getRuntimeType();
-			if (!ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), moduleType.getId(), moduleType.getVersion())) {
+			if (!ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), moduleType)) {
 				serverType = null;
 				wrong = true;
 				//wizard.setMessage("Not the right spec level2", IMessageProvider.ERROR);

@@ -10,7 +10,9 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.IDebugUIConstants;
@@ -319,7 +321,7 @@ public class ServersView extends ViewPart {
 				MenuManager menuManager = new MenuManager(ServerUIPlugin.getResource("%actionSwitchConfiguration"));
 				menuManager.add(new SwitchConfigurationAction(shell, ServerUIPlugin.getResource("%viewNoConfiguration"), server, null));
 	
-				IServerConfiguration[] configs = ServerUtil.getSupportedServerConfigurations(server);
+				IServerConfiguration[] configs = getSupportedServerConfigurations(server);
 				if (configs != null) {
 					int size = configs.length;
 					for (int i = 0; i < size; i++) {
@@ -387,6 +389,34 @@ public class ServersView extends ViewPart {
 	
 		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS+"-end"));
+	}
+	
+	/**
+	 * Returns a list of configurations that are supported by this
+	 * server.
+	 *
+	 * @param server org.eclipse.wst.server.core.IServer
+	 * @return java.util.List
+	 */
+	protected static IServerConfiguration[] getSupportedServerConfigurations(IServer server) {
+		if (server == null)
+			return new IServerConfiguration[0];
+	
+		List list = new ArrayList();
+	
+		IServerConfiguration[] configs = ServerCore.getServerConfigurations();
+		if (configs != null) {
+			int size = configs.length;
+			for (int i = 0; i < size; i++) {
+				//Trace.trace("Is supported configuration: " + getName(server) + " " + getName(configuration) + " " + server.isSupportedConfiguration(configuration));
+				if (server.isSupportedConfiguration(configs[i]))
+					list.add(configs[i]);
+			}
+		}
+		
+		IServerConfiguration[] sc = new IServerConfiguration[list.size()];
+		list.toArray(sc);
+		return sc;
 	}
 	
 	/**
