@@ -33,15 +33,23 @@ public class ProtocolAdapter implements IProtocolAdapter {
 		return element.getAttribute("name");
 	}
 	
-	public void parse(IMonitor monitor, Socket in, Socket out) throws IOException {
-		if (delegate == null) {
-			try {
-				delegate = (ProtocolAdapterDelegate) element.createExecutableExtension("class");
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Could not create protocol adapter delegate: " + getId(), e);
-				return;
-			}
+	protected ProtocolAdapterDelegate getDelegate() {
+		if (delegate != null)
+			return delegate;
+		
+		try {
+			delegate = (ProtocolAdapterDelegate) element.createExecutableExtension("class");
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Could not create protocol adapter delegate: " + getId(), e);
 		}
-		delegate.connect(monitor, in, out);
+		return delegate;
+	}
+	
+	public void connect(IMonitor monitor, Socket in, Socket out) throws IOException {
+		getDelegate().connect(monitor, in, out);
+	}
+	
+	public void disconnect(IMonitor monitor) throws IOException {
+		getDelegate().disconnect(monitor);
 	}
 }

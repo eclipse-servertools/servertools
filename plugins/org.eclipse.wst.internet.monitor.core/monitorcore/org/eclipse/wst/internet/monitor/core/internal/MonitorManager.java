@@ -97,7 +97,7 @@ public class MonitorManager {
 			return;
 		
 		if (AcceptThread.isPortInUse(monitor.getLocalPort()))
-			throw new CoreException(new Status(IStatus.ERROR, MonitorPlugin.PLUGIN_ID, 0, MonitorPlugin.getString("%errorPortInUse"), null));
+			throw new CoreException(new Status(IStatus.ERROR, MonitorPlugin.PLUGIN_ID, 0, MonitorPlugin.getResource("%errorPortInUse", monitor.getLocalPort() + ""), null));
 		
 		AcceptThread thread = new AcceptThread(monitor);
 		thread.startServer();

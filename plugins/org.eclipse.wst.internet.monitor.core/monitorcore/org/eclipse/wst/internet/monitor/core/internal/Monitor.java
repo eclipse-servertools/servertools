@@ -208,18 +208,18 @@ public class Monitor implements IMonitor {
 	
 	public IStatus validate() {
 		if (localPort < 0)
-			return new Status(IStatus.ERROR, MonitorPlugin.PLUGIN_ID, 0, MonitorPlugin.getString("%errorInvalidLocalPort"), null);
+			return new Status(IStatus.ERROR, MonitorPlugin.PLUGIN_ID, 0, MonitorPlugin.getResource("%errorInvalidLocalPort"), null);
 		
 		if (remotePort < 0)
-			return new Status(IStatus.ERROR, MonitorPlugin.PLUGIN_ID, 0, MonitorPlugin.getString("%errorInvalidRemotePort"), null);
+			return new Status(IStatus.ERROR, MonitorPlugin.PLUGIN_ID, 0, MonitorPlugin.getResource("%errorInvalidRemotePort"), null);
 		
 		if (remoteHost == null || remoteHost.length() == 0 || !isValidHostname(remoteHost))
-			return new Status(IStatus.ERROR, MonitorPlugin.PLUGIN_ID, 0, MonitorPlugin.getString("%errorInvalidRemoteHost"), null);
+			return new Status(IStatus.ERROR, MonitorPlugin.PLUGIN_ID, 0, MonitorPlugin.getResource("%errorInvalidRemoteHost"), null);
 		
 		if (isLocalhost(remoteHost) && localPort == remotePort)
-			return new Status(IStatus.ERROR, MonitorPlugin.PLUGIN_ID, 0, MonitorPlugin.getString("%errorInvalidLocalPort"), null);
+			return new Status(IStatus.ERROR, MonitorPlugin.PLUGIN_ID, 0, MonitorPlugin.getResource("%errorInvalidLocalPort"), null);
 	
-		return new Status(IStatus.OK, MonitorPlugin.PLUGIN_ID, 0, MonitorPlugin.getString("%monitorValid"), null);
+		return new Status(IStatus.OK, MonitorPlugin.PLUGIN_ID, 0, MonitorPlugin.getResource("%monitorValid"), null);
 	}
 
 	protected static boolean isValidHostname(String host) {

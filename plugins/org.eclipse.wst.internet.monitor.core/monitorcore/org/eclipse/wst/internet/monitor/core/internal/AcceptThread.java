@@ -26,43 +26,43 @@ public class AcceptThread {
 	
 	protected Thread thread;
 	
-	class ServerThread extends Thread {
+	class ServerThread extends Thread{
 		/**
 		 * ServerThread accepts incoming connections and delegates to the protocol
 		 * adapter to deal with the connection.
 		 */
-	   public void run() {
-		   // create a new server socket
-		   try {
-			   serverSocket = new ServerSocket(monitor.getLocalPort());
-			   serverSocket.setSoTimeout(2000);
-			   
-			   Trace.trace(Trace.FINEST, "Monitoring localhost:" + monitor.getLocalPort() + " -> " + monitor.getRemoteHost() + ":" + monitor.getRemotePort());
-		   } catch (Exception e) {
-			   Trace.trace(Trace.SEVERE, "Could not start monitoring");
-			   return;
-		   }
-		
-		   while (alive) {
-			   try {
-				   // accept the connection from the client
-				   Socket localSocket = serverSocket.accept();
-		
-				   // connect to the remote server
-				   Socket remoteSocket = new Socket(monitor.getRemoteHost(), monitor.getRemotePort());
-		
-				   // relay the call through
-				   String protocolId = monitor.getProtocol();
-				   ProtocolAdapter adapter = MonitorPlugin.getInstance().getProtocolAdapter(protocolId);
-				   adapter.parse(monitor, localSocket, remoteSocket);
-			   } catch (InterruptedIOException e) {
-			   	// do nothing
-			   } catch (Exception e) {
-				   if (alive)
+		public void run() {
+			// create a new server socket
+			try {
+				serverSocket = new ServerSocket(monitor.getLocalPort());
+				serverSocket.setSoTimeout(2000);
+				Trace.trace(Trace.FINEST, "Monitoring localhost:" + monitor.getLocalPort() + " -> " + monitor.getRemoteHost()
+						+ ":" + monitor.getRemotePort());
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Could not start monitoring");
+				return;
+			}
+
+			while (alive) {
+				try {
+					// accept the connection from the client
+					Socket localSocket = serverSocket.accept();
+					
+					// connect to the remote server
+					Socket remoteSocket = new Socket(monitor.getRemoteHost(), monitor.getRemotePort());
+
+					// relay the call through
+					String protocolId = monitor.getProtocol();
+					ProtocolAdapter adapter = MonitorPlugin.getInstance().getProtocolAdapter(protocolId);
+					adapter.connect(monitor, localSocket, remoteSocket);
+				} catch (InterruptedIOException e) {
+					// do nothing
+				} catch (Exception e) {
+					if (alive)
 						Trace.trace(Trace.SEVERE, "Error while monitoring", e);
-			   }
-		   }
-	   }
+				}
+			}
+		}
 	}
 
 	/**
@@ -92,6 +92,10 @@ public class AcceptThread {
 		try {
 			alive = false;
 			thread = null;
+			
+			String protocolId = monitor.getProtocol();
+		   ProtocolAdapter adapter = MonitorPlugin.getInstance().getProtocolAdapter(protocolId);
+			adapter.disconnect(monitor);
 			serverSocket.close();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error stopping server", e);

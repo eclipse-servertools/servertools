@@ -75,4 +75,14 @@ public abstract class ProtocolAdapterDelegate {
 	 *    input or output sockets
 	 */
 	public abstract void connect(IMonitor monitor, Socket in, Socket out) throws IOException;
+	
+	/**
+	 * Called if the monitor is changed or deleted, or the plugin is shutting down.
+	 * The delegate must clean up the connections and threads created to respond to
+	 * this monitor. 
+	 * 
+	 * @param monitor
+	 * @throws IOException
+	 */
+	public abstract void disconnect(IMonitor monitor) throws IOException;
 }
