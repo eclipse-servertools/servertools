@@ -179,6 +179,12 @@ public class MonitorTestCase extends TestCase {
 		assertTrue(MonitorCore.getMonitors().length == num);
 	}
 	
+	public void test19CreateMonitor() {
+		IMonitorWorkingCopy wc = MonitorCore.createMonitor();
+		wc.setProtocol(null);
+		assertNull(wc.getOriginal());
+	}
+
 	public void test20ValidateMonitor() throws Exception {
 		IMonitorWorkingCopy wc = monitor.createWorkingCopy();
 		wc.setLocalPort(-1);
@@ -264,5 +270,13 @@ public class MonitorTestCase extends TestCase {
 			// ignore
 		}
 		monitor2.delete();
+	}
+	
+	public void test30GetId() {
+		assertNotNull(monitor.getId());
+	}
+
+	public void test31GetProtocol() {
+		assertNotNull(monitor.getProtocol());
 	}
 }

@@ -26,8 +26,15 @@ public class RuntimeTypesTestCase extends TestCase {
 		IRuntimeType[] runtimeTypes = ServerCore.getRuntimeTypes();
 		if (runtimeTypes != null) {
 			int size = runtimeTypes.length;
-			for (int i = 0; i < size; i++)
-				System.out.println(runtimeTypes[i].getId() + " - " + runtimeTypes[i].getName());
+			for (int i = 0; i < size; i++) {
+				runtimeTypes[i].getId();
+				runtimeTypes[i].getName();
+				runtimeTypes[i].canCreate();
+				runtimeTypes[i].getDescription();
+				runtimeTypes[i].getVendor();
+				runtimeTypes[i].getVersion();
+				runtimeTypes[i].getModuleTypes();
+			}
 		}
 	}
 }

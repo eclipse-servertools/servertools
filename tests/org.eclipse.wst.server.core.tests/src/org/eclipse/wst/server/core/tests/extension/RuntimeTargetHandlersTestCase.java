@@ -26,8 +26,12 @@ public class RuntimeTargetHandlersTestCase extends TestCase {
 		IRuntimeTargetHandler[] rth = ServerCore.getRuntimeTargetHandlers();
 		if (rth != null) {
 			int size = rth.length;
-			for (int i = 0; i < size; i++)
-				System.out.println(rth[i].getId());
+			for (int i = 0; i < size; i++) {
+				rth[i].getId();
+				rth[i].supportsRuntimeType(null);
+				rth[i].setRuntimeTarget(null, null, null);
+				rth[i].removeRuntimeTarget(null, null, null);
+			}
 		}
 	}
 }

@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import org.eclipse.wst.internet.monitor.core.*;
+import org.eclipse.wst.internet.monitor.core.internal.Monitor;
 import junit.framework.Test;
 import junit.framework.TestCase;
 /**
@@ -40,6 +41,19 @@ public class RequestTestCase extends TestCase {
 			changeCount++;
 		}
 	};
+	
+	class MyRequest extends Request {
+		public MyRequest(Monitor monitor, String protocolId, int localPort, String remoteHost, int remotePort) {
+			super(monitor, protocolId, localPort, remoteHost, remotePort);
+		}
+		
+		public void testProtected() {
+			setName("test");
+			setRequest(null);
+			setResponse(null);
+			fireChangedEvent();
+		}
+	}
 
 	public RequestTestCase() {
 		super();
@@ -155,25 +169,38 @@ public class RequestTestCase extends TestCase {
 		assert(requestEvent.getProperty(""));
 	}*/
 	
-	public void test19CheckRequest() throws Exception {
+	public void test19AddToRequest() throws Exception {
 		requestEvent.addToRequest(new byte[0]);
 	}
 	
-	public void test20CheckRequest() throws Exception {
+	public void test20AddToResponse() throws Exception {
 		requestEvent.addToResponse(new byte[0]);
 	}
 	
-	public void test21CheckAdapter() throws Exception {
+	public void test21SetProperty() throws Exception {
+		requestEvent.setProperty("test", null);
+	}
+	
+	public void test22GetAdapter() throws Exception {
 		assertNull(requestEvent.getAdapter(String.class));
 	}
 
-	public void test30StopMonitor() throws Exception {
+	public void test23StopMonitor() throws Exception {
 		assertTrue(monitor.isRunning());
 		monitor.stop();
 		assertTrue(!monitor.isRunning());
 	}
 	
-	public void test31RemoveListener() throws Exception {
+	public void test24RemoveListener() throws Exception {
 		monitor.removeRequestListener(listener);
+	}
+	
+	public void test25Create() {
+		new Request(null, null, 0, null, 0);
+	}
+	
+	public void test26TestProtectedMethods() {
+		MyRequest mr = new MyRequest(null, null, 0, null, 0);
+		mr.testProtected();
 	}
 }

@@ -120,6 +120,20 @@ public abstract class AbstractServerTestCase extends TestCase {
 	public void test0015Stop() throws Exception {
 		getServer().synchronousStop(false);
 	}
+	
+	public void test0016GetServerPorts() throws Exception {
+		IServerPort[] ports = getServer().getServerPorts();
+		if (ports != null) {
+			int size = ports.length;
+			for (int i = 0; i < size; i++) {
+				ports[i].getId();
+				ports[i].getContentTypes();
+				ports[i].getName();
+				ports[i].getPort();
+				ports[i].getProtocol();
+			}
+		}
+	}
 
 	public void test1001Delete() throws Exception {
 		deleteServer(getServer());

@@ -10,16 +10,43 @@
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.ui.tests.extension;
 
+import org.eclipse.wst.internet.monitor.ui.ContentViewer;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 public class ContentViewersTestCase extends TestCase {
+	protected static ContentViewer viewer;
+
 	public static Test suite() {
 		return new TestSuite(ContentViewersTestCase.class, "ContentViewersTestCase");
 	}
 
-	public void test1ContentViewersExtension() throws Exception {
-		// do nothing
+	public void test00Create() {
+		viewer = new TestContentViewer();
+	}
+	
+	public void test01GetContent() {
+		viewer.getContent();
+	}
+	
+	public void test02GetEditable() {
+		viewer.getEditable();
+	}
+	
+	public void test03SetContent() {
+		viewer.setContent(null);
+	}
+	
+	public void test04SetEditable() {
+		viewer.setEditable(false);
+	}
+	
+	public void test05Init() {
+		viewer.init(null);
+	}
+	
+	public void test06Dispose() {
+		viewer.dispose();
 	}
 }

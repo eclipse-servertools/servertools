@@ -97,6 +97,34 @@ public abstract class AbstractRuntimeTestCase extends TestCase {
 		wc.setName(wc.getName() + "x");
 		wc.save(false, null);
 	}
+	
+	public void test0009IsPrivate() throws Exception {
+		getRuntime().isPrivate();
+	}
+	
+	public void test0010IsReadOnly() throws Exception {
+		getRuntime().isReadOnly();
+	}
+	
+	public void test0011IsDelegateLoaded() throws Exception {
+		getRuntime().isDelegateLoaded();
+	}
+	
+	public void test0012GetTimestamp() throws Exception {
+		getRuntime().getTimestamp();
+	}
+	
+	public void test0013GetRuntimeType() throws Exception {
+		assertNotNull(getRuntime().getRuntimeType());
+	}
+	
+	public void test0014GetLocation() throws Exception {
+		assertNotNull(getRuntime().getLocation());
+	}
+	
+	public void test0015IsStub() throws Exception {
+		getRuntime().isStub();
+	}
 
 	public void test1001Delete() throws Exception {
 		deleteRuntime(getRuntime());

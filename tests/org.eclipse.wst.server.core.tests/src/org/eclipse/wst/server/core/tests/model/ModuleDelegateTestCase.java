@@ -44,7 +44,11 @@ public class ModuleDelegateTestCase extends TestCase {
 		delegate.getModule();
 	}
 	
-	public void test05validate() throws Exception {
+	public void test05Validate() throws Exception {
 		delegate.validate();
+	}
+	
+	public void test06Members() throws Exception {
+		delegate.members();
 	}
 }
