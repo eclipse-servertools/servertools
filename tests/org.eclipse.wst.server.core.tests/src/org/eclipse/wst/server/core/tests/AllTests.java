@@ -30,6 +30,12 @@
 package org.eclipse.wst.server.core.tests;
 
 import org.eclipse.wst.server.core.tests.extension.*;
+import org.eclipse.wst.server.core.tests.model.*;
+import org.eclipse.wst.server.core.util.HTTPLaunchableTestCase;
+import org.eclipse.wst.server.core.util.NullModuleArtifactTestCase;
+import org.eclipse.wst.server.core.util.SocketUtilTestCase;
+import org.eclipse.wst.server.core.util.StaticWebTestCase;
+import org.eclipse.wst.server.core.util.WebResourceTestCase;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -53,6 +59,25 @@ public class AllTests {
 		suite.addTestSuite(ServerUtilTestCase.class);
 		suite.addTest(new OrderedTestSuite(ProjectPropertiesTestCase.class));
 		suite.addTest(new OrderedTestSuite(ServerPreferencesTestCase.class));
+		
+		suite.addTest(new OrderedTestSuite(ClientDelegateTestCase.class));
+		suite.addTest(new OrderedTestSuite(RuntimeLocatorDelegateTestCase.class));
+		suite.addTest(new OrderedTestSuite(ModuleDelegateTestCase.class));
+		suite.addTest(new OrderedTestSuite(RuntimeTargetHandlersTestCase.class));
+		suite.addTest(new OrderedTestSuite(RuntimeDelegateTestCase.class));
+		suite.addTest(new OrderedTestSuite(ServerDelegateTestCase.class));
+		suite.addTest(new OrderedTestSuite(ServerBehaviourDelegateTestCase.class));
+		suite.addTest(new OrderedTestSuite(ServerTaskDelegateTestCase.class));
+		suite.addTest(new OrderedTestSuite(ServerLocatorDelegateTestCase.class));
+		suite.addTest(new OrderedTestSuite(ModuleFileTestCase.class));
+		suite.addTest(new OrderedTestSuite(ModuleFolderTestCase.class));
+		suite.addTest(new OrderedTestSuite(ModuleResourceTestCase.class));
+		
+		suite.addTest(new OrderedTestSuite(HTTPLaunchableTestCase.class));
+		suite.addTest(new OrderedTestSuite(StaticWebTestCase.class));
+		suite.addTest(new OrderedTestSuite(WebResourceTestCase.class));
+		suite.addTest(new OrderedTestSuite(NullModuleArtifactTestCase.class));
+		suite.addTestSuite(SocketUtilTestCase.class);
 		//$JUnit-END$
 		return suite;
 	}

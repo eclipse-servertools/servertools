@@ -13,6 +13,8 @@ package org.eclipse.jst.server.core.tests;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.server.core.GenericRuntimeUtil;
+import org.eclipse.jst.server.core.IGenericRuntime;
+import org.eclipse.jst.server.core.IGenericRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.*;
 
 import junit.framework.Test;
@@ -22,6 +24,9 @@ public class GenericRuntimeTestCase extends TestCase {
 	private static final String RUNTIME_TYPE_ID = "org.eclipse.jst.server.core.runtimeType";
 
 	protected static IRuntime runtime;
+	protected static IRuntime runtimeWC;
+	protected static IGenericRuntime genericRuntime;
+	protected static IGenericRuntimeWorkingCopy genericRuntimeWC;
 
 	public static Test suite() {
 		return new OrderedTestSuite(GenericRuntimeTestCase.class, "GenericRuntimeTestCase");
@@ -44,9 +49,41 @@ public class GenericRuntimeTestCase extends TestCase {
 	public void test02Util() throws Exception {
 		assertTrue(GenericRuntimeUtil.isGenericJ2EERuntime(runtime));
 	}
+	
+	public void test03Adapt() throws Exception {
+		genericRuntime = (IGenericRuntime) runtime.getAdapter(IGenericRuntime.class);
+		assertNotNull(genericRuntime);
+	}
+	
+	public void test04Adapt() throws Exception {
+		assertNotNull(runtime.getAdapter(IGenericRuntimeWorkingCopy.class));
+	}
+	
+	public void test05GetJVM() throws Exception {
+		assertNotNull(genericRuntime.getVMInstall());
+	}
+	
+	public void test06Adapt() throws Exception {
+		runtimeWC = runtime.createWorkingCopy();
+		genericRuntimeWC = (IGenericRuntimeWorkingCopy) runtimeWC.getAdapter(IGenericRuntimeWorkingCopy.class);
+		assertNotNull(genericRuntimeWC);
+	}
+	
+	public void test07Adapt() throws Exception {
+		assertNotNull(runtimeWC.getAdapter(IGenericRuntime.class));
+	}
+	
+	public void test08SetJVM() throws Exception {
+		assertNotNull(genericRuntimeWC.getVMInstall());
+		genericRuntimeWC.setVMInstall(null);
+		assertNull(genericRuntimeWC.getVMInstall());
+	}
 
-	public void test03DeleteRuntime() throws Exception {
+	public void test09DeleteRuntime() throws Exception {
 		runtime.delete();
 		runtime = null;
+		runtimeWC = null;
+		genericRuntime = null;
+		genericRuntimeWC = null;
 	}
 }

@@ -19,6 +19,18 @@ public class AllTests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(ExistenceTest.class);
 		suite.addTest(new OrderedTestSuite(GenericRuntimeTestCase.class));
+		
+		suite.addTest(new OrderedTestSuite(J2EEModuleTestCase.class));
+		suite.addTest(new OrderedTestSuite(ApplicationClientTestCase.class));
+		suite.addTest(new OrderedTestSuite(ConnectorModuleTestCase.class));
+		suite.addTest(new OrderedTestSuite(EJBModuleTestCase.class));
+		suite.addTest(new OrderedTestSuite(WebModuleTestCase.class));
+		suite.addTest(new OrderedTestSuite(EnterpriseApplicationTestCase.class));
+		
+		suite.addTest(new OrderedTestSuite(EJBBeanTestCase.class));
+		suite.addTest(new OrderedTestSuite(ServletTestCase.class));
+		suite.addTest(new OrderedTestSuite(JndiObjectTestCase.class));
+		suite.addTest(new OrderedTestSuite(JndiLaunchableTestCase.class));
 		//$JUnit-END$
 		return suite;
 	}

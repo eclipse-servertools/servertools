@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,13 +8,16 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.server.ui.tests;
+package org.eclipse.wst.server.core.tests.impl;
 
-import org.eclipse.jst.server.ui.internal.JavaServerUIPlugin;
-import junit.framework.TestCase;
+import java.util.List;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IOptionalTask;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.model.ServerTaskDelegate;
 
-public class ExistenceTest extends TestCase {
-	public void testPluginExists() {
-		assertNotNull(JavaServerUIPlugin.getInstance());
+public class TestServerTaskDelegate extends ServerTaskDelegate {
+	public IOptionalTask[] getTasks(IServer server, List[] parents, IModule[] modules) {
+		return null;
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,13 +8,17 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.server.ui.tests;
+package org.eclipse.wst.server.core.tests.impl;
 
-import org.eclipse.jst.server.ui.internal.JavaServerUIPlugin;
-import junit.framework.TestCase;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.wst.server.core.model.IModuleResource;
 
-public class ExistenceTest extends TestCase {
-	public void testPluginExists() {
-		assertNotNull(JavaServerUIPlugin.getInstance());
+public class TestModuleResource implements IModuleResource {
+	public IPath getModuleRelativePath() {
+		return null;
+	}
+
+	public String getName() {
+		return null;
 	}
 }

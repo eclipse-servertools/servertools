@@ -21,7 +21,7 @@ import org.eclipse.wst.server.core.internal.ResourceManager;
 
 public class ServerCoreTestCase extends TestCase {
 	public static Test suite() {
-		return new TestSuite(ServerCoreTestCase.class, "ServerCoreTestCase");
+		return new TestSuite(ServerCoreTestCase.class, "RuntimeLocatorDelegateTestCase");
 	}
 
 	public void testGetRuntimesExtension() throws Exception {
