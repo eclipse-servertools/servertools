@@ -12,8 +12,8 @@ package org.eclipse.jst.server.tomcat.core.tests;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jst.server.tomcat.core.ITomcatRuntime;
-import org.eclipse.jst.server.tomcat.core.ITomcatRuntimeWorkingCopy;
+import org.eclipse.jst.server.tomcat.core.internal.ITomcatRuntime;
+import org.eclipse.jst.server.tomcat.core.internal.ITomcatRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.*;
 
 import junit.framework.Test;
