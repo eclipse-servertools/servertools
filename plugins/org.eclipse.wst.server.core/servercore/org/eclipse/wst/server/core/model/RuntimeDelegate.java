@@ -82,6 +82,9 @@ public abstract class RuntimeDelegate {
 
 	public final void initialize(Runtime newRuntime) {
 		runtime = newRuntime;
+		if (runtime instanceof RuntimeWorkingCopy)
+			runtimeWC = (RuntimeWorkingCopy) runtime;
+		initialize();
 	}
 
 	public IRuntime getRuntime() {
@@ -107,11 +110,11 @@ public abstract class RuntimeDelegate {
 	 * 
 	 * @param workingCopy the runtime working copy
 	 */
-	public final void initialize(RuntimeWorkingCopy workingCopy) {
+	/*public final void initialize(RuntimeWorkingCopy workingCopy) {
 		runtime = workingCopy;
 		runtimeWC = workingCopy;
 		initialize();
-	}
+	}*/
 
 	public final IRuntimeWorkingCopy getRuntimeWC() {
 		return runtimeWC;

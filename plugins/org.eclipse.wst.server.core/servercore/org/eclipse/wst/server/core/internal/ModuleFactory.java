@@ -18,12 +18,13 @@ import org.eclipse.core.runtime.IConfigurationElement;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
+import org.eclipse.wst.server.core.IOrdered;
 import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
 import org.eclipse.wst.server.core.model.IModuleFactoryListener;
 /**
  * 
  */
-public class ModuleFactory {
+public class ModuleFactory implements IOrdered {
 	private IConfigurationElement element;
 	private ModuleFactoryDelegate delegate;
 	private List moduleTypes;

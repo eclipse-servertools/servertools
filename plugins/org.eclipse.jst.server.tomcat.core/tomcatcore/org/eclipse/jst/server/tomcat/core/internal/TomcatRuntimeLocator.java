@@ -16,25 +16,21 @@ import java.io.FileFilter;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.tomcat.core.ITomcatRuntimeWorkingCopy;
 
-import org.eclipse.wst.server.core.IRuntimeLocator;
-import org.eclipse.wst.server.core.IRuntimeType;
-import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.RuntimeLocatorDelegate;
 /**
  * 
  */
 public class TomcatRuntimeLocator extends RuntimeLocatorDelegate {
 	protected static final String[] runtimeTypes = new String[] {
-		"org.eclipse.jst.server.tomcat.32.runtime",
-		"org.eclipse.jst.server.tomcat.40.runtime",
-		"org.eclipse.jst.server.tomcat.41.runtime",
-		"org.eclipse.jst.server.tomcat.50.runtime",
-		"org.eclipse.jst.server.tomcat.55.runtime"};
+		"org.eclipse.jst.server.tomcat.runtime.32",
+		"org.eclipse.jst.server.tomcat.runtime.40",
+		"org.eclipse.jst.server.tomcat.runtime.41",
+		"org.eclipse.jst.server.tomcat.runtime.50",
+		"org.eclipse.jst.server.tomcat.runtime.55"};
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IRuntimeFactoryDelegate#getKnownRuntimes()
@@ -96,8 +92,7 @@ public class TomcatRuntimeLocator extends RuntimeLocatorDelegate {
 				runtime.setName(dir.getName());
 				runtime.setLocation(new Path(dir.getAbsolutePath()));
 				ITomcatRuntimeWorkingCopy wc = (ITomcatRuntimeWorkingCopy) runtime.getAdapter(ITomcatRuntimeWorkingCopy.class);
-				IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
-				wc.setVMInstall(vmInstall);
+				wc.setVMInstall(JavaRuntime.getDefaultVMInstall());
 				IStatus status = runtime.validate(monitor);
 				if (status == null || status.isOK())
 					return runtime;

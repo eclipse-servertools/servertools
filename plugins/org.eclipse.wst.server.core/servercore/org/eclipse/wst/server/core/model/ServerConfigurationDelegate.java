@@ -37,15 +37,11 @@ public abstract class ServerConfigurationDelegate {
 	 */
 	public final void initialize(ServerConfiguration configuration2) {
 		configuration = configuration2;
+		if (configuration instanceof ServerConfigurationWorkingCopy)
+			configurationWC = (ServerConfigurationWorkingCopy) configuration;
 		initialize();
 	}
-	
-	public final void initialize(ServerConfigurationWorkingCopy configuration2) {
-		configuration = configuration2;
-		configurationWC = configuration2;
-		initialize();
-	}
-	
+
 	public void initialize() {
 		// do nothing
 	}

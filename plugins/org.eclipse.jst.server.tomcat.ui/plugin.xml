@@ -14,46 +14,46 @@
    </runtime>
 
    <requires>
-      <import plugin="org.eclipse.core.runtime" />
-      <import plugin="org.eclipse.core.resources" />
-      <import plugin="org.eclipse.ui" />
-      <import plugin="org.eclipse.ui.ide" />
-      <import plugin="org.eclipse.ui.editors" />
-      <import plugin="org.eclipse.ui.forms" />
-      <import plugin="org.eclipse.debug.core" />
-      <import plugin="org.eclipse.debug.ui" />
-      <import plugin="org.eclipse.jdt.core" />
-      <import plugin="org.eclipse.jdt.debug" />
-      <import plugin="org.eclipse.jdt.debug.ui" />
-      <import plugin="org.eclipse.jdt.launching" />
-      <import plugin="org.eclipse.wst.server.core" />
-      <import plugin="org.eclipse.wst.server.ui" />
-      <import plugin="org.eclipse.jst.server.core" />
-      <import plugin="org.eclipse.jst.server.ui" />
-      <import plugin="org.eclipse.jst.server.tomcat.core" />
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui.forms"/>
+      <import plugin="org.eclipse.debug.core"/>
+      <import plugin="org.eclipse.debug.ui"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jdt.debug"/>
+      <import plugin="org.eclipse.jdt.debug.ui"/>
+      <import plugin="org.eclipse.jdt.launching"/>
+      <import plugin="org.eclipse.wst.server.core"/>
+      <import plugin="org.eclipse.wst.server.ui"/>
+      <import plugin="org.eclipse.jst.server.core"/>
+      <import plugin="org.eclipse.jst.server.ui"/>
+      <import plugin="org.eclipse.jst.server.tomcat.core"/>
    </requires>
 
    <extension point="org.eclipse.wst.server.ui.serverImages">
       <image
          id="org.eclipse.jst.server.tomcat.32"
          icon="icons/obj16/server_32.gif"
-         typeIds="org.eclipse.jst.server.tomcat.32.runtime"/>
+         typeIds="org.eclipse.jst.server.tomcat.runtime.32"/>
       <image
          id="org.eclipse.jst.server.tomcat.40"
          icon="icons/obj16/server_40.gif"
-         typeIds="org.eclipse.jst.server.tomcat.40.runtime"/>
+         typeIds="org.eclipse.jst.server.tomcat.runtime.40"/>
       <image
          id="org.eclipse.jst.server.tomcat.41"
          icon="icons/obj16/server_41.gif"
-         typeIds="org.eclipse.jst.server.tomcat.41.runtime"/>
+         typeIds="org.eclipse.jst.server.tomcat.runtime.41"/>
       <image
          id="org.eclipse.jst.server.tomcat.50"
          icon="icons/obj16/server_50.gif"
-         typeIds="org.eclipse.jst.server.tomcat.50.runtime"/>
+         typeIds="org.eclipse.jst.server.tomcat.runtime.50"/>
       <image
          id="org.eclipse.jst.server.tomcat.55"
          icon="icons/obj16/server_55.gif"
-         typeIds="org.eclipse.jst.server.tomcat.55.runtime"/>
+         typeIds="org.eclipse.jst.server.tomcat.runtime.55"/>
 
       <image
          id="org.eclipse.jst.server.tomcat.32"
@@ -109,24 +109,24 @@
    
    <extension point="org.eclipse.wst.server.ui.wizardFragments">
       <fragment
-         id="org.eclipse.jst.server.tomcat.32.runtime"
-         typeIds="org.eclipse.jst.server.tomcat.32.runtime"
+         id="org.eclipse.jst.server.tomcat.runtime.32"
+         typeIds="org.eclipse.jst.server.tomcat.runtime.32"
          class="org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeWizardFragment"/>
       <fragment
-         id="org.eclipse.jst.server.tomcat.40.runtime"
-         typeIds="org.eclipse.jst.server.tomcat.40.runtime"
+         id="org.eclipse.jst.server.tomcat.runtime.40"
+         typeIds="org.eclipse.jst.server.tomcat.runtime.40"
          class="org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeWizardFragment"/>
       <fragment
-         id="org.eclipse.jst.server.tomcat.41.runtime"
-         typeIds="org.eclipse.jst.server.tomcat.41.runtime"
+         id="org.eclipse.jst.server.tomcat.runtime.41"
+         typeIds="org.eclipse.jst.server.tomcat.runtime.41"
          class="org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeWizardFragment"/>
       <fragment
-         id="org.eclipse.jst.server.tomcat.50.runtime"
-         typeIds="org.eclipse.jst.server.tomcat.50.runtime"
+         id="org.eclipse.jst.server.tomcat.runtime.50"
+         typeIds="org.eclipse.jst.server.tomcat.runtime.50"
          class="org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeWizardFragment"/>
       <fragment
-         id="org.eclipse.jst.server.tomcat.55.runtime"
-         typeIds="org.eclipse.jst.server.tomcat.55.runtime"
+         id="org.eclipse.jst.server.tomcat.runtime.55"
+         typeIds="org.eclipse.jst.server.tomcat.runtime.55"
          class="org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeWizardFragment"/>
    </extension>
    
