@@ -2,3 +2,4 @@ bin
 build.xml
 commonmodules.jar
 org.eclipse.jst.server.generic.modules_1.0.0.jar
+temp.folder

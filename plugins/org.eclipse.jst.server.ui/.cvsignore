@@ -2,3 +2,4 @@ bin
 build.xml
 org.eclipse.jst.server.ui_3.0.0.jar
 sjavaui.jar
+temp.folder
