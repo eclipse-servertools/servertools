@@ -412,7 +412,7 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 		return entries;
 	}
 	
-	protected void save() {
+	private void save() {
 		if (sourceAttachments == null)
 			return;
 		String id = getRuntimeTargetHandler().getId();
@@ -441,7 +441,7 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 		}
 	}
 
-	protected void load() {
+	private void load() {
 		String id = getRuntimeTargetHandler().getId();
 		String filename = JavaServerPlugin.getInstance().getStateLocation().append(id + ".xml").toOSString();
 		

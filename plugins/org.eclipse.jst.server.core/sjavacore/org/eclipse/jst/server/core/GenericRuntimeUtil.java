@@ -20,6 +20,13 @@ public class GenericRuntimeUtil {
 	protected static final String RUNTIME_TYPE_ID = "org.eclipse.jst.server.core.runtimeType";
 
 	/**
+	 * Cannot create GenericRuntimeUtil - use static methods.
+	 */
+	private GenericRuntimeUtil() {
+		// cannot create
+	}
+
+	/**
 	 * Returns <code>true</code> if the given runtime is a generic J2EE runtime, and
 	 * <code>false</code> otherwise. The runtime may not be null.
 	 * 
