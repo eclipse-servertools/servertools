@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.j2ee.IWebModule;
 /**
- * 
+ * Tomcat 32 handler.
  */
 public class Tomcat32Handler implements ITomcatVersionHandler {
 	public boolean verifyInstallPath(IPath installPath) {
@@ -84,9 +84,8 @@ public class Tomcat32Handler implements ITomcatVersionHandler {
 		
 		// run in secure mode
 		if (isSecure) {
-			IPath dir = configPath;
-			dir = dir.append("conf").append("tomcat.policy");
 			list.add("-Djava.security.manager");
+			IPath dir = configPath.append("conf").append("tomcat.policy");
 			list.add("-Djava.security.policy=\"" + dir.toOSString() + "\"");
 		}
 		

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -105,16 +105,19 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 * @return java.lang.String
 	 */
 	protected String[] getRuntimeVMArguments() {
+		IPath installPath = getServer().getRuntime().getLocation();
 		IPath configPath = null;
 		if (getTomcatServer().isTestEnvironment())
 			configPath = getTempDirectory();
-		return getTomcatVersionHandler().getRuntimeVMArguments(getServer().getRuntime().getLocation(), configPath, getTomcatServer().isSecure());
+		else
+			configPath = installPath;
+		return getTomcatVersionHandler().getRuntimeVMArguments(installPath, configPath, getTomcatServer().isSecure());
 	}
 
 	/**
 	 * Obtain a temporary directory if this server doesn't
 	 * already have one. Otherwise, return the existing one.
-	 * @return java.io.File
+	 * @return IPath
 	 */
 	public IPath getTempDirectory() {
 		if (tempDirectory == null)
@@ -167,7 +170,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		setServerState(IServer.STATE_STOPPED);
 	}
 
-	public void publishServer(IProgressMonitor monitor) throws CoreException {
+	public void publishServer(int kind, IProgressMonitor monitor) throws CoreException {
 		IPath confDir = null;
 		if (getTomcatServer().isTestEnvironment()) {
 			confDir = getTempDirectory();
@@ -187,7 +190,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 * Returns the project publisher that can be used to
 	 * publish the given project.
 	 */
-	public void publishModule(IModule[] parents, IModule module, IProgressMonitor monitor) {
+	public void publishModule(int kind, IModule[] parents, IModule module, IProgressMonitor monitor) {
 		if (getTomcatServer().isTestEnvironment())
 			return;
 

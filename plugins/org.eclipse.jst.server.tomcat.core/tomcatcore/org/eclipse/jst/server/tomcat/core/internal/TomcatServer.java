@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,8 +16,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.*;
-import org.eclipse.debug.core.*;
-import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.jst.server.j2ee.IWebModule;
 import org.eclipse.jst.server.tomcat.core.ITomcatConfiguration;
 import org.eclipse.jst.server.tomcat.core.ITomcatServer;
@@ -26,18 +24,10 @@ import org.eclipse.jst.server.tomcat.core.WebModule;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.*;
-import org.eclipse.wst.server.core.util.PingThread;
 /**
  * Generic Tomcat server.
  */
 public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomcatServerWorkingCopy {
-	protected transient IPath tempDirectory;
-
-	// the thread used to ping the server to check for startup
-	protected transient PingThread ping = null;
-	protected transient IProcess process;
-	protected transient IDebugEventSetListener processListener;
-	
 	protected transient TomcatConfiguration configuration;
 
 	/**
@@ -157,51 +147,6 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			Trace.trace(Trace.SEVERE, "Could not get root URL", e);
 			return null;
 		}
-	}
-
-	/**
-	 * Return the runtime class name.
-	 *
-	 * @return java.lang.String
-	 */
-	public String getRuntimeClass() {
-		return getTomcatVersionHandler().getRuntimeClass();
-	}
-
-	/**
-	 * Return the program's runtime arguments to start or stop.
-	 *
-	 * @param boolean starting
-	 * @return java.lang.String
-	 */
-	protected String[] getRuntimeProgramArguments(boolean starting) {
-		IPath configPath = null;
-		if (isTestEnvironment())
-			configPath = getTempDirectory();
-		return getTomcatVersionHandler().getRuntimeProgramArguments(configPath, isDebug(), starting);
-	}
-
-	/**
-	 * Return the runtime (VM) arguments.
-	 *
-	 * @return java.lang.String
-	 */
-	protected String[] getRuntimeVMArguments() {
-		IPath configPath = null;
-		if (isTestEnvironment())
-			configPath = getTempDirectory();
-		return getTomcatVersionHandler().getRuntimeVMArguments(getServer().getRuntime().getLocation(), configPath, isSecure());
-	}
-
-	/**
-	 * Obtain a temporary directory if this server doesn't
-	 * already have one. Otherwise, return the existing one.
-	 * @return java.io.File
-	 */
-	public IPath getTempDirectory() {
-		if (tempDirectory == null)
-			tempDirectory = getServer().getTempDirectory();
-		return tempDirectory;
 	}
 
 	/**

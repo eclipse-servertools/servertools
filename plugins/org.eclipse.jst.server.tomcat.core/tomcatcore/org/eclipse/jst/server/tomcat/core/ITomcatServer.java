@@ -42,13 +42,6 @@ public interface ITomcatServer extends IURLProvider {
 	 * @return boolean
 	 */
 	public boolean isTestEnvironment();
-
-	/**
-	 * Returns the main class that is used to launch the Tomcat server.
-	 * 
-	 * @return
-	 */
-	public String getRuntimeClass();
 	
 	/**
 	 * Return the Tomcat configuration model.
