@@ -228,7 +228,12 @@ public abstract class ServerBehaviourDelegate {
 	 * <p>
 	 * This method is called by the server core framework,
 	 * in response to a call to <code>IServer.publish()</code>.
-	 * Clients should never call this method.
+	 * Clients should never call this method directly.
+	 * </p>
+	 * <p>
+	 * If the deltaKind is IServer.REMOVED, the module may have been completely
+	 * deleted and does not exist anymore. In this case, a dummy module (with the
+	 * correct id) will be passed to this method.
 	 * </p>
 	 * 
 	 * @param kind one of the IServer.PUBLISH_XX constants. Valid values are

@@ -864,6 +864,7 @@ public class Server extends Base implements IServer {
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.beginTask(ServerPlugin.getResource("%publishing", toString()), size);
 
+		// TODO - group up status until the end and use better message based on success or failure
 		MultiStatus multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%publishingStatus"), null);
 		
 		// perform tasks
@@ -900,7 +901,11 @@ public class Server extends Base implements IServer {
 		
 		// publish modules
 		if (!monitor.isCanceled()) {
-			publishModules(kind, parents, modules2, deltaKind, multi, monitor);
+			try {
+				publishModules(kind, parents, modules2, deltaKind, multi, monitor);
+			} catch (Exception e) {
+				multi.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorPublishing"), e));
+			}
 		}
 		
 		// end the publishing
@@ -929,6 +934,10 @@ public class Server extends Base implements IServer {
 		monitor.done();
 
 		Trace.trace(Trace.FINEST, "--<-- Done publishing --<--");
+		
+		if (multi.getChildren().length == 1)
+			return multi.getChildren()[0];
+		
 		return multi;
 	}
 
@@ -1414,6 +1423,7 @@ public class Server extends Base implements IServer {
 		};
 		addServerListener(listener);
 		
+		final int serverTimeout = getServerType().getStartTimeout();
 		class Timer {
 			boolean timeout;
 			boolean alreadyDone;
@@ -1423,7 +1433,7 @@ public class Server extends Base implements IServer {
 		Thread thread = new Thread() {
 			public void run() {
 				try {
-					Thread.sleep(120000);
+					Thread.sleep(serverTimeout * 1000);
 					if (!timer.alreadyDone) {
 						timer.timeout = true;
 						// notify waiter
@@ -1448,6 +1458,7 @@ public class Server extends Base implements IServer {
 			launch = start(mode2, monitor);
 		} catch (CoreException e) {
 			removeServerListener(listener);
+			timer.alreadyDone = true;
 			throw e;
 		}
 	
@@ -1463,9 +1474,10 @@ public class Server extends Base implements IServer {
 			}
 		}
 		removeServerListener(listener);
+		timer.alreadyDone = true;
 		
 		if (timer.timeout)
-			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStartFailed", getName()), null));
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStartTimeout", new String[] { getName(), serverTimeout + "" }), null));
 		timer.alreadyDone = true;
 		
 		if (getServerState() == IServer.STATE_STOPPED)
@@ -1756,7 +1768,22 @@ public class Server extends Base implements IServer {
 			while (iterator.hasNext()) {
 				String moduleStr = (String) iterator.next();
 				IModule module = ServerUtil.getModule(moduleStr);
-				modules.add(module);
+				if (module != null)
+					modules.add(module);
+			}
+		} else {
+			// verify modules are still available
+			List remove = new ArrayList();
+			Iterator iterator = modules.iterator();
+			while (iterator.hasNext()) {
+				IModule module = (IModule) iterator.next();
+				if (ServerUtil.getModule(module.getId()) == null)
+					remove.add(module);
+			}
+			
+			iterator = remove.iterator();
+			while (iterator.hasNext()) {
+				modules.remove(iterator.next());
 			}
 		}
 		

@@ -11,9 +11,12 @@
 package org.eclipse.jst.server.tomcat.core.internal;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
@@ -68,7 +71,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		return getTomcatRuntime().getVersionHandler();
 	}
 	
-	public TomcatConfiguration getTomcatConfiguration() {
+	public TomcatConfiguration getTomcatConfiguration() throws CoreException {
 		return getTomcatServer().getTomcatConfiguration();
 	}
 
@@ -200,19 +203,39 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	/*
 	 * Publishes the given module to the server.
 	 */
-	public void publishModule(int kind, int deltaKind, IModule[] parents, IModule module, IProgressMonitor monitor) {
+	public void publishModule(int kind, int deltaKind, IModule[] parents, IModule module, IProgressMonitor monitor) throws CoreException {
 		if (getTomcatServer().isTestEnvironment())
 			return;
 
-		IWebModule webModule = (IWebModule) module.getAdapter(IWebModule.class);
-		IPath from = webModule.getLocation();
-		IPath to = getServer().getRuntime().getLocation().append("webapps").append(webModule.getContextRoot());
-		if (deltaKind == IServer.REMOVED)
-			FileUtil.deleteDirectory(to.toFile(), monitor);
-		else
-			FileUtil.smartCopyDirectory(from.toOSString(), to.toOSString(), monitor);
+		IPath path = getServer().getTempDirectory().append("publish.txt");
+		Properties p = new Properties();
+		try {
+			p.load(new FileInputStream(path.toFile()));
+		} catch (Exception e) {
+			// ignore
+		}
 		
-		setModulePublishState(module, IServer.PUBLISH_STATE_NONE);
+		if (deltaKind == IServer.REMOVED) {
+			try {
+				String publishPath = (String) p.get(module.getId());
+				FileUtil.deleteDirectory(new File(publishPath), monitor);
+			} catch (Exception e) {
+				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, "Could not remove module", e));
+			}
+		} else {
+			IWebModule webModule = (IWebModule) module.getAdapter(IWebModule.class);
+			IPath from = webModule.getLocation();
+			IPath to = getServer().getRuntime().getLocation().append("webapps").append(webModule.getContextRoot());
+			FileUtil.smartCopyDirectory(from.toOSString(), to.toOSString(), monitor);
+			p.put(module.getId(), to.toOSString());
+			setModulePublishState(module, IServer.PUBLISH_STATE_NONE);
+		}
+		
+		try {
+			p.store(new FileOutputStream(path.toFile()), "Tomcat publish data");
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 
 	/**
