@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -16,31 +16,67 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 /**
- * An element.
+ * Provides common methods for working with elements that are
+ * modified via working copies. This interface provides the
+ * getters; the setters are on {@link IElementWorkingCopy}.
+ * <p>
+ * [issue: Why are attributes exposed? The attribute ids and
+ * values are passed to property change listeners. However,
+ * they are not useful unless there is a spec'd correlation
+ * between methods like getName and an attribute "name". The
+ * constants are declared on Base, which is internal.]
+ * </p>
+ * <p>
+ * This interface is not intended to be implemented by clients.
+ * </p>
  * 
- * <p>This interface is not intended to be implemented by clients.</p>
+ * @since 1.0
  */
 public interface IElement {
 	/**
-	 * Return the label (name) of this element.
-	 * 
-	 * @return java.lang.String
+	 * Returns the displayable name for this element.
+	 * <p>
+	 * Note that this name is appropriate for the current locale.
+	 * </p>
+	 *
+	 * @return a displayable name
 	 */
 	public String getName();
 	
 	/**
-	 * Return the id of this element.
+	 * Returns the id of this element.
+	 * Each element (of a given type) has a distinct id, fixed for
+	 * its lifetime. Ids are intended to be used internally as keys;
+	 * they are not intended to be shown to end users.
 	 * 
-	 * @return java.lang.String
+	 * @return the element id
 	 */
 	public String getId();
 
+	/**
+	 * Deletes the persistent representation of this element.
+	 * <p>
+	 * [issue: This method is out of place. Elements do not
+	 * have a notion of being connected to an underlying file.]
+	 * </p>
+	 * 
+	 * @throws CoreException [missing]
+	 */
 	public void delete() throws CoreException;
 
 	/**
-	 * Returns true if this element is locked. (user cannot make changes).
+	 * Returns whether this element is locked.
+	 * When an element is locked, the user cannot make changes to it.
+	 * <p>
+	 * [issue: It's odd to have this at the API level because
+	 * it has no force. Once would modify a locked element as
+	 * readily as an unlocked one, via a working copy.
+	 * This facility, which is unused, needs to be motivated
+	 * (or removed).]
+	 * </p>
 	 *
-	 * @return boolean
+	 * @return <code>true</code> if this element is locked,
+	 * and <code>false</code> otherwise
 	 */
 	public boolean isLocked();
 

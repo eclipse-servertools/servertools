@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,19 +14,38 @@ import java.util.*;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
-import org.eclipse.wst.server.core.internal.*;
 import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.core.util.ProgressUtil;
+import org.eclipse.wst.server.core.internal.*;
 /**
- * Base class for obtaining references to server models.
- * 
- * Also provides references for servers and server configurations.
+ * Main class for server core API.
+ * <p>
+ * This class provides references for servers and server configurations.
  * These references can be saved as tool or server-data and can be
  * used to return the original resource if it still exists. These
- * references are not OS specific and can be used in a team environment.
+ * references are not OS-specific and can be used in a team environment.
+ * </p>
+ * <p>
+ * This class provides all its functionality through static members.
+ * It is not intended to be subclassed or instantiated.
+ * </p>
+ * <p>
+ * <it>Caveat: The server core API is still in an early form, and is
+ * likely to change significantly before the initial release.</it>
+ * </p>
+ * 
+ * @since 1.0
  */
 public class ServerCore {
-	// server core plugin id
+	/**
+	 // server core plugin id
+	 * <p>
+	 * [issue: Plug-in ids should not be exposed as client API
+	 * unless there is a good reason to do so. Client code generally
+	 * don't care about the plug-in structure. Same is usually true
+	 * for service providers.]
+	 * </p>
+	 */
 	public static final String PLUGIN_ID = "org.eclipse.wst.server.core";
 
 	// cached copy of all server startups
@@ -159,9 +178,30 @@ public class ServerCore {
 	}
 	
 	/**
-	 * Returns a List of all module kinds.
-	 *
-	 * @return java.util.List
+	 * Returns the list of all known module kinds.
+	 * <p>
+	 * Clients must not modify the list that is returned.
+	 * If the set of module kinds changes, the affect on
+	 * the returned list is unspecified.
+	 * </p>
+	 * <p>
+	 * [issue: The terminology should be "module types",
+	 * to make it consistent with server types, etc.]
+	 * </p>
+	 * <p>
+	 * [issue: The list returned is precious. You would not want a client
+	 * to accidentally or malicously whack it. Normal practice is to
+	 * return an array instead of a List, and to return a new copy each call.
+	 * This allows the spec to say that the client can do what they want
+	 * with the result, and that it won't change under foot.
+	 * Another alternative is to return a UnmodifiableList implementation
+	 * so that clients cannot modify. But if you don't copy, you still
+	 * have the problem of the list chaning under foot if a new plug-in
+	 * is installed that happens to define a module kind (a scenario that
+	 * Eclipse should support).]
+	 * </p>
+	 * 
+	 * @return the list of module kinds (element type: {@link IModuleKind})
 	 */
 	public static List getModuleKinds() {
 		if (moduleKinds == null)
@@ -170,9 +210,30 @@ public class ServerCore {
 	}
 	
 	/**
-	 * Returns the module kind with the given id.
+	 * Returns the module kind with the given id, or <code>null</code>
+	 * if none. This convenience method searches the list of known
+	 * module kinds ({@link #getModuleKinds()}) for the one a matching
+	 * module kind id ({@link IModuleKind#getId()}).
+	 * <p>
+	 * [issue: The terminology should be "module types",
+	 * to make it consistent with server types, etc.]
+	 * </p>
+	 * <p>
+	 * [issue: It does not really make sense for a key parameter
+	 * like id to be null. 
+	 * Null id should be spec'd as illegal, 
+	 * and the implementation should immediately throw an unspecified 
+	 * RuntimeException if null is passed.]
+	 * </p>
+	 * <p>
+	 * [issue: Consider renaming this method findModuleKind 
+	 * (findModuleType) to make it clear that it is searching.]
+	 * </p>
 	 *
-	 * @return org.eclipse.wst.server.core.IModuleKind
+	 * @param the module kind id, or <code>null</code>
+	 * @return the module kind, or <code>null</code> if 
+	 * id is <code>null</code> or there is no module kind
+	 * with the given id
 	 */
 	public static IModuleKind getModuleKind(String id) {
 		if (id == null)
@@ -191,9 +252,25 @@ public class ServerCore {
 	}
 	
 	/**
-	 * Returns a List of all runtime types.
-	 *
-	 * @return java.util.List
+	 * Returns the list of all known runtime types.
+	 * <p>
+	 * Clients must not modify the list that is returned.
+	 * If the set of runtime types changes, the affect on
+	 * the returned list is unspecified.
+	 * </p>
+	 * <p>
+	 * [issue: The list returned is precious. You would not want a client
+	 * to accidentally or malicously whack it. Normal practice is to
+	 * return an array instead of a List, and to return a new copy each call.
+	 * This allows the spec to say that the client can do what they want
+	 * with the result, and that it won't change under foot.
+	 * Another alternative is to return a UnmodifiableList implementation
+	 * so that clients cannot modify. But if you don't copy, you still
+	 * have the problem of the list chaning under foot if a new plug-in
+	 * is installed that happens to define a runtime type (a scenario that
+	 * Eclipse should support).]
+	 * </p>
+	 * @return the list of runtime types (element type: {@link IRuntimeType})
 	 */
 	public static List getRuntimeTypes() {
 		if (runtimeTypes == null)
@@ -202,9 +279,27 @@ public class ServerCore {
 	}
 	
 	/**
-	 * Returns the runtime type with the given id.
+	 * Returns the runtime type with the given id, or <code>null</code>
+	 * if none. This convenience method searches the list of known
+	 * runtime types ({@link #getRuntimeTypes()}) for the one with a matching
+	 * runtime type id ({@link IRuntimeType#getId()}).
+	 * <p>
+	 * [issue: Same issue as with IServerType.
+	 * It does not really make sense for a key parameter
+	 * like id to be null. 
+	 * Null id should be spec'd as illegal, 
+	 * and the implementation should immediately throw an unspecified 
+	 * RuntimeException if null is passed.]
+	 * </p>
+	 * <p>
+	 * [issue: Consider renaming this method findRuntimeType to make
+	 * it clear that it is searching.]
+	 * </p>
 	 *
-	 * @return org.eclipse.wst.server.core.IRuntimeType
+	 * @param the runtime type id, or <code>null</code>
+	 * @return the runtime type, or <code>null</code> if 
+	 * id is <code>null</code> or there is no runtime type
+	 * with the given id
 	 */
 	public static IRuntimeType getRuntimeType(String id) {
 		if (id == null)
@@ -266,9 +361,25 @@ public class ServerCore {
 	}
 
 	/**
-	 * Returns a List of all server types.
-	 *
-	 * @return java.util.List
+	 * Returns the list of all known server types.
+	 * <p>
+	 * Clients must not modify the list that is returned.
+	 * If the set of server types changes, the affect on
+	 * the returned list is unspecified.
+	 * </p>
+	 * <p>
+	 * [issue: The list returned is precious. You would not want a client
+	 * to accidentally or malicously whack it. Normal practice is to
+	 * return an array instead of a List, and to return a new copy each call.
+	 * This allows the spec to say that the client can do what they want
+	 * with the result, and that it won't change under foot.
+	 * Another alternative is to return a UnmodifiableList implementation
+	 * so that clients cannot modify. But if you don't copy, you still
+	 * have the problem of the list chaning under foot if a new plug-in
+	 * is installed that happens to define a server type (a scenario that
+	 * Eclipse should support).]
+	 * </p>
+	 * @return the list of server types (element type: {@link IServerType})
 	 */
 	public static List getServerTypes() {
 		if (serverTypes == null)
@@ -277,9 +388,26 @@ public class ServerCore {
 	}
 	
 	/**
-	 * Returns the server type with the given id.
+	 * Returns the server type with the given id, or <code>null</code>
+	 * if none. This convenience method searches the list of known
+	 * server types ({@link #getServerTypes()}) for the one with a matching
+	 * server type id ({@link IServerType#getId()}).
+	 * <p>
+	 * [issue: It does not really make sense for a key parameter
+	 * like id to be null. 
+	 * Null id should be spec'd as illegal, 
+	 * and the implementation should immediately throw an unspecified 
+	 * RuntimeException if null is passed.]
+	 * </p>
+	 * <p>
+	 * [issue: Consider renaming this method findServerType to make
+	 * it clear that it is searching.]
+	 * </p>
 	 *
-	 * @return org.eclipse.wst.server.core.IServerType
+	 * @param the server type id, or <code>null</code>
+	 * @return the server type, or <code>null</code> if 
+	 * id is <code>null</code> or there is no server type
+	 * with the given id
 	 */
 	public static IServerType getServerType(String id) {
 		if (id == null)
@@ -298,9 +426,27 @@ public class ServerCore {
 	}
 	
 	/**
-	 * Returns a List of all server configuration types.
-	 *
-	 * @return java.util.List
+	 * Returns the list of all known server configuration types.
+	 * <p>
+	 * Clients must not modify the list that is returned.
+	 * If the set of server configuration types changes, the affect on
+	 * the returned list is unspecified.
+	 * </p>
+	 * <p>
+	 * [issue: Same issue as with IServerType.
+	 * The list returned is precious. You would not want a client
+	 * to accidentally or malicously whack it. Normal practice is to
+	 * return an array instead of a List, and to return a new copy each call.
+	 * This allows the spec to say that the client can do what they want
+	 * with the result, and that it won't change under foot.
+	 * Another alternative is to return a UnmodifiableList implementation
+	 * so that clients cannot modify. But if you don't copy, you still
+	 * have the problem of the list chaning under foot if a new plug-in
+	 * is installed that happens to define a server configuration type (a scenario that
+	 * Eclipse should support).]
+	 * </p>
+	 * @return the list of server configuration types
+	 * (element type: {@link IServerConfigurationType})
 	 */
 	public static List getServerConfigurationTypes() {
 		if (serverConfigurationTypes == null)
@@ -309,9 +455,28 @@ public class ServerCore {
 	}
 	
 	/**
-	 * Returns the server configuration type with the given id.
+	 * Returns the server configuration type with the given id, 
+	 * or <code>null</code> if none. This convenience method searches
+	 * the list of known server configuration types
+	 * ({@link #getServerConfigurationTypes()}) for the one a matching
+	 * server id ({@link IServerConfigurationType#getId()}).
+	 * <p>
+	 * [issue: Same issue as with IServerType.
+	 * It does not really make sense for a key parameter
+	 * like id to be null. 
+	 * Null id should be spec'd as illegal, 
+	 * and the implementation should immediately throw an unspecified 
+	 * RuntimeException if null is passed.]
+	 * </p>
+	 * <p>
+	 * [issue: Consider renaming this method findServerConfigurationType
+	 * to make it clear that it is searching.]
+	 * </p>
 	 *
-	 * @return org.eclipse.wst.server.core.IServerConfigurationType
+	 * @param the server configuration type id, or <code>null</code>
+	 * @return the server configuration type, or <code>null</code> if 
+	 * id is <code>null</code> or there is no server configuration type
+	 * with the given id
 	 */
 	public static IServerConfigurationType getServerConfigurationType(String id) {
 		if (id == null)
@@ -330,9 +495,31 @@ public class ServerCore {
 	}
 
 	/**
-	 * Returns a List of all module factories.
-	 *
-	 * @return java.util.List
+	 * Returns the list of all known module module factories.
+	 * <p>
+	 * Clients must not modify the list that is returned.
+	 * If the set of module factories changes, the affect on
+	 * the returned list is unspecified.
+	 * </p>
+	 * <p>
+	 * [issue: The list returned is precious. You would not want a client
+	 * to accidentally or malicously whack it. Normal practice is to
+	 * return an array instead of a List, and to return a new copy each call.
+	 * This allows the spec to say that the client can do what they want
+	 * with the result, and that it won't change under foot.
+	 * Another alternative is to return a UnmodifiableList implementation
+	 * so that clients cannot modify. But if you don't copy, you still
+	 * have the problem of the list chaning under foot if a new plug-in
+	 * is installed that happens to define a module factory (a scenario that
+	 * Eclipse should support).]
+	 * </p>
+	 * <p>
+	 * [issue: Are module factories SPI-side objects or do
+	 * normal clients need access to them? If they are only SPI,
+	 * this method should be moved to the SPI package.]
+	 * </p>
+	 * 
+	 * @return the list of module factories (element type: {@link IModuleFactory})
 	 */
 	public static List getModuleFactories() {
 		if (moduleFactories == null)
@@ -341,9 +528,31 @@ public class ServerCore {
 	}
 	
 	/**
-	 * Returns the module factory.
+	 * Returns the module factory with the given id, or <code>null</code>
+	 * if none. This convenience method searches the list of known
+	 * module factories ({@link #getModuleFactories()}) for the one a matching
+	 * module factory id ({@link IModuleFactory#getId()}).
+	 * <p>
+	 * [issue: It does not really make sense for a key parameter
+	 * like id to be null. 
+	 * Null id should be spec'd as illegal, 
+	 * and the implementation should immediately throw an unspecified 
+	 * RuntimeException if null is passed.]
+	 * </p>
+	 * <p>
+	 * [issue: Consider renaming this method findModuleFactory
+	 * to make it clear that it is searching.]
+	 * </p>
+	 * <p>
+	 * [issue: Are module factories SPI-side objects or do
+	 * normal clients need access to them? If they are only SPI,
+	 * this method should be moved to the SPI package.]
+	 * </p>
 	 *
-	 * @return java.util.List
+	 * @param the module factory id, or <code>null</code>
+	 * @return the module factory, or <code>null</code> if 
+	 * id is <code>null</code> or there is no module factory
+	 * with the given id
 	 */
 	public static IModuleFactory getModuleFactory(String id) {
 		if (id == null)
