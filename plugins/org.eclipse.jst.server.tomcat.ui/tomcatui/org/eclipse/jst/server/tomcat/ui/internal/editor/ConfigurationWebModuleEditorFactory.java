@@ -24,7 +24,11 @@ public class ConfigurationWebModuleEditorFactory extends ServerEditorPartFactory
 	 */
 	public boolean shouldCreatePage(IServerWorkingCopy server) {
 		TomcatServer tomcatServer = (TomcatServer) server.getAdapter(TomcatServer.class);
-		return tomcatServer.getServerConfiguration() != null;
+		try {
+			return tomcatServer.getServerConfiguration() != null;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	/*

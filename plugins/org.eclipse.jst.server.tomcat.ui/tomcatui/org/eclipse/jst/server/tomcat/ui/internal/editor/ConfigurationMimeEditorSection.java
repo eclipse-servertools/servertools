@@ -194,7 +194,11 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 		super.init(site, input);
 		
 		TomcatServer ts = (TomcatServer) server.getAdapter(TomcatServer.class);
-		tomcatConfiguration = ts.getTomcatConfiguration();
+		try {
+			tomcatConfiguration = ts.getTomcatConfiguration();
+		} catch (Exception e) {
+			// ignore
+		}
 		addChangeListener();
 		initialize();
 	}

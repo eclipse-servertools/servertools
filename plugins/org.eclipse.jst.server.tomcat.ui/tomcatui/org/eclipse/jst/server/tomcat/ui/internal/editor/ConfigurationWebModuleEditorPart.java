@@ -283,7 +283,11 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 		super.init(site, input);
 		
 		TomcatServer ts = (TomcatServer) server.getAdapter(TomcatServer.class);
-		configuration = ts.getTomcatConfiguration();
+		try {
+			configuration = ts.getTomcatConfiguration();
+		} catch (Exception e) {
+			// ignore
+		}
 		if (configuration != null)
 			addChangeListener();
 		

@@ -58,11 +58,18 @@ public class SetWebModulePathTask extends Task {
 	 */
 	public String getDescription() {
 		if (oldModule == null) {
-			IServerWorkingCopy wc = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
-			TomcatServer server = (TomcatServer) wc.getAdapter(TomcatServer.class);
-			TomcatConfiguration configuration = server.getTomcatConfiguration();
-			oldModule = (WebModule) configuration.getWebModules().get(index);
+			try {
+				IServerWorkingCopy wc = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
+				TomcatServer server = (TomcatServer) wc.getAdapter(TomcatServer.class);
+				TomcatConfiguration configuration = server.getTomcatConfiguration();
+				oldModule = (WebModule) configuration.getWebModules().get(index);
+			} catch (Exception e) {
+				// ignore
+			}
 		}
+		
+		if (oldModule == null)
+			return TomcatPlugin.getResource("%configurationEditorActionEditWebModuleDescription", "<>", path);
 		
 		return TomcatPlugin.getResource("%configurationEditorActionEditWebModuleDescription", oldModule.getPath(), path);
 	}

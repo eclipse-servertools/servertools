@@ -23,7 +23,11 @@ public class ConfigurationMimeEditorSectionFactory extends ServerEditorPageSecti
 	 */
 	public boolean shouldCreateSection(IServerWorkingCopy server) {
 		TomcatServer tomcatServer = (TomcatServer) server.getAdapter(ITomcatServer.class);
-		return tomcatServer.getServerConfiguration() != null;
+		try {
+			return tomcatServer.getServerConfiguration() != null;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	/*

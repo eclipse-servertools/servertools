@@ -55,11 +55,18 @@ public class RemoveWebModuleTask extends Task {
 	 */
 	public String getDescription() {
 		if (module == null) {
-			IServerWorkingCopy wc = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
-			TomcatServer server = (TomcatServer) wc.getAdapter(TomcatServer.class);
-			TomcatConfiguration configuration = server.getTomcatConfiguration();
-			module = (WebModule) configuration.getWebModules().get(index);
+			try {
+				IServerWorkingCopy wc = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
+				TomcatServer server = (TomcatServer) wc.getAdapter(TomcatServer.class);
+				TomcatConfiguration configuration = server.getTomcatConfiguration();
+				module = (WebModule) configuration.getWebModules().get(index);
+			} catch (Exception e) {
+				// ignore
+			}
 		}
+		if (module == null)
+			return TomcatPlugin.getResource("%configurationEditorActionRemoveWebModuleDescription", "<>");
+		
 		return TomcatPlugin.getResource("%configurationEditorActionRemoveWebModuleDescription", module.getPath());
 	}
 

@@ -51,11 +51,11 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		return getTomcatRuntime().getVersionHandler();
 	}
 
-	public ITomcatConfiguration getServerConfiguration() {
+	public ITomcatConfiguration getServerConfiguration() throws CoreException {
 		return getTomcatConfiguration();
 	}
 
-	public TomcatConfiguration getTomcatConfiguration() {
+	public TomcatConfiguration getTomcatConfiguration() throws CoreException {
 		if (configuration == null) {
 			IFolder folder = getServer().getServerConfiguration();
 			/*IPath path = null;
@@ -82,6 +82,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			} catch (CoreException ce) {
 				// ignore
 				configuration = null;
+				throw ce;
 			}
 		}
 		return configuration;
@@ -284,10 +285,14 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		if (getServer().getServerConfiguration() == null)
 			return new IServerPort[0];
 		
-		List list = getTomcatConfiguration().getServerPorts();
-		IServerPort[] sp = new IServerPort[list.size()];
-		list.toArray(sp);
-		return sp;
+		try {
+			List list = getTomcatConfiguration().getServerPorts();
+			IServerPort[] sp = new IServerPort[list.size()];
+			list.toArray(sp);
+			return sp;
+		} catch (Exception e) {
+			return new IServerPort[0]; 
+		}
 	}
 	
 	public void setDefaults() {
