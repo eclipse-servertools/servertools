@@ -11,7 +11,6 @@
 package org.eclipse.jst.server.tomcat.core;
 
 import org.eclipse.jdt.launching.IVMInstall;
-
 /**
  *
  */
