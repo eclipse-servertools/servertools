@@ -80,7 +80,7 @@ public interface IMonitorWorkingCopy extends IMonitor {
 	 * creates a new monitor instance with attributes matching this working copy.
 	 * For a working copy cloned from an existing monitor instance (by
 	 * {@link IMonitor#createWorkingCopy()}), this method stops the existing
-	 * monitor (using {@link MonitorCore#stopMonitor(IMonitor)}) if necessary,
+	 * monitor (using {@link IMonitor#stop()}) if necessary,
 	 * and then sets the attributes of the monitor instance to match this
 	 * working copy (the monitor instance is returned).
 	 * <p>

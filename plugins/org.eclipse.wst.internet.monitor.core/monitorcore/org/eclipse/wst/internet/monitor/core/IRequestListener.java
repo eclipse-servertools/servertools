@@ -13,11 +13,16 @@ package org.eclipse.wst.internet.monitor.core;
  * Listener for new or modified requests created from a single monitor.
  * Each request represents message traffic between a monitored client
  * and server.
+ * <p>
+ * Requests are not persisted - they only exist in this API until the
+ * connection is done. An initial requestAdded() event is fired when the
+ *	request is created (by the client creating a connection), and then
+ * requestChanged() events occur as data is passed through the request
+ * or changes are made to the request's properties.
+ * </p>
  * 
  * @see IMonitor#addRequestListener(IRequestListener)
  * @since 1.0
- * 
- * [issue : CS - how come there's no requestRemoved() or requestComplete()?  Perhaps this just doesn't make sense in this context? ]
  */
 public interface IRequestListener {
 	/**

@@ -13,7 +13,7 @@ package org.eclipse.wst.internet.monitor.core;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 /**
- * Represents a monitor.
+ * Represents a monitor between a client and server.
  * The monitor watches all network traffic between a local client (talking
  * on a given local port) and a remote server (identified by host and port).
  * The global list of known monitors is available via {@link MonitorCore.getMonitors()}.

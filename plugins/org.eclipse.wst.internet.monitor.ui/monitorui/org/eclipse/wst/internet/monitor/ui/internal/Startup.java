@@ -10,7 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.internet.monitor.ui.internal;
 
-import org.eclipse.wst.internet.monitor.core.IStartup;
+import org.eclipse.wst.internet.monitor.core.internal.IStartup;
 /**
  * Startup hook.
  */

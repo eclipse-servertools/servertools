@@ -97,7 +97,7 @@ public final class MonitorCore {
 	 * content filters ({@link #getContentFilters()}) for the one with a
 	 * matching id ({@link IContentFilter#getId()})
 	 *
-	 * @param the content filter id; must not be <code>null</code>
+	 * @param id the content filter id; must not be <code>null</code>
 	 * @return the content filter instance, or <code>null</code> if there
 	 *   is no content filter with the given id
 	 */

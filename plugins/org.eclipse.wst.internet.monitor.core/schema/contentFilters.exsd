@@ -73,11 +73,14 @@ Content filter instances of this type will delegate to instances of this class.
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="order" type="string">
+         <attribute name="order" type="int">
             <annotation>
                <documentation>
                   an integer used to order filters relative to each other. Lower orders are processed first
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="java"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>

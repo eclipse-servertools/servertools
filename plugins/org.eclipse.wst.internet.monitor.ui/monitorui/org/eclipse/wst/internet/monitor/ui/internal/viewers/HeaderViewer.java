@@ -76,36 +76,6 @@ public class HeaderViewer {
 		setDisplayHeader(false);
 	}
 	
-	/*public boolean isHidden() {
-		return hidden;
-	}*/
-	
-	/*public void hideViewer() {
-		hidden = true;
-		innerComp.dispose();
-		data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
-		data.heightHint = 0;
-		headerComp.setLayoutData(data);	
-		rootComp.layout(true);
-	}
-	
-	public void showViewer() {
-		hidden = false;
-		
-		innerComp = new Composite(headerComp, SWT.NONE);
-		layout = new GridLayout();
-		layout.numColumns = 1;
-		layout.marginHeight = 0;
-		layout.marginWidth = 2;
-		innerComp.setLayout(layout);
-		data = new GridData(GridData.FILL_BOTH);
-		data.heightHint = HEADER_LABEL_SIZE;
-		innerComp.setLayoutData(data);
-		
-		displayHeader = true;
-		setDisplayHeader(false);
-	}*/
-	
 	public void setRequestResponse(Request reqresp) {
 		rr = reqresp;
 		if (!hidden)
@@ -166,10 +136,6 @@ public class HeaderViewer {
 		}
 		getView();
 	}
-
-	/*public boolean getDisplayHeader() {
-		return displayHeader;
-	}*/
 
 	private void getView() {
 		String out = "";

@@ -256,7 +256,7 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 			}
 		}
 	}
-	
+
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		

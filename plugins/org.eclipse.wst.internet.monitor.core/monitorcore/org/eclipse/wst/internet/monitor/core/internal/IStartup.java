@@ -8,7 +8,7 @@
  * Contributors:
  *    IBM Corporation - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.internet.monitor.core;
+package org.eclipse.wst.internet.monitor.core.internal;
 /**
  * An interface for the startup extension point.
  * Plug-ins that register a startup extension will be activated when the monitor
@@ -16,8 +16,6 @@ package org.eclipse.wst.internet.monitor.core;
  * implemented using the normal contribution mechanisms.
  * 
  * @since 1.0
- * 
- * [issue : CS -  Why do we need to load other plugins from this plugin's startup method?  Isn't this bad practise?]  
  */
 public interface IStartup {
 	/**

@@ -22,61 +22,77 @@ import org.eclipse.wst.internet.monitor.ui.internal.viewers.HeaderViewer;
  */
 public interface IViewerManager {
 	/**
-	 * Set whether or not to show HTTP header details
+	 * Set whether or not to show HTTP header details.
+	 * 
 	 * @param b boolean
 	 */
 	public void setDisplayHeaderInfo(boolean b);
 	
 	/**
-	 * Returns whether or not HTTP header details is showing
+	 * Returns whether or not HTTP header details is showing.
+	 * 
 	 * @return boolean
 	 */
 	public boolean getDisplayHeaderInfo();
 	
 	/**
 	 * Show the TCP/IP request message in a parent Composite
-	 * @param rr org.eclipse.tcpip.monitor.internal.RequestResponse
-	 * @param parent org.eclipse.swt.widgets.Composite
+	 * 
+	 * @param request the request
 	 */
 	public void setRequest(Request rr);
 	
 	/**
 	 * Returns an array of the available TCP/IP request viewer ids
-	 * @return java.lang.String[]
+	 * 
+	 * @return a list of request viewers
 	 */
 	public List getRequestViewers();
 	
 	/**
 	 * Returns an array of the available TCP/IP response viewer ids
-	 * @return java.lang.String[]
+	 * 
+	 * @return a list of response viewers
 	 */
 	public List getResponseViewers();
 	
 	/**
 	 * Set the TCP/IP request message viewer
-	 * @param id java.lang.String
+	 * 
+	 * @param element
 	 */
 	public void setRequestViewer(IConfigurationElement element);
 	
 	/**
 	 * Set the TCP/IP response message viewer
-	 * @param id java.lang.String
+	 * 
+	 * @param element
 	 */
 	public void setResponseViewer(IConfigurationElement element);
 	
+	/**
+	 * 
+	 * @param filter
+	 */
 	public void addFilter(IContentFilter filter);
 	
+	/**
+	 * 
+	 * @param filter
+	 */
 	public void removeFilter(IContentFilter filter);
 	
 	/**
 	 * Return the current request viewer.
-	 * @return The current request viewer.
+	 * 
+	 * @return the current request viewer
 	 */
 	public ContentViewer getCurrentRequestViewer();
 	
 	/**
 	 * Return the current request header viewer.
-	 * @return The current request header viewer.
+	 * 
+	 * @return the current request header viewer
 	 */
 	public HeaderViewer getCurrentRequestHeaderViewer();
 }

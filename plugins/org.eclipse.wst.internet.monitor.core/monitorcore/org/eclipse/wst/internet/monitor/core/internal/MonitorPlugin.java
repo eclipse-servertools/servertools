@@ -15,7 +15,6 @@ import java.util.*;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.wst.internet.monitor.core.IContentFilter;
-import org.eclipse.wst.internet.monitor.core.IStartup;
 /**
  * The monitor core plugin.
  */

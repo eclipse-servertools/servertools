@@ -9,12 +9,11 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.core;
-
 /**
  * Listener for global changes affecting monitors.
  * <p>
  * Clients should implement this interface and register
- * their listener via {@linkMonitorCore#addMonitorListener(IMonitorListener)}.
+ * their listener via {@link MonitorCore#addMonitorListener(IMonitorListener)}.
  * </p>
  * 
  * @since 1.0
@@ -28,7 +27,7 @@ public interface IMonitorListener {
 	 * @param monitor the newly-created monitor
 	 */
 	public void monitorAdded(IMonitor monitor);
-	
+
 	/**
 	 * Notification that the given monitor has been changed.
      * Note that the monitor is never a working copy.
@@ -36,7 +35,7 @@ public interface IMonitorListener {
 	 * @param monitor the monitor that has been changed
 	 */
 	public void monitorChanged(IMonitor monitor);
-	
+
 	/**
 	 * Notification that the given monitor has been deleted (removed
 	 * from the global list of known monitors).

@@ -50,7 +50,6 @@ public interface IContentFilter {
 	 * It would be good to make this optional if the user had no idea how his filter should be ordered.
 	 * I've found that sometimes 'low', 'medium', 'high' are adequate to handle ordering issues and are 
 	 * easier for the extension writer deal with and get a sense of the proper value to assign. ]
-	 * [issue: CS - A minor point ... in contentFilterns.exsd the 'order' attribute should have type='int' not type='string']
 	 */
 	//public int getOrder();
 
