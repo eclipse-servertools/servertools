@@ -11,7 +11,6 @@
 package org.eclipse.wst.server.core;
 
 import java.beans.PropertyChangeListener;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
