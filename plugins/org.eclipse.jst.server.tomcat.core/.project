@@ -3,8 +3,6 @@
 	<name>org.eclipse.jst.server.tomcat.core</name>
 	<comment></comment>
 	<projects>
-		<project>org.eclipse.wst.server.core</project>
-		<project>org.eclipse.jst.server.core</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -3,11 +3,6 @@
 	<name>org.eclipse.jst.server.tomcat.ui</name>
 	<comment></comment>
 	<projects>
-		<project>org.eclipse.wst.server.core</project>
-		<project>org.eclipse.jst.server.core</project>
-		<project>org.eclipse.jst.server.ui</project>
-		<project>org.eclipse.jst.server.tomcat.core</project>
-		<project>org.eclipse.wst.server.ui</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

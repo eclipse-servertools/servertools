@@ -3,8 +3,6 @@
 	<name>org.eclipse.wst.server.ui</name>
 	<comment></comment>
 	<projects>
-		<project>org.eclipse.wst.server.core</project>
-		<project>org.eclipse.jst.server.core</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
