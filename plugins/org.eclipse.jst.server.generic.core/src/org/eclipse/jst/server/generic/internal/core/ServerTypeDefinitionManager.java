@@ -49,7 +49,7 @@ public class ServerTypeDefinitionManager
 	public ServerTypeDefinitionManager(URL serverDefinitionURL)
 	{
 		super();
-		fXmlUtils = new XMLUtils(serverDefinitionURL); 
+		fXmlUtils = new XMLUtils(); 
 	}
 
 
