@@ -49,8 +49,11 @@ public class AllTests {
 		suite.addTestSuite(ModuleObjectAdaptersTestCase.class);
 		suite.addTestSuite(LaunchableAdaptersTestCase.class);
 		suite.addTestSuite(ClientsTestCase.class);
+		
 		suite.addTestSuite(ServerCoreTestCase.class);
 		suite.addTestSuite(ServerUtilTestCase.class);
+		suite.addTest(new OrderedTestSuite(ProjectPropertiesTestCase.class));
+		suite.addTest(new OrderedTestSuite(ServerPreferencesTestCase.class));
 		//$JUnit-END$
 		return suite;
 	}
