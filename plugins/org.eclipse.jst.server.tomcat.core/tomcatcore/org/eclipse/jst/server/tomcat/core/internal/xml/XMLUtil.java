@@ -104,7 +104,7 @@ public class XMLUtil {
 	public static byte[] getContents(Document document) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
-			print(new PrintWriter(out), document);
+			print(new PrintStream(out, true, "UTF-8"), document);
 			return out.toByteArray();
 		} catch (Exception ex) {
 			throw new IOException(ex.getLocalizedMessage());
@@ -219,14 +219,14 @@ public class XMLUtil {
 		return stringbuffer.toString();
 	}
 
-	protected static void print(PrintWriter out, Node node) {
+	protected static void print(PrintStream out, Node node) {
 		if (node == null)
 			return;
 		short type = node.getNodeType();
 		switch (type) {
 			case Node.DOCUMENT_NODE: {
-				//out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-				out.println("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n");
+				out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+				//out.println("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n");
 				NodeList nodelist = node.getChildNodes();
 				int size = nodelist.getLength();
 				for (int i = 0; i < size; i++)
@@ -321,9 +321,9 @@ public class XMLUtil {
 	}
 
 	public static void save(String filename, Document document) throws IOException {
-		PrintWriter out = null;
+		PrintStream out = null;
 		try {
-			out = new PrintWriter(new BufferedWriter(new FileWriter(filename)));
+			out = new PrintStream(new BufferedOutputStream(new FileOutputStream(filename)), true, "UTF-8");
 			//traceNode(document, "");
 			print(out, document);
 		} catch (Exception ex) {
@@ -362,12 +362,12 @@ public class XMLUtil {
 	}
 
 	public static String toString(Document document) {
-		PrintWriter out = null;
+		PrintStream out = null;
 		try {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-			out = new PrintWriter(baos);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream(2048);
+			out = new PrintStream(baos);
 			print(out, document);
-			return new String(baos.toByteArray());
+			return new String(baos.toByteArray(), "UTF-8");
 		} catch (Exception ex) {
 			// ignore
 		} finally {

@@ -67,15 +67,14 @@ public class Factory {
 	public Document getDocument() {
 		return document;
 	}
-	
+
 	public String getPackageName() {
 		return packageName;
 	}
-	
+
 	public XMLElement loadDocument(InputStream in) throws IOException {
 		try {
-			InputStreamReader reader = new InputStreamReader(in);
-			document = XMLUtil.getDocumentBuilder().parse(new InputSource(reader));
+			document = XMLUtil.getDocumentBuilder().parse(new InputSource(in));
 			Element element = document.getDocumentElement();
 			return newInstance(element);
 		} catch (Exception exception) {
@@ -83,7 +82,7 @@ public class Factory {
 			throw new IOException("Could not load document");
 		}
 	}
-	
+
 	protected XMLElement newInstance(Element element) {
 		String s = element.getNodeName();
 		try {
