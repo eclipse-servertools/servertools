@@ -725,7 +725,12 @@ public class Server extends Base implements IServer {
 		
 		IModuleVisitor visitor = new IModuleVisitor() {
 			public boolean visit(IModule[] parents, IModule module) {
-				taskParentList.add(parents);
+				int size = parents.length;
+				List list = new ArrayList(size);
+				for (int i = 0; i < size; i++)
+					list.add(parents[i]);
+				
+				taskParentList.add(list);
 				taskModuleList.add(module);
 				if (parents != null)
 					parentList.add(parents);
