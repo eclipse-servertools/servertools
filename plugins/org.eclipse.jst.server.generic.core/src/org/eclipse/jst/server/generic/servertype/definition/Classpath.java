@@ -28,9 +28,11 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Classpath.java,v 1.2 2005/01/30 21:47:27 gercan Exp $
+ * $Id: Classpath.java,v 1.3 2005/03/14 20:54:15 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
+
+import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 
@@ -54,7 +56,7 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * </p>
  *
  * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getClasspath()
- * @model 
+ * @model extendedMetaData="name='Classpath' kind='elementOnly'"
  * @generated
  */
 public interface Classpath extends EObject{
@@ -70,6 +72,7 @@ public interface Classpath extends EObject{
      * @return the value of the '<em>Group</em>' attribute list.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getClasspath_Group()
      * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
+     *        extendedMetaData="kind='group' name='group:0'"
      * @generated
      */
 	FeatureMap getGroup();
@@ -86,9 +89,10 @@ public interface Classpath extends EObject{
      * @return the value of the '<em>Archive</em>' containment reference list.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getClasspath_Archive()
      * @model type="org.eclipse.jst.server.generic.servertype.definition.ArchiveType" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
+     *        extendedMetaData="kind='element' name='archive' group='#group:0'"
      * @generated
      */
-	EList getArchive();
+	List getArchive();
 
     /**
      * Returns the value of the '<em><b>Id</b></em>' attribute.
@@ -102,6 +106,7 @@ public interface Classpath extends EObject{
      * @see #setId(String)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getClasspath_Id()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
+     *        extendedMetaData="kind='attribute' name='id'"
      * @generated
      */
 	String getId();
@@ -130,6 +135,7 @@ public interface Classpath extends EObject{
      * @see #setIsLibrary(boolean)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getClasspath_IsLibrary()
      * @model unique="false" unsettable="true" dataType="org.eclipse.emf.ecore.xml.type.Boolean"
+     *        extendedMetaData="kind='attribute' name='isLibrary'"
      * @generated
      */
 	boolean isIsLibrary();

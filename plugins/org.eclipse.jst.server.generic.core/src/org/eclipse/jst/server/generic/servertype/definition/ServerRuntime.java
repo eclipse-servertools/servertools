@@ -28,9 +28,11 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerRuntime.java,v 1.2 2005/01/30 21:47:27 gercan Exp $
+ * $Id: ServerRuntime.java,v 1.3 2005/03/14 20:54:14 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
+
+import java.util.List;
 
 import java.util.Map;
 
@@ -47,10 +49,7 @@ import org.eclipse.jst.server.generic.internal.xml.Resolver;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * 
- * 				Generic Server Type Definition. It must have a list of
- * 				properties.
- * 			
+ *      Generic Server Type Definition. It must have a list of     properties.    
  * <!-- end-model-doc -->
  *
  * <p>
@@ -75,7 +74,7 @@ import org.eclipse.jst.server.generic.internal.xml.Resolver;
  * </p>
  *
  * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime()
- * @model 
+ * @model extendedMetaData="name='ServerRuntime' kind='elementOnly'"
  * @generated
  */
 public interface ServerRuntime extends EObject{
@@ -91,6 +90,7 @@ public interface ServerRuntime extends EObject{
      * @return the value of the '<em>Group</em>' attribute list.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Group()
      * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
+     *        extendedMetaData="kind='group' name='group:0'"
      * @generated
      */
 	FeatureMap getGroup();
@@ -107,9 +107,10 @@ public interface ServerRuntime extends EObject{
      * @return the value of the '<em>Property</em>' containment reference list.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Property()
      * @model type="org.eclipse.jst.server.generic.servertype.definition.Property" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
+     *        extendedMetaData="kind='element' name='property' group='#group:0'"
      * @generated
      */
-	EList getProperty();
+	List getProperty();
 
     /**
      * Returns the value of the '<em><b>Group1</b></em>' attribute list.
@@ -123,6 +124,7 @@ public interface ServerRuntime extends EObject{
      * @return the value of the '<em>Group1</em>' attribute list.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Group1()
      * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
+     *        extendedMetaData="kind='group' name='group:2'"
      * @generated
      */
 	FeatureMap getGroup1();
@@ -139,9 +141,10 @@ public interface ServerRuntime extends EObject{
      * @return the value of the '<em>Port</em>' containment reference list.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Port()
      * @model type="org.eclipse.jst.server.generic.servertype.definition.Port" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
+     *        extendedMetaData="kind='element' name='port' group='#group:2'"
      * @generated
      */
-	EList getPort();
+	List getPort();
 
     /**
      * Returns the value of the '<em><b>Group2</b></em>' attribute list.
@@ -155,6 +158,7 @@ public interface ServerRuntime extends EObject{
      * @return the value of the '<em>Group2</em>' attribute list.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Group2()
      * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
+     *        extendedMetaData="kind='group' name='group:4'"
      * @generated
      */
 	FeatureMap getGroup2();
@@ -171,9 +175,10 @@ public interface ServerRuntime extends EObject{
      * @return the value of the '<em>Module</em>' containment reference list.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Module()
      * @model type="org.eclipse.jst.server.generic.servertype.definition.Module" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
+     *        extendedMetaData="kind='element' name='module' group='#group:4'"
      * @generated
      */
-	EList getModule();
+	List getModule();
 
     /**
      * Returns the value of the '<em><b>Project</b></em>' containment reference.
@@ -187,6 +192,7 @@ public interface ServerRuntime extends EObject{
      * @see #setProject(Project)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Project()
      * @model containment="true" resolveProxies="false" required="true"
+     *        extendedMetaData="kind='element' name='project'"
      * @generated
      */
 	Project getProject();
@@ -213,6 +219,7 @@ public interface ServerRuntime extends EObject{
      * @see #setStart(LaunchConfiguration)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Start()
      * @model containment="true" resolveProxies="false" required="true"
+     *        extendedMetaData="kind='element' name='start'"
      * @generated
      */
 	LaunchConfiguration getStart();
@@ -239,6 +246,7 @@ public interface ServerRuntime extends EObject{
      * @see #setStop(LaunchConfiguration)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Stop()
      * @model containment="true" resolveProxies="false" required="true"
+     *        extendedMetaData="kind='element' name='stop'"
      * @generated
      */
 	LaunchConfiguration getStop();
@@ -265,6 +273,7 @@ public interface ServerRuntime extends EObject{
      * @return the value of the '<em>Group3</em>' attribute list.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Group3()
      * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
+     *        extendedMetaData="kind='group' name='group:9'"
      * @generated
      */
 	FeatureMap getGroup3();
@@ -281,9 +290,10 @@ public interface ServerRuntime extends EObject{
      * @return the value of the '<em>Publisher</em>' containment reference list.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Publisher()
      * @model type="org.eclipse.jst.server.generic.servertype.definition.Publisher" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
+     *        extendedMetaData="kind='element' name='publisher' group='#group:9'"
      * @generated
      */
-	EList getPublisher();
+	List getPublisher();
 
     /**
      * Returns the value of the '<em><b>Group4</b></em>' attribute list.
@@ -297,6 +307,7 @@ public interface ServerRuntime extends EObject{
      * @return the value of the '<em>Group4</em>' attribute list.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Group4()
      * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
+     *        extendedMetaData="kind='group' name='group:11'"
      * @generated
      */
 	FeatureMap getGroup4();
@@ -313,9 +324,10 @@ public interface ServerRuntime extends EObject{
      * @return the value of the '<em>Classpath</em>' containment reference list.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Classpath()
      * @model type="org.eclipse.jst.server.generic.servertype.definition.Classpath" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
+     *        extendedMetaData="kind='element' name='classpath' group='#group:11'"
      * @generated
      */
-	EList getClasspath();
+	List getClasspath();
 
     /**
      * Returns the value of the '<em><b>Name</b></em>' attribute.
@@ -329,6 +341,7 @@ public interface ServerRuntime extends EObject{
      * @see #setName(String)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Name()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+     *        extendedMetaData="kind='attribute' name='name'"
      * @generated
      */
 	String getName();
@@ -355,6 +368,7 @@ public interface ServerRuntime extends EObject{
      * @see #setVersion(String)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Version()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
+     *        extendedMetaData="kind='attribute' name='version'"
      * @generated
      */
 	String getVersion();

@@ -28,11 +28,13 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerRuntimeImpl.java,v 1.3 2005/01/30 21:48:52 gercan Exp $
+ * $Id: ServerRuntimeImpl.java,v 1.1 2005/03/14 20:54:15 gercan Exp $
  */
-package org.eclipse.jst.server.generic.servertype.definition.impl;
+package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
 import java.util.Collection;
+import java.util.List;
+
 import java.util.Iterator;
 import java.util.Map;
 import org.eclipse.emf.common.notify.Notification;
@@ -62,21 +64,21 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ServerRuntimeImpl#getGroup <em>Group</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ServerRuntimeImpl#getProperty <em>Property</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ServerRuntimeImpl#getGroup1 <em>Group1</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ServerRuntimeImpl#getPort <em>Port</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ServerRuntimeImpl#getGroup2 <em>Group2</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ServerRuntimeImpl#getModule <em>Module</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ServerRuntimeImpl#getProject <em>Project</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ServerRuntimeImpl#getStart <em>Start</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ServerRuntimeImpl#getStop <em>Stop</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ServerRuntimeImpl#getGroup3 <em>Group3</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ServerRuntimeImpl#getPublisher <em>Publisher</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ServerRuntimeImpl#getGroup4 <em>Group4</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ServerRuntimeImpl#getClasspath <em>Classpath</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ServerRuntimeImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ServerRuntimeImpl#getVersion <em>Version</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getGroup <em>Group</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getProperty <em>Property</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getGroup1 <em>Group1</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getPort <em>Port</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getGroup2 <em>Group2</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getModule <em>Module</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getProject <em>Project</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getStart <em>Start</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getStop <em>Stop</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getGroup3 <em>Group3</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getPublisher <em>Publisher</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getGroup4 <em>Group4</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getClasspath <em>Classpath</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getVersion <em>Version</em>}</li>
  * </ul>
  * </p>
  *
@@ -259,7 +261,7 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public EList getProperty() {
+	public List getProperty() {
         return ((FeatureMap)getGroup()).list(ServerTypePackage.eINSTANCE.getServerRuntime_Property());
     }
 
@@ -280,7 +282,7 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public EList getPort() {
+	public List getPort() {
         return ((FeatureMap)getGroup1()).list(ServerTypePackage.eINSTANCE.getServerRuntime_Port());
     }
 
@@ -301,7 +303,7 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public EList getModule() {
+	public List getModule() {
         return ((FeatureMap)getGroup2()).list(ServerTypePackage.eINSTANCE.getServerRuntime_Module());
     }
 
@@ -451,7 +453,7 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public EList getPublisher() {
+	public List getPublisher() {
         return ((FeatureMap)getGroup3()).list(ServerTypePackage.eINSTANCE.getServerRuntime_Publisher());
     }
 
@@ -472,7 +474,7 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public EList getClasspath() {
+	public List getClasspath() {
         return ((FeatureMap)getGroup4()).list(ServerTypePackage.eINSTANCE.getServerRuntime_Classpath());
     }
 

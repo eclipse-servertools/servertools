@@ -28,11 +28,13 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: PublisherImpl.java,v 1.2 2005/01/30 21:48:52 gercan Exp $
+ * $Id: PublisherImpl.java,v 1.1 2005/03/14 20:54:15 gercan Exp $
  */
-package org.eclipse.jst.server.generic.servertype.definition.impl;
+package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
 import java.util.Collection;
+
+import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -60,9 +62,9 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.PublisherImpl#getGroup <em>Group</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.PublisherImpl#getPublisherdata <em>Publisherdata</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.PublisherImpl#getId <em>Id</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.PublisherImpl#getGroup <em>Group</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.PublisherImpl#getPublisherdata <em>Publisherdata</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.PublisherImpl#getId <em>Id</em>}</li>
  * </ul>
  * </p>
  *
@@ -134,7 +136,7 @@ public class PublisherImpl extends EObjectImpl implements Publisher {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList getPublisherdata() {
+    public List getPublisherdata() {
         return ((FeatureMap)getGroup()).list(ServerTypePackage.eINSTANCE.getPublisher_Publisherdata());
     }
 

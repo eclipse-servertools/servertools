@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypePackage.java,v 1.2 2005/01/30 21:47:27 gercan Exp $
+ * $Id: ServerTypePackage.java,v 1.3 2005/03/14 20:54:15 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -82,14 +82,14 @@ public interface ServerTypePackage extends EPackage{
 	 * <!-- end-user-doc -->
      * @generated
      */
-	ServerTypePackage eINSTANCE = org.eclipse.jst.server.generic.servertype.definition.impl.ServerTypePackageImpl.init();
+	ServerTypePackage eINSTANCE = org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl.init();
 
     /**
      * The meta object id for the '{@link org.eclipse.jst.server.generic.servertype.definition.impl.ArchiveTypeImpl <em>Archive Type</em>}' class.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see org.eclipse.jst.server.generic.servertype.definition.impl.ArchiveTypeImpl
-     * @see org.eclipse.jst.server.generic.servertype.definition.impl.ServerTypePackageImpl#getArchiveType()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ArchiveTypeImpl
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getArchiveType()
      * @generated
      */
 	int ARCHIVE_TYPE = 0;
@@ -116,8 +116,8 @@ public interface ServerTypePackage extends EPackage{
      * The meta object id for the '{@link org.eclipse.jst.server.generic.servertype.definition.impl.ClasspathImpl <em>Classpath</em>}' class.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see org.eclipse.jst.server.generic.servertype.definition.impl.ClasspathImpl
-     * @see org.eclipse.jst.server.generic.servertype.definition.impl.ServerTypePackageImpl#getClasspath()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ClasspathImpl
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getClasspath()
      * @generated
      */
 	int CLASSPATH = 1;
@@ -171,8 +171,8 @@ public interface ServerTypePackage extends EPackage{
      * The meta object id for the '{@link org.eclipse.jst.server.generic.servertype.definition.impl.LaunchConfigurationImpl <em>Launch Configuration</em>}' class.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see org.eclipse.jst.server.generic.servertype.definition.impl.LaunchConfigurationImpl
-     * @see org.eclipse.jst.server.generic.servertype.definition.impl.ServerTypePackageImpl#getLaunchConfiguration()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getLaunchConfiguration()
      * @generated
      */
 	int LAUNCH_CONFIGURATION = 2;
@@ -235,8 +235,8 @@ public interface ServerTypePackage extends EPackage{
      * The meta object id for the '{@link org.eclipse.jst.server.generic.servertype.definition.impl.ModuleImpl <em>Module</em>}' class.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see org.eclipse.jst.server.generic.servertype.definition.impl.ModuleImpl
-     * @see org.eclipse.jst.server.generic.servertype.definition.impl.ServerTypePackageImpl#getModule()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ModuleImpl
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getModule()
      * @generated
      */
 	int MODULE = 3;
@@ -281,8 +281,8 @@ public interface ServerTypePackage extends EPackage{
      * The meta object id for the '{@link org.eclipse.jst.server.generic.servertype.definition.impl.PortImpl <em>Port</em>}' class.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see org.eclipse.jst.server.generic.servertype.definition.impl.PortImpl
-     * @see org.eclipse.jst.server.generic.servertype.definition.impl.ServerTypePackageImpl#getPort()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.PortImpl
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getPort()
      * @generated
      */
 	int PORT = 4;
@@ -327,8 +327,8 @@ public interface ServerTypePackage extends EPackage{
      * The meta object id for the '{@link org.eclipse.jst.server.generic.servertype.definition.impl.ProjectImpl <em>Project</em>}' class.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see org.eclipse.jst.server.generic.servertype.definition.impl.ProjectImpl
-     * @see org.eclipse.jst.server.generic.servertype.definition.impl.ServerTypePackageImpl#getProject()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ProjectImpl
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getProject()
      * @generated
      */
 	int PROJECT = 5;
@@ -355,8 +355,8 @@ public interface ServerTypePackage extends EPackage{
      * The meta object id for the '{@link org.eclipse.jst.server.generic.servertype.definition.impl.PropertyImpl <em>Property</em>}' class.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see org.eclipse.jst.server.generic.servertype.definition.impl.PropertyImpl
-     * @see org.eclipse.jst.server.generic.servertype.definition.impl.ServerTypePackageImpl#getProperty()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.PropertyImpl
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getProperty()
      * @generated
      */
 	int PROPERTY = 6;
@@ -419,8 +419,8 @@ public interface ServerTypePackage extends EPackage{
      * The meta object id for the '{@link org.eclipse.jst.server.generic.servertype.definition.impl.PublisherImpl <em>Publisher</em>}' class.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see org.eclipse.jst.server.generic.servertype.definition.impl.PublisherImpl
-     * @see org.eclipse.jst.server.generic.servertype.definition.impl.ServerTypePackageImpl#getPublisher()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.PublisherImpl
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getPublisher()
      * @generated
      */
 	int PUBLISHER = 7;
@@ -465,8 +465,8 @@ public interface ServerTypePackage extends EPackage{
      * The meta object id for the '{@link org.eclipse.jst.server.generic.servertype.definition.impl.PublisherDataImpl <em>Publisher Data</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see org.eclipse.jst.server.generic.servertype.definition.impl.PublisherDataImpl
-     * @see org.eclipse.jst.server.generic.servertype.definition.impl.ServerTypePackageImpl#getPublisherData()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.PublisherDataImpl
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getPublisherData()
      * @generated
      */
     int PUBLISHER_DATA = 8;
@@ -502,8 +502,8 @@ public interface ServerTypePackage extends EPackage{
      * The meta object id for the '{@link org.eclipse.jst.server.generic.servertype.definition.impl.ServerRuntimeImpl <em>Server Runtime</em>}' class.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see org.eclipse.jst.server.generic.servertype.definition.impl.ServerRuntimeImpl
-     * @see org.eclipse.jst.server.generic.servertype.definition.impl.ServerTypePackageImpl#getServerRuntime()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getServerRuntime()
      * @generated
      */
 	int SERVER_RUNTIME = 9;

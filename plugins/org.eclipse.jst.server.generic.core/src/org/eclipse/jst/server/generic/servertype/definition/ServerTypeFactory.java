@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeFactory.java,v 1.2 2005/01/30 21:47:27 gercan Exp $
+ * $Id: ServerTypeFactory.java,v 1.3 2005/03/14 20:54:15 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -49,7 +49,7 @@ public interface ServerTypeFactory extends EFactory{
 	 * <!-- end-user-doc -->
      * @generated
      */
-	ServerTypeFactory eINSTANCE = new org.eclipse.jst.server.generic.servertype.definition.impl.ServerTypeFactoryImpl();
+	ServerTypeFactory eINSTANCE = new org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypeFactoryImpl();
 
     /**
      * Returns a new object of class '<em>Archive Type</em>'.

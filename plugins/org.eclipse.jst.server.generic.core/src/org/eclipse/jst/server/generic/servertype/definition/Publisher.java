@@ -28,9 +28,11 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Publisher.java,v 1.2 2005/01/30 21:47:27 gercan Exp $
+ * $Id: Publisher.java,v 1.3 2005/03/14 20:54:14 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
+
+import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 
@@ -53,7 +55,7 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * </p>
  *
  * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPublisher()
- * @model 
+ * @model extendedMetaData="name='Publisher' kind='elementOnly'"
  * @generated
  */
 public interface Publisher extends EObject{
@@ -69,6 +71,7 @@ public interface Publisher extends EObject{
      * @return the value of the '<em>Group</em>' attribute list.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPublisher_Group()
      * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
+     *        extendedMetaData="kind='group' name='group:0'"
      * @generated
      */
 	FeatureMap getGroup();
@@ -85,9 +88,10 @@ public interface Publisher extends EObject{
      * @return the value of the '<em>Publisherdata</em>' containment reference list.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPublisher_Publisherdata()
      * @model type="org.eclipse.jst.server.generic.servertype.definition.PublisherData" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
+     *        extendedMetaData="kind='element' name='publisherdata' group='#group:0'"
      * @generated
      */
-    EList getPublisherdata();
+    List getPublisherdata();
 
     /**
      * Returns the value of the '<em><b>Id</b></em>' attribute.
@@ -101,6 +105,7 @@ public interface Publisher extends EObject{
      * @see #setId(String)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPublisher_Id()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
+     *        extendedMetaData="kind='attribute' name='id'"
      * @generated
      */
 	String getId();

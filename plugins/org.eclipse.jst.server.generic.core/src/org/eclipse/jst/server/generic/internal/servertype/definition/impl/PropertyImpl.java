@@ -28,9 +28,9 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: PropertyImpl.java,v 1.2 2005/01/30 21:48:52 gercan Exp $
+ * $Id: PropertyImpl.java,v 1.1 2005/03/14 20:54:15 gercan Exp $
  */
-package org.eclipse.jst.server.generic.servertype.definition.impl;
+package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -50,11 +50,11 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.PropertyImpl#getContext <em>Context</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.PropertyImpl#getDefault <em>Default</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.PropertyImpl#getId <em>Id</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.PropertyImpl#getLabel <em>Label</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.PropertyImpl#getType <em>Type</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.PropertyImpl#getContext <em>Context</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.PropertyImpl#getDefault <em>Default</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.PropertyImpl#getId <em>Id</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.PropertyImpl#getLabel <em>Label</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.PropertyImpl#getType <em>Type</em>}</li>
  * </ul>
  * </p>
  *

@@ -28,9 +28,9 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: LaunchConfigurationImpl.java,v 1.2 2005/01/30 21:48:52 gercan Exp $
+ * $Id: LaunchConfigurationImpl.java,v 1.1 2005/03/14 20:54:15 gercan Exp $
  */
-package org.eclipse.jst.server.generic.servertype.definition.impl;
+package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -50,11 +50,11 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.LaunchConfigurationImpl#getClass_ <em>Class</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.LaunchConfigurationImpl#getWorkingDirectory <em>Working Directory</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.LaunchConfigurationImpl#getProgramArguments <em>Program Arguments</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.LaunchConfigurationImpl#getVmParameters <em>Vm Parameters</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.LaunchConfigurationImpl#getClasspathReference <em>Classpath Reference</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl#getClass_ <em>Class</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl#getWorkingDirectory <em>Working Directory</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl#getProgramArguments <em>Program Arguments</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl#getVmParameters <em>Vm Parameters</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl#getClasspathReference <em>Classpath Reference</em>}</li>
  * </ul>
  * </p>
  *

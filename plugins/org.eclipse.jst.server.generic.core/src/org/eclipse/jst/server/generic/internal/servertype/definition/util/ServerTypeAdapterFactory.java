@@ -28,9 +28,9 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeAdapterFactory.java,v 1.2 2005/01/30 21:49:31 gercan Exp $
+ * $Id: ServerTypeAdapterFactory.java,v 1.1 2005/03/14 20:54:20 gercan Exp $
  */
-package org.eclipse.jst.server.generic.servertype.definition.util;
+package org.eclipse.jst.server.generic.internal.servertype.definition.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;

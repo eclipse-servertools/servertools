@@ -28,9 +28,9 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeFactoryImpl.java,v 1.2 2005/01/30 21:48:52 gercan Exp $
+ * $Id: ServerTypeFactoryImpl.java,v 1.1 2005/03/14 20:54:15 gercan Exp $
  */
-package org.eclipse.jst.server.generic.servertype.definition.impl;
+package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;

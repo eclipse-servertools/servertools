@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: LaunchConfiguration.java,v 1.2 2005/01/30 21:47:27 gercan Exp $
+ * $Id: LaunchConfiguration.java,v 1.3 2005/03/14 20:54:15 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -51,7 +51,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  *
  * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getLaunchConfiguration()
- * @model 
+ * @model extendedMetaData="name='LaunchConfiguration' kind='elementOnly'"
  * @generated
  */
 public interface LaunchConfiguration extends EObject{
@@ -67,6 +67,7 @@ public interface LaunchConfiguration extends EObject{
      * @see #setClass(String)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getLaunchConfiguration_Class()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+     *        extendedMetaData="kind='element' name='class'"
      * @generated
      */
 	String getClass_();
@@ -93,6 +94,7 @@ public interface LaunchConfiguration extends EObject{
      * @see #setWorkingDirectory(String)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getLaunchConfiguration_WorkingDirectory()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+     *        extendedMetaData="kind='element' name='workingDirectory'"
      * @generated
      */
 	String getWorkingDirectory();
@@ -119,6 +121,7 @@ public interface LaunchConfiguration extends EObject{
      * @see #setProgramArguments(String)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getLaunchConfiguration_ProgramArguments()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+     *        extendedMetaData="kind='element' name='programArguments'"
      * @generated
      */
 	String getProgramArguments();
@@ -145,6 +148,7 @@ public interface LaunchConfiguration extends EObject{
      * @see #setVmParameters(String)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getLaunchConfiguration_VmParameters()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+     *        extendedMetaData="kind='element' name='vmParameters'"
      * @generated
      */
 	String getVmParameters();
@@ -171,6 +175,7 @@ public interface LaunchConfiguration extends EObject{
      * @see #setClasspathReference(String)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getLaunchConfiguration_ClasspathReference()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+     *        extendedMetaData="kind='element' name='classpathReference'"
      * @generated
      */
 	String getClasspathReference();

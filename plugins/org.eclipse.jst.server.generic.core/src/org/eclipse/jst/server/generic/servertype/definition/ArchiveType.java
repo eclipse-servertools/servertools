@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ArchiveType.java,v 1.2 2005/01/30 21:47:27 gercan Exp $
+ * $Id: ArchiveType.java,v 1.3 2005/03/14 20:54:15 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -47,7 +47,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  *
  * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getArchiveType()
- * @model 
+ * @model extendedMetaData="name='archive_._type' kind='empty'"
  * @generated
  */
 public interface ArchiveType extends EObject{
@@ -63,6 +63,7 @@ public interface ArchiveType extends EObject{
      * @see #setPath(String)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getArchiveType_Path()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
+     *        extendedMetaData="kind='attribute' name='path'"
      * @generated
      */
 	String getPath();

@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Module.java,v 1.2 2005/01/30 21:47:27 gercan Exp $
+ * $Id: Module.java,v 1.3 2005/03/14 20:54:14 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -49,7 +49,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  *
  * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getModule()
- * @model 
+ * @model extendedMetaData="name='Module' kind='elementOnly'"
  * @generated
  */
 public interface Module extends EObject{
@@ -65,6 +65,7 @@ public interface Module extends EObject{
      * @see #setType(String)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getModule_Type()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+     *        extendedMetaData="kind='element' name='type'"
      * @generated
      */
 	String getType();
@@ -91,6 +92,7 @@ public interface Module extends EObject{
      * @see #setPublishDir(String)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getModule_PublishDir()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+     *        extendedMetaData="kind='element' name='publishDir'"
      * @generated
      */
 	String getPublishDir();
@@ -117,6 +119,7 @@ public interface Module extends EObject{
      * @see #setPublisherReference(String)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getModule_PublisherReference()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+     *        extendedMetaData="kind='element' name='publisherReference'"
      * @generated
      */
 	String getPublisherReference();

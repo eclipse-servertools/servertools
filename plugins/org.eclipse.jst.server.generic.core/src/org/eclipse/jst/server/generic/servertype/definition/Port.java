@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Port.java,v 1.2 2005/01/30 21:47:27 gercan Exp $
+ * $Id: Port.java,v 1.3 2005/03/14 20:54:14 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -49,7 +49,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  *
  * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPort()
- * @model 
+ * @model extendedMetaData="name='Port' kind='elementOnly'"
  * @generated
  */
 public interface Port extends EObject{
@@ -65,6 +65,7 @@ public interface Port extends EObject{
      * @see #setNo(String)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPort_No()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+     *        extendedMetaData="kind='element' name='no'"
      * @generated
      */
 	String getNo();
@@ -91,6 +92,7 @@ public interface Port extends EObject{
      * @see #setName(String)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPort_Name()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+     *        extendedMetaData="kind='element' name='name'"
      * @generated
      */
 	String getName();
@@ -117,6 +119,7 @@ public interface Port extends EObject{
      * @see #setProtocol(String)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPort_Protocol()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+     *        extendedMetaData="kind='element' name='protocol'"
      * @generated
      */
 	String getProtocol();

@@ -30,17 +30,18 @@
 package org.eclipse.jst.server.generic.core.internal;
 
 import java.net.URL;
-
 import org.eclipse.wst.server.core.ILaunchable;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.core.util.HttpLaunchable;
 import org.eclipse.wst.server.core.util.WebResource;
-import org.eclipse.jst.server.core.IWebModule;
+import org.eclipse.jst.server.core.EJBBean;
+import org.eclipse.jst.server.core.JndiLaunchable;
+import org.eclipse.jst.server.core.JndiObject;
 import org.eclipse.jst.server.core.Servlet;
 /**
- * Web Launchable adapter delegate
+ * Launchable adapter delegate for generic servers.
  * @author Gorkem Ercan 
  */
 public class GenericServerLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
@@ -51,13 +52,36 @@ public class GenericServerLaunchableAdapterDelegate extends LaunchableAdapterDel
 		ServerDelegate delegate = (ServerDelegate)server.getAdapter(ServerDelegate.class);
 		if (!(delegate instanceof GenericServer))
 			return null;
-		if (!(moduleObject instanceof Servlet) &&
-			!(moduleObject instanceof WebResource))
-			return null;
-		if (moduleObject.getModule().getAdapter(IWebModule.class) == null)
-			return null;
+		if ((moduleObject instanceof Servlet) ||(moduleObject instanceof WebResource))
+            return prepareHttpLaunchable(moduleObject, delegate);
+		
+        if((moduleObject instanceof EJBBean) || (moduleObject instanceof JndiObject))
+            return prepareJndiLaunchable(moduleObject,delegate);
+		return null;
+	}
 
-		try {
+    private ILaunchable prepareJndiLaunchable(IModuleArtifact moduleObject, ServerDelegate delegate) {
+        JndiLaunchable launchable = null;
+        if(moduleObject instanceof EJBBean)
+        {
+            EJBBean bean = (EJBBean)moduleObject;
+            launchable = new JndiLaunchable(null,bean.getJndiName());
+        }
+        if(moduleObject instanceof JndiObject)
+        {
+            JndiObject jndi = (JndiObject)moduleObject;
+            launchable = new JndiLaunchable(null,jndi.getJndiName());
+        }
+        return launchable;
+    }
+
+    /**
+     * @param moduleObject
+     * @param delegate
+     * @return
+     */
+    private ILaunchable prepareHttpLaunchable(IModuleArtifact moduleObject, ServerDelegate delegate) {
+        try {
 			URL url = ((IURLProvider) delegate).getModuleRootURL(moduleObject.getModule());
 			
 			Trace.trace("root: " + url);
@@ -85,5 +109,5 @@ public class GenericServerLaunchableAdapterDelegate extends LaunchableAdapterDel
 			Trace.trace("Error getting URL for " + moduleObject, e);
 			return null;
 		}
-	}
+    }
 }

@@ -6,7 +6,7 @@
     modelPluginID="org.eclipse.jst.server.generic.model" runtimeJar="true" modelName="Servertype"
     editPluginClass="org.eclipse.jst.server.generic.server.type.definition.provider.ServertypeEditPlugin"
     editorPluginClass="org.eclipse.jst.server.generic.server.type.definition.presentation.ServertypeEditorPlugin"
-    runtimeCompatibility="false">
+    suppressEMFTypes="true" runtimeCompatibility="false">
   <foreignModel>ServerTypeDefinitionSchema.xsd</foreignModel>
   <genPackages prefix="ServerType" basePackage="org.eclipse.jst.server.generic.servertype"
       resource="XML" ecorePackage="org.eclipse.jst.server.generic.servertype.ecore#/">
@@ -38,6 +38,7 @@
     </genClasses>
     <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//Project">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//Project/classpathReference"/>
+      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference org.eclipse.jst.server.generic.servertype.ecore#//Project/@eStructuralFeatures.1"/>
     </genClasses>
     <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//Property">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//Property/context"/>

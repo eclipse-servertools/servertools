@@ -28,9 +28,9 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: PortImpl.java,v 1.2 2005/01/30 21:48:52 gercan Exp $
+ * $Id: ModuleImpl.java,v 1.1 2005/03/14 20:54:15 gercan Exp $
  */
-package org.eclipse.jst.server.generic.servertype.definition.impl;
+package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -40,91 +40,91 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
-import org.eclipse.jst.server.generic.servertype.definition.Port;
+import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Port</b></em>'.
+ * An implementation of the model object '<em><b>Module</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.PortImpl#getNo <em>No</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.PortImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.PortImpl#getProtocol <em>Protocol</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ModuleImpl#getType <em>Type</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ModuleImpl#getPublishDir <em>Publish Dir</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ModuleImpl#getPublisherReference <em>Publisher Reference</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class PortImpl extends EObjectImpl implements Port {
+public class ModuleImpl extends EObjectImpl implements Module {
     /**
-     * The default value of the '{@link #getNo() <em>No</em>}' attribute.
+     * The default value of the '{@link #getType() <em>Type</em>}' attribute.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getNo()
+     * @see #getType()
      * @generated
      * @ordered
      */
-	protected static final String NO_EDEFAULT = null;
+	protected static final String TYPE_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getNo() <em>No</em>}' attribute.
+     * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getNo()
+     * @see #getType()
      * @generated
      * @ordered
      */
-	protected String no = NO_EDEFAULT;
+	protected String type = TYPE_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+     * The default value of the '{@link #getPublishDir() <em>Publish Dir</em>}' attribute.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getName()
+     * @see #getPublishDir()
      * @generated
      * @ordered
      */
-	protected static final String NAME_EDEFAULT = null;
+	protected static final String PUBLISH_DIR_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+     * The cached value of the '{@link #getPublishDir() <em>Publish Dir</em>}' attribute.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getName()
+     * @see #getPublishDir()
      * @generated
      * @ordered
      */
-	protected String name = NAME_EDEFAULT;
+	protected String publishDir = PUBLISH_DIR_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getProtocol() <em>Protocol</em>}' attribute.
+     * The default value of the '{@link #getPublisherReference() <em>Publisher Reference</em>}' attribute.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getProtocol()
+     * @see #getPublisherReference()
      * @generated
      * @ordered
      */
-	protected static final String PROTOCOL_EDEFAULT = null;
+	protected static final String PUBLISHER_REFERENCE_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getProtocol() <em>Protocol</em>}' attribute.
+     * The cached value of the '{@link #getPublisherReference() <em>Publisher Reference</em>}' attribute.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getProtocol()
+     * @see #getPublisherReference()
      * @generated
      * @ordered
      */
-	protected String protocol = PROTOCOL_EDEFAULT;
+	protected String publisherReference = PUBLISHER_REFERENCE_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      */
-	protected PortImpl() {
+	protected ModuleImpl() {
         super();
     }
 
@@ -134,7 +134,7 @@ public class PortImpl extends EObjectImpl implements Port {
      * @generated
      */
 	protected EClass eStaticClass() {
-        return ServerTypePackage.eINSTANCE.getPort();
+        return ServerTypePackage.eINSTANCE.getModule();
     }
 
     /**
@@ -142,8 +142,8 @@ public class PortImpl extends EObjectImpl implements Port {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public String getNo() {
-        return no;
+	public String getType() {
+        return type;
     }
 
     /**
@@ -151,11 +151,11 @@ public class PortImpl extends EObjectImpl implements Port {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public void setNo(String newNo) {
-        String oldNo = no;
-        no = newNo;
+	public void setType(String newType) {
+        String oldType = type;
+        type = newType;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.PORT__NO, oldNo, no));
+            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.MODULE__TYPE, oldType, type));
     }
 
     /**
@@ -163,8 +163,8 @@ public class PortImpl extends EObjectImpl implements Port {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public String getName() {
-        return name;
+	public String getPublishDir() {
+        return publishDir;
     }
 
     /**
@@ -172,11 +172,11 @@ public class PortImpl extends EObjectImpl implements Port {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public void setName(String newName) {
-        String oldName = name;
-        name = newName;
+	public void setPublishDir(String newPublishDir) {
+        String oldPublishDir = publishDir;
+        publishDir = newPublishDir;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.PORT__NAME, oldName, name));
+            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.MODULE__PUBLISH_DIR, oldPublishDir, publishDir));
     }
 
     /**
@@ -184,8 +184,8 @@ public class PortImpl extends EObjectImpl implements Port {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public String getProtocol() {
-        return protocol;
+	public String getPublisherReference() {
+        return publisherReference;
     }
 
     /**
@@ -193,11 +193,11 @@ public class PortImpl extends EObjectImpl implements Port {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public void setProtocol(String newProtocol) {
-        String oldProtocol = protocol;
-        protocol = newProtocol;
+	public void setPublisherReference(String newPublisherReference) {
+        String oldPublisherReference = publisherReference;
+        publisherReference = newPublisherReference;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.PORT__PROTOCOL, oldProtocol, protocol));
+            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.MODULE__PUBLISHER_REFERENCE, oldPublisherReference, publisherReference));
     }
 
     /**
@@ -207,12 +207,12 @@ public class PortImpl extends EObjectImpl implements Port {
      */
 	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.PORT__NO:
-                return getNo();
-            case ServerTypePackage.PORT__NAME:
-                return getName();
-            case ServerTypePackage.PORT__PROTOCOL:
-                return getProtocol();
+            case ServerTypePackage.MODULE__TYPE:
+                return getType();
+            case ServerTypePackage.MODULE__PUBLISH_DIR:
+                return getPublishDir();
+            case ServerTypePackage.MODULE__PUBLISHER_REFERENCE:
+                return getPublisherReference();
         }
         return eDynamicGet(eFeature, resolve);
     }
@@ -224,14 +224,14 @@ public class PortImpl extends EObjectImpl implements Port {
      */
 	public void eSet(EStructuralFeature eFeature, Object newValue) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.PORT__NO:
-                setNo((String)newValue);
+            case ServerTypePackage.MODULE__TYPE:
+                setType((String)newValue);
                 return;
-            case ServerTypePackage.PORT__NAME:
-                setName((String)newValue);
+            case ServerTypePackage.MODULE__PUBLISH_DIR:
+                setPublishDir((String)newValue);
                 return;
-            case ServerTypePackage.PORT__PROTOCOL:
-                setProtocol((String)newValue);
+            case ServerTypePackage.MODULE__PUBLISHER_REFERENCE:
+                setPublisherReference((String)newValue);
                 return;
         }
         eDynamicSet(eFeature, newValue);
@@ -244,14 +244,14 @@ public class PortImpl extends EObjectImpl implements Port {
      */
 	public void eUnset(EStructuralFeature eFeature) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.PORT__NO:
-                setNo(NO_EDEFAULT);
+            case ServerTypePackage.MODULE__TYPE:
+                setType(TYPE_EDEFAULT);
                 return;
-            case ServerTypePackage.PORT__NAME:
-                setName(NAME_EDEFAULT);
+            case ServerTypePackage.MODULE__PUBLISH_DIR:
+                setPublishDir(PUBLISH_DIR_EDEFAULT);
                 return;
-            case ServerTypePackage.PORT__PROTOCOL:
-                setProtocol(PROTOCOL_EDEFAULT);
+            case ServerTypePackage.MODULE__PUBLISHER_REFERENCE:
+                setPublisherReference(PUBLISHER_REFERENCE_EDEFAULT);
                 return;
         }
         eDynamicUnset(eFeature);
@@ -264,12 +264,12 @@ public class PortImpl extends EObjectImpl implements Port {
      */
 	public boolean eIsSet(EStructuralFeature eFeature) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.PORT__NO:
-                return NO_EDEFAULT == null ? no != null : !NO_EDEFAULT.equals(no);
-            case ServerTypePackage.PORT__NAME:
-                return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-            case ServerTypePackage.PORT__PROTOCOL:
-                return PROTOCOL_EDEFAULT == null ? protocol != null : !PROTOCOL_EDEFAULT.equals(protocol);
+            case ServerTypePackage.MODULE__TYPE:
+                return TYPE_EDEFAULT == null ? type != null : !TYPE_EDEFAULT.equals(type);
+            case ServerTypePackage.MODULE__PUBLISH_DIR:
+                return PUBLISH_DIR_EDEFAULT == null ? publishDir != null : !PUBLISH_DIR_EDEFAULT.equals(publishDir);
+            case ServerTypePackage.MODULE__PUBLISHER_REFERENCE:
+                return PUBLISHER_REFERENCE_EDEFAULT == null ? publisherReference != null : !PUBLISHER_REFERENCE_EDEFAULT.equals(publisherReference);
         }
         return eDynamicIsSet(eFeature);
     }
@@ -283,14 +283,14 @@ public class PortImpl extends EObjectImpl implements Port {
         if (eIsProxy()) return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (no: ");
-        result.append(no);
-        result.append(", name: ");
-        result.append(name);
-        result.append(", protocol: ");
-        result.append(protocol);
+        result.append(" (type: ");
+        result.append(type);
+        result.append(", publishDir: ");
+        result.append(publishDir);
+        result.append(", publisherReference: ");
+        result.append(publisherReference);
         result.append(')');
         return result.toString();
     }
 
-} //PortImpl
+} //ModuleImpl

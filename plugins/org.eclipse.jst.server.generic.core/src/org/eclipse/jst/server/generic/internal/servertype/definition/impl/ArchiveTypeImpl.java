@@ -28,9 +28,9 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ProjectImpl.java,v 1.2 2005/01/30 21:48:52 gercan Exp $
+ * $Id: ArchiveTypeImpl.java,v 1.1 2005/03/14 20:54:15 gercan Exp $
  */
-package org.eclipse.jst.server.generic.servertype.definition.impl;
+package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -40,49 +40,49 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
-import org.eclipse.jst.server.generic.servertype.definition.Project;
+import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
 import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Project</b></em>'.
+ * An implementation of the model object '<em><b>Archive Type</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ProjectImpl#getClasspathReference <em>Classpath Reference</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ArchiveTypeImpl#getPath <em>Path</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class ProjectImpl extends EObjectImpl implements Project {
+public class ArchiveTypeImpl extends EObjectImpl implements ArchiveType {
     /**
-     * The default value of the '{@link #getClasspathReference() <em>Classpath Reference</em>}' attribute.
+     * The default value of the '{@link #getPath() <em>Path</em>}' attribute.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getClasspathReference()
+     * @see #getPath()
      * @generated
      * @ordered
      */
-	protected static final String CLASSPATH_REFERENCE_EDEFAULT = null;
+	protected static final String PATH_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getClasspathReference() <em>Classpath Reference</em>}' attribute.
+     * The cached value of the '{@link #getPath() <em>Path</em>}' attribute.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getClasspathReference()
+     * @see #getPath()
      * @generated
      * @ordered
      */
-	protected String classpathReference = CLASSPATH_REFERENCE_EDEFAULT;
+	protected String path = PATH_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      */
-	protected ProjectImpl() {
+	protected ArchiveTypeImpl() {
         super();
     }
 
@@ -92,7 +92,7 @@ public class ProjectImpl extends EObjectImpl implements Project {
      * @generated
      */
 	protected EClass eStaticClass() {
-        return ServerTypePackage.eINSTANCE.getProject();
+        return ServerTypePackage.eINSTANCE.getArchiveType();
     }
 
     /**
@@ -100,8 +100,8 @@ public class ProjectImpl extends EObjectImpl implements Project {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public String getClasspathReference() {
-        return classpathReference;
+	public String getPath() {
+        return path;
     }
 
     /**
@@ -109,11 +109,11 @@ public class ProjectImpl extends EObjectImpl implements Project {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public void setClasspathReference(String newClasspathReference) {
-        String oldClasspathReference = classpathReference;
-        classpathReference = newClasspathReference;
+	public void setPath(String newPath) {
+        String oldPath = path;
+        path = newPath;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.PROJECT__CLASSPATH_REFERENCE, oldClasspathReference, classpathReference));
+            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.ARCHIVE_TYPE__PATH, oldPath, path));
     }
 
     /**
@@ -123,8 +123,8 @@ public class ProjectImpl extends EObjectImpl implements Project {
      */
 	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.PROJECT__CLASSPATH_REFERENCE:
-                return getClasspathReference();
+            case ServerTypePackage.ARCHIVE_TYPE__PATH:
+                return getPath();
         }
         return eDynamicGet(eFeature, resolve);
     }
@@ -136,8 +136,8 @@ public class ProjectImpl extends EObjectImpl implements Project {
      */
 	public void eSet(EStructuralFeature eFeature, Object newValue) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.PROJECT__CLASSPATH_REFERENCE:
-                setClasspathReference((String)newValue);
+            case ServerTypePackage.ARCHIVE_TYPE__PATH:
+                setPath((String)newValue);
                 return;
         }
         eDynamicSet(eFeature, newValue);
@@ -150,8 +150,8 @@ public class ProjectImpl extends EObjectImpl implements Project {
      */
 	public void eUnset(EStructuralFeature eFeature) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.PROJECT__CLASSPATH_REFERENCE:
-                setClasspathReference(CLASSPATH_REFERENCE_EDEFAULT);
+            case ServerTypePackage.ARCHIVE_TYPE__PATH:
+                setPath(PATH_EDEFAULT);
                 return;
         }
         eDynamicUnset(eFeature);
@@ -164,8 +164,8 @@ public class ProjectImpl extends EObjectImpl implements Project {
      */
 	public boolean eIsSet(EStructuralFeature eFeature) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.PROJECT__CLASSPATH_REFERENCE:
-                return CLASSPATH_REFERENCE_EDEFAULT == null ? classpathReference != null : !CLASSPATH_REFERENCE_EDEFAULT.equals(classpathReference);
+            case ServerTypePackage.ARCHIVE_TYPE__PATH:
+                return PATH_EDEFAULT == null ? path != null : !PATH_EDEFAULT.equals(path);
         }
         return eDynamicIsSet(eFeature);
     }
@@ -179,10 +179,10 @@ public class ProjectImpl extends EObjectImpl implements Project {
         if (eIsProxy()) return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (classpathReference: ");
-        result.append(classpathReference);
+        result.append(" (path: ");
+        result.append(path);
         result.append(')');
         return result.toString();
     }
 
-} //ProjectImpl
+} //ArchiveTypeImpl

@@ -28,11 +28,13 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ClasspathImpl.java,v 1.2 2005/01/30 21:48:52 gercan Exp $
+ * $Id: ClasspathImpl.java,v 1.1 2005/03/14 20:54:15 gercan Exp $
  */
-package org.eclipse.jst.server.generic.servertype.definition.impl;
+package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
 import java.util.Collection;
+
+import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -60,10 +62,10 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ClasspathImpl#getGroup <em>Group</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ClasspathImpl#getArchive <em>Archive</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ClasspathImpl#getId <em>Id</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ClasspathImpl#isIsLibrary <em>Is Library</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ClasspathImpl#getGroup <em>Group</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ClasspathImpl#getArchive <em>Archive</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ClasspathImpl#getId <em>Id</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ClasspathImpl#isIsLibrary <em>Is Library</em>}</li>
  * </ul>
  * </p>
  *
@@ -164,7 +166,7 @@ public class ClasspathImpl extends EObjectImpl implements Classpath {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public EList getArchive() {
+	public List getArchive() {
         return ((FeatureMap)getGroup()).list(ServerTypePackage.eINSTANCE.getClasspath_Archive());
     }
 

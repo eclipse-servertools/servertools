@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: PublisherData.java,v 1.1 2005/01/30 21:47:27 gercan Exp $
+ * $Id: PublisherData.java,v 1.2 2005/03/14 20:54:15 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  *
  * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPublisherData()
- * @model 
+ * @model extendedMetaData="name='PublisherData' kind='elementOnly'"
  * @generated
  */
 public interface PublisherData extends EObject{
@@ -38,6 +38,7 @@ public interface PublisherData extends EObject{
      * @see #setDataname(String)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPublisherData_Dataname()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+     *        extendedMetaData="kind='element' name='dataname'"
      * @generated
      */
     String getDataname();
@@ -64,6 +65,7 @@ public interface PublisherData extends EObject{
      * @see #setDatavalue(String)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPublisherData_Datavalue()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+     *        extendedMetaData="kind='element' name='datavalue'"
      * @generated
      */
     String getDatavalue();

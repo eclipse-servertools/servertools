@@ -28,9 +28,9 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ArchiveTypeImpl.java,v 1.2 2005/01/30 21:48:52 gercan Exp $
+ * $Id: ProjectImpl.java,v 1.1 2005/03/14 20:54:15 gercan Exp $
  */
-package org.eclipse.jst.server.generic.servertype.definition.impl;
+package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -40,49 +40,49 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
-import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
+import org.eclipse.jst.server.generic.servertype.definition.Project;
 import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Archive Type</b></em>'.
+ * An implementation of the model object '<em><b>Project</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.ArchiveTypeImpl#getPath <em>Path</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ProjectImpl#getClasspathReference <em>Classpath Reference</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class ArchiveTypeImpl extends EObjectImpl implements ArchiveType {
+public class ProjectImpl extends EObjectImpl implements Project {
     /**
-     * The default value of the '{@link #getPath() <em>Path</em>}' attribute.
+     * The default value of the '{@link #getClasspathReference() <em>Classpath Reference</em>}' attribute.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getPath()
+     * @see #getClasspathReference()
      * @generated
      * @ordered
      */
-	protected static final String PATH_EDEFAULT = null;
+	protected static final String CLASSPATH_REFERENCE_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getPath() <em>Path</em>}' attribute.
+     * The cached value of the '{@link #getClasspathReference() <em>Classpath Reference</em>}' attribute.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getPath()
+     * @see #getClasspathReference()
      * @generated
      * @ordered
      */
-	protected String path = PATH_EDEFAULT;
+	protected String classpathReference = CLASSPATH_REFERENCE_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      */
-	protected ArchiveTypeImpl() {
+	protected ProjectImpl() {
         super();
     }
 
@@ -92,7 +92,7 @@ public class ArchiveTypeImpl extends EObjectImpl implements ArchiveType {
      * @generated
      */
 	protected EClass eStaticClass() {
-        return ServerTypePackage.eINSTANCE.getArchiveType();
+        return ServerTypePackage.eINSTANCE.getProject();
     }
 
     /**
@@ -100,8 +100,8 @@ public class ArchiveTypeImpl extends EObjectImpl implements ArchiveType {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public String getPath() {
-        return path;
+	public String getClasspathReference() {
+        return classpathReference;
     }
 
     /**
@@ -109,11 +109,11 @@ public class ArchiveTypeImpl extends EObjectImpl implements ArchiveType {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public void setPath(String newPath) {
-        String oldPath = path;
-        path = newPath;
+	public void setClasspathReference(String newClasspathReference) {
+        String oldClasspathReference = classpathReference;
+        classpathReference = newClasspathReference;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.ARCHIVE_TYPE__PATH, oldPath, path));
+            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.PROJECT__CLASSPATH_REFERENCE, oldClasspathReference, classpathReference));
     }
 
     /**
@@ -123,8 +123,8 @@ public class ArchiveTypeImpl extends EObjectImpl implements ArchiveType {
      */
 	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.ARCHIVE_TYPE__PATH:
-                return getPath();
+            case ServerTypePackage.PROJECT__CLASSPATH_REFERENCE:
+                return getClasspathReference();
         }
         return eDynamicGet(eFeature, resolve);
     }
@@ -136,8 +136,8 @@ public class ArchiveTypeImpl extends EObjectImpl implements ArchiveType {
      */
 	public void eSet(EStructuralFeature eFeature, Object newValue) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.ARCHIVE_TYPE__PATH:
-                setPath((String)newValue);
+            case ServerTypePackage.PROJECT__CLASSPATH_REFERENCE:
+                setClasspathReference((String)newValue);
                 return;
         }
         eDynamicSet(eFeature, newValue);
@@ -150,8 +150,8 @@ public class ArchiveTypeImpl extends EObjectImpl implements ArchiveType {
      */
 	public void eUnset(EStructuralFeature eFeature) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.ARCHIVE_TYPE__PATH:
-                setPath(PATH_EDEFAULT);
+            case ServerTypePackage.PROJECT__CLASSPATH_REFERENCE:
+                setClasspathReference(CLASSPATH_REFERENCE_EDEFAULT);
                 return;
         }
         eDynamicUnset(eFeature);
@@ -164,8 +164,8 @@ public class ArchiveTypeImpl extends EObjectImpl implements ArchiveType {
      */
 	public boolean eIsSet(EStructuralFeature eFeature) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.ARCHIVE_TYPE__PATH:
-                return PATH_EDEFAULT == null ? path != null : !PATH_EDEFAULT.equals(path);
+            case ServerTypePackage.PROJECT__CLASSPATH_REFERENCE:
+                return CLASSPATH_REFERENCE_EDEFAULT == null ? classpathReference != null : !CLASSPATH_REFERENCE_EDEFAULT.equals(classpathReference);
         }
         return eDynamicIsSet(eFeature);
     }
@@ -179,10 +179,10 @@ public class ArchiveTypeImpl extends EObjectImpl implements ArchiveType {
         if (eIsProxy()) return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (path: ");
-        result.append(path);
+        result.append(" (classpathReference: ");
+        result.append(classpathReference);
         result.append(')');
         return result.toString();
     }
 
-} //ArchiveTypeImpl
+} //ProjectImpl

@@ -28,8 +28,8 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="archive" lowerBound="1"
-        upperBound="-1" eType="#//ArchiveType" volatile="true" transient="true" derived="true"
-        containment="true" resolveProxies="false">
+        upperBound="-1" eType="ecore:EClass /org.eclipse.jst.server.generic.core/xsd/org.eclipse.jst.server.generic.servertype.ecore#//ArchiveType"
+        volatile="true" transient="true" derived="true" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
         <details key="name" value="archive"/>
@@ -158,6 +158,7 @@
         <details key="name" value="classpathReference"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" eType="ecore:EClass /org.eclipse.jst.server.generic.core/xsd/org.eclipse.jst.server.generic.servertype.ecore#//Classpath"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Property">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
@@ -210,8 +211,8 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="publisherdata" lowerBound="1"
-        upperBound="-1" eType="#//PublisherData" volatile="true" transient="true"
-        derived="true" containment="true" resolveProxies="false">
+        upperBound="-1" eType="ecore:EClass /org.eclipse.jst.server.generic.core/xsd/org.eclipse.jst.server.generic.servertype.ecore#//PublisherData"
+        volatile="true" transient="true" derived="true" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
         <details key="name" value="publisherdata"/>
@@ -247,7 +248,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ServerRuntime">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;Generic Server Type Definition. It must have a list of&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;properties.&#xD;&#xA;&#x9;&#x9;&#x9;"/>
+      <details key="documentation" value="     Generic Server Type Definition. It must have a list of     properties.    "/>
     </eAnnotations>
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="ServerRuntime"/>
@@ -261,8 +262,8 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="property" upperBound="-1"
-        eType="#//Property" volatile="true" transient="true" derived="true" containment="true"
-        resolveProxies="false">
+        eType="ecore:EClass /org.eclipse.jst.server.generic.core/xsd/org.eclipse.jst.server.generic.servertype.ecore#//Property"
+        volatile="true" transient="true" derived="true" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
         <details key="name" value="property"/>
@@ -276,7 +277,7 @@
         <details key="name" value="group:2"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="port" upperBound="-1" eType="#//Port"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="port" upperBound="-1" eType="ecore:EClass /org.eclipse.jst.server.generic.core/xsd/org.eclipse.jst.server.generic.servertype.ecore#//Port"
         volatile="true" transient="true" derived="true" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
@@ -292,8 +293,8 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="module" lowerBound="1"
-        upperBound="-1" eType="#//Module" volatile="true" transient="true" derived="true"
-        containment="true" resolveProxies="false">
+        upperBound="-1" eType="ecore:EClass /org.eclipse.jst.server.generic.core/xsd/org.eclipse.jst.server.generic.servertype.ecore#//Module"
+        volatile="true" transient="true" derived="true" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
         <details key="name" value="module"/>
@@ -301,20 +302,21 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="project" lowerBound="1"
-        eType="#//Project" containment="true" resolveProxies="false">
+        eType="ecore:EClass /org.eclipse.jst.server.generic.core/xsd/org.eclipse.jst.server.generic.servertype.ecore#//Project"
+        containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
         <details key="name" value="project"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="start" lowerBound="1" eType="#//LaunchConfiguration"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="start" lowerBound="1" eType="ecore:EClass /org.eclipse.jst.server.generic.core/xsd/org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration"
         containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
         <details key="name" value="start"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="stop" lowerBound="1" eType="#//LaunchConfiguration"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stop" lowerBound="1" eType="ecore:EClass /org.eclipse.jst.server.generic.core/xsd/org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration"
         containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
@@ -329,8 +331,8 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="publisher" upperBound="-1"
-        eType="#//Publisher" volatile="true" transient="true" derived="true" containment="true"
-        resolveProxies="false">
+        eType="ecore:EClass /org.eclipse.jst.server.generic.core/xsd/org.eclipse.jst.server.generic.servertype.ecore#//Publisher"
+        volatile="true" transient="true" derived="true" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
         <details key="name" value="publisher"/>
@@ -345,8 +347,8 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="classpath" lowerBound="1"
-        upperBound="-1" eType="#//Classpath" volatile="true" transient="true" derived="true"
-        containment="true" resolveProxies="false">
+        upperBound="-1" eType="ecore:EClass /org.eclipse.jst.server.generic.core/xsd/org.eclipse.jst.server.generic.servertype.ecore#//Classpath"
+        volatile="true" transient="true" derived="true" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
         <details key="name" value="classpath"/>
