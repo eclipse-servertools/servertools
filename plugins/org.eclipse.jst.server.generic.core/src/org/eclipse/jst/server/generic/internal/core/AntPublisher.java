@@ -50,6 +50,16 @@ import org.eclipse.wst.server.core.IModuleArtifact;
 import org.osgi.framework.Bundle;
 /**
  * Ant based publisher.
+ * All the properties defined in the server definition file are
+ * passed into the ANT build file as properties.
+ * In addition to the properties defined in the server definition
+ * <I>module.dir</I>, <I>module.name,</I> and <I>server.publish.dir</I> are computed and passed to the 
+ * definition file.
+ * <ul>
+ * <li>module.dir: includes the root of the module project file</li>
+ * <li>module.name: the name of the module</li>
+ * <li>server.publish.dir: the directory to put the deployment units</li>
+ * </ul>
  *
  * @author Gorkem Ercan
  */
@@ -73,6 +83,7 @@ public class AntPublisher extends GenericPublisher{
         }
         catch(CoreException e){
             IStatus s = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,"Publish failed using Ant publisher",e);
+            CorePlugin.getDefault().getLog().log(s);
             return new IStatus[] {s};
         }
 		return null;
@@ -142,7 +153,16 @@ public class AntPublisher extends GenericPublisher{
 	private Map getPublishProperties()
 	{
         Map props = new HashMap();
-        //publish dir
+        
+        // pass all properties to build file.
+        Map properties = getServerRuntime().getResolver().getPropertyValues();
+        Iterator propertyIterator = properties.keySet().iterator();
+        while(propertyIterator.hasNext())
+        {
+            String property = (String)propertyIterator.next();
+            props.put(property,properties.get(property));
+        }
+        
         Module module =  getServerRuntime().getModule(getModuleTypeId());
 		String modDir = module.getPublishDir();
 		modDir = getServerRuntime().getResolver().resolveProperties(modDir);
@@ -163,8 +183,6 @@ public class AntPublisher extends GenericPublisher{
 		props.put("module.dir",moduleDir);
 		props.put("server.publish.dir",modDir);
 		return props;
-		
-		
 	}
 	/**
 	 * @param module2
