@@ -223,18 +223,18 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	 * @return java.lang.String
 	 * @param project org.eclipse.core.resources.IProject
 	 */
-	protected WebModule getWebModule(IModule webModule) {
-		if (webModule == null)
+	protected WebModule getWebModule(IModule module) {
+		if (module == null)
 			return null;
 	
-		String memento = webModule.getId();
+		String memento = module.getId();
 	
 		List modules = getWebModules();
 		int size = modules.size();
 		for (int i = 0; i < size; i++) {
-			WebModule module = (WebModule) modules.get(i);
-			if (memento.equals(module.getMemento())) {
-				return module;
+			WebModule webModule = (WebModule) modules.get(i);
+			if (memento.equals(webModule.getMemento())) {
+				return webModule;
 			}
 		}
 		return null;

@@ -38,8 +38,14 @@ public class Module implements IModule {
 	/**
 	 * Module constructor comment.
 	 */
-	public Module() {
+	public Module(ModuleFactory factory, String id, String name, String type, String version, IProject project) {
 		super();
+		this.factory = factory;
+		this.project = project;
+		this.type = type;
+		this.version = version;
+		this.id = id;
+		this.name = name;
 	}
 
 	/**
@@ -49,6 +55,15 @@ public class Module implements IModule {
 	 */
 	public String getId() {
 		return factory.getId() + ":" + id;
+	}
+
+	/**
+	 * Returns the internal (partial) id of this module.
+	 *
+	 * @return the id
+	 */
+	public String getInternalId() {
+		return id;
 	}
 
 	/**

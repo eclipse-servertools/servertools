@@ -293,7 +293,7 @@ public class ServerCore {
 	 * @return the module factory, or <code>null</code> if there is no module factory
 	 * with the given id
 	 */
-	/*public static IModuleFactory findModuleFactory(String id) {
+	protected static ModuleFactory findModuleFactory(String id) {
 		if (id == null)
 			throw new IllegalArgumentException();
 
@@ -302,12 +302,12 @@ public class ServerCore {
 		
 		Iterator iterator = moduleFactories.iterator();
 		while (iterator.hasNext()) {
-			IModuleFactory factory = (IModuleFactory) iterator.next();
+			ModuleFactory factory = (ModuleFactory) iterator.next();
 			if (id.equals(factory.getId()))
 				return factory;
 		}
 		return null;
-	}*/
+	}
 
 	/**
 	 * Returns an array of all module artifact adapters.

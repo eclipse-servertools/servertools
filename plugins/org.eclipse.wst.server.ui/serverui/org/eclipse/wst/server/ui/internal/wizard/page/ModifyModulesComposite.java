@@ -361,16 +361,18 @@ public class ModifyModulesComposite extends Composite {
 
 	protected void addChildren(TreeItem item, IModule module) {
 		try {
-			List children = (List) childModuleMap.get(module);
-			Iterator iterator = children.iterator();
-			while (iterator.hasNext()) {
-				IModule child = (IModule) iterator.next();
-				TreeItem childItem = new TreeItem(item, SWT.NONE);
-				childItem.setText(slp.getText(child));
-				childItem.setImage(slp.getImage(child));
-				childItem.setData(child);
-				parentTreeItemMap.put(childItem, item);
-				addChildren(childItem, child);
+			IModule[] children = (IModule[]) childModuleMap.get(module);
+			if (children != null) {
+				int size = children.length;
+				for (int i = 0; i < size; i++) {
+					IModule child = children[i];
+					TreeItem childItem = new TreeItem(item, SWT.NONE);
+					childItem.setText(slp.getText(child));
+					childItem.setImage(slp.getImage(child));
+					childItem.setData(child);
+					parentTreeItemMap.put(childItem, item);
+					addChildren(childItem, child);
+				}
 			}
 		} catch (Exception e) {
 			// ignore
@@ -491,15 +493,16 @@ public class ModifyModulesComposite extends Composite {
 		public List moduleList = new ArrayList();
 	}
 	
-	private void addChildMap(ModuleMap help, List parents, List children) {
+	private void addChildMap(ModuleMap help, List parents, IModule[] children) {
 		if (children == null)
 			return;
-		Iterator iterator = children.iterator();
-		while (iterator.hasNext()) {
-			IModule module = (IModule) iterator.next();
+		
+		int size = children.length;
+		for (int i = 0; i < size; i++) {
+			IModule module = children[i];
 			help.parentList.add(parents);
 			help.moduleList.add(module);
-			List children2 = (List) childModuleMap.get(module);
+			IModule[] children2 = (IModule[]) childModuleMap.get(module);
 			if (children2 != null) {
 				List parents2 = new ArrayList();
 				parents2.addAll(parents);
@@ -517,7 +520,7 @@ public class ModifyModulesComposite extends Composite {
 			IModule module = (IModule) iterator.next();
 			help.parentList.add(null);
 			help.moduleList.add(module);
-			List children = (List) childModuleMap.get(module);
+			IModule[] children = (IModule[]) childModuleMap.get(module);
 			if (children != null) {
 				List parents = new ArrayList();
 				parents.add(module);

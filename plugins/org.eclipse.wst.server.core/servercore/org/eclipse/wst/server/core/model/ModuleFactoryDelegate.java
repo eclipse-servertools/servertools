@@ -13,7 +13,9 @@ package org.eclipse.wst.server.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.internal.Module;
 import org.eclipse.wst.server.core.internal.ModuleFactory;
 import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.util.ModuleFactoryEvent;
@@ -64,8 +66,8 @@ public abstract class ModuleFactoryDelegate {
 		return factory.getId();
 	}
 	
-	public IModule createModule(String type) {
-		return null;
+	public IModule createModule(String id, String name, String type, String version, IProject project) {
+		return new Module(factory, id, name, type, version, project);
 	}
 
 	/**

@@ -106,8 +106,8 @@ public class ModuleFactory implements IOrdered {
 			getModules();
 		Iterator iterator = modules.iterator();
 		while (iterator.hasNext()) {
-			IModule module = (IModule) iterator.next();
-			if (id.equals(module.getId()))
+			Module module = (Module) iterator.next();
+			if (id.equals(module.getInternalId()))
 				return module;
 		}
 		return null;

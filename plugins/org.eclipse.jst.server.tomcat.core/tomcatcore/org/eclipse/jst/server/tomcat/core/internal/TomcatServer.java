@@ -57,7 +57,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		if (getServer().getRuntime() == null)
 			return null;
 		
-		return (TomcatRuntime) getServer().getAdapter(TomcatRuntime.class);
+		return (TomcatRuntime) getServer().getRuntime().getAdapter(TomcatRuntime.class);
 	}
 
 	public ITomcatVersionHandler getTomcatVersionHandler() {
@@ -405,10 +405,11 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			int size = add.length;
 			for (int i = 0; i < size; i++) {
 				IModule module = add[i];
-				if (!(module instanceof IWebModule))
+				IWebModule webModule = (IWebModule) module.getAdapter(IWebModule.class);
+				if (webModule == null)
 					return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorWebModulesOnly"), null);
 				
-				IStatus status = getTomcatVersionHandler().canAddModule((IWebModule) module);
+				IStatus status = getTomcatVersionHandler().canAddModule(webModule);
 				if (status != null && !status.isOK())
 					return status;
 			}

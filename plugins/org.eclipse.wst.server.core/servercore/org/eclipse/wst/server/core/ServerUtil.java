@@ -167,24 +167,19 @@ public class ServerUtil {
 	 * @return the module
 	 */
 	public static IModule getModule(String moduleId) {
-		ModuleFactory[] moduleFactory = ServerCore.getModuleFactories();
-		int index = moduleId.indexOf("/");
-		if (index < 0)
+		int index = moduleId.indexOf(":");
+		if (index <= 0)
 			return null;
 		
 		String factoryId = moduleId.substring(0, index);
+		ModuleFactory moduleFactory = ServerCore.findModuleFactory(factoryId);
+		if (moduleFactory == null)
+			return null;
+
 		String moduleSubId = moduleId.substring(index+1);
-		if (moduleFactory != null) {
-			int size = moduleFactory.length;
-			for (int i = 0; i < size; i++) {
-				if (moduleFactory[i].getId().equals(factoryId)) {
-					IModule module = moduleFactory[i].getModule(moduleSubId);
-					if (module != null) {
-						return module;
-					}
-				}
-			}
-		}
+		IModule module = moduleFactory.getModule(moduleSubId);
+		if (module != null)
+			return module;
 		return null;
 	}
 	
