@@ -33,9 +33,8 @@ package org.eclipse.jst.server.generic.internal.ui;
 import java.util.Map;
 import org.eclipse.jst.server.generic.internal.core.GenericServerRuntime;
 import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinition;
-import org.eclipse.swt.SWT;
+import org.eclipse.jst.server.generic.ui.GenericServerUIMessages;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
@@ -48,7 +47,8 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
 {
 
     private ServerTypeDefinitionGroup fComposite;
-    private boolean flag=false; 
+    private boolean flag=false;
+    private Map fProperties; 
 	/* (non-Javadoc)
 	 * @see com.ibm.wtp.server.ui.wizard.IWizardFragment#isComplete()
 	 */
@@ -59,37 +59,76 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
 		return flag;
 	}
 
-	public void createContent(Composite parent, IWizardHandle handle) 
-	{
-		createBody(parent,handle);	
+	public void createContent(Composite parent, IWizardHandle handle){
+		createBody(parent,handle);
 	}
 	/**
 	 * 
 	 */
 	private void createBody(Composite parent, IWizardHandle handle) 
 	{
-		IServerWorkingCopy server = (IServerWorkingCopy)getTaskModel().getObject(ITaskModel.TASK_SERVER);
-		String ID = server.getRuntime().getAttribute(GenericServerRuntime.SERVER_DEFINITION_ID,(String)null);
-		Map runtimeProperties = server.getRuntime().getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map)null);
-		ServerTypeDefinition definition = getServerTypeDefinition(ID,runtimeProperties);
-		fComposite = new ServerTypeDefinitionGroup(definition,ServerTypeDefinitionGroup.CONTEXT_SERVER, null,parent,SWT.NONE);
+		IServerWorkingCopy server = getServer();
+		ServerTypeDefinition definition = getServerTypeDefinitionFor(server);
+		fComposite = new ServerTypeDefinitionGroup(this, definition,ServerTypeDefinitionGroup.CONTEXT_SERVER, null,parent);
 		flag=true;
-		
 	}
 
-	public void enter() {
-		// TODO Auto-generated method stub
-		super.enter();
+	/**
+     * @param server
+     * @return
+     */
+    private ServerTypeDefinition getServerTypeDefinitionFor(IServerWorkingCopy server) {
+        String ID = server.getRuntime().getAttribute(GenericServerRuntime.SERVER_DEFINITION_ID,(String)null);
+		Map runtimeProperties = server.getRuntime().getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map)null);
+		ServerTypeDefinition definition = getServerTypeDefinition(ID,runtimeProperties);
+        return definition;
+    }
+
+    /**
+     * @return
+     */
+    private IServerWorkingCopy getServer() {
+        IServerWorkingCopy server = (IServerWorkingCopy)getTaskModel().getObject(ITaskModel.TASK_SERVER);
+        return server;
+    }
+
+    public void enter() {
+        IServerWorkingCopy server = getServer();
+        ServerTypeDefinition definition = getServerTypeDefinitionFor(server);
+        fComposite.reset(definition,ServerTypeDefinitionGroup.CONTEXT_SERVER,null);
 	}
-	public void exit() {
-	    IServerConfigurationWorkingCopy serverConfigWorkingCopy = (IServerConfigurationWorkingCopy)getTaskModel().getObject(ITaskModel.TASK_SERVER_CONFIGURATION);
-	    serverConfigWorkingCopy.setAttribute("lomboz",fComposite.getProperties());
-//		try {
-//            serverWorkingCopy.save(new NullProgressMonitor());
-//        } catch (CoreException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-		
+	public void exit(){
+	    fProperties = fComposite.getProperties();
+	    serverDefinitionTypePropertiesChanged();
 	}
+	
+	protected Map getServerProperties(){
+	    return fProperties;
+	}
+	
+    /* (non-Javadoc)
+     * @see org.eclipse.jst.server.generic.internal.ui.ServerDefinitionTypeAwareWizardFragment#description()
+     */
+    public String description() {
+        return  GenericServerUIMessages.getString("serverWizardDescription");
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jst.server.generic.internal.ui.ServerDefinitionTypeAwareWizardFragment#title()
+     */
+    public String title() {
+        return  GenericServerUIMessages.getString("serverWizardTitle");
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jst.server.generic.internal.ui.ServerDefinitionTypeAwareWizardFragment#serverDefinitionTypePropertiesChanged()
+     */
+    public void serverDefinitionTypePropertiesChanged() {
+        fProperties = fComposite.getProperties();
+        IServerWorkingCopy serverWorkingCopy = getServer();
+        ServerTypeDefinition definition = getServerTypeDefinitionFor(serverWorkingCopy);
+        
+        serverWorkingCopy.setName(GenericServerUIMessages.getFormattedString("serverName",new String[] {definition.getName()}));
+        serverWorkingCopy.setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,getServerProperties());
+    }
 }
