@@ -11,14 +11,10 @@
 package org.eclipse.jst.server.tomcat.core.tests;
 
 import junit.framework.Test;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.ITomcatServer;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.tests.ext.AbstractServerTestCase;
 
 public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCase {
@@ -64,14 +60,6 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 		IServerType st = ServerCore.findServerType(serverTypeId);
 		IRuntime runtime = createRuntime();
 		IServerWorkingCopy wc = st.createServer(null, null, runtime, null);
-		wc.setRuntime(runtime);
-		
-		IFolder folder = getServerProject().getFolder(wc.getName() + "-config");
-		if (!folder.exists())
-			folder.create(true, true, null);
-		wc.setServerConfiguration(folder);
-		
-		((Server)wc).importConfiguration(runtime, null);
 		
 		IServerPort[] ports = wc.getServerPorts();
 		ITomcatServer tomcatServer = (ITomcatServer) wc.getAdapter(ITomcatServer.class);
@@ -84,22 +72,5 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 		}
 		
 		return wc;
-	}
-	
-	public static IProject getServerProject() throws Exception {
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		if (projects != null) {
-			int size = projects.length;
-			for (int i = 0; i < size; i++) {
-				if (ServerCore.getProjectProperties(projects[i]).isServerProject())
-					return projects[i];
-			}
-		}
-		
-		String s = "Servers";
-		IProject project2 = ResourcesPlugin.getWorkspace().getRoot().getProject(s);
-		project2.create(null);
-		project2.open(null);
-		return project2;
 	}
 }
