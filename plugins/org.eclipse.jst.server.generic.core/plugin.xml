@@ -5,7 +5,8 @@
    name="%pluginName"
    version="1.0.0"
    provider-name="%providerName"
-   class="org.eclipse.jst.server.generic.core.CorePlugin">
+   class="org.eclipse.jst.server.generic.core.CorePlugin"
+   description="%pluginDescription">
 
    <runtime>
       <library name="genericserver.jar">
@@ -50,8 +51,8 @@
   <extension point="org.eclipse.wst.server.core.runtimeTypes">
     <runtimeType
        id="org.eclipse.jst.server.generic.runtime"
-       name="J2EE Generic Server Runtime"
-       description="This is the Lomboz type runtime support"
+       name="%runtimeTypeName"
+       description="%runtimeTypeDescription"
        vendor="All"
        version="0"
        order="100"
@@ -73,32 +74,19 @@
            initialState="stopped"
            workingCopyClass="org.eclipse.jst.server.generic.internal.core.GenericServerWorkingCopy"
            runtimeTypeId="org.eclipse.jst.server.generic.runtime"
-           description="Lomboz like generic server"
+           description="%serverTypeDescription"
            launchConfigId="org.eclipse.jst.server.generic.core.launchConfigurationType"
            monitorable="true"
-           name="J2EE Generic server support"
-           launchModes="run,debug"
-		   configurationTypeId="org.eclipse.jst.server.generic.configuration" 
-           >
+           name="%serverTypeName"
+           launchModes="run,debug">
           
      </serverType>
-	</extension>
-
-	<extension point="org.eclipse.wst.server.core.serverConfigurationTypes">
-     <serverConfigurationType
-       id="org.eclipse.jst.server.generic.configuration"
-       name="J2EE Generic server configuration"
-       description="Lomboz like server configuration"
-       isFolder="true"
-       class="org.eclipse.jst.server.generic.internal.core.GenericServerConfigurationDelegate"
-       workingCopyClass="org.eclipse.jst.server.generic.internal.core.GenericServerConfigurationWorkingCopy">
-     </serverConfigurationType>
 	</extension>
 
    <extension point="org.eclipse.debug.core.launchConfigurationTypes">
      <launchConfigurationType
         id="org.eclipse.jst.server.generic.core.launchConfigurationType"
-        name="Generic server launch configuration type"
+        name="%launchConfigurationTypeName"
         delegate="org.eclipse.jst.server.generic.internal.core.GenericServerLaunchConfigurationDelegate"
         modes="run, debug"
         sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
@@ -116,10 +104,4 @@
          class="org.eclipse.jst.server.generic.internal.core.GenericServerLaunchableAdapterDelegate"
          id="org.eclipse.jst.server.generic.web"/>
    </extension>
- 
-
-   
-   
-   
-  
 </plugin>
