@@ -86,7 +86,7 @@ public abstract class AbstractServerTestCase extends TestCase {
 	}
 	
 	public void test0007Publish() throws Exception {
-		getServer().publish(null);
+		getServer().publish(IServer.PUBLISH_FULL, null);
 	}
 	
 	public void test0008CanRun() throws Exception {
