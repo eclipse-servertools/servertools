@@ -53,7 +53,7 @@ public class NewServerWizardFragment extends WizardFragment {
 
 	public void enter() {
 		super.enter();
-		getTaskModel().putObject(ITaskModel.TASK_LAUNCH_MODE, launchMode);
+		getTaskModel().putObject(TaskModel.TASK_LAUNCH_MODE, launchMode);
 	}
 
 	/* (non-Javadoc)
@@ -67,8 +67,8 @@ public class NewServerWizardFragment extends WizardFragment {
 	}
 
 	/*protected void createConfiguration(IServerWorkingCopy server) {
-		ITaskModel model = getTaskModel();
-		IRuntime runtime = (IRuntime) model.getObject(ITaskModel.TASK_RUNTIME);
+		TaskModel model = getTaskModel();
+		IRuntime runtime = (IRuntime) model.getObject(TaskModel.TASK_RUNTIME);
 		
 		IServerType type = server.getServerType();
 		if (type.hasServerConfiguration()) {
@@ -83,7 +83,7 @@ public class NewServerWizardFragment extends WizardFragment {
 						file = ServerUtil.getUnusedServerConfigurationFile(WizardUtil.getServerProject(), null);
 					
 					IServerConfigurationWorkingCopy serverConfiguration = getServerConfiguration(type.getServerConfigurationType(), file, runtime);
-					model.putObject(ITaskModel.TASK_SERVER_CONFIGURATION, serverConfiguration);
+					model.putObject(TaskModel.TASK_SERVER_CONFIGURATION, serverConfiguration);
 					server.setServerConfiguration(serverConfiguration);
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Could not create configuration", e);
@@ -135,14 +135,14 @@ public class NewServerWizardFragment extends WizardFragment {
 
 		Byte b = (Byte) getTaskModel().getObject(MODE);
 		if (b != null && b.byteValue() == MODE_MANUAL) {
-			IRuntime runtime = (IRuntime) getTaskModel().getObject(ITaskModel.TASK_RUNTIME);
+			IRuntime runtime = (IRuntime) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 			if (runtime != null && runtime instanceof IRuntimeWorkingCopy) {
 				WizardFragment sub = getWizardFragment(runtime.getRuntimeType().getId());
 				if (sub != null)
 					list.add(sub);
 			}
 			
-			IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
+			IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
 			if (server != null) {
 				// createConfiguration(server);
 				if (server.getServerType().hasServerConfiguration()) {

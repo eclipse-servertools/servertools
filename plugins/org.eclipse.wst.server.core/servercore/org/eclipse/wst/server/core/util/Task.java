@@ -18,7 +18,7 @@ import org.eclipse.wst.server.core.*;
  * @since 1.0
  */
 public abstract class Task implements ITask {
-	private ITaskModel model;
+	private TaskModel model;
 	private String name;
 	private String description;
 
@@ -57,14 +57,14 @@ public abstract class Task implements ITask {
 	/*
 	 * @see org.eclipse.wst.server.core.ITask.getTaskModel()
 	 */
-	public ITaskModel getTaskModel() {
+	public TaskModel getTaskModel() {
 		return model;
 	}
 	
 	/*
-	 * @see org.eclipse.wst.server.core.ITask.setTaskModel(org.eclipse.wst.server.core.ITaskModel)
+	 * @see org.eclipse.wst.server.core.ITask.setTaskModel(org.eclipse.wst.server.core.TaskModel)
 	 */
-	public void setTaskModel(ITaskModel taskModel) {
+	public void setTaskModel(TaskModel taskModel) {
 		this.model = taskModel;
 	}
 

@@ -156,7 +156,7 @@ public abstract class ServerEditorPart extends EditorPart {
 		return status;
 	}
 
-	protected List getSections() {
+	private List getSections() {
 		if (sections == null) {
 			sections = new ArrayList();
 			sectionToInsertionId = new HashMap();
@@ -192,7 +192,7 @@ public abstract class ServerEditorPart extends EditorPart {
 		return sections;
 	}
 	
-	protected List getSections(String insertionId) {
+	private List getSections(String insertionId) {
 		if (insertionId == null)
 			return null;
 		
@@ -226,7 +226,12 @@ public abstract class ServerEditorPart extends EditorPart {
 			section.init(site, input);
 		}
 	}
-	
+
+	/**
+	 * Return the server that is being editted.
+	 * 
+	 * @return
+	 */
 	public IServerWorkingCopy getServer() {
 		return server;
 	}
@@ -262,7 +267,7 @@ public abstract class ServerEditorPart extends EditorPart {
 	 * @param display
 	 * @return FormToolkit
 	 */
-	public FormToolkit getFormToolkit(Display display) {
+	protected FormToolkit getFormToolkit(Display display) {
 		if (toolkit == null)
 			toolkit = new FormToolkit(display);
 		return toolkit;

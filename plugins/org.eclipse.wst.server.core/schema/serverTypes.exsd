@@ -70,6 +70,9 @@
                   specifies the fully qualified name of the Java class that extends &lt;samp&gt;org.eclipse.wst.server.core.model.ServerDelegate&lt;/samp&gt;.
 Server instances of this type will delegate to instances of this class. Delegates must also have a public 0-arg constructor.
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.ServerDelegate"/>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="behaviourClass" type="string">
@@ -78,6 +81,9 @@ Server instances of this type will delegate to instances of this class. Delegate
                   specifies the fully qualified name of the Java class that implements &lt;samp&gt;org.eclipse.wst.server.core.model.ServerBehaviourDelegate&lt;/samp&gt;.
 Server instances of this type will delegate to instances of this class. Delegates must also have a public 0-arg constructor.
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.ServerBehaviourDelegate"/>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="hasConfiguration" type="boolean">

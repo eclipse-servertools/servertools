@@ -20,9 +20,9 @@ public class ServerConfigurationWizardFragment extends WizardFragment {
 	}
 	
 	public void enter() {
-		//ITaskModel model = getTaskModel();
-		//IRuntime runtime = (IRuntime) model.getObject(ITaskModel.TASK_RUNTIME);
-		//IServerWorkingCopy server = (IServerWorkingCopy) model.getObject(ITaskModel.TASK_SERVER);
+		//TaskModel model = getTaskModel();
+		//IRuntime runtime = (IRuntime) model.getObject(TaskModel.TASK_RUNTIME);
+		//IServerWorkingCopy server = (IServerWorkingCopy) model.getObject(TaskModel.TASK_SERVER);
 		
 		//IServerType type = server.getServerType();
 		/*if (type.hasServerConfiguration() && server.getServerConfiguration() == null) {
@@ -33,7 +33,7 @@ public class ServerConfigurationWizardFragment extends WizardFragment {
 				
 				IServerConfigurationWorkingCopy serverConfiguration = type.getServerConfigurationType().importFromRuntime(null, file, runtime, new NullProgressMonitor());
 				ServerUtil.setServerConfigurationDefaultName(serverConfiguration);
-				model.putObject(ITaskModel.TASK_SERVER_CONFIGURATION, serverConfiguration);
+				model.putObject(TaskModel.TASK_SERVER_CONFIGURATION, serverConfiguration);
 				server.setServerConfiguration(serverConfiguration);
 				updateChildFragments();
 			} catch (Exception e) {
@@ -43,7 +43,7 @@ public class ServerConfigurationWizardFragment extends WizardFragment {
 	}
 
 	/*protected void createChildFragments(List list) {
-		IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
+		IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
 		IServerConfiguration serverConfiguration = null;
 		if (server != null)
 			serverConfiguration = server.getServerConfiguration();

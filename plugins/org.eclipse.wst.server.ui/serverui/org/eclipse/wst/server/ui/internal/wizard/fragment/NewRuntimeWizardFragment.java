@@ -13,7 +13,7 @@ package org.eclipse.wst.server.ui.internal.wizard.fragment;
 import java.util.List;
 
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
-import org.eclipse.wst.server.core.ITaskModel;
+import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.page.NewRuntimeComposite;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
@@ -70,7 +70,7 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 		if (getTaskModel() == null)
 			return;
 	
-		IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_RUNTIME);
+		IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 		if (runtime == null)
 			return;
 

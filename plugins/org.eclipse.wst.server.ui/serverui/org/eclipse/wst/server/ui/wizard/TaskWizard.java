@@ -30,8 +30,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.ITask;
-import org.eclipse.wst.server.core.ITaskModel;
-import org.eclipse.wst.server.core.util.TaskModel;
+import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
@@ -48,7 +47,7 @@ public class TaskWizard implements IWizard {
 	private List pages;
 	private boolean addingPages;
 	private Map fragmentData = new HashMap();
-	protected ITaskModel taskModel = new TaskModel();
+	protected TaskModel taskModel = new TaskModel();
 	
 	private IWizardContainer container = null;
 	
@@ -69,7 +68,7 @@ public class TaskWizard implements IWizard {
 	private WizardFragment rootFragment;
 	private WizardFragment currentFragment;
 	
-	private static TaskWizard current;
+	//private static TaskWizard current;
 
 	class FragmentData {
 		public TaskWizardPage page;
@@ -96,7 +95,7 @@ public class TaskWizard implements IWizard {
 		setNeedsProgressMonitor(true);
 		setForcePreviousAndNextButtons(true);
 		
-		current = this;
+		//current = this;
 	}
 
 	/**
@@ -296,7 +295,7 @@ public class TaskWizard implements IWizard {
 		currentFragment.enter();
 	}
 	
-	protected List getAllWizardFragments() {
+	private List getAllWizardFragments() {
 		List list = new ArrayList();
 		list.add(rootFragment);
 		addSubWizardFragments(rootFragment, list);
@@ -310,7 +309,7 @@ public class TaskWizard implements IWizard {
 		return list;
 	}
 
-	protected void addSubWizardFragments(WizardFragment fragment, List list) {
+	private void addSubWizardFragments(WizardFragment fragment, List list) {
 		Iterator iterator = fragment.getChildFragments().iterator();
 		while (iterator.hasNext()) {
 			WizardFragment child = (WizardFragment) iterator.next();
@@ -350,16 +349,16 @@ public class TaskWizard implements IWizard {
 		}
 	}
 	
-	protected static void updateWizardPages() {
+	/*private static void updateWizardPages() {
 		try {
 			current.updatePages();
 			current.getContainer().updateButtons();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error updating wizard pages", e);
 		}
-	}
+	}*/
 	
-	protected FragmentData getFragmentData(WizardFragment fragment) {
+	private FragmentData getFragmentData(WizardFragment fragment) {
 		try {
 			FragmentData data = (FragmentData) fragmentData.get(fragment);
 			if (data != null)

@@ -45,6 +45,9 @@ public class ServerPlugin extends Plugin {
 	
 	//	cached copy of all server monitors
 	private static List monitors;
+	
+	//	cached copy of all runtime locators
+	private static List runtimeLocators;
 
 	private static final String TEMP_DATA_FILE = "tmp-data.xml";
 
@@ -692,7 +695,7 @@ public class ServerPlugin extends Plugin {
 			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .serverMonitors extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "serverMonitors");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "internalServerMonitors");
 
 		int size = cf.length;
 		monitors = new ArrayList(size);
@@ -706,5 +709,46 @@ public class ServerPlugin extends Plugin {
 		}
 	
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .serverMonitors extension point -<-");
+	}
+	
+	/**
+	 * Returns an array of all known runtime locator instances.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return a possibly-empty array of runtime locator instances {@link IRuntimeLocator}
+	 */
+	public static IRuntimeLocator[] getRuntimeLocators() {
+		if (runtimeLocators == null)
+			loadRuntimeLocators();
+		IRuntimeLocator[] rl = new IRuntimeLocator[runtimeLocators.size()];
+		runtimeLocators.toArray(rl);
+		return rl;
+	}
+	
+	/**
+	 * Load the runtime locators.
+	 */
+	private static synchronized void loadRuntimeLocators() {
+		if (runtimeLocators != null)
+			return;
+		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .runtimeLocators extension point ->-");
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "runtimeLocators");
+
+		int size = cf.length;
+		runtimeLocators = new ArrayList(size);
+		for (int i = 0; i < size; i++) {
+			try {
+				RuntimeLocator runtimeLocator = new RuntimeLocator(cf[i]);
+				runtimeLocators.add(runtimeLocator);
+				Trace.trace(Trace.EXTENSION_POINT, "  Loaded runtimeLocator: " + cf[i].getAttribute("id"));
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "  Could not load runtimeLocator: " + cf[i].getAttribute("id"), t);
+			}
+		}
+		
+		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .runtimeLocators extension point -<-");
 	}
 }

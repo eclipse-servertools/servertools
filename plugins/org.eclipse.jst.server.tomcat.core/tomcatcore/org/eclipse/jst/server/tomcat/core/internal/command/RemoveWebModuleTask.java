@@ -18,7 +18,7 @@ import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.WebModule;
 
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.core.ITaskModel;
+import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.core.util.Task;
 /**
  * Task to remove a web module.
@@ -40,7 +40,7 @@ public class RemoveWebModuleTask extends Task {
 	 * @return boolean
 	 */
 	public void execute(IProgressMonitor monitor) throws CoreException {
-		IServerWorkingCopy wc = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
+		IServerWorkingCopy wc = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
 		TomcatServer server = (TomcatServer) wc.getAdapter(TomcatServer.class);
 		TomcatConfiguration configuration = server.getTomcatConfiguration();
 		if (configuration.getWebModules().size() <= index)
@@ -56,7 +56,7 @@ public class RemoveWebModuleTask extends Task {
 	public String getDescription() {
 		if (module == null) {
 			try {
-				IServerWorkingCopy wc = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
+				IServerWorkingCopy wc = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
 				TomcatServer server = (TomcatServer) wc.getAdapter(TomcatServer.class);
 				TomcatConfiguration configuration = server.getTomcatConfiguration();
 				module = (WebModule) configuration.getWebModules().get(index);
@@ -83,7 +83,7 @@ public class RemoveWebModuleTask extends Task {
 	 */
 	public void undo() {
 		try {
-			IServerWorkingCopy wc = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
+			IServerWorkingCopy wc = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
 			TomcatServer server = (TomcatServer) wc.getAdapter(TomcatServer.class);
 			TomcatConfiguration configuration = server.getTomcatConfiguration();
 			configuration.addWebModule(index, module);

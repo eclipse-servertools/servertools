@@ -8,10 +8,12 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core;
+package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.core.ServerCore;
 /**
  * A server locator provides the ability to locate or search for additional
  * servers of a particular type, on a particular host.
@@ -25,7 +27,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @since 1.0
  */
 public interface IServerLocator {
-	public interface Listener {
+	public interface IServerSearchListener {
 		/**
 		 * Called when a new server is found by the locator.
 		 * The server must never be null.
@@ -101,5 +103,5 @@ public interface IServerLocator {
 	 *    reporting and cancellation are not desired
 	 * @throws CoreException
 	 */
-	public void searchForServers(String host, Listener listener, IProgressMonitor monitor) throws CoreException;
+	public void searchForServers(String host, IServerSearchListener listener, IProgressMonitor monitor) throws CoreException;
 }

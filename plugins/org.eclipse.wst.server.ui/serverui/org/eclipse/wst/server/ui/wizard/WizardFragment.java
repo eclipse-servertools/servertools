@@ -16,14 +16,14 @@ import java.util.List;
 import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.wst.server.core.ITask;
-import org.eclipse.wst.server.core.ITaskModel;
+import org.eclipse.wst.server.core.TaskModel;
 /**
  * A wizard fragment is a
  * 
  * @since 1.0
  */
 public abstract class WizardFragment {
-	private ITaskModel taskModel;
+	private TaskModel taskModel;
 	private boolean isComplete = true;
 	private List listImpl;
 
@@ -54,7 +54,7 @@ public abstract class WizardFragment {
 	 * 
 	 * @param model
 	 */
-	public void setTaskModel(ITaskModel taskModel) {
+	public void setTaskModel(TaskModel taskModel) {
 		this.taskModel = taskModel;
 	}
 
@@ -63,7 +63,7 @@ public abstract class WizardFragment {
 	 * 
 	 * @return
 	 */
-	public ITaskModel getTaskModel() {
+	public TaskModel getTaskModel() {
 		return taskModel;
 	}
 

@@ -70,9 +70,12 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;IRuntimeLocatorDelegate&lt;/samp&gt;.
-Runtime locator instances of this type will delegate to instances of this class.
+                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;ServerLocatorDelegate&lt;/samp&gt;.
+Server locator instances of this type will delegate to instances of this class.
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="java"/>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="supportsRemoteHosts" type="string" use="required">

@@ -48,14 +48,14 @@ public class ModifyModulesTask extends Task {
 		if ((add == null || add.isEmpty()) && (remove == null || remove.isEmpty()))
 			return;
 
-		IServerWorkingCopy workingCopy = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
+		IServerWorkingCopy workingCopy = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
 		
 		IRunningActionServer ras = (IRunningActionServer) workingCopy.getAdapter(IRunningActionServer.class);
 		if (ras != null) {
 			IServer server = workingCopy.getOriginal();
 			int state = server.getServerState();
 			if (state == IServer.STATE_STOPPED || state == IServer.STATE_UNKNOWN) {
-				String mode = (String) getTaskModel().getObject(ITaskModel.TASK_LAUNCH_MODE);
+				String mode = (String) getTaskModel().getObject(TaskModel.TASK_LAUNCH_MODE);
 				if (mode == null || mode.length() == 0)
 					mode = ILaunchManager.DEBUG_MODE;
 				

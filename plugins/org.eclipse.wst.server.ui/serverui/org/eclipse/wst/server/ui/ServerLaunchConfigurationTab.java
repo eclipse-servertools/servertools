@@ -122,7 +122,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		setControl(composite);
 	}
 	
-	protected boolean isSupportedServer(String serverTypeId) {
+	private boolean isSupportedServer(String serverTypeId) {
 		if (serverTypeIds == null)
 			return true;
 		int size = serverTypeIds.length;
@@ -133,7 +133,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		return false;
 	}
 	
-	protected static boolean matches(String a, String b) {
+	private static boolean matches(String a, String b) {
 		if (a == null || b == null || "*".equals(a) || "*".equals(b) || a.startsWith(b) || b.startsWith(a))
 			return true;
 		return false;

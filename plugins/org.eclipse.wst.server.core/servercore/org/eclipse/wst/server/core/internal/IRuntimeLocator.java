@@ -8,11 +8,13 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core;
+package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
+import org.eclipse.wst.server.core.ServerCore;
 /**
  * A runtime locator provides the ability to locate or search for additional
  * runtimes of a particular type.
@@ -26,7 +28,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @since 1.0
  */
 public interface IRuntimeLocator {
-	public interface RuntimeSearchListener {
+	public interface IRuntimeSearchListener {
 		/**
 		 * Called when a new runtime is found by the locator.
 		 * The runtime must never be null.
@@ -87,5 +89,5 @@ public interface IRuntimeLocator {
 	 *    reporting and cancellation are not desired
 	 * @throws CoreException
 	 */
-	public void searchForRuntimes(IPath path, RuntimeSearchListener listener, IProgressMonitor monitor) throws CoreException;
+	public void searchForRuntimes(IPath path, IRuntimeSearchListener listener, IProgressMonitor monitor) throws CoreException;
 }

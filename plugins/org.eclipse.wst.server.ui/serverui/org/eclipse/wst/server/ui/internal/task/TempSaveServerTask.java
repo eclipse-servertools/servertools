@@ -31,7 +31,7 @@ public class TempSaveServerTask extends Task {
 	 * @see com.ibm.wtp.server.ui.internal.task.ITask#doTask()
 	 */
 	public void execute(IProgressMonitor monitor) throws CoreException {
-		IServer server = (IServer) getTaskModel().getObject(ITaskModel.TASK_SERVER);
+		IServer server = (IServer) getTaskModel().getObject(TaskModel.TASK_SERVER);
 		if (server != null && server instanceof IServerWorkingCopy) {
 			IServerWorkingCopy workingCopy = (IServerWorkingCopy) server;
 			if (!workingCopy.isDirty())
@@ -57,7 +57,7 @@ public class TempSaveServerTask extends Task {
 			if (workingCopy.getServerType().hasServerConfiguration()) {
 				((Server)workingCopy).importConfiguration(runtime, null);
 			}
-			getTaskModel().putObject(ITaskModel.TASK_SERVER, workingCopy);
+			getTaskModel().putObject(TaskModel.TASK_SERVER, workingCopy);
 		}
 	}
 }

@@ -36,7 +36,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerAttributes;
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.core.ITaskModel;
+import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.ui.internal.*;
@@ -48,7 +48,7 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
  */
 public class NewServerComposite extends Composite {
 	protected IWizardHandle wizard;
-	protected ITaskModel taskModel;
+	protected TaskModel taskModel;
 	protected IModule module;
 	protected String launchMode;
 	
@@ -410,17 +410,17 @@ public class NewServerComposite extends Composite {
 		if (taskModel != null) {
 			IServerWorkingCopy server = getServer();
 			if (server != null) {
-				taskModel.putObject(ITaskModel.TASK_SERVER, server);
-				taskModel.putObject(ITaskModel.TASK_RUNTIME, server.getRuntime());
+				taskModel.putObject(TaskModel.TASK_SERVER, server);
+				taskModel.putObject(TaskModel.TASK_RUNTIME, server.getRuntime());
 			} else {
-				taskModel.putObject(ITaskModel.TASK_SERVER, null);
-				taskModel.putObject(ITaskModel.TASK_RUNTIME, null);
+				taskModel.putObject(TaskModel.TASK_SERVER, null);
+				taskModel.putObject(TaskModel.TASK_RUNTIME, null);
 			}
 			wizard.update();
 		}
 	}
 
-	public void setTaskModel(ITaskModel model) {
+	public void setTaskModel(TaskModel model) {
 		taskModel = model;
 		taskModel.putObject(NewServerWizardFragment.MODE, new Byte(mode));
 		updateTaskModel();

@@ -43,6 +43,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.IRuntimeLocator;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
 import org.eclipse.wst.server.ui.internal.task.SaveRuntimeTask;
 import org.eclipse.wst.server.ui.internal.viewers.RuntimeComposite;
@@ -194,11 +196,11 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					dialog.setCancelable(true);
 					dialog.open();
 					final IProgressMonitor monitor = dialog.getProgressMonitor();
-					final IRuntimeLocator[] locators = ServerCore.getRuntimeLocators();
+					final IRuntimeLocator[] locators = ServerPlugin.getRuntimeLocators();
 					monitor.beginTask(ServerUIPlugin.getResource("%dialogRuntimeSearchProgress"), 100 * locators.length + 10);
 					final List list = new ArrayList();
 					
-					final IRuntimeLocator.RuntimeSearchListener listener = new IRuntimeLocator.RuntimeSearchListener() {
+					final IRuntimeLocator.IRuntimeSearchListener listener = new IRuntimeLocator.IRuntimeSearchListener() {
 						public void runtimeFound(final IRuntimeWorkingCopy runtime) {
 							dialog.getShell().getDisplay().syncExec(new Runnable() {
 								public void run() {
@@ -337,7 +339,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 				protected void createChildFragments(List list) {
 					list.add(new WizardFragment() {
 						public void enter() {
-							getTaskModel().putObject(ITaskModel.TASK_RUNTIME, runtimeWorkingCopy);
+							getTaskModel().putObject(TaskModel.TASK_RUNTIME, runtimeWorkingCopy);
 						}
 					});
 					list.add(fragment2);

@@ -58,11 +58,10 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;ILaunchConfigurationDelegate&lt;/samp&gt;.
-Launch configuration instances of this type will delegate to instances of this class to perform launching.
+                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;org.eclipse.wst.server.ui.editor.ServerEditorActionFactoryDelegate&lt;/samp&gt;.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.IStartup"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.ui.editor.ServerEditorActionFactoryDelegate"/>
                </appInfo>
             </annotation>
          </attribute>

@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.wst.server.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.wst.server.core" id="serverMonitor" name="Server Monitor"/>
+         <meta.schema plugin="org.eclipse.wst.server.core" id="internalServerMonitor" name="Server Monitor"/>
       </appInfo>
       <documentation>
          This extension point is used to provide a new monitor for servers.
@@ -72,10 +72,12 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;IMonitor&lt;/samp&gt;
+                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;org.eclipse.wst.server.core.internal.ServerMonitorDelegate&lt;/samp&gt;
+
+This extension point is internal and should not be used by any other plugins.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.IStartup"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.internal.ServerMonitorDelegate"/>
                </appInfo>
             </annotation>
          </attribute>

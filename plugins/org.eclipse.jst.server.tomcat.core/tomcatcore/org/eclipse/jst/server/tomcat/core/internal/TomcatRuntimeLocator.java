@@ -13,13 +13,12 @@ package org.eclipse.jst.server.tomcat.core.internal;
 import java.io.File;
 import java.io.FileFilter;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.launching.JavaRuntime;
 
-import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.IRuntimeType;
+import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
+import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.model.RuntimeLocatorDelegate;
 /**
  * 
@@ -35,11 +34,11 @@ public class TomcatRuntimeLocator extends RuntimeLocatorDelegate {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IRuntimeFactoryDelegate#getKnownRuntimes()
 	 */
-	public void searchForRuntimes(IPath path, IRuntimeLocator.RuntimeSearchListener listener, IProgressMonitor monitor) {
+	public void searchForRuntimes(IPath path, IRuntimeSearchListener listener, IProgressMonitor monitor) {
 		searchForRuntimes2(path, listener, monitor);
 	}
 
-	protected static void searchForRuntimes2(IPath path, IRuntimeLocator.RuntimeSearchListener listener, IProgressMonitor monitor) {
+	protected static void searchForRuntimes2(IPath path, IRuntimeSearchListener listener, IProgressMonitor monitor) {
 		File[] files = null;
 		if (path != null) {
 			File f = path.toFile();
@@ -66,7 +65,7 @@ public class TomcatRuntimeLocator extends RuntimeLocatorDelegate {
 			monitor.worked(100);
 	}
 
-	protected static void searchDir(IRuntimeLocator.RuntimeSearchListener listener, File dir, int depth, IProgressMonitor monitor) {
+	protected static void searchDir(IRuntimeSearchListener listener, File dir, int depth, IProgressMonitor monitor) {
 		if ("conf".equals(dir.getName())) {
 			IRuntimeWorkingCopy runtime = getRuntimeFromDir(dir.getParentFile(), monitor);
 			if (runtime != null) {

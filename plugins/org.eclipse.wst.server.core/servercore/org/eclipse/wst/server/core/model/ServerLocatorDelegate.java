@@ -11,7 +11,7 @@
 package org.eclipse.wst.server.core.model;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.IServerLocator;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
 /**
  * A server locator provides the ability to locate or search for additional
  * server of a particular type, on a particular host.
@@ -20,10 +20,19 @@ import org.eclipse.wst.server.core.IServerLocator;
  * to extend the <code>serverLocators</code> extension point.
  * </p>
  * 
- * @see org.eclipse.wst.server.core.IServerLocator
  * @since 1.0
  */
 public abstract class ServerLocatorDelegate {
+	public interface IServerSearchListener {
+		/**
+		 * Called when a new server is found by the locator.
+		 * The server must never be null.
+		 * 
+		 * @param server the runtime that was found.
+		 */
+		public void serverFound(IServerWorkingCopy server);
+	}
+
 	/**
 	 * Searches for servers. 
 	 * It uses the callback listener to report servers that are found.
@@ -32,7 +41,6 @@ public abstract class ServerLocatorDelegate {
 	 * @param listener a listener to report status to
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
-	 * @see org.eclipse.wst.server.core.IServerLocator.searchForServers(String, IServerLocator.Listener, IProgressMonitor)
 	 */
-	public abstract void searchForServers(String host, IServerLocator.Listener listener, IProgressMonitor monitor);
+	public abstract void searchForServers(String host, IServerSearchListener listener, IProgressMonitor monitor);
 }

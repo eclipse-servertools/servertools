@@ -13,7 +13,7 @@ package org.eclipse.wst.server.core.internal;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.IRuntimeLocator;
+import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.model.RuntimeLocatorDelegate;
 /**
  * 
@@ -84,9 +84,14 @@ public class RuntimeLocator implements IRuntimeLocator {
 	/*
 	 * @see IRuntimeLocator#searchForRuntimes()
 	 */
-	public void searchForRuntimes(IPath path, RuntimeSearchListener found, IProgressMonitor monitor) {
+	public void searchForRuntimes(IPath path, final IRuntimeSearchListener found, IProgressMonitor monitor) {
 		try {
-			getDelegate().searchForRuntimes(path, found, monitor);
+			//getDelegate().searchForRuntimes(path, found, monitor);
+			getDelegate().searchForRuntimes(path, new RuntimeLocatorDelegate.IRuntimeSearchListener() {
+				public void runtimeFound(IRuntimeWorkingCopy runtime) {
+					found.runtimeFound(runtime);
+				}
+			}, monitor);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
 		}

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.task;
 
-import org.eclipse.wst.server.core.ITaskModel;
+import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * 
@@ -34,7 +34,7 @@ public class InputWizardFragment extends WizardFragment {
 			getTaskModel().putObject(ids[i], values[i]);
 	}*/
 	
-	public void setTaskModel(ITaskModel taskModel) {
+	public void setTaskModel(TaskModel taskModel) {
 		super.setTaskModel(taskModel);
 		if (taskModel == null)
 			return;

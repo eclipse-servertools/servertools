@@ -36,7 +36,7 @@ public class GenericRuntimeWizardFragment extends WizardFragment {
 	}
 
 	public boolean isComplete() {
-		IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_RUNTIME);
+		IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 		
 		if (runtime == null)
 			return false;
@@ -46,7 +46,7 @@ public class GenericRuntimeWizardFragment extends WizardFragment {
 
 	public void enter() {
 		if (comp != null) {
-			IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_RUNTIME);
+			IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 			comp.setRuntime(runtime);
 		}
 	}

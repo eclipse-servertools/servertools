@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.wst.server.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.wst.server.ui" id="EditorPages" name="Editor Pages"/>
+         <meta.schema plugin="org.eclipse.wst.server.ui" id="editorPages" name="Editor Pages"/>
       </appInfo>
       <documentation>
          This extension point provides a way to add an additional page to a server or server configuration editor.
@@ -58,11 +58,10 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;ILaunchConfigurationDelegate&lt;/samp&gt;.
-Launch configuration instances of this type will delegate to instances of this class to perform launching.
+                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;org.eclipse.wst.server.ui.editor.ServerEditorPageSectionFactoryDelegate&lt;/samp&gt;.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.IStartup"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.ui.editor.ServerEditorPageFactoryDelegate"/>
                </appInfo>
             </annotation>
          </attribute>

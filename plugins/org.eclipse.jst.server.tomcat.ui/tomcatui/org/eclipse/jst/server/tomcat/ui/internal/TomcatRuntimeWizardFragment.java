@@ -16,7 +16,7 @@ import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
 import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
-import org.eclipse.wst.server.core.ITaskModel;
+import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
@@ -34,7 +34,7 @@ public class TomcatRuntimeWizardFragment extends WizardFragment {
 	}
 	
 	public boolean isComplete() {
-		IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_RUNTIME);
+		IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 		
 		if (runtime == null)
 			return false;
@@ -52,13 +52,13 @@ public class TomcatRuntimeWizardFragment extends WizardFragment {
 
 	public void enter() {
 		if (comp != null) {
-			IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_RUNTIME);
+			IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 			comp.setRuntime(runtime);
 		}
 	}
 
 	public void exit() {
-		IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_RUNTIME);
+		IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 		IPath path = runtime.getLocation();
 		if (runtime.validate(null).isOK())
 			TomcatPlugin.setPreference("location" + runtime.getRuntimeType().getId(), path.toString());

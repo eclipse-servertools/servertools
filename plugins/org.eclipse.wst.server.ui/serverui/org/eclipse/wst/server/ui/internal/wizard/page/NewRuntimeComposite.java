@@ -36,14 +36,14 @@ public class NewRuntimeComposite extends Composite {
 	protected IRuntimeWorkingCopy runtime;
 	protected Map runtimeMap = new HashMap();
 	
-	protected ITaskModel taskModel;
+	protected TaskModel taskModel;
 	protected IWizardHandle wizard;
 	
 	protected String type;
 	protected String version;
 	protected String runtimeTypeId;
 
-	public NewRuntimeComposite(Composite parent, IWizardHandle wizard, ITaskModel tm, String type, String version, String runtimeTypeId) {
+	public NewRuntimeComposite(Composite parent, IWizardHandle wizard, TaskModel tm, String type, String version, String runtimeTypeId) {
 		super(parent, SWT.NONE);
 		
 		this.wizard = wizard;
@@ -104,7 +104,7 @@ public class NewRuntimeComposite extends Composite {
 			}
 		}
 
-		taskModel.putObject(ITaskModel.TASK_RUNTIME, runtime);
+		taskModel.putObject(TaskModel.TASK_RUNTIME, runtime);
 		wizard.update();
 	}
 

@@ -42,14 +42,14 @@ public interface ITask {
 	 * 
 	 * @return the task model
 	 */
-	public ITaskModel getTaskModel();
+	public TaskModel getTaskModel();
 
 	/**
 	 * Set the task model.
 	 * 
 	 * @param taskModel the task model
 	 */
-	public void setTaskModel(ITaskModel taskModel);
+	public void setTaskModel(TaskModel taskModel);
 
 	/**
 	 * Returns whether the task can be executed.

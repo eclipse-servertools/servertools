@@ -60,9 +60,12 @@
                <documentation>
                   
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="resource"/>
+               </appInfo>
             </annotation>
          </attribute>
-         <attribute name="typeIds" type="string">
+         <attribute name="typeIds" type="string" use="required">
             <annotation>
                <documentation>
                   

@@ -9,6 +9,10 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.server.core;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * This interface represents a task model that can be shared between multiple
  * tasks in a common workflow.
@@ -17,7 +21,7 @@ package org.eclipse.wst.server.core;
  * 
  * @since 1.0
  */
-public interface ITaskModel {
+public class TaskModel {
 	/**
 	 * Task model id for an IRuntime.
 	 */
@@ -42,6 +46,8 @@ public interface ITaskModel {
 	 * Task model id for a launch mode.
 	 */
 	public static final String TASK_LAUNCH_MODE = "launch-mode";
+	
+	private Map map = new HashMap();
 
 	/**
 	 * Returns the object in the task model with the given id.
@@ -50,13 +56,21 @@ public interface ITaskModel {
 	 * @return the object with the given id, or <code>null</code>
 	 *    if no object could be found with that id
 	 */
-	public Object getObject(String id);
-	
+	public Object getObject(String id) {
+		try {
+			return map.get(id);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
 	/**
 	 * Put an object into the task model with the given id.
 	 * 
 	 * @param id the id to associate the object with
 	 * @param obj an object, or <code>null</code> to reset the id
 	 */
-	public void putObject(String id, Object obj);
+	public void putObject(String id, Object obj) {
+		map.put(id, obj);
+	}
 }

@@ -99,7 +99,7 @@ public class TasksWizardFragment extends WizardFragment {
 		return super.getChildFragments();
 	}
 
-	public void setTaskModel(ITaskModel taskModel) {
+	public void setTaskModel(TaskModel taskModel) {
 		super.setTaskModel(taskModel);
 		updateTasks();
 	}
@@ -109,10 +109,10 @@ public class TasksWizardFragment extends WizardFragment {
 		if (getTaskModel() == null)
 			return;
 
-		IServer server = (IServer) getTaskModel().getObject(ITaskModel.TASK_SERVER);
+		IServer server = (IServer) getTaskModel().getObject(TaskModel.TASK_SERVER);
 		
-		List[] parents = (List[]) getTaskModel().getObject(ITaskModel.TASK_MODULE_PARENTS);
-		IModule[] modules = (IModule[]) getTaskModel().getObject(ITaskModel.TASK_MODULES);
+		List[] parents = (List[]) getTaskModel().getObject(TaskModel.TASK_MODULE_PARENTS);
+		IModule[] modules = (IModule[]) getTaskModel().getObject(TaskModel.TASK_MODULES);
 		
 		if (server != null && (parents == null || modules == null)) {
 			class Helper {
@@ -240,8 +240,8 @@ public class TasksWizardFragment extends WizardFragment {
 		
 		// get most recent server/configuration
 		boolean createdServerWC = false;
-		ITaskModel taskModel = getTaskModel();
-		IServer server = (IServer) taskModel.getObject(ITaskModel.TASK_SERVER);
+		TaskModel taskModel = getTaskModel();
+		IServer server = (IServer) taskModel.getObject(TaskModel.TASK_SERVER);
 		if (server == null)
 			return;
 
@@ -254,7 +254,7 @@ public class TasksWizardFragment extends WizardFragment {
 			createdServerWC = true;
 		}
 		
-		taskModel.putObject(ITaskModel.TASK_SERVER, serverWC);
+		taskModel.putObject(TaskModel.TASK_SERVER, serverWC);
 		
 		// begin task
 		monitor.beginTask(ServerUIPlugin.getResource("%performingTasks"), performTasks.size() * 1000);
@@ -292,9 +292,9 @@ public class TasksWizardFragment extends WizardFragment {
 					if (!pp.isServerProject())
 						pp.setServerProject(true, monitor);
 				}
-				taskModel.putObject(ITaskModel.TASK_SERVER, serverWC.save(false, monitor));
+				taskModel.putObject(TaskModel.TASK_SERVER, serverWC.save(false, monitor));
 			} else
-				taskModel.putObject(ITaskModel.TASK_SERVER, serverWC.getOriginal());
+				taskModel.putObject(TaskModel.TASK_SERVER, serverWC.getOriginal());
 		}
 				
 		monitor.done();

@@ -58,6 +58,16 @@
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="class" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.ui.IServerAdapter"/>
+               </appInfo>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.ui.editor;
+package org.eclipse.wst.server.ui.internal.editor;
 
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.ui.IEditorInput;

@@ -51,7 +51,7 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 		return comp;
 	}
 	
-	public void setTaskModel(ITaskModel taskModel) {
+	public void setTaskModel(TaskModel taskModel) {
 		super.setTaskModel(taskModel);
 		if (comp != null)
 			comp.setTaskModel(taskModel);
@@ -68,17 +68,17 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 	
 	protected void updateModules() {
 		if (comp != null) {
-			IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
+			IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
 			comp.setServer(server);
 			comp.setTaskModel(getTaskModel());
 		} else if (module != null) {
-			ITaskModel taskModel = getTaskModel();
+			TaskModel taskModel = getTaskModel();
 			if (taskModel == null)
 				return;
-			IServerWorkingCopy server = (IServerWorkingCopy) taskModel.getObject(ITaskModel.TASK_SERVER);
+			IServerWorkingCopy server = (IServerWorkingCopy) taskModel.getObject(TaskModel.TASK_SERVER);
 			if (server == null) {
-				taskModel.putObject(ITaskModel.TASK_MODULE_PARENTS, null);
-				taskModel.putObject(ITaskModel.TASK_MODULES, null);
+				taskModel.putObject(TaskModel.TASK_MODULE_PARENTS, null);
+				taskModel.putObject(TaskModel.TASK_MODULES, null);
 				return;
 			}
 			
@@ -121,8 +121,8 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 			IModule[] modules = new IModule[size];
 			help.moduleList.toArray(modules);
 			
-			taskModel.putObject(ITaskModel.TASK_MODULE_PARENTS, parents);
-			taskModel.putObject(ITaskModel.TASK_MODULES, modules);
+			taskModel.putObject(TaskModel.TASK_MODULE_PARENTS, parents);
+			taskModel.putObject(TaskModel.TASK_MODULES, modules);
 		}
 	}
 

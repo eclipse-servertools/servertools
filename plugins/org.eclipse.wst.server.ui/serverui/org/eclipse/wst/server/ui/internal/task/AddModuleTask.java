@@ -33,7 +33,7 @@ public class AddModuleTask extends Task {
 		if (module == null)
 			return;
 
-		IServer server = (IServer) getTaskModel().getObject(ITaskModel.TASK_SERVER);
+		IServer server = (IServer) getTaskModel().getObject(TaskModel.TASK_SERVER);
 		IModule parentModule = null;
 		try {
 			IModule[] parents = server.getRootModules(module, monitor);
@@ -58,6 +58,6 @@ public class AddModuleTask extends Task {
 
 		IServerWorkingCopy workingCopy = server.createWorkingCopy();
 		workingCopy.modifyModules(new IModule[] { parentModule }, new IModule[0], monitor);
-		getTaskModel().putObject(ITaskModel.TASK_SERVER, workingCopy.save(false, monitor));
+		getTaskModel().putObject(TaskModel.TASK_SERVER, workingCopy.save(false, monitor));
 	}
 }

@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.ui.editor.IServerEditorInput;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;

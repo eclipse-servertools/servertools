@@ -62,7 +62,7 @@
 Clieint instances of this type will delegate to instances of this class to launch.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.IStartup"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.ClientDelegate"/>
                </appInfo>
             </annotation>
          </attribute>

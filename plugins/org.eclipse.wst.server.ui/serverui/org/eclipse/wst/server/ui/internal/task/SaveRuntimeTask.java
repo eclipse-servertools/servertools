@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
-import org.eclipse.wst.server.core.ITaskModel;
+import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.core.util.Task;
 /**
  * 
@@ -28,11 +28,11 @@ public class SaveRuntimeTask extends Task {
 	 * @see org.eclipse.wst.server.ui.internal.task.ITask#doTask()
 	 */
 	public void execute(IProgressMonitor monitor) throws CoreException {
-		IRuntime runtime = (IRuntime) getTaskModel().getObject(ITaskModel.TASK_RUNTIME);
+		IRuntime runtime = (IRuntime) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 		if (runtime != null && runtime instanceof IRuntimeWorkingCopy) {
 			IRuntimeWorkingCopy workingCopy = (IRuntimeWorkingCopy) runtime;
 			if (workingCopy.isDirty())
-				getTaskModel().putObject(ITaskModel.TASK_RUNTIME, workingCopy.save(false, monitor));
+				getTaskModel().putObject(TaskModel.TASK_RUNTIME, workingCopy.save(false, monitor));
 		}
 	}
 }

@@ -30,7 +30,7 @@ public class SaveServerTask extends Task {
 	 * @see org.eclipse.wst.server.ui.internal.task.ITask#doTask()
 	 */
 	public void execute(IProgressMonitor monitor) throws CoreException {
-		IServer server = (IServer) getTaskModel().getObject(ITaskModel.TASK_SERVER);
+		IServer server = (IServer) getTaskModel().getObject(TaskModel.TASK_SERVER);
 		if (server != null && server instanceof IServerWorkingCopy) {
 			IServerWorkingCopy workingCopy = (IServerWorkingCopy) server;
 			if (workingCopy.isDirty()) {
@@ -45,7 +45,7 @@ public class SaveServerTask extends Task {
 					if (!pp.isServerProject())
 						pp.setServerProject(true, monitor);
 				}
-				getTaskModel().putObject(ITaskModel.TASK_SERVER, workingCopy.save(false, monitor));
+				getTaskModel().putObject(TaskModel.TASK_SERVER, workingCopy.save(false, monitor));
 			}
 		}
 	}

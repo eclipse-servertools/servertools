@@ -31,8 +31,8 @@ import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.internal.ServerType;
 import org.eclipse.wst.server.core.util.ServerAdapter;
 import org.eclipse.wst.server.ui.ServerUIUtil;
-import org.eclipse.wst.server.ui.editor.IServerEditorInput;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
+import org.eclipse.wst.server.ui.internal.editor.IServerEditorInput;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorInput;
 import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
 import org.eclipse.wst.server.ui.internal.task.InputWizardFragment;
@@ -693,7 +693,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 				final IRuntimeWorkingCopy runtime = runtimeType.createRuntime(null, null);
 				WizardFragment fragment = new WizardFragment() {
 					protected void createChildFragments(List list) {
-						list.add(new InputWizardFragment(ITaskModel.TASK_RUNTIME, runtime));
+						list.add(new InputWizardFragment(TaskModel.TASK_RUNTIME, runtime));
 						list.add(getWizardFragment(runtimeTypeId));
 						list.add(new FinishWizardFragment(new SaveRuntimeTask()));
 					}

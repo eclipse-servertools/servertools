@@ -65,7 +65,7 @@ public class ModifyModulesComposite extends Composite {
 	protected Button add, addAll;
 	protected Button remove, removeAll;
 	
-	protected ITaskModel taskModel;
+	protected TaskModel taskModel;
 	protected IModule newModule;
 	protected IModule origNewModule;
 	
@@ -195,7 +195,7 @@ public class ModifyModulesComposite extends Composite {
 		updateTaskModel();
 	}
 	
-	public void setTaskModel(ITaskModel model) {
+	public void setTaskModel(TaskModel model) {
 		this.taskModel = model;
 	}
 
@@ -453,8 +453,8 @@ public class ModifyModulesComposite extends Composite {
 		IModule[] modules2 = new IModule[size];
 		map.moduleList.toArray(modules2);
 		
-		taskModel.putObject(ITaskModel.TASK_MODULE_PARENTS, parents);
-		taskModel.putObject(ITaskModel.TASK_MODULES, modules2);
+		taskModel.putObject(TaskModel.TASK_MODULE_PARENTS, parents);
+		taskModel.putObject(TaskModel.TASK_MODULES, modules2);
 		wizard.update();
 	}
 

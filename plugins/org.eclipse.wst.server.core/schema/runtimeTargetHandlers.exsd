@@ -69,7 +69,7 @@
 Runtime target handler instances of this type will delegate to instances of this class.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.RuntimeTargetHandlerDelegate"/>
                </appInfo>
             </annotation>
          </attribute>

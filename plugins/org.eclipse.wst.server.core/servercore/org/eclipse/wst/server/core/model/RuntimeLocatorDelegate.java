@@ -12,7 +12,7 @@ package org.eclipse.wst.server.core.model;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.IRuntimeLocator;
+import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 /**
  * A runtime locator provides the ability to locate or search for additional
  * runtimes of a particular type.
@@ -21,10 +21,19 @@ import org.eclipse.wst.server.core.IRuntimeLocator;
  * to extend the <code>runtimeLocators</code> extension point.
  * </p>
  * 
- * @see org.eclipse.wst.server.core.IRuntimeLocator
  * @since 1.0
  */
 public abstract class RuntimeLocatorDelegate {
+	public interface IRuntimeSearchListener {
+		/**
+		 * Called when a new runtime is found by the locator.
+		 * The runtime must never be null.
+		 * 
+		 * @param runtime the runtime that was found.
+		 */
+		public void runtimeFound(IRuntimeWorkingCopy runtime);
+	}
+
 	/**
 	 * Searches for local runtimes. 
 	 * It uses the callback listener to report runtimes that are found.
@@ -35,7 +44,6 @@ public abstract class RuntimeLocatorDelegate {
 	 * @param listener a listener to report status to
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
-	 * @see org.eclipse.wst.server.core.IRuntimeLocator.searchForRuntimes(IPath, IRuntimeLocator.RuntimeSearchListener, IProgressMonitor)
 	 */
-	public abstract void searchForRuntimes(IPath path, IRuntimeLocator.RuntimeSearchListener listener, IProgressMonitor monitor);
+	public abstract void searchForRuntimes(IPath path, IRuntimeSearchListener listener, IProgressMonitor monitor);
 }
