@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ArchiveType.java,v 1.1 2004/11/20 21:18:10 ndai Exp $
+ * $Id: ArchiveType.java,v 1.2 2005/01/30 21:47:27 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -50,31 +50,31 @@ import org.eclipse.emf.ecore.EObject;
  * @model 
  * @generated
  */
-public interface ArchiveType extends EObject {
-	/**
-	 * Returns the value of the '<em><b>Path</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+public interface ArchiveType extends EObject{
+    /**
+     * Returns the value of the '<em><b>Path</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Path</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Path</em>' attribute.
-	 * @see #setPath(String)
-	 * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getArchiveType_Path()
-	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
-	 * @generated
-	 */
+     * @return the value of the '<em>Path</em>' attribute.
+     * @see #setPath(String)
+     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getArchiveType_Path()
+     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
+     * @generated
+     */
 	String getPath();
 
-	/**
-	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.ArchiveType#getPath <em>Path</em>}' attribute.
-	 * <!-- begin-user-doc -->
+    /**
+     * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.ArchiveType#getPath <em>Path</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Path</em>' attribute.
-	 * @see #getPath()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Path</em>' attribute.
+     * @see #getPath()
+     * @generated
+     */
 	void setPath(String value);
 
 } // ArchiveType

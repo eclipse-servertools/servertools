@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeAdapterFactory.java,v 1.1 2004/11/20 21:18:10 ndai Exp $
+ * $Id: ServerTypeAdapterFactory.java,v 1.2 2005/01/30 21:49:31 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition.util;
 
@@ -50,267 +50,250 @@ import org.eclipse.jst.server.generic.servertype.definition.*;
  * @generated
  */
 public class ServerTypeAdapterFactory extends AdapterFactoryImpl {
-	/**
-	 * The cached model package.
-	 * <!-- begin-user-doc -->
+    /**
+     * The cached model package.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected static ServerTypePackage modelPackage;
 
-	/**
-	 * Creates an instance of the adapter factory.
-	 * <!-- begin-user-doc -->
+    /**
+     * Creates an instance of the adapter factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public ServerTypeAdapterFactory() {
-		if (modelPackage == null) {
-			modelPackage = ServerTypePackage.eINSTANCE;
-		}
-	}
+        if (modelPackage == null) {
+            modelPackage = ServerTypePackage.eINSTANCE;
+        }
+    }
 
-	/**
-	 * Returns whether this factory is applicable for the type of the object.
-	 * <!-- begin-user-doc -->
+    /**
+     * Returns whether this factory is applicable for the type of the object.
+     * <!-- begin-user-doc -->
 	 * This implementation returns <code>true</code> if the object is either the model's package or is an instance object of the model.
 	 * <!-- end-user-doc -->
-	 * @return whether this factory is applicable for the type of the object.
-	 * @generated
-	 */
+     * @return whether this factory is applicable for the type of the object.
+     * @generated
+     */
 	public boolean isFactoryForType(Object object) {
-		if (object == modelPackage) {
-			return true;
-		}
-		if (object instanceof EObject) {
-			return ((EObject)object).eClass().getEPackage() == modelPackage;
-		}
-		return false;
-	}
+        if (object == modelPackage) {
+            return true;
+        }
+        if (object instanceof EObject) {
+            return ((EObject)object).eClass().getEPackage() == modelPackage;
+        }
+        return false;
+    }
 
-	/**
-	 * The switch the delegates to the <code>createXXX</code> methods.
-	 * <!-- begin-user-doc -->
+    /**
+     * The switch the delegates to the <code>createXXX</code> methods.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ServerTypeSwitch modelSwitch =
-		new ServerTypeSwitch() {
-			public Object caseArchiveType(ArchiveType object) {
-				return createArchiveTypeAdapter();
-			}
-			public Object caseClasspath(Classpath object) {
-				return createClasspathAdapter();
-			}
-			public Object caseLaunchConfiguration(LaunchConfiguration object) {
-				return createLaunchConfigurationAdapter();
-			}
-			public Object caseModule(Module object) {
-				return createModuleAdapter();
-			}
-			public Object casePort(Port object) {
-				return createPortAdapter();
-			}
-			public Object caseProject(Project object) {
-				return createProjectAdapter();
-			}
-			public Object caseProperty(Property object) {
-				return createPropertyAdapter();
-			}
-			public Object casePublisher(Publisher object) {
-				return createPublisherAdapter();
-			}
-			public Object casePublishType(PublishType object) {
-				return createPublishTypeAdapter();
-			}
-			public Object caseServerRuntime(ServerRuntime object) {
-				return createServerRuntimeAdapter();
-			}
-			public Object caseUnpublishType(UnpublishType object) {
-				return createUnpublishTypeAdapter();
-			}
-			public Object defaultCase(EObject object) {
-				return createEObjectAdapter();
-			}
-		};
+        new ServerTypeSwitch() {
+            public Object caseArchiveType(ArchiveType object) {
+                return createArchiveTypeAdapter();
+            }
+            public Object caseClasspath(Classpath object) {
+                return createClasspathAdapter();
+            }
+            public Object caseLaunchConfiguration(LaunchConfiguration object) {
+                return createLaunchConfigurationAdapter();
+            }
+            public Object caseModule(Module object) {
+                return createModuleAdapter();
+            }
+            public Object casePort(Port object) {
+                return createPortAdapter();
+            }
+            public Object caseProject(Project object) {
+                return createProjectAdapter();
+            }
+            public Object caseProperty(Property object) {
+                return createPropertyAdapter();
+            }
+            public Object casePublisher(Publisher object) {
+                return createPublisherAdapter();
+            }
+            public Object casePublisherData(PublisherData object) {
+                return createPublisherDataAdapter();
+            }
+            public Object caseServerRuntime(ServerRuntime object) {
+                return createServerRuntimeAdapter();
+            }
+            public Object defaultCase(EObject object) {
+                return createEObjectAdapter();
+            }
+        };
 
-	/**
-	 * Creates an adapter for the <code>target</code>.
-	 * <!-- begin-user-doc -->
+    /**
+     * Creates an adapter for the <code>target</code>.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param target the object to adapt.
-	 * @return the adapter for the <code>target</code>.
-	 * @generated
-	 */
+     * @param target the object to adapt.
+     * @return the adapter for the <code>target</code>.
+     * @generated
+     */
 	public Adapter createAdapter(Notifier target) {
-		return (Adapter)modelSwitch.doSwitch((EObject)target);
-	}
+        return (Adapter)modelSwitch.doSwitch((EObject)target);
+    }
 
 
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.ArchiveType <em>Archive Type</em>}'.
-	 * <!-- begin-user-doc -->
+    /**
+     * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.ArchiveType <em>Archive Type</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.jst.server.generic.servertype.definition.ArchiveType
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.jst.server.generic.servertype.definition.ArchiveType
+     * @generated
+     */
 	public Adapter createArchiveTypeAdapter() {
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.Classpath <em>Classpath</em>}'.
-	 * <!-- begin-user-doc -->
+    /**
+     * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.Classpath <em>Classpath</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.jst.server.generic.servertype.definition.Classpath
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.jst.server.generic.servertype.definition.Classpath
+     * @generated
+     */
 	public Adapter createClasspathAdapter() {
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration <em>Launch Configuration</em>}'.
-	 * <!-- begin-user-doc -->
+    /**
+     * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration <em>Launch Configuration</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration
+     * @generated
+     */
 	public Adapter createLaunchConfigurationAdapter() {
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.Module <em>Module</em>}'.
-	 * <!-- begin-user-doc -->
+    /**
+     * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.Module <em>Module</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.jst.server.generic.servertype.definition.Module
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.jst.server.generic.servertype.definition.Module
+     * @generated
+     */
 	public Adapter createModuleAdapter() {
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.Port <em>Port</em>}'.
-	 * <!-- begin-user-doc -->
+    /**
+     * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.Port <em>Port</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.jst.server.generic.servertype.definition.Port
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.jst.server.generic.servertype.definition.Port
+     * @generated
+     */
 	public Adapter createPortAdapter() {
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.Project <em>Project</em>}'.
-	 * <!-- begin-user-doc -->
+    /**
+     * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.Project <em>Project</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.jst.server.generic.servertype.definition.Project
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.jst.server.generic.servertype.definition.Project
+     * @generated
+     */
 	public Adapter createProjectAdapter() {
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.Property <em>Property</em>}'.
-	 * <!-- begin-user-doc -->
+    /**
+     * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.Property <em>Property</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.jst.server.generic.servertype.definition.Property
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.jst.server.generic.servertype.definition.Property
+     * @generated
+     */
 	public Adapter createPropertyAdapter() {
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.Publisher <em>Publisher</em>}'.
-	 * <!-- begin-user-doc -->
+    /**
+     * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.Publisher <em>Publisher</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.jst.server.generic.servertype.definition.Publisher
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.jst.server.generic.servertype.definition.Publisher
+     * @generated
+     */
 	public Adapter createPublisherAdapter() {
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.PublishType <em>Publish Type</em>}'.
-	 * <!-- begin-user-doc -->
+    /**
+     * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.PublisherData <em>Publisher Data</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.eclipse.jst.server.generic.servertype.definition.PublisherData
+     * @generated
+     */
+    public Adapter createPublisherDataAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.ServerRuntime <em>Server Runtime</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.jst.server.generic.servertype.definition.PublishType
-	 * @generated
-	 */
-	public Adapter createPublishTypeAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.ServerRuntime <em>Server Runtime</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.jst.server.generic.servertype.definition.ServerRuntime
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.jst.server.generic.servertype.definition.ServerRuntime
+     * @generated
+     */
 	public Adapter createServerRuntimeAdapter() {
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.UnpublishType <em>Unpublish Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.jst.server.generic.servertype.definition.UnpublishType
-	 * @generated
-	 */
-	public Adapter createUnpublishTypeAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for the default case.
-	 * <!-- begin-user-doc -->
+    /**
+     * Creates a new adapter for the default case.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @generated
+     */
 	public Adapter createEObjectAdapter() {
-		return null;
-	}
+        return null;
+    }
 
 } //ServerTypeAdapterFactory

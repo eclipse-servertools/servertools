@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ModuleImpl.java,v 1.1 2004/11/20 21:18:10 ndai Exp $
+ * $Id: ModuleImpl.java,v 1.2 2005/01/30 21:48:52 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition.impl;
 
@@ -59,238 +59,238 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
  * @generated
  */
 public class ModuleImpl extends EObjectImpl implements Module {
-	/**
-	 * The default value of the '{@link #getType() <em>Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
+    /**
+     * The default value of the '{@link #getType() <em>Type</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getType()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getType()
+     * @generated
+     * @ordered
+     */
 	protected static final String TYPE_EDEFAULT = null;
 
-	/**
-	 * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
+    /**
+     * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getType()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getType()
+     * @generated
+     * @ordered
+     */
 	protected String type = TYPE_EDEFAULT;
 
-	/**
-	 * The default value of the '{@link #getPublishDir() <em>Publish Dir</em>}' attribute.
-	 * <!-- begin-user-doc -->
+    /**
+     * The default value of the '{@link #getPublishDir() <em>Publish Dir</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getPublishDir()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getPublishDir()
+     * @generated
+     * @ordered
+     */
 	protected static final String PUBLISH_DIR_EDEFAULT = null;
 
-	/**
-	 * The cached value of the '{@link #getPublishDir() <em>Publish Dir</em>}' attribute.
-	 * <!-- begin-user-doc -->
+    /**
+     * The cached value of the '{@link #getPublishDir() <em>Publish Dir</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getPublishDir()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getPublishDir()
+     * @generated
+     * @ordered
+     */
 	protected String publishDir = PUBLISH_DIR_EDEFAULT;
 
-	/**
-	 * The default value of the '{@link #getPublisherReference() <em>Publisher Reference</em>}' attribute.
-	 * <!-- begin-user-doc -->
+    /**
+     * The default value of the '{@link #getPublisherReference() <em>Publisher Reference</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getPublisherReference()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getPublisherReference()
+     * @generated
+     * @ordered
+     */
 	protected static final String PUBLISHER_REFERENCE_EDEFAULT = null;
 
-	/**
-	 * The cached value of the '{@link #getPublisherReference() <em>Publisher Reference</em>}' attribute.
-	 * <!-- begin-user-doc -->
+    /**
+     * The cached value of the '{@link #getPublisherReference() <em>Publisher Reference</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getPublisherReference()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getPublisherReference()
+     * @generated
+     * @ordered
+     */
 	protected String publisherReference = PUBLISHER_REFERENCE_EDEFAULT;
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ModuleImpl() {
-		super();
-	}
+        super();
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected EClass eStaticClass() {
-		return ServerTypePackage.eINSTANCE.getModule();
-	}
+        return ServerTypePackage.eINSTANCE.getModule();
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public String getType() {
-		return type;
-	}
+        return type;
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public void setType(String newType) {
-		String oldType = type;
-		type = newType;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.MODULE__TYPE, oldType, type));
-	}
+        String oldType = type;
+        type = newType;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.MODULE__TYPE, oldType, type));
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public String getPublishDir() {
-		return publishDir;
-	}
+        return publishDir;
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public void setPublishDir(String newPublishDir) {
-		String oldPublishDir = publishDir;
-		publishDir = newPublishDir;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.MODULE__PUBLISH_DIR, oldPublishDir, publishDir));
-	}
+        String oldPublishDir = publishDir;
+        publishDir = newPublishDir;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.MODULE__PUBLISH_DIR, oldPublishDir, publishDir));
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public String getPublisherReference() {
-		return publisherReference;
-	}
+        return publisherReference;
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public void setPublisherReference(String newPublisherReference) {
-		String oldPublisherReference = publisherReference;
-		publisherReference = newPublisherReference;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.MODULE__PUBLISHER_REFERENCE, oldPublisherReference, publisherReference));
-	}
+        String oldPublisherReference = publisherReference;
+        publisherReference = newPublisherReference;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.MODULE__PUBLISHER_REFERENCE, oldPublisherReference, publisherReference));
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case ServerTypePackage.MODULE__TYPE:
-				return getType();
-			case ServerTypePackage.MODULE__PUBLISH_DIR:
-				return getPublishDir();
-			case ServerTypePackage.MODULE__PUBLISHER_REFERENCE:
-				return getPublisherReference();
-		}
-		return eDynamicGet(eFeature, resolve);
-	}
+        switch (eDerivedStructuralFeatureID(eFeature)) {
+            case ServerTypePackage.MODULE__TYPE:
+                return getType();
+            case ServerTypePackage.MODULE__PUBLISH_DIR:
+                return getPublishDir();
+            case ServerTypePackage.MODULE__PUBLISHER_REFERENCE:
+                return getPublisherReference();
+        }
+        return eDynamicGet(eFeature, resolve);
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case ServerTypePackage.MODULE__TYPE:
-				setType((String)newValue);
-				return;
-			case ServerTypePackage.MODULE__PUBLISH_DIR:
-				setPublishDir((String)newValue);
-				return;
-			case ServerTypePackage.MODULE__PUBLISHER_REFERENCE:
-				setPublisherReference((String)newValue);
-				return;
-		}
-		eDynamicSet(eFeature, newValue);
-	}
+        switch (eDerivedStructuralFeatureID(eFeature)) {
+            case ServerTypePackage.MODULE__TYPE:
+                setType((String)newValue);
+                return;
+            case ServerTypePackage.MODULE__PUBLISH_DIR:
+                setPublishDir((String)newValue);
+                return;
+            case ServerTypePackage.MODULE__PUBLISHER_REFERENCE:
+                setPublisherReference((String)newValue);
+                return;
+        }
+        eDynamicSet(eFeature, newValue);
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case ServerTypePackage.MODULE__TYPE:
-				setType(TYPE_EDEFAULT);
-				return;
-			case ServerTypePackage.MODULE__PUBLISH_DIR:
-				setPublishDir(PUBLISH_DIR_EDEFAULT);
-				return;
-			case ServerTypePackage.MODULE__PUBLISHER_REFERENCE:
-				setPublisherReference(PUBLISHER_REFERENCE_EDEFAULT);
-				return;
-		}
-		eDynamicUnset(eFeature);
-	}
+        switch (eDerivedStructuralFeatureID(eFeature)) {
+            case ServerTypePackage.MODULE__TYPE:
+                setType(TYPE_EDEFAULT);
+                return;
+            case ServerTypePackage.MODULE__PUBLISH_DIR:
+                setPublishDir(PUBLISH_DIR_EDEFAULT);
+                return;
+            case ServerTypePackage.MODULE__PUBLISHER_REFERENCE:
+                setPublisherReference(PUBLISHER_REFERENCE_EDEFAULT);
+                return;
+        }
+        eDynamicUnset(eFeature);
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case ServerTypePackage.MODULE__TYPE:
-				return TYPE_EDEFAULT == null ? type != null : !TYPE_EDEFAULT.equals(type);
-			case ServerTypePackage.MODULE__PUBLISH_DIR:
-				return PUBLISH_DIR_EDEFAULT == null ? publishDir != null : !PUBLISH_DIR_EDEFAULT.equals(publishDir);
-			case ServerTypePackage.MODULE__PUBLISHER_REFERENCE:
-				return PUBLISHER_REFERENCE_EDEFAULT == null ? publisherReference != null : !PUBLISHER_REFERENCE_EDEFAULT.equals(publisherReference);
-		}
-		return eDynamicIsSet(eFeature);
-	}
+        switch (eDerivedStructuralFeatureID(eFeature)) {
+            case ServerTypePackage.MODULE__TYPE:
+                return TYPE_EDEFAULT == null ? type != null : !TYPE_EDEFAULT.equals(type);
+            case ServerTypePackage.MODULE__PUBLISH_DIR:
+                return PUBLISH_DIR_EDEFAULT == null ? publishDir != null : !PUBLISH_DIR_EDEFAULT.equals(publishDir);
+            case ServerTypePackage.MODULE__PUBLISHER_REFERENCE:
+                return PUBLISHER_REFERENCE_EDEFAULT == null ? publisherReference != null : !PUBLISHER_REFERENCE_EDEFAULT.equals(publisherReference);
+        }
+        return eDynamicIsSet(eFeature);
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (type: ");
-		result.append(type);
-		result.append(", publishDir: ");
-		result.append(publishDir);
-		result.append(", publisherReference: ");
-		result.append(publisherReference);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuffer result = new StringBuffer(super.toString());
+        result.append(" (type: ");
+        result.append(type);
+        result.append(", publishDir: ");
+        result.append(publishDir);
+        result.append(", publisherReference: ");
+        result.append(publisherReference);
+        result.append(')');
+        return result.toString();
+    }
 
 } //ModuleImpl

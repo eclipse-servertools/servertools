@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Publisher.java,v 1.1 2004/11/20 21:18:10 ndai Exp $
+ * $Id: Publisher.java,v 1.2 2005/01/30 21:47:27 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -47,8 +47,7 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.Publisher#getGroup <em>Group</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.Publisher#getPublish <em>Publish</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.Publisher#getUnpublish <em>Unpublish</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.Publisher#getPublisherdata <em>Publisherdata</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.Publisher#getId <em>Id</em>}</li>
  * </ul>
  * </p>
@@ -57,79 +56,63 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * @model 
  * @generated
  */
-public interface Publisher extends EObject {
-	/**
-	 * Returns the value of the '<em><b>Group</b></em>' attribute list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.util.FeatureMap.Entry}.
-	 * <!-- begin-user-doc -->
+public interface Publisher extends EObject{
+    /**
+     * Returns the value of the '<em><b>Group</b></em>' attribute list.
+     * The list contents are of type {@link org.eclipse.emf.ecore.util.FeatureMap.Entry}.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Group</em>' attribute list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Group</em>' attribute list.
-	 * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPublisher_Group()
-	 * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Group</em>' attribute list.
+     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPublisher_Group()
+     * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
+     * @generated
+     */
 	FeatureMap getGroup();
 
-	/**
-	 * Returns the value of the '<em><b>Publish</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.PublishType}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Publish</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Publish</em>' containment reference list.
-	 * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPublisher_Publish()
-	 * @model type="org.eclipse.jst.server.generic.servertype.definition.PublishType" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
-	 * @generated
-	 */
-	EList getPublish();
+    /**
+     * Returns the value of the '<em><b>Publisherdata</b></em>' containment reference list.
+     * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.PublisherData}.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Publisherdata</em>' containment reference list isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Publisherdata</em>' containment reference list.
+     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPublisher_Publisherdata()
+     * @model type="org.eclipse.jst.server.generic.servertype.definition.PublisherData" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
+     * @generated
+     */
+    EList getPublisherdata();
 
-	/**
-	 * Returns the value of the '<em><b>Unpublish</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.UnpublishType}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Unpublish</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Unpublish</em>' containment reference list.
-	 * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPublisher_Unpublish()
-	 * @model type="org.eclipse.jst.server.generic.servertype.definition.UnpublishType" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
-	 * @generated
-	 */
-	EList getUnpublish();
-
-	/**
-	 * Returns the value of the '<em><b>Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+    /**
+     * Returns the value of the '<em><b>Id</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Id</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Id</em>' attribute.
-	 * @see #setId(String)
-	 * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPublisher_Id()
-	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
-	 * @generated
-	 */
+     * @return the value of the '<em>Id</em>' attribute.
+     * @see #setId(String)
+     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPublisher_Id()
+     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
+     * @generated
+     */
 	String getId();
 
-	/**
-	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.Publisher#getId <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
+    /**
+     * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.Publisher#getId <em>Id</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Id</em>' attribute.
-	 * @see #getId()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Id</em>' attribute.
+     * @see #getId()
+     * @generated
+     */
 	void setId(String value);
 
 } // Publisher

@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeResourceFactoryImpl.java,v 1.1 2004/11/20 21:18:10 ndai Exp $
+ * $Id: ServerTypeResourceFactoryImpl.java,v 1.2 2005/01/30 21:49:31 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition.util;
 
@@ -50,40 +50,40 @@ import org.eclipse.emf.ecore.xmi.impl.XMLResourceFactoryImpl;
  * @generated
  */
 public class ServerTypeResourceFactoryImpl extends XMLResourceFactoryImpl {
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected ExtendedMetaData extendedMetaData;
 
-	/**
-	 * Creates an instance of the resource factory.
-	 * <!-- begin-user-doc -->
+    /**
+     * Creates an instance of the resource factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public ServerTypeResourceFactoryImpl() {
-		super();
-		extendedMetaData = ExtendedMetaData.INSTANCE;
-	}
+        super();
+        extendedMetaData = ExtendedMetaData.INSTANCE;
+    }
 
-	/**
-	 * Creates an instance of the resource.
-	 * <!-- begin-user-doc -->
+    /**
+     * Creates an instance of the resource.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public Resource createResource(URI uri) {
-		XMLResource result = new ServerTypeResourceImpl(uri);
-		result.getDefaultSaveOptions().put(XMLResource.OPTION_EXTENDED_META_DATA, extendedMetaData);
-		result.getDefaultLoadOptions().put(XMLResource.OPTION_EXTENDED_META_DATA, extendedMetaData);
+        XMLResource result = new ServerTypeResourceImpl(uri);
+        result.getDefaultSaveOptions().put(XMLResource.OPTION_EXTENDED_META_DATA, extendedMetaData);
+        result.getDefaultLoadOptions().put(XMLResource.OPTION_EXTENDED_META_DATA, extendedMetaData);
 
-		result.getDefaultSaveOptions().put(XMLResource.OPTION_SCHEMA_LOCATION, Boolean.TRUE);
-		result.getDefaultSaveOptions().put(XMLResource.OPTION_USE_ENCODED_ATTRIBUTE_STYLE, Boolean.TRUE);
+        result.getDefaultSaveOptions().put(XMLResource.OPTION_SCHEMA_LOCATION, Boolean.TRUE);
+        result.getDefaultSaveOptions().put(XMLResource.OPTION_USE_ENCODED_ATTRIBUTE_STYLE, Boolean.TRUE);
 
-		result.getDefaultLoadOptions().put(XMLResource.OPTION_USE_LEXICAL_HANDLER, Boolean.TRUE);
-		return result;
-	}
+        result.getDefaultLoadOptions().put(XMLResource.OPTION_USE_LEXICAL_HANDLER, Boolean.TRUE);
+        return result;
+    }
 
 } //ServerTypeResourceFactoryImpl

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.jst.server.generic.model/src"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.jst.server.generic.core/src"
     editDirectory="/org.eclipse.jst.server.generic.model.edit/src" editorDirectory="/org.eclipse.jst.server.generic.model.editor/src"
     modelPluginID="org.eclipse.jst.server.generic.model" runtimeJar="true" modelName="Servertype"
     editPluginClass="org.eclipse.jst.server.generic.server.type.definition.provider.ServertypeEditPlugin"
@@ -48,13 +48,12 @@
     </genClasses>
     <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//Publisher">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//Publisher/group"/>
-      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference org.eclipse.jst.server.generic.servertype.ecore#//Publisher/publish"/>
-      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference org.eclipse.jst.server.generic.servertype.ecore#//Publisher/unpublish"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference org.eclipse.jst.server.generic.servertype.ecore#//Publisher/publisherdata"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//Publisher/id"/>
     </genClasses>
-    <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//PublishType">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//PublishType/task"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//PublishType/classpathReference"/>
+    <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//PublisherData">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//PublisherData/dataname"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//PublisherData/datavalue"/>
     </genClasses>
     <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//ServerRuntime">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//ServerRuntime/group"/>
@@ -72,10 +71,6 @@
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference org.eclipse.jst.server.generic.servertype.ecore#//ServerRuntime/classpath"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//ServerRuntime/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//ServerRuntime/version"/>
-    </genClasses>
-    <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//UnpublishType">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//UnpublishType/task"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//UnpublishType/classpathReference"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

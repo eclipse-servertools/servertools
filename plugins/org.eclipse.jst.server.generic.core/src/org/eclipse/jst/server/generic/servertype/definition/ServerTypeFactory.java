@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeFactory.java,v 1.1 2004/11/20 21:18:10 ndai Exp $
+ * $Id: ServerTypeFactory.java,v 1.2 2005/01/30 21:47:27 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -42,121 +42,112 @@ import org.eclipse.emf.ecore.EFactory;
  * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage
  * @generated
  */
-public interface ServerTypeFactory extends EFactory {
-	/**
-	 * The singleton instance of the factory.
-	 * <!-- begin-user-doc -->
+public interface ServerTypeFactory extends EFactory{
+    /**
+     * The singleton instance of the factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	ServerTypeFactory eINSTANCE = new org.eclipse.jst.server.generic.servertype.definition.impl.ServerTypeFactoryImpl();
 
-	/**
-	 * Returns a new object of class '<em>Archive Type</em>'.
-	 * <!-- begin-user-doc -->
+    /**
+     * Returns a new object of class '<em>Archive Type</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Archive Type</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Archive Type</em>'.
+     * @generated
+     */
 	ArchiveType createArchiveType();
 
-	/**
-	 * Returns a new object of class '<em>Classpath</em>'.
-	 * <!-- begin-user-doc -->
+    /**
+     * Returns a new object of class '<em>Classpath</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Classpath</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Classpath</em>'.
+     * @generated
+     */
 	Classpath createClasspath();
 
-	/**
-	 * Returns a new object of class '<em>Launch Configuration</em>'.
-	 * <!-- begin-user-doc -->
+    /**
+     * Returns a new object of class '<em>Launch Configuration</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Launch Configuration</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Launch Configuration</em>'.
+     * @generated
+     */
 	LaunchConfiguration createLaunchConfiguration();
 
-	/**
-	 * Returns a new object of class '<em>Module</em>'.
-	 * <!-- begin-user-doc -->
+    /**
+     * Returns a new object of class '<em>Module</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Module</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Module</em>'.
+     * @generated
+     */
 	Module createModule();
 
-	/**
-	 * Returns a new object of class '<em>Port</em>'.
-	 * <!-- begin-user-doc -->
+    /**
+     * Returns a new object of class '<em>Port</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Port</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Port</em>'.
+     * @generated
+     */
 	Port createPort();
 
-	/**
-	 * Returns a new object of class '<em>Project</em>'.
-	 * <!-- begin-user-doc -->
+    /**
+     * Returns a new object of class '<em>Project</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Project</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Project</em>'.
+     * @generated
+     */
 	Project createProject();
 
-	/**
-	 * Returns a new object of class '<em>Property</em>'.
-	 * <!-- begin-user-doc -->
+    /**
+     * Returns a new object of class '<em>Property</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Property</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Property</em>'.
+     * @generated
+     */
 	Property createProperty();
 
-	/**
-	 * Returns a new object of class '<em>Publisher</em>'.
-	 * <!-- begin-user-doc -->
+    /**
+     * Returns a new object of class '<em>Publisher</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Publisher</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Publisher</em>'.
+     * @generated
+     */
 	Publisher createPublisher();
 
-	/**
-	 * Returns a new object of class '<em>Publish Type</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Publish Type</em>'.
-	 * @generated
-	 */
-	PublishType createPublishType();
+    /**
+     * Returns a new object of class '<em>Publisher Data</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Publisher Data</em>'.
+     * @generated
+     */
+    PublisherData createPublisherData();
 
-	/**
-	 * Returns a new object of class '<em>Server Runtime</em>'.
-	 * <!-- begin-user-doc -->
+    /**
+     * Returns a new object of class '<em>Server Runtime</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Server Runtime</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Server Runtime</em>'.
+     * @generated
+     */
 	ServerRuntime createServerRuntime();
 
-	/**
-	 * Returns a new object of class '<em>Unpublish Type</em>'.
-	 * <!-- begin-user-doc -->
+    /**
+     * Returns the package supported by this factory.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Unpublish Type</em>'.
-	 * @generated
-	 */
-	UnpublishType createUnpublishType();
-
-	/**
-	 * Returns the package supported by this factory.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the package supported by this factory.
-	 * @generated
-	 */
+     * @return the package supported by this factory.
+     * @generated
+     */
 	ServerTypePackage getServerTypePackage();
 
 } //ServerTypeFactory

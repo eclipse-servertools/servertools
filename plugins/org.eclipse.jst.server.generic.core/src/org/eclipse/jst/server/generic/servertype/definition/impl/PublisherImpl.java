@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: PublisherImpl.java,v 1.1 2004/11/20 21:18:10 ndai Exp $
+ * $Id: PublisherImpl.java,v 1.2 2005/01/30 21:48:52 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition.impl;
 
@@ -61,8 +61,7 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.PublisherImpl#getGroup <em>Group</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.PublisherImpl#getPublish <em>Publish</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.PublisherImpl#getUnpublish <em>Unpublish</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.PublisherImpl#getPublisherdata <em>Publisherdata</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.impl.PublisherImpl#getId <em>Id</em>}</li>
  * </ul>
  * </p>
@@ -70,228 +69,206 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
  * @generated
  */
 public class PublisherImpl extends EObjectImpl implements Publisher {
-	/**
-	 * The cached value of the '{@link #getGroup() <em>Group</em>}' attribute list.
-	 * <!-- begin-user-doc -->
+    /**
+     * The cached value of the '{@link #getGroup() <em>Group</em>}' attribute list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getGroup()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getGroup()
+     * @generated
+     * @ordered
+     */
 	protected FeatureMap group = null;
 
-	/**
-	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
+    /**
+     * The default value of the '{@link #getId() <em>Id</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getId()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getId()
+     * @generated
+     * @ordered
+     */
 	protected static final String ID_EDEFAULT = null;
 
-	/**
-	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
+    /**
+     * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getId()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getId()
+     * @generated
+     * @ordered
+     */
 	protected String id = ID_EDEFAULT;
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected PublisherImpl() {
-		super();
-	}
+        super();
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected EClass eStaticClass() {
-		return ServerTypePackage.eINSTANCE.getPublisher();
-	}
+        return ServerTypePackage.eINSTANCE.getPublisher();
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public FeatureMap getGroup() {
-		if (group == null) {
-			group = new BasicFeatureMap(this, ServerTypePackage.PUBLISHER__GROUP);
-		}
-		return group;
-	}
+        if (group == null) {
+            group = new BasicFeatureMap(this, ServerTypePackage.PUBLISHER__GROUP);
+        }
+        return group;
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList getPublish() {
-		return ((FeatureMap)getGroup()).list(ServerTypePackage.eINSTANCE.getPublisher_Publish());
-	}
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EList getPublisherdata() {
+        return ((FeatureMap)getGroup()).list(ServerTypePackage.eINSTANCE.getPublisher_Publisherdata());
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList getUnpublish() {
-		return ((FeatureMap)getGroup()).list(ServerTypePackage.eINSTANCE.getPublisher_Unpublish());
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public String getId() {
-		return id;
-	}
+        return id;
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public void setId(String newId) {
-		String oldId = id;
-		id = newId;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.PUBLISHER__ID, oldId, id));
-	}
+        String oldId = id;
+        id = newId;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.PUBLISHER__ID, oldId, id));
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
-		if (featureID >= 0) {
-			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
-				case ServerTypePackage.PUBLISHER__GROUP:
-					return ((InternalEList)getGroup()).basicRemove(otherEnd, msgs);
-				case ServerTypePackage.PUBLISHER__PUBLISH:
-					return ((InternalEList)getPublish()).basicRemove(otherEnd, msgs);
-				case ServerTypePackage.PUBLISHER__UNPUBLISH:
-					return ((InternalEList)getUnpublish()).basicRemove(otherEnd, msgs);
-				default:
-					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
-			}
-		}
-		return eBasicSetContainer(null, featureID, msgs);
-	}
+        if (featureID >= 0) {
+            switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
+                case ServerTypePackage.PUBLISHER__GROUP:
+                    return ((InternalEList)getGroup()).basicRemove(otherEnd, msgs);
+                case ServerTypePackage.PUBLISHER__PUBLISHERDATA:
+                    return ((InternalEList)getPublisherdata()).basicRemove(otherEnd, msgs);
+                default:
+                    return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
+            }
+        }
+        return eBasicSetContainer(null, featureID, msgs);
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case ServerTypePackage.PUBLISHER__GROUP:
-				return getGroup();
-			case ServerTypePackage.PUBLISHER__PUBLISH:
-				return getPublish();
-			case ServerTypePackage.PUBLISHER__UNPUBLISH:
-				return getUnpublish();
-			case ServerTypePackage.PUBLISHER__ID:
-				return getId();
-		}
-		return eDynamicGet(eFeature, resolve);
-	}
+        switch (eDerivedStructuralFeatureID(eFeature)) {
+            case ServerTypePackage.PUBLISHER__GROUP:
+                return getGroup();
+            case ServerTypePackage.PUBLISHER__PUBLISHERDATA:
+                return getPublisherdata();
+            case ServerTypePackage.PUBLISHER__ID:
+                return getId();
+        }
+        return eDynamicGet(eFeature, resolve);
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public void eSet(EStructuralFeature eFeature, Object newValue) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case ServerTypePackage.PUBLISHER__GROUP:
-				getGroup().clear();
-				getGroup().addAll((Collection)newValue);
-				return;
-			case ServerTypePackage.PUBLISHER__PUBLISH:
-				getPublish().clear();
-				getPublish().addAll((Collection)newValue);
-				return;
-			case ServerTypePackage.PUBLISHER__UNPUBLISH:
-				getUnpublish().clear();
-				getUnpublish().addAll((Collection)newValue);
-				return;
-			case ServerTypePackage.PUBLISHER__ID:
-				setId((String)newValue);
-				return;
-		}
-		eDynamicSet(eFeature, newValue);
-	}
+        switch (eDerivedStructuralFeatureID(eFeature)) {
+            case ServerTypePackage.PUBLISHER__GROUP:
+                getGroup().clear();
+                getGroup().addAll((Collection)newValue);
+                return;
+            case ServerTypePackage.PUBLISHER__PUBLISHERDATA:
+                getPublisherdata().clear();
+                getPublisherdata().addAll((Collection)newValue);
+                return;
+            case ServerTypePackage.PUBLISHER__ID:
+                setId((String)newValue);
+                return;
+        }
+        eDynamicSet(eFeature, newValue);
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public void eUnset(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case ServerTypePackage.PUBLISHER__GROUP:
-				getGroup().clear();
-				return;
-			case ServerTypePackage.PUBLISHER__PUBLISH:
-				getPublish().clear();
-				return;
-			case ServerTypePackage.PUBLISHER__UNPUBLISH:
-				getUnpublish().clear();
-				return;
-			case ServerTypePackage.PUBLISHER__ID:
-				setId(ID_EDEFAULT);
-				return;
-		}
-		eDynamicUnset(eFeature);
-	}
+        switch (eDerivedStructuralFeatureID(eFeature)) {
+            case ServerTypePackage.PUBLISHER__GROUP:
+                getGroup().clear();
+                return;
+            case ServerTypePackage.PUBLISHER__PUBLISHERDATA:
+                getPublisherdata().clear();
+                return;
+            case ServerTypePackage.PUBLISHER__ID:
+                setId(ID_EDEFAULT);
+                return;
+        }
+        eDynamicUnset(eFeature);
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public boolean eIsSet(EStructuralFeature eFeature) {
-		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case ServerTypePackage.PUBLISHER__GROUP:
-				return group != null && !group.isEmpty();
-			case ServerTypePackage.PUBLISHER__PUBLISH:
-				return !getPublish().isEmpty();
-			case ServerTypePackage.PUBLISHER__UNPUBLISH:
-				return !getUnpublish().isEmpty();
-			case ServerTypePackage.PUBLISHER__ID:
-				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
-		}
-		return eDynamicIsSet(eFeature);
-	}
+        switch (eDerivedStructuralFeatureID(eFeature)) {
+            case ServerTypePackage.PUBLISHER__GROUP:
+                return group != null && !group.isEmpty();
+            case ServerTypePackage.PUBLISHER__PUBLISHERDATA:
+                return !getPublisherdata().isEmpty();
+            case ServerTypePackage.PUBLISHER__ID:
+                return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+        }
+        return eDynamicIsSet(eFeature);
+    }
 
-	/**
-	 * <!-- begin-user-doc -->
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (group: ");
-		result.append(group);
-		result.append(", id: ");
-		result.append(id);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuffer result = new StringBuffer(super.toString());
+        result.append(" (group: ");
+        result.append(group);
+        result.append(", id: ");
+        result.append(id);
+        result.append(')');
+        return result.toString();
+    }
 
 } //PublisherImpl

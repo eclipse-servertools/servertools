@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Project.java,v 1.1 2004/11/20 21:18:10 ndai Exp $
+ * $Id: Project.java,v 1.2 2005/01/30 21:47:27 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -50,31 +50,31 @@ import org.eclipse.emf.ecore.EObject;
  * @model 
  * @generated
  */
-public interface Project extends EObject {
-	/**
-	 * Returns the value of the '<em><b>Classpath Reference</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+public interface Project extends EObject{
+    /**
+     * Returns the value of the '<em><b>Classpath Reference</b></em>' attribute.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Classpath Reference</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Classpath Reference</em>' attribute.
-	 * @see #setClasspathReference(String)
-	 * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getProject_ClasspathReference()
-	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-	 * @generated
-	 */
+     * @return the value of the '<em>Classpath Reference</em>' attribute.
+     * @see #setClasspathReference(String)
+     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getProject_ClasspathReference()
+     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+     * @generated
+     */
 	String getClasspathReference();
 
-	/**
-	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.Project#getClasspathReference <em>Classpath Reference</em>}' attribute.
-	 * <!-- begin-user-doc -->
+    /**
+     * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.Project#getClasspathReference <em>Classpath Reference</em>}' attribute.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Classpath Reference</em>' attribute.
-	 * @see #getClasspathReference()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Classpath Reference</em>' attribute.
+     * @see #getClasspathReference()
+     * @generated
+     */
 	void setClasspathReference(String value);
 
 } // Project
