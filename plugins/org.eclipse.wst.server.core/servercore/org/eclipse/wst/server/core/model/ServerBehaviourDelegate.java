@@ -12,10 +12,13 @@ package org.eclipse.wst.server.core.model;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 /**
  * A server delegate provides the implementation for various 
  * generic and server-type-specific operations for a specific type of server.
@@ -266,7 +269,7 @@ public abstract class ServerBehaviourDelegate {
 	 * actions will be used.
 	 */
 	public void restart(String launchMode) throws CoreException {
-		 throw new CoreException(null);
+		 throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, "Could not restart", null));
 	}
 
 	/**
