@@ -21,6 +21,10 @@ public class AllTests {
 		suite.addTestSuite(ExistenceTest.class);
 		suite.addTestSuite(ContentViewersTestCase.class);
 		suite.addTestSuite(MonitorUICoreTest.class);
+		
+		suite.addTestSuite(DialogsTestCase.class);
+		suite.addTestSuite(PreferencesTestCase.class);
+		suite.addTestSuite(ViewTestCase.class);
 		//$JUnit-END$
 		return suite;
 	}

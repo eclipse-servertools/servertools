@@ -18,15 +18,29 @@ import junit.framework.TestSuite;
 
 public class ContentFiltersTestCase extends TestCase {
 	public static Test suite() {
-		return new TestSuite(ContentFiltersTestCase.class, "MonitorTestCase");
+		return new TestSuite(ContentFiltersTestCase.class, "ContentFiltersTestCase");
 	}
 
-	public void testContentFiltersExtension() throws Exception {
+	public void test1ContentFiltersExtension() throws Exception {
 		IContentFilter[] cf = MonitorCore.getContentFilters();
 		if (cf != null) {
 			int size = cf.length;
 			for (int i = 0; i < size; i++)
 				System.out.println(cf[i].getId() + " - " + cf[i].getName());
 		}
+	}
+	
+	public void test2ContentFiltersExtension() throws Exception {
+		try {
+			MonitorCore.findContentFilter(null);
+			assertTrue("Should throw exception", false);
+		} catch (Exception e) {
+			// ignore
+		}
+	}
+
+	public void test3ContentFiltersExtension() throws Exception {
+		IContentFilter cf = MonitorCore.findContentFilter("abc.xyz");
+		assertTrue(cf == null);
 	}
 }

@@ -19,9 +19,9 @@ public class AllTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.wst.internet.monitor.core.tests");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(ExistenceTest.class);
-		suite.addTestSuite(ProtocolAdaptersTestCase.class);
 		suite.addTestSuite(ContentFiltersTestCase.class);
 		suite.addTest(new OrderedTestSuite(MonitorTestCase.class));
+		suite.addTest(new OrderedTestSuite(MonitorListenerTestCase.class));
 		//$JUnit-END$
 		return suite;
 	}
