@@ -21,13 +21,25 @@ import org.eclipse.wst.internet.monitor.core.internal.Trace;
 import org.eclipse.wst.internet.monitor.core.internal.http.ResendHTTPRequest;
 /**
  * Base class for obtaining references to monitor models. This class also provide methods
- * to do operations on the monitor.
+ * to do operations on a monitor.
  * 
  * @since 1.0
  */
 public class MonitorCore {
-	// [issue: the protocols are stored in here. What if the clients of the API implements a new protocol?]
+	/**
+	 * Protocol adapter id (value "TCPIP") for TCP/IP. Provided here for convenience;
+	 * other protocol adapters may be available.
+	 * 
+	 * @see #findProtocolAdapter(String)
+	 */
 	public static String TCPIP_PROTOCOL_ID = "TCPIP";
+
+	/**
+	 * Protocol adapter id (value "HTTP") for HTTP. Provided here for convenience;
+	 * other protocol adapters may be available.
+	 * 
+	 * @see #findProtocolAdapter(String)
+	 */
 	public static String HTTP_PROTOCOL_ID = "HTTP";
 
 	private static MonitorManager manager = MonitorManager.getInstance();
@@ -35,9 +47,13 @@ public class MonitorCore {
 	private static final String lineSeparator = System.getProperty("line.separator");
 	
 	/**
-	 * Returns an array of all the existing monitors.
+	 * Returns an array of all known monitor instances. The list will not contain any
+	 * working copies.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
 	 * 
-	 * @return an array of monitors
+	 * @return a possibly-empty array of monitor instances {@link IMonitor}
 	 */
 	public static IMonitor[] getMonitors() {
 		List list = manager.getMonitors();
@@ -47,66 +63,90 @@ public class MonitorCore {
 	}
 	
 	/**
-	 * Create a new monitor.
+	 * Create a new monitor. The monitor will not exist for use until
+	 * the save() method has been called.
 	 * 
-	 * @return a working copy of the created monitor.
+	 * @return a working copy of the created monitor
 	 */
 	public static IMonitorWorkingCopy createMonitor() {
 		return manager.createMonitor();
 	}
 	
 	/**
-	 * Start the given monitor.
+	 * Start the given monitor listening on it's client port.
+	 * The monitor must not be null.
 	 * 
-	 * @param monitor the monitor to be started.
-	 * @throws Exception if the monitor fail to start.
+	 * @param monitor the monitor to be started
+	 * @throws Exception thrown if the monitor fails to start because the port
+	 *    is in use or another problem occurs
 	 */
 	public static void startMonitor(IMonitor monitor) throws Exception {
+		if (monitor == null)
+			throw new IllegalArgumentException();
 		manager.startMonitor(monitor);
 	}
 	
 	/**
-	 * Stop the given monitor.
+	 * Stop the given monitor and removes all resources.
+	 * The monitor must not be null.
 	 * 
-	 * @param monitor the monitor to be stopped.
+	 * @param monitor the monitor to be stopped
 	 */
 	public static void stopMonitor(IMonitor monitor) {
+		if (monitor == null)
+			throw new IllegalArgumentException();
 		manager.stopMonitor(monitor);
 	}
 	
 	/**
-	 * Return the protocol adapters.
+	 * Returns an array of all known protocol adapter instances.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
 	 * 
-	 * @return array of protocol adapters
+	 * @return a possibly-empty array of protocol adapter instances {@link IProtocolAdater}
 	 */
 	public static IProtocolAdapter[] getProtocolAdapters() {
 		return MonitorPlugin.getInstance().getProtocolAdapters();
 	}
 	
 	/**
-	 * Return the protocol adapter with the given id.
-	 * 
-	 * @return protocol adapter
+	 * Returns the protocol adapter with the given id, or <code>null</code>
+	 * if none. This convenience method searches the list of known
+	 * protocol adapter ({@link #getProtocolAdapters()}) for the one with a
+	 * matching id ({@link IProtocolAdater#getId()}). The id may not be null.
+	 *
+	 * @param the protocol adapter id
+	 * @return the protocol adapter instance, or <code>null</code> if there
+	 *   is no protocol adapter with the given id
 	 */
-	public static IProtocolAdapter getProtocolAdapter(String id) {
+	public static IProtocolAdapter findProtocolAdapter(String id) {
 		return MonitorPlugin.getInstance().getProtocolAdapter(id);
 	}
 	
 	/**
-	 * Return the content filters.
+	 * Returns an array of all known content filters.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
 	 * 
-	 * @return array of content filters
+	 * @return a possibly-empty array of content filter instances {@link IContentFilter}
 	 */
 	public static IContentFilter[] getContentFilters() {
 		return MonitorPlugin.getInstance().getContentFilters();
 	}
 	
 	/**
-	 * Return the content filter with the given id.
-	 * 
-	 * @return content filter
+	 * Returns the content filter with the given id, or <code>null</code>
+	 * if none. This convenience method searches the list of known
+	 * content filters ({@link #getContentFilters()}) for the one with a
+	 * matching id ({@link IContentFilter#getId()}). The id may not be null.
+	 *
+	 * @param the content filter id
+	 * @return the content filter instance, or <code>null</code> if there
+	 *   is no content filter with the given id
 	 */
-	public static IContentFilter getContentFilter(String id) {
+	public static IContentFilter findContentFilter(String id) {
 		return MonitorPlugin.getInstance().getContentFilter(id);
 	}
 	
@@ -136,9 +176,12 @@ public class MonitorCore {
 	}
 
 	/**
-	 * Return an array of all requests.
+	 * Returns an array of all known request instances.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
 	 * 
-	 * @return an array of all requests.
+	 * @return a possibly-empty array of request instances {@link IRequest}
 	 */
 	public static IRequest[] getRequests() {
 		List list = manager.getRequests();
@@ -148,7 +191,8 @@ public class MonitorCore {
 	}
 	
 	/**
-	 * Remove all requests.
+	 * Remove all requests. This method clears all requests and their data
+	 * from the buffer and notifies the request listeners.
 	 */
 	public static void removeAllRequests() {
 		manager.removeAllRequests();
@@ -180,14 +224,15 @@ public class MonitorCore {
 	}
 	
 	/**
-	 * Parse the given bytes into String form.
+	 * Convenience method to parse the given bytes into String form. The bytes
+	 * are parsed into a line delimited string. The byte array must not be null.
 	 * 
-	 * @param b the input bytes
-	 * @return the string after the conversion.
+	 * @param b a byte array
+	 * @return the string after the conversion
 	 */
 	public static String parse(byte[] b) {
 		if (b == null)
-			return "";
+			throw new IllegalArgumentException();
 
 		ByteArrayInputStream bin = new ByteArrayInputStream(b);
 		BufferedReader br = new BufferedReader(new InputStreamReader(bin));
@@ -210,11 +255,14 @@ public class MonitorCore {
 
 	/**
 	 * Create and return an new IResendRequest from the specified request.
+	 * The request may not be null.
 	 * 
-	 * @param request The request that is to be resent.
-	 * @return A new IResendRequest based on the specified request.
+	 * @param request the request that is to be resent
+	 * @return a new IResendRequest based on the specified request
 	 */
 	public static IResendRequest createResendRequest(IRequest request) {
-	  return new ResendHTTPRequest(request);
+		if (request == null)
+			throw new IllegalArgumentException();
+		return new ResendHTTPRequest(request);
 	}
 }

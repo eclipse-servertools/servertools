@@ -4,13 +4,18 @@
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
-  *
+ *
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
 package org.eclipse.wst.internet.monitor.ui;
 /**
- * Editable viewer interface for viewing and editing requests and responses.
+ * Editable viewer for viewing and editing requests and responses.
+ * This abstract class is intended to be extended only by clients
+ * to extend the <code>contentFilters</code> extension point.
+ * 
+ * @see ContentViewer
+ * @since 1.0
  */
 public abstract class EditableContentViewer extends ContentViewer {
 	/**
@@ -18,17 +23,17 @@ public abstract class EditableContentViewer extends ContentViewer {
 	 * edit the content.
 	 * 
 	 * @param editable <code>true</code> if true the content can be edited,
-	 *     and <code>false</code> otherwise
+	 *    and <code>false</code> otherwise
 	 */
 	public void setEditable(boolean editable) {
 		// do nothing
 	}
 
 	/**
-	 * Get the content from the viewer. This is really only interesting if the
+	 * Get the content from the viewer. This is usually only interesting if the
 	 * content has changed.
 	 * 
-	 * @return the content from the viewer.
+	 * @return the content from the viewer
 	 */
 	public byte[] getContent() {
 		return null;

@@ -20,8 +20,8 @@ import org.eclipse.wst.internet.monitor.core.ProtocolAdapterDelegate;
  * 
  */
 public class TCPIPProtocolAdapter extends ProtocolAdapterDelegate {
-	public void parse(IMonitor monitor, Socket in, Socket out) throws IOException {
-		Request request = new Request(MonitorCore.getProtocolAdapter("TCPIP"), monitor.getLocalPort(), monitor.getRemoteHost(), monitor.getRemotePort());
+	public void connect(IMonitor monitor, Socket in, Socket out) throws IOException {
+		Request request = new Request(MonitorCore.findProtocolAdapter("TCPIP"), monitor.getLocalPort(), monitor.getRemoteHost(), monitor.getRemotePort());
 		Connection conn = new Connection(in, out);
 		DefaultThread requestThread = new DefaultThread(conn, request, in.getInputStream(), out.getOutputStream(), true);
 		requestThread.start();

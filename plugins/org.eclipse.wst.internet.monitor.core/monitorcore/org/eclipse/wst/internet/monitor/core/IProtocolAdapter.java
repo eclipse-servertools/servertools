@@ -12,6 +12,8 @@ package org.eclipse.wst.internet.monitor.core;
 /**
  * A protocol adapter allows the monitor to support a new protocol between a client
  * and server, and manages the message passing between the two.
+ * The global list of known protocol adapters is available via
+ * {@link MonitorCore.getProtocolAdapters()}.
  * <p>
  * This interface is not intended to be implemented by clients.
  * </p>

@@ -373,7 +373,7 @@ public class MonitorView extends ViewPart {
 						String time = MonitorUIPlugin.getResource("%viewResponseTimeFormat", req.getResponseTime() + "");
 						label2.setText(MonitorUIPlugin.getResource("%viewResponseTime", time));
 					}
-					label3.setText(MonitorUIPlugin.getResource("%viewType", req.getType().getName()));
+					label3.setText(MonitorUIPlugin.getResource("%viewType", req.getProtocolAdapter().getName()));
 	
 					// request information
 					requestLabel.setText(MonitorUIPlugin.getResource("%viewRequest", "localhost:" + req.getLocalPort()));

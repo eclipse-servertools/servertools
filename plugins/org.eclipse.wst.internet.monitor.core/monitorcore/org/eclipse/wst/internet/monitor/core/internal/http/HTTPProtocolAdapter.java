@@ -20,7 +20,7 @@ import org.eclipse.wst.internet.monitor.core.internal.Connection;
  * 
  */
 public class HTTPProtocolAdapter extends ProtocolAdapterDelegate {
-	public void parse(IMonitor monitor, Socket in, Socket out) throws IOException {
+	public void connect(IMonitor monitor, Socket in, Socket out) throws IOException {
 		Connection conn2 = new Connection(in, out);
 		HTTPConnection conn = new HTTPConnection(monitor);
 		HTTPThread request = new HTTPThread(conn2, in.getInputStream(), out.getOutputStream(), conn, true, monitor.getRemoteHost(), monitor.getRemotePort());

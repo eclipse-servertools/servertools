@@ -12,7 +12,10 @@ package org.eclipse.wst.internet.monitor.core;
 
 import java.io.IOException;
 /**
- * A content filter that filters specific contents from the monitor traffic of a request.
+ * A content filter that filters specific contents from the monitor traffic
+ * of a request.
+ * The global list of known content filters is available via
+ * {@link MonitorCore.getContentFilters()}. 
  * <p>
  * This interface is not intended to be implemented by clients.
  * </p>
@@ -46,16 +49,14 @@ public interface IContentFilter {
 
 	/**
 	 * Filter the given content from the given request. The content that has been filtered out will 
-	 * not be shown in the TCP/IP monitor. [issue: is this correct?]
+	 * not be shown to clients of the TCP/IP monitor.
 	 * 
-	 * @param request the request that the filter will be performed on.
-	 * @param isRequest Set to true if the content filter applies to request monitor traffic. 
-	 *    set to false if the content filter applies to the response monitor traffic. 
-	 *    [issue: is this correct?]
-	 * @param content - the message content to be filtered out [issue: is this correct?]
-	 * @return The filtered content.
-	 * @throws IOException if the filter fails to open the input of output stream of the request
-	 *     [issue: is this correct?]
+	 * @param request the request that the filter will be performed on
+	 * @param isRequest set to true if the content filter applies to request monitor traffic,
+	 *    or set to false if the content filter applies to the response monitor traffic
+	 * @param content the message content to be filtered out
+	 * @return the filtered content
+	 * @throws IOException if there is an error while parsing or filtering the content
 	 */
 	public byte[] filter(IRequest request, boolean isRequest, byte[] content) throws IOException;
 }

@@ -13,6 +13,10 @@ package org.eclipse.wst.internet.monitor.ui;
 import org.eclipse.swt.widgets.Composite;
 /**
  * Viewer interface for displaying request and response messages.
+ * This abstract class is intended to be extended only by clients
+ * to extend the <code>contentViewers</code> extension point.
+ * 
+ * @since 1.0
  */
 public abstract class ContentViewer {
 	/**

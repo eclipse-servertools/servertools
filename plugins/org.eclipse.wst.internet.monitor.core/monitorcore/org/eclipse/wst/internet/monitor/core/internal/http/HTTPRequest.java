@@ -28,7 +28,7 @@ public class HTTPRequest extends Request {
 	 * HTTPRequestResponse constructor comment.
 	 */
 	public HTTPRequest(int localPort, String remoteHost, int remotePort) {
-		super(MonitorCore.getProtocolAdapter(MonitorCore.HTTP_PROTOCOL_ID), localPort, remoteHost, remotePort);
+		super(MonitorCore.findProtocolAdapter(MonitorCore.HTTP_PROTOCOL_ID), localPort, remoteHost, remotePort);
 	}
 	
 	public byte[] getRequest(byte type2) {

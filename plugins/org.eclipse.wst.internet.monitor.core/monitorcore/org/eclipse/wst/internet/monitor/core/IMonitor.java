@@ -11,9 +11,11 @@
 package org.eclipse.wst.internet.monitor.core;
 /**
  * Represents the monitor that monitors the network traffic between a server and a client.
+ * The global list of known monitors is available via {@link MonitorCore.getMonitors()}.
  * <p>
  * This interface is not intended to be implemented by clients.
  * </p>
+ * @see IMonitorWorkingCopy
  * @since 1.0
  */
 public interface IMonitor {

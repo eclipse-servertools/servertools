@@ -18,6 +18,7 @@ import java.util.Properties;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.internet.monitor.core.IProtocolAdapter;
 import org.eclipse.wst.internet.monitor.core.IRequest;
+import org.eclipse.wst.internet.monitor.core.IResendRequest;
 /**
  * A single TCP/IP request/response pair.
  */
@@ -52,7 +53,7 @@ public class Request implements IRequest {
 		MonitorManager.getInstance().addRequest(this);
 	}
 	
-	public IProtocolAdapter getType() {
+	public IProtocolAdapter getProtocolAdapter() {
 		return type;
 	}
 
@@ -270,20 +271,18 @@ public class Request implements IRequest {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.internet.monitor.core.IRequest#addResendRequest(org.eclipse.wst.internet.monitor.core.IRequest)
 	 */
-	public void addResendRequest(IRequest resendReq)
-	{
-	  if(resendReq != null)
-	  {
-	    resendRequests.add(resendReq);
-	  }
+	public void addResendRequest(IRequest resendReq) {
+		if (resendReq != null)
+			resendRequests.add(resendReq);
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.internet.monitor.core.IRequest#getResendRequests()
 	 */
-	public List getResendRequests()
-	{
-	  return resendRequests;
+	public IResendRequest[] getResendRequests() {
+		IResendRequest[] rr = new IResendRequest[resendRequests.size()];
+		resendRequests.toArray(rr);
+		return rr;
 	}
 	
 	/* (non-Javadoc)

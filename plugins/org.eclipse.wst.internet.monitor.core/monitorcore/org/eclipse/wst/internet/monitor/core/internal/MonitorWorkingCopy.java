@@ -57,10 +57,10 @@ public class MonitorWorkingCopy extends Monitor implements IMonitorWorkingCopy {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.internal.IMonitorWorkingCopy#setType(IType)
+	 * @see org.eclipse.wst.internet.monitor.internal.IMonitorWorkingCopy#setProtocolAdapter(IProtocolAdapter)
 	 */
-	public void setProtocolAdapter(IProtocolAdapter t) {
-		type = t;
+	public void setProtocolAdapter(IProtocolAdapter protocolAdapter) {
+		type = protocolAdapter;
 	}
 	
 	public boolean isWorkingCopy() {

@@ -14,6 +14,7 @@ package org.eclipse.wst.internet.monitor.core;
  * <p>
  * This interface is not intended to be implemented by clients.
  * </p>
+ * @see IMonitor
  * @since 1.0
  */
 public interface IMonitorWorkingCopy extends IMonitor {
@@ -43,10 +44,9 @@ public interface IMonitorWorkingCopy extends IMonitor {
 	 * network traffic between the server and the client.
 	 * 
 	 * @param type the protocol adapter.
-	 * [issue: should this variable be renamed to protocolAdapter in here and in the implementation class?]
 	 * 
 	 */
-	public void setProtocolAdapter(IProtocolAdapter type);
+	public void setProtocolAdapter(IProtocolAdapter protocolAdapter);
 
 	/**
 	 * Saves the changes to this working copy and returns the resulting monitor.

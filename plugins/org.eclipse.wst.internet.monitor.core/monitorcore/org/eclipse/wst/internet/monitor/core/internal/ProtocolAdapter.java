@@ -44,6 +44,6 @@ public class ProtocolAdapter implements IProtocolAdapter {
 				return;
 			}
 		}
-		delegate.parse(monitor, in, out);
+		delegate.connect(monitor, in, out);
 	}
 }

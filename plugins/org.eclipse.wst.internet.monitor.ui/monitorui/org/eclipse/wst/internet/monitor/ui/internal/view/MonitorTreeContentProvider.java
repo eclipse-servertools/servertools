@@ -86,7 +86,14 @@ public class MonitorTreeContentProvider implements ITreeContentProvider{
 			return list.toArray();
 		} else if (element instanceof IRequest) {
 			IRequest req = (IRequest) element;
-			List list = req.getResendRequests();
+			IResendRequest[] rr = req.getResendRequests();
+			List list = new ArrayList();
+			if (rr != null) {
+				int size = rr.length;
+				for (int i = 0; i < size; i++) {
+					list.add(rr[i]);
+				}
+			}
 			if (sortByResponseTime)
 				sortByResponseTime(list);
 			return list.toArray();
@@ -153,7 +160,7 @@ public class MonitorTreeContentProvider implements ITreeContentProvider{
 		if (element instanceof Integer)
 			return true;
 		if (element instanceof IRequest) {
-			return !((IRequest) element).getResendRequests().isEmpty();
+			return ((IRequest) element).getResendRequests().length > 0;
 		}
 		return false;
 	}

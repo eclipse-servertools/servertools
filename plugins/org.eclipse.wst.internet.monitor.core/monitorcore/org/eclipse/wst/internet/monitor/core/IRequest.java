@@ -11,40 +11,60 @@
 package org.eclipse.wst.internet.monitor.core;
 
 import java.util.Date;
-import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 /**
- * [issue: is this description correct?]
- * Represents a request that is being used by the monitor to communicate between the client and 
- * the server.
+ * Represents a request that has been made between the client and a server.
+ * The global list of known requests is available via {@link MonitorCore.getRequests()}.
+ * 
  * @since 1.0
  */
-public interface IRequest extends IAdaptable{
-	// [issue: should these be change to int instead of byte?]
+public interface IRequest extends IAdaptable {
+	/**
+	 * Request content type (value 1) for the transport (header) of a request
+	 * or response.
+	 * 
+	 * @see #getRequest(int)
+	 * @see #getResponse(int)
+	 */
 	public static final int TRANSPORT = 1;
+	
+	/**
+	 * Request content type (value 2) for the content (body) of a request
+	 * or response.
+	 * 
+	 * @see #getRequest(int)
+	 * @see #getResponse(int)
+	 */
 	public static final int CONTENT = 2;
+	
+	/**
+	 * Request content type (value 3) for the entire content of a request
+	 * or response.
+	 * 
+	 * @see #getRequest(int)
+	 * @see #getResponse(int)
+	 */
 	public static final int ALL = 3;
 
 	/**
 	 * Return the protocol adapter of the request.
-	 * [issue: should we rename this to getProtocolAdapter?]
 	 * 
 	 * @return org.eclipse.wst.internet.monitor.core.IProtocolAdapter
 	 */
-	public IProtocolAdapter getType();
+	public IProtocolAdapter getProtocolAdapter();
 
 	/**
 	 * Return the date/time of this request.
 	 *
-	 * @return java.util.Date
+	 * @return the timestamp
 	 */
 	public Date getDate();
 
 	/**
 	 * Returns the local (client) port.
 	 *
-	 * @return int
+	 * @return the local port number
 	 */
 	public int getLocalPort();
 
@@ -58,30 +78,30 @@ public interface IRequest extends IAdaptable{
 	/**
 	 * Returns the remote (server) port.
 	 *
-	 * @return int
+	 * @return the remote port number
 	 */
 	public int getRemotePort();
 
 	/**
 	 * Returns the request as a byte array.
 	 *
-	 * @param type
-	 * @return byte[]
+	 * @param type the content type (IRequest.X)
+	 * @return the request content
 	 */
 	public byte[] getRequest(int type);
 
 	/**
 	 * Returns the response as a byte array.
 	 *
-	 * @param type
-	 * @return byte[]
+	 * @param type the content type (IRequest.X)
+	 * @return the response content
 	 */
 	public byte[] getResponse(int type);
 
 	/**
 	 * Returns the response time in milliseconds.
 	 *
-	 * @return long
+	 * @return the server's response time
 	 */
 	public long getResponseTime();
 
@@ -95,24 +115,24 @@ public interface IRequest extends IAdaptable{
 	/**
 	 * Add a property to the request.
 	 * 
-	 * @param key the key of the property to be added.
-	 * @param value the value of the property to be added.
+	 * @param key the key of the property to be added
+	 * @param value the value of the property to be added
 	 */
 	public void addProperty(String key, Object value);
 
 	/**
 	 * Get a string property with a given key from the request.
 	 * 
-	 * @param key the key of the property.
-	 * @return the value of property.  
+	 * @param key the key of the property
+	 * @return the value of property
 	 */
 	public String getStringProperty(String key);
 
 	/**
 	 * Get a integer property with a given key from the request.
 	 * 
-	 * @param key the key of the property.
-	 * @return the value of property.  
+	 * @param key the key of the property
+	 * @return the value of property
 	 */
 	public Integer getIntegerProperty(String key);
 
@@ -123,17 +143,18 @@ public interface IRequest extends IAdaptable{
 	 * @return the value of property
 	 */
 	public Object getObjectProperty(String key);
-	
+
 	/**
-	 * [issue: not sure what this change event is for. Is it for the property change or for the request change.
-	 *
+	 * Hook to allow other plugins that implement IRequest to fire a change event.
+	 * After the internal values have changed, call this method to invoke a request
+	 * change event to all registered listeners.
 	 */
 	public void fireChangedEvent();
-	
+
 	/**
 	 * Add a resend request to this request.
 	 * 
-	 * @param request The resend request to add
+	 * @param request the resend request to add
 	 */
 	public void addResendRequest(IRequest request);
 
@@ -142,5 +163,5 @@ public interface IRequest extends IAdaptable{
 	 * 
 	 * @return The array of resend requests based on this request
 	 */
-	public List getResendRequests();
+	public IResendRequest[] getResendRequests();
 }

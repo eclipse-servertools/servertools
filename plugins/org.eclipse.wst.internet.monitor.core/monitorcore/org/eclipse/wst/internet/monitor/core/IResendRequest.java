@@ -12,7 +12,10 @@ package org.eclipse.wst.internet.monitor.core;
 /**
  * A representation of a request that is to be resent. This interface is not
  * meant to be implemented by clients.
- * [issue: based on this description, I am not sure when a resend request will be used.]
+ * <p>
+ * Resend requests are used when a client wants to modify and resend a previously
+ * monitored request back to the server.
+ * </p>
  * 
  * @since 1.0
  */
@@ -23,7 +26,8 @@ public interface IResendRequest extends IRequest {
 	public void sendRequest();
 
 	/**
-	 * Returns true if this request has been sent, false otherwise.
+	 * Returns <code>true</code> if this request has been sent, and
+	 * <code>false</code> otherwise.
 	 * 
 	 * @return <code>true</code> if this request has been sent, <code>false</code> otherwise
 	 */
@@ -40,8 +44,8 @@ public interface IResendRequest extends IRequest {
 	/**
 	 * Get the original request that this request is based on.
 	 * 
-	 * @return the original request that this request is based on or null if
-	 *         there is none
+	 * @return the original request that this request is based on, or
+	 *    <code>null</code> if there is none
 	 */
 	public IRequest getOriginalRequest();
 }
