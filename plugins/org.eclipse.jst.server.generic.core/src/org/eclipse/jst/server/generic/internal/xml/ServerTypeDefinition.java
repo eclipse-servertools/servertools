@@ -36,10 +36,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.launching.JavaRuntime;
 /**
  * Holds/presents the XML server definition file. If this object has propertyValues Map
  * the returned values for properties are resolved according to this values. If 
@@ -163,15 +159,15 @@ public class ServerTypeDefinition  {
 	/**
 	 * @return ArrayList
 	 */
-	public ArrayList getClientClassPath() {
-		return clientClassPath;
+	public List getClientClassPath() {
+		return resolveClasspathProperties(clientClassPath);
 	}
 	
 	/**
 	 * @return ArrayList
 	 */
-	public ArrayList getProjectClassPath() {
-		return projectClassPath;
+	public List getProjectClassPath() {
+		return resolveClasspathProperties(projectClassPath);
 	}
 
 	/**
@@ -191,7 +187,7 @@ public class ServerTypeDefinition  {
 	/**
 	 * @return ArrayList
 	 */
-	public ArrayList getProperties() {
+	public List getProperties() {
 		return properties;
 	}
 
@@ -224,8 +220,19 @@ public class ServerTypeDefinition  {
 	/**
 	 * @return ArrayList
 	 */
-	public ArrayList getServerClassPath() {
-		return serverClassPath;
+	public List getServerClassPath() {
+	    return resolveClasspathProperties(serverClassPath);
+	}
+	
+	private List resolveClasspathProperties(List cpList)
+	{
+		ArrayList list = new ArrayList(cpList.size());
+		for (int i = 0; i < cpList.size(); i++) {
+			ClasspathItem item = (ClasspathItem) cpList.get(i);
+			String cpath = resolveProperties(item.getClasspath());
+			list.add(cpath);
+		}
+		return list;
 	}
 
 	/**
@@ -322,8 +329,8 @@ public class ServerTypeDefinition  {
 	 * Sets the ProjectClassPath.
 	 * @param serverClassPath The ProjectClassPath to set
 	 */
-	public void setProjectClassPath(ArrayList projectClassPath) {
-		this.projectClassPath = projectClassPath;
+	public void setProjectClassPath(List projectClassPath) {
+		this.projectClassPath = (ArrayList)projectClassPath;
 	}
 
 	/**
@@ -745,28 +752,7 @@ public class ServerTypeDefinition  {
 		return null;
 	}
 
-	public List getServerClasspathMementos() {
-		List cpathList =getServerClassPath();
-		ArrayList mementoList = new ArrayList();
-		for (int i = 0; i < cpathList.size(); i++) {
-			ClasspathItem item = (ClasspathItem) cpathList.get(i);
-			String cpath = resolveProperties(
-					item.getClasspath());
-			String memento = null;
-			try {
-				memento = JavaRuntime.newArchiveRuntimeClasspathEntry(
-						new Path(cpath)).getMemento();
-			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			mementoList.add(memento);
-		}
-		return mementoList;
-	}
-	
-
-    public Map getPropertyValues() {
+   public Map getPropertyValues() {
         return fPropertyValues;
     }
     public void setPropertyValues(Map propertyValue) {
