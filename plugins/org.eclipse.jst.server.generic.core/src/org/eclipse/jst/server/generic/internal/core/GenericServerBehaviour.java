@@ -316,7 +316,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     			int port = sp.getPort();
     			if (port != 80)
     				url += ":" + port;
-    			ping = new PingThread(getServer(),this, url, 5);
+    			ping = new PingThread(getServer(),this, url, 50);
     		} catch (Exception e) {
     			Trace.trace(Trace.SEVERE, "Can't ping for server startup.");
     		}
