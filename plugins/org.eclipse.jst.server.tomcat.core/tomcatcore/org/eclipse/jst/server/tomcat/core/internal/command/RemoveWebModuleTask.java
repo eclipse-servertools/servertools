@@ -43,6 +43,8 @@ public class RemoveWebModuleTask extends Task {
 		IServerWorkingCopy wc = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
 		TomcatServer server = (TomcatServer) wc.getAdapter(TomcatServer.class);
 		TomcatConfiguration configuration = server.getTomcatConfiguration();
+		if (configuration.getWebModules().size() <= index)
+			return;
 		module = (WebModule) configuration.getWebModules().get(index);
 		configuration.removeWebModule(index);
 	}
