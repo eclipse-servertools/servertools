@@ -113,6 +113,10 @@ public class ServerUtil {
 	
 	/**
 	 * Returns a list of all servers that this module is configured on.
+	 * 
+	 * <p>
+	 * [issue: Possibly empty array...
+	 * </p>
 	 *
 	 * @param module org.eclipse.wst.server.core.model.IModule
 	 * @return java.util.List
@@ -631,6 +635,10 @@ public class ServerUtil {
 	 * Return a list of all runtime targets that match the given type and version.
 	 * If type or version is null, it matches all of that type or version.
 	 * 
+	 * <p>
+	 * [issue: Possibly empty array...
+	 * </p>
+	 * 
 	 * @param type
 	 * @param version
 	 * @return 
@@ -657,6 +665,10 @@ public class ServerUtil {
 	 * Return a list of all runtime types that match the given type and version.
 	 * If type or version is null, it matches all of that type or version.
 	 * 
+	 * <p>
+	 * [issue: Possibly empty array...
+	 * </p>
+	 * 
 	 * @param type
 	 * @param version
 	 * @return 
@@ -682,6 +694,10 @@ public class ServerUtil {
 	 * Return a list of all runtime types that match the given type, version,
 	 * and partial runtime type id. If type, version, or runtimeTypeId is null,
 	 * it matches all of that type or version.
+	 * 
+	 * <p>
+	 * [issue: Possibly empty array...
+	 * </p>
 	 * 
 	 * @param type
 	 * @param version
