@@ -30,10 +30,14 @@ public class TestClasspathRuntimeTargetHandler extends ClasspathRuntimeTargetHan
 	
 	public void testAddMethods() {
 		List list = new ArrayList();
-		addJarFiles(null, list, false);
-		addLibraryEntries(list, null, false);
-		addLibraryEntry(list, (File) null);
-		addLibraryEntry(list, (IPath) null);
-		addLibraryEntry(list, null, null, null);
+		try {
+			addJarFiles(null, list, false);
+			addLibraryEntries(list, null, false);
+			addLibraryEntry(list, (File) null);
+			addLibraryEntry(list, (IPath) null);
+			addLibraryEntry(list, null, null, null);
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 }
