@@ -367,7 +367,7 @@ public class TaskWizard implements IWizard {
 			current.updatePages();
 			current.getContainer().updateButtons();
 		} catch (Exception e) {
-			Trace.trace("Error updating wizard pages", e);
+			Trace.trace(Trace.SEVERE, "Error updating wizard pages", e);
 		}
 	}
 	
@@ -377,7 +377,7 @@ public class TaskWizard implements IWizard {
 			if (data != null)
 				return data;
 		} catch (Exception e) {
-			Trace.trace("Error getting fragment data", e);
+			Trace.trace(Trace.SEVERE, "Error getting fragment data", e);
 		}
 		
 		FragmentData data = new FragmentData(fragment);
