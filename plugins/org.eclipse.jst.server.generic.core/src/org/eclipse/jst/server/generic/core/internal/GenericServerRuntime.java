@@ -59,6 +59,11 @@ public class GenericServerRuntime extends RuntimeDelegate implements IGenericRun
 		return JavaRuntime.getDefaultVMInstall().getVMInstallType().getId();
 		// TODO configurable.
 	}
+	
+	public boolean isUsingDefaultJRE() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jst.server.core.IGenericRuntime#getVMInstallId()
