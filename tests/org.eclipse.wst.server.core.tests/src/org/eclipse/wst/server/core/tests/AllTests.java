@@ -31,11 +31,12 @@ package org.eclipse.wst.server.core.tests;
 
 import org.eclipse.wst.server.core.tests.extension.*;
 import org.eclipse.wst.server.core.tests.model.*;
-import org.eclipse.wst.server.core.util.HTTPLaunchableTestCase;
-import org.eclipse.wst.server.core.util.NullModuleArtifactTestCase;
-import org.eclipse.wst.server.core.util.SocketUtilTestCase;
-import org.eclipse.wst.server.core.util.StaticWebTestCase;
-import org.eclipse.wst.server.core.util.WebResourceTestCase;
+import org.eclipse.wst.server.core.tests.util.HTTPLaunchableTestCase;
+import org.eclipse.wst.server.core.tests.util.NullModuleArtifactTestCase;
+import org.eclipse.wst.server.core.tests.util.SocketUtilTestCase;
+import org.eclipse.wst.server.core.tests.util.StaticWebTestCase;
+import org.eclipse.wst.server.core.tests.util.TaskTestCase;
+import org.eclipse.wst.server.core.tests.util.WebResourceTestCase;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -97,6 +98,7 @@ public class AllTests {
 		suite.addTest(new OrderedTestSuite(WebResourceTestCase.class));
 		suite.addTest(new OrderedTestSuite(NullModuleArtifactTestCase.class));
 		suite.addTestSuite(SocketUtilTestCase.class);
+		suite.addTest(new OrderedTestSuite(TaskTestCase.class));
 		//$JUnit-END$
 		return suite;
 	}

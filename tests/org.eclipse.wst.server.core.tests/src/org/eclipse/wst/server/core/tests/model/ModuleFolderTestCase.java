@@ -35,4 +35,8 @@ public class ModuleFolderTestCase extends TestCase {
 	public void test02Path() throws Exception {
 		assertNull(delegate.getModuleRelativePath());
 	}
+	
+	public void test03Members() throws Exception {
+		delegate.members();
+	}
 }

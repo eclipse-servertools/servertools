@@ -8,32 +8,33 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core.util;
+package org.eclipse.wst.server.core.tests.util;
 
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
+import org.eclipse.wst.server.core.util.HttpLaunchable;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-public class WebResourceTestCase extends TestCase {
-	protected static WebResource web;
+public class HTTPLaunchableTestCase extends TestCase {
+	protected static HttpLaunchable launch;
 	
 	public static Test suite() {
-		return new OrderedTestSuite(WebResourceTestCase.class, "WebResourceTestCase");
+		return new OrderedTestSuite(HTTPLaunchableTestCase.class, "HTTPLaunchableTestCase");
 	}
 
 	public void test00Create() {
-		web = new WebResource(null, null);
+		launch = new HttpLaunchable(null);
 	}
 	
-	public void test01GetModule() {
-		assertNull(web.getModule());
+	public void test01GetURL() {
+		assertNull(launch.getURL());
 	}
 	
-	public void test02GetPath() {
-		assertNull(web.getPath());
-	}
-	
-	public void test03ToString() {
-		web.toString();
+	public void test02ToString() {
+		try {
+			launch.toString();
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 }

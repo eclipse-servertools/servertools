@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core.util;
+package org.eclipse.wst.server.core.tests.util;
 
 import org.eclipse.wst.server.core.util.SocketUtil;
 

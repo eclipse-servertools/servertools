@@ -8,32 +8,29 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core.util;
+package org.eclipse.wst.server.core.tests.util;
 
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
+import org.eclipse.wst.server.core.util.NullModuleArtifact;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-public class HTTPLaunchableTestCase extends TestCase {
-	protected static HttpLaunchable launch;
+public class NullModuleArtifactTestCase extends TestCase {
+	protected static NullModuleArtifact nma;
 	
 	public static Test suite() {
-		return new OrderedTestSuite(HTTPLaunchableTestCase.class, "HTTPLaunchableTestCase");
+		return new OrderedTestSuite(NullModuleArtifactTestCase.class, "NullModuleArtifactTestCase");
 	}
 
 	public void test00Create() {
-		launch = new HttpLaunchable(null);
+		nma = new NullModuleArtifact(null);
 	}
 	
-	public void test01GetURL() {
-		assertNull(launch.getURL());
+	public void test01GetModule() {
+		assertNull(nma.getModule());
 	}
 	
 	public void test02ToString() {
-		try {
-			launch.toString();
-		} catch (Exception e) {
-			// ignore
-		}
+		nma.toString();
 	}
 }

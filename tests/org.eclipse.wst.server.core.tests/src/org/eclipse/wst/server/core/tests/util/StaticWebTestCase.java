@@ -8,15 +8,16 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core.util;
+package org.eclipse.wst.server.core.tests.util;
 
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 import org.eclipse.wst.server.core.tests.impl.TestStaticWeb;
+import org.eclipse.wst.server.core.util.IStaticWeb;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class StaticWebTestCase extends TestCase {
-	protected static TestStaticWeb web;
+	protected static IStaticWeb web;
 	
 	public static Test suite() {
 		return new OrderedTestSuite(StaticWebTestCase.class, "StaticWebTestCase");

@@ -8,28 +8,33 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core.util;
+package org.eclipse.wst.server.core.tests.util;
 
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
+import org.eclipse.wst.server.core.util.WebResource;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-public class NullModuleArtifactTestCase extends TestCase {
-	protected static NullModuleArtifact nma;
+public class WebResourceTestCase extends TestCase {
+	protected static WebResource web;
 	
 	public static Test suite() {
-		return new OrderedTestSuite(NullModuleArtifactTestCase.class, "NullModuleArtifactTestCase");
+		return new OrderedTestSuite(WebResourceTestCase.class, "WebResourceTestCase");
 	}
 
 	public void test00Create() {
-		nma = new NullModuleArtifact(null);
+		web = new WebResource(null, null);
 	}
 	
 	public void test01GetModule() {
-		assertNull(nma.getModule());
+		assertNull(web.getModule());
 	}
 	
-	public void test02ToString() {
-		nma.toString();
+	public void test02GetPath() {
+		assertNull(web.getPath());
+	}
+	
+	public void test03ToString() {
+		web.toString();
 	}
 }
