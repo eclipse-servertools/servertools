@@ -56,8 +56,7 @@ public class Client implements IClient {
 		String label = element.getAttribute("name");
 		if (label == null)
 			return "n/a";
-		else
-			return label;
+		return label;
 	}
 
 	/*

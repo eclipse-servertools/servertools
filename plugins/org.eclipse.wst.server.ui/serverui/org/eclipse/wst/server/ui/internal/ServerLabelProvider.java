@@ -103,8 +103,8 @@ public class ServerLabelProvider implements ILabelProvider {
 				IServer server = (IServer) element;
 				if (server.getServerType() == null)
 					return null;
-				else
-					return ImageResource.getImage(server.getServerType().getId());
+				
+				return ImageResource.getImage(server.getServerType().getId());
 			} else if (element instanceof IServerConfigurationType) {
 				IServerConfigurationType configType = (IServerConfigurationType) element;
 				return ImageResource.getImage(configType.getId());
@@ -124,8 +124,8 @@ public class ServerLabelProvider implements ILabelProvider {
 	protected String getString(String s) {
 		if (s == null)
 			return "";
-		else
-			return s;
+		
+		return s;
 	}
 
 	/*

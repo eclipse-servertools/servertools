@@ -151,8 +151,8 @@ public class TomcatWebModulePublisher implements IPublisher {
 		File rootFile = getRemoteRoot().append(module.getContextRoot()).toFile();
 		if (rootFile.exists()) {
 			return getRemoteResources(null, rootFile);
-		} else
-			return new IRemoteResource[0];
+		}
+		return new IRemoteResource[0];
 	}
 
 	/**

@@ -98,10 +98,9 @@ public class PublishViewerFilter extends ViewerFilter {
 				if (resource instanceof IModuleFolder) {
 					if (visualPublisher.getPublishControl(resource.getModule()).shouldMapMembers((IModuleFolder) resource))
 						return true;
-					else
-						return false;
-				} else
 					return false;
+				}
+				return false;
 			}
 			byte status = visualPublisher.getResourceStatus(resource, path);
 			if (status == VisualPublisher.STATUS_NEW && filterNew)
@@ -116,13 +115,11 @@ public class PublishViewerFilter extends ViewerFilter {
 		} else if (element instanceof ModuleRemoteResource) {
 			if (filterDeleted)
 				return false;
-			else
-				return true;
+			return true;
 		} else if (element instanceof ModuleDeletedResourceFolder) {
 			if (filterDeleted)
 				return false;
-			else
-				return true;
+			return true;
 		}
 		return true;
 	}

@@ -1,4 +1,3 @@
-package org.eclipse.wst.server.ui.internal.wizard;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
  * All rights reserved.   This program and the accompanying materials
@@ -9,6 +8,8 @@ package org.eclipse.wst.server.ui.internal.wizard;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.wizard;
+
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -26,7 +27,6 @@ import org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragmen
 import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
 import org.eclipse.wst.server.ui.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
-
 /**
  * A wizard used to select a server from various lists.
  */
@@ -79,7 +79,6 @@ public class SelectServerWizard extends TaskWizard {
 	public boolean isPreferredServer() {
 		if (task == null)
 			return false;
-		else
-			return task.isPreferredServer();
+		return task.isPreferredServer();
 	}
 }

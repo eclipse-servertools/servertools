@@ -42,5 +42,7 @@ public class GenericRuntimeWorkingCopy extends GenericRuntime implements IGeneri
 			wc.setAttribute(PROP_VM_INSTALL_ID, id);
 	}
 	
-	public void handleSave(byte id, IProgressMonitor monitor) { }
+	public void handleSave(byte id, IProgressMonitor monitor) {
+		// do nothing
+	}
 }

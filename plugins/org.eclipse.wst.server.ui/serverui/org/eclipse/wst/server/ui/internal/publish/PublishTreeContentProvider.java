@@ -21,7 +21,6 @@ import org.eclipse.wst.server.core.resources.IModuleFolder;
 import org.eclipse.wst.server.core.resources.IModuleResource;
 import org.eclipse.wst.server.core.resources.IRemoteResource;
 import org.eclipse.wst.server.ui.internal.Trace;
-
 /**
  * Content provider for the publisher wizard.
  */
@@ -131,8 +130,7 @@ public class PublishTreeContentProvider implements ITreeContentProvider {
 			IModuleResource resource = (IModuleResource) element;
 			if (resource.getParent() != null)
 				return resource.getParent();
-			else
-				return resource.getModule();
+			return resource.getModule();
 		} else if (element instanceof ModuleDeletedResourceFolder) {
 			ModuleDeletedResourceFolder folder = (ModuleDeletedResourceFolder) element;
 			return folder.getModule();
@@ -140,8 +138,7 @@ public class PublishTreeContentProvider implements ITreeContentProvider {
 			ModuleRemoteResource remote = (ModuleRemoteResource) element;
 			if (remote.getFolder() != null)
 				return remote.getFolder();
-			else
-				return remote.getModule();
+			return remote.getModule();
 		}
 		return null;
 	}

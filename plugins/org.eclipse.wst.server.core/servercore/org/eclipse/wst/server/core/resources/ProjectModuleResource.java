@@ -55,10 +55,8 @@ public class ProjectModuleResource implements IModuleResource {
 	public IPath getPath() {
 		if (parent == null)
 			return new Path(getName());
-		else {
-			IPath path = parent.getPath();
-			return path.append(getName());
-		}
+		IPath path = parent.getPath();
+		return path.append(getName());
 	}
 
 	public IResource getResource() {

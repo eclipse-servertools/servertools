@@ -63,8 +63,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	public byte getServerState() {
 		if (server != null)
 			return server.getServerState();
-		else
-			return serverState;
+		return serverState;
 	}
 	
 	public void setServerState(byte state) {

@@ -115,8 +115,7 @@ public class ServerConfiguration extends Base implements IServerConfiguration {
 	public IPath getConfigurationDataPath() {
 		if (file != null)
 			return null;
-		else
-			return getPath(false);
+		return getPath(false);
 	}
 
 	protected IFolder getFolder(boolean create) throws CoreException {

@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2003 IBM Corporation and others.
+/**********************************************************************
+ * Copyright (c) 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    IBM - Initial API and implementation
- */
+ **********************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -16,7 +16,6 @@ import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-
 /**
  * Runtime label provider.
  */
@@ -35,8 +34,7 @@ public class RuntimeTreeLabelProvider extends AbstractTreeLabelProvider implemen
 		IRuntime runtime = (IRuntime) element;
 		if (runtime.getRuntimeType() != null)
 			return ImageResource.getImage(runtime.getRuntimeType().getId());
-		else
-			return null;
+		return null;
 	}
 
 	/**
@@ -55,10 +53,10 @@ public class RuntimeTreeLabelProvider extends AbstractTreeLabelProvider implemen
 			if (element instanceof ServerTreeContentProvider.TreeElement) {
 				ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
 				return sharedImages.getImage(ISharedImages.IMG_OBJ_FOLDER);
-			} else
-				return getImageImpl(element);
-		} else
-			return null;
+			}
+			return getImageImpl(element);
+		}
+		return null;
 	}
 
 	/* (non-Javadoc)
@@ -68,19 +66,16 @@ public class RuntimeTreeLabelProvider extends AbstractTreeLabelProvider implemen
 		if (element instanceof ServerTreeContentProvider.TreeElement) {
 			if (columnIndex == 0)
 				return ((ServerTreeContentProvider.TreeElement) element).text;
-			else
-				return "";
-		} else {
-			IRuntime runtime = (IRuntime) element;
-			if (columnIndex == 0)
-				return runtime.getName();
-			else if (columnIndex == 1) {
-				if (runtime.getRuntimeType() != null)
-					return notNull(runtime.getRuntimeType().getName());
-				else
-					return "";
-			} else
-				return "X";
+			return "";
 		}
+		IRuntime runtime = (IRuntime) element;
+		if (columnIndex == 0)
+			return runtime.getName();
+		else if (columnIndex == 1) {
+			if (runtime.getRuntimeType() != null)
+				return notNull(runtime.getRuntimeType().getName());
+			return "";
+		}
+		return "X";
 	}
 }

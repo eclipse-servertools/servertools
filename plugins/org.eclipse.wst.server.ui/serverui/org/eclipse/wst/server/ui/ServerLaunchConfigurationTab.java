@@ -134,8 +134,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	protected static boolean matches(String a, String b) {
 		if (a == null || b == null || "*".equals(a) || "*".equals(b) || a.startsWith(b) || b.startsWith(a))
 			return true;
-		else
-			return false;
+		return false;
 	}
 	
 	protected void handleServerSelection() {

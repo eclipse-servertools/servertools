@@ -45,8 +45,7 @@ public class PublishStatusItem implements IStatus {
 	public IStatus[] getChildren() {
 		if (child == null)
 			return new IStatus[0];
-		else
-			return new IStatus[] { child };
+		return new IStatus[] { child };
 	}
 
 	/**
@@ -112,8 +111,7 @@ public class PublishStatusItem implements IStatus {
 	public int getSeverity() {
 		if (child == null)
 			return IStatus.OK;
-		else
-			return child.getSeverity();
+		return child.getSeverity();
 	}
 
 	/**

@@ -87,9 +87,9 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	 */
 	public List getMimeMappings() {
 		if (webAppDocument == null)
-			return new ArrayList();
-		else
-			return webAppDocument.getMimeMappings();
+			return new ArrayList(0);
+		
+		return webAppDocument.getMimeMappings();
 	}
 
 	/**
@@ -144,7 +144,9 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 					if ("port".equals(p.getName())) {
 						try {
 							port = Integer.parseInt(p.getValue());
-						} catch (Exception e) { }
+						} catch (Exception e) {
+							// ignore
+						}
 					} else if ("handler".equals(p.getName()))
 						handler = p.getValue();
 					else if ("socketFactory".equals(p.getName()))

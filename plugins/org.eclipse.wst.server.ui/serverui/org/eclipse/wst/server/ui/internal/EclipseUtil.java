@@ -72,8 +72,8 @@ public class EclipseUtil {
 	
 		if (adapter != null)
 			return adapter.getImageDescriptor(project);
-		else
-			return null;
+		
+		return null;
 	}
 
 	/**

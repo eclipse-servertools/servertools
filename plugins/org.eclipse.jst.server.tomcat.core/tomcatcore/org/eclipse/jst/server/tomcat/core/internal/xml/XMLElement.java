@@ -69,8 +69,8 @@ public class XMLElement implements Serializable {
 		Attr attr = xmlElement.getAttributeNode(s);
 		if (attr != null)
 			return attr.getValue();
-		else
-			return null;
+		
+		return null;
 	}
 	
 	public String getElementName() {

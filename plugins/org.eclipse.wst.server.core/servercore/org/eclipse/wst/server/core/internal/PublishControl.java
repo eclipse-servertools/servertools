@@ -108,8 +108,7 @@ public class PublishControl implements IPublishControl {
 	public IPath getMappedLocation(IModuleResource resource) {
 		if (publisher == null)
 			return null;
-		else
-			return publisher.getMappedLocation(resource);
+		return publisher.getMappedLocation(resource);
 	}
 
 	/**
@@ -134,8 +133,7 @@ public class PublishControl implements IPublishControl {
 	public boolean shouldMapMembers(IModuleFolder folder) {
 		if (publisher == null)
 			return false;
-		else
-			return publisher.shouldMapMembers(folder);
+		return publisher.shouldMapMembers(folder);
 	}
 	
 	/**

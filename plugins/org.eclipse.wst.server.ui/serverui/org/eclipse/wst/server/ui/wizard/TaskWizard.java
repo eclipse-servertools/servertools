@@ -495,8 +495,7 @@ public class TaskWizard implements IWizard {
 		if (index == 0 || index == -1)
 			// first page or page not found
 			return null;
-		else
-			return (IWizardPage)pages.get(index - 1);
+		return (IWizardPage)pages.get(index - 1);
 	}
 
 	/* (non-Javadoc)

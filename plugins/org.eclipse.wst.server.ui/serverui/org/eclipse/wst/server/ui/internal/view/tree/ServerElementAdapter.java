@@ -1,4 +1,3 @@
-package org.eclipse.wst.server.ui.internal.view.tree;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
  * All rights reserved.   This program and the accompanying materials
@@ -9,6 +8,8 @@ package org.eclipse.wst.server.ui.internal.view.tree;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.view.tree;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
@@ -20,7 +21,6 @@ import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.ServerLabelProvider;
 import org.eclipse.ui.model.IWorkbenchAdapter;
-
 /**
  * 
  */
@@ -80,14 +80,13 @@ public class ServerElementAdapter implements IAdaptable, IWorkbenchAdapter, ISer
 			if (modules == null || modules.length == 0) {
 				//return new Object[] { new TextResourceAdapter(this, TextResourceAdapter.STYLE_NO_MODULES)};
 				return NO_CHILDREN;
-			} else {
-				int size = modules.length;
-				Object[] obj = new Object[size];
-				for (int i = 0; i < size; i++)
-					obj[i] = new ModuleResourceAdapter(this, server, modules[i]);
-
-				return obj;
 			}
+			int size = modules.length;
+			Object[] obj = new Object[size];
+			for (int i = 0; i < size; i++)
+				obj[i] = new ModuleResourceAdapter(this, server, modules[i]);
+
+			return obj;
 		}/* else if (resource instanceof IServerConfiguration) {
 			IServerConfiguration configuration = (IServerConfiguration) resource;
 			
@@ -142,7 +141,7 @@ public class ServerElementAdapter implements IAdaptable, IWorkbenchAdapter, ISer
 	public IElement getServerResource() {
 		return resource;
 	}
-	
+
 	protected IFile getFile() {
 		if (resource instanceof IServer)
 			return ((IServer) resource).getFile();

@@ -101,10 +101,9 @@ public class ServerType implements IServerType {
 			String mode = element.getAttribute("launchModes");
 			if (mode == null)
 				return false;
-			else
-				return mode.indexOf(launchMode) >= 0;
-		} else
-			return configType.supportsMode(launchMode);
+			return mode.indexOf(launchMode) >= 0;
+		}
+		return configType.supportsMode(launchMode);
 	}
 
 	public IServerConfigurationType getServerConfigurationType() {

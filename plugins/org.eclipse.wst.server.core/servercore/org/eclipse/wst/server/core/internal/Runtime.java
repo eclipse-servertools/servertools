@@ -114,8 +114,7 @@ public class Runtime extends Base implements IRuntime {
 		String temp = getAttribute(PROP_LOCATION, (String)null);
 		if (temp == null)
 			return null;
-		else
-			return new Path(temp);
+		return new Path(temp);
 	}
 	
 	protected void deleteFromMetadata() {

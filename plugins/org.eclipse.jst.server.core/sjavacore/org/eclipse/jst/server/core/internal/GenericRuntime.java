@@ -26,7 +26,9 @@ public class GenericRuntime implements IGenericRuntime {
 
 	protected IRuntime runtime;
 
-	public GenericRuntime() { }
+	public GenericRuntime() {
+		// do nothing
+	}
 
 	public void initialize(IRuntime newRuntime) {
 		this.runtime = newRuntime;
@@ -50,7 +52,9 @@ public class GenericRuntime implements IGenericRuntime {
 				if (id.equals(vmInstalls[i].getId()))
 					return vmInstalls[i];
 			}
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		return null;
 	}
 	
@@ -72,5 +76,7 @@ public class GenericRuntime implements IGenericRuntime {
 			return new Status(IStatus.OK, JavaServerPlugin.PLUGIN_ID, 0, "", null);
 	}
 	
-	public void dispose() { }
+	public void dispose() {
+		// do nothing
+	}
 }

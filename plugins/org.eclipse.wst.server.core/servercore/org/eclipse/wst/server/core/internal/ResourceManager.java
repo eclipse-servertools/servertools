@@ -991,8 +991,8 @@ public class ResourceManager implements IResourceManager {
 				handleChangedFile(file, monitor);
 			monitor.done();
 			return false;
-		} else
-			return true;
+		}
+		return true;
 	
 		/*IProgressMonitor monitor = new NullProgressMonitor();
 		List list = getResourceParentList(resource2);

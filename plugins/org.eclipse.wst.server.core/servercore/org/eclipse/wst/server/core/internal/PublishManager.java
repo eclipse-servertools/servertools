@@ -50,8 +50,7 @@ public class PublishManager implements IPublishManager {
 		String s = element.getAttribute("description");
 		if (s == null || s.length() == 0)
 			return "?";
-		else
-			return s;
+		return s;
 	}
 
 	/*
@@ -61,8 +60,7 @@ public class PublishManager implements IPublishManager {
 		String s = element.getAttribute("name");
 		if (s == null || s.length() == 0)
 			return "?";
-		else
-			return s;
+		return s;
 	}
 
 	/*

@@ -79,8 +79,7 @@ public class ServerConfigurationType implements IServerConfigurationType {
 		String importExt = element.getAttribute("importExtensions");
 		if (importExt == null || importExt.length() < 1)
 			return null;
-		else
-			return ServerPlugin.tokenize(importExt, ",");
+		return ServerPlugin.tokenize(importExt, ",");
 	}
 	
 	public IServerConfigurationWorkingCopy createServerConfiguration(String id, IFile file, IProgressMonitor monitor) {

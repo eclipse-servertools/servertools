@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.j2ee.IWebModule;
-
 /**
  * 
  */
@@ -105,7 +104,7 @@ public class Tomcat32Handler implements ITomcatVersionHandler {
 	public IStatus canAddModule(IWebModule module) {
 		if ("1.2".equals(module.getJ2EESpecificationVersion()))
 			return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%canAddModule"), null);
-		else
-			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorSpec32"), null);
+		
+		return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorSpec32"), null);
 	}
 }

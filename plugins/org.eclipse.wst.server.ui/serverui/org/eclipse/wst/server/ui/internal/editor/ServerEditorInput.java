@@ -1,4 +1,3 @@
-package org.eclipse.wst.server.ui.internal.editor;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
  * All rights reserved.   This program and the accompanying materials
@@ -8,8 +7,9 @@ package org.eclipse.wst.server.ui.internal.editor;
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.editor;
+
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.wst.server.core.IResourceManager;
@@ -20,7 +20,6 @@ import org.eclipse.wst.server.ui.editor.IServerEditorInput;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
-
 /**
  * The editor input for server configurations and instances. The
  * input points to a resource that is either an instance or
@@ -142,8 +141,8 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 	public ImageDescriptor getImageDescriptor() {
 		if (serverId != null)
 			return ImageResource.getImageDescriptor(ImageResource.IMG_SERVER);
-		else
-			return ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_CONFIGURATION);
+		
+		return ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_CONFIGURATION);
 	}
 	
 	/**
@@ -161,14 +160,12 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 			IServer server = rm.getServer(serverId);
 			if (server != null)
 				return server.getName();
-			else
-				return serverId;
+			return serverId;
 		} else if (configurationId != null) {
 			IServerConfiguration configuration = rm.getServerConfiguration(configurationId);
 			if (configuration != null)
 				return configuration.getName();
-			else
-				return configurationId;
+			return configurationId;
 		} else
 			return "";
 	}

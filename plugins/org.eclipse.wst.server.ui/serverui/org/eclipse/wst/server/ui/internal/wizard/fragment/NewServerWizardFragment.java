@@ -29,7 +29,6 @@ import org.eclipse.wst.server.ui.internal.wizard.page.WizardUtil;
 import org.eclipse.wst.server.ui.wizard.IWizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
-
 /**
  * 
  */
@@ -173,14 +172,12 @@ public class NewServerWizardFragment extends WizardFragment {
 	public IServer getServer() {
 		if (comp == null)
 			return null;
-		else
-			return comp.getServer();
+		return comp.getServer();
 	}
 
 	public boolean isPreferredServer() {
 		if (comp == null)
 			return false;
-		else
-			return comp.isPreferredServer();
+		return comp.isPreferredServer();
 	}
 }

@@ -82,10 +82,8 @@ public class RemoteResource implements IRemoteResource {
 	public IPath getPath() {
 		if (parent == null)
 			return new Path(getName());
-		else {
-			IPath path = parent.getPath();
-			return path.append(getName());
-		}
+		IPath path = parent.getPath();
+		return path.append(getName());
 	}
 
 	/**

@@ -1,4 +1,3 @@
-package org.eclipse.wst.server.ui.internal;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
  * All rights reserved.   This program and the accompanying materials
@@ -9,6 +8,8 @@ package org.eclipse.wst.server.ui.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal;
+
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -199,8 +200,8 @@ public class ImageResource {
 		ImageDescriptor id = (ImageDescriptor) imageDescriptors.get(key);
 		if (id != null)
 			return id;
-		else
-			return ImageDescriptor.getMissingImageDescriptor();
+		
+		return ImageDescriptor.getMissingImageDescriptor();
 	}
 
 	/**

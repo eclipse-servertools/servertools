@@ -19,7 +19,6 @@ import org.eclipse.wst.server.core.IElement;
 import org.eclipse.wst.server.core.ITask;
 import org.eclipse.wst.server.ui.editor.ICommandManager;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-
 /**
  * A command manager for a single server resource.
  */
@@ -86,14 +85,13 @@ public class ServerResourceCommandManager implements ICommandManager {
 			
 			// do not execute command
 			return false;
-		} else {
-			// check file timestamp
-			IElement serverfile = commandManager.getServerResource(id);
-			if (commandManager.hasChanged(id))
-				editor.promptReloadServerFile(id, serverfile);
-			
-			// allow edit
-			return true;
 		}
+		// check file timestamp
+		IElement serverfile = commandManager.getServerResource(id);
+		if (commandManager.hasChanged(id))
+			editor.promptReloadServerFile(id, serverfile);
+		
+		// allow edit
+		return true;
 	}
 }

@@ -161,13 +161,13 @@ public abstract class Base {
 		}
 		saveState(child);
 	}
-	protected void saveMap(IMemento memento, String key, Map map) {
+	protected void saveMap(IMemento memento, String key, Map map2) {
 		IMemento child = memento.createChild("map");
 		child.putString("key", key);
-		Iterator iterator = map.keySet().iterator();
+		Iterator iterator = map2.keySet().iterator();
 		while (iterator.hasNext()) {
 			String s = (String) iterator.next();
-			child.putString(s,(String)map.get(s));
+			child.putString(s,(String)map2.get(s));
 		}
 	}
 	
@@ -289,8 +289,7 @@ public abstract class Base {
 		Base base = (Base) obj;
 		if (getId() == null)
 			return false;
-		else
-			return getId().equals(base.getId());
+		return getId().equals(base.getId());
 	}
 
 	/**

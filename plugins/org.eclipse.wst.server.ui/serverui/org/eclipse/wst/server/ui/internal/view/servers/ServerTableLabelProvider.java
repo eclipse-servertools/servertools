@@ -128,15 +128,15 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 						return decorated;
 				}
 				return image;
-			} else
-				return null;
+			}
+			return null;
 		} else if (columnIndex == 2) {
 			IServerType serverType = server.getServerType();
 			if (serverType == null)
 				return null;
 			if (serverType.getServerStateSet() == IServerType.SERVER_STATE_SET_PUBLISHED)
 				return null;
-			else return getServerStateImage(server);
+			return getServerStateImage(server);
 		} else
 			return null;
 	}
@@ -151,8 +151,8 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 			IServerType serverType = server.getServerType();
 			if (serverType != null)
 				return getServerStateLabel(server, serverType.getServerStateSet());
-			else
-				return "";
+			
+			return "";
 		} else if (columnIndex == 3) {
 			if (server.getServerType() == null)
 				return "";
@@ -182,17 +182,15 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 			IServerType serverType = server.getServerType();
 			if (serverType.getServerStateSet() == IServerType.SERVER_STATE_SET_MANAGED)
 				return syncState[i];
-			else
-				return syncStateUnmanaged[i];
+			return syncStateUnmanaged[i];
 		} else
 			return "X";
 	}
 	
 	protected String notNull(String s) {
-		if (s != null)
-			return s;
-		else
+		if (s == null)
 			return "";
+		return s;
 	}
 
 	public boolean isLabelProperty(Object element, String property) {
@@ -225,18 +223,17 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 	protected String getServerStateLabel(IServer server, byte stateSet) {
 		if (stateSet == IServerType.SERVER_STATE_SET_PUBLISHED) {
 			return "";
-		} else {
-			if (stateSet == IServerType.SERVER_STATE_SET_MANAGED) {
-				byte state = server.getServerState();
-				if (state == IServer.SERVER_STARTING)
-					return startingText[count];
-				else if (state == IServer.SERVER_STOPPING)
-					return stoppingText[count];
-				else
-					return serverState[server.getServerState()];
-			} else
-				return serverStateUnmanaged[server.getServerState()];
 		}
+		if (stateSet == IServerType.SERVER_STATE_SET_MANAGED) {
+			byte state = server.getServerState();
+			if (state == IServer.SERVER_STARTING)
+				return startingText[count];
+			else if (state == IServer.SERVER_STOPPING)
+				return stoppingText[count];
+			else
+				return serverState[server.getServerState()];
+		}
+		return serverStateUnmanaged[server.getServerState()];
 	}
 	
 	protected void animate() {

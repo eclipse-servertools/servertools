@@ -1,4 +1,3 @@
-package org.eclipse.wst.server.ui.internal.editor;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
  * All rights reserved.   This program and the accompanying materials
@@ -8,8 +7,9 @@ package org.eclipse.wst.server.ui.internal.editor;
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.editor;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -260,10 +260,9 @@ public class GlobalCommandManager {
 			serverInfo = getExistingCommandManagerInfo(serverId);
 			if (serverInfo == null)
 				return null;
-			else {
-				server = (IServerWorkingCopy) serverInfo.wc;
-				serverReadOnly = serverInfo.isReadOnly;
-			}
+			
+			server = (IServerWorkingCopy) serverInfo.wc;
+			serverReadOnly = serverInfo.isReadOnly;
 		}
 		
 		CommandManagerInfo configurationInfo = null;
@@ -273,10 +272,9 @@ public class GlobalCommandManager {
 			configurationInfo = getExistingCommandManagerInfo(configurationId);
 			if (configurationInfo == null)
 				return null;
-			else {
-				configuration = (IServerConfigurationWorkingCopy) configurationInfo.wc;
-				configurationReadOnly = configurationInfo.isReadOnly;
-			}
+			
+			configuration = (IServerConfigurationWorkingCopy) configurationInfo.wc;
+			configurationReadOnly = configurationInfo.isReadOnly;
 		}
 
 		return new ServerEditorPartInput(serverCommandManager, server, serverReadOnly,
@@ -457,8 +455,8 @@ public class GlobalCommandManager {
 		CommandManagerInfo info = getExistingCommandManagerInfo(id);
 		if (info == null)
 			return false;
-		else
-			return info.isDirty;
+		
+		return info.isDirty;
 	}
 	
 	/**
@@ -470,8 +468,7 @@ public class GlobalCommandManager {
 		CommandManagerInfo info = getExistingCommandManagerInfo(id);
 		if (info == null)
 			return false;
-		else
-			return info.isReadOnly;
+		return info.isReadOnly;
 	}
 	
 	/**
@@ -481,12 +478,11 @@ public class GlobalCommandManager {
 		CommandManagerInfo info = getExistingCommandManagerInfo(id);
 		if (info == null)
 			return;
-		else {
-			if (info.isReadOnly == readOnly)
-				return;
-			info.isReadOnly = readOnly;
-			firePropertyChangeEvent(PROP_RELOAD, id, null);
-		}
+		
+		if (info.isReadOnly == readOnly)
+			return;
+		info.isReadOnly = readOnly;
+		firePropertyChangeEvent(PROP_RELOAD, id, null);
 	}
 
 	/**
@@ -498,8 +494,7 @@ public class GlobalCommandManager {
 		CommandManagerInfo info = getExistingCommandManagerInfo(id);
 		if (info == null)
 			return false;
-		else
-			return (getReadOnlyFiles(id).length > 0);
+		return (getReadOnlyFiles(id).length > 0);
 	}
 	
 	/**
@@ -701,7 +696,6 @@ public class GlobalCommandManager {
 
 		if (count != info.fileMap.size())
 			return true;
-		else
-			return false;
+		return false;
 	}
 }

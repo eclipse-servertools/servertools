@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2003 IBM Corporation and others.
+/**********************************************************************
+ * Copyright (c) 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    IBM - Initial API and implementation
- */
+ **********************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -15,7 +15,6 @@ import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.swt.graphics.Image;
-
 /**
  * Runtime table label provider.
  */
@@ -69,8 +68,7 @@ public class RuntimeTableLabelProvider extends BaseLabelProvider implements ITab
 			IRuntimeType runtimeType = runtime.getRuntimeType();
 			if (runtimeType != null)
 				return notNull(runtimeType.getName());
-			else
-				return "";
+			return "";
 		} else
 			return "X";
 	}

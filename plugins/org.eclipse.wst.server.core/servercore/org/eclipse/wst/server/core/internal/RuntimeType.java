@@ -72,16 +72,14 @@ public class RuntimeType implements IRuntimeType {
 		String vendor = element.getAttribute("vendor");
 		if (vendor == null)
 			return ServerPlugin.getResource("%defaultVendor");
-		else
-			return vendor;
+		return vendor;
 	}
 	
 	public String getVersion() {
 		String version = element.getAttribute("version");
 		if (version == null)
 			return ServerPlugin.getResource("%defaultVersion");
-		else
-			return version;
+		return version;
 	}
 	
 	/**

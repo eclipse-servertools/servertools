@@ -72,8 +72,8 @@ public class TomcatServerUtil {
 			case IClasspathEntry.CPE_LIBRARY:
 				if (!path.isAbsolute())
 					return null;
-				else
-					return JavaCore.newLibraryEntry(path, sourceAttachmentPath, sourceAttachmentRootPath);
+				
+				return JavaCore.newLibraryEntry(path, sourceAttachmentPath, sourceAttachmentRootPath);
 	
 			case IClasspathEntry.CPE_VARIABLE:
 				return JavaCore.newVariableEntry(path, sourceAttachmentPath, sourceAttachmentRootPath);

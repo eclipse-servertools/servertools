@@ -22,7 +22,6 @@ import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.swt.graphics.Image;
-
 /**
  * Label provider for the publisher wizard tree.
  */
@@ -80,8 +79,7 @@ public class PublishTreeLabelProvider implements ITableLabelProvider {
 		if (element instanceof IModule) {
 			if (columnIndex == 0)
 				return labelProvider.getImage(element);
-			else
-				return null;
+			return null;
 		} else if (element instanceof IModuleResource) {
 			IModuleResource resource = (IModuleResource) element;
 			IPath path = visualPublisher.getPublishControl(resource.getModule()).getMappedLocation(resource);
@@ -93,12 +91,10 @@ public class PublishTreeLabelProvider implements ITableLabelProvider {
 				}
 				if (path == null || path.toString() == null)
 					return null;
-				else {
-					if (visualPublisher.getResourcesToPublish(resource.getModule()).contains(resource))
-						return ImageResource.getImage(ImageResource.IMG_PUBLISH_ENABLED);
-					else
-						return ImageResource.getImage(ImageResource.IMG_PUBLISH_DISABLED);
-				}
+				
+				if (visualPublisher.getResourcesToPublish(resource.getModule()).contains(resource))
+					return ImageResource.getImage(ImageResource.IMG_PUBLISH_ENABLED);
+				return ImageResource.getImage(ImageResource.IMG_PUBLISH_DISABLED);
 			}
 		} else if (element instanceof ModuleRemoteResource) {
 			ModuleRemoteResource prr = (ModuleRemoteResource) element;
@@ -107,13 +103,11 @@ public class PublishTreeLabelProvider implements ITableLabelProvider {
 			if (columnIndex == 3) {
 				if (path == null || path.toString() == null)
 					return null;
-				else {
-					IModule module = prr.getModule();
-					if (visualPublisher.getResourcesToDelete(module).contains(remote))
-						return ImageResource.getImage(ImageResource.IMG_PUBLISH_ENABLED);
-					else
-						return ImageResource.getImage(ImageResource.IMG_PUBLISH_DISABLED);
-				}
+				
+				IModule module = prr.getModule();
+				if (visualPublisher.getResourcesToDelete(module).contains(remote))
+					return ImageResource.getImage(ImageResource.IMG_PUBLISH_ENABLED);
+				return ImageResource.getImage(ImageResource.IMG_PUBLISH_DISABLED);
 			}
 		}
 	
@@ -132,8 +126,7 @@ public class PublishTreeLabelProvider implements ITableLabelProvider {
 		if (element instanceof IModule) {
 			if (columnIndex == 0)
 				return labelProvider.getText(element);
-			else
-				return "";
+			return "";
 		} else if (element instanceof IModuleResource) {
 			IModuleResource resource = (IModuleResource) element;
 			IPath path = visualPublisher.getPublishControl(resource.getModule()).getMappedLocation(resource);
@@ -143,23 +136,17 @@ public class PublishTreeLabelProvider implements ITableLabelProvider {
 			else if (columnIndex == 1) {
 				if (path == null || path.toString() == null)
 					return "";
-				else
-					return path.toString();
+				return path.toString();
 			} else if (columnIndex == 2) {
 				if (path == null || path.toString() == null)
 					return "";
-				else {
-					return statusStrings[status];
-				}
+				return statusStrings[status];
 			} else if (columnIndex == 3) {
 				if (path == null || path.toString() == null)
 					return "";
-				else {
-					if (resource instanceof IModuleFolder && status != VisualPublisher.STATUS_NEW)
-						return "";
-					else
-						return ServerUIPlugin.getResource("%wizPublishActionPublish");
-				}
+				if (resource instanceof IModuleFolder && status != VisualPublisher.STATUS_NEW)
+					return "";
+				return ServerUIPlugin.getResource("%wizPublishActionPublish");
 			}
 		} else if (element instanceof ModuleRemoteResource) {
 			if (columnIndex == 0)
@@ -169,8 +156,7 @@ public class PublishTreeLabelProvider implements ITableLabelProvider {
 				IPath path = prr.getRemote().getPath();
 				if (path == null || path.toString() == null)
 					return "";
-				else
-					return path.toString();
+				return path.toString();
 			} else if (columnIndex == 2) {
 				return ServerUIPlugin.getResource("%wizPublishStateDeleted");
 			} else if (columnIndex == 3)
@@ -178,8 +164,7 @@ public class PublishTreeLabelProvider implements ITableLabelProvider {
 		} else if (element instanceof ModuleDeletedResourceFolder) {
 			if (columnIndex == 0)
 				return ServerUIPlugin.getResource("%wizPublishDeletedFolder");
-			else
-				return "";
+			return "";
 		}
 		return "";
 	}

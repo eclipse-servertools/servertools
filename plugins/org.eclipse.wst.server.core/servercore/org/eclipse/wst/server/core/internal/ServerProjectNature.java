@@ -160,8 +160,8 @@ public class ServerProjectNature implements IServerProject, IProjectNature {
 							IFile file = (IFile) resource;
 							rm.handleNewFile(file, new NullProgressMonitor());
 							return false;
-						} else
-							return true;
+						}
+						return true;
 						//return !rm.handleNewServerResource(resource, new NullProgressMonitor());
 					} catch (Exception e) {
 						Trace.trace(Trace.SEVERE, "Error during initial server resource load", e);

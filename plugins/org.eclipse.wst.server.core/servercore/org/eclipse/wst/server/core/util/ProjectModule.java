@@ -68,29 +68,28 @@ public abstract class ProjectModule implements IProjectModule {
 		}
 		if (root2 == null) {
 			return convertChildren(delta, null);
-		} else {
-			class Helper {
-				boolean found = false;
-				IModuleResourceDelta delta2;
-			}
-			final Helper helper = new Helper();
-			final IPath root3 = root2;
-			try {
-				delta.accept(new IResourceDeltaVisitor() {
-					public boolean visit(IResourceDelta visitDelta) {
-						if (!helper.found && root3.equals(visitDelta.getProjectRelativePath())) {
-							helper.delta2 = convertChildren(visitDelta, null);
-							helper.found = true;
-							return false;
-						} else
-							return true;
+		}
+		class Helper {
+			boolean found = false;
+			IModuleResourceDelta delta2;
+		}
+		final Helper helper = new Helper();
+		final IPath root3 = root2;
+		try {
+			delta.accept(new IResourceDeltaVisitor() {
+				public boolean visit(IResourceDelta visitDelta) {
+					if (!helper.found && root3.equals(visitDelta.getProjectRelativePath())) {
+						helper.delta2 = convertChildren(visitDelta, null);
+						helper.found = true;
+						return false;
 					}
-				});
-				Trace.trace(Trace.FINEST, "< getModuleResourceDelta");
-				return helper.delta2;
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Could not get module resource delta");
-			}
+					return true;
+				}
+			});
+			Trace.trace(Trace.FINEST, "< getModuleResourceDelta");
+			return helper.delta2;
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Could not get module resource delta");
 		}
 		Trace.trace(Trace.FINEST, "< getModuleResourceDelta null");
 		return null;
@@ -117,8 +116,7 @@ public abstract class ProjectModule implements IProjectModule {
 		else if (resource instanceof IFile) {
 			if (delta.getFlags() == IResourceDelta.MARKERS)
 				return null;
-			else
-				pubResource = new ProjectModuleFile(this, parent, (IFile) resource);
+			pubResource = new ProjectModuleFile(this, parent, (IFile) resource);
 		}
 		
 		ModuleResourceDelta deployDelta = new ModuleResourceDelta(pubResource, kind);
@@ -167,10 +165,9 @@ public abstract class ProjectModule implements IProjectModule {
 		try {
 			if (root2 == null || root2.isRoot() || root2.equals(new Path("")) || root2.equals(new Path("/")))
 				return getModuleResources(getProject(), null);
-			else {
-				IFolder folder = project.getFolder(root2);
-				return getModuleResources(folder, null);
-			}
+			
+			IFolder folder = project.getFolder(root2);
+			return getModuleResources(folder, null);
 		} catch (CoreException e) {
 			throw e;
 		}

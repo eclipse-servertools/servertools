@@ -142,8 +142,7 @@ public class ServerUIUtil {
 		IServerConfiguration config = server.getServerConfiguration();
 		if (config != null)
 			return promptIfDirty(shell, config);
-		else
-			return true;
+		return true;
 	}
 
 	/**
@@ -179,8 +178,7 @@ public class ServerUIUtil {
 		byte b = ServerUICore.getPreferences().getSaveEditors();
 		if (b == IServerUIPreferences.SAVE_EDITORS_NEVER)
 			return true;
-		else
-			return ServerUIPlugin.getInstance().getWorkbench().saveAllEditors(b == IServerUIPreferences.SAVE_EDITORS_PROMPT);			
+		return ServerUIPlugin.getInstance().getWorkbench().saveAllEditors(b == IServerUIPreferences.SAVE_EDITORS_PROMPT);			
 	}
 
 	/**
@@ -242,8 +240,8 @@ public class ServerUIUtil {
 			} catch (Exception e) {
 				return false;
 			}
-		} else
-			return showNewRuntimeWizard(shell, null, null, runtimeTypeId);
+		}
+		return showNewRuntimeWizard(shell, null, null, runtimeTypeId);
 	}
 
 	public static boolean showNewRuntimeWizard(Shell shell, final String type, final String version) {

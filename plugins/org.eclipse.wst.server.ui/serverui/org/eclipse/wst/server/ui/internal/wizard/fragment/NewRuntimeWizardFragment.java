@@ -22,7 +22,6 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Composite;
-
 /**
  * 
  */
@@ -62,8 +61,8 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 				return false;
 			IStatus status = page.getRuntime().validate();
 			return status == null || status.isOK();
-		} else
-			return true;
+		}
+		return true;
 	}
 
 	public void createSubFragments(List list) {

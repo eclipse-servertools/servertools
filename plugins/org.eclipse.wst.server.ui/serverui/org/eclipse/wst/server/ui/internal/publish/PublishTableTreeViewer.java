@@ -75,25 +75,22 @@ public class PublishTableTreeViewer extends TableTreeViewer {
 					IPath path = visualPublisher.getPublishControl(resource.getModule()).getMappedLocation(resource);
 					if (path == null || path.toString() == null)
 						return new Boolean(false);
-					else {
-						if (visualPublisher.getResourcesToPublish(resource.getModule()).contains(resource))
-							return new Boolean(true);
-						else
-							return new Boolean(false);
-					}
+					
+					if (visualPublisher.getResourcesToPublish(resource.getModule()).contains(resource))
+						return new Boolean(true);
+					return new Boolean(false);
 				} else if (element instanceof ModuleRemoteResource) {
 					ModuleRemoteResource prr = (ModuleRemoteResource) element;
 					IRemoteResource remote = prr.getRemote();
 					IPath path = remote.getPath();
 					if (path == null || path.toString() == null)
 						return new Boolean(false);
-					else {
-						IModule module = prr.getModule();
-						if (visualPublisher.getResourcesToDelete(module).contains(remote))
-							return new Boolean(true);
-						else
-							return new Boolean(false);
-					}
+					
+					IModule module = prr.getModule();
+					if (visualPublisher.getResourcesToDelete(module).contains(remote))
+						return new Boolean(true);
+					
+					return new Boolean(false);
 				}
 				return new Boolean(false);
 			}
@@ -113,11 +110,10 @@ public class PublishTableTreeViewer extends TableTreeViewer {
 								return false;
 						}
 						return true;
-					} else
-						return true;
+					}
+					return true;
 				}
-				else
-					return false;
+				return false;
 			}
 	
 			public void modify(Object element, String property, Object value) {

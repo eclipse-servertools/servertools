@@ -55,8 +55,7 @@ public class ServerMonitor implements IServerMonitor {
 		String label = element.getAttribute("name");
 		if (label == null)
 			return "n/a";
-		else
-			return label;
+		return label;
 	}
 
 	/*

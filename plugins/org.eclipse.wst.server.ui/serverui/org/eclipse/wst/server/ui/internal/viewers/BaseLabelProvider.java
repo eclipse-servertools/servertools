@@ -96,9 +96,8 @@ public abstract class BaseLabelProvider implements ILabelProvider {
 	public void removeListener(ILabelProviderListener listener) { }
 	
 	protected String notNull(String s) {
-		if (s != null)
-			return s;
-		else
+		if (s == null)
 			return "";
+		return s;
 	}
 }

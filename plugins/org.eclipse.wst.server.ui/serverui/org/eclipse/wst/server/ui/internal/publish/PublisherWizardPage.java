@@ -150,10 +150,9 @@ public class PublisherWizardPage extends WizardPage {
 			IPath path = visualPublisher.getPublishControl(resource.getModule()).getMappedLocation(resource);
 			if (path == null || path.toString() == null)
 				return "";
-			else {
-				byte status = visualPublisher.getResourceStatus(resource, path);
-				return descriptionStrings[status];
-			}
+			
+			byte status = visualPublisher.getResourceStatus(resource, path);
+			return descriptionStrings[status];
 		} else if (element instanceof ModuleRemoteResource) {
 			return descriptionStrings[5];
 		}

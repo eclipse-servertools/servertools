@@ -32,10 +32,9 @@ public class MonitorLabelProvider extends BaseLabelProvider implements ITableLab
 		if (columnIndex == 0) {
 			if (port.isStarted())
 				return ImageResource.getImage(ImageResource.IMG_MONITOR_ON);
-			else
-				return ImageResource.getImage(ImageResource.IMG_MONITOR_OFF);
-		} else
-			return null;
+			return ImageResource.getImage(ImageResource.IMG_MONITOR_OFF);
+		}
+		return null;
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
@@ -43,8 +42,7 @@ public class MonitorLabelProvider extends BaseLabelProvider implements ITableLab
 		if (columnIndex == 0) {
 			if (port.isStarted())
 				return ServerUIPlugin.getResource("%started");
-			else
-				return ServerUIPlugin.getResource("%stopped");
+			return ServerUIPlugin.getResource("%stopped");
 		} else if (columnIndex == 1)
 			return notNull(port.getServerPort().getName());
 		else if (columnIndex == 2)
@@ -55,16 +53,15 @@ public class MonitorLabelProvider extends BaseLabelProvider implements ITableLab
 			String[] content = port.getContentTypes();
 			if (content == null || content.length == 0)
 				return ServerUIPlugin.getResource("%dialogMonitorContentTypeAll");
-			else {
-				StringBuffer sb = new StringBuffer();
-				int size = content.length;
-				for (int i = 0; i < size; i++) {
-					if (i > 0)
-						sb.append(",");
-					sb.append(getContentTypeString(content[i]));
-				}
-				return sb.toString();
+			
+			StringBuffer sb = new StringBuffer();
+			int size = content.length;
+			for (int i = 0; i < size; i++) {
+				if (i > 0)
+					sb.append(",");
+				sb.append(getContentTypeString(content[i]));
 			}
+			return sb.toString();
 		}
 	}
 	

@@ -1,4 +1,3 @@
-package org.eclipse.jst.server.tomcat.core.internal;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
  * All rights reserved.   This program and the accompanying materials
@@ -9,6 +8,8 @@ package org.eclipse.jst.server.tomcat.core.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.tomcat.core.internal;
+
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -65,8 +66,8 @@ public class TomcatServer implements ITomcatServer, IStartableServer, IMonitorab
 	public TomcatRuntime getTomcatRuntime() {
 		if (server.getRuntime() == null)
 			return null;
-		else
-			return (TomcatRuntime) server.getRuntime().getDelegate();
+		
+		return (TomcatRuntime) server.getRuntime().getDelegate();
 	}
 	
 	public ITomcatVersionHandler getTomcatVersionHandler() {
@@ -81,8 +82,8 @@ public class TomcatServer implements ITomcatServer, IStartableServer, IMonitorab
 		IServerConfiguration configuration = server.getServerConfiguration();
 		if (configuration == null)
 			return null;
-		else
-			return (TomcatConfiguration) configuration.getDelegate();
+		
+		return (TomcatConfiguration) configuration.getDelegate();
 	}
 
 	/**
@@ -95,8 +96,8 @@ public class TomcatServer implements ITomcatServer, IStartableServer, IMonitorab
 	public IPublisher getPublisher(List parents, IModule module) {
 		if (isTestEnvironment())
 			return null;
-		else
-			return new TomcatWebModulePublisher((IWebModule) module, server.getRuntime().getLocation());
+		
+		return new TomcatWebModulePublisher((IWebModule) module, server.getRuntime().getLocation());
 	}
 
 	/**
@@ -502,8 +503,8 @@ public class TomcatServer implements ITomcatServer, IStartableServer, IMonitorab
 			ArrayList l = new ArrayList();
 			l.add(webModule);
 			return l;
-		} else
-			return null;
+		}
+		return null;
 	}
 	
 	/**

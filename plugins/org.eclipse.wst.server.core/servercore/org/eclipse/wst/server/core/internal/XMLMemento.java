@@ -437,8 +437,7 @@ public final class XMLMemento implements IMemento {
 		String strValue = attr.getValue();
 		if ("true".equalsIgnoreCase(strValue))
 			return new Boolean(true);
-		else
-			return new Boolean(false);
+		return new Boolean(false);
 	}
 
 	/*

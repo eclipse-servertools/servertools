@@ -443,8 +443,7 @@ public class NewServerComposite extends Composite {
 			IServer server = existingComp.getSelectedServer();
 			if (server != null)
 				return server.getRuntime();
-			else
-				return null;
+			return null;
 		} else if (mode == MODE_DETECT)
 			return null;
 		else

@@ -157,8 +157,8 @@ public class ConfigurationPortEditorSection extends ServerResourceEditorSection 
 			public boolean canModify(Object element, String property) {
 				if ("port".equals(property))
 					return true;
-				else
-					return false;
+				
+				return false;
 			}
 	
 			public void modify(Object element, String property, Object value) {

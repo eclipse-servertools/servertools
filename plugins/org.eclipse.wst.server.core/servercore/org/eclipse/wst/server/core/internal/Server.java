@@ -203,8 +203,7 @@ public class Server extends Base implements IServer, IServerState {
 	public boolean isSupportedConfiguration(IServerConfiguration configuration2) {
 		if (!getServerType().hasServerConfiguration() || configuration2 == null)
 			return false;
-		else
-			return getServerType().getServerConfigurationType().equals(configuration2.getServerConfigurationType());
+		return getServerType().getServerConfigurationType().equals(configuration2.getServerConfigurationType());
 	}
 
 	public String getHostname() {
@@ -657,8 +656,8 @@ public class Server extends Base implements IServer, IServerState {
 				if (getPublisher(parents, module) != null) {
 					temp.found = true;
 					return false;
-				} else
-					return true;
+				}
+				return true;
 			}
 		};
 		ServerUtil.visit(this, visitor);
@@ -1244,8 +1243,7 @@ public class Server extends Base implements IServer, IServerState {
 	public boolean isRestartNeeded() {
 		if (getServerState() == SERVER_STOPPED)
 			return false;
-		else
-			return restartNeeded;
+		return restartNeeded;
 	}
 	
 	/**
@@ -1451,8 +1449,7 @@ public class Server extends Base implements IServer, IServerState {
 		
 		if (timer.timeout)
 			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorInstanceStartFailed", getName()), null));
-		else
-			timer.alreadyDone = true;
+		timer.alreadyDone = true;
 		
 		if (getServerState() == IServer.SERVER_STOPPED)
 			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorInstanceStartFailed", getName()), null));
@@ -1627,8 +1624,7 @@ public class Server extends Base implements IServer, IServerState {
 		removeServerListener(listener);
 		if (timer.timeout)
 			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorModuleRestartFailed", getName()), null));
-		else
-			timer.alreadyDone = true;
+		timer.alreadyDone = true;
 		
 		if (getModuleState(module) == IServer.SERVER_STOPPED)
 			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorModuleRestartFailed", getName()), null));

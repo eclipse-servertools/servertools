@@ -43,10 +43,10 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 		if (delegate != null && runtime != null)
 			entries = delegate.resolveClasspathContainer(runtime, id);
 
-		if (entries != null)
-			return entries;
-		else
+		if (entries == null)
 			return new IClasspathEntry[0];
+		
+		return entries;
 	}
 
 	/* (non-Javadoc)
@@ -57,8 +57,8 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 		
 		if (s != null)
 			return s;
-		else
-			return JavaServerPlugin.getResource("%classpathContainerDescription");
+		
+		return JavaServerPlugin.getResource("%classpathContainerDescription");
 	}
 
 	/* (non-Javadoc)

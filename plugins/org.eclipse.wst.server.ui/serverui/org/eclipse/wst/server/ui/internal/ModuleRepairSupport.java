@@ -1,4 +1,3 @@
-package org.eclipse.wst.server.ui.internal;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
  * All rights reserved.   This program and the accompanying materials
@@ -9,6 +8,8 @@ package org.eclipse.wst.server.ui.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.IServerLifecycleEventHandler;
 import org.eclipse.wst.server.ui.ServerUICore;
-
 /**
  * 
  */
@@ -41,8 +41,8 @@ public class ModuleRepairSupport implements IServerLifecycleEventHandler {
 		public Object[] getElements(Object element) {
 			if (ROOT.equals(element))
 				return elements;
-			else
-				return EMPTY;
+			
+			return EMPTY;
 		}
 		
 		public void inputChanged(Viewer viewer2, Object oldInput, Object newInput) { }

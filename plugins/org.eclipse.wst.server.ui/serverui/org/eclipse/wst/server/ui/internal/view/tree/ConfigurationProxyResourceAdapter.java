@@ -1,4 +1,3 @@
-package org.eclipse.wst.server.ui.internal.view.tree;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
  * All rights reserved.   This program and the accompanying materials
@@ -8,8 +7,9 @@ package org.eclipse.wst.server.ui.internal.view.tree;
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.view.tree;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
@@ -21,7 +21,6 @@ import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.ServerLabelProvider;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.ui.model.IWorkbenchAdapter;
-
 /**
  *
  */
@@ -62,8 +61,8 @@ public class ConfigurationProxyResourceAdapter implements IAdaptable, IWorkbench
 		IServerConfiguration config = server.getServerConfiguration();
 		if (config != null && config != deleted)
 			return ((ServerLabelProvider)ServerUICore.getLabelProvider()).getImageDescriptor(config);
-		else
-			return ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_CONFIGURATION_MISSING);
+		
+		return ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_CONFIGURATION_MISSING);
 	}
 
 	/*
@@ -73,8 +72,8 @@ public class ConfigurationProxyResourceAdapter implements IAdaptable, IWorkbench
 		IServerConfiguration config = server.getServerConfiguration();
 		if (config != null && config != deleted)
 			return config.getName();
-		else
-			return ServerUIPlugin.getResource("%viewNoConfiguration");
+		
+		return ServerUIPlugin.getResource("%viewNoConfiguration");
 	}
 
 	/*
@@ -116,7 +115,7 @@ public class ConfigurationProxyResourceAdapter implements IAdaptable, IWorkbench
 		if (server != null) {
 			IFile file = server.getFile();
 			return file.hashCode();
-		} else
-			return 0;
+		}
+		return 0;
 	}
 }

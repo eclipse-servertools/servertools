@@ -1,4 +1,3 @@
-package org.eclipse.wst.server.ui.internal.wizard.page;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
  * All rights reserved.   This program and the accompanying materials
@@ -9,6 +8,8 @@ package org.eclipse.wst.server.ui.internal.wizard.page;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.wizard.page;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,7 +29,6 @@ import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Shell;
-
 /**
  * A helper class for wizards.
  */
@@ -185,8 +185,7 @@ public class WizardUtil {
 			IStatus status = ResourcesPlugin.getWorkspace().validateName(name, IResource.PROJECT);
 			if (status.isOK())
 				return null; // we can create one later
-			else
-				return status.getMessage();
+			return status.getMessage();
 		}
 		
 		String error = ServerUIPlugin.getResource("%wizErrorInvalidFolder");

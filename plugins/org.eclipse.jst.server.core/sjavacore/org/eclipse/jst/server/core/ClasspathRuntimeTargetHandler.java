@@ -42,7 +42,9 @@ public abstract class ClasspathRuntimeTargetHandler implements IRuntimeTargetHan
 		IJavaProject javaProject = null;
 		try {
 			javaProject = (IJavaProject) project.getNature(JavaCore.NATURE_ID);
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		
 		if (javaProject == null)
 			return;
@@ -213,8 +215,10 @@ public abstract class ClasspathRuntimeTargetHandler implements IRuntimeTargetHan
 		IJavaProject javaProject = null;
 		try {
 			javaProject = (IJavaProject) project.getNature(JavaCore.NATURE_ID);
-		} catch (Exception e) { }
-		
+		} catch (Exception e) {
+			// ignore
+		}
+
 		if (javaProject == null)
 			return;
 		

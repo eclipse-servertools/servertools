@@ -11,4 +11,5 @@
 package org.eclipse.jst.server.j2ee;
 
 public interface IApplicationClientModule extends IJ2EEModule {
+	// no additional methods
 }
