@@ -56,12 +56,15 @@ public class ServerUtil {
 	}
 
 	/**
-	 * Returns a module from the given moduleId.
+	 * Returns a module from the given moduleId. The moduleId must not be null.
 	 * 
 	 * @param moduleId
 	 * @return the module
 	 */
 	public static IModule getModule(String moduleId) {
+		if (moduleId == null)
+			throw new IllegalArgumentException();
+		
 		int index = moduleId.indexOf(":");
 		if (index <= 0)
 			return null;
@@ -197,13 +200,17 @@ public class ServerUtil {
 	}
 
 	/**
-	 * Returns true if the two given module types are compatible.
+	 * Returns true if the two given module types are compatible. The moduleTypes may not
+	 * be null.
 	 * 
 	 * @param moduleType
 	 * @param mt
 	 * @return
 	 */
 	public static boolean isSupportedModule(IModuleType moduleType, IModuleType mt) {
+		if (moduleType == null || mt == null)
+			throw new IllegalArgumentException();
+		
 		String type2 = moduleType.getId();
 		if (matches(mt.getId(), type2)) {
 			String version2 = moduleType.getVersion();
@@ -260,6 +267,9 @@ public class ServerUtil {
 	 * @throws CoreException
 	 */
 	public static void modifyModules(IServerWorkingCopy server, IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
+		if (server == null)
+			throw new IllegalArgumentException();
+		
 		if (add == null)
 			add = new IModule[0];
 		if (remove == null)
@@ -342,6 +352,9 @@ public class ServerUtil {
 	 * @param wc
 	 */
 	public static void setServerDefaultName(IServerWorkingCopy wc) {
+		if (wc == null)
+			throw new IllegalArgumentException();
+		
 		String typeName = wc.getServerType().getName();
 		String host = wc.getHost();
 		
@@ -392,6 +405,9 @@ public class ServerUtil {
 	 * @return an unused file within the given project
 	 */
 	public static IFile getUnusedServerFile(IProject project, IServerType type) {
+		if (project == null || type == null)
+			throw new IllegalArgumentException();
+		
 		String typeName = getValidFileName(type.getName());
 		String name = ServerPlugin.getResource("%defaultServerName3", new String[] {typeName})+ "."  + IServerAttributes.FILE_EXTENSION;
 		int i = 2;

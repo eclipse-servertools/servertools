@@ -123,6 +123,8 @@ public class RuntimeTargetHandler implements IRuntimeTargetHandler, IOrdered {
 	 * 
 	 */
 	public void setRuntimeTarget(IProject project, IRuntime runtime, IProgressMonitor monitor) {
+		if (project == null || runtime == null)
+			return;
 		try {
 			getDelegate().setRuntimeTarget(project, runtime, monitor);
 		} catch (Exception e) {
@@ -134,6 +136,8 @@ public class RuntimeTargetHandler implements IRuntimeTargetHandler, IOrdered {
 	 * 
 	 */
 	public void removeRuntimeTarget(IProject project, IRuntime runtime, IProgressMonitor monitor) {
+		if (project == null || runtime == null)
+			return;
 		try {
 			getDelegate().removeRuntimeTarget(project, runtime, monitor);
 		} catch (Exception e) {

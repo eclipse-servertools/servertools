@@ -27,6 +27,13 @@ public final class MonitorCore {
 	private static MonitorManager manager;
 	
 	/**
+	 * Cannot create MonitorCore - use static methods.
+	 */
+	private MonitorCore() {
+		// can't create
+	}
+	
+	/**
 	 * Returns a monitor manager instance.
 	 * 
 	 * @return the monitor manager

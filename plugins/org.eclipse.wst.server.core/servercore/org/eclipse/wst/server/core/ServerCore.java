@@ -48,10 +48,10 @@ public class ServerCore {
 	}
 
 	/**
-	 * ServerCore constructor comment.
+	 * Cannot create ServerCore - use static methods.
 	 */
 	private ServerCore() {
-		super();
+		// can't create
 	}
 
 	/**

@@ -23,7 +23,7 @@ public class GenericRuntimeUtil {
 	 * Cannot create GenericRuntimeUtil - use static methods.
 	 */
 	private GenericRuntimeUtil() {
-		// cannot create
+		// can't create
 	}
 
 	/**
