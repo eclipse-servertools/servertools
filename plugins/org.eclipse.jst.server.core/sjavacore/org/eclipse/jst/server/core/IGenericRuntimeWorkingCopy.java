@@ -12,7 +12,8 @@ package org.eclipse.jst.server.core;
 
 import org.eclipse.jdt.launching.IVMInstall;
 /**
- *
+ * 
+ * @since 1.0
  */
 public interface IGenericRuntimeWorkingCopy extends IGenericRuntime {
 	/**

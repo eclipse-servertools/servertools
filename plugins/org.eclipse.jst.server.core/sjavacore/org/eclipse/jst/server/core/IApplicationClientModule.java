@@ -9,7 +9,10 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.jst.server.core;
-
+/**
+ * 
+ * @since 1.0
+ */
 public interface IApplicationClientModule extends IJ2EEModule {
 	// no additional methods
 }

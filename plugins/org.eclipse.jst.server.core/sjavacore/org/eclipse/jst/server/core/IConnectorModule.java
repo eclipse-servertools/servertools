@@ -13,12 +13,14 @@ package org.eclipse.jst.server.core;
 import org.eclipse.core.runtime.IPath;
 /**
  * A J2EE connector module.
+ * 
+ * @since 1.0
  */
 public interface IConnectorModule extends IJ2EEModule {
 	/**
 	 * Returns the classpath as an array of absolute IPaths.
 	 * 
-	 * @param the classpath array
+	 * return an array of classpath entries
 	 */
 	public IPath[] getClasspath();
 }

@@ -13,19 +13,20 @@ package org.eclipse.jst.server.core;
 import org.eclipse.core.runtime.IPath;
 /**
  * 
+ * @since 1.0
  */
 public interface IEnterpriseApplication {
 	/**
 	 * Returns a version number in the form "x.y.z".
 	 * 
-	 * @return java.lang.String
+	 * @return the J2EE specification version
 	 */
 	public String getJ2EESpecificationVersion();
 
 	/**
 	 * Returns the modules contained within this EAR.
 	 *
-	 * @return org.eclipse.jst.server.j2ee.IJ2EEModule[]
+	 * @return a possibly empty array of modules contained within this application
 	 */
 	public IJ2EEModule[] getModules();
 
@@ -33,15 +34,18 @@ public interface IEnterpriseApplication {
 	 * Returns the URI of the given J2EE module within this
 	 * enterprise application.
 	 *
-	 * @param org.eclipse.jst.server.j2ee.IJ2EEModule
-	 * @return java.lang.String
+	 * @param module a module within this application
+	 * @return the URI of the given module, or <code>null</code> if the URI could
+	 *    not be found
 	 */
 	public String getURI(IJ2EEModule module);
 
 	/**
-	 * Returns true if this EAR supports loose modules.
+	 * Returns <code>true</code> if this EAR supports loose modules and <code>false</code>
+	 * otherwise.
 	 * 
-	 * @return boolean
+	 * @return returns <code>true</code> if this module contains loose modules, or
+	 *    <code>false</code> otherwise
 	 */
 	public boolean containsLooseModules();
 	
@@ -50,7 +54,7 @@ public interface IEnterpriseApplication {
 	 * return null if isUnitTest() returns false. This should
 	 * be an absolute path that is not workbench relative.
 	 * 
-	 * @return org.eclipse.core.runtime.IPath
+	 * @return the absolute path to the root of this application
 	 */
 	public IPath getLocation();
 }

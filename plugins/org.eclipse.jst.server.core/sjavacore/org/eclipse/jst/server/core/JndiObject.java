@@ -14,20 +14,15 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 /**
  * 
+ * @since 1.0
  */
 public class JndiObject implements IModuleArtifact {
-	public static final String ID = "org.eclipse.jst.server.j2ee.jndi";
-
 	private IModule module;
 	private String jndiName;
 	
 	public JndiObject(IModule module, String jndiName) {
 		this.module = module;
 		this.jndiName = jndiName;
-	}
-
-	public String getId() {
-		return ID;
 	}
 
 	public IModule getModule() {

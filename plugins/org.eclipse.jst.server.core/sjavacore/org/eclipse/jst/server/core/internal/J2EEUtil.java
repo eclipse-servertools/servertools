@@ -8,22 +8,25 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.server.core;
+package org.eclipse.jst.server.core.internal;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jst.server.core.IEnterpriseApplication;
+import org.eclipse.jst.server.core.IJ2EEModule;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
 /**
- *
+ * 
+ * @since 1.0
  */
 public class J2EEUtil {
 	/**
 	 * Returns the enterprise applications that the module is contained within.
 	 * 
 	 * @param module
-	 * @return
+	 * @return a possibly empty array of enterprise applications
 	 */
 	public static IEnterpriseApplication[] getEnterpriseApplications(IJ2EEModule module) {
 		List list = new ArrayList();

@@ -14,10 +14,9 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 /**
  * 
+ * @since 1.0
  */
 public class Servlet implements IModuleArtifact {
-	public static final String ID = "org.eclipse.jst.server.j2ee.servlet";
-
 	private IModule module;
 	private String className;
 	private String alias;
@@ -26,10 +25,6 @@ public class Servlet implements IModuleArtifact {
 		this.module = module;
 		this.className = className;
 		this.alias = alias;
-	}
-
-	public String getId() {
-		return ID;
 	}
 
 	public IModule getModule() {

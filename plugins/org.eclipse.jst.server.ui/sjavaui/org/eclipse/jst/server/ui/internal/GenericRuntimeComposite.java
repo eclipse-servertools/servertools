@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.server.internal.ui;
+package org.eclipse.jst.server.ui.internal;
 
 import java.util.ArrayList;
 import java.util.List;

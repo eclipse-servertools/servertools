@@ -13,6 +13,8 @@ package org.eclipse.jst.server.core;
 import org.eclipse.wst.server.core.IRuntime;
 /**
  * Utility methods for the generic J2EE runtime.
+ * 
+ * @since 1.0
  */
 public class GenericRuntimeUtil {
 	protected static final String RUNTIME_TYPE_ID = "org.eclipse.jst.server.core.runtimeType";

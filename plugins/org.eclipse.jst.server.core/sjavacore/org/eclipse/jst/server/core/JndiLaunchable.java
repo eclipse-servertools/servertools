@@ -15,10 +15,9 @@ import java.util.Properties;
 import org.eclipse.wst.server.core.ILaunchable;
 /**
  * 
+ * @since 1.0
  */
 public class JndiLaunchable implements ILaunchable {
-	public static final String ID = "jndi";
-
 	private Properties props;
 	private String jndiName;
 	private String server;
@@ -27,13 +26,6 @@ public class JndiLaunchable implements ILaunchable {
 	public JndiLaunchable(Properties props, String jndiName) {
 		this.jndiName = jndiName;
 		this.props = props;
-	}
-
-	/*
-	 * @see ILaunchable#getId()
-	 */
-	public String getId() {
-		return ID;
 	}
 
 	public Properties getProperties() {

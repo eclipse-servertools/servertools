@@ -5,7 +5,7 @@
   name="%pluginName"
   version="1.0.0"
   provider-name="%providerName"
-  class="org.eclipse.jst.server.internal.ui.JavaServerUIPlugin">
+  class="org.eclipse.jst.server.ui.internal.JavaServerUIPlugin">
 
 <requires>
   <import plugin="org.eclipse.core.runtime"/>
@@ -58,7 +58,7 @@
      <fragment
         id="org.eclipse.jst.server.core.runtimeType"
         typeIds="org.eclipse.jst.server.core.runtimeType"
-        class="org.eclipse.jst.server.internal.ui.GenericRuntimeWizardFragment"/>
+        class="org.eclipse.jst.server.ui.internal.GenericRuntimeWizardFragment"/>
   </extension>
 
 </plugin>

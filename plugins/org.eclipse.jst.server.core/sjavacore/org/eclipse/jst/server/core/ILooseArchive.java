@@ -13,6 +13,7 @@ package org.eclipse.jst.server.core;
 import org.eclipse.core.runtime.IPath;
 /**
  * 
+ * @since 1.0
  */
 public interface ILooseArchive {
 	/**

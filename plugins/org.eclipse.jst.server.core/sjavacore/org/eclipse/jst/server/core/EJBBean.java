@@ -12,37 +12,21 @@ package org.eclipse.jst.server.core;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
-
+/**
+ * 
+ * @since 1.0
+ */
 public class EJBBean implements IModuleArtifact {
-	public static final String ID = "org.eclipse.jst.server.j2ee.ejb";
-
 	private IModule module;
 	private String jndiName;
 	private boolean local;
 	private boolean remote;
-
-	/**
-	 * @deprecated - use the other constructor
-	 * @param module
-	 * @param ejbName
-	 */
-	public EJBBean(IModule module, String ejbName) {
-		this.module = module;
-		this.jndiName = ejbName;
-	}
 
 	public EJBBean(IModule module, String jndiName, boolean remote, boolean local) {
 		this.module = module;
 		this.jndiName = jndiName;
 		this.remote = remote;
 		this.local = local;
-	}
-
-	/*
-	 * @see IModuleArtifact#getId()
-	 */
-	public String getId() {
-		return ID;
 	}
 
 	/*

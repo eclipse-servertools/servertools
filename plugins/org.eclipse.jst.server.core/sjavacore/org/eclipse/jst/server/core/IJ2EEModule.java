@@ -13,12 +13,14 @@ package org.eclipse.jst.server.core;
 import org.eclipse.core.runtime.IPath;
 /**
  * An abstract J2EE module that can be deployed to a server.
+ * 
+ * @since 1.0
  */
 public interface IJ2EEModule {
 	/**
 	 * Returns a version number in the form "x.y.z".
 	 * 
-	 * @param java.lang.String
+	 * @param the J2EE specification version
 	 */
 	public String getJ2EESpecificationVersion();
 
@@ -27,10 +29,10 @@ public interface IJ2EEModule {
 	 * return null if isUnitTest() returns false. This should
 	 * be an absolute path that is not workbench relative.
 	 * 
-	 * @return org.eclipse.core.runtime.IPath
+	 * @return the absolute path to the root of this application
 	 */
 	public IPath getLocation();
-	
+
 	/**
 	 * Returns true if this is a binary (zipped) module, and
 	 * false if it is expanded.

@@ -9,13 +9,16 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.jst.server.core;
-
+/**
+ * 
+ * @since 1.0
+ */
 public interface ILooseArchiveSupport {
 	/**
 	 * Return the loose archives that are contained within this enterprise
 	 * application.
 	 *
-	 * @return ILooseArchive[]
+	 * @return a possibly empty array of modules contained within this application
 	 */
 	public ILooseArchive[] getLooseArchives();
 
@@ -23,8 +26,9 @@ public interface ILooseArchiveSupport {
 	 * Returns the URI of the given loose archive within this
 	 * enterprise application.
 	 *
-	 * @param com.ibm.etools.server.j2ee.ILooseArchive
-	 * @return java.lang.String
+	 * @param archive a loose archive
+	 * @return the URI of the given archive, or <code>null</code> if the URI could
+	 *    not be found
 	 */
-	public String getURI(ILooseArchive jar);
+	public String getURI(ILooseArchive archive);
 }
