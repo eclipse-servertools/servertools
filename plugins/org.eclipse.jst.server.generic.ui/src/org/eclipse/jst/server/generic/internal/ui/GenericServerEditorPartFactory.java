@@ -32,18 +32,16 @@ package org.eclipse.jst.server.generic.internal.ui;
 
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
-import org.eclipse.wst.server.ui.editor.IServerEditorPartFactoryDelegate;
+import org.eclipse.wst.server.ui.editor.ServerEditorPartFactoryDelegate;
 
 
-public class GenericServerEditorPartFactory implements
-		IServerEditorPartFactoryDelegate {
+public class GenericServerEditorPartFactory extends
+		ServerEditorPartFactoryDelegate {
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.ui.editor.IServerEditorPartFactoryDelegate#shouldCreatePage(org.eclipse.wst.server.core.IServer, org.eclipse.wst.server.core.IServerConfiguration)
 	 */
-	public boolean shouldCreatePage(IServer server,
-			IServerConfiguration configuration) {
+	public boolean shouldCreatePage(IServer server) {
 		// TODO Auto-generated method stub
 		return true;
 	}

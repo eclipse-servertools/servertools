@@ -31,15 +31,16 @@
 package org.eclipse.jst.server.generic.modules;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.wst.server.core.model.IModuleObject;
-import org.eclipse.wst.server.core.model.IModuleObjectAdapterDelegate;
+import org.eclipse.wst.server.core.IModuleArtifact;
+import org.eclipse.wst.server.core.model.ModuleArtifactAdapterDelegate;
 
-public class J2EESpecModuleObjectAdapter implements IModuleObjectAdapterDelegate {
+public class J2EESpecModuleObjectAdapter extends ModuleArtifactAdapterDelegate{
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.model.IModuleObjectAdapterDelegate#getModuleObject(java.lang.Object)
-	 */
-	public IModuleObject getModuleObject(Object obj) {
+    /* (non-Javadoc)
+     * @see org.eclipse.wst.server.core.model.ModuleObjectAdapterDelegate#getModuleObject(java.lang.Object)
+     */
+    public IModuleArtifact getModuleObject(Object obj) {
+
 		if (!(obj instanceof IResource))
 			return null;
 		IResource resource = (IResource) obj;
@@ -49,6 +50,7 @@ public class J2EESpecModuleObjectAdapter implements IModuleObjectAdapterDelegate
 			return null;
 
 		return module.getModuleObject(resource);
-	}
+	
+    }
 	
 }

@@ -43,13 +43,14 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IModuleFactoryDelegate;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.model.IModuleFactoryListener;
+import org.eclipse.wst.server.core.model.ModuleDelegate;
+import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
 
 
-public class J2eeSpecModuleFactoryDelegate implements IModuleFactoryDelegate {
-	protected static final List NO_MODULES = new ArrayList(0);
+public class J2eeSpecModuleFactoryDelegate extends ModuleFactoryDelegate {
+	protected static final IModule[] NO_MODULES = new IModule[0];
 	
 	protected static J2eeSpecModuleFactoryDelegate instance;
 	protected IWorkspaceRoot root;
@@ -95,7 +96,7 @@ public class J2eeSpecModuleFactoryDelegate implements IModuleFactoryDelegate {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IModuleFactoryDelegate#getModules()
 	 */
-	public List getModules() {
+	public IModule[] getModules() {
 		IProject[] projects = root.getProjects();
 		if (projects == null)
 			return NO_MODULES;
@@ -104,7 +105,7 @@ public class J2eeSpecModuleFactoryDelegate implements IModuleFactoryDelegate {
 		for (int i = 0; i < size; i++) {
 				this.initModules(projects[i],list);
 		}
-		return list;
+		return (IModule[])list.toArray(new IModule[list.size()]);
 	}
 
 	/* (non-Javadoc)
@@ -189,6 +190,14 @@ public class J2eeSpecModuleFactoryDelegate implements IModuleFactoryDelegate {
 		
 		return null;
 	}
+
+    /* (non-Javadoc)
+     * @see org.eclipse.wst.server.core.model.ModuleFactoryDelegate#getModuleDelegate(org.eclipse.wst.server.core.IModule)
+     */
+    public ModuleDelegate getModuleDelegate(IModule module) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 
 

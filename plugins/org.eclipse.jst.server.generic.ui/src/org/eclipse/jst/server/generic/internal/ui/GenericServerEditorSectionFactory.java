@@ -31,18 +31,16 @@ package org.eclipse.jst.server.generic.internal.ui;
  ***************************************************************************/
 
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
-import org.eclipse.wst.server.ui.editor.IServerEditorPageSectionFactoryDelegate;
 import org.eclipse.wst.server.ui.editor.IServerEditorSection;
+import org.eclipse.wst.server.ui.editor.ServerEditorPageSectionFactoryDelegate;
 
-public class GenericServerEditorSectionFactory implements
-		IServerEditorPageSectionFactoryDelegate {
+public class GenericServerEditorSectionFactory extends
+		ServerEditorPageSectionFactoryDelegate {
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.ui.editor.IServerEditorPageSectionFactoryDelegate#shouldCreateSection(org.eclipse.wst.server.core.IServer, org.eclipse.wst.server.core.IServerConfiguration)
 	 */
-	public boolean shouldCreateSection(IServer server,
-			IServerConfiguration configuration) {
+	public boolean shouldCreateSection(IServer server) {
 		// TODO Auto-generated method stub
 		return true;
 	}

@@ -30,9 +30,6 @@
  ***************************************************************************/
 package org.eclipse.jst.server.generic.internal.ui;
 
-
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -48,12 +45,12 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.wst.server.core.IElement;
-import org.eclipse.wst.server.core.IResourceManager;
+import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.model.RuntimeDelegate;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 
 /**
@@ -67,7 +64,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	private Group selectionBar;
 	private Combo fServerCombo;
 	private ServerTypeDefinitionGroup fServerPanel;
-	private IRuntimeWorkingCopy fRuntimeWC;
+	private RuntimeDelegate fRuntimeDelegate;
     private Map fServerRuntimeProperties;
     private String fSelectedServerType;
     
@@ -82,7 +79,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	 * @see com.ibm.wtp.server.ui.wizard.IWizardFragment#isComplete()
 	 */
 	public boolean isComplete() {
-	  	IRuntimeWorkingCopy runtime = getRuntimeWorkingCopy();
+	  	RuntimeDelegate runtime = getRuntimeDelegate();
 		if (runtime == null)
 			return false;
 		IStatus status = runtime.validate();
@@ -90,7 +87,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	}
 	
 	public void createContent(Composite parent, IWizardHandle handle) {
-		fRuntimeWC=null;
+		fRuntimeDelegate=null;
 		createSelectionBar(parent);
 		createServerDefinitionTypeComposite(parent);
 	}
@@ -98,7 +95,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	
 	private void swapBody() 
 	{
-	    this.fRuntimeWC=null;
+	    this.fRuntimeDelegate=null;
         String selected = fServerCombo == null ? null : fServerCombo
                 .getItem(fServerCombo.getSelectionIndex());
         Map properties = null;
@@ -113,8 +110,8 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
         if(getServerDefinitionId()!=null)
 		    selected=getServerDefinitionId();
         Map properties= null;
-        if(getRuntimeWorkingCopy()!=null)
-            properties = getRuntimeWorkingCopy().getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map)null);
+        if(getRuntimeDelegate()!=null)
+            properties = getRuntimeDelegate().getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map)null);
         ServerRuntime definition = getServerTypeDefinition(selected,properties);
         fServerPanel = new ServerTypeDefinitionGroup(this,definition,ServerTypeDefinitionGroup.CONTEXT_RUNTIME,properties,parent);
     }
@@ -154,8 +151,8 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	private String getServerDefinitionId()
 	{
 		String currentDefinition= null;
-		if(getRuntimeWorkingCopy()!=null)
-			currentDefinition =  getRuntimeWorkingCopy().getAttribute(GenericServerRuntime.SERVER_DEFINITION_ID,"");
+		if(getRuntimeDelegate()!=null)
+			currentDefinition =  getRuntimeDelegate().getAttribute(GenericServerRuntime.SERVER_DEFINITION_ID,"");
 		if(currentDefinition!= null && currentDefinition.length()>0)
 		{	
 			return currentDefinition;
@@ -186,8 +183,8 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 		{
 			selectServerDefinition();
 	        Map properties = null;
-	        if (getRuntimeWorkingCopy() != null) {
-	            properties = getRuntimeWorkingCopy().getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map) null);
+	        if (getRuntimeDelegate() != null) {
+	            properties = getRuntimeDelegate().getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map) null);
 	        }
 	        ServerRuntime definition = getServerTypeDefinition(serverDefinition,properties);
 	        fServerPanel.reset(definition,ServerTypeDefinitionGroup.CONTEXT_RUNTIME, properties);
@@ -199,7 +196,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	 */
 	public void exit() {
 
-        fRuntimeWC=null;
+        fRuntimeDelegate=null;
 	}
 	protected String getSelectedServerType(){
 	   return  fSelectedServerType;
@@ -211,20 +208,18 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	private String createName()
 	{
 	    String selected = getSelectedServerType();
-	    IRuntimeWorkingCopy wc = getRuntimeWorkingCopy();
-	    IRuntimeType runtimeType = wc.getRuntimeType();
+	    RuntimeDelegate dl = getRuntimeDelegate();
+	    IRuntimeType runtimeType = dl.getRuntime().getRuntimeType();
 	    String name = GenericServerUIMessages.getFormattedString("runtimeName", new String[] {selected,runtimeType.getName()});
 	    
-		IResourceManager rm = ServerCore.getResourceManager();
-		List list = rm.getRuntimes(runtimeType);
-		Iterator iterator = list.iterator();
+		
+		IRuntime[] list = ServerCore.getRuntimes();
+		
 		int suffix = 1;
 		String suffixName=name;
-		while(iterator.hasNext())
+		for(int i=0;i<list.length;i++)
 	    {
-		   
-	        IElement el = (IElement)iterator.next();
-	        if(el.getName().equals(name)|| el.getName().equals(suffixName))
+	        if(list[i].getName().equals(name)|| list[i].getName().equals(suffixName))
 	            suffix++;
 	        suffixName= name+" "+suffix;
 	    }
@@ -234,11 +229,15 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	    return name;
 	}
 	
-	private IRuntimeWorkingCopy getRuntimeWorkingCopy()
+	private RuntimeDelegate getRuntimeDelegate()
 	{
-		if(fRuntimeWC == null)
-			fRuntimeWC = (IRuntimeWorkingCopy)getTaskModel().getObject(ITaskModel.TASK_RUNTIME); 
-		return fRuntimeWC;
+		if(fRuntimeDelegate == null)
+		{	
+		    
+		    IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy)getTaskModel().getObject(ITaskModel.TASK_RUNTIME);
+		    fRuntimeDelegate = (RuntimeDelegate)wc.getAdapter(RuntimeDelegate.class);
+		}
+		return fRuntimeDelegate;
 	}
     /* (non-Javadoc)
      * @see org.eclipse.jst.server.generic.internal.ui.ServerDefinitionTypeAwareWizardFragment#description()
@@ -261,20 +260,20 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
         fServerRuntimeProperties = fServerPanel.getProperties();
    		String selected = getSelectedServerType();
 		Map properties = getServerRuntimeProperties();
-		IRuntimeWorkingCopy wc = getRuntimeWorkingCopy();       		
-		wc.setAttribute(GenericServerRuntime.SERVER_DEFINITION_ID, selected);
-		wc.setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,properties);
-		wc.setName(createName());
+		RuntimeDelegate dl = getRuntimeDelegate();       		
+		dl.setAttribute(GenericServerRuntime.SERVER_DEFINITION_ID, selected);
+		dl.setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,properties);
+		dl.getRuntimeWorkingCopy().setName(createName());
 		validate();
    }
     
     private void validate()
     {
-		if (getRuntimeWorkingCopy() == null) {
+		if (getRuntimeDelegate() == null) {
 			this.getWizard().setMessage("", IMessageProvider.ERROR);
 			return;
 		}
-		IStatus status = getRuntimeWorkingCopy().validate();
+		IStatus status = getRuntimeDelegate().validate();
 		if (status == null || status.isOK())
 			getWizard().setMessage(null, IMessageProvider.NONE);
 		else

@@ -32,12 +32,14 @@ package org.eclipse.jst.server.generic.modules;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.j2ee.IEJBModule;
-import org.eclipse.wst.server.core.model.IModule;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IModuleArtifact;
+import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.model.IModuleListener;
-import org.eclipse.wst.server.core.resources.IModuleResource;
 
 
 public class EjbModule extends J2EEModule implements IEJBModule {
@@ -66,7 +68,7 @@ public class EjbModule extends J2EEModule implements IEJBModule {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IModule#members()
 	 */
-	public IModuleResource[] members() throws CoreException {
+	public IModuleArtifact[] members() throws CoreException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -92,24 +94,16 @@ public class EjbModule extends J2EEModule implements IEJBModule {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.model.IModule#getChildModules()
-	 */
-	public IModule[] getChildModules() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.IModuleType#getType()
 	 */
 	public String getType() {
 		return "j2ee.ejb";
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.model.IModule#validate()
-	 */
-	public IStatus validate() {
+    /* (non-Javadoc)
+     * @see org.eclipse.wst.server.core.IModule#validate(org.eclipse.core.runtime.IProgressMonitor)
+     */
+    public IStatus validate(IProgressMonitor monitor) {
 		try {
 			if(Utils.isValidEjbModule(this.getFolder()))
 				return new Status(IStatus.OK,ModulesPlugin.ID, 0,"",null);
@@ -117,5 +111,30 @@ public class EjbModule extends J2EEModule implements IEJBModule {
 			Trace.trace("Unale to validate EJB Module", e);
 		}
 		return new Status(IStatus.ERROR,ModulesPlugin.ID, 0,"",null);
-	}
+	
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.wst.server.core.IModule#getModuleType()
+     */
+    public IModuleType getModuleType() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.wst.server.core.IModule#getChildModules(org.eclipse.core.runtime.IProgressMonitor)
+     */
+    public IModule[] getChildModules(IProgressMonitor monitor) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+     */
+    public Object getAdapter(Class adapter) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

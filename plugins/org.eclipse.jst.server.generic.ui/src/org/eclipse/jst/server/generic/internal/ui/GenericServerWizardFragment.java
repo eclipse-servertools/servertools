@@ -36,8 +36,11 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.generic.ui.GenericServerUIMessages;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ITaskModel;
+import org.eclipse.wst.server.core.model.RuntimeDelegate;
+import org.eclipse.wst.server.core.model.ServerDelegate;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 /**
  * 
@@ -80,15 +83,17 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
      */
     private ServerRuntime getServerTypeDefinitionFor(IServerWorkingCopy server) {
         
-        IRuntime runtime = server.getRuntime();
-        if(runtime==null){    
-            runtime= (IRuntime)getTaskModel().getObject(ITaskModel.TASK_RUNTIME);
+        RuntimeDelegate runtime = (RuntimeDelegate)server.getRuntime().getAdapter(RuntimeDelegate.class);
+        if(runtime==null){
+            IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy)getTaskModel().getObject(ITaskModel.TASK_RUNTIME);
+            
+            runtime= (RuntimeDelegate)wc.getAdapter(RuntimeDelegate.class);
         }        
         String id = runtime.getAttribute(GenericServerRuntime.SERVER_DEFINITION_ID,(String)null);
         if(id==null){   
             return null;
         }
-        Map runtimeProperties = server.getRuntime().getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map)null);
+        Map runtimeProperties = runtime.getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map)null);
 		ServerRuntime definition = getServerTypeDefinition(id,runtimeProperties);
         return definition;
     }
@@ -139,6 +144,7 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
         ServerRuntime definition = getServerTypeDefinitionFor(serverWorkingCopy);
         
         serverWorkingCopy.setName(GenericServerUIMessages.getFormattedString("serverName",new String[] {definition.getName()}));
-        serverWorkingCopy.setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,getServerProperties());
+        ServerDelegate dl= (ServerDelegate)serverWorkingCopy.getAdapter(ServerDelegate.class);
+        dl.setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,getServerProperties());
     }
 }

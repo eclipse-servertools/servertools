@@ -47,6 +47,7 @@ import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.eclipse.jst.server.generic.core.CorePlugin;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 /**
  * ServerLaunchConfiguration for the generic server.
  *
@@ -62,13 +63,13 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 		
 		String serverId = configuration.getAttribute(IServer.ATTR_SERVER_ID, (String) null);
 
-		IServer server = ServerCore.getResourceManager().getServer(serverId);
+		IServer server = ServerCore.findServer(serverId);
 		if (server == null) 
 		{
 			abort("Server "+serverId+" does not exist", null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
 		}	
 		
-		GenericServer genericServer = (GenericServer)server.getDelegate();
+		GenericServerBehaviour genericServer = (GenericServerBehaviour)server.getAdapter(ServerBehaviourDelegate.class);
 		genericServer.setupLaunch(launch, mode, monitor);
 	
 		String mainTypeName = genericServer.getStartClassName(); 

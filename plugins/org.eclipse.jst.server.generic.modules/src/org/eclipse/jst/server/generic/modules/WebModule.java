@@ -32,13 +32,14 @@ package org.eclipse.jst.server.generic.modules;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.j2ee.IWebModule;
-import org.eclipse.wst.server.core.model.IModule;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IModuleArtifact;
+import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.model.IModuleListener;
-import org.eclipse.wst.server.core.resources.IModuleResource;
-
 
 public class WebModule extends J2EEModule implements IWebModule {
 	
@@ -95,22 +96,9 @@ public class WebModule extends J2EEModule implements IWebModule {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.model.IModule#validate()
-	 */
-	public IStatus validate() {
-		try {
-			if(Utils.isValidWebModule(this.getFolder()))
-				return new Status(IStatus.OK,ModulesPlugin.ID, 0,"",null);
-		} catch (Exception e) {
-			Trace.trace("Unale to validate Web Module", e);
-		}
-		return new Status(IStatus.ERROR,ModulesPlugin.ID, 0,"",null);
-	}
-
-	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IModule#members()
 	 */
-	public IModuleResource[] members() throws CoreException {
+	public IModuleArtifact[] members() throws CoreException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -144,4 +132,41 @@ public class WebModule extends J2EEModule implements IWebModule {
 	public String getType() {
 		return "j2ee.web";
 	}
+
+    /* (non-Javadoc)
+     * @see org.eclipse.wst.server.core.IModule#validate(org.eclipse.core.runtime.IProgressMonitor)
+     */
+    public IStatus validate(IProgressMonitor monitor) {
+		try {
+			if(Utils.isValidWebModule(this.getFolder()))
+				return new Status(IStatus.OK,ModulesPlugin.ID, 0,"",null);
+		} catch (Exception e) {
+			Trace.trace("Unale to validate Web Module", e);
+		}
+		return new Status(IStatus.ERROR,ModulesPlugin.ID, 0,"",null);
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.wst.server.core.IModule#getModuleType()
+     */
+    public IModuleType getModuleType() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.wst.server.core.IModule#getChildModules(org.eclipse.core.runtime.IProgressMonitor)
+     */
+    public IModule[] getChildModules(IProgressMonitor monitor) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+     */
+    public Object getAdapter(Class adapter) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

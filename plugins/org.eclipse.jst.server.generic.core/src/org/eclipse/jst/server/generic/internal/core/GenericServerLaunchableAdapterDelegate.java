@@ -30,11 +30,12 @@
 package org.eclipse.jst.server.generic.internal.core;
 
 import java.net.URL;
+
+import org.eclipse.wst.server.core.ILaunchable;
+import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.core.util.HttpLaunchable;
-import org.eclipse.wst.server.core.util.NullLaunchable;
-import org.eclipse.wst.server.core.util.NullModuleObject;
 import org.eclipse.jst.server.j2ee.IWebModule;
 import org.eclipse.jst.server.j2ee.Servlet;
 import org.eclipse.jst.server.j2ee.WebResource;
@@ -42,20 +43,19 @@ import org.eclipse.jst.server.j2ee.WebResource;
  * Web Launchable adapter delegate
  * @author Gorkem Ercan 
  */
-public class GenericServerLaunchableAdapterDelegate implements ILaunchableAdapterDelegate {
+public class GenericServerLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
 	/*
 	 * @see ILaunchableAdapterDelegate#getLaunchable(IServer, IModuleObject)
 	 */
-	public ILaunchable getLaunchable(IServer server, IModuleObject moduleObject) {
+	public ILaunchable getLaunchable(IServer server, IModuleArtifact moduleObject) {
 		
-		IServerDelegate delegate = server.getDelegate();
+		ServerDelegate delegate = (ServerDelegate)server.getAdapter(ServerDelegate.class);
 		if (!(delegate instanceof GenericServer))
 			return null;
 		if (!(moduleObject instanceof Servlet) &&
-			!(moduleObject instanceof WebResource) &&
-			!(moduleObject instanceof NullModuleObject))
+			!(moduleObject instanceof WebResource))
 			return null;
-		if (!(moduleObject.getModule() instanceof IWebModule))
+		if (moduleObject.getModule().getAdapter(IWebModule.class) == null)
 			return null;
 
 		try {
@@ -80,9 +80,7 @@ public class GenericServerLaunchableAdapterDelegate implements ILaunchableAdapte
 					path = path.substring(1);
 				if (path != null && path.length() > 0)
 					url = new URL(url, path);
-			} else { // null
-				return new NullLaunchable();
-			}
+			} 
 			return new HttpLaunchable(url);
 		} catch (Exception e) {
 			Trace.trace("Error getting URL for " + moduleObject, e);

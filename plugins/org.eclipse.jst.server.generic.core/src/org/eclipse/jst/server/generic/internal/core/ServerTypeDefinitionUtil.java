@@ -34,7 +34,6 @@ package org.eclipse.jst.server.generic.internal.core;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
-
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
@@ -43,8 +42,13 @@ import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.model.RuntimeDelegate;
 
-
+/**
+ * Utilities for ServerRuntime definition files.
+ *
+ * @author Gorkem Ercan
+ */
 public class ServerTypeDefinitionUtil 
 {
 	/**
@@ -54,8 +58,9 @@ public class ServerTypeDefinitionUtil
 	 */
 	public static ServerRuntime getServerTypeDefinition(IRuntime runtime)
 	{
-		String serverType = runtime.getAttribute(GenericServerRuntime.SERVER_DEFINITION_ID,(String)null);
-		Map properties = runtime.getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map)null);
+	    RuntimeDelegate delegate = (RuntimeDelegate)runtime.getAdapter(RuntimeDelegate.class);
+		String serverType = delegate.getAttribute(GenericServerRuntime.SERVER_DEFINITION_ID,(String)null);
+		Map properties = delegate.getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map)null);
 		ServerRuntime definition = 
 			CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(serverType,properties);
 		return definition;

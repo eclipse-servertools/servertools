@@ -47,18 +47,15 @@ import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.PublishType;
 import org.eclipse.jst.server.generic.servertype.definition.Publisher;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IPublisher;
-import org.eclipse.wst.server.core.resources.IModuleFolder;
-import org.eclipse.wst.server.core.resources.IModuleResource;
-import org.eclipse.wst.server.core.resources.IRemoteResource;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IModuleArtifact;
 /**
  * Ant based publisher.
  *
  * @author Gorkem Ercan
  */
 
-public class AntPublisher implements IPublisher {
+public class AntPublisher{
 
 	/**
 	 * @param parents
@@ -74,47 +71,12 @@ public class AntPublisher implements IPublisher {
 		this.module = module;
 		this.serverTypeDefinition = serverDefinition;
 	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.wtp.server.core.model.IPublisher#getMappedLocation(org.eclipse.wtp.server.core.resources.IModuleResource)
-	 */
-	public IPath getMappedLocation(IModuleResource resource) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.wtp.server.core.model.IPublisher#shouldMapMembers(org.eclipse.wtp.server.core.resources.IModuleFolder)
-	 */
-	public boolean shouldMapMembers(IModuleFolder folder) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.wtp.server.core.model.IPublisher#getRemoteResources(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	public IRemoteResource[] getRemoteResources(IProgressMonitor monitor)
-			throws CoreException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.wtp.server.core.model.IPublisher#delete(org.eclipse.wtp.server.core.resources.IRemoteResource[], org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	public IStatus[] delete(IRemoteResource[] resource, IProgressMonitor monitor)
-			throws CoreException {
-		
-		return new IStatus[]{new Status(IStatus.OK,CorePlugin.PLUGIN_ID,0,"DeleteResource",null)};
-	}
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.wtp.server.core.model.IPublisher#publish(org.eclipse.wtp.server.core.resources.IModuleResource[], org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public IStatus[] publish(IModuleResource[] resource,
+	public IStatus[] publish(IModuleArtifact[] resource,
 			IProgressMonitor monitor) throws CoreException {
-		Module sModule =  serverTypeDefinition.getModule(this.module.getType());
+		Module sModule =  serverTypeDefinition.getModule(this.module.getModuleType().getId());
 		Publisher publisher =  serverTypeDefinition.getPublisher(sModule.getPublisherReference());
 		String deployAnt = ((PublishType)publisher.getPublish().get(0)).getTask();
 		deployAnt = serverTypeDefinition.getResolver().resolveProperties(deployAnt);
@@ -138,9 +100,9 @@ public class AntPublisher implements IPublisher {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	private Map getPublishProperties(IModuleResource[] resource)
+	private Map getPublishProperties(IModuleArtifact[] resource)
 	{
-		Module module =  serverTypeDefinition.getModule(this.module.getType());
+		Module module =  serverTypeDefinition.getModule(this.module.getModuleType().getId());
 
 		Map props = new HashMap();
 		String modDir = module.getPublishDir();
@@ -183,13 +145,7 @@ public class AntPublisher implements IPublisher {
         }
         return false;
     }
-	/* (non-Javadoc)
-	 * @see org.eclipse.wtp.server.core.model.IPublisher#deleteAll(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	public IStatus deleteAll(IProgressMonitor monitor) throws CoreException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 	
 
 }

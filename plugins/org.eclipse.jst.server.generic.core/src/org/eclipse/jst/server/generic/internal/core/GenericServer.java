@@ -37,96 +37,51 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.debug.core.DebugEvent;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.IDebugEventSetListener;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationType;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.core.model.IProcess;
-import org.eclipse.debug.ui.IDebugUIConstants;
-import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
-import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
-import org.eclipse.jdt.launching.IVMInstall;
-import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.generic.core.CorePlugin;
 import org.eclipse.jst.server.generic.core.GenericServerCoreMessages;
 import org.eclipse.jst.server.generic.modules.J2eeSpecModuleFactoryDelegate;
-import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
-import org.eclipse.jst.server.generic.servertype.definition.Classpath;
 import org.eclipse.jst.server.generic.servertype.definition.Port;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.j2ee.IWebModule;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
-import org.eclipse.wst.server.core.IServerState;
 import org.eclipse.wst.server.core.ITask;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.core.model.IModuleEvent;
 import org.eclipse.wst.server.core.model.IModuleFactoryEvent;
-import org.eclipse.wst.server.core.model.IMonitorableServer;
-import org.eclipse.wst.server.core.model.IPublisher;
-import org.eclipse.wst.server.core.model.IServerDelegate;
-import org.eclipse.wst.server.core.model.IServerPort;
-import org.eclipse.wst.server.core.model.IStartableServer;
 import org.eclipse.wst.server.core.model.IURLProvider;
-import org.eclipse.wst.server.core.resources.IModuleResourceDelta;
+import org.eclipse.wst.server.core.model.RuntimeDelegate;
+import org.eclipse.wst.server.core.model.ServerDelegate;
 import org.eclipse.wst.server.core.util.ServerPort;
-import org.eclipse.wst.server.core.util.SocketUtil;
 
 /**
  * Generic XML based server implementation.
  * 
  * @author Gorkem Ercan
  */
-public class GenericServer implements IServerDelegate, IStartableServer, IMonitorableServer,IURLProvider {
-	private IServerState fLiveServer;
-	private static final String ATTR_STOP = "stop-server";
+public class GenericServer extends ServerDelegate implements IURLProvider {
 	
-	// the thread used to ping the server to check for startup
-	protected transient PingThread ping = null;
-	protected transient IProcess process;
-	protected transient IDebugEventSetListener processListener;
+
+	
+
+
+	
 	
 	private ServerRuntime fServerDefinition;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.server.core.model.IServerDelegate#initialize(org.eclipse.wst.server.core.IServerState)
-	 */
-	public void initialize(IServerState liveServer) {
-		this.fLiveServer = liveServer;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.server.core.model.IServerDelegate#dispose()
-	 */
-	public void dispose() {
-		this.fLiveServer = null;
-	}
-
-	/**
-	 * Returns the project publisher that can be used to
-	 * publish the given project.
-	 *
-	 * @param project org.eclipse.core.resources.IProject
-	 * @return org.eclipse.wst.server.core.model.IProjectPublisher
-	 */
-	public IPublisher getPublisher(List parents, IModule module) {
-		return new AntPublisher(parents, module, this.getServerDefinition());
-	}
+//	/**
+//	 * Returns the project publisher that can be used to
+//	 * publish the given project.
+//	 *
+//	 * @param project org.eclipse.core.resources.IProject
+//	 * @return org.eclipse.wst.server.core.model.IProjectPublisher
+//	 */
+//	public IPublisher getPublisher(List parents, IModule module) {
+//		return new AntPublisher(parents, module, this.getServerDefinition());
+//	}
 
 	/*
 	 * (non-Javadoc)
@@ -137,19 +92,7 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 		Trace.trace(Trace.FINEST, "updateConfiguration" + this);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.server.core.model.IServerDelegate#updateModule(org.eclipse.wst.server.core.model.IModule,
-	 *      org.eclipse.wst.server.core.resources.IModuleResourceDelta)
-	 */
-	public void updateModule(IModule module, IModuleResourceDelta delta) {
-		// TODO Auto-generated method stub
-		Trace.trace(Trace.FINEST, "Configuration updated " + this);
-		//setConfigurationSyncState(SYNC_STATE_DIRTY);
-		//setRestartNeeded(true);
 
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -172,15 +115,15 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 		return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "Published Configuration", null);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.server.core.model.IServerDelegate#publishStop(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	public IStatus publishStop(IProgressMonitor monitor) {
-		fLiveServer.setConfigurationSyncState(IServer.SYNC_STATE_IN_SYNC);
-		return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "Published Configuration", null);
-	}
+//	/*
+//	 * (non-Javadoc)
+//	 * 
+//	 * @see org.eclipse.wst.server.core.model.IServerDelegate#publishStop(org.eclipse.core.runtime.IProgressMonitor)
+//	 */
+//	public IStatus publishStop(IProgressMonitor monitor) {
+//		getServer().setConfigurationSyncState(IServer.SYNC_STATE_IN_SYNC);
+//		return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "Published Configuration", null);
+//	}
 
 	/*
 	 * (non-Javadoc)
@@ -198,10 +141,8 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 	 * 
 	 * @see org.eclipse.wst.server.core.model.IServerDelegate#getModules()
 	 */
-	public IModule[] getModules() {
-		// TODO Auto-generated method stub
-		List list =  J2eeSpecModuleFactoryDelegate.getInstance().getModules();
-		return (IModule[])list.toArray(new IModule[list.size()]);
+	public org.eclipse.wst.server.core.IModule[] getModules() {
+		return J2eeSpecModuleFactoryDelegate.getInstance().getModules();
 	}
 
 	/*
@@ -209,11 +150,8 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 	 * 
 	 * @see org.eclipse.wst.server.core.model.IServerDelegate#getModuleState(org.eclipse.wst.server.core.model.IModule)
 	 */
-	public byte getModuleState(IModule module) {
-		IModule[] modules = getModules();
-	    if (modules!= null && modules.length>0)
-	        return IServer.MODULE_STATE_STARTED;
-	    return IServer.MODULE_STATE_UNKNOWN;
+	public int getModuleState(IModule module) {
+	    return IServer.STATE_STARTED;
 	}
 
 	/*
@@ -233,7 +171,7 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 	 * 
 	 * @see org.eclipse.wst.server.core.model.IServerDelegate#getChildModules(org.eclipse.wst.server.core.model.IModule)
 	 */
-	public List getChildModules(IModule module) {
+	public IModule[] getChildModules(IModule module) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -243,7 +181,7 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 	 * 
 	 * @see org.eclipse.wst.server.core.model.IServerDelegate#getParentModules(org.eclipse.wst.server.core.model.IModule)
 	 */
-	public List getParentModules(IModule module) throws CoreException {
+	public IModule[] getParentModules(IModule module) throws CoreException {
 			//FIXME This is valid for only web modules. A generic server should support any 
 			// kind of j2ee module. Fix this after the server architectures are determined.
 		if (module instanceof IWebModule) {
@@ -253,132 +191,33 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 				throw new CoreException(status);
 			ArrayList l = new ArrayList();
 			l.add(webModule);
-			return l;
+			return (IModule[])l.toArray(new IModule[l.size()]);
 		}
 		return null;
 	
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.server.core.model.IServerDelegate#setLaunchDefaults(org.eclipse.debug.core.ILaunchConfigurationWorkingCopy)
-	 */
-	public void setLaunchDefaults(ILaunchConfigurationWorkingCopy workingCopy) {
-		workingCopy.setAttribute(
-				IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
-				getStartClassName());
-
-		GenericServerRuntime runtime = (GenericServerRuntime) fLiveServer
-				.getRuntime().getDelegate();
-
-		IVMInstall vmInstall = runtime.getVMInstall();
-		workingCopy.setAttribute(
-				IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_TYPE, runtime
-						.getVMInstallTypeId());
-		workingCopy.setAttribute(
-				IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_NAME,
-				vmInstall.getName());
-
-		setupLaunchClasspath(workingCopy, vmInstall, getStartClasspath());
-
-
-		workingCopy.setAttribute(
-				IJavaLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY,
-				getWorkingDirectory());
-		workingCopy.setAttribute(
-				IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
-				getProgramArguments());
-		workingCopy.setAttribute(
-				IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
-				getVmArguments());
-	}
-
-	
-	private List getStartClasspath() {
-		String cpRef = getServerDefinition().getStart().getClasspathReference();
-		return serverClasspath(cpRef);
-	}
-	private List getStopClasspath() {
-		String cpRef = getServerDefinition().getStop().getClasspathReference();
-		return serverClasspath(cpRef);
-	}
-
-	/**
-	 * @param cpRef
-	 * @return
-	 */
-	private List serverClasspath(String cpRef) {
-		Classpath classpath = getServerDefinition().getClasspath(cpRef);
-		
-	    List mementoList = new ArrayList(classpath.getArchive().size());
-	    Iterator iterator= classpath.getArchive().iterator();
-	    while(iterator.hasNext())
-	    {
-	    	ArchiveType archive = (ArchiveType)iterator.next();
-	    	String cpath = getServerDefinition().getResolver().resolveProperties(archive.getPath());
-			try {
-				mementoList.add(JavaRuntime.newArchiveRuntimeClasspathEntry(
-						new Path(cpath)).getMemento());
-			} catch (CoreException e) {
-			    //ignored
-			}
-	    }
-		return mementoList;
-	}
-
-	private String getVmArguments() {
-		return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getVmParameters());
-	}
-
-	private String getProgramArguments() {
-		return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getProgramArguments());
-	}
-
-	private String getWorkingDirectory() {
-		return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getWorkingDirectory());
-	}
-
-	public String getStartClassName() {
-		return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getClass_());
 	}
 
 	/**
 	 * @return
 	 */
 	private Map getServerInstanceProperties() {
-		Map runtimeProperties = fLiveServer.getRuntime().getAttribute(
+		Map runtimeProperties =getRuntimeDelegate().getAttribute(
 				GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, new HashMap());
-		Map serverProperties = this.fLiveServer.getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,new HashMap(1));
+		Map serverProperties = getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,new HashMap(1));
 		Map instanceProperties = new HashMap(runtimeProperties.size()+serverProperties.size());
 		instanceProperties.putAll(runtimeProperties);
 		instanceProperties.putAll(serverProperties);
 		return instanceProperties;
 	}
-
-	public ServerRuntime getServerDefinition() {
-		if (fServerDefinition == null)
-			fServerDefinition = CorePlugin.getDefault()
-					.getServerTypeDefinitionManager()
-					.getServerRuntimeDefinition(
-							fLiveServer.getRuntime().getAttribute(
-									GenericServerRuntime.SERVER_DEFINITION_ID,
-									""), getServerInstanceProperties());
-		return fServerDefinition;
-	}
-
-
 	
-	
-	
+ 	
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.wst.server.core.model.IMonitorableServer#getServerPorts()
 	 */
-	public List getServerPorts() {
+	public org.eclipse.wst.server.core.IServerPort[] getServerPorts() {
 		List ports = new ArrayList();
-					
 		Iterator pIter = this.getServerDefinition().getPort().iterator();
 		while (pIter.hasNext()) {
 			Port element = (Port) pIter.next();
@@ -386,7 +225,7 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 			ports.add(new ServerPort("server", element.getName(), port, element.getProtocol()));		
 		}
 	
-		return ports;
+		return (org.eclipse.wst.server.core.IServerPort[])ports.toArray(new org.eclipse.wst.server.core.IServerPort[ports.size()]);
 	}
 
 	/* (non-Javadoc)
@@ -396,216 +235,6 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 		return true;
 	}
 
-	/**
-	 * Setup for starting the server.
-	 * 
-	 * @param launch ILaunch
-	 * @param launchMode String
-	 * @param monitor IProgressMonitor
-	 */
-	public void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException {
-		if ("true".equals(launch.getLaunchConfiguration().getAttribute(ATTR_STOP, "false")))
-			return;
-//		IStatus status = getRuntime().validate();
-//		if (status != null && !status.isOK())
-//			throw new CoreException(status);
-
-	
-		Iterator iterator = this.getServerPorts().iterator();
-		IServerPort sp = null;
-		while (iterator.hasNext()) {
-			sp = (IServerPort) iterator.next();
-			if (SocketUtil.isPortInUse(sp.getPort(), 5))
-				throw new CoreException(new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.getFormattedString("errorPortInUse",new String[] {Integer.toString(sp.getPort()),sp.getName()}),null));
-		}
-		
-		fLiveServer.setServerState(IServer.SERVER_STARTING);
-	
-		// ping server to check for startup
-		try {
-			String url = "http://localhost";
-			int port = sp.getPort();
-			if (port != 80)
-				url += ":" + port;
-			ping = new PingThread(this, fLiveServer, url, launchMode);
-			ping.start();
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Can't ping for server startup.");
-		}
-	}
-	
-	/**
-	 * Cleanly shuts down and terminates the server.
-	 */
-	public void stop() {
-		byte state = this.fLiveServer.getServerState();
-		if (state == IServer.SERVER_STOPPED)
-			return;
-		else if (state == IServer.SERVER_STARTING || state == IServer.SERVER_STOPPING) {
-			terminate();
-			return;
-		}
-
-		try {
-			Trace.trace(Trace.FINEST, "Stopping Server");
-			if (state != IServer.SERVER_STOPPED)
-				fLiveServer.setServerState(IServer.SERVER_STOPPING);
-			ILaunchManager mgr = DebugPlugin.getDefault().getLaunchManager();
-
-			ILaunchConfigurationType type =
-				mgr.getLaunchConfigurationType(
-					IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
-
-			String launchName = "GenericServerStopper";
-			String uniqueLaunchName =
-				mgr.generateUniqueLaunchConfigurationNameFrom(launchName);
-			ILaunchConfiguration conf = null;
-
-			ILaunchConfiguration[] lch = mgr.getLaunchConfigurations(type);
-			for (int i = 0; i < lch.length; i++) {
-				if (launchName.equals(lch[i].getName())) {
-					conf = lch[i];
-					break;
-				}
-			}
-
-			ILaunchConfigurationWorkingCopy wc = null;
-			if (conf != null) {
-				wc = conf.getWorkingCopy();
-			} else {
-				wc = type.newInstance(null, uniqueLaunchName);
-			}
-			//To stop from appearing in history lists
-			wc.setAttribute(IDebugUIConstants.ATTR_PRIVATE, true);			
-	
-			wc.setAttribute(
-					IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
-					getServerDefinition().getResolver().resolveProperties(this.getServerDefinition().getStop().getClass_()));
-
-			GenericServerRuntime runtime = (GenericServerRuntime) fLiveServer
-					.getRuntime().getDelegate();
-
-			IVMInstall vmInstall = runtime.getVMInstall();
-			wc.setAttribute(
-					IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_TYPE, runtime
-							.getVMInstallTypeId());
-			wc.setAttribute(
-					IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_NAME,
-					vmInstall.getName());
-
-			setupLaunchClasspath(wc, vmInstall, getStopClasspath());
-
-			wc.setAttribute(
-					IJavaLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY,
-					getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getWorkingDirectory()));
-			wc.setAttribute(
-					IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
-					getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getProgramArguments()));
-			wc.setAttribute(
-					IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
-					getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getVmParameters()));				
-			wc.setAttribute(ATTR_STOP, "true");
-			wc.launch(ILaunchManager.RUN_MODE, new NullProgressMonitor());
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error stopping Server", e);
-		}
-	}
-
-
-	/**
-	 * @param wc
-	 * @param vmInstall
-	 */
-	private void setupLaunchClasspath(ILaunchConfigurationWorkingCopy wc, IVMInstall vmInstall, List cp) {
-		// add tools.jar to the path
-		if (vmInstall != null) {
-			try {
-				cp.add(JavaRuntime
-								.newRuntimeContainerClasspathEntry(
-										new Path(JavaRuntime.JRE_CONTAINER)
-												.append(
-														"org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType")
-												.append(vmInstall.getName()),
-										IRuntimeClasspathEntry.BOOTSTRAP_CLASSES)
-								.getMemento());
-			} catch (Exception e) {
-			}
-
-			IPath jrePath = new Path(vmInstall.getInstallLocation()
-					.getAbsolutePath());
-			if (jrePath != null) {
-				IPath toolsPath = jrePath.append("lib").append("tools.jar");
-				if (toolsPath.toFile().exists()) {
-					try {
-						cp.add(JavaRuntime.newArchiveRuntimeClasspathEntry(
-								toolsPath).getMemento());
-					} catch (CoreException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
-			}
-		}
-
-		wc.setAttribute(
-				IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, cp);
-		wc.setAttribute(
-						IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH,
-						false);
-	}
-
-	/**
-	 * Terminates the server.
-	 */
-	public void terminate() {
-		if (fLiveServer.getServerState() == IServer.SERVER_STOPPED)
-			return;
-
-		try {
-			fLiveServer.setServerState(IServer.SERVER_STOPPING);
-			Trace.trace(Trace.FINEST, "Killing the Server process");
-			if (process != null && !process.isTerminated()) {
-				process.terminate();
-				stopImpl();
-			}
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error killing the process", e);
-		}
-	}
-	
-	protected void stopImpl() {
-		if (ping != null) {
-			ping.stopPinging();
-			ping = null;
-		}
-		if (process != null) {
-			process = null;
-			DebugPlugin.getDefault().removeDebugEventListener(processListener);
-			processListener = null;
-		}
-		fLiveServer.setServerState(IServer.SERVER_STOPPED);
-	}	
-	public void setProcess(final IProcess newProcess) {
-		if (process != null)
-			return;
-
-		process = newProcess;
-		processListener = new IDebugEventSetListener() {
-			public void handleDebugEvents(DebugEvent[] events) {
-				if (events != null) {
-					int size = events.length;
-					for (int i = 0; i < size; i++) {
-						if (process.equals(events[i].getSource()) && events[i].getKind() == DebugEvent.TERMINATE) {
-							DebugPlugin.getDefault().removeDebugEventListener(this);
-							stopImpl();
-						}
-					}
-				}
-			}
-		};
-		DebugPlugin.getDefault().addDebugEventListener(processListener);
-	}
-	
 	public int getStartTimeout() {
 		return 300000;
 	}
@@ -622,18 +251,11 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 			if (module == null || !(module instanceof IWebModule))
 				return null;
 
-			IServerConfiguration serverConfig = fLiveServer
-					.getServerConfiguration();
-			if (serverConfig == null)
-				return null;
-
 			String url = "http://localhost";
 			int port = 0;
 			
 			port = getHttpPort();
-			
-			port = ServerCore.getServerMonitorManager().getMonitoredPort(
-					fLiveServer, port, "web");
+			port = ServerCore.getServerMonitorManager().getMonitoredPort(getServer(), port, "web");
 			if (port != 80)
 				url += ":" + port;
 
@@ -667,5 +289,28 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 			port = 8080;
 		return port;
 	}
+
+    public ServerRuntime getServerDefinition() {
+    	if (fServerDefinition == null)
+    		fServerDefinition = CorePlugin.getDefault()
+    				.getServerTypeDefinitionManager()
+    				.getServerRuntimeDefinition(getRuntimeDelegate().getAttribute(
+    								GenericServerRuntime.SERVER_DEFINITION_ID,
+    								""), getServerInstanceProperties());
+    	return fServerDefinition;
+    }
+
+    private RuntimeDelegate getRuntimeDelegate()
+    {
+       return (RuntimeDelegate)getServer().getRuntime().getAdapter(RuntimeDelegate.class);
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.wst.server.core.model.ServerDelegate#modifyModules(org.eclipse.wst.server.core.IModule[], org.eclipse.wst.server.core.IModule[], org.eclipse.core.runtime.IProgressMonitor)
+     */
+    public void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
+        // TODO Auto-generated method stub
+        
+    }
 
 }

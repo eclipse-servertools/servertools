@@ -33,8 +33,8 @@
       </moduleFactory>
    </extension>
 
-   <extension point="org.eclipse.wst.server.core.moduleObjectAdapters">
-      <moduleObjectAdapter
+   <extension point="org.eclipse.wst.server.core.moduleArtifactAdapters">
+      <moduleArtifactAdapter
          id="org.eclipse.jst.server.generic.modules.j2eeSpecModuleObjectAdapter"
          class="org.eclipse.jst.server.generic.modules.J2EESpecModuleObjectAdapter"
          objectClass="org.eclipse.core.resources.IResource"/>

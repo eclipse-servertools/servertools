@@ -35,8 +35,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IModuleObject;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IModuleArtifact;
 
 
 public abstract class J2EEModule implements IModule {
@@ -74,7 +75,7 @@ public abstract class J2EEModule implements IModule {
 	}
 
 	public IStatus canPublish() {
-		return validate();
+		return validate(new NullProgressMonitor());
 	}
 
 	public String getName() {
@@ -92,7 +93,7 @@ public abstract class J2EEModule implements IModule {
 	 * @param resource
 	 * @return
 	 */
-	public IModuleObject getModuleObject(IResource resource) {
+	public IModuleArtifact getModuleObject(IResource resource) {
 		return null;
 	}
 

@@ -39,14 +39,14 @@
         class="org.eclipse.jst.server.generic.internal.core.GenericServerRuntimeTargetHandler"/>
 	</extension>
 
-  <extension point="org.eclipse.wst.server.core.moduleKinds">
-    <moduleKind
+  <extension point="org.eclipse.wst.server.core.moduleTypes">
+    <moduleType
        id="j2ee.web"
        name="war file"/>
-    <moduleKind
+    <moduleType
        id="j2ee.ejb"
        name="ejb"/>
-    <moduleKind
+    <moduleType
        id="j2ee.ear"
        name="ear"/>
   </extension>
@@ -60,7 +60,7 @@
        version="0"
        order="100"
        class="org.eclipse.jst.server.generic.internal.core.GenericServerRuntime"
-       workingCopyClass="org.eclipse.jst.server.generic.internal.core.GenericServerRuntimeWorkingCopy">
+       >
        <moduleType
          types="j2ee.web"
          versions="1.2, 1.3, 1.4"/>
@@ -72,15 +72,15 @@
            runtime="true"
            class="org.eclipse.jst.server.generic.internal.core.GenericServer"
            order="100"
-           hosts="localhost"
            id="org.eclipse.jst.server.generic"
            initialState="stopped"
-           workingCopyClass="org.eclipse.jst.server.generic.internal.core.GenericServerWorkingCopy"
+           supportsRemoteHosts="false"
            runtimeTypeId="org.eclipse.jst.server.generic.runtime"
            description="%serverTypeDescription"
            launchConfigId="org.eclipse.jst.server.generic.core.launchConfigurationType"
-           monitorable="true"
+           behaviourClass="org.eclipse.jst.server.generic.internal.core.GenericServerBehaviour"
            name="%serverTypeName"
+           hasConfiguration="false"
            launchModes="run,debug">
           
      </serverType>

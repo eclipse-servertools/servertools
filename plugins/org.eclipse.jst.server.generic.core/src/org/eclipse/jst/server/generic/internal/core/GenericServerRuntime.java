@@ -33,7 +33,6 @@ package org.eclipse.jst.server.generic.internal.core;
 import java.io.File;
 import java.util.Iterator;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.launching.IVMInstall;
@@ -44,17 +43,15 @@ import org.eclipse.jst.server.generic.core.GenericServerCoreMessages;
 import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
-import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.core.model.RuntimeDelegate;
 /**
  * Generic server runtime support.
  *
  * @author Gorkem Ercan
  */
-public class GenericServerRuntime implements IGenericRuntime
+public class GenericServerRuntime extends RuntimeDelegate implements IGenericRuntime
 {
 
-	private IRuntime fRuntime;
 	public static final String SERVER_DEFINITION_ID = "server_definition_id";
 	public static final String SERVER_INSTANCE_PROPERTIES = "generic_server_instance_properties";
 	/* (non-Javadoc)
@@ -86,10 +83,6 @@ public class GenericServerRuntime implements IGenericRuntime
 	 * @see org.eclipse.jst.server.core.IGenericRuntime#validate()
 	 */
 	public IStatus validate() {
-		if (fRuntime.getName() == null || fRuntime.getName().length() == 0)
-			return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0,  GenericServerCoreMessages.getString("errorName"), null);
-		if (ServerUtil.isNameInUse(fRuntime))
-			return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.getString("errorDuplicateRuntimeName"), null);
 		if (getVMInstall() == null)
 			return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.getString("errorJRE"), null);
 		
@@ -106,7 +99,7 @@ public class GenericServerRuntime implements IGenericRuntime
 			Iterator archIter = cpth.getArchive().iterator();
 			while (archIter.hasNext()) {
 				ArchiveType arch = (ArchiveType) archIter.next();
-				String arcPath = serverTypeDefinition.getResolver().resolveProperties((String)arch.getPath());
+				String arcPath = serverTypeDefinition.getResolver().resolveProperties(arch.getPath());
 		           File f = new File(arcPath);
 		            if(f.exists()==false)
 		                return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,GenericServerCoreMessages.getFormattedString("errorMissingClasspathEntry",new String[]{f.getPath()} ),null);	
@@ -123,25 +116,11 @@ public class GenericServerRuntime implements IGenericRuntime
 	 */
 	public ServerRuntime getServerTypeDefinition()
 	{
-	   String id=  fRuntime.getAttribute(SERVER_DEFINITION_ID,(String)null);
-	   Map properties = fRuntime.getAttribute(SERVER_INSTANCE_PROPERTIES,(Map)null);
+	   String id=  getAttribute(SERVER_DEFINITION_ID,(String)null);
+	   Map properties = getAttribute(SERVER_INSTANCE_PROPERTIES,(Map)null);
 	   if(id==null)
 	       return null;
 	   return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(id,properties);
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.model.IRuntimeDelegate#initialize(org.eclipse.wst.server.core.IRuntime)
-	 */
-	public void initialize(IRuntime runtime) {
-		this.fRuntime = runtime;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.model.IRuntimeDelegate#dispose()
-	 */
-	public void dispose() {
-		this.fRuntime=null;
 	}
 	
 }
