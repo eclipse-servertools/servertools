@@ -170,7 +170,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		setServerState(IServer.STATE_STOPPED);
 	}
 
-	public void publishServer(int kind, IProgressMonitor monitor) throws CoreException {
+	public void publishServer(IProgressMonitor monitor) throws CoreException {
 		IPath confDir = null;
 		if (getTomcatServer().isTestEnvironment()) {
 			confDir = getTempDirectory();
@@ -190,7 +190,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 * Returns the project publisher that can be used to
 	 * publish the given project.
 	 */
-	public void publishModule(int kind, IModule[] parents, IModule module, IProgressMonitor monitor) {
+	public void publishModule(IModule[] parents, IModule module, IProgressMonitor monitor) {
 		if (getTomcatServer().isTestEnvironment())
 			return;
 
@@ -303,15 +303,15 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	}
 
 	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException {
-		if (workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, (String) null) == null) {
-			String[] args = getRuntimeProgramArguments(true);
-			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, renderCommandLine(args, " "));
-		}
+		String existingProgArgs = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, (String)null);
+		String progArgs = renderCommandLine(getRuntimeProgramArguments(true), " ");
+		if (existingProgArgs == null || existingProgArgs.indexOf(progArgs) < 0)
+			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, progArgs);
 
-		if (workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, (String) null) == null) {
-			String[] args = getRuntimeVMArguments();
-			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, renderCommandLine(args, " "));
-		}
+		String existingVMArgs = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, (String)null);
+		String vmArgs = renderCommandLine(getRuntimeVMArguments(), " ");
+		if (existingVMArgs == null || existingVMArgs.indexOf(vmArgs) < 0)
+			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, vmArgs);
 		
 		ITomcatRuntime runtime = getTomcatRuntime();
 		IVMInstall vmInstall = runtime.getVMInstall();
