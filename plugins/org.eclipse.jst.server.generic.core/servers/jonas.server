@@ -48,7 +48,7 @@
 
 	<module>
 		<type>j2ee.web</type>
-		<publishDir>${jonasBase}/webapps/autoload/applications</publishDir>
+		<publishDir>${jonasBase}/webapps/autoload</publishDir>
 		<publisherReference>jonas.web</publisherReference>
 	</module>
 
