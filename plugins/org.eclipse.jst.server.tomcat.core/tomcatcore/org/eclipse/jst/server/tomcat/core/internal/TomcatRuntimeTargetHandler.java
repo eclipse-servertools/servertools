@@ -9,6 +9,7 @@ package org.eclipse.jst.server.tomcat.core.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
@@ -22,8 +23,8 @@ import org.eclipse.wst.server.core.IRuntime;
  * 
  */
 public abstract class TomcatRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
-	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime) {
-		ITomcatRuntime tomcatRuntime = (ITomcatRuntime) runtime.getDelegate();
+	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
+		ITomcatRuntime tomcatRuntime = (ITomcatRuntime) runtime.getExtension(monitor);
 		IVMInstall vmInstall = tomcatRuntime.getVMInstall();
 		if (vmInstall != null) {
 			String name = vmInstall.getName();

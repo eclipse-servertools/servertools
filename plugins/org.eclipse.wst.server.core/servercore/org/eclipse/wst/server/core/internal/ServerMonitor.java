@@ -15,14 +15,14 @@ import org.eclipse.core.runtime.IConfigurationElement;
 
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerMonitor;
-import org.eclipse.wst.server.core.model.IServerMonitorDelegate;
+import org.eclipse.wst.server.core.model.ServerMonitorDelegate;
 import org.eclipse.wst.server.core.model.IServerPort;
 /**
  * 
  */
 public class ServerMonitor implements IServerMonitor {
 	private IConfigurationElement element;
-	private IServerMonitorDelegate delegate;
+	private ServerMonitorDelegate delegate;
 
 	/**
 	 * Monitor constructor comment.
@@ -61,10 +61,10 @@ public class ServerMonitor implements IServerMonitor {
 	/*
 	 * @see IMonitor#getDelegate()
 	 */
-	public IServerMonitorDelegate getDelegate() {
+	public ServerMonitorDelegate getDelegate() {
 		if (delegate == null) {
 			try {
-				delegate = (IServerMonitorDelegate) element.createExecutableExtension("class");
+				delegate = (ServerMonitorDelegate) element.createExecutableExtension("class");
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString() + ": " + e.getMessage());
 			}

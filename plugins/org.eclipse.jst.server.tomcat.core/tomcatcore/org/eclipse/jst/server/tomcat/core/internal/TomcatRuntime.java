@@ -1,7 +1,7 @@
 package org.eclipse.jst.server.tomcat.core.internal;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -13,44 +13,41 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMInstallType;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.tomcat.core.ITomcatRuntime;
+import org.eclipse.jst.server.tomcat.core.ITomcatRuntimeWorkingCopy;
 
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.core.model.RuntimeDelegate;
 /**
  * 
  */
-public class TomcatRuntime implements ITomcatRuntime {
+public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, ITomcatRuntimeWorkingCopy {
 	protected static final String PROP_VM_INSTALL_TYPE_ID = "vm-install-type-id";
 	protected static final String PROP_VM_INSTALL_ID = "vm-install-id";
 
-	protected IRuntime runtime;
-
 	public TomcatRuntime() { }
-
-	public void initialize(IRuntime newRuntime) {
-		this.runtime = newRuntime;
-	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IRuntime#getLocation()
 	 */
 	public ITomcatVersionHandler getVersionHandler() {
-		IRuntimeType type = runtime.getRuntimeType();
+		IRuntimeType type = getRuntime().getRuntimeType();
 		return TomcatPlugin.getTomcatVersionHandler(type.getId());
 	}
 
 	public String getVMInstallTypeId() {
-		return runtime.getAttribute(PROP_VM_INSTALL_TYPE_ID, (String)null);
+		return getAttribute(PROP_VM_INSTALL_TYPE_ID, (String)null);
 	}
 
 	public String getVMInstallId() {
-		return runtime.getAttribute(PROP_VM_INSTALL_ID, (String)null);
+		return getAttribute(PROP_VM_INSTALL_ID, (String)null);
 	}
 
 	public IVMInstall getVMInstall() {
@@ -68,7 +65,7 @@ public class TomcatRuntime implements ITomcatRuntime {
 	}
 
 	public List getRuntimeClasspath() {
-		return getVersionHandler().getRuntimeClasspath(runtime.getLocation());
+		return getVersionHandler().getRuntimeClasspath(getRuntime().getLocation());
 	}
 
 	/**
@@ -78,10 +75,11 @@ public class TomcatRuntime implements ITomcatRuntime {
 	 * @return boolean
 	 */
 	public boolean verifyLocation() {
-		return getVersionHandler().verifyInstallPath(runtime.getLocation());
+		return getVersionHandler().verifyInstallPath(getRuntime().getLocation());
 	}
 	
 	public IStatus validate() {
+		IRuntime runtime = getRuntime();
 		if (runtime.getName() == null || runtime.getName().length() == 0)
 			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorRuntimeName"), null);
 
@@ -98,6 +96,24 @@ public class TomcatRuntime implements ITomcatRuntime {
 		} else
 			return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, "", null);
 	}
-	
-	public void dispose() { }
+
+	public void setDefaults() {
+		IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
+		setVMInstall(vmInstall.getVMInstallType().getId(), vmInstall.getId());
+		
+		IRuntimeType type = getRuntimeWC().getRuntimeType();
+		getRuntimeWC().setLocation(new Path(TomcatPlugin.getPreference("location" + type.getId())));
+	}
+
+	public void setVMInstall(String typeId, String id) {
+		if (typeId == null)
+			setAttribute(PROP_VM_INSTALL_TYPE_ID, (String)null);
+		else
+			setAttribute(PROP_VM_INSTALL_TYPE_ID, typeId);
+		
+		if (id == null)
+			setAttribute(PROP_VM_INSTALL_ID, (String)null);
+		else
+			setAttribute(PROP_VM_INSTALL_ID, id);
+	}
 }

@@ -115,10 +115,10 @@ Server instances of this type will delegate to instances of this class.
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="hosts" type="string">
+         <attribute name="supportsRemoteHosts" type="string">
             <annotation>
                <documentation>
-                  local and/or remote
+                  true if this server type can work with remote host names, false if this server type can only work on localhost. if unspecified, false is assumed
                </documentation>
             </annotation>
          </attribute>
@@ -164,6 +164,20 @@ Server instances of this type will delegate to instances of this class.
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="startTimeout" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="stopTimeout" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
@@ -202,7 +216,7 @@ Server instances of this type will delegate to instances of this class.
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.server.core.model.IServerDelegate&lt;/b&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.server.core.model.ServerDelegate&lt;/b&gt;.
       </documentation>
    </annotation>
 

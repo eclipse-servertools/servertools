@@ -1,6 +1,6 @@
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.wst.server.core.IModuleKind;
 import org.eclipse.wst.server.core.IModuleType;
+import org.eclipse.wst.server.core.IModuleType2;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
@@ -72,16 +72,19 @@ public class RuntimeTypeTreeContentProvider extends AbstractTreeContentProvider 
 						ele.contents.add(runtimeType);
 						elementToParentMap.put(runtimeType, ele);
 					} else if (style == STYLE_MODULE_TYPE) {
-						Iterator iterator2 = runtimeType.getModuleTypes().iterator();
-						while (iterator2.hasNext()) {
-							IModuleType mb = (IModuleType) iterator2.next();
-							IModuleKind mt = ServerCore.getModuleKind(mb.getType());
-							if (mt != null) {
-								ele = getOrCreate(list, mt.getName());
-								TreeElement ele2 = getOrCreate(ele.contents, mt.getName() + "/" + mb.getVersion(), mb.getVersion());
-								ele2.contents.add(runtimeType);
-								elementToParentMap.put(runtimeType, ele2);
-								elementToParentMap.put(ele2, ele);
+						IModuleType2[] moduleTypes = runtimeType.getModuleTypes();
+						if (moduleTypes != null) {
+							int size = moduleTypes.length;
+							for (int i = 0; i < size; i++) {
+								IModuleType2 mb = moduleTypes[i];
+								IModuleType mt = ServerCore.getModuleType(mb.getType());
+								if (mt != null) {
+									ele = getOrCreate(list, mt.getName());
+									TreeElement ele2 = getOrCreate(ele.contents, mt.getName() + "/" + mb.getVersion(), mb.getVersion());
+									ele2.contents.add(runtimeType);
+									elementToParentMap.put(runtimeType, ele2);
+									elementToParentMap.put(ele2, ele);
+								}
 							}
 						}
 					}

@@ -17,10 +17,10 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.ui.actions.IServerAction;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
@@ -45,7 +45,7 @@ public class AddRemoveModulesAction implements IServerAction {
 		// get currently deployed modules
 		List deployed = new ArrayList();
 		List modules = new ArrayList();
-		IModule[] currentModules = server.getModules();
+		IModule[] currentModules = server.getModules(null);
 		if (currentModules != null) {
 			int size = currentModules.length;
 			for (int i = 0; i < size; i++) {
@@ -58,7 +58,7 @@ public class AddRemoveModulesAction implements IServerAction {
 		while (iterator.hasNext()) {
 			IModule module = (IModule) iterator.next();
 			if (!deployed.contains(module)) {
-				IStatus status = server.canModifyModules(new IModule[] { module }, null);
+				IStatus status = server.canModifyModules(new IModule[] { module }, null, null);
 				if (status != null && status.isOK())
 					modules.add(module);
 			}

@@ -12,25 +12,24 @@ package org.eclipse.wst.server.core;
 /**
  * Represents the type of a module.
  * <p>
- * [issue: This interface plays two roles. First, it is used
- * by the system to represent module type objects. Module
- * type objects are instances of the internal ModuleType class.
- * They get created for the "moduleType" elements of the
- * runtimeTypes and moduleFactories extension points.
- * The second role is that it is a superinterface of IModule,
- * the interface that represents module instances.
- * It would be clearer if it only played the former role.
- * IModule should instance have a getModuleType() method that
- * returns an IModuleType.]
+ * The server core framework supports an open-ended set of module types,
+ * which are contributed via the <code>moduleTypes</code> extension point
+ * in the server core plug-in. Module type objects carry no state
+ * (all information is read-only and is supplied by the module type
+ * declaration). The global list of known module types is available via
+ * {@link ServerCore#getModuleTypes()}. 
  * </p>
  * <p>
- * [issue: It's confusing to have a type named IModuleKind as well.
+ * [issue: It's confusing to have a type named IModuleType2 as well.
  * The terminology should be "module types", to make it consistent with
  * server types, etc. On that reading, this interface would be named
- * IModuleType, and the existing one something else (if still needed).]
+ * IModuleType2, and the existing one something else (if still needed).]
  * </p>
  * <p>
  * This interface is not intended to be implemented by clients.
+ * </p>
+ * <p>
+ * [issue: Equality/identify for module type?]
  * </p>
  * <p>
  * <it>Caveat: The server core API is still in an early form, and is
@@ -40,37 +39,23 @@ package org.eclipse.wst.server.core;
  * @since 1.0
  */
 public interface IModuleType {
-	
 	/**
-	 * Returns the module type id.
-	 * <p>
-	 * [issue: Are these strings "module kind ids"? I.e., the same as those returned by 
-	 * IModuleKind.getId()?]
-	 * </p>
-	 * <p>
-	 * [issue: Should be renamed getId (except that would clash
-	 * in its current role as superfinterface of IModule).]
-	 * </p>
+	 * Returns the id of this module type.
+	 * Each known module type has a distinct id.
+	 * Ids are intended to be used internally as keys; they are not
+	 * intended to be shown to end users.
 	 * 
 	 * @return the module type id
 	 */
-	public String getType();
+	public String getId();
 
 	/**
-	 * Returns the version (spec level), e.g., "1.0", "1.3.2".
+	 * Returns the displayable name for this module type.
 	 * <p>
-	 * [issue: This notion of a module type "version" appears here.
-	 * There is no counterpart elsewhere (and certainly not in
-	 * IModuleKind). The phrase "spec level" suggests something
-	 * a little more J2EE-centric (what would be the spec level for
-	 * a static html web module?) It feels like this should be folded
-	 * in to the module type/kind id.]
+	 * Note that this name is appropriate for the current locale.
 	 * </p>
-	 * <p>
-	 * [issue: Spec format of version string?]
-	 * </p>
-	 * 
-	 * @return the version
+	 *
+	 * @return a displayable name for this module type
 	 */
-	public String getVersion();
+	public String getName();
 }

@@ -91,27 +91,6 @@ public interface IServerPreferences {
 	public void setCreateResourcesInWorkspace(boolean b);
 
 	/**
-	 * Returns the default publish manager preference.
-	 *
-	 * @return String
-	 */
-	public String getDefaultPublishManager();
-
-	/**
-	 * Returns the publish manager preference.
-	 *
-	 * @return String
-	 */
-	public String getPublishManager();
-
-	/**
-	 * Sets the publish manager preference.
-	 *
-	 * @param String
-	 */
-	public void setPublishManager(String id);
-
-	/**
 	 * Returns whether changes to modules should be automatically fixed
 	 * in the server configurations. Returns one of the REPAIR_* constants.
 	 *

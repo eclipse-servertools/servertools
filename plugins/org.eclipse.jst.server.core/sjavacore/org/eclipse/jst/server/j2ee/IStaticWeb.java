@@ -10,7 +10,7 @@
  **********************************************************************/
 package org.eclipse.jst.server.j2ee;
 
-import org.eclipse.wst.server.core.model.IModule;
+import org.eclipse.wst.server.core.IModule;
 /**
  * A static Web module that could be deployed to Apache or another
  * HTTP server.

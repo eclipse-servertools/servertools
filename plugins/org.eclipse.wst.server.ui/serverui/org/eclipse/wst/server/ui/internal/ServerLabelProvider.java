@@ -17,7 +17,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IModule;
 /**
  * A label provider for all server related objects.
  */

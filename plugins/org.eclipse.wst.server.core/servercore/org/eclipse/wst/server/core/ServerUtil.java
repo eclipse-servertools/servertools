@@ -15,7 +15,6 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.debug.core.ILaunchManager;
 
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.Trace;
@@ -33,16 +32,16 @@ public class ServerUtil {
 	 * Returns true if the given configuration currently contains
 	 * the given object.
 	 *
-	 * @param configuration org.eclipse.wst.server.core.model.IServerConfiguration
-	 * @param module org.eclipse.wst.server.core.model.IModule
+	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param module org.eclipse.wst.server.core.IModule
 	 * @return boolean
 	 */
-	public static boolean containsModule(IServer server, IModule module) {
+	public static boolean containsModule(IServer server, IModule module, IProgressMonitor monitor) {
 		if (server == null)
 			return false;
 		Trace.trace(Trace.FINEST, "containsModule() " + server + " " + module);
 		try {
-			Iterator iterator = getAllContainedModules(server).iterator();
+			Iterator iterator = getAllContainedModules(server, monitor).iterator();
 			while (iterator.hasNext()) {
 				IModule module2 = (IModule) iterator.next();
 				Trace.trace(Trace.FINEST, "module: " + module2 + " " + module.equals(module2));
@@ -58,17 +57,17 @@ public class ServerUtil {
 	 * projects that are in the configuration, as well as their
 	 * children, and their children...
 	 *
-	 * @param configuration org.eclipse.wst.server.core.model.IServerConfiguration
+	 * @param server org.eclipse.wst.server.core.IServer
 	 * @return java.util.List
 	 */
-	public static List getAllContainedModules(IServer server) {
+	public static List getAllContainedModules(IServer server, IProgressMonitor monitor) {
 		//Trace.trace("> getAllContainedModules: " + getName(configuration));
 		List modules = new ArrayList();
 		if (server == null)
 			return modules;
 
 		// get all of the directly contained projects
-		IModule[] deploys = server.getModules();
+		IModule[] deploys = server.getModules(monitor);
 		if (deploys == null || deploys.length == 0)
 			return modules;
 
@@ -85,7 +84,7 @@ public class ServerUtil {
 		while (count < modules.size()) {
 			IModule module = (IModule) modules.get(count);
 			try {
-				List childProjects = server.getChildModules(module);
+				List childProjects = server.getChildModules(module, monitor);
 				if (childProjects != null) {
 					Iterator iterator = childProjects.iterator();
 					while (iterator.hasNext()) {
@@ -108,22 +107,23 @@ public class ServerUtil {
 	/**
 	 * Returns a list of all servers that this module is configured on.
 	 *
-	 * @param module org.eclipse.wst.server.core.model.IModule
+	 * @param module org.eclipse.wst.server.core.IModule
 	 * @return java.util.List
 	 */
-	public static IServer[] getServersByModule(IModule module) {
+	public static IServer[] getServersByModule(IModule module, IProgressMonitor monitor) {
 		if (module == null)
 			return new IServer[0];
 
 		// do it the slow way - go through all servers and
 		// see if this module is configured in it
 		List list = new ArrayList();
-		List servers = ServerCore.getResourceManager().getServers();
-		Iterator iterator = servers.iterator();
-		while (iterator.hasNext()) {
-			IServer server = (IServer) iterator.next();
-			if (containsModule(server, module))
-				list.add(server);
+		IServer[] servers = ServerCore.getResourceManager().getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				if (containsModule(servers[i], module, monitor))
+					list.add(servers[i]);
+			}
 		}
 		
 		IServer[] allServers = new IServer[list.size()];
@@ -134,7 +134,7 @@ public class ServerUtil {
 	/**
 	 * Returns a list of all servers that this module is configured on.
 	 *
-	 * @param module org.eclipse.wst.server.core.model.IModule
+	 * @param module org.eclipse.wst.server.core.IModule
 	 * @return java.util.List
 	 */
 	public static IServer[] getServersBySupportedModule(IModule module) {
@@ -144,12 +144,13 @@ public class ServerUtil {
 		// do it the slow way - go through all servers and
 		// see if this module is configured in it
 		List list = new ArrayList();
-		List servers = ServerCore.getResourceManager().getServers();
-		Iterator iterator = servers.iterator();
-		while (iterator.hasNext()) {
-			IServer server = (IServer) iterator.next();
-			if (isSupportedModule(server.getServerType(), module))
-				list.add(server);
+		IServer[] servers = ServerCore.getResourceManager().getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				if (isSupportedModule(servers[i].getServerType(), module))
+					list.add(servers[i]);
+			}
 		}
 		
 		IServer[] allServers = new IServer[list.size()];
@@ -161,7 +162,7 @@ public class ServerUtil {
 	 * Returns a list of configurations that are supported by this
 	 * server.
 	 *
-	 * @param server org.eclipse.wst.server.core.model.IServer
+	 * @param server org.eclipse.wst.server.core.IServer
 	 * @return java.util.List
 	 */
 	public static List getSupportedServerConfigurations(IServer server) {
@@ -170,13 +171,14 @@ public class ServerUtil {
 	
 		List list = new ArrayList();
 	
-		List configs = ServerCore.getResourceManager().getServerConfigurations();
-		Iterator iterator = configs.iterator();
-		while (iterator.hasNext()) {
-			IServerConfiguration configuration = (IServerConfiguration) iterator.next();
-			//Trace.trace("Is supported configuration: " + getName(server) + " " + getName(configuration) + " " + server.isSupportedConfiguration(configuration));
-			if (server.isSupportedConfiguration(configuration))
-				list.add(configuration);
+		IServerConfiguration[] configs = ServerCore.getResourceManager().getServerConfigurations();
+		if (configs != null) {
+			int size = configs.length;
+			for (int i = 0; i < size; i++) {
+				//Trace.trace("Is supported configuration: " + getName(server) + " " + getName(configuration) + " " + server.isSupportedConfiguration(configuration));
+				if (server.isSupportedConfiguration(configs[i]))
+					list.add(configs[i]);
+			}
 		}
 		return list;
 	}
@@ -239,16 +241,18 @@ public class ServerUtil {
 	 * 
 	 * @param java.lang.String factoryId
 	 * @param java.lang.String memento
-	 * @return org.eclipse.wst.server.core.model.IModule
+	 * @return org.eclipse.wst.server.core.IModule
 	 */
 	public static IModule getModule(String factoryId, String memento) {
-		Iterator iterator = ServerCore.getModuleFactories().iterator();
-		while (iterator.hasNext()) {
-			IModuleFactory factory = (IModuleFactory) iterator.next();
-			if (factory.getId().equals(factoryId)) {
-				IModule module = factory.getModule(memento);
-				if (module != null) {
-					return module;
+		IModuleFactory[] moduleFactory = ServerCore.getModuleFactories();
+		if (moduleFactory != null) {
+			int size = moduleFactory.length;
+			for (int i = 0; i < size; i++) {
+				if (moduleFactory[i].getId().equals(factoryId)) {
+					IModule module = moduleFactory[i].getModule(memento);
+					if (module != null) {
+						return module;
+					}
 				}
 			}
 		}
@@ -296,18 +300,19 @@ public class ServerUtil {
 		if (obj == null)
 			return null;
 		Trace.trace(Trace.FINEST, "ServerUtil.getModule()");
-		Iterator iterator = ServerCore.getModuleObjectAdapters().iterator();
-		while (iterator.hasNext()) {
-			IModuleObjectAdapter adapter = (IModuleObjectAdapter) iterator.next();
-			
-			if (isEnabled(obj.getClass(), adapter.getObjectClassName())) {
-				if (!initialized) {
-					Trace.trace(Trace.FINEST, "getModule(): " + obj.getClass() + " " + adapter.getObjectClassName());
-					throw new Exception();
+		IModuleObjectAdapter[] adapters = ServerCore.getModuleObjectAdapters();
+		if (adapters != null) {
+			int size = adapters.length;
+			for (int i = 0; i < size; i++) {
+				if (isEnabled(obj.getClass(), adapters[i].getObjectClassName())) {
+					if (!initialized) {
+						Trace.trace(Trace.FINEST, "getModule(): " + obj.getClass() + " " + adapters[i].getObjectClassName());
+						throw new Exception();
+					}
+					IModuleObject moduleObject = adapters[i].getModuleObject(obj);
+					if (moduleObject != null)
+						return moduleObject.getModule();
 				}
-				IModuleObject moduleObject = adapter.getModuleObject(obj);
-				if (moduleObject != null)
-					return moduleObject.getModule();
 			}
 		}
 		return null;
@@ -321,19 +326,21 @@ public class ServerUtil {
 	public static List getModuleObjects(Object obj) {
 		List list = new ArrayList();
 		Trace.trace(Trace.FINEST, "ServerUtil.getModuleObjects()");
-		Iterator iterator = ServerCore.getModuleObjectAdapters().iterator();
-		while (iterator.hasNext()) {
-			IModuleObjectAdapter adapter = (IModuleObjectAdapter) iterator.next();
-			if (isEnabled(obj.getClass(), adapter.getObjectClassName())) {
-				IModuleObject moduleObject = adapter.getModuleObject(obj);
-				Trace.trace(Trace.FINEST, "moduleObject: " + moduleObject);
-				if (moduleObject != null)
-					list.add(moduleObject);
+		IModuleObjectAdapter[] adapters = ServerCore.getModuleObjectAdapters();
+		if (adapters != null) {
+			int size = adapters.length;
+			for (int i = 0; i < size; i++) {
+				if (isEnabled(obj.getClass(), adapters[i].getObjectClassName())) {
+					IModuleObject moduleObject = adapters[i].getModuleObject(obj);
+					Trace.trace(Trace.FINEST, "moduleObject: " + moduleObject);
+					if (moduleObject != null)
+						list.add(moduleObject);
+				}
 			}
 		}
 		return list;
 	}
-	
+
 	/**
 	 * Returns the first launchable object for the given server and module
 	 * object.
@@ -343,16 +350,18 @@ public class ServerUtil {
 	 * @return ILaunchable
 	 */
 	public static ILaunchable getLaunchable(IServer server, IModuleObject moduleObject) {
-		Iterator iterator = ServerCore.getLaunchableAdapters().iterator();
-		while (iterator.hasNext()) {
-			ILaunchableAdapter adapter = (ILaunchableAdapter) iterator.next();
-			try {
-				ILaunchable launchable = adapter.getLaunchable(server, moduleObject);
-				Trace.trace(Trace.FINEST, "adapter= " + adapter + ", launchable= " + launchable);
-				if (launchable != null)
-					return launchable;
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error in launchable adapter", e);
+		ILaunchableAdapter[] adapters = ServerCore.getLaunchableAdapters();
+		if (adapters != null) {
+			int size = adapters.length;
+			for (int i = 0; i < size; i++) {
+				try {
+					ILaunchable launchable = adapters[i].getLaunchable(server, moduleObject);
+					Trace.trace(Trace.FINEST, "adapter= " + adapters[i] + ", launchable= " + launchable);
+					if (launchable != null)
+						return launchable;
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Error in launchable adapter", e);
+				}
 			}
 		}
 		return null;
@@ -362,19 +371,20 @@ public class ServerUtil {
 	 * Returns the launchable clients for the given server and launchable
 	 * object.
 	 *
-	 * @param server org.eclipse.wst.server.core.model.IServer
-	 * @param moduleObject org.eclipse.wst.server.core.model.IModuleObject
+	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param moduleObject org.eclipse.wst.server.core.IModuleObject
 	 * @param launchMode String
 	 * @return java.util.List
 	 */
 	public static List getLaunchableClients(IServer server, ILaunchable launchable, String launchMode) {
 		ArrayList list = new ArrayList();
-		Iterator iterator = ServerCore.getLaunchableClients().iterator();
-		while (iterator.hasNext()) {
-			IClient client = (IClient) iterator.next();
-			Trace.trace(Trace.FINEST, "client= " + client);
-			if (client.supports(server, launchable, launchMode)) {
-				list.add(client);
+		IClient[] clients = ServerCore.getClients();
+		if (clients != null) {
+			int size = clients.length;
+			for (int i = 0; i < size; i++) {
+				Trace.trace(Trace.FINEST, "client= " + clients[i]);
+				if (clients[i].supports(server, launchable, launchMode))
+					list.add(clients[i]);
 			}
 		}
 		return list;
@@ -400,22 +410,9 @@ public class ServerUtil {
 	}
 
 	/**
-	 * Returns the factory that created the given server resource.
-	 * 
-	 * @param org.eclipse.wst.server.core.model.IServerResource
-	 * @return org.eclipse.wst.server.core.IServerResourceFactory
-	 */
-/*	public static IServerResourceFactory getServerResourceFactory(IServerResource resource) {
-		if (resource == null)
-			return null;
-		String id = resource.getFactoryId();
-		return ServerCore.getCreationManager().getServerResourceFactory(id);
-	}*/
-	
-	/**
 	 * Returns the factory that created the given module.
 	 *
-	 * @param org.eclipse.wst.server.core.model.IModule
+	 * @param org.eclipse.wst.server.core.IModule
 	 * @return org.eclipse.wst.server.core.IModuleFactory
 	 */
 	public static IModuleFactory getModuleFactory(IModule module) {
@@ -423,11 +420,13 @@ public class ServerUtil {
 		if (id == null)
 			return null;
 
-		Iterator iterator = ServerCore.getModuleFactories().iterator();
-		while (iterator.hasNext()) {
-			IModuleFactory factory = (IModuleFactory) iterator.next();
-			if (id.equals(factory.getId()))
-				return factory;
+		IModuleFactory[] factories = ServerCore.getModuleFactories();
+		if (factories != null) {
+			int size = factories.length;
+			for (int i = 0; i < size; i++) {
+				if (id.equals(factories[i].getId()))
+					return factories[i];
+			}
 		}
 		return null;
 	}
@@ -443,37 +442,42 @@ public class ServerUtil {
 	public static List getModules(String type, String version, boolean onlyProjectModules) {
 		List list = new ArrayList();
 
-		Iterator iterator = ServerCore.getModuleFactories().iterator();
-		while (iterator.hasNext()) {
-			IModuleFactory factory = (IModuleFactory) iterator.next();
-			//if (!(onlyProjectModules && factory.isProjectModuleFactory())) {
-			if (isSupportedModule(factory.getModuleTypes(), type, version)) {
-					List modules = factory.getModules();
-					if (modules != null && !modules.isEmpty()) {
-						list.addAll(modules);
+		IModuleFactory[] factories = ServerCore.getModuleFactories();
+		if (factories != null) {
+			int size = factories.length;
+			for (int i = 0; i < size; i++) {
+				//if (!(onlyProjectModules && factory.isProjectModuleFactory())) {
+				if (isSupportedModule(factories[i].getModuleTypes(), type, version)) {
+					IModule[] modules = factories[i].getModules();
+					if (modules != null) {
+						int size2 = modules.length;
+						for (int j = 0; j < size2; j++)
+							list.add(modules[j]);
 					}
 				}
-			//}
+				//}
+			}
 		}
 		return list;
 	}
 	
-	public static boolean isSupportedModule(IServerType serverType, IModuleType moduleType) {
+	public static boolean isSupportedModule(IServerType serverType, IModuleType2 moduleType) {
 		IRuntimeType runtimeType = serverType.getRuntimeType();
 		return isSupportedModule(runtimeType.getModuleTypes(), moduleType.getType(), moduleType.getVersion());
 	}
 	
-	public static boolean isSupportedModule(List moduleTypes, String type, String version) {
-		Iterator iterator = moduleTypes.iterator();
-		while (iterator.hasNext()) {
-			IModuleType mt = (IModuleType) iterator.next();
-			if (isSupportedModule(mt, type, version))
-				return true;
+	public static boolean isSupportedModule(IModuleType2[] moduleTypes, String type, String version) {
+		if (moduleTypes != null) {
+			int size = moduleTypes.length;
+			for (int i = 0; i < size; i++) {
+				if (isSupportedModule(moduleTypes[i], type, version))
+					return true;
+			}
 		}
 		return false;
 	}
 	
-	public static boolean isSupportedModule(IModuleType moduleType, String type, String version) {
+	public static boolean isSupportedModule(IModuleType2 moduleType, String type, String version) {
 		String type2 = moduleType.getType();
 		if (matches(type, type2)) {
 			String version2 = moduleType.getVersion();
@@ -488,7 +492,7 @@ public class ServerUtil {
 			return true;
 		return false;
 	}
-	
+
 	/**
 	 * Return all the available modules from all factories.
 	 * 
@@ -497,22 +501,23 @@ public class ServerUtil {
 	public static List getModules() {
 		List list = new ArrayList();
 		
-		Iterator iterator = ServerCore.getModuleFactories().iterator();
-		while (iterator.hasNext()) {
-			IModuleFactory factory = (IModuleFactory) iterator.next();
-			List modules = factory.getModules();
-			if (modules != null) {
-				Iterator iterator2 = modules.iterator();
-				while (iterator2.hasNext()) {
-					IModule module = (IModule) iterator2.next();
-					if (!list.contains(module))
-						list.add(module);
+		IModuleFactory[] factories = ServerCore.getModuleFactories();
+		if (factories != null) {
+			int size = factories.length;
+			for (int i = 0; i < size; i++) {
+				IModule[] modules = factories[i].getModules();
+				if (modules != null) {
+					int size2 = modules.length;
+					for (int j = 0; j < size2; j++) {
+						if (!list.contains(modules[i]))
+							list.add(modules[i]);
+					}
 				}
 			}
 		}
 		return list;
 	}
-	
+
 	/**
 	 * Adds or removes modules from a server. Will search for the first parent module
 	 * of each module and add it to the server instead. This method will handle multiple
@@ -536,7 +541,7 @@ public class ServerUtil {
 		for (int i = 0; i < size; i++) {
 			boolean found = false;
 			try {
-				List parents = server.getParentModules(add[i]);
+				List parents = server.getParentModules(add[i], monitor);
 				if (parents != null) {
 					found = true;
 					if (parents.size() > 0) {				
@@ -559,7 +564,7 @@ public class ServerUtil {
 		for (int i = 0; i < size; i++) {
 			boolean found = false;
 			try {
-				List parents = server.getParentModules(remove[i]);
+				List parents = server.getParentModules(remove[i], monitor);
 				if (parents != null) {
 					found = true;
 					if (parents.size() > 0) {				
@@ -594,14 +599,13 @@ public class ServerUtil {
 	 * @return boolean
 	 */
 	public static boolean isCompatibleWithLaunchMode(IServer server, String launchMode) {
-		if (server == null)
+		if (server == null || launchMode == null)
 			return false;
 
-		byte state = server.getServerState();
-		if ((state == IServer.SERVER_STARTED && launchMode.equals(ILaunchManager.RUN_MODE)) ||
-			(state == IServer.SERVER_STARTED_DEBUG && launchMode.equals(ILaunchManager.DEBUG_MODE)) ||
-			(state == IServer.SERVER_STARTED_PROFILE && launchMode.equals(ILaunchManager.PROFILE_MODE)))
+		int state = server.getServerState();
+		if (state == IServer.STATE_STARTED && launchMode.equals(server.getMode()))
 			return true;
+
 		if (server.getServerType().supportsLaunchMode(launchMode))
 			return true;
 		return false;
@@ -633,15 +637,15 @@ public class ServerUtil {
 	/**
 	 * Visit all the modules in the server configuration.
 	 */
-	public static void visit(IServer server, IModuleVisitor visitor) {
+	public static void visit(IServer server, IModuleVisitor visitor, IProgressMonitor monitor) {
 		if (server == null)
 			return;
 		
-		IModule[] modules = server.getModules();
+		IModule[] modules = server.getModules(monitor);
 		if (modules != null) { 
 			int size = modules.length;
 			for (int i = 0; i < size; i++) {
-				if (!visitModule(server, new ArrayList(), modules[i], visitor))
+				if (!visitModule(server, new ArrayList(), modules[i], visitor, monitor))
 					return;
 			}
 		}
@@ -650,14 +654,14 @@ public class ServerUtil {
 	/**
 	 * Returns true to keep visiting, and false to stop.
 	 */
-	private static boolean visitModule(IServer server, List parents, IModule module, IModuleVisitor visitor) {
+	private static boolean visitModule(IServer server, List parents, IModule module, IModuleVisitor visitor, IProgressMonitor monitor) {
 		if (server == null || module == null || parents == null)
 			return true;
 		
 		if (!visitor.visit(parents, module))
 			return false;
 		
-		List children = server.getChildModules(module);
+		List children = server.getChildModules(module, monitor);
 		if (children != null) {
 			Iterator iterator = children.iterator();
 			while (iterator.hasNext()) {
@@ -667,7 +671,7 @@ public class ServerUtil {
 				parents2.addAll(parents);
 				parents2.add(module);
 				
-				if (!visitModule(server, parents2, module2, visitor))
+				if (!visitModule(server, parents2, module2, visitor, monitor))
 					return false;
 			}
 		}
@@ -676,12 +680,14 @@ public class ServerUtil {
 	}
 
 	public static boolean isNameInUse(IRuntime runtime) {
-		Iterator iterator = ServerCore.getResourceManager().getRuntimes().iterator();
-		while (iterator.hasNext()) {
-			IRuntime runtime2 = (IRuntime) iterator.next();
-			if (!runtime.equals(runtime2) && runtime.getName().equals(runtime2.getName())) {
-				if (!runtime.isWorkingCopy() || !runtime2.equals(((IRuntimeWorkingCopy)runtime).getOriginal()))
-					return true;
+		IRuntime[] runtimes = ServerCore.getResourceManager().getRuntimes();
+		if (runtimes != null) {
+			int size = runtimes.length;
+			for (int i = 0; i < size; i++) {
+				if (!runtime.equals(runtimes[i]) && runtime.getName().equals(runtimes[i].getName())) {
+					if (!runtime.isWorkingCopy() || !runtimes[i].equals(((IRuntimeWorkingCopy)runtime).getOriginal()))
+						return true;
+				}
 			}
 		}
 		return false;
@@ -701,7 +707,7 @@ public class ServerUtil {
 
 	public static void setServerDefaultName(IServerWorkingCopy wc) {
 		String typeName = wc.getServerType().getName();
-		String host = wc.getHostname();
+		String host = wc.getHost();
 		
 		String name = ServerPlugin.getResource("%defaultServerName", new String[] {typeName, host});
 		int i = 2;
@@ -800,9 +806,10 @@ public class ServerUtil {
 	
 		IResourceManager rm = ServerCore.getResourceManager();
 		List list = new ArrayList();
-		list.addAll(rm.getRuntimes());
-		list.addAll(rm.getServers());
-		list.addAll(rm.getServerConfigurations());
+		
+		addAll(list, rm.getRuntimes());
+		addAll(list, rm.getServers());
+		addAll(list, rm.getServerConfigurations());
 
 		Iterator iterator = list.iterator();
 		while (iterator.hasNext()) {
@@ -812,6 +819,16 @@ public class ServerUtil {
 		}
 
 		return false;
+	}
+	
+	private static void addAll(List list, Object[] obj) {
+		if (obj == null)
+			return;
+		
+		int size = obj.length;
+		for (int i = 0; i < size; i++) {
+			list.add(obj[i]);
+		}
 	}
 	
 	/**
@@ -909,12 +926,14 @@ public class ServerUtil {
 	 */
 	public static List getRuntimes(String type, String version) {
 		List list = new ArrayList();
-		Iterator iterator = ServerCore.getResourceManager().getRuntimes().iterator();
-		while (iterator.hasNext()) {
-			IRuntime runtime = (IRuntime) iterator.next();
-			IRuntimeType runtimeType = runtime.getRuntimeType();
-			if (runtimeType != null && isSupportedModule(runtimeType.getModuleTypes(), type, version)) {
-				list.add(runtime);
+		IRuntime[] runtimes = ServerCore.getResourceManager().getRuntimes();
+		if (runtimes != null) {
+			int size = runtimes.length;
+			for (int i = 0; i < size; i++) {
+				IRuntimeType runtimeType = runtimes[i].getRuntimeType();
+				if (runtimeType != null && isSupportedModule(runtimeType.getModuleTypes(), type, version)) {
+					list.add(runtimes[i]);
+				}
 			}
 		}
 		return list;
@@ -930,11 +949,13 @@ public class ServerUtil {
 	 */
 	public static List getRuntimeTypes(String type, String version) {
 		List list = new ArrayList();
-		Iterator iterator = ServerCore.getRuntimeTypes().iterator();
-		while (iterator.hasNext()) {
-			IRuntimeType runtimeType = (IRuntimeType) iterator.next();
-			if (isSupportedModule(runtimeType.getModuleTypes(), type, version)) {
-				list.add(runtimeType);
+		IRuntimeType[] runtimeTypes = ServerCore.getRuntimeTypes();
+		if (runtimeTypes != null) {
+			int size = runtimeTypes.length;
+			for (int i = 0; i < size; i++) {
+				if (isSupportedModule(runtimeTypes[i].getModuleTypes(), type, version)) {
+					list.add(runtimeTypes[i]);
+				}
 			}
 		}
 		return list;
@@ -951,12 +972,14 @@ public class ServerUtil {
 	 */
 	public static List getRuntimeTypes(String type, String version, String runtimeTypeId) {
 		List list = new ArrayList();
-		Iterator iterator = ServerCore.getRuntimeTypes().iterator();
-		while (iterator.hasNext()) {
-			IRuntimeType runtimeType = (IRuntimeType) iterator.next();
-			if (isSupportedModule(runtimeType.getModuleTypes(), type, version)) {
-				if (runtimeTypeId == null || runtimeType.getId().startsWith(runtimeTypeId))
-					list.add(runtimeType);
+		IRuntimeType[] runtimeTypes = ServerCore.getRuntimeTypes();
+		if (runtimeTypes != null) {
+			int size = runtimeTypes.length;
+			for (int i = 0; i < size; i++) {
+				if (isSupportedModule(runtimeTypes[i].getModuleTypes(), type, version)) {
+					if (runtimeTypeId == null || runtimeTypes[i].getId().startsWith(runtimeTypeId))
+						list.add(runtimeTypes[i]);
+				}
 			}
 		}
 		return list;
@@ -968,10 +991,10 @@ public class ServerUtil {
 	 * method return servers where the parent deployable may throw errors. For
 	 * instance, this deployable may be the wrong spec level.
 	 *
-	 * @param module com.ibm.etools.server.core.model.IModule
-	 * @return com.ibm.etools.server.core.model.IServer[]
+	 * @param module com.ibm.etools.server.core.IModule
+	 * @return com.ibm.etools.server.core.IServer[]
 	 */
-	public static IServer[] getAvailableServersForModule(IModule module, boolean includeErrors) {
+	public static IServer[] getAvailableServersForModule(IModule module, boolean includeErrors, IProgressMonitor monitor) {
 		if (module == null)
 			return new IServer[0];
 
@@ -979,28 +1002,29 @@ public class ServerUtil {
 		// see if this deployable is not configured in it
 		// but could be added
 		List list = new ArrayList();
-		List servers = ServerCore.getResourceManager().getServers();
-		Iterator iterator = servers.iterator();
-		while (iterator.hasNext()) {
-			IServer server = (IServer) iterator.next();
-			if (!containsModule(server, module)) {
-				try {
-					List parents = server.getParentModules(module);
-					if (parents != null && !parents.isEmpty()) {
-						Iterator iterator2 = parents.iterator();
-						boolean found = false;
-						while (!found && iterator2.hasNext()) {
-							IModule parent = (IModule) iterator2.next();
-							IStatus status = server.canModifyModules(new IModule[] { parent }, new IModule[0]);
-							if (status == null || status.isOK()){
-								list.add(server);
-								found = true;
+		IServer[] servers = ServerCore.getResourceManager().getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				if (!containsModule(servers[i], module, monitor)) {
+					try {
+						List parents = servers[i].getParentModules(module, monitor);
+						if (parents != null && !parents.isEmpty()) {
+							Iterator iterator2 = parents.iterator();
+							boolean found = false;
+							while (!found && iterator2.hasNext()) {
+								IModule parent = (IModule) iterator2.next();
+								IStatus status = servers[i].canModifyModules(new IModule[] { parent }, new IModule[0], monitor);
+								if (status == null || status.isOK()){
+									list.add(servers[i]);
+									found = true;
+								}
 							}
 						}
+					} catch (Exception se) {
+						if (includeErrors)
+							list.add(servers[i]);
 					}
-				} catch (Exception se) {
-					if (includeErrors)
-						list.add(server);
 				}
 			}
 		}
@@ -1016,8 +1040,8 @@ public class ServerUtil {
 		list.toArray(allServers);
 		return allServers;
 	}
-	
-	public static boolean isDefaultAvailable(IServerType serverType, IModuleType moduleType) {
+
+	/*public static boolean isDefaultAvailable(IServerType serverType, IModuleType2 moduleType) {
 		if (!isSupportedModule(serverType, moduleType))
 			return false;
 	
@@ -1027,9 +1051,10 @@ public class ServerUtil {
 		
 		// if it needs a runtime, check if there is one
 		if (serverType.hasRuntime()) {
-			if (ServerCore.getResourceManager().getRuntimes(serverType.getRuntimeType()).isEmpty())
+			IRuntime[] runtimes = ServerCore.getResourceManager().getRuntimes(serverType.getRuntimeType());
+			if (runtimes == null || runtimes.length == 0)
 				return false;
 		}
 		return true;
-	}
+	}*/
 }

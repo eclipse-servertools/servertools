@@ -11,7 +11,14 @@
 package org.eclipse.wst.server.core.model;
 
 import org.eclipse.wst.server.core.IRuntime;
-
+/**
+ * 
+ */
 public interface IRuntimeLocatorListener {
+	/**
+	 * Fired when a runtime is found.
+	 * 
+	 * @param runtime
+	 */
 	public void runtimeFound(IRuntime runtime);
 }

@@ -13,7 +13,7 @@ package org.eclipse.wst.server.core.internal;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.*;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IRuntimeDelegate;
+import org.eclipse.wst.server.core.model.RuntimeDelegate;
 import org.osgi.framework.Bundle;
 /**
  * 
@@ -22,9 +22,10 @@ public class Runtime extends Base implements IRuntime {
 	protected static final String PROP_RUNTIME_TYPE_ID = "runtime-type-id";
 	protected static final String PROP_LOCATION = "location";
 	protected static final String PROP_TEST_ENVIRONMENT = "test-environment";
+	protected static final String PROP_STUB = "stub";
 
 	protected IRuntimeType runtimeType;
-	protected IRuntimeDelegate delegate;
+	protected RuntimeDelegate delegate;
 
 	public Runtime(IFile file) {
 		super(file);
@@ -48,16 +49,20 @@ public class Runtime extends Base implements IRuntime {
 	 * 
 	 * @return
 	 */
-	public IStatus validate() {
+	public IStatus validate(IProgressMonitor monitor) {
 		try {
-			return getDelegate().validate();
+			return getDelegate(monitor).validate();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate validate() " + toString(), e);
 			return null;
 		}
 	}
+	
+	public IServerExtension getExtension(IProgressMonitor monitor) {
+		return getDelegate(monitor);
+	}
 
-	public IRuntimeDelegate getDelegate() {
+	public RuntimeDelegate getDelegate(IProgressMonitor monitor) {
 		if (delegate != null)
 			return delegate;
 		
@@ -66,7 +71,7 @@ public class Runtime extends Base implements IRuntime {
 				try {
 					long time = System.currentTimeMillis();
 					RuntimeType runtimeType2 = (RuntimeType) runtimeType;
-					delegate = (IRuntimeDelegate) runtimeType2.getElement().createExecutableExtension("class");
+					delegate = (RuntimeDelegate) runtimeType2.getElement().createExecutableExtension("class");
 					delegate.initialize(this);
 					Trace.trace(Trace.PERFORMANCE, "Runtime.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getRuntimeType().getId());
 				} catch (Exception e) {
@@ -91,12 +96,10 @@ public class Runtime extends Base implements IRuntime {
 			delegate.dispose();
 	}
 	
-	public IRuntimeWorkingCopy getWorkingCopy() {
-		IRuntimeWorkingCopy wc = new RuntimeWorkingCopy(this); 
-		addWorkingCopy(wc);
-		return wc;
+	public IRuntimeWorkingCopy createWorkingCopy() {
+		return new RuntimeWorkingCopy(this); 
 	}
-	
+
 	public boolean isWorkingCopy() {
 		return false;
 	}
@@ -131,9 +134,13 @@ public class Runtime extends Base implements IRuntime {
 	protected String getXMLRoot() {
 		return "runtime";
 	}
-	
+
 	public boolean isTestEnvironment() {
 		return getAttribute(PROP_TEST_ENVIRONMENT, false);
+	}
+
+	public boolean isStub() {
+		return getAttribute(PROP_STUB, false);
 	}
 
 	protected void setInternal(RuntimeWorkingCopy wc) {

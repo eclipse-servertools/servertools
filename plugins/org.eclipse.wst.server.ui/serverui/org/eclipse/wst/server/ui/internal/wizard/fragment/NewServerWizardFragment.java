@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.wizard.page.NewServerComposite;
@@ -80,7 +79,7 @@ public class NewServerWizardFragment extends WizardFragment {
 			server.setServerConfiguration(null);
 			IStatus status = null;
 			if (runtime != null)
-				status = runtime.validate();
+				status = runtime.validate(null);
 			if (status == null || status.isOK()) {
 				try {
 					IFile file = null;

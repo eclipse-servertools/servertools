@@ -98,7 +98,7 @@ public class ElementCreationCache {
 			if (ServerCore.getServerPreferences().isCreateResourcesInWorkspace())
 				file = ServerUtil.getUnusedServerFile(WizardUtil.getServerProject(), type);
 			
-			IServerWorkingCopy server = type.createServer(null, file, (IRuntime)null);
+			IServerWorkingCopy server = type.createServer(null, file, (IRuntime)null, monitor);
 			elementCache.put(getKey(type, host), server);
 			return server;
 		} catch (CoreException ce) {

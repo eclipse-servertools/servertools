@@ -17,15 +17,14 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerExtension;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.core.model.IRunningActionServer;
-import org.eclipse.wst.server.core.model.IServerDelegate;
 import org.eclipse.wst.server.core.util.Task;
-
 /**
  * 
  */
@@ -52,10 +51,10 @@ public class ModifyModulesTask extends Task {
 
 		IServerWorkingCopy workingCopy = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
 		
-		IServerDelegate delegate = workingCopy.getDelegate();
-		if (delegate instanceof IRunningActionServer) {
-			byte state = workingCopy.getServerState();
-			if (state == IServer.SERVER_STOPPED || state == IServer.SERVER_UNKNOWN) {
+		IServerExtension extension = workingCopy.getExtension(monitor);
+		if (extension instanceof IRunningActionServer) {
+			int state = workingCopy.getServerState();
+			if (state == IServer.STATE_STOPPED || state == IServer.STATE_UNKNOWN) {
 				String mode = (String) getTaskModel().getObject(ITaskModel.TASK_LAUNCH_MODE);
 				if (mode == null || mode.length() == 0)
 					mode = ILaunchManager.DEBUG_MODE;

@@ -10,9 +10,6 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 
-import java.util.List;
-import java.util.Map;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 /**
@@ -93,20 +90,6 @@ public interface IElement {
 	 * @return boolean
 	 */
 	public boolean isWorkingCopy();
-	
-	/**
-	 * Returns true if there are working copies that have not been saved or released.
-	 * 
-	 * @return boolean
-	 */
-	public boolean isWorkingCopiesExist();
-	
-	/**
-	 * Returns true if there is a working copy that is dirty.
-	 * 
-	 * @return boolean
-	 */
-	public boolean isAWorkingCopyDirty();
 
 	/**
 	 * Returns true if the plugin containing the delegate is loaded.
@@ -121,16 +104,6 @@ public interface IElement {
 	 * @return
 	 */
 	public boolean isDelegateLoaded();
-
-	public int getAttribute(String attributeName, int defaultValue);
-
-	public boolean getAttribute(String attributeName, boolean defaultValue);
-	
-	public String getAttribute(String attributeName, String defaultValue);
-
-	public List getAttribute(String attributeName, List defaultValue);
-
-	public Map getAttribute(String attributeName, Map defaultValue);
 
 	public IStatus validateEdit(Object context);
 	

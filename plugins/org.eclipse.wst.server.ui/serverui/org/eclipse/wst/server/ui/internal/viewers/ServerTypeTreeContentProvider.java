@@ -1,6 +1,6 @@
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -11,12 +11,10 @@
 package org.eclipse.wst.server.ui.internal.viewers;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.ui.internal.Trace;
-
 /**
  * Server type content provider.
  */
@@ -50,43 +48,49 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 		clean();
 
 		List list = new ArrayList();
-		Iterator iterator = ServerCore.getServerTypes().iterator();
-		while (iterator.hasNext()) {
-			IServerType serverType = (IServerType) iterator.next();
-			if (include(serverType)) {
-				if (serverType.getOrder() > initialSelectionOrder) {
-					initialSelection = serverType;
-					initialSelectionOrder = serverType.getOrder();
-				}
-				if (style == STYLE_FLAT) {
-					list.add(serverType);
-				} else if (style != STYLE_MODULE_TYPE) {
-					try {
-						IRuntimeType runtimeType = serverType.getRuntimeType();
-						TreeElement ele = null;
-						if (style == STYLE_VENDOR)
-							ele = getOrCreate(list, runtimeType.getVendor());
-						else if (style == STYLE_VERSION)
-							ele = getOrCreate(list, runtimeType.getVersion());
-						else if (style == STYLE_TYPE)
-							ele = getOrCreate(list, runtimeType.getName());
-						ele.contents.add(serverType);
-						elementToParentMap.put(serverType, ele);
-					} catch (Exception e) {
-						Trace.trace(Trace.WARNING, "Error in server configuration content provider", e);
+		IServerType[] serverTypes = ServerCore.getServerTypes();
+		if (serverTypes != null) {
+			int size = serverTypes.length;
+			for (int i = 0; i < size; i++) {
+			IServerType serverType = serverTypes[i];
+				if (include(serverType)) {
+					if (serverType.getOrder() > initialSelectionOrder) {
+						initialSelection = serverType;
+						initialSelectionOrder = serverType.getOrder();
 					}
-				} else { // style = MODULE_TYPE
-					IRuntimeType runtimeType = serverType.getRuntimeType();
-					Iterator iterator2 = runtimeType.getModuleTypes().iterator();
-					while (iterator2.hasNext()) {
-						IModuleType mb = (IModuleType) iterator2.next();
-						IModuleKind mt = ServerCore.getModuleKind(mb.getType());
-						if (mt != null) {
-							TreeElement ele = getOrCreate(list, mt.getName());
-							TreeElement ele2 = getOrCreate(ele.contents, mt.getName() + "/" + mb.getVersion(), mb.getVersion());
-							ele2.contents.add(serverType);
-							elementToParentMap.put(serverType, ele2);
-							elementToParentMap.put(ele2, ele);
+					if (style == STYLE_FLAT) {
+						list.add(serverType);
+					} else if (style != STYLE_MODULE_TYPE) {
+						try {
+							IRuntimeType runtimeType = serverType.getRuntimeType();
+							TreeElement ele = null;
+							if (style == STYLE_VENDOR)
+								ele = getOrCreate(list, runtimeType.getVendor());
+							else if (style == STYLE_VERSION)
+								ele = getOrCreate(list, runtimeType.getVersion());
+							else if (style == STYLE_TYPE)
+								ele = getOrCreate(list, runtimeType.getName());
+							ele.contents.add(serverType);
+							elementToParentMap.put(serverType, ele);
+						} catch (Exception e) {
+							Trace.trace(Trace.WARNING, "Error in server configuration content provider", e);
+						}
+					} else { // style = MODULE_TYPE
+						IRuntimeType runtimeType = serverType.getRuntimeType();
+						IModuleType2[] moduleTypes = runtimeType.getModuleTypes();
+						if (moduleTypes != null) {
+							int size2 = moduleTypes.length;
+							for (int j = 0; j < size2; j++) {
+								IModuleType2 mb = moduleTypes[j];
+								IModuleType mt = ServerCore.getModuleType(mb.getType());
+								if (mt != null) {
+									TreeElement ele = getOrCreate(list, mt.getName());
+									TreeElement ele2 = getOrCreate(ele.contents, mt.getName() + "/" + mb.getVersion(), mb.getVersion());
+									ele2.contents.add(serverType);
+									elementToParentMap.put(serverType, ele2);
+									elementToParentMap.put(ele2, ele);
+								}
+							}
 						}
 					}
 				}
@@ -114,22 +118,19 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 		
 		if (serverType.supportsRemoteHosts())
 			return true;
-		if (localhost && serverType.supportsLocalhost())
-			return true;
 		
 		return false;
 	}
 
 	protected boolean checkForTestEnvironmentRuntime(IServerType serverType) {
 		IRuntimeType runtimeType = serverType.getRuntimeType();
-		List list = ServerCore.getResourceManager().getRuntimes(runtimeType);
-		if (list.isEmpty())
+		IRuntime[] runtimes = ServerCore.getResourceManager().getRuntimes(runtimeType);
+		if (runtimes == null || runtimes.length == 0)
 			return false;
 		
-		Iterator iterator = list.iterator();
-		while (iterator.hasNext()) {
-			IRuntime runtime = (IRuntime) iterator.next();
-			if (runtime.isTestEnvironment())
+		int size = runtimes.length;
+		for (int i = 0; i < size; i++) {
+			if (runtimes[i].isTestEnvironment())
 				return true;
 		}
 		return false;
@@ -137,14 +138,13 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 
 	protected boolean checkForNonStubEnvironmentRuntime(IServerType serverType) {
 		IRuntimeType runtimeType = serverType.getRuntimeType();
-		List list = ServerCore.getResourceManager().getRuntimes(runtimeType);
-		if (list.isEmpty())
+		IRuntime[] runtimes = ServerCore.getResourceManager().getRuntimes(runtimeType);
+		if (runtimes == null || runtimes.length == 0)
 			return false;
 		
-		Iterator iterator = list.iterator();
-		while (iterator.hasNext()) {
-			IRuntime runtime = (IRuntime) iterator.next();
-			if (!runtime.getAttribute("stub", false))
+		int size = runtimes.length;
+		for (int i = 0; i < size; i++) {
+			if (!runtimes[i].isStub())
 				return true;
 		}
 		return false;

@@ -13,20 +13,11 @@ package org.eclipse.wst.server.core;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IModuleEvent;
-import org.eclipse.wst.server.core.model.IModuleFactoryEvent;
-import org.eclipse.wst.server.core.model.IPublishListener;
-import org.eclipse.wst.server.core.model.IPublisher;
-import org.eclipse.wst.server.core.model.IServerDelegate;
-import org.eclipse.wst.server.core.model.IServerListener;
+import org.eclipse.wst.server.core.model.*;
 /**
  * Represents a server instance. Every server is an instance of a
  * particular, fixed server type.
@@ -125,174 +116,65 @@ public interface IServer extends IElement {
 	/**
 	 * Server state constant (value 0) indicating that the
 	 * server is in an unknown state.
-	 * <p>
-	 * [issue: byte is rarely used in Java. Use int instead.]
-	 * </p>
 	 * 
 	 * @see #getServerState()
 	 */
-	public static final byte SERVER_UNKNOWN = 0;
+	public static final int STATE_UNKNOWN = 0;
 
 	/**
 	 * Server state constant (value 1) indicating that the
 	 * server is starting, but not yet ready to serve content.
-	 * <p>
-	 * [issue: byte is rarely used in Java. Use int instead.]
-	 * </p>
 	 * 
 	 * @see #getServerState()
 	 */
-	public static final byte SERVER_STARTING = 1;
+	public static final int STATE_STARTING = 1;
 
 	/**
 	 * Server state constant (value 2) indicating that the
 	 * server is ready to serve content.
-	 * <p>
-	 * [issue: byte is rarely used in Java. Use int instead.]
-	 * </p>
 	 * 
 	 * @see #getServerState()
 	 */
-	public static final byte SERVER_STARTED = 2;
+	public static final int STATE_STARTED = 2;
 
 	/**
 	 * Server state constant (value 3) indicating that the
-	 * server is started in debug mode and is ready to serve content.
-	 * <p>
-	 * [issue: byte is rarely used in Java. Use int instead.]
-	 * </p>
-	 * <p>
-	 * [issue: SERVER_STARTED_DEBUG and SERVER_STARTED_PROFILE
-	 * could be folded into SERVER_STARTED is there were 
-	 * IServer.getMode() for querying what mode the server is running in.]
-	 * </p>
+	 * server is shutting down.
 	 * 
 	 * @see #getServerState()
 	 */
-	public static final byte SERVER_STARTED_DEBUG = 3;
-	
+	public static final int STATE_STOPPING = 3;
+
 	/**
 	 * Server state constant (value 4) indicating that the
-	 * server is started in profiling mode and is ready to serve content.
-	 * <p>
-	 * [issue: byte is rarely used in Java. Use int instead.]
-	 * </p>
-	 * <p>
-	 * [issue: SERVER_STARTED_DEBUG and SERVER_STARTED_PROFILE
-	 * could be folded into SERVER_STARTED is there were 
-	 * IServer.getMode() for querying what mode the server is running in.]
-	 * </p>
-	 * 
-	 * @see #getServerState()
-	 */
-	public static final byte SERVER_STARTED_PROFILE = 4;
-
-	/**
-	 * Server state constant (value 5) indicating that the
-	 * server is shutting down.
-	 * <p>
-	 * [issue: byte is rarely used in Java. Use int instead.]
-	 * </p>
-	 * 
-	 * @see #getServerState()
-	 */
-	public static final byte SERVER_STOPPING = 5;
-
-	/**
-	 * Server state constant (value 6) indicating that the
 	 * server is stopped.
-	 * <p>
-	 * [issue: byte is rarely used in Java. Use int instead.]
-	 * </p>
 	 * 
 	 * @see #getServerState()
 	 */
-	public static final byte SERVER_STOPPED = 6;
+	public static final int STATE_STOPPED = 4;
 
-	/**
-	 * Server state constant (value 7) indicating that the
-	 * server does not support getting the server state.
-	 * <p>
-	 * [issue: Given SERVER_UNKNOWN, is this state really
-	 * necessary?]
-	 * </p>
-	 * <p>
-	 * [issue: byte is rarely used in Java. Use int instead.]
-	 * </p>
-	 * 
-	 * @see #getServerState()
-	 */
-	public static final byte SERVER_UNSUPPORTED = 7;
+	public static final int STATE_RESTART = 8;
 
+	public static final int STATE_REPUBLISH = 9;
 
-	/**
-	 * Module state constant (value 0) indicating that the
-	 * module is in an unknown state.
-	 * <p>
-	 * [issue: byte is rarely used in Java. Use int instead.]
-	 * </p>
-	 * 
-	 * @see #getModuleState(IModule)
-	 */
-	public static final byte MODULE_STATE_UNKNOWN = 0;
-
-	/**
-	 * Module state constant (value 1) indicating that the
-	 * module is starting up, but not yet ready to serve its content.
-	 * <p>
-	 * [issue: byte is rarely used in Java. Use int instead.]
-	 * </p>
-	 * 
-	 * @see #getModuleState(IModule)
-	 */
-	public static final byte MODULE_STATE_STARTING = 1;
-
-	/**
-	 * Module state constant (value 2) indicating that the
-	 * module is ready to serve its content.
-	 * <p>
-	 * [issue: byte is rarely used in Java. Use int instead.]
-	 * </p>
-	 * 
-	 * @see #getModuleState(IModule)
-	 */
-	public static final byte MODULE_STATE_STARTED = 2;
-
-	/**
-	 * Module state constant (value 3) indicating that the
-	 * module is shutting down.
-	 * <p>
-	 * [issue: byte is rarely used in Java. Use int instead.]
-	 * </p>
-	 * 
-	 * @see #getModuleState(IModule)
-	 */
-	public static final byte MODULE_STATE_STOPPING = 3;
-
-	/**
-	 * Module state constant (value 4) indicating that the
-	 * module is stopped.
-	 * <p>
-	 * [issue: byte is rarely used in Java. Use int instead.]
-	 * </p>
-	 * 
-	 * @see #getModuleState(IModule)
-	 */
-	public static final byte MODULE_STATE_STOPPED = 4;
+	public static final int STATE_REINSTALL_MODULE = 10;
 
 
 	// --- Sync State Constants ---
 	// (returned from the isXxxInSnyc() methods)
 
 	// the state of the server's contents are unknown
-	public static final byte SYNC_STATE_UNKNOWN = 0;
+	public static final int SYNC_STATE_UNKNOWN = 0;
 
 	// the local contents exactly match the server's contents
-	public static final byte SYNC_STATE_IN_SYNC = 1;
+	public static final int SYNC_STATE_IN_SYNC = 1;
 
 	// the local contents do not match the server's contents
-	public static final byte SYNC_STATE_DIRTY = 2;
+	public static final int SYNC_STATE_REPUBLISH = 2;
 	
+	// the local content changes require a restart
+	public static final int SYNC_STATE_RESTART = 3;
+
 	/**
 	 * Returns the current state of this server.
 	 * <p>
@@ -300,28 +182,42 @@ public interface IServer extends IElement {
 	 * (it does not actually communicate with any actual
 	 * server).
 	 * </p>
-	 * <p>
-	 * [issue: byte is rarely used in Java. Use int instead.]
-	 * </p>
 	 *
 	 * @return one of the server state (<code>SERVER_XXX</code>)
 	 * constants declared on {@link IServer}
 	 */
-	public byte getServerState();
+	public int getServerState();
 	
 	/**
-	 * Returns the host for the running server.
-	 * The format of the host conforms to RFC 2732.
-	 * <p>
-	 * [issue: Consider renaming to "getHost" to bring in line
-	 * with terminology used in java.net.URL. The host name can be
-	 * either a host name or octets.]
-	 * </p>
+	 * Returns the ILaunchManager mode that the server is in. This method will
+	 * return null if the server is not running.
+	 *  
+	 * @return
+	 */
+	public String getMode();
+	
+	/**
+	 * Returns the server's sync state.
+	 *
+	 * @return int
+	 */
+	public int getServerSyncState();
+	
+	/**
+	 * Returns the module's sync state.
+	 * @return
+	 */
+	public int getModuleSyncState(IModule module);
+	
+	/**
+	 * Returns the host for the server.
+	 * The format of the host can be either a qualified or unqualified hostname,
+	 * or an IP address and must conform to RFC 2732.
 	 * 
 	 * @return a host string conforming to RFC 2732
 	 * @see java.net.URL.getHost()
 	 */
-	public String getHostname();
+	public String getHost();
 	
 	/**
 	 * Returns the file where this server instance is serialized.
@@ -383,36 +279,19 @@ public interface IServer extends IElement {
 	 * @return the server configuration, or <code>null</code> if none
 	 */
 	public IServerConfiguration getServerConfiguration();
-	
+
 	/**
-	 * Returns the server delegate for this server.
-	 * The server delegate is a server-type-specific object.
-	 * By casting the server delegate to the type prescribed in
+	 * Returns the server extension for this server.
+	 * The server extension is a server-type-specific object.
+	 * By casting the server extension to the type prescribed in
 	 * the API documentation for that particular server type, 
 	 * the client can access server-type-specific properties and
 	 * methods.
-	 * <p>
-	 * [issue: Exposing IServerDelegate to clients of IServer
-	 * is confusing and dangerous. Instead, replace this
-	 * method with something like getServerExtension() which
-	 * returns an IServerExtension. IServerExtension is an
-	 * "marker" interface that server providers would 
-	 * implement or extend if they want to expose additional
-	 * API for their server type. That way IServerDelegate
-	 * can be kept entirely on the SPI side, out of view from 
-	 * clients.]
-	 * </p>
-	 * <p>
-	 * [issue: serverTypes schema, class attribute is optional.
-	 * This suggests that a server need not provide a delegate class.
-	 * This seems implausible. I've spec'd this method 
-	 * as if delegate is mandatory.]
-	 * </p>
 	 * 
-	 * @return the server delegate
+	 * @return the server extension
 	 */
-	public IServerDelegate getDelegate();
-	
+	public IServerExtension getExtension(IProgressMonitor monitor);
+
 	/**
 	 * Returns a server working copy for modifying this server instance.
 	 * If this instance is already a working copy, it is returned.
@@ -438,15 +317,12 @@ public interface IServer extends IElement {
 	 * This may be convenient in code that is ignorant of
 	 * whether they are dealing with a working copy or not.
 	 * However, it is hard for clients to manage working copies
-	 * with this design.
-	 * This method should be renamed "createWorkingCopy"
-	 * or "newWorkingCopy" to make it clear to clients that it
-	 * creates a new object, even for working copies.]
+	 * with this design.]
 	 * </p>
 	 * 
 	 * @return a new working copy
 	 */
-	public IServerWorkingCopy getWorkingCopy();
+	public IServerWorkingCopy createWorkingCopy();
 	
 	/**
 	 * Returns whether the given server configuration can be used with
@@ -470,13 +346,6 @@ public interface IServer extends IElement {
 	 * configuration, and <code>false/code> otherwise
 	 */
 	public boolean isSupportedConfiguration(IServerConfiguration configuration);
-
-	/**
-	 * Returns the configuration's sync state.
-	 *
-	 * @return byte
-	 */
-	public byte getConfigurationSyncState();
 
 	/**
 	 * Returns a list of the projects that have not been published
@@ -532,7 +401,7 @@ public interface IServer extends IElement {
 	 * and <code>false</code> otherwise
 	 */
 	public boolean canPublish();
-	
+
 	/**
 	 * Returns true if the server may have any projects or it's
 	 * configuration out of sync.
@@ -540,61 +409,17 @@ public interface IServer extends IElement {
 	 * @return boolean
 	 */
 	public boolean shouldPublish();
-	
-	/**
-	 * Returns the publisher that can be used to publish the
-	 * given module to this server.
-	 * <p>
-	 * [issue: It is unclear why the IPublisher is being exposed
-	 * here at all. A normal client would call
-	 * IServer.publish to instigate a publish operation; they would
-	 * not be involved with anything finer-grained. Even the package
-	 * suggests that IPublisher is something that should only be 
-	 * relevant on the SPI side.]
-	 * </p>
-	 * <p>
-	 * [issue: Explain the role of the parents parameter.]
-	 * </p>
-	 *
-	 * @param parents the parent modules (element type: <code>IModule</code>)
-	 * @param module the module
-	 * @return the publisher that handles the given module, or
-	 * <code>null</code> if the module cannot be published to
-	 * this server
-	 */
-	public IPublisher getPublisher(List parents, IModule module);
 
 	/**
-	 * Publishes all associated modules to this server using
-	 * the default publish manager.
-	 * <p>
-	 * [issue: The Server implementation of this method currently reads
-	 * ServerCore.getPublishManager(ServerPreferences.DEFAULT_PUBLISH_MANAGER).
-	 * This means that there is a fixed default (the smart publish manager).
-	 * I think it should instead read
-	 * ServerCore.getPublishManager(ServerPreferences.getDefaultPublishManager())
-	 * which allows the default publish manager to be configured via 
-	 * a preference.]
-	 * </p>
+	 * Publish to the server using the progress monitor. The result of the
+	 * publish operation is returned as an IStatus.
 	 * 
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return status indicating what (if anything) went wrong
 	 */
 	public IStatus publish(IProgressMonitor monitor);
-	
-	/**
-	 * Publishes all associated modules to this server using
-	 * the given publish manager.
-	 * 
-	 * @param publishManager the publish manager that is to coordinate
-	 * this publishing operation
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @return status indicating what (if anything) went wrong
-	 */
-	public IStatus publish(IPublishManager publishManager, IProgressMonitor monitor);
-	
+
 	/**
 	 * Returns whether this server is in a state that it can
 	 * be started in the given mode.
@@ -608,9 +433,9 @@ public interface IServer extends IElement {
 	 * mode
 	 */
 	public boolean canStart(String launchMode);
-	
+
 	public ILaunch getExistingLaunch();
-	
+
 	/**
 	 * Return the launch configuration for this server. If one does not exist, it
 	 * will be created if "create" is true, and otherwise will return null.
@@ -619,9 +444,9 @@ public interface IServer extends IElement {
 	 * @return
 	 * @throws CoreException
 	 */
-	public ILaunchConfiguration getLaunchConfiguration(boolean create) throws CoreException;
+	public ILaunchConfiguration getLaunchConfiguration(boolean create, IProgressMonitor monitor) throws CoreException;
 
-	public void setLaunchDefaults(ILaunchConfigurationWorkingCopy workingCopy);
+	public void setLaunchDefaults(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor);
 
 	/**
 	 * Asynchronously starts this server in the given launch mode.
@@ -703,16 +528,12 @@ public interface IServer extends IElement {
 	 * not been modified and the server process is still in sync); the
 	 * result is unspecified if the server is not currently running
 	 */
-	public boolean isRestartNeeded();
+	//public boolean isRestartNeeded();
 
 	/**
 	 * Asynchronously restarts this server. This operation does
 	 * nothing if this server cannot be stopped ({@link #canRestart()}
 	 * returns <code>false</code>.
-	 * <p>
-	 * [issue: Lack of symmetry. Why is there no synchronousRestart? start and
-	 * stop both have synchronous equivalents.]
-	 * </p>
 	 * <p>
 	 * [issue: There is no way to communicate failure to the
 	 * client. Given that this operation can go awry, there probably
@@ -725,6 +546,23 @@ public interface IServer extends IElement {
 	 * {@link org.eclipse.debug.core.ILaunchManager}
 	 */
 	public void restart(String mode);
+	
+	/**
+	 * Synchronously restarts this server. This operation does
+	 * nothing if this server cannot be stopped ({@link #canRestart()}
+	 * returns <code>false</code>.
+	 * <p>
+	 * [issue: There is no way to communicate failure to the
+	 * client. Given that this operation can go awry, there probably
+	 * should be a mechanism that allows failing asynch operations
+	 * to be diagnosed.]
+	 * </p>
+	 *
+	 * @param launchMode a mode in which a server can be launched,
+	 * one of the mode constants defined by
+	 * {@link org.eclipse.debug.core.ILaunchManager}
+	 */
+	public void synchronousRestart(String launchMode, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Returns whether this server is in a state that it can
@@ -781,6 +619,68 @@ public interface IServer extends IElement {
 	public void terminate();
 
 	/**
+	 * Returns whether the given module can be restarted.
+	 * <p>
+	 * [issue: It's unclear whether this operations is guaranteed to be fast
+	 * or whether it could involve communication with any actual
+	 * server. If it is not fast, the method should take a progress
+	 * monitor.]
+	 * </p>
+	 *
+	 * @param module the module
+	 * @return <code>true</code> if the given module can be
+	 * restarted, and <code>false</code> otherwise 
+	 */
+	public boolean canRestartModule(IModule module);
+
+	/**
+	 * Check if the given module is in sync on the server. It should
+	 * return true if the module should be restarted (is out of
+	 * sync) or false if the module does not need to be restarted.
+	 *
+	 * @param module org.eclipse.wst.server.core.model.IModule
+	 * @return boolean
+	 */
+	public boolean isModuleRestartNeeded(IModule module);
+
+	/**
+	 * Asynchronously restarts the given module on the server.
+	 * See the specification of 
+	 * {@link IServer#synchronousRestartModule(IModule, IProgressMonitor)}
+	 * for further details. 
+	 * <p>
+	 * The implementation should update the module sync state and fire
+	 * an event for the module.
+	 * </p>
+	 * <p>
+	 * [issue: It should probably be spec'd to throw an exception error if the
+	 * given module is not associated with the server.]
+	 * </p>
+	 * <p>
+	 * [issue: Since this method is ascynchronous, is there
+	 * any need for the progress monitor?]
+	 * </p>
+	 * <p>
+	 * [issue: Since this method is ascynchronous, how can
+	 * it return a meaningful IStatus? 
+	 * And IServer.synchronousModuleRestart throws CoreException
+	 * if anything goes wrong.]
+	 * </p>
+	 * <p>
+	 * [issue: If the module was just published to the server
+	 * and had never been started, would is be ok to "start"
+	 * the module using this method?]
+	 * </p>
+	 * 
+	 * @param module the module to be started
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return status object
+	 * @exception CoreException if an error occurs while trying to restart the module
+	 */
+	public void restartModule(IModule module, IProgressMonitor monitor) throws CoreException;
+
+	/**
 	 * Restarts the given module and waits until it has finished restarting.
 	 * <p>
 	 * [issue: Lack of symmetry. Why is there no moduleRestart? start, restart,
@@ -789,10 +689,6 @@ public interface IServer extends IElement {
 	 * <p>
 	 * [issue: It should probably be spec'd to throw an exception error if the
 	 * given module is not associated with the server.]
-	 * </p>
-	 * <p>
-	 * [issue: This method should be renamed ""synchronousRestartModule".
-	 * This would bring it into line with IServerDelegate.restartModule.]
 	 * </p>
 	 * <p>
 	 * [issue: If the module was just published to the server
@@ -805,7 +701,7 @@ public interface IServer extends IElement {
 	 *    reporting and cancellation are not desired
 	 * @exception CoreException if an error occurs while trying to restart the module
 	 */
-	public void synchronousModuleRestart(IModule module, IProgressMonitor monitor) throws CoreException;
+	public void synchronousRestartModule(IModule module, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Returns a temporary directory that the requestor can use
@@ -827,8 +723,6 @@ public interface IServer extends IElement {
 	 * @return org.eclipse.core.runtime.IPath
 	 */
 	public IPath getTempDirectory();
-	
-	public void updateConfiguration();
 
 	/**
 	 * Returns whether the specified module modifications could be made to this
@@ -853,46 +747,30 @@ public interface IServer extends IElement {
 	 * @return <code>true</code> if the proposed modifications
 	 * look feasible, and <code>false</code> otherwise
 	 */
-	public IStatus canModifyModules(IModule[] add, IModule[] remove);
+	public IStatus canModifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor);
 
 	/**
-	 * Returns the list of modules that are associated with
+	 * Returns an array of modules that are associated with
 	 * this server.
 	 * <p>
 	 * [issue: Clarify that these are root modules, not ones parented
 	 * by some other module.]
 	 * </p>
 	 *
-	 * @return a possibly-empty list of modules
+	 * @return a possibly-empty array of modules
 	 */
-	public IModule[] getModules();
+	public IModule[] getModules(IProgressMonitor monitor);
 	
 	/**
 	 * Returns the current state of the given module on this server.
-	 * Returns <code>MODULE_STATE_UNKNOWN</code> if the module
+	 * Returns <code>STATE_UNKNOWN</code> if the module
 	 * is not among the ones associated with this server.
-	 * </p>
-	 * <p>
-	 * [issue: This operation gets forwarded to the delegate.
-	 * It's unclear whether this operations is guaranteed to be fast
-	 * or whether it could involve communication with any actual
-	 * server. If it is not fast, the method should take a progress
-	 * monitor.]
-	 * </p>
-	 * <p>
-	 * [issue: byte is rarely used in Java. Use int instead.]
-	 * </p>
-	 * <p>
-	 * [issue: The SERVER_XXX and MODULE_STATE_XXX constants
-	 * should be combined into a single set: {unknown, starting, started,
-	 * stopping, stopped}.]
-	 * </p>
 	 *
 	 * @param module the module
-	 * @return one of the module state (<code>MODULE_STATE_XXX</code>)
+	 * @return one of the state (<code>STATE_XXX</code>)
 	 * constants declared on {@link IServer}
 	 */
-	public byte getModuleState(IModule module);
+	public int getModuleState(IModule module);
 	
 	/**
 	 * Returns the child module(s) of this module. If this
@@ -906,7 +784,7 @@ public interface IServer extends IElement {
 	 * @param module org.eclipse.wst.server.core.model.IModule
 	 * @return java.util.List
 	 */
-	public List getChildModules(IModule module);
+	public List getChildModules(IModule module, IProgressMonitor monitor);
 
 	/**
 	 * Returns the parent module(s) of this module. When
@@ -931,16 +809,12 @@ public interface IServer extends IElement {
 	 * @return java.util.List
 	 * @throws org.eclipse.core.runtime.CoreException
 	 */
-	public List getParentModules(IModule module) throws CoreException;
-
+	public List getParentModules(IModule module, IProgressMonitor monitor) throws CoreException;
+	
 	/**
-	 * Method called when changes to the module or module factories
-	 * within this configuration occur. Return any necessary commands to repair
-	 * or modify the server configuration in response to these changes.
-	 * 
-	 * @param org.eclipse.wst.server.core.model.IModuleFactoryEvent[]
-	 * @param org.eclipse.wst.server.core.model.IModuleEvent[]
-	 * @return org.eclipse.wst.server.core.model.ITask[]
+	 * Returns a list of IServerPorts that this server has.
+	 *
+	 * @return java.util.List
 	 */
-	public ITask[] getRepairCommands(IModuleFactoryEvent[] factoryEvent, IModuleEvent[] moduleEvent);
+	public List getServerPorts();
 }

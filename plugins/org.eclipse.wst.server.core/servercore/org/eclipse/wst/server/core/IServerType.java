@@ -50,39 +50,29 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @since 1.0
  */
 public interface IServerType extends IOrdered {
-	
 	/**
 	 * Constant (value 0) indicating that a type of server that can be
 	 * directly started and stopped.
-	 * <p>
-	 * [issue: byte is rarely used in Java. Use int instead.]
-	 * </p>
 	 * 
 	 * @see #getServerStateSet()
 	 */
-	public static final byte SERVER_STATE_SET_MANAGED = 0;
+	public static final int SERVER_STATE_SET_MANAGED = 0;
 	
 	/**
 	 * Constant (value 1) indicating that a type of server that can be
 	 * attached to, typically for debugging.
-	 * <p>
-	 * [issue: byte is rarely used in Java. Use int instead.]
-	 * </p>
 	 * 
 	 * @see #getServerStateSet()
 	 */
-	public static final byte SERVER_STATE_SET_ATTACHED = 1;
+	public static final int SERVER_STATE_SET_ATTACHED = 1;
 	
 	/**
 	 * Constant (value 2) indicating that a type of server that
 	 * can only be used for publishing.
-	 * <p>
-	 * [issue: byte is rarely used in Java. Use int instead.]
-	 * </p>
 	 * 
 	 * @see #getServerStateSet()
 	 */
-	public static final byte SERVER_STATE_SET_PUBLISHED = 2;
+	public static final int SERVER_STATE_SET_PUBLISHED = 2;
 
 	/**
 	 * Returns the id of this server type.
@@ -213,15 +203,12 @@ public interface IServerType extends IOrdered {
 	 * declaration. This means that any server type has to commit
 	 * so early on which one it is.]
 	 * </p>
-	 * <p>
-	 * [issue: byte is rarely used in Java. Always use int instead.]
-	 * </p>
 	 *
 	 * @return one of {@link #SERVER_STATE_SET_MANAGED},
 	 * {@link #SERVER_STATE_SET_ATTACHED}, or
 	 * {@link #SERVER_STATE_SET_PUBLISHED}
 	 */
-	public byte getServerStateSet();
+	public int getServerStateSet();
 
 	/**
 	 * Returns the type of server configuration that this type
@@ -271,52 +258,15 @@ public interface IServerType extends IOrdered {
 	public boolean hasServerConfiguration();
 
 	/**
-	 * Returns whether this type of server can run on the local host.
-	 * <p>
-	 * [issue: What is the significance of a server type supporting
-	 * local or remote host? Can a server type support both local and
-	 * remote hosts? What about supporting neither?]
-	 * </p>
-	 * <p>
-	 * [issue: Should be renamed "supportsLocalHost" (capital "H").]
-	 * </p>
-	 * <p>
-	 * [issue: Again, it seems odd to me that this is something
-	 * hard-wired to a server type.]
-	 * </p>
-	 * <p>
-	 * [issue: hosts is optional according the serverTypes schema.
-	 * The schema suggests that "local" and "remote" are the legal values.
-	 * The implementation is quite different; it looks to see if
-	 * the value contains either "localhost" or "127.0.0.1". The schema spec
-	 * be tightened up and the implementation brought into line.]
-	 * </p>
-	 * 
-	 * @return <code>true</code> if this type of server can run on
-	 * the local host, and <code>false</code> if it cannot
-	 */
-	public boolean supportsLocalhost();
-
-	/**
-	 * Returns whether this type of server can run on a remote host.
-	 * <p>
-	 * [issue: What is the significance of a server type supporting
-	 * local or remote host? Can a server type support both local and
-	 * remote hosts? What about supporting neither?]
-	 * </p>
+	 * Returns <code>true</code> if this type of server can run on a remote host.
+	 * Returns <code>false</code> if the server type can only be run on "localhost"
+	 * (the local machine). 
 	 * <p>
 	 * [issue: Should be renamed "supportsRemoteHost" (no "s").]
 	 * </p>
 	 * <p>
 	 * [issue: Again, it seems odd to me that this is something
 	 * hard-wired to a server type.]
-	 * </p>
-	 * <p>
-	 * [issue: hosts is optional according the serverTypes schema.
-	 * The schema suggests that "local" and "remote" are the legal values.
-	 * The implementation is quite different; it looks to see if
-	 * the value contains "remote" as a substring. The schema spec
-	 * be tightened up and the implementation brought into line.]
 	 * </p>
 	 * 
 	 * @return <code>true</code> if this type of server can run on
@@ -405,7 +355,7 @@ public interface IServerType extends IOrdered {
 	 * @return a new server working copy with the given id
 	 * @throws CoreException [missing]
 	 */
-	public IServerWorkingCopy createServer(String id, IFile file, IRuntime runtime) throws CoreException;
+	public IServerWorkingCopy createServer(String id, IFile file, IRuntime runtime, IProgressMonitor monitor) throws CoreException;
 	
 	/**
 	 * Creates a working copy instance of this server type.
@@ -440,4 +390,20 @@ public interface IServerType extends IOrdered {
 	 * @throws CoreException [missing]
 	 */
 	public IServerWorkingCopy createServer(String id, IFile file, IProgressMonitor monitor) throws CoreException;
+	
+	/**
+	 * Return the timeout (in ms) that should be used to wait for the server to start.
+	 * Returns -1 if there is no timeout.
+	 * 
+	 * @return
+	 */
+	public int getStartTimeout();
+
+	/**
+	 * Return the timeout (in ms) to wait before assuming that the server
+	 * has failed to stop. Returns -1 if there is no timeout.
+	 *  
+	 * @return
+	 */
+	public int getStopTimeout();
 }

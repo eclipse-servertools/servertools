@@ -36,5 +36,11 @@ public interface IRuntimeLocator {
 	 */
 	public String getDescription();
 
+	/**
+	 * 
+	 * @param listener
+	 * @param monitor
+	 * @throws CoreException
+	 */
 	public void searchForRuntimes(IRuntimeLocatorListener listener, IProgressMonitor monitor) throws CoreException;
 }

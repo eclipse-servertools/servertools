@@ -20,8 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IServerConfigurationDelegate;
-import org.eclipse.wst.server.core.model.IServerConfigurationWorkingCopyDelegate;
+import org.eclipse.wst.server.core.model.ServerConfigurationDelegate;
 import org.eclipse.wst.server.core.util.ProgressUtil;
 /**
  * 
@@ -30,7 +29,7 @@ public class ServerConfigurationWorkingCopy extends ServerConfiguration implemen
 	protected ServerConfiguration config;
 	protected WorkingCopyHelper wch;
 	
-	protected IServerConfigurationWorkingCopyDelegate workingCopyDelegate;
+	protected ServerConfigurationDelegate workingCopyDelegate;
 	
 	// working copy
 	public ServerConfigurationWorkingCopy(ServerConfiguration config) {
@@ -58,7 +57,7 @@ public class ServerConfigurationWorkingCopy extends ServerConfiguration implemen
 		return config;
 	}
 	
-	public IServerConfigurationWorkingCopy getWorkingCopy() {
+	public IServerConfigurationWorkingCopy createWorkingCopy() {
 		return this;
 	}
 
@@ -104,60 +103,33 @@ public class ServerConfigurationWorkingCopy extends ServerConfiguration implemen
 		return wch.isDirty();
 	}
 	
-	public void release() {
-		wch.release();
-		dispose();
-		if (config != null)
-			config.release(this);
-	}
-	
-	public IServerConfiguration save(IProgressMonitor monitor) throws CoreException {
+	public IServerConfiguration save(boolean force, IProgressMonitor monitor) throws CoreException {
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.subTask(ServerPlugin.getResource("%savingTask", getName()));
-		if (wch.isReleased())
-			return null;
+		
+		if (!force)
+			wch.validateTimestamp(getOriginal());
+		
 		if (config == null)
 			config = new ServerConfiguration(file);
 		
-		getWorkingCopyDelegate().handleSave(IServerConfigurationWorkingCopyDelegate.PRE_SAVE, monitor);
 		config.setInternal(this);
 		config.doSave(monitor);
-		saveData(true);
+		saveData(true, monitor);
 		wch.setDirty(false);
-		release();
-		getWorkingCopyDelegate().handleSave(IServerConfigurationWorkingCopyDelegate.POST_SAVE, monitor);
 		
 		return config;
 	}
 	
-	public IServerConfiguration save(IProgressMonitor monitor, boolean release) throws CoreException {
-		monitor = ProgressUtil.getMonitorFor(monitor);
-		monitor.subTask(ServerPlugin.getResource("%savingTask", getName()));
-		if (wch.isReleased())
-			return null;
-		if (config == null)
-			config = new ServerConfiguration(file);
-		
-		getWorkingCopyDelegate().handleSave(IServerConfigurationWorkingCopyDelegate.PRE_SAVE, monitor);
-		config.setInternal(this);
-		config.doSave(monitor);
-		saveData(true);
-		wch.setDirty(false);
-		if (release)
-			release();
-		getWorkingCopyDelegate().handleSave(IServerConfigurationWorkingCopyDelegate.POST_SAVE, monitor);
-		return config;
+	public IServerExtension getExtension(IProgressMonitor monitor) {
+		return getWorkingCopyExtension(monitor);
 	}
 	
-	public IServerConfigurationDelegate getDelegate() {
-		return getWorkingCopyDelegate();
-	}
-	
-	public IServerConfigurationWorkingCopyDelegate getWorkingCopyDelegate() {
-		return getWorkingCopyDelegate(true);
+	public IServerExtension getWorkingCopyExtension(IProgressMonitor monitor) {
+		return getWorkingCopyDelegate(true, monitor);
 	}
 
-	public IServerConfigurationWorkingCopyDelegate getWorkingCopyDelegate(boolean load) {
+	public ServerConfigurationDelegate getWorkingCopyDelegate(boolean load, IProgressMonitor monitor) {
 		if (workingCopyDelegate != null)
 			return workingCopyDelegate;
 		
@@ -166,11 +138,10 @@ public class ServerConfigurationWorkingCopy extends ServerConfiguration implemen
 				try {
 					long time = System.currentTimeMillis();
 					ServerConfigurationType configType = (ServerConfigurationType) configurationType;
-					workingCopyDelegate = (IServerConfigurationWorkingCopyDelegate) configType.getElement().createExecutableExtension("workingCopyClass");
-					workingCopyDelegate.initialize((IServerConfiguration) this);
+					workingCopyDelegate = (ServerConfigurationDelegate) configType.getElement().createExecutableExtension("class");
 					workingCopyDelegate.initialize(this);
 					if (load)
-						loadData();
+						loadData(monitor);
 					Trace.trace(Trace.PERFORMANCE, "ServerConfigurationWorkingCopy.getWorkingCopyDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerConfigurationType().getId());
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);
@@ -211,9 +182,9 @@ public class ServerConfigurationWorkingCopy extends ServerConfiguration implemen
 		wch.firePropertyChangeEvent(propertyName, oldValue, newValue);
 	}
 	
-	public void setDefaults() {
+	public void setDefaults(IProgressMonitor monitor) {
 		try {
-			getWorkingCopyDelegate(false).setDefaults();
+			getWorkingCopyDelegate(false, monitor).setDefaults();
 			isDataLoaded = true;
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate setDefaults() " + toString(), e);
@@ -222,7 +193,7 @@ public class ServerConfigurationWorkingCopy extends ServerConfiguration implemen
 	
 	public void importFromPath(IPath path, IProgressMonitor monitor) throws CoreException {
 		try {
-			getWorkingCopyDelegate(false).importFromPath(path, monitor);
+			getWorkingCopyDelegate(false, monitor).importFromPath(path, monitor);
 			isDataLoaded = true;
 		} catch (CoreException ce) {
 			throw ce;
@@ -233,7 +204,7 @@ public class ServerConfigurationWorkingCopy extends ServerConfiguration implemen
 	
 	public void importFromRuntime(IRuntime runtime, IProgressMonitor monitor) throws CoreException {
 		try {
-			getWorkingCopyDelegate(false).importFromRuntime(runtime, monitor);
+			getWorkingCopyDelegate(false, monitor).importFromRuntime(runtime, monitor);
 			isDataLoaded = true;
 		} catch (CoreException ce) {
 			throw ce;

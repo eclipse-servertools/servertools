@@ -9,9 +9,7 @@ package org.eclipse.jst.server.tomcat.core;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-import org.eclipse.wst.server.core.model.IServerConfigurationWorkingCopyDelegate;
-
-public interface ITomcatConfigurationWorkingCopy extends ITomcatConfiguration, IServerConfigurationWorkingCopyDelegate {
+public interface ITomcatConfigurationWorkingCopy extends ITomcatConfiguration {
 	/**
 	 * Add a web module.
 	 *

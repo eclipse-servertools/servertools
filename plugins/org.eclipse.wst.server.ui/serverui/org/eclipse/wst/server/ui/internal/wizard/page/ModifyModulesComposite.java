@@ -33,11 +33,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.ImageResource;
@@ -55,7 +54,6 @@ public class ModifyModulesComposite extends Composite {
 	protected IWizardHandle wizard;
 	
 	protected IServer server;
-	protected boolean disabled = false;
 
 	protected Map childModuleMap = new HashMap();
 	protected Map parentTreeItemMap = new HashMap();
@@ -111,7 +109,7 @@ public class ModifyModulesComposite extends Composite {
 			return;
 
 		// get currently deployed modules
-		IModule[] currentModules = server.getModules();
+		IModule[] currentModules = server.getModules(null);
 		if (currentModules != null) {
 			int size = currentModules.length;
 			for (int i = 0; i < size; i++) {
@@ -124,7 +122,7 @@ public class ModifyModulesComposite extends Composite {
 		newModule = null;
 		if (origNewModule != null) {
 			try {
-				List parents = server.getParentModules(origNewModule);
+				List parents = server.getParentModules(origNewModule, null);
 				if (parents != null && parents.size() > 0)
 					newModule = (IModule) parents.get(0);
 				else
@@ -144,9 +142,9 @@ public class ModifyModulesComposite extends Composite {
 			IModule module = (IModule) iterator.next();
 			if (!deployed.contains(module)) {
 				try {
-					List parents = server.getParentModules(module);
+					List parents = server.getParentModules(module, null);
 					if (parents != null && parents.contains(module)) {
-						IStatus status = server.canModifyModules(new IModule[] { module }, null);
+						IStatus status = server.canModifyModules(new IModule[] { module }, null, null);
 						if (status != null && !status.isOK())
 							errorMap.put(module, status);
 						modules.add(module);
@@ -163,7 +161,7 @@ public class ModifyModulesComposite extends Composite {
 		while (iterator.hasNext()) {
 			IModule module = (IModule) iterator.next();
 			try {
-				List children = server.getChildModules(module);
+				List children = server.getChildModules(module, null);
 				childModuleMap.put(module, children);
 			} catch (Exception e) { }
 		}
@@ -172,23 +170,9 @@ public class ModifyModulesComposite extends Composite {
 		while (iterator.hasNext()) {
 			IModule module = (IModule) iterator.next();
 			try {
-				List children = server.getChildModules(module);
+				List children = server.getChildModules(module, null);
 				childModuleMap.put(module, children);
 			} catch (Exception e) { }
-		}
-		
-		boolean dirty = false;
-		if (server instanceof IServerWorkingCopy) {
-			IServerWorkingCopy wc = (IServerWorkingCopy) server;
-			IServer server2 = wc.getOriginal();
-			if (server2 != null)
-				dirty = server2.isAWorkingCopyDirty();
-		} else
-			dirty = server.isAWorkingCopyDirty();
-		
-		if (dirty) {
-			wizard.setMessage(ServerUIPlugin.getResource("%errorCloseEditor", server.getName()), IMessageProvider.ERROR);
-			disabled = true;
 		}
 		
 		if (availableTree != null)
@@ -324,14 +308,6 @@ public class ModifyModulesComposite extends Composite {
 	}
 	
 	protected void setEnablement() {
-		if (disabled) {
-			add.setEnabled(false);
-			addAll.setEnabled(false);
-			remove.setEnabled(false);
-			removeAll.setEnabled(false);
-			return;
-		}
-
 		boolean enabled = false;
 		wizard.setMessage(null, IMessageProvider.NONE);
 		if (availableTree.getItemCount() > 0) {
@@ -473,9 +449,9 @@ public class ModifyModulesComposite extends Composite {
 	 * @return boolean
 	 */
 	public boolean isPageComplete() {
-		return (!disabled);
+		return true;
 	}
-	
+
 	public List getModulesToRemove() {
 		List list = new ArrayList();
 		Iterator iterator = originalModules.iterator();

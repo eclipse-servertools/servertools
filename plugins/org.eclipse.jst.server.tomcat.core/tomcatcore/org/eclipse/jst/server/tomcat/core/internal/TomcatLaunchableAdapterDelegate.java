@@ -14,7 +14,10 @@ import java.net.URL;
 import org.eclipse.jst.server.j2ee.IWebModule;
 import org.eclipse.jst.server.j2ee.Servlet;
 import org.eclipse.jst.server.j2ee.WebResource;
+import org.eclipse.wst.server.core.ILaunchable;
+import org.eclipse.wst.server.core.IModuleObject;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerExtension;
 import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.core.util.HttpLaunchable;
 import org.eclipse.wst.server.core.util.NullLaunchable;
@@ -22,14 +25,14 @@ import org.eclipse.wst.server.core.util.NullModuleObject;
 /**
  * Launchable adapter delegate for Web resources in Tomcat.
  */
-public class TomcatLaunchableAdapterDelegate implements ILaunchableAdapterDelegate {
+public class TomcatLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
 	/*
-	 * @see ILaunchableAdapterDelegate#getLaunchable(IServer, IModuleObject)
+	 * @see LaunchableAdapterDelegate#getLaunchable(IServer, IModuleObject)
 	 */
 	public ILaunchable getLaunchable(IServer server, IModuleObject moduleObject) {
 		Trace.trace("TomcatLaunchableAdapter " + server + "-" + moduleObject);
-		IServerDelegate delegate = server.getDelegate();
-		if (!(delegate instanceof TomcatServer))
+		IServerExtension extension = server.getExtension(null);
+		if (!(extension instanceof TomcatServer))
 			return null;
 		if (!(moduleObject instanceof Servlet) &&
 			!(moduleObject instanceof WebResource) &&
@@ -39,7 +42,7 @@ public class TomcatLaunchableAdapterDelegate implements ILaunchableAdapterDelega
 			return null;
 
 		try {
-			URL url = ((IURLProvider) delegate).getModuleRootURL(moduleObject.getModule());
+			URL url = ((IURLProvider) extension).getModuleRootURL(moduleObject.getModule());
 			
 			Trace.trace("root: " + url);
 

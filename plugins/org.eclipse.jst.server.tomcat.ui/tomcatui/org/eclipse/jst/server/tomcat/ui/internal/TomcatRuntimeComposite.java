@@ -82,7 +82,7 @@ public class TomcatRuntimeComposite extends Composite {
 			runtime = null;
 		} else {
 			runtimeWC = newRuntime;
-			runtime = (TomcatRuntimeWorkingCopy) newRuntime.getWorkingCopyDelegate();
+			runtime = (TomcatRuntimeWorkingCopy) newRuntime.getWorkingCopyExtension(null);
 		}
 		
 		init();
@@ -272,7 +272,7 @@ public class TomcatRuntimeComposite extends Composite {
 			return;
 		}
 
-		IStatus status = runtime.validate();
+		IStatus status = runtimeWC.validate(null);
 		if (status == null || status.isOK())
 			wizard.setMessage(null, IMessageProvider.NONE);
 		else

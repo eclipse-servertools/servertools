@@ -14,9 +14,9 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ITaskModel;
-import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.core.util.Task;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -54,7 +54,7 @@ public class SelectServerWizard extends TaskWizard {
 						
 						try {
 							IServer server = (IServer) getTaskModel().getObject(ITaskModel.TASK_SERVER);
-							((ServerUIPreferences)ServerUICore.getPreferences()).addHostname(server.getHostname());
+							((ServerUIPreferences)ServerUICore.getPreferences()).addHostname(server.getHost());
 						} catch (Exception e) { }
 					}
 				}));

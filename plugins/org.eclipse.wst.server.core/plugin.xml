@@ -21,14 +21,13 @@
   </runtime>
 
   <extension-point id="startup" name="%extensionPointServerStartup" schema="schema/startup.exsd"/>
-  <extension-point id="moduleKinds" name="%extensionPointModuleKinds" schema="schema/moduleKinds.exsd"/>
+  <extension-point id="moduleTypes" name="%extensionPointModuleTypes" schema="schema/moduleTypes.exsd"/>
   <extension-point id="runtimeTypes" name="%extensionPointRuntimeTypes" schema="schema/runtimeTypes.exsd"/>
   <extension-point id="runtimeTargetHandlers" name="%extensionPointRuntimeTargetHandlers" schema="schema/runtimeTargetHandlers.exsd"/>
   <extension-point id="runtimeLocators" name="%extensionPointRuntimeLocators" schema="schema/runtimeLocators.exsd"/>
   <extension-point id="serverTypes" name="%extensionPointServerTypes" schema="schema/serverTypes.exsd"/>
   <extension-point id="serverLocators" name="%extensionPointServerLocators" schema="schema/serverLocators.exsd"/>
   <extension-point id="serverConfigurationTypes" name="%extensionPointServerConfigurationTypes" schema="schema/serverConfigurationTypes.exsd"/>
-  <extension-point id="publish" name="%extensionPointPublishManager" schema="schema/publishManager.exsd"/>
   <extension-point id="moduleFactories" name="%extensionPointModuleFactories" schema="schema/moduleFactories.exsd"/>
   <extension-point id="moduleObjectAdapters" name="%extensionPointModuleObjectAdapters" schema="schema/moduleObjectAdapters.exsd"/>
   <extension-point id="launchableAdapters" name="%extensionPointLaunchableAdapters" schema="schema/launchableAdapters.exsd"/>
@@ -54,24 +53,9 @@
         </run>
      </builder>
   </extension>
-
-  <extension point="org.eclipse.wst.server.core.publish">
-     <publish
-           name="%publisherFullName"
-           description="%publisherFullDescription"
-           class="org.eclipse.wst.server.core.internal.FullPublisher"
-           id="org.eclipse.wst.server.core.publish.full">
-     </publish>
-     <publish
-           name="%publisherSmartName"
-           description="%publisherSmartDescription"
-           class="org.eclipse.wst.server.core.internal.SmartPublisher"
-           id="org.eclipse.wst.server.core.publish.smart">
-     </publish>
-  </extension>
   
-  <extension point="org.eclipse.wst.server.core.moduleKinds">
-    <moduleKind
+  <extension point="org.eclipse.wst.server.core.moduleTypes">
+    <moduleType
        id="*"
        name="%moduleTypeUnknown"/>
   </extension>

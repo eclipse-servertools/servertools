@@ -11,14 +11,18 @@
 package org.eclipse.wst.server.core;
 
 import java.util.List;
-
-import org.eclipse.wst.server.core.model.*;
 /**
  * A task for a module.
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
  */
-public interface IModuleTask extends ITask, IModuleTaskDelegate, IOrdered {
+public interface IModuleTask extends ITask, IOrdered {
+	public static final byte TASK_UNNECESSARY = 0;
+	public static final byte TASK_COMPLETED = 1;
+	public static final byte TASK_READY = 2;
+	public static final byte TASK_PREFERRED = 3;
+	public static final byte TASK_MANDATORY = 4;
+
 	/**
 	 * Returns the id of the adapter.
 	 *
@@ -46,10 +50,10 @@ public interface IModuleTask extends ITask, IModuleTaskDelegate, IOrdered {
 	 * be used to clean out any previously cached information, or start to
 	 * create a new cache.
 	 * 
-	 * @param server org.eclipse.wst.server.core.model.IServer
-	 * @param configuration org.eclipse.wst.server.core.model.IServerConfiguration
+	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param configuration org.eclipse.wst.server.core.IServerConfiguration
 	 * @param parents java.util.List
-	 * @param module org.eclipse.wst.server.core.model.IModule
+	 * @param module org.eclipse.wst.server.core.IModule
 	 */
 	public void init(IServer server, IServerConfiguration configuration, List parents, IModule module);
 

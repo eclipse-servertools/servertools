@@ -39,7 +39,7 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 			return;
 		}
 
-		TomcatServer tomcatServer = (TomcatServer) server.getDelegate();
+		TomcatServer tomcatServer = (TomcatServer) server.getExtension(monitor);
 		tomcatServer.setupLaunch(launch, mode, monitor);
 		
 		String mainTypeName = tomcatServer.getRuntimeClass();

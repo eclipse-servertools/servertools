@@ -16,7 +16,6 @@ import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.core.util.Task;
-
 /**
  * 
  */
@@ -31,11 +30,7 @@ public class SaveRuntimeTask extends Task {
 		if (runtime != null && runtime instanceof IRuntimeWorkingCopy) {
 			IRuntimeWorkingCopy workingCopy = (IRuntimeWorkingCopy) runtime;
 			if (workingCopy.isDirty())
-				getTaskModel().putObject(ITaskModel.TASK_RUNTIME, workingCopy.save(monitor));
-			else {
-				workingCopy.release();
-				getTaskModel().putObject(ITaskModel.TASK_RUNTIME, workingCopy.getOriginal());
-			}
+				getTaskModel().putObject(ITaskModel.TASK_RUNTIME, workingCopy.save(false, monitor));
 		}
 	}
 }

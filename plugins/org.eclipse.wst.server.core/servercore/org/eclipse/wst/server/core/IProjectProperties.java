@@ -55,7 +55,15 @@ public interface IProjectProperties {
 	 */
 	public void setRuntimeTarget(IRuntime runtime, IProgressMonitor monitor) throws CoreException;
 
+	/**
+	 * 
+	 * @param listener
+	 */
 	public void addProjectPropertiesListener(IProjectPropertiesListener listener);
 
+	/**
+	 * 
+	 * @param listener
+	 */
 	public void removeProjectPropertiesListener(IProjectPropertiesListener listener);
 }

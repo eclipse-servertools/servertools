@@ -10,8 +10,8 @@
  **********************************************************************/
 package org.eclipse.jst.server.j2ee;
 
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IModuleObject;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IModuleObject;
 
 public class EJBBean implements IModuleObject {
 	public static final String ID = "org.eclipse.jst.server.j2ee.ejb";

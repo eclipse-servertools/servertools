@@ -13,20 +13,18 @@ package org.eclipse.wst.server.ui.internal.wizard.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IModuleVisitor;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ITask;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IModuleVisitor;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.task.ModifyModulesTask;
 import org.eclipse.wst.server.ui.internal.wizard.page.ModifyModulesComposite;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
-
 /**
  * 
  */
@@ -97,13 +95,13 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 						help.moduleList.add(module2);
 						return true;
 					}
-				});
+				}, null);
 			}
 			
 			// add module
 			IModule parent = null;
 			try {
-				List parents = server.getParentModules(module);
+				List parents = server.getParentModules(module, null);
 				List list = new ArrayList();
 				
 				if (parents != null && parents.size() > 0) {

@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.core.internal;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.jst.server.tomcat.core.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.tomcat.core.internal;
+
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
@@ -26,10 +27,12 @@ import org.eclipse.jst.server.j2ee.IWebModule;
 import org.eclipse.jst.server.tomcat.core.ITomcatConfiguration;
 import org.eclipse.jst.server.tomcat.core.WebModule;
 
+import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.model.IServerPort;
+import org.eclipse.wst.server.core.model.ServerConfigurationDelegate;
 import org.eclipse.wst.server.core.util.FileUtil;
 import org.eclipse.wst.server.core.util.ProgressUtil;
-import org.eclipse.wst.server.core.util.ServerConfigurationDelegate;
 /**
  * Generic Tomcat server configuration.
  */
@@ -76,11 +79,12 @@ public abstract class TomcatConfiguration extends ServerConfigurationDelegate im
 			
 			confDir = confDir.append("conf");
 	
-			IFolder folder = configuration.getConfigurationDataFolder();
+			IServerConfiguration config = getServerConfiguration();
+			IFolder folder = config.getConfigurationDataFolder();
 			if (folder != null)
 				backupFolder(folder, confDir, backup, ms, monitor);
 			else {
-				IPath path = configuration.getConfigurationDataPath();
+				IPath path = config.getConfigurationDataPath();
 				backupPath(path, confDir, backup, ms, monitor);
 			}
 			
@@ -237,7 +241,15 @@ public abstract class TomcatConfiguration extends ServerConfigurationDelegate im
 	protected abstract void save(IPath path, boolean forceSave, IProgressMonitor monitor) throws CoreException;
 	
 	protected void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue) {
-		configuration.getWorkingCopy().firePropertyChangeEvent(propertyName, oldValue, newValue);
+		getServerConfiguration().createWorkingCopy().firePropertyChangeEvent(propertyName, oldValue, newValue);
+	}
+	
+	public void importFromPath(IPath path, IProgressMonitor monitor) throws CoreException {
+		load(path, monitor);
+	}
+
+	public void importFromRuntime(IRuntime runtime, IProgressMonitor monitor) throws CoreException {
+		load(runtime.getLocation().append("conf"), monitor);
 	}
 
 	/**

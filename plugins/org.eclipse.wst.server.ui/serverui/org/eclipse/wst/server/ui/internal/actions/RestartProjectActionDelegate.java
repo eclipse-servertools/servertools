@@ -21,8 +21,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.IProjectModule;
-import org.eclipse.wst.server.core.model.IRestartableModule;
-import org.eclipse.wst.server.core.model.IServerDelegate;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
@@ -64,18 +62,15 @@ public class RestartProjectActionDelegate implements IActionDelegate {
 	
 				IProjectModule module = ServerUtil.getModuleProject(project);
 				if (module != null) {
-					IServer[] servers = ServerUtil.getServersByModule(module);
+					IServer[] servers = ServerUtil.getServersByModule(module, null);
 					if (servers != null) {
 						int size2 = servers.length;
 						for (int j = 0; j < size2; j++) {
-							byte state = servers[j].getServerState();
-							IServerDelegate delegate = servers[j].getDelegate();
-							if ((state == IServer.SERVER_STARTED || state == IServer.SERVER_STARTED_DEBUG) &&
-								(delegate instanceof IRestartableModule)) {
-								IRestartableModule restartable = (IRestartableModule)delegate;
-								if (restartable.canRestartModule(module)) {
+							int state = servers[j].getServerState();
+							if (state == IServer.STATE_STARTED) {
+								if (servers[j].canRestartModule(module)) {
 									try {
-										restartable.restartModule(module, new NullProgressMonitor());
+										servers[j].restartModule(module, new NullProgressMonitor());
 									} catch (Exception e) {
 										Trace.trace("Error restarting project", e);
 									}
@@ -127,16 +122,13 @@ public class RestartProjectActionDelegate implements IActionDelegate {
 	
 		IProjectModule module = ServerUtil.getModuleProject(project);
 		if (module != null) {
-			IServer[] servers = ServerUtil.getServersByModule(module);
+			IServer[] servers = ServerUtil.getServersByModule(module, null);
 			if (servers != null) {
 				int size2 = servers.length;
 				for (int j = 0; j < size2; j++) {
-					byte state = servers[j].getServerState();
-					IServerDelegate delegate = servers[j].getDelegate();
-					if ((state == IServer.SERVER_STARTED || state == IServer.SERVER_STARTED_DEBUG) &&
-						(delegate instanceof IRestartableModule)) {
-						IRestartableModule restartable = (IRestartableModule)delegate;
-						if (restartable.canRestartModule(module)) {
+					int state = servers[j].getServerState();
+					if (state == IServer.STATE_STARTED) {
+						if (servers[j].canRestartModule(module)) {
 							action.setEnabled(true);
 							return;
 						}

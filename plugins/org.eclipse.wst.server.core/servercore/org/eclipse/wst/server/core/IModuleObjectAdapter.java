@@ -10,8 +10,6 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 
-import org.eclipse.wst.server.core.model.IModuleObject;
-import org.eclipse.wst.server.core.model.IModuleObjectAdapterDelegate;
 /**
  * A module object adapter converts from some view's model
  * object into a module object that is recognized by the
@@ -44,9 +42,9 @@ public interface IModuleObjectAdapter {
 	/**
 	 * Returns the delegate for this module object adapter.
 	 * 
-	 * @return org.eclipse.wst.server.core.model.IModuleObjectAdapterDelegate
+	 * @return org.eclipse.wst.server.core.model.ModuleObjectAdapterDelegate
 	 */
-	public IModuleObjectAdapterDelegate getDelegate();
+	//public ModuleObjectAdapterDelegate getDelegate();
 
 	/**
 	 * Converts from a model object to an IModuleObject.

@@ -12,7 +12,6 @@ package org.eclipse.wst.server.core;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.model.IServerConfigurationWorkingCopyDelegate;
 /**
  * A working copy server object used for formulating changes
  * to a server configuration instance
@@ -20,7 +19,7 @@ import org.eclipse.wst.server.core.model.IServerConfigurationWorkingCopyDelegate
  * <p>
  * [issue: There can be other server-configuration-type-specific properties.
  * The default values for these need to be specified somewhere
- * too (probably in the API subclass of IServerConfigurationWorkingCopyDelegate).]
+ * too (probably in the API subclass of ServerConfigurationWorkingCopyDelegate).]
  * </p>
  * <p>
  * [issue: IElementWorkingCopy and IElement support an open-ended set
@@ -30,7 +29,7 @@ import org.eclipse.wst.server.core.model.IServerConfigurationWorkingCopyDelegate
  * Is it the case that these attribute-values pairs are the only
  * information about a server instance that can be preserved
  * between workbench sessions? That is, any information recorded
- * just in instance fields of an IServerConfigurationDelegate implementation
+ * just in instance fields of an ServerConfigurationDelegate implementation
  * will be lost when the session ends.]
  * </p>
  * <p>This interface is not intended to be implemented by clients.</p>
@@ -42,13 +41,12 @@ import org.eclipse.wst.server.core.model.IServerConfigurationWorkingCopyDelegate
  * @since 1.0
  */
 public interface IServerConfigurationWorkingCopy extends IServerConfiguration, IElementWorkingCopy {
-	
 	/**
 	 * Returns the server configuration instance that this working copy is
 	 * associated with.
 	 * <p>
 	 * For a server configuration working copy created by a call to
-	 * {@link IServerConfiguration#getWorkingCopy()},
+	 * {@link IServerConfiguration#createWorkingCopy()},
 	 * <code>this.getOriginal()</code> returns the original
 	 * server configuration object. For a server configuration working copy
 	 * just created by a call to
@@ -61,32 +59,17 @@ public interface IServerConfigurationWorkingCopy extends IServerConfiguration, I
 	public IServerConfiguration getOriginal();
 	
 	/**
-	 * Returns the delegate for this server configuration working copy.
-	 * The server configuration working copy delegate is a
+	 * Returns the extension for this server configuration working copy.
+	 * The server configuration working copy extension is a
 	 * server-configuration-type-specific object. By casting the server
-	 * configuration working copy delegate to the type prescribed in the API
+	 * configuration working copy extension to the type prescribed in the API
 	 * documentation for that particular server configuration working copy type,
 	 * the client can access server-configuration-type-specific properties and
 	 * methods.
-	 * <p>
-	 * [issue: Exposing IServerConfigurationWorkingCopyDelegate to clients
-	 * of IServerConfigurationWorkingCopy is same problem as exposing
-	 * IServerConfigurationDelegate to clients of IServerConfiguration.
-	 * The suggested fix is to replace this method with something like
-	 * getServerConfigurationWorkingCopyExtension() which
-	 * returns an IServerConfigurationWorkingCopyExtension.]
-	 * </p>
-	 * <p>
-	 * [issue: serverConfigurationTypes schema, workingCopyClass attribute is
-	 * optional. This suggests that a server configuration need not provide a
-	 * working copy delegate class. Like the class attribute, this seems
-	 * implausible. I've spec'd this method as if working copy delegate is
-	 * mandatory.]
-	 * </p>
 	 * 
-	 * @return the delegate for the server configuration working copy
+	 * @return the extension for the server configuration working copy
 	 */
-	public IServerConfigurationWorkingCopyDelegate getWorkingCopyDelegate();
+	public IServerExtension getWorkingCopyExtension(IProgressMonitor monitor);
 	
 	/**
 	 * Commits the changes made in this working copy. If there is
@@ -109,11 +92,7 @@ public interface IServerConfigurationWorkingCopy extends IServerConfiguration, I
 	 * more smoothly.]
 	 * </p>
 	 * <p>
-	 * [issue: What if this object has already been saved
-	 * or released?]
-	 * </p>
-	 * <p>
-	 * [issue: What is lifecycle for IServerConfigurationWorkingCopyDelegate
+	 * [issue: What is lifecycle for ServerConfigurationWorkingCopyDelegate
 	 * associated with this working copy?]
 	 * </p>
 	 * 
@@ -122,5 +101,5 @@ public interface IServerConfigurationWorkingCopy extends IServerConfiguration, I
 	 * @return a new server configuration instance
 	 * @throws CoreException [missing]
 	 */
-	public IServerConfiguration save(IProgressMonitor monitor) throws CoreException;
+	public IServerConfiguration save(boolean force, IProgressMonitor monitor) throws CoreException;
 }

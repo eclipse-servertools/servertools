@@ -12,8 +12,8 @@ package org.eclipse.wst.server.ui.internal.wizard.page;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.wst.server.core.model.IModuleTaskDelegate;
-import org.eclipse.wst.server.core.model.IServerTaskDelegate;
+import org.eclipse.wst.server.core.model.ModuleTaskDelegate;
+import org.eclipse.wst.server.core.model.ServerTaskDelegate;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.ImageResource;
@@ -149,13 +149,13 @@ public class TasksComposite extends Composite {
 				description.setText(sti.task2.getDescription());
 				
 				byte status = sti.status;
-				if (status == IServerTaskDelegate.TASK_COMPLETED) {
+				if (status == ServerTaskDelegate.TASK_COMPLETED) {
 					checkbox.setEnabled(false);
 					description.setEnabled(false);
-				} else if (status == IServerTaskDelegate.TASK_PREFERRED) {
+				} else if (status == ServerTaskDelegate.TASK_PREFERRED) {
 					checkbox.setSelection(true);
 					count++;
-				} else if (status == IServerTaskDelegate.TASK_MANDATORY) {
+				} else if (status == ServerTaskDelegate.TASK_MANDATORY) {
 					checkbox.setSelection(true);
 					checkbox.setEnabled(false);
 					description.setEnabled(false);
@@ -212,13 +212,13 @@ public class TasksComposite extends Composite {
 				description.setText(dti.task2.getDescription());
 				
 				byte status = dti.status;
-				if (status == IModuleTaskDelegate.TASK_COMPLETED) {
+				if (status == ModuleTaskDelegate.TASK_COMPLETED) {
 					checkbox.setEnabled(false);
 					description.setEnabled(false);
-				} else if (status == IModuleTaskDelegate.TASK_PREFERRED) {
+				} else if (status == ModuleTaskDelegate.TASK_PREFERRED) {
 					checkbox.setSelection(true);
 					count++;
-				} else if (status == IModuleTaskDelegate.TASK_MANDATORY) {
+				} else if (status == ModuleTaskDelegate.TASK_MANDATORY) {
 					checkbox.setSelection(true);
 					checkbox.setEnabled(false);
 					description.setEnabled(false);

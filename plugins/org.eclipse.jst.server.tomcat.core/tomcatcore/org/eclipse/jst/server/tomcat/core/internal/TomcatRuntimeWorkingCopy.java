@@ -1,7 +1,6 @@
-package org.eclipse.jst.server.tomcat.core.internal;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,7 +8,8 @@ package org.eclipse.jst.server.tomcat.core.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-import org.eclipse.core.runtime.IProgressMonitor;
+package org.eclipse.jst.server.tomcat.core.internal;
+
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
@@ -37,15 +37,13 @@ public class TomcatRuntimeWorkingCopy extends TomcatRuntime implements ITomcatRu
 
 	public void setVMInstall(String typeId, String id) {
 		if (typeId == null)
-			wc.setAttribute(PROP_VM_INSTALL_TYPE_ID, (String)null);
+			setAttribute(PROP_VM_INSTALL_TYPE_ID, (String)null);
 		else
-			wc.setAttribute(PROP_VM_INSTALL_TYPE_ID, typeId);
+			setAttribute(PROP_VM_INSTALL_TYPE_ID, typeId);
 		
 		if (id == null)
-			wc.setAttribute(PROP_VM_INSTALL_ID, (String)null);
+			setAttribute(PROP_VM_INSTALL_ID, (String)null);
 		else
-			wc.setAttribute(PROP_VM_INSTALL_ID, id);
+			setAttribute(PROP_VM_INSTALL_ID, id);
 	}
-	
-	public void handleSave(byte id, IProgressMonitor monitor) { }
 }

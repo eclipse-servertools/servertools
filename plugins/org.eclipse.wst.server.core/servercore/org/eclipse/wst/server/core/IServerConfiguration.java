@@ -13,7 +13,7 @@ package org.eclipse.wst.server.core;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.wst.server.core.model.IServerConfigurationDelegate;
+import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * Represents a server configuration instance. Every server configuration is an
  * instance of a particular, fixed server configuration type.
@@ -101,36 +101,19 @@ public interface IServerConfiguration extends IElement {
 	 * particular workspace resource
 	 */
 	public IFile getFile();
-	
+
 	/**
-	 * Returns the delegate for this server configuration.
-	 * The delegate is a server-configuration-type-specific object.
-	 * By casting the server configuration delegate to the type prescribed in
+	 * Returns the extension for this server configuration.
+	 * The extension is a server-configuration-type-specific object.
+	 * By casting the server configuration extension to the type prescribed in
 	 * the API documentation for that particular server configuration type, 
 	 * the client can access server-configuration-type-specific properties and
 	 * methods.
-	 * <p>
-	 * [issue: Exposing IServerConfigurationDelegate to clients of IServer
-	 * is confusing and dangerous. Instead, replace this
-	 * method with something like getServerConfigurationExtension() which
-	 * returns an IServerConfigurationExtension. IServerConfigurationExtension is an
-	 * "marker" interface that server configuration providers would 
-	 * implement or extend if they want to expose additional
-	 * API for their server configuration type. That way
-	 * IServerConfigurationDelegate can be kept entirely on the SPI side, out
-	 * of view from clients.]
-	 * </p>
-	 * <p>
-	 * [issue: serverConfigurationTypes schema, class attribute is optional.
-	 * This suggests that a server need not provide a delegate class.
-	 * This seems implausible. I've spec'd this method 
-	 * as if delegate is mandatory.]
-	 * </p>
 	 * 
-	 * @return the server configuration delegate
+	 * @return the server configuration extension
 	 */
-	public IServerConfigurationDelegate getDelegate();
-	
+	public IServerExtension getExtension(IProgressMonitor monitor);
+
 	/**
 	 * Returns a working copy for modifying this server configuration instance.
 	 * If this instance is already a working copy, it is returned.
@@ -162,7 +145,7 @@ public interface IServerConfiguration extends IElement {
 	 * 
 	 * @return a new working copy
 	 */
-	public IServerConfigurationWorkingCopy getWorkingCopy();
+	public IServerConfigurationWorkingCopy createWorkingCopy();
 	
 	/**
 	 * Returns the handle of a workspace folder where this server

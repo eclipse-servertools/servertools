@@ -55,7 +55,7 @@ public class SwitchConfigurationAction extends Action {
 		
 		IServerType type = server.getServerType();
 		if (type.getServerStateSet() == IServerType.SERVER_STATE_SET_MANAGED &&
-				server.getServerState() != IServer.SERVER_STOPPED)
+				server.getServerState() != IServer.STATE_STOPPED)
 			setEnabled(false);
 	}
 	
@@ -71,9 +71,9 @@ public class SwitchConfigurationAction extends Action {
 			public void run(IProgressMonitor monitor) {
 				try {
 					monitor = ProgressUtil.getMonitorFor(monitor);
-					IServerWorkingCopy workingCopy = server.getWorkingCopy();
+					IServerWorkingCopy workingCopy = server.createWorkingCopy();
 					workingCopy.setServerConfiguration(config);
-					workingCopy.save(monitor);
+					workingCopy.save(false, monitor);
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Could not save configuration", e);
 				}

@@ -58,7 +58,7 @@ public class NewServerWizard extends TaskWizard implements INewWizard {
 					public void execute(IProgressMonitor monitor) throws CoreException {
 						try {
 							IServer server = (IServer) getTaskModel().getObject(ITaskModel.TASK_SERVER);
-							((ServerUIPreferences)ServerUICore.getPreferences()).addHostname(server.getHostname());
+							((ServerUIPreferences)ServerUICore.getPreferences()).addHostname(server.getHost());
 						} catch (Exception e) { }
 					}
 				}));

@@ -24,9 +24,9 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.launching.JavaSourceLookupUtil;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.core.model.IProjectModule;
 /**
  *
@@ -44,7 +44,7 @@ public class TomcatSourcePathComputerDelegate implements ISourcePathComputerDele
 		if (server != null) {
 			List list = new ArrayList();
 			List pathList = new ArrayList();
-			IModule[] modules = server.getModules();
+			IModule[] modules = server.getModules(monitor);
 			for (int i = 0; i < modules.length; i++) {
 				if (modules[i] instanceof IProjectModule) {
 					IProjectModule dp = (IProjectModule) modules[i];

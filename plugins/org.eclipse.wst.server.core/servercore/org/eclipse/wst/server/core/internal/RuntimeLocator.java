@@ -13,14 +13,14 @@ package org.eclipse.wst.server.core.internal;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.IRuntimeLocator;
-import org.eclipse.wst.server.core.model.IRuntimeLocatorDelegate;
+import org.eclipse.wst.server.core.model.RuntimeLocatorDelegate;
 import org.eclipse.wst.server.core.model.IRuntimeLocatorListener;
 /**
  * 
  */
 public class RuntimeLocator implements IRuntimeLocator {
 	private IConfigurationElement element;
-	private IRuntimeLocatorDelegate delegate;
+	private RuntimeLocatorDelegate delegate;
 
 	public RuntimeLocator(IConfigurationElement element) {
 		super();
@@ -58,10 +58,10 @@ public class RuntimeLocator implements IRuntimeLocator {
 	/*
 	 * @see IPublishManager#getDelegate()
 	 */
-	protected IRuntimeLocatorDelegate getDelegate() {
+	protected RuntimeLocatorDelegate getDelegate() {
 		if (delegate == null) {
 			try {
-				delegate = (IRuntimeLocatorDelegate) element.createExecutableExtension("class");
+				delegate = (RuntimeLocatorDelegate) element.createExecutableExtension("class");
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + e.getMessage());
 			}

@@ -11,9 +11,8 @@
 package org.eclipse.wst.server.core;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-
-import org.eclipse.wst.server.core.model.IRuntimeDelegate;
 /**
  * Represents a runtime instance. Every runtime is an instance of a
  * particular, fixed runtime type.
@@ -49,7 +48,6 @@ import org.eclipse.wst.server.core.model.IRuntimeDelegate;
  * @since 1.0
  */
 public interface IRuntime extends IElement {
-	
 	/**
 	 * Returns the type of this runtime instance.
 	 * 
@@ -58,32 +56,16 @@ public interface IRuntime extends IElement {
 	public IRuntimeType getRuntimeType();
 
 	/**
-	 * Returns the delegate for this runtime.
-	 * The runtime delegate is a runtime-type-specific object.
-	 * By casting the runtime delegate to the type prescribed in
+	 * Returns the extension for this runtime.
+	 * The runtime extension is a runtime-type-specific object.
+	 * By casting the runtime extension to the type prescribed in
 	 * the API documentation for that particular runtime type, 
 	 * the client can access runtime-type-specific properties and
 	 * methods.
-	 * <p>
-	 * [issue: Exposing IRuntimeDelegate to clients of IRuntime
-	 * is confusing and dangerous. Instead, replace this
-	 * method with something like getRuntimeExtension() which
-	 * returns an IRuntimeExtension. IRuntimeExtension is an
-	 * "marker" interface that runtime providers would 
-	 * implement or extend if they want to expose additional
-	 * API for their runtime type. That way IRuntimeDelegate
-	 * can be kept entirely on the SPI side, out of view from 
-	 * clients.]
-	 * </p>
-	 * <p>
-	 * [issue: runtimeTypes schema, class attribute is optional.
-	 * This suggests that a server need not provide a delegate class.
-	 * This seems implausible. I've spec'd this method as delegate optional.]
-	 * </p>
 	 * 
-	 * @return the runtime delegate, or <code>null</code> if none
+	 * @return the runtime extension, or <code>null</code> if none
 	 */
-	public IRuntimeDelegate getDelegate();
+	public IServerExtension getExtension(IProgressMonitor monitor);
 
 	/**
 	 * Returns a runtime working copy for modifying this runtime instance.
@@ -108,20 +90,15 @@ public interface IRuntime extends IElement {
 	 * whether they are dealing with a working copy or not.
 	 * However, it is hard for clients to manage working copies
 	 * with this design.
-	 * This method should be renamed "createWorkingCopy"
-	 * or "newWorkingCopy" to make it clear to clients that it
-	 * creates a new object, even for working copies.]
 	 * </p>
 	 * 
 	 * @return a new working copy
 	 */
-	public IRuntimeWorkingCopy getWorkingCopy();
+	public IRuntimeWorkingCopy createWorkingCopy();
 	
 	/**
-	 * Returns the location of this runtime.
-	 * <p>
-	 * [issue: Explain what this "location" is.]
-	 * </p>
+	 * Returns the absolute path in the local file system to the root of the runtime,
+	 * typically the installation directory.
 	 * 
 	 * @return the location of this runtime, or <code>null</code> if none
 	 */
@@ -142,6 +119,13 @@ public interface IRuntime extends IElement {
 	public boolean isTestEnvironment();
 	
 	/**
+	 * Returns whether this runtime is a stub (used for compilation only) or a full runtime.
+	 * 
+	 * @return <code>true</code> if this runtime is a stub, and <code>false</code> otherwise
+	 */
+	public boolean isStub();
+	
+	/**
 	 * Validates this runtime instance.
 	 * <p>
 	 * [issue: Need to explain what could be wrong with a runtime.]
@@ -155,5 +139,5 @@ public interface IRuntime extends IElement {
 	 * runtime is valid, otherwise a status object indicating what is
 	 * wrong with it
 	 */
-	public IStatus validate();
+	public IStatus validate(IProgressMonitor monitor);
 }

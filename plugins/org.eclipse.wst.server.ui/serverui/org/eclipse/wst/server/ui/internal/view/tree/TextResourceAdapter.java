@@ -10,7 +10,6 @@ package org.eclipse.wst.server.ui.internal.view.tree;
  *    IBM - Initial API and implementation
  */
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
@@ -26,7 +25,6 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.model.IWorkbenchAdapter;
-
 /**
  * 
  */
@@ -91,17 +89,19 @@ public class TextResourceAdapter implements IAdaptable, IWorkbenchAdapter, IServ
 				new TextResourceAdapter(this, STYLE_CONFIGURATIONS)
 			};*/
 
-		Iterator iterator = null;
+		IElement[] elements = null;
 		if (thisStyle == STYLE_SERVERS)
-			iterator = ServerCore.getResourceManager().getServers().iterator();
+			elements = ServerCore.getResourceManager().getServers();
 		else if (thisStyle == STYLE_CONFIGURATIONS)
-			iterator = ServerCore.getResourceManager().getServerConfigurations().iterator();
+			elements = ServerCore.getResourceManager().getServerConfigurations();
 
 		List list = new ArrayList();
-		while (iterator.hasNext()) {
-			IElement resource = (IElement) iterator.next();
-			if (resource != deleted)
-				list.add(new ServerElementAdapter(this, resource));
+		if (elements != null) {
+			int size = elements.length;
+			for (int i = 0; i < size; i++) {
+				if (elements[i] != deleted)
+					list.add(new ServerElementAdapter(this, elements[i]));
+			}
 		}
 		return list.toArray();
 	}

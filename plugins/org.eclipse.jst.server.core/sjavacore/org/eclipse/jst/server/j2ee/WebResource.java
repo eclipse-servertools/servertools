@@ -12,8 +12,8 @@ package org.eclipse.jst.server.j2ee;
 
 import org.eclipse.core.runtime.IPath;
 
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IModuleObject;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IModuleObject;
 /**
  * 
  */

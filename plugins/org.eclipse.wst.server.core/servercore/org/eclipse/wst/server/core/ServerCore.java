@@ -37,17 +37,6 @@ import org.eclipse.wst.server.core.internal.*;
  * @since 1.0
  */
 public class ServerCore {
-	/**
-	 // server core plugin id
-	 * <p>
-	 * [issue: Plug-in ids should not be exposed as client API
-	 * unless there is a good reason to do so. Client code generally
-	 * don't care about the plug-in structure. Same is usually true
-	 * for service providers.]
-	 * </p>
-	 */
-	public static final String PLUGIN_ID = "org.eclipse.wst.server.core";
-
 	// cached copy of all server startups
 	private static List startups;
 
@@ -61,7 +50,7 @@ public class ServerCore {
 	private static List launchableAdapters;
 
 	// cached copy of all launchable clients
-	private static List launchableClients;
+	private static List clients;
 	
 	// cached copy of all module tasks
 	private static List moduleTasks;
@@ -69,8 +58,8 @@ public class ServerCore {
 	// cached copy of all server tasks
 	private static List serverTasks;
 	
-	//	cached copy of all module kinds
-	private static List moduleKinds;
+	//	cached copy of all module types
+	private static List moduleTypes;
 	
 	//	cached copy of all runtime types
 	private static List runtimeTypes;
@@ -88,10 +77,6 @@ public class ServerCore {
 	//	cached copy of all monitors
 	private static List monitors;
 
-	// cached copy of the server publisher classes
-	// keyed from String id to IPublishManager
-	private static Map publishManagers;
-
 	static {
 		executeStartups();
 	}
@@ -101,33 +86,6 @@ public class ServerCore {
 	 */
 	private ServerCore() {
 		super();
-	}
-
-	/**
-	 * Returns a map of all publishManagers, keyed by String id.
-	 *
-	 * @return java.util.Map
-	 */
-	public static Map getPublishManagers() {
-		if (publishManagers == null)
-			loadPublishManagers();
-		return publishManagers;
-	}
-
-	/**
-	 * Returns the publish manager with the given id.
-	 *
-	 * @return org.eclipse.wst.server.core.IPublishManager
-	 */
-	public static IPublishManager getPublishManager(String id) {
-		if (publishManagers == null)
-			loadPublishManagers();
-			
-		try {
-			return (IPublishManager) publishManagers.get(id);
-		} catch (Exception e) {
-		}
-		return null;
 	}
 
 	/**
@@ -178,46 +136,27 @@ public class ServerCore {
 	}
 	
 	/**
-	 * Returns the list of all known module kinds.
+	 * Returns an array of all known module types.
 	 * <p>
-	 * Clients must not modify the list that is returned.
-	 * If the set of module kinds changes, the affect on
-	 * the returned list is unspecified.
-	 * </p>
-	 * <p>
-	 * [issue: The terminology should be "module types",
-	 * to make it consistent with server types, etc.]
-	 * </p>
-	 * <p>
-	 * [issue: The list returned is precious. You would not want a client
-	 * to accidentally or malicously whack it. Normal practice is to
-	 * return an array instead of a List, and to return a new copy each call.
-	 * This allows the spec to say that the client can do what they want
-	 * with the result, and that it won't change under foot.
-	 * Another alternative is to return a UnmodifiableList implementation
-	 * so that clients cannot modify. But if you don't copy, you still
-	 * have the problem of the list chaning under foot if a new plug-in
-	 * is installed that happens to define a module kind (a scenario that
-	 * Eclipse should support).]
+	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
 	 * 
-	 * @return the list of module kinds (element type: {@link IModuleKind})
+	 * @return the array of module types {@link IModuleType}
 	 */
-	public static List getModuleKinds() {
-		if (moduleKinds == null)
-			loadModuleKinds();
-		return moduleKinds;
+	public static IModuleType[] getModuleTypes() {
+		if (moduleTypes == null)
+			loadModuleTypes();
+		
+		IModuleType[] mt = new IModuleType[moduleTypes.size()];
+		moduleTypes.toArray(mt);
+		return mt;
 	}
-	
+
 	/**
-	 * Returns the module kind with the given id, or <code>null</code>
+	 * Returns the module type with the given id, or <code>null</code>
 	 * if none. This convenience method searches the list of known
-	 * module kinds ({@link #getModuleKinds()}) for the one a matching
-	 * module kind id ({@link IModuleKind#getId()}).
-	 * <p>
-	 * [issue: The terminology should be "module types",
-	 * to make it consistent with server types, etc.]
-	 * </p>
+	 * module types ({@link #getModuleTypes()}) for the one a matching
+	 * module type id ({@link IModuleType#getId()}).
 	 * <p>
 	 * [issue: It does not really make sense for a key parameter
 	 * like id to be null. 
@@ -226,58 +165,48 @@ public class ServerCore {
 	 * RuntimeException if null is passed.]
 	 * </p>
 	 * <p>
-	 * [issue: Consider renaming this method findModuleKind 
-	 * (findModuleType) to make it clear that it is searching.]
+	 * [issue: Consider renaming this method findModuleType
+	 * to make it clear that it is searching.]
 	 * </p>
 	 *
-	 * @param the module kind id, or <code>null</code>
-	 * @return the module kind, or <code>null</code> if 
-	 * id is <code>null</code> or there is no module kind
+	 * @param the module type id, or <code>null</code>
+	 * @return the module type, or <code>null</code> if 
+	 * id is <code>null</code> or there is no module type
 	 * with the given id
 	 */
-	public static IModuleKind getModuleKind(String id) {
+	public static IModuleType getModuleType(String id) {
 		if (id == null)
 			return null;
 
-		if (moduleKinds == null)
-			loadModuleKinds();
+		if (moduleTypes == null)
+			loadModuleTypes();
 		
-		Iterator iterator = moduleKinds.iterator();
+		Iterator iterator = moduleTypes.iterator();
 		while (iterator.hasNext()) {
-			IModuleKind moduleType = (IModuleKind) iterator.next();
+			IModuleType moduleType = (IModuleType) iterator.next();
 			if (id.equals(moduleType.getId()))
 				return moduleType;
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Returns the list of all known runtime types.
+	 * Returns an array of all known runtime types.
 	 * <p>
-	 * Clients must not modify the list that is returned.
-	 * If the set of runtime types changes, the affect on
-	 * the returned list is unspecified.
+	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
-	 * <p>
-	 * [issue: The list returned is precious. You would not want a client
-	 * to accidentally or malicously whack it. Normal practice is to
-	 * return an array instead of a List, and to return a new copy each call.
-	 * This allows the spec to say that the client can do what they want
-	 * with the result, and that it won't change under foot.
-	 * Another alternative is to return a UnmodifiableList implementation
-	 * so that clients cannot modify. But if you don't copy, you still
-	 * have the problem of the list chaning under foot if a new plug-in
-	 * is installed that happens to define a runtime type (a scenario that
-	 * Eclipse should support).]
-	 * </p>
-	 * @return the list of runtime types (element type: {@link IRuntimeType})
+	 * 
+	 * @return the array of runtime types {@link IRuntimeType}
 	 */
-	public static List getRuntimeTypes() {
+	public static IRuntimeType[] getRuntimeTypes() {
 		if (runtimeTypes == null)
 			loadRuntimeTypes();
-		return runtimeTypes;
+		
+		IRuntimeType[] rt = new IRuntimeType[runtimeTypes.size()];
+		runtimeTypes.toArray(rt);
+		return rt;
 	}
-	
+
 	/**
 	 * Returns the runtime type with the given id, or <code>null</code>
 	 * if none. This convenience method searches the list of known
@@ -316,29 +245,34 @@ public class ServerCore {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Returns a List of all runtime locators.
+	 * Returns an array of all runtime locators.
 	 *
-	 * @return java.util.List
+	 * @return
 	 */
-	public static List getRuntimeLocators() {
+	public static IRuntimeLocator[] getRuntimeLocators() {
 		if (runtimeLocators == null)
 			loadRuntimeLocators();
-		return runtimeLocators;
+		IRuntimeLocator[] rl = new IRuntimeLocator[runtimeLocators.size()];
+		runtimeLocators.toArray(rl);
+		return rl;
 	}
-	
+
 	/**
-	 * Returns a List of all runtime target handlers.
+	 * Returns an array of all runtime target handlers.
 	 *
-	 * @return java.util.List
+	 * @return
 	 */
-	public static List getRuntimeTargetHandlers() {
+	public static IRuntimeTargetHandler[] getRuntimeTargetHandlers() {
 		if (runtimeTargetHandlers == null)
 			loadRuntimeTargetHandlers();
-		return runtimeTargetHandlers;
+		
+		IRuntimeTargetHandler[] rth = new IRuntimeTargetHandler[runtimeTargetHandlers.size()];
+		runtimeTargetHandlers.toArray(rth);
+		return rth;
 	}
-	
+
 	/**
 	 * Returns the runtime target handler with the given id.
 	 *
@@ -361,32 +295,22 @@ public class ServerCore {
 	}
 
 	/**
-	 * Returns the list of all known server types.
+	 * Returns an array of all known server types.
 	 * <p>
-	 * Clients must not modify the list that is returned.
-	 * If the set of server types changes, the affect on
-	 * the returned list is unspecified.
+	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
-	 * <p>
-	 * [issue: The list returned is precious. You would not want a client
-	 * to accidentally or malicously whack it. Normal practice is to
-	 * return an array instead of a List, and to return a new copy each call.
-	 * This allows the spec to say that the client can do what they want
-	 * with the result, and that it won't change under foot.
-	 * Another alternative is to return a UnmodifiableList implementation
-	 * so that clients cannot modify. But if you don't copy, you still
-	 * have the problem of the list chaning under foot if a new plug-in
-	 * is installed that happens to define a server type (a scenario that
-	 * Eclipse should support).]
-	 * </p>
-	 * @return the list of server types (element type: {@link IServerType})
+	 * 
+	 * @return the array of server types {@link IServerType}
 	 */
-	public static List getServerTypes() {
+	public static IServerType[] getServerTypes() {
 		if (serverTypes == null)
 			loadServerTypes();
-		return serverTypes;
+		
+		IServerType[] st = new IServerType[serverTypes.size()];
+		serverTypes.toArray(st);
+		return st;
 	}
-	
+
 	/**
 	 * Returns the server type with the given id, or <code>null</code>
 	 * if none. This convenience method searches the list of known
@@ -426,34 +350,22 @@ public class ServerCore {
 	}
 	
 	/**
-	 * Returns the list of all known server configuration types.
+	 * Returns an array of all known server configuration types.
 	 * <p>
-	 * Clients must not modify the list that is returned.
-	 * If the set of server configuration types changes, the affect on
-	 * the returned list is unspecified.
+	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
-	 * <p>
-	 * [issue: Same issue as with IServerType.
-	 * The list returned is precious. You would not want a client
-	 * to accidentally or malicously whack it. Normal practice is to
-	 * return an array instead of a List, and to return a new copy each call.
-	 * This allows the spec to say that the client can do what they want
-	 * with the result, and that it won't change under foot.
-	 * Another alternative is to return a UnmodifiableList implementation
-	 * so that clients cannot modify. But if you don't copy, you still
-	 * have the problem of the list chaning under foot if a new plug-in
-	 * is installed that happens to define a server configuration type (a scenario that
-	 * Eclipse should support).]
-	 * </p>
-	 * @return the list of server configuration types
-	 * (element type: {@link IServerConfigurationType})
+	 * 
+	 * @return the array of server configuration types {@link IServerConfigurationType}
 	 */
-	public static List getServerConfigurationTypes() {
+	public static IServerConfigurationType[] getServerConfigurationTypes() {
 		if (serverConfigurationTypes == null)
 			loadServerConfigurationTypes();
-		return serverConfigurationTypes;
+
+		IServerConfigurationType[] sct = new IServerConfigurationType[serverConfigurationTypes.size()];
+		serverConfigurationTypes.toArray(sct);
+		return sct;
 	}
-	
+
 	/**
 	 * Returns the server configuration type with the given id, 
 	 * or <code>null</code> if none. This convenience method searches
@@ -495,23 +407,9 @@ public class ServerCore {
 	}
 
 	/**
-	 * Returns the list of all known module module factories.
+	 * Returns an array of all known module module factories.
 	 * <p>
-	 * Clients must not modify the list that is returned.
-	 * If the set of module factories changes, the affect on
-	 * the returned list is unspecified.
-	 * </p>
-	 * <p>
-	 * [issue: The list returned is precious. You would not want a client
-	 * to accidentally or malicously whack it. Normal practice is to
-	 * return an array instead of a List, and to return a new copy each call.
-	 * This allows the spec to say that the client can do what they want
-	 * with the result, and that it won't change under foot.
-	 * Another alternative is to return a UnmodifiableList implementation
-	 * so that clients cannot modify. But if you don't copy, you still
-	 * have the problem of the list chaning under foot if a new plug-in
-	 * is installed that happens to define a module factory (a scenario that
-	 * Eclipse should support).]
+	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
 	 * <p>
 	 * [issue: Are module factories SPI-side objects or do
@@ -519,14 +417,17 @@ public class ServerCore {
 	 * this method should be moved to the SPI package.]
 	 * </p>
 	 * 
-	 * @return the list of module factories (element type: {@link IModuleFactory})
+	 * @return the array of module factories {@link IModuleFactory}
 	 */
-	public static List getModuleFactories() {
+	public static IModuleFactory[] getModuleFactories() {
 		if (moduleFactories == null)
 			loadModuleFactories();
-		return moduleFactories;
+		
+		IModuleFactory[] mf = new IModuleFactory[moduleFactories.size()];
+		moduleFactories.toArray(mf);
+		return mf;
 	}
-	
+
 	/**
 	 * Returns the module factory with the given id, or <code>null</code>
 	 * if none. This convenience method searches the list of known
@@ -571,69 +472,82 @@ public class ServerCore {
 	}
 
 	/**
-	 * Returns a List of all module object adapters.
+	 * Returns an array of all module object adapters.
 	 *
-	 * @return java.util.List
+	 * @return
 	 */
-	public static List getModuleObjectAdapters() {
+	public static IModuleObjectAdapter[] getModuleObjectAdapters() {
 		if (moduleObjectAdapters == null)
 			loadModuleObjectAdapters();
-		return moduleObjectAdapters;
+		
+		IModuleObjectAdapter[] moa = new IModuleObjectAdapter[moduleObjectAdapters.size()];
+		moduleObjectAdapters.toArray(moa);
+		return moa;
 	}
-	
+
 	/**
-	 * Returns a List of all launchable adapters.
+	 * Returns an array of all launchable adapters.
 	 *
-	 * @return java.util.List
+	 * @return
 	 */
-	public static List getLaunchableAdapters() {
+	public static ILaunchableAdapter[] getLaunchableAdapters() {
 		if (launchableAdapters == null)
 			loadLaunchableAdapters();
-		return launchableAdapters;
+		ILaunchableAdapter[] la = new ILaunchableAdapter[launchableAdapters.size()];
+		launchableAdapters.toArray(la);
+		return la;
 	}
-	
+
 	/**
-	 * Returns a List of all launchable clients.
+	 * Returns an array of all launchable clients.
 	 *
-	 * @return java.util.List
+	 * @return
 	 */
-	public static List getLaunchableClients() {
-		if (launchableClients == null)
-			loadLaunchableClients();
-		return launchableClients;
+	public static IClient[] getClients() {
+		if (clients == null)
+			loadClients();
+		IClient[] c = new IClient[clients.size()];
+		clients.toArray(c);
+		return c;
 	}
-	
+
 	/**
-	 * Returns a List of all module tasks.
+	 * Returns an array of all module tasks.
 	 *
-	 * @return java.util.List
+	 * @return
 	 */
-	public static List getModuleTasks() {
+	public static IModuleTask[] getModuleTasks() {
 		if (moduleTasks == null)
 			loadModuleTasks();
-		return moduleTasks;
+		IModuleTask[] mt = new IModuleTask[moduleTasks.size()];
+		moduleTasks.toArray(mt);
+		return mt;
 	}
-	
+
 	/**
-	 * Returns a List of all server tasks.
+	 * Returns an array of all server tasks.
 	 *
-	 * @return java.util.List
+	 * @return
 	 */
-	public static List getServerTasks() {
+	public static IServerTask[] getServerTasks() {
 		if (serverTasks == null)
 			loadServerTasks();
-		return serverTasks;
+		IServerTask[] st = new IServerTask[serverTasks.size()];
+		serverTasks.toArray(st);
+		return st;
 	}
-	
+
 	/**
-	 * Returns a List of all server monitors.
+	 * Returns an array of all server monitors.
 	 *
-	 * @return java.util.List
+	 * @return
 	 */
-	public static List getServerMonitors() {
+	public static IServerMonitor[] getServerMonitors() {
 		if (monitors == null)
 			loadServerMonitors();
-		return monitors;
+		IServerMonitor[] sm = new IServerMonitor[monitors.size()];
+		monitors.toArray(sm);
+		return sm;
 	}
 
 	/**
@@ -775,13 +689,13 @@ public class ServerCore {
 			if (monitor.isCanceled())
 				return null;
 	
-			return new Status(IStatus.OK, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%serverProjectCreated"), null);
+			return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%serverProjectCreated"), null);
 		} catch (CoreException ce) {
 			Trace.trace(Trace.SEVERE, "Could not create server project named " + name, ce);
-			return new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCouldNotCreateServerProjectStatus", ce.getMessage()), ce);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCouldNotCreateServerProjectStatus", ce.getMessage()), ce);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not create server project (2) named " + name, e);
-			return new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCouldNotCreateServerProject"), e);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCouldNotCreateServerProject"), e);
 		} finally {
 			monitor.done();
 		}
@@ -811,7 +725,7 @@ public class ServerCore {
 			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .startup extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "startup");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "startup");
 
 		int size = cf.length;
 		startups = new ArrayList(size);
@@ -827,30 +741,30 @@ public class ServerCore {
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .startup extension point -<-");
 	}
-	
+
 	/**
-	 * Load the module kinds.
+	 * Load the module types.
 	 */
-	private static synchronized void loadModuleKinds() {
-		if (moduleKinds != null)
+	private static synchronized void loadModuleTypes() {
+		if (moduleTypes != null)
 			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleKinds extension point ->-");
+		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleTypes extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "moduleKinds");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleTypes");
 
 		int size = cf.length;
-		moduleKinds = new ArrayList(size);
+		moduleTypes = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
-				ModuleKind moduleKind = new ModuleKind(cf[i]);
-				moduleKinds.add(moduleKind);
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded moduleKind: " + cf[i].getAttribute("id"));
+				ModuleType moduleType = new ModuleType(cf[i]);
+				moduleTypes.add(moduleType);
+				Trace.trace(Trace.EXTENSION_POINT, "  Loaded moduleType: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load moduleKind: " + cf[i].getAttribute("id"), t);
+				Trace.trace(Trace.SEVERE, "  Could not load moduleType: " + cf[i].getAttribute("id"), t);
 			}
 		}
 		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleKinds extension point -<-");
+		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleTypes extension point -<-");
 	}
 
 	/**
@@ -861,7 +775,7 @@ public class ServerCore {
 			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .runtimeTypes extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "runtimeTypes");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "runtimeTypes");
 
 		int size = cf.length;
 		runtimeTypes = new ArrayList(size);
@@ -887,7 +801,7 @@ public class ServerCore {
 			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .runtimeLocators extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "runtimeLocators");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "runtimeLocators");
 
 		int size = cf.length;
 		runtimeLocators = new ArrayList(size);
@@ -912,7 +826,7 @@ public class ServerCore {
 			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .runtimeTargetHandlers extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "runtimeTargetHandlers");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "runtimeTargetHandlers");
 
 		int size = cf.length;
 		runtimeTargetHandlers = new ArrayList(size);
@@ -938,7 +852,7 @@ public class ServerCore {
 			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .serverTypes extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "serverTypes");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "serverTypes");
 
 		int size = cf.length;
 		serverTypes = new ArrayList(size);
@@ -964,7 +878,7 @@ public class ServerCore {
 			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .serverConfigurationTypes extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "serverConfigurationTypes");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "serverConfigurationTypes");
 
 		int size = cf.length;
 		serverConfigurationTypes = new ArrayList(size);
@@ -983,31 +897,6 @@ public class ServerCore {
 	}
 
 	/**
-	 * Load the publish manager extension point.
-	 */
-	private static synchronized void loadPublishManagers() {
-		if (publishManagers != null)
-			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .publish extension point ->-");
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "publish");
-
-		int size = cf.length;
-		publishManagers = new HashMap(size);
-		for (int i = 0; i < size; i++) {
-			try {
-				String id = cf[i].getAttribute("id");
-				IPublishManager publisher = new PublishManager(cf[i]);
-				publishManagers.put(id, publisher);
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded publish manager: " + id);
-			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load publish manager: " + cf[i].getAttribute("class"), t);
-			}
-		}
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .publisher extension point -<-");
-	}
-
-	/**
 	 * Load the module factories extension point.
 	 */
 	private static synchronized void loadModuleFactories() {
@@ -1015,7 +904,7 @@ public class ServerCore {
 			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleFactories extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "moduleFactories");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleFactories");
 
 		int size = cf.length;
 		moduleFactories = new ArrayList(size);
@@ -1039,7 +928,7 @@ public class ServerCore {
 			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleObjectAdapters extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "moduleObjectAdapters");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleObjectAdapters");
 
 		int size = cf.length;
 		moduleObjectAdapters = new ArrayList(size);
@@ -1062,7 +951,7 @@ public class ServerCore {
 			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .launchableAdapters extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "launchableAdapters");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "launchableAdapters");
 
 		int size = cf.length;
 		launchableAdapters = new ArrayList(size);
@@ -1080,18 +969,18 @@ public class ServerCore {
 	/**
 	 * Load the launchable client extension point.
 	 */
-	private static synchronized void loadLaunchableClients() {
-		if (launchableClients != null)
+	private static synchronized void loadClients() {
+		if (clients != null)
 			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .clients extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "clients");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "clients");
 
 		int size = cf.length;
-		launchableClients = new ArrayList(size);
+		clients = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
-				launchableClients.add(new Client(cf[i]));
+				clients.add(new Client(cf[i]));
 				Trace.trace(Trace.EXTENSION_POINT, "  Loaded clients: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load clients: " + cf[i].getAttribute("id"), t);
@@ -1108,7 +997,7 @@ public class ServerCore {
 			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleTasks extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "moduleTasks");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleTasks");
 
 		int size = cf.length;
 		moduleTasks = new ArrayList(size);
@@ -1132,7 +1021,7 @@ public class ServerCore {
 			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .serverTasks extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "serverTasks");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "serverTasks");
 
 		int size = cf.length;
 		serverTasks = new ArrayList(size);
@@ -1157,7 +1046,7 @@ public class ServerCore {
 			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .serverMonitors extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "serverMonitors");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "serverMonitors");
 
 		int size = cf.length;
 		monitors = new ArrayList(size);

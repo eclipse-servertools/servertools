@@ -14,8 +14,8 @@ import java.util.*;
 import java.io.File;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.model.IModule;
 /**
  * Helper to obtain and store the global publish information.
  * (what files were published and when) Delegates to PublishState

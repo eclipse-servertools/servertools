@@ -1,6 +1,6 @@
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -11,13 +11,11 @@
 package org.eclipse.wst.server.ui.internal.viewers;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.wst.server.core.IServerConfigurationType;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.ui.internal.Trace;
-
 /**
  * Server configuration type content provider.
  */
@@ -37,24 +35,27 @@ public class ServerConfigurationTypeTreeContentProvider extends AbstractTreeCont
 	public void fillTree() {
 		clean();
 		List list = new ArrayList();
-		Iterator iterator = ServerCore.getServerConfigurationTypes().iterator();
-		while (iterator.hasNext()) {
-			IServerConfigurationType type = (IServerConfigurationType) iterator.next();
-			if (style == STYLE_FLAT) {
-				list.add(type);
-			} else {
-				try {
-					/*TreeElement ele = null;
-					if (style == STYLE_VENDOR)
-						ele = getOrCreate(list, type.getVendor());
-					else if (style == STYLE_VERSION)
-						ele = getOrCreate(list, type.getVersion());
-					else if (style == STYLE_TYPE)
-						ele = getOrCreate(list, type.getLabel());
-					ele.contents.add(type);
-					elementToParentMap.put(type, ele);*/
-				} catch (Exception e) {
-					Trace.trace(Trace.WARNING, "Error in server configuration content provider", e);
+		IServerConfigurationType[] configTypes = ServerCore.getServerConfigurationTypes();
+		if (configTypes != null) {
+			int size = configTypes.length;
+			for (int i = 0; i < size; i++) {
+				IServerConfigurationType type = configTypes[i];
+				if (style == STYLE_FLAT) {
+					list.add(type);
+				} else {
+					try {
+						/*TreeElement ele = null;
+						if (style == STYLE_VENDOR)
+							ele = getOrCreate(list, type.getVendor());
+						else if (style == STYLE_VERSION)
+							ele = getOrCreate(list, type.getVersion());
+						else if (style == STYLE_TYPE)
+							ele = getOrCreate(list, type.getLabel());
+						ele.contents.add(type);
+						elementToParentMap.put(type, ele);*/
+					} catch (Exception e) {
+						Trace.trace(Trace.WARNING, "Error in server configuration content provider", e);
+					}
 				}
 			}
 		}

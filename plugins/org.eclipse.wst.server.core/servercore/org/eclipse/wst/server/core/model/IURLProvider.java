@@ -12,10 +12,12 @@ package org.eclipse.wst.server.core.model;
 
 import java.net.URL;
 
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IServerExtension;
 /**
  * 
  */
-public interface IURLProvider {
+public interface IURLProvider extends IServerExtension {
 	/**
 	 * Return the base URL of this module on the server. This method may return
 	 * null if this server does not have a valid configuration or does not contain

@@ -17,7 +17,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.core.model.IProjectModule;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.swt.SWT;

@@ -20,8 +20,6 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.util.Task;
-
-
 /**
  * 
  */
@@ -43,9 +41,9 @@ public class TempSaveServerConfigurationTask extends Task {
 				IProject project = file.getProject();
 				ServerCore.createServerProject(project.getName(), null, monitor);
 			}
-			sc = workingCopy.save(monitor);
+			sc = workingCopy.save(false, monitor);
 			
-			workingCopy = sc.getWorkingCopy();
+			workingCopy = sc.createWorkingCopy();
 			try {
 				IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
 				if (server.getServerType().hasServerConfiguration() &&server != null)

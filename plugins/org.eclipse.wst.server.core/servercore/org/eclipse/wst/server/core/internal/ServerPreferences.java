@@ -20,7 +20,6 @@ public class ServerPreferences implements IServerPreferences {
 	private static final String PREF_AUTO_RESTART = "auto-restart";
 	private static final String PREF_AUTO_PUBLISH = "auto-publish";
 	private static final String PREF_AUTO_REPAIR_MODULES = "auto-repair-modules";
-	private static final String PREF_PUBLISHER = "publisher";
 	private static final String PREF_CREATE_IN_WORKSPACE = "create-workspace";
 	private static final String PREF_STARTUP_TIMEOUT = "start-timeout";
 	private static final String PREF_RESTART_MODULE_TIMEOUT = "restart-module-timeout";
@@ -118,24 +117,6 @@ public class ServerPreferences implements IServerPreferences {
 	}
 
 	/**
-	 * Returns the publisher preference.
-	 *
-	 * @return String
-	 */
-	public String getPublishManager() {
-		return preferences.getString(PREF_PUBLISHER);
-	}
-
-	/**
-	 * Returns the publisher preference.
-	 *
-	 * @return String
-	 */
-	public String getDefaultPublishManager() {
-		return DEFAULT_PUBLISH_MANAGER;
-	}
-
-	/**
 	 * Set whether servers will be automatically restarted when
 	 * they need a restart.
 	 *
@@ -153,16 +134,6 @@ public class ServerPreferences implements IServerPreferences {
 	 */
 	public void setAutoPublishing(boolean value) {
 		preferences.setValue(PREF_AUTO_PUBLISH, value);
-		ServerPlugin.getInstance().savePluginPreferences();
-	}
-
-	/**
-	 * Sets the publisher to use.
-	 *
-	 * @param String id
-	 */
-	public void setPublishManager(String id) {
-		preferences.setValue(PREF_PUBLISHER, id);
 		ServerPlugin.getInstance().savePluginPreferences();
 	}
 	
@@ -211,7 +182,6 @@ public class ServerPreferences implements IServerPreferences {
 	public void setDefaults() {
 		preferences.setDefault(PREF_AUTO_PUBLISH, isDefaultAutoPublishing());
 		preferences.setDefault(PREF_AUTO_RESTART, isDefaultAutoRestarting());
-		preferences.setDefault(PREF_PUBLISHER, getDefaultPublishManager());
 		preferences.setDefault(PREF_AUTO_REPAIR_MODULES, getDefaultModuleRepairStatus());
 		preferences.setDefault(PREF_STARTUP_TIMEOUT, 210001);
 		preferences.setDefault(PREF_RESTART_MODULE_TIMEOUT, 120001);

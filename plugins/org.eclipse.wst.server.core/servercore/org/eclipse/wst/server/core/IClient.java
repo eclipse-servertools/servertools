@@ -13,8 +13,6 @@ package org.eclipse.wst.server.core;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunch;
 
-import org.eclipse.wst.server.core.model.IClientDelegate;
-import org.eclipse.wst.server.core.model.ILaunchable;
 /**
  * A launchable client is a client side application or test
  * harness that can be launched (run) against a resource
@@ -45,17 +43,10 @@ public interface IClient {
 	public String getDescription();
 
 	/**
-	 * Returns the delegate for this launchable client
-	 * 
-	 * @return org.eclipse.wst.server.core.model.ILaunchableClientDelegate
-	 */
-	public IClientDelegate getDelegate();
-
-	/**
 	 * Returns true if this launchable can be run by this client.
 	 * 
-	 * @param server org.eclipse.wst.server.core.model.IServer
-	 * @param launchable org.eclipse.wst.server.core.model.ILaunchable
+	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param launchable org.eclipse.wst.server.core.ILaunchable
 	 * @param launchMode String
 	 * @return boolean
 	 */
@@ -64,8 +55,8 @@ public interface IClient {
 	/**
 	 * Launches the client.
 	 * 
-	 * @param server org.eclipse.wst.server.core.model.IServer
-	 * @param launchable org.eclipse.wst.server.core.model.ILaunchable
+	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param launchable org.eclipse.wst.server.core.ILaunchable
 	 * @param launchMode String
 	 * @param launch org.eclipse.debug.core.ILaunch
 	 * @return org.eclipse.core.runtime.IStatus

@@ -13,8 +13,8 @@ package org.eclipse.wst.server.core.internal;
 import java.util.*;
 import org.eclipse.core.runtime.IStatus;
 
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IPublishStatus;
-import org.eclipse.wst.server.core.model.IModule;
 /**
  * IStatus used during publishing. It contains the project
  * or configuration that was published as extra information.

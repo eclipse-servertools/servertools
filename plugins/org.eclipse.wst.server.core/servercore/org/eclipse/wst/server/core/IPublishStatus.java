@@ -11,7 +11,6 @@
 package org.eclipse.wst.server.core;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.wst.server.core.model.IModule;
 /**
  * An IStatus that also contains a time and module. This
  * status is returned from the publishing operations.
@@ -29,7 +28,7 @@ public interface IPublishStatus extends IStatus {
 	/**
 	 * Returns the module that was published.
 	 *
-	 * @return org.eclipse.wst.server.core.model.IModule
+	 * @return org.eclipse.wst.server.core.IModule
 	 */
 	public IModule getModule();
 }

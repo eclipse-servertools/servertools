@@ -15,6 +15,7 @@ import java.util.*;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IPath;
 
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IResourceManager;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.ResourceManager;
@@ -23,7 +24,7 @@ import org.eclipse.wst.server.core.model.*;
 /**
  * 
  */
-public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate {
+public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate2 {
 	protected static IResourceChangeListener listener;
 	
 	protected static List factories = new ArrayList();
@@ -175,18 +176,17 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		IResourceManager rm = ServerCore.getResourceManager();
 		((ResourceManager) rm).syncModuleEvents();
 	}
-	
+
 	/**
 	 * Temporary to make sure that all project modules are updated.
 	 */
 	private void updateProjects() {
-		List modules2 = getModules();
+		IModule[] modules2 = getModules();
 		if (modules2 != null) {
-			Iterator iterator = modules2.iterator();
-			while (iterator.hasNext()) {
-				IModule module = (IModule) iterator.next();
-				if (module instanceof ProjectModule)
-					((ProjectModule) module).update();
+			int size = modules2.length;
+			for (int i = 0; i < size; i++) {
+				if (modules2[i] instanceof ProjectModule)
+					((ProjectModule) modules2[i]).update();
 			}
 		}
 	}

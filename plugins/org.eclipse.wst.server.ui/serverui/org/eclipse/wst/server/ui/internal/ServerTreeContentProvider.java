@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,7 +8,9 @@ package org.eclipse.wst.server.ui.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-import java.util.Iterator;
+package org.eclipse.wst.server.ui.internal;
+
+import java.util.ArrayList;
 
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.runtime.IAdaptable;
@@ -33,7 +34,6 @@ import org.eclipse.wst.server.ui.internal.view.tree.ServerElementAdapter;
 import org.eclipse.wst.server.ui.internal.view.tree.TextResourceAdapter;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.model.IWorkbenchAdapter;
-
 /**
  * Provides tree contents for objects that have the IWorkbenchAdapter
  * adapter registered. 
@@ -71,10 +71,11 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 	 */
 	public void dispose() {
 		// remove listeners
-		Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
-		while (iterator.hasNext()) {
-			IServer server = (IServer) iterator.next();
-			server.removeServerListener(serverListener);
+		IServer[] servers = ServerCore.getResourceManager().getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++)
+				servers[i].removeServerListener(serverListener);
 		}
 
 		ServerCore.getResourceManager().removeResourceListener(listener);
@@ -175,10 +176,11 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 			}
 		};
 
-		Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
-		while (iterator.hasNext()) {
-			IServer server = (IServer) iterator.next();
-			server.addServerListener(serverListener);
+		IServer[] servers = ServerCore.getResourceManager().getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++)
+				servers[i].addServerListener(serverListener);
 		}
 	}
 	
@@ -262,11 +264,13 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 	protected void handleServerModulesChanged(IServer server2) {
 		if (viewer != null) {
 			viewer.refresh(new ServerElementAdapter(null, server2));
-			Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
-			while (iterator.hasNext()) {
-				IServer server = (IServer) iterator.next(); 
-				if (server2.equals(server)) {
-					viewer.refresh(new ServerElementAdapter(null, server));
+			IServer[] servers = ServerCore.getResourceManager().getServers();
+			if (servers != null) {
+				int size = servers.length;
+				for (int i = 0; i < size; i++) {
+					if (server2.equals(servers[i])) {
+						viewer.refresh(new ServerElementAdapter(null, servers[i]));
+					}
 				}
 			}
 		}
@@ -290,16 +294,18 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 			IServerConfiguration configuration = (IServerConfiguration) element;
 			//boolean used = false;
 
-			Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
-			while (iterator.hasNext()) {
-				IServer server = (IServer) iterator.next();
-				IServerConfiguration cfg = server.getServerConfiguration();
-				if (cfg != null && cfg.equals(configuration)) {
-					ServerElementAdapter adapter2 = new ServerElementAdapter(null, server);
-					adapter2.setFlags((byte) 1);
-					viewer.refresh(adapter2);
-					
-					//used = true;
+			IServer[] servers = ServerCore.getResourceManager().getServers();
+			if (servers != null) {
+				int size = servers.length;
+				for (int i = 0; i < size; i++) {
+					IServerConfiguration cfg = servers[i].getServerConfiguration();
+					if (cfg != null && cfg.equals(configuration)) {
+						ServerElementAdapter adapter2 = new ServerElementAdapter(null, servers[i]);
+						adapter2.setFlags((byte) 1);
+						viewer.refresh(adapter2);
+						
+						//used = true;
+					}
 				}
 			}
 			
@@ -337,14 +343,16 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 			IServerConfiguration configuration = (IServerConfiguration) element;
 			
 			// refresh servers
-			Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
-			while (iterator.hasNext()) {
-				IServer server = (IServer) iterator.next();
-				IServerConfiguration cfg = server.getServerConfiguration();
-				if (cfg != null && cfg.equals(configuration)) {
-					ServerElementAdapter adapter2 = new ServerElementAdapter(null, server);
-					adapter2.setFlags((byte) 1);
-					viewer.refresh(adapter2);
+			IServer[] servers = ServerCore.getResourceManager().getServers();
+			if (servers != null) {
+				int size = servers.length;
+				for (int i = 0; i < size; i++) {
+					IServerConfiguration cfg = servers[i].getServerConfiguration();
+					if (cfg != null && cfg.equals(configuration)) {
+						ServerElementAdapter adapter2 = new ServerElementAdapter(null, servers[i]);
+						adapter2.setFlags((byte) 1);
+						viewer.refresh(adapter2);
+					}
 				}
 			}
 			//viewer.refresh(new TextResourceAdapter(null, TextResourceAdapter.STYLE_LOOSE_CONFIGURATIONS));
@@ -402,16 +410,18 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 			
 			// refresh servers
 			//boolean used = false;
-			Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
-			while (iterator.hasNext()) {
-				IServer server = (IServer) iterator.next();
-				IServerConfiguration cfg = server.getServerConfiguration();
-				if (cfg != null && cfg.equals(configuration)) {
-					ServerElementAdapter adapter2 = new ServerElementAdapter(null, server);
-					adapter2.setFlags((byte) 1);
-					viewer.refresh(adapter2);
-					
-					//used = true;
+			IServer[] servers = ServerCore.getResourceManager().getServers();
+			if (servers != null) {
+				int size = servers.length;
+				for (int i = 0; i < size; i++) {
+					IServerConfiguration cfg = servers[i].getServerConfiguration();
+					if (cfg != null && cfg.equals(configuration)) {
+						ServerElementAdapter adapter2 = new ServerElementAdapter(null, servers[i]);
+						adapter2.setFlags((byte) 1);
+						viewer.refresh(adapter2);
+						
+						//used = true;
+					}
 				}
 			}
 			
@@ -425,23 +435,31 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 	}
 	
 	public static IServerConfiguration[] getLooseConfigurations() {
-		java.util.List configs = ServerCore.getResourceManager().getServerConfigurations();
+		IServerConfiguration[] configs = ServerCore.getResourceManager().getServerConfigurations();
+		java.util.List list = new ArrayList();
+		if (configs != null) {
+			int size = configs.length;
+			for (int i = 0; i < size; i++)
+				list.add(configs[i]);
+		}
 		
-		Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
-		while (iterator.hasNext()) {
-			IServer server = (IServer) iterator.next();
-			if (!server.equals(TextResourceAdapter.deleted)) {
-				IServerConfiguration cfg = server.getServerConfiguration();
-				if (cfg != null && configs.contains(cfg))
-					configs.remove(cfg);
+		IServer[] servers = ServerCore.getResourceManager().getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				if (!servers[i].equals(TextResourceAdapter.deleted)) {
+					IServerConfiguration cfg = servers[i].getServerConfiguration();
+					if (cfg != null && list.contains(cfg))
+						list.remove(cfg);
+				}
 			}
 		}
 		
-		if (configs.contains(ConfigurationProxyResourceAdapter.deleted))
-			configs.remove(ConfigurationProxyResourceAdapter.deleted);
+		if (list.contains(ConfigurationProxyResourceAdapter.deleted))
+			list.remove(ConfigurationProxyResourceAdapter.deleted);
 		
-		IServerConfiguration[] config = new IServerConfiguration[configs.size()];
-		configs.toArray(config);
+		IServerConfiguration[] config = new IServerConfiguration[list.size()];
+		list.toArray(config);
 		return config;
 	}
 }

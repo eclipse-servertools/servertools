@@ -23,7 +23,7 @@ import org.eclipse.wst.server.core.model.*;
  */
 public class ModuleTask implements IModuleTask {
 	private IConfigurationElement element;
-	private IModuleTaskDelegate delegate;
+	private ModuleTaskDelegate delegate;
 	protected ITaskModel model;
 
 	/**
@@ -135,10 +135,10 @@ public class ModuleTask implements IModuleTask {
 	/*
 	 * @see IPublishManager#getDelegate()
 	 */
-	public IModuleTaskDelegate getDelegate() {
+	public ModuleTaskDelegate getDelegate() {
 		if (delegate == null) {
 			try {
-				delegate = (IModuleTaskDelegate) element.createExecutableExtension("class");
+				delegate = (ModuleTaskDelegate) element.createExecutableExtension("class");
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString() + ": " + e.getMessage());
 			}

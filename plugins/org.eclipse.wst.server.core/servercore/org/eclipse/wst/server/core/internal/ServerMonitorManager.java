@@ -13,10 +13,10 @@ package org.eclipse.wst.server.core.internal;
 import java.util.*;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IMonitorableServer;
 import org.eclipse.wst.server.core.model.IServerPort;
 /**
  * 
@@ -43,8 +43,8 @@ public class ServerMonitorManager implements IServerMonitorManager {
 			this.content = content;
 		}
 		
-		public MonitoredPort(IMemento memento) {
-			load(memento);
+		public MonitoredPort(IMemento memento, IProgressMonitor monitor) {
+			load(memento, monitor);
 		}
 		
 		public IServer getServer() {
@@ -123,7 +123,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 			}
 		}
 		
-		protected void load(IMemento memento) {
+		protected void load(IMemento memento, IProgressMonitor monitor2) {
 			String serverId = memento.getString("serverId");
 			server = ServerCore.getResourceManager().getServer(serverId);
 			if (server == null)
@@ -133,8 +133,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 				newPort = Integer.parseInt(newPortStr);
 			String portId = memento.getString("portId");
 			
-			IMonitorableServer ms = (IMonitorableServer) server.getDelegate();
-			Iterator iterator = ms.getServerPorts().iterator();
+			Iterator iterator = server.getServerPorts().iterator();
 			while (port == null && iterator.hasNext()) {
 				IServerPort sp = (IServerPort) iterator.next();
 				if (sp.getId() != null && sp.getId().equals(portId))
@@ -160,9 +159,9 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	}
 
 	public ServerMonitorManager() {
-		List monitors = ServerCore.getServerMonitors();
-		if (!monitors.isEmpty())
-			monitor = (IServerMonitor) monitors.get(0);
+		IServerMonitor[] monitors = ServerCore.getServerMonitors();
+		if (monitors != null && monitors.length > 0)
+			monitor = monitors[0];
 		
 		instance = this;
 		loadMonitors();
@@ -197,7 +196,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	 * @throws org.eclipse.core.runtime.CoreException
 	 */
 	public void setServerMonitor(IServerMonitor newMonitor) throws CoreException {
-		throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, "Not implemented yet", null));
+		throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, "Not implemented yet", null));
 	}
 
 	/**
@@ -344,7 +343,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 			
 			for (int i = 0; i < size; i++) {
 				try {
-					MonitoredPort mp = new MonitoredPort(children[i]);
+					MonitoredPort mp = new MonitoredPort(children[i], null);
 					ports.add(mp);
 				} catch (Exception e) {
 					Trace.trace(Trace.WARNING, "Could not load monitor: " + e);

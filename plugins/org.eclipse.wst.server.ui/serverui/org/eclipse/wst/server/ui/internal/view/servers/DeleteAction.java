@@ -1,17 +1,16 @@
-package org.eclipse.wst.server.ui.internal.view.servers;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.view.servers;
+
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
@@ -22,7 +21,6 @@ import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.ui.internal.DeleteServerDialog;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.swt.widgets.Shell;
-
 /**
  * Action for deleting server resources.
  */
@@ -60,13 +58,15 @@ public class DeleteAction extends Action {
 		}
 		
 		// remove configurations that are still referenced
-		Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
-		while (iterator.hasNext()) {
-			IServer server = (IServer) iterator.next();
-			if (!deleteList.contains(server)) {
-				IServerConfiguration config = server.getServerConfiguration();
-				if (deleteExtraList.contains(config))
-					deleteExtraList.remove(config);
+		IServer[] servers = ServerCore.getResourceManager().getServers();
+		if (servers != null) {
+			int size2 = servers.length;
+			for (int i = 0; i < size2; i++) {
+				if (!deleteList.contains(servers[i])) {
+					IServerConfiguration config = servers[i].getServerConfiguration();
+					if (deleteExtraList.contains(config))
+						deleteExtraList.remove(config);
+				}
 			}
 		}
 	}

@@ -125,12 +125,13 @@ public class ServerUIUtil {
 	 * @return boolean
 	 */
 	public static boolean promptIfDirty(Shell shell, IServer server) {
-		if (server == null)
+		if (server == null || !(server instanceof IServerWorkingCopy))
 			return false;
 
 		String title = ServerUIPlugin.getResource("%resourceDirtyDialogTitle");
 		
-		if (server != null && server.isAWorkingCopyDirty()) {
+		IServerWorkingCopy wc = (IServerWorkingCopy) server;
+		if (wc.isDirty()) {
 			String message = ServerUIPlugin.getResource("%resourceDirtyDialogMessage", server.getName());
 			String[] labels = new String[] {ServerUIPlugin.getResource("%resourceDirtyDialogContinue"), IDialogConstants.CANCEL_LABEL};
 			MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.INFORMATION, labels, 0);
@@ -153,12 +154,13 @@ public class ServerUIUtil {
 	 * @return boolean
 	 */
 	public static boolean promptIfDirty(Shell shell, IServerConfiguration configuration) {
-		if (configuration == null)
+		if (configuration == null || !(configuration instanceof IServerConfigurationWorkingCopy))
 			return false;
 
 		String title = ServerUIPlugin.getResource("%resourceDirtyDialogTitle");
 
-		if (configuration != null && configuration.isAWorkingCopyDirty()) {
+		IServerConfigurationWorkingCopy wc = (IServerConfigurationWorkingCopy) configuration;
+		if (wc.isDirty()) {
 			String message = ServerUIPlugin.getResource("%resourceDirtyDialogMessage", configuration.getName());
 			String[] labels = new String[] {ServerUIPlugin.getResource("%resourceDirtyDialogContinue"), IDialogConstants.CANCEL_LABEL};
 			MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.INFORMATION, labels, 0);
@@ -225,7 +227,7 @@ public class ServerUIUtil {
 		IRuntimeType runtimeType = ServerCore.getRuntimeType(runtimeTypeId);
 		if (runtimeType != null) {
 			try {
-				final IRuntimeWorkingCopy runtime = runtimeType.createRuntime(null);
+				final IRuntimeWorkingCopy runtime = runtimeType.createRuntime(null, null);
 				IWizardFragment fragment = new WizardFragment() {
 					public void createSubFragments(List list) {
 						list.add(new InputWizardFragment(ITaskModel.TASK_RUNTIME, runtime));

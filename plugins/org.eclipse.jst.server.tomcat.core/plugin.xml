@@ -33,8 +33,7 @@
        vendor="%apache"
        version="3.2"
        order="50"
-       class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime"
-       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntimeWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime">
        <moduleType
          types="j2ee.web"
          versions="1.2"/>
@@ -47,8 +46,7 @@
        vendor="%apache"
        version="4.0"
        order="52"
-       class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime"
-       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntimeWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime">
        <moduleType
          types="j2ee.web"
          versions="1.2, 1.3"/>
@@ -61,8 +59,7 @@
        vendor="%apache"
        version="4.1"
        order="54"
-       class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime"
-       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntimeWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime">
        <moduleType
          types="j2ee.web"
          versions="1.2, 1.3"/>
@@ -75,8 +72,7 @@
        vendor="%apache"
        version="5.0"
        order="56"
-       class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime"
-       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntimeWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime">
        <moduleType
          types="j2ee.web"
          versions="1.2, 1.3, 1.4"/>
@@ -89,8 +85,7 @@
        vendor="%apache"
        version="5.5"
        order="58"
-       class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime"
-       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntimeWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime">
        <moduleType
          types="j2ee.web"
          versions="1.2, 1.3, 1.4"/>
@@ -134,9 +129,11 @@
        id="org.eclipse.jst.server.tomcat.32"
        name="%tomcat32ServerType"
        description="%tomcat32ServerDescription"
-       hosts="localhost"
+       supportsRemoteHosts="false"
        runtime="true"
        order="50"
+       startTimeout="45000"
+       stopTimeout="15000"
        monitorable="true"
        initialState="stopped"
        configurationTypeId="org.eclipse.jst.server.tomcat.32"
@@ -149,9 +146,11 @@
        id="org.eclipse.jst.server.tomcat.40"
        name="%tomcat40ServerType"
        description="%tomcat40ServerDescription"
-       hosts="localhost"
+       supportsRemoteHosts="false"
        runtime="true"
        order="52"
+       startTimeout="45000"
+       stopTimeout="15000"
        monitorable="true"
        initialState="stopped"
        configurationTypeId="org.eclipse.jst.server.tomcat.40"
@@ -164,9 +163,11 @@
        id="org.eclipse.jst.server.tomcat.41"
        name="%tomcat41ServerType"
        description="%tomcat41ServerDescription"
-       hosts="localhost"
+       supportsRemoteHosts="false"
        runtime="true"
        order="54"
+       startTimeout="45000"
+       stopTimeout="15000"
        monitorable="true"
        initialState="stopped"
        configurationTypeId="org.eclipse.jst.server.tomcat.41"
@@ -179,9 +180,11 @@
        id="org.eclipse.jst.server.tomcat.50"
        name="%tomcat50ServerType"
        description="%tomcat50ServerDescription"
-       hosts="localhost"
+       supportsRemoteHosts="false"
        runtime="true"
        order="56"
+       startTimeout="45000"
+       stopTimeout="15000"
        monitorable="true"
        initialState="stopped"
        configurationTypeId="org.eclipse.jst.server.tomcat.50"
@@ -194,9 +197,11 @@
        id="org.eclipse.jst.server.tomcat.55"
        name="%tomcat55ServerType"
        description="%tomcat55ServerDescription"
-       hosts="localhost"
+       supportsRemoteHosts="false"
        runtime="true"
        order="58"
+       startTimeout="45000"
+       stopTimeout="15000"
        monitorable="true"
        initialState="stopped"
        configurationTypeId="org.eclipse.jst.server.tomcat.55"
@@ -206,7 +211,7 @@
        workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatServerWorkingCopy">
      </serverType>
    </extension>
-   
+
    <extension point="org.eclipse.wst.server.core.serverLocators">
     <serverLocator
        id="org.eclipse.jst.server.tomcat.server.locator"
@@ -215,47 +220,42 @@
        hosts="local"
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatServerLocator"/>
   </extension>
-   
+
    <extension point="org.eclipse.wst.server.core.serverConfigurationTypes">
      <serverConfigurationType
        id="org.eclipse.jst.server.tomcat.32"
        name="%tomcat32ConfigurationType"
        description="%tomcat32ConfigurationDescription"
        isFolder="true"
-       class="org.eclipse.jst.server.tomcat.core.internal.Tomcat32Configuration"
-       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.Tomcat32ConfigurationWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.Tomcat32Configuration">
      </serverConfigurationType>
      <serverConfigurationType
        id="org.eclipse.jst.server.tomcat.40"
        name="%tomcat40ConfigurationType"
        description="%tomcat40ConfigurationDescription"
        isFolder="true"
-       class="org.eclipse.jst.server.tomcat.core.internal.Tomcat40Configuration"
-       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.Tomcat40ConfigurationWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.Tomcat40Configuration">
      </serverConfigurationType>
      <serverConfigurationType
        id="org.eclipse.jst.server.tomcat.41"
        name="%tomcat41ConfigurationType"
        description="%tomcat41ConfigurationDescription"
        isFolder="true"
-       class="org.eclipse.jst.server.tomcat.core.internal.Tomcat41Configuration"
-       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.Tomcat41ConfigurationWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.Tomcat41Configuration">
      </serverConfigurationType>
      <serverConfigurationType
        id="org.eclipse.jst.server.tomcat.50"
        name="%tomcat50ConfigurationType"
        description="%tomcat50ConfigurationDescription"
        isFolder="true"
-       class="org.eclipse.jst.server.tomcat.core.internal.Tomcat50Configuration"
-       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.Tomcat50ConfigurationWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.Tomcat50Configuration">
      </serverConfigurationType>
      <serverConfigurationType
        id="org.eclipse.jst.server.tomcat.55"
        name="%tomcat55ConfigurationType"
        description="%tomcat55ConfigurationDescription"
        isFolder="true"
-       class="org.eclipse.jst.server.tomcat.core.internal.Tomcat55Configuration"
-       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.Tomcat55ConfigurationWorkingCopy">
+       class="org.eclipse.jst.server.tomcat.core.internal.Tomcat55Configuration">
      </serverConfigurationType>
    </extension>
 

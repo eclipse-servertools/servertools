@@ -10,8 +10,6 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 /**
@@ -127,24 +125,14 @@ public interface IRuntimeType extends IOrdered {
 	public String getVersion();
 
 	/**
-	 * Returns the list of module types that this runtime type 
-	 * can support.
+	 * Returns an array of module types that this runtime type can support.
 	 * <p>
-	 * [issue: The list returned is precious. You would not want a client
-	 * to accidentally or malicously whack it. Normal practice is to
-	 * return an array instead of a List, and to return a new copy each call.
-	 * This allows the spec to say that the client can do what they want
-	 * with the result, and that it won't change under foot.
-	 * Another alternative is to return a UnmodifiableList implementation
-	 * so that clients cannot modify. But if you don't copy, you still
-	 * have the problem of the list chaning under foot if a new plug-in
-	 * is installed that happens to define a module kind (a scenario that
-	 * Eclipse should support).]
+	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
 	 * 
-	 * @return the list of module types (element type: {@link IModuleType})
+	 * @return the array of module types {@link IModuleType2}
 	 */
-	public List getModuleTypes();
+	public IModuleType2[] getModuleTypes();
 	
 	/**
 	 * Returns whether this runtime type can be instantiated.
@@ -178,5 +166,5 @@ public interface IRuntimeType extends IOrdered {
 	 * @return a new runtime working copy with the given id
 	 * @throws CoreException [missing]
 	 */
-	public IRuntimeWorkingCopy createRuntime(String id) throws CoreException;
+	public IRuntimeWorkingCopy createRuntime(String id, IProgressMonitor monitor) throws CoreException;
 }

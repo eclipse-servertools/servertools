@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.core.util.Task;
 import org.eclipse.wst.server.ui.internal.Trace;
 
@@ -40,7 +39,7 @@ public class AddModuleTask extends Task {
 		IServer server = (IServer) getTaskModel().getObject(ITaskModel.TASK_SERVER);
 		IModule parentModule = null;
 		try {
-			List parents = server.getParentModules(module);
+			List parents = server.getParentModules(module, monitor);
 			if (parents != null && parents.size() > 0) {
 				parentModule = (IModule) parents.get(0);
 			}
@@ -53,15 +52,15 @@ public class AddModuleTask extends Task {
 			parentModule = module;
 		}
 
-		IModule[] modules = server.getModules();
+		IModule[] modules = server.getModules(monitor);
 		int size = modules.length;
 		for (int i = 0; i < size; i++) {
 			if (parentModule.equals(modules[i]))
 				return;
 		}
 
-		IServerWorkingCopy workingCopy = server.getWorkingCopy();
+		IServerWorkingCopy workingCopy = server.createWorkingCopy();
 		workingCopy.modifyModules(new IModule[] { parentModule }, new IModule[0], monitor);
-		getTaskModel().putObject(ITaskModel.TASK_SERVER, workingCopy.save(monitor));
+		getTaskModel().putObject(ITaskModel.TASK_SERVER, workingCopy.save(false, monitor));
 	}
 }

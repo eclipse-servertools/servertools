@@ -78,7 +78,7 @@ public class ServerListener extends ServerResourceAdapter implements IServerList
 			return;
 		
 		byte state = server.getServerState();
-		if (state != IServer2.SERVER_STARTED && state != IServer2.SERVER_STARTED_DEBUG && state != IServer.SERVER_STARTED_PROFILE)
+		if (state != IServer2.STATE_STARTED && state != IServer2.STATE_STARTED_DEBUG && state != IServer.STATE_STARTED_PROFILE)
 			return;
 	
 		if (ServerCore.getServerPreferences().isAutoRestarting()) {

@@ -43,6 +43,11 @@ public class ServerPlugin extends Plugin {
 	protected Map tempDirHash;
 
 	/**
+	 * server core plugin id
+	 */
+	public static final String PLUGIN_ID = "org.eclipse.wst.server.core";
+
+	/**
 	 * Create the ServerPlugin.
 	 */
 	public ServerPlugin() {
@@ -335,7 +340,7 @@ public class ServerPlugin extends Plugin {
 			int sizeV = versions.length;
 			for (int j = 0; j < sizeT; j++) {
 				for (int k = 0; k < sizeV; k++) {
-					ModuleType module = new ModuleType(types[j], versions[k]);
+					ModuleType2 module = new ModuleType2(types[j], versions[k]);
 					list.add(module);
 				}
 			}

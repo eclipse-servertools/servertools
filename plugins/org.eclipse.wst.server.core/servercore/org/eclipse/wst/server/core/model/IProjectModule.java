@@ -12,8 +12,8 @@ package org.eclipse.wst.server.core.model;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.resources.IModuleResourceDelta;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.wst.server.core.IModule;
 /**
  * A module project is a connection between a module and a project in the
  * workspace. Typically, this is used to listen for resource changes (meaning that
@@ -35,5 +35,5 @@ public interface IProjectModule extends IModule {
 	 * @param delta org.eclipse.core.resources.IResourceDelta
 	 * @return org.eclipse.wst.server.core.IModuleResourceDelta
 	 */
-	public IModuleResourceDelta getModuleResourceDelta(IResourceDelta delta);
+	public IPath getModuleResourceDelta(IResourceDelta delta);
 }

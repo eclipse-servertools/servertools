@@ -210,14 +210,6 @@
    </propertyTester>
 </extension>
 
-<extension point="org.eclipse.wst.server.core.publish">
-  <publish
-    id="org.eclipse.wst.server.ui.publish.visual"
-    name="%publisherVisualName"
-    description="%publisherVisualDescription"
-    class="org.eclipse.wst.server.ui.internal.publish.VisualPublisher"/>
-</extension>
-
 <extension point="org.eclipse.wst.server.ui.serverActions">
   <serverAction id="org.eclipse.wst.server.ui.projects"
     typeIds="*"

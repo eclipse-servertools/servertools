@@ -13,11 +13,11 @@ package org.eclipse.jst.server.core;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jdt.launching.IVMInstall;
 
-import org.eclipse.wst.server.core.model.IRuntimeDelegate;
+import org.eclipse.wst.server.core.IServerExtension;
 /**
  * 
  */
-public interface IGenericRuntime extends IRuntimeDelegate {
+public interface IGenericRuntime extends IServerExtension {
 	public String getVMInstallTypeId();
 
 	public String getVMInstallId();

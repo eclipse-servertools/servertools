@@ -1,4 +1,3 @@
-package org.eclipse.jst.server.tomcat.core;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
  * All rights reserved.   This program and the accompanying materials
@@ -9,10 +8,10 @@ package org.eclipse.jst.server.tomcat.core;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-import org.eclipse.wst.server.core.model.IRuntimeWorkingCopyDelegate;
+package org.eclipse.jst.server.tomcat.core;
 /**
  *
  */
-public interface ITomcatRuntimeWorkingCopy extends ITomcatRuntime, IRuntimeWorkingCopyDelegate {
+public interface ITomcatRuntimeWorkingCopy extends ITomcatRuntime {
 	public void setVMInstall(String typeId, String id);
 }

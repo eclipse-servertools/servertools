@@ -16,8 +16,6 @@ import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.core.util.Task;
-
-
 /**
  * 
  */
@@ -34,8 +32,8 @@ public class TempSaveRuntimeTask extends Task {
 			if (!workingCopy.isDirty())
 				return;
 		
-			runtime = workingCopy.save(monitor);
-			getTaskModel().putObject(ITaskModel.TASK_RUNTIME, runtime.getWorkingCopy());
+			runtime = workingCopy.save(false, monitor);
+			getTaskModel().putObject(ITaskModel.TASK_RUNTIME, runtime.createWorkingCopy());
 		}
 	}
 }

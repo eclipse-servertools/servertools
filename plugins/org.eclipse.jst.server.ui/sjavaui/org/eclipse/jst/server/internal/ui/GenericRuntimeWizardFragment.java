@@ -37,7 +37,7 @@ public class GenericRuntimeWizardFragment extends WizardFragment {
 		
 		if (runtime == null)
 			return false;
-		IStatus status = runtime.validate();
+		IStatus status = runtime.validate(null);
 		return (status != null && status.isOK());
 	}
 

@@ -10,10 +10,6 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 
-import java.util.List;
-
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IModuleFactoryDelegate;
 import org.eclipse.wst.server.core.model.IModuleFactoryListener;
 /**
  * A factory for creating modules.
@@ -65,20 +61,11 @@ public interface IModuleFactory extends IOrdered {
 	/**
 	 * Returns the types of modules that the factory is capable of
 	 * producing.
-	 * <p>
-	 * [issue: The list returned is precious. You would not want a client
-	 * to accidentally or malicously whack it. Normal practice is to
-	 * return an array instead of a List, and to return a new copy each call.
-	 * This allows the spec to say that the client can do what they want
-	 * with the result, and that it won't change under foot.
-	 * Another alternative is to return a UnmodifiableList implementation
-	 * so that clients cannot modify.]
-	 * </p>
 	 * 
-	 * @return a list of module types (element type: {@link IModuleType})
+	 * @return an array of module types (@link IModuleType2}
 	 */
-	public List getModuleTypes();
-	
+	public IModuleType2[] getModuleTypes();
+
 	/**
 	 * Returns whether this module factory produces project modules.
 	 * <p>
@@ -104,7 +91,7 @@ public interface IModuleFactory extends IOrdered {
 	 * 
 	 * @return the module factory delegate
 	 */
-	public IModuleFactoryDelegate getDelegate();
+	//public ModuleFactoryDelegate2 getDelegate();
 
 	/**
 	 * Finds a module create by this factory with the given id.
@@ -139,21 +126,12 @@ public interface IModuleFactory extends IOrdered {
 	 * All modules have to be in the workspace, right?]
 	 * </p>
 	 * <p>
-	 * [issue: Consistency: IServer.getModules returns IModule[] rather than List<IModule>.]
-	 * </p>
-	 * <p>
-	 * [issue: The list returned is precious. You would not want a client
-	 * to accidentally or malicously whack it. Normal practice is to
-	 * return an array instead of a List, and to return a new copy each call.
-	 * This allows the spec to say that the client can do what they want
-	 * with the result, and that it won't change under foot.
-	 * Another alternative is to return a UnmodifiableList implementation
-	 * so that clients cannot modify.]
+	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
 	 * 
-	 * @return a list of modules (element type: {@link IModule})
+	 * @return an array of modules {@link IModule}
 	 */
-	public List getModules();
+	public IModule[] getModules();
 
 	/**
 	 * Add a listener for modules that are added/removed from this

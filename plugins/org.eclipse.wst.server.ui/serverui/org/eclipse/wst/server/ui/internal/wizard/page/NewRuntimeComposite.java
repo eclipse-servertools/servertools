@@ -25,7 +25,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
-
 /**
  * 
  */
@@ -92,7 +91,7 @@ public class NewRuntimeComposite extends Composite {
 			} catch (Exception e) { }
 			if (runtime == null) {
 				try {
-					runtime = runtimeType.createRuntime(null);
+					runtime = runtimeType.createRuntime(null, null);
 					ServerUtil.setRuntimeDefaultName(runtime);
 					if (runtime != null)
 						runtimeMap.put(runtimeType, runtime);

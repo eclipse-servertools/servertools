@@ -15,9 +15,9 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.wst.server.core.IElement;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerConfiguration;
-import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.ServerLabelProvider;
 import org.eclipse.ui.model.IWorkbenchAdapter;
@@ -76,7 +76,7 @@ public class ServerElementAdapter implements IAdaptable, IWorkbenchAdapter, ISer
 				return new Object[] { new ConfigurationProxyResourceAdapter(this, server) };
 				//return NO_CHILDREN;
 
-			IModule[] modules = server.getModules();
+			IModule[] modules = server.getModules(null);
 			if (modules == null || modules.length == 0) {
 				//return new Object[] { new TextResourceAdapter(this, TextResourceAdapter.STYLE_NO_MODULES)};
 				return NO_CHILDREN;

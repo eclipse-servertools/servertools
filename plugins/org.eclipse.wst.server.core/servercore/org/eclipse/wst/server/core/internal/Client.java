@@ -15,15 +15,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunch;
 
 import org.eclipse.wst.server.core.IClient;
+import org.eclipse.wst.server.core.ILaunchable;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.model.IClientDelegate;
-import org.eclipse.wst.server.core.model.ILaunchable;
+import org.eclipse.wst.server.core.model.ClientDelegate;
 /**
  * 
  */
 public class Client implements IClient {
 	private IConfigurationElement element;
-	private IClientDelegate delegate;
+	private ClientDelegate delegate;
 
 	/**
 	 * LaunchableClient constructor comment.
@@ -62,10 +62,10 @@ public class Client implements IClient {
 	/*
 	 * @see IPublishManager#getDelegate()
 	 */
-	public IClientDelegate getDelegate() {
+	public ClientDelegate getDelegate() {
 		if (delegate == null) {
 			try {
-				delegate = (IClientDelegate) element.createExecutableExtension("class");
+				delegate = (ClientDelegate) element.createExecutableExtension("class");
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString() + ": " + e.getMessage());
 			}

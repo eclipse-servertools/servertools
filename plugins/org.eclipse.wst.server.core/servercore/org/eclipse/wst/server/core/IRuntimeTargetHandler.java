@@ -13,7 +13,6 @@ package org.eclipse.wst.server.core;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.model.IRuntimeTargetHandlerDelegate;
 /**
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
@@ -25,9 +24,16 @@ public interface IRuntimeTargetHandler extends IOrdered {
 	 */
 	public String getId();
 
+	/**
+	 * Returns true if this runtime target handler supports (can work with) the
+	 * given runtime.
+	 * 
+	 * @param runtimeType
+	 * @return
+	 */
 	public boolean supportsRuntimeType(IRuntimeType runtimeType);
 
-	public IRuntimeTargetHandlerDelegate getDelegate();
+	public IServerExtension getExtension();
 
 	public void setRuntimeTarget(IProject project, IRuntime runtime, IProgressMonitor monitor) throws CoreException;
 	

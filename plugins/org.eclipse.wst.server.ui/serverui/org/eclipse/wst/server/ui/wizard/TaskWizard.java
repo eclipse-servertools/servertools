@@ -34,10 +34,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerExtension;
 import org.eclipse.wst.server.core.ITask;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.core.model.IRunningActionServer;
-import org.eclipse.wst.server.core.model.IServerDelegate;
 import org.eclipse.wst.server.core.util.TaskModel;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
@@ -197,8 +197,8 @@ public class TaskWizard implements IWizard {
 				boolean useJob = false;
 				try {
 					IServer server = (IServer) taskModel.getObject(ITaskModel.TASK_SERVER);
-					IServerDelegate delegate = server.getDelegate();
-					if (delegate instanceof IRunningActionServer)
+					IServerExtension extension = server.getExtension(monitor);
+					if (extension instanceof IRunningActionServer)
 						useJob = true;
 				} catch (Exception e) { }
 				

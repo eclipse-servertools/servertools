@@ -11,8 +11,8 @@
 package org.eclipse.wst.server.ui.internal;
 
 import org.eclipse.core.expressions.PropertyTester;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.model.IModule;
 
 /**
  * 

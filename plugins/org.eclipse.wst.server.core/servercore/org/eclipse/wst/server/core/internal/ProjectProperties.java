@@ -12,7 +12,6 @@ package org.eclipse.wst.server.core.internal;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.*;
@@ -100,7 +99,7 @@ public class ProjectProperties implements IProjectProperties {
 				else
 					file.create(in, true, monitor);
 			} catch (Exception e) {
-				throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, "", e));
+				throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, "", e));
 			} finally {
 				try {
 					in.close();
@@ -180,12 +179,16 @@ public class ProjectProperties implements IProjectProperties {
 	public void setRuntimeTarget(IRuntime oldRuntime, IRuntime newRuntime, boolean save, IProgressMonitor monitor) throws CoreException {
 		Trace.trace(Trace.RUNTIME_TARGET, "setRuntimeTarget : " + oldRuntime + " -> " + newRuntime);
 		
+		IRuntimeTargetHandler[] handlers = ServerCore.getRuntimeTargetHandlers();
+		if (handlers == null)
+			return;
+	
+		int size = handlers.length;
 		// remove old target
 		if (oldRuntime != null) {
 			IRuntimeType runtimeType = oldRuntime.getRuntimeType();
-			Iterator iterator = ServerCore.getRuntimeTargetHandlers().iterator();
-			while (iterator.hasNext()) {
-				IRuntimeTargetHandler handler = (IRuntimeTargetHandler) iterator.next();
+			for (int i = 0; i < size; i++) {
+				IRuntimeTargetHandler handler = handlers[i];
 				long time = System.currentTimeMillis();
 				boolean supports = handler.supportsRuntimeType(runtimeType);
 				Trace.trace(Trace.RUNTIME_TARGET, "  < " + handler + " " + supports);
@@ -201,9 +204,8 @@ public class ProjectProperties implements IProjectProperties {
 			if (save)
 				savePreferences(monitor);
 			IRuntimeType runtimeType = newRuntime.getRuntimeType();
-			Iterator iterator = ServerCore.getRuntimeTargetHandlers().iterator();
-			while (iterator.hasNext()) {
-				IRuntimeTargetHandler handler = (IRuntimeTargetHandler) iterator.next();
+			for (int i = 0; i < size; i++) {
+				IRuntimeTargetHandler handler = handlers[i];
 				long time = System.currentTimeMillis();
 				boolean supports = handler.supportsRuntimeType(runtimeType);
 				Trace.trace(Trace.RUNTIME_TARGET, "  > " + handler + " " + supports);

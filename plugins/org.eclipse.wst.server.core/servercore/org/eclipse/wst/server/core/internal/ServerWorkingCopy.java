@@ -27,7 +27,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	protected Server server;
 	protected WorkingCopyHelper wch;
 	
-	protected IServerWorkingCopyDelegate workingCopyDelegate;
+	protected ServerWorkingCopyDelegate workingCopyDelegate;
 	
 	// working copy
 	public ServerWorkingCopy(Server server) {
@@ -56,16 +56,16 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		return server;
 	}
 	
-	public IServerWorkingCopy getWorkingCopy() {
+	public IServerWorkingCopy createWorkingCopy() {
 		return this;
 	}
-	
-	public byte getServerState() {
+
+	public int getServerState() {
 		if (server != null)
 			return server.getServerState();
 		return serverState;
 	}
-	
+
 	public void setServerState(byte state) {
 		if (server != null)
 			server.setServerState(state);
@@ -108,7 +108,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		setAttribute(PROP_PRIVATE, b);
 	}
 
-	public void setHostname(String host) {
+	public void setHost(String host) {
 		setAttribute(PROP_HOSTNAME, host);
 	}
 	
@@ -126,19 +126,16 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	public boolean isDirty() {
 		return wch.isDirty();
 	}
-
-	public void release() {
-		wch.release();
-		dispose();
-		if (server != null)
-			server.release(this);
+	
+	public IServerExtension getExtension(IProgressMonitor monitor) {
+		return getWorkingCopyExtension(monitor);
 	}
 	
-	public IServerDelegate getDelegate() {
-		return getWorkingCopyDelegate();
+	public IServerExtension getWorkingCopyExtension(IProgressMonitor monitor) {
+		return getWorkingCopyDelegate(monitor);
 	}
 	
-	public IServerWorkingCopyDelegate getWorkingCopyDelegate() {
+	public ServerWorkingCopyDelegate getWorkingCopyDelegate(IProgressMonitor monitor) {
 		// make sure that the regular delegate is loaded 
 		//getDelegate();
 		
@@ -151,9 +148,8 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 					try {
 						long time = System.currentTimeMillis();
 						IConfigurationElement element = ((ServerType) serverType).getElement();
-						workingCopyDelegate = (IServerWorkingCopyDelegate) element.createExecutableExtension("workingCopyClass");
-						workingCopyDelegate.initialize((IServerState) this);
-						workingCopyDelegate.initialize((IServerWorkingCopy) this);
+						workingCopyDelegate = (ServerWorkingCopyDelegate) element.createExecutableExtension("workingCopyClass");
+						workingCopyDelegate.initialize(this);
 						Trace.trace(Trace.PERFORMANCE, "ServerWorkingCopy.getWorkingCopyDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
 					} catch (Exception e) {
 						Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);
@@ -170,11 +166,13 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			workingCopyDelegate.dispose();
 	}
 	
-	public IServer save(IProgressMonitor monitor) throws CoreException {
+	public IServer save(boolean force, IProgressMonitor monitor) throws CoreException {
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.subTask(ServerPlugin.getResource("%savingTask", getName()));
-		if (wch.isReleased())
-			return null;
+
+		if (!force)
+			wch.validateTimestamp(getOriginal());
+
 		if (server == null) {
 			server = new Server(file);
 			server.setServerState(serverState);
@@ -182,49 +180,26 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			server.serverListeners = serverListeners;
 		}
 		
-		getWorkingCopyDelegate().handleSave(IServerWorkingCopyDelegate.PRE_SAVE, monitor);
 		server.setInternal(this);
 		server.doSave(monitor);
 		wch.setDirty(false);
-		release();
-		getWorkingCopyDelegate().handleSave(IServerWorkingCopyDelegate.POST_SAVE, monitor);
+		getWorkingCopyDelegate(monitor).handleSave(monitor);
 		
 		return server;
 	}
 
-	public IServer save(IProgressMonitor monitor, boolean release) throws CoreException {
-		monitor = ProgressUtil.getMonitorFor(monitor);
-		monitor.subTask(ServerPlugin.getResource("%savingTask", getName()));
-		if (wch.isReleased())
-			return null;
-		if (server == null) {
-			server = new Server(file);
-			server.setServerState(serverState);
-			server.publishListeners = publishListeners;
-			server.serverListeners = serverListeners;
-		}
-		getWorkingCopyDelegate().handleSave(IServerWorkingCopyDelegate.PRE_SAVE, monitor);
-		server.setInternal(this);
-		server.doSave(monitor);
-		wch.setDirty(false);
-		if (release)
-			release();
-		getWorkingCopyDelegate().handleSave(IServerWorkingCopyDelegate.POST_SAVE, monitor);
-		return server;
-	}
-
-	public IServer saveAll(IProgressMonitor monitor) throws CoreException {
+	public IServer saveAll(boolean force, IProgressMonitor monitor) throws CoreException {
 		if (runtime != null && runtime.isWorkingCopy()) {
 			IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy) runtime;
-			wc.save(monitor);
+			wc.save(force, monitor);
 		}
 		
 		if (configuration != null && configuration.isWorkingCopy()) {
 			IServerConfigurationWorkingCopy wc = (IServerConfigurationWorkingCopy) configuration;
-			wc.save(monitor);
+			wc.save(force, monitor);
 		}
 		
-		return save(monitor);
+		return save(force, monitor);
 	}
 
 	/**
@@ -298,7 +273,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	 */
 	public void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
 		int i = 0;
-		while (getServerState() == IServer.SERVER_UNKNOWN && i < 10) {
+		while (getServerState() == IServer.STATE_UNKNOWN && i < 10) {
 			try {
 				Thread.sleep(1000);
 			} catch (Exception e) { }
@@ -308,19 +283,19 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
 			monitor.subTask(ServerPlugin.getResource("%taskModifyModules"));
-			getWorkingCopyDelegate().modifyModules(add, remove, monitor);
+			getWorkingCopyDelegate(monitor).modifyModules(add, remove, monitor);
 			wch.setDirty(true);
 		} catch (CoreException ce) {
 			throw ce;
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate modifyModule() " + toString(), e);
-			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, e.getLocalizedMessage(), e));
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, e.getLocalizedMessage(), e));
 		}
 	}
 
-	public void setDefaults() {
+	public void setDefaults(IProgressMonitor monitor) {
 		try {
-			getWorkingCopyDelegate().setDefaults();
+			getWorkingCopyDelegate(monitor).setDefaults();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate setDefaults() " + toString(), e);
 		}

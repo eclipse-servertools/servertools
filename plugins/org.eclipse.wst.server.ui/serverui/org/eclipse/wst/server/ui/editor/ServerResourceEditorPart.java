@@ -211,6 +211,14 @@ public abstract class ServerResourceEditorPart extends EditorPart {
 			section.init(site, input);
 		}
 	}
+	
+	public IServerWorkingCopy getServer() {
+		return server;
+	}
+	
+	public IServerConfigurationWorkingCopy getServerConfiguration() {
+		return serverConfiguration;
+	}
 
 	public void insertSections(Composite parent, String id) {
 		if (id == null)

@@ -13,7 +13,6 @@ import java.util.List;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.task.ReleaseServerTask;
 import org.eclipse.wst.server.ui.internal.task.SaveServerTask;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
@@ -40,10 +39,6 @@ public class ModifyModulesWizard extends TaskWizard {
 			list.add(new ModifyModulesWizardFragment());
 			list.add(new TasksWizardFragment());
 			list.add(new WizardFragment() {
-				public ITask createCancelTask() {
-					return new ReleaseServerTask();
-				}
-				
 				public ITask createFinishTask() {
 					return new SaveServerTask();
 				}
@@ -55,7 +50,7 @@ public class ModifyModulesWizard extends TaskWizard {
 	 * ModifyModulesWizard constructor comment.
 	 */
 	public ModifyModulesWizard(IServer server) {
-		super(ServerUIPlugin.getResource("%wizModuleWizardTitle"), new ModifyModulesWizard2(server.getWorkingCopy()));
+		super(ServerUIPlugin.getResource("%wizModuleWizardTitle"), new ModifyModulesWizard2(server.createWorkingCopy()));
 	
 		setNeedsProgressMonitor(true);
 	}

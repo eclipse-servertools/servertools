@@ -10,16 +10,16 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.util;
 
+import org.eclipse.wst.server.core.ILaunchable;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.model.IClientDelegate;
-import org.eclipse.wst.server.core.model.ILaunchable;
+import org.eclipse.wst.server.core.model.ClientDelegate;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunch;
 /**
  * 
  */
-public class NullLaunchableClient implements IClientDelegate {
+public class NullLaunchableClient extends ClientDelegate {
 	/*
 	 * @see ILaunchableClient#supports(ILaunchable)
 	 */

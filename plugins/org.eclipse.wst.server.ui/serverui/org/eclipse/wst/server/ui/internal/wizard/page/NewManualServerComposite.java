@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.wizard.page;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,8 +8,10 @@ package org.eclipse.wst.server.ui.internal.wizard.page;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.wizard.page;
+
 import java.lang.reflect.InvocationTargetException;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -36,7 +37,6 @@ import org.eclipse.wst.server.ui.internal.SWTUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.viewers.ServerTypeComposite;
-
 /**
  * Wizard page used to create a server and configuration at the same time.
  */
@@ -58,7 +58,7 @@ public class NewManualServerComposite extends Composite {
 	
 	protected Label runtimeLabel;
 	protected Combo runtimeCombo;
-	protected List runtimes;
+	protected IRuntime[] runtimes;
 
 	protected IRuntime runtime;
 	protected IServerWorkingCopy server;
@@ -131,7 +131,7 @@ public class NewManualServerComposite extends Composite {
 		runtimeCombo.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					runtime = (IRuntime) runtimes.get(runtimeCombo.getSelectionIndex());
+					runtime = runtimes[runtimeCombo.getSelectionIndex()];
 					if (server != null)
 						server.setRuntime(runtime);
 				} catch (Exception ex) { }
@@ -155,7 +155,7 @@ public class NewManualServerComposite extends Composite {
 		else
 			serverTypeComposite.setHost(false);
 		if (server != null) {
-			server.setHostname(host);
+			server.setHost(host);
 			ServerUtil.setServerDefaultName(server);
 		}
 	}
@@ -173,7 +173,7 @@ public class NewManualServerComposite extends Composite {
 	
 		server = cache.getCachedServer(serverType, host);
 		if (server != null) {
-			server.setHostname(host);
+			server.setHost(host);
 			ServerUtil.setServerDefaultName(server);
 			runtime = server.getRuntime();
 			return;
@@ -190,7 +190,7 @@ public class NewManualServerComposite extends Composite {
 	
 					server = cache.getServer(serverType, host, ProgressUtil.getSubMonitorFor(monitor, 200));
 					if (server != null) {
-						server.setHostname(host);
+						server.setHost(host);
 						ServerUtil.setServerDefaultName(server);
 					
 						if (serverType.hasRuntime() && server.getRuntime() == null)
@@ -224,22 +224,21 @@ public class NewManualServerComposite extends Composite {
 	 * @param serverType
 	 * @return
 	 */
-	protected IRuntime getDefaultRuntime(List list) {
-		if (list.isEmpty())
+	protected IRuntime getDefaultRuntime() {
+		if (runtimes == null || runtimes.length == 0)
 			return null;
-		Iterator iterator = list.iterator();
-		while (iterator.hasNext()) {
-			IRuntime runtime2 = (IRuntime) iterator.next();
-			if (runtime2.isTestEnvironment())
-				return runtime2;
+		
+		if (runtimes != null) {
+			int size = runtimes.length;
+			for (int i = 0; i < size; i++) {
+				if (runtimes[i].isTestEnvironment())
+					return runtimes[i];
+		
+				if (!runtimes[i].isStub())
+					return runtime;
+			}
 		}
-		list.iterator();
-		while (iterator.hasNext()) {
-			IRuntime runtime2 = (IRuntime) iterator.next();
-			if (!runtime2.getAttribute("stub", false))
-				return runtime;
-		}
-		return (IRuntime) list.get(0);
+		return runtimes[0];
 	}
 	
 	protected void updateRuntimeCombo(IServerType serverType) {
@@ -259,42 +258,44 @@ public class NewManualServerComposite extends Composite {
 		IRuntimeType runtimeType = serverType.getRuntimeType();
 		runtimes = ServerCore.getResourceManager().getRuntimes(runtimeType);
 		
-		if (SocketUtil.isLocalhost(host)) {
-			int size = runtimes.size();
-			int i = 0;
-			while (i < size) {
-				IRuntime runtime2 = (IRuntime) runtimes.get(i);
-				if (runtime2.getAttribute("stub", false)) {
-					size --;
-					runtimes.remove(i);
-				} else
-					i++;
+		if (SocketUtil.isLocalhost(server.getHost()) && runtimes != null) {
+			List runtimes2 = new ArrayList();
+			int size = runtimes.length;
+			for (int i = 0; i < size; i++) {
+				IRuntime runtime2 = runtimes[i];
+				if (!runtime2.isStub())
+					runtimes2.add(runtime2);
 			}
+			runtimes = new IRuntime[runtimes2.size()];
+			runtimes2.toArray(runtimes);
 		}
 		
-		if (runtimes.isEmpty()) {
+		if (runtimes.length == 0) {
 			// create new runtime
 			try {
-				IRuntimeWorkingCopy runtimeWC = runtimeType.createRuntime(null);
+				IRuntimeWorkingCopy runtimeWC = runtimeType.createRuntime(null, null);
 				ServerUtil.setRuntimeDefaultName(runtimeWC);
-				runtimes.add(runtimeWC);
+				runtimes = new IRuntime[1];
+				runtimes[0] = runtimeWC;
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Couldn't create runtime", e);
 			}
 		}
 		
-		int size = runtimes.size();
+		int size = runtimes.length;
 		String[] items = new String[size];
-		for (int i = 0; i < size; i++) {
-			IRuntime runtime2 = (IRuntime) runtimes.get(i);
-			items[i] = runtime2.getName();
-		}
+		for (int i = 0; i < size; i++)
+			items[i] = runtimes[i].getName();
 		
-		runtime = getDefaultRuntime(runtimes);
+		runtime = getDefaultRuntime();
 		if (runtimeCombo != null) {
 			runtimeCombo.setItems(items);
-			if (runtimes.size() > 0)
-				runtimeCombo.select(runtimes.indexOf(runtime));
+			if (runtimes.length > 0) {
+				for (int i = 0; i < size; i++) {
+					if (runtimes[i].equals(runtime))
+						runtimeCombo.select(i);
+				}
+			}
 			runtimeCombo.setEnabled(size > 1);
 			runtimeLabel.setEnabled(size > 1);
 			runtimeLabel.setVisible(size > 1);
@@ -318,7 +319,7 @@ public class NewManualServerComposite extends Composite {
 		
 		updateRuntimeCombo(serverType);
 		if (wrong) {
-			IModuleKind mk = ServerCore.getModuleKind(type);
+			IModuleType mk = ServerCore.getModuleType(type);
 			String type2 = null;
 			if (mk != null)
 				type2 = mk.getName();

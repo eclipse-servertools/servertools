@@ -12,15 +12,10 @@ package org.eclipse.wst.server.core.internal;
 
 import java.util.*;
 import org.eclipse.core.runtime.*;
-
-import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IPublisher;
-import org.eclipse.wst.server.core.resources.*;
-import org.eclipse.wst.server.core.util.ProgressUtil;
 /**
  * Publish controller.
  */
-public class PublishControl implements IPublishControl {
+public class PublishControl {
 	public String memento;
 	public String parents;
 	public boolean isDirty = true;
@@ -51,9 +46,6 @@ public class PublishControl implements IPublishControl {
 		}
 	}
 	
-	protected transient IPublisher publisher;
-	protected transient IRemoteResource[] remoteResources;
-
 	/**
 	 * PublishControl constructor comment.
 	 */
@@ -73,116 +65,12 @@ public class PublishControl implements IPublishControl {
 		load(memento);
 	}
 	
-	public void setPublisher(IPublisher publisher) {
-		this.publisher = publisher;
-	}
-	
 	public String getMemento() {
 		return memento;
 	}
 	
 	public String getParentsRef() {
 		return parents;
-	}
-
-	/**
-	 * 
-	 */
-	protected void fillRemoteResourceCache(IProgressMonitor monitor) throws CoreException {
-		monitor = ProgressUtil.getMonitorFor(monitor);
-		monitor.beginTask(ServerPlugin.getResource("%caching"), 1000);
-		
-		if (publisher != null)
-			remoteResources = publisher.getRemoteResources(ProgressUtil.getSubMonitorFor(monitor, 1000));
-	
-		monitor.done();
-	}
-
-	/**
-	 * Returns the mapping of this file on the remote system. Returns
-	 * null if this file should not be copied to the remote server.
-	 *
-	 * @param resource org.eclipse.wst.server.core.publish.IModuleResource
-	 * @return org.eclipse.core.resources.IPath
-	 */
-	public IPath getMappedLocation(IModuleResource resource) {
-		if (publisher == null)
-			return null;
-		return publisher.getMappedLocation(resource);
-	}
-
-	/**
-	 * Returns the root level remote resources on the remote system.
-	 *
-	 * @param project org.eclipse.core.resources.IProject
-	 * @return java.util.List
-	 */
-	public IRemoteResource[] getRemoteResources() {
-		return remoteResources;
-	}
-
-	/**
-	 * Returns true if there may be any files or folders within
-	 * this container that should be mapped to the remote system.
-	 * Returns false if files within this folder are never copied
-	 * to the remote system.
-	 *
-	 * @param folder org.eclipse.wst.server.core.publish.IModuleFolder
-	 * @return boolean
-	 */
-	public boolean shouldMapMembers(IModuleFolder folder) {
-		if (publisher == null)
-			return false;
-		return publisher.shouldMapMembers(folder);
-	}
-	
-	/**
-	 * Returns the timestamp of the remote resource on the remote
-	 * machine after it was last published.
-	 *
-	 * @param resource org.eclipse.wst.server.publish.IRemoteResource
-	 * @return long
-	 */
-	public long getPublishedTimestamp(IRemoteResource resource) {
-		if (resource == null)
-			return IRemoteResource.TIMESTAMP_UNKNOWN;
-	
-		IPath remotePath = resource.getPath();
-		if (remotePath == null)
-			return IRemoteResource.TIMESTAMP_UNKNOWN;
-	
-		Iterator iterator = resourceInfo.iterator();
-		while (iterator.hasNext()) {
-			ResourcePublishInfo rpi = (ResourcePublishInfo) iterator.next();
-			if (remotePath.equals(rpi.remotePath))
-				return rpi.remoteTimestamp;
-		}
-	
-		return IRemoteResource.TIMESTAMP_UNKNOWN;
-	}
-
-	/**
-	 * Returns the timestamp that the resource was last published.
-	 *
-	 * @param resource org.eclipse.wst.server.publish.IModuleResource
-	 * @return long
-	 */
-	public long getPublishedTimestamp(IModuleResource resource) {
-		if (resource == null)
-			return IRemoteResource.TIMESTAMP_UNKNOWN;
-	
-		IPath resourcePath = resource.getPath();
-		if (resourcePath == null)
-			return IRemoteResource.TIMESTAMP_UNKNOWN;
-	
-		Iterator iterator = resourceInfo.iterator();
-		while (iterator.hasNext()) {
-			ResourcePublishInfo rpi = (ResourcePublishInfo) iterator.next();
-			if (resourcePath.equals(rpi.localPath))
-				return rpi.localTimestamp;
-		}
-	
-		return IRemoteResource.TIMESTAMP_UNKNOWN;
 	}
 	
 	/**
@@ -270,96 +158,6 @@ public class PublishControl implements IPublishControl {
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not save publish control info", e);
-		}
-	}
-	
-	protected IRemoteResource findRemoteResource(IRemoteFolder folder, IPath path) {
-		Iterator iterator = folder.getContents().iterator();
-		while (iterator.hasNext()) {
-			IRemoteResource remote = (IRemoteResource) iterator.next();
-			if (path.equals(remote.getPath()))
-				return remote;
-			if (remote instanceof IRemoteFolder) {
-				IRemoteFolder folder2 = (IRemoteFolder) remote;
-				IPath folderPath = folder2.getPath();
-				if (folderPath.isPrefixOf(path)) {
-					IRemoteResource rem = findRemoteResource(folder2, path);
-					if (rem != null)
-						return rem;
-				}
-			}
-		}
-		return null;
-	}
-	
-	protected IRemoteResource findRemoteResource(IRemoteResource[] resources, IPath path) {
-		if (resources == null || path == null)
-			return null;
-	
-		int size = resources.length;
-		for (int i = 0; i < size; i++) {
-			IRemoteResource remote = resources[i];
-			
-			if (path.equals(remote.getPath()))
-				return remote;
-			if (remote instanceof IRemoteFolder) {
-				IRemoteFolder folder2 = (IRemoteFolder) remote;
-				IPath folderPath = folder2.getPath();
-				if (folderPath.isPrefixOf(path)) {
-					IRemoteResource rem = findRemoteResource(folder2, path);
-					if (rem != null)
-						return rem;
-				}
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * Verify the files were published and update info.
-	 *
-	 * @param project org.eclipse.core.resources.IProject
-	 * @param publisher org.eclipse.wst.server.core.model.IDeployTargetPublisher
-	 * @param verifyList java.util.List
-	 */
-	protected void verify(List verifyList, List deleteList, IProgressMonitor monitor) {
-		Trace.trace(Trace.FINEST, "Verifying resource state info");
-		try {
-			IRemoteResource[] resources = publisher.getRemoteResources(monitor);
-	
-			Iterator iterator = verifyList.iterator();
-			while (iterator.hasNext()) {
-				IModuleResource resource = (IModuleResource) iterator.next();
-	
-				ResourcePublishInfo rpi = new ResourcePublishInfo();
-				rpi.localPath = resource.getPath();
-				rpi.localTimestamp = resource.getTimestamp();
-	
-				IPath path = publisher.getMappedLocation(resource);
-				IRemoteResource remote = findRemoteResource(resources, path);
-				Trace.trace(Trace.FINEST, "Verifying resource: " + resource + " " + remote);
-				if (remote != null) {
-					rpi.remotePath = remote.getPath();
-					rpi.remoteTimestamp = remote.getTimestamp();
-				}
-	
-				// remove any previous entry for this resource
-				if (resourceInfo.contains(rpi))
-					resourceInfo.remove(rpi);
-
-				// add new one
-				resourceInfo.add(rpi);
-			}
-	
-			iterator = deleteList.iterator();
-			while (iterator.hasNext()) {
-				IRemoteResource remote = (IRemoteResource) iterator.next();
-				ResourcePublishInfo rpi = new ResourcePublishInfo();
-				rpi.remotePath = remote.getPath();
-				resourceInfo.remove(rpi);
-			}
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error verifying resource state info", e);
 		}
 	}
 	

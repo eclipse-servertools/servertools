@@ -12,6 +12,7 @@ package org.eclipse.wst.server.core;
 
 import java.util.List;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 /**
  * A server project.
  *
@@ -19,7 +20,7 @@ import org.eclipse.core.resources.IProject;
  */
 public interface IServerProject {
 	// server project nature id
-	public static final String NATURE_ID = ServerCore.PLUGIN_ID + ".nature";
+	public static final String NATURE_ID = ServerPlugin.PLUGIN_ID + ".nature";
 
 	/**
 	 * Returns a list of available folders within the server project. These are

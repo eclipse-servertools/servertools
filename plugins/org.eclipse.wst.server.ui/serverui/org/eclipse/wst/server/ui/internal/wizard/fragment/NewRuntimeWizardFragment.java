@@ -59,7 +59,7 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 		if (page != null) {
 			if (page.getRuntime() == null)
 				return false;
-			IStatus status = page.getRuntime().validate();
+			IStatus status = page.getRuntime().validate(null);
 			return status == null || status.isOK();
 		}
 		return true;

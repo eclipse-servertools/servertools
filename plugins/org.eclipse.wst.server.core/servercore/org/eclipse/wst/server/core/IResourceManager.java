@@ -10,11 +10,8 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 
-import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.server.core.model.IModuleEventsListener;
-import org.eclipse.wst.server.core.model.IServerLifecycleEventHandler;
 import org.eclipse.wst.server.core.model.IServerResourceListener;
 /**
  * The resource manager handles the mappings between resources
@@ -81,7 +78,7 @@ public interface IResourceManager {
 	 * 
 	 * @return a possibly-empty list of runtime instances (element type: {@link IRuntime})
 	 */
-	public List getRuntimes();
+	public IRuntime[] getRuntimes();
 	
 	/**
 	 * Returns the default runtime. Test API - do not use.
@@ -106,28 +103,13 @@ public interface IResourceManager {
 	public void setDefaultRuntime(IRuntime runtime);
 	
 	/**
-	 * Returns the list of all known runtime instances of
+	 * Returns an array of all known runtime instances of
 	 * the given runtime type. This convenience method filters the list of known
 	 * runtime ({@link #getRuntimes()}) for ones with a matching
-	 * runtime type ({@link IRuntime#getRuntimeType()}).
+	 * runtime type ({@link IRuntime#getRuntimeType()}). The array will not
+	 * contain any working copies.
 	 * <p>
-	 * Clients must not modify the list that is returned.
-	 * If the set of runtimes changes, the affect on
-	 * the returned list is unspecified.
-	 * </p>
-	 * <p>
-	 * [issue: The list returned is precious. You would not want a client
-	 * to accidentally or malicously whack it. Normal practice is to
-	 * return an array instead of a List, and to return a new copy each call.
-	 * This allows the spec to say that the client can do what they want
-	 * with the result, and that it won't change under foot.
-	 * Another alternative is to return a UnmodifiableList implementation
-	 * so that clients cannot modify. But if you don't copy, you still
-	 * have the problem of the list changing under foot as runtime instances
-	 * come and go.]
-	 * </p>
-	 * <p>
-	 * [issue: Clarify whether the list may include working copies.]
+	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
 	 * <p>
 	 * [issue: Is this convenience method really necessary?
@@ -135,10 +117,10 @@ public interface IResourceManager {
 	 * </p>
 	 * 
 	 * @param runtimeType the runtime type
-	 * @return a possibly-empty list of runtime instances (element type: {@link IRuntime})
+	 * @return a possibly-empty list of runtime instances {@link IRuntime}
 	 * of the given runtime type
 	 */
-	public List getRuntimes(IRuntimeType runtimeType);
+	public IRuntime[] getRuntimes(IRuntimeType runtimeType);
 	
 	/**
 	 * Returns the runtime with the given id, or <code>null</code>
@@ -165,30 +147,15 @@ public interface IResourceManager {
 	public IRuntime getRuntime(String id);
 
 	/**
-	 * Returns the list of all known server instances.
+	 * Returns an array of all known server instances. The array will not include any
+	 * working copies.
 	 * <p>
-	 * Clients must not modify the list that is returned.
-	 * If the set of servers changes, the affect on
-	 * the returned list is unspecified.
-	 * </p>
-	 * <p>
-	 * [issue: The list returned is precious. You would not want a client
-	 * to accidentally or malicously whack it. Normal practice is to
-	 * return an array instead of a List, and to return a new copy each call.
-	 * This allows the spec to say that the client can do what they want
-	 * with the result, and that it won't change under foot.
-	 * Another alternative is to return a UnmodifiableList implementation
-	 * so that clients cannot modify. But if you don't copy, you still
-	 * have the problem of the list changing under foot as server instances
-	 * come and go.]
-	 * </p>
-	 * <p>
-	 * [issue: Clarify whether the list may include working copies.]
+	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
 	 * 
-	 * @return a possibly-empty list of server instances (element type: {@link IServer})
+	 * @return a possibly-empty array of server instances {@link IServer}
 	 */
-	public List getServers();
+	public IServer[] getServers();
 
 	/**
 	 * Returns the server with the given id, or <code>null</code>
@@ -235,28 +202,13 @@ public interface IResourceManager {
 	public IServer getServer(IFile file);
 	
 	/**
-	 * Returns the list of all known server instances of
+	 * Returns an array of all known server instances of
 	 * the given server type. This convenience method filters the list of known
 	 * servers ({@link #getServers()}) for ones with a matching
-	 * server type ({@link IServer#getServerType()}).
+	 * server type ({@link IServer#getServerType()}). The array will not contain
+	 * any working copies.
 	 * <p>
-	 * Clients must not modify the list that is returned.
-	 * If the set of servers changes, the affect on
-	 * the returned list is unspecified.
-	 * </p>
-	 * <p>
-	 * [issue: The list returned is precious. You would not want a client
-	 * to accidentally or malicously whack it. Normal practice is to
-	 * return an array instead of a List, and to return a new copy each call.
-	 * This allows the spec to say that the client can do what they want
-	 * with the result, and that it won't change under foot.
-	 * Another alternative is to return a UnmodifiableList implementation
-	 * so that clients cannot modify. But if you don't copy, you still
-	 * have the problem of the list changing under foot as server instances
-	 * come and go.]
-	 * </p>
-	 * <p>
-	 * [issue: Clarify whether the list may include working copies.]
+	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
 	 * <p>
 	 * [issue: Is this convenience method really necessary?
@@ -264,63 +216,32 @@ public interface IResourceManager {
 	 * </p>
 	 * 
 	 * @param serverType the server type
-	 * @return a possibly-empty list of server instances (element type: {@link IServer})
+	 * @return a possibly-empty array of server instances {@link IServer}
 	 * of the given server type
 	 */
-	public List getServers(IServerType serverType);
+	public IServer[] getServers(IServerType serverType);
 
 	/**
-	 * Returns the list of all known server configuration instances.
+	 * Returns an array of all known server configuration instances. The array will not
+	 * include any working copies.
 	 * <p>
-	 * Clients must not modify the list that is returned.
-	 * If the set of server configurations changes, the affect on
-	 * the returned list is unspecified.
-	 * </p>
-	 * <p>
-	 * [issue: The list returned is precious. You would not want a client
-	 * to accidentally or malicously whack it. Normal practice is to
-	 * return an array instead of a List, and to return a new copy each call.
-	 * This allows the spec to say that the client can do what they want
-	 * with the result, and that it won't change under foot.
-	 * Another alternative is to return a UnmodifiableList implementation
-	 * so that clients cannot modify. But if you don't copy, you still
-	 * have the problem of the list changing under foot as server 
-	 * configuration instances come and go.]
-	 * </p>
-	 * <p>
-	 * [issue: Clarify whether the list may include working copies.]
+	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
 	 * 
-	 * @return a possibly-empty list of server configuration instances 
-	 * (element type: {@link IServerConfiguration})
+	 * @return a possibly-empty array of server configuration instances {@link IServerConfiguration}
 	 */
-	public List getServerConfigurations();
-	
+	public IServerConfiguration[] getServerConfigurations();
+
 	/**
-	 * Returns the list of all known server configuration instances of
+	 * Returns an array of all known server configuration instances of
 	 * the given server configuration type. This convenience method filters
 	 * the list of known server configurations
 	 * ({@link #getServerConfigurations()}) for ones with a matching
 	 * server configuration type
-	 * ({@link IServerConfiguration#getServerConfigurationType()}).
+	 * ({@link IServerConfiguration#getServerConfigurationType()}). The array will
+	 * not contain any working copies.
 	 * <p>
-	 * Clients must not modify the list that is returned.
-	 * If the set of server configurations changes, the affect on
-	 * the returned list is unspecified.
-	 * </p>
-	 * <p>
-	 * [issue: The list returned is precious. You would not want a client
-	 * to accidentally or malicously whack it. Normal practice is to
-	 * return an array instead of a List, and to return a new copy each call.
-	 * This allows the spec to say that the client can do what they want
-	 * with the result, and that it won't change under foot.
-	 * Another alternative is to return a UnmodifiableList implementation
-	 * so that clients cannot modify. But if you don't copy, you still
-	 * have the problem of the list changing under foot as server 
-	 * configuration instances come and go.]
-	 * </p>
-	 * <p>
-	 * [issue: Clarify whether the list may include working copies.]
+	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
 	 * <p>
 	 * [issue: Is this convenience method really necessary?
@@ -329,9 +250,9 @@ public interface IResourceManager {
 	 * 
 	 * @param configType the server configuration type
 	 * @return a possibly-empty list of server configuration instances
-	 * (element type: {@link IServer}) of the given server configuration type
+	 * {@link IServerConfiguration) of the given server configuration type
 	 */
-	public List getServerConfigurations(IServerConfigurationType configType);
+	public IServerConfiguration[] getServerConfigurations(IServerConfigurationType configType);
 
 	/**
 	 * Returns the server configuration with the given id, or <code>null</code>
@@ -391,19 +312,4 @@ public interface IResourceManager {
 	 * @param listener org.eclipse.wst.server.model.IModuleEventsListener
 	 */
 	public void removeModuleEventsListener(IModuleEventsListener listener);
-
-	/**
-	 * Adds a new server lifecycle event handler with the given index. Handlers with
-	 * lower indexes are always called first.
-	 *
-	 * @param handler org.eclipse.wst.server.model.IServerLifecycleEventHandler
-	 */
-	public void addServerLifecycleEventHandler(int index, IServerLifecycleEventHandler handler);
-
-	/**
-	 * Removes an existing server lifecycle event handler.
-	 *
-	 * @param handler org.eclipse.wst.server.model.IServerLifecycleEventHandler
-	 */
-	public void removeServerLifecycleEventHandler(IServerLifecycleEventHandler handler);
 }

@@ -138,10 +138,10 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 			public void widgetSelected(SelectionEvent e) {
 				IRuntime runtime = runtimeComp.getSelectedRuntime();
 				if (runtime != null) {
-					IRuntimeWorkingCopy runtimeWorkingCopy = runtime.getWorkingCopy();
+					IRuntimeWorkingCopy runtimeWorkingCopy = runtime.createWorkingCopy();
 					if (showWizard(runtimeWorkingCopy) != Window.CANCEL) {
 						try {
-							runtimeWorkingCopy.save(new NullProgressMonitor());
+							runtimeWorkingCopy.save(false, new NullProgressMonitor());
 							runtimeComp.refresh(runtime);
 						} catch (Exception ex) { }
 					}
@@ -171,7 +171,8 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					dialog.setCancelable(true);
 					dialog.open();
 					final IProgressMonitor monitor = dialog.getProgressMonitor();
-					monitor.beginTask(ServerUIPlugin.getResource("%search"), 100 * ServerCore.getRuntimeLocators().size() + 10);
+					final IRuntimeLocator[] locators = ServerCore.getRuntimeLocators();
+					monitor.beginTask(ServerUIPlugin.getResource("%search"), 100 * locators.length + 10);
 					final List list = new ArrayList();
 					
 					final IRuntimeLocatorListener listener = new IRuntimeLocatorListener() {
@@ -187,15 +188,16 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					
 					IRunnableWithProgress runnable = new IRunnableWithProgress() {
 						public void run(IProgressMonitor monitor2) {
-							Iterator iterator = ServerCore.getRuntimeLocators().iterator();
-							while (iterator.hasNext()) {
-								IRuntimeLocator locator = (IRuntimeLocator) iterator.next();
-								if (!monitor2.isCanceled())
-									try {
-										locator.searchForRuntimes(listener, monitor2);
-									} catch (CoreException ce) {
-										Trace.trace(Trace.WARNING, "Error locating runtimes: " + locator.getId(), ce);
-									}
+							if (locators != null) {
+								int size = locators.length;
+								for (int i = 0; i < size; i++) {
+									if (!monitor2.isCanceled())
+										try {
+											locators[i].searchForRuntimes(listener, monitor2);
+										} catch (CoreException ce) {
+											Trace.trace(Trace.WARNING, "Error locating runtimes: " + locators[i].getId(), ce);
+										}
+								}
 							}
 							System.out.println("done");
 						}
@@ -214,11 +216,13 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 							boolean dup = false;
 							IRuntime wc = (IRuntime) iterator2.next();
 							
-							Iterator iterator = ServerCore.getResourceManager().getRuntimes().iterator();
-							while (iterator.hasNext()) {
-								IRuntime runtime = (IRuntime) iterator.next();
-								if (runtime.getLocation().equals(wc.getLocation()))
-									dup = true;
+							IRuntime[] runtimes = ServerCore.getResourceManager().getRuntimes();
+							if (runtimes != null) {
+								int size = runtimes.length;
+								for (int i = 0; i < size; i++) {
+									if (runtimes[i].getLocation().equals(wc.getLocation()))
+										dup = true;
+								}
 							}
 							if (!dup)
 								good.add(wc);
@@ -230,7 +234,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 						Iterator iterator = good.iterator();
 						while (iterator.hasNext()) {
 							IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy) iterator.next();
-							wc.save(monitor);
+							wc.save(false, monitor);
 						}
 						monitor.done();
 					}
@@ -257,11 +261,13 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		// check for use
 		boolean inUse = false;
 	
-		Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
-		while (iterator.hasNext()) {
-			IServer server = (IServer) iterator.next();
-			if (runtime.equals(server.getRuntime()))
-				inUse = true;
+		IServer[] servers = ServerCore.getResourceManager().getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				if (runtime.equals(servers[i].getRuntime()))
+					inUse = true;
+			}
 		}
 		
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();

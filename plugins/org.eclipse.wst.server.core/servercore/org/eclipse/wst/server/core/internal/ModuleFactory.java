@@ -14,17 +14,18 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleFactory;
+import org.eclipse.wst.server.core.IModuleType2;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IModuleFactoryDelegate;
+import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
 import org.eclipse.wst.server.core.model.IModuleFactoryListener;
 /**
  * 
  */
 public class ModuleFactory implements IModuleFactory {
 	private IConfigurationElement element;
-	private IModuleFactoryDelegate delegate;
+	private ModuleFactoryDelegate delegate;
 	private List moduleTypes;
 
 	/**
@@ -61,11 +62,13 @@ public class ModuleFactory implements IModuleFactory {
 	 * 
 	 * @return
 	 */
-	public List getModuleTypes() {
+	public IModuleType2[] getModuleTypes() {
 		if (moduleTypes == null)
 			moduleTypes = ServerPlugin.getModuleTypes(element.getChildren("moduleType"));
 
-		return moduleTypes;
+		IModuleType2[] mt = new IModuleType2[moduleTypes.size()];
+		moduleTypes.toArray(mt);
+		return mt;
 	}
 	
 	/**
@@ -80,10 +83,10 @@ public class ModuleFactory implements IModuleFactory {
 	/*
 	 * @see IPublishManager#getDelegate()
 	 */
-	public IModuleFactoryDelegate getDelegate() {
+	public ModuleFactoryDelegate getDelegate() {
 		if (delegate == null) {
 			try {
-				delegate = (IModuleFactoryDelegate) element.createExecutableExtension("class");
+				delegate = (ModuleFactoryDelegate) element.createExecutableExtension("class");
 				ResourceManager rm = (ResourceManager) ServerCore.getResourceManager();
 				rm.addModuleFactoryListener(delegate);
 			} catch (Exception e) {
@@ -116,7 +119,7 @@ public class ModuleFactory implements IModuleFactory {
 	 *
 	 * @return org.eclipse.wst.server.core.model.IModule[]
 	 */
-	public List getModules() {
+	public IModule[] getModules() {
 		try {
 			return getDelegate().getModules();
 		} catch (Exception e) {

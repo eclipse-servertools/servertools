@@ -25,15 +25,10 @@ import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.operation.ModalContext;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.wst.server.core.IPublishManager;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IPublishListener;
 import org.eclipse.wst.server.core.IPublishStatus;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerPreferences;
-import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IPublishListener;
-import org.eclipse.wst.server.core.resources.IModuleResource;
-import org.eclipse.wst.server.core.resources.IRemoteResource;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -721,17 +716,13 @@ public class PublishDialog extends Dialog implements IRunnableContext {
 	
 				public void publishStarting(IServer server, List[] parents, IModule[] modules) { }
 				
-				public void publishStarted(IServer server, IPublishStatus status) {
-					dialog.addPublishEvent(null, status);
+				public void publishStarted(IServer server) {
+					dialog.addPublishEvent(null, null);
 				}
 	
 				public void moduleStarting(IServer server, List parents, IModule module) {
 					dialog.addPublishEvent(module, null);
 				}
-	
-				public void moduleResourcesPublished(IServer server, List parents, IModule module, IModuleResource[] published, IPublishStatus[] status) { }
-				
-				public void moduleResourcesDeleted(IServer server, List parents, IModule module, IRemoteResource[] deleted, IPublishStatus[] status) { }
 	
 				public void moduleFinished(IServer server, List parents, IModule module, IPublishStatus status) {
 					dialog.addPublishEvent(module, status);
@@ -746,12 +737,7 @@ public class PublishDialog extends Dialog implements IRunnableContext {
 	
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) {
-					IServerPreferences preferences = ServerCore.getServerPreferences();
-					IPublishManager publisher = (IPublishManager) ServerCore.getPublishManagers().get(preferences.getPublishManager());
-					if (publisher == null)
-						publisher = (IPublishManager) ServerCore.getPublishManagers().get(preferences.getDefaultPublishManager());
-	
-					globalStatus = server2.publish(publisher, monitor);
+					globalStatus = server2.publish(monitor);
 					Trace.trace(Trace.FINEST, "Publishing done: " + globalStatus);
 				}
 			};
@@ -759,7 +745,7 @@ public class PublishDialog extends Dialog implements IRunnableContext {
 			dialog.run(true, true, runnable);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error in publishing dialog", e);
-			return new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerUIPlugin.getResource("%errorPublishing"), e);
+			return new Status(IStatus.ERROR, ServerUICore.PLUGIN_ID, 0, ServerUIPlugin.getResource("%errorPublishing"), e);
 		} finally {
 			server2.removePublishListener(listener);
 		}

@@ -146,7 +146,7 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 		if (columnIndex == 0)
 			return notNull(server.getName());
 		else if (columnIndex == 1) {
-			return notNull(server.getHostname());
+			return notNull(server.getHost());
 		} else if (columnIndex == 2) {
 			IServerType serverType = server.getServerType();
 			if (serverType != null)
@@ -160,7 +160,7 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 			if (server.getServerType().hasServerConfiguration() && server.getServerConfiguration() == null)
 				return ServerUIPlugin.getResource("%viewNoConfiguration");
 			
-			if (server.getServerState() == IServer.SERVER_UNKNOWN)
+			if (server.getServerState() == IServer.STATE_UNKNOWN)
 				return "";
 			
 			String serverId = server.getId();
@@ -168,11 +168,11 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 				return syncState[4];
 			
 			int i = 0;
-			if (server.isRestartNeeded())
+			if (server.getServerSyncState() == IServer.SYNC_STATE_RESTART)
 				i = 1;
 			
 			// republish
-			if (server.getConfigurationSyncState() != IServer.SYNC_STATE_IN_SYNC)
+			if (server.getServerSyncState() != IServer.SYNC_STATE_IN_SYNC)
 				i += 2;
 			else {
 				if (!server.getUnpublishedModules().isEmpty())
@@ -205,10 +205,10 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	protected Image getServerStateImage(IServer server) {
-		byte state = server.getServerState();
-		if (state == IServer.SERVER_STARTING)
+		int state = server.getServerState();
+		if (state == IServer.STATE_STARTING)
 			return startingImages[count];
-		else if (state == IServer.SERVER_STOPPING)
+		else if (state == IServer.STATE_STOPPING)
 			return stoppingImages[count];
 		else
 			return serverStateImage[server.getServerState()];
@@ -220,15 +220,15 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 	 * @return java.lang.String
 	 * @param server org.eclipse.wst.server.core.model.IServer
 	 */
-	protected String getServerStateLabel(IServer server, byte stateSet) {
+	protected String getServerStateLabel(IServer server, int stateSet) {
 		if (stateSet == IServerType.SERVER_STATE_SET_PUBLISHED) {
 			return "";
 		}
 		if (stateSet == IServerType.SERVER_STATE_SET_MANAGED) {
-			byte state = server.getServerState();
-			if (state == IServer.SERVER_STARTING)
+			int state = server.getServerState();
+			if (state == IServer.STATE_STARTING)
 				return startingText[count];
-			else if (state == IServer.SERVER_STOPPING)
+			else if (state == IServer.STATE_STOPPING)
 				return stoppingText[count];
 			else
 				return serverState[server.getServerState()];

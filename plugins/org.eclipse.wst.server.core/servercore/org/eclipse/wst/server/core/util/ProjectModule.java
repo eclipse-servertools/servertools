@@ -13,16 +13,13 @@ package org.eclipse.wst.server.core.util;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.internal.Trace;
-import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.core.model.IModuleListener;
 import org.eclipse.wst.server.core.model.IProjectModule;
-import org.eclipse.wst.server.core.resources.*;
 /**
  * A simple IModuleProject that maps a folder within a project
  * (or the root of the project itself) to the module.
@@ -58,7 +55,7 @@ public abstract class ProjectModule implements IProjectModule {
 	/*
 	 * @see IModuleProject#getModuleResourceDelta(IResourceDelta)
 	 */
-	public IModuleResourceDelta getModuleResourceDelta(IResourceDelta delta) {
+	/*public IModuleResourceDelta getModuleResourceDelta(IResourceDelta delta) {
 		Trace.trace(Trace.FINEST, "> getModuleResourceDelta");
 		IPath root2 = null;
 		try {
@@ -93,12 +90,12 @@ public abstract class ProjectModule implements IProjectModule {
 		}
 		Trace.trace(Trace.FINEST, "< getModuleResourceDelta null");
 		return null;
-	}
+	}*/
 	
 	/**
 	 * 
 	 */
-	protected IModuleResourceDelta convertChildren(IResourceDelta delta, IModuleFolder parent) {
+	/*protected IModuleResourceDelta convertChildren(IResourceDelta delta, IModuleFolder parent) {
 		int flags = delta.getKind();
 		int kind = IModuleResourceDelta.NO_CHANGE;
 		if (flags == IResourceDelta.ADDED)
@@ -131,7 +128,7 @@ public abstract class ProjectModule implements IProjectModule {
 			}
 		}
 		return deployDelta;
-	}
+	}*/
 
 	/*
 	 * @see IModule#getMemento()
@@ -157,7 +154,7 @@ public abstract class ProjectModule implements IProjectModule {
 	/*
 	 * @see IModule#members()
 	 */
-	public IModuleResource[] members() throws CoreException {
+	/*public IModuleResource[] members() throws CoreException {
 		IPath root2 = null;
 		try {
 			root2 = getRootFolder();
@@ -171,9 +168,9 @@ public abstract class ProjectModule implements IProjectModule {
 		} catch (CoreException e) {
 			throw e;
 		}
-	}
+	}*/
 	
-	protected IModuleResource getModuleResources(IFile file) {
+	/*protected IModuleResource getModuleResources(IFile file) {
 		return new ProjectModuleFile(this, null, file);
 	}
 
@@ -198,7 +195,7 @@ public abstract class ProjectModule implements IProjectModule {
 	 	IModuleResource[] moduleResources = new IModuleResource[list.size()];
 	 	list.toArray(moduleResources);
 	 	return moduleResources;
-	}
+	}*/
 
 	/*
 	 * @see IModule#getName()

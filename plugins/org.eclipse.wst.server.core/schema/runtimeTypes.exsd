@@ -94,15 +94,7 @@
          <attribute name="class" type="string">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;IRuntimeDelegate&lt;/samp&gt;.
-Runtime instances of this type will delegate to instances of this class.
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="workingCopyClass" type="string">
-            <annotation>
-               <documentation>
-                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;IRuntimeWorkingCopyDelegate&lt;/samp&gt;.
+                  specifies the fully qualified name of the Java class that extends &lt;samp&gt;RuntimeDelegate&lt;/samp&gt;.
 Runtime instances of this type will delegate to instances of this class.
                </documentation>
             </annotation>
@@ -169,7 +161,7 @@ Runtime instances of this type will delegate to instances of this class.
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.server.core.model.IRuntimeDelegate&lt;/b&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.server.core.model.RuntimeDelegate&lt;/b&gt;.
       </documentation>
    </annotation>
 

@@ -1,6 +1,5 @@
 package org.eclipse.wst.server.ui.internal.viewers;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -72,9 +71,9 @@ public class RuntimeComposite extends AbstractTableComposite {
 				if (e.character == 'l') {
 					try {
 						IRuntime runtime = getSelectedRuntime();
-						IRuntimeWorkingCopy wc = runtime.getWorkingCopy();
+						IRuntimeWorkingCopy wc = runtime.createWorkingCopy();
 						wc.setLocked(!runtime.isLocked());
-						wc.save(new NullProgressMonitor());
+						wc.save(false, null);
 						refresh(runtime);
 					} catch (Exception ex) { }
 				}

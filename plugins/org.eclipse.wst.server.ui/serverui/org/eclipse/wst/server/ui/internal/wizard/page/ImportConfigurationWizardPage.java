@@ -433,10 +433,10 @@ public class ImportConfigurationWizardPage extends WizardPage {
 				ServerCore.createServerProject(project.getName(), null, monitor);
 			}
 			config.setName(theName);
-			config.save(monitor);
+			config.save(false, monitor);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error saving created element", e);
-			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, "Could not create server project", null));
+			throw new CoreException(new Status(IStatus.ERROR, ServerUICore.PLUGIN_ID, 0, "Could not create server project", null));
 		}
 	}
 	

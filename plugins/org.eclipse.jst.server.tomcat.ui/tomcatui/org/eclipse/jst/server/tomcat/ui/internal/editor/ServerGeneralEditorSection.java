@@ -164,7 +164,7 @@ public class ServerGeneralEditorSection extends ServerResourceEditorSection {
 		super.init(site, input);
 		
 		if (server != null) {
-			tomcatServer = (ITomcatServerWorkingCopy) server.getWorkingCopyDelegate();
+			tomcatServer = (ITomcatServerWorkingCopy) server.getWorkingCopyExtension(null);
 			addChangeListener();
 		}
 		initialize();

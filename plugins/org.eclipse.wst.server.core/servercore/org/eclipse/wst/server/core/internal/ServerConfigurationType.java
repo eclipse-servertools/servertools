@@ -86,7 +86,7 @@ public class ServerConfigurationType implements IServerConfigurationType {
 		if (id == null || id.length() == 0)
 			id = ServerPlugin.generateId();
 		ServerConfigurationWorkingCopy scwc = new ServerConfigurationWorkingCopy(id, file, this);
-		scwc.setDefaults();
+		scwc.setDefaults(monitor);
 		return scwc;
 	}
 	
@@ -94,7 +94,7 @@ public class ServerConfigurationType implements IServerConfigurationType {
 		if (id == null || id.length() == 0)
 			id = ServerPlugin.generateId();
 		ServerConfigurationWorkingCopy scwc = new ServerConfigurationWorkingCopy(id, file, this);
-		scwc.setDefaults();
+		scwc.setDefaults(monitor);
 		scwc.importFromRuntime(runtime, monitor);
 		return scwc;
 	}
@@ -103,7 +103,7 @@ public class ServerConfigurationType implements IServerConfigurationType {
 		if (id == null || id.length() == 0)
 			id = ServerPlugin.generateId();
 		ServerConfigurationWorkingCopy scwc = new ServerConfigurationWorkingCopy(id, file, this);
-		scwc.setDefaults();
+		scwc.setDefaults(monitor);
 		scwc.importFromPath(path, monitor);
 		return scwc;
 	}

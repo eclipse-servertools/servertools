@@ -16,13 +16,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.wst.server.core.IElement;
+import org.eclipse.wst.server.core.IElementWorkingCopy;
 /**
  * 
  */
 public class WorkingCopyHelper {
 	protected Base base;
 	protected boolean isDirty;
-	protected boolean isReleased;
 	
 	// property change listeners
 	private transient List propertyListeners;
@@ -32,8 +37,6 @@ public class WorkingCopyHelper {
 	}
 
 	public void setAttribute(String attributeName, int value) {
-		if (isReleased)
-			throw new RuntimeException("Model has already been saved or released");
 		int current = base.getAttribute(attributeName, 0);
 		if (current != 0 && current == value)
 			return;
@@ -44,8 +47,6 @@ public class WorkingCopyHelper {
 	}
 
 	public void setAttribute(String attributeName, boolean value) {
-		if (isReleased)
-			throw new RuntimeException("Model has already been saved or released");
 		boolean current = base.getAttribute(attributeName, false);
 
 		isDirty = true;
@@ -54,8 +55,6 @@ public class WorkingCopyHelper {
 	}
 	
 	public void setAttribute(String attributeName, String value) {
-		if (isReleased)
-			throw new RuntimeException("Model has already been saved or released");
 		String current = base.getAttribute(attributeName, (String)null);
 		if (current != null && current.equals(value))
 			return;
@@ -69,8 +68,6 @@ public class WorkingCopyHelper {
 	}
 	
 	public void setAttribute(String attributeName, List value) {
-		if (isReleased)
-			throw new RuntimeException("Model has already been saved or released");
 		List current = base.getAttribute(attributeName, (List)null);
 		if (current != null && current.equals(value))
 			return;
@@ -84,8 +81,6 @@ public class WorkingCopyHelper {
 	}
 
 	public void setAttribute(String attributeName, Map value) {
-		if (isReleased)
-			throw new RuntimeException("Model has already been saved or released");
 		Map current = base.getAttribute(attributeName, (Map)null);
 		if (current != null && current.equals(value))
 			return;
@@ -117,15 +112,9 @@ public class WorkingCopyHelper {
 		return isDirty;
 	}
 	
-	public boolean isReleased() {
-		return isReleased;
-	}
-
-	public void release() {
-		if (isReleased)
-			return;
-		isReleased = true;
-		isDirty = false;
+	protected void validateTimestamp(IElement element) throws CoreException {
+		if (base.getTimestamp() != element.getTimestamp())
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, IElementWorkingCopy.TIMESTAMP_ERROR, ServerPlugin.getResource("%errorWorkingCopyTimestamp"), null));
 	}
 
 	/**

@@ -14,15 +14,15 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
 
+import org.eclipse.wst.server.core.IModuleObject;
 import org.eclipse.wst.server.core.IModuleObjectAdapter;
-import org.eclipse.wst.server.core.model.IModuleObject;
-import org.eclipse.wst.server.core.model.IModuleObjectAdapterDelegate;
+import org.eclipse.wst.server.core.model.ModuleObjectAdapterDelegate;
 /**
  * 
  */
 public class ModuleObjectAdapter implements IModuleObjectAdapter {
 	private IConfigurationElement element;
-	private IModuleObjectAdapterDelegate delegate;
+	private ModuleObjectAdapterDelegate delegate;
 
 	/**
 	 * ModuleObjectAdapter constructor comment.
@@ -63,10 +63,10 @@ public class ModuleObjectAdapter implements IModuleObjectAdapter {
 	/*
 	 * @see IPublishManager#getDelegate()
 	 */
-	public IModuleObjectAdapterDelegate getDelegate() {
+	public ModuleObjectAdapterDelegate getDelegate() {
 		if (delegate == null) {
 			try {
-				delegate = (IModuleObjectAdapterDelegate) element.createExecutableExtension("class");
+				delegate = (ModuleObjectAdapterDelegate) element.createExecutableExtension("class");
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + e.getMessage());
 			}

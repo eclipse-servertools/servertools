@@ -12,12 +12,10 @@ package org.eclipse.wst.server.core.util;
 
 import java.util.List;
 
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IPublishListener;
 import org.eclipse.wst.server.core.IPublishStatus;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IPublishListener;
-import org.eclipse.wst.server.core.resources.IModuleResource;
-import org.eclipse.wst.server.core.resources.IRemoteResource;
 /**
  *
  */
@@ -35,27 +33,15 @@ public class PublishAdapter implements IPublishListener {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.model.IPublishListener#publishStarted(org.eclipse.wst.server.core.IServer2, org.eclipse.wst.server.core.IPublishStatus)
+	 * @see org.eclipse.wst.server.core.model.IPublishListener#publishStarted(org.eclipse.wst.server.core.IServer2)
 	 */
-	public void publishStarted(IServer server, IPublishStatus status) {
+	public void publishStarted(IServer server) {
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IPublishListener#moduleStarting(org.eclipse.wst.server.core.IServer2, java.util.List, org.eclipse.wst.server.core.model.IModule)
 	 */
 	public void moduleStarting(IServer server, List parents, IModule module) {
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.model.IPublishListener#moduleResourcesPublished(org.eclipse.wst.server.core.IServer2, java.util.List, org.eclipse.wst.server.core.model.IModule, org.eclipse.wst.server.core.resources.IModuleResource[], org.eclipse.wst.server.core.IPublishStatus[])
-	 */
-	public void moduleResourcesPublished(IServer server, List parents, IModule module, IModuleResource[] published, IPublishStatus[] status) {
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.model.IPublishListener#moduleResourcesDeleted(org.eclipse.wst.server.core.IServer2, java.util.List, org.eclipse.wst.server.core.model.IModule, org.eclipse.wst.server.core.resources.IRemoteResource[], org.eclipse.wst.server.core.IPublishStatus[])
-	 */
-	public void moduleResourcesDeleted(IServer server, List parents, IModule module, IRemoteResource[] deleted, IPublishStatus[] status) {
 	}
 
 	/* (non-Javadoc)

@@ -22,9 +22,9 @@ import org.eclipse.swt.widgets.Shell;
  * Stop (terminate) a server.
  */
 public class StopAction extends AbstractServerAction {
-	protected byte serverStateSet;
+	protected int serverStateSet;
 
-	public StopAction(Shell shell, ISelectionProvider selectionProvider, String name, byte serverStateSet) {
+	public StopAction(Shell shell, ISelectionProvider selectionProvider, String name, int serverStateSet) {
 		super(shell, selectionProvider, name);
 		this.serverStateSet = serverStateSet;
 		try {

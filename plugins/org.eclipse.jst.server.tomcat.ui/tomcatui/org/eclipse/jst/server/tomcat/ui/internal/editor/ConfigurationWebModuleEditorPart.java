@@ -47,8 +47,8 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.help.WorkbenchHelp;
 
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.editor.ICommandManager;
 import org.eclipse.wst.server.ui.editor.ServerResourceEditorPart;
@@ -188,7 +188,7 @@ public class ConfigurationWebModuleEditorPart extends ServerResourceEditorPart {
 		else {
 			addProject.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
-					WebModuleDialog dialog = new WebModuleDialog(getEditorSite().getShell(), server2, configuration, true);
+					WebModuleDialog dialog = new WebModuleDialog(getEditorSite().getShell(), getServer(), server2, configuration, true);
 					dialog.open();
 					if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
 						getCommandManager().executeCommand(new AddWebModuleCommand(configuration, dialog.getWebModule()));
@@ -202,7 +202,7 @@ public class ConfigurationWebModuleEditorPart extends ServerResourceEditorPart {
 		addExtProject.setLayoutData(data);
 		addExtProject.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				WebModuleDialog dialog = new WebModuleDialog(getEditorSite().getShell(), server2, configuration, false);
+				WebModuleDialog dialog = new WebModuleDialog(getEditorSite().getShell(), getServer(), server2, configuration, false);
 				dialog.open();
 				if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
 					getCommandManager().executeCommand(new AddWebModuleCommand(configuration, dialog.getWebModule()));
@@ -220,7 +220,7 @@ public class ConfigurationWebModuleEditorPart extends ServerResourceEditorPart {
 				if (selection < 0)
 					return;
 				WebModule module = (WebModule) configuration.getWebModules().get(selection);
-				WebModuleDialog dialog = new WebModuleDialog(getEditorSite().getShell(), server2, configuration, module);
+				WebModuleDialog dialog = new WebModuleDialog(getEditorSite().getShell(), getServer(), server2, configuration, module);
 				dialog.open();
 				if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
 					getCommandManager().executeCommand(new ModifyWebModuleCommand(configuration, selection, dialog.getWebModule()));
@@ -253,7 +253,7 @@ public class ConfigurationWebModuleEditorPart extends ServerResourceEditorPart {
 		while (iterator.hasNext()) {
 			Object module = iterator.next();
 			if (module instanceof IWebModule) {
-				IStatus status = server.canModifyModules(new IModule[] { (IWebModule) module }, null);
+				IStatus status = server.canModifyModules(new IModule[] { (IWebModule) module }, null, null);
 				if (status != null && status.isOK())
 					return true;
 			}
@@ -284,12 +284,12 @@ public class ConfigurationWebModuleEditorPart extends ServerResourceEditorPart {
 		super.init(site, input);
 		
 		if (serverConfiguration != null) {
-			configuration = (ITomcatConfigurationWorkingCopy) serverConfiguration.getWorkingCopyDelegate();
+			configuration = (ITomcatConfigurationWorkingCopy) serverConfiguration.getWorkingCopyExtension(null);
 			addChangeListener();
 		}
 		
 		if (server != null) {
-			server2 = (ITomcatServerWorkingCopy) server.getWorkingCopyDelegate();
+			server2 = (ITomcatServerWorkingCopy) server.getWorkingCopyExtension(null);
 		}
 		initialize();
 	}

@@ -10,8 +10,6 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.internal;
 
-import org.eclipse.wst.server.core.ServerCore;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 /**
@@ -63,7 +61,7 @@ public class Trace {
 	 * @param t java.lang.Throwable
 	 */
 	public static void trace(int level, String s, Throwable t) {
-		trace(ServerCore.PLUGIN_ID, level, s, t);
+		trace(ServerPlugin.PLUGIN_ID, level, s, t);
 	}
 
 	/**

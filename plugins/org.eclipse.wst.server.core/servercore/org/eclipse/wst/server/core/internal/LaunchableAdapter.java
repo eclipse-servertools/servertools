@@ -12,7 +12,9 @@ package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 
+import org.eclipse.wst.server.core.ILaunchable;
 import org.eclipse.wst.server.core.ILaunchableAdapter;
+import org.eclipse.wst.server.core.IModuleObject;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.*;
 /**
@@ -20,7 +22,7 @@ import org.eclipse.wst.server.core.model.*;
  */
 public class LaunchableAdapter implements ILaunchableAdapter {
 	private IConfigurationElement element;
-	private ILaunchableAdapterDelegate delegate;
+	private LaunchableAdapterDelegate delegate;
 
 	/**
 	 * LaunchableAdapter constructor comment.
@@ -42,10 +44,10 @@ public class LaunchableAdapter implements ILaunchableAdapter {
 	/*
 	 * @see IPublishManager#getDelegate()
 	 */
-	public ILaunchableAdapterDelegate getDelegate() {
+	public LaunchableAdapterDelegate getDelegate() {
 		if (delegate == null) {
 			try {
-				delegate = (ILaunchableAdapterDelegate) element.createExecutableExtension("class");
+				delegate = (LaunchableAdapterDelegate) element.createExecutableExtension("class");
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString() + ": " + e.getMessage());
 			}

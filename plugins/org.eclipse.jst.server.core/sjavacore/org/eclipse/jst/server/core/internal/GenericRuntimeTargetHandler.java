@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
@@ -26,8 +27,8 @@ import org.eclipse.wst.server.core.IRuntime;
  * 
  */
 public class GenericRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
-	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime) {
-		GenericRuntime genericRuntime = (GenericRuntime) runtime.getDelegate();
+	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
+		GenericRuntime genericRuntime = (GenericRuntime) runtime.getExtension(monitor);
 		IVMInstall vmInstall = genericRuntime.getVMInstall();
 		if (vmInstall != null) {
 			String name = vmInstall.getName();

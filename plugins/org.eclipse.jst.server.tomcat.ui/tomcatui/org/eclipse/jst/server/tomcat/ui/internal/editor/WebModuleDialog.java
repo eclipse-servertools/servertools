@@ -39,8 +39,9 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
 
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.ui.ServerUICore;
 /**
  * Dialog to add or modify web modules.
@@ -50,6 +51,7 @@ public class WebModuleDialog extends Dialog {
 	protected boolean isEdit;
 	protected boolean isProject;
 	protected Text docBase;
+	protected IServer server2;
 	protected ITomcatServer server;
 	protected ITomcatConfiguration config;
 
@@ -59,9 +61,10 @@ public class WebModuleDialog extends Dialog {
 	 * WebModuleDialog constructor comment.
 	 * @param parentShell org.eclipse.swt.widgets.Shell
 	 */
-	protected WebModuleDialog(Shell parentShell, ITomcatServer server, ITomcatConfiguration config, WebModule module) {
+	protected WebModuleDialog(Shell parentShell, IServer server2, ITomcatServer server, ITomcatConfiguration config, WebModule module) {
 		super(parentShell);
 		this.module = module;
+		this.server2 = server2;
 		this.server = server;
 		this.config = config;
 		isEdit = true;
@@ -71,8 +74,8 @@ public class WebModuleDialog extends Dialog {
 	 * WebModuleDialog constructor comment.
 	 * @param parentShell org.eclipse.swt.widgets.Shell
 	 */
-	protected WebModuleDialog(Shell parentShell, ITomcatServer server, ITomcatConfiguration config, boolean isProject) {
-		this(parentShell, server, config, new WebModule("/", "", null, true));
+	protected WebModuleDialog(Shell parentShell, IServer server2, ITomcatServer server, ITomcatConfiguration config, boolean isProject) {
+		this(parentShell, server2, server, config, new WebModule("/", "", null, true));
 		isEdit = false;
 		this.isProject = isProject;
 	}
@@ -133,7 +136,7 @@ public class WebModuleDialog extends Dialog {
 				Object module3 = iterator.next();
 				if (module3 instanceof IWebModule) {
 					IWebModule module2 = (IWebModule) module3;
-					IStatus status = server.canModifyModules(new IModule[] { module2}, null);
+					IStatus status = server2.canModifyModules(new IModule[] { module2}, null, null);
 					if (status != null && status.isOK()) {
 						TableItem item = new TableItem(projTable, SWT.NONE);
 						item.setText(0, ServerUICore.getLabelProvider().getText(module2));

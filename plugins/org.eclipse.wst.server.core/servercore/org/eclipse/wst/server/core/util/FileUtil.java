@@ -14,7 +14,6 @@ import java.io.*;
 import java.util.zip.*;
 import java.net.URL;
 import org.eclipse.core.runtime.*;
-import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.Trace;
 /**
@@ -94,10 +93,10 @@ public class FileUtil {
 				out.write(buf, 0, avail);
 				avail = in.read(buf);
 			}
-			return new Status(IStatus.OK, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%copyingTask", new String[] {to}), null);
+			return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%copyingTask", new String[] {to}), null);
 		} catch (Exception e) {
 			Trace.trace("Error copying file", e);
-			return new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
 		} finally {
 			try {
 				if (in != null)
@@ -121,7 +120,7 @@ public class FileUtil {
 			return copyFile(new FileInputStream(from), to);
 		} catch (Exception e) {
 			Trace.trace("Error copying file", e);
-			return new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
 		}
 	}
 
@@ -136,7 +135,7 @@ public class FileUtil {
 			return copyFile(from.openStream(), to);
 		} catch (Exception e) {
 			Trace.trace("Error copying file", e);
-			return new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
 		}
 	}
 	/**

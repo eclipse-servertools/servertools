@@ -12,7 +12,7 @@ package org.eclipse.jst.server.j2ee;
 
 import org.eclipse.core.runtime.IPath;
 
-import org.eclipse.wst.server.core.model.IModule;
+import org.eclipse.wst.server.core.IModule;
 /**
  * An abstract J2EE module that can be deployed to a server.
  */

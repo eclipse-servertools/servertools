@@ -27,8 +27,6 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.internal.ServerConfigurationWorkingCopy;
-import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
 import org.eclipse.wst.server.core.model.IServerResourceListener;
 import org.eclipse.wst.server.core.util.ProgressUtil;
 import org.eclipse.wst.server.core.util.ServerResourceAdapter;
@@ -326,13 +324,13 @@ public class ServerEditor extends MultiPageEditorPart {
 				ticks /= 2;
 
 			if (server != null)  {
-				((ServerWorkingCopy)server).save(ProgressUtil.getSubMonitorFor(monitor, ticks), false);
+				server.save(false, ProgressUtil.getSubMonitorFor(monitor, ticks));
 				getCommandManager().resourceSaved(serverId);
 				commandManager.updateTimestamps(serverId);
 			}
 
 			if (serverConfiguration != null) {
-				((ServerConfigurationWorkingCopy)serverConfiguration).save(ProgressUtil.getSubMonitorFor(monitor, ticks), false);
+				serverConfiguration.save(false, ProgressUtil.getSubMonitorFor(monitor, ticks));
 				getCommandManager().resourceSaved(serverConfigurationId);
 				commandManager.updateTimestamps(serverConfigurationId);
 			}

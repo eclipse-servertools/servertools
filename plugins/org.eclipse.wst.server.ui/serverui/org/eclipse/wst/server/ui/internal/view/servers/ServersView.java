@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.view.servers;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.wst.server.ui.internal.view.servers;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.view.servers;
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -341,14 +342,11 @@ public class ServersView extends ViewPart {
 					public void menuAboutToShow(IMenuManager manager) {
 						menuManager.removeAll();
 						if (server2.isDelegatePluginActivated()) {
-							IServerDelegate delegate = server2.getDelegate();
-							if (delegate instanceof IMonitorableServer) {
-								Iterator iterator = ((IMonitorableServer) delegate).getServerPorts().iterator();
-								while (iterator.hasNext()) {
-									IServerPort port = (IServerPort) iterator.next();
-									if (!port.isAdvanced()) {
-										menuManager.add(new MonitorServerPortAction(shell2, server2, port));
-									}
+							Iterator iterator = server2.getServerPorts().iterator();
+							while (iterator.hasNext()) {
+								IServerPort port = (IServerPort) iterator.next();
+								if (!port.isAdvanced()) {
+									menuManager.add(new MonitorServerPortAction(shell2, server2, port));
 								}
 							}
 						}
@@ -364,26 +362,22 @@ public class ServersView extends ViewPart {
 		}
 	
 		if (server != null && server.isDelegateLoaded()) {
-			IServerDelegate delegate = server.getDelegate();
-			if (delegate instanceof IRestartableModule) {
-				menu.add(new Separator());
-		
-				MenuManager restartProjectMenu = new MenuManager(ServerUIPlugin.getResource("%actionRestartProject"));
-				IRestartableModule restartable = (IRestartableModule) delegate;
-		
-				if (server != null) {
-					Iterator iterator = ServerUtil.getAllContainedModules(server).iterator();
-					while (iterator.hasNext()) {
-						IModule module = (IModule) iterator.next();
-						Action action = new RestartModuleAction(restartable, module);
-						restartProjectMenu.add(action);
-					}
+			menu.add(new Separator());
+	
+			MenuManager restartProjectMenu = new MenuManager(ServerUIPlugin.getResource("%actionRestartProject"));
+	
+			if (server != null) {
+				Iterator iterator = ServerUtil.getAllContainedModules(server, null).iterator();
+				while (iterator.hasNext()) {
+					IModule module = (IModule) iterator.next();
+					Action action = new RestartModuleAction(server, module);
+					restartProjectMenu.add(action);
 				}
-				if (restartProjectMenu.isEmpty())
-					menu.add(new DisabledMenuManager(ServerUIPlugin.getResource("%actionRestartProject")));
-				else
-					menu.add(restartProjectMenu);
 			}
+			if (restartProjectMenu.isEmpty())
+				menu.add(new DisabledMenuManager(ServerUIPlugin.getResource("%actionRestartProject")));
+			else
+				menu.add(restartProjectMenu);
 		}
 		
 		if (server != null) {

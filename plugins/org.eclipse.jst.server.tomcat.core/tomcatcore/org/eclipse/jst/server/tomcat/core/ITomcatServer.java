@@ -14,12 +14,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IProcess;
 
-import org.eclipse.wst.server.core.model.IServerDelegate;
+import org.eclipse.wst.server.core.IServerExtension;
 import org.eclipse.wst.server.core.model.IURLProvider;
 /**
  * 
  */
-public interface ITomcatServer extends IServerDelegate, IURLProvider {
+public interface ITomcatServer extends IServerExtension, IURLProvider {
 	public static final String PROPERTY_SECURE = "secure";
 	public static final String PROPERTY_DEBUG = "debug";
 	public static final String PROPERTY_TEST_ENVIRONMENT = "testEnvironment";

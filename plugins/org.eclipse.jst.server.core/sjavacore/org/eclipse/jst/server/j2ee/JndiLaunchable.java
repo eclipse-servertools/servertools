@@ -12,7 +12,7 @@ package org.eclipse.jst.server.j2ee;
 
 import java.util.Properties;
 
-import org.eclipse.wst.server.core.model.ILaunchable;
+import org.eclipse.wst.server.core.ILaunchable;
 /**
  * 
  */

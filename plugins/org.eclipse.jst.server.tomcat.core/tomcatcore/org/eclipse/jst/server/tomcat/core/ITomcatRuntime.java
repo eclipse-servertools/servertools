@@ -13,11 +13,11 @@ import java.util.List;
 
 import org.eclipse.jdt.launching.IVMInstall;
 
-import org.eclipse.wst.server.core.model.IRuntimeDelegate;
+import org.eclipse.wst.server.core.IServerExtension;
 /**
  * 
  */
-public interface ITomcatRuntime extends IRuntimeDelegate {
+public interface ITomcatRuntime extends IServerExtension {
 	public String getVMInstallTypeId();
 
 	public String getVMInstallId();

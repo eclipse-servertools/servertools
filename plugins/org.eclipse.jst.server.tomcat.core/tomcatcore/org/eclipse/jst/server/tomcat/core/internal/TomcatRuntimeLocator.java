@@ -21,14 +21,14 @@ import org.eclipse.jst.server.tomcat.core.ITomcatRuntimeWorkingCopy;
 
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
+import org.eclipse.wst.server.core.IServerExtension;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.model.IRuntimeLocatorDelegate;
+import org.eclipse.wst.server.core.model.RuntimeLocatorDelegate;
 import org.eclipse.wst.server.core.model.IRuntimeLocatorListener;
-import org.eclipse.wst.server.core.model.IRuntimeWorkingCopyDelegate;
 /**
  * 
  */
-public class TomcatRuntimeLocator implements IRuntimeLocatorDelegate {
+public class TomcatRuntimeLocator extends RuntimeLocatorDelegate {
 	protected static final String[] runtimeTypes = new String[] {
 		"org.eclipse.jst.server.tomcat.32.runtime",
 		"org.eclipse.jst.server.tomcat.40.runtime",
@@ -40,6 +40,10 @@ public class TomcatRuntimeLocator implements IRuntimeLocatorDelegate {
 	 * @see org.eclipse.wst.server.core.model.IRuntimeFactoryDelegate#getKnownRuntimes()
 	 */
 	public void searchForRuntimes(IRuntimeLocatorListener listener, IProgressMonitor monitor) {
+		searchForRuntimes2(listener, monitor);
+	}
+
+	protected static void searchForRuntimes2(IRuntimeLocatorListener listener, IProgressMonitor monitor) {
 		File[] files = File.listRoots();
 		if (files != null) {
 			int size = files.length;
@@ -57,9 +61,9 @@ public class TomcatRuntimeLocator implements IRuntimeLocatorDelegate {
 			monitor.worked(100);
 	}
 
-	protected void searchDir(IRuntimeLocatorListener listener, File dir, int depth, IProgressMonitor monitor) {
+	protected static void searchDir(IRuntimeLocatorListener listener, File dir, int depth, IProgressMonitor monitor) {
 		if ("conf".equals(dir.getName())) {
-			IRuntimeWorkingCopy runtime = getRuntimeFromDir(dir.getParentFile());
+			IRuntimeWorkingCopy runtime = getRuntimeFromDir(dir.getParentFile(), monitor);
 			if (runtime != null) {
 				listener.runtimeFound(runtime);
 				return;
@@ -84,18 +88,18 @@ public class TomcatRuntimeLocator implements IRuntimeLocatorDelegate {
 		}
 	}
 
-	protected IRuntimeWorkingCopy getRuntimeFromDir(File dir) {
+	protected static IRuntimeWorkingCopy getRuntimeFromDir(File dir, IProgressMonitor monitor) {
 		for (int i = 0; i < runtimeTypes.length; i++) {
 			try {
 				IRuntimeType runtimeType = ServerCore.getRuntimeType(runtimeTypes[i]);
-				IRuntimeWorkingCopy runtime = runtimeType.createRuntime(dir.getAbsolutePath());
+				IRuntimeWorkingCopy runtime = runtimeType.createRuntime(dir.getAbsolutePath(), monitor);
 				runtime.setName(dir.getName());
 				runtime.setLocation(new Path(dir.getAbsolutePath()));
-				IRuntimeWorkingCopyDelegate delegate = runtime.getWorkingCopyDelegate();
-				ITomcatRuntimeWorkingCopy wc = (ITomcatRuntimeWorkingCopy) delegate;
+				IServerExtension extension = runtime.getWorkingCopyExtension(monitor);
+				ITomcatRuntimeWorkingCopy wc = (ITomcatRuntimeWorkingCopy) extension;
 				IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
 				wc.setVMInstall(vmInstall.getVMInstallType().getId(), vmInstall.getId());
-				IStatus status = wc.validate();
+				IStatus status = runtime.validate(monitor);
 				if (status == null || status.isOK())
 					return runtime;
 				

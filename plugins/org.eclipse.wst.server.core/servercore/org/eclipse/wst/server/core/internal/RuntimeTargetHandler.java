@@ -18,13 +18,13 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IRuntimeTargetHandlerDelegate;
+import org.eclipse.wst.server.core.model.RuntimeTargetHandlerDelegate;
 /**
  * 
  */
 public class RuntimeTargetHandler implements IRuntimeTargetHandler {
 	private IConfigurationElement element;
-	private IRuntimeTargetHandlerDelegate delegate;
+	private RuntimeTargetHandlerDelegate delegate;
 
 	public RuntimeTargetHandler(IConfigurationElement element) {
 		super();
@@ -104,13 +104,17 @@ public class RuntimeTargetHandler implements IRuntimeTargetHandler {
 		return false;
 	}
 
+	public IServerExtension getExtension() {
+		return getDelegate();
+	}
+
 	/*
 	 * @see IPublishManager#getDelegate()
 	 */
-	public IRuntimeTargetHandlerDelegate getDelegate() {
+	public RuntimeTargetHandlerDelegate getDelegate() {
 		if (delegate == null) {
 			try {
-				delegate = (IRuntimeTargetHandlerDelegate) element.createExecutableExtension("class");
+				delegate = (RuntimeTargetHandlerDelegate) element.createExecutableExtension("class");
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + e.getMessage());
 			}

@@ -13,7 +13,6 @@ package org.eclipse.wst.server.core;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.model.IRuntimeWorkingCopyDelegate;
 /**
  * A working copy runtime object used for formulating changes
  * to a runtime instance ({@link IRuntime}).
@@ -25,11 +24,6 @@ import org.eclipse.wst.server.core.model.IRuntimeWorkingCopyDelegate;
  * to initialize this property.]
  * </p>
  * <p>
- * [issue: There can be other runtime-type-specific properties.
- * The default values for these need to be specified somewhere
- * too (probably in the API subclass of IRuntimeWorkingCopyDelegate).]
- * </p>
- * <p>
  * [issue: IElementWorkingCopy and IElement support an open-ended set
  * of attribute-value pairs. What is relationship between these
  * attributes and (a) the get/setXXX methods found on this interface,
@@ -37,7 +31,7 @@ import org.eclipse.wst.server.core.model.IRuntimeWorkingCopyDelegate;
  * Is it the case that these attribute-values pairs are the only
  * information about a runtime instance that can be preserved
  * between workbench sessions? That is, any information recorded
- * just in instance fields of an IRuntimeDelegate implementation
+ * just in instance fields of an RuntimeDelegate implementation
  * will be lost when the session ends.]
  * </p>
  * <p>
@@ -51,13 +45,12 @@ import org.eclipse.wst.server.core.model.IRuntimeWorkingCopyDelegate;
  * @since 1.0
  */
 public interface IRuntimeWorkingCopy extends IRuntime, IElementWorkingCopy {	
-
 	/**
 	 * Returns the runtime instance that this working copy is
 	 * associated with.
 	 * <p>
 	 * For a runtime working copy created by a call to
-	 * {@link IRuntime#getWorkingCopy()},
+	 * {@link IRuntime#createWorkingCopy()},
 	 * <code>this.getOriginal()</code> returns the original
 	 * runtime object. For a runtime working copy just created by
 	 * a call to {@link IRuntimeType#createRuntime(String)},
@@ -69,42 +62,26 @@ public interface IRuntimeWorkingCopy extends IRuntime, IElementWorkingCopy {
 	public IRuntime getOriginal();
 	
 	/**
-	 * Returns the delegate for this runtime working copy.
-	 * The runtime working copy delegate is a
+	 * Returns the extension for this runtime working copy.
+	 * The runtime working copy extension is a
 	 * runtime-type-specific object. By casting the runtime working copy
-	 * delegate to the type prescribed in the API documentation for that
+	 * extension to the type prescribed in the API documentation for that
 	 * particular runtime working copy type, the client can access
 	 * runtime-type-specific properties and methods.
-	 * <p>
-	 * [issue: Exposing IRuntimeWorkingCopyDelegate to clients
-	 * of IRuntimeWorkingCopy is same problem as exposing
-	 * IRuntimeDelegate to clients of IRuntime. The suggested fix 
-	 * is to replace this method with something like
-	 * getRuntimeWorkingCopyExtension() which
-	 * returns an IRuntimeWorkingCopyExtension.]
-	 * </p>
-	 * <p>
-	 * [issue: runtimeTypes schema, workingCopyClass attribute is optional.
-	 * This suggests that a runtime need not provide a working copy
-	 * delegate class. Like the class attribute, this seems implausible.
-	 * I've spec'd this method as if working copy delegate is mandatory.]
-	 * </p>
 	 * 
-	 * @return the delegate for the runtime working copy
+	 * @return the extension for the runtime working copy
 	 */
-	public IRuntimeWorkingCopyDelegate getWorkingCopyDelegate();
-	
+	public IServerExtension getWorkingCopyExtension(IProgressMonitor monitor);
+
 	/**
-	 * Sets the location of this runtime.
-	 * <p>
-	 * [issue: Explain what this "location" is.]
-	 * </p>
+	 * Sets the absolute path in the local file system to the root of the runtime,
+	 * typically the installation directory. 
 	 * 
 	 * @param path the location of this runtime, or <code>null</code> if none
 	 * @see IRuntime#getLocation()
 	 */
 	public void setLocation(IPath path);
-	
+
 	/**
 	 * Commits the changes made in this working copy. If there is
 	 * no extant runtime instance with a matching id and runtime
@@ -125,11 +102,7 @@ public interface IRuntimeWorkingCopy extends IRuntime, IElementWorkingCopy {
 	 * more smoothly.]
 	 * </p>
 	 * <p>
-	 * [issue: What if this object has already been saved
-	 * or released?]
-	 * </p>
-	 * <p>
-	 * [issue: What is lifecycle for IRuntimeWorkingCopyDelegate
+	 * [issue: What is lifecycle for RuntimeWorkingCopyDelegate
 	 * associated with this working copy?]
 	 * </p>
 	 * 
@@ -138,8 +111,8 @@ public interface IRuntimeWorkingCopy extends IRuntime, IElementWorkingCopy {
 	 * @return a new runtime instance
 	 * @throws CoreException [missing]
 	 */
-	public IRuntime save(IProgressMonitor monitor) throws CoreException;
-	
+	public IRuntime save(boolean force, IProgressMonitor monitor) throws CoreException;
+
 	/**
 	 * Sets whether this runtime can be used as a test environment.
 	 * 

@@ -11,7 +11,6 @@ package org.eclipse.jst.server.tomcat.ui.internal;
  **********************************************************************/
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jst.server.tomcat.core.ITomcatRuntimeWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
 import org.eclipse.swt.widgets.Composite;
 
@@ -36,7 +35,7 @@ public class TomcatRuntimeWizardFragment extends WizardFragment {
 		
 		if (runtime == null)
 			return false;
-		IStatus status = runtime.validate();
+		IStatus status = runtime.validate(null);
 		return (status != null && status.isOK());
 	}
 
@@ -58,8 +57,7 @@ public class TomcatRuntimeWizardFragment extends WizardFragment {
 	public void exit() {
 		IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_RUNTIME);
 		IPath path = runtime.getLocation();
-		ITomcatRuntimeWorkingCopy tr = (ITomcatRuntimeWorkingCopy) runtime.getWorkingCopyDelegate();
-		if (tr.validate().isOK())
+		if (runtime.validate(null).isOK())
 			TomcatPlugin.setPreference("location" + runtime.getRuntimeType().getId(), path.toString());
 	}
 }

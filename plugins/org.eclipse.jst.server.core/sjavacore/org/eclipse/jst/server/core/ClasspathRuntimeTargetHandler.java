@@ -26,12 +26,11 @@ import org.eclipse.jst.server.core.internal.JavaServerPlugin;
 import org.eclipse.jst.server.core.internal.RuntimeClasspathContainer;
 import org.eclipse.jst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.model.IRuntimeTargetHandlerDelegate;
-
+import org.eclipse.wst.server.core.model.RuntimeTargetHandlerDelegate;
 /**
  * 
  */
-public abstract class ClasspathRuntimeTargetHandler implements IRuntimeTargetHandlerDelegate {
+public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandlerDelegate {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IRuntimeTargetDelegate#setRuntimeTarget(org.eclipse.core.resources.IProject, org.eclipse.wst.server.core.IRuntime)
 	 */
@@ -62,7 +61,7 @@ public abstract class ClasspathRuntimeTargetHandler implements IRuntimeTargetHan
 			}
 			
 			List add = new ArrayList();
-			IClasspathEntry[] entries = getDelegateClasspathEntries(runtime);
+			IClasspathEntry[] entries = getDelegateClasspathEntries(runtime, monitor);
 			if (entries != null) {
 				size = entries.length;
 				for (int i = 0; i < size; i++)
@@ -223,7 +222,7 @@ public abstract class ClasspathRuntimeTargetHandler implements IRuntimeTargetHan
 			return;
 		
 		try {
-			IClasspathEntry[] delegates = getDelegateClasspathEntries(runtime);
+			IClasspathEntry[] delegates = getDelegateClasspathEntries(runtime, monitor);
 			int delegateSize = 0;
 			if (delegates != null)
 				delegateSize = delegates.length;
@@ -300,7 +299,7 @@ public abstract class ClasspathRuntimeTargetHandler implements IRuntimeTargetHan
 
 	public abstract String getId();
 
-	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime) {
+	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
 		return null;
 	}
 	

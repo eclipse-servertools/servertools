@@ -161,29 +161,34 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		}
 
 		// check for servers with the given start mode
-		Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
+		IServer[] servers = ServerCore.getResourceManager().getServers();
 		boolean found = false;
-		while (!found && iterator.hasNext()) {
-			IServer server = (IServer) iterator.next();
-			if (ServerUtil.isCompatibleWithLaunchMode(server, launchMode)) {
-				try {
-					List parents = server.getParentModules(module);
-					if (parents != null && parents.size() > 0)
-						found = true;
-				} catch (Exception e) { }
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size && !found; i++) {
+				if (ServerUtil.isCompatibleWithLaunchMode(servers[i], launchMode)) {
+					try {
+						List parents = servers[i].getParentModules(module, monitor);
+						if (parents != null && parents.size() > 0)
+							found = true;
+					} catch (Exception e) { }
+				}
 			}
 		}
 
 		if (!found) {
 			// no existing server supports the project and start mode!
 			// check if there might be another one that can be created
-			iterator = ServerCore.getServerTypes().iterator();
+			IServerType[] serverTypes = ServerCore.getServerTypes();
 			boolean found2 = false;
-			while (!found2 && iterator.hasNext()) {
-				IServerType type = (IServerType) iterator.next();
-				List moduleTypes = type.getRuntimeType().getModuleTypes();
-				if (type.supportsLaunchMode(launchMode) && ServerUtil.isSupportedModule(moduleTypes, module.getType(), module.getVersion())) {
-					found2 = true;
+			if (serverTypes != null) {
+				int size = serverTypes.length;
+				for (int i = 0; i < size && !found2; i++) {
+					IServerType type = serverTypes[i];
+					IModuleType2[] moduleTypes = type.getRuntimeType().getModuleTypes();
+					if (type.supportsLaunchMode(launchMode) && ServerUtil.isSupportedModule(moduleTypes, module.getType(), module.getVersion())) {
+						found2 = true;
+					}
 				}
 			}
 			if (!found2) {
@@ -255,23 +260,26 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		ILaunchableAdapter launchableAdapter = null;
 		IModuleObject moduleObject = null;
 		ILaunchable launchable = null;
-		iterator = moduleObjects.iterator();
+		Iterator iterator = moduleObjects.iterator();
 		while (moduleObject == null && iterator.hasNext()) {
 			IModuleObject moduleObject2 = (IModuleObject) iterator.next();
 			
-			Iterator iterator2 = ServerCore.getLaunchableAdapters().iterator();
-			while (moduleObject == null && iterator2.hasNext()) {
-				ILaunchableAdapter adapter = (ILaunchableAdapter) iterator2.next();
-				try {
-					ILaunchable launchable2 = adapter.getLaunchable(server, moduleObject2);
-					Trace.trace(Trace.FINEST, "adapter= " + adapter + ", launchable= " + launchable2);
-					if (launchable2 != null) {
-						launchableAdapter = adapter;
-						moduleObject = moduleObject2;
-						launchable = launchable2;
+			ILaunchableAdapter[] adapters = ServerCore.getLaunchableAdapters();
+			if (adapters != null) {
+				int size = adapters.length;
+				for (int i = 0; i < size && moduleObject == null; i++) {
+					ILaunchableAdapter adapter = adapters[i];
+					try {
+						ILaunchable launchable2 = adapter.getLaunchable(server, moduleObject2);
+						Trace.trace(Trace.FINEST, "adapter= " + adapter + ", launchable= " + launchable2);
+						if (launchable2 != null) {
+							launchableAdapter = adapter;
+							moduleObject = moduleObject2;
+							launchable = launchable2;
+						}
+					} catch (Exception e) {
+						Trace.trace(Trace.SEVERE, "Error in launchable adapter", e);
 					}
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error in launchable adapter", e);
 				}
 			}
 		}
@@ -304,51 +312,36 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 
 		// start server if it's not already started
 		// and cue the client to start
-		byte state = server.getServerState();
-		if (state == IServer.SERVER_STARTING) {
+		int state = server.getServerState();
+		if (state == IServer.STATE_STARTING) {
 			ServerStartupListener listener = new ServerStartupListener(shell, server, client, launchableAdapter, moduleObject, launchMode, module);
 			listener.setEnabled(true);
-		} else if (state == IServer.SERVER_STARTED || state == IServer.SERVER_STARTED_DEBUG || state == IServer.SERVER_STARTED_PROFILE) {
+		} else if (state == IServer.STATE_STARTED) {
 			boolean restart = false;
-			if (state != IServer.SERVER_STARTED_DEBUG && ILaunchManager.DEBUG_MODE.equals(launchMode)) {
+			String mode = server.getMode();
+			if (!ILaunchManager.DEBUG_MODE.equals(mode) && ILaunchManager.DEBUG_MODE.equals(launchMode)) {
 				int result = openWarningDialog(shell, ServerUIPlugin.getResource("%dialogModeWarningDebug"));
-				if (result == 1) {
-					if (state == IServer.SERVER_STARTED)
-						launchMode = ILaunchManager.RUN_MODE;
-					else
-						launchMode = ILaunchManager.PROFILE_MODE;
-				} else if (result == 0)
+				if (result == 1)
+					launchMode = mode;
+				else if (result == 0)
 					restart = true;
 				else
 					return;
-			} else if (state != IServer.SERVER_STARTED_PROFILE && ILaunchManager.PROFILE_MODE.equals(launchMode)) {
+			} else if (!ILaunchManager.PROFILE_MODE.equals(mode) && ILaunchManager.PROFILE_MODE.equals(launchMode)) {
 				int result = openWarningDialog(shell, ServerUIPlugin.getResource("%dialogModeWarningProfile"));
-				if (result == 1) {
-					if (state == IServer.SERVER_STARTED)
-						launchMode = ILaunchManager.RUN_MODE;
-					else
-						launchMode = ILaunchManager.DEBUG_MODE;
-				} else if (result == 0)
+				if (result == 1)
+					launchMode = mode;
+				else if (result == 0)
 					restart = true;
 				else
 					return;
 			}
 			if (restart) {
-				IServerDelegate delegate = server.getDelegate();
-				if (delegate instanceof IRestartableServer) {
-					new ServerStartupListener(shell, server, client, launchableAdapter, moduleObject, launchMode, module, true);
-					((IRestartableServer) delegate).restart(launchMode);
-				} else {
-					server.synchronousStop();
+				server.restart(launchMode);
 				
-					ServerStartupListener listener = new ServerStartupListener(shell, server, client, launchableAdapter, moduleObject, launchMode, module);
-					if (preferences.isAutoPublishing() && !autoPublish(server))
-						return;
-	
-					try {
-						EclipseUtil.startServer(shell, server, launchMode, listener);
-					} catch (CoreException e) { }
-				}
+				if (preferences.isAutoPublishing() && !autoPublish(server))
+					return;
+				ServerStartupListener.launchClientUtil(server, module, launchableAdapter, moduleObject, launchMode, client);
 			} else {
 				if (preferences.isAutoPublishing() && !autoPublish(server))
 					return;
@@ -356,7 +349,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				// open client
 				ServerStartupListener.launchClientUtil(server, module, launchableAdapter, moduleObject, launchMode, client);
 			}
-		} else if (state != IServer.SERVER_STOPPING) {
+		} else if (state != IServer.STATE_STOPPING) {
 			ServerStartupListener listener = new ServerStartupListener(shell, server, client, launchableAdapter, moduleObject, launchMode, module);
 			if (preferences.isAutoPublishing() && !autoPublish(server))
 				return;
@@ -410,10 +403,11 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		if (!initialized) {
 			initialized = true;
 			
-			Iterator iterator = ServerCore.getModuleFactories().iterator();
-			while (iterator.hasNext()) {
-				IModuleFactory factory = (IModuleFactory) iterator.next();
-				factory.getModules();
+			IModuleFactory[] factories = ServerCore.getModuleFactories();
+			if (factories != null) {
+				int size = factories.length;
+				for (int i = 0; i < size; i++)
+					factories[i].getModules();
 			}
 			
 			try {
@@ -505,13 +499,16 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * and the various start modes.
 	 */
 	protected boolean findGlobalLaunchModes(IModule module) {
-		Iterator iterator = ServerCore.getServerTypes().iterator();
-		while (iterator.hasNext()) {
-			IServerType type = (IServerType) iterator.next();
-			if (isValidServerType(type, module)) {
-				for (byte b = 0; b < launchModes.length; b++) {
-					if (type.supportsLaunchMode(launchModes[b])) {
-						globalLaunchMode.put(launchModes[b], new Boolean(true));
+		IServerType[] serverTypes = ServerCore.getServerTypes();
+		if (serverTypes != null) {
+			int size = serverTypes.length;
+			for (int i = 0; i < size; i++) {
+				IServerType type = serverTypes[i];
+				if (isValidServerType(type, module)) {
+					for (byte b = 0; b < launchModes.length; b++) {
+						if (type.supportsLaunchMode(launchModes[b])) {
+							globalLaunchMode.put(launchModes[b], new Boolean(true));
+						}
 					}
 				}
 			}

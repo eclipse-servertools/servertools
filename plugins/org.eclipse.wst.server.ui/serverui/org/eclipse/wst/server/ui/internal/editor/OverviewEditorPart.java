@@ -11,6 +11,7 @@ package org.eclipse.wst.server.ui.internal.editor;
  **********************************************************************/
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -46,7 +47,7 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 	
 	protected boolean updating;
 	
-	protected List runtimes;
+	protected IRuntime[] runtimes;
 
 	protected PropertyChangeListener listener;
 
@@ -59,14 +60,6 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 	
 	protected ICommandManager getCommandManager() {
 		return commandManager;
-	}
-	
-	protected IServerWorkingCopy getServer() {
-		return server;
-	}
-	
-	protected IServerConfigurationWorkingCopy getServerConfiguration() {
-		return serverConfiguration;
 	}
 
 	/**
@@ -190,7 +183,7 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 		if (server != null) {
 			createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewServerHostname"));
 			
-			hostname = toolkit.createText(composite, server.getHostname());
+			hostname = toolkit.createText(composite, server.getHost());
 			GridData data = new GridData(GridData.FILL_HORIZONTAL);
 			hostname.setLayoutData(data);
 			hostname.addModifyListener(new ModifyListener() {
@@ -211,20 +204,21 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 			IRuntimeType runtimeType = server.getServerType().getRuntimeType();
 			runtimes = ServerCore.getResourceManager().getRuntimes(runtimeType);
 			
-			if (runtimes.size() < 2) {
-				if (runtime == null)
-					toolkit.createLabel(composite, "");
-				else
-					toolkit.createLabel(composite, runtime.getName());
-			} else {
+			if (runtimes == null || runtimes.length == 0)
+				toolkit.createLabel(composite, "");
+			else if (runtimes.length == 1)
+				toolkit.createLabel(composite, runtime.getName());
+			else {
 				runtimeCombo = new Combo(composite, SWT.READ_ONLY);
 				GridData data = new GridData(GridData.FILL_HORIZONTAL);
 				runtimeCombo.setLayoutData(data);
 				updateRuntimeCombo();
 				
-				int index = runtimes.indexOf(runtime);
-				if (index >= 0)
-					runtimeCombo.select(index);
+				int size = runtimes.length;
+				for (int i = 0; i < size; i++) {
+					if (runtimes[i].equals(runtime))
+						runtimeCombo.select(i);
+				}
 				
 				runtimeCombo.addSelectionListener(new SelectionListener() {
 					public void widgetSelected(SelectionEvent e) {
@@ -232,7 +226,7 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 							if (updating)
 								return;
 							updating = true;
-							IRuntime newRuntime = (IRuntime) runtimes.get(runtimeCombo.getSelectionIndex());
+							IRuntime newRuntime = runtimes[runtimeCombo.getSelectionIndex()];
 							getCommandManager().executeCommand(new SetServerRuntimeCommand(getServer(), newRuntime));
 							updating = false;
 						} catch (Exception ex) { }
@@ -265,25 +259,23 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 		IRuntimeType runtimeType = server.getServerType().getRuntimeType();
 		runtimes = ServerCore.getResourceManager().getRuntimes(runtimeType);
 		
-		if (SocketUtil.isLocalhost(server.getHostname())) {
-			int size = runtimes.size();
-			int i = 0;
-			while (i < size) {
-				IRuntime runtime2 = (IRuntime) runtimes.get(i);
-				if (runtime2.getAttribute("stub", false)) {
-					size --;
-					runtimes.remove(i);
-				} else
-					i++;
+		if (SocketUtil.isLocalhost(server.getHost()) && runtimes != null) {
+			List runtimes2 = new ArrayList();
+			int size = runtimes.length;
+			for (int i = 0; i < size; i++) {
+				IRuntime runtime2 = runtimes[i];
+				if (!runtime2.isStub())
+					runtimes2.add(runtime2);
 			}
+			runtimes = new IRuntime[runtimes2.size()];
+			runtimes2.toArray(runtimes);
 		}
 		
-		int size = runtimes.size();
+		int size = runtimes.length;
 		String[] items = new String[size];
-		for (int i = 0; i < size; i++) {
-			IRuntime runtime2 = (IRuntime) runtimes.get(i);
-			items[i] = runtime2.getName();
-		}
+		for (int i = 0; i < size; i++)
+			items[i] = runtimes[i].getName();
+		
 		runtimeCombo.setItems(items);
 	}
 

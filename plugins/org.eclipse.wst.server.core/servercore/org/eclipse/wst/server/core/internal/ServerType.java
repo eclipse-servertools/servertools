@@ -10,8 +10,6 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.internal;
 
-import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -111,40 +109,21 @@ public class ServerType implements IServerType {
 		return ServerCore.getServerConfigurationType(configurationTypeId);
 	}
 	
-	public boolean supportsLocalhost() {
-		String hosts = element.getAttribute("hosts");
-		return (hosts == null || hosts.toLowerCase().indexOf("localhost") >= 0 
-				|| hosts.indexOf("127.0.0.1") >= 0);
-	}
-	
 	public boolean supportsRemoteHosts() {
-		String hosts = element.getAttribute("hosts");
-		return (hosts == null || hosts.toLowerCase().indexOf("remote") >= 0);
+		String hosts = element.getAttribute("supportsRemoteHosts");
+		return (hosts != null && hosts.toLowerCase().equals("true"));
 	}
-	
+
 	public byte getInitialState() {
 		String stateString = element.getAttribute("initialState");
 		if ("stopped".equals(stateString))
-			return IServer.SERVER_STOPPED;
+			return IServer.STATE_STOPPED;
 		else if ("started".equals(stateString))
-			return IServer.SERVER_STARTED;
-		return IServer.SERVER_UNKNOWN;
+			return IServer.STATE_STARTED;
+		return IServer.STATE_UNKNOWN;
 	}
-
-	/**
-	 * Returns an IStatus message to verify if a server of this type will be able
-	 * to run the module immediately after being created, without any user
-	 * interaction. If OK, this server may be used as a default server. This
-	 * method should return ERROR if the user must supply any information to
-	 * configure the server correctly, or if the module is not supported.
-	 *
-	 * @return org.eclipse.core.resources.IStatus
-	 */
-	/*public IStatus isDefaultAvailable(IModule module) {
-		return null;
-	}*/
 	
-	public byte getServerStateSet() {
+	public int getServerStateSet() {
 		String stateSet = element.getAttribute("stateSet");
 		if (stateSet == null)
 			return SERVER_STATE_SET_MANAGED;
@@ -169,11 +148,11 @@ public class ServerType implements IServerType {
 		return "true".equalsIgnoreCase(element.getAttribute("testEnvironment"));
 	}
 	
-	public IServerWorkingCopy createServer(String id, IFile file, IRuntime runtime) {
+	public IServerWorkingCopy createServer(String id, IFile file, IRuntime runtime, IProgressMonitor monitor) {
 		if (id == null || id.length() == 0)
 			id = ServerPlugin.generateId();
 		ServerWorkingCopy swc = new ServerWorkingCopy(id, file, runtime, this);
-		swc.setDefaults();
+		swc.setDefaults(monitor);
 		return swc;
 	}
 
@@ -185,13 +164,13 @@ public class ServerType implements IServerType {
 		if (hasRuntime()) {
 			// look for existing runtime
 			IRuntimeType runtimeType = getRuntimeType();
-			List list = ServerCore.getResourceManager().getRuntimes(runtimeType);
-			if (!list.isEmpty()) {
-				runtime = (IRuntime) list.get(0);
-			} else {
+			IRuntime[] runtimes = ServerCore.getResourceManager().getRuntimes(runtimeType);
+			if (runtimes != null && runtimes.length > 0)
+				runtime = runtimes[0];
+			else {
 				// create runtime
 				try {
-					IRuntimeWorkingCopy runtimeWC = runtimeType.createRuntime(id + "-runtime");
+					IRuntimeWorkingCopy runtimeWC = runtimeType.createRuntime(id + "-runtime", monitor);
 					ServerUtil.setRuntimeDefaultName(runtimeWC);
 					runtime = runtimeWC;
 				} catch (Exception e) {
@@ -216,9 +195,37 @@ public class ServerType implements IServerType {
 				swc.setServerConfiguration(config);
 		}
 		
-		swc.setDefaults();
+		swc.setDefaults(monitor);
 		
 		return swc;
+	}
+	
+	/**
+	 * Return the timeout (in ms) that should be used to wait for the server to start.
+	 * Returns -1 if there is no timeout.
+	 * 
+	 * @return
+	 */
+	public int getStartTimeout() {
+		try {
+			return Integer.parseInt(element.getAttribute("startTimeout"));
+		} catch (NumberFormatException e) {
+			return -1;
+		}
+	}
+
+	/**
+	 * Return the timeout (in ms) to wait before assuming that the server
+	 * has failed to stop. Returns -1 if there is no timeout.
+	 *  
+	 * @return
+	 */
+	public int getStopTimeout() {
+		try {
+			return Integer.parseInt(element.getAttribute("stopTimeout"));
+		} catch (NumberFormatException e) {
+			return -1;
+		}
 	}
 
 	/**

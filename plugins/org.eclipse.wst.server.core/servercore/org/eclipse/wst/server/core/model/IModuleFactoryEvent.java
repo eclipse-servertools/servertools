@@ -9,6 +9,9 @@
  *     IBM Corporation - Initial API and implementation
  **********************************************************************/
 package org.eclipse.wst.server.core.model;
+
+import org.eclipse.wst.server.core.IModule;
+
 /**
  * An event fired when a module factory changes.
  */

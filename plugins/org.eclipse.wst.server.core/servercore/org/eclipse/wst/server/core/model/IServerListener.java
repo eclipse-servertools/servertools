@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.model;
 
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 /**
  * This interface is used by the server to broadcast a change of state.

@@ -25,7 +25,7 @@ import org.eclipse.wst.server.core.util.FileUtil;
  */
 public class ServerConfiguration extends Base implements IServerConfiguration {
 	protected IServerConfigurationType configurationType;
-	protected IServerConfigurationDelegate delegate;
+	protected ServerConfigurationDelegate delegate;
 	protected boolean isDataLoaded = false;
 	
 	// working copy, loaded resource
@@ -39,7 +39,11 @@ public class ServerConfiguration extends Base implements IServerConfiguration {
 		this.configurationType = type;
 	}
 
-	public IServerConfigurationDelegate getDelegate() {
+	public IServerExtension getExtension(IProgressMonitor monitor) {
+		return getDelegate(monitor);
+	}
+
+	public ServerConfigurationDelegate getDelegate(IProgressMonitor monitor) {
 		if (delegate != null)
 			return delegate;
 		
@@ -48,9 +52,9 @@ public class ServerConfiguration extends Base implements IServerConfiguration {
 				try {
 					long time = System.currentTimeMillis();
 					ServerConfigurationType configType = (ServerConfigurationType) configurationType;
-					delegate = (IServerConfigurationDelegate) configType.getElement().createExecutableExtension("class");
+					delegate = (ServerConfigurationDelegate) configType.getElement().createExecutableExtension("class");
 					delegate.initialize(this);
-					loadData();
+					loadData(monitor);
 					Trace.trace(Trace.PERFORMANCE, "ServerConfiguration.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerConfigurationType().getId());
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);
@@ -80,10 +84,8 @@ public class ServerConfiguration extends Base implements IServerConfiguration {
 		return Platform.getBundle(pluginId).getState() == Bundle.ACTIVE;
 	}
 	
-	public IServerConfigurationWorkingCopy getWorkingCopy() {
-		IServerConfigurationWorkingCopy wc = new ServerConfigurationWorkingCopy(this); 
-		addWorkingCopy(wc);
-		return wc;
+	public IServerConfigurationWorkingCopy createWorkingCopy() {
+		return new ServerConfigurationWorkingCopy(this); 
 	}
 	
 	public void delete() throws CoreException {
@@ -138,7 +140,7 @@ public class ServerConfiguration extends Base implements IServerConfiguration {
 		return path;
 	}
 	
-	protected void loadData() {
+	protected void loadData(IProgressMonitor monitor) {
 		if (isDataLoaded)
 			return;
 		isDataLoaded = true;
@@ -148,27 +150,27 @@ public class ServerConfiguration extends Base implements IServerConfiguration {
 		try {
 			if (file != null) {
 				IFolder folder = getFolder(false);
-				getDelegate().load(folder, new NullProgressMonitor());
+				getDelegate(monitor).load(folder, new NullProgressMonitor());
 			} else {
 				IPath path = getPath(false);
-				getDelegate().load(path, new NullProgressMonitor());
+				getDelegate(monitor).load(path, new NullProgressMonitor());
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not load server configuration data", e);
 		}
 	}
 	
-	protected void saveData(boolean create) {
+	protected void saveData(boolean create, IProgressMonitor monitor) {
 		if (!isDataLoaded || !getServerConfigurationType().isFolder())
 			return;
 		
 		try {
 			if (file != null) {
 				IFolder folder = getFolder(create);
-				getDelegate().save(folder, new NullProgressMonitor());
+				getDelegate(monitor).save(folder, new NullProgressMonitor());
 			} else {
 				IPath path = getPath(create);
-				getDelegate().save(path, new NullProgressMonitor());
+				getDelegate(monitor).save(path, new NullProgressMonitor());
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not save server configuration data", e);
@@ -178,7 +180,7 @@ public class ServerConfiguration extends Base implements IServerConfiguration {
 	protected void saveToFile(IProgressMonitor monitor) throws CoreException {
 		super.saveToFile(monitor);
 		
-		saveData(true);
+		saveData(true, monitor);
 	}
 
 	protected void loadFromFile(IProgressMonitor monitor) throws CoreException {
@@ -208,7 +210,7 @@ public class ServerConfiguration extends Base implements IServerConfiguration {
 		ResourceManager rm = (ResourceManager) ServerCore.getResourceManager();
 		rm.addServerConfiguration(this);
 		
-		saveData(true);
+		saveData(true, monitor);
 	}
 	
 	protected String getXMLRoot() {

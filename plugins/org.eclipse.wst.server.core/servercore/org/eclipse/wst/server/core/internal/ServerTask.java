@@ -23,7 +23,7 @@ import org.eclipse.wst.server.core.model.*;
  */
 public class ServerTask implements IServerTask {
 	private IConfigurationElement element;
-	private IServerTaskDelegate delegate;
+	private ServerTaskDelegate delegate;
 	protected ITaskModel model;
 
 	/**
@@ -129,10 +129,10 @@ public class ServerTask implements IServerTask {
 	/*
 	 * @see IPublishManager#getDelegate()
 	 */
-	public IServerTaskDelegate getDelegate() {
+	public ServerTaskDelegate getDelegate() {
 		if (delegate == null) {
 			try {
-				delegate = (IServerTaskDelegate) element.createExecutableExtension("class");
+				delegate = (ServerTaskDelegate) element.createExecutableExtension("class");
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString() + ": " + e.getMessage());
 			}

@@ -10,17 +10,15 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.model.*;
 /**
  * 
  */
-public class MissingModuleFactoryDelegate implements IModuleFactoryDelegate {
+public class MissingModuleFactoryDelegate extends ModuleFactoryDelegate {
 	/*
-	 * @see IModuleFactoryDelegate#getModule(String)
+	 * @see ModuleFactoryDelegate2#getModule(String)
 	 */
 	public IModule getModule(String memento) {
 		if (memento == null)
@@ -39,10 +37,10 @@ public class MissingModuleFactoryDelegate implements IModuleFactoryDelegate {
 	}
 
 	/*
-	 * @see IModuleFactoryDelegate#getModules()
+	 * @see ModuleFactoryDelegate2#getModules()
 	 */
-	public List getModules() {
-		return new ArrayList(0);
+	public IModule[] getModules() {
+		return new IModule[0];
 	}
 	
 	/**

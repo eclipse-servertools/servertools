@@ -11,11 +11,10 @@
 package org.eclipse.wst.server.core.util;
 
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.wst.server.core.model.IModule;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.model.IModuleListener;
-import org.eclipse.wst.server.core.resources.IModuleResource;
-import org.eclipse.wst.server.core.resources.IModuleResourceDelta;
 /**
  * A simple IModule that represents a missing or unavailable
  * module.
@@ -32,7 +31,7 @@ public class MissingModule implements IModule {
 	/*
 	 * @see IModuleProject#getModuleResourceDelta(IResourceDelta)
 	 */
-	public IModuleResourceDelta getModuleResourceDelta(IResourceDelta delta) {
+	public IPath getModuleResourceDelta(IResourceDelta delta) {
 		return null;
 	}
 
@@ -75,9 +74,9 @@ public class MissingModule implements IModule {
 	/*
 	 * @see IModule#members()
 	 */
-	public IModuleResource[] members() {
+	/*public IModuleResource[] members() {
 		return new IModuleResource[0];
-	}
+	}*/
 
 	/*
 	 * @see IModule#getName()

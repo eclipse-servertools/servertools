@@ -12,7 +12,6 @@ package org.eclipse.wst.server.core.internal;
 
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -23,10 +22,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IRuntimeDelegate;
-import org.eclipse.wst.server.core.model.IRuntimeWorkingCopyDelegate;
+import org.eclipse.wst.server.core.model.RuntimeDelegate;
 import org.eclipse.wst.server.core.util.ProgressUtil;
-
 /**
  * 
  */
@@ -35,7 +32,7 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 	protected Runtime runtime;
 	protected WorkingCopyHelper wch;
 	
-	protected IRuntimeWorkingCopyDelegate workingCopyDelegate;
+	protected RuntimeDelegate workingCopyDelegate;
 	
 	// from existing runtime
 	public RuntimeWorkingCopy(Runtime runtime) {
@@ -67,7 +64,7 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		return true;
 	}
 
-	public IRuntimeWorkingCopy getWorkingCopy() {
+	public IRuntimeWorkingCopy createWorkingCopy() {
 		return this;
 	}
 
@@ -105,13 +102,6 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 	public boolean isDirty() {
 		return wch.isDirty();
 	}
-
-	public void release() {
-		wch.release();
-		dispose();
-		if (runtime != null)
-			runtime.release(this);
-	}
 	
 	public IRuntime getOriginal() {
 		return runtime;
@@ -132,11 +122,13 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 			setAttribute(PROP_LOCATION, path.toString());
 	}
 
-	public IRuntime save(IProgressMonitor monitor) {
+	public IRuntime save(boolean force, IProgressMonitor monitor) throws CoreException {
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.subTask(ServerPlugin.getResource("%savingTask", getName()));
-		if (wch.isReleased())
-			return null;
+		
+		if (!force)
+			wch.validateTimestamp(getOriginal());
+		
 		IRuntime origRuntime = runtime;
 		if (runtime == null)
 			runtime = new Runtime(file);
@@ -149,12 +141,9 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		} else
 			oldId = null;
 		
-		getWorkingCopyDelegate().handleSave(IRuntimeWorkingCopyDelegate.PRE_SAVE, monitor);
 		runtime.setInternal(this);
 		runtime.saveToMetadata(monitor);
 		wch.setDirty(false);
-		release();
-		getWorkingCopyDelegate().handleSave(IRuntimeWorkingCopyDelegate.POST_SAVE, monitor);
 		
 		if (oldId != null)
 			updateRuntimeReferences(oldId, name, origRuntime);
@@ -186,20 +175,22 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 				// save servers
 				if (runtime != null) {
 					ResourceManager rm = ResourceManager.getInstance();
-					Iterator iterator = rm.getServers().iterator();
-					while (iterator.hasNext()) {
-						Server server = (Server) iterator.next();
-						if (oldId.equals(server.getRuntimeId()) && !server.isAWorkingCopyDirty()) {
-							try {
-								ServerWorkingCopy wc = (ServerWorkingCopy) server.getWorkingCopy();
-								wc.setRuntimeId(newId);
-								wc.save(monitor);
-							} catch (Exception e) { }
+					IServer[] servers = rm.getServers();
+					if (servers != null) {
+						int size = servers.length;
+						for (int i = 0; i < size; i++) {
+							if (oldId.equals(((Server)servers[i]).getRuntimeId())) {
+								try {
+									ServerWorkingCopy wc = (ServerWorkingCopy) servers[i].createWorkingCopy();
+									wc.setRuntimeId(newId);
+									wc.save(false, monitor);
+								} catch (Exception e) { }
+							}
 						}
 					}
 				}
 				
-				return new Status(IStatus.OK, ServerCore.PLUGIN_ID, 0, "", null);
+				return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null);
 			}
 		}
 		UpdateRuntimeReferencesJob job = new UpdateRuntimeReferencesJob();
@@ -242,18 +233,22 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 					}
 				}
 				
-				return new Status(IStatus.OK, ServerCore.PLUGIN_ID, 0, "", null);
+				return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null);
 			}
 		}
 		RebuildRuntimeReferencesJob job = new RebuildRuntimeReferencesJob();
 		job.schedule();
 	}
 
-	public IRuntimeDelegate getDelegate() {
-		return getWorkingCopyDelegate();
+	public IServerExtension getExtension(IProgressMonitor monitor) {
+		return getWorkingCopyExtension(monitor);
+	}
+	
+	public IServerExtension getWorkingCopyExtension(IProgressMonitor monitor) {
+		return getWorkingCopyDelegate(monitor);
 	}
 
-	public IRuntimeWorkingCopyDelegate getWorkingCopyDelegate() {
+	public RuntimeDelegate getWorkingCopyDelegate(IProgressMonitor monitor) {
 		if (workingCopyDelegate != null)
 			return workingCopyDelegate;
 		
@@ -262,8 +257,7 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 				try {
 					long time = System.currentTimeMillis();
 					RuntimeType runtimeType2 = (RuntimeType) runtimeType;
-					workingCopyDelegate = (IRuntimeWorkingCopyDelegate) runtimeType2.getElement().createExecutableExtension("workingCopyClass");
-					workingCopyDelegate.initialize((IRuntime) this);
+					workingCopyDelegate = (RuntimeDelegate) runtimeType2.getElement().createExecutableExtension("class");
 					workingCopyDelegate.initialize(this);
 					Trace.trace(Trace.PERFORMANCE, "RuntimeWorkingCopy.getWorkingCopyDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getRuntimeType().getId());
 				} catch (Exception e) {
@@ -273,7 +267,7 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		}
 		return workingCopyDelegate;
 	}
-	
+
 	public void dispose() {
 		super.dispose();
 		if (workingCopyDelegate != null)
@@ -305,9 +299,9 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		wch.firePropertyChangeEvent(propertyName, oldValue, newValue);
 	}
 	
-	public void setDefaults() {
+	public void setDefaults(IProgressMonitor monitor) {
 		try {
-			getWorkingCopyDelegate().setDefaults();
+			getWorkingCopyDelegate(monitor).setDefaults();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate setDefaults() " + toString(), e);
 		}

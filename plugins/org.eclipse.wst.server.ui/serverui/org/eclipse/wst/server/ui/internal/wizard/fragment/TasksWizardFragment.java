@@ -154,7 +154,7 @@ public class TasksWizardFragment extends WizardFragment {
 					help.moduleList.add(module2);
 					return true;
 				}
-			});
+			}, null);
 
 			int size = help.parentList.size();
 			parents = new List[size];
@@ -178,30 +178,36 @@ public class TasksWizardFragment extends WizardFragment {
 	
 	protected void createTasks(IServer server, IServerConfiguration configuration, List[] parents, IModule[] modules) {
 		// server tasks
-		Iterator iterator = ServerCore.getServerTasks().iterator();
-		while (iterator.hasNext()) {
-			IServerTask task = (IServerTask) iterator.next();
-			task.init(server, configuration, parents, modules);
-			byte status = task.getTaskStatus();
-			if (status != IServerTaskDelegate.TASK_UNNECESSARY) {
-				if (status == IServerTaskDelegate.TASK_READY || status == IServerTaskDelegate.TASK_PREFERRED)
-					hasOptionalTasks = true;
-				addServerTask(server, configuration, parents, modules, task);
+		IServerTask[] serverTasks = ServerCore.getServerTasks();
+		if (serverTasks != null) {
+			int size = serverTasks.length;
+			for (int i = 0; i < size; i++) {
+				IServerTask task = serverTasks[i];
+				task.init(server, configuration, parents, modules);
+				byte status = task.getTaskStatus();
+				if (status != ServerTaskDelegate.TASK_UNNECESSARY) {
+					if (status == ServerTaskDelegate.TASK_READY || status == ServerTaskDelegate.TASK_PREFERRED)
+						hasOptionalTasks = true;
+					addServerTask(server, configuration, parents, modules, task);
+				}
 			}
 		}
 		
 		// module tasks
 		int size = modules.length;
 		for (int i = 0; i < size; i++) {
-			iterator = ServerCore.getModuleTasks().iterator();
-			while (iterator.hasNext()) {
-				IModuleTask task = (IModuleTask) iterator.next();
-				task.init(server, configuration, parents[i], modules[i]);
-				byte status = task.getTaskStatus();
-				if (status != IServerTaskDelegate.TASK_UNNECESSARY) {
-					if (status == IServerTaskDelegate.TASK_READY || status == IServerTaskDelegate.TASK_PREFERRED)
-						hasOptionalTasks = true;
-					addModuleTask(server, configuration, parents[i], modules[i], task);
+			IModuleTask[] moduleTasks = ServerCore.getModuleTasks();
+			if (moduleTasks != null) {
+				int size2 = moduleTasks.length;
+				for (int j = 0; j < size2; j++) {
+					IModuleTask task = moduleTasks[j];
+					task.init(server, configuration, parents[i], modules[i]);
+					byte status = task.getTaskStatus();
+					if (status != ServerTaskDelegate.TASK_UNNECESSARY) {
+						if (status == ServerTaskDelegate.TASK_READY || status == ServerTaskDelegate.TASK_PREFERRED)
+							hasOptionalTasks = true;
+						addModuleTask(server, configuration, parents[i], modules[i], task);
+					}
 				}
 			}
 		}
@@ -215,7 +221,7 @@ public class TasksWizardFragment extends WizardFragment {
 		sti.modules = modules;
 		sti.task2 = task2;
 		sti.status = task2.getTaskStatus();
-		if (sti.status == IModuleTaskDelegate.TASK_PREFERRED || sti.status == IModuleTaskDelegate.TASK_MANDATORY)
+		if (sti.status == ModuleTaskDelegate.TASK_PREFERRED || sti.status == ModuleTaskDelegate.TASK_MANDATORY)
 			sti.setDefaultSelected(true);
 		
 		tasks.add(sti);
@@ -229,7 +235,7 @@ public class TasksWizardFragment extends WizardFragment {
 		dti.module = module;
 		dti.task2 = task2;
 		dti.status = task2.getTaskStatus();
-		if (dti.status == IModuleTaskDelegate.TASK_PREFERRED || dti.status == IModuleTaskDelegate.TASK_MANDATORY)
+		if (dti.status == ModuleTaskDelegate.TASK_PREFERRED || dti.status == ModuleTaskDelegate.TASK_MANDATORY)
 			dti.setDefaultSelected(true);
 		tasks.add(dti);
 	}
@@ -292,7 +298,7 @@ public class TasksWizardFragment extends WizardFragment {
 		if (server instanceof IServerWorkingCopy)
 			serverWC = (IServerWorkingCopy) server;
 		else {
-			serverWC = server.getWorkingCopy();
+			serverWC = server.createWorkingCopy();
 			createdServerWC = true;
 		}
 		
@@ -301,7 +307,7 @@ public class TasksWizardFragment extends WizardFragment {
 			if (configuration instanceof IServerConfigurationWorkingCopy)
 				configWC = (IServerConfigurationWorkingCopy) configuration;
 			else {
-				configWC = configuration.getWorkingCopy();
+				configWC = configuration.createWorkingCopy();
 				createdConfigWC = true;
 			}
 		}
@@ -350,11 +356,9 @@ public class TasksWizardFragment extends WizardFragment {
 					IProject project = file.getProject();
 					ServerCore.createServerProject(project.getName(), null, monitor);
 				}
-				taskModel.putObject(ITaskModel.TASK_SERVER, serverWC.save(monitor));
-			} else {
-				serverWC.release();
+				taskModel.putObject(ITaskModel.TASK_SERVER, serverWC.save(false, monitor));
+			} else
 				taskModel.putObject(ITaskModel.TASK_SERVER, serverWC.getOriginal());
-			}
 		}
 		
 		if (createdConfigWC) {
@@ -364,11 +368,9 @@ public class TasksWizardFragment extends WizardFragment {
 					IProject project = file.getProject();
 					ServerCore.createServerProject(project.getName(), null, monitor);
 				}
-				taskModel.putObject(ITaskModel.TASK_SERVER_CONFIGURATION, configWC.save(monitor));
-			} else {
-				configWC.release();
+				taskModel.putObject(ITaskModel.TASK_SERVER_CONFIGURATION, configWC.save(false, monitor));
+			} else
 				taskModel.putObject(ITaskModel.TASK_SERVER_CONFIGURATION, configWC.getOriginal());
-			}
 		}
 		
 		monitor.done();

@@ -83,7 +83,7 @@ public class ProjectPropertyPage extends PropertyPage {
 				data.horizontalSpan = 3;
 				label.setLayoutData(data);
 			} else {
-				IModuleKind mk = ServerCore.getModuleKind(module.getType());
+				IModuleType mk = ServerCore.getModuleType(module.getType());
 				if (mk != null) {
 					label = new Label(composite, SWT.NONE);
 					label.setText(ServerUIPlugin.getResource("%prefProject"));

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
@@ -36,8 +37,8 @@ public class LaunchConfigurationUtil {
 	 * @return
 	 * @throws CoreException
 	 */
-	public static IRuntimeClasspathEntry[] getClasspath(IServer server, boolean create) throws CoreException {
-		ILaunchConfiguration config = server.getLaunchConfiguration(create);
+	public static IRuntimeClasspathEntry[] getClasspath(IServer server, boolean create, IProgressMonitor monitor) throws CoreException {
+		ILaunchConfiguration config = server.getLaunchConfiguration(create, monitor);
 		if (config == null)
 			return null;
 		
@@ -51,8 +52,8 @@ public class LaunchConfigurationUtil {
 	 * @param classpath
 	 * @throws CoreException
 	 */
-	public static void setClasspath(IServer server, IRuntimeClasspathEntry[] classpath) throws CoreException {
-		ILaunchConfiguration config = server.getLaunchConfiguration(true);
+	public static void setClasspath(IServer server, IRuntimeClasspathEntry[] classpath, IProgressMonitor monitor) throws CoreException {
+		ILaunchConfiguration config = server.getLaunchConfiguration(true, monitor);
 		ILaunchConfigurationWorkingCopy wc = config.getWorkingCopy();
 		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, false);
 	

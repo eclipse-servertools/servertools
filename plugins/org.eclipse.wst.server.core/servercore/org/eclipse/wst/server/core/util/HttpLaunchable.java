@@ -12,7 +12,7 @@ package org.eclipse.wst.server.core.util;
 
 import java.net.URL;
 
-import org.eclipse.wst.server.core.model.ILaunchable;
+import org.eclipse.wst.server.core.ILaunchable;
 /**
  *
  */

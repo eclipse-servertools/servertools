@@ -31,8 +31,8 @@ public class SetServerHostnameCommand extends ServerCommand {
 	 * @return boolean
 	 */
 	public boolean execute() {
-		oldName = server.getHostname();
-		server.setHostname(name);
+		oldName = server.getHost();
+		server.setHost(name);
 		return true;
 	}
 
@@ -56,6 +56,6 @@ public class SetServerHostnameCommand extends ServerCommand {
 	 * Undo the command.
 	 */
 	public void undo() {
-		server.setHostname(oldName);
+		server.setHost(oldName);
 	}
 }

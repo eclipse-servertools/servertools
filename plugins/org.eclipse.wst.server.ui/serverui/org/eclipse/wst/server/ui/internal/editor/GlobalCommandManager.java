@@ -164,11 +164,11 @@ public class GlobalCommandManager {
 			info.id = id;
 			IServer server = ServerCore.getResourceManager().getServer(id);
 			if (server != null)
-				info.wc = server.getWorkingCopy();
+				info.wc = server.createWorkingCopy();
 			else {
 				IServerConfiguration config = ServerCore.getResourceManager().getServerConfiguration(id);
 				if (config != null)
-					info.wc = config.getWorkingCopy();
+					info.wc = config.createWorkingCopy();
 			}
 			info.isDirty = false;
 			info.isReadOnly = false;
@@ -190,14 +190,6 @@ public class GlobalCommandManager {
 			if (info != null) {
 				info.count --;
 				if (info.count == 0) {
-					if (info.wc instanceof IServerWorkingCopy) {
-						IServerWorkingCopy wc = (IServerWorkingCopy) info.wc;
-						wc.release();
-					} else {
-						IServerConfigurationWorkingCopy wc = (IServerConfigurationWorkingCopy) info.wc;
-						wc.release();
-					}
-					
 					commandManagers.remove(id);
 					clearUndoList(id);
 					clearRedoList(id);
@@ -217,11 +209,11 @@ public class GlobalCommandManager {
 			if (info != null) {
 				IServer server = ServerCore.getResourceManager().getServer(id);
 				if (server != null)
-					info.wc = server.getWorkingCopy();
+					info.wc = server.createWorkingCopy();
 				else {
 					IServerConfiguration config = ServerCore.getResourceManager().getServerConfiguration(id);
 					if (config != null)
-						info.wc = config.getWorkingCopy();
+						info.wc = config.createWorkingCopy();
 				}
 				//info.serverElement = ServerCore.getResourceManager().getServer()
 				//info.serverElement = ServerCore.getEditManager().reloadEditModel(info.file, monitor);

@@ -19,7 +19,6 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.util.Task;
-
 /**
  * 
  */
@@ -39,10 +38,7 @@ public class SaveServerTask extends Task {
 					IProject project = file.getProject();
 					ServerCore.createServerProject(project.getName(), null, monitor);
 				}
-				getTaskModel().putObject(ITaskModel.TASK_SERVER, workingCopy.save(monitor));
-			} else {
-				workingCopy.release();
-				getTaskModel().putObject(ITaskModel.TASK_SERVER, workingCopy.getOriginal());
+				getTaskModel().putObject(ITaskModel.TASK_SERVER, workingCopy.save(false, monitor));
 			}
 		}
 	}

@@ -17,13 +17,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.core.util.MissingModule;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.ServerLabelProvider;
 import org.eclipse.ui.model.IWorkbenchAdapter;
-
 /**
  *
  */
@@ -57,7 +56,7 @@ public class ModuleResourceAdapter implements IAdaptable, IWorkbenchAdapter, ISe
 	 * @see IWorkbenchAdapter#getChildren(Object)
 	 */
 	public Object[] getChildren(Object o) {
-		List childModules = server.getChildModules(module);
+		List childModules = server.getChildModules(module, null);
 		if (childModules == null)
 			return NO_CHILDREN;
 		Iterator iterator = childModules.iterator();

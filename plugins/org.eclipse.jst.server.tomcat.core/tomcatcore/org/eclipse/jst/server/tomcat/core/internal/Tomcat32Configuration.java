@@ -17,6 +17,8 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.*;
+import org.eclipse.jst.server.tomcat.core.IMimeMapping;
+import org.eclipse.jst.server.tomcat.core.ITomcatWebModule;
 import org.eclipse.jst.server.tomcat.core.WebModule;
 import org.eclipse.jst.server.tomcat.core.internal.xml.Factory;
 import org.eclipse.jst.server.tomcat.core.internal.xml.XMLUtil;
@@ -28,6 +30,8 @@ import org.eclipse.jst.server.tomcat.core.internal.xml.server32.Server;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
+import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.model.IServerPort;
 import org.eclipse.wst.server.core.util.ProgressUtil;
 import org.eclipse.wst.server.core.util.ServerPort;
@@ -447,6 +451,179 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 		} catch (Exception e) {
 			Trace.trace("Could not save Tomcat v3.2 configuration to " + folder.getFullPath(), e);
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotSaveConfiguration", new String[] {e.getLocalizedMessage()}), e));
+		}
+	}
+	
+	
+	/**
+	 * Adds a mime mapping.
+	 * @param map MimeMapping
+	 */
+	public void addMimeMapping(int index, IMimeMapping map) {
+		webAppDocument.addMimeMapping(index, map);
+		firePropertyChangeEvent(ADD_MAPPING_PROPERTY, new Integer(index), map);
+	}
+
+	/**
+	 * Add a web module.
+	 * @param module org.eclipse.jst.server.tomcat.WebModule
+	 */
+	public void addWebModule(int index, ITomcatWebModule module) {
+		try {
+			ContextManager contextManager = server.getContextManager();
+			Context context = (Context) contextManager.createElement(index, "Context");
+	
+			context.setPath(module.getPath());
+			context.setDocBase(module.getDocumentBase());
+			context.setReloadable(module.isReloadable() ? "true" : "false");
+			if (module.getMemento() != null && module.getMemento().length() > 0)
+				context.setSource(module.getMemento());
+			isServerDirty = true;
+			firePropertyChangeEvent(ADD_WEB_MODULE_PROPERTY, null, module);
+		} catch (Exception e) {
+			Trace.trace("Error adding web module", e);
+		}
+	}
+	
+	/**
+	 * Localize the web projects in this configuration.
+	 *
+	 * @param file java.io.File
+	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
+	 */
+	public void localizeConfiguration(IPath path, TomcatServer serverType, IRuntime runtime, IProgressMonitor monitor) {
+		try {
+			monitor = ProgressUtil.getMonitorFor(monitor);
+			monitor.beginTask(TomcatPlugin.getResource("%updatingConfigurationTask"), 100);
+	
+			Tomcat32Configuration config = new Tomcat32Configuration();
+			config.load(path, ProgressUtil.getSubMonitorFor(monitor, 30));
+	
+			if (monitor.isCanceled())
+				return;
+	
+			if (serverType.isTestEnvironment()) {
+				config.server.getContextManager().setHome(runtime.getLocation().toOSString());
+				config.isServerDirty = true;
+			} else {
+				IServerConfigurationWorkingCopy scwc = config.getServerConfiguration().createWorkingCopy();
+				((Tomcat32Configuration) scwc.getExtension(monitor)).localizeWebModules();
+			}
+	
+			monitor.worked(40);
+	
+			if (monitor.isCanceled())
+				return;
+
+			config.save(path, false, ProgressUtil.getSubMonitorFor(monitor, 30));
+	
+			if (!monitor.isCanceled())
+				monitor.done();
+		} catch (Exception e) {
+			Trace.trace("Error localizing configuration", e);
+		}
+	}
+	
+	/**
+	 * Go through all of the web modules and make the document
+	 * base "local" to the configuration.
+	 */
+	protected void localizeWebModules() {
+		List modules = getWebModules();
+
+		int size = modules.size();
+		for (int i = 0; i < size; i++) {
+			WebModule module = (WebModule) modules.get(i);
+			String memento = module.getMemento();
+			if (memento != null && memento.length() > 0) {
+				// update document base to a relative ref
+				String docBase = getPathPrefix() + module.getPath();
+				if (docBase.startsWith("/") || docBase.startsWith("\\"))
+					docBase = docBase.substring(1);
+				modifyWebModule(i, docBase, module.getPath(), module.isReloadable());
+			}
+		}
+	}
+	
+	/**
+	 * Change the extension of a mime mapping.
+	 * @param index int
+	 * @param newExtension java.lang.String
+	 */
+	public void modifyMimeMapping(int index, IMimeMapping map) {
+		webAppDocument.modifyMimeMapping(index, map);
+		firePropertyChangeEvent(MODIFY_MAPPING_PROPERTY, new Integer(index), map);
+	}
+	
+	/**
+	 * Modify the port with the given id.
+	 *
+	 * @param id java.lang.String
+	 * @param port int
+	 */
+	public void modifyServerPort(String id, int port) {
+		try {
+			int con = Integer.parseInt(id);
+			Connector connector = server.getContextManager().getConnector(con);
+	
+			int size = connector.getParameterCount();
+			for (int i = 0; i < size; i++) {
+				Parameter p = connector.getParameter(i);
+				if ("port".equals(p.getName())) {
+					p.setValue(port + "");
+					isServerDirty = true;
+					firePropertyChangeEvent(MODIFY_PORT_PROPERTY, id, new Integer(port));
+					return;
+				}
+			}
+		} catch (Exception e) {
+			Trace.trace("Error modifying server port " + id, e);
+		}
+	}
+	
+	/**
+	 * Change a web module.
+	 * @param index int
+	 * @param docBase java.lang.String
+	 * @param path java.lang.String
+	 * @param reloadable boolean
+	 */
+	public void modifyWebModule(int index, String docBase, String path, boolean reloadable) {
+		try {
+			ContextManager contextManager = server.getContextManager();
+			Context context = contextManager.getContext(index);
+			context.setPath(path);
+			context.setDocBase(docBase);
+			context.setReloadable(reloadable ? "true" : "false");
+			isServerDirty = true;
+			WebModule module = new WebModule(path, docBase, null, reloadable);
+			firePropertyChangeEvent(MODIFY_WEB_MODULE_PROPERTY, new Integer(index), module);
+		} catch (Exception e) {
+			Trace.trace("Error modifying web module " + index, e);
+		}
+	}
+	
+	/**
+	 * Removes a mime mapping.
+	 * @param index int
+	 */
+	public void removeMimeMapping(int index) {
+		webAppDocument.removeMimeMapping(index);
+		firePropertyChangeEvent(REMOVE_MAPPING_PROPERTY, null, new Integer(index));
+	}
+	
+	/**
+	 * Removes a web module.
+	 * @param index int
+	 */
+	public void removeWebModule(int index) {
+		try {
+			ContextManager contextManager = server.getContextManager();
+			contextManager.removeElement("Context", index);
+			isServerDirty = true;
+			firePropertyChangeEvent(REMOVE_WEB_MODULE_PROPERTY, null, new Integer(index));
+		} catch (Exception e) {
+			Trace.trace("Error removing web module " + index, e);
 		}
 	}
 }

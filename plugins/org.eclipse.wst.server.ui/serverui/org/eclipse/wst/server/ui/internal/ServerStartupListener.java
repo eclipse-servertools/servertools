@@ -17,7 +17,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.server.core.IClient;
+import org.eclipse.wst.server.core.ILaunchable;
 import org.eclipse.wst.server.core.ILaunchableAdapter;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IModuleObject;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.ServerPreferences;
@@ -127,24 +130,22 @@ public class ServerStartupListener {
 	 *
 	 * @param state byte
 	 */
-	protected void handleStateChange(byte state) {
+	protected void handleStateChange(int state) {
 		switch (state) {
-			case IServer.SERVER_STARTED:
-			case IServer.SERVER_STARTED_DEBUG:
-			case IServer.SERVER_STARTED_PROFILE: {
+			case IServer.STATE_STARTED: {
 				dispose();
 				openClient();
 				break;
 			}
-			case IServer.SERVER_STOPPED:
-			case IServer.SERVER_STOPPING: {
+			case IServer.STATE_STOPPED:
+			case IServer.STATE_STOPPING: {
 				if (!ignoreShutdown) {
 					dispose();
 					if (isEnabled)
 						displayError();
 					else
 						isError = true;
-				} else if (ignoreShutdown && state == IServer.SERVER_STOPPED) {
+				} else if (ignoreShutdown && state == IServer.STATE_STOPPED) {
 					ignoreShutdown = false;
 				}
 				break;
@@ -182,7 +183,7 @@ public class ServerStartupListener {
 			return;
 	
 		// initial implementation - should just wait for a module state change event
-		if (server.getModuleState(module) == IServer.MODULE_STATE_STARTING) {
+		if (server.getModuleState(module) == IServer.STATE_STARTING) {
 			class DisplayClientJob extends Job {
 				public DisplayClientJob() {
 					super(ServerUIPlugin.getResource("%viewStatusStarting3"));
@@ -192,9 +193,9 @@ public class ServerStartupListener {
 					IStatus status = new Status(IStatus.OK, ServerUICore.PLUGIN_ID, 0, "", null);
 
 					// wait for up to 5 minutes
-					byte state = server.getModuleState(module);
+					int state = server.getModuleState(module);
 					int count = ((ServerPreferences)ServerCore.getServerPreferences()).getModuleStartTimeout();
-					while (state == IServer.MODULE_STATE_STARTING && count > 0) {
+					while (state == IServer.STATE_STARTING && count > 0) {
 						if (monitor.isCanceled())
 							return status;
 						try {
@@ -207,7 +208,7 @@ public class ServerStartupListener {
 					if (monitor.isCanceled())
 						return status;
 					
-					if (state != IServer.MODULE_STATE_STARTED)
+					if (state != IServer.STATE_STARTED)
 						return status;
 					
 					// display client on UI thread

@@ -18,7 +18,7 @@ import org.eclipse.wst.server.core.*;
  * A nature for projects that contain servers and server configurations.
  */
 public class ServerProjectNature implements IServerProject, IProjectNature {
-	public static final String BUILDER_ID = ServerCore.PLUGIN_ID + ".builder";
+	public static final String BUILDER_ID = ServerPlugin.PLUGIN_ID + ".builder";
 
 	// the project that contains this nature
 	protected IProject project;
@@ -116,12 +116,14 @@ public class ServerProjectNature implements IServerProject, IProjectNature {
 	public List getServerConfigurations() {
 		List list = new ArrayList();
 		IResourceManager rm = ServerCore.getResourceManager();
-		Iterator iterator = rm.getServerConfigurations().iterator();
-		while (iterator.hasNext()) {
-			IServerConfiguration config = (IServerConfiguration) iterator.next();
-			IFile file = config.getFile();
-			if (file != null && file.getProject().equals(project))
-				list.add(config);
+		IServerConfiguration[] configs = rm.getServerConfigurations();
+		if (configs != null) {
+			int size = configs.length;
+			for (int i = 0; i < size; i++) {
+				IFile file = configs[i].getFile();
+				if (file != null && file.getProject().equals(project))
+					list.add(configs[i]);
+			}
 		}
 		return list;
 	}
@@ -135,12 +137,14 @@ public class ServerProjectNature implements IServerProject, IProjectNature {
 	public List getServers() {
 		List list = new ArrayList();
 		IResourceManager rm = ServerCore.getResourceManager();
-		Iterator iterator = rm.getServers().iterator();
-		while (iterator.hasNext()) {
-			IServer server = (IServer) iterator.next();
-			IFile file = server.getFile();
-			if (file != null && file.getProject().equals(project))
-				list.add(server);
+		IServer[] servers = rm.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				IFile file = servers[i].getFile();
+				if (file != null && file.getProject().equals(project))
+					list.add(servers[i]);
+			}
 		}
 		return list;
 	}

@@ -209,7 +209,7 @@ public class ConfigurationPortEditorSection extends ServerResourceEditorSection 
 		super.init(site, input);
 		
 		if (serverConfiguration != null) {
-			tomcatConfiguration = (ITomcatConfigurationWorkingCopy) serverConfiguration.getWorkingCopyDelegate();
+			tomcatConfiguration = (ITomcatConfigurationWorkingCopy) serverConfiguration.getWorkingCopyExtension(null);
 			addChangeListener();
 		}
 		initialize();

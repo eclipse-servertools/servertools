@@ -1,6 +1,6 @@
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -34,7 +34,7 @@ public class RuntimeClasspathContainerInitializer extends ClasspathContainerInit
 				if (containerPath.segmentCount() > 2) {
 					IRuntimeTargetHandler handler = ServerCore.getRuntimeTargetHandler(containerPath.segment(1));
 					if (handler != null)
-						delegate = (ClasspathRuntimeTargetHandler) handler.getDelegate();
+						delegate = (ClasspathRuntimeTargetHandler) handler.getExtension();
 					String runtimeId = containerPath.segment(2);
 					runtime = ServerCore.getResourceManager().getRuntime(runtimeId);
 					if (containerPath.segmentCount() > 3)

@@ -9,11 +9,9 @@
  *    IBM - Initial API and implementation
  **********************************************************************/
 package org.eclipse.jst.server.core;
-
-import org.eclipse.wst.server.core.model.IRuntimeWorkingCopyDelegate;
 /**
  *
  */
-public interface IGenericRuntimeWorkingCopy extends IGenericRuntime, IRuntimeWorkingCopyDelegate {
+public interface IGenericRuntimeWorkingCopy extends IGenericRuntime {
 	public void setVMInstall(String typeId, String id);
 }

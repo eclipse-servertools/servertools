@@ -21,8 +21,6 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.*;
 
-import org.eclipse.wst.server.core.IElementWorkingCopy;
-import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.util.ProgressUtil;
 /**
  * 
@@ -34,8 +32,6 @@ public abstract class Base {
 	protected static final String PROP_ID = "id";
 
 	protected Map map = new HashMap();
-	
-	protected List workingCopies;
 	
 	// file loaded from, or null if it is saved in metadata
 	protected IFile file;
@@ -194,7 +190,7 @@ public abstract class Base {
 				file.create(in, true, ProgressUtil.getSubMonitorFor(monitor, 1000));
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not save " + getXMLRoot(), e);
-			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorSaving", getFile().toString()), e));
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorSaving", getFile().toString()), e));
 		}
 	}
 	
@@ -303,7 +299,7 @@ public abstract class Base {
 			load(memento);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not load from file" + e.getMessage(), e);
-			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLoading", getFile().toString()), e));
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLoading", getFile().toString()), e));
 		} finally {
 			try {
 				in.close();
@@ -326,40 +322,12 @@ public abstract class Base {
 			load(memento);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not load from path: " + e.getMessage(), e);
-			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLoading", path.toString()), e));
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLoading", path.toString()), e));
 		} finally {
 			try {
 				fin.close();
 			} catch (Exception e) {}
 		}
-	}
-	
-	public boolean isWorkingCopiesExist() {
-		return (workingCopies != null && workingCopies.size() > 0);
-	}
-
-	public boolean isAWorkingCopyDirty() {
-		if (workingCopies == null)
-			return false;
-
-		Iterator iterator = workingCopies.iterator();
-		while (iterator.hasNext()) {
-			IElementWorkingCopy wc = (IElementWorkingCopy) iterator.next();
-			if (wc.isDirty())
-				return true;
-		}
-		return false;
-	}
-	
-	protected void addWorkingCopy(IElementWorkingCopy wc) {
-		if (workingCopies == null)
-			workingCopies = new ArrayList(2);
-		workingCopies.add(wc);
-	}
-
-	protected void release(IElementWorkingCopy wc) {
-		if (workingCopies != null)
-			workingCopies.remove(wc);
 	}
 	
 	public IStatus validateEdit(Object context) {
