@@ -105,8 +105,11 @@ public class ServerUIUtil {
 	 * @return boolean
 	 */
 	public static boolean promptIfDirty(Shell shell, IServer server) {
-		if (server == null || !(server instanceof IServerWorkingCopy))
+		if (server == null)
 			return false;
+		
+		if (!(server instanceof IServerWorkingCopy))
+			return true;
 
 		String title = ServerUIPlugin.getResource("%resourceDirtyDialogTitle");
 		
