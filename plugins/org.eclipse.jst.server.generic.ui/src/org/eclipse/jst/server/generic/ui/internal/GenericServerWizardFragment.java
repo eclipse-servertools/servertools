@@ -85,10 +85,9 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
         RuntimeDelegate runtime = (RuntimeDelegate)server.getRuntime().getAdapter(RuntimeDelegate.class);
         if(runtime==null){
             IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy)getTaskModel().getObject(TaskModel.TASK_RUNTIME);
-            
             runtime= (RuntimeDelegate)wc.getAdapter(RuntimeDelegate.class);
         }        
-        String id = runtime.getAttribute(GenericServerRuntime.SERVER_DEFINITION_ID,(String)null);
+        String id = runtime.getRuntime().getRuntimeType().getId();
         if(id==null){   
             return null;
         }
@@ -124,14 +123,26 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
      * @see org.eclipse.jst.server.generic.internal.ui.ServerDefinitionTypeAwareWizardFragment#description()
      */
     public String description() {
-        return  GenericServerUIMessages.getString("serverWizardDescription");
+        String sName = getServerName();
+        if(sName==null || sName.length()<1)
+            sName="Generic";
+        return  GenericServerUIMessages.getFormattedString("serverWizardDescription",new String[] {sName});
     }
 
+    private String getServerName()
+    {
+        if(getServer()!=null && getServer().getRuntime()!=null)
+           return getServer().getRuntime().getRuntimeType().getName();
+        return null;
+    }
     /* (non-Javadoc)
      * @see org.eclipse.jst.server.generic.internal.ui.ServerDefinitionTypeAwareWizardFragment#title()
      */
     public String title() {
-        return  GenericServerUIMessages.getString("serverWizardTitle");
+        String sName= getServerName();
+        if(sName==null || sName.length()<1)
+            sName="Generic";
+        return  GenericServerUIMessages.getFormattedString("serverWizardTitle",new String[]{sName});
     }
 
     /* (non-Javadoc)

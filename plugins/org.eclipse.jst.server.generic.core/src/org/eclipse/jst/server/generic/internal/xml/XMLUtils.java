@@ -74,8 +74,8 @@ public class XMLUtils {
                 definitionFile = getDefinitionFile(element);
                 if(definitionFile!=null && definitionFile.exists() && definitionFile.isFile()){
                     ServerRuntime runtime =readFile(definitionFile);
-                    if(runtime!=null)
-                    {
+                    if(runtime!=null){
+                        runtime.setId(element.getAttribute("id"));
                         runtime.setConfigurationElementNamespace(element.getNamespace());
                         definitions.add(runtime);
                     }
@@ -140,19 +140,30 @@ public class XMLUtils {
 	}
 
 	/**
-	 * @return ArrayList
-	 */
-	public ServerRuntime getServerTypeDefinitionNamed(String name) {
-		refresh();
-		Iterator defs = getServerTypeDefinitions().iterator();
-		while (defs.hasNext()) {
-			ServerRuntime elem = (ServerRuntime) defs.next();
-			if (name.equals(elem.getName()))
-				return elem;
-		}
-		return null;
-	}
-
+//	 * @return ArrayList
+//	 */
+//	public ServerRuntime getServerTypeDefinitionNamed(String name) {
+//		refresh();
+//		Iterator defs = getServerTypeDefinitions().iterator();
+//		while (defs.hasNext()) {
+//			ServerRuntime elem = (ServerRuntime) defs.next();
+//			if (name.equals(elem.getName()))
+//				return elem;
+//		}
+//		return null;
+//	}
+    public ServerRuntime getServerTypeDefinition(String id) {
+        refresh();
+        Iterator defs = getServerTypeDefinitions().iterator();
+        while (defs.hasNext()) {
+            ServerRuntime elem = (ServerRuntime) defs.next();
+            if (id.equals(elem.getId()))
+                return elem;
+        }
+        return null;
+    }
+    
+    
 	/**
 	 * Sets the definitions.
 	 * 

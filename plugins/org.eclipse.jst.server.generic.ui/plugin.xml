@@ -24,21 +24,6 @@
       <import plugin="org.eclipse.wst.server.core" />
    </requires>
 
- <extension
-       point="org.eclipse.wst.server.ui.wizardFragments">
-     <fragment
-        id="org.eclipse.jst.server.generic.runtime"
-        typeIds="org.eclipse.jst.server.generic.runtime"
-        class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>       
- </extension>
-
-<extension
-       point="org.eclipse.wst.server.ui.wizardFragments">
-     <fragment
-        id="org.eclipse.jst.server.generic.server"
-        typeIds="org.eclipse.jst.server.generic"
-        class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>       
- </extension>
   <extension point="org.eclipse.wst.server.ui.editorPages">
       <page
          id="org.eclipse.jst.server.generic.configuration.editor.webmodule"
@@ -56,16 +41,7 @@
          typeIds="org.eclipse.jst.server.generic.*"
          class="org.eclipse.jst.server.generic.ui.internal.GenericServerEditorSectionFactory"/>       
    </extension>
-   <extension point="org.eclipse.wst.server.ui.serverImages">
-      <image
-         id="org.eclipse.jst.server.generic.image"
-         icon="icons/obj16/lomboz.gif"
-         typeIds="org.eclipse.jst.server.generic.runtime"/>
-     <image
-         id="org.eclipse.jst.server.generic.image"
-         icon="icons/obj16/lomboz.gif"
-         typeIds="org.eclipse.jst.server.generic"/>
-	</extension>
+ 	
   <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
     <launchConfigurationTypeImage
       id="org.eclipse.jst.server.generic.image.ui.launchConfigurationTypeImage"
