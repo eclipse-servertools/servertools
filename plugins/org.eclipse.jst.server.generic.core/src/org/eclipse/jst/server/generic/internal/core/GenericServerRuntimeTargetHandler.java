@@ -30,6 +30,7 @@
  ***************************************************************************/
 package org.eclipse.jst.server.generic.internal.core;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
@@ -77,7 +78,7 @@ public class GenericServerRuntimeTargetHandler extends
 		return new String[1];
 	}
 
-	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime) {
+	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
 		GenericServerRuntime genericRuntime = (GenericServerRuntime)runtime.getAdapter(ServerDelegate.class);
 		IVMInstall vmInstall = genericRuntime.getVMInstall();
 		if (vmInstall != null) {
