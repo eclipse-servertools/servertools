@@ -1,9 +1,3 @@
-/*
- * Created on Dec 3, 2004
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 package org.eclipse.jst.server.generic.internal.core;
 
 import java.util.ArrayList;
@@ -45,7 +39,7 @@ import org.eclipse.wst.server.core.util.PingThread;
 import org.eclipse.wst.server.core.util.SocketUtil;
 
 /**
- * 
+ * Server behaviour delegate implementation for generic server.
  *
  * @author Gorkem Ercan
  */
@@ -309,7 +303,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     		IServerPort[] ports = getServer().getServerPorts();
     		IServerPort sp = null;
     		for(int i=0;i<ports.length;i++){
-    			
+    			sp= ports[i];
     			if (SocketUtil.isPortInUse(ports[i].getPort(), 5))
     				throw new CoreException(new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.getFormattedString("errorPortInUse",new String[] {Integer.toString(sp.getPort()),sp.getName()}),null));
     		}
