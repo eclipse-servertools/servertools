@@ -202,7 +202,7 @@ public class ProjectPropertyPage extends PropertyPage {
 					rtComp.apply(new NullProgressMonitor());
 				
 				IProjectProperties props = ServerCore.getProjectProperties(project);
-				props.setDefaultServer(server, new NullProgressMonitor());
+				props.setDefaultServer(server, null);
 			} catch (CoreException e) {
 				Trace.trace(Trace.SEVERE, "Error setting preferred server", e);
 				EclipseUtil.openError(ServerUIPlugin.getResource("%errorCouldNotSavePreference"), e.getStatus());

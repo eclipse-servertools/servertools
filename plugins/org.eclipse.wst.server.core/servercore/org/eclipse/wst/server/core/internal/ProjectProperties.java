@@ -159,6 +159,7 @@ public class ProjectProperties implements IProjectProperties {
 		if (serverId != null && serverId.equals(newServerId))
 			return;
 		
+		serverId = newServerId;
 		savePreferences(monitor);
 		fireDefaultServerChanged(server);
 	}
