@@ -94,8 +94,6 @@
   <extension point="org.eclipse.wst.server.core.runtimeLocators">
     <runtimeLocator
        id="org.eclipse.jst.server.tomcat.runtime.locator"
-       name="%runtimeLocatorLabel"
-       description="%runtimeLocatorDescription"
        typeIds="org.eclipse.jst.server.tomcat.runtime.*"
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntimeLocator"/>
   </extension>
@@ -193,8 +191,6 @@
   <extension point="org.eclipse.wst.server.core.serverLocators">
     <serverLocator
        id="org.eclipse.jst.server.tomcat.server.locator"
-       name="%serverLocatorLabel"
-       description="%serverLocatorDescription"
        supportsRemoteHosts="false"
        typeIds="org.eclipse.jst.server.tomcat.*"
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatServerLocator"/>
