@@ -104,7 +104,7 @@ public class MonitorTestCase extends TestCase {
 		// on some Linux machines it appears to be taking longer
 		// for the ports to clean up
 		try {
-			Thread.sleep(2500);
+			Thread.sleep(5000);
 		} catch (Exception e) {
 			// ignore
 		}
