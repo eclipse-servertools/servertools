@@ -32,8 +32,10 @@ package org.eclipse.jst.server.generic.tests;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.IExtension;
 import org.eclipse.jst.server.generic.core.CorePlugin;
 import org.eclipse.jst.server.generic.internal.core.ServerTypeDefinitionManager;
+import org.eclipse.jst.server.generic.internal.core.util.ExtensionPointUtil;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 
 /**
@@ -68,13 +70,16 @@ public class ServerDefinitionTypeTest extends TestCase {
 	}
 
 	public void testGetTypes() {
-		ServerTypeDefinitionManager serverTypeDefinitionManager = CorePlugin
-				.getDefault().getServerTypeDefinitionManager();
+        IExtension[] extensions = ExtensionPointUtil.getGenericServerDefinitionExtensions();
+        int noOfExtensions = 0;
+        for (int i = 0; i < extensions.length; i++) {
+           noOfExtensions+=  ExtensionPointUtil.getConfigurationElements(extensions[i]).length;
+        }
+        ServerTypeDefinitionManager serverTypeDefinitionManager = CorePlugin.getDefault().getServerTypeDefinitionManager();
 		assertNotNull(serverTypeDefinitionManager);
-		ServerRuntime[] types = serverTypeDefinitionManager
-				.getServerTypeDefinitions();
+		ServerRuntime[] types = serverTypeDefinitionManager.getServerTypeDefinitions();
 		assertNotNull(types);
-		assertEquals(3, types.length);
+		assertEquals(noOfExtensions, types.length);
 	}
 
 	public void testResolve() {
