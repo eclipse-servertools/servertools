@@ -13,7 +13,9 @@ package org.eclipse.wst.internet.monitor.core.tests;
 import org.eclipse.wst.internet.monitor.core.*;
 import junit.framework.Test;
 import junit.framework.TestCase;
-
+/**
+ * Note: use ports between 22100-22200 to ensure they are free on the build machine.
+ */
 public class MonitorTestCase extends TestCase {
 	private static IMonitor monitor;
 
@@ -31,7 +33,7 @@ public class MonitorTestCase extends TestCase {
 
 	public void test01CreateMonitor() throws Exception {
 		IMonitorWorkingCopy wc = MonitorCore.createMonitor();
-		wc.setLocalPort(7781);
+		wc.setLocalPort(22100);
 		wc.setRemoteHost("www.eclipse.org");
 		wc.setRemotePort(80);
 		monitor = wc.save();
@@ -101,13 +103,6 @@ public class MonitorTestCase extends TestCase {
 	
 	public void test09RestartMonitor() throws Exception {
 		assertTrue(!monitor.isRunning());
-		// on some Linux machines it appears to be taking longer
-		// for the ports to clean up
-		try {
-			Thread.sleep(5000);
-		} catch (Exception e) {
-			// ignore
-		}
 		monitor.start();
 		assertTrue(monitor.isRunning());
 		monitor.stop();

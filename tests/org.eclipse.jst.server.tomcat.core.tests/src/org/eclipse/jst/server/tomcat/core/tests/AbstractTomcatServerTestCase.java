@@ -15,6 +15,8 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
+import org.eclipse.jst.server.tomcat.core.ITomcatServer;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.tests.ext.AbstractServerTestCase;
@@ -70,6 +72,16 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 		wc.setServerConfiguration(folder);
 		
 		((Server)wc).importConfiguration(runtime, null);
+		
+		IServerPort[] ports = wc.getServerPorts();
+		ITomcatServer tomcatServer = (ITomcatServer) wc.getAdapter(ITomcatServer.class);
+		ITomcatConfigurationWorkingCopy configuration = (ITomcatConfigurationWorkingCopy) tomcatServer.getServerConfiguration();
+		if (ports != null) {
+			int size = ports.length;
+			for (int i = 0; i < size; i++) {
+				configuration.modifyServerPort(ports[i].getId(), 22100 + i);
+			}
+		}
 		
 		return wc;
 	}
