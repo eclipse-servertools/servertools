@@ -387,7 +387,7 @@ public abstract class ServerBehaviourDelegate {
 	 * 
 	 * @param parents
 	 * @param module
-	 * @return
+	 * @return an array containing the published module resource
 	 */
 	public IModuleResource[] getPublishedResources(IModule[] parents, IModule module) {
 		return server.getPublishedResources(parents, module);
@@ -399,9 +399,31 @@ public abstract class ServerBehaviourDelegate {
 	 *
 	 * @param parents
 	 * @param module
-	 * @return
+	 * @return an array containing the publish resource delta
 	 */
 	public IModuleResourceDelta[] getPublishedResourceDelta(IModule[] parents, IModule module) {
 		return server.getPublishedResourceDelta(parents, module);
+	}
+	
+	/**
+	 * Returns a temporary directory that the requestor can use
+	 * throughout it's lifecycle. This is primary to be used by
+	 * servers for working directories, server specific
+	 * files, etc.
+	 *
+	 * <p>As long as the same key is used to call this method on
+	 * each use of the workbench, this method directory will return
+	 * the same directory. If the directory is not requested over a
+	 * period of time, the directory may be deleted and a new one
+	 * will be assigned on the next request. For this reason, a
+	 * server should request the temp directory on startup
+	 * if it wants to store files there. In all cases, the server
+	 * should have a backup plan to refill the directory
+	 * in case it has been deleted since last use.</p>
+	 *
+	 * @return org.eclipse.core.runtime.IPath
+	 */
+	public IPath getTempDirectory() {
+		return server.getTempDirectory();
 	}
 }
