@@ -47,11 +47,11 @@
 <!--<property id="classPathVariableName"
 	label="Classpath Variable Name:"
 	type="string"
-	default="WEBLOGIC81" />
+	default="WEBLOGIC81" />-->
 <property id="classPath"
 	label="Classpath Variable:"
 	type="directory"
-	default="C:/bea/weblogic81/server/lib" />-->
+	default="C:/bea/weblogic81/server/lib" />
 <serverHome>${serverRootDirectory}</serverHome>
 <webModulesDeployDirectory>${domainDirectory}/applications</webModulesDeployDirectory>
 <ejbModulesDeployDirectory>${domainDirectory}/applications</ejbModulesDeployDirectory>
