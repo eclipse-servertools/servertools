@@ -30,12 +30,17 @@
  ***************************************************************************/
 package org.eclipse.jst.server.generic.internal.core;
 
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.IGenericRuntime;
 import org.eclipse.jst.server.generic.core.CorePlugin;
+import org.eclipse.jst.server.generic.core.GenericServerCoreMessages;
+import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinition;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.ServerUtil;
 /**
@@ -79,22 +84,40 @@ public class GenericServerRuntime implements IGenericRuntime
 	 */
 	public IStatus validate() {
 		if (fRuntime.getName() == null || fRuntime.getName().length() == 0)
-			return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, CorePlugin.getResourceString("%errorName"), null);
-
+			return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0,  GenericServerCoreMessages.getString("errorName"), null);
 		if (ServerUtil.isNameInUse(fRuntime))
-			return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, CorePlugin.getResourceString("%errorDuplicateRuntimeName"), null);
-		
-//		IPath path = fRuntime.getLocation();
-//		if (path == null || path.isEmpty())
-//			return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, "", null);
-//		else if (!path.toFile().exists())
-//			return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, CorePlugin.getResourceString("%errorLocation"), null);
-//		else 
+			return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.getString("errorDuplicateRuntimeName"), null);
 		if (getVMInstall() == null)
-			return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, CorePlugin.getResourceString("%errorJRE"), null);
-		return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "", null);
+			return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.getString("errorJRE"), null);
+		
+		ServerTypeDefinition serverTypeDefinition = getServerTypeDefinition();
+        if(serverTypeDefinition == null)
+		    return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.getString("errorNoServerType"), null);
+		List cpList  = serverTypeDefinition.getServerClassPath();
+        if(cpList== null || cpList.size()<1)
+            return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,GenericServerCoreMessages.getString("errorNoClasspath"),null);
+        for (int i = 0; i < cpList.size(); i++) {
+            File f = new File((String)cpList.get(i));
+            if(f.exists()==false)
+                return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,GenericServerCoreMessages.getFormattedString("errorMissingClasspathEntry",new String[]{f.getPath()} ),null);
+        }
+        return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "", null);
 	}
-
+	/**
+	 * Returns the ServerTypeDefinition for this runtime. 
+	 * Populated with the user properties if exists. 
+	 * 
+	 * @return populated ServerTypeDefinition
+	 */
+	public ServerTypeDefinition getServerTypeDefinition()
+	{
+	   String id=  fRuntime.getAttribute(SERVER_DEFINITION_ID,(String)null);
+	   Map properties = fRuntime.getAttribute(SERVER_INSTANCE_PROPERTIES,(Map)null);
+	   if(id==null)
+	       return null;
+	   return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(id,properties);
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IRuntimeDelegate#initialize(org.eclipse.wst.server.core.IRuntime)
 	 */
