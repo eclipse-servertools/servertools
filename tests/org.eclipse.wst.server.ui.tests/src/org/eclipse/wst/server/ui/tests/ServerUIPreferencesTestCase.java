@@ -13,18 +13,18 @@ package org.eclipse.wst.server.ui.tests;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.wst.server.ui.IServerUIPreferences;
-import org.eclipse.wst.server.ui.ServerUICore;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.ServerUIPreferences;
 
 public class ServerUIPreferencesTestCase extends TestCase {
-	protected static IServerUIPreferences prefs;	
+	protected static ServerUIPreferences prefs;	
 
 	public static Test suite() {
 		return new OrderedTestSuite(ServerUIPreferencesTestCase.class, "ServerUIPreferencesTestCase");
 	}
 
 	public void test00GetProperties() throws Exception {
-		prefs = ServerUICore.getPreferences();
+		prefs = ServerUIPlugin.getPreferences();
 	}
 
 	public void test01GetPref() throws Exception {
@@ -46,18 +46,18 @@ public class ServerUIPreferencesTestCase extends TestCase {
 	}
 	
 	public void test05SetPref() throws Exception {
-		prefs.setSaveEditors(IServerUIPreferences.SAVE_EDITORS_AUTO);
-		assertEquals(prefs.getSaveEditors(), IServerUIPreferences.SAVE_EDITORS_AUTO);
+		prefs.setSaveEditors(ServerUIPreferences.SAVE_EDITORS_AUTO);
+		assertEquals(prefs.getSaveEditors(), ServerUIPreferences.SAVE_EDITORS_AUTO);
 	}
 	
 	public void test06SetPref() throws Exception {
-		prefs.setSaveEditors(IServerUIPreferences.SAVE_EDITORS_NEVER);
-		assertEquals(prefs.getSaveEditors(), IServerUIPreferences.SAVE_EDITORS_NEVER);
+		prefs.setSaveEditors(ServerUIPreferences.SAVE_EDITORS_NEVER);
+		assertEquals(prefs.getSaveEditors(), ServerUIPreferences.SAVE_EDITORS_NEVER);
 	}
 	
 	public void test07SetPref() throws Exception {
-		prefs.setSaveEditors(IServerUIPreferences.SAVE_EDITORS_PROMPT);
-		assertEquals(prefs.getSaveEditors(), IServerUIPreferences.SAVE_EDITORS_PROMPT);
+		prefs.setSaveEditors(ServerUIPreferences.SAVE_EDITORS_PROMPT);
+		assertEquals(prefs.getSaveEditors(), ServerUIPreferences.SAVE_EDITORS_PROMPT);
 	}
 	
 	public void test08DefaultPref() throws Exception {

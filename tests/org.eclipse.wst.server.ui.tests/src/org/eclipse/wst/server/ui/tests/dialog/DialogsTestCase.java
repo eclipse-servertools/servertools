@@ -15,8 +15,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.DeleteServerDialog;
+import org.eclipse.wst.server.ui.internal.PublishDialog;
 import org.eclipse.wst.server.ui.internal.TerminationDialog;
-import org.eclipse.wst.server.ui.internal.publish.PublishDialog;
 import junit.framework.TestCase;
 
 public class DialogsTestCase extends TestCase {
@@ -35,7 +35,7 @@ public class DialogsTestCase extends TestCase {
 	}
 
 	public void testPublishDialog() {
-		PublishDialog pd = new PublishDialog(getShell(), false);
+		PublishDialog pd = new PublishDialog(getShell());
 		UITestHelper.assertDialog(pd);
 	}
 }

@@ -46,7 +46,6 @@ public class AllTests {
 		suite.addTestSuite(ServerTypesTestCase.class);
 		suite.addTestSuite(ServerTasksTestCase.class);
 		suite.addTestSuite(ServerLocatorsTestCase.class);
-		suite.addTestSuite(ModuleObjectAdaptersTestCase.class);
 		suite.addTestSuite(LaunchableAdaptersTestCase.class);
 		suite.addTestSuite(ClientsTestCase.class);
 		

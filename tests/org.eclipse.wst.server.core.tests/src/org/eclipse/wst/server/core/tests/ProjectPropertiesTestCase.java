@@ -15,11 +15,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.wst.server.core.IProjectProperties;
-import org.eclipse.wst.server.core.IProjectPropertiesListener;
-import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.*;
 
 public class ProjectPropertiesTestCase extends TestCase {
 	protected static IProject project;
@@ -45,7 +41,7 @@ public class ProjectPropertiesTestCase extends TestCase {
 	};
 
 	public static Test suite() {
-		return new OrderedTestSuite(ProjectPropertiesTestCase.class, "ProjectPropertiesTestCase");
+		return new OrderedTestSuite(ProjectPropertiesTestCase.class, "AbstractServerTestCase");
 	}
 
 	public void test00GetProperties() throws Exception {

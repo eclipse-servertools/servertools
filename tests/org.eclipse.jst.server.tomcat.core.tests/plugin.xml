@@ -15,11 +15,13 @@
 
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.junit"/>
       <import plugin="org.eclipse.jdt.launching"/>
       <import plugin="org.eclipse.wst.server.core"/>
       <import plugin="org.eclipse.jst.server.core"/>
       <import plugin="org.eclipse.jst.server.tomcat.core"/>
+      <import plugin="org.eclipse.wst.server.core.tests"/>
    </requires>
 
 </plugin>
