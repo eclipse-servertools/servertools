@@ -35,11 +35,15 @@ public class ServerTypeDefinitionProperty {
 	public static final int TYPE_FILE = 1;
 	public static final int TYPE_DIRECTORY = 2;
 	public static final int TYPE_BOOLEAN = 3;
+	public static final String CONTEXT_SERVER = "server";
+	public static final String CONTEXT_RUNTIME = "runtime";    
+	    
 
 	private String id;
 	private String label;
 	private int type;
 	private String defaultValue;
+	private String context;
 
 	/**
 	 * @return String
@@ -129,7 +133,14 @@ public class ServerTypeDefinitionProperty {
 						: (type == TYPE_BOOLEAN ? "boolean" : "undefined"))))
 			+ "\"\n\tdefault=\""
 			+ this.getDefaultValue()
-			+ "\" />";
+			+ "\"\n\tcontext=\""+ this.getContext()
+			+"\" />";
 	}
 
+    public String getContext() {
+        return context;
+    }
+    public void setContext(String context) {
+        this.context = context;
+    }
 }

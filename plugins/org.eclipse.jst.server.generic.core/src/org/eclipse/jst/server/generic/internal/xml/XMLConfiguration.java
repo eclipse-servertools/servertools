@@ -165,6 +165,7 @@ public class XMLConfiguration implements IXMLTagProcessor {
 			property.setLabel(attributes.getValue("label"));
 			property.setDefaultValue(attributes.getValue("default"));
 			property.setTypeFromStr(attributes.getValue("type"));
+			property.setContext(attributes.getValue("context"));
 			currentDefinition.getProperties().add(property);
 		} else if ("serverClassPath".equals(tagName)) {
 			currentClasspath = new ArrayList();

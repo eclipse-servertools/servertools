@@ -50,7 +50,12 @@ public class ClasspathItem {
 	public String getClasspath() {
 		return classpath;
 	}
-
+	/**
+	 * @return String
+	 */
+	public String getResolvedClasspath(ServerTypeDefinition definition) {
+		return definition.resolveProperties(classpath);
+	}
 	/**
 	 * @return int
 	 */
@@ -101,10 +106,9 @@ public class ClasspathItem {
 
 			IClasspathEntry res = JavaCore.getResolvedClasspathEntry(entry);
 			return (res != null);
-		} else {
-			File f = new File(def.resolveProperties(this.getClasspath()));
-			return f.exists();
 		}
+		File f = new File(def.resolveProperties(this.getClasspath()));
+		return f.exists();
 	}
 
 	public void setRawClasspathFor(ServerTypeDefinition def, String rawPath) {

@@ -35,19 +35,69 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-
-
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.launching.JavaRuntime;
 /**
+ * Holds/presents the XML server definition file. If this object has propertyValues Map
+ * the returned values for properties are resolved according to this values. If 
+ * propertyValues are not present the default values in the XML definition file is 
+ * resolved..
  * @author Naci Dai
+ * @author Gorkem Ercan
  */
 public class ServerTypeDefinition  {
 	
-	ServerAdminTool adminTool;
-	private List fDescriptors;
+	private ServerAdminTool adminTool;
 	
 	private File definitionFile;
+	private Map fPropertyValues;
+	
+	private String name;
+	private String id;
+	private String vendor;
+	private String description;
+	private String version;
+	
+	private boolean webModules;
+	private boolean ejbModules;
+	private boolean earModules;
 
+	private ArrayList properties;
+	private ArrayList serverClassPath;
+	private ArrayList clientClassPath;
+	private ArrayList projectClassPath;
+
+	private String webModulesDeployDirectory;
+	private String ejbModulesDeployDirectory;
+	private String earModulesDeployDirectory;
+
+	private String jndiInitialContextFactory;
+	private String jndiProviderUrl;
+
+	private String startClass;
+	private String startWorkingDirectory;
+	private String startVmParameters;
+	private String startProgramArguments;
+
+	private String stopClass;
+	private String stopWorkingDirectory;
+	private String stopVmParameters;
+	private String stopProgramArguments;
+
+	private String serverHome;
+	/**
+	 * 
+	 */
+	public ServerTypeDefinition() {
+		properties = new ArrayList();
+		serverClassPath = new ArrayList();
+		clientClassPath = new ArrayList();
+		projectClassPath = new ArrayList();
+		adminTool = new ServerAdminTool(this);
+	}
 	/**
 	 * @return Returns the description.
 	 */
@@ -96,49 +146,8 @@ public class ServerTypeDefinition  {
 	public void setVersion(String version) {
 		this.version = version;
 	}
-	private String name;
-	private String id;
-	private String vendor;
-	private String description;
-	private String version;
-	
-	private boolean webModules;
-	private boolean ejbModules;
-	private boolean earModules;
 
-	private ArrayList properties;
-	private ArrayList serverClassPath;
-	private ArrayList clientClassPath;
-	private ArrayList projectClassPath;
 
-	private String webModulesDeployDirectory;
-	private String ejbModulesDeployDirectory;
-	private String earModulesDeployDirectory;
-
-	private String jndiInitialContextFactory;
-	private String jndiProviderUrl;
-
-	private String startClass;
-	private String startWorkingDirectory;
-	private String startVmParameters;
-	private String startProgramArguments;
-
-	private String stopClass;
-	private String stopWorkingDirectory;
-	private String stopVmParameters;
-	private String stopProgramArguments;
-
-	private String serverHome;
-	/**
-	 * 
-	 */
-	public ServerTypeDefinition() {
-		properties = new ArrayList();
-		serverClassPath = new ArrayList();
-		clientClassPath = new ArrayList();
-		projectClassPath = new ArrayList();
-		adminTool = new ServerAdminTool(this);
-	}
 
 	public void addServerClasspath(ClasspathItem classpathItem) {
 		this.getServerClassPath().add(classpathItem);
@@ -169,14 +178,14 @@ public class ServerTypeDefinition  {
 	 * @return String
 	 */
 	public String getEarModulesDeployDirectory() {
-		return earModulesDeployDirectory;
+		return resolveProperties(earModulesDeployDirectory);
 	}
 	
 	/**
 	 * @return String
 	 */
 	public String getEjbModulesDeployDirectory() {
-		return ejbModulesDeployDirectory;
+		return resolveProperties(ejbModulesDeployDirectory);
 	}
 
 	/**
@@ -230,14 +239,14 @@ public class ServerTypeDefinition  {
 	 * @return String
 	 */
 	public String getStartProgramArguments() {
-		return startProgramArguments;
+		return resolveProperties(startProgramArguments);
 	}
 
 	/**
 	 * @return String
 	 */
 	public String getStartVmParameters() {
-		return startVmParameters;
+		return resolveProperties(startVmParameters);
 	}
 
 	/**
@@ -251,14 +260,14 @@ public class ServerTypeDefinition  {
 	 * @return String
 	 */
 	public String getStopProgramArguments() {
-		return stopProgramArguments;
+		return resolveProperties(stopProgramArguments);
 	}
 
 	/**
 	 * @return String
 	 */
 	public String getStopVmParameters() {
-		return stopVmParameters;
+		return resolveProperties(stopVmParameters);
 	}
 
 	/**
@@ -532,14 +541,14 @@ public class ServerTypeDefinition  {
 	 * @return String
 	 */
 	public String getStartWorkingDirectory() {
-		return startWorkingDirectory;
+		return resolveProperties(startWorkingDirectory);
 	}
 
 	/**
 	 * @return String
 	 */
 	public String getStopWorkingDirectory() {
-		return stopWorkingDirectory;
+		return resolveProperties(stopWorkingDirectory);
 	}
 
 	/**
@@ -569,7 +578,7 @@ public class ServerTypeDefinition  {
 	 * @return String
 	 */
 	public String getJndiProviderUrl() {
-		return jndiProviderUrl;
+		return resolveProperties(jndiProviderUrl);
 	}
 
 	/**
@@ -604,14 +613,16 @@ public class ServerTypeDefinition  {
 	}
 
 
-	public String resolveProperties(
+	protected String resolveProperties(
 		String proppedString) {
 		HashMap cache = new HashMap(getProperties().size());
 		Iterator itr = getProperties().iterator();
 		while (itr.hasNext()) {
-			ServerTypeDefinitionProperty element =
-				(ServerTypeDefinitionProperty) itr.next();
-			cache.put(element.getId(), element.getDefaultValue());
+			ServerTypeDefinitionProperty element =(ServerTypeDefinitionProperty) itr.next();
+			String value = element.getDefaultValue();
+			if(fPropertyValues!= null && fPropertyValues.containsKey(element.getId()))
+			    value=(String)fPropertyValues.get(element.getId());
+			 cache.put(element.getId(), value);
 		}
 		//String vmPath = install.getInstallLocation().getCanonicalPath();
 		//vmPath = vmPath.replace('\\', '/');
@@ -704,8 +715,7 @@ public class ServerTypeDefinition  {
 		ServerTypeDefinitionProperty prop = getPropertyNamed((String)id);
 		if(prop != null)
 			return prop.getDefaultValue();
-		else
-			return null;
+		return null;
 	}
 
 	public boolean isPropertySet(Object id)
@@ -735,5 +745,33 @@ public class ServerTypeDefinition  {
 		return null;
 	}
 
+	public List getServerClasspathMementos() {
+		List cpathList =getServerClassPath();
+		ArrayList mementoList = new ArrayList();
+		for (int i = 0; i < cpathList.size(); i++) {
+			ClasspathItem item = (ClasspathItem) cpathList.get(i);
+			String cpath = resolveProperties(
+					item.getClasspath());
+			String memento = null;
+			try {
+				memento = JavaRuntime.newArchiveRuntimeClasspathEntry(
+						new Path(cpath)).getMemento();
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			mementoList.add(memento);
+		}
+		return mementoList;
+	}
+	
 
+    public Map getPropertyValues() {
+        return fPropertyValues;
+    }
+    public void setPropertyValues(Map propertyValue) {
+        fPropertyValues = propertyValue;
+    }
+   
+    
 }
