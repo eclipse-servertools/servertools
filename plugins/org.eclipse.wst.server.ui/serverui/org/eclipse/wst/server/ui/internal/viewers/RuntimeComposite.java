@@ -95,7 +95,7 @@ public class RuntimeComposite extends AbstractTableComposite {
 				try {
 					IRuntime runtime = (IRuntime) event.getElement();
 					if (event.getChecked()) {
-						if (defaultRuntime != null)
+						if (defaultRuntime != null && !runtime.equals(defaultRuntime))
 							((CheckboxTableViewer)tableViewer).setChecked(defaultRuntime, false);
 						ServerCore.setDefaultRuntime(runtime);
 						defaultRuntime = runtime;
