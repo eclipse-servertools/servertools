@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.internet.monitor.core.IRequest;
 import org.eclipse.wst.internet.monitor.core.IResendRequest;
-import org.eclipse.wst.internet.monitor.core.MonitorCore;
+import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
 /**
  * Content provider for the monitor server view.
  */
@@ -71,7 +71,7 @@ public class MonitorTreeContentProvider implements ITreeContentProvider{
 		if (element instanceof Integer) {
 			Integer in = (Integer) element;
 			List list = new ArrayList();
-			IRequest[] requests = MonitorCore.getRequests();
+			IRequest[] requests = MonitorUIPlugin.getInstance().getRequests();
 			if (requests != null) {
 				int size = requests.length;
 				for (int i = 0; i < size; i++) {
@@ -109,7 +109,7 @@ public class MonitorTreeContentProvider implements ITreeContentProvider{
 	public Object[] getElements(Object element) {
 		if (ROOT.equals(element)) {
 			List list = new ArrayList();
-			IRequest[] requests = MonitorCore.getRequests();
+			IRequest[] requests = MonitorUIPlugin.getInstance().getRequests();
 			if (requests != null) {
 				int size = requests.length;
 				for (int i = 0; i < size; i++) {

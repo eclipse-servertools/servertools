@@ -23,20 +23,20 @@ import org.eclipse.wst.internet.monitor.core.IMonitorWorkingCopy;
 /**
  * 
  */
-public class MonitorPrefrencesDialog extends Dialog {
+public class MonitorPreferencesDialog extends Dialog {
 	protected IMonitorWorkingCopy monitor;
 	protected boolean isEdit;
 
 	/**
 	 * @param parentShell
 	 */
-	public MonitorPrefrencesDialog(Shell parentShell, IMonitorWorkingCopy monitor) {
+	public MonitorPreferencesDialog(Shell parentShell, IMonitorWorkingCopy monitor) {
 		super(parentShell);
 		this.monitor = monitor;
 		isEdit = true;
 	}
 	
-	public MonitorPrefrencesDialog(Shell composite) {
+	public MonitorPreferencesDialog(Shell composite) {
 		super(composite);
 		isEdit=false;
 	}

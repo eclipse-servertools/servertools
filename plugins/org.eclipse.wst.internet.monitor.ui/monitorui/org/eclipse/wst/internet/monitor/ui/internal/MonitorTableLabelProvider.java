@@ -88,7 +88,7 @@ public class MonitorTableLabelProvider implements ITableLabelProvider {
 		} else if (columnIndex == 1)
 			return monitor.getRemoteHost() + ":" + monitor.getRemotePort();
 		else if (columnIndex == 2)
-			return monitor.getProtocolAdapter().getName();
+			return monitor.getProtocol();
 		else if (columnIndex == 3)
 			return monitor.getLocalPort() + "";
 		else

@@ -9,30 +9,39 @@
  *    IBM - Initial API and implementation
  **********************************************************************/
 package org.eclipse.wst.internet.monitor.core;
+
 /**
- * Listener that listen to the monitor add, remove and changes.
+ * Listener for global changes affecting monitors.
+ * <p>
+ * Clients should implement this interface and register
+ * their listener via {@linkMonitorCore#addMonitorListener(IMonitorListener)}.
+ * </p>
  * 
  * @since 1.0
  */
 public interface IMonitorListener {
+	
 	/**
-	 * This method is being called when a monitor is added.
+	 * Notification that the given monitor has been created (added to the
+	 * global list of known monitors).
 	 * 
-	 * @param monitor the monitor that has been added
+	 * @param monitor the newly-created monitor
 	 */
 	public void monitorAdded(IMonitor monitor);
 	
 	/**
-	 * This method is being called when a monitor is changed.
+	 * Notification that the given monitor has been changed.
+     * Note that the monitor is never a working copy.
 	 * 
 	 * @param monitor the monitor that has been changed
 	 */
 	public void monitorChanged(IMonitor monitor);
 	
 	/**
-	 * This method is being called when a monitor is removed.
+	 * Notification that the given monitor has been deleted (removed
+	 * from the global list of known monitors).
 	 * 
-	 * @param monitor the monitor that has been removed
+	 * @param monitor the monitor that has been deleted
 	 */
 	public void monitorRemoved(IMonitor monitor);
 }

@@ -34,7 +34,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.internet.monitor.core.MonitorCore;
 import org.eclipse.wst.internet.monitor.ui.ContentViewer;
 import org.eclipse.wst.internet.monitor.ui.internal.ContextIds;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
@@ -57,6 +56,8 @@ public class XMLViewer extends ContentViewer {
 	protected boolean setEncoding = false;
 	protected boolean missingEncoding = false;
 	protected String originalEncoding;
+	
+	protected byte[] content;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.internet.monitor.ui.IContentViewer#dispose()
@@ -69,9 +70,10 @@ public class XMLViewer extends ContentViewer {
 	 * @see org.eclipse.wst.internet.monitor.ui.IContentViewer#setContent()
 	 */
 	public void setContent(byte[] b) {
+		content = b;
 		String out = "";		
 		if (b != null)
-			out = MonitorCore.parse(b);
+			out = MonitorUIPlugin.parse(b);
 				
 		String lineSeparator = System.getProperty("line.separator");
 		int ls = lineSeparator.length();
@@ -84,7 +86,7 @@ public class XMLViewer extends ContentViewer {
 		if (out_temp.indexOf("<?xml") < 0) 
 			xmlTagMissing = true;
 		
-		if (out.length() > 0) {		
+		if (out.length() > 0) {
 			byte[] b1 = createDocument(out);
 			String finalMsg = new String (b1);
 			if (finalMsg.startsWith("Invalid XML")) {
@@ -93,17 +95,13 @@ public class XMLViewer extends ContentViewer {
 				layout.topControl = messageLabel;
 				messageLabel.setVisible(true);
 				messageLabel.setText("<" + MonitorUIPlugin.getResource("%xmlViewInvalid") + ">");
-				
-			}
-			else if (xmlTagMissing && finalMsg.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")) {
+			} else if (xmlTagMissing && finalMsg.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")) {
 				int x = finalMsg.indexOf("\n") + 1;
 				String Msg = finalMsg.substring(x);
 				finalMsg = Msg;
 				
 				messageText.setText(finalMsg);
-			}
-			
-			else if (setEncoding) {
+			} else if (setEncoding) {
 				//change back to original Encoding
 				int begin = finalMsg.indexOf("UTF-8"); //location of opening "
 				int last = begin + 5;  //location of closing "
@@ -112,9 +110,7 @@ public class XMLViewer extends ContentViewer {
 				finalMsg = first_half + originalEncoding + second_half;	
 				
 				messageText.setText(finalMsg);
-			}
-			
-			else if (missingEncoding) {
+			} else if (missingEncoding) {
 				//remove encoding completely
 				int begin = finalMsg.indexOf("encoding=\"UTF-8\""); //location of opening "
 				int last = begin + 16;  //location of closing "
@@ -126,6 +122,10 @@ public class XMLViewer extends ContentViewer {
 			}			
 		} else
 			messageText.setText(out);
+	}
+	
+	public byte[] getContent() {
+		return content;
 	}
 	
 	/* (non-Javadoc)
@@ -216,11 +216,9 @@ public class XMLViewer extends ContentViewer {
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
 			transformer.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
 			transformer.transform(source, result);            
-		}
-		catch (TransformerConfigurationException e) {
+		} catch (TransformerConfigurationException e) {
 			throw (IOException) (new IOException().initCause(e));
-		}
-		catch (TransformerException e) {
+		} catch (TransformerException e) {
 			throw (IOException) (new IOException().initCause(e));
 		}
 		return out.toByteArray();

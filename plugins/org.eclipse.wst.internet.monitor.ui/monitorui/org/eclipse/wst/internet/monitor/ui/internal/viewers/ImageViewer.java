@@ -28,6 +28,8 @@ public class ImageViewer extends ContentViewer {
 	protected Composite rootComp;
 	protected Composite viewerComp;
 	protected Label messageLabel;
+	
+	protected byte[] content;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.internet.monitor.ui.IContentViewer#init(Composite)
@@ -52,6 +54,7 @@ public class ImageViewer extends ContentViewer {
 	 * @see org.eclipse.wst.internet.monitor.ui.IContentViewer#setContent()
 	 */
 	public void setContent(byte[] b) {
+		content = b;
 		if (b == null || b.length == 0) {
 			messageLabel.setText("<" + MonitorUIPlugin.getResource("%imageViewInvalid") + ">");
 		} else {
@@ -82,6 +85,10 @@ public class ImageViewer extends ContentViewer {
 		}
 		
 		viewerComp.layout(true);
+	}
+	
+	public byte[] getContent() {
+		return content;
 	}
 	
 	/* (non-Javadoc)

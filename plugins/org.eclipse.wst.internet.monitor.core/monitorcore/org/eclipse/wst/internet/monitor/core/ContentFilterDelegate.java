@@ -11,11 +11,21 @@
 package org.eclipse.wst.internet.monitor.core;
 
 import java.io.IOException;
+
 /**
  * A content filter that filters contents from the monitor traffic on a request.
  * <p>
- * This abstract class is intended to be extended only by clients
+ * This abstract class is intended to be subclassed only by clients
  * to extend the <code>contentFilters</code> extension point.
+ * The subclass must have a public 0-argument constructor, which will be used
+ * automatically to instantiate the delegate when required. 
+ * </p>
+ * <p>
+ * [issue: The notion of content filters is a UI/presentation
+ * concern, not something that is makes sense to have as core
+ * functionality. The contentFilters extension point, IContentFilter,
+ * and ContentFilterDelegate should all move to the o.e.wst.internet.monitor.ui
+ * plug-in.]
  * </p>
  * 
  * @since 1.0

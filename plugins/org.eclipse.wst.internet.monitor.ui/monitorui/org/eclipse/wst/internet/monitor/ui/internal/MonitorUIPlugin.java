@@ -10,9 +10,14 @@
  **********************************************************************/
 package org.eclipse.wst.internet.monitor.ui.internal;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IAdapterFactory;
@@ -22,7 +27,13 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.wst.internet.monitor.core.IMonitor;
+import org.eclipse.wst.internet.monitor.core.IMonitorListener;
 import org.eclipse.wst.internet.monitor.core.IRequest;
+import org.eclipse.wst.internet.monitor.core.IRequestListener;
+import org.eclipse.wst.internet.monitor.core.MonitorCore;
+import org.eclipse.wst.internet.monitor.core.internal.Trace;
+import org.eclipse.wst.internet.monitor.ui.internal.view.MonitorView;
 import org.osgi.framework.BundleContext;
 /**
  * The TCP/IP monitor UI plugin.
@@ -33,6 +44,8 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 	private static MonitorUIPlugin singleton;
 
 	protected Map imageDescriptors = new HashMap();
+	
+	private static final String lineSeparator = System.getProperty("line.separator");
 
 	private static URL ICON_BASE_URL;
 	private static final String URL_CLCL = "clcl16/";
@@ -59,6 +72,36 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 
 	private static final String SHOW_VIEW_ON_ACTIVITY = "show-view";
 	private static final String SHOW_HEADER = "show-header";
+	
+	protected List requests = new ArrayList();
+	
+	protected IMonitorListener monitorListener = new IMonitorListener() {
+		public void monitorAdded(IMonitor monitor) {
+			monitor.addRequestListener(requestListener);
+		}
+
+		public void monitorChanged(IMonitor monitor) {
+			// ignore
+		}
+
+		public void monitorRemoved(IMonitor monitor) {
+			monitor.removeRequestListener(requestListener);
+		}
+	};
+
+	protected IRequestListener requestListener = new IRequestListener() {
+		public void requestAdded(IRequest request) {
+			addRequest(request);
+			
+			if (MonitorView.view != null)
+				MonitorView.view.doRequestAdded(request);
+		}
+
+		public void requestChanged(IRequest request) {
+			if (MonitorView.view != null)
+				MonitorView.view.doRequestChanged(request);
+		}
+	};
 
 	/**
 	 * MonitorUIPlugin constructor comment.
@@ -227,6 +270,30 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 		super.start(context);
 
 		getPreferenceStore().setDefault(MonitorUIPlugin.SHOW_VIEW_ON_ACTIVITY, true);
+		
+		MonitorCore.addMonitorListener(monitorListener);
+		
+		IMonitor[] monitors = MonitorCore.getMonitors();
+		if (monitors != null) {
+			int size = monitors.length;
+			for (int i = 0; i < size; i++) {
+				monitors[i].addRequestListener(requestListener);
+			}
+		}
+	}
+	
+	public void stop(BundleContext context) throws Exception {
+		super.stop(context);
+		
+		IMonitor[] monitors = MonitorCore.getMonitors();
+		if (monitors != null) {
+			int size = monitors.length;
+			for (int i = 0; i < size; i++) {
+				monitors[i].removeRequestListener(requestListener);
+			}
+		}
+		
+		MonitorCore.removeMonitorListener(monitorListener);
 	}
 
 	public static boolean getDefaultShowOnActivityPreference() {
@@ -249,5 +316,55 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 	public static void setShowHeaderPreference(boolean b) {
 		getInstance().getPreferenceStore().setValue(SHOW_HEADER, b);
 		getInstance().savePluginPreferences();
+	}
+	
+	/**
+	 * Convenience method to parse the given bytes into String form. The bytes
+	 * are parsed into a line delimited string. The byte array must not be null.
+	 * 
+	 * @param b a byte array
+	 * @return the string after the conversion
+	 */
+	public static String parse(byte[] b) {
+		if (b == null)
+			throw new IllegalArgumentException();
+
+		ByteArrayInputStream bin = new ByteArrayInputStream(b);
+		BufferedReader br = new BufferedReader(new InputStreamReader(bin));
+		StringBuffer sb = new StringBuffer();
+		try {
+			String s = br.readLine();
+			
+			while (s != null) {
+				sb.append(s);
+				s = br.readLine();
+				if (s != null)
+					sb.append(lineSeparator);
+			}
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error parsing input", e);
+		}
+		
+		return sb.toString();
+	}
+	
+	public void addRequest(IRequest request) {
+		if (!requests.contains(request))
+			requests.add(request);
+	}
+
+	/**
+	 * Returns a list of the current requests.
+	 *
+	 * @return java.util.List
+	 */
+	public IRequest[] getRequests() {
+		IRequest[] r = new IRequest[requests.size()];
+		requests.toArray(r);
+		return r;
+	}
+	
+	public void clearRequests() {
+		requests = new ArrayList();
 	}
 }

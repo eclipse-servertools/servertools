@@ -17,7 +17,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.internet.monitor.core.*;
 /**
  * 
@@ -32,12 +35,7 @@ public class MonitorManager {
 	protected Map threads = new HashMap();
 	
 	protected List monitorListeners = new ArrayList();
-	
-	// requests
-	protected List requests = new ArrayList();
-	
-	protected List requestListeners = new ArrayList();
-	
+
 	private Preferences.IPropertyChangeListener pcl;
 	protected boolean ignorePreferenceChanges = false;
 	
@@ -78,7 +76,7 @@ public class MonitorManager {
 		return new ArrayList(monitors);
 	}
 
-	protected void addMonitor(IMonitor monitor) {
+	protected synchronized void addMonitor(IMonitor monitor) {
 		if (!monitors.contains(monitor))
 			monitors.add(monitor);
 		fireMonitorEvent(monitor, ADD);
@@ -89,12 +87,12 @@ public class MonitorManager {
 		return (threads.get(monitor) != null);
 	}
 
-	public void startMonitor(IMonitor monitor) throws Exception {
+	public void startMonitor(IMonitor monitor) throws CoreException {
 		if (!monitors.contains(monitor))
 			return;
 		
 		if (AcceptThread.isPortInUse(monitor.getLocalPort()))
-			throw new Exception(MonitorPlugin.getString("%errorPortInUse"));
+			throw new CoreException(new Status(IStatus.ERROR, MonitorPlugin.PLUGIN_ID, 0, MonitorPlugin.getString("%errorPortInUse"), null));
 		
 		AcceptThread thread = new AcceptThread(monitor);
 		thread.startServer();
@@ -112,7 +110,7 @@ public class MonitorManager {
 		}
 	}
 	
-	protected void removeMonitor(IMonitor monitor) {
+	protected synchronized void removeMonitor(IMonitor monitor) {
 		if (monitor.isRunning())
 			stopMonitor(monitor);
 		monitors.remove(monitor);
@@ -120,9 +118,13 @@ public class MonitorManager {
 		saveMonitors();
 	}
 	
-	protected void monitorChanged(IMonitor monitor) {
+	protected synchronized void monitorChanged(IMonitor monitor) {
 		fireMonitorEvent(monitor, CHANGE);
 		saveMonitors();
+	}
+	
+	protected boolean exists(IMonitor monitor) {
+		return (monitors.contains(monitor));
 	}
 	
 	/**
@@ -130,8 +132,9 @@ public class MonitorManager {
 	 * 
 	 * @param listener
 	 */
-	public void addMonitorListener(IMonitorListener listener) {
-		monitorListeners.add(listener);
+	public synchronized void addMonitorListener(IMonitorListener listener) {
+		if (!monitorListeners.contains(listener))
+			monitorListeners.add(listener);
 	}
 
 	/**
@@ -139,8 +142,9 @@ public class MonitorManager {
 	 * 
 	 * @param listener
 	 */
-	public void removeMonitorListener(IMonitorListener listener) {
-		monitorListeners.remove(listener);
+	public synchronized void removeMonitorListener(IMonitorListener listener) {
+		if (monitorListeners.contains(listener))
+			monitorListeners.remove(listener);
 	}
 	
 	/**
@@ -162,96 +166,8 @@ public class MonitorManager {
 				listener.monitorRemoved(monitor);
 		}
 	}
-	
-	/**
-	 * Returns a list of the current requests.
-	 *
-	 * @return java.util.List
-	 */
-	public List getRequests() {
-		return requests;
-	}
-	
-	/**
-	 * Add a new request response pair.
-	 *
-	 * @param pair org.eclipse.tcpip.monitor.RequestResponse
-	 */
-	public void addRequest(IRequest rr) {
-		if (requests.contains(rr))
-			return;
 
-		requests.add(rr);
-		fireRequestEvent(rr, ADD);
-	}
-	
-	public void requestChanged(IRequest rr) {
-		fireRequestEvent(rr, CHANGE);
-	}
-	
-	public void removeRequest(IRequest rr) {
-		if (!requests.contains(rr))
-			return;
-
-		requests.remove(rr);
-		fireRequestEvent(rr, REMOVE);
-	}
-	
-	public void removeAllRequests() {
-		int size = requests.size();
-		IRequest[] rrs = new IRequest[size];
-		requests.toArray(rrs);
-		
-		for (int i = 0; i < size; i++) {
-			removeRequest(rrs[i]);
-		}
-	}
-	
-	/**
-	 * Add request listener.
-	 * 
-	 * @param listener
-	 */
-	public void addRequestListener(IRequestListener listener) {
-		requestListeners.add(listener);
-	}
-
-	/**
-	 * Remove request listener.
-	 * 
-	 * @param listener
-	 */
-	public void removeRequestListener(IRequestListener listener) {
-		requestListeners.remove(listener);
-	}
-
-	/**
-	 * Fire a request event.
-	 * @param rr
-	 * @param type
-	 */
-	protected void fireRequestEvent(IRequest rr, int type) {
-		int size = requestListeners.size();
-		IRequestListener[] xrl = MonitorPlugin.getInstance().getRequestListeners();
-		int size2 = xrl.length;
-		
-		IRequestListener[] rl = new IRequestListener[size + size2];
-		System.arraycopy(xrl, 0, rl, 0, size2);
-		for (int i = 0; i < size; i++)
-			rl[size2 + i] = (IRequestListener) requestListeners.get(i);
-
-		for (int i = 0; i < size + size2; i++) {
-			IRequestListener listener = rl[i];
-			if (type == ADD)
-				listener.requestAdded(rr);
-			else if (type == CHANGE)
-				listener.requestChanged(rr);
-			else if (type == REMOVE)
-				listener.requestRemoved(rr);
-		}
-	}
-	
-	protected void loadMonitors() {
+	protected synchronized void loadMonitors() {
 		Trace.trace(Trace.FINEST, "Loading monitors");
 		
 		monitors = new ArrayList();
@@ -277,7 +193,7 @@ public class MonitorManager {
 		}
 	}
 	
-	protected void saveMonitors() {
+	protected synchronized void saveMonitors() {
 		try {
 			ignorePreferenceChanges = true;
 			XMLMemento memento = XMLMemento.createWriteRoot("monitors");

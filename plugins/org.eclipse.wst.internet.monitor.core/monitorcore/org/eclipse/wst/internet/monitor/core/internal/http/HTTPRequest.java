@@ -10,7 +10,8 @@
  **********************************************************************/
 package org.eclipse.wst.internet.monitor.core.internal.http;
 
-import org.eclipse.wst.internet.monitor.core.MonitorCore;
+import org.eclipse.wst.internet.monitor.core.internal.IProtocolAdapter;
+import org.eclipse.wst.internet.monitor.core.internal.Monitor;
 import org.eclipse.wst.internet.monitor.core.internal.Request;
 /**
  * 
@@ -27,11 +28,11 @@ public class HTTPRequest extends Request {
 	/**
 	 * HTTPRequestResponse constructor comment.
 	 */
-	public HTTPRequest(int localPort, String remoteHost, int remotePort) {
-		super(MonitorCore.findProtocolAdapter(MonitorCore.HTTP_PROTOCOL_ID), localPort, remoteHost, remotePort);
+	public HTTPRequest(Monitor monitor, int localPort, String remoteHost, int remotePort) {
+		super(monitor, IProtocolAdapter.HTTP_PROTOCOL_ID, localPort, remoteHost, remotePort);
 	}
-	
-	public byte[] getRequest(byte type2) {
+
+	public byte[] getRequest(int type2) {
 		if (type2 == ALL)
 			return request;
 		else if (type2 == TRANSPORT)
@@ -40,7 +41,7 @@ public class HTTPRequest extends Request {
 			return getRequestContent();
 	}
 	
-	public byte[] getResponse(byte type2) {
+	public byte[] getResponse(int type2) {
 		if (type2 == ALL)
 			return response;
 		else if (type2 == TRANSPORT)
@@ -50,28 +51,28 @@ public class HTTPRequest extends Request {
 	}
 	
 	protected byte[] getRequestHeader() {
-		Object obj = getObjectProperty(HTTP_REQUEST_HEADER);
+		Object obj = getProperty(HTTP_REQUEST_HEADER);
 		if (obj == null || !(obj instanceof byte[]))
 			return null;
 		return (byte[]) obj;
 	}
 	
 	protected byte[] getRequestContent() {
-		Object obj = getObjectProperty(HTTP_REQUEST_BODY);
+		Object obj = getProperty(HTTP_REQUEST_BODY);
 		if (obj == null || !(obj instanceof byte[]))
 			return null;
 		return (byte[]) obj;
 	}
 	
 	protected byte[] getResponseHeader() {
-		Object obj = getObjectProperty(HTTP_RESPONSE_HEADER);
+		Object obj = getProperty(HTTP_RESPONSE_HEADER);
 		if (obj == null || !(obj instanceof byte[]))
 			return null;
 		return (byte[]) obj;
 	}
 	
 	protected byte[] getResponseContent() {
-		Object obj = getObjectProperty(HTTP_RESPONSE_BODY);
+		Object obj = getProperty(HTTP_RESPONSE_BODY);
 		if (obj == null || !(obj instanceof byte[]))
 			return null;
 		return (byte[]) obj;

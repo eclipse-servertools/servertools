@@ -17,6 +17,7 @@ import java.net.Socket;
 import org.eclipse.wst.internet.monitor.core.IRequest;
 import org.eclipse.wst.internet.monitor.core.IResendRequest;
 import org.eclipse.wst.internet.monitor.core.internal.Connection;
+import org.eclipse.wst.internet.monitor.core.internal.Monitor;
 import org.eclipse.wst.internet.monitor.core.internal.SocketWrapper;
 /**
  * Wraps an existing request to create an HTTP request that can be sent. The
@@ -36,11 +37,10 @@ public class ResendHTTPRequest extends HTTPRequest implements IResendRequest {
 	 * 
 	 * @param req the request that is to be resent.
 	 */
-	public ResendHTTPRequest(IRequest req) {
-		super(req.getLocalPort(), req.getRemoteHost(), req.getRemotePort());
-		addProperty(HTTP_REQUEST_HEADER, req
-				.getObjectProperty(HTTP_REQUEST_HEADER));
-		addProperty(HTTP_REQUEST_BODY, req.getObjectProperty(HTTP_REQUEST_BODY));
+	public ResendHTTPRequest(Monitor monitor, IRequest req) {
+		super(monitor, req.getLocalPort(), req.getRemoteHost(), req.getRemotePort());
+		setProperty(HTTP_REQUEST_HEADER, req.getProperty(HTTP_REQUEST_HEADER));
+		setProperty(HTTP_REQUEST_BODY, req.getProperty(HTTP_REQUEST_BODY));
 		header = req.getRequest(TRANSPORT);
 		content = req.getRequest(CONTENT);
 		request = req.getRequest(ALL);

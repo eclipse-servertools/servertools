@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.internet.monitor.core.IRequest;
-import org.eclipse.wst.internet.monitor.core.MonitorCore;
 import org.eclipse.wst.internet.monitor.ui.internal.ContextIds;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
 /**
@@ -176,9 +175,13 @@ public class HeaderViewer {
 		String out = "";
 		if (rr != null) {
 			if (msg == REQUEST_HEADER) {
-				out = MonitorCore.parse(rr.getRequest(IRequest.TRANSPORT));
+				byte[] b = rr.getRequest(IRequest.TRANSPORT);
+				if (b != null)
+					out = MonitorUIPlugin.parse(b);
 			} else if (msg == RESPONSE_HEADER) {
-				out = MonitorCore.parse(rr.getResponse(IRequest.TRANSPORT));
+				byte[] b = rr.getResponse(IRequest.TRANSPORT);
+				if (b != null)
+					out = MonitorUIPlugin.parse(b);
 			}
 		}
 		

@@ -143,7 +143,7 @@ public class MonitorComposite extends Composite {
 		edit.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				IMonitor monitor = (IMonitor) getSelection().get(0);
-				IMonitorWorkingCopy wc = monitor.getWorkingCopy();
+				IMonitorWorkingCopy wc = monitor.createWorkingCopy();
 				
 				MonitorDialog dialog = new MonitorDialog(getShell(), wc);
 				if (dialog.open() != Window.CANCEL) {
@@ -185,7 +185,7 @@ public class MonitorComposite extends Composite {
 				while (iterator.hasNext()) {
 					IMonitor monitor = (IMonitor) iterator.next();
 					try {
-						MonitorCore.startMonitor(monitor);
+						monitor.start();
 					} catch (CoreException ce) {
 						MessageDialog.openError(getShell(), MonitorUIPlugin.getResource("%errorDialogTitle"), ce.getStatus().getMessage());
 					} catch (Exception ce) {
@@ -205,7 +205,7 @@ public class MonitorComposite extends Composite {
 				while (iterator.hasNext()) {
 					IMonitor monitor = (IMonitor) iterator.next();
 					try {
-						MonitorCore.stopMonitor(monitor);
+						monitor.stop();
 					} catch (Exception ex) {
 						// ignore
 					}

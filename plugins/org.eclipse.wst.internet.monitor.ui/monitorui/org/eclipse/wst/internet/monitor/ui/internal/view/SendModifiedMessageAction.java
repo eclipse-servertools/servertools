@@ -18,7 +18,6 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.wst.internet.monitor.core.IRequest;
 import org.eclipse.wst.internet.monitor.core.IResendRequest;
 import org.eclipse.wst.internet.monitor.ui.ContentViewer;
-import org.eclipse.wst.internet.monitor.ui.EditableContentViewer;
 import org.eclipse.wst.internet.monitor.ui.internal.viewers.HeaderViewer;
 /**
  * Send a modified message.
@@ -43,8 +42,7 @@ public class SendModifiedMessageAction implements IViewActionDelegate{
 				IResendRequest req = (IResendRequest) element;
 				ContentViewer curViewer = MonitorView.view.vm.getCurrentRequestViewer();
 				HeaderViewer curHeaderViewer = MonitorView.view.vm.getCurrentRequestHeaderViewer();
-				if (curViewer instanceof EditableContentViewer)
-					req.setRequest(((EditableContentViewer) curViewer).getContent(), IRequest.CONTENT);
+				req.setRequest(curViewer.getContent(), IRequest.CONTENT);
 				
 				if (curHeaderViewer != null)
 					req.setRequest(curHeaderViewer.getContent(), IRequest.TRANSPORT);

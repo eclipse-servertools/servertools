@@ -18,13 +18,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.internet.monitor.core.MonitorCore;
-import org.eclipse.wst.internet.monitor.ui.EditableContentViewer;
+import org.eclipse.wst.internet.monitor.ui.ContentViewer;
 import org.eclipse.wst.internet.monitor.ui.internal.ContextIds;
+import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
 /**
  * A basic byte viewer.
  */
-public class ByteViewer extends EditableContentViewer {
+public class ByteViewer extends ContentViewer {
 	protected Text text;
 	protected Composite comp;
 
@@ -41,7 +41,7 @@ public class ByteViewer extends EditableContentViewer {
 	public void setContent(byte[] b) {
 		String out = "";
 		if (b != null)
-			out = MonitorCore.parse(b);
+			out = MonitorUIPlugin.parse(b);
 
 		String lineSeparator = System.getProperty("line.separator");
 		int ls = lineSeparator.length();

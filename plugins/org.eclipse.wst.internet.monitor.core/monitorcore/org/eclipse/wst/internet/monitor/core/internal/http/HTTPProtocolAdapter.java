@@ -14,8 +14,8 @@ import java.io.IOException;
 import java.net.Socket;
 
 import org.eclipse.wst.internet.monitor.core.IMonitor;
-import org.eclipse.wst.internet.monitor.core.ProtocolAdapterDelegate;
 import org.eclipse.wst.internet.monitor.core.internal.Connection;
+import org.eclipse.wst.internet.monitor.core.internal.ProtocolAdapterDelegate;
 /**
  * 
  */

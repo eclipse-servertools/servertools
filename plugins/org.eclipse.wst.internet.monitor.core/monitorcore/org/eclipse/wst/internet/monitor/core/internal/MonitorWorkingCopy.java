@@ -27,7 +27,14 @@ public class MonitorWorkingCopy extends Monitor implements IMonitorWorkingCopy {
 		this.monitor = monitor;
 		setInternal(monitor);
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.internet.monitor.internal.IMonitorWorkingCopy#getOriginal()
+	 */
+	public IMonitor getOriginal() {
+		return monitor;
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.internet.monitor.internal.IMonitorWorkingCopy#setRemoteHost(java.lang.String)
 	 */
@@ -59,19 +66,19 @@ public class MonitorWorkingCopy extends Monitor implements IMonitorWorkingCopy {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.internet.monitor.internal.IMonitorWorkingCopy#setProtocolAdapter(IProtocolAdapter)
 	 */
-	public void setProtocolAdapter(IProtocolAdapter protocolAdapter) {
-		type = protocolAdapter;
+	public void setProtocol(String protocolId2) {
+		protocolId = protocolId2;
 	}
 	
 	public boolean isWorkingCopy() {
 		return true;
 	}
 	
-	public IMonitorWorkingCopy getWorkingCopy() {
+	public IMonitorWorkingCopy createWorkingCopy() {
 		return this;
 	}
-	
-	public IMonitor save() {
+
+	public synchronized IMonitor save() {
 		MonitorManager mm = MonitorManager.getInstance();
 		if (monitor != null) {
 			//boolean restart = false;

@@ -28,7 +28,8 @@ public class AcceptThread {
 	
 	class ServerThread extends Thread {
 		/**
-		 * Actual running of the server proxy.
+		 * ServerThread accepts incoming connections and delegates to the protocol
+		 * adapter to deal with the connection.
 		 */
 	   public void run() {
 		   // create a new server socket
@@ -51,7 +52,8 @@ public class AcceptThread {
 				   Socket remoteSocket = new Socket(monitor.getRemoteHost(), monitor.getRemotePort());
 		
 				   // relay the call through
-				   ProtocolAdapter adapter = (ProtocolAdapter) monitor.getProtocolAdapter();
+				   String protocolId = monitor.getProtocol();
+				   ProtocolAdapter adapter = MonitorPlugin.getInstance().getProtocolAdapter(protocolId);
 				   adapter.parse(monitor, localSocket, remoteSocket);
 			   } catch (InterruptedIOException e) {
 			   	// do nothing
@@ -64,7 +66,7 @@ public class AcceptThread {
 	}
 
 	/**
-	 * ServerMonitorThread constructor comment.
+	 * AcceptThread constructor comment.
 	 */
 	public AcceptThread(IMonitor monitor) {
 		super();

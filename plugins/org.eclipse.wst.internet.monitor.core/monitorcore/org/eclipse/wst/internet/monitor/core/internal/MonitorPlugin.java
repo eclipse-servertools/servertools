@@ -14,7 +14,6 @@ import java.util.*;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.wst.internet.monitor.core.IContentFilter;
-import org.eclipse.wst.internet.monitor.core.IProtocolAdapter;
 import org.eclipse.wst.internet.monitor.core.IRequestListener;
 /**
  * The monitor core plugin.
@@ -61,21 +60,44 @@ public class MonitorPlugin extends Plugin {
 		}
 	}
 	
-	public IProtocolAdapter getDefaultType() {
-		return (ProtocolAdapter) protocolAdapters.get("HTTP");
+	public String getDefaultType() {
+		return "HTTP";
 	}
-	
-	public IProtocolAdapter getProtocolAdapter(String id) {
+
+	/**
+	 * Returns the protocol adapter with the given id, or <code>null</code>
+	 * if none. This convenience method searches the list of known
+	 * protocol adapters ({@link #getProtocolAdapters()}) for the one with a
+	 * matching id ({@link IProtocolAdater#getId()}).
+	 *
+	 * @param the protocol adapter id; must not be <code>null</code>
+	 * @return the protocol adapter instance, or <code>null</code> if there
+	 *   is no protocol adapter with the given id
+	 */
+	public ProtocolAdapter getProtocolAdapter(String id) {
 		return (ProtocolAdapter) protocolAdapters.get(id);
 	}
 
-	public IProtocolAdapter[] getProtocolAdapters() {
+	/**
+	 * Returns a list of all known protocol adapter instances.
+	 * <p>
+	 * Protocol adapters are registered via the <code>protocolAdapaters</code>
+	 * extension point in the <code>org.eclipse.wst.internet.monitor.core</code>
+	 * plug-in.
+	 * </p>
+	 * <p>
+	 * A new array is returned on each call; clients may safely store or modify the result.
+	 * </p>
+	 * 
+	 * @return a possibly-empty array of protocol adapter instances
+	 */
+	public ProtocolAdapter[] getProtocolAdapters() {
 		List list = new ArrayList();
 		Iterator iterator = protocolAdapters.values().iterator();
 		while (iterator.hasNext()) {
 			list.add(iterator.next());
 		}
-		IProtocolAdapter[] types = new IProtocolAdapter[list.size()];
+		ProtocolAdapter[] types = new ProtocolAdapter[list.size()];
 		list.toArray(types);
 		return types;
 	}
@@ -91,7 +113,7 @@ public class MonitorPlugin extends Plugin {
 		return cf;
 	}
 	
-	public IContentFilter getContentFilter(String id) {
+	public IContentFilter findContentFilter(String id) {
 		return (IContentFilter) contentFilters.get(id);
 	}
 	

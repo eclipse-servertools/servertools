@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.internet.monitor.core.*;
 import org.eclipse.wst.internet.monitor.ui.ContentViewer;
-import org.eclipse.wst.internet.monitor.ui.EditableContentViewer;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
 import org.eclipse.wst.internet.monitor.ui.internal.Trace;
 import org.eclipse.wst.internet.monitor.ui.internal.viewers.ByteViewer;
@@ -95,20 +94,19 @@ public class ViewerManager implements IViewerManager{
 	}
 
 	public void setRequest(IRequest rr) {
-		// Maintain the state of the request and request header if they've been modified.
-		if (request instanceof IResendRequest
-				&& request.getResponse(IRequest.ALL) == null) {
-			if (reqViewer instanceof EditableContentViewer) {
-				IResendRequest resRequest = (IResendRequest) request;
-				EditableContentViewer editViewer = (EditableContentViewer) reqViewer;
-				byte[] content = editViewer.getContent();
-				if (content != null && !MonitorCore.parse(resRequest.getRequest(IRequest.CONTENT)).equals(MonitorCore.parse(content))) {
-					resRequest.setRequest(content, IRequest.CONTENT);
-				}
-				byte[] header = reqHeader.getContent();
-				if (header != null && !MonitorCore.parse(resRequest.getRequest(IRequest.TRANSPORT)).equals(MonitorCore.parse(header))) {
-					resRequest.setRequest(header, IRequest.TRANSPORT);
-				}
+		// maintain the state of the request and request header if they've been modified.
+		if (request instanceof IResendRequest && request.getResponse(IRequest.ALL) == null) {
+			IResendRequest resRequest = (IResendRequest) request;
+			//EditableContentViewer editViewer = (ContentViewer) reqViewer;
+			byte[] content = reqViewer.getContent();
+			byte[] b = resRequest.getRequest(IRequest.CONTENT);
+			if (content != null && b != null && !MonitorUIPlugin.parse(b).equals(MonitorUIPlugin.parse(content))) {
+				resRequest.setRequest(content, IRequest.CONTENT);
+			}
+			byte[] header = reqHeader.getContent();
+			b = resRequest.getRequest(IRequest.TRANSPORT);
+			if (header != null && b != null && !MonitorUIPlugin.parse(b).equals(MonitorUIPlugin.parse(header))) {
+				resRequest.setRequest(header, IRequest.TRANSPORT);
 			}
 		}
 		reqHeader.setRequestResponse(rr);
@@ -124,19 +122,16 @@ public class ViewerManager implements IViewerManager{
 		request = rr;
 		// Set the editor to editable if the request hasn't  been sent and the
 		// editor can be set as editable.
-		if (request instanceof IResendRequest
-				&& request.getResponse(IRequest.ALL) == null) {
+		if (request instanceof IResendRequest && request.getResponse(IRequest.ALL) == null) {
 			if (displayHeaderInf) {
 				reqHeader.setEditable(true);
 			}
-			if (reqViewer instanceof EditableContentViewer)
-				((EditableContentViewer) reqViewer).setEditable(true);
+			reqViewer.setEditable(true);
 		} else {
 			if (displayHeaderInf) {
 				reqHeader.setEditable(false);
 			}
-			if (reqViewer instanceof EditableContentViewer)
-				((EditableContentViewer) reqViewer).setEditable(false);
+			reqViewer.setEditable(false);
 		}
 	}
 
@@ -212,15 +207,12 @@ public class ViewerManager implements IViewerManager{
 		byte[] b = null;
 		if (request != null) {
 			b = filter(request.getRequest(IRequest.CONTENT));
-			// Set the editor to editable if the request hasn't  been sent and the
-			// editor can be set as editable.
-			if (request instanceof IResendRequest
-					&& request.getResponse(IRequest.TRANSPORT) == null) {
-				if (reqViewer instanceof EditableContentViewer)
-					((EditableContentViewer) reqViewer).setEditable(true);
+			// set the editor to editable if the request hasn't been sent and the
+			// editor can be set as editable
+			if (request instanceof IResendRequest && request.getResponse(IRequest.TRANSPORT) == null) {
+				reqViewer.setEditable(true);
 			} else {
-				if (reqViewer instanceof EditableContentViewer)
-					((EditableContentViewer) reqViewer).setEditable(false);
+				reqViewer.setEditable(false);
 			}
 		}
 		reqViewer.setContent(b);

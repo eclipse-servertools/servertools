@@ -13,6 +13,7 @@ package org.eclipse.wst.internet.monitor.core.internal.http;
 import java.io.*;
 import org.eclipse.wst.internet.monitor.core.IRequest;
 import org.eclipse.wst.internet.monitor.core.internal.Connection;
+import org.eclipse.wst.internet.monitor.core.internal.Request;
 import org.eclipse.wst.internet.monitor.core.internal.Trace;
 /**
  * Monitor server I/O thread.
@@ -446,7 +447,7 @@ Host: localhost:8081
 					if (isRequest && keepAlive)
 						waitForResponse();
 					
-					IRequest r = conn.getRequestResponse(true);
+					Request r = (Request) conn.getRequestResponse(true);
 					r.fireChangedEvent();
 
 					Trace.trace(Trace.PARSING, "Done HTTP request for " + this + " " + keepAlive);
@@ -589,20 +590,20 @@ Host: localhost:8081
 			byte[] b = rr.getRequest(IRequest.ALL);
 			byte[] h = new byte[b.length];
 			System.arraycopy(b, 0, h, 0, b.length);
-			rr.addProperty(HTTPRequest.HTTP_REQUEST_HEADER, h);
+			rr.setProperty(HTTPRequest.HTTP_REQUEST_HEADER, h);
 		} else {
 			byte[] b = rr.getResponse(IRequest.ALL);
 			byte[] h = new byte[b.length];
 			System.arraycopy(b, 0, h, 0, b.length);
-			rr.addProperty(HTTPRequest.HTTP_RESPONSE_HEADER, h);
+			rr.setProperty(HTTPRequest.HTTP_RESPONSE_HEADER, h);
 		}
 	}
 	
 	protected void setHTTPBody(byte[] b) {
 		IRequest rr = conn.getRequestResponse(isRequest);
 		if (isRequest)
-			rr.addProperty(HTTPRequest.HTTP_REQUEST_BODY, b);
+			rr.setProperty(HTTPRequest.HTTP_REQUEST_BODY, b);
 		else
-			rr.addProperty(HTTPRequest.HTTP_RESPONSE_BODY, b);
+			rr.setProperty(HTTPRequest.HTTP_RESPONSE_BODY, b);
 	}
 }

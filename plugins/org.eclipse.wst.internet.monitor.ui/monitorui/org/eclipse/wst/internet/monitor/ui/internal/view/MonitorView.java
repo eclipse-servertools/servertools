@@ -54,7 +54,7 @@ public class MonitorView extends ViewPart {
 
 	protected IAction httpHeaderAction;
 	
-	protected static MonitorView view;
+	public static MonitorView view;
 	
 	protected IRequest currentRequest = null;
 	protected StructuredSelection currentSelection = null;
@@ -66,45 +66,30 @@ public class MonitorView extends ViewPart {
 		super();
 		view = this;
 	}
-	
-	protected void addListener() {
-		listener = new IRequestListener() {
-			public void requestAdded(final IRequest rr) {
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						if(!(rr instanceof IResendRequest))
-						{
-						  Integer in = new Integer(rr.getLocalPort());
-						  treeViewer.add(MonitorTreeContentProvider.ROOT, in);
-						  treeViewer.add(in, rr); 
-						  treeViewer.setSelection(new StructuredSelection(rr), true);
-						}
-					}
-				});
-			}
 
-			public void requestChanged(final IRequest rr) {
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						IStructuredSelection sel = (IStructuredSelection) treeViewer.getSelection();
-						
-						treeViewer.refresh(rr);
-						if (!sel.isEmpty())
-							treeViewer.setSelection(sel);
-					}
-				});
+	public void doRequestAdded(final IRequest rr) {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				if (!(rr instanceof IResendRequest)) {
+				  Integer in = new Integer(rr.getLocalPort());
+				  treeViewer.add(MonitorTreeContentProvider.ROOT, in);
+				  treeViewer.add(in, rr); 
+				  treeViewer.setSelection(new StructuredSelection(rr), true);
+				}
 			}
+		});
+	}
 
-			public void requestRemoved(final IRequest rr) {
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						treeViewer.remove(rr);
-					}
-				});
+	public void doRequestChanged(final IRequest rr) {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				IStructuredSelection sel = (IStructuredSelection) treeViewer.getSelection();
+				
+				treeViewer.refresh(rr);
+				if (!sel.isEmpty())
+					treeViewer.setSelection(sel);
 			}
-		};
-	
-		MonitorCore.addRequestListener(listener);
+		});
 	}
 
 	/**
@@ -373,7 +358,7 @@ public class MonitorView extends ViewPart {
 						String time = MonitorUIPlugin.getResource("%viewResponseTimeFormat", req.getResponseTime() + "");
 						label2.setText(MonitorUIPlugin.getResource("%viewResponseTime", time));
 					}
-					label3.setText(MonitorUIPlugin.getResource("%viewType", req.getProtocolAdapter().getName()));
+					label3.setText(MonitorUIPlugin.getResource("%viewType", req.getProtocol()));
 	
 					// request information
 					requestLabel.setText(MonitorUIPlugin.getResource("%viewRequest", "localhost:" + req.getLocalPort()));
@@ -398,7 +383,7 @@ public class MonitorView extends ViewPart {
 		});
 		treeViewer.expandToLevel(2);
 		
-        // Create a menu manager for a context menu.
+		// create a menu manager for a context menu
 		MenuManager menuManager = new MenuManager();
 		menuManager.setRemoveAllWhenShown(true);
 		menuManager.addMenuListener(new IMenuListener() {
@@ -407,16 +392,14 @@ public class MonitorView extends ViewPart {
 			}
 		});
 
-		// create the menu.
+		// create the menu
 		Menu menu = menuManager.createContextMenu(treeViewer.getControl());
 		treeViewer.getControl().setMenu(menu);
 		
-		// register the menu with the platform.
+		// register the menu with the platform
 		getSite().registerContextMenu(menuManager, treeViewer);
         
 		initializeActions();
-	
-		addListener();
 	}
 	
 	protected String getSizeString(byte[] a, byte[] b) {
@@ -433,7 +416,7 @@ public class MonitorView extends ViewPart {
 	public void dispose() {
 		super.dispose();
 		treeViewer = null;
-		MonitorCore.removeRequestListener(listener);
+		view = null;
 	}
 
 	/**
@@ -460,7 +443,7 @@ public class MonitorView extends ViewPart {
 	
 		IAction clearAction = new Action() {
 			public void run() {
-				MonitorCore.removeAllRequests();
+				MonitorUIPlugin.getInstance().clearRequests();
 			}
 		};
 		clearAction.setToolTipText(MonitorUIPlugin.getResource("%actionClearToolTip"));
@@ -487,7 +470,7 @@ public class MonitorView extends ViewPart {
 				IWorkbench workbench = PlatformUI.getWorkbench();
 				IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
 								
-				MonitorPrefrencesDialog monitorPrefDialog = new MonitorPrefrencesDialog(workbenchWindow.getShell());
+				MonitorPreferencesDialog monitorPrefDialog = new MonitorPreferencesDialog(workbenchWindow.getShell());
 				if (monitorPrefDialog.open() == Window.CANCEL)
 					return;
 			}
@@ -519,8 +502,6 @@ public class MonitorView extends ViewPart {
 				try {
 					IWorkbench workbench = MonitorUIPlugin.getInstance().getWorkbench();
 					IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
-					//if (workbenchWindow == null)
-					//	workbenchWindow = workbench.getWorkbenchWindows()[0];
 	
 					IWorkbenchPage page = workbenchWindow.getActivePage();
 	

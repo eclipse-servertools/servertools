@@ -14,14 +14,12 @@ import java.io.IOException;
 import java.net.Socket;
 
 import org.eclipse.wst.internet.monitor.core.IMonitor;
-import org.eclipse.wst.internet.monitor.core.MonitorCore;
-import org.eclipse.wst.internet.monitor.core.ProtocolAdapterDelegate;
 /**
  * 
  */
 public class TCPIPProtocolAdapter extends ProtocolAdapterDelegate {
 	public void connect(IMonitor monitor, Socket in, Socket out) throws IOException {
-		Request request = new Request(MonitorCore.findProtocolAdapter("TCPIP"), monitor.getLocalPort(), monitor.getRemoteHost(), monitor.getRemotePort());
+		Request request = new Request((Monitor) monitor, IProtocolAdapter.TCPIP_PROTOCOL_ID, monitor.getLocalPort(), monitor.getRemoteHost(), monitor.getRemotePort());
 		Connection conn = new Connection(in, out);
 		DefaultThread requestThread = new DefaultThread(conn, request, in.getInputStream(), out.getOutputStream(), true);
 		requestThread.start();

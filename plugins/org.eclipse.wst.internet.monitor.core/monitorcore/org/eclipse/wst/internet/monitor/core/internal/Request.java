@@ -16,13 +16,13 @@ import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.internet.monitor.core.IProtocolAdapter;
 import org.eclipse.wst.internet.monitor.core.IRequest;
 import org.eclipse.wst.internet.monitor.core.IResendRequest;
 /**
  * A single TCP/IP request/response pair.
  */
 public class Request implements IRequest {
+	protected Monitor monitor;
 	protected Date date;
 	protected long responseTime = -1;
 	protected int localPort;
@@ -32,29 +32,29 @@ public class Request implements IRequest {
 	protected byte[] response;
 	
 	protected String label;
-	protected IProtocolAdapter type;
+	protected String protocolId;
 
 	protected Properties properties;
 	
 	protected List resendRequests = new ArrayList();
 
-
 	/**
 	 * RequestResponse constructor comment.
 	 */
-	public Request(IProtocolAdapter type, int localPort, String remoteHost, int remotePort) {
+	public Request(Monitor monitor, String protocolId, int localPort, String remoteHost, int remotePort) {
 		super();
-		this.type = type;
+		this.monitor = monitor;
+		this.protocolId = protocolId;
 		this.localPort = localPort;
 		this.remoteHost = remoteHost;
 		this.remotePort = remotePort;
 		date = new Date();
 		properties = new Properties();
-		MonitorManager.getInstance().addRequest(this);
+		monitor.addRequest(this);
 	}
-	
-	public IProtocolAdapter getProtocolAdapter() {
-		return type;
+
+	public String getProtocol() {
+		return protocolId;
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class Request implements IRequest {
 	
 		this.request = request;
 	
-		MonitorManager.getInstance().requestChanged(this);
+		monitor.requestChanged(this);
 	}
 
 	/**
@@ -201,7 +201,7 @@ public class Request implements IRequest {
 	
 		responseTime = System.currentTimeMillis() - date.getTime();
 	
-		MonitorManager.getInstance().requestChanged(this);
+		monitor.requestChanged(this);
 	}
 
 	/**
@@ -215,48 +215,27 @@ public class Request implements IRequest {
 			return;
 	
 		label = s;
-		MonitorManager.getInstance().requestChanged(this);
+		monitor.requestChanged(this);
 	}
 	
 	/**
 	 * 
 	 */
-	public void addProperty(String key, Object value) {
+	public void setProperty(String key, Object value) {
 		try {
 			if (properties.containsKey(key))
 				properties.remove(key);
-			properties.put(key, value);
+			if (value != null)
+				properties.put(key, value);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not add property", e);
 		}
 	}
-	
+
 	/**
 	 * 
 	 */
-	public String getStringProperty(String key) {
-		try {
-			return (String) properties.get(key);
-		} catch (Exception e) {
-			return "";
-		}
-	}
-	
-	/**
-	 * 
-	 */
-	public Integer getIntegerProperty(String key) {
-		try {
-			return (Integer) properties.get(key);
-		} catch (Exception e) {
-			return null;
-		}
-	}
-	
-	/**
-	 * 
-	 */
-	public Object getObjectProperty(String key) {
+	public Object getProperty(String key) {
 		try {
 			return properties.get(key);
 		} catch (Exception e) {
@@ -264,8 +243,12 @@ public class Request implements IRequest {
 		}
 	}
 	
+	public Monitor getMonitor() {
+		return monitor;
+	}
+	
 	public void fireChangedEvent() {
-		MonitorManager.getInstance().requestChanged(this);
+		monitor.requestChanged(this);
 	}
 	
 	/* (non-Javadoc)

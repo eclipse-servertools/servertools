@@ -12,6 +12,7 @@ package org.eclipse.wst.internet.monitor.core.internal.http;
 
 import org.eclipse.wst.internet.monitor.core.IMonitor;
 import org.eclipse.wst.internet.monitor.core.IRequest;
+import org.eclipse.wst.internet.monitor.core.internal.Monitor;
 import org.eclipse.wst.internet.monitor.core.internal.Trace;
 
 import java.util.List;
@@ -67,7 +68,7 @@ public class HTTPConnection {
 	 */
 	public void addProperty(String key, Object value) {
 		IRequest pair = getRequestResponse(req);
-		pair.addProperty(key, value);
+		pair.setProperty(key, value);
 	}
 
 	/**
@@ -86,7 +87,7 @@ public class HTTPConnection {
 	protected IRequest getRequestResponse(int i) {
 		synchronized (this) {
 			while (i >= calls.size()) {
-				IRequest rr = new HTTPRequest(monitor.getLocalPort(), monitor.getRemoteHost(), monitor.getRemotePort());
+				IRequest rr = new HTTPRequest((Monitor) monitor, monitor.getLocalPort(), monitor.getRemoteHost(), monitor.getRemotePort());
 				calls.add(rr);
 				return rr;
 			}

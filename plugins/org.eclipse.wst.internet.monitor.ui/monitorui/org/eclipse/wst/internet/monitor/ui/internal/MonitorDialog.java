@@ -10,9 +10,10 @@
  **********************************************************************/
 package org.eclipse.wst.internet.monitor.ui.internal;
 
-import java.net.InetAddress;
-
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
@@ -28,8 +29,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.internet.monitor.core.IMonitorWorkingCopy;
-import org.eclipse.wst.internet.monitor.core.IProtocolAdapter;
 import org.eclipse.wst.internet.monitor.core.MonitorCore;
+import org.eclipse.wst.internet.monitor.core.internal.IProtocolAdapter;
 /**
  * 
  */
@@ -39,7 +40,6 @@ public class MonitorDialog extends Dialog {
 	
 	private Button okButton;
 	private Text monitorPort;
-	private Text remoteHostname;
 	private Text remotePort;
 	
 	interface StringModifyListener {
@@ -100,13 +100,13 @@ public class MonitorDialog extends Dialog {
 		return text;
 	}
 	
-	protected Combo createTypeCombo(Composite comp, final IProtocolAdapter[] types, IProtocolAdapter sel, final TypeModifyListener listener) {
+	protected Combo createTypeCombo(Composite comp, final String[] types, String sel, final StringModifyListener listener) {
 		final Combo combo = new Combo(comp, SWT.DROP_DOWN | SWT.READ_ONLY);
 		int size = types.length;
 		String[] items = new String[size];
 		int index = -1;
 		for (int i = 0; i < size; i++) {
-			items[i] = types[i].getName();
+			items[i] = types[i];
 			if (types[i].equals(sel))
 				index = i;
 		}
@@ -158,7 +158,7 @@ public class MonitorDialog extends Dialog {
 		group.setText(MonitorUIPlugin.getResource("%remoteGroup"));
 		
 		createLabel(group, MonitorUIPlugin.getResource("%remoteHost"));		
-		remoteHostname = createText(group, monitor.getRemoteHost(), new StringModifyListener() {
+		createText(group, monitor.getRemoteHost(), new StringModifyListener() {
 			public void valueChanged(String s) {
 				monitor.setRemoteHost(s);
 				validateFields();
@@ -178,9 +178,9 @@ public class MonitorDialog extends Dialog {
 		});
 		
 		createLabel(group, MonitorUIPlugin.getResource("%parseType"));		
-		createTypeCombo(group, MonitorCore.getProtocolAdapters(), monitor.getProtocolAdapter(), new TypeModifyListener() {
-			public void valueChanged(IProtocolAdapter type) {
-				monitor.setProtocolAdapter(type);
+		createTypeCombo(group, new String[] {"TCP/IP","HTTP"}, monitor.getProtocol(), new StringModifyListener() {
+			public void valueChanged(String protocolId) {
+				monitor.setProtocol(protocolId);
 			}
 		});
 		
@@ -191,7 +191,12 @@ public class MonitorDialog extends Dialog {
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
 	 */
 	protected void okPressed() {
-		monitor.save();
+		try {
+			monitor.save();
+		} catch (CoreException ce) {
+			ErrorDialog.openError(getShell(), MonitorUIPlugin.getResource("%errorDialogTitle"), ce.getLocalizedMessage(), ce.getStatus());
+			return;
+		}
 		super.okPressed();
 	}
 
@@ -214,59 +219,17 @@ public class MonitorDialog extends Dialog {
 			return;
 		
 		boolean result = true;
-
-		String currHostname = remoteHostname.getText();
-		if (!isValidHostname(currHostname))
-			result = false;
-		
-		String currHostnamePort = remotePort.getText();
 		try {
-			Integer.parseInt(currHostnamePort);
-		} catch (Exception any) {
-			result = false;
-		}
-		
-		String currMonitorPort = monitorPort.getText();
-		try {
-			Integer.parseInt(currMonitorPort);
-		} catch (Exception any) {
-			result = false;
-		}
-		
-		if (result && isLocalhost(currHostname)) {
-			if (currHostnamePort.equals(currMonitorPort))
-				result = false;
-		}
-		setOKButtonEnabled(result);
-	}
-	
-	protected static boolean isValidHostname(String host) {
-		if (host == null || host.trim().length() < 1)
-			return false;
-		
-		int length = host.length();
-		for (int i = 0; i < length; i++) {
-			char c = host.charAt(i);
-			if (!Character.isLetterOrDigit(c) && c != ':' && c != '.')
-				return false;
-		}
-		if (host.endsWith(":"))
-			return false;
-		return true;
-	}
-
-	protected static boolean isLocalhost(String host) {
-		if (host == null)
-			return false;
-		try {
-			if ("localhost".equals(host) || "127.0.0.1".equals(host))
-				return true;
-			InetAddress localHostaddr = InetAddress.getLocalHost();
-			if (localHostaddr.getHostName().equals(host))
-				return true;
+			Integer.parseInt(remotePort.getText());
+			Integer.parseInt(monitorPort.getText());
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Error checking for localhost", e);
+			result = false;
 		}
-		return false;
+		
+		IStatus status = monitor.validate();
+		if (!status.isOK())
+			result = false;
+		
+		setOKButtonEnabled(result);
 	}
 }
