@@ -16,9 +16,13 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.action.*;
+import org.eclipse.jface.preference.IPreferenceNode;
+import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -468,12 +472,7 @@ public class MonitorView extends ViewPart {
 
 		IAction preferenceAction = new Action() {
 			public void run() {
-				IWorkbench workbench = PlatformUI.getWorkbench();
-				IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
-								
-				MonitorPreferencesDialog monitorPrefDialog = new MonitorPreferencesDialog(workbenchWindow.getShell());
-				if (monitorPrefDialog.open() == Window.CANCEL)
-					return;
+				showPreferencePage();
 			}
 		};
 		preferenceAction.setText(MonitorUIPlugin.getResource("%actionProperties"));
@@ -492,6 +491,24 @@ public class MonitorView extends ViewPart {
 			menuManager.add(action);
 		}
 		menuManager.add(preferenceAction);
+	}
+
+	protected boolean showPreferencePage() {
+		PreferenceManager manager = PlatformUI.getWorkbench().getPreferenceManager();
+		IPreferenceNode node = manager.find("org.eclipse.internet").findSubNode("org.eclipse.wst.internet.monitor.preferencePage");
+		PreferenceManager manager2 = new PreferenceManager();
+		manager2.addToRoot(node);
+		
+		final PreferenceDialog dialog = new PreferenceDialog(getSite().getShell(), manager2);
+		final boolean[] result = new boolean[] { false };
+		BusyIndicator.showWhile(getSite().getShell().getDisplay(), new Runnable() {
+			public void run() {
+				dialog.create();
+				if (dialog.open() == Window.OK)
+					result[0] = true;
+			}
+		});
+		return result[0];
 	}
 
 	/**
