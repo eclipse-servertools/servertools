@@ -57,8 +57,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
      * @see org.eclipse.wst.server.core.model.ServerBehaviourDelegate#publishServer(org.eclipse.core.runtime.IProgressMonitor)
      */
     public void publishServer(int kind, IProgressMonitor monitor) throws CoreException {
-        // TODO Auto-generated method stub
-
+        
     }
 
     /* (non-Javadoc)
@@ -285,13 +284,17 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
         workingCopy.setAttribute(
                 IJavaLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY,
                 getWorkingDirectory());
-        workingCopy.setAttribute(
-                IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
-                getProgramArguments());
-        workingCopy.setAttribute(
-                IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
-                getVmArguments());
-    
+        
+        String existingProgArgs  = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, (String)null);
+        String serverProgArgs =  getProgramArguments();
+        if(existingProgArgs==null || existingProgArgs.indexOf(serverProgArgs)<0) {
+            workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,serverProgArgs);
+        }
+        String existingVMArgs = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,(String)null);
+        String serverVMArgs= getVmArguments();
+        if(existingVMArgs==null || existingVMArgs.indexOf(serverVMArgs)<0) {
+            workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,serverVMArgs);
+        }
     }
     /**
     	 * Setup for starting the server.
@@ -390,5 +393,15 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     public void initialize() {
       super.initialize();
       setModules(getServer().getModules());
+    }
+    public void publishFinish(IProgressMonitor monitor) throws CoreException {
+        IModule[] modules = this.getServer().getModules();
+        boolean allpublished= true;
+        for (int i = 0; i < modules.length; i++) {
+            if(this.getServer().getModulePublishState(modules[i])!=IServer.PUBLISH_STATE_NONE)
+                allpublished=false;
+        }
+        if(allpublished)
+            setServerPublishState(IServer.PUBLISH_STATE_NONE);
     }
 }
