@@ -21,52 +21,58 @@ package org.eclipse.wst.server.core;
  * @since 1.0
  */
 public interface IOptionalTask extends ITask {
-    /**
-     * Optional task status constant (value 0) indicating that the task
-     * should not be run.
-     * 
-     * @see #getStatus()
-     */
+
+   /**
+	 * Optional task status constant (value 0) indicating that the task should
+	 * not be run.
+	 * 
+	 * @see #getStatus()
+	 */
 	public static final int TASK_UNNECESSARY = 0;
-    /**
-     * Optional task status constant (value 1) indicating that the task
-     * is completed.
-     * 
-     * @see #getStatus()
-     */
+
+	/**
+	 * Optional task status constant (value 1) indicating that the task is
+	 * completed.
+	 * 
+	 * @see #getStatus()
+	 */
 	public static final int TASK_COMPLETED = 1;
-    /**
-     * Optional task status constant (value 2) indicating that the task
-     * is ready to be run.
-     * 
-     * @see #getStatus()
-     */
+
+	/**
+	 * Optional task status constant (value 2) indicating that the task is ready
+	 * to be run.
+	 * 
+	 * @see #getStatus()
+	 */
 	public static final int TASK_READY = 2;
-    /**
-     * Optional task status constant (value 3) indicating that the task
-     * should be selected to be run by default.
-     * 
-     * @see #getStatus()
-     */
+
+	/**
+	 * Optional task status constant (value 3) indicating that the task should be
+	 * selected to be run by default.
+	 * 
+	 * @see #getStatus()
+	 */
 	public static final int TASK_PREFERRED = 3;
-    /**
-     * Optional task status constant (value 4) indicating that the task
-     * must be run.
-     * 
-     * @see #getStatus()
-     */
+
+	/**
+	 * Optional task status constant (value 4) indicating that the task must be
+	 * run.
+	 * 
+	 * @see #getStatus()
+	 */
 	public static final int TASK_MANDATORY = 4;
 
 	/**
 	 * Returns the status of this task.
-     * 
-     * issue: EY Should this status can return any of the TASK_XXX? The TASK_XXX looks
-     * like a mix of status, e.g. for TASK_COMPLETED and TASK_READY. The other TASK_XXX
-     * look like a nature of the task, e.g. TASK_UNNECESSARY, TASK_PREFERRED, TASK_MANDATORY.
-     * Is this being used for both status and deciding whether the task should be shown? 
-     *  
-     * @return one of the status of the task (<code>TASK_XXX</code>)
-     * constants declared on {@link IOptionalTask}
+	 * 
+	 * issue: EY Should this status can return any of the TASK_XXX? The TASK_XXX
+	 * looks like a mix of status, e.g. for TASK_COMPLETED and TASK_READY. The
+	 * other TASK_XXX look like a nature of the task, e.g. TASK_UNNECESSARY,
+	 * TASK_PREFERRED, TASK_MANDATORY. Is this being used for both status and
+	 * deciding whether the task should be shown?
+	 * 
+	 * @return one of the status of the task (<code>TASK_XXX</code>)
+	 *         constants declared on {@link IOptionalTask}
 	 */
 	public int getStatus();
 	
