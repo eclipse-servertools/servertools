@@ -24,7 +24,8 @@ import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.Trace;
 /**
- * Server utility methods.
+ * Server utility methods. These static methods can be used to perform
+ * common operations on server artifacts.
  * 
  * @since 1.0
  */
@@ -35,9 +36,12 @@ public class ServerUtil {
 	private ServerUtil() {
 		// do nothing
 	}
-	
+
 	/**
 	 * Returns the project modules attached to a project.
+	 * 
+	 * @param project a project
+	 * @return a possibly empty array of modules
 	 */
 	public static IModule[] getModules(IProject project) {
 		if (project == null)
@@ -61,8 +65,8 @@ public class ServerUtil {
 	/**
 	 * Returns a module from the given moduleId. The moduleId must not be null.
 	 * 
-	 * @param moduleId
-	 * @return the module
+	 * @param moduleId a module id
+	 * @return the module, or <code>null</code> if the module could not be found
 	 */
 	public static IModule getModule(String moduleId) {
 		if (moduleId == null)
@@ -88,7 +92,7 @@ public class ServerUtil {
 	 * Return all the available modules from all factories whose
 	 * type matches the given module types.
 	 * 
-	 * @param moduleTypes
+	 * @param moduleTypes an array of module types
 	 * @return a possibly empty array of modules
 	 */
 	public static IModule[] getModules(IModuleType[] moduleTypes) {
@@ -117,7 +121,7 @@ public class ServerUtil {
 	 * Return all the available modules from all factories whose
 	 * type matches the given module type id.
 	 * 
-	 * @param type
+	 * @param type a module type
 	 * @return a possibly empty array of modules
 	 */
 	public static IModule[] getModules(String type) {
@@ -146,9 +150,9 @@ public class ServerUtil {
 	 * Returns <code>true</code> if any of the given moduleTypes have the given
 	 * module type id and version id.
 	 * 
-	 * @param moduleTypes
-	 * @param typeId
-	 * @param versionId
+	 * @param moduleTypes an array of module types
+	 * @param typeId a module type
+	 * @param versionId a module version
 	 * @return <code>true</code> if the module type is supported, and
 	 *    <code>false</code> otherwise
 	 */
@@ -178,8 +182,8 @@ public class ServerUtil {
 	 * Returns <code>true</code> if any of the given moduleTypes match the given
 	 * module type.
 	 * 
-	 * @param moduleTypes
-	 * @param mt
+	 * @param moduleTypes an array of modules types
+	 * @param mt a module type
 	 * @return <code>true</code> if the module type is supported, and
 	 *    <code>false</code> otherwise
 	 */
@@ -208,8 +212,8 @@ public class ServerUtil {
 	 * Returns true if the two given module types are compatible. The moduleTypes may not
 	 * be null.
 	 * 
-	 * @param moduleType
-	 * @param mt
+	 * @param moduleType a module type
+	 * @param mt a module type
 	 * @return <code>true</code> if the module type is supported, and
 	 *    <code>false</code> otherwise
 	 */
@@ -235,7 +239,7 @@ public class ServerUtil {
 	/**
 	 * Return all the available modules from all factories.
 	 * 
-	 * @return IModule[]
+	 * @return a possibly empty array of modules
 	 */
 	private static IModule[] getModules() {
 		List list = new ArrayList();
@@ -265,9 +269,9 @@ public class ServerUtil {
 	 * modules having the same parent (the parent will only be added once), but may not
 	 * handle the case where the same module or parent is being both added and removed.
 	 * 
-	 * @param server
-	 * @param add
-	 * @param remove
+	 * @param server a server
+	 * @param add an array of modules to add, or <code>null</code> to not add any
+	 * @param remove an array of modules to remove, or <code>null</code> to not remove any
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @throws CoreException
@@ -338,10 +342,10 @@ public class ServerUtil {
 	/**
 	 * Sets a default name on the given runtime.
 	 * 
-	 * @param wc
+	 * @param runtime a runtime
 	 */
-	public static void setRuntimeDefaultName(IRuntimeWorkingCopy wc) {
-		String typeName = wc.getRuntimeType().getName();
+	public static void setRuntimeDefaultName(IRuntimeWorkingCopy runtime) {
+		String typeName = runtime.getRuntimeType().getName();
 		
 		String name = ServerPlugin.getResource("%defaultRuntimeName", new String[] {typeName});
 		int i = 2;
@@ -349,20 +353,20 @@ public class ServerUtil {
 			name = ServerPlugin.getResource("%defaultRuntimeName2", new String[] {typeName, i + ""});
 			i++;
 		}
-		wc.setName(name);
+		runtime.setName(name);
 	}
 
 	/**
 	 * Sets a default name on the given server.
 	 * 
-	 * @param wc
+	 * @param server a server
 	 */
-	public static void setServerDefaultName(IServerWorkingCopy wc) {
-		if (wc == null)
+	public static void setServerDefaultName(IServerWorkingCopy server) {
+		if (server == null)
 			throw new IllegalArgumentException();
 		
-		String typeName = wc.getServerType().getName();
-		String host = wc.getHost();
+		String typeName = server.getServerType().getName();
+		String host = server.getHost();
 		
 		String name = ServerPlugin.getResource("%defaultServerName", new String[] {typeName, host});
 		int i = 2;
@@ -370,7 +374,7 @@ public class ServerUtil {
 			name = ServerPlugin.getResource("%defaultServerName2", new String[] {typeName, host, i + ""});
 			i++;
 		}
-		wc.setName(name);
+		server.setName(name);
 	}
 
 	private static boolean isValidFilename(String name) {
@@ -406,8 +410,8 @@ public class ServerUtil {
 	/**
 	 * Returns an unused file in the given project.
 	 * 
-	 * @param project
-	 * @param type
+	 * @param project a project
+	 * @param type a server type
 	 * @return an unused file within the given project
 	 */
 	public static IFile getUnusedServerFile(IProject project, IServerType type) {
@@ -427,7 +431,7 @@ public class ServerUtil {
 	/**
 	 * Returns true if a server or runtime exists with the given name.
 	 *
-	 * @param name java.lang.String
+	 * @param name a name
 	 * @return <code>true</code> if the name is in use, and <code>false</code>
 	 *    otherwise
 	 */
@@ -465,9 +469,10 @@ public class ServerUtil {
 	/**
 	 * Returns true if an element exists with the given name.
 	 *
-	 * @param project
-	 * @param name
-	 * @return boolean
+	 * @param project a project
+	 * @param name a file or folder name
+	 * @return boolean <code>true</code> if the file or folder name is being
+	 *    used, and <code>false</code> otherwise
 	 */
 	private static boolean isFileNameInUse(IProject project, String name) {
 		if (name == null || project == null)
@@ -485,8 +490,8 @@ public class ServerUtil {
 	 * Return a list of all runtime targets that match the given type and version.
 	 * If type or version is null, it matches all of that type or version.
 	 * 
-	 * @param type
-	 * @param version
+	 * @param type a module type
+	 * @param version a module version
 	 * @return a possibly-empty array of runtime instances {@link IRuntime}
 	 */
 	public static IRuntime[] getRuntimes(String type, String version) {
@@ -511,8 +516,8 @@ public class ServerUtil {
 	 * Return a list of all runtime types that match the given type and version.
 	 * If type or version is null, it matches all of that type or version.
 	 * 
-	 * @param type
-	 * @param version
+	 * @param type a module type
+	 * @param version a module version
 	 * @return a possibly-empty array of runtime type instances {@link IRuntimeType}
 	 */
 	public static IRuntimeType[] getRuntimeTypes(String type, String version) {
@@ -537,8 +542,8 @@ public class ServerUtil {
 	 * and partial runtime type id. If type, version, or runtimeTypeId is null,
 	 * it matches all of that type or version.
 	 * 
-	 * @param type
-	 * @param version
+	 * @param type a module type
+	 * @param version a module version
 	 * @return a possibly-empty array of runtime type instances {@link IRuntimeType}
 	 */
 	public static IRuntimeType[] getRuntimeTypes(String type, String version, String runtimeTypeId) {
@@ -565,11 +570,12 @@ public class ServerUtil {
 	 * method return servers where the parent deployable may throw errors. For
 	 * instance, this deployable may be the wrong spec level.
 	 *
-	 * @param module com.ibm.etools.server.core.IModule
-	 * @param includeErrors
+	 * @param module a module
+	 * @param includeErrors <code>true</code> to include servers that returned
+	 *    errors when trying to add the module, and <code>false</code> otherwise
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
-	 * @return com.ibm.etools.server.core.IServer[]
+	 * @return a possibly empty array of servers
 	 */
 	public static IServer[] getAvailableServersForModule(IModule module, boolean includeErrors, IProgressMonitor monitor) {
 		if (module == null)
@@ -623,7 +629,7 @@ public class ServerUtil {
 	/**
 	 * Returns a list of all servers that this module is configured on.
 	 * 
-	 * @param module org.eclipse.wst.server.core.model.IModule
+	 * @param module a module
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return a possibly-empty array of server instances {@link IServer}
@@ -652,11 +658,12 @@ public class ServerUtil {
 	/**
 	 * Returns true if the given server currently contains the given module.
 	 *
-	 * @param server org.eclipse.wst.server.core.IServer
-	 * @param module org.eclipse.wst.server.core.IModule
+	 * @param server a server
+	 * @param module a module
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
-	 * @return boolean
+	 * @return boolean <code>true</code> if the module is contained on the server,
+	 *    or <code>false</code> otherwise
 	 */
 	public static boolean containsModule(IServer server, final IModule module, IProgressMonitor monitor) {
 		if (server == null)

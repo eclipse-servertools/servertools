@@ -28,7 +28,7 @@ public abstract class LaunchableAdapterDelegate {
 	 * @param server the server
 	 * @param moduleArtifact a module artifact
 	 * @return the launchable object
-	 * @throws if there was an error doing the conversion
+	 * @throws CoreException if there was an error doing the conversion
 	 */
 	public abstract Object getLaunchable(IServer server, IModuleArtifact moduleArtifact) throws CoreException;
 }
