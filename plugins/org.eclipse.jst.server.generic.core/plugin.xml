@@ -52,8 +52,8 @@
        class="org.eclipse.jst.server.generic.internal.core.GenericServerRuntime"
        >
        <moduleType
-         types="j2ee.web"
-         versions="1.2, 1.3, 1.4"/>
+         types="j2ee"
+         versions="*"/>
     </runtimeType>
  </extension>
 

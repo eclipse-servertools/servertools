@@ -47,6 +47,7 @@ import org.eclipse.jst.server.generic.core.GenericServerCoreMessages;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.Port;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
+import org.eclipse.jst.server.core.IEJBModule;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerCore;
@@ -80,11 +81,13 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 
 	public IStatus canModifyModules(IModule[] add, IModule[] remove) {
 		Iterator iterator = getServerDefinition().getModule().iterator();
-		
-		while(iterator.hasNext())   {
+       
+        while(iterator.hasNext())   {
 	        Module module = (Module)iterator.next();
-	        if("j2ee.web".equals(module.getType()))
-	            return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "CanModifyModules", null);
+	        for (int i = 0; i < add.length; i++) {
+                if(add[i].getModuleType().getId().equals(module.getType()))
+                    return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "CanModifyModules", null);
+            }
 	    }
 		return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.getString("moduleNotCompatible"), null);
 	}
@@ -261,17 +264,31 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
      * @see org.eclipse.wst.server.core.model.ServerDelegate#getRootModules(org.eclipse.wst.server.core.IModule)
      */
     public IModule[] getRootModules(IModule module) throws CoreException {
-        // FIXME This is valid for only web modules. A generic server should
-        // support any
-        // kind of j2ee module. Fix this after the server architectures are
-        // determined.
-        IWebModule webModule = (IWebModule) module.getAdapter(IWebModule.class);
-        if (webModule != null) {
-            IStatus status = canModifyModules(new IModule[] { module }, null);
-            if (status == null || !status.isOK())
-                throw new CoreException(status);
-            return new IModule[] { module };
+
+        String type = module.getModuleType().getId();
+//FIXME this is j2ee only stuff.
+        if (type.equals("j2ee.ejb")) {
+            IEJBModule ejbModule = (IEJBModule) module.getAdapter(IEJBModule.class);
+            if (ejbModule != null) {
+                IStatus status = canModifyModules(new IModule[] { module },
+                        null);
+                if (status == null || !status.isOK())
+                    throw new CoreException(status);
+                return new IModule[] { module };
+            }
         }
+        if (type.equals("j2ee.web")) {
+
+            IWebModule webModule = (IWebModule) module.getAdapter(IWebModule.class);
+            if (webModule != null) {
+                IStatus status = canModifyModules(new IModule[] { module },
+                        null);
+                if (status == null || !status.isOK())
+                    throw new CoreException(status);
+                return new IModule[] { module };
+            }
+        }
+
         return null;
     }
 

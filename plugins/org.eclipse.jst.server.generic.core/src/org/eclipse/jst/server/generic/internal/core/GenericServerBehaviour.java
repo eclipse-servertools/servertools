@@ -387,4 +387,8 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     	String cpRef = getServerDefinition().getStop().getClasspathReference();
     	return serverClasspath(cpRef);
     }
+    public void initialize() {
+      super.initialize();
+      setModules(getServer().getModules());
+    }
 }

@@ -44,6 +44,7 @@ import org.eclipse.jst.server.generic.core.CorePlugin;
 import org.eclipse.jst.server.generic.internal.core.util.FileUtil;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.PublisherData;
+import org.eclipse.jst.server.core.IEJBModule;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.osgi.framework.Bundle;
@@ -111,16 +112,26 @@ public class AntPublisher extends GenericPublisher{
     }
 	private Map getPublishProperties(IModuleArtifact[] resource)
 	{
-		Module module =  fServerRuntime.getModule("j2ee.web");
-
-		Map props = new HashMap();
+        Map props = new HashMap();
+        //publish dir
+        Module module =  fServerRuntime.getModule(getModuleTypeId());
 		String modDir = module.getPublishDir();
 		modDir = fServerRuntime.getResolver().resolveProperties(modDir);
 
 		IWebModule webModule = (IWebModule)fModule.getAdapter(IWebModule.class);
-		String moduleName = this.guessModuleName(webModule);
+        IEJBModule ejbModule = (IEJBModule)fModule.getAdapter(IEJBModule.class);
+		String moduleName="unknownmodule";
+        String moduleDir="";
+        if(webModule!=null){    
+            moduleName = this.guessModuleName(webModule);
+            moduleDir = webModule.getLocation().toString();
+        }
+        if(ejbModule!=null){  
+            moduleName = fModule.getName();
+            moduleDir= ejbModule.getLocation().toString();
+        }
 		props.put("module.name",moduleName);
-		props.put("module.dir",webModule.getLocation().toString());
+		props.put("module.dir",moduleDir);
 		props.put("server.publish.dir",modDir);
 		return props;
 		
