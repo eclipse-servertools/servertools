@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.editor.ICommandManager;
 import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -550,7 +551,7 @@ public class GlobalCommandManager {
 	public static IFile[] getReadOnlyFiles(IServerAttributes server) {
 		try {
 			List list = new ArrayList();
-			IFile file = server.getFile();
+			IFile file = ((Server)server).getFile();
 			
 			if (file != null)
 				list.add(file);
@@ -625,7 +626,7 @@ public class GlobalCommandManager {
 		IServer server = info.wc.getOriginal();
 
 		if (server != null)
-			return server.getTimestamp();
+			return ((Server)server).getTimestamp();
 		return -1;
 	}
 

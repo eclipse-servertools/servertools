@@ -848,7 +848,7 @@ public class ResourceManager {
 		monitor.beginTask("", 2000);
 		
 		// try loading a server
-		if (file.getFileExtension().equals(IServerAttributes.FILE_EXTENSION)) {
+		if (file.getFileExtension().equals(Server.FILE_EXTENSION)) {
 			try {
 				IServer server = loadServer(file, ProgressUtil.getSubMonitorFor(monitor, 1000));
 				if (server != null) {
@@ -883,7 +883,7 @@ public class ResourceManager {
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
-				if (file.equals(servers[i].getFile()))
+				if (file.equals(((Server)servers[i]).getFile()))
 					return servers[i];
 			}
 		}

@@ -20,19 +20,14 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jdt.launching.*;
 
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerAttributes;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.ServerUtil;
 /**
  * 
  */
 public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigurationDelegate {
 
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
-		String serverId = configuration.getAttribute(IServerAttributes.ATTR_SERVER_ID, (String) null);
-
-		IServer server = null;
-		if (serverId != null)
-			server = ServerCore.findServer(serverId);
+		IServer server = ServerUtil.getServer(configuration);
 		if (server == null) {
 			Trace.trace(Trace.FINEST, "Launch configuration could not find server");
 			// throw CoreException();

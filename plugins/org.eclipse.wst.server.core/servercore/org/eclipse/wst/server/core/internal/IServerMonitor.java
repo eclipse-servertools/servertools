@@ -46,12 +46,12 @@ public interface IServerMonitor {
 	 * @param port
 	 * @return
 	 */
-	//public int startMonitoring(IServer server, IServerPort port, int monitorPort) throws CoreException;
+	//public int startMonitoring(IServer server, ServerPort port, int monitorPort) throws CoreException;
 
 	/**
 	 * Stop monitoring the given port.
 	 * 
 	 * @param port
 	 */
-	//public void stopMonitoring(IServer server, IServerPort port);
+	//public void stopMonitoring(IServer server, ServerPort port);
 }

@@ -20,7 +20,6 @@ import org.eclipse.wst.server.core.internal.ResourceManager;
 import org.eclipse.wst.server.core.model.ModuleEvent;
 import org.eclipse.wst.server.core.model.IModuleEventsListener;
 import org.eclipse.wst.server.core.model.ModuleFactoryEvent;
-import org.eclipse.wst.server.core.util.ServerAdapter;
 import org.eclipse.wst.server.ui.internal.view.tree.ModuleResourceAdapter;
 import org.eclipse.wst.server.ui.internal.view.tree.ServerElementAdapter;
 import org.eclipse.wst.server.ui.internal.view.tree.TextResourceAdapter;
@@ -35,13 +34,13 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 	
 	// listeners
 	protected LifecycleListener listener;
-	protected IServerListener serverListener;
+	//protected IServerListener serverListener;
 	protected IResourceChangeListener resourceChangeListener;
 	protected IModuleEventsListener moduleEventsListener;
 	
 	class LifecycleListener implements IServerLifecycleListener {
 		public void serverAdded(final IServer server) {
-			server.addServerListener(serverListener);
+			//server.addServerListener(serverListener);
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
 					handleServerResourceAdded(server);
@@ -49,7 +48,7 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 			});
 		}
 		public void serverRemoved(final IServer server) {
-			server.removeServerListener(serverListener);
+			//server.removeServerListener(serverListener);
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
 					handleServerResourceRemoved(server);
@@ -71,7 +70,7 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 	public ServerTreeContentProvider() {
 		// add listeners
 		addServerResourceListener();
-		addServerConfigurationListener();
+		addServerListener();
 		addModuleEventsListener();
 	}
 
@@ -89,12 +88,12 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 	 */
 	public void dispose() {
 		// remove listeners
-		IServer[] servers = ServerCore.getServers();
+		/*IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++)
 				servers[i].removeServerListener(serverListener);
-		}
+		}*/
 
 		ServerCore.removeServerLifecycleListener(listener);
 		
@@ -182,9 +181,9 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 	/**
 	 * Add listeners for resource changes.
 	 */
-	private void addServerConfigurationListener() {
+	private void addServerListener() {
 		// add a listener for configuration child module changes
-		serverListener = new ServerAdapter() {
+		/*serverListener = new IServerListener() {
 			public void modulesChanged(final IServer server) {
 				Display.getDefault().syncExec(new Runnable() {
 					public void run() {
@@ -199,7 +198,7 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 			int size = servers.length;
 			for (int i = 0; i < size; i++)
 				servers[i].addServerListener(serverListener);
-		}
+		}*/
 	}
 	
 	/**

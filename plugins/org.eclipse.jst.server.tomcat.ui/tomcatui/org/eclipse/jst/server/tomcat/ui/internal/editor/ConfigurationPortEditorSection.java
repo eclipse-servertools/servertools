@@ -13,8 +13,7 @@ package org.eclipse.jst.server.tomcat.ui.internal.editor;
 import java.beans.*;
 import java.util.Iterator;
 
-import org.eclipse.wst.server.core.IServerPort;
-import org.eclipse.wst.server.core.util.ServerPort;
+import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
@@ -80,7 +79,7 @@ public class ConfigurationPortEditorSection extends ServerEditorSection {
 		TableItem[] items = ports.getItems();
 		int size = items.length;
 		for (int i = 0; i < size; i++) {
-			IServerPort sp = (IServerPort) items[i].getData();
+			ServerPort sp = (ServerPort) items[i].getData();
 			if (sp.getId().equals(id)) {
 				items[i].setData(new ServerPort(id, sp.getName(), port, sp.getProtocol()));
 				items[i].setText(1, port + "");
@@ -153,7 +152,7 @@ public class ConfigurationPortEditorSection extends ServerEditorSection {
 	
 		ICellModifier cellModifier = new ICellModifier() {
 			public Object getValue(Object element, String property) {
-				IServerPort sp = (IServerPort) element;
+				ServerPort sp = (ServerPort) element;
 				if (sp.getPort() < 0)
 					return "-";
 				return sp.getPort() + "";
@@ -169,7 +168,7 @@ public class ConfigurationPortEditorSection extends ServerEditorSection {
 			public void modify(Object element, String property, Object value) {
 				try {
 					Item item = (Item) element;
-					IServerPort sp = (IServerPort) item.getData();
+					ServerPort sp = (ServerPort) item.getData();
 					int port = Integer.parseInt((String) value);
 					commandManager.executeCommand(new ModifyPortCommand(tomcatConfiguration, sp.getId(), port));
 				} catch (Exception ex) {
@@ -227,7 +226,7 @@ public class ConfigurationPortEditorSection extends ServerEditorSection {
 
 		Iterator iterator = tomcatConfiguration.getServerPorts().iterator();
 		while (iterator.hasNext()) {
-			IServerPort port = (IServerPort) iterator.next();
+			ServerPort port = (ServerPort) iterator.next();
 			TableItem item = new TableItem(ports, SWT.NONE);
 			String portStr = "-";
 			if (port.getPort() >= 0)

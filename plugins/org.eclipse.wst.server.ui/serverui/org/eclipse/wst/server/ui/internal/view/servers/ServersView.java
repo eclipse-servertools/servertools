@@ -240,7 +240,7 @@ public class ServersView extends ViewPart {
 		restartAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_RESTART));
 
 		// create the stop action
-		Action stopAction = new StopAction(shell, provider, "stop", IServerType.SERVER_STATE_SET_MANAGED);
+		Action stopAction = new StopAction(shell, provider, "stop");
 		stopAction.setToolTipText(ServerUIPlugin.getResource("%actionStopToolTip"));
 		stopAction.setText(ServerUIPlugin.getResource("%actionStop"));
 		stopAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_STOP));
@@ -248,12 +248,12 @@ public class ServersView extends ViewPart {
 		stopAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_STOP));
 
 		// create the disconnect action
-		Action disconnectAction = new StopAction(shell, provider, "disconnect", IServerType.SERVER_STATE_SET_ATTACHED);
+		/*Action disconnectAction = new StopAction(shell, provider, "disconnect", IServerType.SERVER_STATE_SET_ATTACHED);
 		disconnectAction.setToolTipText(ServerUIPlugin.getResource("%actionStopToolTip2"));
 		disconnectAction.setText(ServerUIPlugin.getResource("%actionStop2"));
 		disconnectAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_DISCONNECT));
 		disconnectAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_DISCONNECT));
-		disconnectAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_DISCONNECT));
+		disconnectAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_DISCONNECT));*/
 
 		// create the publish action
 		Action publishAction = new PublishAction(shell, provider, "publish");
@@ -271,15 +271,14 @@ public class ServersView extends ViewPart {
 		addModuleAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CTOOL_MODIFY_MODULES));
 		addModuleAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DTOOL_MODIFY_MODULES));
 		
-		actions = new Action[8];
+		actions = new Action[7];
 		actions[0] = debugAction;
 		actions[1] = runAction;
 		actions[2] = profileAction;
 		actions[3] = restartAction;
 		actions[4] = stopAction;
-		actions[5] = disconnectAction;
-		actions[6] = publishAction;
-		actions[7] = addModuleAction;
+		actions[5] = publishAction;
+		actions[6] = addModuleAction;
 		
 		// add toolbar buttons
 		IContributionManager cm = getViewSite().getActionBars().getToolBarManager();
@@ -356,7 +355,7 @@ public class ServersView extends ViewPart {
 					public void menuAboutToShow(IMenuManager manager) {
 						menuManager.removeAll();
 						if (server2.isDelegateLoaded()) {
-							IServerPort[] ports = server2.getServerPorts();
+							ServerPort[] ports = server2.getServerPorts();
 							if (ports != null) {
 								int size = ports.length;
 								for (int i = 0; i < size; i++) {

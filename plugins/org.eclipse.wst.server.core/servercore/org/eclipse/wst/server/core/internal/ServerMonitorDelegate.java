@@ -13,7 +13,7 @@ package org.eclipse.wst.server.core.internal;
 import org.eclipse.core.runtime.CoreException;
 
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerPort;
+import org.eclipse.wst.server.core.ServerPort;
 /**
  * An interface to a TCP/IP monitor.
  */
@@ -26,11 +26,11 @@ public abstract class ServerMonitorDelegate {
 	 * @param port
 	 * @return the port used for monitoring
 	 */
-	public abstract int startMonitoring(IServer server, IServerPort port, int monitorPort) throws CoreException;
+	public abstract int startMonitoring(IServer server, ServerPort port, int monitorPort) throws CoreException;
 
 	/**
 	 * Stop monitoring the given port.
 	 * @param port
 	 */
-	public abstract void stopMonitoring(IServer server, IServerPort port);
+	public abstract void stopMonitoring(IServer server, ServerPort port);
 }

@@ -42,7 +42,7 @@ public class PublishServerJob extends Job {
 	public boolean shouldRun() {
 		if (!check)
 			return true;
-		return ServerPreferences.getInstance().isAutoPublishing() && server.shouldPublish();
+		return ServerPreferences.getInstance().isAutoPublishing() && ((Server)server).shouldPublish();
 	}
 
 	/* (non-Javadoc)

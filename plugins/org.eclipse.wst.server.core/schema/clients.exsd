@@ -83,6 +83,13 @@ Clieint instances of this type will delegate to instances of this class to launc
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="launchable" type="string">
+            <annotation>
+               <documentation>
+                  the fully qualified classname of the launchable object that this client supports
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

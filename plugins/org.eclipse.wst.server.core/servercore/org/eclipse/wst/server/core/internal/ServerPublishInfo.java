@@ -15,7 +15,6 @@ import java.util.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.*;
 /**
@@ -140,14 +139,16 @@ public class ServerPublishInfo {
 		while (iterator.hasNext()) {
 			ModulePublishInfo mpi = (ModulePublishInfo) iterator.next();
 			IModule[] module2 = getModule(mpi.getModuleId());
-			if (module2 == null) {
+			if (module2 == null || module2.length == 0) {
 				String moduleId = mpi.getModuleId();
-				int index = moduleId.lastIndexOf("#");
-				module2 = new IModule[] { new DeletedModule(moduleId.substring(index + 1)) };
+				if (moduleId != null) {
+					int index = moduleId.lastIndexOf("#");
+					module2 = new IModule[] { new DeletedModule(moduleId.substring(index + 1)) };
+				}
 			}
-			if (module2 != null) {
+			if (module2 != null && module2.length > 0) {
 				moduleList.add(module2);
-				kindList.add(new Integer(IServer.REMOVED));
+				kindList.add(new Integer(ServerBehaviourDelegate.REMOVED));
 			}
 		}
 	}

@@ -24,8 +24,7 @@ import org.eclipse.jst.server.tomcat.core.internal.xml.server40.*;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-import org.eclipse.wst.server.core.IServerPort;
-import org.eclipse.wst.server.core.util.ServerPort;
+import org.eclipse.wst.server.core.ServerPort;
 /**
  * Tomcat v5.5 server configuration.
  */
@@ -62,10 +61,10 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	 * Return the port number.
 	 * @return int
 	 */
-	public IServerPort getMainPort() {
+	public ServerPort getMainPort() {
 		Iterator iterator = getServerPorts().iterator();
 		while (iterator.hasNext()) {
-			IServerPort port = (IServerPort) iterator.next();
+			ServerPort port = (ServerPort) iterator.next();
 			if (port.getName().equals("HTTP"))
 				return port;
 		}

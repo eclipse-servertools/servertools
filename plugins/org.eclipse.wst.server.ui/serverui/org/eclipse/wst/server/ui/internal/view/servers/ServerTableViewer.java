@@ -23,6 +23,7 @@ import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.IPublishListener;
 import org.eclipse.wst.server.core.internal.PublishAdapter;
 import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.util.ServerEvent;
 import org.eclipse.wst.server.ui.internal.ServerTree;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.view.tree.ServerTreeAction;
@@ -61,7 +62,7 @@ public class ServerTableViewer extends TreeViewer {
 			if (servers != null) {
 				int size = servers.length;
 				for (int i = 0; i < size; i++) {
-					if (!servers[i].isPrivate())
+					if (!((Server)servers[i]).isPrivate())
 						list.add(servers[i]);
 				}
 			}
@@ -289,40 +290,49 @@ public class ServerTableViewer extends TreeViewer {
 		};
 		
 		serverListener = new IServerListener() {
-			public void moduleStateChange(IServer server, IModule[] module) {
-				refreshServer(server);
-			}
-		
-			public void serverStateChange(IServer server) {
-				refreshServer(server);
-				int state = server.getServerState();
-				String id = server.getId();
-				if (state == IServer.STATE_STARTING || state == IServer.STATE_STOPPING) {
-					if (!starting.contains(id)) {
-						if (starting.isEmpty())
-							startThread();
-						starting.add(id);
-					}
-				} else {
-					if (starting.contains(id)) {
-						starting.remove(id);
-						if (starting.isEmpty())
-							stopThread();
-					}
+			public void serverChanged(ServerEvent event) {
+				if (event == null) {
+					return;
+				}
+				int eventKind = event.getKind();
+				IServer server = event.getServer();
+				if ((eventKind & ServerEvent.SERVER_CHANGE) != 0) {
+					// Server change event
+					if ((eventKind & ServerEvent.STATE_CHANGE) != 0) {
+						refreshServer(server);
+						int state = event.getState();
+						String id = server.getId();
+						if (state == IServer.STATE_STARTING || state == IServer.STATE_STOPPING) {
+							if (!starting.contains(id)) {
+								if (starting.isEmpty())
+									startThread();
+								starting.add(id);
+							}
+						} else {
+							if (starting.contains(id)) {
+								starting.remove(id);
+								if (starting.isEmpty())
+									stopThread();
+							}
+						}
+					} else if ((eventKind & ServerEvent.RESTART_STATE_CHANGE) != 0) {
+						refreshServer(server);
+					} 
+				} else if ((eventKind & ServerEvent.MODULE_CHANGE) != 0) {
+					// Module change event
+					if ((eventKind & ServerEvent.STATE_CHANGE) != 0) {
+						refreshServer(server);
+					} 
 				}
 			}
-			public void configurationSyncStateChange(IServer server) {
-				refreshServer(server);
-			}
-			public void restartStateChange(IServer server) {
-				refreshServer(server);
-			}
-			public void modulesChanged(IServer server) {
-				handleServerModulesChanged(server);
-			}
-			public void moduleStateChange(IServer server, IModule module) {
-				// do nothing
-			}
+
+			// TODO: these two events are not handled.
+//			public void configurationSyncStateChange(IServer server) {
+//				refreshServer(server);
+//			}
+//			public void modulesChanged(IServer server) {
+//				handleServerModulesChanged(server);
+//			}
 		};
 		
 		// add listeners to servers

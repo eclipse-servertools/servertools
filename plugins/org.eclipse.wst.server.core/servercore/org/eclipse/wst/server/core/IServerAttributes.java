@@ -10,7 +10,6 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.*;
 /**
@@ -65,16 +64,7 @@ import org.eclipse.core.runtime.*;
  * Chained working copies for runtime, server configuration.
  * Server has a set of root modules.
  * Modules have state wrt a server.
- * Restarting modules.
- * ]
- * </p>
- * <p>
- * [issue: The information actually stored in the (.server) file is:
- * server id and name, server type id, runtime id, server configuration id,
- * and test-environment. It's unclear what's gained by storing this
- * information in a workspace file. Is it so that this information
- * can be shared between users via a repository? Or is it just so that
- * there would be something to open in the resource navigator view?]
+ * Restarting modules.]
  * </p>
  * <p>
  * Two servers are identical if and only if they have the same id.
@@ -89,31 +79,6 @@ import org.eclipse.core.runtime.*;
  * @since 1.0
  */
 public interface IServerAttributes extends IAdaptable {
-	/**
-	 * File extension (value "server") for serialized representation of
-	 * server instances.
-	 * <p>
-	 * [issue: What is relationship between this file extension and
-	 * the file passed to IServerType.create(...) or returned by
-	 * IServer.getFile()? That is, are server files expected to end
-	 * in ".server", or is this just a default? If the former
-	 * (as I suspect), then IServerType.create needs to say so,
-	 * and the implementation should enforce the restriction.]
-	 * </p>
-	 */
-	public static final String FILE_EXTENSION = "server";
-
-	/**
-	 * Server id attribute (value "server-id") of launch configurations.
-	 * This attribute is used to tag a launch configuration with th
-	 * id of the corresponding server.
-	 * <p>
-	 * [issue: This feels like an implementation detail. If it is to
-	 * remain API, need to explain how a client uses this attribute.]
-	 * </p>
-	 */
-	public static final String ATTR_SERVER_ID = "server-id";
-	
 	/**
 	 * Returns the displayable name for this server.
 	 * <p>
@@ -152,14 +117,6 @@ public interface IServerAttributes extends IAdaptable {
 	public boolean isReadOnly();
 
 	/**
-	 * Returns true if this server is private (not shown in the UI).
-	 * 
-	 * @return <code>true</code> if this server is private,
-	 *    and <code>false</code> otherwise
-	 */
-	public boolean isPrivate();
-
-	/**
 	 * Returns true if this is a working copy.
 	 * 
 	 * @return <code>true</code> if this server is a working copy,
@@ -176,26 +133,6 @@ public interface IServerAttributes extends IAdaptable {
 	public boolean isDelegateLoaded();
 
 	/**
-	 * Validates whether this server can be editted.
-	 * 
-	 * @param context
-	 * @return a status object with code <code>IStatus.OK</code> if the server
-	 *   can be edited, otherwise a status object indicating what when wrong
-	 *   with the checkout
-	 */
-	public IStatus validateEdit(Object context);
-
-	/**
-	 * Returns the timestamp of this server.
-	 * Timestamps are monotonically increased each time the server is saved
-	 * and can be used to determine if any changes have been made on disk
-	 * since the server was loaded.
-	 * 
-	 * @return the server's timestamp
-	 */
-	public int getTimestamp();
-
-	/**
 	 * Returns the host for the server.
 	 * The format of the host can be either a qualified or unqualified hostname,
 	 * or an IP address and must conform to RFC 2732.
@@ -204,17 +141,7 @@ public interface IServerAttributes extends IAdaptable {
 	 * @see java.net.URL#getHost()
 	 */
 	public String getHost();
-	
-	/**
-	 * Returns the file where this server instance is serialized.
-	 * 
-	 * @return the file in the workspace where the server instance
-	 * is serialized, or <code>null</code> if the information is
-	 * instead to be persisted with the workspace but not with any
-	 * particular workspace resource
-	 */
-	public IFile getFile();
-	
+
 	/**
 	 * Returns the runtime associated with this server.
 	 * <p>
@@ -239,6 +166,7 @@ public interface IServerAttributes extends IAdaptable {
 	 * Returns the type of this server.
 	 * 
 	 * @return the server type
+	 * @see IServerType
 	 */
 	public IServerType getServerType();
 	
@@ -378,9 +306,9 @@ public interface IServerAttributes extends IAdaptable {
 	public IModule[] getRootModules(IModule module, IProgressMonitor monitor) throws CoreException;
 
 	/**
-	 * Returns an array of IServerPorts that this server has.
+	 * Returns an array of ServerPorts that this server has.
 	 *
 	 * @return a possibly empty array of servers ports
 	 */
-	public IServerPort[] getServerPorts();
+	public ServerPort[] getServerPorts();
 }

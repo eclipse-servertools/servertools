@@ -207,7 +207,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		setErrorMessage(null);
 
 		try {
-			String serverId = configuration.getAttribute(IServerAttributes.ATTR_SERVER_ID, "");
+			String serverId = configuration.getAttribute(Server.ATTR_SERVER_ID, "");
 			if (serverId != null && !serverId.equals("")) {
 				server = ServerCore.findServer(serverId);
 
@@ -238,9 +238,9 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	 */
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		if (server != null)
-			configuration.setAttribute(IServerAttributes.ATTR_SERVER_ID, server.getId());
+			configuration.setAttribute(Server.ATTR_SERVER_ID, server.getId());
 		else
-			configuration.setAttribute(IServerAttributes.ATTR_SERVER_ID, (String)null);
+			configuration.setAttribute(Server.ATTR_SERVER_ID, (String)null);
 	}
 
 	/*
@@ -257,7 +257,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	 */
 	public boolean isValid(ILaunchConfiguration launchConfig) {
 		try {
-			String id = launchConfig.getAttribute(IServerAttributes.ATTR_SERVER_ID, "");
+			String id = launchConfig.getAttribute(Server.ATTR_SERVER_ID, "");
 			if (id != null && !id.equals("")) {
 				IServer server2 = ServerCore.findServer(id);
 				if (server2 == null)

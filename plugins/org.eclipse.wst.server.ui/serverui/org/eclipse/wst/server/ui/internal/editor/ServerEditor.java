@@ -29,6 +29,7 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.part.MultiPageEditorPart;
 
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.wst.server.ui.internal.*;
@@ -906,8 +907,9 @@ public class ServerEditor extends MultiPageEditorPart {
 	 * Set the tooltip.
 	 */
 	public String getTitleToolTip() {
-		if (server != null && server.getFile() != null)
-			return server.getFile().getFullPath().toString();
+		Server server2 = (Server) server;
+		if (server != null && server2.getFile() != null)
+			return server2.getFile().getFullPath().toString();
 		else if (server != null)
 			return server.getName();
 		else

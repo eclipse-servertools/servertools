@@ -265,7 +265,7 @@ public class TasksWizardFragment extends WizardFragment {
 		
 		if (createdServerWC) {
 			if (serverWC.isDirty()) {
-				IFile file = serverWC.getFile();
+				IFile file = ((Server)serverWC).getFile();
 				if (file != null) {
 					IProject project = file.getProject();
 					

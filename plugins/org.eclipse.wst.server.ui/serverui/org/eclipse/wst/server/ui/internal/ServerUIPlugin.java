@@ -29,7 +29,7 @@ import org.eclipse.wst.server.core.internal.IPublishListener;
 import org.eclipse.wst.server.core.internal.PublishAdapter;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.internal.ServerType;
-import org.eclipse.wst.server.core.util.ServerAdapter;
+import org.eclipse.wst.server.core.util.ServerEvent;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 import org.eclipse.wst.server.ui.internal.editor.IServerEditorInput;
@@ -100,11 +100,15 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		}
 	};
 
-	protected static IServerListener serverListener = new ServerAdapter() {
-		public void serverStateChange(IServer server) {
-			showServersView();
+	protected static IServerListener serverListener = new IServerListener() {
+		public void serverChanged(ServerEvent event) {
+			int eventKind = event.getKind();
+			if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
+				showServersView();
+			}
 		}
 
+		// TODO: handle module change. 
 		public void modulesChanged(IServer server) {
 			showServersView();
 		}
@@ -312,10 +316,14 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		t.setPriority(Thread.NORM_PRIORITY - 2);
 	
 		// add listener to stop the thread if/when the server stops
-		IServerListener listener = new ServerAdapter() {
-			public void serverStateChange(IServer server2) {
-				if (server2.getServerState() == IServer.STATE_STOPPED && t != null)
-					t.alive = false;
+		IServerListener listener = new IServerListener() {
+			public void serverChanged(ServerEvent event) {
+				int eventKind = event.getKind();
+				IServer server2 = event.getServer();
+				if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
+					if (server2.getServerState() == IServer.STATE_STOPPED && t != null)
+						t.alive = false;
+				}
 			}
 		};
 		t.listener = listener;
@@ -391,7 +399,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
-				if (file.equals(servers[i].getFile()))
+				if (file.equals(((Server)servers[i]).getFile()))
 					return servers[i];
 			}
 		}

@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerPort;
+import org.eclipse.wst.server.core.ServerPort;
 /**
  * 
  */
@@ -76,7 +76,7 @@ public class ServerMonitor implements IServerMonitor {
 	 * @param port
 	 * @return the port used for monitoring
 	 */
-	public int startMonitoring(IServer server, IServerPort port, int monitorPort) throws CoreException {
+	public int startMonitoring(IServer server, ServerPort port, int monitorPort) throws CoreException {
 		try {
 			return getDelegate().startMonitoring(server, port, monitorPort);
 		} catch (CoreException ce) {
@@ -91,7 +91,7 @@ public class ServerMonitor implements IServerMonitor {
 	 * Stop monitoring the given port.
 	 * @param port
 	 */
-	public void stopMonitoring(IServer server, IServerPort port) {
+	public void stopMonitoring(IServer server, ServerPort port) {
 		try {
 			getDelegate().stopMonitoring(server, port);
 		} catch (Exception e) {

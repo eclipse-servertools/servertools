@@ -31,10 +31,31 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @since 1.0
  */
 public interface IRuntimeWorkingCopy extends IRuntime {
-	public static final int TIMESTAMP_ERROR = 5;
+	/**
+	 * Status code (value 1) returned from the save() method when the save
+	 * failed with force set to <code>false</code> because the runtime has
+	 * been modified and saved since this working copy was created.
+	 * 
+	 * @see #save(boolean, IProgressMonitor)
+	 */
+	public static final int SAVE_CONFLICT = 1;
 	
+	/**
+	 * Property change name (value "name") used when the name of the runtime
+	 * changes.
+	 * 
+	 * @see #addPropertyChangeListener(PropertyChangeListener)
+	 * @see #removePropertyChangeListener(PropertyChangeListener)
+	 */
 	public static final String PROPERTY_NAME = "name";
 	
+	/**
+	 * Property change name (value "location") used when the location of the
+	 * runtime changes.
+	 * 
+	 * @see #addPropertyChangeListener(PropertyChangeListener)
+	 * @see #removePropertyChangeListener(PropertyChangeListener)
+	 */
 	public static final String PROPERTY_LOCATION = "location";
 
 	/**
@@ -59,18 +80,6 @@ public interface IRuntimeWorkingCopy extends IRuntime {
 	public void setReadOnly(boolean readOnly);
 	
 	/**
-	 * Sets whether this runtime is private.
-	 * Generally speaking, runtimes marked private are internal ones
-	 * that should not be shown to users (because they won't know
-	 * anything about them).
-	 * 
-	 * @param p <code>true</code> if this runtime is private,
-	 *    and <code>false</code> otherwise
-	 * @see IRuntime#isPrivate()
-	 */
-	//public void setPrivate(boolean p);
-	
-	/**
 	 * Returns whether this working copy has unsaved changes.
 	 * 
 	 * @return <code>true</code> if this working copy has unsaved
@@ -79,23 +88,27 @@ public interface IRuntimeWorkingCopy extends IRuntime {
 	public boolean isDirty();
 
 	/**
-	 * Adds a property change listener to this server.
+	 * Adds a property change listener to this runtime.
+	 * <p>
+	 * Once registered, a listener starts receiving notification of 
+	 * property changes to this runtime. The listener continues to receive
+	 * notifications until it is removed.
+	 * Has no effect if an identical listener is already registered.
+	 * </p>
 	 *
-	 * @param listener java.beans.PropertyChangeListener
+	 * @param listener a property change listener
+	 * @see #removePropertyChangeListener(PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener);
 
 	/**
-	 * Removes a property change listener from this server.
+	 * Removes a property change listener from this runtime.
+	 * Has no effect if the listener is not registered.
 	 *
-	 * @param listener java.beans.PropertyChangeListener
+	 * @param listener a property change listener
+	 * @see #addPropertyChangeListener(PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener);
-	
-	/**
-	 * Fires a property change event.
-	 */
-	//public void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue);
 
 	/**
 	 * Returns the runtime instance that this working copy is
@@ -112,18 +125,6 @@ public interface IRuntimeWorkingCopy extends IRuntime {
 	 * @return the associated runtime instance, or <code>null</code> if none
 	 */
 	public IRuntime getOriginal();
-	
-	/**
-	 * Returns the extension for this runtime working copy.
-	 * The runtime working copy extension is a
-	 * runtime-type-specific object. By casting the runtime working copy
-	 * extension to the type prescribed in the API documentation for that
-	 * particular runtime working copy type, the client can access
-	 * runtime-type-specific properties and methods.
-	 * 
-	 * @return the extension for the runtime working copy
-	 */
-	//public IServerExtension getWorkingCopyExtension(IProgressMonitor monitor);
 
 	/**
 	 * Sets the absolute path in the local file system to the root of the runtime,
@@ -158,6 +159,7 @@ public interface IRuntimeWorkingCopy extends IRuntime {
 	 *    reporting and cancellation are not desired
 	 * @return a new runtime instance
 	 * @throws CoreException if the save could not be completed
+	 * @see #SAVE_CONFLICT
 	 */
 	public IRuntime save(boolean force, IProgressMonitor monitor) throws CoreException;
 }

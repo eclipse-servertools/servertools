@@ -61,8 +61,7 @@ public class Tomcat32Handler implements ITomcatVersionHandler {
 	public String[] getRuntimeProgramArguments(IPath configPath, boolean debug, boolean starting) {
 		List list = new ArrayList();
 		if (configPath != null) {
-			list.add("-f");
-			list.add("\"" + configPath.append("conf").append("server.xml").toOSString() + "\"");
+			list.add("-f \"" + configPath.append("conf").append("server.xml").toOSString() + "\"");
 		}
 		
 		if (!starting)

@@ -98,7 +98,7 @@ public abstract class ServerDelegate {
 	 * 
 	 * @return the server
 	 */
-	public final IServer getServer() {
+	public IServer getServer() {
 		return server;
 	}
 
@@ -107,27 +107,27 @@ public abstract class ServerDelegate {
 	 * 
 	 * @return the server
 	 */
-	public final IServerWorkingCopy getServerWorkingCopy() {
+	public IServerWorkingCopy getServerWorkingCopy() {
 		return serverWC;
 	}
 
-	public final int getAttribute(String attributeName, int defaultValue) {
+	public int getAttribute(String attributeName, int defaultValue) {
 		return server.getAttribute(attributeName, defaultValue);
 	}
 
-	public final boolean getAttribute(String attributeName, boolean defaultValue) {
+	public boolean getAttribute(String attributeName, boolean defaultValue) {
 		return server.getAttribute(attributeName, defaultValue);
 	}
 	
-	public final String getAttribute(String attributeName, String defaultValue) {
+	public String getAttribute(String attributeName, String defaultValue) {
 		return server.getAttribute(attributeName, defaultValue);
 	}
 
-	public final List getAttribute(String attributeName, List defaultValue) {
+	public List getAttribute(String attributeName, List defaultValue) {
 		return server.getAttribute(attributeName, defaultValue);
 	}
 
-	public final Map getAttribute(String attributeName, Map defaultValue) {
+	public Map getAttribute(String attributeName, Map defaultValue) {
 		return server.getAttribute(attributeName, defaultValue);
 	}
 
@@ -159,6 +159,7 @@ public abstract class ServerDelegate {
 	 * <p>
 	 * [issue: See IServerAttributes.canModifyModules(IModule[], IModule[], IProgressMonitor).]
 	 * </p>
+	 * [issue: doc that it should be quick]
 	 *
 	 * @param add a possibly-empty list of modules to add
 	 * @param remove a possibly-empty list of modules to remove
@@ -210,7 +211,7 @@ public abstract class ServerDelegate {
 	 *
 	 * @return the server's ports
 	 */
-	public IServerPort[] getServerPorts() {
+	public ServerPort[] getServerPorts() {
 		return null;
 	}
 
@@ -231,7 +232,7 @@ public abstract class ServerDelegate {
 	 * @param value the value of the specified attribute
 	 * @see #getAttribute(String, int)
 	 */
-	public final void setAttribute(String id, int value) {
+	public void setAttribute(String id, int value) {
 		serverWC.setAttribute(id, value);
 	}
 
@@ -243,7 +244,7 @@ public abstract class ServerDelegate {
 	 * @param value the value of the specified attribute
 	 * @see #getAttribute(String, boolean)
 	 */
-	public final void setAttribute(String id, boolean value) {
+	public void setAttribute(String id, boolean value) {
 		serverWC.setAttribute(id, value);
 	}
 
@@ -255,7 +256,7 @@ public abstract class ServerDelegate {
 	 * @param value the value of the specified attribute
 	 * @see #getAttribute(String, String)
 	 */
-	public final void setAttribute(String id, String value) {
+	public void setAttribute(String id, String value) {
 		serverWC.setAttribute(id, value);
 	}
 
@@ -267,7 +268,7 @@ public abstract class ServerDelegate {
 	 * @param value the value of the specified attribute
 	 * @see #getAttribute(String, List)
 	 */
-	public final void setAttribute(String id, List value) {
+	public void setAttribute(String id, List value) {
 		serverWC.setAttribute(id, value);
 	}
 
@@ -279,7 +280,7 @@ public abstract class ServerDelegate {
 	 * @param value the value of the specified attribute
 	 * @see #getAttribute(String, Map)
 	 */
-	public final void setAttribute(String id, Map value) {
+	public void setAttribute(String id, Map value) {
 		serverWC.setAttribute(id, value);
 	}
 

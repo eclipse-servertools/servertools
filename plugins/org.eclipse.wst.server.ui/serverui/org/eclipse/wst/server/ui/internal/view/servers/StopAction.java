@@ -21,11 +21,8 @@ import org.eclipse.swt.widgets.Shell;
  * Stop (terminate) a server.
  */
 public class StopAction extends AbstractServerAction {
-	protected int serverStateSet;
-
-	public StopAction(Shell shell, ISelectionProvider selectionProvider, String name, int serverStateSet) {
+	public StopAction(Shell shell, ISelectionProvider selectionProvider, String name) {
 		super(shell, selectionProvider, name);
-		this.serverStateSet = serverStateSet;
 		try {
 			selectionChanged((IStructuredSelection) selectionProvider.getSelection());
 		} catch (Exception e) {
@@ -39,7 +36,7 @@ public class StopAction extends AbstractServerAction {
 	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	public boolean accept(IServer server) {
-		if (server.getServerType() == null || server.getServerType().getServerStateSet() != serverStateSet)
+		if (server.getServerType() == null)
 			return false;
 		return server.getServerType() != null && server.canStop().isOK();
 	}

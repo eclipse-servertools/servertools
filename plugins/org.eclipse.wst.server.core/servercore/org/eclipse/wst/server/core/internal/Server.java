@@ -20,13 +20,36 @@ import org.eclipse.debug.core.*;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.*;
-import org.eclipse.wst.server.core.util.ServerAdapter;
+import org.eclipse.wst.server.core.util.ServerEvent;
 import org.eclipse.wst.server.core.util.SocketUtil;
 /**
  * 
  */
 public class Server extends Base implements IServer {
+	/**
+	 * Server id attribute (value "server-id") of launch configurations.
+	 * This attribute is used to tag a launch configuration with th
+	 * id of the corresponding server.
+	 * 
+	 * @see ILaunchConfiguration
+	 */
+	public static final String ATTR_SERVER_ID = "server-id";
+
 	protected static final List EMPTY_LIST = new ArrayList(0);
+	
+	/**
+	 * File extension (value "server") for serialized representation of
+	 * server instances.
+	 * <p>
+	 * [issue: What is relationship between this file extension and
+	 * the file passed to IServerType.create(...) or returned by
+	 * IServer.getFile()? That is, are server files expected to end
+	 * in ".server", or is this just a default? If the former
+	 * (as I suspect), then IServerType.create needs to say so,
+	 * and the implementation should enforce the restriction.]
+	 * </p>
+	 */
+	public static final String FILE_EXTENSION = "server";
 	
 	protected static final String PROP_HOSTNAME = "hostname";
 	protected static final String SERVER_ID = "server-id";
@@ -70,8 +93,8 @@ public class Server extends Base implements IServer {
 	// publish listeners
 	protected transient List publishListeners;
 	
-	// server listeners
-	protected transient List serverListeners;
+	// Server listeners
+	protected transient ServerNotificationManager notificationManager;
 	
 	public class AutoPublishThread extends Thread {
 		public boolean stop;
@@ -256,12 +279,19 @@ public class Server extends Base implements IServer {
 	 */
 	public void addServerListener(IServerListener listener) {
 		Trace.trace(Trace.LISTENERS, "Adding server listener " + listener + " to " + this);
-	
-		if (serverListeners == null)
-			serverListeners = new ArrayList();
-		serverListeners.add(listener);
+		getServerNotificationManager().addListener(listener);
 	}
 	
+	/**
+	 * Add a listener to this server with the given event mask.
+	 *
+	 * @param listener org.eclipse.wst.server.model.IServerListener
+	 */
+	public void addServerListener(IServerListener listener, int eventMask) {
+		Trace.trace(Trace.LISTENERS, "Adding server listener " + listener + " to " + this + " with eventMask " + eventMask);
+		getServerNotificationManager().addListener(listener, eventMask);
+	}
+
 	/**
 	 * Remove a listener from this server.
 	 *
@@ -269,9 +299,7 @@ public class Server extends Base implements IServer {
 	 */
 	public void removeServerListener(IServerListener listener) {
 		Trace.trace(Trace.LISTENERS, "Removing server listener " + listener + " from " + this);
-	
-		if (serverListeners != null)
-			serverListeners.remove(listener);
+		getServerNotificationManager().removeListener(listener);
 	}
 	
 	/**
@@ -304,22 +332,12 @@ public class Server extends Base implements IServer {
 	protected void fireRestartStateChangeEvent() {
 		Trace.trace(Trace.LISTENERS, "->- Firing server restart change event: " + getName() + " ->-");
 	
-		if (serverListeners == null || serverListeners.isEmpty())
+		if (notificationManager == null || notificationManager.hasListenerEntries())
 			return;
 	
-		int size = serverListeners.size();
-		IServerListener[] sil = new IServerListener[size];
-		serverListeners.toArray(sil);
-	
-		for (int i = 0; i < size; i++) {
-			try {
-				Trace.trace(Trace.LISTENERS, "  Firing server restart change event to: " + sil[i]);
-				sil[i].restartStateChange(this);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing server restart change event", e);
-			}
-		}
-		Trace.trace(Trace.LISTENERS, "-<- Done firing server restart change event -<-");
+		notificationManager.broadcastChange(
+			new ServerEvent(ServerEvent.SERVER_CHANGE | ServerEvent.RESTART_STATE_CHANGE, this, getServerState(), 
+				getServerPublishState(), getServerRestartState()));
 	}
 	
 	/**
@@ -328,46 +346,27 @@ public class Server extends Base implements IServer {
 	protected void fireServerStateChangeEvent() {
 		Trace.trace(Trace.LISTENERS, "->- Firing server state change event: " + getName() + ", " + getServerState() + " ->-");
 	
-		if (serverListeners == null || serverListeners.isEmpty())
+		if (notificationManager == null || notificationManager.hasListenerEntries())
 			return;
 	
-		int size = serverListeners.size();
-		IServerListener[] sil = new IServerListener[size];
-		serverListeners.toArray(sil);
-	
-		for (int i = 0; i < size; i++) {
-			try {
-				Trace.trace(Trace.LISTENERS, "  Firing server state change event to: " + sil[i]);
-				sil[i].serverStateChange(this);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing server state change event", e);
-			}
-		}
-		Trace.trace(Trace.LISTENERS, "-<- Done firing server state change event -<-");
+		notificationManager.broadcastChange(
+			new ServerEvent(ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE, this, getServerState(), 
+				getServerPublishState(), getServerRestartState()));
 	}
 	
 	/**
 	 * Fire a server listener module change event.
+	 * [issue: should this be removed?]
 	 */
 	protected void fireServerModuleChangeEvent() {
-		Trace.trace(Trace.LISTENERS, "->- Firing server module change event: " + getName() + ", " + getServerState() + " ->-");
-		
-		if (serverListeners == null || serverListeners.isEmpty())
-			return;
-		
-		int size = serverListeners.size();
-		IServerListener[] sil = new IServerListener[size];
-		serverListeners.toArray(sil);
-		
-		for (int i = 0; i < size; i++) {
-			try {
-				Trace.trace(Trace.LISTENERS, "  Firing server module change event to: " + sil[i]);
-				sil[i].modulesChanged(this);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing server module change event", e);
-			}
-		}
-		Trace.trace(Trace.LISTENERS, "-<- Done firing server module change event -<-");
+//		Trace.trace(Trace.LISTENERS, "->- Firing server module change event: " + getName() + ", " + getServerState() + " ->-");
+//		
+//		if (notificationManager == null || notificationManager.hasListenerEntries())
+//			return;
+//	
+//		notificationManager.boardcastChange(
+//				new ServerEvent(ServerEvent.MODULE_CHANGE | ServerEvent.STATE_CHANGE, this, getServerState(), 
+//						getServerPublishState(), getServerRestartState()));
 	}
 
 	/**
@@ -376,22 +375,12 @@ public class Server extends Base implements IServer {
 	protected void fireServerModuleStateChangeEvent(IModule[] module) {
 		Trace.trace(Trace.LISTENERS, "->- Firing server module state change event: " + getName() + ", " + getServerState() + " ->-");
 		
-		if (serverListeners == null || serverListeners.isEmpty())
+		if (notificationManager == null || notificationManager.hasListenerEntries())
 			return;
-		
-		int size = serverListeners.size();
-		IServerListener[] sil = new IServerListener[size];
-		serverListeners.toArray(sil);
-		
-		for (int i = 0; i < size; i++) {
-			try {
-				Trace.trace(Trace.LISTENERS, "  Firing server module state change event to: " + sil[i]);
-				sil[i].moduleStateChange(this, module);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing server module state change event", e);
-			}
-		}
-		Trace.trace(Trace.LISTENERS, "-<- Done firing server module state change event -<-");
+	
+		notificationManager.broadcastChange(
+			new ServerEvent(ServerEvent.MODULE_CHANGE | ServerEvent.STATE_CHANGE, this, module, getModuleState(module), 
+				getModulePublishState(module), getModuleRestartState(module)));
 	}
 
 	public void setMode(String m) {
@@ -491,6 +480,13 @@ public class Server extends Base implements IServer {
 		}
 		
 		//Trace.trace(Trace.FINEST, "< handleDeployableProjectChange()");
+	}
+	
+	private ServerNotificationManager getServerNotificationManager() {
+		if (notificationManager == null) {
+			notificationManager = new ServerNotificationManager();
+		}
+		return notificationManager;
 	}
 
 	/**
@@ -657,23 +653,12 @@ public class Server extends Base implements IServer {
 	protected void firePublishStateChange(IModule[] module) {
 		Trace.trace(Trace.FINEST, "->- Firing publish state change event: " + module + " ->-");
 	
-		if (serverListeners == null || serverListeners.isEmpty())
+		if (notificationManager == null || notificationManager.hasListenerEntries())
 			return;
-
-		int size = serverListeners.size();
-		IServerListener[] sl = new IServerListener[size];
-		serverListeners.toArray(sl);
-
-		for (int i = 0; i < size; i++) {
-			Trace.trace(Trace.FINEST, "  Firing publish state change event to " + sl[i]);
-			try {
-				sl[i].moduleStateChange(this, module);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing publish state change event to " + sl[i], e);
-			}
-		}
-
-		Trace.trace(Trace.FINEST, "-<- Done firing publish state change event -<-");
+	
+		notificationManager.broadcastChange(
+			new ServerEvent(ServerEvent.MODULE_CHANGE | ServerEvent.PUBLISH_STATE_CHANGE, this, module, getModuleState(module), 
+				getModulePublishState(module), getModuleRestartState(module)));
 	}
 
 	/**
@@ -749,9 +734,9 @@ public class Server extends Base implements IServer {
 	 * Publish to the server using the progress monitor. The result of the
 	 * publish operation is returned as an IStatus.
 	 */
-	public IStatus publish(IProgressMonitor monitor) {
+	/*public IStatus publish(IProgressMonitor monitor) {
 		return publish(PUBLISH_INCREMENTAL, monitor);
-	}
+	}*/
 
 	/*
 	 * Publish to the server using the progress monitor. The result of the
@@ -783,11 +768,11 @@ public class Server extends Base implements IServer {
 				
 				if (spi.hasModulePublishInfo(module)) {
 					if (getPublishedResourceDelta(module).length == 0)
-						kindList.add(new Integer(NO_CHANGE));
+						kindList.add(new Integer(ServerBehaviourDelegate.NO_CHANGE));
 					else
-						kindList.add(new Integer(CHANGED));
+						kindList.add(new Integer(ServerBehaviourDelegate.CHANGED));
 				} else
-					kindList.add(new Integer(ADDED));
+					kindList.add(new Integer(ServerBehaviourDelegate.ADDED));
 				return true;
 			}
 		};
@@ -806,7 +791,7 @@ public class Server extends Base implements IServer {
 		spi.addRemovedModules(moduleList, kindList);
 		
 		while (moduleList.size() > kindList.size()) {
-			kindList.add(new Integer(REMOVED));
+			kindList.add(new Integer(ServerBehaviourDelegate.REMOVED));
 		}
 		
 		//parents = parentList;
@@ -865,6 +850,7 @@ public class Server extends Base implements IServer {
 			try {
 				publishModules(kind, moduleList, kindList, multi, monitor);
 			} catch (Exception e) {
+				Trace.trace(Trace.WARNING, "Error while publishing modules", e);
 				multi.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorPublishing"), e));
 			}
 		}
@@ -928,7 +914,7 @@ public class Server extends Base implements IServer {
 		for (int i = 0; i < size; i++) {
 			((ModuleResourceDelta)delta[i]).trace(">  ");
 		}*/
-		if (deltaKind == REMOVED)
+		if (deltaKind == ServerBehaviourDelegate.REMOVED)
 			getServerPublishInfo().removeModulePublishInfo(module);
 		else
 			getServerPublishInfo().fill(module);
@@ -1128,6 +1114,18 @@ public class Server extends Base implements IServer {
 		}
 	}
 
+	/**
+	 * Return the launch configuration for this server. If one does not exist, it
+	 * will be created if "create" is true, and otherwise will return null.
+	 * 
+	 * @param create <code>true</code> if a new launch configuration should be
+	 *    created if there are none already
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return the launch configuration, no <code>null</code> if there was no
+	 *    existing launch configuration and <code>create</code> was false
+	 * @throws CoreException
+	 */
 	public ILaunchConfiguration getLaunchConfiguration(boolean create, IProgressMonitor monitor) throws CoreException {
 		ILaunchConfigurationType launchConfigType = ((ServerType) getServerType()).getLaunchConfigurationType();
 		
@@ -1289,31 +1287,36 @@ public class Server extends Base implements IServer {
 			}
 		
 			// add listener to start it as soon as it is stopped
-			addServerListener(new ServerAdapter() {
-				public void serverStateChange(IServer server) {
-					if (server.getServerState() == STATE_STOPPED) {
-						server.removeServerListener(this);
+			addServerListener(new IServerListener() {
+				public void serverChanged(ServerEvent event) {
+					int eventKind = event.getKind();
+					IServer server = event.getServer();
+					if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
+						if (server.getServerState() == STATE_STOPPED) {
+							server.removeServerListener(this);
 
-						// restart in a quarter second (give other listeners a chance
-						// to hear the stopped message)
-						Thread t = new Thread() {
-							public void run() {
-								try {
-									Thread.sleep(250);
-								} catch (Exception e) {
-									// ignore
+							// restart in a quarter second (give other listeners a chance
+							// to hear the stopped message)
+							Thread t = new Thread() {
+								public void run() {
+									try {
+										Thread.sleep(250);
+									} catch (Exception e) {
+										// ignore
+									}
+									try {
+										Server.this.start(mode2, new NullProgressMonitor());
+									} catch (Exception e) {
+										Trace.trace(Trace.SEVERE, "Error while restarting server", e);
+									}
 								}
-								try {
-									Server.this.start(mode2, new NullProgressMonitor());
-								} catch (Exception e) {
-									Trace.trace(Trace.SEVERE, "Error while restarting server", e);
-								}
-							}
-						};
-						t.setDaemon(true);
-						t.setPriority(Thread.NORM_PRIORITY - 2);
-						t.start();
+							};
+							t.setDaemon(true);
+							t.setPriority(Thread.NORM_PRIORITY - 2);
+							t.start();
+						}
 					}
+					
 				}
 			});
 	
@@ -1368,17 +1371,21 @@ public class Server extends Base implements IServer {
 		final Object mutex = new Object();
 	
 		// add listener to the server
-		IServerListener listener = new ServerAdapter() {
-			public void serverStateChange(IServer server) {
-				int state = server.getServerState();
-				if (state == IServer.STATE_STARTED || state == IServer.STATE_STOPPED) {
-					// notify waiter
-					synchronized (mutex) {
-						try {
-							Trace.trace(Trace.FINEST, "synchronousStart notify");
-							mutex.notifyAll();
-						} catch (Exception e) {
-							Trace.trace(Trace.SEVERE, "Error notifying server start", e);
+		IServerListener listener = new IServerListener() {
+			public void serverChanged(ServerEvent event) {
+				int eventKind = event.getKind();
+				IServer server = event.getServer();
+				if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
+					int state = server.getServerState();
+					if (state == IServer.STATE_STARTED || state == IServer.STATE_STOPPED) {
+						// notify waiter
+						synchronized (mutex) {
+							try {
+								Trace.trace(Trace.FINEST, "synchronousStart notify");
+								mutex.notifyAll();
+							} catch (Exception e) {
+								Trace.trace(Trace.SEVERE, "Error notifying server start", e);
+							}
 						}
 					}
 				}
@@ -1469,16 +1476,20 @@ public class Server extends Base implements IServer {
 		final Object mutex = new Object();
 	
 		// add listener to the server
-		IServerListener listener = new ServerAdapter() {
-			public void serverStateChange(IServer server) {
-				int state = server.getServerState();
-				if (Server.this == server && state == IServer.STATE_STOPPED) {
-					// notify waiter
-					synchronized (mutex) {
-						try {
-							mutex.notifyAll();
-						} catch (Exception e) {
-							Trace.trace(Trace.SEVERE, "Error notifying server stop", e);
+		IServerListener listener = new IServerListener() {
+			public void serverChanged(ServerEvent event) {
+				int eventKind = event.getKind();
+				IServer server = event.getServer();
+				if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
+					int state = server.getServerState();
+					if (Server.this == server && state == IServer.STATE_STOPPED) {
+						// notify waiter
+						synchronized (mutex) {
+							try {
+								mutex.notifyAll();
+							} catch (Exception e) {
+								Trace.trace(Trace.SEVERE, "Error notifying server stop", e);
+							}
 						}
 					}
 				}
@@ -1550,17 +1561,21 @@ public class Server extends Base implements IServer {
 		final Object mutex = new Object();
 	
 		// add listener to the module
-		IServerListener listener = new ServerAdapter() {
-			public void moduleStateChange(IServer server) {
-				int state = server.getModuleState(module);
-				if (state == IServer.STATE_STARTED || state == IServer.STATE_STOPPED) {
-					// notify waiter
-					synchronized (mutex) {
-						try {
-							Trace.trace(Trace.FINEST, "synchronousModuleRestart notify");
-							mutex.notifyAll();
-						} catch (Exception e) {
-							Trace.trace(Trace.SEVERE, "Error notifying module restart", e);
+		IServerListener listener = new IServerListener() {
+			public void serverChanged(ServerEvent event) {
+				int eventKind = event.getKind();
+				IServer server = event.getServer();
+				if (eventKind == (ServerEvent.MODULE_CHANGE | ServerEvent.STATE_CHANGE)) {
+					int state = server.getModuleState(module);
+					if (state == IServer.STATE_STARTED || state == IServer.STATE_STOPPED) {
+						// notify waiter
+						synchronized (mutex) {
+							try {
+								Trace.trace(Trace.FINEST, "synchronousModuleRestart notify");
+								mutex.notifyAll();
+							} catch (Exception e) {
+								Trace.trace(Trace.SEVERE, "Error notifying module restart", e);
+							}
 						}
 					}
 				}
@@ -1888,7 +1903,7 @@ public class Server extends Base implements IServer {
 	 *
 	 * @return a possibly empty array of servers ports
 	 */
-	public IServerPort[] getServerPorts() {
+	public ServerPort[] getServerPorts() {
 		try {
 			return getDelegate().getServerPorts();
 		} catch (Exception e) {

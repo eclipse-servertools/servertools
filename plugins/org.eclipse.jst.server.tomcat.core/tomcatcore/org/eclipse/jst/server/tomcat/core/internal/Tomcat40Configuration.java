@@ -10,13 +10,7 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -31,8 +25,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
-import org.eclipse.wst.server.core.IServerPort;
-import org.eclipse.wst.server.core.util.ServerPort;
+import org.eclipse.wst.server.core.ServerPort;
 /**
  * Tomcat v4.0 server configuration.
  */
@@ -74,10 +67,10 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	 * Return the port number.
 	 * @return int
 	 */
-	public IServerPort getMainPort() {
+	public ServerPort getMainPort() {
 		Iterator iterator = getServerPorts().iterator();
 		while (iterator.hasNext()) {
-			IServerPort port = (IServerPort) iterator.next();
+			ServerPort port = (ServerPort) iterator.next();
 			if (port.getName().equals("HTTP Connector"))
 				return port;
 		}

@@ -276,17 +276,17 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, "%canModifyModules", null);
 	}
 
-	public IServerPort[] getServerPorts() {
+	public ServerPort[] getServerPorts() {
 		if (getServer().getServerConfiguration() == null)
-			return new IServerPort[0];
+			return new ServerPort[0];
 		
 		try {
 			List list = getTomcatConfiguration().getServerPorts();
-			IServerPort[] sp = new IServerPort[list.size()];
+			ServerPort[] sp = new ServerPort[list.size()];
 			list.toArray(sp);
 			return sp;
 		} catch (Exception e) {
-			return new IServerPort[0]; 
+			return new ServerPort[0]; 
 		}
 	}
 	

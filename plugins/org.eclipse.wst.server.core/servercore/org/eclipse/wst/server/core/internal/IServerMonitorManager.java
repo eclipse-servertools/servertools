@@ -12,7 +12,7 @@ package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerPort;
+import org.eclipse.wst.server.core.ServerPort;
 /**
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
@@ -37,7 +37,7 @@ public interface IServerMonitorManager {
 	 * @param content
 	 * @return monitor port number
 	 */
-	public IMonitoredServerPort createMonitor(IServer server, IServerPort port, int monitorPort, String[] content);
+	public IMonitoredServerPort createMonitor(IServer server, ServerPort port, int monitorPort, String[] content);
 
 	/**
 	 * Stop monitoring the given port. Throws a CoreException if there was a problem

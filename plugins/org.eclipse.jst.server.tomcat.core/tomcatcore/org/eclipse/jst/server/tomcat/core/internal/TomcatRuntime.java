@@ -28,7 +28,8 @@ import org.eclipse.jdt.launching.*;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 /**
- * 
+ * TODO: allow a "default" setting on the VM that will use the Eclipse
+ * default VM, even if it changes.
  */
 public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, ITomcatRuntimeWorkingCopy {
 	protected static final String PROP_VM_INSTALL_TYPE_ID = "vm-install-type-id";

@@ -275,6 +275,9 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * @param project a project
 	 */
 	private void addModules(IProject project) {
+		if (projects == null)
+			cacheModules();
+		
 		IModule[] modules = createModules(project);
 		if (modules == null || modules.length == 0)
 			return;
@@ -289,6 +292,9 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * @param project a project
 	 */
 	private void removeModules(IProject project) {
+		if (projects == null)
+			cacheModules();
+		
 		try {
 			IModule[] modules = (IModule[]) projects.get(project);
 			projects.remove(project);

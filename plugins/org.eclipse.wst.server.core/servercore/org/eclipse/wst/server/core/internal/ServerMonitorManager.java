@@ -30,12 +30,12 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	
 	class MonitoredPort implements IMonitoredServerPort {
 		protected IServer server;
-		protected IServerPort port;
+		protected ServerPort port;
 		protected int newPort = -1;
 		protected String[] content;
 		public boolean started;
 		
-		public MonitoredPort(IServer server, IServerPort port, int newPort, String[] content) {
+		public MonitoredPort(IServer server, ServerPort port, int newPort, String[] content) {
 			this.server = server;
 			this.port = port;
 			this.newPort = newPort;
@@ -50,7 +50,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 			return server;
 		}
 		
-		public IServerPort getServerPort() {
+		public ServerPort getServerPort() {
 			return port;
 		}
 		
@@ -136,11 +136,11 @@ public class ServerMonitorManager implements IServerMonitorManager {
 				newPort = Integer.parseInt(newPortStr);
 			String portId = memento.getString("portId");
 			
-			IServerPort[] ports2 = server.getServerPorts();
+			ServerPort[] ports2 = server.getServerPorts();
 			if (ports2 != null) {
 				int size = ports2.length;
 				for (int i = 0; port == null && i < size; i++) {
-					IServerPort sp = ports2[i];
+					ServerPort sp = ports2[i];
 					if (sp.getId() != null && sp.getId().equals(portId))
 						port = sp;
 				}
@@ -232,7 +232,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	 * @return a monitored server port
 	 * @throws org.eclipse.core.runtime.CoreException
 	 */
-	public IMonitoredServerPort createMonitor(IServer server, IServerPort port, int monitorPort, String[] content) {
+	public IMonitoredServerPort createMonitor(IServer server, ServerPort port, int monitorPort, String[] content) {
 		if (port == null || monitor == null)
 			return null;
 		

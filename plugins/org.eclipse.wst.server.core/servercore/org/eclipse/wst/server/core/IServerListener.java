@@ -9,6 +9,8 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.server.core;
+
+import org.eclipse.wst.server.core.util.ServerEvent;
 /**
  * This interface is used by the server to broadcast a change of state.
  * Usually, the change of state will be caused by some user action,
@@ -18,47 +20,17 @@ package org.eclipse.wst.server.core;
  * used to inform the user of the change or update the UI.
  *
  * <p>Note: The server listener event MUST NOT directly be used to modify
- * the server's state via one of the server's method. For example, a server
- * stopped event cannot directly trigger a start(). Doing this may cause
- * the thread to hang.</p>
- * 
- * required events:
- *   state change (server + module)
- *   publish change (server + module)
- *   add/remove module
- *   restart mode (server + module)
+ * the server's or module's state via one of the server's method. For example, 
+ * a server stopped event cannot directly trigger a start(). Doing this may 
+ * cause the thread to hang.</p>
  *   
  * @since 1.0
  */
 public interface IServerListener {
 	/**
-	 * Called when the server isRestartNeeded() property changes.
-	 *
-	 * @param server the affected server
+	 * A server or module has been changed as specified in the event.
+	 * 
+	 * @param event a server event that contains information on the change
 	 */
-	public void restartStateChange(IServer server);
-
-	/**
-	 * Notification when the server state has changed.
-	 *
-	 * @param server the affected server
-	 */
-	public void serverStateChange(IServer server);
-
-	/**
-	 * Called when the modules tree of this server has changed.
-	 *
-	 * @param server the affected server
-	 */
-	public void modulesChanged(IServer server);
-
-	/**
-	 * Fired when a module on this server needs to be published
-	 * or no longer needs to be published, or it's state has
-	 * changed.
-	 *
-	 * @param server the affected server
-	 * @param module the module
-	 */
-	public void moduleStateChange(IServer server, IModule[] module);
+	public void serverChanged(ServerEvent event); 
 }

@@ -16,6 +16,7 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.debug.core.ILaunchConfiguration;
 
 import org.eclipse.wst.server.core.internal.IModuleVisitor;
 import org.eclipse.wst.server.core.internal.ModuleFactory;
@@ -414,10 +415,10 @@ public class ServerUtil {
 			throw new IllegalArgumentException();
 		
 		String typeName = getValidFileName(type.getName());
-		String name = ServerPlugin.getResource("%defaultServerName3", new String[] {typeName})+ "."  + IServerAttributes.FILE_EXTENSION;
+		String name = ServerPlugin.getResource("%defaultServerName3", new String[] {typeName})+ "."  + Server.FILE_EXTENSION;
 		int i = 2;
 		while (isFileNameInUse(project, name)) {
-			name = ServerPlugin.getResource("%defaultServerName4", new String[] {typeName, i + ""}) + "."  + IServerAttributes.FILE_EXTENSION;
+			name = ServerPlugin.getResource("%defaultServerName4", new String[] {typeName, i + ""}) + "."  + Server.FILE_EXTENSION;
 			i++;
 		}
 		return project.getFile(name);
@@ -678,5 +679,35 @@ public class ServerUtil {
 			}
 		}, null);
 		return h.b;
+	}
+
+	/**
+	 * Returns the server associated with the given launch configuration.
+	 * 
+	 * @param configuration a launch configuration
+	 * @return the server associated with the launch configuration, or
+	 *    <code>null</code> if no server could be found
+	 * @throws CoreException if there is a problem getting the attribute from
+	 *    the launch configuration
+	 */
+	public static IServer getServer(ILaunchConfiguration configuration) throws CoreException {
+		String serverId = configuration.getAttribute(Server.ATTR_SERVER_ID, (String) null);
+
+		if (serverId != null)
+			return ServerCore.findServer(serverId);
+		return null;
+	}
+
+	/**
+	 * Validates whether this server can be editted.
+	 * 
+	 * @param context the context (Shell)
+	 * @param server the server
+	 * @return a status object with code <code>IStatus.OK</code> if the server
+	 *   can be edited, otherwise a status object indicating what when wrong
+	 *   with the checkout
+	 */
+	public static IStatus validateEdit(Object context, IServer server) {
+		return ((Server)server).validateEdit(context);
 	}
 }

@@ -129,18 +129,6 @@ public class ServerType implements IServerType, IOrdered {
 			return IServer.STATE_STARTED;
 		return IServer.STATE_UNKNOWN;
 	}
-	
-	public int getServerStateSet() {
-		String stateSet = element.getAttribute("stateSet");
-		if (stateSet == null)
-			return SERVER_STATE_SET_MANAGED;
-		else if (stateSet.toLowerCase().indexOf("attach") >= 0)
-			return SERVER_STATE_SET_ATTACHED;
-		else if (stateSet.toLowerCase().indexOf("publish") >= 0)
-			return SERVER_STATE_SET_PUBLISHED;
-		else
-			return SERVER_STATE_SET_MANAGED;
-	}
 
 	public boolean hasServerConfiguration() {
 		return ("true".equalsIgnoreCase(element.getAttribute("hasConfiguration")));

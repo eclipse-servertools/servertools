@@ -37,7 +37,7 @@ public class TempSaveServerTask extends Task {
 			if (!workingCopy.isDirty())
 				return;
 			
-			IFile file = workingCopy.getFile();
+			IFile file = ((Server)workingCopy).getFile();
 			if (file != null) {
 				IProject project = file.getProject();
 				

@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
@@ -155,8 +156,9 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 		if (serverId != null) {
 			IServer server = ServerCore.findServer(serverId);
 			if (server != null) {
-				if (server.getFile() != null) {
-					s = server.getFile().getFullPath().makeRelative().toString();
+				Server server2 = (Server) server;
+				if (server2.getFile() != null) {
+					s = server2.getFile().getFullPath().makeRelative().toString();
 					if (s.startsWith("/"))
 						s = s.substring(1);
 				} else

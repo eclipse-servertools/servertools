@@ -135,6 +135,16 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		setAttribute(PROP_LOCKED, b);
 	}
 
+	/**
+	 * Sets whether this element is private.
+	 * Generally speaking, elements marked private are internal ones
+	 * that should not be shown to users (because they won't know
+	 * anything about them).
+	 * 
+	 * @param b <code>true</code> if this element is private,
+	 * and <code>false</code> otherwise
+	 * @see IServerAttributes#isPrivate()
+	 */
 	public void setPrivate(boolean b) {
 		setAttribute(PROP_PRIVATE, b);
 	}
@@ -159,6 +169,14 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			setAttribute(CONFIGURATION_ID, configuration.getFullPath().toString());
 	}
 
+	/**
+	 * Sets the file where this server instance is serialized.
+	 * 
+	 * @param file the file in the workspace where the server instance
+	 *    is serialized, or <code>null</code> if the information is
+	 *    instead to be persisted with the workspace but not with any
+	 *    particular workspace resource
+	 */
 	public void setFile(IFile file) {
 		this.file = file;
 	}
@@ -206,13 +224,13 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		monitor.subTask(ServerPlugin.getResource("%savingTask", getName()));
 
 		if (!force && getOriginal() != null)
-			wch.validateTimestamp(getOriginal().getTimestamp());
+			wch.validateTimestamp(((Server)getOriginal()).getTimestamp());
 
 		if (server == null) {
 			server = new Server(file);
 			server.setServerState(serverState);
 			server.publishListeners = publishListeners;
-			server.serverListeners = serverListeners;
+			server.notificationManager = notificationManager;
 		}
 		
 		if (getServerType().hasServerConfiguration()) {

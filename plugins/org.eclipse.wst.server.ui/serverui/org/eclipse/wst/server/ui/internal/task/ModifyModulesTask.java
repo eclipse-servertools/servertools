@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.ProjectProperties;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.model.IRunningActionServer;
 import org.eclipse.wst.server.core.util.Task;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
@@ -76,7 +77,7 @@ public class ModifyModulesTask extends Task {
 			add.toArray(add2);
 		}
 		
-		IFile file = workingCopy.getFile();
+		IFile file = ((Server)workingCopy).getFile();
 		if (file != null) {
 			IProject project = file.getProject();
 			

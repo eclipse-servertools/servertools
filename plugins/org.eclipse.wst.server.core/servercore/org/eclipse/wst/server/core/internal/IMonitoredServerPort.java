@@ -11,7 +11,7 @@
 package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerPort;
+import org.eclipse.wst.server.core.ServerPort;
 
 /**
  * An monitored port on a server.
@@ -33,7 +33,7 @@ public interface IMonitoredServerPort {
 	 * 
 	 * @return org.eclipse.wst.server.model.IServerPort
 	 */
-	public IServerPort getServerPort();
+	public ServerPort getServerPort();
 
 	/**
 	 * Return the port that is being used to monitor.

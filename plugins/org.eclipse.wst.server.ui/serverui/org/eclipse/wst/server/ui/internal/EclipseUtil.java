@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -24,6 +21,7 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
 
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.internal.ProjectProperties;
 /**
  * Eclipse utility methods.
@@ -193,34 +191,12 @@ public class EclipseUtil {
 	public static void openError(Shell shell, String message, IStatus status) {
 		ErrorDialog.openError(shell, ServerUIPlugin.getResource("%errorDialogTitle"), message, status);
 	}
-	
-	/**
-	 * Start a server and display a dialog if it fails.
-	 */
-	/*public static ILaunch startServer(final Shell shell, final IServer server, final String mode) throws CoreException {
-			//, final ServerStartupListener listener) throws CoreException {
-		// Eclipse v2 workaround to make sure that the debug UI listeners are setup
-		DebugUIPlugin.getDefault();
-
-		try {
-			return server.start(mode, new NullProgressMonitor());
-		} catch (final CoreException e) {
-			Trace.trace(Trace.SEVERE, "Error starting server", e);
-			Display.getDefault().syncExec(new Runnable() {
-				public void run() {
-					EclipseUtil.openError(shell, ServerUIPlugin.getResource("%serverStartError"), e.getStatus());
-					listener.setEnabled(false);
-				}
-			});
-			throw e;
-		}
-	}*/
 
 	/**
 	 * Do a validateEdit() on the given server.
 	 */
 	public static boolean validateEdit(Shell shell, IServer server) {
-		IStatus status = server.validateEdit(shell);
+		IStatus status = ServerUtil.validateEdit(shell, server);
 		return validateEdit(shell, status);
 	}
 

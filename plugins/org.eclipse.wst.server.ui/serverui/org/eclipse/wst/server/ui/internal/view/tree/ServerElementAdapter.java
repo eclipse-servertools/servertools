@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.ServerLabelProvider;
 import org.eclipse.ui.model.IWorkbenchAdapter;
@@ -137,7 +138,7 @@ public class ServerElementAdapter implements IAdaptable, IWorkbenchAdapter, ISer
 
 	protected IFile getFile() {
 		if (resource instanceof IServer)
-			return ((IServer) resource).getFile();
+			return ((Server) resource).getFile();
 		return null;
 	}
 	

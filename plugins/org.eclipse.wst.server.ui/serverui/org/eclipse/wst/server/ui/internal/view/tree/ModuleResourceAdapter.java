@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.ServerLabelProvider;
 import org.eclipse.ui.model.IWorkbenchAdapter;
@@ -103,7 +104,7 @@ public class ModuleResourceAdapter implements IAdaptable, IWorkbenchAdapter, ISe
 	public int hashCode() {
 		int hash = 0;
 		if (server != null) {
-			IFile file = server.getFile();
+			IFile file = ((Server)server).getFile();
 			if (file != null)
 				hash = file.hashCode();
 		}

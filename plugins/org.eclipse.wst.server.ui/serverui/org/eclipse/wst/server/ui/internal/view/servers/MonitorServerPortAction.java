@@ -25,11 +25,11 @@ import org.eclipse.swt.widgets.Shell;
 public class MonitorServerPortAction extends Action {
 	protected Shell shell;
 	protected IServer server;
-	protected IServerPort port;
+	protected ServerPort port;
 	protected IMonitoredServerPort monitoredPort;
 	protected boolean checked;
 	
-	public MonitorServerPortAction(Shell shell, IServer server, IServerPort port) {
+	public MonitorServerPortAction(Shell shell, IServer server, ServerPort port) {
 		super(ServerUIPlugin.getResource("%actionMonitorPort", new String[] { port.getPort() + "", port.getName() }));
 		
 		this.shell = shell;

@@ -8,22 +8,20 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core.util;
-
-import org.eclipse.wst.server.core.IServerPort;
+package org.eclipse.wst.server.core;
 /**
- * A default implementation of the IServerPort interface.
+ * This class represents a port on a server.
  * 
  * @since 1.0
  */
-public class ServerPort implements IServerPort {
+public class ServerPort {
 	private String id;
 	private String name;
 	private int port;
 	private String protocol;
 	private String[] contentTypes;
 	private boolean advanced;
-
+	
 	/**
 	 * Create a new server port.
 	 */
@@ -50,18 +48,18 @@ public class ServerPort implements IServerPort {
 		this.contentTypes = contentTypes;
 		this.advanced = advanced;
 	}
-	
+
 	/**
-	 * 
+	 * Create a new server port.
 	 */
 	public ServerPort(String name, int port, String protocol) {
 		this(null, name, port, protocol);
 	}
-	
+
 	/**
 	 * Return an optional internal id used to identify this port.
 	 * 
-	 * @return the id
+	 * @return an internal id
 	 */
 	public String getId() {
 		return id;
@@ -70,7 +68,7 @@ public class ServerPort implements IServerPort {
 	/**
 	 * Return the name of the port.
 	 * 
-	 * @return java.lang.String
+	 * @return the name of the port
 	 */
 	public String getName() {
 		return name;
@@ -78,7 +76,8 @@ public class ServerPort implements IServerPort {
 
 	/**
 	 * Return the actual port number.
-	 * @return int
+	 * 
+	 * @return the port number
 	 */
 	public int getPort() {
 		return port;
@@ -88,17 +87,17 @@ public class ServerPort implements IServerPort {
 	 * Returns the protocol, e.g. HTTP of this port. Returns null
 	 * if the protocol is unknown.
 	 * 
-	 * @return java.lang.String
+	 * @return the procotol
 	 */
 	public String getProtocol() {
 		return protocol;
 	}
 
 	/**
-	 * Returns the content that this port would normally serve, or null
+	 * Returns the content types that this port would normally serve, or null
 	 * if the content is unknown.
 	 * 
-	 * @return java.lang.String[]
+	 * @return a possibly empty array of content types
 	 */
 	public String[] getContentTypes() {
 		return contentTypes;
@@ -108,12 +107,13 @@ public class ServerPort implements IServerPort {
 	 * Returns true if this port is an "advanced" port and should not be shown
 	 * to novice users.
 	 * 
-	 * @return boolean
+	 * @return <code>true</code> if the port is advanced, or <code>false</code>
+	 *    otherwise
 	 */
 	public boolean isAdvanced() {
 		return advanced;
 	}
-
+	
 	/**
 	 * @see Object#equals(Object)
 	 */

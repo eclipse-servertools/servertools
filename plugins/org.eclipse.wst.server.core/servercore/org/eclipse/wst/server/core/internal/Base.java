@@ -44,10 +44,26 @@ public abstract class Base {
 		map.put(PROP_ID, id);
 	}
 
+	/**
+	 * Returns the timestamp of this object.
+	 * Timestamps are monotonically increased each time the object is saved
+	 * and can be used to determine if any changes have been made on disk
+	 * since the object was loaded.
+	 * 
+	 * @return the object's timestamp
+	 */
 	public int getTimestamp() {
 		return getAttribute("timestamp", -1);
 	}
 
+	/**
+	 * Returns the file where this server instance is serialized.
+	 * 
+	 * @return the file in the workspace where the server instance
+	 * is serialized, or <code>null</code> if the information is
+	 * instead to be persisted with the workspace but not with any
+	 * particular workspace resource
+	 */
 	public IFile getFile() {
 		return file;
 	}
@@ -128,6 +144,13 @@ public abstract class Base {
 		return getAttribute(PROP_LOCKED, false);
 	}
 
+	/**
+	 * Returns <code>true</code> if this runtime is private (not shown
+	 * in the UI to the users), and <code>false</code> otherwise.
+	 * 
+	 * @return <code>true</code> if this runtime is private,
+	 *    and <code>false</code> otherwise
+	 */
 	public boolean isPrivate() {
 		return getAttribute(PROP_PRIVATE, false);
 	}

@@ -20,14 +20,14 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerPort;
+import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 /**
  * Dialog that prompts a user to add or edit a server monitor.
  */
 public class MonitorDialog extends Dialog {
 	protected IServer server;
-	protected IServerPort port;
+	protected ServerPort port;
 	protected int monitorPort = -1;
 	protected String[] portContentTypes;
 	protected String[] contentTypes;
@@ -52,7 +52,7 @@ public class MonitorDialog extends Dialog {
 		this.server = server;
 	}
 	
-	public MonitorDialog(Shell parentShell, IServer server, IServerPort port, int monitorPort, String[] contentTypes) {
+	public MonitorDialog(Shell parentShell, IServer server, ServerPort port, int monitorPort, String[] contentTypes) {
 		this(parentShell, server);
 		this.monitorPort = monitorPort;
 		this.contentTypes = contentTypes;
@@ -123,8 +123,8 @@ public class MonitorDialog extends Dialog {
 		
 		tableViewer.setSorter(new ViewerSorter() {
 			public int compare(Viewer viewer, Object e1, Object e2) {
-				IServerPort port1 = (IServerPort) e1;
-				IServerPort port2 = (IServerPort) e2;
+				ServerPort port1 = (ServerPort) e1;
+				ServerPort port2 = (ServerPort) e2;
 				if (port1.getPort() == port2.getPort())
 					return 0;
 				else if (port1.getPort() > port2.getPort())
@@ -179,7 +179,7 @@ public class MonitorDialog extends Dialog {
 		
 		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				port = (IServerPort) getSelection(tableViewer.getSelection());
+				port = (ServerPort) getSelection(tableViewer.getSelection());
 				if (port == null)
 					return;
 				if (!portChanged) {
@@ -236,7 +236,7 @@ public class MonitorDialog extends Dialog {
 		return monitorPort;
 	}
 
-	public IServerPort getServerPort() {
+	public ServerPort getServerPort() {
 		return port;
 	}
 

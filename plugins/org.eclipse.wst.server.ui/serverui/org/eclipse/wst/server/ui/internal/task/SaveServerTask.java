@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.ProjectProperties;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.util.Task;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 /**
@@ -34,7 +35,7 @@ public class SaveServerTask extends Task {
 		if (server != null && server instanceof IServerWorkingCopy) {
 			IServerWorkingCopy workingCopy = (IServerWorkingCopy) server;
 			if (workingCopy.isDirty()) {
-				IFile file = workingCopy.getFile();
+				IFile file = ((Server)workingCopy).getFile();
 				if (file != null) {
 					IProject project = file.getProject();
 					

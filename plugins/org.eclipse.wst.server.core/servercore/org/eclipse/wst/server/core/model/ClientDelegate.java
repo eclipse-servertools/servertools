@@ -33,7 +33,9 @@ public abstract class ClientDelegate {
 	 * @return <code>true</code> if the client supports this combination, and <code>false</code>
 	 *    otherwise
 	 */
-	public abstract boolean supports(IServer server, Object launchable, String launchMode);
+	public boolean supports(IServer server, Object launchable, String launchMode) {
+		return true;
+	}
 
 	/**
 	 * Opens or executes on the launchable.

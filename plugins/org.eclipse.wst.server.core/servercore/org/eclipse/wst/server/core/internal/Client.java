@@ -47,6 +47,10 @@ public class Client implements IClient {
 	public String getDescription() {
 		return element.getAttribute("description");
 	}
+	
+	protected String getLaunchable() {
+		return element.getAttribute("launchable");
+	}
 
 	/*
 	 * @see IPublishManager#getLabel()
@@ -76,6 +80,10 @@ public class Client implements IClient {
 	 * 
 	 */
 	public boolean supports(IServer server, Object launchable, String launchMode) {
+		if (launchable == null)
+			return false;
+		//if (!launchable.getClass().getName().equals(getLaunchable()))
+		//	return false;
 		try {
 			return getDelegate().supports(server, launchable, launchMode);
 		} catch (Exception e) {

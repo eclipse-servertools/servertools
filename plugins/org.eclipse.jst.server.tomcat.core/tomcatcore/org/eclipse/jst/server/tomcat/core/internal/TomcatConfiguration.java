@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.core.IWebModule;
 
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IServerPort;
+import org.eclipse.wst.server.core.ServerPort;
 /**
  * Generic Tomcat server configuration.
  */
@@ -196,9 +196,9 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 
 	/**
 	 * Returns the main server port.
-	 * @return IServerPort
+	 * @return ServerPort
 	 */
-	public abstract IServerPort getMainPort();
+	public abstract ServerPort getMainPort();
 
 	/**
 	 * Returns the prefix that is used in front of the

@@ -20,17 +20,12 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.tomcat.core.internal.xml.Factory;
 import org.eclipse.jst.server.tomcat.core.internal.xml.XMLUtil;
-import org.eclipse.jst.server.tomcat.core.internal.xml.server32.Connector;
-import org.eclipse.jst.server.tomcat.core.internal.xml.server32.Context;
-import org.eclipse.jst.server.tomcat.core.internal.xml.server32.ContextManager;
-import org.eclipse.jst.server.tomcat.core.internal.xml.server32.Parameter;
-import org.eclipse.jst.server.tomcat.core.internal.xml.server32.Server;
+import org.eclipse.jst.server.tomcat.core.internal.xml.server32.*;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.IServerPort;
-import org.eclipse.wst.server.core.util.ServerPort;
+import org.eclipse.wst.server.core.ServerPort;
 /**
  * Tomcat v3.2 server configuration.
  */
@@ -71,10 +66,10 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	 * Returns the main server port.
 	 * @return TomcatServerPort
 	 */
-	public IServerPort getMainPort() {
+	public ServerPort getMainPort() {
 		Iterator iterator = getServerPorts().iterator();
 		while (iterator.hasNext()) {
-			IServerPort port = (IServerPort) iterator.next();
+			ServerPort port = (ServerPort) iterator.next();
 			if (port.getName().equals("HTTP Connector"))
 				return port;
 		}

@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerPort;
+import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.internal.IMonitoredServerPort;
 import org.eclipse.wst.server.core.internal.IServerMonitorManager;
 import org.eclipse.wst.server.core.internal.ServerMonitorManager;
@@ -34,7 +34,7 @@ import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
  * 
  */
 public class MonitorComposite extends Composite {
-	//protected IServerPort selection;
+	//protected ServerPort selection;
 	protected PortSelectionListener listener;
 	protected IServer server;
 	
@@ -44,7 +44,7 @@ public class MonitorComposite extends Composite {
 	protected TableViewer monitorTableViewer;
 	
 	public interface PortSelectionListener {
-		public void portSelected(IServerPort port);
+		public void portSelected(ServerPort port);
 	}
 	
 	public MonitorComposite(Composite parent, int style, PortSelectionListener listener2, IServer server) {
@@ -131,7 +131,7 @@ public class MonitorComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				MonitorDialog dialog = new MonitorDialog(getShell(), server2);
 				if (dialog.open() != Window.CANCEL) {
-					IServerPort port = dialog.getServerPort();
+					ServerPort port = dialog.getServerPort();
 					IMonitoredServerPort sp = smm.createMonitor(server2, port, dialog.getMonitorPort(), dialog.getContentTypes());
 					if (sp != null)
 						monitorTableViewer.add(sp);

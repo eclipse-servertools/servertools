@@ -17,7 +17,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.*;
@@ -49,9 +48,7 @@ public class SwitchConfigurationAction extends Action {
 		else
 			setImageDescriptor(((ServerLabelProvider)ServerUICore.getLabelProvider()).getImageDescriptor(config));
 		
-		IServerType type = server.getServerType();
-		if (type.getServerStateSet() == IServerType.SERVER_STATE_SET_MANAGED &&
-				server.getServerState() != IServer.STATE_STOPPED)
+		if (server.getServerState() != IServer.STATE_STOPPED)
 			setEnabled(false);
 	}
 	

@@ -14,7 +14,7 @@ import java.util.Iterator;
 
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfigurationWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
-import org.eclipse.wst.server.core.IServerPort;
+import org.eclipse.wst.server.core.ServerPort;
 /**
  * Command to change the configuration port.
  */
@@ -40,7 +40,7 @@ public class ModifyPortCommand extends ConfigurationCommand {
 		// find old port number
 		Iterator iterator = configuration.getServerPorts().iterator();
 		while (iterator.hasNext()) {
-			IServerPort temp = (IServerPort) iterator.next();
+			ServerPort temp = (ServerPort) iterator.next();
 			if (id.equals(temp.getId()))
 				oldPort = temp.getPort();
 		}

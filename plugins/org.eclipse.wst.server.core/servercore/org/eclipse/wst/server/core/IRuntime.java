@@ -91,15 +91,6 @@ public interface IRuntime extends IAdaptable {
 	public boolean isReadOnly();
 
 	/**
-	 * Returns <code>true</code> if this runtime is private (not shown
-	 * in the UI to the users), and <code>false</code> otherwise.
-	 * 
-	 * @return <code>true</code> if this runtime is private,
-	 *    and <code>false</code> otherwise
-	 */
-	//public boolean isPrivate();
-
-	/**
 	 * Returns true if this is a working copy.
 	 * 
 	 * @return <code>true</code> if this runtime is a working copy
@@ -115,16 +106,6 @@ public interface IRuntime extends IAdaptable {
 	 *    otherwise
 	 */
 	public boolean isDelegateLoaded();
-	
-	/**
-	 * Returns the timestamp of this runtime.
-	 * Timestamps are monotonically increased each time the runtime is saved
-	 * and can be used to determine if any changes have been made on disk
-	 * since the runtime was loaded.
-	 * 
-	 * @return the runtime's timestamp
-	 */
-	//public int getTimestamp();
 
 	/**
 	 * Returns the type of this runtime instance.

@@ -34,11 +34,7 @@ public class TomcatSourcePathComputerDelegate implements ISourcePathComputerDele
 	public ISourceContainer[] computeSourceContainers(ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException {
 		IRuntimeClasspathEntry[] entries = JavaRuntime.computeUnresolvedSourceLookupPath(configuration);
 
-		String serverId = configuration.getAttribute(IServerAttributes.ATTR_SERVER_ID, (String) null);
-
-		IServer server = null;
-		if (serverId != null)
-			server = ServerCore.findServer(serverId);
+		IServer server = ServerUtil.getServer(configuration);
 		if (server != null) {
 			List list = new ArrayList();
 			List pathList = new ArrayList();

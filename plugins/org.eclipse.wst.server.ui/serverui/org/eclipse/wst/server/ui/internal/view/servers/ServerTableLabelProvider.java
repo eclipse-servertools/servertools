@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
-import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 
@@ -20,30 +19,12 @@ import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.DefaultServerLabelDecorator;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.provisional.UIDecoratorManager;
 import org.eclipse.swt.graphics.Image;
 /**
  * Server table label provider.
  */
 public class ServerTableLabelProvider implements ITableLabelProvider {
-	private static final Image[] startingImages = new Image[] {
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_1),
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_2),
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_3)
-	};
-	
-	private static final Image[] stoppingImages = new Image[] {
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_1),
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_2),
-		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPING_2)
-	};
-		
-	private static final String[] serverStateUnmanaged = new String[] {
-		"",
-		ServerUIPlugin.getResource("%viewStatusStarting4"),
-		ServerUIPlugin.getResource("%viewStatusStarted2"),
-		ServerUIPlugin.getResource("%viewStatusStopping4"),
-		ServerUIPlugin.getResource("%viewStatusStopped2")};
-
 	public static final String[] syncState = new String[] {
 		ServerUIPlugin.getResource("%viewSyncOkay"),
 		ServerUIPlugin.getResource("%viewSyncRestart"),
@@ -57,16 +38,6 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 		ServerUIPlugin.getResource("%viewSyncPublish2"),
 		ServerUIPlugin.getResource("%viewSyncRestartPublish2"),
 		ServerUIPlugin.getResource("%viewSyncPublishing2")};
-		
-	private static final String[] startingText = new String[] {
-		ServerUIPlugin.getResource("%viewStatusStarting1"),
-		ServerUIPlugin.getResource("%viewStatusStarting2"),
-		ServerUIPlugin.getResource("%viewStatusStarting3")};
-	
-	private static final String[] stoppingText = new String[] {
-		ServerUIPlugin.getResource("%viewStatusStopping1"),
-		ServerUIPlugin.getResource("%viewStatusStopping2"),
-		ServerUIPlugin.getResource("%viewStatusStopping3")};
 
 	private int count = 0;
 	
@@ -103,7 +74,7 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 			if (columnIndex == 0)
 				ServerUICore.getLabelProvider().getImage(ms.module);
 			if (columnIndex == 1)
-				return getStateImage(ms.server.getModuleState(ms.module), null);
+				return getStateImage(ms.server.getServerType(), ms.server.getModuleState(ms.module), null);
 			return null;
 		}
 		IServer server = (IServer) element;
@@ -122,8 +93,8 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 			IServerType serverType = server.getServerType();
 			if (serverType == null)
 				return null;
-			if (serverType.getServerStateSet() == IServerType.SERVER_STATE_SET_PUBLISHED)
-				return null;
+			//if (serverType.getServerStateSet() == IServerType.SERVER_STATE_SET_PUBLISHED)
+			//	return null;
 			return getServerStateImage(server);
 		} else
 			return null;
@@ -137,7 +108,7 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 				return ms.module[size - 1].getName();
 			}
 			else if (columnIndex == 1)
-				return getStateLabel(ms.server.getModuleState(ms.module), null, IServerType.SERVER_STATE_SET_MANAGED);
+				return getStateLabel(ms.server.getServerType(), ms.server.getModuleState(ms.module), null);
 			else if (columnIndex == 2)
 				return "-";
 		}
@@ -149,7 +120,7 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 		else if (columnIndex == 1) {
 			IServerType serverType = server.getServerType();
 			if (serverType != null)
-				return getServerStateLabel(server, serverType.getServerStateSet());
+				return getServerStateLabel(server);
 			
 			return "";
 		} else if (columnIndex == 2) {
@@ -174,10 +145,11 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 			if (server.getServerPublishState() != IServer.PUBLISH_STATE_NONE)
 				i += 2;
 			
-			IServerType serverType = server.getServerType();
-			if (serverType.getServerStateSet() == IServerType.SERVER_STATE_SET_MANAGED)
+			//IServerType serverType = server.getServerType();
+			// TODO: state set
+			//if (serverType.getServerStateSet() == IServerType.SERVER_STATE_SET_MANAGED)
 				return syncState[i];
-			return syncStateUnmanaged[i];
+			//return syncStateUnmanaged[i];
 		} else
 			return "-";
 	}
@@ -203,7 +175,7 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	protected Image getServerStateImage(IServer server) {
-		return getStateImage(server.getServerState(), server.getMode());
+		return getStateImage(server.getServerType(), server.getServerState(), server.getMode());
 	}
 
 	/**
@@ -211,8 +183,9 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 	 * 
 	 * @return org.eclipse.jface.parts.IImage
 	 */
-	protected Image getStateImage(int state, String mode) {
-		if (state == IServer.STATE_UNKNOWN)
+	protected Image getStateImage(IServerType serverType, int state, String mode) {
+		return UIDecoratorManager.getUIDecorator(serverType).getStateImage(state, mode, count);
+		/*if (state == IServer.STATE_UNKNOWN)
 			return null;
 		else if (state == IServer.STATE_STARTING)
 			return startingImages[count];
@@ -228,7 +201,7 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 				return ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTED_PROFILE);
 			else
 				return ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTED);
-		}
+		}*/
 	}
 	
 	/**
@@ -237,8 +210,8 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 	 * @return java.lang.String
 	 * @param server org.eclipse.wst.server.core.IServer
 	 */
-	protected String getServerStateLabel(IServer server, int stateSet) {
-		return getStateLabel(server.getServerState(), server.getMode(), stateSet);
+	protected String getServerStateLabel(IServer server) {
+		return getStateLabel(server.getServerType(), server.getServerState(), server.getMode());
 	}
 
 	/**
@@ -246,8 +219,9 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 	 *
 	 * @return java.lang.String
 	 */
-	protected String getStateLabel(int state, String mode, int stateSet) {
-		if (stateSet == IServerType.SERVER_STATE_SET_PUBLISHED)
+	protected String getStateLabel(IServerType serverType, int state, String mode) {
+		return UIDecoratorManager.getUIDecorator(serverType).getStateLabel(state, mode, count);
+		/*if (stateSet == IServerType.SERVER_STATE_SET_PUBLISHED)
 			return "";
 		
 		if (stateSet == IServerType.SERVER_STATE_SET_MANAGED) {
@@ -268,7 +242,7 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 				return ServerUIPlugin.getResource("%viewStatusStopped");
 		}
 		
-		return serverStateUnmanaged[state];
+		return serverStateUnmanaged[state];*/
 	}
 	
 	protected void animate() {

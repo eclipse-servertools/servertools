@@ -11,6 +11,7 @@
 package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.util.ServerEvent;
 import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
 /**
  * Listens for messages from the servers. This class keeps
@@ -49,55 +50,6 @@ public class ServerListener extends ServerLifecycleAdapter implements IServerLis
 	}
 
 	/**
-	 * Notification when the server state has changed.
-	 *
-	 * @param server org.eclipse.wst.server.model.IServer
-	 */
-	public void serverStateChange(IServer server) {
-		// do nothing
-	}
-
-	/**
-	 * Notification when the server state has changed.
-	 *
-	 * @param server org.eclipse.wst.server.model.IServer
-	 */
-	public void modulesChanged(IServer server) {
-		// do nothing
-	}
-
-	/**
-	 * Notification when the state of a module has changed.
-	 *
-	 * @param server org.eclipse.wst.server.model.IServer
-	 */
-	public void moduleStateChange(IServer server, IModule[] module) {
-		// do nothing
-	}
-
-	/**
-	 * Called when the server isRestartNeeded() property changes.
-	 *
-	 * @param server org.eclipse.wst.server.core.IServer
-	 */
-	public void restartStateChange(IServer server) {
-		/*if (server.isRestartNeeded() == false)
-			return;
-		
-		byte state = server.getServerState();
-		if (state != IServer2.STATE_STARTED && state != IServer2.STATE_STARTED_DEBUG && state != IServer.STATE_STARTED_PROFILE)
-			return;
-	
-		if (ServerCore.getServerPreferences().isAutoRestarting()) {
-			try {
-				server.restart();
-			} catch (CoreException e) {
-				Trace.trace(Trace.SEVERE, "Error restarting server", e);
-			}
-		}*/
-	}
-
-	/**
 	 * A new resource has been added.
 	 *
 	 * @param server org.eclipse.wst.server.core.IServer
@@ -113,5 +65,9 @@ public class ServerListener extends ServerLifecycleAdapter implements IServerLis
 	 */
 	public void serverRemoved(IServer server) {
 		server.removeServerListener(this);
+	}
+
+	public void serverChanged(ServerEvent event) {
+		// do nothing
 	}
 }

@@ -15,10 +15,10 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.internal.PublishServerJob;
 import org.eclipse.wst.server.ui.internal.RestartServerJob;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.provisional.UIDecoratorManager;
 import org.eclipse.swt.widgets.Shell;
 /**
  * Restart a server.
@@ -50,7 +50,7 @@ public class RestartAction extends AbstractServerAction {
 		String mode2 = mode;
 		if (mode2 == null)
 			mode2 = server.getMode();
-		return server.getServerType() != null && server.getServerType().getServerStateSet() == IServerType.SERVER_STATE_SET_MANAGED && server.canRestart(mode2).isOK();
+		return server.getServerType() != null && UIDecoratorManager.getUIDecorator(server.getServerType()).canRestart() && server.canRestart(mode2).isOK();
 	}
 
 	/**

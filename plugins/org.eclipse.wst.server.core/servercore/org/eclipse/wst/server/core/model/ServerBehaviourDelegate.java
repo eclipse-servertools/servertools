@@ -48,6 +48,14 @@ import org.eclipse.wst.server.core.internal.ServerPlugin;
  */
 public abstract class ServerBehaviourDelegate {
 	private Server server;
+	
+	/**
+	 * Publish kind constants
+	 */
+	public static final int NO_CHANGE = 0;
+	public static final int ADDED = 1;
+	public static final int CHANGED = 2;
+	public static final int REMOVED = 3;
 
 	/**
 	 * Delegates must have a public 0-arg constructor.

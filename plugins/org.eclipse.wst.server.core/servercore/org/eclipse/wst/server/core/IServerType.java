@@ -39,30 +39,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public interface IServerType {
 	/**
-	 * Constant (value 0) indicating that a type of server that can be
-	 * directly started and stopped.
-	 * 
-	 * @see #getServerStateSet()
-	 */
-	public static final int SERVER_STATE_SET_MANAGED = 0;
-	
-	/**
-	 * Constant (value 1) indicating that a type of server that can be
-	 * attached to, typically for debugging.
-	 * 
-	 * @see #getServerStateSet()
-	 */
-	public static final int SERVER_STATE_SET_ATTACHED = 1;
-	
-	/**
-	 * Constant (value 2) indicating that a type of server that
-	 * can only be used for publishing.
-	 * 
-	 * @see #getServerStateSet()
-	 */
-	public static final int SERVER_STATE_SET_PUBLISHED = 2;
-
-	/**
 	 * Returns the id of this server type.
 	 * Each known server type has a distinct id. 
 	 * Ids are intended to be used internally as keys; they are not
@@ -149,14 +125,6 @@ public interface IServerType {
 	 * declaration. This means that any server type has to commit
 	 * so early on which modes it supports.]
 	 * </p>
-	 * <p>
-	 * [issue: Because the spec for this method piggy-backs off the
-	 * debug API, this method is vulnerable to any expansion that may
-	 * happen there. For instance, a 3rd mode (PROFILE_MODE) was added in 3.0.
-	 * As spec'd, clients can reasonably expect to launch servers
-	 * in this mode as well. It may also make sense for the server
-	 * core to define its own notion of legal modes.]
-	 * </p>
 	 * 
 	 * @param launchMode a mode in which a server can be launched,
 	 *    one of the mode constants defined by
@@ -164,38 +132,6 @@ public interface IServerType {
 	 * @return whether this type of server supports the given mode
 	 */
 	public boolean supportsLaunchMode(String launchMode);
-
-	/**
-	 * Returns the server state set that should for instances of this server type.
-	 * If the state set is {@link #SERVER_STATE_SET_MANAGED}, this is
-	 * a runnable server that may be directly started and stopped 
-	 * (i.e., it should be represented as starting, started in debug mode,
-	 * etc.) If the state set is {@link #SERVER_STATE_SET_ATTACHED}, this is a
-	 * server that can be attached to, typically for debugging purposes
-	 * (i.e., it should be represented as attaching, attached for
-	 * debugging, etc.).
-	 * If the state set is {@link #SERVER_STATE_SET_PUBLISHED}, this is a
-	 * server that only be published to (i.e., it should be represented as
-	 * not having states).
-	 * <p>
-	 * [issue: The notion of a "server state set" is a little abstruce.
-	 * It feels like the main thing to capture in the server type
-	 * is that there are 3 different styles of servers, and this
-	 * has a bearing on how you control them. That would suggest
-	 * there will be different rules for operating on them, and
-	 * that they might cycle through different sets of states.]
-	 * </p>
-	 * <p>
-	 * [issue: It also seems odd that this is part of the server type
-	 * declaration. This means that any server type has to commit
-	 * so early on which one it is.]
-	 * </p>
-	 *
-	 * @return one of {@link #SERVER_STATE_SET_MANAGED},
-	 *    {@link #SERVER_STATE_SET_ATTACHED}, or
-	 *    {@link #SERVER_STATE_SET_PUBLISHED}
-	 */
-	public int getServerStateSet();
 
 	/**
 	 * Returns whether this type of server requires a server
@@ -213,14 +149,7 @@ public interface IServerType {
 	/**
 	 * Returns <code>true</code> if this type of server can run on a remote host.
 	 * Returns <code>false</code> if the server type can only be run on "localhost"
-	 * (the local machine). 
-	 * <p>
-	 * [issue: Should be renamed "supportsRemoteHost" (no "s").]
-	 * </p>
-	 * <p>
-	 * [issue: Again, it seems odd to me that this is something
-	 * hard-wired to a server type.]
-	 * </p>
+	 * (the local machine).
 	 * 
 	 * @return <code>true</code> if this type of server can run on
 	 *    a remote host, and <code>false</code> if it cannot

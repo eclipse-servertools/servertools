@@ -62,8 +62,7 @@ public class Tomcat50Handler implements ITomcatVersionHandler {
 	public String[] getRuntimeProgramArguments(IPath configPath, boolean debug, boolean starting) {
 		List list = new ArrayList();
 		if (configPath != null) {
-			list.add("-config");
-			list.add("\"" + configPath.append("conf").append("server.xml").toOSString() + "\"");
+			list.add("-config \"" + configPath.append("conf").append("server.xml").toOSString() + "\"");
 		}
 		
 		if (debug)

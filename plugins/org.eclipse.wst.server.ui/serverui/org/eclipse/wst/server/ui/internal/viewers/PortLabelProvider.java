@@ -14,7 +14,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerPort;
+import org.eclipse.wst.server.core.ServerPort;
 /**
  * Server port label provider.
  */
@@ -31,7 +31,7 @@ public class PortLabelProvider extends BaseLabelProvider implements ITableLabelP
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
-		IServerPort port = (IServerPort) element;
+		ServerPort port = (ServerPort) element;
 		if (columnIndex == 0)
 			return notNull(port.getName());
 		else if (columnIndex == 1)

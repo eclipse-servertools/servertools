@@ -12,7 +12,6 @@ package org.eclipse.wst.server.core;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfiguration;
 /**
  * Represents a server instance. Every server is an instance of a
  * particular, fixed server type.
@@ -78,7 +77,7 @@ public interface IServer extends IServerAttributes {
 	 * server is in an unknown state.
 	 * 
 	 * @see #getServerState()
-	 * @see #getModuleState(IModule[], IModule)
+	 * @see #getModuleState(IModule[])
 	 */
 	public static final int STATE_UNKNOWN = 0;
 
@@ -87,7 +86,7 @@ public interface IServer extends IServerAttributes {
 	 * server is starting, but not yet ready to serve content.
 	 * 
 	 * @see #getServerState()
-	 * @see #getModuleState(IModule[], IModule)
+	 * @see #getModuleState(IModule[])
 	 */
 	public static final int STATE_STARTING = 1;
 
@@ -96,7 +95,7 @@ public interface IServer extends IServerAttributes {
 	 * server is ready to serve content.
 	 * 
 	 * @see #getServerState()
-	 * @see #getModuleState(IModule[], IModule)
+	 * @see #getModuleState(IModule[])
 	 */
 	public static final int STATE_STARTED = 2;
 
@@ -105,7 +104,7 @@ public interface IServer extends IServerAttributes {
 	 * server is shutting down.
 	 * 
 	 * @see #getServerState()
-	 * @see #getModuleState(IModule[], IModule)
+	 * @see #getModuleState(IModule[])
 	 */
 	public static final int STATE_STOPPING = 3;
 
@@ -114,7 +113,7 @@ public interface IServer extends IServerAttributes {
 	 * server is stopped.
 	 * 
 	 * @see #getServerState()
-	 * @see #getModuleState(IModule[], IModule)
+	 * @see #getModuleState(IModule[])
 	 */
 	public static final int STATE_STOPPED = 4;
 
@@ -123,7 +122,7 @@ public interface IServer extends IServerAttributes {
 	 * in an unknown state.
 	 * 
 	 * @see #getServerPublishState()
-	 * @see #getModulePublishState(IModule[], IModule)
+	 * @see #getModulePublishState(IModule[])
 	 */
 	public static final int PUBLISH_STATE_UNKNOWN = 0;
 
@@ -132,7 +131,7 @@ public interface IServer extends IServerAttributes {
 	 * is no publish required.
 	 * 
 	 * @see #getServerPublishState()
-	 * @see #getModulePublishState(IModule[], IModule)
+	 * @see #getModulePublishState(IModule[])
 	 */
 	public static final int PUBLISH_STATE_NONE = 1;
 
@@ -141,7 +140,7 @@ public interface IServer extends IServerAttributes {
 	 * incremental publish is required.
 	 * 
 	 * @see #getServerPublishState()
-	 * @see #getModulePublishState(IModule[], IModule)
+	 * @see #getModulePublishState(IModule[])
 	 */
 	public static final int PUBLISH_STATE_INCREMENTAL = 2;
 
@@ -150,7 +149,7 @@ public interface IServer extends IServerAttributes {
 	 * full publish is required.
 	 * 
 	 * @see #getServerPublishState()
-	 * @see #getModulePublishState(IModule[], IModule)
+	 * @see #getModulePublishState(IModule[])
 	 */
 	public static final int PUBLISH_STATE_FULL = 3;
 
@@ -183,14 +182,6 @@ public interface IServer extends IServerAttributes {
 	public static final int PUBLISH_CLEAN = 4;
 
 	/**
-	 * Publish kind constants
-	 */
-	public static final int NO_CHANGE = 0;
-	public static final int ADDED = 1;
-	public static final int CHANGED = 2;
-	public static final int REMOVED = 3;
-
-	/**
 	 * Returns the current state of this server.
 	 * <p>
 	 * Note that this operation is guaranteed to be fast
@@ -198,7 +189,7 @@ public interface IServer extends IServerAttributes {
 	 * server).
 	 * </p>
 	 *
-	 * @return one of the server state (<code>SERVER_XXX</code>)
+	 * @return one of the server state (<code>STATE_XXX</code>)
 	 * constants declared on {@link IServer}
 	 */
 	public int getServerState();
@@ -241,6 +232,20 @@ public interface IServer extends IServerAttributes {
 	public void addServerListener(IServerListener listener);
 
 	/**
+	 * Adds the given server state listener to this server.
+	 * Once registered, a listener starts receiving notification of 
+	 * state changes to this server. The listener continues to receive
+	 * notifications until it is removed.
+	 * Has no effect if an identical listener is already registered.
+	 *
+	 * @param listener the server listener
+	 * @param eventMask the bit-wise OR of all event types of interest to the
+	 * listener
+	 * @see #removeServerListener(IServerListener)
+	 */
+	public void addServerListener(IServerListener listener, int eventMask);
+
+	/**
 	 * Removes the given server state listener from this server. Has no
 	 * effect if the listener is not registered.
 	 * 
@@ -257,24 +262,6 @@ public interface IServer extends IServerAttributes {
 	 *   be published to, otherwise a status object indicating what is wrong
 	 */
 	public IStatus canPublish();
-
-	/**
-	 * Returns true if the server may have any projects or it's
-	 * configuration out of sync.
-	 *
-	 * @return boolean
-	 */
-	public boolean shouldPublish();
-
-	/**
-	 * Publish to the server using the progress monitor. The result of the
-	 * publish operation is returned as an IStatus.
-	 * 
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @return status indicating what (if anything) went wrong
-	 */
-	public IStatus publish(IProgressMonitor monitor);
 
 	/**
 	 * Publish to the server using the progress monitor. The result of the
@@ -305,20 +292,6 @@ public interface IServer extends IServerAttributes {
 	 *    be started, otherwise a status object indicating why it can't
 	 */
 	public IStatus canStart(String launchMode);
-
-	/**
-	 * Return the launch configuration for this server. If one does not exist, it
-	 * will be created if "create" is true, and otherwise will return null.
-	 * 
-	 * @param create <code>true</code> if a new launch configuration should be
-	 *    created if there are none already
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @return the launch configuration, no <code>null</code> if there was no
-	 *    existing launch configuration and <code>create</code> was false
-	 * @throws CoreException
-	 */
-	public ILaunchConfiguration getLaunchConfiguration(boolean create, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Asynchronously starts this server in the given launch mode.
@@ -404,11 +377,11 @@ public interface IServer extends IServerAttributes {
 	 * to be diagnosed.]
 	 * </p>
 	 *
-	 * @param mode a mode in which a server can be launched,
+	 * @param launchMode a mode in which a server can be launched,
 	 *    one of the mode constants defined by
 	 *    {@link org.eclipse.debug.core.ILaunchManager}
 	 */
-	public void restart(String mode);
+	public void restart(String launchMode);
 	
 	/**
 	 * Synchronously restarts this server. This operation does
@@ -557,22 +530,4 @@ public interface IServer extends IServerAttributes {
 	 *    on {@link IServer}
 	 */
 	public int getModuleState(IModule[] module);
-
-	/**
-	 * Returns an array of modules that are deployed to this server. This
-	 * list may contain user applications as well as any other applications
-	 * (e.g. published from a different workspace) that are running on the
-	 * server.
-	 * <p>
-	 * This method returns the root modules, which are not parented within
-	 * another modules. Each of these may contain child modules, which are
-	 * also deployed to this server.
-	 * </p>
-	 *
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @return a possibly-empty array of modules
-	 * @see IServerAttributes#getModules()
-	 */
-	public IModule[] getServerModules(IProgressMonitor monitor);
 }

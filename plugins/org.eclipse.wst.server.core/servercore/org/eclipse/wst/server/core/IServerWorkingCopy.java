@@ -28,7 +28,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @since 1.0
  */
 public interface IServerWorkingCopy extends IServerAttributes {
-	public static final int TIMESTAMP_ERROR = 5;
+	/**
+	 * Status code (value 1) returned from the save() method when the save
+	 * failed with force set to <code>false</code> because the runtime has
+	 * been modified and saved since this working copy was created.
+	 * 
+	 * @see #save(boolean, IProgressMonitor)
+	 */
+	public static final int SAVE_CONFLICT = 1;
 
 	/**
 	 * Sets the displayable name for this server.
@@ -52,18 +59,6 @@ public interface IServerWorkingCopy extends IServerAttributes {
 	public void setReadOnly(boolean readOnly);
 	
 	/**
-	 * Sets whether this element is private.
-	 * Generally speaking, elements marked private are internal ones
-	 * that should not be shown to users (because they won't know
-	 * anything about them).
-	 * 
-	 * @param b <code>true</code> if this element is private,
-	 * and <code>false</code> otherwise
-	 * @see IServerAttributes#isPrivate()
-	 */
-	public void setPrivate(boolean b);
-	
-	/**
 	 * Returns whether this working copy has unsaved changes.
 	 * 
 	 * @return <code>true</code> if this working copy has unsaved
@@ -73,22 +68,26 @@ public interface IServerWorkingCopy extends IServerAttributes {
 
 	/**
 	 * Adds a property change listener to this server.
+	 * <p>
+	 * Once registered, a listener starts receiving notification of 
+	 * property changes to this server. The listener continues to receive
+	 * notifications until it is removed.
+	 * Has no effect if an identical listener is already registered.
+	 * </p>
 	 *
-	 * @param listener java.beans.PropertyChangeListener
+	 * @param listener a property change listener
+	 * @see #removePropertyChangeListener(PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener);
 
 	/**
 	 * Removes a property change listener from this server.
+	 * Has no effect if the listener is not registered.
 	 *
-	 * @param listener java.beans.PropertyChangeListener
+	 * @param listener a property change listener
+	 * @see #addPropertyChangeListener(PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener);
-	
-	/**
-	 * Fires a property change event.
-	 */
-	public void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue);
 
 	/**
 	 * Sets the server configuration associated with this server working copy.
@@ -165,6 +164,7 @@ public interface IServerWorkingCopy extends IServerAttributes {
 	 *    reporting and cancellation are not desired
 	 * @return a new server instance
 	 * @throws CoreException [missing]
+	 * @see #SAVE_CONFLICT
 	 */
 	public IServer save(boolean force, IProgressMonitor monitor) throws CoreException;
 
@@ -198,18 +198,9 @@ public interface IServerWorkingCopy extends IServerAttributes {
 	 *    reporting and cancellation are not desired
 	 * @return a new server instance
 	 * @throws CoreException [missing]
+	 * @see #SAVE_CONFLICT
 	 */
 	public IServer saveAll(boolean force, IProgressMonitor monitor) throws CoreException;
-
-	/**
-	 * Sets the file where this server instance is serialized.
-	 * 
-	 * @param file the file in the workspace where the server instance
-	 *    is serialized, or <code>null</code> if the information is
-	 *    instead to be persisted with the workspace but not with any
-	 *    particular workspace resource
-	 */
-	public void setFile(IFile file);
 
 	/**
 	 * Sets the runtime associated with this server working copy.

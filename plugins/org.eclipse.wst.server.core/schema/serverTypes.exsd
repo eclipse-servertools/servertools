@@ -149,13 +149,6 @@ Server instances of this type will delegate to instances of this class. Delegate
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="stateSet" type="string">
-            <annotation>
-               <documentation>
-                  the state set of the server (changes menu options and UI). values are &quot;managed&quot;, &quot;attach&quot;, and &quot;publish&quot;
-               </documentation>
-            </annotation>
-         </attribute>
          <attribute name="startTimeout" type="string">
             <annotation>
                <documentation>

@@ -109,7 +109,7 @@ public abstract class RuntimeDelegate {
 	 * 
 	 * @return the runtime
 	 */
-	public final IRuntimeWorkingCopy getRuntimeWorkingCopy() {
+	public IRuntimeWorkingCopy getRuntimeWorkingCopy() {
 		return runtimeWC;
 	}
 
@@ -140,7 +140,11 @@ public abstract class RuntimeDelegate {
 		
 		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null);
 	}
-	
+
+	/**
+	 * 
+	 * @return
+	 */
 	private boolean isNameInUse() {
 		IRuntime orig = runtime;
 		if (runtimeWC != null)
@@ -157,23 +161,29 @@ public abstract class RuntimeDelegate {
 		return false;
 	}
 
-	public final int getAttribute(String attributeName, int defaultValue) {
+	/**
+	 * 
+	 * @param attributeName
+	 * @param defaultValue
+	 * @return
+	 */
+	public int getAttribute(String attributeName, int defaultValue) {
 		return runtime.getAttribute(attributeName, defaultValue);
 	}
 
-	public final boolean getAttribute(String attributeName, boolean defaultValue) {
+	public boolean getAttribute(String attributeName, boolean defaultValue) {
 		return runtime.getAttribute(attributeName, defaultValue);
 	}
 	
-	public final String getAttribute(String attributeName, String defaultValue) {
+	public String getAttribute(String attributeName, String defaultValue) {
 		return runtime.getAttribute(attributeName, defaultValue);
 	}
 
-	public final List getAttribute(String attributeName, List defaultValue) {
+	public List getAttribute(String attributeName, List defaultValue) {
 		return runtime.getAttribute(attributeName, defaultValue);
 	}
 
-	public final Map getAttribute(String attributeName, Map defaultValue) {
+	public Map getAttribute(String attributeName, Map defaultValue) {
 		return runtime.getAttribute(attributeName, defaultValue);
 	}
 	
@@ -208,7 +218,7 @@ public abstract class RuntimeDelegate {
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
 	 */
-	public final void setAttribute(String id, int value) {
+	public void setAttribute(String id, int value) {
 		runtimeWC.setAttribute(id, value);
 	}
 
@@ -219,7 +229,7 @@ public abstract class RuntimeDelegate {
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
 	 */
-	public final void setAttribute(String id, boolean value) {
+	public void setAttribute(String id, boolean value) {
 		runtimeWC.setAttribute(id, value);
 	}
 
@@ -230,7 +240,7 @@ public abstract class RuntimeDelegate {
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
 	 */
-	public final void setAttribute(String id, String value) {
+	public void setAttribute(String id, String value) {
 		runtimeWC.setAttribute(id, value);
 	}
 
@@ -241,7 +251,7 @@ public abstract class RuntimeDelegate {
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
 	 */
-	public final void setAttribute(String id, List value) {
+	public void setAttribute(String id, List value) {
 		runtimeWC.setAttribute(id, value);
 	}
 
@@ -252,7 +262,7 @@ public abstract class RuntimeDelegate {
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
 	 */
-	public final void setAttribute(String id, Map value) {
+	public void setAttribute(String id, Map value) {
 		runtimeWC.setAttribute(id, value);
 	}
 }

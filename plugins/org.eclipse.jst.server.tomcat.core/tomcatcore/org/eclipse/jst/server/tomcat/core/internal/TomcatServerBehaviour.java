@@ -28,6 +28,7 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.IWebModule;
 
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.core.util.PingThread;
 import org.eclipse.wst.server.core.util.SocketUtil;
@@ -202,7 +203,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		
 		IModule module = moduleTree[0];
 		
-		if (deltaKind == IServer.REMOVED) {
+		if (deltaKind == REMOVED) {
 			try {
 				String publishPath = (String) p.get(module.getId());
 				FileUtil.deleteDirectory(new File(publishPath), monitor);
@@ -246,7 +247,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		Iterator iterator = configuration.getServerPorts().iterator();
 		List usedPorts = new ArrayList();
 		while (iterator.hasNext()) {
-			IServerPort sp = (IServerPort) iterator.next();
+			ServerPort sp = (ServerPort) iterator.next();
 			if (sp.getPort() < 0)
 				throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPortInvalid"), null));
 			if (SocketUtil.isPortInUse(sp.getPort(), 5)) {
@@ -254,7 +255,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			}
 		}
 		if (usedPorts.size() == 1) {
-			IServerPort port = (IServerPort) usedPorts.get(0);
+			ServerPort port = (ServerPort) usedPorts.get(0);
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPortInUse", new String[] {port.getPort() + "", getServer().getName()}), null));
 		} else if (usedPorts.size() > 1) {
 			String portStr = "";
@@ -264,7 +265,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 				if (!first)
 					portStr += ", ";
 				first = false;
-				IServerPort sp = (IServerPort) iterator.next();
+				ServerPort sp = (ServerPort) iterator.next();
 				portStr += "" + sp.getPort();
 			}
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPortsInUse", new String[] {portStr, getServer().getName()}), null));
@@ -306,7 +307,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			if (state != IServer.STATE_STOPPED)
 				setServerState(IServer.STATE_STOPPING);
 	
-			ILaunchConfiguration launchConfig = getServer().getLaunchConfiguration(true, null);
+			ILaunchConfiguration launchConfig = ((Server)getServer()).getLaunchConfiguration(true, null);
 			ILaunchConfigurationWorkingCopy wc = launchConfig.getWorkingCopy();
 			
 			String args = renderCommandLine(getRuntimeProgramArguments(false), " ");
@@ -344,17 +345,118 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	public String toString() {
 		return "TomcatServer";
 	}
+	
+	/**
+	 * Merge the given arguments into the original argument string, replacing
+	 * invalid values if they have been changed.
+	 * 
+	 * @param originalArg
+	 * @param vmArgs
+	 * @return
+	 */
+	public static String mergeArguments(String originalArg, String[] vmArgs) {
+		if (vmArgs == null)
+			return originalArg;
+		
+		// replace and null out all vmargs that already exist
+		int size = vmArgs.length;
+		for (int i = 0; i < size; i++) {
+			int ind = vmArgs[i].indexOf(" ");
+			int ind2 = vmArgs[i].indexOf("=");
+			if (ind >= 0) { // -a bc style
+				int index = originalArg.indexOf(vmArgs[i].substring(0, ind + 1));
+				if (index == 0 || (index > 0 && originalArg.charAt(index - 1) == ' ')) {
+					// replace
+					String s = originalArg.substring(0, index);
+					int index2 = originalArg.indexOf(" ", index + ind + 1);
+					if (index2 >= 0)
+						originalArg = s + vmArgs[i] + originalArg.substring(index2);
+					else
+						originalArg = s + vmArgs[i];
+					vmArgs[i] = null;
+				}
+			} else if (ind2 >= 0) { // a=b style
+				int index = originalArg.indexOf(vmArgs[i].substring(0, ind2 + 1));
+				if (index == 0 || (index > 0 && originalArg.charAt(index - 1) == ' ')) {
+					// replace
+					String s = originalArg.substring(0, index);
+					int index2 = originalArg.indexOf(" ", index);
+					if (index2 >= 0)
+						originalArg = s + vmArgs[i] + originalArg.substring(index2);
+					else
+						originalArg = s + vmArgs[i];
+					vmArgs[i] = null;
+				}
+			} else { // abc style
+				int index = originalArg.indexOf(vmArgs[i]);
+				if (index == 0 || (index > 0 && originalArg.charAt(index-1) == ' ')) {
+					// replace
+					String s = originalArg.substring(0, index);
+					int index2 = originalArg.indexOf(" ", index);
+					if (index2 >= 0)
+						originalArg = s + vmArgs[i] + originalArg.substring(index2);
+					else
+						originalArg = s + vmArgs[i];
+					vmArgs[i] = null;
+				}
+			}
+		}
+		
+		// add remaining vmargs to the end
+		for (int i = 0; i < size; i++) {
+			if (vmArgs[i] != null) {
+				if (originalArg.length() > 0 && !originalArg.endsWith(" "))
+					originalArg += " ";
+				originalArg += vmArgs[i];
+			}
+		}
+		
+		return originalArg;
+	}
+
+	/**
+	 * Replace the current JRE container classpath with the given entry.
+	 * 
+	 * @param cp
+	 * @param entry
+	 */
+	public static void replaceJREContainer(List cp, IRuntimeClasspathEntry entry) {
+		int size = cp.size();
+		for (int i = 0; i < size; i++) {
+			IRuntimeClasspathEntry entry2 = (IRuntimeClasspathEntry) cp.get(i);
+			if (entry2.getPath().uptoSegment(2).isPrefixOf(entry.getPath())) {
+				cp.set(i, entry);
+				return;
+			}
+		}
+		
+		cp.add(0, entry);
+	}
+
+	/**
+	 * Merge a single classpath entry into the classpath list.
+	 * 
+	 * @param cp
+	 * @param entry
+	 */
+	public static void mergeClasspath(List cp, IRuntimeClasspathEntry entry) {
+		Iterator iterator = cp.iterator();
+		while (iterator.hasNext()) {
+			IRuntimeClasspathEntry entry2 = (IRuntimeClasspathEntry) iterator.next();
+			
+			if (entry2.getPath().equals(entry.getPath()))
+				return;
+		}
+		
+		cp.add(entry);
+	}
 
 	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException {
 		String existingProgArgs = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, (String)null);
-		String progArgs = renderCommandLine(getRuntimeProgramArguments(true), " ");
-		if (existingProgArgs == null || existingProgArgs.indexOf(progArgs) < 0)
-			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, progArgs);
+		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, mergeArguments(existingProgArgs, getRuntimeProgramArguments(true)));
 
 		String existingVMArgs = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, (String)null);
-		String vmArgs = renderCommandLine(getRuntimeVMArguments(), " ");
-		if (existingVMArgs == null || existingVMArgs.indexOf(vmArgs) < 0)
-			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, vmArgs);
+		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, mergeArguments(existingVMArgs, getRuntimeVMArguments()));
 		
 		ITomcatRuntime runtime = getTomcatRuntime();
 		IVMInstall vmInstall = runtime.getVMInstall();
@@ -363,34 +465,46 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_NAME, vmInstall.getName());
 		}
 		
-		// add tools.jar to the path
-		List cp = runtime.getRuntimeClasspath();
+		// update classpath
+		IRuntimeClasspathEntry[] originalClasspath = JavaRuntime.computeUnresolvedRuntimeClasspath(workingCopy);
+		int size = originalClasspath.length;
+		List oldCp = new ArrayList(originalClasspath.length + 2);
+		for (int i = 0; i < size; i++)
+			oldCp.add(originalClasspath[i]);
+		
+		List cp2 = runtime.getRuntimeClasspath();
+		Iterator iterator = cp2.iterator();
+		while (iterator.hasNext()) {
+			IRuntimeClasspathEntry entry = (IRuntimeClasspathEntry) iterator.next();
+			mergeClasspath(oldCp, entry);
+		}
+		
 		if (vmInstall != null) {
 			try {
-				cp.add(JavaRuntime.newRuntimeContainerClasspathEntry(new Path(JavaRuntime.JRE_CONTAINER).append("org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType").append(vmInstall.getName()), IRuntimeClasspathEntry.BOOTSTRAP_CLASSES));
+				replaceJREContainer(oldCp, JavaRuntime.newRuntimeContainerClasspathEntry(new Path(JavaRuntime.JRE_CONTAINER).append("org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType").append(vmInstall.getName()), IRuntimeClasspathEntry.BOOTSTRAP_CLASSES));
 			} catch (Exception e) {
 				// ignore
-			}			
+			}
 			
 			IPath jrePath = new Path(vmInstall.getInstallLocation().getAbsolutePath());
 			if (jrePath != null) {
 				IPath toolsPath = jrePath.append("lib").append("tools.jar");
-				if (toolsPath.toFile().exists()) {
-					cp.add(JavaRuntime.newArchiveRuntimeClasspathEntry(toolsPath));
-				}
+				if (toolsPath.toFile().exists())
+					mergeClasspath(oldCp, JavaRuntime.newArchiveRuntimeClasspathEntry(toolsPath));
 			}
 		}
 		
-		Iterator cpi = cp.iterator();
+		iterator = oldCp.iterator();
 		List list = new ArrayList();
-		while (cpi.hasNext()) {
-			IRuntimeClasspathEntry entry = (IRuntimeClasspathEntry) cpi.next();
+		while (iterator.hasNext()) {
+			IRuntimeClasspathEntry entry = (IRuntimeClasspathEntry) iterator.next();
 			try {
 				list.add(entry.getMemento());
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Could not resolve classpath entry: " + entry, e);
 			}
 		}
+		
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, list);
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, false);
 	}
