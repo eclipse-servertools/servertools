@@ -37,9 +37,15 @@ public class TempSaveServerTask extends Task {
 				return;
 			
 			IFile file = workingCopy.getFile();
-			if (file != null && !file.getProject().exists()) {
+			if (file != null) {
 				IProject project = file.getProject();
-				EclipseUtil.createNewServerProject(null, project.getName(), null, monitor);
+				
+				if (!file.getProject().exists())
+					EclipseUtil.createNewServerProject(null, project.getName(), null, monitor);
+				
+				IProjectProperties pp = ServerCore.getProjectProperties(project);
+				if (!pp.isServerProject())
+					pp.setServerProject(true, monitor);
 			}
 			IRuntime runtime = workingCopy.getRuntime();
 			

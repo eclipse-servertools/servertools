@@ -276,9 +276,15 @@ public class TasksWizardFragment extends WizardFragment {
 		if (createdServerWC) {
 			if (serverWC.isDirty()) {
 				IFile file = serverWC.getFile();
-				if (file != null && !file.getProject().exists()) {
+				if (file != null) {
 					IProject project = file.getProject();
-					EclipseUtil.createNewServerProject(null, project.getName(), null, monitor);
+					
+					if (!file.getProject().exists())
+						EclipseUtil.createNewServerProject(null, project.getName(), null, monitor);
+					
+					IProjectProperties pp = ServerCore.getProjectProperties(project);
+					if (!pp.isServerProject())
+						pp.setServerProject(true, monitor);
 				}
 				taskModel.putObject(ITaskModel.TASK_SERVER, serverWC.save(false, monitor));
 			} else
