@@ -101,6 +101,13 @@ public class MonitorTestCase extends TestCase {
 	
 	public void test09RestartMonitor() throws Exception {
 		assertTrue(!monitor.isRunning());
+		// on some Linux machines it appears to be taking longer
+		// for the ports to clean up
+		try {
+			Thread.sleep(2500);
+		} catch (Exception e) {
+			// ignore
+		}
 		monitor.start();
 		assertTrue(monitor.isRunning());
 		monitor.stop();
