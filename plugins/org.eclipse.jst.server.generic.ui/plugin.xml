@@ -20,8 +20,8 @@
        <import plugin="org.eclipse.debug.ui"/>
       <import plugin="org.eclipse.jdt.debug.ui"/>
       <import plugin="org.eclipse.jst.server.generic.core"/>
-      <import plugin="org.eclipse.wst.server.core" version="3.0.0" match="equivalent"/>
-      <import plugin="org.eclipse.jst.server.core" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.wst.server.core" />
+      <import plugin="org.eclipse.jst.server.core"/>
    </requires>
 
  <extension
