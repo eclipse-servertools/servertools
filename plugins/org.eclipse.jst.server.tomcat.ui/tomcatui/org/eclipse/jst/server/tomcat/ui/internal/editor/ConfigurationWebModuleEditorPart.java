@@ -108,10 +108,11 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 		form.setText(TomcatUIPlugin.getResource("%configurationEditorWebModulesPageTitle"));
 		form.getBody().setLayout(new GridLayout());
 	
-		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TWISTIE|ExpandableComposite.EXPANDED|ExpandableComposite.TITLE_BAR|Section.DESCRIPTION|ExpandableComposite.FOCUS_TITLE);
+		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED
+			| ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
 		section.setText(TomcatUIPlugin.getResource("%configurationEditorWebModulesSection"));
 		section.setDescription(TomcatUIPlugin.getResource("%configurationEditorWebModulesDescription"));
-		section.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL));
+		section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		Composite composite = toolkit.createComposite(section);
 		GridLayout layout = new GridLayout();
@@ -121,7 +122,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 		layout.verticalSpacing = 5;
 		layout.horizontalSpacing = 15;
 		composite.setLayout(layout);
-		composite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL));
+		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		WorkbenchHelp.setHelp(composite, ContextIds.CONFIGURATION_EDITOR_WEBMODULES);
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
@@ -156,7 +157,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 		
 		webAppTable.setLayout(tableLayout);
 	
-		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		data.widthHint = 450;
 		data.heightHint = 120;
 		webAppTable.setLayoutData(data);
@@ -245,6 +246,9 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 			}
 		});
 		WorkbenchHelp.setHelp(remove, ContextIds.CONFIGURATION_EDITOR_WEBMODULES_REMOVE);
+		
+		form.setContent(section);
+		form.reflow(true);
 
 		initialize();
 	}

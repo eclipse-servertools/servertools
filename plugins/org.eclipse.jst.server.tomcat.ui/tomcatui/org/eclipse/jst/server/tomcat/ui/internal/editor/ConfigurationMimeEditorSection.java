@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -87,10 +87,11 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 		
 		FormToolkit toolkit = getFormToolkit(parent.getDisplay());
 		
-		Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE|ExpandableComposite.TITLE_BAR|Section.DESCRIPTION|ExpandableComposite.FOCUS_TITLE);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR
+			| Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
 		section.setText(TomcatUIPlugin.getResource("%configurationEditorMimeMappingsSection"));
 		section.setDescription(TomcatUIPlugin.getResource("%configurationEditorMimeMappingsDescription"));
-		section.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL));
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 		
 		Composite composite = toolkit.createComposite(section);
 		GridLayout layout = new GridLayout();

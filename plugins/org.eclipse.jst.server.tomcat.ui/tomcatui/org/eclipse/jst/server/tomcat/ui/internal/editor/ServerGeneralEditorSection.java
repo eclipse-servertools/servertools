@@ -89,10 +89,11 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		super.createSection(parent);
 		FormToolkit toolkit = getFormToolkit(parent.getDisplay());
 		
-		Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE|ExpandableComposite.EXPANDED|ExpandableComposite.TITLE_BAR|Section.DESCRIPTION|ExpandableComposite.FOCUS_TITLE);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED
+			| ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
 		section.setText(TomcatUIPlugin.getResource("%serverEditorGeneralSection"));
 		section.setDescription(TomcatUIPlugin.getResource("%serverEditorGeneralDescription"));
-		section.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL));
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 
 		Composite composite = toolkit.createComposite(section);
 		GridLayout layout = new GridLayout();

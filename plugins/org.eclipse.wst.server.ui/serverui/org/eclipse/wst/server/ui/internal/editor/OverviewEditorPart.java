@@ -113,7 +113,6 @@ public class OverviewEditorPart extends ServerEditorPart {
 		ScrolledForm form = toolkit.createScrolledForm(parent);
 		form.setText(ServerUIPlugin.getResource("%serverEditorOverviewPageTitle"));
 		form.getBody().setLayout(new GridLayout());
-		form.getBody().setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL));
 		
 		Composite columnComp = toolkit.createComposite(form.getBody());
 		GridLayout layout = new GridLayout();
@@ -123,7 +122,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		layout.verticalSpacing = 0;
 		layout.horizontalSpacing = 10;
 		columnComp.setLayout(layout);
-		columnComp.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL));
+		columnComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 		
 		// left column
 		Composite leftColumnComp = toolkit.createComposite(columnComp);
@@ -133,12 +132,12 @@ public class OverviewEditorPart extends ServerEditorPart {
 		layout.verticalSpacing = 10;
 		layout.horizontalSpacing = 0;
 		leftColumnComp.setLayout(layout);
-		leftColumnComp.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL));
+		leftColumnComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 		
 		Section section = toolkit.createSection(leftColumnComp, ExpandableComposite.TWISTIE|ExpandableComposite.EXPANDED | ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
 		section.setText(ServerUIPlugin.getResource("%serverEditorOverviewSection"));
 		section.setDescription(ServerUIPlugin.getResource("%serverEditorOverviewDescription"));
-		section.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL));
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 
 		Composite composite = toolkit.createComposite(section);
 		layout = new GridLayout();
@@ -189,19 +188,6 @@ public class OverviewEditorPart extends ServerEditorPart {
 			});
 		}
 		
-		// server configuration path
-		if (server != null && server.getServerType().hasServerConfiguration()) {
-			createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewServerConfigurationPath"));
-			
-			IFolder folder = server.getServerConfiguration();
-			if (folder == null)
-				serverConfigurationName = toolkit.createLabel(composite, ServerUIPlugin.getResource("%elementUnknownName"));
-			else
-				serverConfigurationName = toolkit.createLabel(composite, "" + server.getServerConfiguration().getFullPath());
-			GridData data = new GridData(GridData.FILL_HORIZONTAL);
-			serverConfigurationName.setLayoutData(data);
-		}
-		
 		// runtime
 		if (server != null && server.getServerType() != null && server.getServerType().hasRuntime()) {
 			IRuntime runtime = server.getRuntime();
@@ -244,6 +230,19 @@ public class OverviewEditorPart extends ServerEditorPart {
 					}
 				});
 			}
+		}
+		
+		// server configuration path
+		if (server != null && server.getServerType().hasServerConfiguration()) {
+			createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewServerConfigurationPath"));
+			
+			IFolder folder = server.getServerConfiguration();
+			if (folder == null)
+				serverConfigurationName = toolkit.createLabel(composite, ServerUIPlugin.getResource("%elementUnknownName"));
+			else
+				serverConfigurationName = toolkit.createLabel(composite, "" + server.getServerConfiguration().getFullPath());
+			GridData data = new GridData(GridData.FILL_HORIZONTAL);
+			serverConfigurationName.setLayoutData(data);
 		}
 		
 		// auto-publish
@@ -294,7 +293,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		
 		insertSections(leftColumnComp, "org.eclipse.wst.server.editor.overview.left");
 		
-		// left column
+		// right column
 		Composite rightColumnComp = toolkit.createComposite(columnComp);
 		layout = new GridLayout();
 		layout.marginHeight = 0;
@@ -302,9 +301,12 @@ public class OverviewEditorPart extends ServerEditorPart {
 		layout.verticalSpacing = 10;
 		layout.horizontalSpacing = 0;
 		rightColumnComp.setLayout(layout);
-		rightColumnComp.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL));
+		rightColumnComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 		
 		insertSections(rightColumnComp, "org.eclipse.wst.server.editor.overview.right");
+		
+		form.setContent(columnComp);
+		form.reflow(true);
 
 		initialize();
 	}
