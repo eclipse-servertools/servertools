@@ -70,7 +70,7 @@ public class Trace {
 	 * @param s java.lang.String
 	 * @param t java.lang.Throwable
 	 */
-	protected static void trace(String pluginId, int level, String s, Throwable t) {
+	private static void trace(String pluginId, int level, String s, Throwable t) {
 		if (pluginId == null || s == null)
 			return;
 
