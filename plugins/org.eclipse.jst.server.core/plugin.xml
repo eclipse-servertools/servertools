@@ -19,8 +19,7 @@
   <runtime>
     <library name="sjavacore.jar">
       <export name="*"/>
-        <packages prefixes="org.eclipse.jst.server.j2ee,org.eclipse.jst.server.core"/>
-    </library>
+     </library>
   </runtime>
 
   <extension point="org.eclipse.jdt.core.classpathContainerInitializer">
