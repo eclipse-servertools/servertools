@@ -42,10 +42,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+import org.eclipse.jst.server.generic.core.CorePlugin;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
 
@@ -144,15 +148,20 @@ public class XMLUtils {
 						.createFileURI(file.getAbsolutePath());
 
 				// Demand load the resource for this file.
-				Resource resource = resourceSet.getResource(fileURI, true);
-				ServerRuntime def = (ServerRuntime) resource.getContents().get(
-						0);
-
-				if (def != null) {
-					def.setFilename(file.getAbsolutePath());
-					all.add(def);
-				}
-
+				Resource resource=null;
+                try {
+                    resource = resourceSet.getResource(fileURI, true);
+                } catch (WrappedException e) {
+//                  sth wrong with this .server file.
+                    CorePlugin.getDefault().getLog().log(new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,1,"Error loading the server type definition",e));
+                }
+                if(resource!=null) {
+                    ServerRuntime def = (ServerRuntime) resource.getContents().get(0);
+					if (def != null) {
+						def.setFilename(file.getAbsolutePath());
+						all.add(def);
+					}
+	            }
 			}
 		}
 
