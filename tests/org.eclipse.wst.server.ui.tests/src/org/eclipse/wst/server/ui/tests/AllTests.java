@@ -13,15 +13,25 @@ package org.eclipse.wst.server.ui.tests;
 import org.eclipse.wst.server.ui.tests.dialog.DialogsTestCase;
 import org.eclipse.wst.server.ui.tests.dialog.PreferencesTestCase;
 import org.eclipse.wst.server.ui.tests.dialog.ViewTestCase;
+import org.eclipse.wst.server.ui.tests.editor.ICommandManagerTestCase;
+import org.eclipse.wst.server.ui.tests.editor.IServerEditorPartInputTestCase;
+import org.eclipse.wst.server.ui.tests.editor.IServerEditorSectionTestCase;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 public class AllTests {
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.wst.server.ui.tests");
+		TestSuite suite = new TestSuite("Test suite for org.eclipse.wst.server.ui.tests");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(ExistenceTest.class);
 		suite.addTestSuite(ServerUIPreferencesTestCase.class);
+		
+		suite.addTestSuite(ServerUICoreTestCase.class);
+		suite.addTestSuite(ServerUIUtilTestCase.class);
+		
+		suite.addTestSuite(ICommandManagerTestCase.class);
+		suite.addTestSuite(IServerEditorPartInputTestCase.class);
+		suite.addTestSuite(IServerEditorSectionTestCase.class);
 		
 		suite.addTestSuite(DialogsTestCase.class);
 		suite.addTestSuite(PreferencesTestCase.class);

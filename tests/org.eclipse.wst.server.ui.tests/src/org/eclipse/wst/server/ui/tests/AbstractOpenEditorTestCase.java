@@ -20,7 +20,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorInput;
 
 public abstract class AbstractOpenEditorTestCase extends TestCase {
-	private final String SERVER_EDITOR_ID = "org.eclipse.wst.server.ui.editor";
+	private final String SERVER_EDITOR_ID = "org.eclipse.wst.server.ui.tests.editor";
 	
 	public static Test suite() {
 		return new TestSuite(AbstractOpenEditorTestCase.class, "OpenEditorTestCase");
