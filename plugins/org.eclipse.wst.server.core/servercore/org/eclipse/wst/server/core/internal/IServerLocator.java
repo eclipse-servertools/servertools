@@ -48,26 +48,6 @@ public interface IServerLocator {
 	public String getId();
 
 	/**
-	 * Returns the displayable name for this server locator.
-	 * <p>
-	 * Note that this name is appropriate for the current locale.
-	 * </p>
-	 *
-	 * @return a displayable name for this server locator
-	 */
-	public String getName();
-
-	/**
-	 * Returns the displayable description for this server locator.
-	 * <p>
-	 * Note that this description is appropriate for the current locale.
-	 * </p>
-	 *
-	 * @return a displayable description for this server locator
-	 */
-	public String getDescription();
-
-	/**
 	 * Returns true if the server locator can find servers of the given type.
 	 * The id should never be null.
 	 * 

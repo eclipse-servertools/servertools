@@ -87,7 +87,8 @@ public class Request implements IAdaptable {
 		this.remotePort = remotePort;
 		date = new Date();
 		properties = new Properties();
-		monitor.addRequest(this);
+		if (monitor != null)
+			monitor.addRequest(this);
 	}
 
 	/**

@@ -279,6 +279,9 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 	}
 	
 	private static void addJarFiles(File dir, List list, int depth) {
+		if (dir == null)
+			return;
+		
 		File[] files = dir.listFiles();
 		if (files != null) {
 			int size = files.length;
@@ -442,6 +445,8 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 	}
 
 	private void load() {
+		if (getRuntimeTargetHandler() == null)
+			return;
 		String id = getRuntimeTargetHandler().getId();
 		String filename = JavaServerPlugin.getInstance().getStateLocation().append(id + ".xml").toOSString();
 		

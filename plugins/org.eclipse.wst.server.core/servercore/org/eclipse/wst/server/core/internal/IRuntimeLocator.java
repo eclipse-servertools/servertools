@@ -49,26 +49,6 @@ public interface IRuntimeLocator {
 	public String getId();
 
 	/**
-	 * Returns the displayable name for this runtime locator.
-	 * <p>
-	 * Note that this name is appropriate for the current locale.
-	 * </p>
-	 *
-	 * @return a displayable name for this runtime locator
-	 */
-	public String getName();
-
-	/**
-	 * Returns the displayable description for this runtime locator.
-	 * <p>
-	 * Note that this description is appropriate for the current locale.
-	 * </p>
-	 *
-	 * @return a displayable description for this runtime locator
-	 */
-	public String getDescription();
-
-	/**
 	 * Returns true if the runtime locator can find runtimes of the given type.
 	 * The id should never be null.
 	 * 

@@ -39,20 +39,6 @@ public class RuntimeLocator implements IRuntimeLocator {
 	}
 
 	/*
-	 * @see IRuntimeLocator#getName()
-	 */
-	public String getName() {
-		return element.getAttribute("name");
-	}
-
-	/*
-	 * @see IRuntimeLocator#getDescription()
-	 */
-	public String getDescription() {
-		return element.getAttribute("description");
-	}
-
-	/*
 	 * @see IRuntimeLocator
 	 */
 	protected String[] getTypeIds() {
@@ -98,6 +84,6 @@ public class RuntimeLocator implements IRuntimeLocator {
 	}
 
 	public String toString() {
-		return "RuntimeLocator[" + getId() + ", " + getName() + "]";
+		return "RuntimeLocator[" + getId() + "]";
 	}
 }
