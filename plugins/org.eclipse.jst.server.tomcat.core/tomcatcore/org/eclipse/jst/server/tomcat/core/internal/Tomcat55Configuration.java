@@ -48,7 +48,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	/**
 	 * Tomcat55Configuration constructor comment.
 	 */
-	public Tomcat55Configuration(IPath path) {
+	public Tomcat55Configuration(IFolder path) {
 		super(path);
 	}
 	
@@ -486,7 +486,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 			monitor = ProgressUtil.getMonitorFor(monitor);
 			monitor.beginTask(TomcatPlugin.getResource("%updatingConfigurationTask"), 100);
 			
-			Tomcat55Configuration config = new Tomcat55Configuration(path);
+			Tomcat55Configuration config = new Tomcat55Configuration(null);
 			config.load(path, ProgressUtil.getSubMonitorFor(monitor, 40));
 	
 			if (monitor.isCanceled())

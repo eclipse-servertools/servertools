@@ -11,8 +11,8 @@
 package org.eclipse.wst.server.core;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * A working copy server object used for formulating changes
@@ -78,7 +78,7 @@ public interface IServerWorkingCopy extends IServerAttributes, IElementWorkingCo
 	 * 
 	 * @param configuration the server configuration, or <code>null</code> if none
 	 */
-	public void setServerConfiguration(IPath configuration);
+	public void setServerConfiguration(IFolder configuration);
 	
 	/**
 	 * Returns the server instance that this working copy is

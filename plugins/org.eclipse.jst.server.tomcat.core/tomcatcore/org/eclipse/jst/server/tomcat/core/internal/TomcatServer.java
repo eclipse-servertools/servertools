@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IProcess;
@@ -72,29 +73,28 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 
 	public TomcatConfiguration getTomcatConfiguration() {
 		if (configuration == null) {
-			//IPath path = getServer().getServerConfiguration();
-			//if (path == null)
-			IPath path = null;
+			IFolder folder = getServer().getServerConfiguration();
+			/*IPath path = null;
 			if (getServerWC() != null && getServerWC().getRuntime() != null)
 				path = getServerWC().getRuntime().getLocation().append("conf");
 			else if (getServer() != null && getServer().getRuntime() != null)
 				path = getServer().getRuntime().getLocation().append("conf");
 			else
-				return null;
+				return null;*/
 			
 			String id = getServer().getServerType().getId();
 			if (id.indexOf("32") > 0)
-				configuration = new Tomcat32Configuration(path);
+				configuration = new Tomcat32Configuration(folder);
 			else if (id.indexOf("40") > 0)
-				configuration = new Tomcat40Configuration(path);
+				configuration = new Tomcat40Configuration(folder);
 			else if (id.indexOf("41") > 0)
-				configuration = new Tomcat41Configuration(path);
+				configuration = new Tomcat41Configuration(folder);
 			else if (id.indexOf("50") > 0)
-				configuration = new Tomcat50Configuration(path);
+				configuration = new Tomcat50Configuration(folder);
 			else if (id.indexOf("55") > 0)
-				configuration = new Tomcat55Configuration(path);
+				configuration = new Tomcat55Configuration(folder);
 			try {
-				configuration.load(path, null);
+				configuration.load(folder, null);
 			} catch (CoreException ce) {
 				// ignore
 			}
@@ -107,20 +107,25 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		
 		String id = getServer().getServerType().getId();
 		if (id.indexOf("32") > 0)
-			configuration = new Tomcat32Configuration(path);
+			configuration = new Tomcat32Configuration(null);
 		else if (id.indexOf("40") > 0)
-			configuration = new Tomcat40Configuration(path);
+			configuration = new Tomcat40Configuration(null);
 		else if (id.indexOf("41") > 0)
-			configuration = new Tomcat41Configuration(path);
+			configuration = new Tomcat41Configuration(null);
 		else if (id.indexOf("50") > 0)
-			configuration = new Tomcat50Configuration(path);
+			configuration = new Tomcat50Configuration(null);
 		else if (id.indexOf("55") > 0)
-			configuration = new Tomcat55Configuration(path);
+			configuration = new Tomcat55Configuration(null);
 		try {
 			configuration.load(path, monitor);
 		} catch (CoreException ce) {
 			// ignore
 		}
+	}
+
+	public void saveConfiguration(IProgressMonitor monitor) throws CoreException {
+		TomcatConfiguration config = getTomcatConfiguration();
+		config.save(getServer().getServerConfiguration(), monitor);
 	}
 
 	/**
@@ -133,7 +138,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			if (module == null || !(module instanceof IWebModule))
 				return null;
 	
-			IPath serverConfig = getServer().getServerConfiguration();
+			IFolder serverConfig = getServer().getServerConfiguration();
 			if (serverConfig == null)
 				return null;
 	
@@ -495,6 +500,6 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 				}
 			}
 		}
-		config.save(config.getPath(), true, monitor);
+		config.save(config.getFolder(), monitor);
 	}
 }

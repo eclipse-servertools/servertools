@@ -326,4 +326,8 @@ public abstract class ServerDelegate {
 	public void importConfiguration(IRuntime runtime, IProgressMonitor monitor) {
 		// do nothing
 	}
+
+	public void saveConfiguration(IProgressMonitor monitor) throws CoreException {
+		// do nothing
+	}
 }

@@ -11,6 +11,7 @@
 package org.eclipse.wst.server.core;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.*;
 /**
  * Represents a server instance. Every server is an instance of a
@@ -175,7 +176,7 @@ public interface IServerAttributes extends IElement, IAdaptable {
 	 * 
 	 * @return the server configuration, or <code>null</code> if none
 	 */
-	public IPath getServerConfiguration();
+	public IFolder getServerConfiguration();
 
 	/**
 	 * Returns the server extension for this server.

@@ -11,6 +11,10 @@
 package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -177,6 +181,13 @@ public class ServerType implements IServerType, IOrdered {
 		if (runtime != null)
 			swc.setRuntime(runtime);
 		
+		if (swc.getServerType().hasServerConfiguration()) {
+			// TODO: config
+			((Server)swc).importConfiguration(runtime, null);
+			IFolder folder = getServerProject().getFolder("cfg");
+			swc.setServerConfiguration(folder);
+		}
+		
 		//TODO: import server config
 		/* IServerConfigurationWorkingCopy config = null;
 		if (hasServerConfiguration()) {
@@ -192,6 +203,35 @@ public class ServerType implements IServerType, IOrdered {
 		swc.setDefaults(monitor);
 		
 		return swc;
+	}
+	
+	public static IProject getServerProject() {
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		if (projects != null) {
+			int size = projects.length;
+			for (int i = 0; i < size; i++) {
+				if (ServerCore.getProjectProperties(projects[i]).isServerProject())
+					return projects[i];
+			}
+		}
+		
+		String s = findUnusedServerProjectName();
+		return ResourcesPlugin.getWorkspace().getRoot().getProject(s);
+	}
+	
+	/**
+	 * Finds an unused project name to use as a server project.
+	 * 
+	 * @return java.lang.String
+	 */
+	protected static String findUnusedServerProjectName() {
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		String name = ServerPlugin.getResource("%defaultServerProjectName", "");
+		int count = 1;
+		while (root.getProject(name).exists()) {
+			name = ServerPlugin.getResource("%defaultServerProjectName", ++count + "");
+		}
+		return name;
 	}
 	
 	/**

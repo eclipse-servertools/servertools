@@ -195,6 +195,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		IPath from = webModule.getLocation();
 		IPath to = getServer().getRuntime().getLocation().append("webapps").append(webModule.getContextRoot());
 		FileUtil.smartCopyDirectory(from.toOSString(), to.toOSString(), monitor);
+		
+		setModulePublishState(module, IServer.PUBLISH_STATE_NONE);
 	}
 
 	/**

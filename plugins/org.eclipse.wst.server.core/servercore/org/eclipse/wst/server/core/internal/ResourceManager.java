@@ -66,8 +66,6 @@ public class ResourceManager {
 	// module events listeners
 	protected transient List moduleEventListeners;
 
-	protected static List serverProjects = new ArrayList();
-
 	/**
 	 * Resource listener - tracks changes on server resources so that
 	 * we can reload/drop server instances and configurations that
@@ -119,7 +117,7 @@ public class ResourceManager {
 		 * @param delta org.eclipse.core.resources.IResourceDelta
 		 */
 		protected void projectChanged(IProject project, IResourceDelta delta) {
-			if (serverProjects.contains(project)) {
+			if (!ServerCore.getProjectProperties(project).isServerProject()) {
 				Trace.trace(Trace.RESOURCES, "Not a server project: " + project.getName());
 				return;
 			}
@@ -277,10 +275,8 @@ public class ResourceManager {
 		if (projects != null) {
 			int size = projects.length;
 			for (int i = 0; i < size; i++) {
-				if (ServerCore.getProjectProperties(projects[i]).isServerProject()) {
-					serverProjects.add(projects[i]);
+				if (ServerCore.getProjectProperties(projects[i]).isServerProject())
 					loadFromProject(projects[i]);
-				}
 			}
 		}
 		

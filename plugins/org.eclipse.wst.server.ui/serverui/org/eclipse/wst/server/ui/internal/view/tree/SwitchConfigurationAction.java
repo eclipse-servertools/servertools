@@ -10,7 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.view.tree;
 
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
@@ -20,31 +20,27 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.ServerUICore;
-import org.eclipse.wst.server.ui.internal.EclipseUtil;
-import org.eclipse.wst.server.ui.internal.ImageResource;
-import org.eclipse.wst.server.ui.internal.ProgressUtil;
-import org.eclipse.wst.server.ui.internal.ServerLabelProvider;
-import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.swt.widgets.Shell;
 /**
  * Action to add or remove configuration to/from a server.
  */
 public class SwitchConfigurationAction extends Action {
 	protected IServer server;
-	protected IPath config;
+	protected IFolder config;
 	protected Shell shell;
 	protected IStatus status;
 
 	/**
 	 * SwitchConfigurationAction constructor comment.
 	 */
-	public SwitchConfigurationAction(Shell shell, String label, IServer server, IPath config) {
+	public SwitchConfigurationAction(Shell shell, String label, IServer server, IFolder config) {
 		super(label);
 		this.shell = shell;
 		this.server = server;
 		this.config = config;
 
-		IPath tempConfig = server.getServerConfiguration();
+		IFolder tempConfig = server.getServerConfiguration();
 		if ((tempConfig == null && config == null) || (tempConfig != null && tempConfig.equals(config)))
 			setChecked(true);
 
@@ -60,7 +56,7 @@ public class SwitchConfigurationAction extends Action {
 	}
 	
 	public void run() {
-		IPath tempConfig = server.getServerConfiguration();
+		IFolder tempConfig = server.getServerConfiguration();
 		if ((tempConfig == null && config == null) || (tempConfig != null && tempConfig.equals(config)))
 			return;
 			

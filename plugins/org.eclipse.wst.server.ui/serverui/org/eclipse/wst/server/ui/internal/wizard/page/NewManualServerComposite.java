@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
@@ -30,12 +31,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.util.SocketUtil;
-import org.eclipse.wst.server.ui.internal.ContextIds;
-import org.eclipse.wst.server.ui.internal.ProgressUtil;
-import org.eclipse.wst.server.ui.internal.SWTUtil;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.viewers.ServerTypeComposite;
 /**
  * Wizard page used to create a server and configuration at the same time.
@@ -131,8 +129,15 @@ public class NewManualServerComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					runtime = runtimes[runtimeCombo.getSelectionIndex()];
-					if (server != null)
+					if (server != null) {
 						server.setRuntime(runtime);
+						if (server.getServerType().hasServerConfiguration()) {
+							// TODO: config
+							((Server)server).importConfiguration(runtime, null);
+							IFolder folder = WizardUtil.getServerProject().getFolder("cfg");
+							server.setServerConfiguration(folder);
+						}
+					}
 				} catch (Exception ex) {
 					// ignore
 				}
@@ -194,8 +199,16 @@ public class NewManualServerComposite extends Composite {
 						server.setHost(host);
 						ServerUtil.setServerDefaultName(server);
 					
-						if (serverType.hasRuntime() && server.getRuntime() == null)
+						if (serverType.hasRuntime() && server.getRuntime() == null) {
 							server.setRuntime(runtime);
+							
+							if (server.getServerType().hasServerConfiguration()) {
+								// TODO: config
+								((Server)server).importConfiguration(runtime, null);
+								IFolder folder = WizardUtil.getServerProject().getFolder("cfg");
+								server.setServerConfiguration(folder);
+							}
+						}
 					}
 				} catch (CoreException cex) {
 					ce[0] = cex;

@@ -13,7 +13,9 @@ package org.eclipse.wst.server.core.internal;
 import java.util.*;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
 import org.osgi.framework.Bundle;
@@ -37,7 +39,7 @@ public class Server extends Base implements IServer {
 	protected ServerBehaviourDelegate behaviourDelegate;
 
 	protected IRuntime runtime;
-	protected IPath configuration;
+	protected IFolder configuration;
 	protected String mode;
 
 	protected int serverState = STATE_UNKNOWN;
@@ -114,7 +116,7 @@ public class Server extends Base implements IServer {
 	/* (non-Javadoc)
 	 * @see com.ibm.wtp.server.core.IServer2#getServerConfiguration()
 	 */
-	public IPath getServerConfiguration() {
+	public IFolder getServerConfiguration() {
 		return configuration;
 	}
 
@@ -619,8 +621,7 @@ public class Server extends Base implements IServer {
 	public boolean canPublish() {
 		// can't publish if the server is starting or stopping
 		int state = getServerState();
-		if (state == STATE_STARTING ||
-			state == STATE_STOPPING)
+		if (state == STATE_STARTING || state == STATE_STOPPING)
 			return false;
 	
 		// can't publish if there is no configuration
@@ -1546,7 +1547,7 @@ public class Server extends Base implements IServer {
 		String configPath = getAttribute(CONFIGURATION_ID, (String)null);
 		configuration = null;
 		if (configPath != null)
-			configuration = new Path(configPath);
+			configuration = ResourcesPlugin.getWorkspace().getRoot().getFolder(new Path(configPath));
 	}
 
 	protected void setInternal(ServerWorkingCopy wc) {
@@ -1567,7 +1568,7 @@ public class Server extends Base implements IServer {
 			memento.putString("server-type", serverType.getId());
 
 		if (configuration != null)
-			memento.putString(CONFIGURATION_ID, configuration.toPortableString());
+			memento.putString(CONFIGURATION_ID, configuration.getFullPath().toString());
 		else
 			memento.putString(CONFIGURATION_ID, null);
 		

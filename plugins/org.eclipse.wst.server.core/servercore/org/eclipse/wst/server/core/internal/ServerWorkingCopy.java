@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.ServerDelegate;
@@ -111,12 +113,12 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		setAttribute(PROP_HOSTNAME, host);
 	}
 	
-	public void setServerConfiguration(IPath config) {
+	public void setServerConfiguration(IFolder config) {
 		this.configuration = config;
 		if (configuration == null)
 			setAttribute(CONFIGURATION_ID, (String)null);
 		else
-			setAttribute(CONFIGURATION_ID, configuration.toPortableString());
+			setAttribute(CONFIGURATION_ID, configuration.getFullPath().toString());
 	}
 
 	public void setFile(IFile file) {
@@ -177,6 +179,12 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		
 		server.setInternal(this);
 		server.doSave(monitor);
+		IFolder folder = getServerConfiguration();
+		if (folder != null && !folder.exists()) {
+			folder.create(IResource.FORCE, true, null);
+		}
+		//ResourcesPlugin.getWorkspace().getRoot().g
+		getDelegate().saveConfiguration(monitor);
 		wch.setDirty(false);
 		
 		return server;

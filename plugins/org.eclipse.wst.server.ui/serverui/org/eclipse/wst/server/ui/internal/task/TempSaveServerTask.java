@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.util.Task;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 /**
@@ -46,6 +47,9 @@ public class TempSaveServerTask extends Task {
 			workingCopy = server.createWorkingCopy();
 			
 			workingCopy.setRuntime(runtime);
+			if (workingCopy.getServerType().hasServerConfiguration()) {
+				((Server)workingCopy).importConfiguration(runtime, null);
+			}
 			getTaskModel().putObject(ITaskModel.TASK_SERVER, workingCopy);
 		}
 	}

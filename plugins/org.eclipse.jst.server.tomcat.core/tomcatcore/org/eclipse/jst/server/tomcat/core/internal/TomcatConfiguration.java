@@ -47,7 +47,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	public static final String ADD_WEB_MODULE_PROPERTY = "addWebModule";
 	public static final String REMOVE_WEB_MODULE_PROPERTY = "removeWebModule";
 	
-	protected IPath configPath;
+	protected IFolder configPath;
 
 	// property change listeners
 	private transient List propertyListeners;
@@ -55,7 +55,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	/**
 	 * TomcatConfiguration constructor comment.
 	 */
-	public TomcatConfiguration(IPath path) {
+	public TomcatConfiguration(IFolder path) {
 		super();
 		this.configPath = path;
 		/*try {
@@ -65,7 +65,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 		}*/
 	}
 	
-	protected IPath getPath() {
+	protected IFolder getFolder() {
 		return configPath;
 	}
 
@@ -98,10 +98,10 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 			if (folder != null)
 				backupFolder(folder, confDir, backup, ms, monitor);
 			else {
-				IPath path = config.getConfigurationDataPath();*/
-				backupPath(configPath, confDir, backup, ms, monitor);
+				IPath path = config.getConfigurationDataPath();
+				backupPath(configPath, confDir, backup, ms, monitor);*/
+				backupFolder(getFolder(), confDir, backup, ms, monitor);
 			//}
-			
 		} catch (Exception e) {
 			Trace.trace("backupAndPublish() error", e);
 			IStatus s = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPublishConfiguration", new String[] {e.getLocalizedMessage()}), e);
@@ -253,7 +253,9 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	 * @param forceSave boolean
 	 * @exception java.io.IOException
 	 */
-	protected abstract void save(IPath path, boolean forceSave, IProgressMonitor monitor) throws CoreException;
+	//protected abstract void save(IPath path, boolean forceSave, IProgressMonitor monitor) throws CoreException;
+	
+	protected abstract void save(IFolder folder, IProgressMonitor monitor) throws CoreException;
 	
 	protected void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue) {
 		if (propertyListeners == null)
@@ -304,9 +306,9 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 		load(runtime.getLocation().append("conf"), monitor);
 	}*/
 	
-	public abstract void load(IPath path, IProgressMonitor monitor) throws CoreException;
+	protected abstract void load(IPath path, IProgressMonitor monitor) throws CoreException;
 	
-	//public abstract void load(IFolder folder, IProgressMonitor monitor) throws CoreException;
+	protected abstract void load(IFolder folder, IProgressMonitor monitor) throws CoreException;
 	
 	public abstract void addWebModule(int index, ITomcatWebModule module);
 	
