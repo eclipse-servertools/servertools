@@ -4,7 +4,7 @@
    id="org.eclipse.wst.server.ui.tests"
    name="org.eclipse.wst.server.ui.tests"
    version="1.0.0"
-   provider-name="IBM"
+   provider-name="Eclipse.org"
    class="org.eclipse.wst.server.ui.tests.TestsPlugin">
 
    <runtime>

@@ -4,7 +4,7 @@
    id="org.eclipse.wst.internet.monitor.core.tests"
    name="org.eclipse.wst.internet.monitor.core.tests"
    version="1.0.0"
-   provider-name="IBM"
+   provider-name="Eclipse.org"
    class="org.eclipse.wst.internet.monitor.core.tests.TestsPlugin">
 
    <runtime>
