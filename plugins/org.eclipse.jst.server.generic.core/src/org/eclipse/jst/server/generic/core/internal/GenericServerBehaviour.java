@@ -30,7 +30,7 @@ import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerPort;
+import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.core.model.ServerDelegate;
@@ -64,7 +64,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     public void publishModule(int kind, int deltaKind, IModule[] module,
             IProgressMonitor monitor) throws CoreException {
  
-        if(IServer.REMOVED == deltaKind){
+        if(REMOVED == deltaKind){
             removeFromServer(module,monitor);
         }
         else{
@@ -329,8 +329,8 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     //			throw new CoreException(status);
     
     	
-    		IServerPort[] ports = getServer().getServerPorts();
-    		IServerPort sp = null;
+    		ServerPort[] ports = getServer().getServerPorts();
+    		ServerPort sp = null;
     		for(int i=0;i<ports.length;i++){
     			sp= ports[i];
     			if (SocketUtil.isPortInUse(ports[i].getPort(), 5))

@@ -45,8 +45,7 @@ import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMRunner;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerAttributes;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 /**
  * ServerLaunchConfiguration for the generic server.
@@ -61,12 +60,11 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		
-		String serverId = configuration.getAttribute(IServerAttributes.ATTR_SERVER_ID, (String) null);
+		
 
-		IServer server = ServerCore.findServer(serverId);
-		if (server == null) 
-		{
-			abort("Server "+serverId+" does not exist", null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
+		IServer server = ServerUtil.getServer(configuration);
+		if (server == null){
+            abort("Server does not exist", null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
 		}	
 		
 		GenericServerBehaviour genericServer = (GenericServerBehaviour)server.getAdapter(ServerBehaviourDelegate.class);

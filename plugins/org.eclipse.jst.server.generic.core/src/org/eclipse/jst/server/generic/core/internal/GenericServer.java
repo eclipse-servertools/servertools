@@ -54,7 +54,7 @@ import org.eclipse.wst.server.core.internal.ServerMonitorManager;
 import org.eclipse.wst.server.core.model.IURLProvider;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 import org.eclipse.wst.server.core.model.ServerDelegate;
-import org.eclipse.wst.server.core.util.ServerPort;
+import org.eclipse.wst.server.core.ServerPort;
 
 /**
  * Generic XML based server implementation.
@@ -183,7 +183,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	 * 
 	 * @see org.eclipse.wst.server.core.model.IMonitorableServer#getServerPorts()
 	 */
-	public org.eclipse.wst.server.core.IServerPort[] getServerPorts() {
+	public org.eclipse.wst.server.core.ServerPort[] getServerPorts() {
 		List ports = new ArrayList();
 		Iterator pIter = this.getServerDefinition().getPort().iterator();
 		while (pIter.hasNext()) {
@@ -192,7 +192,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 			ports.add(new ServerPort("server", element.getName(), port, element.getProtocol()));		
 		}
 	
-		return (org.eclipse.wst.server.core.IServerPort[])ports.toArray(new org.eclipse.wst.server.core.IServerPort[ports.size()]);
+		return (org.eclipse.wst.server.core.ServerPort[])ports.toArray(new org.eclipse.wst.server.core.ServerPort[ports.size()]);
 	}
 
 
