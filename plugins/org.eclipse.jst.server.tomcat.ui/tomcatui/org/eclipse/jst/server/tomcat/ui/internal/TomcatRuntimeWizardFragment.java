@@ -39,7 +39,7 @@ public class TomcatRuntimeWizardFragment extends WizardFragment {
 		if (runtime == null)
 			return false;
 		IStatus status = runtime.validate(null);
-		return (status != null && status.isOK());
+		return (status != null && status.getSeverity() != IStatus.ERROR);
 	}
 
 	/* (non-Javadoc)

@@ -274,6 +274,8 @@ public class TomcatRuntimeComposite extends Composite {
 		IStatus status = runtimeWC.validate(null);
 		if (status == null || status.isOK())
 			wizard.setMessage(null, IMessageProvider.NONE);
+		else if (status.getSeverity() == IStatus.WARNING)
+			wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
 		else
 			wizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
 		wizard.update();

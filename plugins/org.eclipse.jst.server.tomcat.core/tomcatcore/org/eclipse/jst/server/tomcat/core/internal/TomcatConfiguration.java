@@ -30,7 +30,6 @@ import org.eclipse.jst.server.tomcat.core.WebModule;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServerPort;
-import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.util.FileUtil;
 /**
  * Generic Tomcat server configuration.
@@ -214,7 +213,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 			return module.getPath();
 		
 		IWebModule webModule2 = (IWebModule) webModule.getAdapter(IWebModule.class);
-		return webModule2.getContextRoot();
+		return "/" + webModule2.getContextRoot();
 	}
 
 	/**
