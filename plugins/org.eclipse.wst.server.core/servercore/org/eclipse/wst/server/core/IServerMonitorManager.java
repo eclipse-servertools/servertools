@@ -11,7 +11,6 @@
 package org.eclipse.wst.server.core;
 
 import org.eclipse.core.runtime.CoreException;
-
 /**
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
@@ -22,7 +21,7 @@ public interface IServerMonitorManager {
 	 *  
 	 * @return
 	 */
-	public IServerMonitor getCurrentServerMonitor();
+	//public IServerMonitor getCurrentServerMonitor();
 	
 	/**
 	 * Switch to use a different server monitor. All existing monitors will be
@@ -31,7 +30,7 @@ public interface IServerMonitorManager {
 	 * @param newMonitor
 	 * @throws CoreException
 	 */
-	public void setServerMonitor(IServerMonitor newMonitor) throws CoreException;
+	//public void setServerMonitor(IServerMonitor newMonitor) throws CoreException;
 
 	/**
 	 * Returns the array of ports that are currently being monitored.

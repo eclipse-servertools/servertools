@@ -158,7 +158,6 @@ public abstract class Base {
 				saveList(child, key, list);
 			} else if (obj instanceof Map) {
 				Map vMap = (Map) obj;
-				//FIXME: ASSUMPTION MAP STORES STRINGS ONLY
 				saveMap(child,key,vMap);
 				
 			}

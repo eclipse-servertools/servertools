@@ -44,7 +44,7 @@ public class ServerTableViewer extends TableViewer {
 	protected IPublishListener publishListener;
 	protected IServerListener serverListener;
 
-	protected static IElement deletedElement = null;
+	protected static Object deletedElement = null;
 
 	// servers that are currently publishing and starting
 	protected static List publishing = new ArrayList();

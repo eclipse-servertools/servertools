@@ -12,7 +12,7 @@ package org.eclipse.wst.server.core;
 /**
  * An optional task.
  */
-public interface IOptionalTask extends ITask, IOrdered {
+public interface IOptionalTask extends ITask {
 	public static final int TASK_UNNECESSARY = 0;
 	public static final int TASK_COMPLETED = 1;
 	public static final int TASK_READY = 2;
@@ -25,4 +25,11 @@ public interface IOptionalTask extends ITask, IOrdered {
 	 * @return byte
 	 */
 	public int getStatus();
+	
+	/**
+	 * Returns the order (index/priority).
+	 * 
+	 * @return int
+	 */
+	public int getOrder();
 }

@@ -10,11 +10,6 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.core;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.model.IProcess;
-
 import org.eclipse.wst.server.core.model.IURLProvider;
 /**
  * 
@@ -54,22 +49,4 @@ public interface ITomcatServer extends IURLProvider {
 	 * @return
 	 */
 	public String getRuntimeClass();
-
-	/**
-	 * Set the process that is monitored for Tomcat startup and shutdown.
-	 * Warning: Do not call this method unless you know what you're doing;
-	 * it should only be used in rare cases.
-	 * 
-	 * @param newProcess
-	 */
-	public void setProcess(IProcess newProcess);
-	
-	/**
-	 * Setup for starting the server.
-	 * 
-	 * @param launch ILaunch
-	 * @param launchMode String
-	 * @param monitor IProgressMonitor
-	 */
-	public void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException;
 }

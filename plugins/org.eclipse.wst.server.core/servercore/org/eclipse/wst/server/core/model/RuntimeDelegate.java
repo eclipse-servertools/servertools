@@ -37,15 +37,8 @@ import org.eclipse.wst.server.core.internal.ServerPlugin;
  * </p>
  * <p>
  * Runtime delegates may keep state in instance fields, but that state is
- * transient and will not be persisted across workbench sessions.
- * </p>
- * <p>
- * [issue: Runtime delegates can read runtime attributes via
- * IRuntime; runtime working copy delegates can also set them
- * via IRuntimeWorkingCopy. However, current implementation does
- * not serialize any attributes other than the ones server core
- * knows about. So it's unclear whether there is any intent
- * to support attributes that are runtime-type-specific.]
+ * transient and will not be persisted across workbench sessions. To save state
+ * across workbench sessions, it must be persisted using the attributes.
  * </p>
  * <p>
  * This abstract class is intended to be extended only by clients
@@ -57,6 +50,7 @@ import org.eclipse.wst.server.core.internal.ServerPlugin;
  * </p>
  * 
  * @see IRuntime
+ * @see IRuntimeWorkingCopy
  * @since 1.0
  */
 public abstract class RuntimeDelegate {
@@ -68,18 +62,21 @@ public abstract class RuntimeDelegate {
 	}
 	
 	/**
-	 * Initializes this runtime delegate with its life-long runtime instance.
-	 * <p>
-	 * This method is called by the web server core framework.
-	 * Clients should never call this method.
-	 * </p>
-	 * 
-	 * @param runtime the runtime instance
+	 * Initialize this runtime delegate.
 	 */
 	public void initialize() {
 		// do nothing
 	}
 
+	/**
+	 * Initializes this runtime delegate with its life-long runtime instance.
+	 * <p>
+	 * This method is called by the server core framework.
+	 * Clients should never call this method.
+	 * </p>
+	 * 
+	 * @param server the runtime instance
+	 */
 	public final void initialize(Runtime newRuntime) {
 		runtime = newRuntime;
 		if (runtime instanceof RuntimeWorkingCopy)
@@ -227,10 +224,7 @@ public abstract class RuntimeDelegate {
 
 	/**
 	 * Sets the value of the specified list-valued attribute of this
-	 * element. The list may only contain Strings.
-	 * <p>
-	 * [issue: Serialization/deserialization]
-	 * </p>
+	 * element. The list may only contain String values.
 	 * 
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
@@ -241,10 +235,7 @@ public abstract class RuntimeDelegate {
 
 	/**
 	 * Sets the value of the specified map-valued attribute of this
-	 * element.
-	 * <p>
-	 * [issue: Serialization/deserialization]
-	 * </p>
+	 * element. The map may only contain String values.
 	 * 
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute

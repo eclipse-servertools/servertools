@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerMonitor;
 import org.eclipse.wst.server.core.IServerPort;
 import org.eclipse.wst.server.core.model.ServerMonitorDelegate;
 /**

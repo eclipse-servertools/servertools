@@ -15,22 +15,32 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 /**
+ * A runtime target handler is used to apply some properties to a project
+ * this is being targeted to a given runtime. For instance, the handler
+ * might update the classpath of a Java project to include the runtime's
+ * classes, add validation for the given runtime, or restrict the type of
+ * resources that can be created.
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
  */
-public interface IRuntimeTargetHandler extends IOrdered, IAdaptable {
+public interface IRuntimeTargetHandler extends IAdaptable {
 	/**
+	 * Returns the id of this runtime target handler.
+	 * Each known runtime target handler has a distinct id. 
+	 * Ids are intended to be used internally as keys; they are not
+	 * intended to be shown to end users.
 	 * 
-	 * @return
+	 * @return the runtime target handler id
 	 */
 	public String getId();
 
 	/**
-	 * Returns true if this runtime target handler supports (can work with) the
-	 * given runtime.
+	 * Returns <code>true</code> if this runtime target handler supports
+	 * (can work with) the given runtime.
 	 * 
-	 * @param runtimeType
-	 * @return
+	 * @param runtimeType a runtime type
+	 * @return <code>true</code> if the handler can accept the given runtime type,
+	 *    and <code>false</code> otherwise
 	 */
 	public boolean supportsRuntimeType(IRuntimeType runtimeType);
 

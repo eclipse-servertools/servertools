@@ -13,7 +13,7 @@ package org.eclipse.wst.server.ui.editor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IEditorSite;
 
-import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
 /**
  *
  */
@@ -25,7 +25,7 @@ public abstract class ServerEditorActionFactoryDelegate {
 	 * 
 	 * @param server
 	 */
-	public abstract boolean shouldDisplay(IServer server);
+	public abstract boolean shouldDisplay(IServerWorkingCopy server);
 
 	/**
 	 * Create the action.

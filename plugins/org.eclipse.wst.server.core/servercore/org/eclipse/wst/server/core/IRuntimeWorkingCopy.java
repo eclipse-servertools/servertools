@@ -15,7 +15,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * A working copy runtime object used for formulating changes
- * to a runtime instance ({@link IRuntime}).
+ * to a runtime instance ({@link IRuntime}). Changes made on a
+ * working copy do not occur (and are not persisted) until a
+ * save() is performed. 
  * <p>
  * [issue: The default value of location and test environment
  * should be specified here (or in IServerType.createRuntime).
@@ -42,6 +44,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * likely to change significantly before the initial release.</it>
  * </p>
  * 
+ * @see IRuntime
  * @since 1.0
  */
 public interface IRuntimeWorkingCopy extends IRuntime, IElementWorkingCopy {	
@@ -86,20 +89,12 @@ public interface IRuntimeWorkingCopy extends IRuntime, IElementWorkingCopy {
 	 * Commits the changes made in this working copy. If there is
 	 * no extant runtime instance with a matching id and runtime
 	 * type, this will create a runtime instance with attributes
-	 * taken from this working copy. If there an existing runtime
-	 * instance with a matching id and runtime type, this will
-	 * change the runtime instance accordingly.
+	 * taken from this working copy, and return that object.
 	 * <p>
-	 * [issue: What is relationship to 
-	 * this.getOriginal() and the IRuntime returned by this.save()?
-	 * The answer should be: they're the same runtime, for an
-	 * appropriate notion of "same". As currently implemented, they
-	 * are different IRuntime instances but have the same runtime
-	 * id and same runtime types. Client that are hanging on to
-	 * the old runtime instance will not see the changes. 
-	 * If IRuntime were some kind of handle object as elsewhere in 
-	 * Eclipse Platform, this kind of change could be done much
-	 * more smoothly.]
+	 * If there an existing runtime instance with a matching id and
+	 * runtime type, this will change the runtime instance accordingly.
+	 * The returned runtime will be the same runtime this is returned
+	 * from getOriginal(), after the changes have been applied.
 	 * </p>
 	 * <p>
 	 * [issue: What is lifecycle for RuntimeWorkingCopyDelegate
@@ -109,16 +104,7 @@ public interface IRuntimeWorkingCopy extends IRuntime, IElementWorkingCopy {
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return a new runtime instance
-	 * @throws CoreException [missing]
+	 * @throws CoreException thrown if the save could not be completed
 	 */
 	public IRuntime save(boolean force, IProgressMonitor monitor) throws CoreException;
-
-	/**
-	 * Sets whether this runtime can be used as a test environment.
-	 * 
-	 * @param b <code>true</code> if this runtime can be use as a
-	 * test environment, and <code>false</code> if it cannot
-	 * @see IRuntime#isTestEnvironment()
-	 */
-	public void setTestEnvironment(boolean b);
 }

@@ -633,7 +633,7 @@ public class ServerUtil {
 	/**
 	 * Visit all the modules in the server configuration.
 	 */
-	public static void visit(IServer server, IModuleVisitor visitor, IProgressMonitor monitor) {
+	public static void visit(IServerAttributes server, IModuleVisitor visitor, IProgressMonitor monitor) {
 		if (server == null)
 			return;
 		
@@ -650,7 +650,7 @@ public class ServerUtil {
 	/**
 	 * Returns true to keep visiting, and false to stop.
 	 */
-	private static boolean visitModule(IServer server, IModule[] parents, IModule module, IModuleVisitor visitor, IProgressMonitor monitor) {
+	private static boolean visitModule(IServerAttributes server, IModule[] parents, IModule module, IModuleVisitor visitor, IProgressMonitor monitor) {
 		if (server == null || module == null || parents == null)
 			return true;
 		
@@ -844,58 +844,6 @@ public class ServerUtil {
 			name = ServerPlugin.getResource("%defaultServerProjectName", ++count + "");
 		}
 		return name;
-	}
-	
-	/**
-	 * Sort the given list of IOrdered items into indexed order. This method
-	 * modifies the original list, but returns the value for convenience.
-	 *
-	 * @param list java.util.List
-	 * @return java.util.List
-	 */
-	public static List sortOrderedList(List list) {
-		if (list == null)
-			return null;
-
-		int size = list.size();
-		for (int i = 0; i < size - 1; i++) {
-			for (int j = i + 1; j < size; j++) {
-				IOrdered a = (IOrdered) list.get(i);
-				IOrdered b = (IOrdered) list.get(j);
-				if (a.getOrder() > b.getOrder()) {
-					Object temp = a;
-					list.set(i, b);
-					list.set(j, temp);
-				}
-			}
-		}
-		return list;
-	}
-	
-	/**
-	 * Sort the given list of IOrdered items into reverse indexed order. This method
-	 * modifies the original list, but returns the value for convenience.
-	 *
-	 * @param list java.util.List
-	 * @return java.util.List
-	 */
-	public static List sortOrderedListReverse(List list) {
-		if (list == null)
-			return null;
-
-		int size = list.size();
-		for (int i = 0; i < size - 1; i++) {
-			for (int j = i + 1; j < size; j++) {
-				IOrdered a = (IOrdered) list.get(i);
-				IOrdered b = (IOrdered) list.get(j);
-				if (a.getOrder() < b.getOrder()) {
-					Object temp = a;
-					list.set(i, b);
-					list.set(j, temp);
-				}
-			}
-		}
-		return list;
 	}
 
 	/**

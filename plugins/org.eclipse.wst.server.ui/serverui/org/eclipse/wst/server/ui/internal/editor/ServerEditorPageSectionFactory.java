@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.editor;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,16 +8,17 @@ package org.eclipse.wst.server.ui.internal.editor;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.editor;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 
-import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.wst.server.ui.internal.Trace;
-
 /**
  * 
  */
@@ -146,7 +146,7 @@ public class ServerEditorPageSectionFactory implements IServerEditorPageSectionF
 	 * <p>If the instance or configuration is being opened by itself, the
 	 * other value (instance or configuration) will be null.
 	 */
-	public boolean shouldCreateSection(IServer server) {
+	public boolean shouldCreateSection(IServerWorkingCopy server) {
 		try {
 			return getDelegate().shouldCreateSection(server);
 		} catch (Exception e) {

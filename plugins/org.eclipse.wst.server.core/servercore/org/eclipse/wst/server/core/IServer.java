@@ -10,7 +10,6 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -46,8 +45,8 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
  * stop, and restart it.
  * </p>
  * <p>
- * The resource manager maintains a global list of all known server instances
- * ({@link IResourceManager#getServers()}).
+ * The server framework maintains a global list of all known server instances
+ * ({@link ServerCore#getServers()}).
  * </p>
  * <p>
  * [rough notes:
@@ -82,8 +81,7 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
  * 
  * @since 1.0
  */
-public interface IServer extends IElement, IAdaptable {
-	
+public interface IServer extends IServerAttributes, IAdaptable {
 	/**
 	 * File extension (value "server") for serialized representation of
 	 * server instances.
@@ -224,77 +222,6 @@ public interface IServer extends IElement, IAdaptable {
 	 * @return
 	 */
 	public int getModulePublishState(IModule module);
-	
-	/**
-	 * Returns the host for the server.
-	 * The format of the host can be either a qualified or unqualified hostname,
-	 * or an IP address and must conform to RFC 2732.
-	 * 
-	 * @return a host string conforming to RFC 2732
-	 * @see java.net.URL.getHost()
-	 */
-	public String getHost();
-	
-	/**
-	 * Returns the file where this server instance is serialized.
-	 * 
-	 * @return the file in the workspace where the server instance
-	 * is serialized, or <code>null</code> if the information is
-	 * instead to be persisted with the workspace but not with any
-	 * particular workspace resource
-	 */
-	public IFile getFile();
-	
-	/**
-	 * Returns the runtime associated with this server.
-	 * <p>
-	 * Note: The runtime of a server working copy may or may not
-	 * be a working copy. For a server instance that is not a
-	 * working copy, the runtime instance is not a working copy
-	 * either.
-	 * </p>
-	 * <p>
-	 * [issue: According to serverType extension point, 
-	 * runtimeTypeId is a mandatory attribute. It seems odd
-	 * then to have server runtime instance being an
-	 * optional property of server instance. What does it mean
-	 * for a server to not have a runtime?]
-	 * </p>
-	 * 
-	 * @return the runtime, or <code>null</code> if none
-	 */
-	public IRuntime getRuntime();
-	
-	/**
-	 * Returns the type of this server.
-	 * 
-	 * @return the server type
-	 */
-	public IServerType getServerType();
-	
-	/**
-	 * Returns the server configuration associated with this server.
-	 * <p>
-	 * Note: The server configuration of a server working copy may
-	 * or may not be a working copy. For a server instance that is
-	 * not a working copy, the server configuration instance is not
-	 * a working copy either.
-	 * </p>
-	 * <p>
-	 * [issue: According to serverType extension point, 
-	 * configurationTypeId is an optional attribute. If a server type
-	 * has no server configuration type, then it seems reasonable to 
-	 * expect this method to return null for all instances of that server
-	 * type. But what about a server type that explicitly specifies
-	 * a server configuration type. Does that mean that all server
-	 * instances of that server type must have a server configuration
-	 * instance of that server configuration type, and that this method
-	 * never returns null in those cases?]
-	 * </p>
-	 * 
-	 * @return the server configuration, or <code>null</code> if none
-	 */
-	public IServerConfiguration getServerConfiguration();
 
 	/**
 	 * Returns the server extension for this server.
@@ -339,29 +266,6 @@ public interface IServer extends IElement, IAdaptable {
 	 * @return a new working copy
 	 */
 	public IServerWorkingCopy createWorkingCopy();
-	
-	/**
-	 * Returns whether the given server configuration can be used with
-	 * this server.
-	 * <p>
-	 * [issue: This seems to be just a convenience method. Given that it's 
-	 * straightforward enought for a client to compare 
-	 * this.getServerType().getServerConfiguration()
-	 * to configuration.getServerConfigurationType(),
-	 * it's not clear that there is a great need for this method.]
-	 * </p>
-	 * <p>
-	 * [issue: It does not make sense to allow a null configuration.]
-	 * </p>
-	 * 
-	 * Returns true if this is a configuration that is
-	 * applicable to (can be used with) this server.
-	 *
-	 * @param configuration the server configuration
-	 * @return <code>true</code> if this server supports the given server
-	 * configuration, and <code>false/code> otherwise
-	 */
-	public boolean isSupportedConfiguration(IServerConfiguration configuration);
 
 	/**
 	 * Returns an array of the modules that have not been published
@@ -598,13 +502,20 @@ public interface IServer extends IElement, IAdaptable {
 	 * nothing if this server cannot be stopped ({@link #canStop()}
 	 * returns <code>false</code>.
 	 * <p>
+	 * If force is <code>false</code>, it will attempt to stop the server
+	 * normally/gracefully. If force is <code>true</code>, then the server
+	 * process will be terminated any way that it can.
+	 * </p>
+	 * <p>
 	 * [issue: There is no way to communicate failure to the
 	 * client. Given that this operation can go awry, there probably
 	 * should be a mechanism that allows failing asynch operations
 	 * to be diagnosed.]
 	 * </p>
+	 * @param force <code>true</code> to kill the server, or <code>false</code>
+	 *    to stop normally
 	 */
-	public void stop();
+	public void stop(boolean force);
 
 	/**
 	 * Stops this server and waits until the server has completely stopped.
@@ -615,21 +526,6 @@ public interface IServer extends IElement, IAdaptable {
 	 * </p>
 	 */
 	public void synchronousStop();
-
-	/**
-	 * Terminates the server process(es). This method should only be
-	 * used as a last resort after the stop() method fails to work.
-	 * The server should return from this method quickly and
-	 * use the server listener to notify shutdown progress.
-	 * It MUST terminate the server completely and return it to
-	 * the stopped state.
-	 * <p>
-	 * [issue: Since IServer already has stop(), it's hard to explain
-	 * in what way this method is truely different. Given that stop()
-	 * did not do the trick, why would terminate() have better luck.]
-	 * </p>
-	 */
-	public void terminate();
 
 	/**
 	 * Returns whether the given module can be restarted.
@@ -705,63 +601,6 @@ public interface IServer extends IElement, IAdaptable {
 	public void synchronousRestartModule(IModule module, IProgressMonitor monitor) throws CoreException;
 
 	/**
-	 * Returns a temporary directory that the requestor can use
-	 * throughout it's lifecycle. This is primary to be used by
-	 * servers for working directories, server specific
-	 * files, etc.
-	 *
-	 * <p>As long as the same key is used to call this method on
-	 * each use of the workbench, this method directory will return
-	 * the same directory. If the directory is not requested over a
-	 * period of time, the directory may be deleted and a new one
-	 * will be assigned on the next request. For this reason, a
-	 * server should request the temp directory on startup
-	 * if it wants to store files there. In all cases, the server
-	 * should have a backup plan to refill the directory
-	 * in case it has been deleted since last use.</p>
-	 *
-	 * @return org.eclipse.core.runtime.IPath
-	 */
-	public IPath getTempDirectory();
-
-	/**
-	 * Returns whether the specified module modifications could be made to this
-	 * server at this time.
-	 * <p>
-	 * This method may decide based on the type of module
-	 * or refuse simply due to reaching a maximum number of
-	 * modules or other criteria.
-	 * </p>
-	 * <p>
-	 * [issue: This seems odd to have a pre-flight method.
-	 * I should expect that the client can propose making
-	 * any set of module changes they desire (via a server
-	 * working copy). If the server doesn't like it, the operation
-	 * should fail.]
-	 * </p>
-	 *
-	 * @param add a possibly-empty list of modules to add
-	 * @param remove a possibly-empty list of modules to remove
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @return <code>true</code> if the proposed modifications
-	 * look feasible, and <code>false</code> otherwise
-	 */
-	public IStatus canModifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor);
-
-	/**
-	 * Returns an array of modules that are associated with
-	 * this server.
-	 * <p>
-	 * [issue: Clarify that these are root modules, not ones parented
-	 * by some other module.]
-	 * </p>
-	 *
-	 * @return a possibly-empty array of modules
-	 */
-	public IModule[] getModules(IProgressMonitor monitor);
-	
-	/**
 	 * Returns the current state of the given module on this server.
 	 * Returns <code>STATE_UNKNOWN</code> if the module
 	 * is not among the ones associated with this server.
@@ -771,50 +610,4 @@ public interface IServer extends IElement, IAdaptable {
 	 * constants declared on {@link IServer}
 	 */
 	public int getModuleState(IModule module);
-	
-	/**
-	 * Returns the child module(s) of this module. If this
-	 * module contains other modules, it should list those
-	 * modules. If not, it should return an empty list.
-	 *
-	 * <p>This method should only return the direct children.
-	 * To obtain the full module tree, this method may be
-	 * recursively called on the children.</p>
-	 *
-	 * @param module org.eclipse.wst.server.core.IModule
-	 * @return array
-	 */
-	public IModule[] getChildModules(IModule module, IProgressMonitor monitor);
-
-	/**
-	 * Returns the parent module(s) of this module. When
-	 * determining if a given project can run on a server
-	 * configuration, this method will be used to find the
-	 * actual module(s) that may be run on the server. For
-	 * instance, a Web module may return a list of Ear
-	 * modules that it is contained in if the server only
-	 * supports configuring Ear modules.
-	 *
-	 * <p>If the module type is not supported, this method
-	 * may return null. If the type is normally supported but there
-	 * is a configuration problem or missing parent, etc., this
-	 * method may fire a CoreException that may then be presented
-	 * to the user.</p>
-	 *
-	 * <p>If it does return valid parent(s), this method should
-	 * always return the topmost parent module(s), even if
-	 * there are a few levels (a heirarchy) of modules.</p>
-	 *
-	 * @param module org.eclipse.wst.server.core.IModule
-	 * @return array
-	 * @throws org.eclipse.core.runtime.CoreException
-	 */
-	public IModule[] getParentModules(IModule module, IProgressMonitor monitor) throws CoreException;
-	
-	/**
-	 * Returns an array of IServerPorts that this server has.
-	 *
-	 * @return
-	 */
-	public IServerPort[] getServerPorts();
 }

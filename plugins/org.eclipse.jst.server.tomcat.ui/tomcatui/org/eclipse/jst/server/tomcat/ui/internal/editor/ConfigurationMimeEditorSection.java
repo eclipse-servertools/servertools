@@ -38,7 +38,7 @@ import org.eclipse.ui.help.WorkbenchHelp;
 /**
  * Tomcat configuration mime editor section.
  */
-public class ConfigurationMimeEditorSection extends ServerResourceEditorSection {
+public class ConfigurationMimeEditorSection extends ServerEditorSection {
 	protected ITomcatConfigurationWorkingCopy tomcatConfiguration;
 
 	protected boolean updating;

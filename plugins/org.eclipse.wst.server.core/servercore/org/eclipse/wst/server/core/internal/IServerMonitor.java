@@ -8,10 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.server.core;
-
-import org.eclipse.core.runtime.CoreException;
-
+package org.eclipse.wst.server.core.internal;
 /**
  * An interface to a TCP/IP monitor.
  * 
@@ -47,12 +44,12 @@ public interface IServerMonitor {
 	 * @param port
 	 * @return
 	 */
-	public int startMonitoring(IServer server, IServerPort port, int monitorPort) throws CoreException;
+	//public int startMonitoring(IServer server, IServerPort port, int monitorPort) throws CoreException;
 
 	/**
 	 * Stop monitoring the given port.
 	 * 
 	 * @param port
 	 */
-	public void stopMonitoring(IServer server, IServerPort port);
+	//public void stopMonitoring(IServer server, IServerPort port);
 }

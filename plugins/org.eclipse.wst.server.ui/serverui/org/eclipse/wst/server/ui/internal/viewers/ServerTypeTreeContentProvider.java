@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,6 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 	public static final byte STYLE_TYPE = 4; // not used yet
 	
 	protected boolean localhost;
-	protected boolean includeTestEnvironments = true;
 	
 	protected IModuleType moduleType;
 	protected boolean includeIncompatibleVersions;
@@ -50,11 +49,12 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 		if (serverTypes != null) {
 			int size = serverTypes.length;
 			for (int i = 0; i < size; i++) {
-			IServerType serverType = serverTypes[i];
+				IServerType serverType = serverTypes[i];
 				if (include(serverType)) {
-					if (serverType.getOrder() > initialSelectionOrder) {
+					int order = getServerOrder(serverType);
+					if (order > initialSelectionOrder) {
 						initialSelection = serverType;
-						initialSelectionOrder = serverType.getOrder();
+						initialSelectionOrder = order;
 					}
 					if (style == STYLE_FLAT) {
 						list.add(serverType);
@@ -100,36 +100,24 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 		IRuntimeType runtimeType = serverType.getRuntimeType();
 		if (runtimeType == null)
 			return false;
+		
+		String moduleTypeId = null;
+		if (moduleType != null)
+			moduleTypeId = moduleType.getId();
 		if (includeIncompatibleVersions) {
-			if (!ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), moduleType.getId(), null))
+			if (!ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), moduleTypeId, null))
 				return false;
 		} else {
-			if (!ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), moduleType.getId(), moduleType.getVersion()))
-				return false;
-		}
-		
-		if (!includeTestEnvironments && serverType.isTestEnvironment()) {
-			if (!checkForTestEnvironmentRuntime(serverType))
+			String moduleVersion = null;
+			if (moduleType != null)
+				moduleVersion = moduleType.getVersion();
+			if (!ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), moduleTypeId, moduleVersion))
 				return false;
 		}
 		
 		if (localhost || serverType.supportsRemoteHosts())
 			return true;
 		
-		return false;
-	}
-
-	protected boolean checkForTestEnvironmentRuntime(IServerType serverType) {
-		IRuntimeType runtimeType = serverType.getRuntimeType();
-		IRuntime[] runtimes = ServerUtil.getRuntimes(runtimeType);
-		if (runtimes == null || runtimes.length == 0)
-			return false;
-		
-		int size = runtimes.length;
-		for (int i = 0; i < size; i++) {
-			if (runtimes[i].isTestEnvironment())
-				return true;
-		}
 		return false;
 	}
 
@@ -151,14 +139,13 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 		localhost = local;
 		fillTree();
 	}
-	
-	public void setIncludeTestEnvironments(boolean te) {
-		includeTestEnvironments = te;
-		fillTree();
-	}
-	
+
 	public void setIncludeIncompatibleVersions(boolean b) {
 		includeIncompatibleVersions = b;
 		fillTree();
+	}
+	
+	private int getServerOrder(IServerType serverType) {
+		return 0;
 	}
 }

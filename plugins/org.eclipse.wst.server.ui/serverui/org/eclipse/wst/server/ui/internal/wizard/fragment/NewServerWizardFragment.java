@@ -166,7 +166,7 @@ public class NewServerWizardFragment extends WizardFragment {
 		}
 	}
 	
-	public IServer getServer() {
+	public IServerWorkingCopy getServer() {
 		if (comp == null)
 			return null;
 		return comp.getServer();

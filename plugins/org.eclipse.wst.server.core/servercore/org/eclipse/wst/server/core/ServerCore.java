@@ -97,7 +97,7 @@ public class ServerCore {
 	/**
 	 * Returns the resource manager.
 	 *
-	 * @return org.eclipse.wst.server.core.IResourceManager
+	 * @return org.eclipse.wst.server.core.internal.ResourceManager
 	 */
 	private static ResourceManager getResourceManager() {
 		return ResourceManager.getInstance();
@@ -155,16 +155,12 @@ public class ServerCore {
 	 * if none. This convenience method searches the list of known
 	 * runtime types ({@link #getRuntimeTypes()}) for the one with a matching
 	 * runtime type id ({@link IRuntimeType#getId()}). The id may not be null.
-	 * <p>
-	 * [issue: Consider renaming this method findRuntimeType to make
-	 * it clear that it is searching.]
-	 * </p>
 	 *
 	 * @param the runtime type id
 	 * @return the runtime type, or <code>null</code> if there is no runtime type
 	 * with the given id
 	 */
-	public static IRuntimeType getRuntimeType(String id) {
+	public static IRuntimeType findRuntimeType(String id) {
 		if (id == null)
 			throw new IllegalArgumentException();
 
@@ -250,16 +246,12 @@ public class ServerCore {
 	 * if none. This convenience method searches the list of known
 	 * server types ({@link #getServerTypes()}) for the one with a matching
 	 * server type id ({@link IServerType#getId()}). The id may not be null.
-	 * <p>
-	 * [issue: Consider renaming this method findServerType to make
-	 * it clear that it is searching.]
-	 * </p>
 	 *
 	 * @param the server type id
 	 * @return the server type, or <code>null</code> if there is no server type
 	 * with the given id
 	 */
-	public static IServerType getServerType(String id) {
+	public static IServerType findServerType(String id) {
 		if (id == null)
 			throw new IllegalArgumentException();
 
@@ -299,16 +291,12 @@ public class ServerCore {
 	 * ({@link #getServerConfigurationTypes()}) for the one a matching
 	 * server id ({@link IServerConfigurationType#getId()}). The id may not
 	 * be null.
-	 * <p>
-	 * [issue: Consider renaming this method findServerConfigurationType
-	 * to make it clear that it is searching.]
-	 * </p>
 	 *
 	 * @param the server configuration type id
 	 * @return the server configuration type, or <code>null</code> if
 	 * there is no server configuration type with the given id
 	 */
-	public static IServerConfigurationType getServerConfigurationType(String id) {
+	public static IServerConfigurationType findServerConfigurationType(String id) {
 		if (id == null)
 			throw new IllegalArgumentException();
 
@@ -329,11 +317,6 @@ public class ServerCore {
 	 * <p>
 	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
-	 * <p>
-	 * [issue: Are module factories SPI-side objects or do
-	 * normal clients need access to them? If they are only SPI,
-	 * this method should be moved to the SPI package.]
-	 * </p>
 	 * 
 	 * @return the array of module factories {@link IModuleFactory}
 	 */
@@ -351,21 +334,12 @@ public class ServerCore {
 	 * if none. This convenience method searches the list of known
 	 * module factories ({@link #getModuleFactories()}) for the one a matching
 	 * module factory id ({@link IModuleFactory#getId()}). The id may not be null.
-	 * <p>
-	 * [issue: Consider renaming this method findModuleFactory
-	 * to make it clear that it is searching.]
-	 * </p>
-	 * <p>
-	 * [issue: Are module factories SPI-side objects or do
-	 * normal clients need access to them? If they are only SPI,
-	 * this method should be moved to the SPI package.]
-	 * </p>
 	 *
 	 * @param the module factory id
 	 * @return the module factory, or <code>null</code> if there is no module factory
 	 * with the given id
 	 */
-	/*public static IModuleFactory getModuleFactory(String id) {
+	/*public static IModuleFactory findModuleFactory(String id) {
 		if (id == null)
 			throw new IllegalArgumentException();
 
@@ -494,7 +468,7 @@ public class ServerCore {
 				Trace.trace(Trace.SEVERE, "  Could not load runtimeType: " + cf[i].getAttribute("id"), t);
 			}
 		}
-		ServerUtil.sortOrderedList(runtimeTypes);
+		sortOrderedList(runtimeTypes);
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .runtimeTypes extension point -<-");
 	}
@@ -545,7 +519,7 @@ public class ServerCore {
 				Trace.trace(Trace.SEVERE, "  Could not load runtimeTargetHandler: " + cf[i].getAttribute("id"), t);
 			}
 		}
-		ServerUtil.sortOrderedList(runtimeTargetHandlers);
+		sortOrderedList(runtimeTargetHandlers);
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .runtimeTargetHandlers extension point -<-");
 	}
@@ -571,7 +545,7 @@ public class ServerCore {
 				Trace.trace(Trace.SEVERE, "  Could not load serverType: " + cf[i].getAttribute("id"), t);
 			}
 		}
-		ServerUtil.sortOrderedList(serverTypes);
+		sortOrderedList(serverTypes);
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .serverTypes extension point -<-");
 	}
@@ -597,7 +571,7 @@ public class ServerCore {
 				Trace.trace(Trace.SEVERE, "  Could not load serverConfigurationType: " + cf[i].getAttribute("id"), t);
 			}
 		}
-		ServerUtil.sortOrderedList(serverConfigurationTypes);
+		sortOrderedList(serverConfigurationTypes);
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .serverConfigurationTypes extension point -<-");
 	}
@@ -622,7 +596,8 @@ public class ServerCore {
 				Trace.trace(Trace.SEVERE, "  Could not load moduleFactories: " + cf[i].getAttribute("id"), t);
 			}
 		}
-		ServerUtil.sortOrderedList(moduleFactories);
+		sortOrderedList(moduleFactories);
+		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleFactories extension point -<-");
 	}
 
@@ -716,7 +691,8 @@ public class ServerCore {
 			}
 		}
 		
-		ServerUtil.sortOrderedList(serverTasks);
+		sortOrderedList(serverTasks);
+		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .serverTasks extension point -<-");
 	}
 
@@ -749,16 +725,12 @@ public class ServerCore {
 	 * if none. This convenience method searches the list of known
 	 * runtimes ({@link #getRuntimes()}) for the one with a matching
 	 * runtime id ({@link IRuntime#getId()}). The id may not be null.
-	 * <p>
-	 * [issue: Consider renaming this method findRuntime to make
-	 * it clear that it is searching.]
-	 * </p>
 	 *
 	 * @param the runtime id
 	 * @return the runtime instance, or <code>null</code> if there is no runtime
 	 * with the given id
 	 */
-	public static IRuntime getRuntime(String id) {
+	public static IRuntime findRuntime(String id) {
 		return getResourceManager().getRuntime(id);
 	}
 
@@ -780,16 +752,12 @@ public class ServerCore {
 	 * if none. This convenience method searches the list of known
 	 * servers ({@link #getServers()}) for the one with a matching
 	 * server id ({@link IServer#getId()}). The id must not be null.
-	 * <p>
-	 * [issue: Consider renaming this method findServer to make
-	 * it clear that it is searching.]
-	 * </p>
 	 *
 	 * @param the server id
 	 * @return the server instance, or <code>null</code> if there is no server
 	 * with the given id
 	 */
-	public static IServer getServer(String id) {
+	public static IServer findServer(String id) {
 		return getResourceManager().getServer(id);
 	}
 
@@ -799,16 +767,12 @@ public class ServerCore {
 	 * server configurations ({@link #getServerConfigurations()}) for the one
 	 * with a matching server configuration id
 	 * ({@link IServerConfiguration#getId()}). The id must not be null.
-	 * <p>
-	 * [issue: Consider renaming this method findServerConfiguration to make
-	 * it clear that it is searching.]
-	 * </p>
 	 *
 	 * @param the server configuration id
 	 * @return the server configuration instance, or <code>null</code> if
 	 * there is no server configuration with the given id
 	 */
-	public static IServerConfiguration getServerConfiguration(String id) {
+	public static IServerConfiguration findServerConfiguration(String id) {
 		return getResourceManager().getServerConfiguration(id);
 	}
 
@@ -942,5 +906,31 @@ public class ServerCore {
 	 */
 	public static void removeModuleEventsListener(IModuleEventsListener listener) {
 		getResourceManager().removeModuleEventsListener(listener);
+	}
+
+	/**
+	 * Sort the given list of IOrdered items into indexed order. This method
+	 * modifies the original list, but returns the value for convenience.
+	 *
+	 * @param list java.util.List
+	 * @return java.util.List
+	 */
+	private static List sortOrderedList(List list) {
+		if (list == null)
+			return null;
+
+		int size = list.size();
+		for (int i = 0; i < size - 1; i++) {
+			for (int j = i + 1; j < size; j++) {
+				IOrdered a = (IOrdered) list.get(i);
+				IOrdered b = (IOrdered) list.get(j);
+				if (a.getOrder() > b.getOrder()) {
+					Object temp = a;
+					list.set(i, b);
+					list.set(j, temp);
+				}
+			}
+		}
+		return list;
 	}
 }

@@ -229,7 +229,7 @@ public class ServerConfiguration extends Base implements IServerConfiguration {
 	
 	protected void loadState(IMemento memento) {
 		String serverTypeId = memento.getString("server-configuration-type-id");
-		configurationType = ServerCore.getServerConfigurationType(serverTypeId);
+		configurationType = ServerCore.findServerConfigurationType(serverTypeId);
 	}
 	
 	protected void saveState(IMemento memento) {

@@ -28,14 +28,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * This interface is not intended to be implemented by clients.
  * </p>
  * <p>
- * [issue: It is notoriously difficult to place any kind of
- * useful order on objects that are contributed independently by
- * non-collaborating parties. The IOrdered mechanism is weak, and
- * can't really solve the problem. Issues of presentation are usually
- * best left to the UI, which can sort objects based on arbitrary
- * properties.]
- * </p>
- * <p>
  * [issue: Equality/identify for server types? Are IServerType
  * instances guaranteed to be canonical (client can use ==),
  * or is it possible for there to be non-identical IServerType
@@ -49,7 +41,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * 
  * @since 1.0
  */
-public interface IServerType extends IOrdered {
+public interface IServerType {
 	/**
 	 * Constant (value 0) indicating that a type of server that can be
 	 * directly started and stopped.
@@ -275,55 +267,6 @@ public interface IServerType extends IOrdered {
 	public boolean supportsRemoteHosts();
 
 	/**
-	 * Returns whether this type of server can be monitored.
-	 * <p>
-	 * For instances of server types that can be monitored, 
-	 * the corresponding server delegate implements
-	 * {@link org.eclipse.wst.server.core.model.IMonitorableServer}.
-	 * </p>
-	 * <p>
-	 * [issue: Again, it seems odd to me that this is something
-	 * hard-wired to a server type. Without loss of generality,
-	 * the notion of "monitorable" need only show up at the
-	 * server instance level. All that would be required
-	 * would be to have the server delegate implement
-	 * IMonitorableServer.]
-	 * </p>
-	 * <p>
-	 * [issue: It's not clear how much of this is a client concern.
-	 * If it is a client concern, care should be taken to do
-	 * it in such a way that the server delegate does not need to be
-	 * exposed to ordinary clients.]
-	 * </p>
-	 * 
-	 * @return <code>true</code> if this type of server can be monitored,
-	 * and <code>false</code> if it cannot
-	 */
-	public boolean isMonitorable();
-
-	/**
-	 * Returns whether this type of server can be used as a
-	 * test environment.
-	 * <p>
-	 * [issue: How does one explain what a "test environment" is?
-	 * How does this property of server types square with 
-	 * IRuntime.isTestEnvironment(), an *instance-specific*
-	 * property of a server runtime (it's not on IRuntimeType)?]
-	 * </p>
-	 * <p>
-	 * [issue: The old spec read:
-	 * "Returns true if the "testEnvironment" attribute is set. If true, this
-	 * server can only be created when there is an existing runtime that has
-	 * the property "testEnvironment" set to true."
-	 * ]
-	 * </p>
-	 * 
-	 * @return <code>true</code> if this type of server can be use as a
-	 * test environment, and <code>false</code> if it cannot
-	 */
-	public boolean isTestEnvironment();
-
-	/**
 	 * Creates an working copy instance of this server type.
 	 * After setting various properties of the working copy,
 	 * the client should call {@link IServerWorkingCopy#save(IProgressMonitor)}
@@ -337,6 +280,10 @@ public interface IServerType extends IOrdered {
 	 * [issue: The implementation of this method never creates a server
 	 * config working copy, whereas the other one does!?]
 	 * Consider combining the method with the other.]
+	 * </p>
+	 * <p>
+	 * The server returned from this method will have it's
+	 * host set to "localhost".
 	 * </p>
 	 * <p>
 	 * [issue: This method is declared as throwing CoreException.
@@ -368,6 +315,10 @@ public interface IServerType extends IOrdered {
 	 * of a progress monitor.]
 	 * </p>
 	 * <p>
+	 * The server returned from this method will have it's
+	 * host set to "localhost".
+	 * </p>
+	 * <p>
 	 * [issue: The implementation of this method creates a server
 	 * config working copy, whereas the other one does not!?
 	 * Consider combining the method with the other.]
@@ -379,7 +330,7 @@ public interface IServerType extends IOrdered {
 	 * </p>
 	 * 
 	 * @param id the id to assign to the server instance; a generated
-	 * id is used if id is <code>null</code> or an empty string
+	 *    id is used if id is <code>null</code> or an empty string
 	 * @param file the file in the workspace where the server instance
 	 * is to be serialized, or <code>null</code> if the information is
 	 * instead to be persisted with the workspace but not with any
@@ -390,20 +341,20 @@ public interface IServerType extends IOrdered {
 	 * @throws CoreException [missing]
 	 */
 	public IServerWorkingCopy createServer(String id, IFile file, IProgressMonitor monitor) throws CoreException;
-	
+
 	/**
 	 * Return the timeout (in ms) that should be used to wait for the server to start.
 	 * Returns -1 if there is no timeout.
 	 * 
-	 * @return
+	 * @return the server startup timeout
 	 */
 	public int getStartTimeout();
 
 	/**
 	 * Return the timeout (in ms) to wait before assuming that the server
 	 * has failed to stop. Returns -1 if there is no timeout.
-	 *  
-	 * @return
+	 * 
+	 * @return the server shutdown timeout
 	 */
 	public int getStopTimeout();
 }

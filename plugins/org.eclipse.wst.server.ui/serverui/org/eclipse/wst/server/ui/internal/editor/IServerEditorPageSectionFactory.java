@@ -8,25 +8,19 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.server.ui.editor;
+package org.eclipse.wst.server.ui.internal.editor;
 
-import org.eclipse.ui.IEditorPart;
-
-import org.eclipse.wst.server.core.IOrdered;
-import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.ui.editor.IOrdered;
+import org.eclipse.wst.server.ui.editor.IServerEditorSection;
 /**
  *
  */
-public interface IServerEditorPartFactory extends IOrdered {
+public interface IServerEditorPageSectionFactory extends IOrdered {
 	/**
 	 * 
 	 */
 	public String getId();
-	
-	/**
-	 * 
-	 */
-	public String getName();
 
 	/**
 	 * Returns true if the given server resource type (given by the
@@ -37,17 +31,17 @@ public interface IServerEditorPartFactory extends IOrdered {
 	 */
 	public boolean supportsType(String id);
 	
-	public boolean supportsInsertionId(String id);
+	public String getInsertionId();
 	
 	/**
-	 * Returns true if this editor page should be visible with the given server.
+	 * Returns true if this editor page section should be visible with the given server.
 	 * This allows (for instance) complex configuration pages to only be shown when used
 	 * with non-unittest servers.
 	 */
-	public boolean shouldCreatePage(IServer server);
+	public boolean shouldCreateSection(IServerWorkingCopy server);
 
 	/**
-	 * Create the editor page.
+	 * Create the editor page section.
 	 */
-	public IEditorPart createPage();
+	public IServerEditorSection createSection();
 }

@@ -10,7 +10,7 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.ui.internal.editor;
 
-import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.editor.*;
 /**
  *
@@ -19,7 +19,7 @@ public class ServerGeneralEditorSectionFactory extends ServerEditorPageSectionFa
 	/*
 	 * @see ServerEditorPartFactoryDelegate#shouldDisplay(IServer)
 	 */
-	public boolean shouldCreateSection(IServer server) {
+	public boolean shouldCreateSection(IServerWorkingCopy server) {
 		return (server != null && server.getServerType().getId().indexOf("tomcat") >= 0);
 	}
 

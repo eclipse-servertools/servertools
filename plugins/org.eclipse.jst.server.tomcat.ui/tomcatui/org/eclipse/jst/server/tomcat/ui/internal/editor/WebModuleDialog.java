@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
 
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerAttributes;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.ui.ServerUICore;
 /**
@@ -50,7 +50,7 @@ public class WebModuleDialog extends Dialog {
 	protected boolean isEdit;
 	protected boolean isProject;
 	protected Text docBase;
-	protected IServer server2;
+	protected IServerAttributes server2;
 	protected ITomcatServer server;
 	protected ITomcatConfiguration config;
 
@@ -60,7 +60,7 @@ public class WebModuleDialog extends Dialog {
 	 * WebModuleDialog constructor comment.
 	 * @param parentShell org.eclipse.swt.widgets.Shell
 	 */
-	protected WebModuleDialog(Shell parentShell, IServer server2, ITomcatServer server, ITomcatConfiguration config, WebModule module) {
+	protected WebModuleDialog(Shell parentShell, IServerAttributes server2, ITomcatServer server, ITomcatConfiguration config, WebModule module) {
 		super(parentShell);
 		this.module = module;
 		this.server2 = server2;
@@ -73,7 +73,7 @@ public class WebModuleDialog extends Dialog {
 	 * WebModuleDialog constructor comment.
 	 * @param parentShell org.eclipse.swt.widgets.Shell
 	 */
-	protected WebModuleDialog(Shell parentShell, IServer server2, ITomcatServer server, ITomcatConfiguration config, boolean isProject) {
+	protected WebModuleDialog(Shell parentShell, IServerAttributes server2, ITomcatServer server, ITomcatConfiguration config, boolean isProject) {
 		this(parentShell, server2, server, config, new WebModule("/", "", null, true));
 		isEdit = false;
 		this.isProject = isProject;

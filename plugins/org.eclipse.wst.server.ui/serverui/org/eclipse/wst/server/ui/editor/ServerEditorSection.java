@@ -22,7 +22,7 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
 /**
  * 
  */
-public abstract class ServerResourceEditorSection implements IServerEditorSection {
+public abstract class ServerEditorSection implements IServerEditorSection {
 	private String errorMessage = null;
 
 	public IServerWorkingCopy server;
@@ -30,7 +30,7 @@ public abstract class ServerResourceEditorSection implements IServerEditorSectio
 	public ICommandManager commandManager;
 	protected boolean readOnly;
 	protected Composite parentComp;
-	protected ServerResourceEditorPart editor;
+	protected ServerEditorPart editor;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.ui.editor.IServerEditorSection#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
@@ -73,7 +73,7 @@ public abstract class ServerResourceEditorSection implements IServerEditorSectio
 		return null;
 	}
 
-	public void setServerResourceEditorPart(ServerResourceEditorPart editor) {
+	public void setServerResourceEditorPart(ServerEditorPart editor) {
 		this.editor = editor;
 	}
 

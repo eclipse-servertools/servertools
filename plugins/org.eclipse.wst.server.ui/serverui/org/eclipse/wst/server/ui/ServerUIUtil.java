@@ -218,7 +218,7 @@ public class ServerUIUtil {
 	 * @return
 	 */
 	public static boolean showNewRuntimeWizard(Shell shell, final String runtimeTypeId) {
-		IRuntimeType runtimeType = ServerCore.getRuntimeType(runtimeTypeId);
+		IRuntimeType runtimeType = ServerCore.findRuntimeType(runtimeTypeId);
 		if (runtimeType != null) {
 			try {
 				final IRuntimeWorkingCopy runtime = runtimeType.createRuntime(null, null);

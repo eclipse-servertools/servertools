@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,13 +18,12 @@ import org.eclipse.core.runtime.IConfigurationElement;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
-import org.eclipse.wst.server.core.IOrdered;
 import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
 import org.eclipse.wst.server.core.model.IModuleFactoryListener;
 /**
  * 
  */
-public class ModuleFactory implements IOrdered {
+public class ModuleFactory {
 	private IConfigurationElement element;
 	private ModuleFactoryDelegate delegate;
 	private List moduleTypes;

@@ -77,10 +77,10 @@ public class Module implements IModule {
 		return name;
 	}
 
-	public ModuleDelegate getDelegate(IProgressMonitor monitor) {
+	protected ModuleDelegate getDelegate() {
 		if (delegate == null) {
 			try {
-				delegate = null; // TODO
+				delegate = factory.getDelegate().getModuleDelegate(this);
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString() + ": " + e.getMessage());
 			}
@@ -95,7 +95,7 @@ public class Module implements IModule {
 	 */
 	public IModule[] getChildModules(IProgressMonitor monitor) {
 		try {
-			return getDelegate(monitor).getChildModules();
+			return getDelegate().getChildModules();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate getChildModules() " + toString(), e);
 			return null;
@@ -109,7 +109,7 @@ public class Module implements IModule {
 	 */
 	public IStatus validate(IProgressMonitor monitor) {
 		try {
-			return getDelegate(monitor).validate();
+			return getDelegate().validate();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate validate() " + toString(), e);
 			return null;
@@ -173,7 +173,7 @@ public class Module implements IModule {
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
 	public Object getAdapter(Class adapter) {
-		ModuleDelegate delegate2 = getDelegate(null);
+		ModuleDelegate delegate2 = getDelegate();
 		if (adapter.isInstance(delegate2))
 			return delegate;
 		return null;

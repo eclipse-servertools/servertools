@@ -14,14 +14,13 @@
   </runtime>
 
   <requires>
-     <import plugin="org.eclipse.core.runtime" />
-     <import plugin="org.eclipse.core.resources" />
-     <import plugin="org.eclipse.debug.core" />
-     <import plugin="org.eclipse.jdt.core" />
-     <import plugin="org.eclipse.jdt.debug" />
-     <import plugin="org.eclipse.jdt.launching" />
-     <import plugin="org.eclipse.wst.server.core" />
-     <import plugin="org.eclipse.jst.server.core" />
+     <import plugin="org.eclipse.core.runtime"/>
+     <import plugin="org.eclipse.core.resources"/>
+     <import plugin="org.eclipse.debug.core"/>
+     <import plugin="org.eclipse.jdt.core"/>
+     <import plugin="org.eclipse.jdt.launching"/>
+     <import plugin="org.eclipse.wst.server.core"/>
+     <import plugin="org.eclipse.jst.server.core"/>
   </requires>
 
   <extension point="org.eclipse.wst.server.core.runtimeTypes">
@@ -118,13 +117,12 @@
        order="50"
        startTimeout="45000"
        stopTimeout="15000"
-       monitorable="true"
        initialState="stopped"
        configurationTypeId="org.eclipse.jst.server.tomcat.32"
        launchConfigId="org.eclipse.jst.server.tomcat.core.launchConfigurationType"
-       runtimeTypeId="org.eclipse.jst.server.tomcat.32.runtime"
+       runtimeTypeId="org.eclipse.jst.server.tomcat.runtime.32"
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatServer"
-       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatServerWorkingCopy">
+       behaviourClass="org.eclipse.jst.server.tomcat.core.internal.TomcatServerBehaviour">
      </serverType>
      <serverType
        id="org.eclipse.jst.server.tomcat.40"
@@ -135,13 +133,12 @@
        order="52"
        startTimeout="45000"
        stopTimeout="15000"
-       monitorable="true"
        initialState="stopped"
        configurationTypeId="org.eclipse.jst.server.tomcat.40"
        launchConfigId="org.eclipse.jst.server.tomcat.core.launchConfigurationType"
-       runtimeTypeId="org.eclipse.jst.server.tomcat.40.runtime"
+       runtimeTypeId="org.eclipse.jst.server.tomcat.runtime.40"
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatServer"
-       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatServerWorkingCopy">
+       behaviourClass="org.eclipse.jst.server.tomcat.core.internal.TomcatServerBehaviour">
      </serverType>
      <serverType
        id="org.eclipse.jst.server.tomcat.41"
@@ -152,13 +149,12 @@
        order="54"
        startTimeout="45000"
        stopTimeout="15000"
-       monitorable="true"
        initialState="stopped"
        configurationTypeId="org.eclipse.jst.server.tomcat.41"
        launchConfigId="org.eclipse.jst.server.tomcat.core.launchConfigurationType"
-       runtimeTypeId="org.eclipse.jst.server.tomcat.41.runtime"
+       runtimeTypeId="org.eclipse.jst.server.tomcat.runtime.41"
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatServer"
-       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatServerWorkingCopy">
+       behaviourClass="org.eclipse.jst.server.tomcat.core.internal.TomcatServerBehaviour">
      </serverType>
      <serverType
        id="org.eclipse.jst.server.tomcat.50"
@@ -169,13 +165,12 @@
        order="56"
        startTimeout="45000"
        stopTimeout="15000"
-       monitorable="true"
        initialState="stopped"
        configurationTypeId="org.eclipse.jst.server.tomcat.50"
        launchConfigId="org.eclipse.jst.server.tomcat.core.launchConfigurationType"
-       runtimeTypeId="org.eclipse.jst.server.tomcat.50.runtime"
+       runtimeTypeId="org.eclipse.jst.server.tomcat.runtime.50"
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatServer"
-       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatServerWorkingCopy">
+       behaviourClass="org.eclipse.jst.server.tomcat.core.internal.TomcatServerBehaviour">
      </serverType>
      <serverType
        id="org.eclipse.jst.server.tomcat.55"
@@ -186,13 +181,12 @@
        order="58"
        startTimeout="45000"
        stopTimeout="15000"
-       monitorable="true"
        initialState="stopped"
        configurationTypeId="org.eclipse.jst.server.tomcat.55"
        launchConfigId="org.eclipse.jst.server.tomcat.core.launchConfigurationType"
-       runtimeTypeId="org.eclipse.jst.server.tomcat.55.runtime"
+       runtimeTypeId="org.eclipse.jst.server.tomcat.runtime.55"
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatServer"
-       workingCopyClass="org.eclipse.jst.server.tomcat.core.internal.TomcatServerWorkingCopy">
+       behaviourClass="org.eclipse.jst.server.tomcat.core.internal.TomcatServerBehaviour">
      </serverType>
    </extension>
 

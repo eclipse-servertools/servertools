@@ -26,7 +26,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	protected static ServerMonitorManager instance;
 
 	protected List ports = new ArrayList(); 
-	protected IServerMonitor monitor;
+	protected ServerMonitor monitor;
 	
 	class MonitoredPort implements IMonitoredServerPort {
 		protected IServer server;
@@ -124,7 +124,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 		
 		protected void load(IMemento memento, IProgressMonitor monitor2) {
 			String serverId = memento.getString("serverId");
-			server = ServerCore.getServer(serverId);
+			server = ServerCore.findServer(serverId);
 			if (server == null)
 				throw new RuntimeException("Server could not be found: " + serverId + " " + server);
 			String newPortStr = memento.getString("port");
@@ -163,7 +163,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	public ServerMonitorManager() {
 		IServerMonitor[] monitors = ServerCore.getServerMonitors();
 		if (monitors != null && monitors.length > 0)
-			monitor = monitors[0];
+			monitor = (ServerMonitor) monitors[0];
 		
 		instance = this;
 		loadMonitors();

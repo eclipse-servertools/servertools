@@ -8,11 +8,11 @@
   class="org.eclipse.jst.server.core.internal.JavaServerPlugin">
 
   <requires>
-    <import plugin="org.eclipse.core.resources" />
-    <import plugin="org.eclipse.debug.core" />
-    <import plugin="org.eclipse.wst.server.core" />
-    <import plugin="org.eclipse.jdt.core" />
-    <import plugin="org.eclipse.jdt.launching" />
+    <import plugin="org.eclipse.core.resources"/>
+    <import plugin="org.eclipse.debug.core"/>
+    <import plugin="org.eclipse.wst.server.core"/>
+    <import plugin="org.eclipse.jdt.core"/>
+    <import plugin="org.eclipse.jdt.launching"/>
     <import plugin="org.eclipse.core.runtime"/>
   </requires>
 

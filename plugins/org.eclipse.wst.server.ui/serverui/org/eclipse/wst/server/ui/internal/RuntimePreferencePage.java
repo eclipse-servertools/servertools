@@ -178,7 +178,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					final List list = new ArrayList();
 					
 					final IRuntimeLocator.Listener listener = new IRuntimeLocator.Listener() {
-						public void runtimeFound(final IRuntime runtime) {
+						public void runtimeFound(final IRuntimeWorkingCopy runtime) {
 							dialog.getShell().getDisplay().syncExec(new Runnable() {
 								public void run() {
 									monitor.subTask(runtime.getName());

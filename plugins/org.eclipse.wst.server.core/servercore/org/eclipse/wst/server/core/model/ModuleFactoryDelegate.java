@@ -27,16 +27,6 @@ import org.eclipse.wst.server.core.util.ModuleFactoryEvent;
  * constructor.
  * </p>
  * <p>
- * [issue: 2 differences from server delegate.
- * (1) module factory delegate is associated with the module factory
- * itself (server delegates are associated with each server instance
- * (2) the module factory delegate has no backpoint to its IModuleFactory.
- * The first is ok; the second is problematic because there is
- * protocol on IModuleFactory that the delegate might need, such
- * as the module factory id. Should add an initialize(IModuleFactory)
- * method and spec that initialize is called at creation time.]
- * </p>
- * <p>
  * Module factory delegates may keep state in instance fields, but that state is
  * transient and will not be persisted across workbench sessions.
  * </p>
@@ -56,6 +46,16 @@ public abstract class ModuleFactoryDelegate {
 
 	private ModuleFactory factory;
 
+	/**
+	 * Initializes this module factory delegate with its life-long module
+	 * factory instance.
+	 * <p>
+	 * This method is called by the server core framework.
+	 * Clients should never call this method.
+	 * </p>
+	 * 
+	 * @param newFactory the module factory instance
+	 */
 	public final void initialize(ModuleFactory newFactory) {
 		factory = newFactory;
 	}
@@ -64,7 +64,7 @@ public abstract class ModuleFactoryDelegate {
 		return factory.getId();
 	}
 	
-	protected IModule createModule(String type) {
+	public IModule createModule(String type) {
 		return null;
 	}
 

@@ -22,7 +22,7 @@ import org.eclipse.wst.server.core.*;
 /**
  * 
  */
-public class ServerType implements IServerType {
+public class ServerType implements IServerType, IOrdered {
 	protected IConfigurationElement element;
 
 	/**
@@ -55,7 +55,7 @@ public class ServerType implements IServerType {
 	}
 	
 	public IRuntimeType getRuntimeType() {
-		return ServerCore.getRuntimeType(element.getAttribute("runtimeTypeId"));
+		return ServerCore.findRuntimeType(element.getAttribute("runtimeTypeId"));
 	}
 	
 	public boolean hasRuntime() {
@@ -106,7 +106,7 @@ public class ServerType implements IServerType {
 
 	public IServerConfigurationType getServerConfigurationType() {
 		String configurationTypeId = element.getAttribute("configurationTypeId");
-		return ServerCore.getServerConfigurationType(configurationTypeId);
+		return ServerCore.findServerConfigurationType(configurationTypeId);
 	}
 	
 	public boolean supportsRemoteHosts() {
@@ -140,14 +140,6 @@ public class ServerType implements IServerType {
 	public boolean hasServerConfiguration() {
 		String configurationTypeId = element.getAttribute("configurationTypeId");
 		return configurationTypeId != null && configurationTypeId.length() > 0;
-	}
-	
-	public boolean isMonitorable() {
-		return "true".equalsIgnoreCase(element.getAttribute("monitorable"));
-	}
-	
-	public boolean isTestEnvironment() {
-		return "true".equalsIgnoreCase(element.getAttribute("testEnvironment"));
 	}
 	
 	public IServerWorkingCopy createServer(String id, IFile file, IRuntime runtime, IProgressMonitor monitor) {

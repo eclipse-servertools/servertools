@@ -241,8 +241,8 @@ public class ServerEditor extends MultiPageEditorPart {
 					Trace.trace(Trace.FINEST, "Adding page: " + factory.getId() + " " + editorPartInput);
 					try {
 						IEditorPart page = factory.createPage();
-						if (page instanceof ServerResourceEditorPart) {
-							ServerResourceEditorPart srep = (ServerResourceEditorPart) page;
+						if (page instanceof ServerEditorPart) {
+							ServerEditorPart srep = (ServerEditorPart) page;
 							srep.setPageFactory(factory);
 						}
 						index = addPage(page, editorPartInput);
@@ -316,8 +316,8 @@ public class ServerEditor extends MultiPageEditorPart {
 		int count = 0;
 		while (iterator.hasNext()) {
 			IEditorPart part = (IEditorPart) iterator.next();
-			if (part instanceof ServerResourceEditorPart) {
-				IStatus[] status2 = ((ServerResourceEditorPart) part).getSaveStatus();
+			if (part instanceof ServerEditorPart) {
+				IStatus[] status2 = ((ServerEditorPart) part).getSaveStatus();
 				if (status2 != null) {
 					int size = status2.length;
 					for (int i = 0; i < size; i++)
@@ -403,7 +403,7 @@ public class ServerEditor extends MultiPageEditorPart {
 	 * @param i int
 	 */
 	protected void firePropertyChange(int i) {
-		if (i == ServerResourceEditorPart.PROP_ERROR)
+		if (i == ServerEditorPart.PROP_ERROR)
 			updateStatusError();
 		super.firePropertyChange(i);
 	}
@@ -525,15 +525,15 @@ public class ServerEditor extends MultiPageEditorPart {
 
 		String error = null;
 		IEditorPart part = getActiveEditor();
-		if (part instanceof ServerResourceEditorPart)
-			error = ((ServerResourceEditorPart) part).getErrorMessage();
+		if (part instanceof ServerEditorPart)
+			error = ((ServerEditorPart) part).getErrorMessage();
 		
 		Iterator iterator = serverPages.iterator();
 		int count = 0;
 		while (error == null && iterator.hasNext()) {
 			part = (IEditorPart) iterator.next();
-			if (part instanceof ServerResourceEditorPart) {
-				error = ((ServerResourceEditorPart) part).getErrorMessage();
+			if (part instanceof ServerEditorPart) {
+				error = ((ServerEditorPart) part).getErrorMessage();
 				if (error != null)
 					error = "[" + getPageText(count) + "] " + error;
 			}
@@ -909,7 +909,7 @@ public class ServerEditor extends MultiPageEditorPart {
 	/**
 	 * 
 	 */
-	protected void promptReloadServerFile(String id, IServer serverFile2) {
+	protected void promptReloadServerFile(String id, IServerWorkingCopy serverFile2) {
 		String title = ServerUIPlugin.getResource("%editorResourceModifiedTitle");
 		String message = ServerUIPlugin.getResource("%editorServerModifiedMessage");
 

@@ -12,7 +12,6 @@ package org.eclipse.wst.server.core.internal.operations;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * A server state.
  */

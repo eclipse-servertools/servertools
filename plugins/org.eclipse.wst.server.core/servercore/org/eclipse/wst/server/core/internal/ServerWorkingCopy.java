@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.*;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.*;
+import org.eclipse.wst.server.core.model.ServerDelegate;
 /**
  * 
  */
@@ -26,7 +26,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	protected Server server;
 	protected WorkingCopyHelper wch;
 	
-	protected ServerWorkingCopyDelegate workingCopyDelegate;
+	protected ServerDelegate workingCopyDelegate;
 	
 	// working copy
 	public ServerWorkingCopy(Server server) {
@@ -130,7 +130,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		return wch.isDirty();
 	}
 	
-	public ServerWorkingCopyDelegate getWorkingCopyDelegate(IProgressMonitor monitor) {
+	public ServerDelegate getWorkingCopyDelegate(IProgressMonitor monitor) {
 		// make sure that the regular delegate is loaded 
 		//getDelegate();
 		
@@ -143,7 +143,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 					try {
 						long time = System.currentTimeMillis();
 						IConfigurationElement element = ((ServerType) serverType).getElement();
-						workingCopyDelegate = (ServerWorkingCopyDelegate) element.createExecutableExtension("workingCopyClass");
+						workingCopyDelegate = (ServerDelegate) element.createExecutableExtension("class");
 						workingCopyDelegate.initialize(this);
 						Trace.trace(Trace.PERFORMANCE, "ServerWorkingCopy.getWorkingCopyDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
 					} catch (Exception e) {
@@ -178,7 +178,6 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		server.setInternal(this);
 		server.doSave(monitor);
 		wch.setDirty(false);
-		getWorkingCopyDelegate(monitor).handleSave(monitor);
 		
 		return server;
 	}

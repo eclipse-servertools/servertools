@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,13 +17,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.wst.server.core.IElement;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
-import org.eclipse.wst.server.core.IServerConfigurationLifecycleListener;
-import org.eclipse.wst.server.core.IServerListener;
-import org.eclipse.wst.server.core.IServerLifecycleListener;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.IModuleEvent;
 import org.eclipse.wst.server.core.model.IModuleEventsListener;
 import org.eclipse.wst.server.core.model.IModuleFactoryEvent;
@@ -283,9 +277,9 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 	/**
 	 * Handles the add of a new server resource.
 	 *
-	 * @param element org.eclipse.wst.server.core.model.IServerResource
+	 * @param element
 	 */
-	protected void handleServerResourceAdded(IElement element) {
+	protected void handleServerResourceAdded(Object element) {
 		//Trace.trace("add: " + element);
 		if (viewer == null)
 			return;
@@ -324,9 +318,9 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 	/**
 	 * Updates an element in the tree.
 	 *
-	 * @param element org.eclipse.wst.server.core.model.IServerResource
+	 * @param element
 	 */
-	protected void handleServerResourceChanged(IElement element) {
+	protected void handleServerResourceChanged(Object element) {
 		//Trace.trace("change: " + element);
 		if (viewer == null)
 			return;
@@ -366,9 +360,9 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 	/**
 	 * Handles the removal of a server resource.
 	 *
-	 * @param element org.eclipse.wst.server.core.model.IServerResource
+	 * @param element
 	 */
-	protected void handleServerResourceRemoved(IElement element) {
+	protected void handleServerResourceRemoved(Object element) {
 		//Trace.trace("remove: " + element);
 		if (viewer == null)
 			return;

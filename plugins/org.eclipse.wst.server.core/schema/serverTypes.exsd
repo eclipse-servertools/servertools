@@ -50,13 +50,6 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="runtimeTypeId" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
@@ -79,7 +72,7 @@ Server instances of this type will delegate to instances of this class.
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="workingCopyClass" type="string">
+         <attribute name="behaviourClass" type="string">
             <annotation>
                <documentation>
                   specifies the fully qualified name of the Java class that implements &lt;samp&gt;IServerWorkingCopyDelegate&lt;/samp&gt;.
@@ -91,6 +84,13 @@ Server instances of this type will delegate to instances of this class.
             <annotation>
                <documentation>
                   the id of the server configuration type that this server requires
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="runtimeTypeId" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
                </documentation>
             </annotation>
          </attribute>
@@ -129,24 +129,10 @@ Server instances of this type will delegate to instances of this class.
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="monitorable" type="boolean">
-            <annotation>
-               <documentation>
-                  &quot;true&quot; if the class implements IMonitorableServer, and &quot;false&quot; otherwise
-               </documentation>
-            </annotation>
-         </attribute>
          <attribute name="launchModes" type="string">
             <annotation>
                <documentation>
                   the launch modes that this server supports
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="testEnvironment" type="string">
-            <annotation>
-               <documentation>
-                  &quot;true&quot; if this server should not be creatable unless there is an existing runtime with the test environment flag set to true, &quot;false&quot; otherwise
                </documentation>
             </annotation>
          </attribute>
@@ -216,7 +202,7 @@ Server instances of this type will delegate to instances of this class.
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.server.core.model.ServerDelegate&lt;/b&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends the abstract class &lt;b&gt;org.eclipse.wst.server.core.model.ServerDelegate&lt;/b&gt; and has a public 0-arg constructor.
       </documentation>
    </annotation>
 

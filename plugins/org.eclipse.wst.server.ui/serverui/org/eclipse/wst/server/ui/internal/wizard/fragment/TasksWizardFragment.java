@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -24,10 +24,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.util.Task;
+import org.eclipse.wst.server.ui.editor.IOrdered;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.ProgressUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.wst.server.ui.internal.editor.ServerEditorCore;
 import org.eclipse.wst.server.ui.internal.wizard.page.TasksComposite;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
@@ -274,7 +276,7 @@ public class TasksWizardFragment extends WizardFragment {
 		// begin task
 		monitor.beginTask(ServerUIPlugin.getResource("%performingTasks"), performTasks.size() * 1000);
 		
-		ServerUtil.sortOrderedList(performTasks);
+		ServerEditorCore.sortOrderedList(performTasks);
 
 		Iterator iterator = performTasks.iterator();
 		while (iterator.hasNext()) {

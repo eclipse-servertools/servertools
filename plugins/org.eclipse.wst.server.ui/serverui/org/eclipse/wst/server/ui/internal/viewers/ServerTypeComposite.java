@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -32,7 +32,6 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 	
 	protected IModuleType moduleType;
 	
-	protected boolean includeTestEnvironments = true;
 	protected boolean isLocalhost;
 	protected boolean includeIncompatibleVersions;
 	
@@ -106,15 +105,6 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 		//treeViewer.expandToLevel(2);
 		treeViewer.setSelection(sel, true);
 	}
-
-	public void setIncludeTestEnvironments(boolean b) {
-		includeTestEnvironments = b;
-		ISelection sel = treeViewer.getSelection();
-		contentProvider.setIncludeTestEnvironments(b);
-		treeViewer.refresh();
-		treeViewer.setSelection(sel, true);
-		//treeViewer.expandToLevel(2);
-	}
 	
 	public void setIncludeIncompatibleVersions(boolean b) {
 		includeIncompatibleVersions = b;
@@ -142,7 +132,6 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 		ISelection sel = treeViewer.getSelection();
 		contentProvider = new ServerTypeTreeContentProvider(option, moduleType);
 		contentProvider.setLocalhost(isLocalhost);
-		contentProvider.setIncludeTestEnvironments(includeTestEnvironments);
 		contentProvider.setIncludeIncompatibleVersions(includeIncompatibleVersions);
 		treeViewer.setContentProvider(contentProvider);
 		treeViewer.setSelection(sel);

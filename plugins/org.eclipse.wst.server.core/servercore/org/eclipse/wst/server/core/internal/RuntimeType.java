@@ -18,7 +18,7 @@ import org.eclipse.wst.server.core.*;
 /**
  * 
  */
-public class RuntimeType implements IRuntimeType {
+public class RuntimeType implements IRuntimeType, IOrdered {
 	private IConfigurationElement element;
 	private List moduleTypes;
 
@@ -54,7 +54,7 @@ public class RuntimeType implements IRuntimeType {
 	public String getDescription() {
 		return element.getAttribute("description");
 	}
-	
+
 	/**
 	 * Returns the order.
 	 *

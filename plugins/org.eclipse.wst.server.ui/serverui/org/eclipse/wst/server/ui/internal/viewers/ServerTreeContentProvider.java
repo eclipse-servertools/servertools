@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2003 IBM Corporation and others.
+/**********************************************************************
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *    IBM - Initial API and implementation
- */
+ **********************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
 import java.util.ArrayList;
@@ -64,9 +64,10 @@ public class ServerTreeContentProvider extends AbstractTreeContentProvider {
 					if (acceptServer(servers[i])) {
 						IServerType serverType = servers[i].getServerType();
 						IRuntimeType runtimeType = serverType.getRuntimeType();
-						if (serverType.getOrder() > initialSelectionOrder) {
+						int order = getServerOrder(serverType);
+						if (order > initialSelectionOrder) {
 							initialSelection = servers[i];
-							initialSelectionOrder = serverType.getOrder();
+							initialSelectionOrder = order;
 						}
 						TreeElement te = null;
 						if (style == STYLE_HOST) {
@@ -95,9 +96,10 @@ public class ServerTreeContentProvider extends AbstractTreeContentProvider {
 					if (acceptServer(servers[i])) {
 						IServerType serverType = servers[i].getServerType();
 						list.add(servers[i]);
-						if (serverType.getOrder() > initialSelectionOrder) {
+						int order = getServerOrder(serverType);
+						if (order > initialSelectionOrder) {
 							initialSelection = servers[i];
-							initialSelectionOrder = serverType.getOrder();
+							initialSelectionOrder = order;
 						}
 					}
 				}
@@ -121,5 +123,9 @@ public class ServerTreeContentProvider extends AbstractTreeContentProvider {
 				return false;
 		}
 		return true;
+	}
+	
+	private int getServerOrder(IServerType serverType) {
+		return 0;
 	}
 }

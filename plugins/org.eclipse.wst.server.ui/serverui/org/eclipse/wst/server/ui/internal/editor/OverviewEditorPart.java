@@ -39,7 +39,7 @@ import org.eclipse.wst.server.ui.internal.command.SetServerRuntimeCommand;
 /**
  * Server general editor page.
  */
-public class OverviewEditorPart extends ServerResourceEditorPart {
+public class OverviewEditorPart extends ServerEditorPart {
 	protected Text serverName;
 	protected Text serverConfigurationName;
 	protected Text hostname;

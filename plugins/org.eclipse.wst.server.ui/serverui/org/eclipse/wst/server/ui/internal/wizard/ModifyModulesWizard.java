@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.wizard;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.wst.server.ui.internal.wizard;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.wizard;
+
 import java.util.List;
 
 import org.eclipse.wst.server.core.*;
@@ -18,13 +19,12 @@ import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFra
 import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
 import org.eclipse.wst.server.ui.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
-
 /**
  * A wizard used to add and remove modules.
  */
 public class ModifyModulesWizard extends TaskWizard {
 	static class ModifyModulesWizard2 extends WizardFragment {
-		protected IServer server;
+		protected IServerWorkingCopy server;
 		
 		public ModifyModulesWizard2(IServerWorkingCopy server) {
 			this.server = server;

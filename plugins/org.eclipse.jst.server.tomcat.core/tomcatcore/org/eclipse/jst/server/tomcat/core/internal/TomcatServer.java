@@ -10,7 +10,6 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal;
 
-import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,21 +24,19 @@ import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.j2ee.IWebModule;
 import org.eclipse.jst.server.tomcat.core.ITomcatConfiguration;
+import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.ITomcatRuntime;
 import org.eclipse.jst.server.tomcat.core.ITomcatServer;
+import org.eclipse.jst.server.tomcat.core.ITomcatServerWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.WebModule;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.*;
-import org.eclipse.wst.server.core.util.FileUtil;
 import org.eclipse.wst.server.core.util.PingThread;
-import org.eclipse.wst.server.core.util.SocketUtil;
 /**
  * Generic Tomcat server.
  */
-public class TomcatServer extends ServerDelegate implements ITomcatServer {
-	private static final String ATTR_STOP = "stop-server";
-	
+public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomcatServerWorkingCopy {
 	protected transient IPath tempDirectory;
 
 	// the thread used to ping the server to check for startup
@@ -194,158 +191,6 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer {
 			buf.append(commandLine[i]);
 		}	
 		return buf.toString();
-	}
-
-	public void setProcess(final IProcess newProcess) {
-		if (process != null)
-			return;
-
-		process = newProcess;
-		processListener = new IDebugEventSetListener() {
-			public void handleDebugEvents(DebugEvent[] events) {
-				if (events != null) {
-					int size = events.length;
-					for (int i = 0; i < size; i++) {
-						if (process.equals(events[i].getSource()) && events[i].getKind() == DebugEvent.TERMINATE) {
-							DebugPlugin.getDefault().removeDebugEventListener(this);
-							stopImpl();
-						}
-					}
-				}
-			}
-		};
-		DebugPlugin.getDefault().addDebugEventListener(processListener);
-	}
-
-	protected void stopImpl() {
-		if (ping != null) {
-			ping.stopPinging();
-			ping = null;
-		}
-		if (process != null) {
-			process = null;
-			DebugPlugin.getDefault().removeDebugEventListener(processListener);
-			processListener = null;
-		}
-		setServerState(IServer.STATE_STOPPED);
-	}
-
-	public void publishServer(IProgressMonitor monitor) throws CoreException {
-		IPath confDir = null;
-		if (isTestEnvironment()) {
-			confDir = getTempDirectory();
-			File temp = confDir.append("conf").toFile();
-			if (!temp.exists())
-				temp.mkdirs();
-		} else
-			confDir = getServer().getRuntime().getLocation();
-		IStatus status = getTomcatConfiguration().backupAndPublish(confDir, !isTestEnvironment(), monitor);
-		if (status != null && !status.isOK())
-			throw new CoreException(status);
-		
-		setServerPublishState(IServer.PUBLISH_STATE_NONE);
-	}
-
-	/**
-	 * Returns the project publisher that can be used to
-	 * publish the given project.
-	 */
-	public void publishModule(IModule[] parents, IModule module, IProgressMonitor monitor) {
-		if (isTestEnvironment())
-			return;
-
-		// TODO - publish!
-		IWebModule webModule = (IWebModule) module;
-		IPath from = webModule.getLocation();
-		IPath to = getServer().getRuntime().getLocation().append("webapps").append(webModule.getContextRoot());
-		FileUtil.smartCopyDirectory(from.toOSString(), to.toOSString(), monitor);
-	}
-
-	/**
-	 * Setup for starting the server.
-	 * 
-	 * @param launch ILaunch
-	 * @param launchMode String
-	 * @param monitor IProgressMonitor
-	 */
-	public void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException {
-		if ("true".equals(launch.getLaunchConfiguration().getAttribute(ATTR_STOP, "false")))
-			return;
-		IStatus status = getTomcatRuntime().validate();
-		if (status != null && !status.isOK())
-			throw new CoreException(status);
-
-		//setRestartNeeded(false);
-		TomcatConfiguration configuration = getTomcatConfiguration();
-	
-		// check that ports are free
-		Iterator iterator = configuration.getServerPorts().iterator();
-		while (iterator.hasNext()) {
-			IServerPort sp = (IServerPort) iterator.next();
-			if (SocketUtil.isPortInUse(sp.getPort(), 5))
-				throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPortInUse", new String[] {sp.getPort() + "", sp.getName()}), null));
-		}
-		
-		setServerState(IServer.STATE_STARTING);
-	
-		// ping server to check for startup
-		try {
-			String url = "http://localhost";
-			int port = configuration.getMainPort().getPort();
-			if (port != 80)
-				url += ":" + port;
-			ping = new PingThread(getServer(), this, url);
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Can't ping for Tomcat startup.");
-		}
-	}
-
-	/**
-	 * Cleanly shuts down and terminates the server.
-	 */
-	public void stop() {
-		int state = getServer().getServerState();
-		if (state == IServer.STATE_STOPPED)
-			return;
-		else if (state == IServer.STATE_STARTING || state == IServer.STATE_STOPPING) {
-			terminate();
-			return;
-		}
-
-		try {
-			Trace.trace(Trace.FINER, "Stopping Tomcat");
-			if (state != IServer.STATE_STOPPED)
-				setServerState(IServer.STATE_STOPPING);
-	
-			ILaunchConfiguration launchConfig = getServer().getLaunchConfiguration(true, null);
-			ILaunchConfigurationWorkingCopy wc = launchConfig.getWorkingCopy();
-			
-			String args = renderCommandLine(getRuntimeProgramArguments(false), " ");
-			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, args);
-			wc.setAttribute(ATTR_STOP, "true");
-			wc.launch(ILaunchManager.RUN_MODE, new NullProgressMonitor());
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error stopping Tomcat", e);
-		}
-	}
-
-	/**
-	 * Terminates the server.
-	 */
-	public void terminate() {
-		if (getServer().getServerState() == IServer.STATE_STOPPED)
-			return;
-
-		try {
-			setServerState(IServer.STATE_STOPPING);
-			Trace.trace(Trace.FINER, "Killing the Tomcat process");
-			if (process != null && !process.isTerminated()) {
-				process.terminate();
-				stopImpl();
-			}
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error killing the process", e);
-		}
 	}
 
 	/**
@@ -525,5 +370,88 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer {
 		IServerPort[] sp = new IServerPort[list.size()];
 		list.toArray(sp);
 		return sp;
+	}
+	
+	public void setDefaults() {
+		setTestEnvironment(true);
+	}
+	
+	/**
+	 * Sets this process to debug mode. This feature only works
+	 * with Tomcat v4.0.
+	 *
+	 * @param b boolean
+	 */
+	public void setDebug(boolean b) {
+		setAttribute(PROPERTY_DEBUG, b);
+	}
+
+	/**
+	 * Sets this process to secure mode.
+	 * @param b boolean
+	 */
+	public void setSecure(boolean b) {
+		setAttribute(PROPERTY_SECURE, b);
+	}
+
+	/**
+	 * Sets this server to test environment mode.
+	 * 
+	 * @param b boolean
+	 */
+	public void setTestEnvironment(boolean b) {
+		setAttribute(PROPERTY_TEST_ENVIRONMENT, b);
+	}
+	
+	/**
+	 * Add the given project to this configuration. The project
+	 * has already been verified using isSupportedProject() and
+	 * does not already exist in the configuration.
+	 *
+	 * @param ref java.lang.String
+	 */
+	public void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
+		IStatus status = canModifyModules(add, remove);
+		if (status == null || !status.isOK())
+			throw new CoreException(status);
+		
+		IServerConfigurationWorkingCopy scwc = getServer().getServerConfiguration().createWorkingCopy();
+		// TODO
+		ITomcatConfigurationWorkingCopy wc = (ITomcatConfigurationWorkingCopy) scwc.getAdapter(ITomcatConfigurationWorkingCopy.class);
+		boolean change = false;
+
+		if (add != null) {
+			int size = add.length;
+			for (int i = 0; i < size; i++) {
+				IModule module3 = add[i];
+				IWebModule module = (IWebModule) module3.getAdapter(IWebModule.class);
+				String contextRoot = module.getContextRoot();
+				if (contextRoot != null && !contextRoot.startsWith("/"))
+					contextRoot = "/" + contextRoot;
+				WebModule module2 = new WebModule(contextRoot,
+						module.getLocation().toOSString(), module3.getId(), true);
+				wc.addWebModule(-1, module2);
+				change = true;
+			}
+		}
+		
+		if (remove != null) {
+			int size2 = remove.length;
+			for (int j = 0; j < size2; j++) {
+				IModule module3 = remove[j];
+				String memento = module3.getId();
+				List modules = getTomcatConfiguration().getWebModules();
+				int size = modules.size();
+				for (int i = 0; i < size; i++) {
+					WebModule module = (WebModule) modules.get(i);
+					if (memento.equals(module.getMemento())) {
+						wc.removeWebModule(i);
+						change = true;
+					}
+				}
+			}
+		}
+		if (change)
+			scwc.save(false, monitor);
 	}
 }

@@ -17,6 +17,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerAttributes;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
 import org.eclipse.swt.SWT;
@@ -48,7 +49,7 @@ public class NewDetectServerComposite extends Composite {
 	protected Label hostLabel;
 
 	public interface IServerSelectionListener {
-		public void serverSelected(IServer server);
+		public void serverSelected(IServerAttributes server);
 	}
 	
 	public class ServerContentProvider implements IStructuredContentProvider {

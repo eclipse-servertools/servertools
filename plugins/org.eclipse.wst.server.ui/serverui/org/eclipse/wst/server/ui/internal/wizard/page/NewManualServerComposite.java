@@ -42,7 +42,7 @@ import org.eclipse.wst.server.ui.internal.viewers.ServerTypeComposite;
  */
 public class NewManualServerComposite extends Composite {
 	public interface ServerSelectionListener {
-		public void serverSelected(IServer server);
+		public void serverSelected(IServerAttributes server);
 	}
 
 	public interface IWizardHandle2 {
@@ -115,7 +115,6 @@ public class NewManualServerComposite extends Composite {
 				//WizardUtil.defaultSelect(parent, CreateServerWizardPage.this);
 			}
 		});
-		serverTypeComposite.setIncludeTestEnvironments(false);
 		serverTypeComposite.setIncludeIncompatibleVersions(true);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
 		data.horizontalSpan = 2;
@@ -233,9 +232,6 @@ public class NewManualServerComposite extends Composite {
 		if (runtimes != null) {
 			int size = runtimes.length;
 			for (int i = 0; i < size; i++) {
-				if (runtimes[i].isTestEnvironment())
-					return runtimes[i];
-		
 				if (!runtimes[i].isStub())
 					return runtime;
 			}

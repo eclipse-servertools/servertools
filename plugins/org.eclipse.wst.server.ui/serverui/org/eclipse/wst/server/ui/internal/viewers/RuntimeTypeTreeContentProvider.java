@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,9 +55,10 @@ public class RuntimeTypeTreeContentProvider extends AbstractTreeContentProvider 
 				for (int i = 0; i < size; i++) {
 					IRuntimeType runtimeType = runtimeTypes[i];
 					if (!creation || runtimeType.canCreate()) {
-						if (runtimeType.getOrder() > initialSelectionOrder) {
+						int order = getRuntimeOrder(runtimeType);
+						if (order > initialSelectionOrder) {
 							initialSelection = runtimeType;
-							initialSelectionOrder = runtimeType.getOrder();
+							initialSelectionOrder = order;
 						}
 						TreeElement ele = null;
 						if (style == STYLE_VENDOR) {
@@ -94,9 +95,10 @@ public class RuntimeTypeTreeContentProvider extends AbstractTreeContentProvider 
 				for (int i = 0; i < size; i++) {
 					IRuntimeType runtimeType = runtimeTypes[i];
 					if (!creation || runtimeType.canCreate()) {
-						if (runtimeType.getOrder() > initialSelectionOrder) {
+						int order = getRuntimeOrder(runtimeType);
+						if (order > initialSelectionOrder) {
 							initialSelection = runtimeType;
-							initialSelectionOrder = runtimeType.getOrder();
+							initialSelectionOrder = order;
 						}
 						list.add(runtimeType);
 					}
@@ -104,5 +106,9 @@ public class RuntimeTypeTreeContentProvider extends AbstractTreeContentProvider 
 			}
 		}
 		elements = list.toArray();
+	}
+	
+	private int getRuntimeOrder(IRuntimeType runtimeType) {
+		return 0;
 	}
 }

@@ -10,7 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.editor;
 
-import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
 /**
  *
  */
@@ -21,7 +21,7 @@ public abstract class ServerEditorPageSectionFactoryDelegate {
 	 * instance) complex configuration pages to only be shown when used
 	 * with non-unittest servers.
 	 */
-	public abstract boolean shouldCreateSection(IServer server);
+	public abstract boolean shouldCreateSection(IServerWorkingCopy server);
 
 	/**
 	 * Create the editor page section.

@@ -135,7 +135,7 @@ public class ProjectProperties implements IProjectProperties {
 		if (serverId == null || serverId.length() == 0)
 			return null;
 		
-		IServer server = ServerCore.getServer(serverId);
+		IServer server = ServerCore.findServer(serverId);
 		/*if (server != null && ServerUtil.containsModule(server, module))
 			return server;
 		else
@@ -178,7 +178,7 @@ public class ProjectProperties implements IProjectProperties {
 		loadPreferences();
 		if (runtimeId == null)
 			return null;
-		return ServerCore.getRuntime(runtimeId);
+		return ServerCore.findRuntime(runtimeId);
 	}
 
 	/**
@@ -189,7 +189,7 @@ public class ProjectProperties implements IProjectProperties {
 	 */
 	public void setRuntimeTarget(IRuntime runtime, IProgressMonitor monitor) throws CoreException {
 		loadPreferences();
-		IRuntime oldRuntime = ServerCore.getRuntime(runtimeId);
+		IRuntime oldRuntime = ServerCore.findRuntime(runtimeId);
 		setRuntimeTarget(oldRuntime, runtime, true, monitor);
 	}
 

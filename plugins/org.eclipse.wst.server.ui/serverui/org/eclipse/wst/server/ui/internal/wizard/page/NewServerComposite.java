@@ -33,6 +33,7 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerAttributes;
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ITaskModel;
@@ -298,7 +299,7 @@ public class NewServerComposite extends Composite {
 		detectHostComp = createHostComposite(detectComp2);
 		
 		detectComp = new NewDetectServerComposite(detectComp2, new NewDetectServerComposite.IServerSelectionListener() {
-			public void serverSelected(IServer server) {
+			public void serverSelected(IServerAttributes server) {
 				// do nothing
 			}
 		});
@@ -374,6 +375,9 @@ public class NewServerComposite extends Composite {
 		manualComp2.setLayout(layout);
 		
 		manualHostComp = createHostComposite(manualComp2);
+		IModuleType mt = null;
+		if (module != null)
+			mt = module.getModuleType();
 		
 		manualComp = new NewManualServerComposite(manualComp2, new NewManualServerComposite.IWizardHandle2() {
 			public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable) throws InterruptedException, InvocationTargetException {
@@ -385,8 +389,8 @@ public class NewServerComposite extends Composite {
 			public void setMessage(String newMessage, int newType) {
 				wizard.setMessage(newMessage, newType);
 			}
-		}, module.getModuleType(), new NewManualServerComposite.ServerSelectionListener() {
-			public void serverSelected(IServer server) {
+		}, mt, new NewManualServerComposite.ServerSelectionListener() {
+			public void serverSelected(IServerAttributes server) {
 				updateTaskModel();
 			}
 		});
@@ -404,7 +408,7 @@ public class NewServerComposite extends Composite {
 
 	protected void updateTaskModel() {
 		if (taskModel != null) {
-			IServer server = getServer();
+			IServerWorkingCopy server = getServer();
 			if (server != null) {
 				taskModel.putObject(ITaskModel.TASK_SERVER, server);
 				taskModel.putObject(ITaskModel.TASK_RUNTIME, server.getRuntime());
@@ -422,7 +426,7 @@ public class NewServerComposite extends Composite {
 		updateTaskModel();
 	}
 
-	public IServer getServer() {
+	public IServerWorkingCopy getServer() {
 		if (mode == MODE_EXISTING)
 			return existingWC; //existingComp.getSelectedServer();
 		else if (mode == MODE_DETECT)

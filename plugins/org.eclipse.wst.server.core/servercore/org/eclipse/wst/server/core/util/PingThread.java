@@ -17,7 +17,7 @@ import java.net.URLConnection;
 
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.internal.Trace;
-import org.eclipse.wst.server.core.model.ServerDelegate;
+import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 /**
  * Thread used to ping server to test when it is started.
  */
@@ -33,7 +33,7 @@ public class PingThread {
 
 	private boolean stop = false;
 	private String url;
-	private ServerDelegate server;
+	private ServerBehaviourDelegate server;
 	private IServer server2;
 
 	/**
@@ -44,7 +44,7 @@ public class PingThread {
 	 * @param url
 	 * @param mode
 	 */
-	public PingThread(IServer server2, ServerDelegate server, String url) {
+	public PingThread(IServer server2, ServerBehaviourDelegate server, String url) {
 		super();
 		this.server = server;
 		this.server2 = server2;
@@ -72,7 +72,7 @@ public class PingThread {
 		while (!stop) {
 			try {
 				if (count == MAX_PINGS) {
-					server2.stop();
+					server2.stop(false);
 					stop = true;
 					break;
 				}

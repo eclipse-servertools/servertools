@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.editor;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,13 +8,14 @@ package org.eclipse.wst.server.ui.internal.editor;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.editor;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.ui.editor.IServerEditorPartFactory;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.editor.ServerEditorPartFactoryDelegate;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.ui.IEditorPart;
@@ -176,7 +176,7 @@ public class ServerEditorPartFactory implements IServerEditorPartFactory {
 	 * This allows (for instance) complex configuration pages to only be shown when used
 	 * with non-unittest servers.
 	 */
-	public boolean shouldCreatePage(IServer server) {
+	public boolean shouldCreatePage(IServerWorkingCopy server) {
 		try {
 			return getDelegate().shouldCreatePage(server);
 		} catch (Exception e) {

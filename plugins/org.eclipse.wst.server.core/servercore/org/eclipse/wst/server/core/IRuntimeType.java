@@ -42,14 +42,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * be tied to the particular servers involved.]
  * </p>
  * <p>
- * [issue: It is notoriously difficult to place any kind of
- * useful order on objects that are contributed independently by
- * non-collaborating parties. The IOrdered mechanism is weak, and
- * can't really solve the problem. Issues of presentation are usually
- * best left to the UI, which can sort objects based on arbitrary
- * properties.]
- * </p>
- * <p>
  * [issue: Equality/identify for runtime types? Are IRuntimeType
  * instances guaranteed to be canonical (client can use ==),
  * or is it possible for there to be non-identical IRuntimeType
@@ -63,7 +55,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * 
  * @since 1.0
  */
-public interface IRuntimeType extends IOrdered {
+public interface IRuntimeType {
 	/**
 	 * Returns the id of this runtime type.
 	 * Each known server runtime type has a distinct id. 

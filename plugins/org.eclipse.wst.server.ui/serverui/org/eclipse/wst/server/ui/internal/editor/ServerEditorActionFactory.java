@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal.editor;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,19 +8,19 @@ package org.eclipse.wst.server.ui.internal.editor;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.editor;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.ui.editor.IServerEditorActionFactory;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.editor.ServerEditorActionFactoryDelegate;
 import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.ui.IEditorSite;
-
 /**
  * A default server that can be created for a set of given
  * natures.
@@ -147,7 +146,7 @@ public class ServerEditorActionFactory implements IServerEditorActionFactory {
 	 * instance) complex configuration pages to only be shown when used
 	 * with non-unittest servers.
 	 */
-	public boolean shouldDisplay(IServer server) {
+	public boolean shouldDisplay(IServerWorkingCopy server) {
 		try {
 			return getDelegate().shouldDisplay(server);
 		} catch (Exception e) {

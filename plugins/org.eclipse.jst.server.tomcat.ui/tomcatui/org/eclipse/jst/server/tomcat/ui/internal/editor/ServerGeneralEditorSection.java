@@ -38,7 +38,7 @@ import org.eclipse.wst.server.ui.editor.*;
 /**
  * Tomcat server general editor page.
  */
-public class ServerGeneralEditorSection extends ServerResourceEditorSection {
+public class ServerGeneralEditorSection extends ServerEditorSection {
 	protected ITomcatServerWorkingCopy tomcatServer;
 
 	protected Button secure;

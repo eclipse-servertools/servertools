@@ -188,7 +188,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 									// only try calling terminate once. Also, make sure that it didn't stop while
 									// the dialog was open
 									if (server.getServerState() != IServer.STATE_STOPPED)
-										server.terminate();
+										server.stop(true);
 									alive = false;
 								}
 							}

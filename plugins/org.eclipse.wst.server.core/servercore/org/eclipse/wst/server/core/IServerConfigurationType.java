@@ -30,14 +30,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * This interface is not intended to be implemented by clients.
  * </p>
  * <p>
- * [issue: It is notoriously difficult to place any kind of
- * useful order on objects that are contributed independently by
- * non-collaborating parties. The IOrdered mechanism is weak, and
- * can't really solve the problem. Issues of presentation are usually
- * best left to the UI, which can sort objects based on arbitrary
- * properties.]
- * </p>
- * <p>
  * [issue: Equality/identify for server types? Are IServerConfigurationType
  * instances guaranteed to be canonical (client can use ==),
  * or is it possible for there to be non-identical IServerConfigurationType
@@ -51,7 +43,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * 
  * @since 1.0
  */
-public interface IServerConfigurationType extends IOrdered {
+public interface IServerConfigurationType {
 
 	/**
 	 * Returns the id of this server configuration type.

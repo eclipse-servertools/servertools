@@ -20,12 +20,12 @@ import org.eclipse.wst.server.core.model.ServerLocatorDelegate;
 public class TomcatServerLocator extends ServerLocatorDelegate {
 	public void searchForServers(String host, final IServerLocator.Listener listener, final IProgressMonitor monitor) {
 		IRuntimeLocator.Listener listener2 = new IRuntimeLocator.Listener() {
-			public void runtimeFound(IRuntime runtime) {
+			public void runtimeFound(IRuntimeWorkingCopy runtime) {
 				String runtimeTypeId = runtime.getRuntimeType().getId();
 				String serverTypeId = runtimeTypeId.substring(0, runtimeTypeId.length() - 8);
-				IServerType serverType = ServerCore.getServerType(serverTypeId);
+				IServerType serverType = ServerCore.findServerType(serverTypeId);
 				try {
-					IServer server = serverType.createServer(serverTypeId, null, runtime, monitor);
+					IServerWorkingCopy server = serverType.createServer(serverTypeId, null, runtime, monitor);
 					listener.serverFound(server);
 				} catch (Exception e) {
 					Trace.trace(Trace.WARNING, "Could not create Tomcat server", e);

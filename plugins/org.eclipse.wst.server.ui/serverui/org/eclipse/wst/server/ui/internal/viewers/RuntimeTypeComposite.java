@@ -74,12 +74,7 @@ public class RuntimeTypeComposite extends AbstractTreeComposite {
 					return super.compare(viewer, e1, e2);
 				IRuntimeType r1 = (IRuntimeType) e1;
 				IRuntimeType r2 = (IRuntimeType) e2;
-				if (r1.getOrder() > r2.getOrder())
-					return -1;
-				else if (r1.getOrder() < r2.getOrder())
-					return 1;
-				else
-					return super.compare(viewer, e1, e2);
+				return r1.getName().compareToIgnoreCase(r2.getName());
 			}
 		});
 	}

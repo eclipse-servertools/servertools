@@ -1,15 +1,15 @@
-package org.eclipse.wst.server.ui.internal;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -19,23 +19,13 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.wst.server.core.IElement;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.actions.NewServerAction;
-import org.eclipse.wst.server.ui.internal.view.servers.DeleteAction;
-import org.eclipse.wst.server.ui.internal.view.servers.OpenAction;
-import org.eclipse.wst.server.ui.internal.view.servers.PublishAction;
-import org.eclipse.wst.server.ui.internal.view.servers.RestartAction;
-import org.eclipse.wst.server.ui.internal.view.servers.StartAction;
+import org.eclipse.wst.server.ui.internal.view.servers.*;
 import org.eclipse.wst.server.ui.internal.view.tree.ServerElementAdapter;
 import org.eclipse.wst.server.ui.internal.view.tree.ServerTreeAction;
 import org.eclipse.swt.widgets.Shell;
-
 /**
  * 
  */
@@ -329,7 +319,7 @@ public class ServerTree {
 				return true;
 			} else if (obj instanceof ServerElementAdapter) {
 				ServerElementAdapter adapter = (ServerElementAdapter) obj;
-				IElement element = adapter.getServerResource();
+				Object element = adapter.getObject();
 				if (element instanceof IServer) {
 					Action open = new OpenAction((IServer) element);
 					open.run();
@@ -347,13 +337,13 @@ public class ServerTree {
 			while (iterator.hasNext()) {
 				Object obj = iterator.next();
 				
-				if (obj instanceof IElement)
+				if (obj instanceof ServerElementAdapter)
+					list.add(((ServerElementAdapter) obj).getObject());
+				else
 					list.add(obj);
-				else if (obj instanceof ServerElementAdapter)
-					list.add(((ServerElementAdapter) obj).getServerResource());
 			}
 			
-			IElement[] res = new IElement[list.size()];
+			Object[] res = new Object[list.size()];
 			list.toArray(res);
 			
 			Action delete = new DeleteAction(shell, res);

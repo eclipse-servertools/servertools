@@ -10,22 +10,14 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.internal.operations;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 /**
- * A server.
+ * Start server operation.
  */
-public interface IServer {
-	/**
-	 * 
-	 */
-	public boolean canOperate(IServerOperation[] operations);
-
-	/**
-	 * 
-	 * @param operation
-	 * @param state
-	 * @param synchronous
-	 * @return
-	 */
-	public IStatus operate(IServerOperation[] operations, ServerState state, boolean synchronous);
+public class StopServerOperation implements IServerOperation {
+	public IStatus execute(IProgressMonitor monitor) throws CoreException {
+		return null;
+	}
 }

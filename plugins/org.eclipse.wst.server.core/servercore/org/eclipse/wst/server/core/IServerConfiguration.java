@@ -32,8 +32,8 @@ import org.eclipse.core.runtime.IPath;
  * configurations between several servers of the same type (e.g., a local test
  * server and a remote server running on another host). * </p>
  * <p>
- * The resource manager maintains a global list of all known server 
- * configuration instances ({@link IResourceManager#getServerConfigurations()}).
+ * The server framework maintains a global list of all known server 
+ * configuration instances ({@link ServerCore#getServerConfigurations()}).
  * </p>
  * <p>
  * [issue: The information actually stored in the (.config) file is:

@@ -25,8 +25,10 @@ import org.eclipse.core.runtime.*;
  * </p>
  * <p>
  * IRuntime implements IAdaptable to allow users to obtain a runtime-type-specific
- * class that can be used to set fields. getAdapter() may involve plugin loading,
- * and should not be called from popup menus and the like.
+ * class. By casting the runtime extension to the type prescribed in the API
+ * documentation for that particular runtime type, the client can access
+ * runtime-type-specific properties and methods. getAdapter() may involve plugin
+ * loading, and should not be called from popup menus, etc.
  * </p>
  * <p>
  * [issue: As mentioned in an issue on IRuntimeType, the term "runtime"
@@ -35,11 +37,13 @@ import org.eclipse.core.runtime.*;
  * better choice.]
  * </p>
  * <p>
- * The resource manager maintains a global list of all known runtime instances
- * ({@link IResourceManager#getRuntimes()}).
+ * The server framework maintains a global list of all known runtime instances
+ * ({@link ServerCore#getRuntimes()}).
  * </p>
  * <p>
- * [issue: Equality/identify for runtimes?]
+ * All runtimes have a unique id. Two runtimes (or more likely a runtime and it's
+ * working copy) with the same id are equal, and two runtimes with different ids
+ * are never equal.
  * </p>
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
@@ -57,18 +61,6 @@ public interface IRuntime extends IElement, IAdaptable {
 	 * @return the runtime type
 	 */
 	public IRuntimeType getRuntimeType();
-
-	/**
-	 * Returns the extension for this runtime.
-	 * The runtime extension is a runtime-type-specific object.
-	 * By casting the runtime extension to the type prescribed in
-	 * the API documentation for that particular runtime type, 
-	 * the client can access runtime-type-specific properties and
-	 * methods.
-	 * 
-	 * @return the runtime extension, or <code>null</code> if none
-	 */
-	//public IServerExtension getExtension(IProgressMonitor monitor);
 
 	/**
 	 * Returns a runtime working copy for modifying this runtime instance.
@@ -107,20 +99,6 @@ public interface IRuntime extends IElement, IAdaptable {
 	 */
 	public IPath getLocation();
 
-	/**
-	 * Returns whether this runtime can be used as a test environment.
-	 * <p>
-	 * [issue: How does one explain what a "test environment" is?
-	 * How does this property of runtime square with 
-	 * IServerType.isTestEnvironment(), a *type-generic*
-	 * property of a server type?]
-	 * </p>
-	 * 
-	 * @return <code>true</code> if this runtime can be use as a
-	 * test environment, and <code>false</code> if it cannot
-	 */
-	public boolean isTestEnvironment();
-	
 	/**
 	 * Returns whether this runtime is a stub (used for compilation only) or a full runtime.
 	 * 

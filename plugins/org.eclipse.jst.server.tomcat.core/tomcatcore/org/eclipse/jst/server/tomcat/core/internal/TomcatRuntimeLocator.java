@@ -87,7 +87,7 @@ public class TomcatRuntimeLocator extends RuntimeLocatorDelegate {
 	protected static IRuntimeWorkingCopy getRuntimeFromDir(File dir, IProgressMonitor monitor) {
 		for (int i = 0; i < runtimeTypes.length; i++) {
 			try {
-				IRuntimeType runtimeType = ServerCore.getRuntimeType(runtimeTypes[i]);
+				IRuntimeType runtimeType = ServerCore.findRuntimeType(runtimeTypes[i]);
 				IRuntimeWorkingCopy runtime = runtimeType.createRuntime(dir.getAbsolutePath(), monitor);
 				runtime.setName(dir.getName());
 				runtime.setLocation(new Path(dir.getAbsolutePath()));

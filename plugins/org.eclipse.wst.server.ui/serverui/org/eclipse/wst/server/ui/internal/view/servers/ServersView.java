@@ -331,7 +331,7 @@ public class ServersView extends ViewPart {
 			}
 			
 			// monitor
-			if (server.getServerType() != null && server.getServerType().isMonitorable()) {
+			if (server.getServerType() != null) {
 				final MenuManager menuManager = new MenuManager(ServerUIPlugin.getResource("%actionMonitor"));
 				
 				final IServer server2 = server;

@@ -61,7 +61,7 @@ public class StopAction extends AbstractServerAction {
 				dialog.setBlockOnOpen(false);
 				dialog.open();
 	
-				server.stop();
+				server.stop(false);
 				dialog.close();
 			}
 		});

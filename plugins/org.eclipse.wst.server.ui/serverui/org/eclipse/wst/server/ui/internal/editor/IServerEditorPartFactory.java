@@ -8,22 +8,21 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.server.ui.editor;
+package org.eclipse.wst.server.ui.internal.editor;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IEditorPart;
 
-import org.eclipse.wst.server.core.IOrdered;
-import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.ui.editor.IOrdered;
 /**
  *
  */
-public interface IServerEditorActionFactory extends IOrdered {
+public interface IServerEditorPartFactory extends IOrdered {
 	/**
 	 * 
 	 */
 	public String getId();
-
+	
 	/**
 	 * 
 	 */
@@ -32,21 +31,23 @@ public interface IServerEditorActionFactory extends IOrdered {
 	/**
 	 * Returns true if the given server resource type (given by the
 	 * id) can be opened with this editor. This result is based on
-	 * the result of the getFactoryIds() method.
+	 * the result of the types attribute.
 	 *
 	 * @return boolean
 	 */
-	public boolean supportsServerElementType(String id);
-
+	public boolean supportsType(String id);
+	
+	public boolean supportsInsertionId(String id);
+	
 	/**
 	 * Returns true if this editor page should be visible with the given server.
 	 * This allows (for instance) complex configuration pages to only be shown when used
 	 * with non-unittest servers.
 	 */
-	public boolean shouldDisplay(IServer server);
+	public boolean shouldCreatePage(IServerWorkingCopy server);
 
 	/**
-	 * Create the action.
+	 * Create the editor page.
 	 */
-	public IAction createAction(IEditorSite site, IServerEditorPartInput input);
+	public IEditorPart createPage();
 }

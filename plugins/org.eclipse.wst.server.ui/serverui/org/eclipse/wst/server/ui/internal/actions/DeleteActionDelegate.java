@@ -81,7 +81,7 @@ public class DeleteActionDelegate implements IWorkbenchWindowActionDelegate {
 			else if (obj instanceof IServerConfiguration)
 				list.add(obj);
 			else if (obj instanceof ServerElementAdapter)
-				list.add(((ServerElementAdapter) obj).getServerResource());
+				list.add(((ServerElementAdapter) obj).getObject());
 			else {
 				action.setEnabled(false);
 				return;

@@ -38,7 +38,7 @@ import org.eclipse.ui.help.WorkbenchHelp;
 /**
  * Tomcat configuration port editor page.
  */
-public class ConfigurationPortEditorSection extends ServerResourceEditorSection {
+public class ConfigurationPortEditorSection extends ServerEditorSection {
 	protected ITomcatConfigurationWorkingCopy tomcatConfiguration;
 
 	protected boolean updating;

@@ -28,7 +28,7 @@ public interface IRuntimeLocator {
 		 * 
 		 * @param runtime the runtime that was found.
 		 */
-		public void runtimeFound(IRuntime runtime);
+		public void runtimeFound(IRuntimeWorkingCopy runtime);
 	}
 
 	/**

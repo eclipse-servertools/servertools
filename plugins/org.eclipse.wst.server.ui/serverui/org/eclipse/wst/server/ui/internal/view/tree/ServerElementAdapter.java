@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -14,7 +14,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.wst.server.core.IElement;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerConfiguration;
@@ -27,11 +26,11 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
 public class ServerElementAdapter implements IAdaptable, IWorkbenchAdapter, IServerElementTag {
 	private static final Object[] NO_CHILDREN = new Object[0];
 
-	protected IElement resource;
+	protected Object resource;
 	protected Object parent;
 	protected byte flags;
 
-	public ServerElementAdapter(Object parent, IElement resource) {
+	public ServerElementAdapter(Object parent, Object resource) {
 		this.parent = parent;
 		this.resource = resource;
 	}
@@ -138,7 +137,7 @@ public class ServerElementAdapter implements IAdaptable, IWorkbenchAdapter, ISer
 		return parent;
 	}
 
-	public IElement getServerResource() {
+	public Object getObject() {
 		return resource;
 	}
 

@@ -103,9 +103,9 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 	 *		otherwise
 	 */
 	public boolean exists() {
-		if (serverId != null && ServerCore.getServer(serverId) == null)
+		if (serverId != null && ServerCore.findServer(serverId) == null)
 			return false;
-		else if (configurationId != null && ServerCore.getServerConfiguration(configurationId) == null)
+		else if (configurationId != null && ServerCore.findServerConfiguration(configurationId) == null)
 			return false;
 		else
 			return true;
@@ -154,12 +154,12 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 	 */
 	public String getName() {
 		if (serverId != null) {
-			IServer server = ServerCore.getServer(serverId);
+			IServer server = ServerCore.findServer(serverId);
 			if (server != null)
 				return server.getName();
 			return serverId;
 		} else if (configurationId != null) {
-			IServerConfiguration configuration = ServerCore.getServerConfiguration(configurationId);
+			IServerConfiguration configuration = ServerCore.findServerConfiguration(configurationId);
 			if (configuration != null)
 				return configuration.getName();
 			return configurationId;
@@ -180,7 +180,7 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 	public String getToolTipText() {
 		String s = null;
 		if (serverId != null) {
-			IServer server = ServerCore.getServer(serverId);
+			IServer server = ServerCore.findServer(serverId);
 			if (server != null) {
 				if (server.getFile() != null) {
 					s = server.getFile().getFullPath().makeRelative().toString();
@@ -191,7 +191,7 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 			}
 		}
 		if (s == null && configurationId != null) {
-			IServerConfiguration configuration = ServerCore.getServerConfiguration(configurationId);
+			IServerConfiguration configuration = ServerCore.findServerConfiguration(configurationId);
 			if (configuration != null) {
 				if (configuration.getFile() != null) {
 					s = configuration.getFile().getFullPath().makeRelative().toString();

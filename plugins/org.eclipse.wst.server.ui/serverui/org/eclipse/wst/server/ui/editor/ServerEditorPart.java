@@ -23,6 +23,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.ui.internal.editor.IServerEditorPageSectionFactory;
+import org.eclipse.wst.server.ui.internal.editor.IServerEditorPartFactory;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorCore;
 /**
  * An abstract server editor which implements the most common methods
@@ -31,7 +33,7 @@ import org.eclipse.wst.server.ui.internal.editor.ServerEditorCore;
  * This class also provides each editor page with an error message which
  * will be displayed on the status bar of the editor.
  */
-public abstract class ServerResourceEditorPart extends EditorPart {
+public abstract class ServerEditorPart extends EditorPart {
 	public static final int PROP_ERROR = 5;
 	
 	private String errorMessage = null;
@@ -47,7 +49,7 @@ public abstract class ServerResourceEditorPart extends EditorPart {
 	
 	private FormToolkit toolkit;
 
-	public ServerResourceEditorPart() {
+	public ServerEditorPart() {
 		super();
 	}
 
@@ -174,8 +176,8 @@ public abstract class ServerResourceEditorPart extends EditorPart {
 							(serverConfigurationTypeId != null && factory.supportsType(serverConfigurationTypeId)))
 							&& factory.shouldCreateSection(server)) {
 						IServerEditorSection section = factory.createSection();
-						if (section instanceof ServerResourceEditorSection)
-							((ServerResourceEditorSection) section).setServerResourceEditorPart(this);
+						if (section instanceof ServerEditorSection)
+							((ServerEditorSection) section).setServerResourceEditorPart(this);
 						sections.add(section);
 						sectionToInsertionId.put(section, insertionId);
 					}

@@ -51,11 +51,11 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.editor.ICommandManager;
-import org.eclipse.wst.server.ui.editor.ServerResourceEditorPart;
+import org.eclipse.wst.server.ui.editor.ServerEditorPart;
 /**
  * Tomcat configuration web module editor page.
  */
-public class ConfigurationWebModuleEditorPart extends ServerResourceEditorPart {
+public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 	protected ITomcatServerWorkingCopy server2;
 	protected ITomcatConfigurationWorkingCopy configuration;
 

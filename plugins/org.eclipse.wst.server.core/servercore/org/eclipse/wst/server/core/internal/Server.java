@@ -34,6 +34,7 @@ public class Server extends Base implements IServer {
 
 	protected IServerType serverType;
 	protected ServerDelegate delegate;
+	protected ServerBehaviourDelegate behaviourDelegate;
 
 	protected IRuntime runtime;
 	protected IServerConfiguration configuration;
@@ -117,7 +118,7 @@ public class Server extends Base implements IServer {
 		return configuration;
 	}
 
-	public ServerDelegate getDelegate(IProgressMonitor monitor) {
+	protected ServerDelegate getDelegate() {
 		if (delegate != null)
 			return delegate;
 		
@@ -139,6 +140,28 @@ public class Server extends Base implements IServer {
 		return delegate;
 	}
 	
+	protected ServerBehaviourDelegate getBehaviourDelegate() {
+		if (behaviourDelegate != null)
+			return behaviourDelegate;
+		
+		if (serverType != null) {
+			synchronized (this) {
+				if (behaviourDelegate == null) {
+					try {
+						long time = System.currentTimeMillis();
+						IConfigurationElement element = ((ServerType) serverType).getElement();
+						behaviourDelegate = (ServerBehaviourDelegate) element.createExecutableExtension("behaviourClass");
+						behaviourDelegate.initialize(this);
+						Trace.trace(Trace.PERFORMANCE, "Server.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
+					} catch (Exception e) {
+						Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);
+					}
+				}
+			}
+		}
+		return behaviourDelegate;
+	}
+
 	/**
 	 * Returns true if the delegate has been loaded.
 	 * 
@@ -380,7 +403,7 @@ public class Server extends Base implements IServer {
 							deployableDelta[i] = moduleProjects[i].getModuleResourceDelta(delta);
 						
 						if (deployableDelta[i] != null) {
-							// TODO updateDeployable(module, deployableDelta[i]);
+							// updateDeployable(module, deployableDelta[i]);
 
 							PublishControl control = PublishInfo.getPublishInfo().getPublishControl(Server.this, parents, module);
 							if (control.isDirty())
@@ -736,28 +759,31 @@ public class Server extends Base implements IServer {
 			multi.add(taskStatus);
 
 		if (monitor.isCanceled())
-			return null; // TODO
+			return new Status(IStatus.INFO, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%publishingCancelled"), null);
 		
 		// start publishing
 		Trace.trace(Trace.FINEST, "Opening connection to the remote server");
 		firePublishStarted();
 		//boolean connectionOpen = false;
 		try {
-			getDelegate(monitor).publishStart(ProgressUtil.getSubMonitorFor(monitor, 1000));
+			getBehaviourDelegate().publishStart(ProgressUtil.getSubMonitorFor(monitor, 1000));
 		} catch (CoreException ce) {
-			Trace.trace(Trace.SEVERE, "Error starting publish to " + toString(), ce);
-			Status ps = new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%xxx"), null); // TODO
-			firePublishFinished(ps);
+			Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
+			firePublishFinished(ce.getStatus());
 			return ce.getStatus();
 		}
 		
-		// publish the configuration
+		// publish the server
 		try {
 			if (!monitor.isCanceled() && serverType.hasServerConfiguration()) {
-				delegate.publishServer(ProgressUtil.getSubMonitorFor(monitor, 1000));
+				getBehaviourDelegate().publishServer(ProgressUtil.getSubMonitorFor(monitor, 1000));
 			}
+		} catch (CoreException ce) {
+			Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
+			multi.add(ce.getStatus());
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error publishing configuration to " + toString(), e);
+			multi.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorPublishing"), e));
 		}
 		
 		// remove old modules
@@ -770,14 +796,17 @@ public class Server extends Base implements IServer {
 		// end the publishing
 		Trace.trace(Trace.FINEST, "Closing connection with the remote server");
 		try {
-			delegate.publishStop(ProgressUtil.getSubMonitorFor(monitor, 500));
+			getBehaviourDelegate().publishFinish(ProgressUtil.getSubMonitorFor(monitor, 500));
 		} catch (CoreException ce) {
-			Trace.trace(Trace.SEVERE, "Error stopping publish to " + toString(), ce);
-			// TODO
+			Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
+			multi.add(ce.getStatus());
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error stopping publish to " + toString(), e);
+			multi.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorPublishing"), e));
 		}
-	
+		
 		if (monitor.isCanceled()) {
-			IStatus status = new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%publishingCancelled"), null);
+			IStatus status = new Status(IStatus.INFO, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%publishingCancelled"), null);
 			multi.add(status);
 		}
 
@@ -805,7 +834,7 @@ public class Server extends Base implements IServer {
 		
 		Status multi = new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%publishingProject", module.getName()), null);
 		try {
-			getDelegate(monitor).publishModule(parents, module, monitor);
+			getBehaviourDelegate().publishModule(parents, module, monitor);
 		} catch (CoreException ce) {
 			// ignore
 		}
@@ -867,9 +896,35 @@ public class Server extends Base implements IServer {
 			}
 		}
 
-		ServerUtil.sortOrderedList(tasks);
+		sortOrderedList(tasks);
 		
 		return tasks;
+	}
+
+	/**
+	 * Sort the given list of IOrdered items into indexed order. This method
+	 * modifies the original list, but returns the value for convenience.
+	 *
+	 * @param list java.util.List
+	 * @return java.util.List
+	 */
+	private static List sortOrderedList(List list) {
+		if (list == null)
+			return null;
+
+		int size = list.size();
+		for (int i = 0; i < size - 1; i++) {
+			for (int j = i + 1; j < size; j++) {
+				IOrdered a = (IOrdered) list.get(i);
+				IOrdered b = (IOrdered) list.get(j);
+				if (a.getOrder() > b.getOrder()) {
+					Object temp = a;
+					list.set(i, b);
+					list.set(j, temp);
+				}
+			}
+		}
+		return list;
 	}
 
 	protected IStatus performTasks(List tasks, IProgressMonitor monitor) {
@@ -909,9 +964,12 @@ public class Server extends Base implements IServer {
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
 	public Object getAdapter(Class adapter) {
-		ServerDelegate delegate2 = getDelegate(null);
+		ServerDelegate delegate2 = getDelegate();
 		if (adapter.isInstance(delegate2))
-			return delegate;
+			return delegate2;
+		ServerBehaviourDelegate delegate3 = getBehaviourDelegate();
+		if (adapter.isInstance(delegate3))
+			return delegate3;
 		return null;
 	}
 
@@ -962,7 +1020,7 @@ public class Server extends Base implements IServer {
 
 	public void setLaunchDefaults(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) {
 		try {
-			getDelegate(monitor).setLaunchDefaults(workingCopy);
+			getBehaviourDelegate().setLaunchDefaults(workingCopy);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate setLaunchDefaults() " + toString(), e);
 		}
@@ -1107,7 +1165,7 @@ public class Server extends Base implements IServer {
 	
 		try {
 			try {
-				getDelegate(null).restart(mode2);
+				getBehaviourDelegate().restart(mode2);
 				return;
 			} catch (CoreException ce) {
 				Trace.trace(Trace.SEVERE, "Error calling delegate restart() " + toString());
@@ -1143,7 +1201,7 @@ public class Server extends Base implements IServer {
 			});
 	
 			// stop the server
-			stop();
+			stop(false);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error restarting server", e);
 		}
@@ -1166,32 +1224,16 @@ public class Server extends Base implements IServer {
 	/**
 	 * Stop the server if it is running.
 	 */
-	public void stop() {
+	public void stop(boolean force) {
 		if (getServerState() == STATE_STOPPED)
 			return;
 
 		Trace.trace(Trace.FINEST, "Stopping server: " + toString());
 
 		try {
-			getDelegate(null).stop();
+			getBehaviourDelegate().stop(force);
 		} catch (Throwable t) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate stop() " + toString(), t);
-		}
-	}
-
-	/**
-	 * Terminate the server process(es). This method should only be
-	 * used as a last resort after the stop() method fails to work.
-	 * The server should return from this method quickly and
-	 * use the server listener to notify shutdown progress.
-	 * It MUST terminate the server completely and return it to
-	 * the stopped state.
-	 */
-	public void terminate() {
-		try {
-			getDelegate(null).terminate();
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate terminate() " + toString(), e);
 		}
 	}
 	
@@ -1346,7 +1388,7 @@ public class Server extends Base implements IServer {
 		thread.start();
 	
 		// stop the server
-		stop();
+		stop(false);
 	
 		// wait for it! wait for it!
 		synchronized (mutex) {
@@ -1432,7 +1474,7 @@ public class Server extends Base implements IServer {
 	
 		// restart the module
 		try {
-			getDelegate(monitor).restartModule(module, monitor);
+			getBehaviourDelegate().restartModule(module, monitor);
 		} catch (CoreException e) {
 			removeServerListener(listener);
 			throw e;
@@ -1483,15 +1525,15 @@ public class Server extends Base implements IServer {
 	protected void resolve() {
 		IServerType oldServerType = serverType;
 		String serverTypeId = getAttribute("server-type-id", (String)null);
-		serverType = ServerCore.getServerType(serverTypeId);
+		serverType = ServerCore.findServerType(serverTypeId);
 		if (serverType != null && !serverType.equals(oldServerType))
 			serverState = ((ServerType)serverType).getInitialState();
 		
 		String runtimeId = getAttribute(RUNTIME_ID, (String)null);
-		runtime = ServerCore.getRuntime(runtimeId);
+		runtime = ServerCore.findRuntime(runtimeId);
 		
 		String configurationId = getAttribute(CONFIGURATION_ID, (String)null);
-		configuration = ServerCore.getServerConfiguration(configurationId);
+		configuration = ServerCore.findServerConfiguration(configurationId);
 	}
 	
 	protected void setInternal(ServerWorkingCopy wc) {
@@ -1535,7 +1577,7 @@ public class Server extends Base implements IServer {
 	 */
 	public IStatus canModifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) {
 		try {
-			return getDelegate(monitor).canModifyModules(add, remove);
+			return getDelegate().canModifyModules(add, remove);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate canModifyModules() " + toString(), e);
 			return null;
@@ -1547,7 +1589,7 @@ public class Server extends Base implements IServer {
 	 */
 	public IModule[] getModules(IProgressMonitor monitor) {
 		try {
-			return getDelegate(monitor).getModules();
+			return getDelegate().getModules();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate getModules() " + toString(), e);
 			return new IModule[0];
@@ -1587,7 +1629,7 @@ public class Server extends Base implements IServer {
 	 */
 	public IModule[] getChildModules(IModule module, IProgressMonitor monitor) {
 		try {
-			return getDelegate(monitor).getChildModules(module);
+			return getDelegate().getChildModules(module);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate getChildModules() " + toString(), e);
 			return null;
@@ -1599,7 +1641,7 @@ public class Server extends Base implements IServer {
 	 */
 	public IModule[] getParentModules(IModule module, IProgressMonitor monitor) throws CoreException {
 		try {
-			return getDelegate(monitor).getParentModules(module);
+			return getDelegate().getParentModules(module);
 		} catch (CoreException se) {
 			//Trace.trace(Trace.FINER, "CoreException calling delegate getParentModules() " + toString() + ": " + se.getMessage());
 			throw se;
@@ -1630,7 +1672,7 @@ public class Server extends Base implements IServer {
 	 */
 	public boolean canRestartModule(IModule module) {
 		try {
-			return getDelegate(null).canRestartModule(module);
+			return getBehaviourDelegate().canRestartModule(module);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate canRestartRuntime() " + toString(), e);
 			return false;
@@ -1661,7 +1703,7 @@ public class Server extends Base implements IServer {
 	 */
 	public void restartModule(IModule module, IProgressMonitor monitor) throws CoreException {
 		try {
-			getDelegate(monitor).restartModule(module, monitor);
+			getBehaviourDelegate().restartModule(module, monitor);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate restartModule() " + toString(), e);
 		}
@@ -1674,7 +1716,7 @@ public class Server extends Base implements IServer {
 	 */
 	public IServerPort[] getServerPorts() {
 		try {
-			return getDelegate(null).getServerPorts();
+			return getDelegate().getServerPorts();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate getServerPorts() " + toString(), e);
 			return null;

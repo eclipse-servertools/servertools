@@ -22,13 +22,13 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.wst.server.core.IOrdered;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerConfiguration;
-import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.ui.actions.IServerAction;
+import org.eclipse.wst.server.ui.editor.IOrdered;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.wst.server.ui.internal.editor.ServerEditorCore;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 /**
@@ -225,7 +225,7 @@ public class ServerAction implements IOrdered {
 		}
 
 		// sort actions
-		ServerUtil.sortOrderedList(serverActions);
+		ServerEditorCore.sortOrderedList(serverActions);
 		Trace.trace(Trace.CONFIG, "-<- Done loading .serverActions extension point -<-");
 	}
 

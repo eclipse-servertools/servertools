@@ -103,7 +103,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 					IResourceDelta delta = event.getDelta();
 					
 					//if (delta.getFlags() == IResourceDelta.MARKERS || delta.getFlags() == IResourceDelta.NO_CHANGE)
-					//	return; // TODO
+					//	return;
 				
 					delta.accept(new IResourceDeltaVisitor() {
 						public boolean visit(IResourceDelta visitorDelta) {

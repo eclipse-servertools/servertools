@@ -28,7 +28,7 @@ public interface IServerLocator {
 		 * 
 		 * @param server the runtime that was found.
 		 */
-		public void serverFound(IServer server);
+		public void serverFound(IServerWorkingCopy server);
 	}
 
 	/**

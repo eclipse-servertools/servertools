@@ -54,13 +54,14 @@ public class ModifyModulesTask extends Task {
 		
 		IRunningActionServer ras = (IRunningActionServer) workingCopy.getAdapter(IRunningActionServer.class);
 		if (ras != null) {
-			int state = workingCopy.getServerState();
+			IServer server = workingCopy.getOriginal();
+			int state = server.getServerState();
 			if (state == IServer.STATE_STOPPED || state == IServer.STATE_UNKNOWN) {
 				String mode = (String) getTaskModel().getObject(ITaskModel.TASK_LAUNCH_MODE);
 				if (mode == null || mode.length() == 0)
 					mode = ILaunchManager.DEBUG_MODE;
 				
-				workingCopy.synchronousStart(mode, monitor);
+				server.synchronousStart(mode, monitor);
 			}
 		}
 

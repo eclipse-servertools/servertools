@@ -33,10 +33,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ITaskModel;
-import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
@@ -48,7 +45,7 @@ public class ModifyModulesComposite extends Composite {
 	
 	protected IWizardHandle wizard;
 	
-	protected IServer server;
+	protected IServerAttributes server;
 
 	protected Map childModuleMap = new HashMap();
 	protected Map parentTreeItemMap = new HashMap();
@@ -89,7 +86,7 @@ public class ModifyModulesComposite extends Composite {
 		createControl();
 	}
 	
-	public void setServer(IServer server) {
+	public void setServer(IServerAttributes server) {
 		if (server == this.server)
 			return;
 

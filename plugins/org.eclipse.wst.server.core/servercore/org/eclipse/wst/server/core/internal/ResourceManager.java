@@ -456,17 +456,6 @@ public class ResourceManager {
 			return;
 
 		Trace.trace(Trace.RESOURCES, "Deregistering server: " + server.getName());
-
-		// terminate server if it is being deleted!
-		// TODO - should we be doing this?
-		/*int state = server.getServerState();
-		if (state != IServer.STATE_STOPPED && state != IServer.STATE_STOPPING &&
-				state != IServer.STATE_UNKNOWN) {
-			IServerExtension extension = server.getExtension(null);
-			if (extension instanceof IStartableServer) {
-				((IStartableServer) extension).terminate();
-			}
-		}*/
 		
 		((Server) server).deleteLaunchConfigurations();
 		ServerPlugin.getInstance().removeTempDirectory(server.getId(), new NullProgressMonitor());
@@ -823,7 +812,7 @@ public class ResourceManager {
 				IRuntime a = (IRuntime) list.get(i);
 				IRuntime b = (IRuntime) list.get(j);
 				if (a.getRuntimeType() != null && b.getRuntimeType() != null &&
-						a.getRuntimeType().getOrder() < b.getRuntimeType().getOrder()) {
+						((RuntimeType)a.getRuntimeType()).getOrder() < ((RuntimeType)b.getRuntimeType()).getOrder()) {
 					Object temp = a;
 					list.set(i, b);
 					list.set(j, temp);
@@ -840,7 +829,7 @@ public class ResourceManager {
 		list.toArray(r);
 		return r;
 	}
-	
+
 	/**
 	 * Returns the runtime with the given id.
 	 *

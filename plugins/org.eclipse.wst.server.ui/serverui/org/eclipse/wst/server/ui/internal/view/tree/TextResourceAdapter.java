@@ -15,7 +15,6 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.wst.server.core.IElement;
 import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.ui.ServerImageResource;
@@ -32,7 +31,7 @@ public class TextResourceAdapter implements IAdaptable, IWorkbenchAdapter, IServ
 	protected Object parent;
 	protected byte thisStyle;
 	
-	public static IElement deleted;
+	public static Object deleted;
 	
 	public final static byte STYLE_SERVERS = 0;
 	public final static byte STYLE_CONFIGURATIONS = 1;
@@ -89,7 +88,7 @@ public class TextResourceAdapter implements IAdaptable, IWorkbenchAdapter, IServ
 				new TextResourceAdapter(this, STYLE_CONFIGURATIONS)
 			};*/
 
-		IElement[] elements = null;
+		Object[] elements = null;
 		if (thisStyle == STYLE_SERVERS)
 			elements = ServerCore.getServers();
 		else if (thisStyle == STYLE_CONFIGURATIONS)

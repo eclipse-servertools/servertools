@@ -17,13 +17,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * A working copy server object used for formulating changes
  * to a server instance ({@link IServer}).
  * <p>
- * [issue: The default value of host name should be specified
- * here (or in IServerType.createServer). If the initial value is null (or
- * something simularly unsuitable for actual use), then IServer.getHost
- * needs to be spec'd to allow null return, and save needs to deal with the
- * case where the client forgets to initialize this property.]
- * </p>
- * <p>
  * [issue: The default value of runtime should be specified
  * here (or in IServerType.createServer). If the initial value is null (or
  * something simularly unsuitable for actual use), then IServer.getRuntime
@@ -66,7 +59,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * 
  * @since 1.0
  */
-public interface IServerWorkingCopy extends IServer, IElementWorkingCopy {
+public interface IServerWorkingCopy extends IServerAttributes, IElementWorkingCopy {
 	/**
 	 * Sets the server configuration associated with this server working copy.
 	 * <p>
