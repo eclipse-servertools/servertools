@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<plugin id="org.eclipse.jst.server.tomcat.ui"
+   name="%pluginName"
+   version="3.0.0"
+   provider-name="%providerName"
+   class="org.eclipse.jst.server.tomcat.ui.internal.TomcatUIPlugin">
+
+   <runtime>
+      <library name="tomcatui.jar">
+         <export name="*"/>
+         <packages prefixes="org.eclipse.jst.server.tomcat.ui"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.core.resources" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.ui" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.ui.ide" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.ui.editors" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.ui.forms" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.debug.core" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.debug.ui" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.jdt.core" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.jdt.debug" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.jdt.debug.ui" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.jdt.launching" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.wst.server.core" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.wst.server.ui" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.jst.server.core" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.jst.server.ui" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.jst.server.tomcat.core" version="3.0.0" match="equivalent"/>
+   </requires>
+
+   <extension point="org.eclipse.wst.server.ui.serverImages">
+      <image
+         id="org.eclipse.jst.server.tomcat.32"
+         icon="icons/obj16/server_32.gif"
+         typeIds="org.eclipse.jst.server.tomcat.32.runtime"/>
+      <image
+         id="org.eclipse.jst.server.tomcat.40"
+         icon="icons/obj16/server_40.gif"
+         typeIds="org.eclipse.jst.server.tomcat.40.runtime"/>
+      <image
+         id="org.eclipse.jst.server.tomcat.41"
+         icon="icons/obj16/server_41.gif"
+         typeIds="org.eclipse.jst.server.tomcat.41.runtime"/>
+      <image
+         id="org.eclipse.jst.server.tomcat.50"
+         icon="icons/obj16/server_50.gif"
+         typeIds="org.eclipse.jst.server.tomcat.50.runtime"/>
+
+      <image
+         id="org.eclipse.jst.server.tomcat.32"
+         icon="icons/obj16/server_32.gif"
+         typeIds="org.eclipse.jst.server.tomcat.32"/>
+      <image
+         id="org.eclipse.jst.server.tomcat.40"
+         icon="icons/obj16/server_40.gif"
+         typeIds="org.eclipse.jst.server.tomcat.40"/>
+      <image
+         id="org.eclipse.jst.server.tomcat.41"
+         icon="icons/obj16/server_41.gif"
+         typeIds="org.eclipse.jst.server.tomcat.41"/>
+      <image
+         id="org.eclipse.jst.server.tomcat.50"
+         icon="icons/obj16/server_50.gif"
+         typeIds="org.eclipse.jst.server.tomcat.50"/>
+   </extension>
+
+   <extension point="org.eclipse.wst.server.ui.editorPages">
+      <page
+         id="org.eclipse.jst.server.tomcat.configuration.editor.webmodule"
+         order="20"
+         name="%configurationEditorWebModulesPage"
+         typeIds="org.eclipse.jst.server.tomcat.*"
+         class="org.eclipse.jst.server.tomcat.ui.internal.editor.ConfigurationWebModuleEditorFactory"/>
+   </extension>
+   
+   <extension point="org.eclipse.wst.server.ui.editorPageSections">
+      <section
+         id="org.eclipse.jst.server.tomcat.server.editor.general"
+         order="0"
+         insertionId="org.eclipse.wst.server.editor.overview.left"
+         typeIds="org.eclipse.jst.server.tomcat.*"
+         class="org.eclipse.jst.server.tomcat.ui.internal.editor.ServerGeneralEditorSectionFactory"/>
+      <section
+         id="org.eclipse.jst.server.tomcat.configuration.editor.port"
+         order="10"
+         insertionId="org.eclipse.wst.server.editor.overview.right"
+         typeIds="org.eclipse.jst.server.tomcat.*"
+         class="org.eclipse.jst.server.tomcat.ui.internal.editor.ConfigurationPortEditorSectionFactory"/>
+      <section
+         id="org.eclipse.jst.server.tomcat.configuration.editor.mime"
+         order="20"
+         insertionId="org.eclipse.wst.server.editor.overview.right"
+         typeIds="org.eclipse.jst.server.tomcat.*"
+         class="org.eclipse.jst.server.tomcat.ui.internal.editor.ConfigurationMimeEditorSectionFactory"/>
+   </extension>
+   
+   <extension point="org.eclipse.wst.server.ui.wizardFragments">
+      <fragment
+         id="org.eclipse.jst.server.tomcat.32.runtime"
+         typeIds="org.eclipse.jst.server.tomcat.32.runtime"
+         class="org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeWizardFragment"/>
+      <fragment
+         id="org.eclipse.jst.server.tomcat.40.runtime"
+         typeIds="org.eclipse.jst.server.tomcat.40.runtime"
+         class="org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeWizardFragment"/>
+      <fragment
+         id="org.eclipse.jst.server.tomcat.41.runtime"
+         typeIds="org.eclipse.jst.server.tomcat.41.runtime"
+         class="org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeWizardFragment"/>
+      <fragment
+         id="org.eclipse.jst.server.tomcat.50.runtime"
+         typeIds="org.eclipse.jst.server.tomcat.50.runtime"
+         class="org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeWizardFragment"/>
+   </extension>
+   
+  <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+    <launchConfigurationTypeImage
+      id="org.eclipse.jst.server.tomcat.ui.launchConfigurationTypeImage"
+      configTypeID="org.eclipse.jst.server.tomcat.core.launchConfigurationType"
+      icon="icons/obj16/tomcat_tools.gif">
+    </launchConfigurationTypeImage>
+  </extension>
+
+  <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+    <launchConfigurationTabGroup
+      id="org.eclipse.jst.server.tomcat.ui.launchConfigurationTabGroup"
+      type="org.eclipse.jst.server.tomcat.core.launchConfigurationType"
+      class="org.eclipse.jst.server.tomcat.ui.internal.TomcatLaunchConfigurationTabGroup">
+    </launchConfigurationTabGroup>
+  </extension>
+
+</plugin>

@@ -1,0 +1,208 @@
+
+<serverDefinition 
+	 name="Orion v2.02"
+	 ejbModules="true"
+	 webModules="true"
+	 earModules="true">
+<property id="orionHome"
+	label="Orion Directory:"
+	type="directory"
+	default="/your_server_root/orion" />
+<property id="userName"
+	label="User Name:"
+	type="string"
+	default="admin" />
+<property id="password"
+	label="Password:"
+	type="string"
+	default="password" />
+<property id="serverAddress"
+	label="Address:"
+	type="string"
+	default="127.0.0.1" />
+<property id="serverPort"
+	label="Port:"
+	type="string"
+	default="80" />
+<property id="ormiPort"
+	label="ORMI Port:"
+	type="string"
+	default="23791" />
+<property id="classPathVariableName"
+	label="Classpath Variable Name:"
+	type="string"
+	default="ORION202" />
+<property id="classPath"
+	label="Classpath Variable:"
+	type="directory"
+	default="/your_server_root/orion" />
+	
+<property id="defaultWebSite"
+	label="Default web-site:"
+	type="string"
+	default="default-web-site" />
+		
+<serverHome>${serverRootDirectory}</serverHome>
+<webModulesDeployDirectory>${orionHome}/auto</webModulesDeployDirectory>
+<ejbModulesDeployDirectory>${orionHome}/auto</ejbModulesDeployDirectory>
+<earModulesDeployDirectory>${orionHome}/auto</earModulesDeployDirectory>
+<jndiInitialContextFactory>com.evermind.server.rmi.RMIInitialContextFactory</jndiInitialContextFactory>
+<jndiProviderUrl>ormi://${serverAddress}:${ormiPort}</jndiProviderUrl>
+<startClass>com.evermind.server.ApplicationServer</startClass>
+<startWorkingDirectory>${orionHome}</startWorkingDirectory>
+<startVmParameters></startVmParameters>
+<startProgramArguments></startProgramArguments>
+<stopClass>com.evermind.client.orion.OrionConsoleAdmin</stopClass>
+<stopWorkingDirectory>${orionHome}</stopWorkingDirectory>
+<stopVmParameters></stopVmParameters>
+<stopProgramArguments>ormi://${serverAddress}:${ormiPort} ${userName} ${password} -shutdown </stopProgramArguments>
+<serverClassPath>
+	<jar type="variable">JDK_TOOLS</jar>
+	<jar type="variable">${classPathVariableName}/orion.jar</jar>
+	<jar type="variable">${classPathVariableName}/ejb.jar</jar>
+	<jar type="variable">${classPathVariableName}/jndi.jar</jar>
+	<jar type="variable">${classPathVariableName}/jdbc.jar</jar>
+	<jar type="variable">${classPathVariableName}/jta.jar</jar>
+	<jar type="variable">${classPathVariableName}/jaxp.jar</jar>
+	<jar type="variable">${classPathVariableName}/crimson.jar</jar>
+	<jar type="variable">${classPathVariableName}/xalan.jar</jar>
+	<jar type="variable">${classPathVariableName}/jsse.jar</jar>
+	<jar type="variable">${classPathVariableName}/jnet.jar</jar>
+	<jar type="variable">${classPathVariableName}/jcert.jar</jar>
+	<jar type="variable">${classPathVariableName}/activation.jar</jar>
+	<jar type="variable">${classPathVariableName}/mail.jar</jar>
+	<jar type="variable">${classPathVariableName}/jaas.jar</jar>
+	<jar type="variable">${classPathVariableName}/connector.jar</jar>
+</serverClassPath>
+<clientClassPath>
+	<jar type="variable">${classPathVariableName}/orionclient.jar</jar>
+	<jar type="variable">${classPathVariableName}/ejb.jar</jar>
+</clientClassPath>
+<projectClassPath>
+	<jar type="variable">JDK_TOOLS</jar>
+	<jar type="variable">${classPathVariableName}/orion.jar</jar>
+	<jar type="variable">${classPathVariableName}/ejb.jar</jar>
+	<jar type="variable">${classPathVariableName}/jndi.jar</jar>
+	<jar type="variable">${classPathVariableName}/jdbc.jar</jar>
+	<jar type="variable">${classPathVariableName}/jta.jar</jar>
+	<jar type="variable">${classPathVariableName}/jaxp.jar</jar>
+	<jar type="variable">${classPathVariableName}/crimson.jar</jar>
+	<jar type="variable">${classPathVariableName}/xalan.jar</jar>
+	<jar type="variable">${classPathVariableName}/jsse.jar</jar>
+	<jar type="variable">${classPathVariableName}/jnet.jar</jar>
+	<jar type="variable">${classPathVariableName}/jcert.jar</jar>
+	<jar type="variable">${classPathVariableName}/activation.jar</jar>
+	<jar type="variable">${classPathVariableName}/mail.jar</jar>
+	<jar type="variable">${classPathVariableName}/jaas.jar</jar>
+	<jar type="variable">${classPathVariableName}/connector.jar</jar>
+</projectClassPath>
+<adminTool>
+
+	<web> <deploy /> <undeploy />	 </web>
+	<ejb> <deploy /> <undeploy />	 </ejb>
+	
+
+	<ear>
+		<deploy>
+			<![CDATA[
+			<!-- Copyright (c) 2002 by ObjectLearn. All Rights Reserved. -->
+			<!-- DO NOT MODIFY THIS FILE CHANGE THE SERVER FILE INSTEAD -->
+				<project name="deployextension"  default="deploy"  basedir=".">
+				  <target name="deploy" >
+				    <path id="toolpath">
+				        <!-- append the external classpath lastly -->
+				        <pathelement path="%{java.class.path}" />
+				        <!-- append the path sent through eclipse to classpath -->
+				        <pathelement path="%{adminToolPath}" />  
+				     </path>
+					 <java classname="com.evermind.client.orion.OrionConsoleAdmin" 
+					        fork="true" 
+					        classpathref="toolpath" >
+							<arg value="ormi://${serverAddress}:${ormiPort}" />
+			                <arg value="${userName}" />
+			                <arg value="${password}" />
+			                <arg value="-deploy" />
+			                <arg value="-file" />
+			                <arg value="%{domain}/%{ear}.ear" />
+			                <arg value="-deploymentName" />
+			                <arg value="%{ear}" />
+			                <arg value="-cluster" />
+			          </java>
+				  </target>
+				</project>
+				]]>
+		</deploy>
+		<undeploy>
+			<![CDATA[
+			<!-- Copyright (c) 2002 by ObjectLearn. All Rights Reserved. -->
+			<!-- DO NOT MODIFY THIS FILE CHANGE THE SERVER FILE INSTEAD -->
+				<project name="deployextension"  default="undeploy"  basedir=".">
+				  <target name="undeploy" >
+				    <path id="toolpath">
+				        <!-- append the external classpath lastly -->
+				        <pathelement path="%{java.class.path}" />
+				        <!-- append the path sent through eclipse to classpath -->
+				        <pathelement path="%{adminToolPath}" />  
+				     </path>
+					 <java classname="com.evermind.client.orion.OrionConsoleAdmin" 
+					        fork="true" 
+					        classpathref="toolpath"
+					        args="%{domain}/%{ear}.ear" >
+							<arg value="ormi://${serverAddress}:${ormiPort}" />
+			                <arg value="${userName}" />
+			                <arg value="${password}" />
+			                <arg value="-undeploy" />
+			                <arg value="-file" />
+			                <arg value="$%{ear}" />
+	 				 </java>
+				  </target>
+				</project>
+				]]>
+	   </undeploy>
+	   <webModule>
+	   		<deploy>
+					<![CDATA[
+					<!-- Copyright (c) 2002 by ObjectLearn. All Rights Reserved. -->
+					<!-- DO NOT MODIFY THIS FILE CHANGE THE SERVER FILE INSTEAD -->
+						<project name="deployextension"  default="deploy"  basedir=".">
+						  <target name="deploy" >
+						    <path id="toolpath">
+						        <!-- append the external classpath lastly -->
+						        <pathelement path="%{java.class.path}" />
+						        <!-- append the path sent through eclipse to classpath -->
+						        <pathelement path="%{adminToolPath}" />  
+				     		</path>
+							REPEAT[ 
+							  <java classname="com.evermind.client.orion.OrionConsoleAdmin" 
+							        fork="true" 
+							        classpathref="toolpath" >
+									<arg value="ormi://${serverAddress}:${ormiPort}" />
+					                <arg value="${userName}" />
+					                <arg value="${password}" />
+				                <arg value="-bindWebApp" />
+				                <arg value="%{ear}" />
+				                <arg value="%{web-uri}" />
+				                <arg value="${defaultWebSite}" />
+				                <arg value="%{context-root}" />
+			 				 </java>
+			 				]ENDREPEAT
+						  </target>
+						</project>
+				]]>
+	   		</deploy>
+	   		<undeploy />
+	   </webModule>
+	   <ejbModule>
+	   		<deploy />
+	   		<undeploy />
+	   </ejbModule>
+	 </ear>
+</adminTool>
+
+
+<adminToolPath>
+	<jar type="variable">${classPathVariableName}/orion.jar</jar>
+	<jar type="variable">${classPathVariableName}/ejb.jar</jar>
+	<jar type="variable">${classPathVariableName}/jndi.jar</jar>
+</adminToolPath>
+</serverDefinition>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<plugin id="org.eclipse.jst.server.core"
+  name="%pluginName"
+  version="3.0.0"
+  provider-name="%providerName"
+  class="org.eclipse.jst.server.internal.core.JavaServerPlugin">
+
+  <requires>
+    <import plugin="org.eclipse.core.runtime" version="3.0.0" match="equivalent"/>
+    <import plugin="org.eclipse.core.resources" version="3.0.0" match="equivalent"/>
+    <import plugin="org.eclipse.debug.core" version="3.0.0" match="equivalent"/>
+    <import plugin="org.eclipse.wst.server.core" version="3.0.0" match="equivalent"/>
+    <import plugin="org.eclipse.jdt.core" version="3.0.0" match="equivalent"/>
+    <import plugin="org.eclipse.jdt.launching" version="3.0.0" match="equivalent"/>
+  </requires>
+
+  <runtime>
+    <library name="sjavacore.jar">
+      <export name="*"/>
+        <packages prefixes="org.eclipse.jst.server.j2ee,org.eclipse.jst.server.core"/>
+    </library>
+  </runtime>
+
+  <extension point="org.eclipse.jdt.core.classpathContainerInitializer">
+    <classpathContainerInitializer
+      id="org.eclipse.jst.server.core.container"
+      class="org.eclipse.jst.server.internal.core.RuntimeClasspathContainerInitializer"/>
+  </extension>
+  
+  <extension point="org.eclipse.wst.server.core.moduleKinds">
+    <moduleKind
+       id="j2ee.web"
+       name="%moduleTypeJ2EEWebName"/>
+    <moduleKind
+       id="j2ee.ejb"
+       name="%moduleTypeJ2EEEJBName"/>
+    <moduleKind
+       id="j2ee.ear"
+       name="%moduleTypeJ2EEEARName"/>
+  </extension>
+
+  <extension point="org.eclipse.wst.server.core.runtimeTypes">
+    <runtimeType
+       id="org.eclipse.jst.server.core.runtimeType"
+       name="%runtimeTypeName"
+       description="%runtimeTypeDescription"
+       class="org.eclipse.jst.server.internal.core.GenericRuntime"
+       workingCopyClass="org.eclipse.jst.server.internal.core.GenericRuntimeWorkingCopy">
+       <moduleType
+         types="j2ee"
+         versions="*"/>
+       <moduleType
+         types="utility"
+         versions="*"/>
+    </runtimeType>
+  </extension>
+
+  <extension point="org.eclipse.wst.server.core.runtimeTargetHandlers">
+    <runtimeTargetHandler
+      id="org.eclipse.jst.server.core.runtimeTarget"
+      runtimeTypeIds="org.eclipse.jst.server.core.runtimeType"
+      class="org.eclipse.jst.server.internal.core.GenericRuntimeTargetHandler"/>
+  </extension>
+
+</plugin>

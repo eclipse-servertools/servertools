@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.eclipse.jst.server.generic.core"
+   name="%pluginName"
+   version="1.0.0"
+   provider-name="%providerName"
+   class="org.eclipse.jst.server.generic.core.CorePlugin">
+
+   <runtime>
+      <library name="genericserver.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.debug.core" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.jdt.core" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.jdt.launching" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.wst.server.core" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.jst.server.core" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.debug.ui"/>
+      <import plugin="org.eclipse.ant.core"/>
+      <import plugin="org.eclipse.ant.ui"/>
+   </requires>
+	
+ <extension point="org.eclipse.wst.server.core.runtimeTargetHandlers">
+     <runtimeTargetHandler
+        id="org.eclipse.jst.server.generic.runtimeTarget"
+        runtimeTypeIds="org.eclipse.jst.server.generic.runtime"
+        class="org.eclipse.jst.server.generic.internal.core.GenericServerRuntimeTargetHandler"/>
+	</extension>
+
+  <extension point="org.eclipse.wst.server.core.moduleKinds">
+    <moduleKind
+       id="j2ee.web"
+       name="war file"/>
+    <moduleKind
+       id="j2ee.ejb"
+       name="ejb"/>
+    <moduleKind
+       id="j2ee.ear"
+       name="ear"/>
+  </extension>
+  
+  <extension point="org.eclipse.wst.server.core.runtimeTypes">
+    <runtimeType
+       id="org.eclipse.jst.server.generic.runtime"
+       name="J2EE Generic Server Runtime"
+       description="This is the Lomboz type runtime support"
+       vendor="All"
+       version="0"
+       order="100"
+       class="org.eclipse.jst.server.generic.internal.core.GenericServerRuntime"
+       workingCopyClass="org.eclipse.jst.server.generic.internal.core.GenericServerRuntimeWorkingCopy">
+       <moduleType
+         types="j2ee.web"
+         versions="1.2, 1.3, 1.4"/>
+    </runtimeType>
+ </extension>
+
+<extension point="org.eclipse.wst.server.core.serverTypes">
+     <serverType
+           runtime="true"
+           class="org.eclipse.jst.server.generic.internal.core.GenericServer"
+           order="100"
+           hosts="localhost"
+           id="org.eclipse.jst.server.generic"
+           initialState="stopped"
+           workingCopyClass="org.eclipse.jst.server.generic.internal.core.GenericServerWorkingCopy"
+           runtimeTypeId="org.eclipse.jst.server.generic.runtime"
+           description="Lomboz like generic server"
+           launchConfigId="org.eclipse.jst.server.generic.core.launchConfigurationType"
+           monitorable="true"
+           name="J2EE Generic server support"
+           launchModes="run,debug"
+           configurationTypeId="org.eclipse.jst.server.generic">
+     </serverType>
+	</extension>
+
+	<extension point="org.eclipse.wst.server.core.serverConfigurationTypes">
+     <serverConfigurationType
+       id="org.eclipse.jst.server.generic"
+       name="J2EE Generic server configuration"
+       description="Lomboz like server configuration"
+       isFolder="true"
+       class="org.eclipse.jst.server.generic.internal.core.GenericServerConfigurationDelegate"
+       workingCopyClass="org.eclipse.jst.server.generic.internal.core.GenericServerConfigurationWorkingCopy">
+     </serverConfigurationType>
+	</extension>
+
+   <extension point="org.eclipse.debug.core.launchConfigurationTypes">
+     <launchConfigurationType
+        id="org.eclipse.jst.server.generic.core.launchConfigurationType"
+        name="Generic server launch configuration type"
+        delegate="org.eclipse.jst.server.generic.internal.core.GenericServerLaunchConfigurationDelegate"
+        modes="run, debug"
+        sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
+        sourcePathComputerId="org.eclipse.jst.server.generic.core.sourcePathComputer"/>
+  </extension>
+
+   <extension point="org.eclipse.debug.core.sourcePathComputers">
+     <sourcePathComputer
+        id="org.eclipse.jst.server.generic.core.sourcePathComputer"
+        class="org.eclipse.jst.server.generic.internal.core.GenericServerSourcePathComputerDelegate"/>
+   </extension>
+
+
+   
+   
+   
+  
+</plugin>

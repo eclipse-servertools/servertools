@@ -1,0 +1,76 @@
+
+<serverDefinition 
+	 name="BEA Weblogic Server v7.0"
+	 ejbModules="true"
+	 webModules="true"
+	 earModules="true">
+<property id="beaHome"
+	label="BEA Home Directory:"
+	type="directory"
+	default="/your_server_root/bea" />
+<property id="serverRootDirectory"
+	label="Application Server Directory:"
+	type="directory"
+	default="/your_server_root/bea/weblogic700" />
+<property id="domainName"
+	label="Admin Domain Name:"
+	type="string"
+	default="mydomain" />
+<property id="domainDirectory"
+	label="Administration Domain Directory:"
+	type="directory"
+	default="/your_server_root/bea/user_projects/mydomain" />
+<property id="serverName"
+	label="Server Name:"
+	type="string"
+	default="myserver" />
+<property id="userName"
+	label="User Name:"
+	type="string"
+	default="system" />
+<property id="password"
+	label="Password:"
+	type="string"
+	default="weblogic" />
+<property id="productionMode"
+	label="Production Mode:"
+	type="boolean"
+	default="false" />
+<property id="serverAddress"
+	label="Address:"
+	type="string"
+	default="127.0.0.1" />
+<property id="serverPort"
+	label="Port:"
+	type="string"
+	default="7001" />
+<property id="classPathVariableName"
+	label="Classpath Variable Name:"
+	type="string"
+	default="WEBLOGIC700" />
+<property id="classPath"
+	label="Classpath Variable:"
+	type="directory"
+	default="/your_server_root/bea/weblogic700/server/lib" />
+<serverHome>${serverRootDirectory}</serverHome>
+<webModulesDeployDirectory>${domainDirectory}/applications</webModulesDeployDirectory>
+<ejbModulesDeployDirectory>${domainDirectory}/applications</ejbModulesDeployDirectory>
+<earModulesDeployDirectory>${domainDirectory}/applications</earModulesDeployDirectory>
+<jndiInitialContextFactory>weblogic.jndi.WLInitialContextFactory</jndiInitialContextFactory>
+<jndiProviderUrl>t3://${serverAddress}:${serverPort}</jndiProviderUrl>
+<startClass>weblogic.Server</startClass>
+<startWorkingDirectory>${domainDirectory}</startWorkingDirectory>
+<startVmParameters>-Xms32m -Xmx200m -Dweblogic.security.SSL.trustedCAKeyStore="${serverRootDirectory}/server/lib/cacerts" -Dweblogic.Name=${serverName} -Dbea.home="${beaHome}"  -Dweblogic.management.username=${userName} -Dweblogic.management.password=${password} -Dweblogic.ProductionModeEnabled=${productionMode} -Djava.security.policy=="${serverRootDirectory}/server/lib/weblogic.policy"</startVmParameters>
+<startProgramArguments></startProgramArguments>
+<stopClass>weblogic.Admin</stopClass>
+<stopWorkingDirectory>${domainDirectory}</stopWorkingDirectory>
+<stopVmParameters></stopVmParameters>
+<stopProgramArguments>-url t3://${serverAddress}:${serverPort} -username ${userName} -password ${password} SHUTDOWN</stopProgramArguments>
+<serverClassPath>
+	<jar type="variable">JDK_TOOLS</jar>
+	<jar type="variable">${classPathVariableName}/weblogic.jar</jar>
+</serverClassPath>
+<clientClassPath>
+	<jar type="variable">${classPathVariableName}/weblogic.jar</jar>
+</clientClassPath>
+</serverDefinition>

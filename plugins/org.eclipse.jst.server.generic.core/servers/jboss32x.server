@@ -1,0 +1,105 @@
+
+<serverDefinition 
+	 name="JBOSS 3.2.x"
+	 ejbModules="true"
+	 webModules="true"
+	 earModules="true">
+<property id="serverRootDirectory"
+	label="Application Server Directory:"
+	type="directory"
+	default="/your_server_root/appservers/jboss-3.2.3" />
+<property id="serverAddress"
+	label="Address:"
+	type="string"
+	default="127.0.0.1" />
+<property id="port"
+	label="Port:"
+	type="string"
+	default="8080" />
+<property id="serverConfig"
+	label="Server Configuration (minimal/default/all):"
+	type="string"
+	default="default" />
+<property id="classPathVariableName"
+	label="Classpath Variable Name:"
+	type="string"
+	default="JBOSS32X" />
+<property id="classPath"
+	label="Classpath Variable:"
+	type="directory"
+	default="/your_server_root/appservers/jboss-3.2.3" />
+<serverHome>${serverRootDirectory}</serverHome>
+<webModulesDeployDirectory>${serverRootDirectory}/server/${serverConfig}/deploy</webModulesDeployDirectory>
+<ejbModulesDeployDirectory>${serverRootDirectory}/server/${serverConfig}/deploy</ejbModulesDeployDirectory>
+<earModulesDeployDirectory>${serverRootDirectory}/server/${serverConfig}/deploy</earModulesDeployDirectory>
+<jndiInitialContextFactory>org.jnp.interfaces.NamingContextFactory</jndiInitialContextFactory>
+<jndiProviderUrl>jnp://${serverAddress}:1099</jndiProviderUrl>
+<startClass>org.jboss.Main</startClass>
+<startWorkingDirectory>${serverRootDirectory}/bin</startWorkingDirectory>
+<startVmParameters></startVmParameters>
+<startProgramArguments>-c ${serverConfig}</startProgramArguments>
+<stopClass>org.jboss.Shutdown</stopClass>
+<stopWorkingDirectory>${serverRootDirectory}/bin</stopWorkingDirectory>
+<stopVmParameters></stopVmParameters>
+<stopProgramArguments>-S</stopProgramArguments>
+<serverClassPath>
+	<jar type="variable">${classPath}/bin/run.jar</jar>
+	<jar type="variable">${classPath}/bin/shutdown.jar</jar>
+	<jar type="variable">${classPath}/client/jboss-j2ee.jar</jar>
+	<jar type="variable">${classPath}/server/${serverConfig}/lib/javax.servlet.jar</jar>
+	<jar type="variable">${classPath}/lib/jboss-boot.jar</jar>
+	<jar type="variable">${classPath}/lib/jboss-system.jar</jar>
+	<jar type="variable">${classPath}/lib/concurrent.jar</jar>
+	<jar type="variable">${classPath}/server/${serverConfig}/lib/jboss.jar</jar>
+	<jar type="variable">${classPath}/server/${serverConfig}/lib/jnpserver.jar</jar>
+	<jar type="variable">${classPath}/server/${serverConfig}/lib/jpl-pattern.jar</jar>
+	<jar type="variable">${classPath}/server/${serverConfig}/lib/jpl-util.jar</jar>
+	<jar type="variable">${classPath}/server/${serverConfig}/lib/jboss-transaction.jar</jar>
+	<jar type="variable">${classPath}/server/${serverConfig}/lib/bcel.jar</jar>
+	<jar type="variable">${classPath}/lib/jdom.jar</jar>
+	<jar type="variable">${classPath}/lib/xercesImpl.jar</jar>
+	<jar type="variable">${classPath}/lib/xml-apis.jar</jar>
+	<jar type="variable">${classPath}/lib/gnu-regexp.jar</jar>
+	<jar type="variable">${classPath}/lib/getopt.jar</jar>
+</serverClassPath>
+<clientClassPath>
+	<jar type="variable">${classPath}/client/jboss-j2ee.jar</jar>
+	<jar type="variable">${classPath}/client/jnp-client.jar</jar>
+	<jar type="variable">${classPath}/client/jboss-client.jar</jar>
+	<jar type="variable">${classPath}/client/jboss-common-client.jar</jar>
+	<jar type="variable">${classPath}/client/jbosssx-client.jar</jar>
+	<jar type="variable">${classPath}/client/log4j.jar</jar>
+	<jar type="variable">${classPath}/client/jnet.jar</jar>
+	<jar type="variable">${classPath}/server/default/lib/jnpserver.jar</jar>
+	<jar type="variable">${classPath}/client/jboss-jaas.jar</jar>
+</clientClassPath>
+<projectClassPath>
+	<jar type="variable">${classPath}/bin/run.jar</jar>
+	<jar type="variable">${classPath}/bin/shutdown.jar</jar>
+	<jar type="variable">${classPath}/client/jboss-j2ee.jar</jar>
+	<jar type="variable">${classPath}/server/${serverConfig}/lib/javax.servlet.jar</jar>
+	<jar type="variable">${classPath}/lib/jboss-boot.jar</jar>
+	<jar type="variable">${classPath}/lib/jboss-system.jar</jar>
+	<jar type="variable">${classPath}/lib/concurrent.jar</jar>
+	<jar type="variable">${classPath}/server/${serverConfig}/lib/jboss.jar</jar>
+	<jar type="variable">${classPath}/server/${serverConfig}/lib/jnpserver.jar</jar>
+	<jar type="variable">${classPath}/server/${serverConfig}/lib/jpl-pattern.jar</jar>
+	<jar type="variable">${classPath}/server/${serverConfig}/lib/jpl-util.jar</jar>
+	<jar type="variable">${classPath}/server/${serverConfig}/lib/jboss-transaction.jar</jar>
+	<jar type="variable">${classPath}/server/${serverConfig}/lib/bcel.jar</jar>
+</projectClassPath>
+<adminTool>
+	<web><deploy /><undeploy />
+	</web>
+	<ejb><deploy /><undeploy />
+	</ejb>
+	<ear><deploy /><undeploy />
+		<webModule><deploy /><undeploy />
+		</webModule>
+		<ejbModule><deploy /><undeploy />
+		</ejbModule>
+	</ear>
+</adminTool>
+<adminToolPath>
+</adminToolPath>
+</serverDefinition>

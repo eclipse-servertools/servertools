@@ -1,0 +1,328 @@
+
+<serverDefinition 
+	 name="JonAS"
+	 ejbModules="true"
+	 webModules="true"
+	 earModules="true">
+<property id="jonasRoot"
+	label="JonAS Installation Directory:"
+	type="directory"
+	default="/your_server_root/appservers/JOnAS-3.3.5" />
+<property id="jonasBase"
+	label="JonAS Configaration Directory:"
+	type="directory"
+	default="/your_server_root/appservers/JOnAS-3.3.5" />
+<property id="serverAddress"
+	label="Address:"
+	type="string"
+	default="127.0.0.1" />
+<property id="serverPort"
+	label="Port:"
+	type="string"
+	default="8080" />
+<property id="protocols"
+	label="Ejb Protocols:"
+	type="string"
+	default="jrmp" />
+<property id="mappernames"
+	label="Mapper names:"
+	type="string"
+	default="" />
+<property id="classPathVariableName"
+	label="Classpath Variable Name:"
+	type="string"
+	default="JONAS" />
+<property id="classPath"
+	label="Classpath Variable:"
+	type="directory"
+	default="/your_server_root/appservers/JOnAS-3.3.5" />
+<serverHome>${jonasRoot}</serverHome>
+<webModulesDeployDirectory>${jonasBase}/webapps</webModulesDeployDirectory>
+<ejbModulesDeployDirectory>${jonasBase}/ejbjars</ejbModulesDeployDirectory>
+<earModulesDeployDirectory>${jonasBase}/apps</earModulesDeployDirectory>
+<jndiInitialContextFactory>org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory</jndiInitialContextFactory>
+<jndiProviderUrl>iiop://${serverAddress}:2001</jndiProviderUrl>
+<startClass>org.objectweb.jonas.server.Bootstrap</startClass>
+<startWorkingDirectory>${jonasRoot}</startWorkingDirectory>
+<startVmParameters>-Dinstall.root=${jonasRoot} -Djonas.base=${jonasBase} -Djava.security.policy=${jonasRoot}/conf/java.policy -Djonas.classpath= -Djonas.default.classloader=true -Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate -Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory -Djava.security.auth.login.config=${jonasRoot}/conf/jaas.config -Djava.rmi.server.RMIClassLoaderSpi=org.objectweb.jonas.server.RemoteClassLoaderSpi</startVmParameters>
+<startProgramArguments>org.objectweb.jonas.server.Server</startProgramArguments>
+<stopClass>org.objectweb.jonas.server.Bootstrap</stopClass>
+<stopWorkingDirectory>${jonasRoot}</stopWorkingDirectory>
+<stopVmParameters>-Dinstall.root=${jonasRoot} -Djonas.base=${jonasBase} -Djava.security.policy=${jonasRoot}/conf/java.policy -Djonas.classpath= -Djonas.default.classloader=true -Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate -Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory -Djava.security.auth.login.config=${jonasRoot}/conf/jaas.config -Djava.rmi.server.RMIClassLoaderSpi=org.objectweb.jonas.server.RemoteClassLoaderSpi</stopVmParameters>
+<stopProgramArguments>org.objectweb.jonas.adm.JonasAdmin -s</stopProgramArguments>
+<serverClassPath>
+	<jar type="variable">${classPathVariableName}/lib/common/ow_jonas_bootstrap.jar</jar>
+	<jar type="variable">JDK_TOOLS</jar>
+	<jar type="variable">${classPathVariableName}/conf</jar>
+</serverClassPath>
+<clientClassPath>
+	<jar type="variable">${classPathVariableName}/lib/client.jar</jar>
+</clientClassPath>
+<projectClassPath>
+	<jar type="variable">${classPathVariableName}/lib/common/ow_jonas_bootstrap.jar</jar>
+	<jar type="variable">JDK_TOOLS</jar>
+	<jar type="variable">${classPathVariableName}/lib/common/j2ee/ejb/ejb-2_1-api.jar</jar>
+</projectClassPath>
+<adminTool>
+	<web>
+		<deploy><![CDATA[
+			
+			<!-- Copyright (c) 2002 by ObjectLearn. All Rights Reserved. -->
+			<!-- DO NOT MODIFY THIS FILE CHANGE THE SERVER FILE INSTEAD -->
+				<project name="deployextension"  default="deploy"  basedir=".">
+			      <path id="toolpath">
+				        <!-- append the external classpath lastly -->
+				        <pathelement path="%{java.class.path}" />
+				        <!-- append the path sent through eclipse to classpath -->
+				        <pathelement path="%{adminToolPath}" />  
+				  </path>
+				  <target name="jonas-jar" unless="bypass-server-jar" />
+				  <target name="jonas-deploy" unless="bypass-server-deploy" >
+					  <java 
+					        classname="org.objectweb.jonas.server.Bootstrap" 
+					        fork="true" 
+					        classpathref="toolpath" >
+					      <arg value="org.objectweb.jonas.adm.JonasAdmin" />  
+					      <arg value="-a" />
+					      <arg value="%{deploy.dir}/%{war}.war" />
+					      <jvmarg value="-Dinstall.root=${jonasRoot}" />
+					      <jvmarg value="-Djonas.base=${jonasBase}" />
+					      <jvmarg value="-Djava.security.policy=${jonasRoot}/conf/java.policy" />
+					      <jvmarg value="-Djonas.classpath=" />
+					      <jvmarg value="-Djonas.default.classloader=true" />
+					      <jvmarg value="-Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate" />
+					      <jvmarg value="-Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory" />
+					      <jvmarg value="-Djava.security.auth.login.config=${jonasRoot}/conf/jaas.config" />
+					      <jvmarg value="-Djava.rmi.server.RMIClassLoaderSpi=org.objectweb.jonas.server.RemoteClassLoaderSpi" />				      
+					   </java>
+				  </target>
+				  <target name="deploy" depends="jonas-jar,jonas-deploy" >
+				  </target>
+				</project>
+				
+		]]></deploy>
+		<undeploy><![CDATA[
+			
+			<!-- Copyright (c) 2002 by ObjectLearn. All Rights Reserved. -->
+			<!-- DO NOT MODIFY THIS FILE CHANGE THE SERVER FILE INSTEAD -->
+				<project name="deployextension"  default="undeploy"  basedir=".">
+				  <target name="undeploy" >
+				    <path id="toolpath">
+				        <!-- append the external classpath lastly -->
+				        <pathelement path="%{java.class.path}" />
+				        <!-- append the path sent through eclipse to classpath -->
+				        <pathelement path="%{adminToolPath}" />  
+				     </path>
+					  <java 
+					        classname="org.objectweb.jonas.server.Bootstrap" 
+					        fork="true" 
+					        classpathref="toolpath" >
+					      <arg value="org.objectweb.jonas.adm.JonasAdmin" />  
+					      <arg value="-r" />
+					      <arg value="%{deploy.dir}/%{war}.war" />
+					      <jvmarg value="-Dinstall.root=${jonasRoot}" />
+					      <jvmarg value="-Djonas.base=${jonasBase}" />
+					      <jvmarg value="-Djava.security.policy=${jonasRoot}/conf/java.policy" />
+					      <jvmarg value="-Djonas.classpath=" />
+					      <jvmarg value="-Djonas.default.classloader=true" />
+					      <jvmarg value="-Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate" />
+					      <jvmarg value="-Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory" />
+					      <jvmarg value="-Djava.security.auth.login.config=${jonasRoot}/conf/jaas.config" />
+					      <jvmarg value="-Djava.rmi.server.RMIClassLoaderSpi=org.objectweb.jonas.server.RemoteClassLoaderSpi" />				      
+					   </java>
+				  </target>
+				</project>
+				
+		]]></undeploy>
+	</web>
+	<ejb>
+		<deploy><![CDATA[
+			
+			<!-- Copyright (c) 2002 by ObjectLearn. All Rights Reserved. -->
+			<!-- DO NOT MODIFY THIS FILE CHANGE THE SERVER FILE INSTEAD -->
+				<project name="deployextension"  default="deploy"  basedir=".">
+				 <!-- ejbjar task  -->
+				 <taskdef name="jonasEjbJjar"
+				    classname="org.objectweb.jonas.ant.EjbJar"
+				    classpath="${jonasRoot}/lib/common/ow_jonas_ant.jar" />
+				    
+				  <path id="base.classpath">
+				    <!-- CLASSPATH is added for runtest target -->
+				    <fileset dir="${jonasRoot}/lib">
+				      <include name="**/*.jar"/>
+				      <include name="**/**/*.jar"/>
+				      <include name="**/**/**/*.jar"/>
+				      <exclude name="**/ow_jonas_bootstrap.jar"/>
+				    </fileset>
+				  </path>				
+  			      <path id="toolpath">
+				        <!-- append the external classpath lastly -->
+				        <pathelement path="%{java.class.path}" />
+				        <!-- append the path sent through eclipse to classpath -->
+				        <pathelement path="%{adminToolPath}" />  
+				  </path>
+
+				  <target name="jonas-jar" unless="bypass-server-jar" >
+  					<delete dir="%{deploy.dir}/%{ejb}_jonas" failonerror="false" />
+				     
+					<unjar src="%{deploy.dir}/%{ejb}.jar" dest="%{deploy.dir}/%{ejb}_jonas"/> 
+					<delete file="%{deploy.dir}/%{ejb}.jar" failonerror="false"  />
+
+				    <jonasEjbJjar basejarname="%{ejb}"
+					    srcdir="%{deploy.dir}/%{ejb}_jonas"
+					    descriptordir="%{deploy.dir}/%{ejb}_jonas/META-INF" 
+					    dependency="full" >
+				      <include name="**/ejb-jar.xml"/>
+				      <dtd publicId="-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN"
+					   location="${jonasRoot}/xml/ejb-jar_2_0.dtd" />
+				      <support dir="%{deploy.dir}/%{ejb}_jonas">
+					  	<include name="**/*.*"/>
+					  	<exclude name="**/MANIFEST.MF"/>
+					  	<exclude name="**/ejb-jar.xml"/>
+					  	<exclude name="**/jonas-ejb-jar.xml"/>
+				      </support>
+				      <jonas destdir="%{deploy.dir}"
+				         classpath="%{base.classpath}:%{deploy.dir}/%{ejb}_jonas" 
+					     jonasroot="${jonasRoot}" 
+					     mappernames="${mappernames}"
+				         protocols="${protocols}"
+					     keepgenerated="true" />
+				    </jonasEjbJjar>
+  					<delete dir="%{deploy.dir}/%{ejb}_jonas" failonerror="false" /> 
+				 </target>
+				 <target name="jonas-deploy" unless="bypass-server-deploy" >
+					  <java 
+					        classname="org.objectweb.jonas.server.Bootstrap" 
+					        fork="true" 
+					        classpathref="toolpath" >
+					      <arg value="org.objectweb.jonas.adm.JonasAdmin" />  
+					      <arg value="-a" />
+					      <arg value="%{deploy.dir}/%{ejb}.jar" />
+					      <jvmarg value="-Dinstall.root=${jonasRoot}" />
+					      <jvmarg value="-Djonas.base=${jonasBase}" />
+					      <jvmarg value="-Djava.security.policy=${jonasRoot}/conf/java.policy" />
+					      <jvmarg value="-Djonas.classpath=" />
+					      <jvmarg value="-Djonas.default.classloader=true" />
+					      <jvmarg value="-Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate" />
+					      <jvmarg value="-Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory" />
+					      <jvmarg value="-Djava.security.auth.login.config=${jonasRoot}/conf/jaas.config" />
+					      <jvmarg value="-Djava.rmi.server.RMIClassLoaderSpi=org.objectweb.jonas.server.RemoteClassLoaderSpi" />				      
+					   </java>
+				  </target>
+				  <target name="deploy" depends="jonas-jar,jonas-deploy" >
+				  </target>
+				</project>
+				
+		]]></deploy>
+		<undeploy><![CDATA[
+			
+			<!-- Copyright (c) 2002 by ObjectLearn. All Rights Reserved. -->
+			<!-- DO NOT MODIFY THIS FILE CHANGE THE SERVER FILE INSTEAD -->
+				<project name="deployextension"  default="undeploy"  basedir=".">
+				  <target name="undeploy" >
+				    <path id="toolpath">
+				        <!-- append the external classpath lastly -->
+				        <pathelement path="%{java.class.path}" />
+				        <!-- append the path sent through eclipse to classpath -->
+				        <pathelement path="%{adminToolPath}" />  
+				     </path>
+					  <java 
+					        classname="org.objectweb.jonas.server.Bootstrap" 
+					        fork="true" 
+					        classpathref="toolpath" >
+					      <arg value="org.objectweb.jonas.adm.JonasAdmin" />  
+					      <arg value="-r" />
+					      <arg value="%{ejb}.jar" />
+					      <jvmarg value="-Dinstall.root=${jonasRoot}" />
+					      <jvmarg value="-Djonas.base=${jonasBase}" />
+					      <jvmarg value="-Djava.security.policy=${jonasRoot}/conf/java.policy" />
+					      <jvmarg value="-Djonas.classpath=" />
+					      <jvmarg value="-Djonas.default.classloader=true" />
+					      <jvmarg value="-Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate" />
+					      <jvmarg value="-Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory" />
+					      <jvmarg value="-Djava.security.auth.login.config=${jonasRoot}/conf/jaas.config" />
+					      <jvmarg value="-Djava.rmi.server.RMIClassLoaderSpi=org.objectweb.jonas.server.RemoteClassLoaderSpi" />				      
+					   </java>
+				  </target>
+				</project>
+				
+		]]></undeploy>
+	</ejb>
+	<ear>
+		<deploy><![CDATA[
+			
+			<!-- Copyright (c) 2002 by ObjectLearn. All Rights Reserved. -->
+			<!-- DO NOT MODIFY THIS FILE CHANGE THE SERVER FILE INSTEAD -->
+				<project name="deployextension"  default="deploy"  basedir=".">
+				  <target name="deploy" >
+				    <path id="toolpath">
+				        <!-- append the external classpath lastly -->
+				        <pathelement path="%{java.class.path}" />
+				        <!-- append the path sent through eclipse to classpath -->
+				        <pathelement path="%{adminToolPath}" />  
+				     </path>
+					  <java 
+					        classname="org.objectweb.jonas.server.Bootstrap" 
+					        fork="true" 
+					        classpathref="toolpath" >
+					      <arg value="org.objectweb.jonas.adm.JonasAdmin" />  
+					      <arg value="-a" />
+					      <arg value="%{deploy.dir}/%{ear}.ear" />
+					      <jvmarg value="-Dinstall.root=${jonasRoot}" />
+					      <jvmarg value="-Djonas.base=${jonasBase}" />
+					      <jvmarg value="-Djava.security.policy=${jonasRoot}/conf/java.policy" />
+					      <jvmarg value="-Djonas.classpath=" />
+					      <jvmarg value="-Djonas.default.classloader=true" />
+					      <jvmarg value="-Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate" />
+					      <jvmarg value="-Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory" />
+					      <jvmarg value="-Djava.security.auth.login.config=${jonasRoot}/conf/jaas.config" />
+					      <jvmarg value="-Djava.rmi.server.RMIClassLoaderSpi=org.objectweb.jonas.server.RemoteClassLoaderSpi" />				      
+					   </java>
+				  </target>
+				</project>
+				
+		]]></deploy>
+		<undeploy><![CDATA[
+			
+			<!-- Copyright (c) 2002 by ObjectLearn. All Rights Reserved. -->
+			<!-- DO NOT MODIFY THIS FILE CHANGE THE SERVER FILE INSTEAD -->
+				<project name="deployextension"  default="undeploy"  basedir=".">
+				  <target name="undeploy" >
+				    <path id="toolpath">
+				        <!-- append the external classpath lastly -->
+				        <pathelement path="%{java.class.path}" />
+				        <!-- append the path sent through eclipse to classpath -->
+				        <pathelement path="%{adminToolPath}" />  
+				     </path>
+					  <java 
+					        classname="org.objectweb.jonas.server.Bootstrap" 
+					        fork="true" 
+					        classpathref="toolpath" >
+					      <arg value="org.objectweb.jonas.adm.JonasAdmin" />  
+					      <arg value="-r" />
+					      <arg value="%{deploy.dir}/%{ear}.ear" />
+					      <jvmarg value="-Dinstall.root=${jonasRoot}" />
+					      <jvmarg value="-Djonas.base=${jonasBase}" />
+					      <jvmarg value="-Djava.security.policy=${jonasRoot}/conf/java.policy" />
+					      <jvmarg value="-Djonas.classpath=" />
+					      <jvmarg value="-Djonas.default.classloader=true" />
+					      <jvmarg value="-Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate" />
+					      <jvmarg value="-Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory" />
+					      <jvmarg value="-Djava.security.auth.login.config=${jonasRoot}/conf/jaas.config" />
+					      <jvmarg value="-Djava.rmi.server.RMIClassLoaderSpi=org.objectweb.jonas.server.RemoteClassLoaderSpi" />				      
+					   </java>
+				  </target>
+				</project>
+				
+		]]></undeploy>
+		<webModule><deploy /><undeploy />
+		</webModule>
+		<ejbModule><deploy /><undeploy />
+		</ejbModule>
+	</ear>
+</adminTool>
+<adminToolPath>
+	<jar type="absolute">${jonasBase}/conf</jar>
+	<jar type="variable">${classPathVariableName}/lib/common/ow_jonas_bootstrap.jar</jar>
+</adminToolPath>
+</serverDefinition>
