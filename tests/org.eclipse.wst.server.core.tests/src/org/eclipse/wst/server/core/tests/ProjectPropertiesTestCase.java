@@ -20,7 +20,7 @@ import org.eclipse.wst.server.core.internal.ProjectProperties;
 
 public class ProjectPropertiesTestCase extends TestCase {
 	protected static IProject project;
-	protected static ProjectProperties props;
+	protected static IProjectProperties props;
 	
 	protected static IProject projectEvent;
 	protected static IServer serverEvent;
@@ -51,7 +51,7 @@ public class ProjectPropertiesTestCase extends TestCase {
 			project.create(null);
 			project.open(null);
 		}
-		props = (ProjectProperties) ServerCore.getProjectProperties(project);
+		props = ServerCore.getProjectProperties(project);
 	}
 
 	public void test01AddListener() throws Exception {
@@ -67,7 +67,7 @@ public class ProjectPropertiesTestCase extends TestCase {
 	}
 
 	public void test04GetServerProject() throws Exception {
-		assertFalse(props.isServerProject());
+		assertFalse(((ProjectProperties) props).isServerProject());
 	}
 	
 	public void test05TestListener() throws Exception {
@@ -97,15 +97,17 @@ public class ProjectPropertiesTestCase extends TestCase {
 	}
 
 	public void test10SetServerProject() throws Exception {
-		props.setServerProject(true, null);
-		assertTrue(props.isServerProject());
+		ProjectProperties pp = (ProjectProperties) props;
+		pp.setServerProject(true, null);
+		assertTrue(pp.isServerProject());
 	}
 
 	public void test11UnsetServerProject() throws Exception {
-		props.setServerProject(false, null);
-		assertFalse(props.isServerProject());
+		ProjectProperties pp = (ProjectProperties) props;
+		pp.setServerProject(false, null);
+		assertFalse(pp.isServerProject());
 	}
-	
+
 	public void test12TestListener() throws Exception {
 		assertTrue(count == 0);
 	}
@@ -116,5 +118,20 @@ public class ProjectPropertiesTestCase extends TestCase {
 
 	public void test14End() throws Exception {
 		project.delete(true, true, null);
+	}
+	
+	public void test15CheckListener() throws Exception {
+		IProjectPropertiesListener listener2 = new IProjectPropertiesListener() {
+			public void defaultServerChanged(IProject project2, IServer server) {
+				// ignore
+			}
+
+			public void runtimeTargetChanged(IProject project2, IRuntime runtime) {
+				// ignore
+			}
+		};
+		
+		listener2.defaultServerChanged(null, null);
+		listener2.runtimeTargetChanged(null, null);
 	}
 }

@@ -279,4 +279,19 @@ public class MonitorTestCase extends TestCase {
 	public void test31GetProtocol() {
 		assertNotNull(monitor.getProtocol());
 	}
+	
+	public void test32CheckListener() throws Exception {
+		IRequestListener listener2 = new IRequestListener() {
+			public void requestAdded(IMonitor monitor2, Request request) {
+				// ignore
+			}
+
+			public void requestChanged(IMonitor monitor2, Request request) {
+				// ignore
+			}
+		};
+		
+		listener2.requestAdded(null, null);
+		listener2.requestChanged(null, null);
+	}
 }

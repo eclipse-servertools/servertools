@@ -8,32 +8,25 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core.util;
+package org.eclipse.wst.internet.monitor.core.tests;
 
-import org.eclipse.wst.server.core.tests.OrderedTestSuite;
+import org.eclipse.wst.internet.monitor.core.ContentFilterDelegate;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-public class WebResourceTestCase extends TestCase {
-	protected static WebResource web;
+public class ContentFilterTestCase extends TestCase {
+	protected static ContentFilterDelegate delegate;
 	
 	public static Test suite() {
-		return new OrderedTestSuite(WebResourceTestCase.class, "WebResourceTestCase");
-	}
-
-	public void test00Create() {
-		web = new WebResource(null, null);
+		return new OrderedTestSuite(MonitorListenerTestCase.class, "MonitorTestCase");
 	}
 	
-	public void test01GetModule() {
-		assertNull(web.getModule());
+	public void test00Creation() {
+		delegate = new TestContentFilterDelegate();
 	}
 	
-	public void test02GetPath() {
-		assertNull(web.getPath());
-	}
-	
-	public void test03ToString() {
-		web.toString();
+	public void test01Filter() throws Exception {
+		delegate.filter(null, false, null);
 	}
 }

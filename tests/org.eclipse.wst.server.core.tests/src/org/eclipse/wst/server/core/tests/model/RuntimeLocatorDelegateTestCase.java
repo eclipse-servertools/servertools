@@ -13,6 +13,7 @@ package org.eclipse.wst.server.core.tests.model;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
+import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.model.RuntimeLocatorDelegate;
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 import org.eclipse.wst.server.core.tests.impl.TestRuntimeLocatorDelegate;
@@ -30,5 +31,15 @@ public class RuntimeLocatorDelegateTestCase extends TestCase {
 	
 	public void test01Search() throws Exception {
 		delegate.searchForRuntimes(null, null, null);
+	}
+	
+	public void test02Listener() {
+		RuntimeLocatorDelegate.IRuntimeSearchListener listener = new RuntimeLocatorDelegate.IRuntimeSearchListener() {
+			public void runtimeFound(IRuntimeWorkingCopy runtime) {
+				// ignore
+			}
+		};
+		
+		listener.runtimeFound(null);
 	}
 }

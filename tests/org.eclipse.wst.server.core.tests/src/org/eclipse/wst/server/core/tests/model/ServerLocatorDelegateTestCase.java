@@ -13,6 +13,7 @@ package org.eclipse.wst.server.core.tests.model;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
+import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.model.ServerLocatorDelegate;
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 import org.eclipse.wst.server.core.tests.impl.TestServerLocatorDelegate;
@@ -30,5 +31,15 @@ public class ServerLocatorDelegateTestCase extends TestCase {
 	
 	public void test01Search() throws Exception {
 		delegate.searchForServers("host", null, null);
+	}
+	
+	public void test02Listener() {
+		ServerLocatorDelegate.IServerSearchListener listener = new ServerLocatorDelegate.IServerSearchListener() {
+			public void serverFound(IServerWorkingCopy server) {
+				// ignore
+			}
+		};
+		
+		listener.serverFound(null);
 	}
 }

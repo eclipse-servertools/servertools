@@ -60,6 +60,15 @@ public class AllTests {
 		suite.addTest(new OrderedTestSuite(ProjectPropertiesTestCase.class));
 		suite.addTest(new OrderedTestSuite(ServerPreferencesTestCase.class));
 		
+		suite.addTestSuite(TaskModelTestCase.class);
+		
+		suite.addTestSuite(RuntimeLifecycleListenerTestCase.class);
+		suite.addTestSuite(ServerLifecycleListenerTestCase.class);
+		suite.addTestSuite(ServerListenerTestCase.class);
+		suite.addTestSuite(RuntimeLifecycleAdapterTestCase.class);
+		suite.addTestSuite(ServerLifecycleAdapterTestCase.class);
+		suite.addTestSuite(ServerAdapterTestCase.class);
+		
 		suite.addTest(new OrderedTestSuite(ClientDelegateTestCase.class));
 		suite.addTest(new OrderedTestSuite(RuntimeLocatorDelegateTestCase.class));
 		suite.addTest(new OrderedTestSuite(ModuleDelegateTestCase.class));
