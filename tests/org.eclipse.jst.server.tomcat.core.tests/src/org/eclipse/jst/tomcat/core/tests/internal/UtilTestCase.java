@@ -11,9 +11,15 @@
 package org.eclipse.jst.tomcat.core.tests.internal;
 
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServerBehaviour;
+import junit.framework.Test;
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 public class UtilTestCase extends TestCase {
+	public static Test suite() {
+		return new TestSuite(UtilTestCase.class, "UtilTestCase");
+	}
+	
 	public void testArgMerge() {
 		assertEquals("", TomcatServerBehaviour.mergeArguments("", new String[] { }));
 	}

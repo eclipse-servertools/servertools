@@ -34,6 +34,8 @@ public abstract class AbstractServerTestCase extends TestCase {
 	protected static IProjectProperties props;
 	
 	protected static IServer server;
+	protected static IServerAttributes serverAttr;
+	protected static IServerWorkingCopy serverWC;
 	
 	public static Test suite() {
 		return new OrderedTestSuite(AbstractServerTestCase.class, "AbstractServerTestCase");
@@ -110,19 +112,19 @@ public abstract class AbstractServerTestCase extends TestCase {
 	}
 	
 	public void test0013Debug() throws Exception {
-		getServer().synchronousStart(ILaunchManager.DEBUG_MODE, null);
+		server.synchronousStart(ILaunchManager.DEBUG_MODE, null);
 	}
 	
-	public void test0014CanStop() throws Exception {
-		assertTrue(getServer().canStop().isOK());
+	public void test0014CanStop() {
+		assertTrue(server.canStop().isOK());
 	}
 	
-	public void test0015Stop() throws Exception {
-		getServer().synchronousStop(false);
+	public void test0015Stop() {
+		server.synchronousStop(false);
 	}
 	
-	public void test0016GetServerPorts() throws Exception {
-		ServerPort[] ports = getServer().getServerPorts();
+	public void test0016GetServerPorts() {
+		ServerPort[] ports = server.getServerPorts();
 		if (ports != null) {
 			int size = ports.length;
 			for (int i = 0; i < size; i++) {
@@ -134,6 +136,187 @@ public abstract class AbstractServerTestCase extends TestCase {
 				ports[i].isAdvanced();
 			}
 		}
+	}
+	
+	public void test0017GetServerState() {
+		server.getServerState();
+	}
+	
+	public void test0018GetServerPublishState() {
+		server.getServerPublishState();
+	}
+	
+	public void test0019GetServerRestartState() {
+		server.getServerRestartState();
+	}
+	
+	public void test0020GetModuleState() {
+		server.getModuleState(null);
+	}
+	
+	public void test0021GetModulePublishState() {
+		server.getModulePublishState(null);
+	}
+	
+	public void test0022GetModuleRestartState() {
+		server.getModuleRestartState(null);
+	}
+	
+	public void test0023GetMode() {
+		server.getMode();
+	}
+	
+	public void test0024CanPublish() {
+		server.canPublish();
+	}
+	
+	public void test0025CanRestart() {
+		server.canRestart("run");
+	}
+	
+	public void test0026CanRestartModule() {
+		server.canRestartModule(null);
+	}
+	
+	public void test0027AddServerListener() {
+		server.addServerListener(null);
+	}
+	
+	public void test0028AddServerListener() {
+		server.addServerListener(null, 0);
+	}
+	
+	public void test0029RemoveServerListener() {
+		server.removeServerListener(null);
+	}
+	
+	public void test0030GetServerAttributes() {
+		serverAttr = server;
+	}
+	
+	public void test0031GetName() {
+		serverAttr.getName();
+	}
+	
+	public void test0032GetId() {
+		serverAttr.getId();
+	}
+	
+	public void test0033IsReadOnly() {
+		serverAttr.isReadOnly();
+	}
+	
+	public void test0034IsWorkingCopy() {
+		serverAttr.isWorkingCopy();
+	}
+	
+	public void test0034IsDelegateLoaded() {
+		serverAttr.isDelegateLoaded();
+	}
+	
+	public void test0035GetHost() {
+		serverAttr.getHost();
+	}
+	
+	public void test0036GetRuntime() {
+		serverAttr.getRuntime();
+	}
+	
+	public void test0037GetServerType() {
+		serverAttr.getServerType();
+	}
+	
+	public void test0038GetServerConfiguration() {
+		serverAttr.getServerConfiguration();
+	}
+	
+	public void test0039CreateWorkingCopy() {
+		serverAttr.createWorkingCopy();
+	}
+	
+	public void test0040GetModules() {
+		serverAttr.getModules();
+	}
+	
+	public void test0041CanModifyModules() {
+		serverAttr.canModifyModules(null, null, null);
+	}
+	
+	public void test0042GetChildModules() {
+		serverAttr.getChildModules(null, null);
+	}
+	
+	public void test0043GetRootModules() {
+		try {
+			serverAttr.getRootModules(null, null);
+		} catch (Exception e) {
+			// ignore
+		}
+	}
+	
+	public void test0044GetServerPorts() {
+		serverAttr.getServerPorts();
+	}
+	
+	public void test0045Delete() {
+		try {
+			serverAttr.createWorkingCopy().delete();
+		} catch (Exception e) {
+			// ignore
+		}
+	}
+	
+	public void test0046CreateWorkingCopy() {
+		serverWC = server.createWorkingCopy();
+	}
+	
+	public void test0047IsDirty() {
+		assertFalse(serverWC.isDirty());
+	}
+	
+	public void test0048SetName() {
+		serverWC.setName("test");
+	}
+	
+	public void test0049SetHost() {
+		serverWC.setHost("www.eclipse.org");
+	}
+	
+	public void test0050SetReadOnly() {
+		serverWC.setReadOnly(true);
+	}
+	
+	public void test0051IsDirty() {
+		assertTrue(serverWC.isDirty());
+	}
+	
+	public void test0052AddPropertyChangeListener() {
+		serverWC.addPropertyChangeListener(null);
+	}
+	
+	public void test0053RemovePropertyChangeListener() {
+		serverWC.removePropertyChangeListener(null);
+	}
+	
+	public void test0054GetOriginal() {
+		serverWC.getOriginal();
+	}
+
+	public void test0055SetServerConfiguration() {
+		serverWC.setServerConfiguration(null);
+	}
+	
+	public void test0056ModifyModules() {
+		try {
+			serverWC.modifyModules(null, null, null);
+		} catch (Exception e) {
+			// ignore
+		}
+	}
+	
+	public void test0057Clear() {
+		serverAttr = null;
+		serverWC = null;
 	}
 
 	public void test1001Delete() throws Exception {

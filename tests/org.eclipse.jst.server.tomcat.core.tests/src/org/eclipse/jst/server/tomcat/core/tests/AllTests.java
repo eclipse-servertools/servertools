@@ -58,7 +58,7 @@ public class AllTests {
 			suite.addTest(new OrderedTestSuite(Tomcat55ServerTestCase.class));
 		}
 		
-		suite.addTest(new UtilTestCase());
+		suite.addTestSuite(UtilTestCase.class);
 		//$JUnit-END$
 		return suite;
 	}

@@ -26,8 +26,22 @@ public class ServerTypesTestCase extends TestCase {
 		IServerType[] serverTypes = ServerCore.getServerTypes();
 		if (serverTypes != null) {
 			int size = serverTypes.length;
-			for (int i = 0; i < size; i++)
-				System.out.println(serverTypes[i].getId() + " - " + serverTypes[i].getName());
+			for (int i = 0; i < size; i++) {
+				serverTypes[i].getId();
+				serverTypes[i].getName();
+				serverTypes[i].getDescription();
+				serverTypes[i].getRuntimeType();
+				serverTypes[i].hasRuntime();
+				serverTypes[i].hasServerConfiguration();
+				serverTypes[i].supportsLaunchMode("run");
+				serverTypes[i].supportsRemoteHosts();
+				try {
+					serverTypes[i].createServer(null, null, null);
+					serverTypes[i].createServer(null, null, null, null);
+				} catch (Exception e) {
+					// ignore
+				}
+			}
 		}
 	}
 }

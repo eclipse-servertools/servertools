@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.Runtime;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 /**
@@ -33,6 +34,7 @@ public abstract class AbstractRuntimeTestCase extends TestCase {
 	protected static IProjectProperties props;
 
 	protected static IRuntime runtime;
+	protected static IRuntimeWorkingCopy runtimeWC;
 
 	public static Test suite() {
 		return new OrderedTestSuite(AbstractRuntimeTestCase.class, "AbstractRuntimeTestCase");
@@ -94,36 +96,67 @@ public abstract class AbstractRuntimeTestCase extends TestCase {
 
 	public void test0008ModifyRuntime() throws Exception {
 		IRuntimeWorkingCopy wc = getRuntime().createWorkingCopy();
-		wc.setName(wc.getName() + "x");
+		String name = wc.getName();
+		wc.setName(name + "x");
+		wc.setName(name);
 		wc.save(false, null);
 	}
-	
-	/*public void test0009IsPrivate() throws Exception {
-		getRuntime().isPrivate();
-	}*/
-	
-	public void test0010IsReadOnly() throws Exception {
-		getRuntime().isReadOnly();
+
+	public void test0009IsPrivate() {
+		((Runtime)runtime).isPrivate();
 	}
 	
-	public void test0011IsDelegateLoaded() throws Exception {
-		getRuntime().isDelegateLoaded();
+	public void test0010IsReadOnly() {
+		runtime.isReadOnly();
 	}
 	
-	/*public void test0012GetTimestamp() throws Exception {
-		getRuntime().getTimestamp();
-	}*/
-	
-	public void test0013GetRuntimeType() throws Exception {
-		assertNotNull(getRuntime().getRuntimeType());
+	public void test0011IsDelegateLoaded() {
+		runtime.isDelegateLoaded();
 	}
 	
-	public void test0014GetLocation() throws Exception {
-		assertNotNull(getRuntime().getLocation());
+	public void test0012GetTimestamp() {
+		((Runtime)runtime).getTimestamp();
 	}
 	
-	public void test0015IsStub() throws Exception {
-		getRuntime().isStub();
+	public void test0013GetRuntimeType() {
+		assertNotNull(runtime.getRuntimeType());
+	}
+	
+	public void test0014GetLocation() {
+		assertNotNull(runtime.getLocation());
+	}
+	
+	public void test0015IsStub() {
+		runtime.isStub();
+	}
+	
+	public void test0016CreateWorkingCopy() {
+		runtimeWC = runtime.createWorkingCopy();
+	}
+	
+	public void test0017IsDirty() {
+		assertFalse(runtimeWC.isDirty());
+	}
+	
+	public void test0018SetReadOnly() {
+		runtimeWC.setReadOnly(true);
+		runtimeWC.setReadOnly(false);
+	}
+	
+	public void test0019IsDirty() {
+		assertTrue(runtimeWC.isDirty());
+	}
+	
+	public void test0020AddPropertyChangeListener() {
+		runtimeWC.addPropertyChangeListener(null);
+	}
+	
+	public void test0020RemovePropertyChangeListener() {
+		runtimeWC.removePropertyChangeListener(null);
+	}
+	
+	public void test0021Clear() {
+		runtimeWC = null;
 	}
 
 	public void test1001Delete() throws Exception {
