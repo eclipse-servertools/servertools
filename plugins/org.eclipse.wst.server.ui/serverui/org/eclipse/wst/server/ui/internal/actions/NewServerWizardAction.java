@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.ui.actions;
+package org.eclipse.wst.server.ui.internal.actions;
 
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.wst.server.ui.internal.ImageResource;
@@ -19,14 +19,14 @@ import org.eclipse.wst.server.ui.internal.wizard.NewServerWizard;
  * 
  * @since 1.0
  */
-public class NewServerAction extends LaunchWizardAction {
+public class NewServerWizardAction extends LaunchWizardAction {
 	protected String[] ids;
 	protected String[] values;
 
 	/**
 	 * New server action.
 	 */
-	public NewServerAction() {
+	public NewServerWizardAction() {
 		super();
 	
 		setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CTOOL_NEW_SERVER));
@@ -39,7 +39,7 @@ public class NewServerAction extends LaunchWizardAction {
 	 * @param ids ids to pass into the action
 	 * @param values values to pass into the action
 	 */
-	public NewServerAction(String[] ids, String[] values) {
+	public NewServerWizardAction(String[] ids, String[] values) {
 		this();
 		this.ids = ids;
 		this.values = values;

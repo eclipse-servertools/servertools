@@ -16,7 +16,6 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IPath;
 
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.internal.ResourceManager;
 import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
 /**
@@ -175,8 +174,6 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 			ProjectModuleFactoryDelegate factory = (ProjectModuleFactoryDelegate) iterator.next();
 			factory.fireEvents();
 		}
-		
-		ResourceManager.getInstance().syncModuleEvents();
 	}
 
 	/**

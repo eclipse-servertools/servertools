@@ -31,7 +31,7 @@ import org.eclipse.wst.server.core.internal.Trace;
  */
 public class ServerUtil {
 	/**
-	 * Static class - cannot create an instance.
+	 * Static utility class - cannot create an instance.
 	 */
 	private ServerUtil() {
 		// do nothing

@@ -212,6 +212,9 @@ public class ServerPublishInfo {
 	}
 
 	public IModuleResourceDelta[] getDelta(IModule[] module) {
+		if (module == null)
+			return new IModuleResourceDelta[0];
+		
 		ModulePublishInfo mpi = getModulePublishInfo(module);
 		int size = module.length;
 		ModuleDelegate pm = (ModuleDelegate) module[size - 1].getAdapter(ModuleDelegate.class);

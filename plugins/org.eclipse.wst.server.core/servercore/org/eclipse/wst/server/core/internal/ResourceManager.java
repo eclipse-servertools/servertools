@@ -54,17 +54,6 @@ public class ResourceManager {
 	private IResourceChangeListener publishResourceChangeListener;
 	private Preferences.IPropertyChangeListener pcl;
 	protected boolean ignorePreferenceChanges = false;
-	
-	// module factory listener
-	private IModuleFactoryListener moduleFactoryListener;
-	protected List moduleFactoryEvents = new ArrayList(5);
-	
-	// module listener
-	protected IModuleListener moduleListener;
-	protected List moduleEvents = new ArrayList(5);
-	
-	// module events listeners
-	protected transient List moduleEventListeners;
 
 	/**
 	 * Resource listener - tracks changes on server resources so that
@@ -185,41 +174,6 @@ public class ResourceManager {
 		}
 	}
 	
-	public class ModuleFactoryListener implements IModuleFactoryListener {
-		public void moduleFactoryChanged(ModuleFactoryEvent event) {
-			Trace.trace(Trace.FINEST, "Module factory changed");
-			moduleFactoryEvents.add(event);
-
-			// add new listeners
-			IModule[] modules = event.getAddedModules();
-			if (modules != null) {
-				int size = modules.length;
-				for (int i = 0; i < size; i++) {
-					Trace.trace(Trace.FINEST, "Adding module listener to: " + modules[i]);
-					modules[i].addModuleListener(moduleListener);
-				}
-			}
-			
-			// remove old listeners
-			modules = event.getRemovedModules();
-			if (modules != null) {
-				int size = modules.length;
-				for (int i = 0; i < size; i++) {
-					Trace.trace(Trace.FINEST, "Removing module listener from: " + modules[i]);
-					modules[i].removeModuleListener(moduleListener);
-				}
-			}
-		}
-	}
-
-	public class ModuleListener implements IModuleListener {
-		public void moduleChanged(ModuleEvent event) {
-			Trace.trace(Trace.FINEST, "Module changed: " + event);
-			if (!moduleEvents.contains(event))
-				moduleEvents.add(event);
-		}
-	}
-	
 	protected List moduleServerEventHandlers;
 	protected List moduleServerEventHandlerIndexes;
 
@@ -279,9 +233,6 @@ public class ResourceManager {
 					loadFromProject(projects[i]);
 			}
 		}
-		
-		moduleFactoryListener = new ModuleFactoryListener();
-		moduleListener = new ModuleListener();
 		
 		addServerLifecycleListener(ServerListener.getInstance());
 	}
@@ -1033,100 +984,6 @@ public class ResourceManager {
 	
 		servers.add(server);
 		fireServerEvent(server, EVENT_ADDED);
-	}
-
-	/**
-	 *
-	 */
-	protected void addModuleFactoryListener(ModuleFactoryDelegate delegate) {
-		if (delegate == null)
-			return;
-	
-		Trace.trace(Trace.LISTENERS, "Adding module factory listener to: " + delegate);
-		delegate.addModuleFactoryListener(moduleFactoryListener);
-		
-		IModule[] modules = delegate.getModules();
-		if (modules != null) {
-			int size = modules.length;
-			for (int i = 0; i < size; i++) {
-				Trace.trace(Trace.LISTENERS, "Adding module listener to: " + modules[i]);
-				modules[i].addModuleListener(moduleListener);
-			}
-		}
-	}
-
-	/**
-	 * Adds a new module events listener.
-	 *
-	 * @param listener org.eclipse.wst.server.core.model.IModuleEventsListener
-	 */
-	public void addModuleEventsListener(IModuleEventsListener listener) {
-		Trace.trace(Trace.LISTENERS, "Adding moduleEvents listener " + listener + " to " + this);
-	
-		if (moduleEventListeners == null)
-			moduleEventListeners = new ArrayList();
-		moduleEventListeners.add(listener);
-	}
-	
-	/**
-	 * Removes an existing module events listener.
-	 *
-	 * @param listener org.eclipse.wst.server.core.model.IModuleEventsListener
-	 */
-	public void removeModuleEventsListener(IModuleEventsListener listener) {
-		Trace.trace(Trace.LISTENERS, "Removing moduleEvents listener " + listener + " to " + this);
-	
-		if (moduleEventListeners != null)
-			moduleEventListeners.remove(listener);
-	}
-	
-	/**
-	 * Module events have momentarily stopped firing and should be
-	 * handled appropriately.
-	 */
-	public void syncModuleEvents() {
-		if (moduleEvents.isEmpty() && moduleFactoryEvents.isEmpty())
-			return;
-
-		Trace.trace(Trace.LISTENERS, "->- Firing moduleEvents " + moduleEvents.size() + " " + moduleFactoryEvents.size());
-		Iterator iterator = moduleEvents.iterator();
-		while (iterator.hasNext()) {
-			ModuleEvent event = (ModuleEvent) iterator.next();
-			Trace.trace(Trace.LISTENERS, "  1> " + event);
-		}
-		iterator = moduleFactoryEvents.iterator();
-		while (iterator.hasNext()) {
-			ModuleFactoryEvent event = (ModuleFactoryEvent) iterator.next();
-			Trace.trace(Trace.LISTENERS, "  2> " + event);
-		}
-
-		ModuleEvent[] events = new ModuleEvent[moduleEvents.size()];
-		moduleEvents.toArray(events);
-		
-		ModuleFactoryEvent[] factoryEvents = new ModuleFactoryEvent[moduleFactoryEvents.size()];
-		moduleFactoryEvents.toArray(factoryEvents);
-		
-		if (moduleEventListeners != null) {
-			iterator = moduleEventListeners.iterator();
-			while (iterator.hasNext()) {
-				IModuleEventsListener listener = (IModuleEventsListener) iterator.next();
-				try {
-					Trace.trace(Trace.LISTENERS, "  Firing moduleEvents to " + listener);
-					listener.moduleEvents(factoryEvents, events);
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "  Error firing moduleEvents to " + listener);
-				}
-			}
-		}
-		
-		// fire module server events
-		fireModuleServerEvent(factoryEvents, events);
-		
-		// clear cache
-		moduleEvents = new ArrayList(5);
-		moduleFactoryEvents = new ArrayList(5);
-		
-		Trace.trace(Trace.LISTENERS, "-<- Firing moduleEvents " + moduleEvents.size() + " " + moduleFactoryEvents.size());
 	}
 
 	protected void fireModuleServerEvent(ModuleFactoryEvent[] factoryEvents, ModuleEvent[] events) {

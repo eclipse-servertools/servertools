@@ -16,10 +16,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.internal.ResourceManager;
-import org.eclipse.wst.server.core.model.ModuleEvent;
-import org.eclipse.wst.server.core.model.IModuleEventsListener;
-import org.eclipse.wst.server.core.model.ModuleFactoryEvent;
 import org.eclipse.wst.server.ui.internal.view.tree.ModuleResourceAdapter;
 import org.eclipse.wst.server.ui.internal.view.tree.ServerElementAdapter;
 import org.eclipse.wst.server.ui.internal.view.tree.TextResourceAdapter;
@@ -36,8 +32,7 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 	protected LifecycleListener listener;
 	//protected IServerListener serverListener;
 	protected IResourceChangeListener resourceChangeListener;
-	protected IModuleEventsListener moduleEventsListener;
-	
+
 	class LifecycleListener implements IServerLifecycleListener {
 		public void serverAdded(final IServer server) {
 			//server.addServerListener(serverListener);
@@ -71,7 +66,6 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 		// add listeners
 		addServerResourceListener();
 		addServerListener();
-		addModuleEventsListener();
 	}
 
 	public Object[] getServerTreeRoots(Object parent) {
@@ -96,9 +90,6 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 		}*/
 
 		ServerCore.removeServerLifecycleListener(listener);
-		
-		if (moduleEventsListener != null)
-			ResourceManager.getInstance().removeModuleEventsListener(moduleEventsListener);
 	}
 
 	/**
@@ -208,24 +199,6 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 		// add a listener for resources being added or removed
 		listener = new LifecycleListener();
 		ServerCore.addServerLifecycleListener(listener);
-	}
-	
-	/**
-	 * Add listener to refresh when modules are added.
-	 */
-	private void addModuleEventsListener() {
-		moduleEventsListener = new IModuleEventsListener() {
-			public void moduleEvents(ModuleFactoryEvent[] factoryEvent, ModuleEvent[] event) {
-				Display.getDefault().syncExec(new Runnable() {
-					public void run() {
-						if (viewer != null)
-							viewer.refresh(true);
-					}
-				});
-			}
-		};
-		
-		ResourceManager.getInstance().addModuleEventsListener(moduleEventsListener);
 	}
 
 	/**

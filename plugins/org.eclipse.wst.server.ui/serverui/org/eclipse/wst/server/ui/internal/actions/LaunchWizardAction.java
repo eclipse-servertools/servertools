@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.ui.actions;
+package org.eclipse.wst.server.ui.internal.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;

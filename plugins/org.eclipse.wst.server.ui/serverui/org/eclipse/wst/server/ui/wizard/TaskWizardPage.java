@@ -34,8 +34,8 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 	
 	public void createControl(Composite parentComp) {
 		Composite comp = fragment.createComposite(parentComp, this);
-		GridData data = new GridData(GridData.FILL_BOTH);
-		data.widthHint = convertHorizontalDLUsToPixels(350);
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		data.widthHint = convertHorizontalDLUsToPixels(150);
 		//data.heightHint = convertVerticalDLUsToPixels(350);
 		comp.setLayoutData(data);
 		setControl(comp);

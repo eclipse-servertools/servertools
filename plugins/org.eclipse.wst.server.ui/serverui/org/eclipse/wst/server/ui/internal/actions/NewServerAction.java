@@ -19,7 +19,7 @@ import org.eclipse.wst.server.ui.internal.wizard.NewServerWizard;
  */
 public class NewServerAction extends NewWizardAction {
 	/**
-	 * NewServerAction constructor comment.
+	 * NewServerWizardAction constructor comment.
 	 */
 	public NewServerAction() {
 		super();

@@ -35,6 +35,7 @@ public class ServerEvent {
 	 * @see #getKind()
 	 */
 	public static final int STATE_CHANGE = 0x0001;
+	
 	/**
 	 * Fired when published is needed or no longer needs to be published, 
 	 * or it's state has changed.
@@ -46,6 +47,7 @@ public class ServerEvent {
 	 * @see #getKind()
 	 */
 	public static final int PUBLISH_STATE_CHANGE = 0x0002;
+	
 	/**
 	 * For notification when the server isRestartNeeded() property changes.
 	 * <p>
@@ -56,12 +58,14 @@ public class ServerEvent {
 	 * @see #getKind()
 	 */
 	public static final int RESTART_STATE_CHANGE = 0x0004;
+	
 	/**
 	 * For event on server changes. This kind is mutually exclusive with <code>MODULE_CHANGE</code>.
 	 * 
 	 * @see #getKind()
 	 */
 	public static final int SERVER_CHANGE = 0x0010;
+	
 	/**
 	 * For event on module changes. This kind is mutually exclusive with <code>SERVER_CHANGE</code>.
 	 * 
@@ -73,17 +77,18 @@ public class ServerEvent {
 	 * For server change events.
 	 * [issue: should we check the mutually exclusive flags and throw an InstantiationError 
 	 * if the mutually exclusive flag condition is not satisify.] 
+	 * 
 	 * @param the kind of the change. (<code>XXX_CHANGE</code>). If the kind does not 
-	 * include the <code>SERVER_CHANGE</code> kind, the SERVER_CHANGE will be added automatically.  
-	 * constants declared on {@link ServerEvent}
+	 *    include the <code>SERVER_CHANGE</code> kind, the SERVER_CHANGE will be added automatically.  
+	 *    constants declared on {@link ServerEvent}
 	 * @param server the server that the server event takes place.
 	 * @param state the server state after the change (<code>STATE_XXX</code>)
-	 * constants declared on {@link IServer}
+	 *    constants declared on {@link IServer}
 	 * @param publishingState the server publishing state after the 
-	 * change (<code>PUBLISH_STATE_XXX</code>)
-	 * constants declared on {@link IServer}
+	 *    change (<code>PUBLISH_STATE_XXX</code>)
+	 *    constants declared on {@link IServer}
 	 * @param restartState get the server restart state after the server is restart 
-	 * needed property change event.
+	 *    needed property change event.
 	 */
 	public ServerEvent(int kind, IServer server, int state, int publishingState, boolean restartState) {
 		this.kind = kind |= SERVER_CHANGE;
@@ -98,17 +103,18 @@ public class ServerEvent {
 	 * [issue: should we check the mutually exclusive flags and throw an InstantiationError 
 	 * if the mutually exclusive flag condition is not satisify. Also, should we check for
 	 * moduleTree to make sure it is not null or empty.] 
+	 * 
 	 * @param the kind of the change. (<code>XXX_CHANGE</code>). If the kind does not 
-	 * include the <code>MODULE_CHANGE</code> kind, the MODULE_CHANGE will be added automatically.  
-	 * constants declared on {@link ServerEvent}
+	 *    include the <code>MODULE_CHANGE</code> kind, the MODULE_CHANGE will be added automatically.  
+	 *    constants declared on {@link ServerEvent}
 	 * @param server the server that the module event takes place.
 	 * @param state the module state after the change (<code>STATE_XXX</code>)
-	 * constants declared on {@link IServer}
+	 *    constants declared on {@link IServer}
 	 * @param publishingState the module publishing state after the 
-	 * change (<code>PUBLISH_STATE_XXX</code>)
-	 * constants declared on {@link IServer}
+	 *    change (<code>PUBLISH_STATE_XXX</code>)
+	 *    constants declared on {@link IServer}
 	 * @param restartState get the module restart state after the module is restart 
-	 * needed property change event.
+	 *    needed property change event.
 	 * @exception InstantiationError will be throw if the module tree is null or empty.
 	 */
 	public ServerEvent(int kind, IServer server, IModule[] moduleTree, int state, int publishingState, boolean restartState) {
@@ -130,7 +136,7 @@ public class ServerEvent {
 	 * ((getKind() | MODULE_CHANGE) != 0) 
 	 * 
 	 * @return the kind of the change (<code>XXX_CHANGE</code>
-	 * constants declared on {@link ServerEvent}
+	 *    constants declared on {@link ServerEvent}
 	 */
 	public int getKind() {
 		return kind;
@@ -141,9 +147,10 @@ public class ServerEvent {
 	 * or <code>null</code> if the event is not a module event, i.e. isModuleEvent() is false.
 	 *  
 	 * @return the module tree of the module involved in the module change event,
-	 * or <code>null</code> if the event is not a module event, i.e. isModuleEvent() is false.
+	 *    or <code>null</code> if the event is not a module event, i.e.
+	 *    isModuleEvent() is false.
 	 */
-	public IModule[] getModuleTree() {
+	public IModule[] getModule() {
 		return moduleTree;
 	}
 	
@@ -152,10 +159,11 @@ public class ServerEvent {
 	 * is of the SERVER_CHANGE kind, then the publishing state is the server publishing state.
 	 * If this event is of the MODULE_CHANGE kind, then the publishing state is the module
 	 * publishing state.
+	 * 
 	 * @return the publishing state after the change (<code>PUBLISH_STATE_XXX</code>)
-	 * constants declared on {@link IServer}
+	 *    constants declared on {@link IServer}
 	 */
-	public int getPublishingState() {
+	public int getPublishState() {
 		return publishState;
 	}
 	
@@ -164,6 +172,7 @@ public class ServerEvent {
 	 * If this event is of the SERVER_CHANGE kind, then the restart state is the server 
 	 * restart state. If this event is of the MODULE_CHANGE kind, then the restart state 
 	 * is the module restart state. 
+	 * 
 	 * @return <code>true</code> if restart is needed, and
 	 *    <code>false</code> otherwise
 	 */
@@ -176,8 +185,9 @@ public class ServerEvent {
 	 * is of the SERVER_CHANGE kind, then the state is the server state.
 	 * If this event is of the MODULE_CHANGE kind, then the state is the module
 	 * state.
+	 * 
 	 * @return the server state after the change (<code>STATE_XXX</code>)
-	 * constants declared on {@link IServer}
+	 *    constants declared on {@link IServer}
 	 */
 	public int getState() {
 		return state;
@@ -185,6 +195,7 @@ public class ServerEvent {
 	
 	/**
 	 * Returns the server involved in the change event.
+	 * 
 	 * @return the server involved in the change event.
 	 */
 	public IServer getServer() {

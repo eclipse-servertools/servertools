@@ -8,13 +8,12 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.ui.actions;
+package org.eclipse.wst.server.ui.internal.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 /**
  * "Run on Server" menu action. Allows the user to select an
  * object, and have automatic server creation, launching, and

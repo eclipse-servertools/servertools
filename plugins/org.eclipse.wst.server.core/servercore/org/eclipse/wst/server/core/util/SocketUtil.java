@@ -28,8 +28,15 @@ import sun.net.spi.nameservice.dns.DNSNameService;
  */
 public class SocketUtil {
 	private static final Random rand = new Random(System.currentTimeMillis());
-	
+
 	private static String dnsHostname;
+
+	/**
+	 * Static utility class - cannot create an instance.
+	 */
+	private SocketUtil() {
+		// cannot create
+	}
 
 	/**
 	 * Finds an unused port between the given from and to values.

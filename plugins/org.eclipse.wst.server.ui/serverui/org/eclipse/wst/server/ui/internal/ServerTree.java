@@ -21,7 +21,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.ui.actions.NewServerAction;
+import org.eclipse.wst.server.ui.internal.actions.NewServerWizardAction;
 import org.eclipse.wst.server.ui.internal.view.servers.*;
 import org.eclipse.wst.server.ui.internal.view.tree.ServerElementAdapter;
 import org.eclipse.wst.server.ui.internal.view.tree.ServerTreeAction;
@@ -49,7 +49,7 @@ public class ServerTree {
 	}
 	
 	public static void fillNewContextMenu(Shell shell, ISelection selection, IMenuManager menu) {
-		IAction newServerAction = new NewServerAction();
+		IAction newServerAction = new NewServerWizardAction();
 		newServerAction.setText(ServerUIPlugin.getResource("%actionNewServer"));
 		menu.add(newServerAction);
 	}
