@@ -83,7 +83,7 @@ public class AntPublisher extends GenericPublisher{
      * @return
      */
     private File computeBuildFile() {
-        Bundle bundle = Platform.getBundle(getServerRuntime().getConfigurationElementNamespace());
+        Bundle bundle = Platform.getBundle(fServerRuntime.getConfigurationElementNamespace());
         File file = FileUtil.resolveFileFrom(bundle,getBuildFile());
         return file;
     }
@@ -104,7 +104,7 @@ public class AntPublisher extends GenericPublisher{
      */
     private String[] doGetTargets(String dataname) {
         ArrayList list = new ArrayList();
-        Iterator iterator = getServerRuntime().getPublisher(PUBLISHER_ID).getPublisherdata().iterator();
+        Iterator iterator = fServerRuntime.getPublisher(PUBLISHER_ID).getPublisherdata().iterator();
         while(iterator.hasNext()){
             PublisherData data = (PublisherData)iterator.next();
             if(dataname.equals(data.getDataname())) {
@@ -125,17 +125,17 @@ public class AntPublisher extends GenericPublisher{
     
     private String getModuleTypeId()
     {
-        return getModule().getModuleType().getId();
+        return fModule.getModuleType().getId();
     }
     
 	private String getBuildFile()
     {
-        Iterator iterator = getServerRuntime().getPublisher(PUBLISHER_ID).getPublisherdata().iterator();
+        Iterator iterator = fServerRuntime.getPublisher(PUBLISHER_ID).getPublisherdata().iterator();
         while(iterator.hasNext())
         {
             PublisherData data = (PublisherData)iterator.next();
             if(DATA_NAME_BUILD_FILE.equals(data.getDataname()))
-                return getServerRuntime().getResolver().resolveProperties(data.getDatavalue());
+                return fServerRuntime.getResolver().resolveProperties(data.getDatavalue());
         }
         return null;
     }
@@ -143,12 +143,12 @@ public class AntPublisher extends GenericPublisher{
 	{
         Map props = new HashMap();
         //publish dir
-        Module module =  getServerRuntime().getModule(getModuleTypeId());
+        Module module =  fServerRuntime.getModule(getModuleTypeId());
 		String modDir = module.getPublishDir();
-		modDir = getServerRuntime().getResolver().resolveProperties(modDir);
+		modDir = fServerRuntime.getResolver().resolveProperties(modDir);
 
-		IWebModule webModule = (IWebModule)getModule().getAdapter(IWebModule.class);
-        IEJBModule ejbModule = (IEJBModule)getModule().getAdapter(IEJBModule.class);
+		IWebModule webModule = (IWebModule)fModule.getAdapter(IWebModule.class);
+        IEJBModule ejbModule = (IEJBModule)fModule.getAdapter(IEJBModule.class);
 		String moduleName="unknownmodule";
         String moduleDir="";
         if(webModule!=null){    
@@ -156,7 +156,7 @@ public class AntPublisher extends GenericPublisher{
             moduleDir = webModule.getLocation().toString();
         }
         if(ejbModule!=null){  
-            moduleName = getModule().getName();
+            moduleName = fModule.getName();
             moduleDir= ejbModule.getLocation().toString();
         }
 		props.put("module.name",moduleName);
@@ -172,7 +172,7 @@ public class AntPublisher extends GenericPublisher{
 	 * @return
 	 */
 	private String guessModuleName(IWebModule webModule) {
-		String moduleName = getModule().getName(); 
+		String moduleName = fModule.getName(); 
 		//Default to project name but not a good guess
 		//may have blanks etc.
 		

@@ -39,17 +39,16 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.jst.server.generic.core.CorePlugin;
 import org.eclipse.jst.server.generic.internal.core.util.ExtensionPointUtil;
 import org.eclipse.jst.server.generic.internal.core.util.FileUtil;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
-import org.eclipse.jst.server.generic.servertype.definition.util.ServerTypeResourceFactoryImpl;
 import org.osgi.framework.Bundle;
 
 public class XMLUtils {
@@ -102,12 +101,13 @@ public class XMLUtils {
         // stand-alone!
         resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
                 .put(Resource.Factory.Registry.DEFAULT_EXTENSION,
-                        new ServerTypeResourceFactoryImpl());
+                        new XMIResourceFactoryImpl());
 
          ServerTypePackage gstPack = ServerTypePackage.eINSTANCE;
 
         // Get the URI of the model file.
-        URI fileURI = URI.createFileURI(file.getAbsolutePath());
+        org.eclipse.emf.common.util.URI fileURI = org.eclipse.emf.common.util.URI
+                .createFileURI(file.getAbsolutePath());
 
         // Demand load the resource for this file.
         Resource resource = null;
