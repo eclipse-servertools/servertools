@@ -13,6 +13,7 @@ package org.eclipse.wst.server.core.model;
 import org.eclipse.core.runtime.IPath;
 /**
  * 
+ * @since 1.0
  */
 public interface IModuleResourceDelta {
 	public static final int NO_CHANGE = 0;
@@ -21,8 +22,9 @@ public interface IModuleResourceDelta {
 	public static final int REMOVED = 3;
 
 	/**
+	 * Returns the module resource represented by this delta.
 	 * 
-	 * @return
+	 * @return the corresponding module resource
 	 */
 	public IModuleResource getModuleResource();
 

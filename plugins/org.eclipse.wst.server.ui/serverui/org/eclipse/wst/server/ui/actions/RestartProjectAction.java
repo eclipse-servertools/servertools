@@ -18,6 +18,8 @@ import org.eclipse.wst.server.ui.internal.actions.RestartProjectActionDelegate;
 /**
  * Action to restart an individual project on servers that
  * support it.
+ * 
+ * @since 1.0
  */
 public class RestartProjectAction extends Action {
 	protected RestartProjectActionDelegate delegate;

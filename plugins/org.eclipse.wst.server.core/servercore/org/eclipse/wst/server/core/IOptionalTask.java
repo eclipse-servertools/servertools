@@ -11,6 +11,8 @@
 package org.eclipse.wst.server.core;
 /**
  * An optional task.
+ * 
+ * @since 1.0
  */
 public interface IOptionalTask extends ITask {
 	public static final int TASK_UNNECESSARY = 0;

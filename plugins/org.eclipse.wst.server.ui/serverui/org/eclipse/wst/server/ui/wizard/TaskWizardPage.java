@@ -19,6 +19,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 /**
  * 
+ * 
+ * @since 1.0
  */
 class TaskWizardPage extends WizardPage implements IWizardHandle {
 	protected WizardFragment fragment;

@@ -40,7 +40,9 @@ import org.eclipse.core.runtime.CoreException;
  * Clients may implement this interface.
  * </p>
  *
- * @see IModuleResourceDelta#accept(IModuleResourceVisitor)
+ * [issue: @see IModuleResourceDelta#accept(IModuleResourceVisitor)]
+ * 
+ * @since 1.0
  */
 public interface IModuleResourceDeltaVisitor {
 	/** 

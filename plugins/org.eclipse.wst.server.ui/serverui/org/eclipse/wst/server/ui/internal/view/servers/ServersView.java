@@ -10,17 +10,24 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.debug.ui.IDebugView;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.view.tree.DisabledMenuManager;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -31,13 +38,13 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.*;
+import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 /**
  * View of server, their configurations and status.
  */
 public class ServersView extends ViewPart {
-	//private static final String LAUNCH_CONFIGURATION_TYPE_ID = "org.eclipse.wst.server.core.launchConfigurationTypes";
-
 	protected Table table;
 	protected ServerTableViewer tableViewer;
 
@@ -144,6 +151,8 @@ public class ServersView extends ViewPart {
 		table.setMenu(menu);
 		getSite().registerContextMenu(menuManager, tableViewer);
 		getSite().setSelectionProvider(tableViewer);
+		
+		initDragAndDrop();
 	}
 
 	protected void selectServerProcess(Object process) {
@@ -363,7 +372,7 @@ public class ServersView extends ViewPart {
 			MenuManager restartProjectMenu = new MenuManager(ServerUIPlugin.getResource("%actionRestartProject"));
 	
 			if (server != null) {
-				IModule[] modules = ServerUtil.getAllContainedModules(server, null);
+				IModule[] modules = getAllContainedModules(server, null);
 				if (modules != null) {
 					int size = modules.length;
 					for (int i = 0; i < size; i++) {
@@ -410,18 +419,77 @@ public class ServersView extends ViewPart {
 		return sc;
 	}*/
 	
-	/*
-    * @see IWorkbenchPart#getAdapter(Class)
-    */
-   /*public Object getAdapter(Class adapter) {
-       return null;
-   }*/
-	
 	/**
 	 * 
 	 */
 	public void setFocus() {
 		if (table != null)
 			table.setFocus();
+	}
+
+	/**
+    * Adds drag and drop support to the Servers view.
+    */
+   protected void initDragAndDrop() {
+		int ops = DND.DROP_COPY;
+		Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getInstance(),
+			ResourceTransfer.getInstance(), FileTransfer.getInstance() };
+		//tableViewer.addDragSupport(ops, transfers, new ServersViewDragAdapter(viewer));
+		tableViewer.addDropSupport(ops | DND.DROP_DEFAULT, transfers, new ServersViewDropAdapter(tableViewer));
+	}
+
+	/**
+	 * Returns all projects contained by the server. This included the
+	 * projects that are in the configuration, as well as their
+	 * children, and their children...
+	 *
+	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return a possibly-empty array of module instances {@link IModule}
+	 */
+	public static IModule[] getAllContainedModules(IServer server, IProgressMonitor monitor) {
+		//Trace.trace("> getAllContainedModules: " + getName(configuration));
+		List modules = new ArrayList();
+		if (server == null)
+			return new IModule[0];
+
+		// get all of the directly contained projects
+		IModule[] deploys = server.getModules();
+		if (deploys == null || deploys.length == 0)
+			return new IModule[0];
+
+		int size = deploys.length;
+		for (int i = 0; i < size; i++) {
+			if (deploys[i] != null && !modules.contains(deploys[i]))
+				modules.add(deploys[i]);
+		}
+
+		//Trace.trace("  getAllContainedModules: root level done");
+
+		// get all of the module's children
+		int count = 0;
+		while (count < modules.size()) {
+			IModule module = (IModule) modules.get(count);
+			try {
+				IModule[] children = server.getChildModules(module, monitor);
+				if (children != null) {
+					size = children.length;
+					for (int i = 0; i < size; i++) {
+						if (children[i] != null && !modules.contains(children[i]))
+							modules.add(children[i]);
+					}
+				}
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Error getting child modules for: " + module.getName(), e);
+			}
+			count ++;
+		}
+
+		//Trace.trace("< getAllContainedModules");
+
+		IModule[] modules2 = new IModule[modules.size()];
+		modules.toArray(modules2);
+		return modules2;
 	}
 }

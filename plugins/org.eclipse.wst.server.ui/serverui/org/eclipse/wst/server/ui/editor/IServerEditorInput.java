@@ -18,6 +18,8 @@ import org.eclipse.ui.IEditorInput;
  * and server configuration.
  *
  * <p>This interface is not intended to be implemented by clients.</p>
+ * 
+ * @since 1.0
  */
 public interface IServerEditorInput extends IEditorInput {
 	public static final String EDITOR_ID = ServerUIPlugin.PLUGIN_ID + ".editor";

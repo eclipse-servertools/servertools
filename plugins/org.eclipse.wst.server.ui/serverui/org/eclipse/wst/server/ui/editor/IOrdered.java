@@ -22,6 +22,8 @@ package org.eclipse.wst.server.ui.editor;
  * </p>
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
+ * 
+ * @since 1.0
  */
 public interface IOrdered {
 	/**

@@ -19,6 +19,8 @@ import org.eclipse.wst.server.core.IServer;
  * A server task delegate.
  * 
  * <p>This is the implementation of a serverTask extension point.</p>
+ * 
+ * @since 1.0
  */
 public abstract class ServerTaskDelegate {
 	/**

@@ -14,11 +14,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.IProjectProperties;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.core.ITaskModel;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.ProjectProperties;
 import org.eclipse.wst.server.core.util.Task;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 /**
@@ -44,7 +41,7 @@ public class SaveServerTask extends Task {
 					if (!file.getProject().exists())
 						EclipseUtil.createNewServerProject(null, project.getName(), null, monitor);
 					
-					IProjectProperties pp = ServerCore.getProjectProperties(project);
+					ProjectProperties pp = (ProjectProperties) ServerCore.getProjectProperties(project);
 					if (!pp.isServerProject())
 						pp.setServerProject(true, monitor);
 				}

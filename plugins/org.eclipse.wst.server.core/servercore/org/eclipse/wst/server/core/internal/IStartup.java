@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.server.core.model;
+package org.eclipse.wst.server.core.internal;
 /**
  * An interface for the startup extension point.
  * Plug-ins that register a startup extension will be activated when the server
@@ -17,9 +17,9 @@ package org.eclipse.wst.server.core.model;
  * 
  * @since 1.0
  */
-public abstract class IStartup {
+public interface IStartup {
 	/**
 	 * Will be called on server core startup.
 	 */
-	public abstract void startup();
+	public void startup();
 }

@@ -13,6 +13,8 @@ package org.eclipse.wst.server.core.model;
 import org.eclipse.core.runtime.IPath;
 /**
  * A resource (file or folder) within a module.
+ * 
+ * @since 1.0
  */
 public interface IModuleResource {
 	/**

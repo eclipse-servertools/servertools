@@ -15,6 +15,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 /**
  *
+ * @since 1.0
  */
 public abstract class ServerEditorPartFactoryDelegate {
 	/**

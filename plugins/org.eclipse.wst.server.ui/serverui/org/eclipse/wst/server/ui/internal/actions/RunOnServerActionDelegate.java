@@ -50,6 +50,8 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	protected static Object globalSelection;
 
 	protected static Map globalLaunchMode;
+	
+	protected boolean tasksRun;
 
 	/**
 	 * RunOnServerActionDelegate constructor comment.
@@ -73,6 +75,60 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 */
 	public void init(IWorkbenchWindow newWindow) {
 		window = newWindow;
+	}
+	
+	public IServer getServer(IModule module, String launchMode, IProgressMonitor monitor) {
+		IServer server = null;
+		IProject project = module.getProject();
+		if (project != null)
+			server = ServerCore.getProjectProperties(project).getDefaultServer();
+		
+		// ignore preference if the server doesn't support this mode.
+		if (server != null && !ServerUIPlugin.isCompatibleWithLaunchMode(server, launchMode))
+			server = null;
+		
+		if (server != null && !ServerPlugin.containsModule(server, module, monitor)) {
+			IServerWorkingCopy wc = server.createWorkingCopy();
+			try {
+				ServerUtil.modifyModules(wc, new IModule[] { module }, new IModule[0], monitor);
+				wc.save(false, monitor);
+			} catch (CoreException ce) {
+				Trace.trace(Trace.SEVERE, "Could not add module to server", ce);
+				server = null;
+			}
+		}
+		
+		Shell shell;
+		if (window != null)
+			shell = window.getShell();
+		else
+			shell = ServerUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
+
+		if (server == null) {
+			// try the full wizard
+			RunOnServerWizard wizard = new RunOnServerWizard(module, launchMode);
+			ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
+			if (dialog.open() == Window.CANCEL) {
+				monitor.setCanceled(true);
+				return null;
+			}
+
+			// TODO - this can't be called until the wizard's job finishes!!
+			server = wizard.getServer();
+			boolean preferred = wizard.isPreferredServer();
+			tasksRun = true;
+
+			// set preferred server if requested
+			if (server != null && preferred && project != null) {
+				try {
+					ServerCore.getProjectProperties(project).setDefaultServer(server, monitor);
+				} catch (CoreException ce) {
+					String message = ServerUIPlugin.getResource("%errorCouldNotSavePreference");
+					ErrorDialog.openError(shell, ServerUIPlugin.getResource("%errorDialogTitle"), message, ce.getStatus());
+				}
+			}
+		}
+		return server;
 	}
 
 	/**
@@ -103,7 +159,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size && !found; i++) {
-				if (ServerUtil.isCompatibleWithLaunchMode(servers[i], launchMode)) {
+				if (ServerUIPlugin.isCompatibleWithLaunchMode(servers[i], launchMode)) {
 					try {
 						IModule[] parents = servers[i].getRootModules(module, monitor);
 						if (parents != null && parents.length > 0)
@@ -140,50 +196,11 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		if (!ServerUIPlugin.saveEditors())
 			return;
 
-		IServer server = null;
-		IProject project = module.getProject();
-		if (project != null)
-			server = ServerCore.getProjectProperties(project).getDefaultServer();
+		tasksRun = false;
+		IServer server = getServer(module, launchMode, monitor);
+		if (monitor.isCanceled())
+			return;
 		
-		// ignore preference if the server doesn't support this mode.
-		if (server != null && !ServerUtil.isCompatibleWithLaunchMode(server, launchMode))
-			server = null;
-		
-		if (server != null && !ServerUtil.containsModule(server, module, monitor)) {
-			IServerWorkingCopy wc = server.createWorkingCopy();
-			try {
-				ServerUtil.modifyModules(wc, new IModule[] { module }, new IModule[0], monitor);
-				wc.save(false, monitor);
-			} catch (CoreException ce) {
-				Trace.trace(Trace.SEVERE, "Could not add module to server", ce);
-				server = null;
-			}
-		}
-
-		boolean tasksRun = false;	
-		if (server == null) {
-			// try the full wizard
-			RunOnServerWizard wizard = new RunOnServerWizard(module, launchMode);
-			ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
-			if (dialog.open() == Window.CANCEL) {
-				return;
-			}
-
-			// TODO - this can't be called until the wizard's job finishes!!
-			server = wizard.getServer();
-			boolean preferred = wizard.isPreferredServer();
-			tasksRun = true;
-
-			// set preferred server if requested
-			if (server != null && preferred && project != null) {
-				try {
-					ServerCore.getProjectProperties(project).setDefaultServer(server, new NullProgressMonitor());
-				} catch (CoreException ce) {
-					String message = ServerUIPlugin.getResource("%errorCouldNotSavePreference");
-					ErrorDialog.openError(shell, ServerUIPlugin.getResource("%errorDialogTitle"), message, ce.getStatus());
-				}
-			}
-		}
 		Trace.trace(Trace.FINEST, "Server: " + server);
 		
 		if (server == null) {

@@ -15,9 +15,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * A server locator provides the ability to locate or search for additional
  * servers of a particular type, on a particular host.
+ * <p>
+ * Server locators are found via ServerCore.getServerLocators().
+ * </p>
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
  * 
+ * @see ServerCore
  * @since 1.0
  */
 public interface IServerLocator {

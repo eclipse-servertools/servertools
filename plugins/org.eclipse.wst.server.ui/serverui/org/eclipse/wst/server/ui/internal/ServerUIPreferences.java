@@ -25,6 +25,7 @@ public class ServerUIPreferences {
 	private static final String PREF_IMPORT_LOCATION = "import-location";
 	private static final String PREF_SAVE_EDITORS = "save-editors";
 	private static final String PREF_HOST_NAMES = "host-names";
+	private static final String PREF_SHOW_ON_ACTIVITY = "show-on-activity";
 
 	public static final byte SAVE_EDITORS_NEVER = 0;
 	public static final byte SAVE_EDITORS_PROMPT = 1;
@@ -46,6 +47,7 @@ public class ServerUIPreferences {
 		preferences.setDefault(PREF_PROMPT_IRREVERSIBLE, getDefaultPromptBeforeIrreversibleChange());
 		preferences.setDefault(PREF_SAVE_EDITORS, getDefaultSaveEditors());
 		preferences.setDefault(PREF_HOST_NAMES, "localhost");
+		preferences.setDefault(PREF_SHOW_ON_ACTIVITY, true);
 	}
 
 	/**
@@ -123,6 +125,34 @@ public class ServerUIPreferences {
 	 */
 	public void setSaveEditors(byte b) {
 		preferences.setValue(PREF_SAVE_EDITORS, b);
+		ServerUIPlugin.getInstance().savePluginPreferences();
+	}
+	
+	/**
+	 * Returns the default setting for opening the servers view on activity.
+	 * 
+	 * @return boolean
+	 */
+	public boolean getDefaultShowOnActivity() {
+		return true;
+	}
+
+	/**
+	 * Returns the setting for opening the servers view on activity.
+	 * 
+	 * @return boolean
+	 */
+	public boolean getShowOnActivity() {
+		return preferences.getBoolean(PREF_SHOW_ON_ACTIVITY);
+	}
+
+	/**
+	 * Sets the value for opening the servers view on activity.
+	 * 
+	 * @param boolean
+	 */
+	public void setShowOnActivity(boolean b) {
+		preferences.setValue(PREF_SHOW_ON_ACTIVITY, b);
 		ServerUIPlugin.getInstance().savePluginPreferences();
 	}
 

@@ -8,13 +8,18 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core;
+package org.eclipse.wst.server.core.internal;
 
 import java.util.List;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IOptionalTask;
+import org.eclipse.wst.server.core.IServer;
 /**
  * A task for a server.
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
+ * 
+ * @since 1.0
  */
 public interface IServerTask {
 	/**

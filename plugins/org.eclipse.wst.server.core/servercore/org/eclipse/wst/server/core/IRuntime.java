@@ -60,6 +60,7 @@ import org.eclipse.core.runtime.*;
  * likely to change significantly before the initial release.</it>
  * </p>
  * 
+ * @see IRuntimeWorkingCopy
  * @since 1.0
  */
 public interface IRuntime extends IAdaptable {
@@ -121,7 +122,8 @@ public interface IRuntime extends IAdaptable {
 	/**
 	 * Returns true if the delegate has been loaded.
 	 * 
-	 * @return
+	 * @return <code>true</code> if the delegate is loaded, and <code>false</code>
+	 *    otherwise
 	 */
 	public boolean isDelegateLoaded();
 	

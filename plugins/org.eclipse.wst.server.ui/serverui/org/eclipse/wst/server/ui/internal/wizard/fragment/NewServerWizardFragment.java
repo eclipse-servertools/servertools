@@ -18,7 +18,7 @@ import java.util.Map;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
-import org.eclipse.wst.server.ui.ServerUICore;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.page.NewServerComposite;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
@@ -117,7 +117,7 @@ public class NewServerWizardFragment extends WizardFragment {
 			// ignore
 		}
 		
-		WizardFragment fragment = ServerUICore.getWizardFragment(typeId);
+		WizardFragment fragment = ServerUIPlugin.getWizardFragment(typeId);
 		if (fragment != null)
 			fragmentMap.put(typeId, fragment);
 		return fragment;

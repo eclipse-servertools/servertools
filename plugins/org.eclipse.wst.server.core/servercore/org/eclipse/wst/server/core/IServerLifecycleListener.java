@@ -11,6 +11,8 @@
 package org.eclipse.wst.server.core;
 /**
  * Listener interface for server changes.
+ * 
+ * @since 1.0
  */
 public interface IServerLifecycleListener {
 	/**

@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.core.IWebModule;
 
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.ServerMonitorManager;
 import org.eclipse.wst.server.core.model.*;
 /**
  * Generic Tomcat server.
@@ -131,7 +132,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	
 			String url = "http://localhost";
 			int port = config.getMainPort().getPort();
-			port = ServerCore.getServerMonitorManager().getMonitoredPort(getServer(), port, "web");
+			port = ServerMonitorManager.getInstance().getMonitoredPort(getServer(), port, "web");
 			if (port != 80)
 				url += ":" + port;
 

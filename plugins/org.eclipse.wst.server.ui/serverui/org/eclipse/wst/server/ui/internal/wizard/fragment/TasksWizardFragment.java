@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.*;
 import org.eclipse.wst.server.core.util.Task;
 import org.eclipse.wst.server.ui.editor.IOrdered;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
@@ -119,7 +120,7 @@ public class TasksWizardFragment extends WizardFragment {
 				List moduleList = new ArrayList();
 			}
 			final Helper help = new Helper();
-			ServerUtil.visit(server, new IModuleVisitor() {
+			((Server) server).visit(new IModuleVisitor() {
 				public boolean visit(IModule[] parents2, IModule module2) {
 					int size = parents2.length;
 					List list = new ArrayList(size);
@@ -158,7 +159,7 @@ public class TasksWizardFragment extends WizardFragment {
 			serverTypeId = server.getServerType().getId();
 		
 		// server tasks
-		IServerTask[] serverTasks = ServerCore.getServerTasks();
+		IServerTask[] serverTasks = ServerPlugin.getServerTasks();
 		if (serverTasks != null) {
 			int size = serverTasks.length;
 			for (int i = 0; i < size; i++) {
@@ -287,7 +288,7 @@ public class TasksWizardFragment extends WizardFragment {
 					if (!file.getProject().exists())
 						EclipseUtil.createNewServerProject(null, project.getName(), null, monitor);
 					
-					IProjectProperties pp = ServerCore.getProjectProperties(project);
+					ProjectProperties pp = (ProjectProperties) ServerCore.getProjectProperties(project);
 					if (!pp.isServerProject())
 						pp.setServerProject(true, monitor);
 				}

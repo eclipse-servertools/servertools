@@ -35,7 +35,7 @@ public class PublishAction extends AbstractServerAction {
 	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	public boolean accept(IServer server) {
-		return server.canPublish();
+		return server.canPublish().isOK();
 	}
 
 	/**

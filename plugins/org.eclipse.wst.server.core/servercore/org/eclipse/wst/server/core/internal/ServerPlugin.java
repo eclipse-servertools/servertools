@@ -16,6 +16,8 @@ import java.text.DateFormat;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.*;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IServer;
 import org.osgi.framework.BundleContext;
 /**
  * The main server plugin class.
@@ -31,9 +33,18 @@ public class ServerPlugin extends Plugin {
 
 	// cached copy of all launchable clients
 	private static List clients;
+	
+	// cached copy of all module factories
+	private static List moduleFactories;
 
 	// singleton instance of this class
 	private static ServerPlugin singleton;
+
+	// cached copy of all server tasks
+	private static List serverTasks;
+	
+	//	cached copy of all server monitors
+	private static List monitors;
 
 	private static final String TEMP_DATA_FILE = "tmp-data.xml";
 
@@ -465,5 +476,264 @@ public class ServerPlugin extends Plugin {
 			}
 		}
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .clients extension point -<-");
+	}
+	
+	/**
+	 * Returns an array of all known server tasks.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return a possibly-empty array of server tasks instances {@link IServerTask}
+	 */
+	public static IServerTask[] getServerTasks() {
+		if (serverTasks == null)
+			loadServerTasks();
+		IServerTask[] st = new IServerTask[serverTasks.size()];
+		serverTasks.toArray(st);
+		return st;
+	}
+	
+	/**
+	 * Load the server task extension point.
+	 */
+	private static synchronized void loadServerTasks() {
+		if (serverTasks != null)
+			return;
+		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .serverTasks extension point ->-");
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "serverTasks");
+
+		int size = cf.length;
+		serverTasks = new ArrayList(size);
+		for (int i = 0; i < size; i++) {
+			try {
+				serverTasks.add(new ServerTask(cf[i]));
+				Trace.trace(Trace.EXTENSION_POINT, "  Loaded serverTask: " + cf[i].getAttribute("id"));
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "  Could not load serverTask: " + cf[i].getAttribute("id"), t);
+			}
+		}
+		
+		sortOrderedList(serverTasks);
+		
+		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .serverTasks extension point -<-");
+	}
+	
+	/**
+	 * Sort the given list of IOrdered items into indexed order.
+	 *
+	 * @param list java.util.List
+	 * @return java.util.List
+	 */
+	private static List sortOrderedList(List list) {
+		if (list == null)
+			return null;
+
+		int size = list.size();
+		for (int i = 0; i < size - 1; i++) {
+			for (int j = i + 1; j < size; j++) {
+				IOrdered a = (IOrdered) list.get(i);
+				IOrdered b = (IOrdered) list.get(j);
+				if (a.getOrder() > b.getOrder()) {
+					Object temp = a;
+					list.set(i, b);
+					list.set(j, temp);
+				}
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * Returns an array of all known module module factories.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return the array of module factories {@link IModuleFactory}
+	 */
+	public static ModuleFactory[] getModuleFactories() {
+		if (moduleFactories == null)
+			loadModuleFactories();
+		
+		ModuleFactory[] mf = new ModuleFactory[moduleFactories.size()];
+		moduleFactories.toArray(mf);
+		return mf;
+	}
+	
+	/**
+	 * Returns the module factory with the given id, or <code>null</code>
+	 * if none. This convenience method searches the list of known
+	 * module factories ({@link #getModuleFactories()}) for the one a matching
+	 * module factory id ({@link IModuleFactory#getId()}). The id may not be null.
+	 *
+	 * @param the module factory id
+	 * @return the module factory, or <code>null</code> if there is no module factory
+	 * with the given id
+	 */
+	public static ModuleFactory findModuleFactory(String id) {
+		if (id == null)
+			throw new IllegalArgumentException();
+
+		if (moduleFactories == null)
+			loadModuleFactories();
+		
+		Iterator iterator = moduleFactories.iterator();
+		while (iterator.hasNext()) {
+			ModuleFactory factory = (ModuleFactory) iterator.next();
+			if (id.equals(factory.getId()))
+				return factory;
+		}
+		return null;
+	}
+	
+	/**
+	 * Load the module factories extension point.
+	 */
+	private static synchronized void loadModuleFactories() {
+		if (moduleFactories != null)
+			return;
+		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleFactories extension point ->-");
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleFactories");
+
+		int size = cf.length;
+		moduleFactories = new ArrayList(size);
+		for (int i = 0; i < size; i++) {
+			try {
+				moduleFactories.add(new ModuleFactory(cf[i]));
+				Trace.trace(Trace.EXTENSION_POINT, "  Loaded moduleFactories: " + cf[i].getAttribute("id"));
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "  Could not load moduleFactories: " + cf[i].getAttribute("id"), t);
+			}
+		}
+		sortOrderedList(moduleFactories);
+		
+		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleFactories extension point -<-");
+	}
+	
+	/**
+	 * Returns all projects contained by the server. This included the
+	 * projects that are in the configuration, as well as their
+	 * children, and their children...
+	 *
+	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return a possibly-empty array of module instances {@link IModule}
+	 */
+	private static IModule[] getAllContainedModules(IServer server, IProgressMonitor monitor) {
+		//Trace.trace("> getAllContainedModules: " + getName(configuration));
+		List modules = new ArrayList();
+		if (server == null)
+			return new IModule[0];
+
+		// get all of the directly contained projects
+		IModule[] deploys = server.getModules();
+		if (deploys == null || deploys.length == 0)
+			return new IModule[0];
+
+		int size = deploys.length;
+		for (int i = 0; i < size; i++) {
+			if (deploys[i] != null && !modules.contains(deploys[i]))
+				modules.add(deploys[i]);
+		}
+
+		//Trace.trace("  getAllContainedModules: root level done");
+
+		// get all of the module's children
+		int count = 0;
+		while (count < modules.size()) {
+			IModule module = (IModule) modules.get(count);
+			try {
+				IModule[] children = server.getChildModules(module, monitor);
+				if (children != null) {
+					size = children.length;
+					for (int i = 0; i < size; i++) {
+						if (children[i] != null && !modules.contains(children[i]))
+							modules.add(children[i]);
+					}
+				}
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Error getting child modules for: " + module.getName(), e);
+			}
+			count ++;
+		}
+
+		//Trace.trace("< getAllContainedModules");
+
+		IModule[] modules2 = new IModule[modules.size()];
+		modules.toArray(modules2);
+		return modules2;
+	}
+	
+	/**
+	 * Returns true if the given server currently contains the given module.
+	 *
+	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param module org.eclipse.wst.server.core.IModule
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return boolean
+	 */
+	public static boolean containsModule(IServer server, IModule module, IProgressMonitor monitor) {
+		if (server == null)
+			return false;
+		Trace.trace(Trace.FINEST, "containsModule() " + server + " " + module);
+		try {
+			IModule[] modules = getAllContainedModules(server, monitor);
+			if (modules != null) {
+				int size = modules.length;
+				for (int i = 0; i < size; i++) {
+					Trace.trace(Trace.FINEST, "module: " + modules[i] + " " + module.equals(modules[i]));
+					if (module.equals(modules[i]))
+						return true;
+				}
+			}
+		} catch (Throwable t) {
+			// ignore
+		}
+		return false;
+	}
+	
+	/**
+	 * Returns an array of all known server monitor instances.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return a possibly-empty array of server monitor instances {@link IServerMonitor}
+	 */
+	public static IServerMonitor[] getServerMonitors() {
+		if (monitors == null)
+			loadServerMonitors();
+		IServerMonitor[] sm = new IServerMonitor[monitors.size()];
+		monitors.toArray(sm);
+		return sm;
+	}
+	
+	/**
+	 * Load the server monitor extension point.
+	 */
+	private static synchronized void loadServerMonitors() {
+		if (monitors != null)
+			return;
+		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .serverMonitors extension point ->-");
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "serverMonitors");
+
+		int size = cf.length;
+		monitors = new ArrayList(size);
+		for (int i = 0; i < size; i++) {
+			try {
+				monitors.add(new ServerMonitor(cf[i]));
+				Trace.trace(Trace.EXTENSION_POINT, "  Loaded serverMonitor: " + cf[i].getAttribute("id"));
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "  Could not load serverMonitor: " + cf[i].getAttribute("id"), t);
+			}
+		}
+	
+		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .serverMonitors extension point -<-");
 	}
 }

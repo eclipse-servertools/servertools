@@ -21,7 +21,7 @@ import org.eclipse.wst.server.core.IRuntimeLocator;
  * to extend the <code>runtimeLocators</code> extension point.
  * </p>
  * 
- * @see IRuntimeLocator
+ * @see org.eclipse.wst.server.core.IRuntimeLocator
  * @since 1.0
  */
 public abstract class RuntimeLocatorDelegate {
@@ -35,7 +35,7 @@ public abstract class RuntimeLocatorDelegate {
 	 * @param listener a listener to report status to
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
-	 * @see IRuntimeLocator.searchForRuntimes(IPath, IRuntimeLocator.RuntimeSearchListener, IProgressMonitor)
+	 * @see org.eclipse.wst.server.core.IRuntimeLocator.searchForRuntimes(IPath, IRuntimeLocator.RuntimeSearchListener, IProgressMonitor)
 	 */
 	public abstract void searchForRuntimes(IPath path, IRuntimeLocator.RuntimeSearchListener listener, IProgressMonitor monitor);
 }

@@ -12,7 +12,8 @@ package org.eclipse.wst.server.ui.editor;
 
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 /**
- *
+ * 
+ * @since 1.0
  */
 public abstract class ServerEditorPageSectionFactoryDelegate {
 	/**

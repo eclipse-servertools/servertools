@@ -31,6 +31,8 @@ import org.eclipse.wst.server.ui.internal.editor.ServerEditorCore;
  * 
  * This class also provides each editor page with an error message which
  * will be displayed on the status bar of the editor.
+ * 
+ * @since 1.0
  */
 public abstract class ServerEditorPart extends EditorPart {
 	public static final int PROP_ERROR = 5;

@@ -463,7 +463,7 @@ public class Server extends Base implements IServer {
 			}
 		};
 
-		ServerUtil.visit(this, visitor, null);
+		visit(visitor, null);
 		
 		if (!helper.changed)
 			return;
@@ -519,8 +519,10 @@ public class Server extends Base implements IServer {
 
 	/**
 	 * Adds a publish listener to this server.
+	 * Has no effect if an identical listener is already registered.
 	 *
-	 * @param listener org.eclipse.wst.server.core.model.IPublishListener
+	 * @param listener the publish listener
+	 * @see #removePublishListener(IPublishListener)
 	 */
 	public void addPublishListener(IPublishListener listener) {
 		Trace.trace(Trace.LISTENERS, "Adding publish listener " + listener + " to " + this);
@@ -532,8 +534,10 @@ public class Server extends Base implements IServer {
 
 	/**
 	 * Removes a publish listener from this server.
+	 * Has no effect if the listener is not registered.
 	 *
-	 * @param listener org.eclipse.wst.server.core.model.IPublishListener
+	 * @param listener the publish listener
+	 * @see #addPublishListener(IPublishListener)
 	 */
 	public void removePublishListener(IPublishListener listener) {
 		Trace.trace(Trace.LISTENERS, "Removing publish listener " + listener + " from " + this);
@@ -682,20 +686,21 @@ public class Server extends Base implements IServer {
 	 * be published to.
 	 *
 	 * @return boolean
+	 * TODO: fix return strings 
 	 */
-	public boolean canPublish() {
+	public IStatus canPublish() {
 		// can't publish if the server is starting or stopping
 		int state = getServerState();
 		if (state == STATE_STARTING || state == STATE_STOPPING)
-			return false;
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
 	
 		// can't publish if there is no configuration
 		if (getServerType() == null || getServerType().hasServerConfiguration() && configuration == null)
-			return false;
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
 	
 		// return true if the configuration can be published
 		if (getServerPublishState() != PUBLISH_STATE_NONE)
-			return true;
+			return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
 
 		// return true if any modules can be published
 		class Temp {
@@ -703,7 +708,7 @@ public class Server extends Base implements IServer {
 		}
 		//final Temp temp = new Temp();
 		
-		return true;
+		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
 	
 		/*IModuleVisitor visitor = new IModuleVisitor() {
 			public boolean visit(IModule[] parents, IModule module) {
@@ -726,7 +731,7 @@ public class Server extends Base implements IServer {
 	 * @return boolean
 	 */
 	public boolean shouldPublish() {
-		if (!canPublish())
+		if (!canPublish().isOK())
 			return false;
 	
 		if (getServerPublishState() != PUBLISH_STATE_NONE)
@@ -832,7 +837,7 @@ public class Server extends Base implements IServer {
 			}
 		};
 
-		ServerUtil.visit(this, visitor, monitor);
+		visit(visitor, monitor);
 		
 		// build arrays & lists
 		List[] taskParents = new List[taskParentList.size()];
@@ -1024,7 +1029,7 @@ public class Server extends Base implements IServer {
 		
 		String serverTypeId = getServerType().getId();
 		
-		IServerTask[] serverTasks = ServerCore.getServerTasks();
+		IServerTask[] serverTasks = ServerPlugin.getServerTasks();
 		if (serverTasks != null) {
 			int size = serverTasks.length;
 			for (int i = 0; i < size; i++) {
@@ -1113,17 +1118,17 @@ public class Server extends Base implements IServer {
 	 * be started, and supports the given mode.
 	 *
 	 * @param mode
-	 * @return boolean
+	 * @return status
 	 */
-	public boolean canStart(String mode2) {
+	public IStatus canStart(String mode2) {
 		int state = getServerState();
 		if (state != STATE_STOPPED && state != STATE_UNKNOWN)
-			return false;
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%canStartErrorState"), null);
 		
 		if (getServerType() == null || !getServerType().supportsLaunchMode(mode2))
-			return false;
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
 
-		return true;
+		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%canStartOk"), null);
 	}
 	
 	public ILaunch getExistingLaunch() {
@@ -1270,16 +1275,17 @@ public class Server extends Base implements IServer {
 	 * be restarted.
 	 *
 	 * @return boolean
+	 * TODO: fix return strings
 	 */
-	public boolean canRestart(String mode2) {
-		/*ServerDelegate delegate2 = getDelegate();
-		if (!(delegate2 instanceof IStartableServer))
-			return false;*/
+	public IStatus canRestart(String mode2) {
 		if (!getServerType().supportsLaunchMode(mode2))
-			return false;
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
 
 		int state = getServerState();
-		return (state == STATE_STARTED);
+		if (state == STATE_STARTED)
+			return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
+		
+		return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
 	}
 
 	/**
@@ -1368,12 +1374,13 @@ public class Server extends Base implements IServer {
 	 * be stopped.
 	 *
 	 * @return boolean
+	 * TODO: fix return strings
 	 */
-	public boolean canStop() {
+	public IStatus canStop() {
 		if (getServerState() == STATE_STOPPED)
-			return false;
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
 
-		return true;
+		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
 	}
 
 	/**
@@ -1423,7 +1430,7 @@ public class Server extends Base implements IServer {
 		};
 		addServerListener(listener);
 		
-		final int serverTimeout = getServerType().getStartTimeout();
+		final int serverTimeout = ((ServerType) getServerType()).getStartTimeout();
 		class Timer {
 			boolean timeout;
 			boolean alreadyDone;
@@ -1876,15 +1883,18 @@ public class Server extends Base implements IServer {
 	 *
 	 * @param module the module
 	 * @return <code>true</code> if the given module can be
-	 * restarted, and <code>false</code> otherwise 
+	 *    restarted, and <code>false</code> otherwise
+	 * TODO: fix return strings
 	 */
-	public boolean canRestartModule(IModule module) {
+	public IStatus canRestartModule(IModule module) {
 		try {
-			return getBehaviourDelegate().canRestartModule(module);
+			boolean b = getBehaviourDelegate().canRestartModule(module);
+			if (b)
+				return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate canRestartRuntime() " + toString(), e);
-			return false;
 		}
+		return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
 	}
 
 	/**
@@ -1929,5 +1939,52 @@ public class Server extends Base implements IServer {
 			Trace.trace(Trace.SEVERE, "Error calling delegate getServerPorts() " + toString(), e);
 			return null;
 		}
+	}
+	
+	/**
+	 * Visit all the modules in the server with the given module visitor.
+	 * 
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 */
+	public void visit(IModuleVisitor visitor, IProgressMonitor monitor) {
+		IModule[] modules2 = getModules();
+		if (modules2 != null) { 
+			int size = modules2.length;
+			for (int i = 0; i < size; i++) {
+				if (!visitModule(new IModule[0], modules2[i], visitor, monitor))
+					return;
+			}
+		}
+	}
+
+	/**
+	 * Returns true to keep visiting, and false to stop.
+	 * 
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 */
+	private boolean visitModule(IModule[] parents, IModule module, IModuleVisitor visitor, IProgressMonitor monitor) {
+		if (module == null || parents == null)
+			return true;
+		
+		if (!visitor.visit(parents, module))
+			return false;
+		
+		IModule[] children = getChildModules(module, monitor);
+		if (children != null) {
+			int size = children.length;
+			for (int i = 0; i < size; i++) {
+				IModule module2 = children[i];
+				IModule[] parents2 = new IModule[parents.length + 1];
+				System.arraycopy(parents, 0, parents2, 0, parents.length);
+				parents2[parents.length] = module;
+				
+				if (!visitModule(parents2, module2, visitor, monitor))
+					return false;
+			}
+		}
+			
+		return true;
 	}
 }

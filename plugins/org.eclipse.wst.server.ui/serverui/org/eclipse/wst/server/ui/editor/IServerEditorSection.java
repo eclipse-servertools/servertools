@@ -16,6 +16,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 /**
  * 
+ * @since 1.0
  */
 public interface IServerEditorSection {
 	public void init(IEditorSite site, IEditorInput input);

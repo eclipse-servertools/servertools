@@ -13,8 +13,8 @@ package org.eclipse.wst.server.ui.internal.viewers;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import org.eclipse.wst.server.core.IMonitoredServerPort;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.internal.IMonitoredServerPort;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 /**

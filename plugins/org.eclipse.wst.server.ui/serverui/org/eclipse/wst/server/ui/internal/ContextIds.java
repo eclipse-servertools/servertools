@@ -59,7 +59,7 @@ public interface ContextIds {
 	public static final String PREF_GENERAL_SHOW_PUBLISHING_DETAILS = ServerUIPlugin.PLUGIN_ID + ".spge0010";
 	public static final String PREF_GENERAL_PUBLISH_BEFORE_START = ServerUIPlugin.PLUGIN_ID + ".spge0012";
 	public static final String PREF_GENERAL_AUTO_RESTART = ServerUIPlugin.PLUGIN_ID + ".spge0014";
-	public static final String PREF_GENERAL_PUBLISHER = ServerUIPlugin.PLUGIN_ID + ".spge0015";
+	public static final String PREF_GENERAL_SHOW_ON_ACTIVITY = ServerUIPlugin.PLUGIN_ID + ".spge0016";
 	public static final String PREF_GENERAL_REPAIR = ServerUIPlugin.PLUGIN_ID + ".spge0018";
 	public static final String PREF_GENERAL_PROMPT_IRREVERSIBLE = ServerUIPlugin.PLUGIN_ID + ".spge0020";
 	public static final String PREF_GENERAL_CREATE_IN_WORKSPACE = ServerUIPlugin.PLUGIN_ID + ".spge0022";

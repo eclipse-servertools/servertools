@@ -13,6 +13,8 @@ package org.eclipse.wst.server.ui.editor;
 import org.eclipse.wst.server.core.ITask;
 /**
  * A command manager.
+ * 
+ * @since 1.0
  */
 public interface ICommandManager {
 	/**

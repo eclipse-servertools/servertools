@@ -83,7 +83,7 @@ public class LaunchClientJob extends Job {
 				Trace.trace(Trace.FINEST, "Attempting to load client: " + client);
 				try {
 					ILaunchable launchable = launchableAdapter.getLaunchable(server, moduleArtifact);
-					client.launch(server, launchable, launchMode, server.getExistingLaunch());
+					client.launch(server, launchable, launchMode, ((Server) server).getExistingLaunch());
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Server client failed", e);
 				}

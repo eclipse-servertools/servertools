@@ -16,14 +16,9 @@ package org.eclipse.wst.server.core;
  * resource. Examples may include HTTP requests and JNDI names.
  * 
  * [issue: rename to avoid confusion with debug.ui.ILaunchable]
+ * 
+ * @since 1.0
  */
 public interface ILaunchable {
-	/**
-	 * Returns the id of this launchable. Each known launchable has a distinct id. 
-	 * Ids are intended to be used internally as keys; they are not
-	 * intended to be shown to end users.
-	 * 
-	 * @return the launchable id
-	 */
-	public String getId();
+	// no content
 }

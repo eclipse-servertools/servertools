@@ -63,6 +63,8 @@ public class ServerMonitorManager implements IServerMonitorManager {
 		}
 		
 		public String[] getContentTypes() {
+			if (content == null)
+				return new String[0];
 			return content;
 		}
 		
@@ -163,7 +165,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	}
 
 	public ServerMonitorManager() {
-		IServerMonitor[] monitors = ServerCore.getServerMonitors();
+		IServerMonitor[] monitors = ServerPlugin.getServerMonitors();
 		if (monitors != null && monitors.length > 0)
 			monitor = (ServerMonitor) monitors[0];
 		

@@ -297,20 +297,4 @@ public interface IServerType {
 	 *    or setting it's default values
 	 */
 	public IServerWorkingCopy createServer(String id, IFile file, IProgressMonitor monitor) throws CoreException;
-
-	/**
-	 * Return the timeout (in ms) that should be used to wait for the server to start.
-	 * Returns -1 if there is no timeout.
-	 * 
-	 * @return the server startup timeout
-	 */
-	public int getStartTimeout();
-
-	/**
-	 * Return the timeout (in ms) to wait before assuming that the server
-	 * has failed to stop. Returns -1 if there is no timeout.
-	 * 
-	 * @return the server shutdown timeout
-	 */
-	public int getStopTimeout();
 }

@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.ITaskModel;
-import org.eclipse.wst.server.ui.ServerUICore;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.page.NewRuntimeComposite;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
@@ -74,7 +74,7 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 		if (runtime == null)
 			return;
 
-		WizardFragment sub = ServerUICore.getWizardFragment(runtime.getRuntimeType().getId());
+		WizardFragment sub = ServerUIPlugin.getWizardFragment(runtime.getRuntimeType().getId());
 		if (sub != null)
 			list.add(sub);
 	}

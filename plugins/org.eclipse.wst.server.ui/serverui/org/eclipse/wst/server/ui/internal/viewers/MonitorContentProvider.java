@@ -14,7 +14,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.ServerMonitorManager;
 /**
  * Monitor port content provider.
  */
@@ -31,7 +31,7 @@ public class MonitorContentProvider implements IStructuredContentProvider {
 	}
 
 	public Object[] getElements(Object inputElement) {
-		return ServerCore.getServerMonitorManager().getMonitoredPorts(server);
+		return ServerMonitorManager.getInstance().getMonitoredPorts(server);
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {

@@ -52,7 +52,7 @@ public class RestartModuleAction extends Action {
 			return;
 		}*/
 	
-		setEnabled(server.canRestartModule(module));
+		setEnabled(server.canRestartModule(module).isOK());
 	}
 
 	/**

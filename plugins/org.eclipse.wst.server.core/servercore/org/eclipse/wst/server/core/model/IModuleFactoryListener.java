@@ -11,6 +11,8 @@
 package org.eclipse.wst.server.core.model;
 /**
  * 
+ * 
+ * @since 1.0
  */
 public interface IModuleFactoryListener {
 	/**

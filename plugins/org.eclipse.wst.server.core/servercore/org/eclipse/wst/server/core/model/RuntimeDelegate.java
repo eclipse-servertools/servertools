@@ -141,7 +141,7 @@ public abstract class RuntimeDelegate {
 		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null);
 	}
 	
-	protected boolean isNameInUse() {
+	private boolean isNameInUse() {
 		IRuntime orig = runtime;
 		if (runtimeWC != null)
 			orig = runtimeWC.getOriginal();

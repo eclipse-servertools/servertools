@@ -8,11 +8,17 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core;
+package org.eclipse.wst.server.core.internal;
+
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerPort;
+
 /**
  * An monitored port on a server.
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
+ * 
+ * @since 1.0
  */
 public interface IMonitoredServerPort {
 	/**

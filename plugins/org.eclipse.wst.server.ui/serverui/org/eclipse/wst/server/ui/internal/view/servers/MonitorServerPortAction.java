@@ -13,6 +13,9 @@ package org.eclipse.wst.server.ui.internal.view.servers;
 import org.eclipse.jface.action.Action;
 
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.IMonitoredServerPort;
+import org.eclipse.wst.server.core.internal.IServerMonitorManager;
+import org.eclipse.wst.server.core.internal.ServerMonitorManager;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.swt.widgets.Shell;
@@ -33,7 +36,7 @@ public class MonitorServerPortAction extends Action {
 		this.server = server;
 		this.port = port;
 		
-		IMonitoredServerPort[] msps = ServerCore.getServerMonitorManager().getMonitoredPorts(server);
+		IMonitoredServerPort[] msps = ServerMonitorManager.getInstance().getMonitoredPorts(server);
 		if (msps != null) {
 			int size = msps.length;
 			for (int i = 0; i < size; i++) {
@@ -51,10 +54,10 @@ public class MonitorServerPortAction extends Action {
 	 * Enable or disable monitoring.
 	 */
 	public void run() {
+		IServerMonitorManager smm = ServerMonitorManager.getInstance();
 		if (checked) {
-			ServerCore.getServerMonitorManager().removeMonitor(monitoredPort);
+			smm.removeMonitor(monitoredPort);
 		} else {
-			IServerMonitorManager smm = ServerCore.getServerMonitorManager();
 			if (monitoredPort == null)
 				monitoredPort = smm.createMonitor(server, port, -1, null);
 			

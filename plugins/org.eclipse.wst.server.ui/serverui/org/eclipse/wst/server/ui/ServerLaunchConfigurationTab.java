@@ -30,9 +30,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.internal.*;
 /**
  * Server launch configuration tab.
+ * 
+ * @since 1.0
  */
 public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab {
 	protected String[] serverTypeIds;
@@ -59,7 +62,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		this.serverTypeIds = serverTypeIds;
 	}
 
-	/**
+	/*
 	 * @see ILaunchConfigurationTab#createControl(Composite)
 	 */
 	public void createControl(Composite parent) {
@@ -173,7 +176,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		super.updateLaunchConfigurationDialog();
 	}
 
-	/**
+	/*
 	 * @see ILaunchConfigurationTab#setDefaults(ILaunchConfigurationWorkingCopy)
 	 */
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
@@ -188,14 +191,14 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 			server = (IServer) servers.get(serverCombo.getSelectionIndex());
 			if (server != null)
 				try {
-					server.setupLaunchConfiguration(configuration, null);
+					((Server) server).setupLaunchConfiguration(configuration, null);
 				} catch (CoreException ce) {
 					Trace.trace(Trace.SEVERE, "Error setting up launch configuration", ce);
 				}
 		}
 	}
 
-	/**
+	/*
 	 * @see ILaunchConfigurationTab#initializeFrom(ILaunchConfiguration)
 	 */
 	public void initializeFrom(ILaunchConfiguration configuration) {
@@ -230,7 +233,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		}
 	}
 
-	/**
+	/*
 	 * @see ILaunchConfigurationTab#performApply(ILaunchConfigurationWorkingCopy)
 	 */
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
@@ -240,7 +243,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 			configuration.setAttribute(IServerAttributes.ATTR_SERVER_ID, (String)null);
 	}
 
-	/**
+	/*
 	 * @see ILaunchConfigurationTab#isValid() 
 	 */
 	public boolean isValid() {
@@ -249,7 +252,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		return false;
 	}
 
-	/**
+	/*
 	 * @see ILaunchConfigurationTab#isValid(ILaunchConfiguration) 
 	 */
 	public boolean isValid(ILaunchConfiguration launchConfig) {
@@ -272,7 +275,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		return ImageResource.getImage(ImageResource.IMG_SERVER);
 	}
 
-	/**
+	/*
 	 * @see ILaunchConfigurationTab#getName()
 	 */
 	public String getName() {

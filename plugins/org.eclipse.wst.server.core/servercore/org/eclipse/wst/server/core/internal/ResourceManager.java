@@ -117,7 +117,7 @@ public class ResourceManager {
 		 * @param delta org.eclipse.core.resources.IResourceDelta
 		 */
 		protected void projectChanged(IProject project, IResourceDelta delta) {
-			if (!ServerCore.getProjectProperties(project).isServerProject()) {
+			if (!((ProjectProperties)ServerCore.getProjectProperties(project)).isServerProject()) {
 				Trace.trace(Trace.RESOURCES, "Not a server project: " + project.getName());
 				return;
 			}
@@ -275,7 +275,7 @@ public class ResourceManager {
 		if (projects != null) {
 			int size = projects.length;
 			for (int i = 0; i < size; i++) {
-				if (ServerCore.getProjectProperties(projects[i]).isServerProject())
+				if (((ProjectProperties)ServerCore.getProjectProperties(projects[i])).isServerProject())
 					loadFromProject(projects[i]);
 			}
 		}

@@ -41,7 +41,7 @@ public class StopAction extends AbstractServerAction {
 	public boolean accept(IServer server) {
 		if (server.getServerType() == null || server.getServerType().getServerStateSet() != serverStateSet)
 			return false;
-		return server.getServerType() != null && server.canStop();
+		return server.getServerType() != null && server.canStop().isOK();
 	}
 
 	/**

@@ -39,6 +39,8 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 
 	protected Button promptIrreversible;
 	
+	protected Button showOnActivity;
+	
 	protected byte saveEditors;
 	
 	protected Button saveNever;
@@ -168,6 +170,14 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		promptIrreversible.setSelection(uiPreferences.getPromptBeforeIrreversibleChange());
 		whs.setHelp(promptIrreversible, ContextIds.PREF_GENERAL_PROMPT_IRREVERSIBLE);
 		
+		showOnActivity = new Button(composite, SWT.CHECK);
+		showOnActivity.setText(ServerUIPlugin.getResource("%prefShowOnActivity"));
+		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		data.horizontalSpan = 3;
+		showOnActivity.setLayoutData(data);
+		showOnActivity.setSelection(uiPreferences.getShowOnActivity());
+		whs.setHelp(showOnActivity, ContextIds.PREF_GENERAL_SHOW_ON_ACTIVITY);
+		
 		createInWorkspace = new Button(composite, SWT.CHECK);
 		createInWorkspace.setText(ServerUIPlugin.getResource("%prefCreateInWorkspace"));
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -249,6 +259,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		autoRestart.setSelection(preferences.isDefaultAutoRestarting());
 		publishBeforeStart.setSelection(preferences.isDefaultAutoPublishing());
 		promptIrreversible.setSelection(uiPreferences.getDefaultPromptBeforeIrreversibleChange());
+		showOnActivity.setSelection(uiPreferences.getDefaultShowOnActivity());
 		createInWorkspace.setSelection(preferences.isDefaultCreateResourcesInWorkspace());
 		
 		autoPublishLocal.setSelection(preferences.getDefaultAutoPublishLocal());
@@ -270,6 +281,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		preferences.setAutoRestarting(autoRestart.getSelection());
 		uiPreferences.setSaveEditors(saveEditors);
 		uiPreferences.setPromptBeforeIrreversibleChange(promptIrreversible.getSelection());
+		uiPreferences.setShowOnActivity(showOnActivity.getSelection());
 		preferences.setCreateResourcesInWorkspace(createInWorkspace.getSelection());
 		
 		preferences.setAutoPublishLocal(autoPublishLocal.getSelection());
@@ -297,7 +309,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 				IServer server = servers[i];
 				if (server.getServerRestartState()) {
 					String mode = server.getMode();
-					if (server.canRestart(mode))
+					if (server.canRestart(mode).isOK())
 						try {
 							Trace.trace(Trace.FINEST, "Attempting to auto restart " + server.getName());
 							server.restart(mode);

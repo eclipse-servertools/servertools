@@ -14,12 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IModuleVisitor;
-import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.core.ITask;
-import org.eclipse.wst.server.core.ITaskModel;
-import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.IModuleVisitor;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.task.ModifyModulesTask;
 import org.eclipse.wst.server.ui.internal.wizard.page.ModifyModulesComposite;
@@ -91,7 +88,7 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 			}
 			final Helper help = new Helper();
 			if (server != null) {
-				ServerUtil.visit(server, new IModuleVisitor() {
+				((Server) server).visit(new IModuleVisitor() {
 					public boolean visit(IModule[] parents2, IModule module2) {
 						help.parentList.add(parents2);
 						help.moduleList.add(module2);

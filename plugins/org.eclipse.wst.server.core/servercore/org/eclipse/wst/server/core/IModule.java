@@ -12,8 +12,6 @@ package org.eclipse.wst.server.core;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.model.IModuleListener;
 /**
  * A module is a unit of "content" that can be published to a
@@ -64,66 +62,6 @@ public interface IModule extends IAdaptable {
 	 * @return the module id
 	 */
 	public String getId();
-
-	/**
-	 * Validates this module.
-	 * <p>
-	 * [issue: Conjecture: Each different type of module prescribes
-	 * legal arrangements of, and the significance of, the files within
-	 * it. This would be spelled out in the spec for the particular
-	 * module types.
-	 * This validate operation is suppose to check the actual
-	 * arrangement of files in this module to see whether they
-	 * meet expectations.
-	 * It's an open question as to how "strenuous" a check this
-	 * is.]
-	 * </p>
-	 * <p>
-	 * [issue: Old comment said: "If there is an error
-	 * that should block the server from starting (e.g. major errors)
-	 * it should be returned from this method. This method can also be used to
-	 * return warning for such things as an open (and dirty) editor."]
-	 * </p>
-	 * <p>
-	 * [issue: All existing implementations of this return null,
-	 * which is illegal.]
-	 * </p>
-	 * <p>
-	 * [issue: Old comment said: "Returns an IStatus that is used to determine if this object can
-	 * be published to the server." Since the same module can
-	 * be associated with any number of servers, "the server" is
-	 * ill-defined.]
-	 * </p>
-	 * <p>
-	 * [issue: Old comment said: "Should return an error if there
-	 * is a major problem with the resources, or can be used to
-	 * return warnings on unsaved files, etc." It is usually
-	 * difficult in principle for core-level infrastructure to
-	 * detect whether there are open editors with unsaved changes.]
-	 * </p>
-	 *
-	 * @return a status object with code <code>IStatus.OK</code> if the given
-	 * module is valid, otherwise a status object indicating what is
-	 * wrong with it
-	 */
-	public IStatus validate(IProgressMonitor monitor);
-
-	/**
-	 * Returns the root resources of this module. All members
-     * belong to this module (as do their members, and so on).
-	 * <p>
-	 * [issue: What are the exact constraints on where these
-	 * resources are located?
-	 * Do they all have to be inside the workspace?
-	 * Do they all have to be in the same project?
-	 * When a folder is included, does that mean the entire
-	 * subtree is published to server?]
-	 * </p>
-	 * 
-	 * @return the members of this module
-	 * @throws CoreException [missing]
-	 */
-	//public IModuleResource[] members() throws CoreException;
 
 	/**
 	 * Returns the displayable name for this module.
@@ -184,11 +122,4 @@ public interface IModule extends IAdaptable {
 	 * @param listener org.eclipse.wst.server.core.model.IModuleListener
 	 */
 	public void removeModuleListener(IModuleListener listener);
-
-	/**
-	 * Returns the child modules of this module.
-	 *
-	 * @return org.eclipse.wst.server.core.model.IModule[]
-	 */
-	public IModule[] getChildModules(IProgressMonitor monitor);
 }

@@ -13,21 +13,39 @@ package org.eclipse.wst.server.ui.internal;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.*;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.StructuredSelection;
 
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.IPublishListener;
+import org.eclipse.wst.server.core.internal.PublishAdapter;
+import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.internal.ServerType;
 import org.eclipse.wst.server.core.util.ServerAdapter;
+import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.editor.IServerEditorInput;
+import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorInput;
+import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
+import org.eclipse.wst.server.ui.internal.task.InputWizardFragment;
+import org.eclipse.wst.server.ui.internal.task.SaveRuntimeTask;
+import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
+import org.eclipse.wst.server.ui.internal.wizard.fragment.NewRuntimeWizardFragment;
+import org.eclipse.wst.server.ui.wizard.TaskWizard;
+import org.eclipse.wst.server.ui.wizard.WizardFragment;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -37,6 +55,10 @@ import org.osgi.framework.BundleContext;
  */
 public class ServerUIPlugin extends AbstractUIPlugin {
 	private static final String MODULE_ARTIFACT_CLASS = "org.eclipse.wst.server.core.IModuleArtifact";
+	protected static final String VIEW_ID = "org.eclipse.wst.server.ui.ServersView";
+	
+	// server UI plugin id
+	public static final String PLUGIN_ID = "org.eclipse.wst.server.ui";
 
 	//public static final byte START = 0;
 	public static final byte STOP = 1;
@@ -46,11 +68,58 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	private static ServerUIPlugin singleton;
 
 	protected Map imageDescriptors = new HashMap();
+	
+	// cached copy of all runtime wizards
+	private static Map wizardFragments;
+	
+	static class WizardFragmentData {
+		String id;
+		IConfigurationElement ce;
+		WizardFragment fragment;
+		
+		public WizardFragmentData(String id, IConfigurationElement ce) {
+			this.id = id;
+			this.ce = ce;
+		}
+	}
 
 	protected static List terminationWatches = new ArrayList();
 
-	// server UI plugin id
-	public static final String PLUGIN_ID = "org.eclipse.wst.server.ui";
+	protected IServerLifecycleListener serverLifecycleListener = new IServerLifecycleListener() {
+		public void serverAdded(IServer server) {
+			server.addServerListener(serverListener);
+			((Server) server).addPublishListener(publishListener);
+		}
+
+		public void serverChanged(IServer server) {
+			// ignore
+		}
+
+		public void serverRemoved(IServer server) {
+			server.removeServerListener(serverListener);
+			((Server) server).removePublishListener(publishListener);
+		}
+	};
+
+	protected static IServerListener serverListener = new ServerAdapter() {
+		public void serverStateChange(IServer server) {
+			showServersView();
+		}
+
+		public void modulesChanged(IServer server) {
+			showServersView();
+		}
+	};
+	
+	protected static IPublishListener publishListener = new PublishAdapter() {
+		public void publishStarted(IServer server) {
+			showServersView();
+		}
+
+		public void publishFinished(IServer server, IStatus status) {
+			showServersView();
+		}
+	};
 
 	/**
 	 * Create the ServerUIPlugin.
@@ -141,8 +210,19 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	
 		ServerUIPreferences prefs = getPreferences();
 		prefs.setDefaults();
+		
+		ServerCore.addServerLifecycleListener(serverLifecycleListener);
+		
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				servers[i].addServerListener(serverListener);
+				((Server) servers[i]).addPublishListener(publishListener);
+			}
+		}
 	}
-	
+
 	/**
 	 * Shuts down this plug-in and saves all plug-in state.
 	 *
@@ -153,6 +233,17 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		super.stop(context);
 		
 		ImageResource.dispose();
+		
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				servers[i].removeServerListener(serverListener);
+				((Server) servers[i]).removePublishListener(publishListener);
+			}
+		}
+		
+		ServerCore.removeServerLifecycleListener(serverLifecycleListener);
 	}
 
 	/**
@@ -174,11 +265,12 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	
 			public void run() {
 				while (alive) {
-					int delay = server.getServerType().getStartTimeout();
+					ServerType serverType = (ServerType) server.getServerType();
+					int delay = serverType.getStartTimeout();
 					if (mode == 1)
-						delay = server.getServerType().getStopTimeout();
+						delay = serverType.getStopTimeout();
 					else if (mode == 2)
-						delay += server.getServerType().getStopTimeout();
+						delay += serverType.getStopTimeout();
 					
 					if (delay < 0)
 						return;
@@ -515,5 +607,191 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		}
 	
 		return true;
+	}
+	
+	protected static void showServersView() {
+		if (!getPreferences().getShowOnActivity())
+			return;
+		
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				try {
+					IWorkbench workbench = ServerUIPlugin.getInstance().getWorkbench();
+					IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+	
+					IWorkbenchPage page = workbenchWindow.getActivePage();
+	
+					IViewPart view2 = page.findView(VIEW_ID);
+					
+					if (view2 != null)
+						page.bringToTop(view2);
+					else
+						page.showView(VIEW_ID);
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Error opening TCP/IP view", e);
+				}
+			}
+		});
+	}
+	
+	/**
+	 * Returns true if the given server is already started in the given
+	 * mode, or could be (re)started in the start mode.
+	 * 
+	 * @param server
+	 * @param launchMode
+	 * @return boolean
+	 */
+	public static boolean isCompatibleWithLaunchMode(IServer server, String launchMode) {
+		if (server == null || launchMode == null)
+			return false;
+
+		int state = server.getServerState();
+		if (state == IServer.STATE_STARTED && launchMode.equals(server.getMode()))
+			return true;
+
+		if (server.getServerType().supportsLaunchMode(launchMode))
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Open the new runtime wizard.
+	 * 
+	 * @param shell
+	 * @param type
+	 * @param version
+	 * @param runtimeTypeId
+	 * @return
+	 */
+	public static boolean showNewRuntimeWizard(Shell shell, final String type, final String version, final String runtimeTypeId) {
+		WizardFragment fragment = new WizardFragment() {
+			protected void createChildFragments(List list) {
+				list.add(new NewRuntimeWizardFragment(type, version, runtimeTypeId));
+				list.add(new FinishWizardFragment(new SaveRuntimeTask()));
+			}
+		};
+		TaskWizard wizard = new TaskWizard(ServerUIPlugin.getResource("%wizNewRuntimeWizardTitle"), fragment);
+		wizard.setForcePreviousAndNextButtons(true);
+		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
+		return (dialog.open() == IDialogConstants.OK_ID);
+	}
+	
+	/**
+	 * Open the new runtime wizard.
+	 * 
+	 * @param shell
+	 * @param runtimeTypeId
+	 * @return
+	 */
+	public static boolean showNewRuntimeWizard(Shell shell, final String runtimeTypeId) {
+		IRuntimeType runtimeType = null;
+		if (runtimeTypeId != null)
+			runtimeType = ServerCore.findRuntimeType(runtimeTypeId);
+		if (runtimeType != null) {
+			try {
+				final IRuntimeWorkingCopy runtime = runtimeType.createRuntime(null, null);
+				WizardFragment fragment = new WizardFragment() {
+					protected void createChildFragments(List list) {
+						list.add(new InputWizardFragment(ITaskModel.TASK_RUNTIME, runtime));
+						list.add(getWizardFragment(runtimeTypeId));
+						list.add(new FinishWizardFragment(new SaveRuntimeTask()));
+					}
+				};
+				TaskWizard wizard = new TaskWizard(ServerUIPlugin.getResource("%wizNewRuntimeWizardTitle"), fragment);
+				wizard.setForcePreviousAndNextButtons(true);
+				ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
+				return (dialog.open() == IDialogConstants.OK_ID);
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		return showNewRuntimeWizard(shell, null, null, runtimeTypeId);
+	}
+	
+	/**
+	 * Open the new runtime wizard.
+	 * @param shell
+	 * @return
+	 */
+	public static boolean showNewRuntimeWizard(Shell shell) {
+		return ServerUIUtil.showNewRuntimeWizard(shell, null, null);
+	}
+	
+	/**
+	 * Returns the wizard fragment with the given id.
+	 *
+	 * @param typeId the server or runtime type id
+	 * @return a wizard fragment, or <code>null</code> if none could be found
+	 */
+	public static WizardFragment getWizardFragment(String typeId) {
+		if (typeId == null)
+			return null;
+
+		if (wizardFragments == null)
+			loadWizardFragments();
+		
+		Iterator iterator = wizardFragments.keySet().iterator();
+		while (iterator.hasNext()) {
+			String key = (String) iterator.next();
+			if (typeId.equals(key)) {
+				WizardFragmentData data = (WizardFragmentData) wizardFragments.get(key);
+				return getWizardFragment(data);
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Load the wizard fragments.
+	 */
+	private static synchronized void loadWizardFragments() {
+		if (wizardFragments != null)
+			return;
+		Trace.trace(Trace.CONFIG, "->- Loading .wizardFragments extension point ->-");
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "wizardFragments");
+
+		int size = cf.length;
+		wizardFragments = new HashMap(size);
+		for (int i = 0; i < size; i++) {
+			try {
+				String id = cf[i].getAttribute("typeIds");
+				wizardFragments.put(id, new WizardFragmentData(id, cf[i]));
+				Trace.trace(Trace.CONFIG, "  Loaded wizardFragment: " + id);
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "  Could not load wizardFragment: " + cf[i].getAttribute("id"), t);
+			}
+		}
+		
+		Trace.trace(Trace.CONFIG, "-<- Done loading .wizardFragments extension point -<-");
+	}
+
+	protected static WizardFragment getWizardFragment(WizardFragmentData fragment) {
+		if (fragment == null)
+			return null;
+	
+		if (fragment.fragment == null) {
+			try {
+				fragment.fragment = (WizardFragment) fragment.ce.createExecutableExtension("class");
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "Could not create wizardFragment: " + fragment.ce.getAttribute("id"), t);
+			}
+		}
+		return fragment.fragment;
+	}
+	
+	public static void runOnServer(Object object, String launchMode) {
+		RunOnServerActionDelegate delegate = new RunOnServerActionDelegate();
+		Action action = new Action() {
+			// dummy action
+		};
+		if (object != null) {
+			StructuredSelection sel = new StructuredSelection(object);
+			delegate.selectionChanged(action, sel);
+		} else
+			delegate.selectionChanged(action, null);
+
+		delegate.run(action);
 	}
 }

@@ -111,7 +111,7 @@ public class ServerTreeContentProvider extends AbstractTreeContentProvider {
 	protected boolean acceptServer(IServer server) {
 		if (module == null || launchMode == null)
 			return true;
-		if (!ServerUtil.isCompatibleWithLaunchMode(server, launchMode))
+		if (!ServerUIPlugin.isCompatibleWithLaunchMode(server, launchMode))
 			return false;
 		
 		IModuleType mt = module.getModuleType();

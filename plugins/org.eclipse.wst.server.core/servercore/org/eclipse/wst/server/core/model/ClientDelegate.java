@@ -21,6 +21,8 @@ import org.eclipse.wst.server.core.IServer;
  * This abstract class is intended to be extended only by clients
  * to extend the <code>clients</code> extension point.
  * </p>
+ * 
+ * @since 1.0
  */
 public abstract class ClientDelegate {
 	/**
@@ -29,7 +31,8 @@ public abstract class ClientDelegate {
 	 * @param server
 	 * @param launchable
 	 * @param launchMode
-	 * @return 
+	 * @return <code>true</code> if the client supports this combination, and <code>false</code>
+	 *    otherwise
 	 */
 	public abstract boolean supports(IServer server, ILaunchable launchable, String launchMode);
 
@@ -40,7 +43,7 @@ public abstract class ClientDelegate {
 	 * @param launchable
 	 * @param launchMode
 	 * @param launch
-	 * @return 
+	 * @return status indicating what (if anything) went wrong
 	 */
 	public abstract IStatus launch(IServer server, ILaunchable launchable, String launchMode, ILaunch launch);
 }

@@ -17,6 +17,8 @@ package org.eclipse.wst.server.core;
  * Objects that provide an adapter of this type will be considered by the
  * contextual Run on Server launch support. 
  * </p>
+ * 
+ * @since 1.0
  */
 public interface IModuleArtifact {
 	/**

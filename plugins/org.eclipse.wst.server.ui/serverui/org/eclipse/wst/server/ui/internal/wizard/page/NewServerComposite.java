@@ -356,7 +356,7 @@ public class NewServerComposite extends Composite {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
 				IModuleType mt = module.getModuleType();
-				if (ServerUtil.isCompatibleWithLaunchMode(servers[i], launchMode) &&
+				if (ServerUIPlugin.isCompatibleWithLaunchMode(servers[i], launchMode) &&
 					ServerUtil.isSupportedModule(servers[i].getServerType().getRuntimeType().getModuleTypes(), mt))
 						return true;
 			}

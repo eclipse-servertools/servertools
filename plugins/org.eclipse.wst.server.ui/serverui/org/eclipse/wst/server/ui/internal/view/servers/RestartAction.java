@@ -50,7 +50,7 @@ public class RestartAction extends AbstractServerAction {
 		String mode2 = mode;
 		if (mode2 == null)
 			mode2 = server.getMode();
-		return server.getServerType() != null && server.getServerType().getServerStateSet() == IServerType.SERVER_STATE_SET_MANAGED && server.canRestart(mode2);
+		return server.getServerType() != null && server.getServerType().getServerStateSet() == IServerType.SERVER_STATE_SET_MANAGED && server.canRestart(mode2).isOK();
 	}
 
 	/**

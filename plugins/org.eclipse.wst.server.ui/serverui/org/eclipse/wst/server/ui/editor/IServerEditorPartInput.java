@@ -15,6 +15,8 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 /**
  *
+ *
+ * @since 1.0
  */
 public interface IServerEditorPartInput extends IEditorInput {
 	/**

@@ -427,7 +427,7 @@ public class ModifyModulesComposite extends Composite {
 			if (add2) {
 				modules.remove(module);
 				deployed.add(module);
-			} else {
+			} else if (!module.equals(newModule)) {
 				modules.add(module);
 				deployed.remove(module);
 			}

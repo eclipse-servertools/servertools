@@ -231,7 +231,7 @@ public class ServerType implements IServerType, IOrdered {
 		if (projects != null) {
 			int size = projects.length;
 			for (int i = 0; i < size; i++) {
-				if (ServerCore.getProjectProperties(projects[i]).isServerProject())
+				if (((ProjectProperties)ServerCore.getProjectProperties(projects[i])).isServerProject())
 					return projects[i];
 			}
 		}
@@ -240,7 +240,7 @@ public class ServerType implements IServerType, IOrdered {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(s);
 		project.create(null);
 		project.open(null);
-		ServerCore.getProjectProperties(project).setServerProject(true, null);
+		((ProjectProperties)ServerCore.getProjectProperties(project)).setServerProject(true, null);
 		return project;
 	}
 
@@ -258,12 +258,12 @@ public class ServerType implements IServerType, IOrdered {
 		}
 		return name;
 	}
-	
+
 	/**
 	 * Return the timeout (in ms) that should be used to wait for the server to start.
 	 * Returns -1 if there is no timeout.
 	 * 
-	 * @return
+	 * @return the server startup timeout
 	 */
 	public int getStartTimeout() {
 		try {
@@ -276,8 +276,8 @@ public class ServerType implements IServerType, IOrdered {
 	/**
 	 * Return the timeout (in ms) to wait before assuming that the server
 	 * has failed to stop. Returns -1 if there is no timeout.
-	 *  
-	 * @return
+	 * 
+	 * @return the server shutdown timeout
 	 */
 	public int getStopTimeout() {
 		try {

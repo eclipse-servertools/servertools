@@ -19,6 +19,8 @@ import org.eclipse.wst.server.core.IServer;
  * an IModuleArtifact to an ILaunchable.
  * 
  * <p>This is the implementation of a launchableAdapter extension point.</p>
+ * 
+ * @since 1.0
  */
 public abstract class LaunchableAdapterDelegate {
 	/**
@@ -26,8 +28,8 @@ public abstract class LaunchableAdapterDelegate {
 	 * 
 	 * @param server
 	 * @param moduleObject
-	 * @return 
-	 * @exception 
+	 * @return the launchable object
+	 * @exception if there was an error doing the conversion
 	 */
 	public abstract ILaunchable getLaunchable(IServer server, IModuleArtifact moduleObject) throws CoreException;
 }

@@ -22,15 +22,33 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.jst.server.core.internal.IMemento;
 import org.eclipse.jst.server.core.internal.JavaServerPlugin;
 import org.eclipse.jst.server.core.internal.RuntimeClasspathContainer;
 import org.eclipse.jst.server.core.internal.Trace;
+import org.eclipse.jst.server.core.internal.XMLMemento;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.model.RuntimeTargetHandlerDelegate;
 /**
+ * A runtime target handler that supports changing the classpath of the
+ * project by adding one or more classpath containers. Runtime providers
+ * can extend this class and implement the abstract methods to provide
+ * the correct build path for their runtime type. 
  * 
+ * @since 1.0
  */
 public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandlerDelegate {
+	
+	class SourceAttachmentUpdate {
+		String runtimeId;
+		String id;
+		IPath entry;
+		IPath sourceAttachmentPath;
+		IPath sourceAttachmentRootPath;
+	}
+	
+	protected List sourceAttachments;
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IRuntimeTargetDelegate#setRuntimeTarget(org.eclipse.core.resources.IProject, org.eclipse.wst.server.core.IRuntime)
 	 */
@@ -321,11 +339,41 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 	 * <code>new String[] { "id1", "id2" }</code>
 	 * </p>
 	 * 
-	 * @param runtime
-	 * @return
+	 * @return an array of classpath entry ids
 	 */
 	public String[] getClasspathEntryIds() {
 		return new String[1];
+	}
+
+	/**
+	 * Request that the classpath container for the given runtime and id be updated
+	 * with the given classpath container entries.
+	 * 
+	 * @param runtime
+	 * @param id
+	 * @param entries
+	 */
+	public void requestClasspathContainerUpdate(IRuntime runtime, String id, IClasspathEntry[] entries) {
+		// default behaviour is to save the source path entries
+		if (runtime == null || entries == null)
+			return;
+		
+		// find the source attachments
+		sourceAttachments = new ArrayList();
+		
+		int size = entries.length;
+		for (int i = 0; i < size; i++) {
+			if (entries[i].getSourceAttachmentPath() != null) {
+				SourceAttachmentUpdate sau = new SourceAttachmentUpdate();
+				sau.runtimeId = runtime.getId();
+				sau.id = id;
+				sau.entry = entries[i].getPath();
+				sau.sourceAttachmentPath = entries[i].getSourceAttachmentPath();
+				sau.sourceAttachmentRootPath = entries[i].getSourceAttachmentRootPath();
+				sourceAttachments.add(sau);
+			}
+		}
+		save();
 	}
 
 	/**
@@ -338,6 +386,95 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 	 * @return a classpath container label
 	 */
 	public abstract String getClasspathContainerLabel(IRuntime runtime, String id);
+
+	public IClasspathEntry[] resolveClasspathContainerImpl(IRuntime runtime, String id) {
+		IClasspathEntry[] entries = resolveClasspathContainer(runtime, id);
+		
+		if (entries == null)
+			entries = new IClasspathEntry[0];
+		
+		if (sourceAttachments == null)
+			load();
+		
+		int size = entries.length;
+		int size2 = sourceAttachments.size();
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size2; j++) {
+				SourceAttachmentUpdate sau = (SourceAttachmentUpdate) sourceAttachments.get(j);
+				if ((id != null && sau.id.equals(id)) || (id == null && sau.id == null)) {
+					if (sau.runtimeId.equals(runtime.getId()) && sau.entry.equals(entries[i].getPath())) {
+						entries[i] = JavaCore.newLibraryEntry(entries[i].getPath(), sau.sourceAttachmentPath, sau.sourceAttachmentRootPath);
+					}
+				}
+			}
+		}
+		
+		return entries;
+	}
+	
+	protected void save() {
+		if (sourceAttachments == null)
+			return;
+		String id = getRuntimeTargetHandler().getId();
+		String filename = JavaServerPlugin.getInstance().getStateLocation().append(id + ".xml").toOSString();
+		try {
+			XMLMemento memento = XMLMemento.createWriteRoot("classpath");
+
+			Iterator iterator = sourceAttachments.iterator();
+			while (iterator.hasNext()) {
+				SourceAttachmentUpdate sau = (SourceAttachmentUpdate) iterator.next();
+				IMemento child = memento.createChild("source-attachment");
+				child.putString("runtime-id", sau.runtimeId);
+				if (sau.id != null)
+					child.putString("id", sau.id);
+				if (sau.entry != null)
+					child.putString("entry", sau.entry.toPortableString());
+				if (sau.sourceAttachmentPath != null)
+					child.putString("source-attachment-path", sau.sourceAttachmentPath.toPortableString());
+				if (sau.sourceAttachmentRootPath != null)
+					child.putString("source-attachment-root-path", sau.sourceAttachmentRootPath.toPortableString());
+			}
+			
+			memento.saveToFile(filename);
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error saving source path info", e);
+		}
+	}
+
+	protected void load() {
+		String id = getRuntimeTargetHandler().getId();
+		String filename = JavaServerPlugin.getInstance().getStateLocation().append(id + ".xml").toOSString();
+		
+		sourceAttachments = new ArrayList();
+		try {
+			IMemento memento = XMLMemento.loadMemento(filename);
+			
+			IMemento[] children = memento.getChildren("source-attachment");
+			int size = children.length;
+			
+			for (int i = 0; i < size; i++) {
+				try {
+					SourceAttachmentUpdate sau = new SourceAttachmentUpdate();
+					sau.runtimeId = children[i].getString("runtime-id");
+					sau.id = children[i].getString("id");
+					String temp = children[i].getString("entry");
+					if (temp != null)
+						sau.entry = new Path(temp);
+					temp = children[i].getString("source-attachment-path");
+					if (temp != null)
+						sau.sourceAttachmentPath = new Path(temp);
+					temp = children[i].getString("source-attachment-root-path");
+					if (temp != null)
+						sau.sourceAttachmentRootPath = new Path(temp);
+					sourceAttachments.add(sau);
+				} catch (Exception e) {
+					Trace.trace(Trace.WARNING, "Could not load monitor: " + e);
+				}
+			}
+		} catch (Exception e) {
+			Trace.trace(Trace.WARNING, "Could not load source path info: " + e.getMessage());
+		}
+	}
 
 	/**
 	 * Resolves (creates the classpath entries for) the classpath container with

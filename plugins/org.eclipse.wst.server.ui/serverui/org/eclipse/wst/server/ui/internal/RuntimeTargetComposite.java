@@ -23,6 +23,7 @@ import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.Module;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -69,7 +70,7 @@ public class RuntimeTargetComposite {
 		childProjects = new ArrayList();
 		if (projectModule != null) {
 			List children = new ArrayList();
-			IModule[] child = projectModule.getChildModules(null);
+			IModule[] child = ((Module) projectModule).getChildModules(null);
 			if (child != null) {
 				int size = child.length;
 				for (int i = 0; i < size; i++)
@@ -77,7 +78,7 @@ public class RuntimeTargetComposite {
 				int a = 0;
 				while (a < children.size()) {
 					IModule module = (IModule) children.get(a);
-					IModule[] child2 = module.getChildModules(null);
+					IModule[] child2 = ((Module) module).getChildModules(null);
 					if (child2 != null) {
 						size = child2.length;
 						for (int i = 0; i < size; i++)

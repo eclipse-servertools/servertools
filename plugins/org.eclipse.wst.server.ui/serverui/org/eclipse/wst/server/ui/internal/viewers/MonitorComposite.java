@@ -22,11 +22,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.wst.server.core.IMonitoredServerPort;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerMonitorManager;
 import org.eclipse.wst.server.core.IServerPort;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.IMonitoredServerPort;
+import org.eclipse.wst.server.core.internal.IServerMonitorManager;
+import org.eclipse.wst.server.core.internal.ServerMonitorManager;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -52,7 +52,7 @@ public class MonitorComposite extends Composite {
 		this.listener = listener2;
 		this.server = server;
 		
-		smm = ServerCore.getServerMonitorManager();
+		smm = ServerMonitorManager.getInstance();
 		
 		GridLayout layout = new GridLayout();
 		layout.marginWidth = 0;
@@ -215,7 +215,7 @@ public class MonitorComposite extends Composite {
 			}
 		});
 		
-		IMonitoredServerPort[] msps = ServerCore.getServerMonitorManager().getMonitoredPorts(server); 
+		IMonitoredServerPort[] msps = ServerMonitorManager.getInstance().getMonitoredPorts(server); 
 		if (msps != null && msps.length > 0)
 			monitorTableViewer.setSelection(new StructuredSelection(msps[0]));
 	}

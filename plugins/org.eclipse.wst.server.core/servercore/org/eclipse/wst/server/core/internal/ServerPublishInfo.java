@@ -252,7 +252,7 @@ public class ServerPublishInfo {
 		int size2 = current.length;
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size2; j++) {
-				if (!found.contains(original[i]) && !found.contains(current[i]) && original[i].equals(current[j])) {
+				if (!found.contains(original[i]) && !found.contains(current[j]) && original[i].equals(current[j])) {
 					// found a match
 					found.add(original[i]);
 					if (original[i] instanceof IModuleFile) {

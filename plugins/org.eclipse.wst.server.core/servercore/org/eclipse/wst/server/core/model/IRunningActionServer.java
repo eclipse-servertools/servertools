@@ -13,6 +13,8 @@ package org.eclipse.wst.server.core.model;
  * This interface is a tag for a server that should be running before calling
  * modifyModules(). It will be implemented by delegate classes of servers that
  * should be started before calling API.
+ * 
+ * @since 1.0
  */
 public interface IRunningActionServer {
 	// marker interface

@@ -9,7 +9,6 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.server.core;
-
 /**
  * This interface is used by the server to broadcast a change of state.
  * Usually, the change of state will be caused by some user action,
@@ -22,33 +21,35 @@ package org.eclipse.wst.server.core;
  * the server's state via one of the server's method. For example, a server
  * stopped event cannot directly trigger a start(). Doing this may cause
  * the thread to hang.</p>
+ * 
+ * @since 1.0
  */
 public interface IServerListener {
 	/**
 	 * Called when the server configuration's sync state changes.
 	 *
-	 * @param server org.eclipse.wst.server.IServer
+	 * @param server the affected server
 	 */
 	public void configurationSyncStateChange(IServer server);
 
 	/**
 	 * Called when the server isRestartNeeded() property changes.
 	 *
-	 * @param server org.eclipse.wst.server.IServer
+	 * @param server the affected server
 	 */
 	public void restartStateChange(IServer server);
 
 	/**
 	 * Notification when the server state has changed.
 	 *
-	 * @param server org.eclipse.wst.server.IServer
+	 * @param server the affected server
 	 */
 	public void serverStateChange(IServer server);
 
 	/**
 	 * Called when the modules tree of this server has changed.
 	 *
-	 * @param server org.eclipse.wst.server.IServer
+	 * @param server the affected server
 	 */
 	public void modulesChanged(IServer server);
 
@@ -57,9 +58,9 @@ public interface IServerListener {
 	 * or no longer needs to be published, or it's state has
 	 * changed.
 	 *
-	 * @param server org.eclipse.wst.server.IServer
-	 * @param parents org.eclipse.wst.server.IModule[]
-	 * @param module org.eclipse.wst.server.IModule
+	 * @param server the affected server
+	 * @param parents the module's parents
+	 * @param module the module
 	 */
 	public void moduleStateChange(IServer server, IModule[] parents, IModule module);
 }

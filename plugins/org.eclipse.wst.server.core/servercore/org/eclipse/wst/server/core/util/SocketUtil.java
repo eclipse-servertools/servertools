@@ -22,7 +22,9 @@ import sun.net.spi.nameservice.dns.DNSNameService;
 /**
  * A utility class for socket-related function. It's main purposes are to find
  * unused ports, check whether a port is in use, and check whether a given
- * address is a local(host) address.  
+ * address is a local(host) address.
+ * 
+ * @since 1.0
  */
 public class SocketUtil {
 	private static final Random rand = new Random(System.currentTimeMillis());
@@ -32,14 +34,16 @@ public class SocketUtil {
 	/**
 	 * Finds an unused port between the given from and to values.
 	 * 
-	 * @param host
-	 * @param searchFrom
-	 * @param searchTo
-	 * @return
+	 * @param low lowest possible port number
+	 * @param high highest possible port number
+	 * @return an usused port number, or <code>-1</code> if no used ports could be found
 	 */
-	public static int findUnusedPort(int searchFrom, int searchTo) {
+	public static int findUnusedPort(int low, int high) {
+		if (high < low)
+			return -1;
+		
 		for (int i = 0; i < 10; i++) {
-			int port = getRandomPort(searchFrom, searchTo);
+			int port = getRandomPort(low, high);
 			if (!isPortInUse(port))
 				return port;
 		}

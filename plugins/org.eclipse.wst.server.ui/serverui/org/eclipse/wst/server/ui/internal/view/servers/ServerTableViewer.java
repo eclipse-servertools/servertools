@@ -20,7 +20,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.*;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.util.PublishAdapter;
+import org.eclipse.wst.server.core.internal.IPublishListener;
+import org.eclipse.wst.server.core.internal.PublishAdapter;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.internal.ServerTree;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.view.tree.ServerTreeAction;
@@ -230,7 +232,7 @@ public class ServerTableViewer extends TableViewer {
 			public void serverAdded(IServer server) {
 				addServer(server);
 				server.addServerListener(serverListener);
-				server.addPublishListener(publishListener);
+				((Server) server).addPublishListener(publishListener);
 			}
 			public void serverChanged(IServer server) {
 				refreshServer(server);
@@ -238,7 +240,7 @@ public class ServerTableViewer extends TableViewer {
 			public void serverRemoved(IServer server) {
 				removeServer(server);
 				server.removeServerListener(serverListener);
-				server.removePublishListener(publishListener);
+				((Server) server).removePublishListener(publishListener);
 			}
 		};
 		ServerCore.addServerLifecycleListener(serverResourceListener);
@@ -296,7 +298,7 @@ public class ServerTableViewer extends TableViewer {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
 				servers[i].addServerListener(serverListener);
-				servers[i].addPublishListener(publishListener);
+				((Server) servers[i]).addPublishListener(publishListener);
 			}
 		}
 	}
@@ -350,7 +352,7 @@ public class ServerTableViewer extends TableViewer {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
 				servers[i].removeServerListener(serverListener);
-				servers[i].removePublishListener(publishListener);
+				((Server) servers[i]).removePublishListener(publishListener);
 			}
 		}
 	

@@ -20,6 +20,8 @@ import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 /**
  * Thread used to ping server to test when it is started.
+ * 
+ * @since 1.0
  */
 public class PingThread {
 	// delay before pinging starts
@@ -42,7 +44,7 @@ public class PingThread {
 	 * @param server2
 	 * @param server
 	 * @param url
-	 * @param mode
+	 * @param maxPings
 	 */
 	public PingThread(IServer server2, ServerBehaviourDelegate server, String url, int maxPings) {
 		super();

@@ -11,6 +11,8 @@
 package org.eclipse.wst.server.core;
 /**
  * An abstract port on a server.
+ * 
+ * @since 1.0
  */
 public interface IServerPort {
 	/**

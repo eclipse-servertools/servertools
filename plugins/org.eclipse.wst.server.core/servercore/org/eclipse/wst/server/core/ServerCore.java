@@ -14,7 +14,6 @@ import java.util.*;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
-import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.core.internal.*;
 /**
  * Main class for server core API.
@@ -35,12 +34,6 @@ import org.eclipse.wst.server.core.internal.*;
  * @since 1.0
  */
 public class ServerCore {
-	// cached copy of all module factories
-	private static List moduleFactories;
-	
-	// cached copy of all server tasks
-	private static List serverTasks;
-	
 	//	cached copy of all runtime types
 	private static List runtimeTypes;
 	
@@ -52,9 +45,6 @@ public class ServerCore {
 
 	//	cached copy of all server and configuration types
 	private static List serverTypes;
-	
-	//	cached copy of all monitors
-	private static List monitors;
 
 	static {
 		executeStartups();
@@ -74,15 +64,6 @@ public class ServerCore {
 	 */
 	private static ResourceManager getResourceManager() {
 		return ResourceManager.getInstance();
-	}
-	
-	/**
-	 * Returns the server monitor manager.
-	 *
-	 * @return org.eclipse.wst.server.core.IServerMonitorManager
-	 */
-	public static IServerMonitorManager getServerMonitorManager() {
-		return ServerMonitorManager.getInstance();
 	}
 	
 	/**
@@ -120,7 +101,7 @@ public class ServerCore {
 	 * runtime types ({@link #getRuntimeTypes()}) for the one with a matching
 	 * runtime type id ({@link IRuntimeType#getId()}). The id may not be null.
 	 *
-	 * @param the runtime type id
+	 * @param id the runtime type id
 	 * @return the runtime type, or <code>null</code> if there is no runtime type
 	 * with the given id
 	 */
@@ -181,7 +162,7 @@ public class ServerCore {
 	 * a matching runtime target handler id ({@link IRuntimeTargetHandler#getId()}).
 	 * The id may not be null.
 	 *
-	 * @param the runtime target handler id
+	 * @param id the runtime target handler id
 	 * @return the runtime target handler instance, or <code>null</code> if
 	 *   there is no runtime target handler with the given id
 	 */
@@ -224,7 +205,7 @@ public class ServerCore {
 	 * server types ({@link #getServerTypes()}) for the one with a matching
 	 * server type id ({@link IServerType#getId()}). The id may not be null.
 	 *
-	 * @param the server type id
+	 * @param id the server type id
 	 * @return the server type, or <code>null</code> if there is no server type
 	 * with the given id
 	 */
@@ -242,81 +223,6 @@ public class ServerCore {
 				return serverType;
 		}
 		return null;
-	}
-
-	/**
-	 * Returns an array of all known module module factories.
-	 * <p>
-	 * A new array is returned on each call, so clients may store or modify the result.
-	 * </p>
-	 * 
-	 * @return the array of module factories {@link IModuleFactory}
-	 */
-	protected static ModuleFactory[] getModuleFactories() {
-		if (moduleFactories == null)
-			loadModuleFactories();
-		
-		ModuleFactory[] mf = new ModuleFactory[moduleFactories.size()];
-		moduleFactories.toArray(mf);
-		return mf;
-	}
-
-	/**
-	 * Returns the module factory with the given id, or <code>null</code>
-	 * if none. This convenience method searches the list of known
-	 * module factories ({@link #getModuleFactories()}) for the one a matching
-	 * module factory id ({@link IModuleFactory#getId()}). The id may not be null.
-	 *
-	 * @param the module factory id
-	 * @return the module factory, or <code>null</code> if there is no module factory
-	 * with the given id
-	 */
-	protected static ModuleFactory findModuleFactory(String id) {
-		if (id == null)
-			throw new IllegalArgumentException();
-
-		if (moduleFactories == null)
-			loadModuleFactories();
-		
-		Iterator iterator = moduleFactories.iterator();
-		while (iterator.hasNext()) {
-			ModuleFactory factory = (ModuleFactory) iterator.next();
-			if (id.equals(factory.getId()))
-				return factory;
-		}
-		return null;
-	}
-
-	/**
-	 * Returns an array of all known server tasks.
-	 * <p>
-	 * A new array is returned on each call, so clients may store or modify the result.
-	 * </p>
-	 * 
-	 * @return a possibly-empty array of server tasks instances {@link IServerTask}
-	 */
-	public static IServerTask[] getServerTasks() {
-		if (serverTasks == null)
-			loadServerTasks();
-		IServerTask[] st = new IServerTask[serverTasks.size()];
-		serverTasks.toArray(st);
-		return st;
-	}
-
-	/**
-	 * Returns an array of all known server monitor instances.
-	 * <p>
-	 * A new array is returned on each call, so clients may store or modify the result.
-	 * </p>
-	 * 
-	 * @return a possibly-empty array of server monitor instances {@link IServerMonitor}
-	 */
-	public static IServerMonitor[] getServerMonitors() {
-		if (monitors == null)
-			loadServerMonitors();
-		IServerMonitor[] sm = new IServerMonitor[monitors.size()];
-		monitors.toArray(sm);
-		return sm;
 	}
 
 	/**
@@ -449,87 +355,12 @@ public class ServerCore {
 	}
 
 	/**
-	 * Load the module factories extension point.
-	 */
-	private static synchronized void loadModuleFactories() {
-		if (moduleFactories != null)
-			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleFactories extension point ->-");
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleFactories");
-
-		int size = cf.length;
-		moduleFactories = new ArrayList(size);
-		for (int i = 0; i < size; i++) {
-			try {
-				moduleFactories.add(new ModuleFactory(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded moduleFactories: " + cf[i].getAttribute("id"));
-			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load moduleFactories: " + cf[i].getAttribute("id"), t);
-			}
-		}
-		sortOrderedList(moduleFactories);
-		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleFactories extension point -<-");
-	}
-
-	/**
-	 * Load the server task extension point.
-	 */
-	private static synchronized void loadServerTasks() {
-		if (serverTasks != null)
-			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .serverTasks extension point ->-");
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "serverTasks");
-
-		int size = cf.length;
-		serverTasks = new ArrayList(size);
-		for (int i = 0; i < size; i++) {
-			try {
-				serverTasks.add(new ServerTask(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded serverTask: " + cf[i].getAttribute("id"));
-			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load serverTask: " + cf[i].getAttribute("id"), t);
-			}
-		}
-		
-		sortOrderedList(serverTasks);
-		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .serverTasks extension point -<-");
-	}
-
-	/**
-	 * Load the server monitor extension point.
-	 */
-	private static synchronized void loadServerMonitors() {
-		if (monitors != null)
-			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .serverMonitors extension point ->-");
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "serverMonitors");
-
-		int size = cf.length;
-		monitors = new ArrayList(size);
-		for (int i = 0; i < size; i++) {
-			try {
-				monitors.add(new ServerMonitor(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded serverMonitor: " + cf[i].getAttribute("id"));
-			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load serverMonitor: " + cf[i].getAttribute("id"), t);
-			}
-		}
-	
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .serverMonitors extension point -<-");
-	}
-
-	/**
 	 * Returns the runtime with the given id, or <code>null</code>
 	 * if none. This convenience method searches the list of known
 	 * runtimes ({@link #getRuntimes()}) for the one with a matching
 	 * runtime id ({@link IRuntime#getId()}). The id may not be null.
 	 *
-	 * @param the runtime id
+	 * @param id the runtime id
 	 * @return the runtime instance, or <code>null</code> if there is no runtime
 	 * with the given id
 	 */
@@ -556,7 +387,7 @@ public class ServerCore {
 	 * servers ({@link #getServers()}) for the one with a matching
 	 * server id ({@link IServer#getId()}). The id must not be null.
 	 *
-	 * @param the server id
+	 * @param id the server id
 	 * @return the server instance, or <code>null</code> if there is no server
 	 * with the given id
 	 */
@@ -576,12 +407,13 @@ public class ServerCore {
 	public static IServer[] getServers() {
 		return getResourceManager().getServers();
 	}
-	
+
 	/**
 	 * Adds a new runtime lifecycle listener.
 	 * Has no effect if an identical listener is already registered.
 	 *
-	 * @param listener org.eclipse.wst.server.IRuntimeLifecycleListener
+	 * @param listener a runtime lifecycle listener
+	 * @see #removeRuntimeLifecycleListener(IRuntimeLifecycleListener)
 	 */
 	public static void addRuntimeLifecycleListener(IRuntimeLifecycleListener listener) {
 		getResourceManager().addRuntimeLifecycleListener(listener);
@@ -591,17 +423,19 @@ public class ServerCore {
 	 * Removes a runtime lifecycle listener.
 	 * Has no effect if the listener is not registered.
 	 *
-	 * @param listener org.eclipse.wst.server.IRuntimeLifecycleListener
+	 * @param listener a runtime lifecycle listener
+	 * @see #addRuntimeLifecycleListener(IRuntimeLifecycleListener)
 	 */
 	public static void removeRuntimeLifecycleListener(IRuntimeLifecycleListener listener) {
 		getResourceManager().removeRuntimeLifecycleListener(listener);
 	}
-	
+
 	/**
 	 * Adds a new server lifecycle listener.
 	 * Has no effect if an identical listener is already registered.
 	 *
-	 * @param listener org.eclipse.wst.server.IServerLifecycleListener
+	 * @param listener a server lifecycle listener
+	 * @see #removeServerLifecycleListener(IServerLifecycleListener)
 	 */
 	public static void addServerLifecycleListener(IServerLifecycleListener listener) {
 		getResourceManager().addServerLifecycleListener(listener);
@@ -611,30 +445,11 @@ public class ServerCore {
 	 * Removes a server lifecycle listener.
 	 * Has no effect if the listener is not registered.
 	 *
-	 * @param listener org.eclipse.wst.server.IServerLifecycleListener
+	 * @param listener a server lifecycle listener
+	 * #addServerLifecycleListener(IServerLifecycleListener)
 	 */
 	public static void removeServerLifecycleListener(IServerLifecycleListener listener) {
 		getResourceManager().removeServerLifecycleListener(listener);
-	}
-
-	/**
-	 * Adds a new module events listener.
-	 * Has no effect if an identical listener is already registered.
-	 *
-	 * @param listener org.eclipse.wst.server.model.IModuleEventsListener
-	 */
-	public static void addModuleEventsListener(IModuleEventsListener listener) {
-		getResourceManager().addModuleEventsListener(listener);
-	}
-
-	/**
-	 * Removes an existing module events listener.
-	 * Has no effect if the listener is not registered.
-	 *
-	 * @param listener org.eclipse.wst.server.model.IModuleEventsListener
-	 */
-	public static void removeModuleEventsListener(IModuleEventsListener listener) {
-		getResourceManager().removeModuleEventsListener(listener);
 	}
 
 	/**

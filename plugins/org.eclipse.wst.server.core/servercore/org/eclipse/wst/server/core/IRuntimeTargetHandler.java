@@ -22,6 +22,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * resources that can be created.
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
+ * 
+ * @since 1.0
  */
 public interface IRuntimeTargetHandler extends IAdaptable {
 	/**

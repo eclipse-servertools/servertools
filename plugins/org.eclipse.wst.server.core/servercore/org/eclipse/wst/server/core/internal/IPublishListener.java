@@ -8,9 +8,11 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.server.core;
+package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IServer;
 /**
  * A publish listener is used to listen for publishing events from a server.
  * The events are typically received in the following order:
@@ -21,6 +23,11 @@ import org.eclipse.core.runtime.IStatus;
  *   publishModuleStarted() - The next module is publishing
  *   ...
  * publishFinished() - The publish operation is finished
+ * <p>
+ * Publish listeners are added to a server via IServer.addPublishListener().
+ * </p>
+ * @see IServer
+ * @since 1.0
  */
 public interface IPublishListener {
 	/**

@@ -13,7 +13,9 @@ package org.eclipse.wst.server.core.util;
 import org.eclipse.wst.server.core.*;
 /**
  * An abstract implementation of the org.eclipse.wst.server.core.ITask interface
- * that provides default implementation of the methods. 
+ * that provides default implementation of the methods.
+ * 
+ * @since 1.0
  */
 public abstract class Task implements ITask {
 	private ITaskModel model;

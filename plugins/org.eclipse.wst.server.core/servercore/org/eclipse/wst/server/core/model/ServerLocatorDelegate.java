@@ -20,7 +20,7 @@ import org.eclipse.wst.server.core.IServerLocator;
  * to extend the <code>serverLocators</code> extension point.
  * </p>
  * 
- * @see IServerLocator
+ * @see org.eclipse.wst.server.core.IServerLocator
  * @since 1.0
  */
 public abstract class ServerLocatorDelegate {
@@ -32,7 +32,7 @@ public abstract class ServerLocatorDelegate {
 	 * @param listener a listener to report status to
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
-	 * @see IServerLocator.searchForServers(IServerLocator.Listener, IProgressMonitor)
+	 * @see org.eclipse.wst.server.core.IServerLocator.searchForServers(String, IServerLocator.Listener, IProgressMonitor)
 	 */
 	public abstract void searchForServers(String host, IServerLocator.Listener listener, IProgressMonitor monitor);
 }

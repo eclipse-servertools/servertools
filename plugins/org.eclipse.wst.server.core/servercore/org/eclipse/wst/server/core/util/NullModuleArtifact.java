@@ -14,18 +14,13 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 /**
  * 
+ * @since 1.0
  */
 public class NullModuleArtifact implements IModuleArtifact {
-	public static final String ID = "org.eclipse.wst.server.core.null";
-
 	private IModule module;
 
 	public NullModuleArtifact(IModule module) {
 		this.module = module;
-	}
-
-	public String getId() {
-		return ID;
 	}
 
 	public IModule getModule() {

@@ -11,12 +11,14 @@
 package org.eclipse.wst.server.core.model;
 /**
  * A folder within a module.
+ * 
+ * @since 1.0
  */
 public interface IModuleFolder extends IModuleResource {
 	/**
 	 * Returns the members (contents) of this folder.
 	 * 
-	 * @return
+	 * @return an array containing the module resources contained in this folder
 	 */
 	public IModuleResource[] members();
 }

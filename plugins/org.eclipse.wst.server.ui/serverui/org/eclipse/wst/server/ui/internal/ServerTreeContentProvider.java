@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.ResourceManager;
 import org.eclipse.wst.server.core.model.ModuleEvent;
 import org.eclipse.wst.server.core.model.IModuleEventsListener;
 import org.eclipse.wst.server.core.model.ModuleFactoryEvent;
@@ -98,7 +99,7 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 		ServerCore.removeServerLifecycleListener(listener);
 		
 		if (moduleEventsListener != null)
-			ServerCore.removeModuleEventsListener(moduleEventsListener);
+			ResourceManager.getInstance().removeModuleEventsListener(moduleEventsListener);
 	}
 
 	/**
@@ -225,7 +226,7 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 			}
 		};
 		
-		ServerCore.addModuleEventsListener(moduleEventsListener);
+		ResourceManager.getInstance().addModuleEventsListener(moduleEventsListener);
 	}
 
 	/**

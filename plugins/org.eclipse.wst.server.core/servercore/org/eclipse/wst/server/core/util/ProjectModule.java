@@ -23,6 +23,8 @@ import org.eclipse.wst.server.core.model.*;
 /**
  * A simple IModuleProject that maps a folder within a project
  * (or the root of the project itself) to the module.
+ * 
+ * @since 1.0
  */
 public abstract class ProjectModule extends ModuleDelegate {
 	protected IProject project;

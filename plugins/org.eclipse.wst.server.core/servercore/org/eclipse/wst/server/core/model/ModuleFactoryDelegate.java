@@ -119,7 +119,7 @@ public abstract class ModuleFactoryDelegate {
 	 * associated with the given module.
 	 * 
 	 * @param module a module
-	 * @return
+	 * @return the module delegate
 	 */
 	public abstract ModuleDelegate getModuleDelegate(IModule module);
 

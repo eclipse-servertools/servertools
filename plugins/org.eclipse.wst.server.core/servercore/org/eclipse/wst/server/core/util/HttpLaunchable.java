@@ -15,18 +15,13 @@ import java.net.URL;
 import org.eclipse.wst.server.core.ILaunchable;
 /**
  *
+ * @since 1.0
  */
 public class HttpLaunchable implements ILaunchable {
-	public static final String ID = "http.launchable";
-
 	private URL url;
 
 	public HttpLaunchable(URL url) {
 		this.url = url;
-	}
-
-	public String getId() {
-		return ID;
 	}
 
 	public URL getURL() {
@@ -34,6 +29,6 @@ public class HttpLaunchable implements ILaunchable {
 	}
 
 	public String toString() {
-		return "HttpLaunchable[id=" + getId() + ", url=" + url.toString() + "]";
+		return "HttpLaunchable[url=" + url.toString() + "]";
 	}
 }

@@ -18,7 +18,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.ITask;
 import org.eclipse.wst.server.core.ITaskModel;
 /**
- * A wizard fragment is a 
+ * A wizard fragment is a
+ * 
+ * @since 1.0
  */
 public abstract class WizardFragment {
 	private ITaskModel taskModel;

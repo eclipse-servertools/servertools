@@ -119,9 +119,45 @@ public class Module implements IModule {
 	}
 
 	/**
-	 * Return the validation status of the module.
-	 * 
-	 * @return
+	 * Validates this module.
+	 * <p>
+	 * [issue: Conjecture: Each different type of module prescribes
+	 * legal arrangements of, and the significance of, the files within
+	 * it. This would be spelled out in the spec for the particular
+	 * module types.
+	 * This validate operation is suppose to check the actual
+	 * arrangement of files in this module to see whether they
+	 * meet expectations.
+	 * It's an open question as to how "strenuous" a check this
+	 * is.]
+	 * </p>
+	 * <p>
+	 * [issue: Old comment said: "If there is an error
+	 * that should block the server from starting (e.g. major errors)
+	 * it should be returned from this method. This method can also be used to
+	 * return warning for such things as an open (and dirty) editor."]
+	 * </p>
+	 * <p>
+	 * [issue: All existing implementations of this return null,
+	 * which is illegal.]
+	 * </p>
+	 * <p>
+	 * [issue: Old comment said: "Returns an IStatus that is used to determine if this object can
+	 * be published to the server." Since the same module can
+	 * be associated with any number of servers, "the server" is
+	 * ill-defined.]
+	 * </p>
+	 * <p>
+	 * [issue: Old comment said: "Should return an error if there
+	 * is a major problem with the resources, or can be used to
+	 * return warnings on unsaved files, etc." It is usually
+	 * difficult in principle for core-level infrastructure to
+	 * detect whether there are open editors with unsaved changes.]
+	 * </p>
+	 *
+	 * @return a status object with code <code>IStatus.OK</code> if the given
+	 * module is valid, otherwise a status object indicating what is
+	 * wrong with it
 	 */
 	public IStatus validate(IProgressMonitor monitor) {
 		try {

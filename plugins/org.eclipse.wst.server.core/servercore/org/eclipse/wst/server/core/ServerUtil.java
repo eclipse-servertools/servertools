@@ -22,6 +22,8 @@ import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.Trace;
 /**
  * Server utility methods.
+ * 
+ * @since 1.0
  */
 public class ServerUtil {
 	/**
@@ -29,119 +31,6 @@ public class ServerUtil {
 	 */
 	private ServerUtil() {
 		// do nothing
-	}
-
-	/**
-	 * Returns true if the given server currently contains the given module.
-	 *
-	 * @param server org.eclipse.wst.server.core.IServer
-	 * @param module org.eclipse.wst.server.core.IModule
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @return boolean
-	 */
-	public static boolean containsModule(IServer server, IModule module, IProgressMonitor monitor) {
-		if (server == null)
-			return false;
-		Trace.trace(Trace.FINEST, "containsModule() " + server + " " + module);
-		try {
-			IModule[] modules = getAllContainedModules(server, monitor);
-			if (modules != null) {
-				int size = modules.length;
-				for (int i = 0; i < size; i++) {
-					Trace.trace(Trace.FINEST, "module: " + modules[i] + " " + module.equals(modules[i]));
-					if (module.equals(modules[i]))
-						return true;
-				}
-			}
-		} catch (Throwable t) {
-			// ignore
-		}
-		return false;
-	}
-
-	/**
-	 * Returns all projects contained by the server. This included the
-	 * projects that are in the configuration, as well as their
-	 * children, and their children...
-	 *
-	 * @param server org.eclipse.wst.server.core.IServer
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @return a possibly-empty array of module instances {@link IModule}
-	 */
-	public static IModule[] getAllContainedModules(IServer server, IProgressMonitor monitor) {
-		//Trace.trace("> getAllContainedModules: " + getName(configuration));
-		List modules = new ArrayList();
-		if (server == null)
-			return new IModule[0];
-
-		// get all of the directly contained projects
-		IModule[] deploys = server.getModules();
-		if (deploys == null || deploys.length == 0)
-			return new IModule[0];
-
-		int size = deploys.length;
-		for (int i = 0; i < size; i++) {
-			if (deploys[i] != null && !modules.contains(deploys[i]))
-				modules.add(deploys[i]);
-		}
-
-		//Trace.trace("  getAllContainedModules: root level done");
-
-		// get all of the module's children
-		int count = 0;
-		while (count < modules.size()) {
-			IModule module = (IModule) modules.get(count);
-			try {
-				IModule[] children = server.getChildModules(module, monitor);
-				if (children != null) {
-					size = children.length;
-					for (int i = 0; i < size; i++) {
-						if (children[i] != null && !modules.contains(children[i]))
-							modules.add(children[i]);
-					}
-				}
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error getting child modules for: " + module.getName(), e);
-			}
-			count ++;
-		}
-
-		//Trace.trace("< getAllContainedModules");
-
-		IModule[] modules2 = new IModule[modules.size()];
-		modules.toArray(modules2);
-		return modules2;
-	}
-	
-	/**
-	 * Returns a list of all servers that this module is configured on.
-	 * 
-	 * @param module org.eclipse.wst.server.core.model.IModule
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @return a possibly-empty array of server instances {@link IServer}
-	 */
-	public static IServer[] getServersByModule(IModule module, IProgressMonitor monitor) {
-		if (module == null)
-			return new IServer[0];
-
-		// do it the slow way - go through all servers and
-		// see if this module is configured in it
-		List list = new ArrayList();
-		IServer[] servers = ServerCore.getServers();
-		if (servers != null) {
-			int size = servers.length;
-			for (int i = 0; i < size; i++) {
-				if (containsModule(servers[i], module, monitor))
-					list.add(servers[i]);
-			}
-		}
-		
-		IServer[] allServers = new IServer[list.size()];
-		list.toArray(allServers);
-		return allServers;
 	}
 	
 	/**
@@ -169,7 +58,7 @@ public class ServerUtil {
 	/**
 	 * Returns a module from the given moduleId.
 	 * 
-	 * @param java.lang.String moduleId
+	 * @param moduleId
 	 * @return the module
 	 */
 	public static IModule getModule(String moduleId) {
@@ -178,7 +67,7 @@ public class ServerUtil {
 			return null;
 		
 		String factoryId = moduleId.substring(0, index);
-		ModuleFactory moduleFactory = ServerCore.findModuleFactory(factoryId);
+		ModuleFactory moduleFactory = ServerPlugin.findModuleFactory(factoryId);
 		if (moduleFactory == null)
 			return null;
 
@@ -199,7 +88,7 @@ public class ServerUtil {
 	public static IModule[] getModules(IModuleType[] moduleTypes) {
 		List list = new ArrayList();
 
-		ModuleFactory[] factories = ServerCore.getModuleFactories();
+		ModuleFactory[] factories = ServerPlugin.getModuleFactories();
 		if (factories != null) {
 			int size = factories.length;
 			for (int i = 0; i < size; i++) {
@@ -228,7 +117,7 @@ public class ServerUtil {
 	public static IModule[] getModules(String type) {
 		List list = new ArrayList();
 
-		ModuleFactory[] factories = ServerCore.getModuleFactories();
+		ModuleFactory[] factories = ServerPlugin.getModuleFactories();
 		if (factories != null) {
 			int size = factories.length;
 			for (int i = 0; i < size; i++) {
@@ -267,7 +156,7 @@ public class ServerUtil {
 		return false;
 	}
 
-	protected static boolean isSupportedModule(IModuleType[] moduleTypes, IModuleType[] mt) {
+	private static boolean isSupportedModule(IModuleType[] moduleTypes, IModuleType[] mt) {
 		if (mt != null) {
 			int size = mt.length;
 			for (int i = 0; i < size; i++) {
@@ -297,7 +186,7 @@ public class ServerUtil {
 		return false;
 	}
 	
-	protected static boolean isSupportedModule(IModuleType moduleType, String type, String version) {
+	private static boolean isSupportedModule(IModuleType moduleType, String type, String version) {
 		String type2 = moduleType.getId();
 		if (matches(type, type2)) {
 			String version2 = moduleType.getVersion();
@@ -324,7 +213,7 @@ public class ServerUtil {
 		return false;
 	}
 
-	protected static boolean matches(String a, String b) {
+	private static boolean matches(String a, String b) {
 		if (a == null || b == null || "*".equals(a) || "*".equals(b) || a.startsWith(b) || b.startsWith(a))
 			return true;
 		return false;
@@ -335,10 +224,10 @@ public class ServerUtil {
 	 * 
 	 * @return IModule[]
 	 */
-	protected static IModule[] getModules() {
+	private static IModule[] getModules() {
 		List list = new ArrayList();
 		
-		ModuleFactory[] factories = ServerCore.getModuleFactories();
+		ModuleFactory[] factories = ServerPlugin.getModuleFactories();
 		if (factories != null) {
 			int size = factories.length;
 			for (int i = 0; i < size; i++) {
@@ -431,77 +320,6 @@ public class ServerUtil {
 	}
 
 	/**
-	 * Returns true if the given server is already started in the given
-	 * mode, or could be (re)started in the start mode.
-	 * 
-	 * @param server
-	 * @param launchMode
-	 * @return boolean
-	 */
-	public static boolean isCompatibleWithLaunchMode(IServer server, String launchMode) {
-		if (server == null || launchMode == null)
-			return false;
-
-		int state = server.getServerState();
-		if (state == IServer.STATE_STARTED && launchMode.equals(server.getMode()))
-			return true;
-
-		if (server.getServerType().supportsLaunchMode(launchMode))
-			return true;
-		return false;
-	}
-
-	/**
-	 * Visit all the modules in the server with the given module visitor.
-	 * 
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 */
-	public static void visit(IServerAttributes server, IModuleVisitor visitor, IProgressMonitor monitor) {
-		if (server == null)
-			return;
-		
-		IModule[] modules = server.getModules();
-		if (modules != null) { 
-			int size = modules.length;
-			for (int i = 0; i < size; i++) {
-				if (!visitModule(server, new IModule[0], modules[i], visitor, monitor))
-					return;
-			}
-		}
-	}
-
-	/**
-	 * Returns true to keep visiting, and false to stop.
-	 * 
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 */
-	private static boolean visitModule(IServerAttributes server, IModule[] parents, IModule module, IModuleVisitor visitor, IProgressMonitor monitor) {
-		if (server == null || module == null || parents == null)
-			return true;
-		
-		if (!visitor.visit(parents, module))
-			return false;
-		
-		IModule[] children = server.getChildModules(module, monitor);
-		if (children != null) {
-			int size = children.length;
-			for (int i = 0; i < size; i++) {
-				IModule module2 = children[i];
-				IModule[] parents2 = new IModule[parents.length + 1];
-				System.arraycopy(parents, 0, parents2, 0, parents.length);
-				parents2[parents.length] = module;
-				
-				if (!visitModule(server, parents2, module2, visitor, monitor))
-					return false;
-			}
-		}
-			
-		return true;
-	}
-
-	/**
 	 * Sets a default name on the given runtime.
 	 * 
 	 * @param wc
@@ -571,7 +389,7 @@ public class ServerUtil {
 	 * 
 	 * @param project
 	 * @param type
-	 * @return
+	 * @return an unused file within the given project
 	 */
 	public static IFile getUnusedServerFile(IProject project, IServerType type) {
 		String typeName = getValidFileName(type.getName());
@@ -588,7 +406,8 @@ public class ServerUtil {
 	 * Returns true if a server or runtime exists with the given name.
 	 *
 	 * @param name java.lang.String
-	 * @return boolean
+	 * @return <code>true</code> if the name is in use, and <code>false</code>
+	 *    otherwise
 	 */
 	private static boolean isNameInUse(String name) {
 		if (name == null)
@@ -730,7 +549,7 @@ public class ServerUtil {
 	 *    reporting and cancellation are not desired
 	 * @return com.ibm.etools.server.core.IServer[]
 	 */
-	public static IServer[] getAvailableServersForModule(IModule module, boolean includeErrors, IProgressMonitor monitor) {
+	/*public static IServer[] getAvailableServersForModule(IModule module, boolean includeErrors, IProgressMonitor monitor) {
 		if (module == null)
 			return new IServer[0];
 
@@ -742,7 +561,7 @@ public class ServerUtil {
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
-				if (!containsModule(servers[i], module, monitor)) {
+				if (!ServerPlugin.containsModule(servers[i], module, monitor)) {
 					try {
 						IModule[] parents = servers[i].getRootModules(module, monitor);
 						if (parents != null && parents.length > 0) {
@@ -777,5 +596,5 @@ public class ServerUtil {
 		IServer[] allServers = new IServer[list.size()];
 		list.toArray(allServers);
 		return allServers;
-	}
+	}*/
 }

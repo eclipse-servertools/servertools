@@ -10,9 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core;
 /**
- * This interface
+ * This interface represents a task model that can be shared between multiple
+ * tasks in a common workflow.
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
+ * 
+ * @since 1.0
  */
 public interface ITaskModel {
 	/**

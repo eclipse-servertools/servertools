@@ -16,6 +16,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * This interface holds information on the properties of a given project.
  *
  * <p>This interface is not intended to be implemented by clients.</p>
+ * 
+ * @see IProjectPropertiesListener
+ * @since 1.0
  */
 public interface IProjectProperties {
 	/**
@@ -24,7 +27,8 @@ public interface IProjectProperties {
 	 * server is recreated or was in a closed project, etc. this method will return
 	 * the original value if it becomes available again)
 	 *
-	 * @return org.eclipse.wst.server.core.IServer
+	 * @return the current default server, or <code>null</code> if there is no
+	 *    default server
 	 */
 	public IServer getDefaultServer();
 
@@ -33,43 +37,60 @@ public interface IProjectProperties {
 	 * null to clear the setting. If there is a problem saving the file, a CoreException
 	 * will be thrown.
 	 *
-	 * @param server org.eclipse.wst.server.model.IServer
-	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
-	 * @throws org.eclipse.core.runtime.CoreException
+	 * @param server the server to set the default server, or <code>null</code>
+	 *    to unset the default
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException if there is a problem setting the default server
 	 */
 	public void setDefaultServer(IServer server, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Returns the current runtime target for this project.
 	 * 
-	 * @return
+	 * @return the current runtime target, or <code>null</code> if the project has
+	 *    no runtime target 
 	 */
 	public IRuntime getRuntimeTarget();
 
 	/**
 	 * Sets the runtime target for the project.
 	 * 
-	 * @param target
-	 * @param monitor
+	 * @param runtime the runtime to use as the target, or <code>null</code> to
+	 *    unset the target 
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException if there is a problem setting the runtime target
 	 */
 	public void setRuntimeTarget(IRuntime runtime, IProgressMonitor monitor) throws CoreException;
 
 	/**
+	 * Returns <code>true</code> if this project can contain server artifacts, and
+	 * <code>false</code> otherwise.
 	 * 
+	 * @return <code>true</code> if this project can contain server artifacts, and
+	 *    <code>false</code> otherwise
 	 */
-	public boolean isServerProject();
+	//public boolean isServerProject();
 
 	/**
+	 * Sets whether the project can contain server resources.
 	 * 
-	 * @param b
+	 * @param sp <code>true</code> to allow the project to contain server
+	 *    resources, or <code>false</code> to not allow the project to contain
+	 *    servers
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException if there is a problem setting the server project
 	 */
-	public void setServerProject(boolean b, IProgressMonitor monitor) throws CoreException;
+	//public void setServerProject(boolean sp, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Adds a new project properties listener.
 	 * Has no effect if an identical listener is already registered.
 	 * 
-	 * @param listener
+	 * @param listener the properties listener
+	 * @see #removeProjectPropertiesListener(IProjectPropertiesListener)
 	 */
 	public void addProjectPropertiesListener(IProjectPropertiesListener listener);
 
@@ -77,7 +98,8 @@ public interface IProjectProperties {
 	 * Removes an existing project properties listener.
 	 * Has no effect if the listener is not registered.
 	 * 
-	 * @param listener
+	 * @param listener the properties listener
+	 * @see #addProjectPropertiesListener(IProjectPropertiesListener)
 	 */
 	public void removeProjectPropertiesListener(IProjectPropertiesListener listener);
 }

@@ -17,6 +17,8 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 /**
  * 
+ * 
+ * @since 1.0
  */
 public interface IWizardHandle extends IMessageProvider {
 	public void update();

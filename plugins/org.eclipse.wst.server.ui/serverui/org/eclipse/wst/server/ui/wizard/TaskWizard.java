@@ -18,11 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IWorkspaceRunnable;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -42,6 +38,8 @@ import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.wizard.page.WorkspaceRunnableAdapter;
 /**
  * A wizard used to execute tasks.
+ * 
+ * @since 1.0
  */
 public class TaskWizard implements IWizard {
 	private static final byte FINISH = 2;

@@ -20,6 +20,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 /**
  * 
+ * 
+ * @since 1.0
  */
 public abstract class ServerEditorSection implements IServerEditorSection {
 	private String errorMessage = null;

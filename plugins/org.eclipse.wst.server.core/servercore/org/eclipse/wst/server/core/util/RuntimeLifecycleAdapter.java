@@ -15,6 +15,9 @@ import org.eclipse.wst.server.core.IRuntimeLifecycleListener;
 /**
  * Helper class which implements the IRuntimeLifecycleListener interface
  * with empty methods.
+ * 
+ * @see org.eclipse.wst.server.core.IRuntimeLifecycleListener
+ * @since 1.0
  */
 public class RuntimeLifecycleAdapter implements IRuntimeLifecycleListener {
 	public void runtimeAdded(IRuntime runtime) {

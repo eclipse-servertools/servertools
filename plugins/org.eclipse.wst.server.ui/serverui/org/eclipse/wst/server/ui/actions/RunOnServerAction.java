@@ -20,6 +20,8 @@ import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
  * object, and have automatic server creation, launching, and
  * the appropriate client to appear. A new instance of this
  * action must be created for each object that the user selects.
+ * 
+ * @since 1.0
  */
 public class RunOnServerAction extends Action {
 	protected RunOnServerActionDelegate delegate;

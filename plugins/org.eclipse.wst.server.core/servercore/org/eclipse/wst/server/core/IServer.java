@@ -13,7 +13,6 @@ package org.eclipse.wst.server.core;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 /**
  * Represents a server instance. Every server is an instance of a
  * particular, fixed server type.
@@ -238,7 +237,7 @@ public interface IServer extends IServerAttributes {
 	 * @see #removeServerListener(IServerListener)
 	 */
 	public void addServerListener(IServerListener listener);
-	
+
 	/**
 	 * Removes the given server state listener from this server. Has no
 	 * effect if the listener is not registered.
@@ -249,29 +248,13 @@ public interface IServer extends IServerAttributes {
 	public void removeServerListener(IServerListener listener);
 
 	/**
-	 * Adds a publish listener to this server.
-	 * Has no effect if an identical listener is already registered.
-	 *
-	 * @param listener org.eclipse.wst.server.core.model.IPublishListener
-	 */
-	public void addPublishListener(IPublishListener listener);
-
-	/**
-	 * Removes a publish listener from this server.
-	 * Has no effect if the listener is not registered.
-	 *
-	 * @param listener org.eclipse.wst.server.core.model.IPublishListener
-	 */
-	public void removePublishListener(IPublishListener listener);
-	
-	/**
 	 * Returns whether this server is in a state that it can
 	 * be published to.
 	 *
-	 * @return <code>true</code> if this server can be published to,
-	 * and <code>false</code> otherwise
+	 * @return a status object with code <code>IStatus.OK</code> if the server can
+	 *   be published to, otherwise a status object indicating what is wrong
 	 */
-	public boolean canPublish();
+	public IStatus canPublish();
 
 	/**
 	 * Returns true if the server may have any projects or it's
@@ -316,12 +299,10 @@ public interface IServer extends IServerAttributes {
 	 * @param launchMode a mode in which a server can be launched,
 	 * one of the mode constants defined by
 	 * {@link org.eclipse.debug.core.ILaunchManager}
-	 * @return <code>true</code> if this server can be started
-	 * in the given mode, and <code>false</code> if it is either
-	 * not ready to be started or if it does not support the given
-	 * mode
+	 * @return a status object with code <code>IStatus.OK</code> if the server can
+	 *   be started, otherwise a status object indicating why it can't
 	 */
-	public boolean canStart(String launchMode);
+	public IStatus canStart(String launchMode);
 
 	/**
 	 * Returns an existing launch for this server, or null if there is
@@ -329,7 +310,7 @@ public interface IServer extends IServerAttributes {
 	 * 
 	 * @return
 	 */
-	public ILaunch getExistingLaunch();
+	//public ILaunch getExistingLaunch();
 
 	/**
 	 * Return the launch configuration for this server. If one does not exist, it
@@ -351,7 +332,7 @@ public interface IServer extends IServerAttributes {
 	 * @param monitor
 	 * @throws CoreException
 	 */
-	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException;
+	//public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Asynchronously starts this server in the given launch mode.
@@ -404,11 +385,10 @@ public interface IServer extends IServerAttributes {
 	 * @param launchMode a mode in which a server can be launched,
 	 *    one of the mode constants defined by
 	 *    {@link org.eclipse.debug.core.ILaunchManager}
-	 * @return <code>true</code> if this server can be restarted in the
-	 *    given mode, and <code>false</code> if it is either not ready
-	 *    to be restarted or if it does not support the given mode
+	 * @return a status object with code <code>IStatus.OK</code> if the server can
+	 *   be restarted, otherwise a status object indicating why it can't
 	 */
-	public boolean canRestart(String mode);
+	public IStatus canRestart(String mode);
 	
 	/**
 	 * Returns whether this server is out of sync and needs to be
@@ -469,10 +449,10 @@ public interface IServer extends IServerAttributes {
 	 * Servers can be stopped if they are not already stopped and if
 	 * they belong to a state-set that can be stopped.
 	 *
-	 * @return <code>true</code> if this server can be stopped,
-	 *    and <code>false</code> otherwise
+	 * @return a status object with code <code>IStatus.OK</code> if the server can
+	 *   be stopped, otherwise a status object indicating why it can't
 	 */
-	public boolean canStop();
+	public IStatus canStop();
 
 	/**
 	 * Asynchronously stops this server. This operation does
@@ -518,10 +498,10 @@ public interface IServer extends IServerAttributes {
 	 * </p>
 	 *
 	 * @param module the module
-	 * @return <code>true</code> if the given module can be
-	 * restarted, and <code>false</code> otherwise 
+	 * @return a status object with code <code>IStatus.OK</code> if the module can
+	 *   be restarted, otherwise a status object indicating why it can't
 	 */
-	public boolean canRestartModule(IModule module);
+	public IStatus canRestartModule(IModule module);
 
 	/**
 	 * Check if the given module is in sync on the server. It should

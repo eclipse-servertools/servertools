@@ -17,6 +17,7 @@ import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeTargetHandler;
 /**
  * 
+ * @since 1.0
  */
 public abstract class RuntimeTargetHandlerDelegate {
 	private IRuntimeTargetHandler handler;
@@ -33,7 +34,7 @@ public abstract class RuntimeTargetHandlerDelegate {
 	/**
 	 * Returns the runtime target handler that this delegate is associated with.
 	 * 
-	 * @return
+	 * @return the runtime target handler
 	 */
 	public IRuntimeTargetHandler getRuntimeTargetHandler() {
 		return handler;

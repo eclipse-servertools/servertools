@@ -8,34 +8,22 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core;
+package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerPort;
 /**
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
+ * 
+ * @since 1.0
  */
 public interface IServerMonitorManager {
 	/**
-	 * Returns the monitor that is currently being used.
-	 *  
-	 * @return
-	 */
-	//public IServerMonitor getCurrentServerMonitor();
-	
-	/**
-	 * Switch to use a different server monitor. All existing monitors will be
-	 * removed from the current monitor and added to the new monitor.
-	 * 
-	 * @param newMonitor
-	 * @throws CoreException
-	 */
-	//public void setServerMonitor(IServerMonitor newMonitor) throws CoreException;
-
-	/**
 	 * Returns the array of ports that are currently being monitored.
 	 *
-	 * @return
+	 * @return an array containing the monitored ports for this server
 	 */
 	public IMonitoredServerPort[] getMonitoredPorts(IServer server);
 

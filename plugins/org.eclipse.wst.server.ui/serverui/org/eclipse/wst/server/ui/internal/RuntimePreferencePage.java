@@ -43,7 +43,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
 import org.eclipse.wst.server.ui.internal.task.SaveRuntimeTask;
 import org.eclipse.wst.server.ui.internal.viewers.RuntimeComposite;
@@ -329,7 +328,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 			};
 		} else {
 			title = ServerUIPlugin.getResource("%wizEditRuntimeWizardTitle");
-			final WizardFragment fragment2 = ServerUICore.getWizardFragment(runtimeWorkingCopy.getRuntimeType().getId());
+			final WizardFragment fragment2 = ServerUIPlugin.getWizardFragment(runtimeWorkingCopy.getRuntimeType().getId());
 			if (fragment2 == null) {
 				edit.setEnabled(false);
 				return Window.CANCEL;

@@ -16,7 +16,9 @@ import java.util.Map;
 import org.eclipse.wst.server.core.*;
 /**
  * An implementation of the org.eclipse.wst.server.core.ITaskModel interface
- * that provides a default implementation of the methods. 
+ * that provides a default implementation of the methods.
+ * 
+ * @since 1.0
  */
 public class TaskModel implements ITaskModel {
 	private Map map = new HashMap();

@@ -42,7 +42,7 @@ public class StartAction extends AbstractServerAction {
 	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	public boolean accept(IServer server) {
-		return server.canStart(launchMode);
+		return server.canStart(launchMode).isOK();
 	}
 
 	/**

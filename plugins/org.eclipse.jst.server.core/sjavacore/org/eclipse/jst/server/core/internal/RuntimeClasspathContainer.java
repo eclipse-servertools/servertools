@@ -41,7 +41,7 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	public IClasspathEntry[] getClasspathEntries() {
 		IClasspathEntry[] entries = null;
 		if (delegate != null && runtime != null)
-			entries = delegate.resolveClasspathContainer(runtime, id);
+			entries = delegate.resolveClasspathContainerImpl(runtime, id);
 
 		if (entries == null)
 			return new IClasspathEntry[0];

@@ -16,9 +16,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * A runtime locator provides the ability to locate or search for additional
  * runtimes of a particular type.
+ * <p>
+ * Runtime locators are found via ServerCore.getRuntimeLocators().
+ * </p>
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
  * 
+ * @see ServerCore
  * @since 1.0
  */
 public interface IRuntimeLocator {
