@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.eclipse.wst.server.core.tests"
+   name="org.eclipse.wst.server.core.tests"
+   version="1.0.0"
+   provider-name="Eteration.com"
+   class="org.eclipse.wtp.wst.server.core.tests.TestsPlugin">
+
+   <runtime>
+      <library name="servertests.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.junit"/>
+      <import plugin="org.eclipse.wst.server.core"/>
+   </requires>
+
+</plugin>
