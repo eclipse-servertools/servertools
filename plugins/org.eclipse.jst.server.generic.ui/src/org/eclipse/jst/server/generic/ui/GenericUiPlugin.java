@@ -30,6 +30,8 @@
  ***************************************************************************/
 package org.eclipse.jst.server.generic.ui;
 
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.*;
 import org.osgi.framework.BundleContext;
 import java.util.*;
@@ -40,7 +42,9 @@ import java.util.*;
  * @author Gorkem Ercan
  */
 public class GenericUiPlugin extends AbstractUIPlugin {
-	//The shared instance.
+	
+    public static final String WIZBAN_IMAGE = "genericlogo";
+    //The shared instance.
 	private static GenericUiPlugin plugin;
 	//Resource bundle.
 	private ResourceBundle resourceBundle;
@@ -92,6 +96,15 @@ public class GenericUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
+    protected ImageRegistry createImageRegistry() {
+        ImageRegistry registry = new ImageRegistry();
+        ImageDescriptor desc = ImageDescriptor.createFromURL(getDefault().getBundle().getEntry("/icons/wizban/logo.gif"));
+        registry.put(WIZBAN_IMAGE,desc);
+        return registry;
+    }
+  	public ImageDescriptor imageDescriptor(String key){
+		return getImageRegistry().getDescriptor(key);
+	}
 	/**
 	 * Returns the plugin's resource bundle,
 	 */
