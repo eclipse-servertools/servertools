@@ -9,9 +9,6 @@
  *    IBM - Initial API and implementation
  **********************************************************************/
 package org.eclipse.wst.internet.monitor.core.internal;
-
-import org.eclipse.wst.internet.monitor.core.IMonitorWorkingCopy;
-import org.eclipse.wst.internet.monitor.core.MonitorCore;
 /**
  * A protocol adapter enables a monitor to support a particular network
  * protocol used to communicate between a client and server. All supported
