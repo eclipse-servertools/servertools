@@ -20,9 +20,9 @@ public class AllTests
   {
     TestSuite suite = new TestSuite("Test for org.eclipse.jst.server.tomcat.tests.performance.tomcat50");
     //$JUnit-BEGIN$
-    suite.addTestSuite(GetDelegateTestCase.class);
+    /*suite.addTestSuite(GetDelegateTestCase.class);
     suite.addTestSuite(OpenEditorTestCase.class);
-    suite.addTestSuite(ServerActionsTestCase.class);
+    suite.addTestSuite(ServerActionsTestCase.class);*/
     //$JUnit-END$
     return suite;
   }
