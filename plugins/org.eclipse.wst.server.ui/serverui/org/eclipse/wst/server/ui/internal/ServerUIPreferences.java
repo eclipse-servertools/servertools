@@ -177,6 +177,9 @@ public class ServerUIPreferences {
 	 * @param hostname
 	 */
 	public void addHostname(String hostname) {
+		if ("localhost".equals(hostname))
+			return;
+		
 		List list = getHostnames();
 		
 		// remove duplicates
