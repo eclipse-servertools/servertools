@@ -32,17 +32,12 @@
 package org.eclipse.jst.server.generic.internal.xml;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
-
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -50,123 +45,92 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.jst.server.generic.core.CorePlugin;
+import org.eclipse.jst.server.generic.internal.core.util.ExtensionPointUtil;
+import org.eclipse.jst.server.generic.internal.core.util.FileUtil;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
+import org.osgi.framework.Bundle;
 
-/**
- * @author Naci Dai
- */
 public class XMLUtils {
 
-	ArrayList definitions;
+	
+    private ArrayList definitions;
 
-	File sourceDir;
 
-	public XMLUtils(URL installUrl) {
-		String serversPath = installUrl.getPath() + "/servers";
-		URI uri;
-		try {
-			uri = new URI(installUrl.getProtocol(), installUrl.getHost(),
-					serversPath, installUrl.getQuery());
-			sourceDir = new File(uri);
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+	public XMLUtils() {
 		refresh();
 	}
 
 	public void refresh() {
-		definitions = scanFiles(sourceDir);
-	}
-
-	public void update(ServerRuntime element) {
-		toFile(element);
-	}
-
-	public void update() {
-		Iterator defs = definitions.iterator();
-		while (defs.hasNext()) {
-			ServerRuntime element = (ServerRuntime) defs.next();
-			update(element);
-		}
-	}
-
-	private void toFile(ServerRuntime def) {
-		try {
-
-			File f = new File(def.getFilename());
-			f.renameTo(new File(f.getCanonicalFile() + ".bak"));
-		} catch (IOException e) {
-		}
-
-		try {
-			FileOutputStream out = new FileOutputStream(def.getFilename());
-			out.write(def.toString().getBytes());
-			out.close();
-		} catch (FileNotFoundException e) {
-		} catch (IOException e) {
-		}
-	}
-
-	private ArrayList scanFiles(File dir) {
-		ArrayList all = new ArrayList();
-		if (dir.isDirectory()) {
-			File[] allServers = dir.listFiles(new FilenameFilter() {
-				/*
-				 * (non-Javadoc)
-				 * 
-				 * @see java.io.FilenameFilter#accept(java.io.File,
-				 *      java.lang.String)
-				 */
-				public boolean accept(File dir, String name) {
-					if (name.endsWith(".server"))
-						return true;
-					return false;
-				}
-
-			});
-
-			for (int i = 0; i < allServers.length; i++) {
-				File file = allServers[i];
-
-				// Create a resource set.
-				ResourceSet resourceSet = new ResourceSetImpl();
-
-				// Register the default resource factory -- only needed for
-				// stand-alone!
-				resourceSet.getResourceFactoryRegistry()
-						.getExtensionToFactoryMap().put(
-								Resource.Factory.Registry.DEFAULT_EXTENSION,
-								new XMIResourceFactoryImpl());
-
-				ServerTypePackage gstPack = ServerTypePackage.eINSTANCE;
-
-				// Get the URI of the model file.
-				org.eclipse.emf.common.util.URI fileURI = org.eclipse.emf.common.util.URI
-						.createFileURI(file.getAbsolutePath());
-
-				// Demand load the resource for this file.
-				Resource resource=null;
-                try {
-                    resource = resourceSet.getResource(fileURI, true);
-                } catch (WrappedException e) {
-//                  sth wrong with this .server file.
-                    CorePlugin.getDefault().getLog().log(new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,1,"Error loading the server type definition",e));
+		definitions= new ArrayList();
+         IExtension[] extensions = ExtensionPointUtil.getGenericServerDefinitionExtensions();
+        for (int i = 0; extensions!=null && i < extensions.length; i++) {
+            File definitionFile=null;
+            IExtension extension = extensions[i];
+            IConfigurationElement[] elements = ExtensionPointUtil.getConfigurationElements(extension);
+            for (int j = 0; j < elements.length; j++) {
+                IConfigurationElement element = elements[j];
+                definitionFile = getDefinitionFile(element);
+                if(definitionFile!=null && definitionFile.exists() && definitionFile.isFile()){
+                    ServerRuntime runtime =readFile(definitionFile);
+                    if(runtime!=null)
+                    {
+                        runtime.setConfigurationElementNamespace(element.getNamespace());
+                        definitions.add(runtime);
+                    }
                 }
-                if(resource!=null) {
-                    ServerRuntime def = (ServerRuntime) resource.getContents().get(0);
-					if (def != null) {
-						def.setFilename(file.getAbsolutePath());
-						all.add(def);
-					}
-	            }
-			}
-		}
+            }
 
-		return all;
+        }
 	}
+
+    /**
+     * @param extension
+     */
+    private File getDefinitionFile(IConfigurationElement element) {
+        Bundle bundle = Platform.getBundle(element.getNamespace());
+        String definitionFile = element.getAttribute("definitionfile");
+        return FileUtil.resolveFileFrom(bundle,definitionFile);
+    }
+
+    public ServerRuntime readFile(File file) {
+        // Create a resource set.
+        ResourceSet resourceSet = new ResourceSetImpl();
+
+        // Register the default resource factory -- only needed for
+        // stand-alone!
+        resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
+                .put(Resource.Factory.Registry.DEFAULT_EXTENSION,
+                        new XMIResourceFactoryImpl());
+
+         ServerTypePackage gstPack = ServerTypePackage.eINSTANCE;
+
+        // Get the URI of the model file.
+        org.eclipse.emf.common.util.URI fileURI = org.eclipse.emf.common.util.URI
+                .createFileURI(file.getAbsolutePath());
+
+        // Demand load the resource for this file.
+        Resource resource = null;
+        try {
+            resource = resourceSet.getResource(fileURI, true);
+        } catch (WrappedException e) {
+            // sth wrong with this .server file.
+            CorePlugin.getDefault().getLog().log(
+                    new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 1,
+                            "Error loading the server type definition", e));
+        }
+
+        if (resource != null) {
+            ServerRuntime def = (ServerRuntime) resource.getContents().get(0);
+            if (def != null) {
+                def.setFilename(file.getAbsolutePath());
+                return def;
+            }
+        }
+        return null;
+
+    }
+
 
 	/**
 	 * @return ArrayList
