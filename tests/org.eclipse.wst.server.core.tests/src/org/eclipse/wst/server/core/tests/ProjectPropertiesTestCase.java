@@ -16,6 +16,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.IProjectPropertiesListener;
 import org.eclipse.wst.server.core.internal.ProjectProperties;
 
 public class ProjectPropertiesTestCase extends TestCase {
@@ -55,7 +56,7 @@ public class ProjectPropertiesTestCase extends TestCase {
 	}
 
 	public void test01AddListener() throws Exception {
-		props.addProjectPropertiesListener(listener);
+		((ProjectProperties)props).addProjectPropertiesListener(listener);
 	}
 
 	public void test02GetServer() throws Exception {
@@ -113,7 +114,7 @@ public class ProjectPropertiesTestCase extends TestCase {
 	}
 	
 	public void test13RemoveListener() throws Exception {
-		props.removeProjectPropertiesListener(listener);
+		((ProjectProperties)props).removeProjectPropertiesListener(listener);
 	}
 
 	public void test14End() throws Exception {

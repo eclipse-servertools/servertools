@@ -29,8 +29,6 @@ public class RuntimeTargetHandlersTestCase extends TestCase {
 			for (int i = 0; i < size; i++) {
 				rth[i].getId();
 				rth[i].supportsRuntimeType(null);
-				rth[i].setRuntimeTarget(null, null, null);
-				rth[i].removeRuntimeTarget(null, null, null);
 			}
 		}
 	}

@@ -38,10 +38,6 @@ public class IOptionalTaskTestCase extends TestCase {
 				// ignore
 			}
 
-			public boolean canExecute() {
-				return false;
-			}
-
 			public void execute(IProgressMonitor monitor) throws CoreException {
 				// ignore
 			}
@@ -66,7 +62,6 @@ public class IOptionalTaskTestCase extends TestCase {
 		task.getDescription();
 		task.getTaskModel();
 		task.setTaskModel(null);
-		task.canExecute();
 		task.execute(null);
 		task.canUndo();
 		task.undo();
