@@ -3,6 +3,9 @@
 	<name>org.eclipse.jst.server.ui</name>
 	<comment></comment>
 	<projects>
+		<project>org.eclipse.wst.server.core</project>
+		<project>org.eclipse.jst.server.core</project>
+		<project>org.eclipse.wst.server.ui</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

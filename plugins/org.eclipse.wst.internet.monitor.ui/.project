@@ -3,6 +3,7 @@
 	<name>org.eclipse.wst.internet.monitor.ui</name>
 	<comment></comment>
 	<projects>
+		<project>org.eclipse.wst.internet.monitor.core</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -49,7 +49,6 @@ public class SWTUtil {
 			initializeDialogUnits(comp);
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.widthHint = getButtonWidthHint(b);
-		data.heightHint = Dialog.convertVerticalDLUsToPixels(fontMetrics, IDialogConstants.BUTTON_HEIGHT);
 		b.setLayoutData(data);
 		return b;
 	}
