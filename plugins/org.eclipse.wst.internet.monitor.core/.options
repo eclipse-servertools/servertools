@@ -1,0 +1,6 @@
+# Debugging options for the org.eclipse.wst.monitor.core plugin
+
+# Turn on general debugging
+org.eclipse.wst.monitor.core/debug=false
+
+org.eclipse.wst.monitor.core/parsing=false

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<plugin id="org.eclipse.wst.monitor.core"
+  name="%pluginName"
+  version="1.0.0"
+  provider-name="%providerName"
+  class="org.eclipse.wst.monitor.core.internal.MonitorPlugin">
+
+<requires>
+  <import plugin="org.eclipse.core.runtime"/>
+</requires>
+
+<runtime>
+  <library name="monitorcore.jar">
+    <export name="*"/>
+  </library>
+</runtime>
+
+<extension-point name="%extensionPointProtocolAdapters" id="protocolAdapters" schema="schema/protocolAdapters.exsd"/>
+<extension-point name="%extensionPointContentFilters" id="contentFilters" schema="schema/contentFilters.exsd"/>
+<extension-point name="%extensionPointRequestListeners" id="requestListeners" schema="schema/requestListeners.exsd"/>
+
+<extension point="org.eclipse.wst.monitor.core.protocolAdapters">
+  <protocolAdapter
+    id="TCPIP"
+    class="org.eclipse.wst.monitor.core.internal.TCPIPProtocolAdapter"
+    name="%TCPIP"/>
+  <protocolAdapter
+    id="HTTP"
+    class="org.eclipse.wst.monitor.core.internal.http.HTTPProtocolAdapter"
+    name="%HTTP"/>
+</extension>
+
+</plugin>
