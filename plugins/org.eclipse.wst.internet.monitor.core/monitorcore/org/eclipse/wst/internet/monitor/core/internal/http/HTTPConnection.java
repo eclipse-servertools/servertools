@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,7 @@
 package org.eclipse.wst.internet.monitor.core.internal.http;
 
 import org.eclipse.wst.internet.monitor.core.IMonitor;
-import org.eclipse.wst.internet.monitor.core.IRequest;
+import org.eclipse.wst.internet.monitor.core.Request;
 import org.eclipse.wst.internet.monitor.core.internal.Monitor;
 import org.eclipse.wst.internet.monitor.core.internal.Trace;
 
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.ArrayList;
 /**
  * Manages a monitor server connection between two hosts. This
- * connection may spawn one or more TCP/IP pairs to be displayed
+ * connection may spawn one or more TCP/IP requests to be displayed
  * in the monitor server view.
  */
 public class HTTPConnection {
@@ -28,7 +28,7 @@ public class HTTPConnection {
 	protected int req = -1;
 	protected int resp = -1;
 
-	protected List calls = new ArrayList();
+	protected List requests = new ArrayList();
 
 	/**
 	 * MonitorHTTPConnection constructor comment.
@@ -44,11 +44,11 @@ public class HTTPConnection {
 	 * @param req byte[]
 	 * @param isNew boolean
 	 */
-	public void addRequest(byte[] request, boolean isNew) {
+	public void addRequest(byte[] b, boolean isNew) {
 		if (isNew)
 			req ++;
-		HTTPRequest pair = (HTTPRequest) getRequestResponse(req);
-		pair.addToRequest(request);
+		HTTPRequest request = (HTTPRequest) getRequestResponse(req);
+		request.addToRequest(b);
 	}
 
 	/**
@@ -56,25 +56,25 @@ public class HTTPConnection {
 	 * @param req byte[]
 	 * @param isNew boolean
 	 */
-	public void addResponse(byte[] response, boolean isNew) {
+	public void addResponse(byte[] b, boolean isNew) {
 		if (isNew)
 			resp ++;
-		HTTPRequest pair = (HTTPRequest) getRequestResponse(resp);
-		pair.addToResponse(response);
+		HTTPRequest request = (HTTPRequest) getRequestResponse(resp);
+		request.addToResponse(b);
 	}
 
 	/**
 	 * 
 	 */
 	public void addProperty(String key, Object value) {
-		IRequest pair = getRequestResponse(req);
-		pair.setProperty(key, value);
+		Request request = getRequestResponse(req);
+		request.setProperty(key, value);
 	}
 
 	/**
 	 * 
 	 */
-	public IRequest getRequestResponse(boolean isRequest) {
+	public Request getRequestResponse(boolean isRequest) {
 		if (isRequest)
 			return getRequestResponse(req);
 		
@@ -84,14 +84,14 @@ public class HTTPConnection {
 	/**
 	 * 
 	 */
-	protected IRequest getRequestResponse(int i) {
+	protected Request getRequestResponse(int i) {
 		synchronized (this) {
-			while (i >= calls.size()) {
-				IRequest rr = new HTTPRequest((Monitor) monitor, monitor.getLocalPort(), monitor.getRemoteHost(), monitor.getRemotePort());
-				calls.add(rr);
-				return rr;
+			while (i >= requests.size()) {
+				Request request = new HTTPRequest((Monitor) monitor, monitor.getLocalPort(), monitor.getRemoteHost(), monitor.getRemotePort());
+				requests.add(request);
+				return request;
 			}
-			return (IRequest) calls.get(i);
+			return (Request) requests.get(i);
 		}
 	}
 
@@ -103,7 +103,7 @@ public class HTTPConnection {
 	public void setLabel(String title, boolean isNew) {
 		if (isNew)
 			req ++;
-		HTTPRequest pair = (HTTPRequest) getRequestResponse(req);
-		pair.setLabel(title);
+		HTTPRequest request = (HTTPRequest) getRequestResponse(req);
+		request.setName(title);
 	}
 }

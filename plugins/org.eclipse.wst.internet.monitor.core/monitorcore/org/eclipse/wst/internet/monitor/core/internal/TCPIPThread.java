@@ -11,10 +11,11 @@
 package org.eclipse.wst.internet.monitor.core.internal;
 
 import java.io.*;
+import org.eclipse.wst.internet.monitor.core.Request;
 /**
  * Monitor server I/O thread.
  */
-public class DefaultThread extends Thread {
+public class TCPIPThread extends Thread {
 	private static final int BUFFER = 2048;
 	protected InputStream in;
 	protected OutputStream out;
@@ -26,7 +27,7 @@ public class DefaultThread extends Thread {
 	/**
 	 * MonitorThread constructor comment.
 	 */
-	public DefaultThread(Connection conn, Request request, InputStream in, OutputStream out, boolean isRequest) {
+	public TCPIPThread(Connection conn, Request request, InputStream in, OutputStream out, boolean isRequest) {
 		super();
 		this.conn = conn;
 		this.request = request;
@@ -66,7 +67,7 @@ public class DefaultThread extends Thread {
 		} catch (IOException e) {
 			// ignore
 		} finally {
-			request.fireChangedEvent();
+			//request.fireChangedEvent();
 			if (!isRequest)
 				conn.close();
 		}

@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.internet.monitor.core.IRequest;
+import org.eclipse.wst.internet.monitor.core.Request;
 import org.eclipse.wst.internet.monitor.ui.internal.ContextIds;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
 /**
@@ -34,7 +34,7 @@ public class HeaderViewer {
 
 	protected Label headerLabel;
 	protected Text headerText;
-	protected IRequest rr;
+	protected Request rr;
 	protected byte msg;
 	protected GridLayout layout;
 	protected GridData data;
@@ -106,7 +106,7 @@ public class HeaderViewer {
 		setDisplayHeader(false);
 	}*/
 	
-	public void setRequestResponse(IRequest reqresp) {
+	public void setRequestResponse(Request reqresp) {
 		rr = reqresp;
 		if (!hidden)
 			getView();
@@ -175,11 +175,11 @@ public class HeaderViewer {
 		String out = "";
 		if (rr != null) {
 			if (msg == REQUEST_HEADER) {
-				byte[] b = rr.getRequest(IRequest.TRANSPORT);
+				byte[] b = rr.getRequest(Request.TRANSPORT);
 				if (b != null)
 					out = MonitorUIPlugin.parse(b);
 			} else if (msg == RESPONSE_HEADER) {
-				byte[] b = rr.getResponse(IRequest.TRANSPORT);
+				byte[] b = rr.getResponse(Request.TRANSPORT);
 				if (b != null)
 					out = MonitorUIPlugin.parse(b);
 			}

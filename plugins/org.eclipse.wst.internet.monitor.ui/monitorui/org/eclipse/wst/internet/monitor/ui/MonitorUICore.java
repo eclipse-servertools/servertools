@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.internet.monitor.ui;
 
-import org.eclipse.wst.internet.monitor.core.IRequest;
+import org.eclipse.wst.internet.monitor.core.Request;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
 /**
  * Main class for access to the monitor UI.
@@ -27,7 +27,7 @@ public final class MonitorUICore {
 	 *
 	 * @return an array of requests
 	 */
-	public static IRequest[] getRequests() {
+	public static Request[] getRequests() {
 		return MonitorUIPlugin.getInstance().getRequests();
 	}
 }

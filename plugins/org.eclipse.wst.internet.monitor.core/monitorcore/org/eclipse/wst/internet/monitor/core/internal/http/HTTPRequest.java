@@ -10,9 +10,9 @@
  **********************************************************************/
 package org.eclipse.wst.internet.monitor.core.internal.http;
 
+import org.eclipse.wst.internet.monitor.core.Request;
 import org.eclipse.wst.internet.monitor.core.internal.IProtocolAdapter;
 import org.eclipse.wst.internet.monitor.core.internal.Monitor;
-import org.eclipse.wst.internet.monitor.core.internal.Request;
 /**
  * 
  */
@@ -76,5 +76,9 @@ public class HTTPRequest extends Request {
 		if (obj == null || !(obj instanceof byte[]))
 			return null;
 		return (byte[]) obj;
+	}
+	
+	protected void setName(String n) {
+		super.setName(n);
 	}
 }

@@ -34,6 +34,7 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wst.internet.monitor.core.*;
+import org.eclipse.wst.internet.monitor.core.internal.http.ResendHTTPRequest;
 import org.eclipse.wst.internet.monitor.ui.internal.*;
 /**
  * View of TCP/IP activity.
@@ -56,7 +57,7 @@ public class MonitorView extends ViewPart {
 	
 	public static MonitorView view;
 	
-	protected IRequest currentRequest = null;
+	protected Request currentRequest = null;
 	protected StructuredSelection currentSelection = null;
 
 	/**
@@ -67,10 +68,10 @@ public class MonitorView extends ViewPart {
 		view = this;
 	}
 
-	public void doRequestAdded(final IRequest rr) {
+	public void doRequestAdded(final Request rr) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				if (!(rr instanceof IResendRequest)) {
+				if (!(rr instanceof ResendHTTPRequest)) {
 				  Integer in = new Integer(rr.getLocalPort());
 				  treeViewer.add(MonitorTreeContentProvider.ROOT, in);
 				  treeViewer.add(in, rr); 
@@ -80,7 +81,7 @@ public class MonitorView extends ViewPart {
 		});
 	}
 
-	public void doRequestChanged(final IRequest rr) {
+	public void doRequestChanged(final Request rr) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				IStructuredSelection sel = (IStructuredSelection) treeViewer.getSelection();
@@ -104,7 +105,7 @@ public class MonitorView extends ViewPart {
 		});
 	}
 	
-	protected void setSelection(IRequest request) {
+	protected void setSelection(Request request) {
 		if (treeViewer != null)
 			treeViewer.setSelection(new StructuredSelection(request));
 	}
@@ -340,13 +341,13 @@ public class MonitorView extends ViewPart {
 			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection selection = event.getSelection();
 
-				IRequest req = null;
+				Request req = null;
 				if (selection != null && !selection.isEmpty()) {
 					StructuredSelection sel = (StructuredSelection) selection;
 					currentSelection = sel;
 					Object obj = sel.iterator().next();
-					if (obj instanceof IRequest)
-						req = (IRequest) obj;
+					if (obj instanceof Request)
+						req = (Request) obj;
 				}
 	
 				if (req != null) {
@@ -362,11 +363,11 @@ public class MonitorView extends ViewPart {
 	
 					// request information
 					requestLabel.setText(MonitorUIPlugin.getResource("%viewRequest", "localhost:" + req.getLocalPort()));
-					requestSizeLabel.setText(getSizeString(req.getRequest(IRequest.CONTENT), req.getRequest(IRequest.ALL)));
+					requestSizeLabel.setText(getSizeString(req.getRequest(Request.CONTENT), req.getRequest(Request.ALL)));
 	
 					// response information
 					responseLabel.setText(MonitorUIPlugin.getResource("%viewResponse", req.getRemoteHost() + ":" + req.getRemotePort()));
-					responseSizeLabel.setText(getSizeString(req.getResponse(IRequest.CONTENT), req.getResponse(IRequest.ALL)));
+					responseSizeLabel.setText(getSizeString(req.getResponse(Request.CONTENT), req.getResponse(Request.ALL)));
 
 					vm.setRequest(req);
 				} else {
@@ -496,7 +497,7 @@ public class MonitorView extends ViewPart {
 	/**
 	 * 
 	 */
-	public static void open(final IRequest request) {
+	public static void open(final Request request) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				try {

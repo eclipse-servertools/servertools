@@ -181,33 +181,28 @@ public class Monitor implements IMonitor {
 	 * @param rr
 	 * @param type
 	 */
-	protected void fireRequestEvent(IRequest rr, int type) {
+	protected void fireRequestEvent(Request rr, int type) {
 		int size = requestListeners.size();
-		IRequestListener[] xrl = MonitorPlugin.getInstance().getRequestListeners();
-		int size2 = xrl.length;
-		
-		IRequestListener[] rl = new IRequestListener[size + size2];
-		System.arraycopy(xrl, 0, rl, 0, size2);
-		for (int i = 0; i < size; i++)
-			rl[size2 + i] = (IRequestListener) requestListeners.get(i);
+		IRequestListener[] rl = new IRequestListener[size];
+		requestListeners.toArray(rl);
 
-		for (int i = 0; i < size + size2; i++) {
+		for (int i = 0; i < size; i++) {
 			IRequestListener listener = rl[i];
 			if (type == ADD)
-				listener.requestAdded(rr);
+				listener.requestAdded(this, rr);
 			else if (type == CHANGE)
-				listener.requestChanged(rr);
+				listener.requestChanged(this, rr);
 		}
 	}
 	
 	/**
 	 * Add a new request response pair.
 	 */
-	public void addRequest(IRequest rr) {
+	public void addRequest(Request rr) {
 		fireRequestEvent(rr, ADD);
 	}
 
-	public void requestChanged(IRequest rr) {
+	public void requestChanged(Request rr) {
 		fireRequestEvent(rr, CHANGE);
 	}
 	

@@ -14,8 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.wst.internet.monitor.core.IRequest;
-import org.eclipse.wst.internet.monitor.core.IResendRequest;
+import org.eclipse.wst.internet.monitor.core.Request;
+import org.eclipse.wst.internet.monitor.core.internal.MonitorManager;
+import org.eclipse.wst.internet.monitor.core.internal.http.ResendHTTPRequest;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
 /**
  * Content provider for the monitor server view.
@@ -71,22 +72,22 @@ public class MonitorTreeContentProvider implements ITreeContentProvider{
 		if (element instanceof Integer) {
 			Integer in = (Integer) element;
 			List list = new ArrayList();
-			IRequest[] requests = MonitorUIPlugin.getInstance().getRequests();
+			Request[] requests = MonitorUIPlugin.getInstance().getRequests();
 			if (requests != null) {
 				int size = requests.length;
 				for (int i = 0; i < size; i++) {
-					IRequest req = requests[i];
+					Request req = requests[i];
 					if ((req.getLocalPort() == in.intValue())
-							&& !(req instanceof IResendRequest))
+							&& !(req instanceof ResendHTTPRequest))
 						list.add(req);
 				}
 			}
 			if (sortByResponseTime)
 				sortByResponseTime(list);
 			return list.toArray();
-		} else if (element instanceof IRequest) {
-			IRequest req = (IRequest) element;
-			IResendRequest[] rr = req.getResendRequests();
+		} else if (element instanceof Request) {
+			Request req = (Request) element;
+			ResendHTTPRequest[] rr = MonitorManager.getInstance().getResendRequests(req);
 			List list = new ArrayList();
 			if (rr != null) {
 				int size = rr.length;
@@ -109,11 +110,11 @@ public class MonitorTreeContentProvider implements ITreeContentProvider{
 	public Object[] getElements(Object element) {
 		if (ROOT.equals(element)) {
 			List list = new ArrayList();
-			IRequest[] requests = MonitorUIPlugin.getInstance().getRequests();
+			Request[] requests = MonitorUIPlugin.getInstance().getRequests();
 			if (requests != null) {
 				int size = requests.length;
 				for (int i = 0; i < size; i++) {
-					IRequest req = requests[i];
+					Request req = requests[i];
 					Integer in = new Integer(req.getLocalPort());
 					if (!list.contains(in))
 						list.add(in);
@@ -134,10 +135,10 @@ public class MonitorTreeContentProvider implements ITreeContentProvider{
 		if (element != null) {
 			if (element instanceof Integer)
 				return ROOT;
-			IRequest call = (IRequest) element;
-			if (call instanceof IResendRequest) {
-				IResendRequest callResend = (IResendRequest) call;
-				IRequest parent = callResend.getOriginalRequest();
+			Request call = (Request) element;
+			if (call instanceof ResendHTTPRequest) {
+				ResendHTTPRequest callResend = (ResendHTTPRequest) call;
+				Request parent = callResend.getOriginalRequest();
 				if (parent != null)
 					return parent;
 			}
@@ -159,9 +160,9 @@ public class MonitorTreeContentProvider implements ITreeContentProvider{
 	public boolean hasChildren(Object element) {
 		if (element instanceof Integer)
 			return true;
-		if (element instanceof IRequest) {
-			return ((IRequest) element).getResendRequests().length > 0;
-		}
+		if (element instanceof Request)
+			return MonitorManager.getInstance().getResendRequests((Request) element).length > 0; 
+		
 		return false;
 	}
 
@@ -188,8 +189,8 @@ public class MonitorTreeContentProvider implements ITreeContentProvider{
 		int size = list.size();
 		for (int i = 0; i < size - 1; i++) {
 			for (int j = i + 1; j < size; j++) {
-				IRequest c1 = (IRequest) list.get(i);
-				IRequest c2 = (IRequest) list.get(j);
+				Request c1 = (Request) list.get(i);
+				Request c2 = (Request) list.get(j);
 				if (c1.getResponseTime() < c2.getResponseTime()) {
 					list.set(i, c2);
 					list.set(j, c1);

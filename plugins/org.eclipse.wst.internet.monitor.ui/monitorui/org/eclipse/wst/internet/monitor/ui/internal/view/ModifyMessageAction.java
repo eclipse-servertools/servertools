@@ -16,9 +16,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.wst.internet.monitor.core.IRequest;
-import org.eclipse.wst.internet.monitor.core.IResendRequest;
-import org.eclipse.wst.internet.monitor.core.MonitorCore;
+import org.eclipse.wst.internet.monitor.core.Request;
+import org.eclipse.wst.internet.monitor.core.internal.MonitorManager;
+import org.eclipse.wst.internet.monitor.core.internal.http.ResendHTTPRequest;
 /**
  * Modify the selected message. Creates a new resendrequest and adds it
  * to the tree.
@@ -39,10 +39,10 @@ public class ModifyMessageAction implements IViewActionDelegate{
 	public void run(IAction action) {
 		if (selection != null) {
 			Object element = ((StructuredSelection) selection).getFirstElement();
-			if (element != null && element instanceof IRequest) {
-				IRequest req = (IRequest) element;
-				IResendRequest newReq = MonitorCore.createResendRequest(req);
-				req.addResendRequest(newReq);
+			if (element != null && element instanceof Request) {
+				Request req = (Request) element;
+				ResendHTTPRequest newReq = MonitorManager.createResendRequest(req);
+				MonitorManager.getInstance().addResendRequest(req, newReq);
 				TreeViewer treeViewer = MonitorView.view.treeViewer;
 				treeViewer.add(req, newReq);
 				treeViewer.setSelection(new StructuredSelection(newReq), false);

@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.wst.internet.monitor.core.IContentFilter;
-import org.eclipse.wst.internet.monitor.core.IRequest;
+import org.eclipse.wst.internet.monitor.core.Request;
 import org.eclipse.wst.internet.monitor.ui.ContentViewer;
 import org.eclipse.wst.internet.monitor.ui.internal.viewers.HeaderViewer;
 /**
@@ -38,7 +38,7 @@ public interface IViewerManager {
 	 * @param rr org.eclipse.tcpip.monitor.internal.RequestResponse
 	 * @param parent org.eclipse.swt.widgets.Composite
 	 */
-	public void setRequest(IRequest rr);
+	public void setRequest(Request rr);
 	
 	/**
 	 * Returns an array of the available TCP/IP request viewer ids

@@ -15,8 +15,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.wst.internet.monitor.core.IRequest;
-import org.eclipse.wst.internet.monitor.core.IResendRequest;
+import org.eclipse.wst.internet.monitor.core.Request;
+import org.eclipse.wst.internet.monitor.core.internal.http.ResendHTTPRequest;
 import org.eclipse.wst.internet.monitor.ui.ContentViewer;
 import org.eclipse.wst.internet.monitor.ui.internal.viewers.HeaderViewer;
 /**
@@ -38,14 +38,14 @@ public class SendModifiedMessageAction implements IViewActionDelegate{
 	public void run(IAction action) {
 		if (selection != null) {
 			Object element = ((StructuredSelection) selection).getFirstElement();
-			if (element != null && element instanceof IResendRequest) {
-				IResendRequest req = (IResendRequest) element;
+			if (element != null && element instanceof ResendHTTPRequest) {
+				ResendHTTPRequest req = (ResendHTTPRequest) element;
 				ContentViewer curViewer = MonitorView.view.vm.getCurrentRequestViewer();
 				HeaderViewer curHeaderViewer = MonitorView.view.vm.getCurrentRequestHeaderViewer();
-				req.setRequest(curViewer.getContent(), IRequest.CONTENT);
+				req.setRequest(curViewer.getContent(), Request.CONTENT);
 				
 				if (curHeaderViewer != null)
-					req.setRequest(curHeaderViewer.getContent(), IRequest.TRANSPORT);
+					req.setRequest(curHeaderViewer.getContent(), Request.TRANSPORT);
 
 				req.sendRequest();
 			}

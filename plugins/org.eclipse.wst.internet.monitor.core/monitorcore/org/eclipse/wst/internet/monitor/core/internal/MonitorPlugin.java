@@ -14,7 +14,7 @@ import java.util.*;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.wst.internet.monitor.core.IContentFilter;
-import org.eclipse.wst.internet.monitor.core.IRequestListener;
+import org.eclipse.wst.internet.monitor.core.IStartup;
 /**
  * The monitor core plugin.
  */
@@ -25,7 +25,7 @@ public class MonitorPlugin extends Plugin {
 	
 	protected Map protocolAdapters;
 	protected Map contentFilters;
-	protected IRequestListener[] requestListeners;
+	protected boolean startupsLoaded;
 
 	/**
 	 * MonitorPlugin constructor comment.
@@ -116,12 +116,6 @@ public class MonitorPlugin extends Plugin {
 	public IContentFilter findContentFilter(String id) {
 		return (IContentFilter) contentFilters.get(id);
 	}
-	
-	public IRequestListener[] getRequestListeners() {
-		if (requestListeners == null)
-			loadRequestListeners();
-		return requestListeners;
-	}
 
 	protected synchronized void loadProtocolAdapters() {
 		if (protocolAdapters != null)
@@ -155,29 +149,24 @@ public class MonitorPlugin extends Plugin {
 		}
 	}
 	
-	protected synchronized void loadRequestListeners() {
-		if (requestListeners != null)
+	protected synchronized void loadStartups() {
+		if (startupsLoaded)
 			return;
-		Trace.trace(Trace.CONFIG, "Loading request listeners"); 
+		
+		Trace.trace(Trace.CONFIG, "Loading startups"); 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(MonitorPlugin.PLUGIN_ID, "requestListeners");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(MonitorPlugin.PLUGIN_ID, "startups");
 
 		int size = cf.length;
-		List list = new ArrayList();
 		for (int i = 0; i < size; i++) {
 			String id = cf[i].getAttribute("id");
-			Trace.trace(Trace.CONFIG, "Loading request listener: " + id);
+			Trace.trace(Trace.CONFIG, "Loading startup: " + id);
 			try {
-				IRequestListener rl = (IRequestListener) cf[i].createExecutableExtension("class");
-				list.add(rl);
+				IStartup startup = (IStartup) cf[i].createExecutableExtension("class");
+				startup.startup();
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Could not create request listener: " + id, e);
-				return;
+				Trace.trace(Trace.SEVERE, "Could not create startup: " + id, e);
 			}
 		}
-		
-		size = list.size();
-		requestListeners = new IRequestListener[size];
-		list.toArray(requestListeners);
 	}
 }

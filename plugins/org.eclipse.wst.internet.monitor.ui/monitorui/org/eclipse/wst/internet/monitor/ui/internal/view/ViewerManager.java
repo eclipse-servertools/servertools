@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.core.runtime.*;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.internet.monitor.core.*;
+import org.eclipse.wst.internet.monitor.core.internal.http.ResendHTTPRequest;
 import org.eclipse.wst.internet.monitor.ui.ContentViewer;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
 import org.eclipse.wst.internet.monitor.ui.internal.Trace;
@@ -41,7 +42,7 @@ public class ViewerManager implements IViewerManager{
 
 	protected List viewers;
 
-	protected IRequest request;
+	protected Request request;
 
 	protected List filters = new ArrayList();
 
@@ -80,7 +81,7 @@ public class ViewerManager implements IViewerManager{
 		MonitorUIPlugin.setShowHeaderPreference(b);
 		if (b) {
 			reqHeader.setEditable(false);
-			if (request instanceof IResendRequest && request.getResponse(IRequest.TRANSPORT) == null) {
+			if (request instanceof ResendHTTPRequest && request.getResponse(Request.TRANSPORT) == null) {
 				reqHeader.setEditable(true);
 			}
 		}
@@ -93,36 +94,36 @@ public class ViewerManager implements IViewerManager{
 		return displayHeaderInf;
 	}
 
-	public void setRequest(IRequest rr) {
+	public void setRequest(Request rr) {
 		// maintain the state of the request and request header if they've been modified.
-		if (request instanceof IResendRequest && request.getResponse(IRequest.ALL) == null) {
-			IResendRequest resRequest = (IResendRequest) request;
+		if (request instanceof ResendHTTPRequest && request.getResponse(Request.ALL) == null) {
+			ResendHTTPRequest resRequest = (ResendHTTPRequest) request;
 			//EditableContentViewer editViewer = (ContentViewer) reqViewer;
 			byte[] content = reqViewer.getContent();
-			byte[] b = resRequest.getRequest(IRequest.CONTENT);
+			byte[] b = resRequest.getRequest(Request.CONTENT);
 			if (content != null && b != null && !MonitorUIPlugin.parse(b).equals(MonitorUIPlugin.parse(content))) {
-				resRequest.setRequest(content, IRequest.CONTENT);
+				resRequest.setRequest(content, Request.CONTENT);
 			}
 			byte[] header = reqHeader.getContent();
-			b = resRequest.getRequest(IRequest.TRANSPORT);
+			b = resRequest.getRequest(Request.TRANSPORT);
 			if (header != null && b != null && !MonitorUIPlugin.parse(b).equals(MonitorUIPlugin.parse(header))) {
-				resRequest.setRequest(header, IRequest.TRANSPORT);
+				resRequest.setRequest(header, Request.TRANSPORT);
 			}
 		}
 		reqHeader.setRequestResponse(rr);
 		respHeader.setRequestResponse(rr);
 		byte[] b = null;
 		if (rr != null)
-			b = filter(rr.getRequest(IRequest.CONTENT));
+			b = filter(rr.getRequest(Request.CONTENT));
 		reqViewer.setContent(b);
 		b = null;
 		if (rr != null)
-			b = filter(rr.getResponse(IRequest.CONTENT));
+			b = filter(rr.getResponse(Request.CONTENT));
 		respViewer.setContent(b);
 		request = rr;
 		// Set the editor to editable if the request hasn't  been sent and the
 		// editor can be set as editable.
-		if (request instanceof IResendRequest && request.getResponse(IRequest.ALL) == null) {
+		if (request instanceof ResendHTTPRequest && request.getResponse(Request.ALL) == null) {
 			if (displayHeaderInf) {
 				reqHeader.setEditable(true);
 			}
@@ -206,10 +207,10 @@ public class ViewerManager implements IViewerManager{
 		//reqViewer.setRequestResponse(rr);
 		byte[] b = null;
 		if (request != null) {
-			b = filter(request.getRequest(IRequest.CONTENT));
+			b = filter(request.getRequest(Request.CONTENT));
 			// set the editor to editable if the request hasn't been sent and the
 			// editor can be set as editable
-			if (request instanceof IResendRequest && request.getResponse(IRequest.TRANSPORT) == null) {
+			if (request instanceof ResendHTTPRequest && request.getResponse(Request.TRANSPORT) == null) {
 				reqViewer.setEditable(true);
 			} else {
 				reqViewer.setEditable(false);
@@ -233,7 +234,7 @@ public class ViewerManager implements IViewerManager{
 		//respViewer.setRequestResponse(rr);
 		byte[] b = null;
 		if (request != null)
-			b = filter(request.getResponse(IRequest.CONTENT));
+			b = filter(request.getResponse(Request.CONTENT));
 		respViewer.setContent(b);
 		respVComp.layout(true);
 	}

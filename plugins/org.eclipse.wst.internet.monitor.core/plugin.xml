@@ -19,7 +19,7 @@
 
 <extension-point name="%extensionPointProtocolAdapters" id="protocolAdapters" schema="schema/protocolAdapters.exsd"/>
 <extension-point name="%extensionPointContentFilters" id="contentFilters" schema="schema/contentFilters.exsd"/>
-<extension-point name="%extensionPointRequestListeners" id="requestListeners" schema="schema/requestListeners.exsd"/>
+<extension-point name="%extensionPointStartup" id="startups" schema="schema/startups.exsd"/>
 
 <extension point="org.eclipse.wst.internet.monitor.core.protocolAdapters">
   <protocolAdapter

@@ -14,7 +14,7 @@ import java.io.IOException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.wst.internet.monitor.core.ContentFilterDelegate;
 import org.eclipse.wst.internet.monitor.core.IContentFilter;
-import org.eclipse.wst.internet.monitor.core.IRequest;
+import org.eclipse.wst.internet.monitor.core.Request;
 /**
  * 
  */
@@ -31,7 +31,7 @@ public class ContentFilter implements IContentFilter {
 	}
 	
 	/*
-	 * [issue: I couldn't find any place that is using the order]
+	 * Returns the relative order for this filter.
 	 */ 
 	public int getOrder() {
 		try {
@@ -45,7 +45,7 @@ public class ContentFilter implements IContentFilter {
 		return element.getAttribute("name");
 	}
 
-	public byte[] filter(IRequest request, boolean isRequest, byte[] content) throws IOException {
+	public byte[] filter(Request request, boolean isRequest, byte[] content) throws IOException {
 		if (delegate == null) {
 			try {
 				delegate = (ContentFilterDelegate) element.createExecutableExtension("class");

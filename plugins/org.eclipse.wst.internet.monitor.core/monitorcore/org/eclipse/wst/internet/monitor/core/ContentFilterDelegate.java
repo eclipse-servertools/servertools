@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,6 @@
 package org.eclipse.wst.internet.monitor.core;
 
 import java.io.IOException;
-
 /**
  * A content filter that filters contents from the monitor traffic on a request.
  * <p>
@@ -42,5 +41,5 @@ public abstract class ContentFilterDelegate {
 	 * @return the filtered content
 	 * @throws IOException if there is an error while parsing or filtering the content
 	 */
-	public abstract byte[] filter(IRequest request, boolean isRequest, byte[] content) throws IOException;
+	public abstract byte[] filter(Request request, boolean isRequest, byte[] content) throws IOException;
 }

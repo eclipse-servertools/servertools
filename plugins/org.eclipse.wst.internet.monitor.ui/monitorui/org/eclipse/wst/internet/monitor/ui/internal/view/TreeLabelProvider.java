@@ -13,8 +13,8 @@ package org.eclipse.wst.internet.monitor.ui.internal.view;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.internet.monitor.core.IRequest;
-import org.eclipse.wst.internet.monitor.core.IResendRequest;
+import org.eclipse.wst.internet.monitor.core.Request;
+import org.eclipse.wst.internet.monitor.core.internal.http.ResendHTTPRequest;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
 /**
  * A label provider for the monitor server view.
@@ -46,9 +46,9 @@ public class TreeLabelProvider implements ILabelProvider {
 	 * in the given viewer.
 	 */
 	public Image getImage(Object element) {
-		if (element instanceof IRequest) {
-			if (element instanceof IResendRequest) {
-				if (!((IResendRequest) element).hasBeenSent())
+		if (element instanceof Request) {
+			if (element instanceof ResendHTTPRequest) {
+				if (!((ResendHTTPRequest) element).hasBeenSent())
 					return MonitorUIPlugin.getImage(MonitorUIPlugin.IMG_RESEND_REQUEST_RESPONSE);
 			}
 			return MonitorUIPlugin.getImage(MonitorUIPlugin.IMG_REQUEST_RESPONSE);
@@ -61,9 +61,9 @@ public class TreeLabelProvider implements ILabelProvider {
 	 * in the given viewer.
 	 */
 	public String getText(Object element) {
-		if (element instanceof IRequest) {
-			IRequest call = (IRequest) element;
-			return call.getLabel();
+		if (element instanceof Request) {
+			Request call = (Request) element;
+			return call.getName();
 		} else if (element instanceof Integer) {
 			Integer in = (Integer) element;
 			return "localhost:" + in.intValue();

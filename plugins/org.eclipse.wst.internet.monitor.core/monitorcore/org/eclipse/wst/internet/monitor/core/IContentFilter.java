@@ -39,13 +39,13 @@ public interface IContentFilter {
 	public String getName();
 
 	/**
-	 * Returns the relative order for this filter.
+	 * Returns the relative order of this filter.
 	 * Each filter has a relative order that allows them to be applied in the correct
 	 * order relative to each other. Lower orders are processed first.
 	 *
 	 * @return the relative order
 	 */
-	public int getOrder();
+	//public int getOrder();
 
 	/**
 	 * Filter the given content from the given request. The content that has been filtered out will 
@@ -58,5 +58,5 @@ public interface IContentFilter {
 	 * @return the filtered content
 	 * @throws IOException if there is an error while parsing or filtering the content
 	 */
-	public byte[] filter(IRequest request, boolean isRequest, byte[] content) throws IOException;
+	public byte[] filter(Request request, boolean isRequest, byte[] content) throws IOException;
 }

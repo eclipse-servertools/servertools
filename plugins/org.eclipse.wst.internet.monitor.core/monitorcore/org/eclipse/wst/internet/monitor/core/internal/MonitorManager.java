@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.internet.monitor.core.*;
+import org.eclipse.wst.internet.monitor.core.internal.http.ResendHTTPRequest;
 /**
  * 
  */
@@ -39,11 +40,15 @@ public class MonitorManager {
 	private Preferences.IPropertyChangeListener pcl;
 	protected boolean ignorePreferenceChanges = false;
 	
+	protected Map resendMap = new HashMap();
+	
 	protected static MonitorManager instance;
 	
 	public static MonitorManager getInstance() {
-		if (instance == null)
+		if (instance == null) {
+			MonitorPlugin.getInstance().loadStartups();
 			instance = new MonitorManager();
+		}
 		return instance;
 	}
 	
@@ -213,5 +218,56 @@ public class MonitorManager {
 			Trace.trace(Trace.SEVERE, "Could not save browsers", e);
 		}
 		ignorePreferenceChanges = false;
+	}
+	
+	/**
+	 * Creates a new resend request from the given request.
+	 * 
+	 * @param request the request that is to be resent; may not be <code>null</code>
+	 * @return a new resend request
+	 */
+	public static ResendHTTPRequest createResendRequest(Request request) {
+		if (request == null)
+			throw new IllegalArgumentException();
+		return new ResendHTTPRequest((Monitor)request.getMonitor(), request);
+	}
+
+	/**
+	 * Adds a resend request to this request.
+	 * 
+	 * @param request the resend request to add
+	 */
+	public void addResendRequest(Request request, ResendHTTPRequest resendReq) {
+		if (request == null || resendReq == null)
+			return;
+		
+		List list = null;
+		try {
+			list = (List) resendMap.get(request);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		if (list == null) {
+			list = new ArrayList();
+			resendMap.put(request, list);
+		}
+		list.add(resendReq);
+	}
+
+	/**
+	 * Returns an array of resend requests based on this request. 
+	 * 
+	 * @return the array of resend requests based on this request
+	 */
+	public ResendHTTPRequest[] getResendRequests(Request request) {
+		try {
+			List list = (List) resendMap.get(request);
+			ResendHTTPRequest[] rr = new ResendHTTPRequest[list.size()];
+			list.toArray(rr);
+			return rr;
+		} catch (Exception e) {
+			return new ResendHTTPRequest[0];
+		}
 	}
 }

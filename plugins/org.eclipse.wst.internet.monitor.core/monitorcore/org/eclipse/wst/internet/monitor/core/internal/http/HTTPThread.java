@@ -11,9 +11,8 @@
 package org.eclipse.wst.internet.monitor.core.internal.http;
 
 import java.io.*;
-import org.eclipse.wst.internet.monitor.core.IRequest;
+import org.eclipse.wst.internet.monitor.core.Request;
 import org.eclipse.wst.internet.monitor.core.internal.Connection;
-import org.eclipse.wst.internet.monitor.core.internal.Request;
 import org.eclipse.wst.internet.monitor.core.internal.Trace;
 /**
  * Monitor server I/O thread.
@@ -369,8 +368,8 @@ Host: localhost:8081
 
 		outputBytes(b, false);
 
-		IRequest rr = conn.getRequestResponse(isRequest);
-		Trace.trace(Trace.PARSING, "Setting header length: " + rr.getRequest(IRequest.ALL).length);
+		Request rr = conn.getRequestResponse(isRequest);
+		Trace.trace(Trace.PARSING, "Setting header length: " + rr.getRequest(Request.ALL).length);
 		
 		setHTTPHeader(rr);
 	}
@@ -447,8 +446,8 @@ Host: localhost:8081
 					if (isRequest && keepAlive)
 						waitForResponse();
 					
-					Request r = (Request) conn.getRequestResponse(true);
-					r.fireChangedEvent();
+					//Request r = conn.getRequestResponse(true);
+					//r.fireChangedEvent();
 
 					Trace.trace(Trace.PARSING, "Done HTTP request for " + this + " " + keepAlive);
 					if (!isRequest && !request.keepAlive) {
@@ -585,14 +584,14 @@ Host: localhost:8081
 		Trace.trace(Trace.PARSING, "Done notifying request " + this);
 	}
 	
-	protected void setHTTPHeader(IRequest rr) {
+	protected void setHTTPHeader(Request rr) {
 		if (isRequest) {
-			byte[] b = rr.getRequest(IRequest.ALL);
+			byte[] b = rr.getRequest(Request.ALL);
 			byte[] h = new byte[b.length];
 			System.arraycopy(b, 0, h, 0, b.length);
 			rr.setProperty(HTTPRequest.HTTP_REQUEST_HEADER, h);
 		} else {
-			byte[] b = rr.getResponse(IRequest.ALL);
+			byte[] b = rr.getResponse(Request.ALL);
 			byte[] h = new byte[b.length];
 			System.arraycopy(b, 0, h, 0, b.length);
 			rr.setProperty(HTTPRequest.HTTP_RESPONSE_HEADER, h);
@@ -600,7 +599,7 @@ Host: localhost:8081
 	}
 	
 	protected void setHTTPBody(byte[] b) {
-		IRequest rr = conn.getRequestResponse(isRequest);
+		Request rr = conn.getRequestResponse(isRequest);
 		if (isRequest)
 			rr.setProperty(HTTPRequest.HTTP_REQUEST_BODY, b);
 		else

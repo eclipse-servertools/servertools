@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,20 +29,6 @@ import org.eclipse.swt.widgets.Composite;
  * Is it just that the UI provides a list of available
  * views for the user to make a manual selection from, regardless
  * of the actual content of the message traffic?]
- * </p>
- * <p>
- * [issue: Unless you have clear and pressing requirements for
- * pluggable content viewers (i.e., besides the ones that you
- * would be able to build in), I suggest you make 
- * the <code>contentViewers</code> extension point and this
- * class internal. You can always expose it later.]
- * </p>
- * <p>
- * [issue: Every content viewer should have getEditable,
- * setEditable, and getContent.
- * Particular content viewer implementation must implement
- * getContent, and decide whether instances are considered
- * editable.]
  * </p>
  * 
  * @since 1.0
@@ -75,7 +61,7 @@ public abstract class ContentViewer {
 	 * </p>
 	 * <p>
 	 * [issue: Since this is for displaying request-reponse messages,
-	 * why not pass an IRequest? The problem as it stands now is that
+	 * why not pass an Request? The problem as it stands now is that
 	 * it is unclear from specs how content viewers relate to anything
 	 * else having to do with the monitor.]
 	 * </p>
@@ -86,18 +72,25 @@ public abstract class ContentViewer {
 	public abstract void setContent(byte[] b);
 
 	/**
+	 * Get the content from the viewer. This is usually only interesting if the
+	 * content has changed.
+	 * <p>
+	 * The default implementation of this method does nothing and
+	 * returns null. Subclasses should override this method.
+	 * </p>
+	 * 
+	 * @return the content from the viewer, or <code>null</code> if none
+	 */
+	public abstract byte[] getContent();
+
+	/**
 	 * Disposes this viewer and any underlying resources such as a composite.
+	 * This method will be called whenever the user switches to use another
+	 * viewer or the monitor view is closed. The parent composite should not
+	 * be disposed since it may be used to display another viewer. 
 	 * <p>
 	 * The default implementation of this method does nothing.
 	 * Subclasses should override this method to provide specialized cleanup.
-	 * </p>
-	 * <p>
-	 * [issue: The spec needs to be clarified as to who's expected to
-	 * do what. It's not clear when this is called. In general, the implementations
-	 * seem to assume that they can dispose of the parent
-	 * composite. This seems backwards, and wrong. I don't think
-	 * the viewer should assume that it's the only child of the
-	 * parent composite (even if it is).]
 	 * </p>
 	 */
 	public void dispose() {
@@ -121,14 +114,18 @@ public abstract class ContentViewer {
 	}
 
 	/**
-	 * Get the content from the viewer. This is usually only interesting if the
-	 * content has changed.
+	 * Returns whether the current viewer is editable, that is, the user is able to
+	 * edit the content.
 	 * <p>
-	 * The default implementation of this method does nothing and
-	 * returns null. Subclasses should override this method.
+	 * The default implementation of this method does nothing.
+	 * Subclasses should override this method to allows instances
+	 * to be made editable.
 	 * </p>
 	 * 
-	 * @return the content from the viewer, or <code>null</code> if none
+	 * @return <code>true</code> if true the content can be edited,
+	 *    and <code>false</code> otherwise
 	 */
-	public abstract byte[] getContent();
+	public boolean getEditable() {
+		return false;
+	}
 }

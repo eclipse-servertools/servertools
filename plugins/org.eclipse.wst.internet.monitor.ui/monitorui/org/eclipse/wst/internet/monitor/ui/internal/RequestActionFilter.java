@@ -11,7 +11,7 @@
 package org.eclipse.wst.internet.monitor.ui.internal;
 
 import org.eclipse.ui.IActionFilter;
-import org.eclipse.wst.internet.monitor.core.IRequest;
+import org.eclipse.wst.internet.monitor.core.Request;
 /**
  * An action filter for requests.
  */
@@ -22,7 +22,7 @@ public class RequestActionFilter implements IActionFilter{
 	 * @see IActionFilter#testAttribute(Object, String, String)
 	 */
 	public boolean testAttribute(Object target, String name, String value) {
-		IRequest request = (IRequest) target;
+		Request request = (Request) target;
 		if (name.equals(REQUEST_SENT)) {
 			if (value.equals("true"))
 				return request.getResponseTime() != -1;

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,6 @@ import java.util.List;
 
 import org.eclipse.wst.internet.monitor.core.internal.MonitorManager;
 import org.eclipse.wst.internet.monitor.core.internal.MonitorPlugin;
-import org.eclipse.wst.internet.monitor.core.internal.Request;
-import org.eclipse.wst.internet.monitor.core.internal.http.ResendHTTPRequest;
 /**
  * Main class for creating new monitors and locating existing ones. The methods on
  * this class are thread safe.
@@ -125,23 +123,5 @@ public final class MonitorCore {
 		if (listener == null)
 			throw new IllegalArgumentException();
 		manager.removeMonitorListener(listener);
-	}
-
-	/**
-	 * Creates a new resend request from the given request.
-	 * <p>
-	 * [issue: This method seems to be HTTP-specific. It would be hard to
-	 * specify what it would mean for other protocols. It also violates the
-	 * premise that the monitor merely monitors traffic between client and
-	 * server. This method should be deleted.]
-	 * </p>
-	 * 
-	 * @param request the request that is to be resent; may not be <code>null</code>
-	 * @return a new resend request
-	 */
-	public static IResendRequest createResendRequest(IRequest request) {
-		if (request == null)
-			throw new IllegalArgumentException();
-		return new ResendHTTPRequest(((Request)request).getMonitor(), request);
 	}
 }

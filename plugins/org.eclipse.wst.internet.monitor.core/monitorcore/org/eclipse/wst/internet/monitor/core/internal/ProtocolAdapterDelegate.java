@@ -13,14 +13,14 @@ package org.eclipse.wst.internet.monitor.core.internal;
 import java.io.IOException;
 import java.net.Socket;
 import org.eclipse.wst.internet.monitor.core.IMonitor;
-import org.eclipse.wst.internet.monitor.core.IRequest;
+import org.eclipse.wst.internet.monitor.core.Request;
 
 /**
  * Abstract base class for protocol adapter delegates, which provide the
  * implementation behind a particular protocol adapter.
  * A protocol adapter watches the message traffic passing between client and
  * server; it parses the messages and reports them in the form of 
- * {@link IRequest} objects.
+ * {@link Request} objects.
  * <p>
  * This abstract class is intended to be subclassed only by clients
  * to extend the <code>protocolAdapters</code> extension point.
@@ -28,14 +28,12 @@ import org.eclipse.wst.internet.monitor.core.IRequest;
  * automatically to instantiate the delegate when required. 
  * </p>
  * <p>
- * [issue: As implemented, there is one delegate instance per known protocol
- * adapter. This means that if there are multiple monitor instances using the
- * same protocol adapter (e.g., between different client-server pairs), then
- * the single delegate instance has to juggle multiple monitor instances.
- * This makes sense when the delegate instance does not require any instance
- * state, which I'm not sure is the case here. It might be much better to spec
- * one delegate instance per monitor instance, which would make it easy for
- * each delegate instance to remember instance state.]
+ * There is only one delegate created per protocol, and this delegate must
+ * be able to handle multiple monitor instances. This means that the delegate
+ * typically will not have instance state, or must synchronize and keep the
+ * state separate.
+ * </p>
+ * <p>
  * [issue: The HTTP and TCP/IP delegate implementations create threads which
  * shuffle info between sockets. If the monitor is changed or deleted, how do
  * these threads go away? Methinks that delegates in general should be forced
@@ -76,7 +74,7 @@ public abstract class ProtocolAdapterDelegate {
 	 * @param in the input socket of the monitor client
 	 * @param out the output socket of the monitor server
 	 * @throws IOException if an exception occur when opening the streams of the
-	 * input or output sockets
+	 *    input or output sockets
 	 */
 	public abstract void connect(IMonitor monitor, Socket in, Socket out) throws IOException;
 }

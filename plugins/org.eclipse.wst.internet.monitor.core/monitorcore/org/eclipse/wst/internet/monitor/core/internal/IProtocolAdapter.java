@@ -14,7 +14,8 @@ import org.eclipse.wst.internet.monitor.core.IMonitorWorkingCopy;
 import org.eclipse.wst.internet.monitor.core.MonitorCore;
 /**
  * A protocol adapter enables a monitor to support a particular network
- * protocol used to communicate between a client and server.
+ * protocol used to communicate between a client and server. All supported
+ * protocols will be based on TCP/IP.
  * <p>
  * Protocol adapters are registered via the <code>protocolAdapaters</code>
  * extension point in the <code>org.eclipse.wst.internet.monitor.core</code>
@@ -24,10 +25,6 @@ import org.eclipse.wst.internet.monitor.core.MonitorCore;
  * {@linkplain #TCPIP_PROTOCOL_ID TCP/IP} are built-in.
  * <p>
  * This interface is not intended to be implemented by clients.
- * </p>
- * <p>
- * [issue: Would it be fair to say that we're only talking about other protocols
- * that are based on TCP/IP? IRequest does seem pretty TCP/IP specific.]
  * </p>
  * 
  * @see IMonitorWorkingCopy#setProtocolAdapter(IProtocolAdapter)

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-import org.eclipse.wst.internet.monitor.core.IRequest;
-import org.eclipse.wst.internet.monitor.core.IResendRequest;
+import org.eclipse.wst.internet.monitor.core.Request;
 import org.eclipse.wst.internet.monitor.core.internal.Connection;
 import org.eclipse.wst.internet.monitor.core.internal.Monitor;
 import org.eclipse.wst.internet.monitor.core.internal.SocketWrapper;
@@ -23,28 +22,28 @@ import org.eclipse.wst.internet.monitor.core.internal.SocketWrapper;
  * Wraps an existing request to create an HTTP request that can be sent. The
  * response is ignored. Only the request is important in this case.
  */
-public class ResendHTTPRequest extends HTTPRequest implements IResendRequest {
+public class ResendHTTPRequest extends HTTPRequest {
 	private boolean sent = false;
 
 	private byte[] header;
 
 	private byte[] content;
 
-	private IRequest originalRequest = null;
+	private Request originalRequest = null;
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param req the request that is to be resent.
 	 */
-	public ResendHTTPRequest(Monitor monitor, IRequest req) {
+	public ResendHTTPRequest(Monitor monitor, Request req) {
 		super(monitor, req.getLocalPort(), req.getRemoteHost(), req.getRemotePort());
 		setProperty(HTTP_REQUEST_HEADER, req.getProperty(HTTP_REQUEST_HEADER));
 		setProperty(HTTP_REQUEST_BODY, req.getProperty(HTTP_REQUEST_BODY));
 		header = req.getRequest(TRANSPORT);
 		content = req.getRequest(CONTENT);
 		request = req.getRequest(ALL);
-		label = req.getLabel();
+		name = req.getName();
 		this.originalRequest = req;
 	}
 
@@ -53,24 +52,21 @@ public class ResendHTTPRequest extends HTTPRequest implements IResendRequest {
 	 */
 	public void sendRequest() {
 		try {
-			Socket inSocket = new SocketWrapper(new ByteArrayInputStream(
-					request));
+			Socket inSocket = new SocketWrapper(new ByteArrayInputStream(request));
 			Socket outSocket = new Socket(remoteHost, remotePort);
 			//Connection conn = new Connection(inSocket, outSocket);
-			//DefaultThread requestThread = new DefaultThread(conn, this, in,
+			//TCPIPThread requestThread = new TCPIPThread(conn, this, in,
 			// outSocket.getOutputStream(), true);
 			//requestThread.start();
-			//new DefaultThread(conn, this, outSocket.getInputStream(),
+			//new TCPIPThread(conn, this, outSocket.getInputStream(),
 			// inSocket.getOutputStream(), false).start();
 			Connection conn2 = new Connection(inSocket, outSocket);
 			ResendHTTPConnection conn = new ResendHTTPConnection(this);
 
-			HTTPThread request2 = new HTTPThread(conn2, inSocket
-					.getInputStream(), outSocket.getOutputStream(), conn, true,
-					remoteHost, remotePort);
-			HTTPThread response2 = new HTTPThread(conn2, outSocket
-					.getInputStream(), inSocket.getOutputStream(), conn, false,
-					"localhost", localPort, request2);
+			HTTPThread request2 = new HTTPThread(conn2, inSocket.getInputStream(),
+					outSocket.getOutputStream(), conn, true, remoteHost, remotePort);
+			HTTPThread response2 = new HTTPThread(conn2, outSocket.getInputStream(),
+					inSocket.getOutputStream(), conn, false, "localhost", localPort, request2);
 			request2.start();
 			response2.start();
 		} catch (IOException e) {
@@ -80,7 +76,7 @@ public class ResendHTTPRequest extends HTTPRequest implements IResendRequest {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.core.internal.Request#addToRequest(byte[])
+	 * @see org.eclipse.wst.internet.monitor.core.internal.Request2#addToRequest(byte[])
 	 */
 	public void addToRequest(byte[] addRequest) {
 		// Don't want to add to the request as we already have the request.
@@ -129,7 +125,7 @@ public class ResendHTTPRequest extends HTTPRequest implements IResendRequest {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.internet.monitor.core.IResendRequest#getOriginalRequest()
 	 */
-	public IRequest getOriginalRequest() {
+	public Request getOriginalRequest() {
 		return originalRequest;
 	}
 }

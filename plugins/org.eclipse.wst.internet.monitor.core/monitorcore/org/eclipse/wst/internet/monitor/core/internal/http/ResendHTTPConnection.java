@@ -10,14 +10,14 @@
  **********************************************************************/
 package org.eclipse.wst.internet.monitor.core.internal.http;
 
-import org.eclipse.wst.internet.monitor.core.IRequest;
+import org.eclipse.wst.internet.monitor.core.Request;
 /**
  * A resend HTTP connection wraps an HTTP connection to send an existing request.
  */
 public class ResendHTTPConnection extends HTTPConnection{
-	protected IRequest existingRequest;
+	protected Request existingRequest;
 
-	public ResendHTTPConnection(IRequest request) {
+	public ResendHTTPConnection(Request request) {
 		super(null);
 		this.existingRequest = request;
 	}
@@ -25,7 +25,7 @@ public class ResendHTTPConnection extends HTTPConnection{
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.internet.monitor.core.internal.http.HTTPConnection#getRequestResponse(int)
 	 */
-	protected IRequest getRequestResponse(int i) {
+	protected Request getRequestResponse(int i) {
 		return existingRequest;
 	}
 }

@@ -20,18 +20,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.IActionFilter;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.internet.monitor.core.IMonitor;
-import org.eclipse.wst.internet.monitor.core.IMonitorListener;
-import org.eclipse.wst.internet.monitor.core.IRequest;
-import org.eclipse.wst.internet.monitor.core.IRequestListener;
-import org.eclipse.wst.internet.monitor.core.MonitorCore;
+import org.eclipse.wst.internet.monitor.core.*;
 import org.eclipse.wst.internet.monitor.core.internal.Trace;
 import org.eclipse.wst.internet.monitor.ui.internal.view.MonitorView;
 import org.osgi.framework.BundleContext;
@@ -90,14 +84,14 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 	};
 
 	protected IRequestListener requestListener = new IRequestListener() {
-		public void requestAdded(IRequest request) {
+		public void requestAdded(IMonitor monitor, Request request) {
 			addRequest(request);
 			
 			if (MonitorView.view != null)
 				MonitorView.view.doRequestAdded(request);
 		}
 
-		public void requestChanged(IRequest request) {
+		public void requestChanged(IMonitor monitor, Request request) {
 			if (MonitorView.view != null)
 				MonitorView.view.doRequestChanged(request);
 		}
@@ -109,27 +103,6 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 	public MonitorUIPlugin() {
 		super();
 		singleton = this;
-
-		// Create an adapter factory to hold the adapter for IRequests
-		IAdapterFactory adaptFact = new IAdapterFactory() {
-			private RequestActionFilter reqActionFilter = null;
-
-			public Class[] getAdapterList() {
-				return new Class[] { IActionFilter.class };
-			}
-
-			public Object getAdapter(Object adaptableObject, Class adapterType) {
-				if (adapterType == IActionFilter.class) {
-					if (reqActionFilter == null) {
-						reqActionFilter = new RequestActionFilter();
-					}
-					return reqActionFilter;
-				}
-				return null;
-			}
-		};
-
-		Platform.getAdapterManager().registerAdapters(adaptFact, IRequest.class);
 	}
 
 	/**
@@ -348,7 +321,7 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 		return sb.toString();
 	}
 	
-	public void addRequest(IRequest request) {
+	public void addRequest(Request request) {
 		if (!requests.contains(request))
 			requests.add(request);
 	}
@@ -358,8 +331,8 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 	 *
 	 * @return java.util.List
 	 */
-	public IRequest[] getRequests() {
-		IRequest[] r = new IRequest[requests.size()];
+	public Request[] getRequests() {
+		Request[] r = new Request[requests.size()];
 		requests.toArray(r);
 		return r;
 	}
