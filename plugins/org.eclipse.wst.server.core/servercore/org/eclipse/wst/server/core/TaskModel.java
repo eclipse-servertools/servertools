@@ -12,10 +12,15 @@ package org.eclipse.wst.server.core;
 
 import java.util.HashMap;
 import java.util.Map;
-
 /**
- * This interface represents a task model that can be shared between multiple
+ * A task model represents a model that can be shared between multiple
  * tasks in a common workflow.
+ * <p>
+ * The task model contains information about the overall task flow and allows
+ * tasks to store and retreive data. Its usage allows mutliple tasks to be
+ * chained together and share data from the output of one task to the input
+ * of another.
+ * </p>
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
  * 
@@ -24,22 +29,34 @@ import java.util.Map;
 public class TaskModel {
 	/**
 	 * Task model id for an IRuntime.
+	 * 
+	 * @see getObject(String)
+	 * @see putObject(String, Object)
 	 */
 	public static final String TASK_RUNTIME = "runtime";
 	
 	/**
 	 * Task model id for an IServer.
+	 * 
+	 * @see getObject(String)
+	 * @see putObject(String, Object)
 	 */
 	public static final String TASK_SERVER = "server";
 
 	/**
 	 * Task model id for an array of modules.
 	 * The value is a List containing IModule[] arrays.
+	 * 
+	 * @see getObject(String)
+	 * @see putObject(String, Object)
 	 */
 	public static final String TASK_MODULES = "modules";
 	
 	/**
 	 * Task model id for a launch mode.
+	 * 
+	 * @see getObject(String)
+	 * @see putObject(String, Object)
 	 */
 	public static final String TASK_LAUNCH_MODE = "launch-mode";
 	
@@ -47,6 +64,10 @@ public class TaskModel {
 
 	/**
 	 * Returns the object in the task model with the given id.
+	 * <p>
+	 * The id can be any of the predefined ids within TaskModel, or
+	 * any other key to retreive task-specific data.
+	 * </p>
 	 * 
 	 * @param id an id for the object
 	 * @return the object with the given id, or <code>null</code>
@@ -62,9 +83,13 @@ public class TaskModel {
 
 	/**
 	 * Put an object into the task model with the given id.
+	 * <p>
+	 * The id can be any of the predefined ids within TaskModel, or
+	 * any other key to store task-specific data. 
+	 * </p>
 	 * 
 	 * @param id the id to associate the object with
-	 * @param obj an object, or <code>null</code> to reset the id
+	 * @param obj an object, or <code>null</code> to reset (clear) the id
 	 */
 	public void putObject(String id, Object obj) {
 		map.put(id, obj);

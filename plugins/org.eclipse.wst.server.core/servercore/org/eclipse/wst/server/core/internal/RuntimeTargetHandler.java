@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.*;
@@ -120,7 +121,13 @@ public class RuntimeTargetHandler implements IRuntimeTargetHandler, IOrdered {
 	}
 
 	/**
+	 * Set the runtime target on the given project.
 	 * 
+	 * @param project the project to set the runtime on
+	 * @param runtime the target runtime
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException thrown if there is a problem setting the runtime
 	 */
 	public void setRuntimeTarget(IProject project, IRuntime runtime, IProgressMonitor monitor) {
 		if (project == null || runtime == null)
@@ -133,7 +140,14 @@ public class RuntimeTargetHandler implements IRuntimeTargetHandler, IOrdered {
 	}
 	
 	/**
+	 * Remove the runtime target from the given project. This method will undo
+	 * all changes made in setRuntimeTarget().
 	 * 
+	 * @param project the project to remove the runtime from
+	 * @param runtime the target runtime
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException thrown if there is a problem removing the runtime
 	 */
 	public void removeRuntimeTarget(IProject project, IRuntime runtime, IProgressMonitor monitor) {
 		if (project == null || runtime == null)

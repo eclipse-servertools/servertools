@@ -223,7 +223,7 @@ public class ProjectProperties implements IProjectProperties {
 				boolean supports = handler.supportsRuntimeType(runtimeType);
 				Trace.trace(Trace.RUNTIME_TARGET, "  < " + handler + " " + supports);
 				if (supports)
-					handler.removeRuntimeTarget(project, oldRuntime, monitor);
+					((RuntimeTargetHandler)handler).removeRuntimeTarget(project, oldRuntime, monitor);
 				Trace.trace(Trace.PERFORMANCE, "Runtime target: <" + (System.currentTimeMillis() - time) + "> " + handler.getId());
 			}
 		}
@@ -240,7 +240,7 @@ public class ProjectProperties implements IProjectProperties {
 				boolean supports = handler.supportsRuntimeType(runtimeType);
 				Trace.trace(Trace.RUNTIME_TARGET, "  > " + handler + " " + supports);
 				if (supports)
-					handler.setRuntimeTarget(project, newRuntime, monitor);
+					((RuntimeTargetHandler)handler).setRuntimeTarget(project, newRuntime, monitor);
 				Trace.trace(Trace.PERFORMANCE, "Runtime target: <" + (System.currentTimeMillis() - time) + "> " + handler.getId());
 			}
 		} else {
@@ -253,6 +253,13 @@ public class ProjectProperties implements IProjectProperties {
 		Trace.trace(Trace.RUNTIME_TARGET, "setRuntimeTarget <");
 	}
 
+	/**
+	 * Adds a new project properties listener.
+	 * Has no effect if an identical listener is already registered.
+	 * 
+	 * @param listener the properties listener
+	 * @see #removeProjectPropertiesListener(IProjectPropertiesListener)
+	 */
 	public void addProjectPropertiesListener(IProjectPropertiesListener listener) {
 		Trace.trace(Trace.LISTENERS, "Adding project properties listener " + listener + " to " + this);
 		
@@ -261,6 +268,13 @@ public class ProjectProperties implements IProjectProperties {
 		listeners.add(listener);
 	}
 
+	/**
+	 * Removes an existing project properties listener.
+	 * Has no effect if the listener is not registered.
+	 * 
+	 * @param listener the properties listener
+	 * @see #addProjectPropertiesListener(IProjectPropertiesListener)
+	 */
 	public void removeProjectPropertiesListener(IProjectPropertiesListener listener) {
 		Trace.trace(Trace.LISTENERS, "Removing project properties listener " + listener + " from " + this);
 		
@@ -323,7 +337,11 @@ public class ProjectProperties implements IProjectProperties {
 	}
 	
 	/**
+	 * Returns <code>true</code> if this project can contain server artifacts, and
+	 * <code>false</code> otherwise.
 	 * 
+	 * @return <code>true</code> if this project can contain server artifacts, and
+	 *    <code>false</code> otherwise
 	 */
 	public boolean isServerProject() {
 		loadPreferences();
@@ -331,8 +349,14 @@ public class ProjectProperties implements IProjectProperties {
 	}
 
 	/**
+	 * Sets whether the project can contain server resources.
 	 * 
-	 * @param b
+	 * @param sp <code>true</code> to allow the project to contain server
+	 *    resources, or <code>false</code> to not allow the project to contain
+	 *    servers
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException if there is a problem setting the server project
 	 */
 	public void setServerProject(boolean b, IProgressMonitor monitor) throws CoreException {
 		loadPreferences();

@@ -48,6 +48,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 
 	/**
 	 * Cache any preexisting module.
+	 * TODO: When/where is this called?
 	 */
 	protected void cacheModules() {
 		projects = new HashMap();

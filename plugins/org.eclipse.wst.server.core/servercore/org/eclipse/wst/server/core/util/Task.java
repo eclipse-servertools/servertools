@@ -67,13 +67,6 @@ public abstract class Task implements ITask {
 	public void setTaskModel(TaskModel taskModel) {
 		this.model = taskModel;
 	}
-
-	/**
-	 * @see ITask#canExecute()
-	 */
-	public boolean canExecute() {
-		return true;
-	}
 	
 	/**
 	 * @see ITask#canUndo()

@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * A runtime target handler is used to apply some properties to a project
  * this is being targeted to a given runtime. For instance, the handler
@@ -45,27 +42,4 @@ public interface IRuntimeTargetHandler extends IAdaptable {
 	 *    and <code>false</code> otherwise
 	 */
 	public boolean supportsRuntimeType(IRuntimeType runtimeType);
-
-	/**
-	 * Set the runtime target on the given project.
-	 * 
-	 * @param project the project to set the runtime on
-	 * @param runtime the target runtime
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @throws CoreException thrown if there is a problem setting the runtime
-	 */
-	public void setRuntimeTarget(IProject project, IRuntime runtime, IProgressMonitor monitor) throws CoreException;
-
-	/**
-	 * Remove the runtime target from the given project. This method will undo
-	 * all changes made in setRuntimeTarget().
-	 * 
-	 * @param project the project to remove the runtime from
-	 * @param runtime the target runtime
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @throws CoreException thrown if there is a problem removing the runtime
-	 */
-	public void removeRuntimeTarget(IProject project, IRuntime runtime, IProgressMonitor monitor) throws CoreException;
 }

@@ -24,21 +24,33 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public interface ITask {
 	/**
-	 * Returns the label for this command.
+	 * Returns the displayable name for this task.
+	 * <p>
+	 * Note that this name is appropriate for the current locale.
+	 * </p>
 	 *
-	 * @return java.lang.String
+	 * @return a displayable name for this task
 	 */
 	public String getName();
 
 	/**
-	 * Returns a description of this command.
+	 * Returns the displayable description for this task.
+	 * <p>
+	 * Note that this description is appropriate for the current locale.
+	 * </p>
 	 *
-	 * @return java.lang.String
+	 * @return a displayable description for this task
 	 */
 	public String getDescription();
 
 	/**
 	 * Return the task model.
+	 * <p>
+	 * A task model contains information about the overall task flow and allows
+	 * tasks to store and retreive data. Its usage allows mutliple tasks to be
+	 * chained together and share data from the output of one task to the input
+	 * of another.
+	 * </p>
 	 * 
 	 * @return the task model
 	 */
@@ -46,18 +58,16 @@ public interface ITask {
 
 	/**
 	 * Set the task model.
+	 * <p>
+	 * A task model contains information about the overall task flow and allows
+	 * tasks to store and retreive data. Its usage allows mutliple tasks to be
+	 * chained together and share data from the output of one task to the input
+	 * of another.
+	 * </p>
 	 * 
 	 * @param taskModel the task model
 	 */
 	public void setTaskModel(TaskModel taskModel);
-
-	/**
-	 * Returns whether the task can be executed.
-	 * 
-	 * @return <code>true</code> if the task can be executed, and 
-	 *    <code>false</code> otherwise
-	 */
-	public boolean canExecute();
 
 	/**
 	 * Execute (perform) the task.

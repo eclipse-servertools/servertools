@@ -18,19 +18,21 @@ public interface IServerPort {
 	/**
 	 * Return an optional internal id used to identify this port.
 	 * 
-	 * @return java.lang.String
+	 * @return an internal id
 	 */
 	public String getId();
 
 	/**
 	 * Return the name of the port.
-	 * @return java.lang.String
+	 * 
+	 * @return the name of the port
 	 */
 	public String getName();
 
 	/**
 	 * Return the actual port number.
-	 * @return int
+	 * 
+	 * @return the port number
 	 */
 	public int getPort();
 
@@ -38,7 +40,7 @@ public interface IServerPort {
 	 * Returns the protocol, e.g. HTTP of this port. Returns null
 	 * if the protocol is unknown.
 	 * 
-	 * @return java.lang.String
+	 * @return the procotol
 	 */
 	public String getProtocol();
 
@@ -46,15 +48,16 @@ public interface IServerPort {
 	 * Returns the content types that this port would normally serve, or null
 	 * if the content is unknown.
 	 * 
-	 * @return java.lang.String[]
+	 * @return a possibly empty array of content types
 	 */
 	public String[] getContentTypes();
-	
+
 	/**
 	 * Returns true if this port is an "advanced" port and should not be shown
 	 * to novice users.
 	 * 
-	 * @return boolean
+	 * @return <code>true</code> if the port is advanced, or <code>false</code>
+	 *    otherwise
 	 */
 	public boolean isAdvanced();
 }

@@ -23,18 +23,24 @@ public class ServerPort implements IServerPort {
 	private String protocol;
 	private String[] contentTypes;
 	private boolean advanced;
-	
+
 	/**
-	 * ServerPort constructor comment.
+	 * Create a new server port.
 	 */
 	public ServerPort(String id, String name, int port, String protocol) {
 		this(id, name, port, protocol, null, true);
 	}
-	
+
+	/**
+	 * Create a new server port.
+	 */
 	public ServerPort(String id, String name, int port, String protocol, boolean advanced) {
 		this(id, name, port, protocol, null, advanced);
 	}
 
+	/**
+	 * Create a new server port.
+	 */
 	public ServerPort(String id, String name, int port, String protocol, String[] contentTypes, boolean advanced) {
 		super();
 		this.id = id;
@@ -46,7 +52,7 @@ public class ServerPort implements IServerPort {
 	}
 	
 	/**
-	 * ServerPort constructor comment.
+	 * 
 	 */
 	public ServerPort(String name, int port, String protocol) {
 		this(null, name, port, protocol);
@@ -55,7 +61,7 @@ public class ServerPort implements IServerPort {
 	/**
 	 * Return an optional internal id used to identify this port.
 	 * 
-	 * @return java.lang.String
+	 * @return the id
 	 */
 	public String getId() {
 		return id;
@@ -108,17 +114,26 @@ public class ServerPort implements IServerPort {
 		return advanced;
 	}
 
+	/**
+	 * @see Object#equals(Object)
+	 */
 	public boolean equals(Object obj) {
 		if (!(obj instanceof ServerPort))
 			return false;
 		ServerPort sp = (ServerPort) obj;
 		return (sp.port == port);
 	}
-	
+
+	/**
+	 * @see Object#hashCode()
+	 */
 	public int hashCode() {
 		return port;
 	}
-	
+
+	/**
+	 * @see Object#toString()
+	 */
 	public String toString() {
 		return "ServerPort [" + getName() + ", " + getId() + ", " + getPort() + ", " + getProtocol() + "]";
 	}

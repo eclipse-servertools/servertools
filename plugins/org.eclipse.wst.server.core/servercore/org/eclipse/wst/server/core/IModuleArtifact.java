@@ -18,6 +18,7 @@ package org.eclipse.wst.server.core;
  * contextual Run on Server launch support. 
  * </p>
  * 
+ * @see org.eclipse.wst.server.core.model.ModuleArtifactAdapterDelegate
  * @since 1.0
  */
 public interface IModuleArtifact {

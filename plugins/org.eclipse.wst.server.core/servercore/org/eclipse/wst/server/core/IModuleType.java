@@ -24,6 +24,11 @@ package org.eclipse.wst.server.core;
 public interface IModuleType {
 	/**
 	 * Returns the module type id.
+	 * <p>
+	 * The module type id is a "." separated string uniquely identifying the
+	 * type of module. Like a java package name, it should scope the type from
+	 * most general to specific. For instance, "j2ee.web".
+	 * </p>
 	 * 
 	 * @return the module type id
 	 */
@@ -40,20 +45,17 @@ public interface IModuleType {
 	public String getName();
 
 	/**
-	 * Returns the version (spec level), e.g., "1.0", "1.3.2".
+	 * Returns the version (specification level) of this module type,
+	 * e.g. "1.0" or "1.3.2a".
 	 * <p>
-	 * [issue: This notion of a module type "version" appears here.
-	 * There is no counterpart elsewhere (and certainly not in
-	 * IModuleType). The phrase "spec level" suggests something
-	 * a little more J2EE-centric (what would be the spec level for
-	 * a static html web module?) It feels like this should be folded
-	 * in to the module type/kind id.]
-	 * </p>
-	 * <p>
-	 * [issue: Spec format of version string?]
+	 * The version will normally be a series of numbers separated by
+	 * ".", but it could be different depending on the type of module.
+	 * For module types where a version does not make sense (e.g.
+	 * a static Web module), <code>null</code> is returned.
 	 * </p>
 	 * 
-	 * @return the version
+	 * @return the specification version of this module type, or
+	 *    <code>null</code> if there is no version 
 	 */
 	public String getVersion();
 }
