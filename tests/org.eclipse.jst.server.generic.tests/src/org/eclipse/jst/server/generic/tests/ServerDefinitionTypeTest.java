@@ -32,12 +32,9 @@ package org.eclipse.jst.server.generic.tests;
 
 import java.util.Iterator;
 import java.util.List;
-
 import junit.framework.TestCase;
-
 import org.eclipse.jst.server.generic.core.CorePlugin;
 import org.eclipse.jst.server.generic.internal.core.ServerTypeDefinitionManager;
-import org.eclipse.jst.server.generic.internal.xml.ClasspathItem;
 import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinition;
 
 /**
@@ -97,14 +94,10 @@ public class ServerDefinitionTypeTest extends TestCase {
 			assertNotNull(aList);
 			Iterator iterator = aList.iterator();
 			while (iterator.hasNext()) {
-				ClasspathItem cpItem = (ClasspathItem) iterator.next();
+				String cpItem = (String) iterator.next();
 				assertNotNull(cpItem);
-				String unresolved = cpItem.getClasspath();
-				if (unresolved.indexOf("${classPath}") >= 0) {
-					String resolved = cpItem.getResolvedClasspath(definition);
-					assertTrue(resolved.indexOf("/home/test/nowhere") >= 0);
+				assertTrue(cpItem.indexOf("/home/test/nowhere") >= 0);
 				}
 			}
-		}
 	}
 }
