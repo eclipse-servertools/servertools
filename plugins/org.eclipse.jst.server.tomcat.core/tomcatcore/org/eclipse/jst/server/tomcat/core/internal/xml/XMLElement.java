@@ -15,6 +15,8 @@ import org.w3c.dom.*;
  * An XML element.
  */
 public class XMLElement implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private Element xmlElement;
 	protected Factory factory;
 

@@ -19,6 +19,10 @@ import org.eclipse.jst.server.tomcat.internal.core.Trace;
  * Factory for reading and writing from XML files.
  */
 public class Factory implements Serializable {
+
+
+	private static final long serialVersionUID = 1L;
+	
 	protected String packageName;
 	protected Document document;
 
