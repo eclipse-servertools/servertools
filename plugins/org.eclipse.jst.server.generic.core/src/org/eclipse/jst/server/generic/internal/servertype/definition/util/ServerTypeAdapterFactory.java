@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeAdapterFactory.java,v 1.1 2005/03/14 20:54:20 gercan Exp $
+ * $Id: ServerTypeAdapterFactory.java,v 1.2 2005/03/27 12:56:23 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.util;
 
@@ -102,6 +102,12 @@ public class ServerTypeAdapterFactory extends AdapterFactoryImpl {
             public Object caseClasspath(Classpath object) {
                 return createClasspathAdapter();
             }
+            public Object caseJndiConnection(JndiConnection object) {
+                return createJndiConnectionAdapter();
+            }
+            public Object caseJndiProperty(JndiProperty object) {
+                return createJndiPropertyAdapter();
+            }
             public Object caseLaunchConfiguration(LaunchConfiguration object) {
                 return createLaunchConfigurationAdapter();
             }
@@ -169,6 +175,34 @@ public class ServerTypeAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
 	public Adapter createClasspathAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.JndiConnection <em>Jndi Connection</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.eclipse.jst.server.generic.servertype.definition.JndiConnection
+     * @generated
+     */
+    public Adapter createJndiConnectionAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.JndiProperty <em>Jndi Property</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.eclipse.jst.server.generic.servertype.definition.JndiProperty
+     * @generated
+     */
+    public Adapter createJndiPropertyAdapter() {
         return null;
     }
 

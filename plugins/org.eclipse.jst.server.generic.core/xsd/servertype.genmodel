@@ -19,8 +19,18 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//Classpath/id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//Classpath/isLibrary"/>
     </genClasses>
+    <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//JndiConnection">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//JndiConnection/providerUrl"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//JndiConnection/group"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference org.eclipse.jst.server.generic.servertype.ecore#//JndiConnection/jndiProperty"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//JndiConnection/initialContextFactory"/>
+    </genClasses>
+    <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//JndiProperty">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//JndiProperty/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//JndiProperty/value"/>
+    </genClasses>
     <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/class"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/mainClass"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/workingDirectory"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/programArguments"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/vmParameters"/>
@@ -38,7 +48,6 @@
     </genClasses>
     <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//Project">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//Project/classpathReference"/>
-      <genFeatures notify="false" createChild="false" ecoreFeature="ecore:EReference org.eclipse.jst.server.generic.servertype.ecore#//Project/@eStructuralFeatures.1"/>
     </genClasses>
     <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//Property">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//Property/context"/>
@@ -70,6 +79,7 @@
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference org.eclipse.jst.server.generic.servertype.ecore#//ServerRuntime/publisher"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//ServerRuntime/group4"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference org.eclipse.jst.server.generic.servertype.ecore#//ServerRuntime/classpath"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference org.eclipse.jst.server.generic.servertype.ecore#//ServerRuntime/jndiConnection"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//ServerRuntime/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//ServerRuntime/version"/>
     </genClasses>

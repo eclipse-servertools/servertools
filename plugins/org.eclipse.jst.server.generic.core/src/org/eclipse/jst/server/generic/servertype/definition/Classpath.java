@@ -28,12 +28,13 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Classpath.java,v 1.4 2005/03/16 17:59:53 gercan Exp $
+ * $Id: Classpath.java,v 1.5 2005/03/27 12:56:23 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
+
 import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**
@@ -60,18 +61,18 @@ public interface Classpath extends EObject{
      * Returns the value of the '<em><b>Group</b></em>' attribute list.
      * The list contents are of type {@link org.eclipse.emf.ecore.util.FeatureMap.Entry}.
      * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Group</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Group</em>' attribute list isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
      * @return the value of the '<em>Group</em>' attribute list.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getClasspath_Group()
      * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
      *        extendedMetaData="kind='group' name='group:0'"
      * @generated
      */
-	FeatureMap getGroup();
+    FeatureMap getGroup();
 
     /**
      * Returns the value of the '<em><b>Archive</b></em>' containment reference list.

@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: LaunchConfiguration.java,v 1.3 2005/03/14 20:54:15 gercan Exp $
+ * $Id: LaunchConfiguration.java,v 1.4 2005/03/27 12:56:23 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -42,7 +42,7 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getClass_ <em>Class</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getMainClass <em>Main Class</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getWorkingDirectory <em>Working Directory</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getProgramArguments <em>Program Arguments</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getVmParameters <em>Vm Parameters</em>}</li>
@@ -56,31 +56,31 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface LaunchConfiguration extends EObject{
     /**
-     * Returns the value of the '<em><b>Class</b></em>' attribute.
+     * Returns the value of the '<em><b>Main Class</b></em>' attribute.
      * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Class</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Class</em>' attribute.
-     * @see #setClass(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getLaunchConfiguration_Class()
+     * <p>
+     * If the meaning of the '<em>Main Class</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Main Class</em>' attribute.
+     * @see #setMainClass(String)
+     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getLaunchConfiguration_MainClass()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-     *        extendedMetaData="kind='element' name='class'"
+     *        extendedMetaData="kind='element' name='mainClass'"
      * @generated
      */
-	String getClass_();
+    String getMainClass();
 
     /**
-     * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getClass_ <em>Class</em>}' attribute.
+     * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getMainClass <em>Main Class</em>}' attribute.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Class</em>' attribute.
-     * @see #getClass_()
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Main Class</em>' attribute.
+     * @see #getMainClass()
      * @generated
      */
-	void setClass(String value);
+    void setMainClass(String value);
 
     /**
      * Returns the value of the '<em><b>Working Directory</b></em>' attribute.

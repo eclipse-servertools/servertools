@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeFactoryImpl.java,v 1.1 2005/03/14 20:54:15 gercan Exp $
+ * $Id: ServerTypeFactoryImpl.java,v 1.2 2005/03/27 12:55:36 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
@@ -65,6 +65,8 @@ public class ServerTypeFactoryImpl extends EFactoryImpl implements ServerTypeFac
         switch (eClass.getClassifierID()) {
             case ServerTypePackage.ARCHIVE_TYPE: return createArchiveType();
             case ServerTypePackage.CLASSPATH: return createClasspath();
+            case ServerTypePackage.JNDI_CONNECTION: return createJndiConnection();
+            case ServerTypePackage.JNDI_PROPERTY: return createJndiProperty();
             case ServerTypePackage.LAUNCH_CONFIGURATION: return createLaunchConfiguration();
             case ServerTypePackage.MODULE: return createModule();
             case ServerTypePackage.PORT: return createPort();
@@ -96,6 +98,26 @@ public class ServerTypeFactoryImpl extends EFactoryImpl implements ServerTypeFac
 	public Classpath createClasspath() {
         ClasspathImpl classpath = new ClasspathImpl();
         return classpath;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public JndiConnection createJndiConnection() {
+        JndiConnectionImpl jndiConnection = new JndiConnectionImpl();
+        return jndiConnection;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public JndiProperty createJndiProperty() {
+        JndiPropertyImpl jndiProperty = new JndiPropertyImpl();
+        return jndiProperty;
     }
 
     /**

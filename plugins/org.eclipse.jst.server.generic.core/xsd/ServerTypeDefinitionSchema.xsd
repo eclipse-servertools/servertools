@@ -34,6 +34,7 @@
 			<sequence maxOccurs="unbounded" minOccurs="1">
 				<element name="classpath" type="jst:Classpath"/>
 			</sequence>
+			<element name="jndiConnection" type="jst:jndiConnection"/>
 		</sequence>
 
 		<attribute name="name" type="string" use="required"/>
@@ -58,7 +59,7 @@
 
 	<complexType name="LaunchConfiguration">
 		<sequence>
-			<element name="class" type="string"/>
+			<element name="mainClass" type="string"/>
 			<element name="workingDirectory" type="string"/>
 			<element name="programArguments" type="string"/>
 			<element name="vmParameters" type="string"/>
@@ -106,4 +107,21 @@
       <element name="datavalue" type="string"/>
     </sequence>
   </complexType>
+    <complexType name="jndiConnection">
+    	<sequence>
+    		<element name="providerUrl" type="string"/>
+    		<sequence maxOccurs="unbounded" minOccurs="0">
+    			<element name="jndiProperty" type="jst:jndiProperty"/>
+    		</sequence>
+    		<element name="initialContextFactory" type="string"/>
+    	</sequence>
+    </complexType>
+
+    <complexType name="jndiProperty">
+    	<all maxOccurs="1" minOccurs="1">
+    		<element name="name" type="string"/>
+    		<element name="value" type="string"/>
+    	</all>
+    </complexType>
+
 </schema>

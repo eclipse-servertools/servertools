@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: LaunchConfigurationImpl.java,v 1.1 2005/03/14 20:54:15 gercan Exp $
+ * $Id: LaunchConfigurationImpl.java,v 1.2 2005/03/27 12:55:36 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
@@ -50,7 +50,7 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl#getClass_ <em>Class</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl#getMainClass <em>Main Class</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl#getWorkingDirectory <em>Working Directory</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl#getProgramArguments <em>Program Arguments</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl#getVmParameters <em>Vm Parameters</em>}</li>
@@ -62,24 +62,24 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
  */
 public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfiguration {
     /**
-     * The default value of the '{@link #getClass_() <em>Class</em>}' attribute.
+     * The default value of the '{@link #getMainClass() <em>Main Class</em>}' attribute.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @see #getClass_()
+     * <!-- end-user-doc -->
+     * @see #getMainClass()
      * @generated
      * @ordered
      */
-	protected static final String CLASS_EDEFAULT = null;
+    protected static final String MAIN_CLASS_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getClass_() <em>Class</em>}' attribute.
+     * The cached value of the '{@link #getMainClass() <em>Main Class</em>}' attribute.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @see #getClass_()
+     * <!-- end-user-doc -->
+     * @see #getMainClass()
      * @generated
      * @ordered
      */
-	protected String class_ = CLASS_EDEFAULT;
+    protected String mainClass = MAIN_CLASS_EDEFAULT;
 
     /**
      * The default value of the '{@link #getWorkingDirectory() <em>Working Directory</em>}' attribute.
@@ -181,23 +181,23 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 
     /**
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      */
-	public String getClass_() {
-        return class_;
+    public String getMainClass() {
+        return mainClass;
     }
 
     /**
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      */
-	public void setClass(String newClass) {
-        String oldClass = class_;
-        class_ = newClass;
+    public void setMainClass(String newMainClass) {
+        String oldMainClass = mainClass;
+        mainClass = newMainClass;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.LAUNCH_CONFIGURATION__CLASS, oldClass, class_));
+            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.LAUNCH_CONFIGURATION__MAIN_CLASS, oldMainClass, mainClass));
     }
 
     /**
@@ -291,8 +291,8 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
      */
 	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.LAUNCH_CONFIGURATION__CLASS:
-                return getClass_();
+            case ServerTypePackage.LAUNCH_CONFIGURATION__MAIN_CLASS:
+                return getMainClass();
             case ServerTypePackage.LAUNCH_CONFIGURATION__WORKING_DIRECTORY:
                 return getWorkingDirectory();
             case ServerTypePackage.LAUNCH_CONFIGURATION__PROGRAM_ARGUMENTS:
@@ -312,8 +312,8 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
      */
 	public void eSet(EStructuralFeature eFeature, Object newValue) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.LAUNCH_CONFIGURATION__CLASS:
-                setClass((String)newValue);
+            case ServerTypePackage.LAUNCH_CONFIGURATION__MAIN_CLASS:
+                setMainClass((String)newValue);
                 return;
             case ServerTypePackage.LAUNCH_CONFIGURATION__WORKING_DIRECTORY:
                 setWorkingDirectory((String)newValue);
@@ -338,8 +338,8 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
      */
 	public void eUnset(EStructuralFeature eFeature) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.LAUNCH_CONFIGURATION__CLASS:
-                setClass(CLASS_EDEFAULT);
+            case ServerTypePackage.LAUNCH_CONFIGURATION__MAIN_CLASS:
+                setMainClass(MAIN_CLASS_EDEFAULT);
                 return;
             case ServerTypePackage.LAUNCH_CONFIGURATION__WORKING_DIRECTORY:
                 setWorkingDirectory(WORKING_DIRECTORY_EDEFAULT);
@@ -364,8 +364,8 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
      */
 	public boolean eIsSet(EStructuralFeature eFeature) {
         switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.LAUNCH_CONFIGURATION__CLASS:
-                return CLASS_EDEFAULT == null ? class_ != null : !CLASS_EDEFAULT.equals(class_);
+            case ServerTypePackage.LAUNCH_CONFIGURATION__MAIN_CLASS:
+                return MAIN_CLASS_EDEFAULT == null ? mainClass != null : !MAIN_CLASS_EDEFAULT.equals(mainClass);
             case ServerTypePackage.LAUNCH_CONFIGURATION__WORKING_DIRECTORY:
                 return WORKING_DIRECTORY_EDEFAULT == null ? workingDirectory != null : !WORKING_DIRECTORY_EDEFAULT.equals(workingDirectory);
             case ServerTypePackage.LAUNCH_CONFIGURATION__PROGRAM_ARGUMENTS:
@@ -387,8 +387,8 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
         if (eIsProxy()) return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (class: ");
-        result.append(class_);
+        result.append(" (mainClass: ");
+        result.append(mainClass);
         result.append(", workingDirectory: ");
         result.append(workingDirectory);
         result.append(", programArguments: ");

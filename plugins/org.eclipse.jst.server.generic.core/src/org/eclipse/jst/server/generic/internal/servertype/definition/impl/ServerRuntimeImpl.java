@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerRuntimeImpl.java,v 1.2 2005/03/16 17:58:36 gercan Exp $
+ * $Id: ServerRuntimeImpl.java,v 1.3 2005/03/27 12:55:36 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
@@ -46,6 +46,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.BasicFeatureMap;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.jst.server.generic.servertype.definition.JndiConnection;
 import org.eclipse.jst.server.generic.internal.xml.Resolver;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
 import org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration;
@@ -75,6 +76,7 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
  *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getPublisher <em>Publisher</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getGroup4 <em>Group4</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getClasspath <em>Classpath</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getJndiConnection <em>Jndi Connection</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerRuntimeImpl#getVersion <em>Version</em>}</li>
  * </ul>
@@ -86,32 +88,32 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
     /**
      * The cached value of the '{@link #getGroup() <em>Group</em>}' attribute list.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @see #getGroup()
      * @generated
      * @ordered
      */
-	protected FeatureMap group = null;
+    protected FeatureMap group = null;
 
     /**
      * The cached value of the '{@link #getGroup1() <em>Group1</em>}' attribute list.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @see #getGroup1()
      * @generated
      * @ordered
      */
-	protected FeatureMap group1 = null;
+    protected FeatureMap group1 = null;
 
     /**
      * The cached value of the '{@link #getGroup2() <em>Group2</em>}' attribute list.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @see #getGroup2()
      * @generated
      * @ordered
      */
-	protected FeatureMap group2 = null;
+    protected FeatureMap group2 = null;
 
     /**
      * The cached value of the '{@link #getProject() <em>Project</em>}' containment reference.
@@ -146,22 +148,32 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
     /**
      * The cached value of the '{@link #getGroup3() <em>Group3</em>}' attribute list.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @see #getGroup3()
      * @generated
      * @ordered
      */
-	protected FeatureMap group3 = null;
+    protected FeatureMap group3 = null;
 
     /**
      * The cached value of the '{@link #getGroup4() <em>Group4</em>}' attribute list.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @see #getGroup4()
      * @generated
      * @ordered
      */
-	protected FeatureMap group4 = null;
+    protected FeatureMap group4 = null;
+
+    /**
+     * The cached value of the '{@link #getJndiConnection() <em>Jndi Connection</em>}' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getJndiConnection()
+     * @generated
+     * @ordered
+     */
+    protected JndiConnection jndiConnection = null;
 
     /**
      * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -245,10 +257,10 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
 
     /**
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      */
-	public FeatureMap getGroup() {
+    public FeatureMap getGroup() {
         if (group == null) {
             group = new BasicFeatureMap(this, ServerTypePackage.SERVER_RUNTIME__GROUP);
         }
@@ -257,19 +269,19 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
 
     /**
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      */
-	public List getProperty() {
+    public List getProperty() {
         return ((FeatureMap)getGroup()).list(ServerTypePackage.eINSTANCE.getServerRuntime_Property());
     }
 
     /**
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      */
-	public FeatureMap getGroup1() {
+    public FeatureMap getGroup1() {
         if (group1 == null) {
             group1 = new BasicFeatureMap(this, ServerTypePackage.SERVER_RUNTIME__GROUP1);
         }
@@ -278,19 +290,19 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
 
     /**
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      */
-	public List getPort() {
+    public List getPort() {
         return ((FeatureMap)getGroup1()).list(ServerTypePackage.eINSTANCE.getServerRuntime_Port());
     }
 
     /**
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      */
-	public FeatureMap getGroup2() {
+    public FeatureMap getGroup2() {
         if (group2 == null) {
             group2 = new BasicFeatureMap(this, ServerTypePackage.SERVER_RUNTIME__GROUP2);
         }
@@ -299,10 +311,10 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
 
     /**
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      */
-	public List getModule() {
+    public List getModule() {
         return ((FeatureMap)getGroup2()).list(ServerTypePackage.eINSTANCE.getServerRuntime_Module());
     }
 
@@ -437,10 +449,10 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
 
     /**
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      */
-	public FeatureMap getGroup3() {
+    public FeatureMap getGroup3() {
         if (group3 == null) {
             group3 = new BasicFeatureMap(this, ServerTypePackage.SERVER_RUNTIME__GROUP3);
         }
@@ -449,19 +461,19 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
 
     /**
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      */
-	public List getPublisher() {
+    public List getPublisher() {
         return ((FeatureMap)getGroup3()).list(ServerTypePackage.eINSTANCE.getServerRuntime_Publisher());
     }
 
     /**
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      */
-	public FeatureMap getGroup4() {
+    public FeatureMap getGroup4() {
         if (group4 == null) {
             group4 = new BasicFeatureMap(this, ServerTypePackage.SERVER_RUNTIME__GROUP4);
         }
@@ -470,11 +482,54 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
 
     /**
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      */
-	public List getClasspath() {
+    public List getClasspath() {
         return ((FeatureMap)getGroup4()).list(ServerTypePackage.eINSTANCE.getServerRuntime_Classpath());
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public JndiConnection getJndiConnection() {
+        return jndiConnection;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public NotificationChain basicSetJndiConnection(JndiConnection newJndiConnection, NotificationChain msgs) {
+        JndiConnection oldJndiConnection = jndiConnection;
+        jndiConnection = newJndiConnection;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ServerTypePackage.SERVER_RUNTIME__JNDI_CONNECTION, oldJndiConnection, newJndiConnection);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setJndiConnection(JndiConnection newJndiConnection) {
+        if (newJndiConnection != jndiConnection) {
+            NotificationChain msgs = null;
+            if (jndiConnection != null)
+                msgs = ((InternalEObject)jndiConnection).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ServerTypePackage.SERVER_RUNTIME__JNDI_CONNECTION, null, msgs);
+            if (newJndiConnection != null)
+                msgs = ((InternalEObject)newJndiConnection).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ServerTypePackage.SERVER_RUNTIME__JNDI_CONNECTION, null, msgs);
+            msgs = basicSetJndiConnection(newJndiConnection, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.SERVER_RUNTIME__JNDI_CONNECTION, newJndiConnection, newJndiConnection));
     }
 
     /**
@@ -553,6 +608,8 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
                     return ((InternalEList)getGroup4()).basicRemove(otherEnd, msgs);
                 case ServerTypePackage.SERVER_RUNTIME__CLASSPATH:
                     return ((InternalEList)getClasspath()).basicRemove(otherEnd, msgs);
+                case ServerTypePackage.SERVER_RUNTIME__JNDI_CONNECTION:
+                    return basicSetJndiConnection(null, msgs);
                 default:
                     return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
             }
@@ -593,6 +650,8 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
                 return getGroup4();
             case ServerTypePackage.SERVER_RUNTIME__CLASSPATH:
                 return getClasspath();
+            case ServerTypePackage.SERVER_RUNTIME__JNDI_CONNECTION:
+                return getJndiConnection();
             case ServerTypePackage.SERVER_RUNTIME__NAME:
                 return getName();
             case ServerTypePackage.SERVER_RUNTIME__VERSION:
@@ -657,6 +716,9 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
                 getClasspath().clear();
                 getClasspath().addAll((Collection)newValue);
                 return;
+            case ServerTypePackage.SERVER_RUNTIME__JNDI_CONNECTION:
+                setJndiConnection((JndiConnection)newValue);
+                return;
             case ServerTypePackage.SERVER_RUNTIME__NAME:
                 setName((String)newValue);
                 return;
@@ -713,6 +775,9 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
             case ServerTypePackage.SERVER_RUNTIME__CLASSPATH:
                 getClasspath().clear();
                 return;
+            case ServerTypePackage.SERVER_RUNTIME__JNDI_CONNECTION:
+                setJndiConnection((JndiConnection)null);
+                return;
             case ServerTypePackage.SERVER_RUNTIME__NAME:
                 setName(NAME_EDEFAULT);
                 return;
@@ -756,6 +821,8 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
                 return group4 != null && !group4.isEmpty();
             case ServerTypePackage.SERVER_RUNTIME__CLASSPATH:
                 return !getClasspath().isEmpty();
+            case ServerTypePackage.SERVER_RUNTIME__JNDI_CONNECTION:
+                return jndiConnection != null;
             case ServerTypePackage.SERVER_RUNTIME__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
             case ServerTypePackage.SERVER_RUNTIME__VERSION:

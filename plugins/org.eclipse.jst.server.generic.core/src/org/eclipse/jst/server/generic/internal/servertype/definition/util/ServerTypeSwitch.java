@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeSwitch.java,v 1.1 2005/03/14 20:54:20 gercan Exp $
+ * $Id: ServerTypeSwitch.java,v 1.2 2005/03/27 12:56:23 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.util;
 
@@ -125,6 +125,18 @@ public class ServerTypeSwitch {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case ServerTypePackage.JNDI_CONNECTION: {
+                JndiConnection jndiConnection = (JndiConnection)theEObject;
+                Object result = caseJndiConnection(jndiConnection);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case ServerTypePackage.JNDI_PROPERTY: {
+                JndiProperty jndiProperty = (JndiProperty)theEObject;
+                Object result = caseJndiProperty(jndiProperty);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             case ServerTypePackage.LAUNCH_CONFIGURATION: {
                 LaunchConfiguration launchConfiguration = (LaunchConfiguration)theEObject;
                 Object result = caseLaunchConfiguration(launchConfiguration);
@@ -204,6 +216,36 @@ public class ServerTypeSwitch {
      * @generated
      */
 	public Object caseClasspath(Classpath object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpretting the object as an instance of '<em>Jndi Connection</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpretting the object as an instance of '<em>Jndi Connection</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public Object caseJndiConnection(JndiConnection object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpretting the object as an instance of '<em>Jndi Property</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpretting the object as an instance of '<em>Jndi Property</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public Object caseJndiProperty(JndiProperty object) {
         return null;
     }
 

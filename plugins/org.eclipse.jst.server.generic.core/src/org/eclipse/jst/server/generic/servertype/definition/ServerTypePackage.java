@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypePackage.java,v 1.3 2005/03/14 20:54:15 gercan Exp $
+ * $Id: ServerTypePackage.java,v 1.4 2005/03/27 12:56:23 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -125,11 +125,11 @@ public interface ServerTypePackage extends EPackage{
     /**
      * The feature id for the '<em><b>Group</b></em>' attribute list.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int CLASSPATH__GROUP = 0;
+    int CLASSPATH__GROUP = 0;
 
     /**
      * The feature id for the '<em><b>Archive</b></em>' containment reference list.
@@ -168,6 +168,98 @@ public interface ServerTypePackage extends EPackage{
 	int CLASSPATH_FEATURE_COUNT = 4;
 
     /**
+     * The meta object id for the '{@link org.eclipse.jst.server.generic.servertype.definition.impl.JndiConnectionImpl <em>Jndi Connection</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.JndiConnectionImpl
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getJndiConnection()
+     * @generated
+     */
+    int JNDI_CONNECTION = 2;
+
+    /**
+     * The feature id for the '<em><b>Provider Url</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JNDI_CONNECTION__PROVIDER_URL = 0;
+
+    /**
+     * The feature id for the '<em><b>Group</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JNDI_CONNECTION__GROUP = 1;
+
+    /**
+     * The feature id for the '<em><b>Jndi Property</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JNDI_CONNECTION__JNDI_PROPERTY = 2;
+
+    /**
+     * The feature id for the '<em><b>Initial Context Factory</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JNDI_CONNECTION__INITIAL_CONTEXT_FACTORY = 3;
+
+    /**
+     * The number of structural features of the the '<em>Jndi Connection</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JNDI_CONNECTION_FEATURE_COUNT = 4;
+
+    /**
+     * The meta object id for the '{@link org.eclipse.jst.server.generic.servertype.definition.impl.JndiPropertyImpl <em>Jndi Property</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.JndiPropertyImpl
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getJndiProperty()
+     * @generated
+     */
+    int JNDI_PROPERTY = 3;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JNDI_PROPERTY__NAME = 0;
+
+    /**
+     * The feature id for the '<em><b>Value</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JNDI_PROPERTY__VALUE = 1;
+
+    /**
+     * The number of structural features of the the '<em>Jndi Property</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JNDI_PROPERTY_FEATURE_COUNT = 2;
+
+    /**
      * The meta object id for the '{@link org.eclipse.jst.server.generic.servertype.definition.impl.LaunchConfigurationImpl <em>Launch Configuration</em>}' class.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -175,16 +267,16 @@ public interface ServerTypePackage extends EPackage{
      * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getLaunchConfiguration()
      * @generated
      */
-	int LAUNCH_CONFIGURATION = 2;
+	int LAUNCH_CONFIGURATION = 4;
 
     /**
-     * The feature id for the '<em><b>Class</b></em>' attribute.
+     * The feature id for the '<em><b>Main Class</b></em>' attribute.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int LAUNCH_CONFIGURATION__CLASS = 0;
+    int LAUNCH_CONFIGURATION__MAIN_CLASS = 0;
 
     /**
      * The feature id for the '<em><b>Working Directory</b></em>' attribute.
@@ -239,7 +331,7 @@ public interface ServerTypePackage extends EPackage{
      * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getModule()
      * @generated
      */
-	int MODULE = 3;
+	int MODULE = 5;
 
     /**
      * The feature id for the '<em><b>Type</b></em>' attribute.
@@ -285,7 +377,7 @@ public interface ServerTypePackage extends EPackage{
      * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getPort()
      * @generated
      */
-	int PORT = 4;
+	int PORT = 6;
 
     /**
      * The feature id for the '<em><b>No</b></em>' attribute.
@@ -331,7 +423,7 @@ public interface ServerTypePackage extends EPackage{
      * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getProject()
      * @generated
      */
-	int PROJECT = 5;
+	int PROJECT = 7;
 
     /**
      * The feature id for the '<em><b>Classpath Reference</b></em>' attribute.
@@ -359,7 +451,7 @@ public interface ServerTypePackage extends EPackage{
      * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getProperty()
      * @generated
      */
-	int PROPERTY = 6;
+	int PROPERTY = 8;
 
     /**
      * The feature id for the '<em><b>Context</b></em>' attribute.
@@ -423,16 +515,16 @@ public interface ServerTypePackage extends EPackage{
      * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getPublisher()
      * @generated
      */
-	int PUBLISHER = 7;
+	int PUBLISHER = 9;
 
     /**
      * The feature id for the '<em><b>Group</b></em>' attribute list.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int PUBLISHER__GROUP = 0;
+    int PUBLISHER__GROUP = 0;
 
     /**
      * The feature id for the '<em><b>Publisherdata</b></em>' containment reference list.
@@ -469,7 +561,7 @@ public interface ServerTypePackage extends EPackage{
      * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getPublisherData()
      * @generated
      */
-    int PUBLISHER_DATA = 8;
+    int PUBLISHER_DATA = 10;
 
     /**
      * The feature id for the '<em><b>Dataname</b></em>' attribute.
@@ -506,61 +598,61 @@ public interface ServerTypePackage extends EPackage{
      * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getServerRuntime()
      * @generated
      */
-	int SERVER_RUNTIME = 9;
+	int SERVER_RUNTIME = 11;
 
     /**
      * The feature id for the '<em><b>Group</b></em>' attribute list.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int SERVER_RUNTIME__GROUP = 0;
+    int SERVER_RUNTIME__GROUP = 0;
 
     /**
      * The feature id for the '<em><b>Property</b></em>' containment reference list.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int SERVER_RUNTIME__PROPERTY = 1;
+    int SERVER_RUNTIME__PROPERTY = 1;
 
     /**
      * The feature id for the '<em><b>Group1</b></em>' attribute list.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int SERVER_RUNTIME__GROUP1 = 2;
+    int SERVER_RUNTIME__GROUP1 = 2;
 
     /**
      * The feature id for the '<em><b>Port</b></em>' containment reference list.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int SERVER_RUNTIME__PORT = 3;
+    int SERVER_RUNTIME__PORT = 3;
 
     /**
      * The feature id for the '<em><b>Group2</b></em>' attribute list.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int SERVER_RUNTIME__GROUP2 = 4;
+    int SERVER_RUNTIME__GROUP2 = 4;
 
     /**
      * The feature id for the '<em><b>Module</b></em>' containment reference list.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int SERVER_RUNTIME__MODULE = 5;
+    int SERVER_RUNTIME__MODULE = 5;
 
     /**
      * The feature id for the '<em><b>Project</b></em>' containment reference.
@@ -592,38 +684,47 @@ public interface ServerTypePackage extends EPackage{
     /**
      * The feature id for the '<em><b>Group3</b></em>' attribute list.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int SERVER_RUNTIME__GROUP3 = 9;
+    int SERVER_RUNTIME__GROUP3 = 9;
 
     /**
      * The feature id for the '<em><b>Publisher</b></em>' containment reference list.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int SERVER_RUNTIME__PUBLISHER = 10;
+    int SERVER_RUNTIME__PUBLISHER = 10;
 
     /**
      * The feature id for the '<em><b>Group4</b></em>' attribute list.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int SERVER_RUNTIME__GROUP4 = 11;
+    int SERVER_RUNTIME__GROUP4 = 11;
 
     /**
      * The feature id for the '<em><b>Classpath</b></em>' containment reference list.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int SERVER_RUNTIME__CLASSPATH = 12;
+    int SERVER_RUNTIME__CLASSPATH = 12;
+
+    /**
+     * The feature id for the '<em><b>Jndi Connection</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SERVER_RUNTIME__JNDI_CONNECTION = 13;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -632,7 +733,7 @@ public interface ServerTypePackage extends EPackage{
      * @generated
      * @ordered
      */
-	int SERVER_RUNTIME__NAME = 13;
+	int SERVER_RUNTIME__NAME = 14;
 
     /**
      * The feature id for the '<em><b>Version</b></em>' attribute.
@@ -641,7 +742,7 @@ public interface ServerTypePackage extends EPackage{
      * @generated
      * @ordered
      */
-	int SERVER_RUNTIME__VERSION = 14;
+	int SERVER_RUNTIME__VERSION = 15;
 
     /**
      * The number of structural features of the the '<em>Server Runtime</em>' class.
@@ -650,7 +751,7 @@ public interface ServerTypePackage extends EPackage{
      * @generated
      * @ordered
      */
-	int SERVER_RUNTIME_FEATURE_COUNT = 15;
+	int SERVER_RUNTIME_FEATURE_COUNT = 16;
 
     /**
      * Returns the meta object for class '{@link org.eclipse.jst.server.generic.servertype.definition.ArchiveType <em>Archive Type</em>}'.
@@ -686,13 +787,13 @@ public interface ServerTypePackage extends EPackage{
     /**
      * Returns the meta object for the attribute list '{@link org.eclipse.jst.server.generic.servertype.definition.Classpath#getGroup <em>Group</em>}'.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @return the meta object for the attribute list '<em>Group</em>'.
      * @see org.eclipse.jst.server.generic.servertype.definition.Classpath#getGroup()
      * @see #getClasspath()
      * @generated
      */
-	EAttribute getClasspath_Group();
+    EAttribute getClasspath_Group();
 
     /**
      * Returns the meta object for the containment reference list '{@link org.eclipse.jst.server.generic.servertype.definition.Classpath#getArchive <em>Archive</em>}'.
@@ -728,6 +829,92 @@ public interface ServerTypePackage extends EPackage{
 	EAttribute getClasspath_IsLibrary();
 
     /**
+     * Returns the meta object for class '{@link org.eclipse.jst.server.generic.servertype.definition.JndiConnection <em>Jndi Connection</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Jndi Connection</em>'.
+     * @see org.eclipse.jst.server.generic.servertype.definition.JndiConnection
+     * @generated
+     */
+    EClass getJndiConnection();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.eclipse.jst.server.generic.servertype.definition.JndiConnection#getProviderUrl <em>Provider Url</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Provider Url</em>'.
+     * @see org.eclipse.jst.server.generic.servertype.definition.JndiConnection#getProviderUrl()
+     * @see #getJndiConnection()
+     * @generated
+     */
+    EAttribute getJndiConnection_ProviderUrl();
+
+    /**
+     * Returns the meta object for the attribute list '{@link org.eclipse.jst.server.generic.servertype.definition.JndiConnection#getGroup <em>Group</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute list '<em>Group</em>'.
+     * @see org.eclipse.jst.server.generic.servertype.definition.JndiConnection#getGroup()
+     * @see #getJndiConnection()
+     * @generated
+     */
+    EAttribute getJndiConnection_Group();
+
+    /**
+     * Returns the meta object for the containment reference list '{@link org.eclipse.jst.server.generic.servertype.definition.JndiConnection#getJndiProperty <em>Jndi Property</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference list '<em>Jndi Property</em>'.
+     * @see org.eclipse.jst.server.generic.servertype.definition.JndiConnection#getJndiProperty()
+     * @see #getJndiConnection()
+     * @generated
+     */
+    EReference getJndiConnection_JndiProperty();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.eclipse.jst.server.generic.servertype.definition.JndiConnection#getInitialContextFactory <em>Initial Context Factory</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Initial Context Factory</em>'.
+     * @see org.eclipse.jst.server.generic.servertype.definition.JndiConnection#getInitialContextFactory()
+     * @see #getJndiConnection()
+     * @generated
+     */
+    EAttribute getJndiConnection_InitialContextFactory();
+
+    /**
+     * Returns the meta object for class '{@link org.eclipse.jst.server.generic.servertype.definition.JndiProperty <em>Jndi Property</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Jndi Property</em>'.
+     * @see org.eclipse.jst.server.generic.servertype.definition.JndiProperty
+     * @generated
+     */
+    EClass getJndiProperty();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.eclipse.jst.server.generic.servertype.definition.JndiProperty#getName <em>Name</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Name</em>'.
+     * @see org.eclipse.jst.server.generic.servertype.definition.JndiProperty#getName()
+     * @see #getJndiProperty()
+     * @generated
+     */
+    EAttribute getJndiProperty_Name();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.eclipse.jst.server.generic.servertype.definition.JndiProperty#getValue <em>Value</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Value</em>'.
+     * @see org.eclipse.jst.server.generic.servertype.definition.JndiProperty#getValue()
+     * @see #getJndiProperty()
+     * @generated
+     */
+    EAttribute getJndiProperty_Value();
+
+    /**
      * Returns the meta object for class '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration <em>Launch Configuration</em>}'.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -738,15 +925,15 @@ public interface ServerTypePackage extends EPackage{
 	EClass getLaunchConfiguration();
 
     /**
-     * Returns the meta object for the attribute '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getClass_ <em>Class</em>}'.
+     * Returns the meta object for the attribute '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getMainClass <em>Main Class</em>}'.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Class</em>'.
-     * @see org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getClass_()
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Main Class</em>'.
+     * @see org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getMainClass()
      * @see #getLaunchConfiguration()
      * @generated
      */
-	EAttribute getLaunchConfiguration_Class();
+    EAttribute getLaunchConfiguration_MainClass();
 
     /**
      * Returns the meta object for the attribute '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getWorkingDirectory <em>Working Directory</em>}'.
@@ -977,13 +1164,13 @@ public interface ServerTypePackage extends EPackage{
     /**
      * Returns the meta object for the attribute list '{@link org.eclipse.jst.server.generic.servertype.definition.Publisher#getGroup <em>Group</em>}'.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @return the meta object for the attribute list '<em>Group</em>'.
      * @see org.eclipse.jst.server.generic.servertype.definition.Publisher#getGroup()
      * @see #getPublisher()
      * @generated
      */
-	EAttribute getPublisher_Group();
+    EAttribute getPublisher_Group();
 
     /**
      * Returns the meta object for the containment reference list '{@link org.eclipse.jst.server.generic.servertype.definition.Publisher#getPublisherdata <em>Publisherdata</em>}'.
@@ -1052,68 +1239,68 @@ public interface ServerTypePackage extends EPackage{
     /**
      * Returns the meta object for the attribute list '{@link org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getGroup <em>Group</em>}'.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @return the meta object for the attribute list '<em>Group</em>'.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getGroup()
      * @see #getServerRuntime()
      * @generated
      */
-	EAttribute getServerRuntime_Group();
+    EAttribute getServerRuntime_Group();
 
     /**
      * Returns the meta object for the containment reference list '{@link org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getProperty <em>Property</em>}'.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @return the meta object for the containment reference list '<em>Property</em>'.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getProperty()
      * @see #getServerRuntime()
      * @generated
      */
-	EReference getServerRuntime_Property();
+    EReference getServerRuntime_Property();
 
     /**
      * Returns the meta object for the attribute list '{@link org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getGroup1 <em>Group1</em>}'.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @return the meta object for the attribute list '<em>Group1</em>'.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getGroup1()
      * @see #getServerRuntime()
      * @generated
      */
-	EAttribute getServerRuntime_Group1();
+    EAttribute getServerRuntime_Group1();
 
     /**
      * Returns the meta object for the containment reference list '{@link org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getPort <em>Port</em>}'.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @return the meta object for the containment reference list '<em>Port</em>'.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getPort()
      * @see #getServerRuntime()
      * @generated
      */
-	EReference getServerRuntime_Port();
+    EReference getServerRuntime_Port();
 
     /**
      * Returns the meta object for the attribute list '{@link org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getGroup2 <em>Group2</em>}'.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @return the meta object for the attribute list '<em>Group2</em>'.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getGroup2()
      * @see #getServerRuntime()
      * @generated
      */
-	EAttribute getServerRuntime_Group2();
+    EAttribute getServerRuntime_Group2();
 
     /**
      * Returns the meta object for the containment reference list '{@link org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getModule <em>Module</em>}'.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @return the meta object for the containment reference list '<em>Module</em>'.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getModule()
      * @see #getServerRuntime()
      * @generated
      */
-	EReference getServerRuntime_Module();
+    EReference getServerRuntime_Module();
 
     /**
      * Returns the meta object for the containment reference '{@link org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getProject <em>Project</em>}'.
@@ -1151,46 +1338,57 @@ public interface ServerTypePackage extends EPackage{
     /**
      * Returns the meta object for the attribute list '{@link org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getGroup3 <em>Group3</em>}'.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @return the meta object for the attribute list '<em>Group3</em>'.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getGroup3()
      * @see #getServerRuntime()
      * @generated
      */
-	EAttribute getServerRuntime_Group3();
+    EAttribute getServerRuntime_Group3();
 
     /**
      * Returns the meta object for the containment reference list '{@link org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getPublisher <em>Publisher</em>}'.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @return the meta object for the containment reference list '<em>Publisher</em>'.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getPublisher()
      * @see #getServerRuntime()
      * @generated
      */
-	EReference getServerRuntime_Publisher();
+    EReference getServerRuntime_Publisher();
 
     /**
      * Returns the meta object for the attribute list '{@link org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getGroup4 <em>Group4</em>}'.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @return the meta object for the attribute list '<em>Group4</em>'.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getGroup4()
      * @see #getServerRuntime()
      * @generated
      */
-	EAttribute getServerRuntime_Group4();
+    EAttribute getServerRuntime_Group4();
 
     /**
      * Returns the meta object for the containment reference list '{@link org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getClasspath <em>Classpath</em>}'.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @return the meta object for the containment reference list '<em>Classpath</em>'.
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getClasspath()
      * @see #getServerRuntime()
      * @generated
      */
-	EReference getServerRuntime_Classpath();
+    EReference getServerRuntime_Classpath();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getJndiConnection <em>Jndi Connection</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Jndi Connection</em>'.
+     * @see org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getJndiConnection()
+     * @see #getServerRuntime()
+     * @generated
+     */
+    EReference getServerRuntime_JndiConnection();
 
     /**
      * Returns the meta object for the attribute '{@link org.eclipse.jst.server.generic.servertype.definition.ServerRuntime#getName <em>Name</em>}'.

@@ -30,6 +30,9 @@
 package org.eclipse.jst.server.generic.core.internal;
 
 import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.*;
@@ -39,6 +42,8 @@ import org.eclipse.jst.server.core.EJBBean;
 import org.eclipse.jst.server.core.JndiLaunchable;
 import org.eclipse.jst.server.core.JndiObject;
 import org.eclipse.jst.server.core.Servlet;
+import org.eclipse.jst.server.generic.servertype.definition.JndiProperty;
+import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 /**
  * Launchable adapter delegate for generic servers.
  * @author Gorkem Ercan 
@@ -61,15 +66,28 @@ public class GenericServerLaunchableAdapterDelegate extends LaunchableAdapterDel
 
     private Object prepareJndiLaunchable(IModuleArtifact moduleObject, ServerDelegate delegate) {
         JndiLaunchable launchable = null;
+        GenericServer genericServer = (GenericServer)delegate;
+        ServerRuntime definition = genericServer.getServerDefinition();
+        Properties props = new Properties();
+        props.put("java.naming.factory.initial",definition.getJndiConnection().getInitialContextFactory());
+        props.put("java.naming.provider.url",definition.getJndiConnection().getProviderUrl());
+        List jps = definition.getJndiConnection().getJndiProperty();
+        Iterator propsIt =jps.iterator();
+        while(propsIt.hasNext())
+        {
+            JndiProperty prop = (JndiProperty)propsIt.next();
+            props.put(prop.getName(),prop.getValue());
+        }
+        
         if(moduleObject instanceof EJBBean)
         {
             EJBBean bean = (EJBBean)moduleObject;
-            launchable = new JndiLaunchable(null,bean.getJndiName());
+            launchable = new JndiLaunchable(props,bean.getJndiName());
         }
         if(moduleObject instanceof JndiObject)
         {
             JndiObject jndi = (JndiObject)moduleObject;
-            launchable = new JndiLaunchable(null,jndi.getJndiName());
+            launchable = new JndiLaunchable(props,jndi.getJndiName());
         }
         return launchable;
     }
