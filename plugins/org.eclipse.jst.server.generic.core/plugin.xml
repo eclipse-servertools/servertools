@@ -25,6 +25,7 @@
       <import plugin="org.eclipse.debug.ui"/>
       <import plugin="org.eclipse.ant.core"/>
       <import plugin="org.eclipse.ant.ui"/>
+      <import plugin="org.eclipse.jst.server.generic.modules"/>
    </requires>
 	
  <extension point="org.eclipse.wst.server.core.runtimeTargetHandlers">
@@ -107,7 +108,13 @@
         id="org.eclipse.jst.server.generic.core.sourcePathComputer"
         class="org.eclipse.jst.server.generic.internal.core.GenericServerSourcePathComputerDelegate"/>
    </extension>
-
+ 
+   <extension point="org.eclipse.wst.server.core.launchableAdapters">
+      <launchableAdapter
+         class="org.eclipse.jst.server.generic.internal.core.GenericServerLaunchableAdapterDelegate"
+         id="org.eclipse.jst.server.generic.web"/>
+   </extension>
+ 
 
    
    

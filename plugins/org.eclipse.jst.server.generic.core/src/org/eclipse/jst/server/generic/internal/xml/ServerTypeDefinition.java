@@ -265,7 +265,7 @@ public class ServerTypeDefinition  {
 	 * @return String
 	 */
 	public String getWebModulesDeployDirectory() {
-		return webModulesDeployDirectory;
+		return this.resolveProperties(webModulesDeployDirectory);
 	}
 
 	/**

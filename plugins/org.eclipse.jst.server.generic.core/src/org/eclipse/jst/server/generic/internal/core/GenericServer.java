@@ -30,13 +30,12 @@
  ***************************************************************************/
 package org.eclipse.jst.server.generic.internal.core;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -61,10 +60,13 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.generic.core.CorePlugin;
 import org.eclipse.jst.server.generic.internal.xml.ClasspathItem;
 import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinition;
+import org.eclipse.jst.server.generic.modules.J2eeSpecModuleFactoryDelegate;
 import org.eclipse.jst.server.j2ee.IWebModule;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.IServerState;
 import org.eclipse.wst.server.core.ITask;
+import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.core.model.IModuleEvent;
 import org.eclipse.wst.server.core.model.IModuleFactoryEvent;
@@ -73,6 +75,7 @@ import org.eclipse.wst.server.core.model.IPublisher;
 import org.eclipse.wst.server.core.model.IServerDelegate;
 import org.eclipse.wst.server.core.model.IServerPort;
 import org.eclipse.wst.server.core.model.IStartableServer;
+import org.eclipse.wst.server.core.model.IURLProvider;
 import org.eclipse.wst.server.core.resources.IModuleResourceDelta;
 import org.eclipse.wst.server.core.util.ServerPort;
 import org.eclipse.wst.server.core.util.SocketUtil;
@@ -82,7 +85,7 @@ import org.eclipse.wst.server.core.util.SocketUtil;
  * 
  * @author Gorkem Ercan
  */
-public class GenericServer implements IServerDelegate, IStartableServer, IMonitorableServer {
+public class GenericServer implements IServerDelegate, IStartableServer, IMonitorableServer,IURLProvider {
 	private IServerState fLiveServer;
 	private static final String ATTR_STOP = "stop-server";
 	
@@ -193,31 +196,10 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 	 */
 	public IModule[] getModules() {
 		// TODO Auto-generated method stub
-		
-		List l = doGetModules();
-		return (IModule[]) l.toArray(new IModule[l.size()]);
+		List list =  J2eeSpecModuleFactoryDelegate.getInstance().getModules();
+		return (IModule[])list.toArray(new IModule[list.size()]);
 	}
 
-	private List doGetModules() {
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IProject[] projects = root.getProjects();
-		if (projects == null)
-			return new ArrayList(0);
-		
-		List list = new ArrayList();
-		int size = projects.length;
-		for (int i = 0; i < size; i++) {
-			try {
-				IWebModule module = getWebModule(projects[i]);
-				if (module != null)
-					list.add(module);
-			} catch (CoreException ce) {
-				Trace.trace("Could not determine nature", ce);
-			}
-		}
-		
-		return list;
-	}
 	
 	protected IWebModule getWebModule(IProject project) throws CoreException {
 	
@@ -629,6 +611,39 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 	
 	public int getStopTimeout() {
 		return 300000;
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.wtp.server.core.model.IURLProvider#getModuleRootURL(org.eclipse.wtp.server.core.model.IModule)
+	 */
+	public URL getModuleRootURL(IModule module) {
+
+		try {
+			if (module == null || !(module instanceof IWebModule))
+				return null;
+
+			IServerConfiguration serverConfig = fLiveServer
+					.getServerConfiguration();
+			if (serverConfig == null)
+				return null;
+
+			String url = "http://localhost";
+			int port = Integer.parseInt(getServerDefinition().getPort());
+			port = ServerCore.getServerMonitorManager().getMonitoredPort(
+					fLiveServer, port, "web");
+			if (port != 80)
+				url += ":" + port;
+
+			url += "/"+module.getName();
+
+			if (!url.endsWith("/"))
+				url += "/";
+
+			return new URL(url);
+		} catch (Exception e) {
+			Trace.trace("Could not get root URL", e);
+			return null;
+		}
+
 	}
 
 }

@@ -44,14 +44,14 @@
 	label="Port:"
 	type="string"
 	default="7001" />
-<property id="classPathVariableName"
+<!--<property id="classPathVariableName"
 	label="Classpath Variable Name:"
 	type="string"
 	default="WEBLOGIC81" />
 <property id="classPath"
 	label="Classpath Variable:"
 	type="directory"
-	default="C:/bea/weblogic81/server/lib" />
+	default="C:/bea/weblogic81/server/lib" />-->
 <serverHome>${serverRootDirectory}</serverHome>
 <webModulesDeployDirectory>${domainDirectory}/applications</webModulesDeployDirectory>
 <ejbModulesDeployDirectory>${domainDirectory}/applications</ejbModulesDeployDirectory>
@@ -82,4 +82,28 @@
 	<jar type="variable">${classPath}/ojdbc14.jar</jar>
 	<jar type="variable">${classPath}/webservices.jar</jar>
 </projectClassPath>
+<adminTool>
+	<web>
+		<deploy>
+		<![CDATA[
+			
+				<project name="deployextension"  default="deploy"  basedir=".">
+				    <target name="deploy">
+						<jar destfile="${deploymentUnitName}.war"> 
+							<zipfileset dir="${moduleDir}">
+	        					<include name="**/*.*"/>
+	       						<exclude name="**/jsp_servlet/*.class"/>
+						        <exclude name="**/*.war"/>
+							</zipfileset>
+						</jar>
+  				  		<move file="${deploymentUnitName}.war" todir="${deployDir}"/>
+  					  </target>
+				</project>
+				
+		]]>
+		</deploy>
+		<undeploy>
+		</undeploy>
+	</web>
+</adminTool>
 </serverDefinition>
