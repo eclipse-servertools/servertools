@@ -36,22 +36,21 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.generic.core.CorePlugin;
 import org.eclipse.jst.server.generic.core.GenericServerCoreMessages;
-import org.eclipse.jst.server.generic.modules.J2eeSpecModuleFactoryDelegate;
+import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.Port;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.j2ee.IWebModule;
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ITask;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.model.IModuleEvent;
-import org.eclipse.wst.server.core.model.IModuleFactoryEvent;
+import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.IURLProvider;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 import org.eclipse.wst.server.core.model.ServerDelegate;
@@ -63,36 +62,9 @@ import org.eclipse.wst.server.core.util.ServerPort;
  * @author Gorkem Ercan
  */
 public class GenericServer extends ServerDelegate implements IURLProvider {
-	
 
-	
-
-
-	
-	
-	private ServerRuntime fServerDefinition;
-
-//	/**
-//	 * Returns the project publisher that can be used to
-//	 * publish the given project.
-//	 *
-//	 * @param project org.eclipse.core.resources.IProject
-//	 * @return org.eclipse.wst.server.core.model.IProjectPublisher
-//	 */
-//	public IPublisher getPublisher(List parents, IModule module) {
-//		return new AntPublisher(parents, module, this.getServerDefinition());
-//	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.server.core.model.IServerDelegate#updateConfiguration()
-	 */
-	public void updateConfiguration() {
-		Trace.trace(Trace.FINEST, "updateConfiguration" + this);
-	}
-
-
+    private static final String ATTR_GENERIC_SERVER_MODULES = "Generic_Server_Modules_List";
+    private ServerRuntime fServerDefinition;
 
 	/*
 	 * (non-Javadoc)
@@ -105,66 +77,77 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 		return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "PublishingStarted", null);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.server.core.model.IServerDelegate#publishConfiguration(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	public IStatus publishConfiguration(IProgressMonitor monitor) {
 
-		return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "Published Configuration", null);
-	}
-
-//	/*
-//	 * (non-Javadoc)
-//	 * 
-//	 * @see org.eclipse.wst.server.core.model.IServerDelegate#publishStop(org.eclipse.core.runtime.IProgressMonitor)
-//	 */
-//	public IStatus publishStop(IProgressMonitor monitor) {
-//		getServer().setConfigurationSyncState(IServer.SYNC_STATE_IN_SYNC);
-//		return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "Published Configuration", null);
-//	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.server.core.model.IServerDelegate#canModifyModules(org.eclipse.wst.server.core.model.IModule[],
-	 *      org.eclipse.wst.server.core.model.IModule[])
-	 */
 	public IStatus canModifyModules(IModule[] add, IModule[] remove) {
-		// TODO Auto-generated method stub
-		return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "CanModifyModules", null);
+		Iterator iterator = getServerDefinition().getModule().iterator();
+		
+		while(iterator.hasNext())   {
+	        Module module = (Module)iterator.next();
+	        if("j2ee.web".equals(module.getType()))
+	            return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "CanModifyModules", null);
+	    }
+		return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.getString("moduleNotCompatible"), null);
 	}
-
+	
+	private String createModuleId(IModule module)
+	{
+	    return module.getProject().getName()+":"+module.getId();
+	}
+    /* (non-Javadoc)
+     * @see org.eclipse.wst.server.core.model.ServerDelegate#modifyModules(org.eclipse.wst.server.core.IModule[], org.eclipse.wst.server.core.IModule[], org.eclipse.core.runtime.IProgressMonitor)
+     */
+    public void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
+      
+        List modules = this.getAttribute(ATTR_GENERIC_SERVER_MODULES,(List)null);
+        
+        if(add!=null&& add.length>0)
+        {
+            if(modules==null) {
+               modules=new ArrayList(add.length);
+            }
+            for (int i = 0; i < add.length; i++) {
+               String modlId = createModuleId(add[i]);
+               if(modules.contains(modlId)==false)
+                    modules.add(modlId);
+            }
+        }
+        if(remove!=null && remove.length>0 && modules!=null)
+        {
+            for (int i = 0; i < remove.length; i++) {
+                modules.remove(createModuleId(remove[i]));
+            }
+        }
+        if(modules!=null)    
+            setAttribute(ATTR_GENERIC_SERVER_MODULES,modules);
+        
+    }
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.wst.server.core.model.IServerDelegate#getModules()
 	 */
 	public org.eclipse.wst.server.core.IModule[] getModules() {
-		return J2eeSpecModuleFactoryDelegate.getInstance().getModules();
+		List modules = getAttribute(ATTR_GENERIC_SERVER_MODULES,(List)null);
+		List imodules = new ArrayList();
+		Iterator iterator = modules.iterator();
+		while(iterator.hasNext())
+		{
+		    String moduleId = (String)iterator.next();
+		    int sep = moduleId.indexOf(":");
+		    IProject project =ResourcesPlugin.getWorkspace().getRoot().getProject(moduleId.substring(0,sep));
+		    IModule[] ms = ServerUtil.getModules(project);
+		    for (int i = 0; i < ms.length; i++) {
+                if(ms[i].getId().equals(moduleId.substring(sep+1)));
+                	imodules.add(ms[i]);
+            }
+	
+		}
+		if(modules!= null)
+		    return (IModule[])imodules.toArray(new IModule[imodules.size()]);
+		return new IModule[0];
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.server.core.model.IServerDelegate#getModuleState(org.eclipse.wst.server.core.model.IModule)
-	 */
-	public int getModuleState(IModule module) {
-	    return IServer.STATE_STARTED;
-	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.server.core.model.IServerDelegate#getRepairCommands(org.eclipse.wst.server.core.model.IModuleFactoryEvent[],
-	 *      org.eclipse.wst.server.core.model.IModuleEvent[])
-	 */
-	public ITask[] getRepairCommands(IModuleFactoryEvent[] factoryEvent,
-			IModuleEvent[] moduleEvent) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -228,20 +211,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 		return (org.eclipse.wst.server.core.IServerPort[])ports.toArray(new org.eclipse.wst.server.core.IServerPort[ports.size()]);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.model.IStartableServer#isTerminateOnShutdown()
-	 */
-	public boolean isTerminateOnShutdown() {
-		return true;
-	}
 
-	public int getStartTimeout() {
-		return 300000;
-	}
-	
-	public int getStopTimeout() {
-		return 300000;
-	}
 	/* (non-Javadoc)
 	 * @see org.eclipse.wtp.server.core.model.IURLProvider#getModuleRootURL(org.eclipse.wtp.server.core.model.IModule)
 	 */
@@ -305,12 +275,6 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
        return (RuntimeDelegate)getServer().getRuntime().getAdapter(RuntimeDelegate.class);
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.wst.server.core.model.ServerDelegate#modifyModules(org.eclipse.wst.server.core.IModule[], org.eclipse.wst.server.core.IModule[], org.eclipse.core.runtime.IProgressMonitor)
-     */
-    public void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
-        // TODO Auto-generated method stub
-        
-    }
+
 
 }

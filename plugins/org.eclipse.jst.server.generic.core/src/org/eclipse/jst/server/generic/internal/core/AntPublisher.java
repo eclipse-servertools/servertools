@@ -42,11 +42,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.generic.core.CorePlugin;
-import org.eclipse.jst.server.generic.modules.WebModule;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.PublishType;
 import org.eclipse.jst.server.generic.servertype.definition.Publisher;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
+import org.eclipse.jst.server.j2ee.IWebModule;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 /**
@@ -76,7 +76,7 @@ public class AntPublisher{
 	 */
 	public IStatus[] publish(IModuleArtifact[] resource,
 			IProgressMonitor monitor) throws CoreException {
-		Module sModule =  serverTypeDefinition.getModule(this.module.getModuleType().getId());
+		Module sModule =  serverTypeDefinition.getModule("j2ee.web");
 		Publisher publisher =  serverTypeDefinition.getPublisher(sModule.getPublisherReference());
 		String deployAnt = ((PublishType)publisher.getPublish().get(0)).getTask();
 		deployAnt = serverTypeDefinition.getResolver().resolveProperties(deployAnt);
@@ -99,14 +99,15 @@ public class AntPublisher{
 	}
 	private Map getPublishProperties(IModuleArtifact[] resource)
 	{
-		Module module =  serverTypeDefinition.getModule(this.module.getModuleType().getId());
+		Module module =  serverTypeDefinition.getModule("j2ee.web");
 
 		Map props = new HashMap();
 		String modDir = module.getPublishDir();
 		modDir = serverTypeDefinition.getResolver().resolveProperties(modDir);
 
 		props.put("module.name",this.module.getName());
-		props.put("module.dir",((WebModule)this.module).getLocation().toString());
+		IWebModule webModule = (IWebModule)this.module.getAdapter(IWebModule.class);
+		props.put("module.dir",webModule.getLocation().toString());
 		props.put("server.publish.dir",modDir);
 		return props;
 		
