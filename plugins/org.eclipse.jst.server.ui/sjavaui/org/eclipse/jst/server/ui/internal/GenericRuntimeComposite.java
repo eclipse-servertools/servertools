@@ -29,7 +29,7 @@ import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jst.server.core.IGenericRuntimeWorkingCopy;
+import org.eclipse.jst.server.core.internal.IGenericRuntimeWorkingCopy;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.PlatformUI;

@@ -9,19 +9,6 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.jst.server.core.internal;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
-import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
-import org.eclipse.jdt.launching.JavaRuntime;
-
-import org.eclipse.wst.server.core.IServer;
 /**
  * 
  */
@@ -38,13 +25,13 @@ public class LaunchConfigurationUtil {
 	 * @return an array containing runtime classpath entries
 	 * @throws CoreException
 	 */
-	public static IRuntimeClasspathEntry[] getClasspath(IServer server, boolean create, IProgressMonitor monitor) throws CoreException {
+	/*public static IRuntimeClasspathEntry[] getClasspath(IServer server, boolean create, IProgressMonitor monitor) throws CoreException {
 		ILaunchConfiguration config = server.getLaunchConfiguration(create, monitor);
 		if (config == null)
 			return null;
 		
 		return JavaRuntime.computeUnresolvedRuntimeClasspath(config);
-	}
+	}*/
 
 	/**
 	 * Sets the classpath on the given server's launch configuration.
@@ -53,7 +40,7 @@ public class LaunchConfigurationUtil {
 	 * @param classpath
 	 * @throws CoreException
 	 */
-	public static void setClasspath(IServer server, IRuntimeClasspathEntry[] classpath, IProgressMonitor monitor) throws CoreException {
+	/*public static void setClasspath(IServer server, IRuntimeClasspathEntry[] classpath, IProgressMonitor monitor) throws CoreException {
 		ILaunchConfiguration config = server.getLaunchConfiguration(true, monitor);
 		ILaunchConfigurationWorkingCopy wc = config.getWorkingCopy();
 		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, false);
@@ -65,5 +52,5 @@ public class LaunchConfigurationUtil {
 		}
 		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, mementos);
 		wc.doSave();
-	}
+	}*/
 }

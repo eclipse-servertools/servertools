@@ -8,11 +8,10 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.server.core;
+package org.eclipse.jst.server.core.internal;
 
 import org.eclipse.jdt.launching.IVMInstall;
 /**
- * 
  * @since 1.0
  */
 public interface IGenericRuntimeWorkingCopy extends IGenericRuntime {

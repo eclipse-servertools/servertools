@@ -14,12 +14,11 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMInstallType;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jst.server.core.IGenericRuntime;
-import org.eclipse.jst.server.core.IGenericRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 /**
- * 
+ * TODO: allow a "default" setting on the VM that will use the Eclipse
+ * default VM, even if it changes.
  */
 public class GenericRuntime extends RuntimeDelegate implements IGenericRuntime, IGenericRuntimeWorkingCopy {
 	protected static final String PROP_VM_INSTALL_TYPE_ID = "vm-install-type-id";
