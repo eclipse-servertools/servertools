@@ -24,15 +24,7 @@ public class ServerPortTestCase extends TestCase {
 		new ServerPort(null, null, 0, null);
 	}
 
-	public void test01CreatePort() throws Exception {
-		new ServerPort(null, null, 0, null, false);
-	}
-	
 	public void test02CreatePort() throws Exception {
 		new ServerPort(null, null, 0, null, null, false);
-	}
-	
-	public void test03CreatePort() throws Exception {
-		new ServerPort(null, 0, null);
 	}
 }
