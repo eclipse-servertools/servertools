@@ -1537,12 +1537,16 @@ public class Server extends Base implements IServer {
 	protected void resolve() {
 		IServerType oldServerType = serverType;
 		String serverTypeId = getAttribute("server-type-id", (String)null);
-		serverType = ServerCore.findServerType(serverTypeId);
+		if (serverTypeId != null)
+			serverType = ServerCore.findServerType(serverTypeId);
+		else
+			serverType = null;
 		if (serverType != null && !serverType.equals(oldServerType))
 			serverState = ((ServerType)serverType).getInitialState();
 		
 		String runtimeId = getAttribute(RUNTIME_ID, (String)null);
-		runtime = ServerCore.findRuntime(runtimeId);
+		if (runtimeId != null)
+			runtime = ServerCore.findRuntime(runtimeId);
 		
 		String configPath = getAttribute(CONFIGURATION_ID, (String)null);
 		configuration = null;

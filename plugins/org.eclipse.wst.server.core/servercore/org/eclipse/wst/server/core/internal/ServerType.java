@@ -59,9 +59,12 @@ public class ServerType implements IServerType, IOrdered {
 	}
 	
 	public IRuntimeType getRuntimeType() {
-		return ServerCore.findRuntimeType(element.getAttribute("runtimeTypeId"));
+		String typeId = element.getAttribute("runtimeTypeId");
+		if (typeId == null)
+			return null;
+		return ServerCore.findRuntimeType(typeId);
 	}
-	
+
 	public boolean hasRuntime() {
 		String s = element.getAttribute("runtime");
 		return "true".equals(s);

@@ -149,7 +149,10 @@ public class Runtime extends Base implements IRuntime {
 
 	protected void loadState(IMemento memento) {
 		String runtimeTypeId = memento.getString(PROP_RUNTIME_TYPE_ID);
-		runtimeType = ServerCore.findRuntimeType(runtimeTypeId);
+		if (runtimeTypeId != null)
+			runtimeType = ServerCore.findRuntimeType(runtimeTypeId);
+		else
+			runtimeType = null;
 	}
 
 	protected void saveState(IMemento memento) {

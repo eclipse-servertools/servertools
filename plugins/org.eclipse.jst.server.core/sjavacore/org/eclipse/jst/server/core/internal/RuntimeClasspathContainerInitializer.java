@@ -36,7 +36,8 @@ public class RuntimeClasspathContainerInitializer extends ClasspathContainerInit
 					if (handler != null)
 						crth = (ClasspathRuntimeTargetHandler) handler.getAdapter(ClasspathRuntimeTargetHandler.class);
 					String runtimeId = containerPath.segment(2);
-					runtime = ServerCore.findRuntime(runtimeId);
+					if (runtimeId != null)
+						runtime = ServerCore.findRuntime(runtimeId);
 					if (containerPath.segmentCount() > 3)
 						id = containerPath.segment(3);
 				}

@@ -164,7 +164,9 @@ public class GlobalCommandManager {
 			CommandManagerInfo info = new CommandManagerInfo();
 			info.count = 1;
 			info.id = id;
-			IServer server = ServerCore.findServer(id);
+			IServer server = null;
+			if (id != null)
+				server = ServerCore.findServer(id);
 			if (server != null)
 				info.wc = server.createWorkingCopy();
 			info.isDirty = false;
@@ -204,7 +206,9 @@ public class GlobalCommandManager {
 		try {
 			CommandManagerInfo info = getExistingCommandManagerInfo(id);
 			if (info != null) {
-				IServer server = ServerCore.findServer(id);
+				IServer server = null;
+				if (id != null)
+					server = ServerCore.findServer(id);
 				if (server != null)
 					info.wc = server.createWorkingCopy();
 				//info.serverElement = ServerCore.getResourceManager().getServer()

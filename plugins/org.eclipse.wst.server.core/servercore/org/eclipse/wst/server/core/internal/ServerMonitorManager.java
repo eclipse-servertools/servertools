@@ -124,7 +124,9 @@ public class ServerMonitorManager implements IServerMonitorManager {
 		
 		protected void load(IMemento memento, IProgressMonitor monitor2) {
 			String serverId = memento.getString("serverId");
-			server = ServerCore.findServer(serverId);
+			server = null;
+			if (serverId != null)
+				server = ServerCore.findServer(serverId);
 			if (server == null)
 				throw new RuntimeException("Server could not be found: " + serverId + " " + server);
 			String newPortStr = memento.getString("port");

@@ -11,7 +11,6 @@
 package org.eclipse.wst.server.core.internal;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -102,13 +101,14 @@ public class ModuleFactory implements IOrdered {
 	 * @see
 	 */
 	public IModule getModule(String id) {
-		if (modules == null)
-			getModules();
-		Iterator iterator = modules.iterator();
-		while (iterator.hasNext()) {
-			Module module = (Module) iterator.next();
-			if (id.equals(module.getInternalId()))
-				return module;
+		IModule[] modules2 = getModules();
+		if (modules2 != null) {
+			int size = modules2.length;
+			for (int i = 0; i < size; i++) {
+				Module module = (Module) modules2[i];
+				if (id.equals(module.getInternalId()))
+					return module;
+			}
 		}
 		return null;
 	}
@@ -117,6 +117,7 @@ public class ModuleFactory implements IOrdered {
 	 * @see
 	 */
 	public IModule[] getModules() {
+		modules = null;
 		if (modules == null) {
 			try {
 				modules = new ArrayList();

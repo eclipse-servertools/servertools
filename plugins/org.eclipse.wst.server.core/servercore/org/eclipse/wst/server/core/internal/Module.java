@@ -193,6 +193,25 @@ public class Module implements IModule {
 			return delegate;
 		return null;
 	}
+	
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Module))
+			return false;
+		
+		Module m = (Module) obj;
+		if (!factory.equals(m.factory))
+			return false;
+		if (!id.equals(m.id))
+			return false;
+		if (!project.equals(m.project))
+			return false;
+		if (!type.equals(m.type))
+			return false;
+		if (!version.equals(m.version))
+			return false;
+		
+		return true;
+	}
 
 	/**
 	 * Return a string representation of this object.

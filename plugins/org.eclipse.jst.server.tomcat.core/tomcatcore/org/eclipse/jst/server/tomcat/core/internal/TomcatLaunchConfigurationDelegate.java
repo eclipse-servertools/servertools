@@ -33,7 +33,9 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		String serverId = configuration.getAttribute(IServer.ATTR_SERVER_ID, (String) null);
 
-		IServer server = ServerCore.findServer(serverId);
+		IServer server = null;
+		if (serverId != null)
+			server = ServerCore.findServer(serverId);
 		if (server == null) {
 			Trace.trace(Trace.FINEST, "Launch configuration could not find server");
 			// throw CoreException();

@@ -204,7 +204,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 
 		try {
 			String serverId = configuration.getAttribute(IServer.ATTR_SERVER_ID, "");
-			if (!serverId.equals("")) {
+			if (serverId != null && !serverId.equals("")) {
 				server = ServerCore.findServer(serverId);
 
 				if (server == null) { //server no longer exists				
@@ -254,7 +254,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	public boolean isValid(ILaunchConfiguration launchConfig) {
 		try {
 			String id = launchConfig.getAttribute(IServer.ATTR_SERVER_ID, "");
-			if (!id.equals("")) {
+			if (id != null && !id.equals("")) {
 				IServer server2 = ServerCore.findServer(id);
 				if (server2 == null)
 					return false;

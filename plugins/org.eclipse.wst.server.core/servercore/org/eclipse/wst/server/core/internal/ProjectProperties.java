@@ -189,7 +189,9 @@ public class ProjectProperties implements IProjectProperties {
 	 */
 	public void setRuntimeTarget(IRuntime runtime, IProgressMonitor monitor) throws CoreException {
 		loadPreferences();
-		IRuntime oldRuntime = ServerCore.findRuntime(runtimeId);
+		IRuntime oldRuntime = null;
+		if (runtimeId != null)
+			ServerCore.findRuntime(runtimeId);
 		setRuntimeTarget(oldRuntime, runtime, true, monitor);
 	}
 
