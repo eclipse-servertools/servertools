@@ -48,7 +48,7 @@ import org.eclipse.wst.server.core.model.RuntimeDelegate;
 public class ServerCreationTest extends TestCase {
 
 	RuntimeType j2eeRuntimeType = null;
-	private final static String ID = "org.eclipse.jst.server.generic";
+	private final static String ID = "org.eclipse.jst.server.generic.jonas414";
 
 	/*
 	 * @see TestCase#setUp()
@@ -96,7 +96,7 @@ public class ServerCreationTest extends TestCase {
 			if (ID.equals(sType.getId()))
 				serverType = sType;
 		}
-		assertNotNull("Could not find org.eclipse.jst.server.generic server type",serverType);
+		assertNotNull("Could not find org.eclipse.jst.server.generic.jonas414 server type",serverType);
 
 		//Finds the generic server runtime type
 		IRuntimeType runtimeType = serverType.getRuntimeType();

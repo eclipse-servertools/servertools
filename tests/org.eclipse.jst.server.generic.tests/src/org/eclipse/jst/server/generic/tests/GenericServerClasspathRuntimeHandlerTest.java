@@ -34,7 +34,7 @@ public class GenericServerClasspathRuntimeHandlerTest extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        IRuntimeType type =ServerCore.findRuntimeType("org.eclipse.jst.server.generic.runtime");
+        IRuntimeType type =ServerCore.findRuntimeType("org.eclipse.jst.server.generic.runtime.jonas414");
         IRuntimeWorkingCopy wc = type.createRuntime("testRuntime",null);
         RuntimeDelegate delegate = (RuntimeDelegate)wc.getAdapter(RuntimeDelegate.class);
 		HashMap props = new HashMap();
