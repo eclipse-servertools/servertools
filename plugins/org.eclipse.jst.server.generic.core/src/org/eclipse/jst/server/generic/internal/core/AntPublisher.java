@@ -89,15 +89,12 @@ public class AntPublisher{
 		try {
 			createNewFile(file.toFile(),deployAnt.getBytes());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return null;
 		}
 				
 		runAnt(file.toString(),new String[]{"deploy"},getPublishProperties(resource),monitor);
 		
 		file.toFile().delete();
-		
-		// TODO Auto-generated method stub
 		return null;
 	}
 	private Map getPublishProperties(IModuleArtifact[] resource)
@@ -108,9 +105,9 @@ public class AntPublisher{
 		String modDir = module.getPublishDir();
 		modDir = serverTypeDefinition.getResolver().resolveProperties(modDir);
 
-		props.put("deploymentUnitName",this.module.getName());
-		props.put("moduleDir",((WebModule)this.module).getLocation().toString());
-		props.put("deployDir",modDir);
+		props.put("module.name",this.module.getName());
+		props.put("module.dir",((WebModule)this.module).getLocation().toString());
+		props.put("server.publish.dir",modDir);
 		return props;
 		
 		

@@ -78,13 +78,13 @@
 			
 				<project name="deployextension"  default="deploy"  basedir=".">
 				    <target name="deploy">
-						<jar destfile="${deploymentUnitName}.war"> 
-							<zipfileset dir="${moduleDir}">
+						<jar destfile="${module.name}.war"> 
+							<zipfileset dir="${module.dir}">
 	        					<include name="**/*.*"/>
 						        <exclude name="**/*.war"/>
 							</zipfileset>
 						</jar>
-  				  		<move file="${deploymentUnitName}.war" todir="${deployDir}"/>
+  				  		<move file="${module.name}.war" todir="${server.publish.dir}"/>
   					  </target>
 				</project>
 				
@@ -95,7 +95,7 @@
 			<task>
 				<![CDATA[<project name="deployextension"  default="deploy"  basedir=".">
 				    <target name="deploy">
-  				  		<delete file="${deployDir}/${deploymentUnitName}.war"/>
+  				  		<delete file="${server.publish.dir}/${module.name}.war"/>
   					  </target>
 				</project>]]>
 			</task>
