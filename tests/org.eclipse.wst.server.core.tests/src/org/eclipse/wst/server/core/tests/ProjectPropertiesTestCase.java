@@ -16,10 +16,11 @@ import junit.framework.TestCase;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.ProjectProperties;
 
 public class ProjectPropertiesTestCase extends TestCase {
 	protected static IProject project;
-	protected static IProjectProperties props;
+	protected static ProjectProperties props;
 	
 	protected static IProject projectEvent;
 	protected static IServer serverEvent;
@@ -50,7 +51,7 @@ public class ProjectPropertiesTestCase extends TestCase {
 			project.create(null);
 			project.open(null);
 		}
-		props = ServerCore.getProjectProperties(project);
+		props = (ProjectProperties) ServerCore.getProjectProperties(project);
 	}
 
 	public void test01AddListener() throws Exception {

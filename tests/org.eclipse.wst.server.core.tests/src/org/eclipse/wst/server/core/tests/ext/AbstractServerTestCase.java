@@ -90,7 +90,7 @@ public abstract class AbstractServerTestCase extends TestCase {
 	}
 	
 	public void test0008CanRun() throws Exception {
-		assertTrue(getServer().canStart(ILaunchManager.RUN_MODE));
+		assertTrue(getServer().canStart(ILaunchManager.RUN_MODE).isOK());
 	}
 	
 	public void test0009Run() throws Exception {
@@ -98,7 +98,7 @@ public abstract class AbstractServerTestCase extends TestCase {
 	}
 	
 	public void test0010CanStop() throws Exception {
-		assertTrue(getServer().canStop());
+		assertTrue(getServer().canStop().isOK());
 	}
 	
 	public void test0011Stop() throws Exception {
@@ -106,7 +106,7 @@ public abstract class AbstractServerTestCase extends TestCase {
 	}
 	
 	public void test0012CanDebug() throws Exception {
-		assertTrue(getServer().canStart(ILaunchManager.DEBUG_MODE));
+		assertTrue(getServer().canStart(ILaunchManager.DEBUG_MODE).isOK());
 	}
 	
 	public void test0013Debug() throws Exception {
@@ -114,7 +114,7 @@ public abstract class AbstractServerTestCase extends TestCase {
 	}
 	
 	public void test0014CanStop() throws Exception {
-		assertTrue(getServer().canStop());
+		assertTrue(getServer().canStop().isOK());
 	}
 	
 	public void test0015Stop() throws Exception {
