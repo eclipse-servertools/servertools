@@ -27,7 +27,7 @@ public abstract class RuntimeTargetHandlerDelegate {
 	 * @param handler2
 	 */
 	public final void initialize(IRuntimeTargetHandler handler2) {
-		this.handler = handler2;
+		handler = handler2;
 	}
 
 	/**

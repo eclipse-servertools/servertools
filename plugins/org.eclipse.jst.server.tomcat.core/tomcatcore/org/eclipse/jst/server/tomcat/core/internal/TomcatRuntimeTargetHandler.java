@@ -48,7 +48,7 @@ public class TomcatRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
 	 * @return
 	 */
 	public String getClasspathContainerLabel(IRuntime runtime, String id) {
-		String id2 = runtime.getId();
+		String id2 = runtime.getRuntimeType().getId();
 		if (id2.indexOf("32") > 0)
 			return TomcatPlugin.getResource("%target32runtime");
 		else if (id2.indexOf("40") > 0)
@@ -78,7 +78,7 @@ public class TomcatRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
 			return new IClasspathEntry[0];
 		
 		List list = new ArrayList();
-		if (runtime.getId().indexOf("32") > 0) {
+		if (runtime.getRuntimeType().getId().indexOf("32") > 0) {
 			IPath path = installPath.append("lib");
 			addLibraryEntries(list, path.toFile(), true);
 		} else {
