@@ -452,7 +452,7 @@ public class ServerTableViewer extends TreeViewer {
 	protected void addServer(final IServer server) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				add(null, server);
+				add(ROOT, server);
 			}
 		});
 	}
