@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.*;
 
-import org.eclipse.wst.server.core.internal.Trace;
+import org.eclipse.jst.server.core.internal.Trace;
 /**
  * 
  */
@@ -91,7 +91,7 @@ public class Util {
 			}
 			return null;
 		} catch (Exception e) {
-			Trace.trace("Could not find servlet class", e);
+			Trace.trace(Trace.WARNING, "Could not find servlet class", e);
 			return null;
 		}
 	}

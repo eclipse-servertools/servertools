@@ -17,7 +17,6 @@ import java.util.Iterator;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.wst.server.ui.internal.Trace;
 /**
  * Utility class to handle image resources.
  */
@@ -65,14 +64,14 @@ public class ImageResource {
 	 */
 	protected static void dispose() {
 		try {
-			Trace.trace("Disposing of element images");
+			Trace.trace(Trace.FINEST, "Disposing of element images");
 			Iterator iterator = elementImages.values().iterator();
 			while (iterator.hasNext()) {
 				Image image = (Image) iterator.next();
 				image.dispose();
 			}
 		} catch (Exception e) {
-			Trace.trace("Could not dispose of images");
+			Trace.trace(Trace.WARNING, "Could not dispose of images");
 		}
 	}
 	
@@ -126,7 +125,7 @@ public class ImageResource {
 			imageRegistry.put(key, id);
 			imageDescriptors.put(key, id);
 		} catch (Exception e) {
-			Trace.trace("Error registering image " + key + " from " + partialURL, e);
+			Trace.trace(Trace.WARNING, "Error registering image " + key + " from " + partialURL, e);
 		}
 	}
 }
