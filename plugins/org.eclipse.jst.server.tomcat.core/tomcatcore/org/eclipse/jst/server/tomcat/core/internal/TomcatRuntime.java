@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal;
 
+import java.io.File;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -89,6 +90,16 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorInstallDir"), null);
 		else if (getVMInstall() == null)
 			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorJRE"), null);
+
+		boolean found = false;
+		File file = getVMInstall().getInstallLocation();
+		if (file != null) {
+			File toolsJar = new File(file, "lib" + File.separator + "tools.jar");
+			if (toolsJar.exists())
+				found = true;
+		}
+		if (!found)
+			return new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%warningJRE"), null);
 		
 		return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, "", null);
 	}

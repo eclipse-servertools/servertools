@@ -99,7 +99,6 @@ Content filter instances of this type will delegate to instances of this class.
    class=&quot;com.example.ExampleContentFilter&quot;/&gt;
  &lt;/extension&gt;
 &lt;/pre&gt;
-&lt;/p&gt;
       </documentation>
    </annotation>
 

@@ -135,11 +135,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	 */
 	public URL getModuleRootURL(IModule module) {
 		try {
-			if (module == null || !(module instanceof IWebModule))
-				return null;
-	
-			IFolder serverConfig = getServer().getServerConfiguration();
-			if (serverConfig == null)
+			if (module == null)
 				return null;
 	
 			TomcatConfiguration config = getTomcatConfiguration();

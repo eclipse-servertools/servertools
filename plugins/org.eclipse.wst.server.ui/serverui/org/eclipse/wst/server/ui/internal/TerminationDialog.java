@@ -30,9 +30,8 @@ public class TerminationDialog extends Dialog {
 	/**
 	 * TerminationDialog constructor comment.
 	 * @param parentShell org.eclipse.swt.widgets.Shell
-	 * @
 	 */
-	protected TerminationDialog(Shell parentShell, String serverName) {
+	public TerminationDialog(Shell parentShell, String serverName) {
 		super(parentShell);
 		this.serverName = serverName;
 		setBlockOnOpen(true);

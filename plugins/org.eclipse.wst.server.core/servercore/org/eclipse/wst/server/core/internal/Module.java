@@ -96,6 +96,7 @@ public class Module implements IModule {
 		if (delegate == null) {
 			try {
 				delegate = factory.getDelegate().getModuleDelegate(this);
+				delegate.initialize(this);
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString() + ": " + e.getMessage());
 			}

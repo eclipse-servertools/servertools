@@ -44,7 +44,7 @@ import org.eclipse.wst.server.ui.internal.viewers.ServerComposite;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 /**
- * A wizard page used to select a server client.
+ * A wizard page used to select a server.
  */
 public class NewServerComposite extends Composite {
 	protected IWizardHandle wizard;
@@ -402,7 +402,7 @@ public class NewServerComposite extends Composite {
 
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
 		data.horizontalSpan = 3;
-		data.heightHint = 200;
+		data.heightHint = 250;
 		manualComp.setLayoutData(data);
 	}
 
