@@ -192,7 +192,7 @@ public class RequestTestCase extends TestCase {
 				setRequest(null);
 				setResponse(null);
 				fireChangedEvent();
-				return super.getAdapter(c);
+				return null;
 			}
 		};
 		mr.getAdapter(null);
