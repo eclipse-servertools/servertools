@@ -76,6 +76,16 @@ public class OverviewEditorPart extends ServerEditorPart {
 					updateNames();
 				else if (event.getPropertyName().equals("hostname") && hostname != null) {
 					hostname.setText((String) event.getNewValue());
+				} else if (event.getPropertyName().equals("runtime-id")) {
+					String runtimeId = (String) event.getNewValue();
+					IRuntime runtime = null;
+					if (runtimeId != null)
+						runtime = ServerCore.findRuntime(runtimeId);
+					int size = runtimes.length;
+					for (int i = 0; i < size; i++) {
+						if (runtimes[i].equals(runtime))
+							runtimeCombo.select(i);
+					}
 				}
 				updating = false;
 			}
