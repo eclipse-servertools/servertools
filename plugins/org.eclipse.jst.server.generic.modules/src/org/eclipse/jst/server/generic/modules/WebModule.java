@@ -39,6 +39,7 @@ import org.eclipse.jst.server.j2ee.IWebModule;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IModuleType;
+import org.eclipse.wst.server.core.internal.ModuleType;
 import org.eclipse.wst.server.core.model.IModuleListener;
 
 public class WebModule extends J2EEModule implements IWebModule {
@@ -73,6 +74,7 @@ public class WebModule extends J2EEModule implements IWebModule {
 			servletSpec = "1.1";
 		return jspSpec;
 	}
+
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jst.server.j2ee.IWebModule#getContextRoot()
@@ -151,7 +153,7 @@ public class WebModule extends J2EEModule implements IWebModule {
      */
     public IModuleType getModuleType() {
         // TODO Auto-generated method stub
-        return null;
+        return new ModuleType(getType(), getJ2EESpecificationVersion());
     }
 
     /* (non-Javadoc)
