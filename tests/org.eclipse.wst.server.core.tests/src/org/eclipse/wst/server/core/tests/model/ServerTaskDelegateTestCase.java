@@ -29,6 +29,6 @@ public class ServerTaskDelegateTestCase extends TestCase {
 	}
 	
 	public void test01GetTasks() throws Exception {
-		delegate.getTasks(null, null, null);
+		delegate.getTasks(null, null);
 	}
 }

@@ -12,16 +12,15 @@ package org.eclipse.wst.server.core.tests.impl;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunch;
-import org.eclipse.wst.server.core.ILaunchable;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.ClientDelegate;
 
 public class TestClientDelegate extends ClientDelegate {
-	public boolean supports(IServer server, ILaunchable launchable, String launchMode) {
+	public boolean supports(IServer server, Object launchable, String launchMode) {
 		return false;
 	}
 
-	public IStatus launch(IServer server, ILaunchable launchable, String launchMode, ILaunch launch) {
+	public IStatus launch(IServer server, Object launchable, String launchMode, ILaunch launch) {
 		return null;
 	}
 }

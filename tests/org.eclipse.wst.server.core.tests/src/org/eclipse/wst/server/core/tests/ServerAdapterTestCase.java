@@ -22,6 +22,6 @@ public class ServerAdapterTestCase extends TestCase {
 		listener.restartStateChange(null);
 		listener.serverStateChange(null);
 		listener.modulesChanged(null);
-		listener.moduleStateChange(null, null, null);
+		listener.moduleStateChange(null, null);
 	}
 }

@@ -98,9 +98,9 @@ public abstract class AbstractRuntimeTestCase extends TestCase {
 		wc.save(false, null);
 	}
 	
-	public void test0009IsPrivate() throws Exception {
+	/*public void test0009IsPrivate() throws Exception {
 		getRuntime().isPrivate();
-	}
+	}*/
 	
 	public void test0010IsReadOnly() throws Exception {
 		getRuntime().isReadOnly();
@@ -110,9 +110,9 @@ public abstract class AbstractRuntimeTestCase extends TestCase {
 		getRuntime().isDelegateLoaded();
 	}
 	
-	public void test0012GetTimestamp() throws Exception {
+	/*public void test0012GetTimestamp() throws Exception {
 		getRuntime().getTimestamp();
-	}
+	}*/
 	
 	public void test0013GetRuntimeType() throws Exception {
 		assertNotNull(getRuntime().getRuntimeType());

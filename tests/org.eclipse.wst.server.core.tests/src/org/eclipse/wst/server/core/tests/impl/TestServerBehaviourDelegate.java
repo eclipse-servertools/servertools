@@ -20,7 +20,7 @@ public class TestServerBehaviourDelegate extends ServerBehaviourDelegate {
 		// ignore
 	}
 
-	public void publishModule(int kind, int deltaKind, IModule[] parents, IModule module, IProgressMonitor monitor) throws CoreException {
+	public void publishModule(int kind, int deltaKind, IModule[] module, IProgressMonitor monitor) throws CoreException {
 		// ignore
 	}
 

@@ -21,7 +21,7 @@ public class TestServerDelegate extends ServerDelegate {
 		return null;
 	}
 
-	public IModule[] getChildModules(IModule module) {
+	public IModule[] getChildModules(IModule[] module) {
 		return null;
 	}
 

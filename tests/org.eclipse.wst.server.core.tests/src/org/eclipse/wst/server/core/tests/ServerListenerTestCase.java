@@ -19,10 +19,6 @@ import junit.framework.TestCase;
 public class ServerListenerTestCase extends TestCase {
 	public void testListener() {
 		IServerListener listener = new IServerListener() {
-			public void configurationSyncStateChange(IServer server) {
-				// ignore
-			}
-
 			public void restartStateChange(IServer server) {
 				// ignore
 			}
@@ -35,15 +31,14 @@ public class ServerListenerTestCase extends TestCase {
 				// ignore
 			}
 
-			public void moduleStateChange(IServer server, IModule[] parents, IModule module) {
+			public void moduleStateChange(IServer server, IModule[] module) {
 				// ignore
 			}
 		};
 		
-		listener.configurationSyncStateChange(null);
 		listener.restartStateChange(null);
 		listener.serverStateChange(null);
 		listener.modulesChanged(null);
-		listener.moduleStateChange(null, null, null);
+		listener.moduleStateChange(null, null);
 	}
 }

@@ -11,13 +11,12 @@
 package org.eclipse.wst.server.core.tests.impl;
 
 import java.util.List;
-import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IOptionalTask;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.ServerTaskDelegate;
 
 public class TestServerTaskDelegate extends ServerTaskDelegate {
-	public IOptionalTask[] getTasks(IServer server, List[] parents, IModule[] modules) {
+	public IOptionalTask[] getTasks(IServer server, List modules) {
 		return null;
 	}
 }
