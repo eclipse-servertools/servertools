@@ -20,7 +20,7 @@ import org.eclipse.wst.server.core.IServerListener;
  * @see org.eclipse.wst.server.core.IServerListener
  * @since 1.0
  */
-public abstract class ServerAdapter implements IServerListener {
+public class ServerAdapter implements IServerListener {
 	public void configurationSyncStateChange(IServer server) {
 		// do nothing
 	}
