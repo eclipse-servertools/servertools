@@ -31,9 +31,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-
 /**
- * A wizard page used to select a server client.
+ * A wizard page used to detect a server.
  */
 public class NewDetectServerComposite extends Composite {
 	protected String host;
