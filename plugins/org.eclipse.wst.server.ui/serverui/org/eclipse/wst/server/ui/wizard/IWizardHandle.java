@@ -57,11 +57,11 @@ public interface IWizardHandle extends IMessageProvider {
 	 * disable the wizard while the runnable is running, and provide a progress
 	 * monitor for the user.  
 	 * 
-	 * @param fork
-	 * @param cancelable
-	 * @param runnable
-	 * @throws InterruptedException
-	 * @throws InvocationTargetException
+	 * @param fork true if a separate thread should be used
+	 * @param cancelable true if it should be cancelable
+	 * @param runnable the runnable
+	 * @throws InterruptedException thrown if it is interrupted
+	 * @throws InvocationTargetException thrown if there is an error
 	 */
 	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable) throws InterruptedException, InvocationTargetException;
 }
