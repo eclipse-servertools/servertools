@@ -28,18 +28,18 @@ public class AllTests {
 		suite.addTestSuite(ServerUICoreTestCase.class);
 		suite.addTestSuite(ServerUIUtilTestCase.class);
 		
-		suite.addTestSuite(ICommandManagerTestCase.class);
-		suite.addTestSuite(IServerEditorPartInputTestCase.class);
-		suite.addTestSuite(IServerEditorSectionTestCase.class);
+		suite.addTest(new OrderedTestSuite(ICommandManagerTestCase.class));
+		suite.addTest(new OrderedTestSuite(IServerEditorPartInputTestCase.class));
+		suite.addTest(new OrderedTestSuite(IServerEditorSectionTestCase.class));
 		
 		suite.addTestSuite(DialogsTestCase.class);
 		suite.addTestSuite(PreferencesTestCase.class);
 		suite.addTestSuite(ViewTestCase.class);
 		
-		suite.addTestSuite(IOrderedTestCase.class);
-		suite.addTestSuite(ServerEditorActionFactoryDelegateTestCase.class);
-		suite.addTestSuite(ServerEditorPageSectionFactoryDelegateTestCase.class);
-		suite.addTestSuite(ServerEditorPartFactoryDelegateTestCase.class);
+		suite.addTest(new OrderedTestSuite(IOrderedTestCase.class));
+		suite.addTest(new OrderedTestSuite(ServerEditorActionFactoryDelegateTestCase.class));
+		suite.addTest(new OrderedTestSuite(ServerEditorPageSectionFactoryDelegateTestCase.class));
+		suite.addTest(new OrderedTestSuite(ServerEditorPartFactoryDelegateTestCase.class));
 		
 		suite.addTestSuite(IWizardHandleTestCase.class);
 		//$JUnit-END$
