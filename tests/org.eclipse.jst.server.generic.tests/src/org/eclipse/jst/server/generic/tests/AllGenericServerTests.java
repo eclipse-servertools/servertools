@@ -41,12 +41,7 @@ public class AllGenericServerTests {
         //$JUnit-BEGIN$
         suite.addTestSuite(ModuleFactoryTests.class);
         suite.addTestSuite(ServerDefinitionTypeTest.class);
-       
-        // This test is machine and path specific.  It cannot be a general test
-        // Needs JONAS Installed and must raise requests with the build team
-        // after fixing
-        //suite.addTestSuite(GenericServerClasspathRuntimeHandlerTest.class);
-        
+        suite.addTestSuite(GenericServerClasspathRuntimeHandlerTest.class);
         suite.addTestSuite(PluginIntegrityTest.class);
         suite.addTestSuite(ServerCreationTest.class);
         //$JUnit-END$

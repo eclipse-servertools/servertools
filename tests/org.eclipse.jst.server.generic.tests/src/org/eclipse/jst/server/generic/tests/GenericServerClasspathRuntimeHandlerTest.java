@@ -26,7 +26,7 @@ import junit.framework.TestCase;
  */
 public class GenericServerClasspathRuntimeHandlerTest extends TestCase {
 
-    private static final String CLASSPATH_PREFIX = "C:\\dev\\java\\appservers\\JOnAS-4.1.4";
+    private static final String CLASSPATH_PREFIX = "/dev/java/appservers/JOnAS-4.1.4";
     private static final String SERVER_DEF_NAME = "JonAS 4.1.4";
     private IRuntime fRuntime;
     /*
@@ -73,7 +73,7 @@ public class GenericServerClasspathRuntimeHandlerTest extends TestCase {
         IClasspathEntry[] entries = handler.resolveClasspathContainer(fRuntime,null);
         assertNotNull("Failed to resolve classpath entries",entries);
         for (int i = 0; i < entries.length; i++) {
-            assertTrue("the resolved classpath entry does not start with classpath prefix",entries[i].getPath().toOSString().startsWith(CLASSPATH_PREFIX));
+            assertTrue("the resolved classpath entry does not start with classpath prefix",(new org.eclipse.core.runtime.Path(CLASSPATH_PREFIX)).isPrefixOf(entries[i].getPath()));
         }
     }
 
