@@ -33,7 +33,8 @@ public class TomcatRuntimeLocator implements IRuntimeLocatorDelegate {
 		"org.eclipse.jst.server.tomcat.32.runtime",
 		"org.eclipse.jst.server.tomcat.40.runtime",
 		"org.eclipse.jst.server.tomcat.41.runtime",
-		"org.eclipse.jst.server.tomcat.50.runtime"};
+		"org.eclipse.jst.server.tomcat.50.runtime",
+		"org.eclipse.jst.server.tomcat.55.runtime"};
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IRuntimeFactoryDelegate#getKnownRuntimes()

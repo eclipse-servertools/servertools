@@ -18,6 +18,7 @@ public class TomcatConfigurationUtil {
 	public static final int CONFIGURATION_V40 = 20;
 	public static final int CONFIGURATION_V41 = 40;
 	public static final int CONFIGURATION_V50 = 60;
+	public static final int CONFIGURATION_V55 = 80;
 
 	/**
 	 * 
@@ -33,13 +34,17 @@ public class TomcatConfigurationUtil {
 				server = ((Tomcat41Configuration)config).server;
 			} else if (config instanceof Tomcat50Configuration) {
 				server = ((Tomcat50Configuration)config).server;
+			} else if (config instanceof Tomcat55Configuration) {
+				server = ((Tomcat55Configuration)config).server;
 			}
 
 			/*if (Tomcat50Configuration.verifyConfiguration(server))
 				return (version == CONFIGURATION_V50);
 */
 			if (Tomcat41Configuration.hasMDBListener(server))
-				return (version == CONFIGURATION_V41 || version == CONFIGURATION_V50);
+				return (version == CONFIGURATION_V41
+						|| version == CONFIGURATION_V50
+						|| version == CONFIGURATION_V55);
 
 			if (version == CONFIGURATION_V40)
 				return true;

@@ -51,6 +51,10 @@
          id="org.eclipse.jst.server.tomcat.50"
          icon="icons/obj16/server_50.gif"
          typeIds="org.eclipse.jst.server.tomcat.50.runtime"/>
+      <image
+         id="org.eclipse.jst.server.tomcat.55"
+         icon="icons/obj16/server_55.gif"
+         typeIds="org.eclipse.jst.server.tomcat.55.runtime"/>
 
       <image
          id="org.eclipse.jst.server.tomcat.32"
@@ -68,6 +72,10 @@
          id="org.eclipse.jst.server.tomcat.50"
          icon="icons/obj16/server_50.gif"
          typeIds="org.eclipse.jst.server.tomcat.50"/>
+      <image
+         id="org.eclipse.jst.server.tomcat.55"
+         icon="icons/obj16/server_55.gif"
+         typeIds="org.eclipse.jst.server.tomcat.55"/>
    </extension>
 
    <extension point="org.eclipse.wst.server.ui.editorPages">
@@ -116,6 +124,10 @@
       <fragment
          id="org.eclipse.jst.server.tomcat.50.runtime"
          typeIds="org.eclipse.jst.server.tomcat.50.runtime"
+         class="org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeWizardFragment"/>
+      <fragment
+         id="org.eclipse.jst.server.tomcat.55.runtime"
+         typeIds="org.eclipse.jst.server.tomcat.55.runtime"
          class="org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeWizardFragment"/>
    </extension>
    

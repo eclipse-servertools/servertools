@@ -33,12 +33,14 @@ public class TomcatPlugin extends Plugin {
 	public static final String TOMCAT_40 = "org.eclipse.jst.server.tomcat.40";
 	public static final String TOMCAT_41 = "org.eclipse.jst.server.tomcat.41";
 	public static final String TOMCAT_50 = "org.eclipse.jst.server.tomcat.50";
+	public static final String TOMCAT_55 = "org.eclipse.jst.server.tomcat.55";
 	
 	protected static final String VERIFY_INSTALL_FILE = "verifyInstall.properties";
 	protected static String[] verify32;
 	protected static String[] verify40;
 	protected static String[] verify41;
 	protected static String[] verify50;
+	protected static String[] verify55;
 	
 	/**
 	 * TomcatPlugin constructor comment.
@@ -158,6 +160,8 @@ public class TomcatPlugin extends Plugin {
 			return new Tomcat41Handler();
 		else if (TOMCAT_50.equals(id))
 			return new Tomcat50Handler();
+		else if (TOMCAT_55.equals(id))
+			return new Tomcat55Handler();
 		else
 			return null;
 	}
@@ -224,12 +228,25 @@ public class TomcatPlugin extends Plugin {
 			Trace.trace(Trace.FINEST, "Verify50: " + list.toString());
 			verify50 = new String[list.size()];
 			list.toArray(verify50);
+
+			// v5.5
+			verify = p.getProperty("verify55install");
+			verify.replace('/', File.separatorChar);
+
+			st = new StringTokenizer(verify, ",");
+			list = new ArrayList();
+			while (st.hasMoreTokens())
+				list.add(st.nextToken());
+			Trace.trace(Trace.FINEST, "Verify55: " + list.toString());
+			verify55 = new String[list.size()];
+			list.toArray(verify55);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not load installation verification properties", e);
 			verify32 = new String[0];
 			verify40 = new String[0];
 			verify41 = new String[0];
 			verify50 = new String[0];
+			verify55 = new String[0];
 		}
 	}
 
@@ -253,6 +270,8 @@ public class TomcatPlugin extends Plugin {
 			paths = verify41;
 		else if (TOMCAT_50.equals(id))
 			paths = verify50;
+		else if (TOMCAT_55.equals(id))
+			paths = verify55;
 		else
 			return false;
 		
