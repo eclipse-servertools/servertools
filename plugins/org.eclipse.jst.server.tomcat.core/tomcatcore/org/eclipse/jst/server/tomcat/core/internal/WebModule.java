@@ -8,7 +8,7 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.jst.server.tomcat.core;
+package org.eclipse.jst.server.tomcat.core.internal;
 /**
  * A Web module.
  */

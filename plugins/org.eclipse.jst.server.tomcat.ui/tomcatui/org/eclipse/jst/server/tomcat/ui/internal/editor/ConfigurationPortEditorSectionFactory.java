@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.ui.internal.editor;
 
-import org.eclipse.jst.server.tomcat.core.ITomcatServer;
+import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.editor.*;
 /**
@@ -21,7 +21,7 @@ public class ConfigurationPortEditorSectionFactory extends ServerEditorPageSecti
 	 * @see ServerEditorPartFactoryDelegate#shouldDisplay(IServer)
 	 */
 	public boolean shouldCreateSection(IServerWorkingCopy server) {
-		ITomcatServer tomcatServer = (ITomcatServer) server.getAdapter(ITomcatServer.class);
+		TomcatServer tomcatServer = (TomcatServer) server.getAdapter(TomcatServer.class);
 		return tomcatServer.getServerConfiguration() != null;
 	}
 

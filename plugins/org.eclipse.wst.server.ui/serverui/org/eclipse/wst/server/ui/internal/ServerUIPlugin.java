@@ -36,9 +36,11 @@ import org.osgi.framework.BundleContext;
  * The server UI plugin class.
  */
 public class ServerUIPlugin extends AbstractUIPlugin {
-	public static final byte START = 0;
+	private static final String MODULE_ARTIFACT_CLASS = "org.eclipse.wst.server.core.IModuleArtifact";
+
+	//public static final byte START = 0;
 	public static final byte STOP = 1;
-	public static final byte RESTART = 2;
+	//public static final byte RESTART = 2;
 	
 	// singleton instance of this class
 	private static ServerUIPlugin singleton;
@@ -344,8 +346,6 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		
 		return false;
 	}
-	
-	protected static final String MODULE_ARTIFACT_CLASS = "org.eclipse.wst.server.core.IModuleArtifact";
 
 	public static IModuleArtifact getModuleArtifact(Object obj) {
 		Trace.trace(Trace.FINEST, "ServerUIPlugin.getModuleArtifact() " + obj);

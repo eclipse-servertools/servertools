@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,8 +10,9 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal.command;
 
-import org.eclipse.jst.server.tomcat.core.*;
+import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfigurationWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
+import org.eclipse.jst.server.tomcat.core.internal.WebModule;
 /**
  * Command to add a web module.
  */

@@ -23,7 +23,8 @@ import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
  */
 public final class MonitorUICore {
 	/**
-	 * Returns an array of the requests currently being displayed in the monitor.
+	 * Returns an array of the requests currently being displayed in the TCP/IP
+	 * monitor view.
 	 *
 	 * @return an array of requests
 	 */

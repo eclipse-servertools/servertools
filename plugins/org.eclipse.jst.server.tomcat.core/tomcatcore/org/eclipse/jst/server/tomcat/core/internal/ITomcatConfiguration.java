@@ -8,22 +8,31 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.jst.server.tomcat.core;
+package org.eclipse.jst.server.tomcat.core.internal;
+
+import java.util.List;
 /**
  * 
  */
-public interface IMimeMapping {
+public interface ITomcatConfiguration {
 	/**
-	 * Returns the extension.
+	 * Returns a list of mime mappings.
 	 * 
-	 * @return the extension
+	 * @return mime mappings
 	 */
-	public String getExtension();
+	public List getMimeMappings();
+	
+	/**
+	 * Returns a list of ServerPorts that this configuration uses.
+	 *
+	 * @return the server ports
+	 */
+	public List getServerPorts();
 
 	/**
-	 * Returns the mime type.
+	 * Return a list of the web modules in this server.
 	 * 
-	 * @return the mime type
+	 * @return the web modules
 	 */
-	public String getMimeType();
+	public List getWebModules();
 }

@@ -117,13 +117,6 @@ public interface IRuntime extends IAdaptable {
 	 *    <code>false</code> otherwise
 	 */
 	public boolean isWorkingCopy();
-
-	/**
-	 * Returns true if the plugin containing the delegate is loaded.
-	 * 
-	 * @return boolean
-	 */
-	public boolean isDelegatePluginActivated();
 	
 	/**
 	 * Returns true if the delegate has been loaded.

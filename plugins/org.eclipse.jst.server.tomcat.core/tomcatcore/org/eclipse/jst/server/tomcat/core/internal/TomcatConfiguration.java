@@ -23,10 +23,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.core.IWebModule;
-import org.eclipse.jst.server.tomcat.core.ITomcatConfiguration;
-import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
-import org.eclipse.jst.server.tomcat.core.ITomcatWebModule;
-import org.eclipse.jst.server.tomcat.core.WebModule;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServerPort;

@@ -8,36 +8,22 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.jst.server.tomcat.core;
+package org.eclipse.jst.server.tomcat.core.internal;
 /**
- * A Web module deployed on Tomcat.
+ * 
  */
-public interface ITomcatWebModule {
+public interface IMimeMapping {
 	/**
-	 * Get the document base.
-	 *
-	 * @return java.lang.String
+	 * Returns the extension.
+	 * 
+	 * @return the extension
 	 */
-	public String getDocumentBase();
+	public String getExtension();
 
 	/**
-	 * Return the path. (context root)
-	 *
-	 * @return java.lang.String
+	 * Returns the mime type.
+	 * 
+	 * @return the mime type
 	 */
-	public String getPath();
-
-	/**
-	 * Return the memento.
-	 *
-	 * @return java.lang.String
-	 */
-	public String getMemento();
-
-	/**
-	 * Return true if the web module is auto-reloadable.
-	 *
-	 * @return java.lang.String
-	 */
-	public boolean isReloadable();
+	public String getMimeType();
 }

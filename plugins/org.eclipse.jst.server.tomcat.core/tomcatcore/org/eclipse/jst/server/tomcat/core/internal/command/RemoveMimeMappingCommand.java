@@ -10,7 +10,7 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal.command;
 
-import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
+import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfigurationWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.internal.MimeMapping;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
 /**

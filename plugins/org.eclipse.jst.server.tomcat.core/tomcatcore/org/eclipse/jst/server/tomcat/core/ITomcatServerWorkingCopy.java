@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,21 +13,6 @@ package org.eclipse.jst.server.tomcat.core;
  * 
  */
 public interface ITomcatServerWorkingCopy extends ITomcatServer {
-	/**
-	 * Sets this process to Tomcat debug mode. This feature only works
-	 * with Tomcat v4.0 and above.
-	 *
-	 * @param b boolean
-	 */
-	public void setDebug(boolean b);
-	
-	/**
-	 * Sets this process to secure mode.
-	 * 
-	 * @param b boolean
-	 */
-	public void setSecure(boolean b);
-	
 	/**
 	 * Sets this server to test environment mode.
 	 * 

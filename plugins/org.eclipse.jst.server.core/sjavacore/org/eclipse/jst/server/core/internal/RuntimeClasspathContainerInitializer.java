@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,7 +32,7 @@ public class RuntimeClasspathContainerInitializer extends ClasspathContainerInit
 				IRuntime runtime = null;
 				String id = "";
 				if (containerPath.segmentCount() > 2) {
-					IRuntimeTargetHandler handler = ServerCore.getRuntimeTargetHandler(containerPath.segment(1));
+					IRuntimeTargetHandler handler = ServerCore.findRuntimeTargetHandler(containerPath.segment(1));
 					if (handler != null)
 						crth = (ClasspathRuntimeTargetHandler) handler.getAdapter(ClasspathRuntimeTargetHandler.class);
 					String runtimeId = containerPath.segment(2);

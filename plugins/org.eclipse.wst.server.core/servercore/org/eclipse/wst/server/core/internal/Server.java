@@ -17,7 +17,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
-import org.osgi.framework.Bundle;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.*;
@@ -214,12 +213,6 @@ public class Server extends Base implements IServer {
 	public void dispose() {
 		if (delegate != null)
 			delegate.dispose();
-	}
-	
-	public boolean isDelegatePluginActivated() {
-		IConfigurationElement element = ((ServerType) serverType).getElement();
-		String pluginId = element.getDeclaringExtension().getNamespace();
-		return Platform.getBundle(pluginId).getState() == Bundle.ACTIVE;
 	}
 
 	public String getHost() {

@@ -16,10 +16,8 @@ import java.util.List;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.core.IWebModule;
-import org.eclipse.jst.server.tomcat.core.ITomcatConfiguration;
 import org.eclipse.jst.server.tomcat.core.ITomcatServer;
 import org.eclipse.jst.server.tomcat.core.ITomcatServerWorkingCopy;
-import org.eclipse.jst.server.tomcat.core.WebModule;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.*;
@@ -27,6 +25,9 @@ import org.eclipse.wst.server.core.model.*;
  * Generic Tomcat server.
  */
 public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomcatServerWorkingCopy {
+	public static final String PROPERTY_SECURE = "secure";
+	public static final String PROPERTY_DEBUG = "debug";
+
 	protected transient TomcatConfiguration configuration;
 
 	/**

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,30 +19,13 @@ import org.eclipse.wst.server.core.internal.*;
 /**
  * Main class for server core API.
  * <p>
- * This class provides references for servers and server configurations.
- * These references can be saved as tool or server-data and can be
- * used to return the original resource if it still exists. These
- * references are not OS-specific and can be used in a team environment.
+ * This class provides API to access most of the types in the server
+ * framework, including server runtimes and servers. Methods **
+ * The methods on this class are thread safe.
  * </p>
  * <p>
  * This class provides all its functionality through static members.
  * It is not intended to be subclassed or instantiated.
- * </p>
- * <p>
- * The resource manager handles the mappings between resources
- * and servers or configurations, and notifies of servers or configurations
- * being added, removed, or modified.
- * </p>
- * <p>
- * Servers and configurations may be a single resource, or they may
- * be a folder that contains a group of files. Folder resources may not
- * contain other servers or configurations (i.e., they cannot be nested).
- * </p>
- * <p>
- * Changes made to server element resources (e.g., an edit or deletion of a
- * file) are processed as a reload or deletion of the element. Note that saving
- * a folder-based server or configuration may result in a series of reload
- * events.
  * </p>
  * <p>
  * <it>Caveat: The server core API is still in an early form, and is
@@ -191,11 +174,17 @@ public class ServerCore {
 	}
 
 	/**
-	 * Returns the runtime target handler with the given id. The id may not be null.
+	 * Returns the runtime target handler with the given id, or <code>null</code>
+	 * if none. This convenience method searches the list of known runtime
+	 * target handlers ({@link #getRuntimeTargetHandlers()}) for the one with
+	 * a matching runtime target handler id ({@link IRuntimeTargetHandler#getId()}).
+	 * The id may not be null.
 	 *
-	 * @return org.eclipse.wst.server.core.IRuntimeTargetHandler
+	 * @param the runtime target handler id
+	 * @return the runtime target handler instance, or <code>null</code> if
+	 *   there is no runtime target handler with the given id
 	 */
-	public static IRuntimeTargetHandler getRuntimeTargetHandler(String id) {
+	public static IRuntimeTargetHandler findRuntimeTargetHandler(String id) {
 		if (id == null)
 			throw new IllegalArgumentException();
 

@@ -6,7 +6,9 @@
          <meta.schema plugin="org.eclipse.wst.internet.monitor.core" id="protocolAdapters" name="Protocol Adapters"/>
       </appInfo>
       <documentation>
-         This extension point is used to provide an adapter for a new protocol (e.g. HTTP). This allows different types of protocols to be monitored.
+         This extension point is used to provide an adapter for a new protocol (e.g. HTTP). This allows different types of protocols to be monitored in a specific way.
+
+This extension point is currently not being exposed as API.
       </documentation>
    </annotation>
 

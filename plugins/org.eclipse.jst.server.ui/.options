@@ -1,0 +1,4 @@
+# Debugging options for the org.eclipse.jst.server.ui plugin
+
+# Turn on general debugging
+org.eclipse.jst.server.ui/debug=true

@@ -1,6 +1,6 @@
 # Debugging options for the org.eclipse.wst.internet.monitor.core plugin
 
 # Turn on general debugging
-org.eclipse.wst.internet.monitor.core/debug=false
+org.eclipse.wst.internet.monitor.core/debug=true
 
 org.eclipse.wst.internet.monitor.core/parsing=false

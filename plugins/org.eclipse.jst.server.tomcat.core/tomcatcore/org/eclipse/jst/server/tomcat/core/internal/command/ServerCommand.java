@@ -12,19 +12,20 @@ package org.eclipse.jst.server.tomcat.core.internal.command;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jst.server.tomcat.core.ITomcatServerWorkingCopy;
+import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.wst.server.core.util.Task;
 /**
  * A command on a Tomcat server.
  */
 public abstract class ServerCommand extends Task {
-	protected ITomcatServerWorkingCopy server;
+	protected TomcatServer server;
 
 	/**
 	 * ServerCommand constructor comment.
 	 */
 	public ServerCommand(ITomcatServerWorkingCopy server) {
 		super();
-		this.server = server;
+		this.server = (TomcatServer) server;
 	}
 	
 	/**

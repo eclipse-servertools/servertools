@@ -5,15 +5,20 @@
    <title>Package-level Javadoc</title>
 </head>
 <body>
-Provides core support for the internet monitor.
-<h2>
-Package Specification</h2>
-[<it>TBD - This is the best place to paint a high-level picture of what API is to be
-found in this package. Ideally, the reader would be able to form a high-level
-picture of what's there, and be able to quickly determine whether this is even
-relevant for what they're doing. E.g.: This package specifies the API related to the
-internet monitor.  This includes 
-area such as ... .  In addition, this API supplies various utility types such as
-....</it>]
+
+<h2>Package Specification for org.eclipse.wst.internet.monitor.core</h2>
+
+<p>This package gives core (non-UI) access to the TCP/IP monitor. Clients can
+query for existing monitors, create new monitors, start/stop monitors, and
+listen for requests being received by a running monitor.</p>
+
+<p>The MonitorCore class gives initial access to all of the API. From here you
+can query the existing monitors, create new ones, and add/remove a listener for
+monitor changes.</p>
+
+<p>The IMonitor interface provides information about a particular monitor,
+allowing you to change it via a working copy, start/stop it, or add a listener
+for request activity.</p>
+
 </body>
 </html>

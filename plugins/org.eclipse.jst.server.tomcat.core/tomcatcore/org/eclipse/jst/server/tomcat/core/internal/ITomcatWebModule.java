@@ -8,31 +8,36 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.jst.server.tomcat.core;
-
-import java.util.List;
+package org.eclipse.jst.server.tomcat.core.internal;
 /**
- * 
+ * A Web module deployed on Tomcat.
  */
-public interface ITomcatConfiguration {
+public interface ITomcatWebModule {
 	/**
-	 * Returns a list of mime mappings.
-	 * 
-	 * @return mime mappings
-	 */
-	public List getMimeMappings();
-	
-	/**
-	 * Returns a list of ServerPorts that this configuration uses.
+	 * Get the document base.
 	 *
-	 * @return the server ports
+	 * @return java.lang.String
 	 */
-	public List getServerPorts();
+	public String getDocumentBase();
 
 	/**
-	 * Return a list of the web modules in this server.
-	 * 
-	 * @return the web modules
+	 * Return the path. (context root)
+	 *
+	 * @return java.lang.String
 	 */
-	public List getWebModules();
+	public String getPath();
+
+	/**
+	 * Return the memento.
+	 *
+	 * @return java.lang.String
+	 */
+	public String getMemento();
+
+	/**
+	 * Return true if the web module is auto-reloadable.
+	 *
+	 * @return java.lang.String
+	 */
+	public boolean isReloadable();
 }

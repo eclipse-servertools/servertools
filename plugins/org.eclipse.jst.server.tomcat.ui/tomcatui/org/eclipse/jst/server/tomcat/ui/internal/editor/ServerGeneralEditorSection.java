@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import org.eclipse.jst.server.tomcat.core.ITomcatServer;
-import org.eclipse.jst.server.tomcat.core.ITomcatServerWorkingCopy;
+import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.command.SetDebugModeCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.SetSecureCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.SetTestEnvironmentCommand;
@@ -39,7 +39,7 @@ import org.eclipse.wst.server.ui.editor.*;
  * Tomcat server general editor page.
  */
 public class ServerGeneralEditorSection extends ServerEditorSection {
-	protected ITomcatServerWorkingCopy tomcatServer;
+	protected TomcatServer tomcatServer;
 
 	protected Button secure;
 	protected Button debug;
@@ -64,10 +64,10 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 				if (updating)
 					return;
 				updating = true;
-				if (ITomcatServer.PROPERTY_SECURE.equals(event.getPropertyName())) {
+				if (TomcatServer.PROPERTY_SECURE.equals(event.getPropertyName())) {
 					Boolean b = (Boolean) event.getNewValue();
 					ServerGeneralEditorSection.this.secure.setSelection(b.booleanValue());
-				} else if (ITomcatServer.PROPERTY_DEBUG.equals(event.getPropertyName())) {
+				} else if (TomcatServer.PROPERTY_DEBUG.equals(event.getPropertyName())) {
 					Boolean b = (Boolean) event.getNewValue();
 					ServerGeneralEditorSection.this.debug.setSelection(b.booleanValue());
 				} else if (ITomcatServer.PROPERTY_TEST_ENVIRONMENT.equals(event.getPropertyName())) {
@@ -167,7 +167,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		super.init(site, input);
 		
 		if (server != null) {
-			tomcatServer = (ITomcatServerWorkingCopy) server.getAdapter(ITomcatServerWorkingCopy.class);
+			tomcatServer = (TomcatServer) server.getAdapter(TomcatServer.class);
 			addChangeListener();
 		}
 		initialize();

@@ -10,9 +10,9 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal.command;
 
-import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
-import org.eclipse.jst.server.tomcat.core.WebModule;
+import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfigurationWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
+import org.eclipse.jst.server.tomcat.core.internal.WebModule;
 /**
  * Command to change a web module.
  */

@@ -337,7 +337,7 @@ public class ServersView extends ViewPart {
 				menuManager.addMenuListener(new IMenuListener() {
 					public void menuAboutToShow(IMenuManager manager) {
 						menuManager.removeAll();
-						if (server2.isDelegatePluginActivated()) {
+						if (server2.isDelegateLoaded()) {
 							IServerPort[] ports = server2.getServerPorts();
 							if (ports != null) {
 								int size = ports.length;

@@ -10,7 +10,6 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal;
 
-import org.eclipse.jst.server.tomcat.core.IMimeMapping;
 /**
  * A mime mapping.
  */
