@@ -10,8 +10,6 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 
-import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunch;
@@ -85,7 +83,7 @@ import org.eclipse.wst.server.core.model.*;
  * 
  * @since 1.0
  */
-public interface IServer extends IElement {
+public interface IServer extends IElement, IAdaptable {
 	
 	/**
 	 * File extension (value "server") for serialized representation of
@@ -309,7 +307,7 @@ public interface IServer extends IElement {
 	 * 
 	 * @return the server extension
 	 */
-	public IServerExtension getExtension(IProgressMonitor monitor);
+	//public IServerExtension getExtension(IProgressMonitor monitor);
 
 	/**
 	 * Returns a server working copy for modifying this server instance.
@@ -367,13 +365,13 @@ public interface IServer extends IElement {
 	public boolean isSupportedConfiguration(IServerConfiguration configuration);
 
 	/**
-	 * Returns a list of the projects that have not been published
-	 * since the last modification. (i.e. the projects that are
+	 * Returns an array of the modules that have not been published
+	 * since the last modification. (i.e. the modules that are
 	 * out of sync with the server.
 	 *
-	 * @return java.util.List
+	 * @return org.eclipse.wst.server.model.IModule[]
 	 */
-	public List getUnpublishedModules();
+	public IModule[] getUnpublishedModules();
 
 	/**
 	 * Adds the given server state listener to this server.
@@ -800,10 +798,10 @@ public interface IServer extends IElement {
 	 * To obtain the full module tree, this method may be
 	 * recursively called on the children.</p>
 	 *
-	 * @param module org.eclipse.wst.server.core.model.IModule
-	 * @return java.util.List
+	 * @param module org.eclipse.wst.server.core.IModule
+	 * @return array
 	 */
-	public List getChildModules(IModule module, IProgressMonitor monitor);
+	public IModule[] getChildModules(IModule module, IProgressMonitor monitor);
 
 	/**
 	 * Returns the parent module(s) of this module. When
@@ -824,16 +822,16 @@ public interface IServer extends IElement {
 	 * always return the topmost parent module(s), even if
 	 * there are a few levels (a heirarchy) of modules.</p>
 	 *
-	 * @param module org.eclipse.wst.server.core.model.IModule
-	 * @return java.util.List
+	 * @param module org.eclipse.wst.server.core.IModule
+	 * @return array
 	 * @throws org.eclipse.core.runtime.CoreException
 	 */
-	public List getParentModules(IModule module, IProgressMonitor monitor) throws CoreException;
+	public IModule[] getParentModules(IModule module, IProgressMonitor monitor) throws CoreException;
 	
 	/**
-	 * Returns a list of IServerPorts that this server has.
+	 * Returns an array of IServerPorts that this server has.
 	 *
-	 * @return java.util.List
+	 * @return
 	 */
-	public List getServerPorts();
+	public IServerPort[] getServerPorts();
 }

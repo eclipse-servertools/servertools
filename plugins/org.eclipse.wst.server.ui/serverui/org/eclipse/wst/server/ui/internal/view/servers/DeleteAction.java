@@ -58,7 +58,7 @@ public class DeleteAction extends Action {
 		}
 		
 		// remove configurations that are still referenced
-		IServer[] servers = ServerCore.getResourceManager().getServers();
+		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size2 = servers.length;
 			for (int i = 0; i < size2; i++) {

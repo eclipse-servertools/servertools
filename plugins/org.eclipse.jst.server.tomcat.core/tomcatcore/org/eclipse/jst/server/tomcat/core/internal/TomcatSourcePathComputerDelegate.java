@@ -39,7 +39,7 @@ public class TomcatSourcePathComputerDelegate implements ISourcePathComputerDele
 
 		String serverId = configuration.getAttribute(IServer.ATTR_SERVER_ID, (String) null);
 
-		IServer server = ServerCore.getResourceManager().getServer(serverId);
+		IServer server = ServerCore.getServer(serverId);
 		if (server != null) {
 			List list = new ArrayList();
 			List pathList = new ArrayList();

@@ -9,7 +9,7 @@ package org.eclipse.jst.server.ui;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-import org.eclipse.jst.server.core.SystemProperty;
+import org.eclipse.jst.server.core.internal.SystemProperty;
 /**
  * An generic interface for modifying the system properties of
  * a Java server. Can be used to implement the command

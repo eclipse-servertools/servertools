@@ -36,7 +36,7 @@ public class RuntimeTreeContentProvider extends AbstractTreeContentProvider {
 		clean();
 		List list = new ArrayList();
 		if (style != STYLE_FLAT) {
-			IRuntime[] runtimes = ServerCore.getResourceManager().getRuntimes();
+			IRuntime[] runtimes = ServerCore.getRuntimes();
 			if (runtimes != null) {
 				int size = runtimes.length;
 				for (int i = 0; i < size; i++) {
@@ -57,7 +57,7 @@ public class RuntimeTreeContentProvider extends AbstractTreeContentProvider {
 				}
 			}
 		} else {
-			IRuntime[] runtimes = ServerCore.getResourceManager().getRuntimes();
+			IRuntime[] runtimes = ServerCore.getRuntimes();
 			if (runtimes != null) {
 				int size = runtimes.length;
 				for (int i = 0; i < size; i++)

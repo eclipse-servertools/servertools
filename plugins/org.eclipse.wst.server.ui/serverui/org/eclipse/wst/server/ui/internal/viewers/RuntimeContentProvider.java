@@ -43,7 +43,7 @@ public class RuntimeContentProvider implements IStructuredContentProvider {
 	 */
 	public Object[] getElements(Object inputElement) {
 		List list = new ArrayList();
-		IRuntime[] runtimes = ServerCore.getResourceManager().getRuntimes();
+		IRuntime[] runtimes = ServerCore.getRuntimes();
 		if (runtimes != null) {
 			int size = runtimes.length;
 			for (int i = 0; i < size; i++) {

@@ -30,7 +30,7 @@ import org.eclipse.jst.server.tomcat.core.WebModule;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServerConfiguration;
-import org.eclipse.wst.server.core.model.IServerPort;
+import org.eclipse.wst.server.core.IServerPort;
 import org.eclipse.wst.server.core.model.ServerConfigurationDelegate;
 import org.eclipse.wst.server.core.util.FileUtil;
 import org.eclipse.wst.server.core.util.ProgressUtil;
@@ -200,7 +200,7 @@ public abstract class TomcatConfiguration extends ServerConfigurationDelegate im
 		if (module != null)
 			return module.getPath();
 		
-		IWebModule webModule2 = (IWebModule) webModule.getExtension(null);
+		IWebModule webModule2 = (IWebModule) webModule.getAdapter(IWebModule.class);
 		return webModule2.getContextRoot();
 	}
 

@@ -87,11 +87,11 @@ public class RuntimeType implements IRuntimeType {
 	 * 
 	 * @return
 	 */
-	public IModuleType2[] getModuleTypes() {
+	public IModuleType[] getModuleTypes() {
 		if (moduleTypes == null)
 			moduleTypes = ServerPlugin.getModuleTypes(element.getChildren("moduleType"));
 
-		IModuleType2[] mt = new IModuleType2[moduleTypes.size()];
+		IModuleType[] mt = new IModuleType[moduleTypes.size()];
 		moduleTypes.toArray(mt);
 		return mt;
 	}

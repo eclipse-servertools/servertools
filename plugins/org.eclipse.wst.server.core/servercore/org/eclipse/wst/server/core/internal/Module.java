@@ -56,8 +56,8 @@ public class Module implements IModule {
 	 * 
 	 * @return
 	 */
-	public IModuleType2 getModuleType() {
-		return new ModuleType2(type, version);
+	public IModuleType getModuleType() {
+		return new ModuleType(type, version);
 	}
 
 	/**
@@ -75,10 +75,6 @@ public class Module implements IModule {
 	 */
 	public String getName() {
 		return name;
-	}
-
-	public IServerExtension getExtension(IProgressMonitor monitor) {
-		return getDelegate(monitor);
 	}
 
 	public ModuleDelegate getDelegate(IProgressMonitor monitor) {
@@ -171,6 +167,16 @@ public class Module implements IModule {
 			}
 		}
 		Trace.trace(Trace.FINEST, "-<- Done firing module change event -<-");
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+	 */
+	public Object getAdapter(Class adapter) {
+		ModuleDelegate delegate2 = getDelegate(null);
+		if (adapter.isInstance(delegate2))
+			return delegate;
+		return null;
 	}
 
 	/**

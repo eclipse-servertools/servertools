@@ -12,7 +12,6 @@ package org.eclipse.wst.server.core;
 
 import org.eclipse.core.runtime.CoreException;
 
-import org.eclipse.wst.server.core.model.IServerPort;
 /**
  * An interface to a TCP/IP monitor.
  * 

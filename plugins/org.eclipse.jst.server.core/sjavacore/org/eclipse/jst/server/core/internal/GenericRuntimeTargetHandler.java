@@ -28,7 +28,7 @@ import org.eclipse.wst.server.core.IRuntime;
  */
 public class GenericRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
 	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
-		GenericRuntime genericRuntime = (GenericRuntime) runtime.getExtension(monitor);
+		GenericRuntime genericRuntime = (GenericRuntime) runtime.getAdapter(GenericRuntime.class);
 		IVMInstall vmInstall = genericRuntime.getVMInstall();
 		if (vmInstall != null) {
 			String name = vmInstall.getName();

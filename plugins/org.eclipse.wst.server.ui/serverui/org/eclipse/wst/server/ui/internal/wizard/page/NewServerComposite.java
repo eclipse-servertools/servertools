@@ -31,7 +31,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
-import org.eclipse.wst.server.core.IModuleType2;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerType;
@@ -322,12 +321,9 @@ public class NewServerComposite extends Composite {
 				// check for compatibility
 				if (server != null && module != null) {
 					IServerType serverType = server.getServerType();
-					IModuleType2 mt = module.getModuleType();
+					IModuleType mt = module.getModuleType();
 					if (!ServerUtil.isSupportedModule(serverType, mt)) {
-						IModuleType mk = ServerCore.getModuleType(mt.getId());
-						String type = null;
-						if (mk != null)
-							type = mk.getName();
+						String type = mt.getName();
 						wizard.setMessage(ServerUIPlugin.getResource("%errorVersionLevel", new Object[] { type, mt.getVersion() }), IMessageProvider.ERROR);
 						server = null;
 					}
@@ -354,11 +350,11 @@ public class NewServerComposite extends Composite {
 		if (module == null || launchMode == null)
 			return false;
 		
-		IServer[] servers = ServerCore.getResourceManager().getServers();
+		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
-				IModuleType2 mt = module.getModuleType();
+				IModuleType mt = module.getModuleType();
 				if (ServerUtil.isCompatibleWithLaunchMode(servers[i], launchMode) &&
 					ServerUtil.isSupportedModule(servers[i].getServerType().getRuntimeType().getModuleTypes(), mt.getId(), mt.getVersion()))
 						return true;
@@ -382,7 +378,7 @@ public class NewServerComposite extends Composite {
 		String type = null;
 		String version = null;
 		if (module != null) {
-			IModuleType2 mt = module.getModuleType();
+			IModuleType mt = module.getModuleType();
 			type = mt.getId();
 			version = mt.getVersion();
 		}

@@ -71,7 +71,7 @@ public interface IRuntimeWorkingCopy extends IRuntime, IElementWorkingCopy {
 	 * 
 	 * @return the extension for the runtime working copy
 	 */
-	public IServerExtension getWorkingCopyExtension(IProgressMonitor monitor);
+	//public IServerExtension getWorkingCopyExtension(IProgressMonitor monitor);
 
 	/**
 	 * Sets the absolute path in the local file system to the root of the runtime,

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,16 +10,19 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 /**
- * A visitor on a server's modules.
+ * An optional task.
  */
-public interface IModuleVisitor {
+public interface IOptionalTask extends ITask, IOrdered {
+	public static final int TASK_UNNECESSARY = 0;
+	public static final int TASK_COMPLETED = 1;
+	public static final int TASK_READY = 2;
+	public static final int TASK_PREFERRED = 3;
+	public static final int TASK_MANDATORY = 4;
+
 	/**
-	 * Visit a single module. Returns true to keep visiting, and
-	 * false if it should stop visiting the module. 
+	 * Returns the status of this task.
 	 * 
-	 * @param parents org.eclipse.wst.server.core.IModule[]
-	 * @param module org.eclipse.wst.server.core.IModule
-	 * @return boolean
+	 * @return byte
 	 */
-	public boolean visit(IModule[] parents, IModule module);
+	public int getStatus();
 }

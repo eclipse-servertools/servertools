@@ -82,7 +82,7 @@ public class TomcatRuntimeComposite extends Composite {
 			runtime = null;
 		} else {
 			runtimeWC = newRuntime;
-			runtime = (ITomcatRuntimeWorkingCopy) newRuntime.getWorkingCopyExtension(null);
+			runtime = (ITomcatRuntimeWorkingCopy) newRuntime.getAdapter(ITomcatRuntimeWorkingCopy.class);
 		}
 		
 		init();

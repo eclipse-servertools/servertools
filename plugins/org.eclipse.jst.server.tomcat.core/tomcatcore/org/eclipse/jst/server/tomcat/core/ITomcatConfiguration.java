@@ -11,12 +11,10 @@
 package org.eclipse.jst.server.tomcat.core;
 
 import java.util.List;
-
-import org.eclipse.wst.server.core.IServerExtension;
 /**
  * 
  */
-public interface ITomcatConfiguration extends IServerExtension {
+public interface ITomcatConfiguration {
 	/**
 	 * Returns a list of mime mappings.
 	 * @return java.util.List

@@ -65,7 +65,7 @@
          <attribute name="class" type="string">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;IServerConfigurationDelegate&lt;/samp&gt;.
+                  specifies the fully qualified name of the Java class that extends &lt;samp&gt;IServerConfigurationDelegate&lt;/samp&gt;.
 Server configuration instances of this type will delegate to instances of this class.
                </documentation>
             </annotation>
@@ -109,9 +109,7 @@ Server configuration instances of this type will delegate to instances of this c
        name=&quot;%serverConfigurationTypeName&quot;
        description=&quot;%serverConfigurationTypeDescription&quot;
        isFolder=&quot;true&quot;
-       class=&quot;com.example.ExampleServerConfigurationDelegate&quot;
-       workingCopyClass=&quot;com.example.ExampleServerConfigurationWorkingCopyDelegate&quot;&gt;
-     &lt;/serverConfigurationType&gt;
+       class=&quot;com.example.ExampleServerConfigurationDelegate&quot;/&gt;
    &lt;/extension&gt;
 &lt;/pre&gt;
 &lt;/p&gt;
@@ -123,7 +121,7 @@ Server configuration instances of this type will delegate to instances of this c
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.server.core.model.ServerConfigurationDelegate&lt;/b&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;b&gt;org.eclipse.wst.server.core.model.ServerConfigurationDelegate&lt;/b&gt; and contains a public 0-arg constructor.
       </documentation>
    </annotation>
 

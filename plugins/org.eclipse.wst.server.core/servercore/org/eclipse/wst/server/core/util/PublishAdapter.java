@@ -23,7 +23,7 @@ public class PublishAdapter implements IPublishListener {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IPublishListener#moduleStateChange(org.eclipse.wst.server.core.IServer2, java.util.List, org.eclipse.wst.server.core.model.IModule)
 	 */
-	public void moduleStateChange(IServer server, List parents, IModule module) {
+	public void moduleStateChange(IServer server, IModule[] parents, IModule module) {
 		// do nothing
 	}
 
@@ -44,14 +44,14 @@ public class PublishAdapter implements IPublishListener {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IPublishListener#moduleStarting(org.eclipse.wst.server.core.IServer2, java.util.List, org.eclipse.wst.server.core.model.IModule)
 	 */
-	public void moduleStarting(IServer server, List parents, IModule module) {
+	public void moduleStarting(IServer server, IModule[] parents, IModule module) {
 		// do nothing
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.IPublishListener#moduleFinished(org.eclipse.wst.server.core.IServer2, java.util.List, org.eclipse.wst.server.core.model.IModule, org.eclipse.wst.server.core.IPublishStatus)
 	 */
-	public void moduleFinished(IServer server, List parents, IModule module, IPublishStatus status) {
+	public void moduleFinished(IServer server, IModule[] parents, IModule module, IPublishStatus status) {
 		// do nothing
 	}
 

@@ -63,7 +63,7 @@ public class ServerTableViewer extends TableViewer {
 	public class ServerContentProvider implements IStructuredContentProvider {
 		public Object[] getElements(Object inputElement) {
 			List list = new ArrayList();
-			IServer[] servers = ServerCore.getResourceManager().getServers();
+			IServer[] servers = ServerCore.getServers();
 			if (servers != null) {
 				int size = servers.length;
 				for (int i = 0; i < size; i++) {
@@ -249,7 +249,7 @@ public class ServerTableViewer extends TableViewer {
 				server.removePublishListener(publishListener);
 			}
 		};
-		ServerCore.getResourceManager().addResourceListener(serverResourceListener);
+		ServerCore.addResourceListener(serverResourceListener);
 		
 		publishListener = new PublishAdapter() {
 			public void moduleStateChange(IServer server, List parents, IModule module) {
@@ -299,7 +299,7 @@ public class ServerTableViewer extends TableViewer {
 		};
 		
 		// add listeners to servers
-		IServer[] servers = ServerCore.getResourceManager().getServers();
+		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
@@ -321,7 +321,7 @@ public class ServerTableViewer extends TableViewer {
 		if (!add)
 			deletedElement = configuration;
 	
-		IServer[] servers = ServerCore.getResourceManager().getServers();
+		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
@@ -350,11 +350,10 @@ public class ServerTableViewer extends TableViewer {
 		stopThread();
 		view.getViewSite().getPage().removeSelectionListener(dsListener);
 
-		IResourceManager rm = ServerCore.getResourceManager();
-		rm.removeResourceListener(serverResourceListener);
+		ServerCore.removeResourceListener(serverResourceListener);
 		
 		// remove listeners from server
-		IServer[] servers = rm.getServers();
+		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
@@ -387,7 +386,7 @@ public class ServerTableViewer extends TableViewer {
 		if (server2 == null)
 			return;
 
-		IServer[] servers = ServerCore.getResourceManager().getServers();
+		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
@@ -420,7 +419,7 @@ public class ServerTableViewer extends TableViewer {
 		if (element instanceof IServer) {
 			refresh(element);
 		} else if (element instanceof IServerConfiguration) {
-			IServer[] servers = ServerCore.getResourceManager().getServers();
+			IServer[] servers = ServerCore.getServers();
 			if (servers != null) {
 				int size = servers.length;
 				for (int i = 0; i < size; i++) {

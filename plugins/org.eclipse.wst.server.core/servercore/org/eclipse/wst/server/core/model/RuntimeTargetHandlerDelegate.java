@@ -14,11 +14,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.IServerExtension;
 /**
  * 
  */
-public abstract class RuntimeTargetHandlerDelegate implements IServerExtension {
+public abstract class RuntimeTargetHandlerDelegate {
 	/**
 	 * Set the runtime target on the given project.
 	 * 

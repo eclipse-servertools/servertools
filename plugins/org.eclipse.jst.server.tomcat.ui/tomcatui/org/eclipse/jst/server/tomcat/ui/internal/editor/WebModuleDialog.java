@@ -10,8 +10,6 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.ui.internal.editor;
 
-import java.util.Iterator;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -42,7 +40,6 @@ import org.eclipse.ui.help.WorkbenchHelp;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerExtension;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.ui.ServerUICore;
 /**
@@ -133,18 +130,20 @@ public class WebModuleDialog extends Dialog {
 			WorkbenchHelp.setHelp(projTable, ContextIds.CONFIGURATION_EDITOR_WEBMODULE_DIALOG_PROJECT);
 	
 			// fill table with web module projects
-			Iterator iterator = ServerUtil.getModules("j2ee.web", "*", false).iterator();
-			while (iterator.hasNext()) {
-				IModule module3 = (IModule) iterator.next();
-				IServerExtension extension = module3.getExtension(null);
-				if (extension instanceof IWebModule) {
-					IWebModule module2 = (IWebModule) extension;
-					IStatus status = server2.canModifyModules(new IModule[] { module3 }, null, null);
-					if (status != null && status.isOK()) {
-						TableItem item = new TableItem(projTable, SWT.NONE);
-						item.setText(0, ServerUICore.getLabelProvider().getText(module2));
-						item.setImage(0, ServerUICore.getLabelProvider().getImage(module2));
-						item.setData(module2);
+			IModule[] modules = ServerUtil.getModules("j2ee.web", "*", false);
+			if (modules != null) {
+				int size = modules.length;
+				for (int i = 0; i < size; i++) {
+					IModule module3 = modules[i];
+					IWebModule module2 = (IWebModule) module3.getAdapter(IWebModule.class);
+					if (module2 != null) {
+						IStatus status = server2.canModifyModules(new IModule[] { module3 }, null, null);
+						if (status != null && status.isOK()) {
+							TableItem item = new TableItem(projTable, SWT.NONE);
+							item.setText(0, ServerUICore.getLabelProvider().getText(module2));
+							item.setImage(0, ServerUICore.getLabelProvider().getImage(module2));
+							item.setData(module2);
+						}
 					}
 				}
 			}
@@ -228,7 +227,7 @@ public class WebModuleDialog extends Dialog {
 						String contextRoot = module2.getContextRoot();
 						if (contextRoot != null && !contextRoot.startsWith("/"))
 							contextRoot = "/" + contextRoot;
-						module = new WebModule(contextRoot, module2.getLocation().toOSString(), module2.getId(), module.isReloadable());
+						module = new WebModule(contextRoot, module2.getLocation().toOSString(), module.getMemento(), module.isReloadable());
 						docBase.setText(module2.getLocation().toOSString());
 					} catch (Exception e) {
 						// ignore

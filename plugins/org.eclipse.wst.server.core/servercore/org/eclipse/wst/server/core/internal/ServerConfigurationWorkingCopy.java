@@ -120,14 +120,6 @@ public class ServerConfigurationWorkingCopy extends ServerConfiguration implemen
 		
 		return config;
 	}
-	
-	public IServerExtension getExtension(IProgressMonitor monitor) {
-		return getWorkingCopyExtension(monitor);
-	}
-	
-	public IServerExtension getWorkingCopyExtension(IProgressMonitor monitor) {
-		return getWorkingCopyDelegate(true, monitor);
-	}
 
 	public ServerConfigurationDelegate getWorkingCopyDelegate(boolean load, IProgressMonitor monitor) {
 		if (workingCopyDelegate != null)

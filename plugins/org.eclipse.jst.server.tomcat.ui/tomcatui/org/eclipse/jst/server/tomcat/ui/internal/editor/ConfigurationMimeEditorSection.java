@@ -192,7 +192,7 @@ public class ConfigurationMimeEditorSection extends ServerResourceEditorSection 
 		super.init(site, input);
 		
 		if (serverConfiguration != null) {
-			tomcatConfiguration = (ITomcatConfigurationWorkingCopy) serverConfiguration.getWorkingCopyExtension(null);
+			tomcatConfiguration = (ITomcatConfigurationWorkingCopy) serverConfiguration.getAdapter(ITomcatConfigurationWorkingCopy.class);
 			addChangeListener();
 		}
 		initialize();

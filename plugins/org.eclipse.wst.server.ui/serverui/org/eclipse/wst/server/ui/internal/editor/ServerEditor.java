@@ -261,7 +261,7 @@ public class ServerEditor extends MultiPageEditorPart {
 		}
 		
 		if (resourceListener != null)
-			ServerCore.getResourceManager().removeResourceListener(resourceListener);
+			ServerCore.removeResourceListener(resourceListener);
 
 		super.dispose();
 		if (commandManager != null)
@@ -643,14 +643,13 @@ public class ServerEditor extends MultiPageEditorPart {
 			IFileEditorInput fei = (IFileEditorInput) input;
 			IFile file = fei.getFile();
 			if (file != null && file.exists()) {
-				IResourceManager rm = ServerCore.getResourceManager();
-				IServer server2 = rm.getServer(file);
+				IServer server2 = ServerUtil.getServer(file);
 				if (server2 != null) {
 					serverId = server2.getId();
 					if (server2.getServerConfiguration() != null)
 						serverConfigurationId = server2.getServerConfiguration().getId();
 				} else {
-					IServerConfiguration configuration = rm.getServerConfiguration(file);
+					IServerConfiguration configuration = ServerUtil.getServerConfiguration(file);
 					if (configuration != null)
 						serverConfigurationId = configuration.getId();
 				}
@@ -734,7 +733,7 @@ public class ServerEditor extends MultiPageEditorPart {
 		createActions();
 		
 		// add resource listener
-		ServerCore.getResourceManager().addResourceListener(new ServerResourceAdapter() {
+		ServerCore.addResourceListener(new ServerResourceAdapter() {
 			public void serverRemoved(IServer oldServer) {
 				if (oldServer.equals(server) && !isDirty())
 					closeEditor();

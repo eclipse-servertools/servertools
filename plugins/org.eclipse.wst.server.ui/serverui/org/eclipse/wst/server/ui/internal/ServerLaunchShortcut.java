@@ -10,14 +10,13 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal;
 
-import java.util.List;
-
 import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 
+import org.eclipse.wst.server.core.IModuleObject;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 import org.eclipse.ui.IEditorInput;
@@ -53,8 +52,8 @@ public class ServerLaunchShortcut implements ILaunchShortcut {
 		// check if the editor input itself can be run. Otherwise, check if
 		// the editor has a file input that can be run
 		IEditorInput input = editor.getEditorInput();
-		List list = ServerUtil.getModuleObjects(input);
-		if (!list.isEmpty()) {
+		IModuleObject[] mo = ServerUtil.getModuleObjects(input);
+		if (mo != null && mo.length > 0) {
 			launch(new StructuredSelection(input), mode);
 		} else if (input instanceof IFileEditorInput) {
 			IFileEditorInput fei = (IFileEditorInput) input;

@@ -92,7 +92,7 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 			final Helper help = new Helper();
 			if (server != null) {
 				ServerUtil.visit(server, new IModuleVisitor() {
-					public boolean visit(List parents2, IModule module2) {
+					public boolean visit(IModule[] parents2, IModule module2) {
 						help.parentList.add(parents2);
 						help.moduleList.add(module2);
 						return true;
@@ -103,11 +103,11 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 			// add module
 			IModule parent = null;
 			try {
-				List parents = server.getParentModules(module, null);
+				IModule[] parents = server.getParentModules(module, null);
 				List list = new ArrayList();
 				
-				if (parents != null && parents.size() > 0) {
-					parent = (IModule) parents.get(0);
+				if (parents != null && parents.length > 0) {
+					parent = parents[0];
 					list.add(parent);
 				}
 				if (!help.moduleList.contains(module)) {

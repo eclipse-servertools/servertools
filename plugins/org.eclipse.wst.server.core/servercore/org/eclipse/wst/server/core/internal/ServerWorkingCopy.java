@@ -127,14 +127,6 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		return wch.isDirty();
 	}
 	
-	public IServerExtension getExtension(IProgressMonitor monitor) {
-		return getWorkingCopyExtension(monitor);
-	}
-	
-	public IServerExtension getWorkingCopyExtension(IProgressMonitor monitor) {
-		return getWorkingCopyDelegate(monitor);
-	}
-	
 	public ServerWorkingCopyDelegate getWorkingCopyDelegate(IProgressMonitor monitor) {
 		// make sure that the regular delegate is loaded 
 		//getDelegate();

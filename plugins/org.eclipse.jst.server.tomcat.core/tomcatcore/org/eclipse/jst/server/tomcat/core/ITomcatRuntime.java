@@ -13,12 +13,10 @@ package org.eclipse.jst.server.tomcat.core;
 import java.util.List;
 
 import org.eclipse.jdt.launching.IVMInstall;
-
-import org.eclipse.wst.server.core.IServerExtension;
 /**
  * 
  */
-public interface ITomcatRuntime extends IServerExtension {
+public interface ITomcatRuntime {
 	public String getVMInstallTypeId();
 
 	public String getVMInstallId();

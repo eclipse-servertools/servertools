@@ -29,7 +29,7 @@ public class PortContentProvider implements IStructuredContentProvider {
 	}
 
 	public Object[] getElements(Object inputElement) {
-		return server.getServerPorts().toArray();
+		return server.getServerPorts();
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {

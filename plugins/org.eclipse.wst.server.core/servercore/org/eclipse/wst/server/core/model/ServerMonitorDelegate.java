@@ -13,6 +13,7 @@ package org.eclipse.wst.server.core.model;
 import org.eclipse.core.runtime.CoreException;
 
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerPort;
 /**
  * An interface to a TCP/IP monitor.
  */

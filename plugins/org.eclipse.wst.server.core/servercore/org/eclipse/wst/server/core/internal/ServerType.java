@@ -164,7 +164,7 @@ public class ServerType implements IServerType {
 		if (hasRuntime()) {
 			// look for existing runtime
 			IRuntimeType runtimeType = getRuntimeType();
-			IRuntime[] runtimes = ServerCore.getResourceManager().getRuntimes(runtimeType);
+			IRuntime[] runtimes = ServerUtil.getRuntimes(runtimeType);
 			if (runtimes != null && runtimes.length > 0)
 				runtime = runtimes[0];
 			else {

@@ -34,7 +34,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerExtension;
 import org.eclipse.wst.server.core.ITask;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.core.model.IRunningActionServer;
@@ -43,7 +42,6 @@ import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.wizard.page.WorkspaceRunnableAdapter;
-
 /**
  * A wizard used to execute tasks.
  */
@@ -197,8 +195,8 @@ public class TaskWizard implements IWizard {
 				boolean useJob = false;
 				try {
 					IServer server = (IServer) taskModel.getObject(ITaskModel.TASK_SERVER);
-					IServerExtension extension = server.getExtension(monitor);
-					if (extension instanceof IRunningActionServer)
+					Object obj = server.getAdapter(IRunningActionServer.class);
+					if (obj != null)
 						useJob = true;
 				} catch (Exception e) {
 					// ignore

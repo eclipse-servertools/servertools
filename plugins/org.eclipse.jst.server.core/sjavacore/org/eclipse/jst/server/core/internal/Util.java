@@ -8,7 +8,7 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.jst.server.core;
+package org.eclipse.jst.server.core.internal;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;

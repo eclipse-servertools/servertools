@@ -244,14 +244,6 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		job.schedule();
 	}
 
-	public IServerExtension getExtension(IProgressMonitor monitor) {
-		return getWorkingCopyExtension(monitor);
-	}
-	
-	public IServerExtension getWorkingCopyExtension(IProgressMonitor monitor) {
-		return getWorkingCopyDelegate(monitor);
-	}
-
 	public RuntimeDelegate getWorkingCopyDelegate(IProgressMonitor monitor) {
 		if (workingCopyDelegate != null)
 			return workingCopyDelegate;

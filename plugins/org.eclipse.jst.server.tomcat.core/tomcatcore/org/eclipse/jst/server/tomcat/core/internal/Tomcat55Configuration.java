@@ -44,7 +44,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
-import org.eclipse.wst.server.core.model.IServerPort;
+import org.eclipse.wst.server.core.IServerPort;
 import org.eclipse.wst.server.core.util.ProgressUtil;
 import org.eclipse.wst.server.core.util.ServerPort;
 /**
@@ -512,7 +512,8 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	
 			if (!server2.isTestEnvironment()) {
 				IServerConfigurationWorkingCopy scwc = config.getServerConfiguration().createWorkingCopy();
-				((Tomcat55Configuration) scwc.getExtension(monitor)).localizeWebModules();
+				Tomcat55Configuration cfg = (Tomcat55Configuration) scwc.getAdapter(Tomcat55Configuration.class);
+				cfg.localizeWebModules();
 			}
 			monitor.worked(20);
 	

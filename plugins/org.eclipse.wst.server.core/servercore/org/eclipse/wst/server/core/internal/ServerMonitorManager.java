@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IServerPort;
 /**
  * 
  */
@@ -125,7 +124,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 		
 		protected void load(IMemento memento, IProgressMonitor monitor2) {
 			String serverId = memento.getString("serverId");
-			server = ServerCore.getResourceManager().getServer(serverId);
+			server = ServerCore.getServer(serverId);
 			if (server == null)
 				throw new RuntimeException("Server could not be found: " + serverId + " " + server);
 			String newPortStr = memento.getString("port");
@@ -133,11 +132,14 @@ public class ServerMonitorManager implements IServerMonitorManager {
 				newPort = Integer.parseInt(newPortStr);
 			String portId = memento.getString("portId");
 			
-			Iterator iterator = server.getServerPorts().iterator();
-			while (port == null && iterator.hasNext()) {
-				IServerPort sp = (IServerPort) iterator.next();
-				if (sp.getId() != null && sp.getId().equals(portId))
-					port = sp;
+			IServerPort[] ports2 = server.getServerPorts();
+			if (ports2 != null) {
+				int size = ports2.length;
+				for (int i = 0; port == null && i < size; i++) {
+					IServerPort sp = ports2[i];
+					if (sp.getId() != null && sp.getId().equals(portId))
+						port = sp;
+				}
 			}
 			if (port == null)
 				throw new RuntimeException("Could not relocate port: " + serverId + " " + server + " " + portId);
@@ -204,7 +206,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	 *
 	 * @return
 	 */
-	public List getMonitoredPorts(IServer server) {
+	public IMonitoredServerPort[] getMonitoredPorts(IServer server) {
 		List list = new ArrayList();
 		Iterator iterator = ports.iterator();
 		while (iterator.hasNext()) {
@@ -212,7 +214,10 @@ public class ServerMonitorManager implements IServerMonitorManager {
 			if (mp.server.equals(server))
 				list.add(mp);
 		}
-		return list;
+		
+		IMonitoredServerPort[] msp = new IMonitoredServerPort[list.size()];
+		list.toArray(msp);
+		return msp;
 	}
 
 	/**

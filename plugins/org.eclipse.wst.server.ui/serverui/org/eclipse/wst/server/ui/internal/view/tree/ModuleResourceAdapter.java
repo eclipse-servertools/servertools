@@ -10,7 +10,6 @@ package org.eclipse.wst.server.ui.internal.view.tree;
  *    IBM - Initial API and implementation
  */
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -56,15 +55,15 @@ public class ModuleResourceAdapter implements IAdaptable, IWorkbenchAdapter, ISe
 	 * @see IWorkbenchAdapter#getChildren(Object)
 	 */
 	public Object[] getChildren(Object o) {
-		List childModules = server.getChildModules(module, null);
+		IModule[] childModules = server.getChildModules(module, null);
 		if (childModules == null)
 			return NO_CHILDREN;
-		Iterator iterator = childModules.iterator();
-
+		
 		List child = new ArrayList();
-		while (iterator.hasNext()) {
-			IModule module2 = (IModule) iterator.next();
-			child.add(new ModuleResourceAdapter(this, server, module2));
+		if (childModules != null) {
+			int size = childModules.length;
+			for (int i = 0; i < size; i++)
+				child.add(new ModuleResourceAdapter(this, server, childModules[i]));
 		}
 
 		ModuleResourceAdapter[] adapters = new ModuleResourceAdapter[child.size()];

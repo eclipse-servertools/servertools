@@ -21,7 +21,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.wst.server.core.IResourceManager;
 import org.eclipse.wst.server.core.IServerProject;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
@@ -125,7 +124,6 @@ public class WizardUtil {
 	 * @return org.eclipse.core.resources.IContainer
 	 */
 	protected static IContainer findServerProjectContainer(IResource resource) {
-		IResourceManager rm = ServerCore.getResourceManager();
 		IContainer container = null;
 		while (resource != null) {
 			if (container == null && resource instanceof IContainer)
@@ -133,7 +131,7 @@ public class WizardUtil {
 	
 			if (resource instanceof IFile) {
 				IFile file = (IFile) resource;
-				if (rm.getServerConfiguration(file) != null || rm.getServer(file) != null)
+				if (ServerUtil.getServerConfiguration(file) != null || ServerUtil.getServer(file) != null)
 				return null;
 			}
 	
@@ -219,11 +217,10 @@ public class WizardUtil {
 	
 			// make sure we're not embedding in another server element
 			IResource temp = container;
-			IResourceManager rm = ServerCore.getResourceManager();
 			while (temp != null && !(temp instanceof IProject)) {
 				if (temp instanceof IFile) {
 					IFile file = (IFile) temp;
-					if (rm.getServerConfiguration(file) != null || rm.getServer(file) != null)
+					if (ServerUtil.getServerConfiguration(file) != null || ServerUtil.getServer(file) != null)
 						return error;
 				}
 				temp = temp.getParent();

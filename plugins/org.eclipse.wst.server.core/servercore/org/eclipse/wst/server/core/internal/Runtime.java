@@ -57,10 +57,6 @@ public class Runtime extends Base implements IRuntime {
 			return null;
 		}
 	}
-	
-	public IServerExtension getExtension(IProgressMonitor monitor) {
-		return getDelegate(monitor);
-	}
 
 	public RuntimeDelegate getDelegate(IProgressMonitor monitor) {
 		if (delegate != null)
@@ -121,14 +117,12 @@ public class Runtime extends Base implements IRuntime {
 	}
 	
 	protected void deleteFromMetadata() {
-		ResourceManager rm = (ResourceManager) ServerCore.getResourceManager();
-		rm.removeRuntime(this);
+		ResourceManager.getInstance().removeRuntime(this);
 	}
 
 	protected void saveToMetadata(IProgressMonitor monitor) {
 		super.saveToMetadata(monitor);
-		ResourceManager rm = (ResourceManager) ServerCore.getResourceManager();
-		rm.addRuntime(this);
+		ResourceManager.getInstance().addRuntime(this);
 	}
 
 	protected String getXMLRoot() {
@@ -169,6 +163,16 @@ public class Runtime extends Base implements IRuntime {
 		
 		Runtime runtime = (Runtime) obj;
 		return runtime.getId().equals(getId());
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+	 */
+	public Object getAdapter(Class adapter) {
+		RuntimeDelegate delegate2 = getDelegate(null);
+		if (adapter.isInstance(delegate2))
+			return delegate;
+		return null;
 	}
 	
 	public String toString() {

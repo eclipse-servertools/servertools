@@ -91,9 +91,9 @@ public class TextResourceAdapter implements IAdaptable, IWorkbenchAdapter, IServ
 
 		IElement[] elements = null;
 		if (thisStyle == STYLE_SERVERS)
-			elements = ServerCore.getResourceManager().getServers();
+			elements = ServerCore.getServers();
 		else if (thisStyle == STYLE_CONFIGURATIONS)
-			elements = ServerCore.getResourceManager().getServerConfigurations();
+			elements = ServerCore.getServerConfigurations();
 
 		List list = new ArrayList();
 		if (elements != null) {

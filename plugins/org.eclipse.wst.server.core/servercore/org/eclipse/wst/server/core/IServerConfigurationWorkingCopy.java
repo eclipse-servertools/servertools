@@ -69,7 +69,7 @@ public interface IServerConfigurationWorkingCopy extends IServerConfiguration, I
 	 * 
 	 * @return the extension for the server configuration working copy
 	 */
-	public IServerExtension getWorkingCopyExtension(IProgressMonitor monitor);
+	//public IServerExtension getWorkingCopyExtension(IProgressMonitor monitor);
 	
 	/**
 	 * Commits the changes made in this working copy. If there is

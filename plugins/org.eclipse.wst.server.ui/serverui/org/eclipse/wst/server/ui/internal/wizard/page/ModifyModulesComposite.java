@@ -38,13 +38,8 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.ui.ServerUICore;
-import org.eclipse.wst.server.ui.internal.ContextIds;
-import org.eclipse.wst.server.ui.internal.ImageResource;
-import org.eclipse.wst.server.ui.internal.SWTUtil;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
-
 /**
  * A wizard page used to add and remove modules.
  */
@@ -122,9 +117,9 @@ public class ModifyModulesComposite extends Composite {
 		newModule = null;
 		if (origNewModule != null) {
 			try {
-				List parents = server.getParentModules(origNewModule, null);
-				if (parents != null && parents.size() > 0)
-					newModule = (IModule) parents.get(0);
+				IModule[] parents = server.getParentModules(origNewModule, null);
+				if (parents != null && parents.length > 0)
+					newModule = parents[0];
 				else
 					newModule = origNewModule;
 			} catch (Exception e) {
@@ -137,31 +132,39 @@ public class ModifyModulesComposite extends Composite {
 
 		// get remaining modules
 		errorMap = new HashMap();
-		Iterator iterator = ServerUtil.getModules().iterator();
-		while (iterator.hasNext()) {
-			IModule module = (IModule) iterator.next();
-			if (!deployed.contains(module)) {
-				try {
-					List parents = server.getParentModules(module, null);
-					if (parents != null && parents.contains(module)) {
-						IStatus status = server.canModifyModules(new IModule[] { module }, null, null);
-						if (status != null && !status.isOK())
-							errorMap.put(module, status);
+		IModule[] modules2 = ServerUtil.getModules();
+		if (modules2 != null) {
+			int size = modules2.length;
+			for (int i = 0; i < size; i++) {
+				IModule module = modules2[i];
+				if (!deployed.contains(module)) {
+					try {
+						IModule[] parents = server.getParentModules(module, null);
+						if (parents != null) {
+							int size2 = parents.length;
+							for (int j = 0; j < size2; j++) {
+								if (parents[j].equals(module)) {
+									IStatus status = server.canModifyModules(new IModule[] { module }, null, null);
+									if (status != null && !status.isOK())
+										errorMap.put(module, status);
+									modules.add(module);
+								}
+							}
+						}
+					} catch (CoreException ce) {
+						errorMap.put(module, ce.getStatus());
 						modules.add(module);
 					}
-				} catch (CoreException ce) {
-					errorMap.put(module, ce.getStatus());
-					modules.add(module);
 				}
 			}
 		}
 
 		// build child map
-		iterator = deployed.iterator();
+		Iterator iterator = deployed.iterator();
 		while (iterator.hasNext()) {
 			IModule module = (IModule) iterator.next();
 			try {
-				List children = server.getChildModules(module, null);
+				IModule[] children = server.getChildModules(module, null);
 				childModuleMap.put(module, children);
 			} catch (Exception e) {
 				// ignore
@@ -172,7 +175,7 @@ public class ModifyModulesComposite extends Composite {
 		while (iterator.hasNext()) {
 			IModule module = (IModule) iterator.next();
 			try {
-				List children = server.getChildModules(module, null);
+				IModule[] children = server.getChildModules(module, null);
 				childModuleMap.put(module, children);
 			} catch (Exception e) {
 				// ignore

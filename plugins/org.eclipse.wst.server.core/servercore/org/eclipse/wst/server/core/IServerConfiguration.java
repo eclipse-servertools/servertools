@@ -12,8 +12,8 @@ package org.eclipse.wst.server.core;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * Represents a server configuration instance. Every server configuration is an
  * instance of a particular, fixed server configuration type.
@@ -68,7 +68,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * 
  * @since 1.0
  */
-public interface IServerConfiguration extends IElement {
+public interface IServerConfiguration extends IElement, IAdaptable {
 	
 	/**
 	 * File extension (value "config") for serialized representation of
@@ -112,7 +112,7 @@ public interface IServerConfiguration extends IElement {
 	 * 
 	 * @return the server configuration extension
 	 */
-	public IServerExtension getExtension(IProgressMonitor monitor);
+	//public IServerExtension getExtension(IProgressMonitor monitor);
 
 	/**
 	 * Returns a working copy for modifying this server configuration instance.

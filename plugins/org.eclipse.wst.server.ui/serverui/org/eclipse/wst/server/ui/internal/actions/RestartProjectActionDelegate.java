@@ -59,8 +59,9 @@ public class RestartProjectActionDelegate implements IActionDelegate {
 				dialog.setBlockOnOpen(false);
 				dialog.open();
 	
-				IModule module = ServerUtil.getModuleProject(project);
-				if (module != null) {
+				IModule[] modules = ServerUtil.getModules(project);
+				if (modules != null && modules.length > 0) {
+					IModule module = modules[0];
 					IServer[] servers = ServerUtil.getServersByModule(module, null);
 					if (servers != null) {
 						int size2 = servers.length;
@@ -119,8 +120,9 @@ public class RestartProjectActionDelegate implements IActionDelegate {
 			return;
 		}
 	
-		IModule module = ServerUtil.getModuleProject(project);
-		if (module != null) {
+		IModule[] modules = ServerUtil.getModules(project);
+		if (modules != null && modules.length > 0) {
+			IModule module = modules[0];
 			IServer[] servers = ServerUtil.getServersByModule(module, null);
 			if (servers != null) {
 				int size2 = servers.length;

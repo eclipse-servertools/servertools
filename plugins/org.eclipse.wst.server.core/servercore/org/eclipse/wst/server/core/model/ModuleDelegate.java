@@ -12,13 +12,12 @@ package org.eclipse.wst.server.core.model;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IServerExtension;
 /**
  * A module.
  * 
  * <p>This is the implementation of a module factory extension point.</p>
  */
-public abstract class ModuleDelegate implements IServerExtension {
+public abstract class ModuleDelegate {
 	/**
 	 * Validates this module instance. See the specification of
 	 * {@link IModule#validate()} for further details. Subclasses should

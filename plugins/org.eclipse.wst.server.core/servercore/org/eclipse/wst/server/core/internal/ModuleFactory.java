@@ -16,8 +16,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleFactory;
-import org.eclipse.wst.server.core.IModuleType2;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
 import org.eclipse.wst.server.core.model.IModuleFactoryListener;
 /**
@@ -62,11 +61,11 @@ public class ModuleFactory implements IModuleFactory {
 	 * 
 	 * @return
 	 */
-	public IModuleType2[] getModuleTypes() {
+	public IModuleType[] getModuleTypes() {
 		if (moduleTypes == null)
 			moduleTypes = ServerPlugin.getModuleTypes(element.getChildren("moduleType"));
 
-		IModuleType2[] mt = new IModuleType2[moduleTypes.size()];
+		IModuleType[] mt = new IModuleType[moduleTypes.size()];
 		moduleTypes.toArray(mt);
 		return mt;
 	}
@@ -88,8 +87,7 @@ public class ModuleFactory implements IModuleFactory {
 			try {
 				delegate = (ModuleFactoryDelegate) element.createExecutableExtension("class");
 				delegate.initialize(this);
-				ResourceManager rm = (ResourceManager) ServerCore.getResourceManager();
-				rm.addModuleFactoryListener(delegate);
+				ResourceManager.getInstance().addModuleFactoryListener(delegate);
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + e.getMessage());
 			}

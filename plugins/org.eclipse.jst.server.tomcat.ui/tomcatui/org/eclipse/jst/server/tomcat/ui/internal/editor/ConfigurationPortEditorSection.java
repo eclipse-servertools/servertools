@@ -13,7 +13,7 @@ package org.eclipse.jst.server.tomcat.ui.internal.editor;
 import java.beans.*;
 import java.util.Iterator;
 
-import org.eclipse.wst.server.core.model.IServerPort;
+import org.eclipse.wst.server.core.IServerPort;
 import org.eclipse.wst.server.core.util.ServerPort;
 import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.swt.SWT;
@@ -214,7 +214,7 @@ public class ConfigurationPortEditorSection extends ServerResourceEditorSection 
 		super.init(site, input);
 		
 		if (serverConfiguration != null) {
-			tomcatConfiguration = (ITomcatConfigurationWorkingCopy) serverConfiguration.getWorkingCopyExtension(null);
+			tomcatConfiguration = (ITomcatConfigurationWorkingCopy) serverConfiguration.getAdapter(ITomcatConfigurationWorkingCopy.class);
 			addChangeListener();
 		}
 		initialize();

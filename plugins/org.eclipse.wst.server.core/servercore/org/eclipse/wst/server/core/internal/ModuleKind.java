@@ -10,29 +10,35 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.internal;
 
-import org.eclipse.wst.server.core.IModuleType2;
+import org.eclipse.core.runtime.IConfigurationElement;
 /**
  * 
  */
-public class ModuleType2 implements IModuleType2 {
+public class ModuleKind {
 	protected String id;
-	protected String version;
+	protected String name;
 	
-	public ModuleType2(String id, String version) {
+	public ModuleKind(IConfigurationElement ce) {
+		super();
+		this.id = ce.getAttribute("id");
+		this.name = ce.getAttribute("name");
+	}
+	
+	public ModuleKind(String id, String name) {
 		super();
 		this.id = id;
-		this.version = version;
+		this.name = name;
 	}
-
+	
 	public String getId() {
 		return id;
 	}
 
-	public String getVersion() {
-		return version;
+	public String getName() {
+		return name;
 	}
 
 	public String toString() {
-		return "ModuleType2[" + id + ", " + version + "]";
+		return "ModuleType[" + id + ", " + name + "]";
 	}
 }

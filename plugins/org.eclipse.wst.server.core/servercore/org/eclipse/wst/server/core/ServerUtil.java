@@ -11,6 +11,7 @@
 package org.eclipse.wst.server.core;
 
 import java.util.*;
+
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -42,12 +43,14 @@ public class ServerUtil {
 			return false;
 		Trace.trace(Trace.FINEST, "containsModule() " + server + " " + module);
 		try {
-			Iterator iterator = getAllContainedModules(server, monitor).iterator();
-			while (iterator.hasNext()) {
-				IModule module2 = (IModule) iterator.next();
-				Trace.trace(Trace.FINEST, "module: " + module2 + " " + module.equals(module2));
-				if (module.equals(module2))
-					return true;
+			IModule[] modules = getAllContainedModules(server, monitor);
+			if (modules != null) {
+				int size = modules.length;
+				for (int i = 0; i < size; i++) {
+					Trace.trace(Trace.FINEST, "module: " + modules[i] + " " + module.equals(modules[i]));
+					if (module.equals(modules[i]))
+						return true;
+				}
 			}
 		} catch (Throwable t) {
 			// ignore
@@ -63,16 +66,16 @@ public class ServerUtil {
 	 * @param server org.eclipse.wst.server.core.IServer
 	 * @return java.util.List
 	 */
-	public static List getAllContainedModules(IServer server, IProgressMonitor monitor) {
+	public static IModule[] getAllContainedModules(IServer server, IProgressMonitor monitor) {
 		//Trace.trace("> getAllContainedModules: " + getName(configuration));
 		List modules = new ArrayList();
 		if (server == null)
-			return modules;
+			return new IModule[0];
 
 		// get all of the directly contained projects
 		IModule[] deploys = server.getModules(monitor);
 		if (deploys == null || deploys.length == 0)
-			return modules;
+			return new IModule[0];
 
 		int size = deploys.length;
 		for (int i = 0; i < size; i++) {
@@ -87,13 +90,12 @@ public class ServerUtil {
 		while (count < modules.size()) {
 			IModule module = (IModule) modules.get(count);
 			try {
-				List childProjects = server.getChildModules(module, monitor);
-				if (childProjects != null) {
-					Iterator iterator = childProjects.iterator();
-					while (iterator.hasNext()) {
-						IModule child = (IModule) iterator.next();
-						if (child != null && !modules.contains(child))
-							modules.add(child);
+				IModule[] children = server.getChildModules(module, monitor);
+				if (children != null) {
+					size = children.length;
+					for (int i = 0; i < size; i++) {
+						if (children[i] != null && !modules.contains(children[i]))
+							modules.add(children[i]);
 					}
 				}
 			} catch (Exception e) {
@@ -104,7 +106,9 @@ public class ServerUtil {
 
 		//Trace.trace("< getAllContainedModules");
 
-		return modules;
+		IModule[] modules2 = new IModule[modules.size()];
+		modules.toArray(modules2);
+		return modules2;
 	}
 
 	/**
@@ -120,7 +124,7 @@ public class ServerUtil {
 		// do it the slow way - go through all servers and
 		// see if this module is configured in it
 		List list = new ArrayList();
-		IServer[] servers = ServerCore.getResourceManager().getServers();
+		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
@@ -147,7 +151,7 @@ public class ServerUtil {
 		// do it the slow way - go through all servers and
 		// see if this module is configured in it
 		List list = new ArrayList();
-		IServer[] servers = ServerCore.getResourceManager().getServers();
+		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
@@ -168,13 +172,13 @@ public class ServerUtil {
 	 * @param server org.eclipse.wst.server.core.IServer
 	 * @return java.util.List
 	 */
-	public static List getSupportedServerConfigurations(IServer server) {
+	public static IServerConfiguration[] getSupportedServerConfigurations(IServer server) {
 		if (server == null)
-			return new ArrayList();
+			return new IServerConfiguration[0];
 	
 		List list = new ArrayList();
 	
-		IServerConfiguration[] configs = ServerCore.getResourceManager().getServerConfigurations();
+		IServerConfiguration[] configs = ServerCore.getServerConfigurations();
 		if (configs != null) {
 			int size = configs.length;
 			for (int i = 0; i < size; i++) {
@@ -183,7 +187,10 @@ public class ServerUtil {
 					list.add(configs[i]);
 			}
 		}
-		return list;
+		
+		IServerConfiguration[] sc = new IServerConfiguration[list.size()];
+		list.toArray(sc);
+		return sc;
 	}
 
 	/**
@@ -227,16 +234,18 @@ public class ServerUtil {
 			return null;
 
 		List list = new ArrayList();
-		Iterator iterator = getModules(null, null, true).iterator();
-		while (iterator.hasNext()) {
-			IModule module = (IModule) iterator.next();
-			if (module != null && project.equals(module.getProject()))
-				list.add(module);
+		IModule[] modules = getModules(null, null, true);
+		if (modules != null) {
+			int size = modules.length;
+			for (int i = 0; i < size; i++) {
+				if (modules[i] != null && project.equals(modules[i].getProject()))
+					list.add(modules[i]);
+			}
 		}
 		
-		IModule[] modules = new IModule[list.size()];
-		list.toArray(modules);
-		return modules;
+		IModule[] modules2 = new IModule[list.size()];
+		list.toArray(modules2);
+		return modules2;
 	}
 
 	/**
@@ -326,7 +335,7 @@ public class ServerUtil {
 	 *
 	 * @return java.util.List
 	 */
-	public static List getModuleObjects(Object obj) {
+	public static IModuleObject[] getModuleObjects(Object obj) {
 		List list = new ArrayList();
 		Trace.trace(Trace.FINEST, "ServerUtil.getModuleObjects()");
 		IModuleObjectAdapter[] adapters = ServerCore.getModuleObjectAdapters();
@@ -341,7 +350,10 @@ public class ServerUtil {
 				}
 			}
 		}
-		return list;
+		
+		IModuleObject[] mo = new IModuleObject[list.size()];
+		list.toArray(mo);
+		return mo;
 	}
 
 	/**
@@ -379,7 +391,7 @@ public class ServerUtil {
 	 * @param launchMode String
 	 * @return java.util.List
 	 */
-	public static List getLaunchableClients(IServer server, ILaunchable launchable, String launchMode) {
+	public static IClient[] getClients(IServer server, ILaunchable launchable, String launchMode) {
 		ArrayList list = new ArrayList();
 		IClient[] clients = ServerCore.getClients();
 		if (clients != null) {
@@ -390,7 +402,10 @@ public class ServerUtil {
 					list.add(clients[i]);
 			}
 		}
-		return list;
+		
+		IClient[] clients2 = new IClient[list.size()];
+		list.toArray(clients2);
+		return clients2;
 	}
 
 	/**
@@ -442,7 +457,7 @@ public class ServerUtil {
 	 * @param onlyProjectModules boolean
 	 * @return java.util.List
 	 */
-	public static List getModules(String type, String version, boolean onlyProjectModules) {
+	public static IModule[] getModules(String type, String version, boolean onlyProjectModules) {
 		List list = new ArrayList();
 
 		IModuleFactory[] factories = ServerCore.getModuleFactories();
@@ -461,15 +476,17 @@ public class ServerUtil {
 				//}
 			}
 		}
-		return list;
+		IModule[] modules = new IModule[list.size()];
+		list.toArray(modules);
+		return modules;
 	}
 	
-	public static boolean isSupportedModule(IServerType serverType, IModuleType2 moduleType) {
+	public static boolean isSupportedModule(IServerType serverType, IModuleType moduleType) {
 		IRuntimeType runtimeType = serverType.getRuntimeType();
 		return isSupportedModule(runtimeType.getModuleTypes(), moduleType.getId(), moduleType.getVersion());
 	}
 	
-	public static boolean isSupportedModule(IModuleType2[] moduleTypes, String type, String version) {
+	public static boolean isSupportedModule(IModuleType[] moduleTypes, String type, String version) {
 		if (moduleTypes != null) {
 			int size = moduleTypes.length;
 			for (int i = 0; i < size; i++) {
@@ -480,7 +497,7 @@ public class ServerUtil {
 		return false;
 	}
 	
-	public static boolean isSupportedModule(IModuleType2 moduleType, String type, String version) {
+	public static boolean isSupportedModule(IModuleType moduleType, String type, String version) {
 		String type2 = moduleType.getId();
 		if (matches(type, type2)) {
 			String version2 = moduleType.getVersion();
@@ -501,7 +518,7 @@ public class ServerUtil {
 	 * 
 	 * @return java.util.List
 	 */
-	public static List getModules() {
+	public static IModule[] getModules() {
 		List list = new ArrayList();
 		
 		IModuleFactory[] factories = ServerCore.getModuleFactories();
@@ -518,7 +535,9 @@ public class ServerUtil {
 				}
 			}
 		}
-		return list;
+		IModule[] modules = new IModule[list.size()];
+		list.toArray(modules);
+		return modules;
 	}
 
 	/**
@@ -544,11 +563,11 @@ public class ServerUtil {
 		for (int i = 0; i < size; i++) {
 			boolean found = false;
 			try {
-				List parents = server.getParentModules(add[i], monitor);
+				IModule[] parents = server.getParentModules(add[i], monitor);
 				if (parents != null) {
 					found = true;
-					if (parents.size() > 0) {				
-						Object parent = parents.get(0);
+					if (parents.length > 0) {				
+						Object parent = parents[0];
 						found = true;
 						if (!addParentModules.contains(parent))
 							addParentModules.add(parent);
@@ -567,11 +586,11 @@ public class ServerUtil {
 		for (int i = 0; i < size; i++) {
 			boolean found = false;
 			try {
-				List parents = server.getParentModules(remove[i], monitor);
+				IModule[] parents = server.getParentModules(remove[i], monitor);
 				if (parents != null) {
 					found = true;
-					if (parents.size() > 0) {				
-						Object parent = parents.get(0);
+					if (parents.length > 0) {				
+						Object parent = parents[0];
 						found = true;
 						if (!removeParentModules.contains(parent))
 							removeParentModules.add(parent);
@@ -648,7 +667,7 @@ public class ServerUtil {
 		if (modules != null) { 
 			int size = modules.length;
 			for (int i = 0; i < size; i++) {
-				if (!visitModule(server, new ArrayList(), modules[i], visitor, monitor))
+				if (!visitModule(server, new IModule[0], modules[i], visitor, monitor))
 					return;
 			}
 		}
@@ -657,22 +676,21 @@ public class ServerUtil {
 	/**
 	 * Returns true to keep visiting, and false to stop.
 	 */
-	private static boolean visitModule(IServer server, List parents, IModule module, IModuleVisitor visitor, IProgressMonitor monitor) {
+	private static boolean visitModule(IServer server, IModule[] parents, IModule module, IModuleVisitor visitor, IProgressMonitor monitor) {
 		if (server == null || module == null || parents == null)
 			return true;
 		
 		if (!visitor.visit(parents, module))
 			return false;
 		
-		List children = server.getChildModules(module, monitor);
+		IModule[] children = server.getChildModules(module, monitor);
 		if (children != null) {
-			Iterator iterator = children.iterator();
-			while (iterator.hasNext()) {
-				IModule module2 = (IModule) iterator.next();
-				
-				List parents2 = new ArrayList(parents.size() + 1);
-				parents2.addAll(parents);
-				parents2.add(module);
+			int size = children.length;
+			for (int i = 0; i < size; i++) {
+				IModule module2 = children[i];
+				IModule[] parents2 = new IModule[parents.length + 1];
+				System.arraycopy(parents, 0, parents2, 0, parents.length);
+				parents2[parents.length] = module;
 				
 				if (!visitModule(server, parents2, module2, visitor, monitor))
 					return false;
@@ -683,7 +701,7 @@ public class ServerUtil {
 	}
 
 	public static boolean isNameInUse(IRuntime runtime) {
-		IRuntime[] runtimes = ServerCore.getResourceManager().getRuntimes();
+		IRuntime[] runtimes = ServerCore.getRuntimes();
 		if (runtimes != null) {
 			int size = runtimes.length;
 			for (int i = 0; i < size; i++) {
@@ -807,12 +825,11 @@ public class ServerUtil {
 		if (name == null)
 			return true;
 	
-		IResourceManager rm = ServerCore.getResourceManager();
 		List list = new ArrayList();
 		
-		addAll(list, rm.getRuntimes());
-		addAll(list, rm.getServers());
-		addAll(list, rm.getServerConfigurations());
+		addAll(list, ServerCore.getRuntimes());
+		addAll(list, ServerCore.getServers());
+		addAll(list, ServerCore.getServerConfigurations());
 
 		Iterator iterator = list.iterator();
 		while (iterator.hasNext()) {
@@ -927,9 +944,9 @@ public class ServerUtil {
 	 * @param version
 	 * @return 
 	 */
-	public static List getRuntimes(String type, String version) {
+	public static IRuntime[] getRuntimes(String type, String version) {
 		List list = new ArrayList();
-		IRuntime[] runtimes = ServerCore.getResourceManager().getRuntimes();
+		IRuntime[] runtimes = ServerCore.getRuntimes();
 		if (runtimes != null) {
 			int size = runtimes.length;
 			for (int i = 0; i < size; i++) {
@@ -939,7 +956,10 @@ public class ServerUtil {
 				}
 			}
 		}
-		return list;
+		
+		IRuntime[] runtimes2 = new IRuntime[list.size()];
+		list.toArray(runtimes2);
+		return runtimes2;
 	}
 
 	/**
@@ -950,7 +970,7 @@ public class ServerUtil {
 	 * @param version
 	 * @return 
 	 */
-	public static List getRuntimeTypes(String type, String version) {
+	public static IRuntimeType[] getRuntimeTypes(String type, String version) {
 		List list = new ArrayList();
 		IRuntimeType[] runtimeTypes = ServerCore.getRuntimeTypes();
 		if (runtimeTypes != null) {
@@ -961,7 +981,10 @@ public class ServerUtil {
 				}
 			}
 		}
-		return list;
+		
+		IRuntimeType[] rt = new IRuntimeType[list.size()];
+		list.toArray(rt);
+		return rt;
 	}
 	
 	/**
@@ -973,7 +996,7 @@ public class ServerUtil {
 	 * @param version
 	 * @return 
 	 */
-	public static List getRuntimeTypes(String type, String version, String runtimeTypeId) {
+	public static IRuntimeType[] getRuntimeTypes(String type, String version, String runtimeTypeId) {
 		List list = new ArrayList();
 		IRuntimeType[] runtimeTypes = ServerCore.getRuntimeTypes();
 		if (runtimeTypes != null) {
@@ -985,7 +1008,10 @@ public class ServerUtil {
 				}
 			}
 		}
-		return list;
+		
+		IRuntimeType[] rt = new IRuntimeType[list.size()];
+		list.toArray(rt);
+		return rt;
 	}
 
 	/**
@@ -1005,22 +1031,24 @@ public class ServerUtil {
 		// see if this deployable is not configured in it
 		// but could be added
 		List list = new ArrayList();
-		IServer[] servers = ServerCore.getResourceManager().getServers();
+		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
 				if (!containsModule(servers[i], module, monitor)) {
 					try {
-						List parents = servers[i].getParentModules(module, monitor);
-						if (parents != null && !parents.isEmpty()) {
-							Iterator iterator2 = parents.iterator();
+						IModule[] parents = servers[i].getParentModules(module, monitor);
+						if (parents != null && parents.length > 0) {
 							boolean found = false;
-							while (!found && iterator2.hasNext()) {
-								IModule parent = (IModule) iterator2.next();
-								IStatus status = servers[i].canModifyModules(new IModule[] { parent }, new IModule[0], monitor);
-								if (status == null || status.isOK()){
-									list.add(servers[i]);
-									found = true;
+							if (parents != null) {
+								int size2 = parents.length;
+								for (int j = 0; !found && j < size2; j++) {
+									IModule parent = parents[j];
+									IStatus status = servers[i].canModifyModules(new IModule[] { parent }, new IModule[0], monitor);
+									if (status == null || status.isOK()){
+										list.add(servers[i]);
+										found = true;
+									}
 								}
 							}
 						}
@@ -1044,7 +1072,7 @@ public class ServerUtil {
 		return allServers;
 	}
 
-	/*public static boolean isDefaultAvailable(IServerType serverType, IModuleType2 moduleType) {
+	/*public static boolean isDefaultAvailable(IServerType serverType, IModuleType moduleType) {
 		if (!isSupportedModule(serverType, moduleType))
 			return false;
 	
@@ -1060,4 +1088,175 @@ public class ServerUtil {
 		}
 		return true;
 	}*/
+	
+	/**
+	 * Returns an array of all known runtime instances of
+	 * the given runtime type. This convenience method filters the list of known
+	 * runtime ({@link #getRuntimes()}) for ones with a matching
+	 * runtime type ({@link IRuntime#getRuntimeType()}). The array will not
+	 * contain any working copies.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * <p>
+	 * [issue: Is this convenience method really necessary?
+	 * It's straightforward enough for a client to do.]
+	 * </p>
+	 * 
+	 * @param runtimeType the runtime type
+	 * @return a possibly-empty list of runtime instances {@link IRuntime}
+	 * of the given runtime type
+	 */
+	public static IRuntime[] getRuntimes(IRuntimeType runtimeType) {
+		List list = new ArrayList();
+		IRuntime[] runtimes = ServerCore.getRuntimes();
+		if (runtimes != null) {
+			int size = runtimes.length;
+			for (int i = 0; i < size; i++) {
+				if (runtimes[i].getRuntimeType() != null && runtimes[i].getRuntimeType().equals(runtimeType))
+					list.add(runtimes[i]);
+			}
+		}
+		
+		IRuntime[] r = new IRuntime[list.size()];
+		list.toArray(r);
+		return r;
+	}
+	
+	/**
+	 * Returns the server that came from the given file, or <code>null</code>
+	 * if none. This convenience method searches the list of known
+	 * servers ({@link #getServers()}) for the one with a matching
+	 * location ({@link IServer#getFile()}). The file may not be null.
+	 * <p>
+	 * [issue: Is this convenience method really necessary?
+	 * It's straightforward enough for a client to do.]
+	 * </p>
+	 * <p>
+	 * [issue: Consider renaming this method findServer to make
+	 * it clear that it is searching.]
+	 * </p>
+	 *
+	 * @param a server file
+	 * @return the server instance, or <code>null</code> if 
+	 * there is no server associated with the given file
+	 */
+	public static IServer getServer(IFile file) {
+		if (file == null)
+			throw new IllegalArgumentException();
+		
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				if (file.equals(servers[i].getFile()))
+					return servers[i];
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns an array of all known server instances of
+	 * the given server type. This convenience method filters the list of known
+	 * servers ({@link #getServers()}) for ones with a matching
+	 * server type ({@link IServer#getServerType()}). The array will not contain
+	 * any working copies.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * <p>
+	 * [issue: Is this convenience method really necessary?
+	 * It's straightforward enough for a client to do.]
+	 * </p>
+	 * 
+	 * @param serverType the server type
+	 * @return a possibly-empty array of server instances {@link IServer}
+	 * of the given server type
+	 */
+	public static IServer[] getServers(IServerType serverType) {
+		List list = new ArrayList();
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				if (servers[i].getServerType().equals(serverType))
+					list.add(servers[i]);
+			}
+		}
+		
+		IServer[] s = new IServer[list.size()];
+		list.toArray(s);
+		return s;
+	}
+
+	/**
+	 * Returns an array of all known server configuration instances of
+	 * the given server configuration type. This convenience method filters
+	 * the list of known server configurations
+	 * ({@link #getServerConfigurations()}) for ones with a matching
+	 * server configuration type
+	 * ({@link IServerConfiguration#getServerConfigurationType()}). The array will
+	 * not contain any working copies.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * <p>
+	 * [issue: Is this convenience method really necessary?
+	 * It's straightforward enough for a client to do.]
+	 * </p>
+	 * 
+	 * @param configType the server configuration type
+	 * @return a possibly-empty list of server configuration instances
+	 * {@link IServerConfiguration) of the given server configuration type
+	 */
+	public static IServerConfiguration[] getServerConfigurations(IServerConfigurationType configType) {
+		List list = new ArrayList();
+		IServerConfiguration[] configs = ServerCore.getServerConfigurations();
+		if (configs != null) {
+			int size = configs.length;
+			for (int i = 0; i < size; i++) {
+				if (configs[i].getServerConfigurationType().equals(configType))
+					list.add(configs[i]);
+			}
+		}
+		
+		IServerConfiguration[] sc = new IServerConfiguration[list.size()];
+		list.toArray(sc);
+		return sc;
+	}
+
+	/**
+	 * Returns the server configuration that came from the given file, 
+	 * or <code>null</code> if none. This convenience method searches the list
+	 * of known server configurations ({@link #getServerConfigurations()}) for
+	 * the one with a matching location ({@link IServerConfiguration#getFile()}).
+	 * The id may not be null.
+	 * <p>
+	 * [issue: Is this convenience method really necessary?
+	 * It's straightforward enough for a client to do.]
+	 * </p>
+	 * <p>
+	 * [issue: Consider renaming this method findServerConfiguration to make
+	 * it clear that it is searching.]
+	 * </p>
+	 *
+	 * @param a server configuration file
+	 * @return the server configuration instance, or <code>null</code> if 
+	 * there is no server configuration associated with the given file
+	 */
+	public static IServerConfiguration getServerConfiguration(IFile file) {
+		if (file == null)
+			throw new IllegalArgumentException();
+		
+		IServerConfiguration[] configs = ServerCore.getServerConfigurations();
+		if (configs != null) {
+			int size = configs.length;
+			for (int i = 0; i < size; i++) {
+				if (file.equals(configs[i].getFile()))
+					return configs[i];
+			}
+		}
+		return null;
+	}
 }

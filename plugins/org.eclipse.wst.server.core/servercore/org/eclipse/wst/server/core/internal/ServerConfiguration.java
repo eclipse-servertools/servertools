@@ -39,10 +39,6 @@ public class ServerConfiguration extends Base implements IServerConfiguration {
 		this.configurationType = type;
 	}
 
-	public IServerExtension getExtension(IProgressMonitor monitor) {
-		return getDelegate(monitor);
-	}
-
 	public ServerConfigurationDelegate getDelegate(IProgressMonitor monitor) {
 		if (delegate != null)
 			return delegate;
@@ -190,8 +186,7 @@ public class ServerConfiguration extends Base implements IServerConfiguration {
 	}
 	
 	protected void deleteFromMetadata() {
-		ResourceManager rm = (ResourceManager) ServerCore.getResourceManager();
-		rm.removeServerConfiguration(this);
+		ResourceManager.getInstance().removeServerConfiguration(this);
 		
 		if (getServerConfigurationType().isFolder()) {
 			try {
@@ -207,8 +202,7 @@ public class ServerConfiguration extends Base implements IServerConfiguration {
 
 	protected void saveToMetadata(IProgressMonitor monitor) {
 		super.saveToMetadata(monitor);
-		ResourceManager rm = (ResourceManager) ServerCore.getResourceManager();
-		rm.addServerConfiguration(this);
+		ResourceManager.getInstance().addServerConfiguration(this);
 		
 		saveData(true, monitor);
 	}
@@ -249,5 +243,15 @@ public class ServerConfiguration extends Base implements IServerConfiguration {
 		
 		// TODO
 		return file.getWorkspace().validateEdit(new IFile[] { file }, context);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+	 */
+	public Object getAdapter(Class adapter) {
+		ServerConfigurationDelegate delegate2 = getDelegate(null);
+		if (adapter.isInstance(delegate2))
+			return delegate;
+		return null;
 	}
 }

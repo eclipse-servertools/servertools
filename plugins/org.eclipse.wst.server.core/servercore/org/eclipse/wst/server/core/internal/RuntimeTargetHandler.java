@@ -104,10 +104,6 @@ public class RuntimeTargetHandler implements IRuntimeTargetHandler {
 		return false;
 	}
 
-	public IServerExtension getExtension() {
-		return getDelegate();
-	}
-
 	/*
 	 * @see IPublishManager#getDelegate()
 	 */
@@ -142,6 +138,16 @@ public class RuntimeTargetHandler implements IRuntimeTargetHandler {
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+	 */
+	public Object getAdapter(Class adapter) {
+		RuntimeTargetHandlerDelegate delegate2 = getDelegate();
+		if (adapter.isInstance(delegate2))
+			return delegate;
+		return null;
 	}
 
 	public String toString() {

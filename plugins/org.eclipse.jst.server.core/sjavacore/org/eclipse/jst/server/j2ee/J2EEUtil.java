@@ -11,7 +11,6 @@
 package org.eclipse.jst.server.j2ee;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.wst.server.core.IModule;
@@ -27,18 +26,21 @@ public class J2EEUtil {
 	 * @return org.eclipse.jst.server.j2ee.IEnterpriseApplication
 	 */
 	public static IEnterpriseApplication[] getEnterpriseApplications(IJ2EEModule module) {
-		Iterator iterator = ServerUtil.getModules("j2ee.ear", "*", false).iterator();
 		List list = new ArrayList();
-		while (iterator.hasNext()) {
-			IModule module2 = (IModule) iterator.next();
-			if (module2 instanceof IEnterpriseApplication) {
-				IEnterpriseApplication ear = (IEnterpriseApplication) module2;
-				IJ2EEModule[] modules = ear.getModules();
-				if (modules != null) {
-					int size = modules.length;
-					for (int i = 0; i < size; i++) {
-						if (modules[i].equals(module))
-							list.add(ear);
+		IModule[] modules = ServerUtil.getModules("j2ee.ear", "*", false);
+		if (modules != null) {
+			int size = modules.length;
+			for (int i = 0; i < size; i++) {
+				IModule module2 = modules[i];
+				if (module2 instanceof IEnterpriseApplication) {
+					IEnterpriseApplication ear = (IEnterpriseApplication) module2;
+					IJ2EEModule[] modules2 = ear.getModules();
+					if (modules2 != null) {
+						int size2 = modules2.length;
+						for (int j = 0; j < size2; j++) {
+							if (modules2[j].equals(module))
+								list.add(ear);
+						}
 					}
 				}
 			}

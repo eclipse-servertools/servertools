@@ -42,7 +42,7 @@ public class RemoveWebModuleTask extends Task {
 	 */
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		IServerConfigurationWorkingCopy wc = (IServerConfigurationWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER_CONFIGURATION);
-		ITomcatConfigurationWorkingCopy configuration = (ITomcatConfigurationWorkingCopy) wc.getWorkingCopyExtension(monitor);
+		ITomcatConfigurationWorkingCopy configuration = (ITomcatConfigurationWorkingCopy) wc.getAdapter(ITomcatConfigurationWorkingCopy.class);
 		module = (WebModule) configuration.getWebModules().get(index);
 		configuration.removeWebModule(index);
 	}
@@ -54,7 +54,7 @@ public class RemoveWebModuleTask extends Task {
 	public String getDescription() {
 		if (module == null) {
 			IServerConfiguration config = (IServerConfiguration) getTaskModel().getObject(ITaskModel.TASK_SERVER_CONFIGURATION);
-			ITomcatConfiguration configuration = (ITomcatConfiguration) config.getExtension(null);
+			ITomcatConfiguration configuration = (ITomcatConfiguration) config.getAdapter(ITomcatConfiguration.class);
 			module = (WebModule) configuration.getWebModules().get(index);
 		}
 		return TomcatPlugin.getResource("%configurationEditorActionRemoveWebModuleDescription", module.getPath());
@@ -74,7 +74,7 @@ public class RemoveWebModuleTask extends Task {
 	public void undo() {
 		try {
 			IServerConfigurationWorkingCopy wc = (IServerConfigurationWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER_CONFIGURATION);
-			ITomcatConfigurationWorkingCopy configuration = (ITomcatConfigurationWorkingCopy) wc.getWorkingCopyExtension(null);
+			ITomcatConfigurationWorkingCopy configuration = (ITomcatConfigurationWorkingCopy) wc.getAdapter(ITomcatConfigurationWorkingCopy.class);
 			configuration.addWebModule(index, module);
 		} catch (Exception e) {
 			// ignore

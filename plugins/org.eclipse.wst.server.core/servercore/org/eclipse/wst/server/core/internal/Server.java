@@ -58,34 +58,6 @@ public class Server extends Base implements IServer {
 	
 	// server listeners
 	protected transient List serverListeners;
-	
-	class ServerTaskInfo implements IOrdered {
-		IServerTask task;
-		List[] parents;
-		IModule[] modules;
-		
-		public int getOrder() {
-			return task.getOrder();
-		}
-		
-		public String toString() {
-			return task.getName();
-		}
-	}
-
-	class ModuleTaskInfo implements IOrdered {
-		IModuleTask task;
-		List parents;
-		IModule module;
-	
-		public int getOrder() {
-			return task.getOrder();
-		}
-		
-		public String toString() {
-			return task.getName();
-		}
-	}
 
 	// working copy, loaded resource
 	public Server(IFile file) {
@@ -120,14 +92,12 @@ public class Server extends Base implements IServer {
 	}
 	
 	protected void deleteFromMetadata() {
-		ResourceManager rm = (ResourceManager) ServerCore.getResourceManager();
-		rm.removeServer(this);
+		ResourceManager.getInstance().removeServer(this);
 	}
 	
 	protected void saveToMetadata(IProgressMonitor monitor) {
 		super.saveToMetadata(monitor);
-		ResourceManager rm = (ResourceManager) ServerCore.getResourceManager();
-		rm.addServer(this);
+		ResourceManager.getInstance().addServer(this);
 	}
 
 	/* (non-Javadoc)
@@ -146,10 +116,6 @@ public class Server extends Base implements IServer {
 	 */
 	public IServerConfiguration getServerConfiguration() {
 		return configuration;
-	}
-
-	public IServerExtension getExtension(IProgressMonitor monitor) {
-		return getDelegate(monitor);
 	}
 
 	public ServerDelegate getDelegate(IProgressMonitor monitor) {
@@ -405,7 +371,7 @@ public class Server extends Base implements IServer {
 		//final IModuleResourceDelta[] deployableDelta = new IModuleResourceDelta[size];
 		// TODO
 		IModuleVisitor visitor = new IModuleVisitor() {
-			public boolean visit(List parents, IModule module) {
+			public boolean visit(IModule[] parents, IModule module) {
 				if (module.getProject() == null)
 					return true;
 				
@@ -540,7 +506,7 @@ public class Server extends Base implements IServer {
 	 *
 	 * @param 
 	 */
-	private void fireModulePublishStarting(List parents, IModule module) {
+	private void fireModulePublishStarting(IModule[] parents, IModule module) {
 		Trace.trace(Trace.FINEST, "->- Firing module starting event: " + module + " ->-");
 	
 		if (publishListeners == null || publishListeners.isEmpty())
@@ -567,7 +533,7 @@ public class Server extends Base implements IServer {
 	 *
 	 * @param 
 	 */
-	private void fireModulePublishFinished(List parents, IModule module, IPublishStatus status) {
+	private void fireModulePublishFinished(IModule[] parents, IModule module, IPublishStatus status) {
 		Trace.trace(Trace.FINEST, "->- Firing module finished event: " + module + " " + status + " ->-");
 	
 		if (publishListeners == null || publishListeners.isEmpty())
@@ -621,7 +587,7 @@ public class Server extends Base implements IServer {
 	 *
 	 * @param 
 	 */
-	protected void firePublishStateChange(List parents, IModule module) {
+	protected void firePublishStateChange(IModule[] parents, IModule module) {
 		Trace.trace(Trace.FINEST, "->- Firing publish state change event: " + module + " ->-");
 	
 		if (publishListeners == null || publishListeners.isEmpty())
@@ -671,7 +637,7 @@ public class Server extends Base implements IServer {
 		final Temp temp = new Temp();
 	
 		IModuleVisitor visitor = new IModuleVisitor() {
-			public boolean visit(List parents, IModule module) {
+			public boolean visit(IModule[] parents, IModule module) {
 				if (getModulePublishState(module) != PUBLISH_STATE_NONE) {
 					temp.found = true;
 					return false;
@@ -697,7 +663,7 @@ public class Server extends Base implements IServer {
 		if (getServerPublishState() != PUBLISH_STATE_NONE)
 			return true;
 	
-		if (!getUnpublishedModules().isEmpty())
+		if (getUnpublishedModules().length > 0)
 			return true;
 	
 		return false;
@@ -711,14 +677,10 @@ public class Server extends Base implements IServer {
 	 *
 	 * @return java.util.List
 	 */
-	public List getUnpublishedModules() {
+	public IModule[] getUnpublishedModules() {
 		final List modules = new ArrayList();
-		
-		if (configuration == null)
-			return modules;
-		
 		IModuleVisitor visitor = new IModuleVisitor() {
-			public boolean visit(List parents, IModule module) {
+			public boolean visit(IModule[] parents, IModule module) {
 				if (getModulePublishState(module) != PUBLISH_STATE_NONE && !modules.contains(module)) {
 					PublishControl control = PublishInfo.getPublishInfo().getPublishControl(Server.this, parents, module);
 					if (control.isDirty)
@@ -731,7 +693,9 @@ public class Server extends Base implements IServer {
 		
 		Trace.trace(Trace.FINEST, "Unpublished modules: " + modules);
 		
-		return modules;
+		IModule[] m = new IModule[modules.size()];
+		modules.toArray(m);
+		return m;
 	}
 
 	/**
@@ -758,7 +722,7 @@ public class Server extends Base implements IServer {
 		final List taskModuleList = new ArrayList();
 		
 		IModuleVisitor visitor = new IModuleVisitor() {
-			public boolean visit(List parents, IModule module) {
+			public boolean visit(IModule[] parents, IModule module) {
 				taskParentList.add(parents);
 				taskModuleList.add(module);
 				if (parents != null)
@@ -864,7 +828,7 @@ public class Server extends Base implements IServer {
 	/**
 	 * Publish a single module.
 	 */
-	protected IPublishStatus publishModule(List parents, IModule module, IProgressMonitor monitor) {
+	protected IPublishStatus publishModule(IModule[] parents, IModule module, IProgressMonitor monitor) {
 		Trace.trace(Trace.FINEST, "Publishing module: " + module);
 		
 		monitor.beginTask(ServerPlugin.getResource("%publishingProject", module.getName()), 1000);
@@ -925,35 +889,12 @@ public class Server extends Base implements IServer {
 			for (int i = 0; i < size; i++) {
 				IServerTask task = serverTasks[i];
 				if ((task.supportsType(serverTypeId)) || (serverConfigurationTypeId != null && task.supportsType(serverConfigurationTypeId))) {
-					task.init(this, configuration, parents, modules);
-					byte status = task.getTaskStatus();
-					if (status == ServerTaskDelegate.TASK_MANDATORY) {
-						ServerTaskInfo info = new ServerTaskInfo();
-						info.task = task;
-						info.parents = parents;
-						info.modules = modules;
-						tasks.add(info);
-					}
-				}
-			}
-		}
-		
-		IModuleTask[] moduleTasks = ServerCore.getModuleTasks(); 
-		int size = parents.length;
-		for (int i = 0; i < size; i++) {
-			if (moduleTasks != null) {
-				int size2 = moduleTasks.length;
-				for (int j = 0; j < size2; j++) {
-					IModuleTask task = moduleTasks[j];
-					if ((task.supportsType(serverTypeId)) || (serverConfigurationTypeId != null && task.supportsType(serverConfigurationTypeId))) {
-						task.init(this, configuration, parents[i], modules[i]);
-						byte status = task.getTaskStatus();
-						if (status == ModuleTaskDelegate.TASK_MANDATORY) {
-							ModuleTaskInfo info = new ModuleTaskInfo();
-							info.task = task;
-							info.parents = parents[i];
-							info.module = modules[i];
-							tasks.add(info);
+					IOptionalTask[] tasks2 = task.getTasks(this, configuration, parents, modules);
+					if (tasks2 != null) {
+						int size2 = tasks2.length;
+						for (int j = 0; j < size2; j++) {
+							if (tasks2[j].getStatus() == IOptionalTask.TASK_MANDATORY)
+								tasks.add(tasks2[j]);
 						}
 					}
 				}
@@ -974,25 +915,21 @@ public class Server extends Base implements IServer {
 		long time = System.currentTimeMillis();
 		PublishStatus multi = new PublishStatus(ServerPlugin.PLUGIN_ID, ServerPlugin.getResource("%taskPerforming"), null);
 
-		/*Iterator iterator = tasks.iterator();
+		Iterator iterator = tasks.iterator();
 		while (iterator.hasNext()) {
-			IOrdered task = (IOrdered) iterator.next();
+			IOptionalTask task = (IOptionalTask) iterator.next();
 			monitor.subTask(ServerPlugin.getResource("%taskPerforming", task.toString()));
-			IStatus status = null;
-			if (task instanceof ServerTaskInfo) {
-				ServerTaskInfo info = (ServerTaskInfo) task;
-				status = info.task.performTask(server, configuration, info.parents, info.modules, ProgressUtil.getSubMonitorFor(monitor, 500));
-			} else {
-				ModuleTaskInfo info = (ModuleTaskInfo) task;
-				status = info.task.performTask(server, configuration, info.parents, info.module, ProgressUtil.getSubMonitorFor(monitor, 500));
+			try {
+				task.execute(ProgressUtil.getSubMonitorFor(monitor, 500));
+			} catch (CoreException ce) {
+				Trace.trace(Trace.SEVERE, "Task failed", ce);
 			}
-			multi.addChild(status);
 			if (monitor.isCanceled())
 				return multi;
 		}
 		
 		// save server and configuration
-		try {
+		/*try {
 			ServerUtil.save(server, ProgressUtil.getSubMonitorFor(monitor, 1000));
 			ServerUtil.save(configuration, ProgressUtil.getSubMonitorFor(monitor, 1000));
 		} catch (CoreException se) {
@@ -1002,6 +939,16 @@ public class Server extends Base implements IServer {
 
 		multi.setTime(System.currentTimeMillis() - time);
 		return multi;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+	 */
+	public Object getAdapter(Class adapter) {
+		ServerDelegate delegate2 = getDelegate(null);
+		if (adapter.isInstance(delegate2))
+			return delegate;
+		return null;
 	}
 
 	public String toString() {
@@ -1575,10 +1522,10 @@ public class Server extends Base implements IServer {
 			serverState = ((ServerType)serverType).getInitialState();
 		
 		String runtimeId = getAttribute(RUNTIME_ID, (String)null);
-		runtime = ServerCore.getResourceManager().getRuntime(runtimeId);
+		runtime = ServerCore.getRuntime(runtimeId);
 		
 		String configurationId = getAttribute(CONFIGURATION_ID, (String)null);
-		configuration = ServerCore.getResourceManager().getServerConfiguration(configurationId);
+		configuration = ServerCore.getServerConfiguration(configurationId);
 	}
 	
 	protected void setInternal(ServerWorkingCopy wc) {
@@ -1672,7 +1619,7 @@ public class Server extends Base implements IServer {
 	/*
 	 * @see IServerConfigurationFactory#getChildModule(IModule)
 	 */
-	public List getChildModules(IModule module, IProgressMonitor monitor) {
+	public IModule[] getChildModules(IModule module, IProgressMonitor monitor) {
 		try {
 			return getDelegate(monitor).getChildModules(module);
 		} catch (Exception e) {
@@ -1684,7 +1631,7 @@ public class Server extends Base implements IServer {
 	/*
 	 * @see IServerConfigurationFactory#getParentModules(IModule)
 	 */
-	public List getParentModules(IModule module, IProgressMonitor monitor) throws CoreException {
+	public IModule[] getParentModules(IModule module, IProgressMonitor monitor) throws CoreException {
 		try {
 			return getDelegate(monitor).getParentModules(module);
 		} catch (CoreException se) {
@@ -1787,11 +1734,11 @@ public class Server extends Base implements IServer {
 	}
 	
 	/**
-	 * Returns a list of IServerPorts that this server has.
+	 * Returns an array of IServerPorts that this server has.
 	 *
-	 * @return java.util.List
+	 * @return 
 	 */
-	public List getServerPorts() {
+	public IServerPort[] getServerPorts() {
 		try {
 			return getDelegate(null).getServerPorts();
 		} catch (Exception e) {

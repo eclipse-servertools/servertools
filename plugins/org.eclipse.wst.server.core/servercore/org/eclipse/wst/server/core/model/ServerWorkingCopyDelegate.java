@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import org.eclipse.wst.server.core.IElement;
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IServerExtension;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
 /**
@@ -91,7 +90,7 @@ import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
  * @see org.eclipse.wst.server.core.IServerWorkingCopy#getWorkingCopyExtension()
  * @since 1.0
  */
-public abstract class ServerWorkingCopyDelegate implements IServerExtension {
+public abstract class ServerWorkingCopyDelegate {
 	private ServerWorkingCopy server;
 
 	/**

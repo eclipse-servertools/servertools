@@ -85,14 +85,14 @@ public class TomcatServerWorkingCopy extends TomcatServer implements ITomcatServ
 		
 		IServerConfigurationWorkingCopy scwc = getServer().getServerConfiguration().createWorkingCopy();
 		// TODO
-		ITomcatConfigurationWorkingCopy wc = (ITomcatConfigurationWorkingCopy) scwc.getWorkingCopyExtension(monitor);
+		ITomcatConfigurationWorkingCopy wc = (ITomcatConfigurationWorkingCopy) scwc.getAdapter(ITomcatConfigurationWorkingCopy.class);
 		boolean change = false;
 
 		if (add != null) {
 			int size = add.length;
 			for (int i = 0; i < size; i++) {
 				IModule module3 = add[i];
-				IWebModule module = (IWebModule) module3.getExtension(monitor);
+				IWebModule module = (IWebModule) module3.getAdapter(IWebModule.class);
 				String contextRoot = module.getContextRoot();
 				if (contextRoot != null && !contextRoot.startsWith("/"))
 					contextRoot = "/" + contextRoot;

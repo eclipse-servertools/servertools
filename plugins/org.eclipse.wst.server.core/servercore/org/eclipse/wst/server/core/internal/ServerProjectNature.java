@@ -119,8 +119,7 @@ public class ServerProjectNature implements IServerProject, IProjectNature {
 	 */
 	public List getServerConfigurations() {
 		List list = new ArrayList();
-		IResourceManager rm = ServerCore.getResourceManager();
-		IServerConfiguration[] configs = rm.getServerConfigurations();
+		IServerConfiguration[] configs = ServerCore.getServerConfigurations();
 		if (configs != null) {
 			int size = configs.length;
 			for (int i = 0; i < size; i++) {
@@ -140,8 +139,7 @@ public class ServerProjectNature implements IServerProject, IProjectNature {
 	 */
 	public List getServers() {
 		List list = new ArrayList();
-		IResourceManager rm = ServerCore.getResourceManager();
-		IServer[] servers = rm.getServers();
+		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
@@ -158,7 +156,7 @@ public class ServerProjectNature implements IServerProject, IProjectNature {
 	 */
 	public void loadFiles() {
 		Trace.trace(Trace.FINER, "Initial server resource load for " + project.getName(), null);
-		final ResourceManager rm = (ResourceManager) ServerCore.getResourceManager();
+		final ResourceManager rm = ResourceManager.getInstance();
 	
 		try {
 			getProject().accept(new IResourceVisitor() {

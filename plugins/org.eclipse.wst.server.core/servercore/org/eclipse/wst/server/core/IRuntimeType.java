@@ -130,9 +130,9 @@ public interface IRuntimeType extends IOrdered {
 	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
 	 * 
-	 * @return the array of module types {@link IModuleType2}
+	 * @return the array of module types {@link IModuleType}
 	 */
-	public IModuleType2[] getModuleTypes();
+	public IModuleType[] getModuleTypes();
 	
 	/**
 	 * Returns whether this runtime type can be instantiated.

@@ -71,17 +71,17 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 	 */
 	public void dispose() {
 		// remove listeners
-		IServer[] servers = ServerCore.getResourceManager().getServers();
+		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++)
 				servers[i].removeServerListener(serverListener);
 		}
 
-		ServerCore.getResourceManager().removeResourceListener(listener);
+		ServerCore.removeResourceListener(listener);
 		
 		if (moduleEventsListener != null)
-			ServerCore.getResourceManager().removeModuleEventsListener(moduleEventsListener);
+			ServerCore.removeModuleEventsListener(moduleEventsListener);
 	}
 
 	/**
@@ -176,7 +176,7 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 			}
 		};
 
-		IServer[] servers = ServerCore.getResourceManager().getServers();
+		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++)
@@ -235,7 +235,7 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 				});
 			}
 		};
-		ServerCore.getResourceManager().addResourceListener(listener);
+		ServerCore.addResourceListener(listener);
 	}
 	
 	/**
@@ -253,7 +253,7 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 			}
 		};
 		
-		ServerCore.getResourceManager().addModuleEventsListener(moduleEventsListener);
+		ServerCore.addModuleEventsListener(moduleEventsListener);
 	}
 
 	/**
@@ -264,7 +264,7 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 	protected void handleServerModulesChanged(IServer server2) {
 		if (viewer != null) {
 			viewer.refresh(new ServerElementAdapter(null, server2));
-			IServer[] servers = ServerCore.getResourceManager().getServers();
+			IServer[] servers = ServerCore.getServers();
 			if (servers != null) {
 				int size = servers.length;
 				for (int i = 0; i < size; i++) {
@@ -294,7 +294,7 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 			IServerConfiguration configuration = (IServerConfiguration) element;
 			//boolean used = false;
 
-			IServer[] servers = ServerCore.getResourceManager().getServers();
+			IServer[] servers = ServerCore.getServers();
 			if (servers != null) {
 				int size = servers.length;
 				for (int i = 0; i < size; i++) {
@@ -343,7 +343,7 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 			IServerConfiguration configuration = (IServerConfiguration) element;
 			
 			// refresh servers
-			IServer[] servers = ServerCore.getResourceManager().getServers();
+			IServer[] servers = ServerCore.getServers();
 			if (servers != null) {
 				int size = servers.length;
 				for (int i = 0; i < size; i++) {
@@ -410,7 +410,7 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 			
 			// refresh servers
 			//boolean used = false;
-			IServer[] servers = ServerCore.getResourceManager().getServers();
+			IServer[] servers = ServerCore.getServers();
 			if (servers != null) {
 				int size = servers.length;
 				for (int i = 0; i < size; i++) {
@@ -435,7 +435,7 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 	}
 	
 	public static IServerConfiguration[] getLooseConfigurations() {
-		IServerConfiguration[] configs = ServerCore.getResourceManager().getServerConfigurations();
+		IServerConfiguration[] configs = ServerCore.getServerConfigurations();
 		java.util.List list = new ArrayList();
 		if (configs != null) {
 			int size = configs.length;
@@ -443,7 +443,7 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 				list.add(configs[i]);
 		}
 		
-		IServer[] servers = ServerCore.getResourceManager().getServers();
+		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {

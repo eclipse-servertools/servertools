@@ -32,7 +32,7 @@ import org.xml.sax.InputSource;
 
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
-import org.eclipse.wst.server.core.model.IServerPort;
+import org.eclipse.wst.server.core.IServerPort;
 import org.eclipse.wst.server.core.util.ProgressUtil;
 import org.eclipse.wst.server.core.util.ServerPort;
 /**
@@ -507,7 +507,8 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 				config.isServerDirty = true;
 			} else {
 				IServerConfigurationWorkingCopy scwc = config.getServerConfiguration().createWorkingCopy();
-				((Tomcat32Configuration) scwc.getExtension(monitor)).localizeWebModules();
+				Tomcat32Configuration cfg = (Tomcat32Configuration) scwc.getAdapter(Tomcat32Configuration.class);
+				cfg.localizeWebModules();
 			}
 	
 			monitor.worked(40);

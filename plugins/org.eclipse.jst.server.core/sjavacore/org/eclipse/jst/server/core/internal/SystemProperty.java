@@ -8,7 +8,7 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.jst.server.core;
+package org.eclipse.jst.server.core.internal;
 /**
  * A system property name/value pair.
  */

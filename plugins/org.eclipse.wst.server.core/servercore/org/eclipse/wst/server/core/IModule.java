@@ -11,6 +11,7 @@
 package org.eclipse.wst.server.core;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.model.IModuleListener;
@@ -52,7 +53,7 @@ import org.eclipse.wst.server.core.model.IModuleListener;
  * 
  * @since 1.0
  */
-public interface IModule {
+public interface IModule extends IAdaptable {
 	/**
 	 * Returns the id of this module.
 	 * Each module has a distinct id, used to distinguish this
@@ -139,7 +140,7 @@ public interface IModule {
 	 * 
 	 * @return
 	 */
-	public IModuleType2 getModuleType();
+	public IModuleType getModuleType();
 
 	/**
 	 * Returns whether this module currently exists.
@@ -165,8 +166,6 @@ public interface IModule {
 	 * @return org.eclipse.core.resources.IProject
 	 */
 	public IProject getProject();
-	
-	public IServerExtension getExtension(IProgressMonitor monitor);
 
 	/**
 	 * Add a listener for child module that are added/removed from this

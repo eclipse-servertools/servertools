@@ -1,4 +1,3 @@
-package org.eclipse.jst.server.tomcat.core.internal;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
  * All rights reserved.   This program and the accompanying materials
@@ -9,6 +8,8 @@ package org.eclipse.jst.server.tomcat.core.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.jst.server.tomcat.core.internal;
+
 import java.net.URL;
 
 import org.eclipse.jst.server.j2ee.IWebModule;
@@ -17,7 +18,6 @@ import org.eclipse.jst.server.j2ee.WebResource;
 import org.eclipse.wst.server.core.ILaunchable;
 import org.eclipse.wst.server.core.IModuleObject;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerExtension;
 import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.core.util.HttpLaunchable;
 import org.eclipse.wst.server.core.util.NullLaunchable;
@@ -31,8 +31,7 @@ public class TomcatLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
 	 */
 	public ILaunchable getLaunchable(IServer server, IModuleObject moduleObject) {
 		Trace.trace("TomcatLaunchableAdapter " + server + "-" + moduleObject);
-		IServerExtension extension = server.getExtension(null);
-		if (!(extension instanceof TomcatServer))
+		if (server.getAdapter(TomcatServer.class) == null)			
 			return null;
 		if (!(moduleObject instanceof Servlet) &&
 			!(moduleObject instanceof WebResource) &&
@@ -42,7 +41,7 @@ public class TomcatLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
 			return null;
 
 		try {
-			URL url = ((IURLProvider) extension).getModuleRootURL(moduleObject.getModule());
+			URL url = ((IURLProvider) server.getAdapter(IURLProvider.class)).getModuleRootURL(moduleObject.getModule());
 			
 			Trace.trace("root: " + url);
 

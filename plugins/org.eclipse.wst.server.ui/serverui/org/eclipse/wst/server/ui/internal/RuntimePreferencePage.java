@@ -224,7 +224,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 							boolean dup = false;
 							IRuntime wc = (IRuntime) iterator2.next();
 							
-							IRuntime[] runtimes = ServerCore.getResourceManager().getRuntimes();
+							IRuntime[] runtimes = ServerCore.getRuntimes();
 							if (runtimes != null) {
 								int size = runtimes.length;
 								for (int i = 0; i < size; i++) {
@@ -269,7 +269,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		// check for use
 		boolean inUse = false;
 	
-		IServer[] servers = ServerCore.getResourceManager().getServers();
+		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {

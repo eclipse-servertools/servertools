@@ -96,7 +96,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		runtimeLocation.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		// initialize
-		IServer[] servers2 = ServerCore.getResourceManager().getServers();
+		IServer[] servers2 = ServerCore.getServers();
 		servers = new ArrayList();
 		if (servers2 != null) {
 			int size = servers2.length;
@@ -205,7 +205,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		try {
 			String serverId = configuration.getAttribute(IServer.ATTR_SERVER_ID, "");
 			if (!serverId.equals("")) {
-				server = ServerCore.getResourceManager().getServer(serverId);
+				server = ServerCore.getServer(serverId);
 
 				if (server == null) { //server no longer exists				
 					setErrorMessage(ServerUIPlugin.getResource("%errorInvalidServer"));
@@ -255,7 +255,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		try {
 			String id = launchConfig.getAttribute(IServer.ATTR_SERVER_ID, "");
 			if (!id.equals("")) {
-				IServer server2 = ServerCore.getResourceManager().getServer(id);
+				IServer server2 = ServerCore.getServer(id);
 				if (server2 == null)
 					return false;
 				if (server2.getServerState() == IServer.STATE_STOPPED)

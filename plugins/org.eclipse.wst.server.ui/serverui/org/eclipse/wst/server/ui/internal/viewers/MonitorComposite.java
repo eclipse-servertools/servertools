@@ -10,8 +10,6 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
@@ -27,8 +25,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.wst.server.core.IMonitoredServerPort;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerMonitorManager;
+import org.eclipse.wst.server.core.IServerPort;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.model.IServerPort;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -217,9 +215,9 @@ public class MonitorComposite extends Composite {
 			}
 		});
 		
-		List list = ServerCore.getServerMonitorManager().getMonitoredPorts(server); 
-		if (!list.isEmpty())
-			monitorTableViewer.setSelection(new StructuredSelection(list.get(0)));
+		IMonitoredServerPort[] msps = ServerCore.getServerMonitorManager().getMonitoredPorts(server); 
+		if (msps != null && msps.length > 0)
+			monitorTableViewer.setSelection(new StructuredSelection(msps[0]));
 	}
 	
 	protected Object getSelection(ISelection sel2) {

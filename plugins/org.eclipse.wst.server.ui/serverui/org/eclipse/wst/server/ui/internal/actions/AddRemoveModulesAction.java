@@ -1,4 +1,3 @@
-package org.eclipse.wst.server.ui.internal.actions;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
  * All rights reserved.   This program and the accompanying materials
@@ -8,10 +7,10 @@ package org.eclipse.wst.server.ui.internal.actions;
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal.actions;
+
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -26,7 +25,6 @@ import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.wst.server.ui.internal.wizard.ModifyModulesWizard;
 import org.eclipse.swt.widgets.Shell;
-
 /**
  * 
  */
@@ -54,13 +52,16 @@ public class AddRemoveModulesAction implements IServerAction {
 		}
 
 		// get remaining modules
-		Iterator iterator = ServerUtil.getModules().iterator();
-		while (iterator.hasNext()) {
-			IModule module = (IModule) iterator.next();
-			if (!deployed.contains(module)) {
-				IStatus status = server.canModifyModules(new IModule[] { module }, null, null);
-				if (status != null && status.isOK())
-					modules.add(module);
+		IModule[] modules2 = ServerUtil.getModules();
+		if (modules != null) {
+			int size = modules2.length;
+			for (int i = 0; i < size; i++) {
+				IModule module = modules2[i];
+				if (!deployed.contains(module)) {
+					IStatus status = server.canModifyModules(new IModule[] { module }, null, null);
+					if (status != null && status.isOK())
+						modules.add(module);
+				}
 			}
 		}
 		

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IModuleType2;
+import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerType;
@@ -57,7 +57,7 @@ public class ServerTreeContentProvider extends AbstractTreeContentProvider {
 		clean();
 		List list = new ArrayList();
 		if (style != STYLE_FLAT) {
-			IServer[] servers = ServerCore.getResourceManager().getServers();
+			IServer[] servers = ServerCore.getServers();
 			if (servers != null) {
 				int size = servers.length;
 				for (int i = 0; i < size; i++) {
@@ -88,7 +88,7 @@ public class ServerTreeContentProvider extends AbstractTreeContentProvider {
 				}
 			}
 		} else {
-			IServer[] servers = ServerCore.getResourceManager().getServers();
+			IServer[] servers = ServerCore.getServers();
 			if (servers != null) {
 				int size = servers.length;
 				for (int i = 0; i < size; i++) {
@@ -112,7 +112,7 @@ public class ServerTreeContentProvider extends AbstractTreeContentProvider {
 		if (!ServerUtil.isCompatibleWithLaunchMode(server, launchMode))
 			return false;
 		
-		IModuleType2 mt = module.getModuleType();
+		IModuleType mt = module.getModuleType();
 		if (includeIncompatibleVersions) {
 			if (!ServerUtil.isSupportedModule(server.getServerType().getRuntimeType().getModuleTypes(), mt.getId(), null))
 				return false;

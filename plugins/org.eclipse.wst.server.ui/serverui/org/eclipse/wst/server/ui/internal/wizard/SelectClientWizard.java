@@ -1,4 +1,3 @@
-package org.eclipse.wst.server.ui.internal.wizard;
 /**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
  * All rights reserved.   This program and the accompanying materials
@@ -8,9 +7,8 @@ package org.eclipse.wst.server.ui.internal.wizard;
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
-import java.util.List;
+package org.eclipse.wst.server.ui.internal.wizard;
 
 import org.eclipse.wst.server.core.IClient;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -29,7 +27,7 @@ public class SelectClientWizard extends TaskWizard {
 	/**
 	 * SelectClientWizard constructor comment.
 	 */
-	public SelectClientWizard(final List elements) {
+	public SelectClientWizard(final IClient[] clients) {
 		super(ServerUIPlugin.getResource("%wizSelectClientWizardTitle"),
 			new WizardFragment() {						
 				public boolean hasComposite() {
@@ -40,7 +38,7 @@ public class SelectClientWizard extends TaskWizard {
 				 * @see org.eclipse.wst.server.ui.internal.task.WizardTask#getWizardPage()
 				 */
 				public Composite createComposite(Composite parent, IWizardHandle wizard) {
-					comp = new SelectClientComposite(parent, wizard, elements);
+					comp = new SelectClientComposite(parent, wizard, clients);
 					return comp;
 				}
 			}

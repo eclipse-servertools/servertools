@@ -10,7 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.util;
 
-import org.eclipse.wst.server.core.model.IServerPort;
+import org.eclipse.wst.server.core.IServerPort;
 /**
  * A port on a server configuration.
  */

@@ -21,7 +21,6 @@ import org.eclipse.jst.server.tomcat.core.ITomcatRuntimeWorkingCopy;
 
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
-import org.eclipse.wst.server.core.IServerExtension;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.model.RuntimeLocatorDelegate;
 import org.eclipse.wst.server.core.model.IRuntimeLocatorListener;
@@ -95,8 +94,7 @@ public class TomcatRuntimeLocator extends RuntimeLocatorDelegate {
 				IRuntimeWorkingCopy runtime = runtimeType.createRuntime(dir.getAbsolutePath(), monitor);
 				runtime.setName(dir.getName());
 				runtime.setLocation(new Path(dir.getAbsolutePath()));
-				IServerExtension extension = runtime.getWorkingCopyExtension(monitor);
-				ITomcatRuntimeWorkingCopy wc = (ITomcatRuntimeWorkingCopy) extension;
+				ITomcatRuntimeWorkingCopy wc = (ITomcatRuntimeWorkingCopy) runtime.getAdapter(ITomcatRuntimeWorkingCopy.class);
 				IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
 				wc.setVMInstall(vmInstall.getVMInstallType().getId(), vmInstall.getId());
 				IStatus status = runtime.validate(monitor);

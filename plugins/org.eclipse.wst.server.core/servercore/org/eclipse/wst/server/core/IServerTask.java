@@ -16,27 +16,14 @@ import java.util.List;
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
  */
-public interface IServerTask extends ITask, IOrdered {
-	public static final byte TASK_UNNECESSARY = 0;
-	public static final byte TASK_COMPLETED = 1;
-	public static final byte TASK_READY = 2;
-	public static final byte TASK_PREFERRED = 3;
-	public static final byte TASK_MANDATORY = 4;
-
+public interface IServerTask {
 	/**
 	 * Returns the id of the adapter.
 	 *
 	 * @return java.lang.String
 	 */
 	public String getId();
-	
-	/**
-	 * Return the type ids that may be supported.
-	 * 
-	 * @return java.lang.String[]
-	 */
-	public String[] getTypeIds();
-	
+
 	/**
 	 * Returns true if the given type (given by the id) can use this task. This
 	 * result is based on the result of the getTypeIds() method.
@@ -55,12 +42,5 @@ public interface IServerTask extends ITask, IOrdered {
 	 * @param parents java.util.List[]
 	 * @param modules org.eclipse.wst.server.core.IModule[]
 	 */
-	public void init(IServer server, IServerConfiguration configuration, List[] parents, IModule[] modules);
-
-	/**
-	 * Returns the status of this task.
-	 * 
-	 * @return byte
-	 */
-	public byte getTaskStatus();
+	public IOptionalTask[] getTasks(IServer server, IServerConfiguration configuration, List[] parents, IModule[] modules);
 }

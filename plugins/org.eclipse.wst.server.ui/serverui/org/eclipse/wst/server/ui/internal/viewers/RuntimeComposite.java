@@ -86,7 +86,7 @@ public class RuntimeComposite extends AbstractTableComposite {
 			}
 		});
 		
-		defaultRuntime = ServerCore.getResourceManager().getDefaultRuntime();
+		defaultRuntime = ServerCore.getDefaultRuntime();
 		if (defaultRuntime != null)
 			((CheckboxTableViewer)tableViewer).setChecked(defaultRuntime, true);
 
@@ -97,10 +97,10 @@ public class RuntimeComposite extends AbstractTableComposite {
 					if (event.getChecked()) {
 						if (defaultRuntime != null)
 							((CheckboxTableViewer)tableViewer).setChecked(defaultRuntime, false);
-						ServerCore.getResourceManager().setDefaultRuntime(runtime);
+						ServerCore.setDefaultRuntime(runtime);
 						defaultRuntime = runtime;
 					} else
-						ServerCore.getResourceManager().setDefaultRuntime(null);
+						ServerCore.setDefaultRuntime(null);
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Error setting default runtime", e);
 				}

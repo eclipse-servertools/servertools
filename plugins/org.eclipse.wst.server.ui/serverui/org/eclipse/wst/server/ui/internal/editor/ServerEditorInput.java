@@ -12,7 +12,6 @@ package org.eclipse.wst.server.ui.internal.editor;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.wst.server.core.IResourceManager;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.ServerCore;
@@ -104,10 +103,9 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 	 *		otherwise
 	 */
 	public boolean exists() {
-		IResourceManager rm = ServerCore.getResourceManager();
-		if (serverId != null && rm.getServer(serverId) == null)
+		if (serverId != null && ServerCore.getServer(serverId) == null)
 			return false;
-		else if (configurationId != null && rm.getServerConfiguration(configurationId) == null)
+		else if (configurationId != null && ServerCore.getServerConfiguration(configurationId) == null)
 			return false;
 		else
 			return true;
@@ -155,14 +153,13 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 	 * @return the file name string
 	 */
 	public String getName() {
-		IResourceManager rm = ServerCore.getResourceManager();
 		if (serverId != null) {
-			IServer server = rm.getServer(serverId);
+			IServer server = ServerCore.getServer(serverId);
 			if (server != null)
 				return server.getName();
 			return serverId;
 		} else if (configurationId != null) {
-			IServerConfiguration configuration = rm.getServerConfiguration(configurationId);
+			IServerConfiguration configuration = ServerCore.getServerConfiguration(configurationId);
 			if (configuration != null)
 				return configuration.getName();
 			return configurationId;
@@ -182,9 +179,8 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 
 	public String getToolTipText() {
 		String s = null;
-		IResourceManager rm = ServerCore.getResourceManager();
 		if (serverId != null) {
-			IServer server = rm.getServer(serverId);
+			IServer server = ServerCore.getServer(serverId);
 			if (server != null) {
 				if (server.getFile() != null) {
 					s = server.getFile().getFullPath().makeRelative().toString();
@@ -195,7 +191,7 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 			}
 		}
 		if (s == null && configurationId != null) {
-			IServerConfiguration configuration = rm.getServerConfiguration(configurationId);
+			IServerConfiguration configuration = ServerCore.getServerConfiguration(configurationId);
 			if (configuration != null) {
 				if (configuration.getFile() != null) {
 					s = configuration.getFile().getFullPath().makeRelative().toString();

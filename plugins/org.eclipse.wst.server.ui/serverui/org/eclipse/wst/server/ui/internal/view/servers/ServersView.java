@@ -11,7 +11,6 @@
 package org.eclipse.wst.server.ui.internal.view.servers;
 
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.IDebugUIConstants;
@@ -19,7 +18,6 @@ import org.eclipse.debug.ui.IDebugView;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.actions.ServerAction;
@@ -38,7 +36,6 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.*;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.ui.part.ViewPart;
-
 /**
  * View of server, their configurations and status.
  */
@@ -322,11 +319,12 @@ public class ServersView extends ViewPart {
 				MenuManager menuManager = new MenuManager(ServerUIPlugin.getResource("%actionSwitchConfiguration"));
 				menuManager.add(new SwitchConfigurationAction(shell, ServerUIPlugin.getResource("%viewNoConfiguration"), server, null));
 	
-				List configs = ServerUtil.getSupportedServerConfigurations(server);
-				Iterator iterator = configs.iterator();
-				while (iterator.hasNext()) {
-					IServerConfiguration config = (IServerConfiguration) iterator.next();
-					menuManager.add(new SwitchConfigurationAction(shell, config.getName(), server, config));
+				IServerConfiguration[] configs = ServerUtil.getSupportedServerConfigurations(server);
+				if (configs != null) {
+					int size = configs.length;
+					for (int i = 0; i < size; i++) {
+						menuManager.add(new SwitchConfigurationAction(shell, configs[i].getName(), server, configs[i]));
+					}
 				}
 	
 				menu.add(menuManager);
@@ -342,11 +340,12 @@ public class ServersView extends ViewPart {
 					public void menuAboutToShow(IMenuManager manager) {
 						menuManager.removeAll();
 						if (server2.isDelegatePluginActivated()) {
-							Iterator iterator = server2.getServerPorts().iterator();
-							while (iterator.hasNext()) {
-								IServerPort port = (IServerPort) iterator.next();
-								if (!port.isAdvanced()) {
-									menuManager.add(new MonitorServerPortAction(shell2, server2, port));
+							IServerPort[] ports = server2.getServerPorts();
+							if (ports != null) {
+								int size = ports.length;
+								for (int i = 0; i < size; i++) {
+									if (!ports[i].isAdvanced())
+										menuManager.add(new MonitorServerPortAction(shell2, server2, ports[i]));
 								}
 							}
 						}
@@ -367,11 +366,13 @@ public class ServersView extends ViewPart {
 			MenuManager restartProjectMenu = new MenuManager(ServerUIPlugin.getResource("%actionRestartProject"));
 	
 			if (server != null) {
-				Iterator iterator = ServerUtil.getAllContainedModules(server, null).iterator();
-				while (iterator.hasNext()) {
-					IModule module = (IModule) iterator.next();
-					Action action = new RestartModuleAction(server, module);
-					restartProjectMenu.add(action);
+				IModule[] modules = ServerUtil.getAllContainedModules(server, null);
+				if (modules != null) {
+					int size = modules.length;
+					for (int i = 0; i < size; i++) {
+						Action action = new RestartModuleAction(server, modules[i]);
+						restartProjectMenu.add(action);
+					}
 				}
 			}
 			if (restartProjectMenu.isEmpty())

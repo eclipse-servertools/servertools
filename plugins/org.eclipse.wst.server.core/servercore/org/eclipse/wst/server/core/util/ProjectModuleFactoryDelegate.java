@@ -16,8 +16,6 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IPath;
 
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IResourceManager;
-import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.ResourceManager;
 import org.eclipse.wst.server.core.internal.Trace;
 /**
@@ -174,8 +172,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 			factory.fireEvents();
 		}
 		
-		IResourceManager rm = ServerCore.getResourceManager();
-		((ResourceManager) rm).syncModuleEvents();
+		ResourceManager.getInstance().syncModuleEvents();
 	}
 
 	/**

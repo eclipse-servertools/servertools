@@ -228,7 +228,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	protected static void autoRestartAll() {
 		Trace.trace(Trace.FINEST, "Auto restarting all dirty servers");
 	
-		IServer[] servers = ServerCore.getResourceManager().getServers();
+		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {

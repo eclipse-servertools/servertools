@@ -133,7 +133,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		String launchMode = getLaunchMode();
 		firePropertyChangeEvent("launchMode", null, launchMode);
 
-		List moduleObjects = ServerUtil.getModuleObjects(selection);
+		IModuleObject[] moduleObjects = ServerUtil.getModuleObjects(selection);
 		
 		Shell shell;
 		if (window != null)
@@ -141,17 +141,17 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		else
 			shell = ServerUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
 
-		if (moduleObjects == null || moduleObjects.isEmpty()) {
+		if (moduleObjects == null || moduleObjects.length == 0) {
 			EclipseUtil.openError(ServerUIPlugin.getResource("%errorNoModules"));
 			Trace.trace(Trace.FINEST, "No modules");
 			return;
 		}
-		IModule module = ((IModuleObject) moduleObjects.get(0)).getModule();
-		if (moduleObjects.size() > 1) {
+		IModule module = moduleObjects[0].getModule();
+		if (moduleObjects.length > 1) {
 			// check if the modules are all in the same module
-			int size = moduleObjects.size();
+			int size = moduleObjects.length;
 			for (int i = 0; i < size; i++) {
-				IModule module2 = ((IModuleObject) moduleObjects.get(i)).getModule();
+				IModule module2 = moduleObjects[i].getModule();
 				if (!module.equals(module2)) {
 					EclipseUtil.openError("Too many module objects");
 					Trace.trace(Trace.SEVERE, "Too many module objects! Unsupported!");
@@ -161,15 +161,15 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		}
 
 		// check for servers with the given start mode
-		IServer[] servers = ServerCore.getResourceManager().getServers();
+		IServer[] servers = ServerCore.getServers();
 		boolean found = false;
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size && !found; i++) {
 				if (ServerUtil.isCompatibleWithLaunchMode(servers[i], launchMode)) {
 					try {
-						List parents = servers[i].getParentModules(module, monitor);
-						if (parents != null && parents.size() > 0)
+						IModule[] parents = servers[i].getParentModules(module, monitor);
+						if (parents != null && parents.length > 0)
 							found = true;
 					} catch (Exception e) {
 						// ignore
@@ -187,8 +187,8 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				int size = serverTypes.length;
 				for (int i = 0; i < size && !found2; i++) {
 					IServerType type = serverTypes[i];
-					IModuleType2[] moduleTypes = type.getRuntimeType().getModuleTypes();
-					IModuleType2 mt = module.getModuleType();
+					IModuleType[] moduleTypes = type.getRuntimeType().getModuleTypes();
+					IModuleType mt = module.getModuleType();
 					if (type.supportsLaunchMode(launchMode) && ServerUtil.isSupportedModule(moduleTypes, mt.getId(), mt.getVersion())) {
 						found2 = true;
 					}
@@ -263,45 +263,48 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		ILaunchableAdapter launchableAdapter = null;
 		IModuleObject moduleObject = null;
 		ILaunchable launchable = null;
-		Iterator iterator = moduleObjects.iterator();
-		while (moduleObject == null && iterator.hasNext()) {
-			IModuleObject moduleObject2 = (IModuleObject) iterator.next();
-			
-			ILaunchableAdapter[] adapters = ServerCore.getLaunchableAdapters();
-			if (adapters != null) {
-				int size = adapters.length;
-				for (int i = 0; i < size && moduleObject == null; i++) {
-					ILaunchableAdapter adapter = adapters[i];
-					try {
-						ILaunchable launchable2 = adapter.getLaunchable(server, moduleObject2);
-						Trace.trace(Trace.FINEST, "adapter= " + adapter + ", launchable= " + launchable2);
-						if (launchable2 != null) {
-							launchableAdapter = adapter;
-							moduleObject = moduleObject2;
-							launchable = launchable2;
+		//IModuleObject[] mo = moduleObjects.iterator();
+		if (moduleObjects != null) {
+			int size = moduleObjects.length;
+			for (int i = 0; i < size; i++) {
+				IModuleObject moduleObject2 = moduleObjects[i];
+				
+				ILaunchableAdapter[] adapters = ServerCore.getLaunchableAdapters();
+				if (adapters != null) {
+					int size2 = adapters.length;
+					for (int j = 0; j < size2 && moduleObject == null; j++) {
+						ILaunchableAdapter adapter = adapters[j];
+						try {
+							ILaunchable launchable2 = adapter.getLaunchable(server, moduleObject2);
+							Trace.trace(Trace.FINEST, "adapter= " + adapter + ", launchable= " + launchable2);
+							if (launchable2 != null) {
+								launchableAdapter = adapter;
+								moduleObject = moduleObject2;
+								launchable = launchable2;
+							}
+						} catch (Exception e) {
+							Trace.trace(Trace.SEVERE, "Error in launchable adapter", e);
 						}
-					} catch (Exception e) {
-						Trace.trace(Trace.SEVERE, "Error in launchable adapter", e);
 					}
 				}
 			}
 		}
 		
-		List list = new ArrayList();
+		IClient[] clients = new IClient[0];
 		if (launchable != null)
-			list = ServerUtil.getLaunchableClients(server, launchable, launchMode);
+			clients = ServerUtil.getClients(server, launchable, launchMode);
 
-		Trace.trace(Trace.FINEST, "Launchable clients: " + list);
+		Trace.trace(Trace.FINEST, "Launchable clients: " + clients);
 
 		IClient client = null;
-		if (list == null || list.isEmpty()) {
+		if (clients == null || clients.length == 0) {
 			EclipseUtil.openError(ServerUIPlugin.getResource("%errorNoClient"));
 			Trace.trace(Trace.SEVERE, "No launchable clients!");
 			return;
-		} else if (list.size() == 1) {
-			client = (IClient) list.get(0);
+		} else if (clients.length == 1) {
+			client = clients[0];
 		} else {
-			SelectClientWizard wizard = new SelectClientWizard(list);
+			SelectClientWizard wizard = new SelectClientWizard(clients);
 			ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
 			dialog.open();
 			client = wizard.getSelectedClient();
@@ -531,7 +534,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	protected boolean isValidServerType(IServerType type, IModule module) {
 		try {
 			IRuntimeType runtimeType = type.getRuntimeType();
-			IModuleType2 mt = module.getModuleType();
+			IModuleType mt = module.getModuleType();
 			ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), mt.getId(), mt.getVersion());
 		} catch (Exception e) {
 			return false;

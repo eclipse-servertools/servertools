@@ -10,9 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.*;
 /**
  * Represents a runtime instance. Every runtime is an instance of a
  * particular, fixed runtime type.
@@ -24,6 +22,11 @@ import org.eclipse.core.runtime.IStatus;
  * of being used to launch the server for testing. Having the server runtimes
  * identified as an entity separate from the server itself facilitates sharing
  * server runtimes between several servers.
+ * </p>
+ * <p>
+ * IRuntime implements IAdaptable to allow users to obtain a runtime-type-specific
+ * class that can be used to set fields. getAdapter() may involve plugin loading,
+ * and should not be called from popup menus and the like.
  * </p>
  * <p>
  * [issue: As mentioned in an issue on IRuntimeType, the term "runtime"
@@ -47,7 +50,7 @@ import org.eclipse.core.runtime.IStatus;
  * 
  * @since 1.0
  */
-public interface IRuntime extends IElement {
+public interface IRuntime extends IElement, IAdaptable {
 	/**
 	 * Returns the type of this runtime instance.
 	 * 
@@ -65,7 +68,7 @@ public interface IRuntime extends IElement {
 	 * 
 	 * @return the runtime extension, or <code>null</code> if none
 	 */
-	public IServerExtension getExtension(IProgressMonitor monitor);
+	//public IServerExtension getExtension(IProgressMonitor monitor);
 
 	/**
 	 * Returns a runtime working copy for modifying this runtime instance.

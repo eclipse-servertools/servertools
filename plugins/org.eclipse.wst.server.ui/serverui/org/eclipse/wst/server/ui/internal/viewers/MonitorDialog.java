@@ -20,7 +20,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.model.IServerPort;
+import org.eclipse.wst.server.core.IServerPort;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 /**
  * Dialog that prompts a user to add or edit a server monitor.

@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
-import org.eclipse.wst.server.core.IServerExtension;
 import org.eclipse.wst.server.core.internal.ServerConfiguration;
 import org.eclipse.wst.server.core.internal.ServerConfigurationWorkingCopy;
 /*
@@ -25,7 +24,7 @@ import org.eclipse.wst.server.core.internal.ServerConfigurationWorkingCopy;
  * directories (the resources to be run on the server) and configuration
  * information. (i.e. mime types, data sources, etc.)
  */
-public abstract class ServerConfigurationDelegate implements IServerExtension {
+public abstract class ServerConfigurationDelegate {
 	private ServerConfiguration configuration;
 	private ServerConfigurationWorkingCopy configurationWC;
 

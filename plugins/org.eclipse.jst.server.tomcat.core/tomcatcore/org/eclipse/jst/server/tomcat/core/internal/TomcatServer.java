@@ -58,15 +58,14 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer {
 		if (getServer().getRuntime() == null)
 			return null;
 		
-		return (TomcatRuntime) getServer().getRuntime().getExtension(null);
+		return (TomcatRuntime) getServer().getAdapter(TomcatRuntime.class);
 	}
 	
 	public ITomcatVersionHandler getTomcatVersionHandler() {
 		if (getServer().getRuntime() == null)
 			return null;
 
-		TomcatRuntime runtime = (TomcatRuntime) getServer().getRuntime().getExtension(null);
-		return runtime.getVersionHandler();
+		return getTomcatRuntime().getVersionHandler();
 	}
 	
 	public TomcatConfiguration getTomcatConfiguration() {
@@ -74,7 +73,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer {
 		if (configuration == null)
 			return null;
 		
-		return (TomcatConfiguration) configuration.getExtension(null);
+		return (TomcatConfiguration) configuration.getAdapter(TomcatConfiguration.class);
 	}
 
 	/**
@@ -91,7 +90,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer {
 			if (serverConfig == null)
 				return null;
 	
-			TomcatConfiguration config = (TomcatConfiguration) serverConfig.getExtension(null);
+			TomcatConfiguration config = (TomcatConfiguration) serverConfig.getAdapter(TomcatConfiguration.class);
 			if (config == null)
 				return null;
 	
@@ -251,7 +250,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer {
 	 * Returns the project publisher that can be used to
 	 * publish the given project.
 	 */
-	public void publishModule(List parents, IModule module, IProgressMonitor monitor) {
+	public void publishModule(IModule[] parents, IModule module, IProgressMonitor monitor) {
 		if (isTestEnvironment())
 			return;
 
@@ -428,8 +427,8 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer {
 	 * @param project org.eclipse.core.resources.IProject
 	 * @return java.util.List
 	 */
-	public List getChildModules(IModule project) {
-		return new ArrayList(0);
+	public IModule[] getChildModules(IModule project) {
+		return new IModule[0];
 	}
 
 	/**
@@ -447,15 +446,13 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer {
 	 * @param project org.eclipse.core.resources.IProject
 	 * @return java.util.List
 	 */
-	public List getParentModules(IModule module) throws CoreException {
+	public IModule[] getParentModules(IModule module) throws CoreException {
 		if (module instanceof IWebModule) {
 			IWebModule webModule = (IWebModule) module;
 			IStatus status = canModifyModules(new IModule[] { module }, null);
 			if (status == null || !status.isOK())
 				throw new CoreException(status);
-			ArrayList l = new ArrayList();
-			l.add(webModule);
-			return l;
+			return new IModule[] { webModule };
 		}
 		return null;
 	}
@@ -524,9 +521,13 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer {
 		return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, "%canModifyModules", null);
 	}
 
-	public List getServerPorts() {
+	public IServerPort[] getServerPorts() {
 		if (getServer().getServerConfiguration() == null)
-			return new ArrayList();
-		return getTomcatConfiguration().getServerPorts();
+			return new IServerPort[0];
+		
+		List list = getTomcatConfiguration().getServerPorts();
+		IServerPort[] sp = new IServerPort[list.size()];
+		list.toArray(sp);
+		return sp;
 	}
 }

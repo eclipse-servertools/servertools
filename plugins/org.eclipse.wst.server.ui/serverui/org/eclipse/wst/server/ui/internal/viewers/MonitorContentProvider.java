@@ -31,7 +31,7 @@ public class MonitorContentProvider implements IStructuredContentProvider {
 	}
 
 	public Object[] getElements(Object inputElement) {
-		return ServerCore.getServerMonitorManager().getMonitoredPorts(server).toArray();
+		return ServerCore.getServerMonitorManager().getMonitoredPorts(server);
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {

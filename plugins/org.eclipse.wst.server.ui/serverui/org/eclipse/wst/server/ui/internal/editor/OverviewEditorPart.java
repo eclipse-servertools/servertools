@@ -202,7 +202,7 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 			createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewRuntime"));
 			
 			IRuntimeType runtimeType = server.getServerType().getRuntimeType();
-			runtimes = ServerCore.getResourceManager().getRuntimes(runtimeType);
+			runtimes = ServerUtil.getRuntimes(runtimeType);
 			
 			if (runtimes == null || runtimes.length == 0)
 				toolkit.createLabel(composite, "");
@@ -259,7 +259,7 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 	
 	protected void updateRuntimeCombo() {
 		IRuntimeType runtimeType = server.getServerType().getRuntimeType();
-		runtimes = ServerCore.getResourceManager().getRuntimes(runtimeType);
+		runtimes = ServerUtil.getRuntimes(runtimeType);
 		
 		if (SocketUtil.isLocalhost(server.getHost()) && runtimes != null) {
 			List runtimes2 = new ArrayList();

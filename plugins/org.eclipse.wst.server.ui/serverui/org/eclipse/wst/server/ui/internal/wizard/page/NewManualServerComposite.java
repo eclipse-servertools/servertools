@@ -258,7 +258,7 @@ public class NewManualServerComposite extends Composite {
 		}
 
 		IRuntimeType runtimeType = serverType.getRuntimeType();
-		runtimes = ServerCore.getResourceManager().getRuntimes(runtimeType);
+		runtimes = ServerUtil.getRuntimes(runtimeType);
 		
 		if (server != null && SocketUtil.isLocalhost(server.getHost()) && runtimes != null) {
 			List runtimes2 = new ArrayList();
@@ -321,10 +321,8 @@ public class NewManualServerComposite extends Composite {
 		
 		updateRuntimeCombo(serverType);
 		if (wrong) {
-			IModuleType mk = ServerCore.getModuleType(type);
-			String type2 = null;
-			if (mk != null)
-				type2 = mk.getName();
+			//IModuleType mk = ServerCore.getModuleType(type);
+			String type2 = type.getName();
 			wizard.setMessage(ServerUIPlugin.getResource("%errorVersionLevel", new Object[] { type2, version }), IMessageProvider.ERROR);
 		} else if (serverType == null)
 			wizard.setMessage("", IMessageProvider.ERROR);

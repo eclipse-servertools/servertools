@@ -30,6 +30,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 /**
  * Dialog that prompts a user to change the target runtime.
+ * 
+ * TODO - must support multiple modules per project (remove [0] from getModules(IProject))
  */
 public class RuntimeTargetComposite {
 	public interface RuntimeSelectionListener {
@@ -40,7 +42,7 @@ public class RuntimeTargetComposite {
 	protected IProjectProperties props;
 	protected IRuntime currentRuntime;
 	protected IRuntime newRuntime;
-	protected List targets;
+	protected IRuntime[] targets;
 	protected String[] items;
 	protected RuntimeSelectionListener listener;
 	
@@ -61,7 +63,7 @@ public class RuntimeTargetComposite {
 			offset = 1;
 		
 		// get child modules
-		IModule projectModule = ServerUtil.getModuleProject(project);
+		IModule projectModule = ServerUtil.getModules(project)[0];
 		childProjects = new ArrayList();
 		if (projectModule != null) {
 			List children = new ArrayList();
@@ -128,7 +130,7 @@ public class RuntimeTargetComposite {
 					if (offset > 0 && select == 0)
 						newRuntime = null;
 					else
-						newRuntime = (IRuntime) targets.get(select - offset);
+						newRuntime = targets[select - offset];
 					if (listener != null)
 						listener.runtimeSelected(newRuntime);
 				}
@@ -136,12 +138,12 @@ public class RuntimeTargetComposite {
 			if (sel >= 0) {
 				combo.select(sel);
 				if (offset == 0 || sel > 0)
-					newRuntime = (IRuntime) targets.get(sel - offset);
+					newRuntime = targets[sel - offset];
 			} else
 				combo.select(0);
 		}
 
-		final IModule projectModule = ServerUtil.getModuleProject(project);
+		final IModule projectModule = ServerUtil.getModules(project)[0];
 		
 		Button button = SWTUtil.createButton(parent, ServerUIPlugin.getResource("%runtimeTargetNewRuntime"));
 		button.addSelectionListener(new SelectionAdapter() {
@@ -150,7 +152,7 @@ public class RuntimeTargetComposite {
 				String type = null;
 				String version = null;
 				if (projectModule != null) {
-					IModuleType2 mt = projectModule.getModuleType();
+					IModuleType mt = projectModule.getModuleType();
 					type = mt.getId();
 					version = mt.getVersion();
 				}
@@ -186,23 +188,23 @@ public class RuntimeTargetComposite {
 	}
 	
 	protected int updateRuntimes() {
-		IModule pm = ServerUtil.getModuleProject(project);
+		IModule pm = ServerUtil.getModules(project)[0];
 		if (pm != null) {
-			IModuleType2 mt = pm.getModuleType();
+			IModuleType mt = pm.getModuleType();
 			targets = ServerUtil.getRuntimes(mt.getId(), mt.getVersion());
 		}
 
 		items = new String[0];
 		int sel = -1;
 		if (targets != null) {
-			int size = targets.size();
+			int size = targets.length;
 			items = new String[size + offset];
 			if (offset > 0) {
 				items[0] = ServerUIPlugin.getResource("%runtimeTargetNone");
 				sel = 0;
 			}
 			for (int i = 0; i < size; i++) {
-				IRuntime target = (IRuntime) targets.get(i);
+				IRuntime target = targets[i];
 				items[i+offset] = target.getName();
 				if (target.equals(currentRuntime))
 					sel = i;

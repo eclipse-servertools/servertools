@@ -166,11 +166,11 @@ public class GlobalCommandManager {
 			CommandManagerInfo info = new CommandManagerInfo();
 			info.count = 1;
 			info.id = id;
-			IServer server = ServerCore.getResourceManager().getServer(id);
+			IServer server = ServerCore.getServer(id);
 			if (server != null)
 				info.wc = server.createWorkingCopy();
 			else {
-				IServerConfiguration config = ServerCore.getResourceManager().getServerConfiguration(id);
+				IServerConfiguration config = ServerCore.getServerConfiguration(id);
 				if (config != null)
 					info.wc = config.createWorkingCopy();
 			}
@@ -211,11 +211,11 @@ public class GlobalCommandManager {
 		try {
 			CommandManagerInfo info = getExistingCommandManagerInfo(id);
 			if (info != null) {
-				IServer server = ServerCore.getResourceManager().getServer(id);
+				IServer server = ServerCore.getServer(id);
 				if (server != null)
 					info.wc = server.createWorkingCopy();
 				else {
-					IServerConfiguration config = ServerCore.getResourceManager().getServerConfiguration(id);
+					IServerConfiguration config = ServerCore.getServerConfiguration(id);
 					if (config != null)
 						info.wc = config.createWorkingCopy();
 				}

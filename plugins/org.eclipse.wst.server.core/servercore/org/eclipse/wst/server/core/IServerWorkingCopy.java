@@ -111,7 +111,7 @@ public interface IServerWorkingCopy extends IServer, IElementWorkingCopy {
 	 * 
 	 * @return the extension for the server working copy
 	 */
-	public IServerExtension getWorkingCopyExtension(IProgressMonitor monitor);
+	//public IServerExtension getWorkingCopyExtension(IProgressMonitor monitor);
 
 	/**
 	 * Commits the changes made in this working copy. If there is

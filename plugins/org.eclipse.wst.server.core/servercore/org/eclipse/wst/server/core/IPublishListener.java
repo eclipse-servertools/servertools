@@ -11,7 +11,6 @@
 package org.eclipse.wst.server.core;
 
 import java.util.List;
-
 /**
  * A publish listener. Can listen to publishing events from a
  * server control. The usual steps are:
@@ -32,10 +31,10 @@ public interface IPublishListener {
 	 * or no longer needs to be published.
 	 *
 	 * @param server org.eclipse.wst.server.model.IServer
-	 * @param parents java.util.List
+	 * @param parents org.eclipse.wst.server.model.IModule[]
 	 * @param module org.eclipse.wst.server.model.IModule
 	 */
-	public void moduleStateChange(IServer server, List parents, IModule module);
+	public void moduleStateChange(IServer server, IModule[] parents, IModule module);
 	
 	/**
 	 * Called when a project's restart state has changed. This state
@@ -56,7 +55,7 @@ public interface IPublishListener {
 	 * @param module org.eclipse.wst.server.model.IModule[]
 	 */
 	public void publishStarting(IServer server, List[] parents, IModule[] module);
-	
+
 	/**
 	 * Fired to notify the result of opening a connection to the remove machine.
 	 * If the status is an error, the publishing will finish immediately. If not,
@@ -72,21 +71,21 @@ public interface IPublishListener {
 	 * is starting.
 	 * 
 	 * @param server org.eclipse.wst.server.model.IServer
-	 * @param parents java.util.List
+	 * @param parents org.eclipse.wst.server.model.IModule[]
 	 * @param module org.eclipse.wst.server.model.IModule
 	 */
-	public void moduleStarting(IServer server, List parents, IModule module);
+	public void moduleStarting(IServer server, IModule[] parents, IModule module);
 
 	/**
 	 * The event is fired when the module has finished publishing,
 	 * and includes the status.
 	 * 
 	 * @param server org.eclipse.wst.server.model.IServer
-	 * @param parents java.util.List
+	 * @param parents org.eclipse.wst.server.model.IModule[]
 	 * @param module org.eclipse.wst.server.model.IModule
 	 * @param status org.eclipse.wst.server.core.IPublishStatus
 	 */
-	public void moduleFinished(IServer server, List parents, IModule module, IPublishStatus status);
+	public void moduleFinished(IServer server, IModule[] parents, IModule module, IPublishStatus status);
 
 	/**
 	 * Publishing has finished. Returns the overall status.

@@ -12,12 +12,13 @@ package org.eclipse.wst.server.core;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
  */
-public interface IRuntimeTargetHandler extends IOrdered {
+public interface IRuntimeTargetHandler extends IOrdered, IAdaptable {
 	/**
 	 * 
 	 * @return
@@ -33,9 +34,24 @@ public interface IRuntimeTargetHandler extends IOrdered {
 	 */
 	public boolean supportsRuntimeType(IRuntimeType runtimeType);
 
-	public IServerExtension getExtension();
-
+	/**
+	 * Set the runtime target on the given project.
+	 *  
+	 * @param project
+	 * @param runtime
+	 * @param monitor
+	 * @throws CoreException
+	 */
 	public void setRuntimeTarget(IProject project, IRuntime runtime, IProgressMonitor monitor) throws CoreException;
-	
+
+	/**
+	 * Remove the runtime target from the given project. This method will undo
+	 * all changes made in setRuntimeTarget().
+	 * 
+	 * @param project
+	 * @param runtime
+	 * @param monitor
+	 * @throws CoreException
+	 */
 	public void removeRuntimeTarget(IProject project, IRuntime runtime, IProgressMonitor monitor) throws CoreException;
 }

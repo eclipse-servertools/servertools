@@ -73,7 +73,7 @@ public class ProjectPropertyPage extends PropertyPage {
 			data.widthHint = 200;
 			label.setLayoutData(data);
 
-			module = ServerUtil.getModuleProject(project);
+			module = ServerUtil.getModules(project)[0];
 
 			if (module == null) {
 				label = new Label(composite, SWT.NONE);
@@ -82,8 +82,8 @@ public class ProjectPropertyPage extends PropertyPage {
 				data.horizontalSpan = 3;
 				label.setLayoutData(data);
 			} else {
-				IModuleType mk = ServerCore.getModuleType(module.getModuleType().getId());
-				if (mk != null) {
+				IModuleType mt = module.getModuleType();
+				if (mt != null) {
 					label = new Label(composite, SWT.NONE);
 					label.setText(ServerUIPlugin.getResource("%prefProject"));
 					data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -93,7 +93,7 @@ public class ProjectPropertyPage extends PropertyPage {
 					data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 					data.horizontalSpan = 2;
 					moduleKind.setLayoutData(data);
-					moduleKind.setText(module.getName() + " (" + mk.getName() + ")");
+					moduleKind.setText(module.getName() + " (" + mt.getName() + ")");
 				}
 				
 				rtComp = new RuntimeTargetComposite(composite, project);

@@ -11,7 +11,7 @@ package org.eclipse.jst.server.ui;
  **********************************************************************/
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jst.server.core.SystemProperty;
+import org.eclipse.jst.server.core.internal.SystemProperty;
 import org.eclipse.jst.server.internal.ui.ContextIds;
 import org.eclipse.jst.server.internal.ui.JavaServerUIPlugin;
 import org.eclipse.swt.SWT;

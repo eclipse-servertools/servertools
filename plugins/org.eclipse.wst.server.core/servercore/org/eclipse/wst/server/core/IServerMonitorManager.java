@@ -10,11 +10,8 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 
-import org.eclipse.wst.server.core.model.IServerPort;
 /**
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
@@ -37,12 +34,11 @@ public interface IServerMonitorManager {
 	public void setServerMonitor(IServerMonitor newMonitor) throws CoreException;
 
 	/**
-	 * Returns the list of ports that are currently being monitored. The elements in the
-	 * array are of type IMonitoredServerPorts.
+	 * Returns the array of ports that are currently being monitored.
 	 *
 	 * @return
 	 */
-	public List getMonitoredPorts(IServer server);
+	public IMonitoredServerPort[] getMonitoredPorts(IServer server);
 
 	/**
 	 * Starts monitoring the given port, and returns the new port # to use that will

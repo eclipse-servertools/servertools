@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerExtension;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.core.ServerCore;
@@ -53,8 +52,8 @@ public class ModifyModulesTask extends Task {
 
 		IServerWorkingCopy workingCopy = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
 		
-		IServerExtension extension = workingCopy.getExtension(monitor);
-		if (extension instanceof IRunningActionServer) {
+		IRunningActionServer ras = (IRunningActionServer) workingCopy.getAdapter(IRunningActionServer.class);
+		if (ras != null) {
 			int state = workingCopy.getServerState();
 			if (state == IServer.STATE_STOPPED || state == IServer.STATE_UNKNOWN) {
 				String mode = (String) getTaskModel().getObject(ITaskModel.TASK_LAUNCH_MODE);

@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IElement;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
-import org.eclipse.wst.server.core.IServerExtension;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.internal.Runtime;
 import org.eclipse.wst.server.core.internal.RuntimeWorkingCopy;
@@ -79,7 +78,7 @@ import org.eclipse.wst.server.core.internal.ServerPlugin;
  * @see IRuntime#getExtension()
  * @since 1.0
  */
-public abstract class RuntimeDelegate implements IServerExtension {
+public abstract class RuntimeDelegate {
 	private Runtime runtime;
 	private RuntimeWorkingCopy runtimeWC;
 	
@@ -93,14 +92,6 @@ public abstract class RuntimeDelegate implements IServerExtension {
 	 * This method is called by the web server core framework.
 	 * Clients should never call this method.
 	 * </p>
-	 * <p>
-	 * Implementations are expected to hang on to a reference to the runtime.
-	 * </p>
-	 * <p>
-	 * [issue: The class attribute of the runtimeTypes extension point
-	 * must stipulate that the class must have a public 0-arg constructor
-	 * in addition to implementing RuntimeDelegate.]
-	 * </p>
 	 * 
 	 * @param runtime the runtime instance
 	 */
@@ -111,7 +102,7 @@ public abstract class RuntimeDelegate implements IServerExtension {
 	public final void initialize(Runtime newRuntime) {
 		runtime = newRuntime;
 	}
-	
+
 	public IRuntime getRuntime() {
 		return runtime;
 	}

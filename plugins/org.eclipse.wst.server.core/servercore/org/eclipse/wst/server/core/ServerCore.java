@@ -30,6 +30,22 @@ import org.eclipse.wst.server.core.internal.*;
  * It is not intended to be subclassed or instantiated.
  * </p>
  * <p>
+ * The resource manager handles the mappings between resources
+ * and servers or configurations, and notifies of servers or configurations
+ * being added, removed, or modified.
+ * </p>
+ * <p>
+ * Servers and configurations may be a single resource, or they may
+ * be a folder that contains a group of files. Folder resources may not
+ * contain other servers or configurations (i.e., they cannot be nested).
+ * </p>
+ * <p>
+ * Changes made to server element resources (e.g., an edit or deletion of a
+ * file) are processed as a reload or deletion of the element. Note that saving
+ * a folder-based server or configuration may result in a series of reload
+ * events.
+ * </p>
+ * <p>
  * <it>Caveat: The server core API is still in an early form, and is
  * likely to change significantly before the initial release.</it>
  * </p>
@@ -37,9 +53,6 @@ import org.eclipse.wst.server.core.internal.*;
  * @since 1.0
  */
 public class ServerCore {
-	// cached copy of all server startups
-	private static List startups;
-
 	// cached copy of all module factories
 	private static List moduleFactories;
 
@@ -52,14 +65,8 @@ public class ServerCore {
 	// cached copy of all launchable clients
 	private static List clients;
 	
-	// cached copy of all module tasks
-	private static List moduleTasks;
-	
 	// cached copy of all server tasks
 	private static List serverTasks;
-	
-	//	cached copy of all module types
-	private static List moduleTypes;
 	
 	//	cached copy of all runtime types
 	private static List runtimeTypes;
@@ -93,7 +100,7 @@ public class ServerCore {
 	 *
 	 * @return org.eclipse.wst.server.core.IResourceManager
 	 */
-	public static IResourceManager getResourceManager() {
+	private static ResourceManager getResourceManager() {
 		return ResourceManager.getInstance();
 	}
 	
@@ -116,78 +123,15 @@ public class ServerCore {
 	}
 	
 	/**
-	 * Returns the preference information for the project.
+	 * Returns the preference information for the project. The project may not
+	 * be null.
 	 *
 	 * @return org.eclipse.wst.server.core.IServerProjectPreferences
 	 */
 	public static IProjectProperties getProjectProperties(IProject project) {
+		if (project == null)
+			throw new IllegalArgumentException();
 		return new ProjectProperties(project);
-	}
-	
-	/**
-	 * Returns a List of all startups.
-	 *
-	 * @return java.util.List
-	 */
-	public static List getStartups() {
-		if (startups == null)
-			loadStartups();
-		return startups;
-	}
-	
-	/**
-	 * Returns an array of all known module types.
-	 * <p>
-	 * A new array is returned on each call, so clients may store or modify the result.
-	 * </p>
-	 * 
-	 * @return the array of module types {@link IModuleType}
-	 */
-	public static IModuleType[] getModuleTypes() {
-		if (moduleTypes == null)
-			loadModuleTypes();
-		
-		IModuleType[] mt = new IModuleType[moduleTypes.size()];
-		moduleTypes.toArray(mt);
-		return mt;
-	}
-
-	/**
-	 * Returns the module type with the given id, or <code>null</code>
-	 * if none. This convenience method searches the list of known
-	 * module types ({@link #getModuleTypes()}) for the one a matching
-	 * module type id ({@link IModuleType#getId()}).
-	 * <p>
-	 * [issue: It does not really make sense for a key parameter
-	 * like id to be null. 
-	 * Null id should be spec'd as illegal, 
-	 * and the implementation should immediately throw an unspecified 
-	 * RuntimeException if null is passed.]
-	 * </p>
-	 * <p>
-	 * [issue: Consider renaming this method findModuleType
-	 * to make it clear that it is searching.]
-	 * </p>
-	 *
-	 * @param the module type id, or <code>null</code>
-	 * @return the module type, or <code>null</code> if 
-	 * id is <code>null</code> or there is no module type
-	 * with the given id
-	 */
-	public static IModuleType getModuleType(String id) {
-		if (id == null)
-			return null;
-
-		if (moduleTypes == null)
-			loadModuleTypes();
-		
-		Iterator iterator = moduleTypes.iterator();
-		while (iterator.hasNext()) {
-			IModuleType moduleType = (IModuleType) iterator.next();
-			if (id.equals(moduleType.getId()))
-				return moduleType;
-		}
-		return null;
 	}
 
 	/**
@@ -211,28 +155,19 @@ public class ServerCore {
 	 * Returns the runtime type with the given id, or <code>null</code>
 	 * if none. This convenience method searches the list of known
 	 * runtime types ({@link #getRuntimeTypes()}) for the one with a matching
-	 * runtime type id ({@link IRuntimeType#getId()}).
-	 * <p>
-	 * [issue: Same issue as with IServerType.
-	 * It does not really make sense for a key parameter
-	 * like id to be null. 
-	 * Null id should be spec'd as illegal, 
-	 * and the implementation should immediately throw an unspecified 
-	 * RuntimeException if null is passed.]
-	 * </p>
+	 * runtime type id ({@link IRuntimeType#getId()}). The id may not be null.
 	 * <p>
 	 * [issue: Consider renaming this method findRuntimeType to make
 	 * it clear that it is searching.]
 	 * </p>
 	 *
-	 * @param the runtime type id, or <code>null</code>
-	 * @return the runtime type, or <code>null</code> if 
-	 * id is <code>null</code> or there is no runtime type
+	 * @param the runtime type id
+	 * @return the runtime type, or <code>null</code> if there is no runtime type
 	 * with the given id
 	 */
 	public static IRuntimeType getRuntimeType(String id) {
 		if (id == null)
-			return null;
+			throw new IllegalArgumentException();
 
 		if (runtimeTypes == null)
 			loadRuntimeTypes();
@@ -274,13 +209,13 @@ public class ServerCore {
 	}
 
 	/**
-	 * Returns the runtime target handler with the given id.
+	 * Returns the runtime target handler with the given id. The id may not be null.
 	 *
 	 * @return org.eclipse.wst.server.core.IRuntimeTargetHandler
 	 */
 	public static IRuntimeTargetHandler getRuntimeTargetHandler(String id) {
 		if (id == null)
-			return null;
+			throw new IllegalArgumentException();
 
 		if (runtimeTargetHandlers == null)
 			loadRuntimeTargetHandlers();
@@ -315,27 +250,19 @@ public class ServerCore {
 	 * Returns the server type with the given id, or <code>null</code>
 	 * if none. This convenience method searches the list of known
 	 * server types ({@link #getServerTypes()}) for the one with a matching
-	 * server type id ({@link IServerType#getId()}).
-	 * <p>
-	 * [issue: It does not really make sense for a key parameter
-	 * like id to be null. 
-	 * Null id should be spec'd as illegal, 
-	 * and the implementation should immediately throw an unspecified 
-	 * RuntimeException if null is passed.]
-	 * </p>
+	 * server type id ({@link IServerType#getId()}). The id may not be null.
 	 * <p>
 	 * [issue: Consider renaming this method findServerType to make
 	 * it clear that it is searching.]
 	 * </p>
 	 *
-	 * @param the server type id, or <code>null</code>
-	 * @return the server type, or <code>null</code> if 
-	 * id is <code>null</code> or there is no server type
+	 * @param the server type id
+	 * @return the server type, or <code>null</code> if there is no server type
 	 * with the given id
 	 */
 	public static IServerType getServerType(String id) {
 		if (id == null)
-			return null;
+			throw new IllegalArgumentException();
 
 		if (serverTypes == null)
 			loadServerTypes();
@@ -371,28 +298,20 @@ public class ServerCore {
 	 * or <code>null</code> if none. This convenience method searches
 	 * the list of known server configuration types
 	 * ({@link #getServerConfigurationTypes()}) for the one a matching
-	 * server id ({@link IServerConfigurationType#getId()}).
-	 * <p>
-	 * [issue: Same issue as with IServerType.
-	 * It does not really make sense for a key parameter
-	 * like id to be null. 
-	 * Null id should be spec'd as illegal, 
-	 * and the implementation should immediately throw an unspecified 
-	 * RuntimeException if null is passed.]
-	 * </p>
+	 * server id ({@link IServerConfigurationType#getId()}). The id may not
+	 * be null.
 	 * <p>
 	 * [issue: Consider renaming this method findServerConfigurationType
 	 * to make it clear that it is searching.]
 	 * </p>
 	 *
-	 * @param the server configuration type id, or <code>null</code>
-	 * @return the server configuration type, or <code>null</code> if 
-	 * id is <code>null</code> or there is no server configuration type
-	 * with the given id
+	 * @param the server configuration type id
+	 * @return the server configuration type, or <code>null</code> if
+	 * there is no server configuration type with the given id
 	 */
 	public static IServerConfigurationType getServerConfigurationType(String id) {
 		if (id == null)
-			return null;
+			throw new IllegalArgumentException();
 
 		if (serverConfigurationTypes == null)
 			loadServerConfigurationTypes();
@@ -432,14 +351,7 @@ public class ServerCore {
 	 * Returns the module factory with the given id, or <code>null</code>
 	 * if none. This convenience method searches the list of known
 	 * module factories ({@link #getModuleFactories()}) for the one a matching
-	 * module factory id ({@link IModuleFactory#getId()}).
-	 * <p>
-	 * [issue: It does not really make sense for a key parameter
-	 * like id to be null. 
-	 * Null id should be spec'd as illegal, 
-	 * and the implementation should immediately throw an unspecified 
-	 * RuntimeException if null is passed.]
-	 * </p>
+	 * module factory id ({@link IModuleFactory#getId()}). The id may not be null.
 	 * <p>
 	 * [issue: Consider renaming this method findModuleFactory
 	 * to make it clear that it is searching.]
@@ -450,14 +362,13 @@ public class ServerCore {
 	 * this method should be moved to the SPI package.]
 	 * </p>
 	 *
-	 * @param the module factory id, or <code>null</code>
-	 * @return the module factory, or <code>null</code> if 
-	 * id is <code>null</code> or there is no module factory
+	 * @param the module factory id
+	 * @return the module factory, or <code>null</code> if there is no module factory
 	 * with the given id
 	 */
 	public static IModuleFactory getModuleFactory(String id) {
 		if (id == null)
-			return null;
+			throw new IllegalArgumentException();
 
 		if (moduleFactories == null)
 			loadModuleFactories();
@@ -509,19 +420,6 @@ public class ServerCore {
 		IClient[] c = new IClient[clients.size()];
 		clients.toArray(c);
 		return c;
-	}
-
-	/**
-	 * Returns an array of all module tasks.
-	 *
-	 * @return
-	 */
-	public static IModuleTask[] getModuleTasks() {
-		if (moduleTasks == null)
-			loadModuleTasks();
-		IModuleTask[] mt = new IModuleTask[moduleTasks.size()];
-		moduleTasks.toArray(mt);
-		return mt;
 	}
 
 	/**
@@ -700,39 +598,24 @@ public class ServerCore {
 			monitor.done();
 		}
 	}
-	
-	private static void executeStartups() {
-		try {
-			Iterator iterator = getStartups().iterator();
-			while (iterator.hasNext()) {
-				IStartup startup = (IStartup) iterator.next();
-				try {
-					startup.startup();
-				} catch (Exception ex) {
-					Trace.trace(Trace.SEVERE, "Startup failed" + startup.toString(), ex);
-				}
-			}
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error with startup", e);
-		}
-	}
 
 	/**
 	 * Load the server startups.
 	 */
-	private static synchronized void loadStartups() {
-		if (startups != null)
-			return;
+	private static synchronized void executeStartups() {
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .startup extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "startup");
 
 		int size = cf.length;
-		startups = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
-				IStartup startup = (IStartup) cf[i].createExecutableExtension("class");
-				startups.add(startup);
+				StartupDelegate startup = (StartupDelegate) cf[i].createExecutableExtension("class");
+				try {
+					startup.startup();
+				} catch (Exception ex) {
+					Trace.trace(Trace.SEVERE, "Startup failed" + startup.toString(), ex);
+				}
 				Trace.trace(Trace.EXTENSION_POINT, "  Loaded startup: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load startup: " + cf[i].getAttribute("id"), t);
@@ -740,31 +623,6 @@ public class ServerCore {
 		}
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .startup extension point -<-");
-	}
-
-	/**
-	 * Load the module types.
-	 */
-	private static synchronized void loadModuleTypes() {
-		if (moduleTypes != null)
-			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleTypes extension point ->-");
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleTypes");
-
-		int size = cf.length;
-		moduleTypes = new ArrayList(size);
-		for (int i = 0; i < size; i++) {
-			try {
-				ModuleType moduleType = new ModuleType(cf[i]);
-				moduleTypes.add(moduleType);
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded moduleType: " + cf[i].getAttribute("id"));
-			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load moduleType: " + cf[i].getAttribute("id"), t);
-			}
-		}
-		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleTypes extension point -<-");
 	}
 
 	/**
@@ -988,30 +846,6 @@ public class ServerCore {
 		}
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .clients extension point -<-");
 	}
-	
-	/**
-	 * Load the module task extension point.
-	 */
-	private static synchronized void loadModuleTasks() {
-		if (moduleTasks != null)
-			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleTasks extension point ->-");
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleTasks");
-
-		int size = cf.length;
-		moduleTasks = new ArrayList(size);
-		for (int i = 0; i < size; i++) {
-			try {
-				moduleTasks.add(new ModuleTask(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded moduleTask: " + cf[i].getAttribute("id"));
-			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load moduleTask: " + cf[i].getAttribute("id"), t);
-			}
-		}
-		ServerUtil.sortOrderedList(moduleTasks);
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleTasks extension point -<-");
-	}
 
 	/**
 	 * Load the server task extension point.
@@ -1060,5 +894,165 @@ public class ServerCore {
 		}
 	
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .serverMonitors extension point -<-");
+	}
+
+	/**
+	 * Returns the runtime with the given id, or <code>null</code>
+	 * if none. This convenience method searches the list of known
+	 * runtimes ({@link #getRuntimes()}) for the one with a matching
+	 * runtime id ({@link IRuntime#getId()}). The id may not be null.
+	 * <p>
+	 * [issue: Consider renaming this method findRuntime to make
+	 * it clear that it is searching.]
+	 * </p>
+	 *
+	 * @param the runtime id
+	 * @return the runtime instance, or <code>null</code> if there is no runtime
+	 * with the given id
+	 */
+	public static IRuntime getRuntime(String id) {
+		return getResourceManager().getRuntime(id);
+	}
+
+	/**
+	 * Returns an array of all known runtime instances. The list will not contain any
+	 * working copies.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return a possibly-empty array of runtime instances {@link IRuntime}
+	 */
+	public static IRuntime[] getRuntimes() {
+		return getResourceManager().getRuntimes();
+	}
+
+	/**
+	 * Returns the server with the given id, or <code>null</code>
+	 * if none. This convenience method searches the list of known
+	 * servers ({@link #getServers()}) for the one with a matching
+	 * server id ({@link IServer#getId()}). The id must not be null.
+	 * <p>
+	 * [issue: Consider renaming this method findServer to make
+	 * it clear that it is searching.]
+	 * </p>
+	 *
+	 * @param the server id
+	 * @return the server instance, or <code>null</code> if there is no server
+	 * with the given id
+	 */
+	public static IServer getServer(String id) {
+		return getResourceManager().getServer(id);
+	}
+
+	/**
+	 * Returns the server configuration with the given id, or <code>null</code>
+	 * if none. This convenience method searches the list of known
+	 * server configurations ({@link #getServerConfigurations()}) for the one
+	 * with a matching server configuration id
+	 * ({@link IServerConfiguration#getId()}). The id must not be null.
+	 * <p>
+	 * [issue: Consider renaming this method findServerConfiguration to make
+	 * it clear that it is searching.]
+	 * </p>
+	 *
+	 * @param the server configuration id
+	 * @return the server configuration instance, or <code>null</code> if
+	 * there is no server configuration with the given id
+	 */
+	public static IServerConfiguration getServerConfiguration(String id) {
+		return getResourceManager().getServerConfiguration(id);
+	}
+
+	/**
+	 * Returns an array of all known server configuration instances. The array will not
+	 * include any working copies.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return a possibly-empty array of server configuration instances {@link IServerConfiguration}
+	 */
+	public static IServerConfiguration[] getServerConfigurations() {
+		return getResourceManager().getServerConfigurations();
+	}
+
+	/**
+	 * Returns an array of all known server instances. The array will not include any
+	 * working copies.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return a possibly-empty array of server instances {@link IServer}
+	 */
+	public static IServer[] getServers() {
+		return getResourceManager().getServers();
+	}
+	
+	/**
+	 * Adds a new server resource listener.
+	 * Has no effect if an identical listener is already registered.
+	 *
+	 * @param listener org.eclipse.wst.server.model.IServerResourceListener
+	 */
+	public static void addResourceListener(IServerResourceListener listener) {
+		getResourceManager().addResourceListener(listener);
+	}
+
+	/**
+	 * Removes a server resource listener.
+	 * Has no effect if the listener is not registered.
+	 *
+	 * @param listener org.eclipse.wst.server.model.IServerResourceListener
+	 */
+	public static void removeResourceListener(IServerResourceListener listener) {
+		getResourceManager().removeResourceListener(listener);
+	}
+
+	/**
+	 * Returns the default runtime. Test API - do not use.
+	 * <p>
+	 * [issue: This is marked "Test API - do not use."]
+	 * </p>
+	 *
+	 * @return a runtime instance, or <code>null</code> if none
+	 * @see #setDefaultRuntime(IRuntime)
+	 */
+	public static IRuntime getDefaultRuntime() {
+		return getResourceManager().getDefaultRuntime();
+	}
+	
+	/**
+	 * Sets the default runtime.
+	 * <p>
+	 * [issue: This is marked "Test API - do not use."]
+	 * </p>
+	 *
+	 * @param runtime a runtime instance, or <code>null</code>
+	 * @see #getDefaultRuntime()
+	 */
+	public static void setDefaultRuntime(IRuntime runtime) {
+		getResourceManager().setDefaultRuntime(runtime);
+	}
+
+	/**
+	 * Adds a new module events listener.
+	 * Has no effect if an identical listener is already registered.
+	 *
+	 * @param listener org.eclipse.wst.server.model.IModuleEventsListener
+	 */
+	public static void addModuleEventsListener(IModuleEventsListener listener) {
+		getResourceManager().addModuleEventsListener(listener);
+	}
+	
+	/**
+	 * Removes an existing module events listener.
+	 * Has no effect if the listener is not registered.
+	 *
+	 * @param listener org.eclipse.wst.server.model.IModuleEventsListener
+	 */
+	public static void removeModuleEventsListener(IModuleEventsListener listener) {
+		getResourceManager().removeModuleEventsListener(listener);
 	}
 }

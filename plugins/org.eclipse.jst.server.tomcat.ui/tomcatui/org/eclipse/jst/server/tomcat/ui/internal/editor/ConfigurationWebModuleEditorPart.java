@@ -48,7 +48,6 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.help.WorkbenchHelp;
 
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IServerExtension;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.editor.ICommandManager;
@@ -250,14 +249,16 @@ public class ConfigurationWebModuleEditorPart extends ServerResourceEditorPart {
 	}
 
 	protected boolean canAddWebModule() {
-		Iterator iterator = ServerUtil.getModules("j2ee.web", "*", false).iterator();
-		while (iterator.hasNext()) {
-			IModule module = (IModule) iterator.next();
-			IServerExtension extension = module.getExtension(null);
-			if (extension instanceof IWebModule) {
-				IStatus status = server.canModifyModules(new IModule[] { module }, null, null);
-				if (status != null && status.isOK())
-					return true;
+		IModule[] modules = ServerUtil.getModules("j2ee.web", "*", false);
+		if (modules != null) {
+			int size = modules.length;
+			for (int i = 0; i < size; i++) {
+				IWebModule webModule = (IWebModule) modules[i].getAdapter(IWebModule.class);
+				if (webModule != null) {
+					IStatus status = server.canModifyModules(new IModule[] { modules[i] }, null, null);
+					if (status != null && status.isOK())
+						return true;
+				}
 			}
 		}
 		return false;
@@ -286,13 +287,13 @@ public class ConfigurationWebModuleEditorPart extends ServerResourceEditorPart {
 		super.init(site, input);
 		
 		if (serverConfiguration != null) {
-			configuration = (ITomcatConfigurationWorkingCopy) serverConfiguration.getWorkingCopyExtension(null);
+			configuration = (ITomcatConfigurationWorkingCopy) serverConfiguration.getAdapter(ITomcatConfigurationWorkingCopy.class);
 			addChangeListener();
 		}
 		
-		if (server != null) {
-			server2 = (ITomcatServerWorkingCopy) server.getWorkingCopyExtension(null);
-		}
+		if (server != null)
+			server2 = (ITomcatServerWorkingCopy) server.getAdapter(ITomcatServerWorkingCopy.class);
+		
 		initialize();
 	}
 

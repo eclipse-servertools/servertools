@@ -77,15 +77,14 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 						}
 					} else { // style = MODULE_TYPE
 						IRuntimeType runtimeType = serverType.getRuntimeType();
-						IModuleType2[] moduleTypes = runtimeType.getModuleTypes();
+						IModuleType[] moduleTypes = runtimeType.getModuleTypes();
 						if (moduleTypes != null) {
 							int size2 = moduleTypes.length;
 							for (int j = 0; j < size2; j++) {
-								IModuleType2 mb = moduleTypes[j];
-								IModuleType mt = ServerCore.getModuleType(mb.getId());
-								if (mt != null) {
-									TreeElement ele = getOrCreate(list, mt.getName());
-									TreeElement ele2 = getOrCreate(ele.contents, mt.getName() + "/" + mb.getVersion(), mb.getVersion());
+								IModuleType mb = moduleTypes[j];
+								if (mb != null) {
+									TreeElement ele = getOrCreate(list, mb.getName());
+									TreeElement ele2 = getOrCreate(ele.contents, mb.getName() + "/" + mb.getVersion(), mb.getVersion());
 									ele2.contents.add(serverType);
 									elementToParentMap.put(serverType, ele2);
 									elementToParentMap.put(ele2, ele);
@@ -124,7 +123,7 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 
 	protected boolean checkForTestEnvironmentRuntime(IServerType serverType) {
 		IRuntimeType runtimeType = serverType.getRuntimeType();
-		IRuntime[] runtimes = ServerCore.getResourceManager().getRuntimes(runtimeType);
+		IRuntime[] runtimes = ServerUtil.getRuntimes(runtimeType);
 		if (runtimes == null || runtimes.length == 0)
 			return false;
 		
@@ -138,7 +137,7 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 
 	protected boolean checkForNonStubEnvironmentRuntime(IServerType serverType) {
 		IRuntimeType runtimeType = serverType.getRuntimeType();
-		IRuntime[] runtimes = ServerCore.getResourceManager().getRuntimes(runtimeType);
+		IRuntime[] runtimes = ServerUtil.getRuntimes(runtimeType);
 		if (runtimes == null || runtimes.length == 0)
 			return false;
 		

@@ -62,9 +62,9 @@ public interface IModuleFactory extends IOrdered {
 	 * Returns the types of modules that the factory is capable of
 	 * producing.
 	 * 
-	 * @return an array of module types (@link IModuleType2}
+	 * @return an array of module types (@link IModuleType}
 	 */
-	public IModuleType2[] getModuleTypes();
+	public IModuleType[] getModuleTypes();
 
 	/**
 	 * Returns whether this module factory produces project modules.

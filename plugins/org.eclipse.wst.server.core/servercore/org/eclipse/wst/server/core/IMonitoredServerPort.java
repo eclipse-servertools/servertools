@@ -10,7 +10,6 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 
-import org.eclipse.wst.server.core.model.IServerPort;
 /**
  * An monitored port on a server.
  * 

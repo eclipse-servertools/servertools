@@ -30,7 +30,7 @@ import org.eclipse.wst.server.core.util.ProgressUtil;
  * of files. Folder-resource may not contain other servers
  * or configurations.</p>
  */
-public class ResourceManager implements IResourceManager {
+public class ResourceManager {
 	private static final String SERVER_DATA_FILE = "servers.xml";
 	private static final String SERVER_CONFIGURATION_DATA_FILE = "configurations.xml";
 
@@ -513,26 +513,6 @@ public class ResourceManager implements IResourceManager {
 	}
 
 	/**
-	 * Returns the server configuration that came from the
-	 * given resource.
-	 *
-	 * @param resource org.eclipse.core.resources.IResource
-	 * @return org.eclipse.wst.server.core.model.IServerConfiguration
-	 */
-	public IServerConfiguration getServerConfiguration(IFile file) {
-		if (file == null)
-			return null;
-		
-		Iterator iterator = configurations.iterator();
-		while (iterator.hasNext()) {
-			IServerConfiguration config = (IServerConfiguration) iterator.next();
-			if (file.equals(config.getFile()))
-				return config;
-		}
-		return null;
-	}
-
-	/**
 	 * Returns an array of all currently active server configurations.
 	 *
 	 * @return
@@ -547,32 +527,13 @@ public class ResourceManager implements IResourceManager {
 	}
 	
 	/**
-	 * Returns an array of all servers configs.
-	 *
-	 * @return
-	 */
-	public IServerConfiguration[] getServerConfigurations(IServerConfigurationType configType) {
-		List list = new ArrayList();
-		Iterator iterator = configurations.iterator();
-		while (iterator.hasNext()) {
-			IServerConfiguration config = (IServerConfiguration) iterator.next();
-			if (config.getServerConfigurationType().equals(configType))
-				list.add(config);
-		}
-		
-		IServerConfiguration[] sc = new IServerConfiguration[list.size()];
-		list.toArray(sc);
-		return sc;
-	}
-	
-	/**
 	 * Returns a list of all servers.
 	 *
 	 * @return java.util.List
 	 */
 	public IServerConfiguration getServerConfiguration(String id) {
 		if (id == null)
-			return null;
+			throw new IllegalArgumentException();
 	
 		Iterator iterator = configurations.iterator();
 		while (iterator.hasNext()) {
@@ -813,30 +774,14 @@ public class ResourceManager implements IResourceManager {
 	}
 	
 	/**
-	 * Returns the runtimes with the given runtime type.
-	 *
-	 * @return
-	 */
-	public IRuntime[] getRuntimes(IRuntimeType runtimeType) {
-		List list = new ArrayList();
-		Iterator iterator = runtimes.iterator();
-		while (iterator.hasNext()) {
-			IRuntime runtime = (IRuntime) iterator.next();
-			if (runtime.getRuntimeType() != null && runtime.getRuntimeType().equals(runtimeType))
-				list.add(runtime);
-		}
-		
-		IRuntime[] r = new IRuntime[list.size()];
-		list.toArray(r);
-		return r;
-	}
-	
-	/**
 	 * Returns the runtime with the given id.
 	 *
 	 * @return IRuntime
 	 */
 	public IRuntime getRuntime(String id) {
+		if (id == null)
+			throw new IllegalArgumentException();
+
 		Iterator iterator = runtimes.iterator();
 		while (iterator.hasNext()) {
 			IRuntime runtime = (IRuntime) iterator.next();
@@ -874,25 +819,6 @@ public class ResourceManager implements IResourceManager {
 	}
 
 	/**
-	 * Returns the server that came from the
-	 * given resource.
-	 *
-	 * @param resource org.eclipse.core.resources.IResource
-	 * @return org.eclipse.wst.server.core.model.IServer
-	 */
-	public IServer getServer(IFile file) {
-		if (file == null)
-			return null;
-		Iterator iterator = servers.iterator();
-		while (iterator.hasNext()) {
-			Server server = (Server) iterator.next();
-			if (file.equals(server.getFile()))
-				return server;
-		}
-		return null;
-	}
-
-	/**
 	 * Returns an array of all servers.
 	 *
 	 * @return
@@ -913,7 +839,7 @@ public class ResourceManager implements IResourceManager {
 	 */
 	public IServer getServer(String id) {
 		if (id == null)
-			return null;
+			throw new IllegalArgumentException();
 	
 		Iterator iterator = servers.iterator();
 		while (iterator.hasNext()) {
@@ -922,25 +848,6 @@ public class ResourceManager implements IResourceManager {
 				return server;
 		}
 		return null;
-	}
-	
-	/**
-	 * Returns an array of all servers with the given server type.
-	 *
-	 * @return
-	 */
-	public IServer[] getServers(IServerType serverType) {
-		List list = new ArrayList();
-		Iterator iterator = servers.iterator();
-		while (iterator.hasNext()) {
-			IServer server = (IServer) iterator.next();
-			if (server.getServerType().equals(serverType))
-				list.add(server);
-		}
-		
-		IServer[] s = new IServer[list.size()];
-		list.toArray(s);
-		return s;
 	}
 
 	/**
@@ -1095,7 +1002,7 @@ public class ResourceManager implements IResourceManager {
 		monitor.beginTask("", 1000);
 		boolean found = false;
 	
-		IServer server = getServer(file);
+		IServer server = ServerUtil.getServer(file);
 		if (server != null) {
 			found = true;
 			try {
@@ -1108,7 +1015,7 @@ public class ResourceManager implements IResourceManager {
 			}
 		}
 		
-		IServerConfiguration configuration = getServerConfiguration(file);
+		IServerConfiguration configuration = ServerUtil.getServerConfiguration(file);
 		if (configuration != null) {
 			found = true;
 			try {
@@ -1147,12 +1054,12 @@ public class ResourceManager implements IResourceManager {
 	protected boolean handleRemovedFile(IFile file) {
 		Trace.trace(Trace.RESOURCES, "handleRemovedServerResource: " + file);
 	
-		IServer server = getServer(file);
+		IServer server = ServerUtil.getServer(file);
 		if (server != null) {
 			deregisterServer(server);
 			return true;
 		}
-		IServerConfiguration config = getServerConfiguration(file);
+		IServerConfiguration config = ServerUtil.getServerConfiguration(file);
 		if (config != null) {
 			deregisterServerConfiguration(config);
 			return true;
@@ -1178,18 +1085,23 @@ public class ResourceManager implements IResourceManager {
 		if (isDeltaOnlyMarkers(delta))
 			return;
 
-		final IModule moduleProject = ServerUtil.getModuleProject(project);
+		final IModule[] moduleProject = ServerUtil.getModules(project);
 		if (moduleProject == null)
 			return;
 		
 		Trace.trace(Trace.FINEST, "- publishHandleProjectChange");
 
-		IServer[] servers2 = getServers();
-		if (servers2 != null) {
-			int size = servers2.length;
-			for (int i = 0; i < size; i++) {
-			if (servers2[i].isDelegateLoaded())
-				((Server) servers2[i]).handleModuleProjectChange(delta, new IModule[] { moduleProject });
+		if (moduleProject != null) {
+			int size2 = moduleProject.length;
+			for (int j = 0; j < size2; j++) {
+				IServer[] servers2 = getServers();
+				if (servers2 != null) {
+					int size = servers2.length;
+					for (int i = 0; i < size; i++) {
+					if (servers2[i].isDelegateLoaded())
+						((Server) servers2[i]).handleModuleProjectChange(delta, new IModule[] { moduleProject[j] });
+					}
+				}
 			}
 		}
 		Trace.trace(Trace.FINEST, "< publishHandleProjectChange");

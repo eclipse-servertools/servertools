@@ -712,7 +712,7 @@ public class PublishDialog extends Dialog implements IRunnableContext {
 			final PublishDialog dialog = new PublishDialog(shell, keepOpen);
 	
 			listener = new IPublishListener() {
-				public void moduleStateChange(IServer server, List parents, IModule module) {
+				public void moduleStateChange(IServer server, IModule[] parents, IModule module) {
 					// do nothing
 				}
 	
@@ -724,11 +724,11 @@ public class PublishDialog extends Dialog implements IRunnableContext {
 					dialog.addPublishEvent(null, null);
 				}
 	
-				public void moduleStarting(IServer server, List parents, IModule module) {
+				public void moduleStarting(IServer server, IModule[] parents, IModule module) {
 					dialog.addPublishEvent(module, null);
 				}
 	
-				public void moduleFinished(IServer server, List parents, IModule module, IPublishStatus status) {
+				public void moduleFinished(IServer server, IModule[] parents, IModule module, IPublishStatus status) {
 					dialog.addPublishEvent(module, status);
 				}
 	

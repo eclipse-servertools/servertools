@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerExtension;
+import org.eclipse.wst.server.core.IServerPort;
 import org.eclipse.wst.server.core.internal.Server;
 /**
  * A server delegate provides the implementation for various 
@@ -76,7 +76,7 @@ import org.eclipse.wst.server.core.internal.Server;
  * @see IServer#getExtension()
  * @since 1.0
  */
-public abstract class ServerDelegate implements IServerExtension {
+public abstract class ServerDelegate {
 	private Server server;
 	
 	public ServerDelegate() {
@@ -257,7 +257,7 @@ public abstract class ServerDelegate implements IServerExtension {
 	 * @param module
 	 * @return
 	 */
-	public abstract void publishModule(List parents, IModule module, IProgressMonitor monitor) throws CoreException;
+	public abstract void publishModule(IModule[] parents, IModule module, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Methods called to notify that publishing has finished.
@@ -329,7 +329,7 @@ public abstract class ServerDelegate implements IServerExtension {
 	 *
 	 * @see IServer#getChildModules(IModule)
 	 */
-	public abstract List getChildModules(IModule module);
+	public abstract IModule[] getChildModules(IModule module);
 
 	/**
 	 * Returns the parent module(s) of this module. When
@@ -352,7 +352,7 @@ public abstract class ServerDelegate implements IServerExtension {
 	 *
 	 * @see IServer#getParentModules(IModule)
 	 */
-	public abstract List getParentModules(IModule module) throws CoreException;
+	public abstract IModule[] getParentModules(IModule module) throws CoreException;
 	
 	/**
 	 * 
@@ -463,11 +463,11 @@ public abstract class ServerDelegate implements IServerExtension {
 	public abstract void terminate();
 	
 	/**
-	 * Returns a list of IServerPorts that this server has.
+	 * Returns an array of IServerPorts that this server has.
 	 *
-	 * @return java.util.List
+	 * @return
 	 */
-	public List getServerPorts() {
+	public IServerPort[] getServerPorts() {
 		return null;
 	}
 }
