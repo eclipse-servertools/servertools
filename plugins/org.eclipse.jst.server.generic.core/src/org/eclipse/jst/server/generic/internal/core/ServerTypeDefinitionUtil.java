@@ -38,11 +38,9 @@ public class ServerTypeDefinitionUtil
 		ServerTypeDefinition definition = getServerTypeDefinition(runtime);		
 		List cpathList =definition.getServerClassPath();
 		ArrayList entryList = new ArrayList();
-		for (int i = 0; i < cpathList.size(); i++) 
-		{
-			ClasspathItem item = (ClasspathItem) cpathList.get(i);
-			String cpath = item.getResolvedClasspath(definition);
-			IClasspathEntry entry = JavaCore.newLibraryEntry(new Path(cpath),null,null );
+		for (int i = 0; i < cpathList.size(); i++){
+			String item = (String) cpathList.get(i);
+			IClasspathEntry entry = JavaCore.newLibraryEntry(new Path(item),null,null );
 			entryList.add(entry);
 		}
 	
