@@ -41,7 +41,6 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.help.WorkbenchHelp;
 
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
@@ -100,7 +99,7 @@ public class TomcatRuntimeComposite extends Composite {
 		layout.numColumns = 2;
 		setLayout(layout);
 		setLayoutData(new GridData(GridData.FILL_BOTH));
-		WorkbenchHelp.setHelp(this, ContextIds.RUNTIME);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, ContextIds.RUNTIME);
 		
 		Label label = new Label(this, SWT.NONE);
 		label.setText(TomcatUIPlugin.getResource("%runtimeName"));

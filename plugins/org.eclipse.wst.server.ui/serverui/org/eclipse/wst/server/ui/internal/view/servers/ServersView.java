@@ -31,7 +31,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.*;
-import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.ui.part.ViewPart;
 /**
  * View of server, their configurations and status.
@@ -62,7 +61,7 @@ public class ServersView extends ViewPart {
 		table.setLinesVisible(false);
 		table.setLayoutData(new GridData(GridData.FILL_BOTH));
 		table.setFont(parent.getFont());
-		WorkbenchHelp.setHelp(table, ContextIds.VIEW_CONTROL);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(table, ContextIds.VIEW_CONTROL);
 		
 		TableLayout tableLayout = new TableLayout();
 	

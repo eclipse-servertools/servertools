@@ -34,7 +34,7 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 /**
  * Tomcat configuration mime editor section.
  */
@@ -103,7 +103,8 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 		composite.setLayout(layout);
 		GridData data = new GridData(GridData.FILL_BOTH);
 		composite.setLayoutData(data);
-		WorkbenchHelp.setHelp(composite, ContextIds.CONFIGURATION_EDITOR_MAPPINGS);
+		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
+		whs.setHelp(composite, ContextIds.CONFIGURATION_EDITOR_MAPPINGS);
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 		
@@ -112,7 +113,7 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 		data.widthHint = 220;
 		data.heightHint = 200;
 		mimeTypes.setLayoutData(data);
-		WorkbenchHelp.setHelp(mimeTypes, ContextIds.CONFIGURATION_EDITOR_MAPPINGS_LIST);
+		whs.setHelp(mimeTypes, ContextIds.CONFIGURATION_EDITOR_MAPPINGS_LIST);
 		
 		// add listener to the table
 		mimeTypes.addSelectionListener(new SelectionAdapter() {
@@ -142,7 +143,7 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 				}
 			}
 		});
-		WorkbenchHelp.setHelp(add, ContextIds.CONFIGURATION_EDITOR_MAPPINGS_ADD);
+		whs.setHelp(add, ContextIds.CONFIGURATION_EDITOR_MAPPINGS_ADD);
 		
 		edit = toolkit.createButton(buttonComp, TomcatUIPlugin.getResource("%editorEdit"), SWT.PUSH);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -161,7 +162,7 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 				}
 			}
 		});
-		WorkbenchHelp.setHelp(edit, ContextIds.CONFIGURATION_EDITOR_MAPPINGS_EDIT);
+		whs.setHelp(edit, ContextIds.CONFIGURATION_EDITOR_MAPPINGS_EDIT);
 		
 		remove = toolkit.createButton(buttonComp, TomcatUIPlugin.getResource("%editorRemove"), SWT.PUSH);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -179,7 +180,7 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 				remove.setEnabled(false);
 			}
 		});
-		WorkbenchHelp.setHelp(remove, ContextIds.CONFIGURATION_EDITOR_MAPPINGS_REMOVE);
+		whs.setHelp(remove, ContextIds.CONFIGURATION_EDITOR_MAPPINGS_REMOVE);
 		
 		initialize();
 	}

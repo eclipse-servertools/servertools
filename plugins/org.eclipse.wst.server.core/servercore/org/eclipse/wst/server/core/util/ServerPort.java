@@ -12,7 +12,7 @@ package org.eclipse.wst.server.core.util;
 
 import org.eclipse.wst.server.core.IServerPort;
 /**
- * A port on a server configuration.
+ * A default implementation of the IServerPort interface.
  */
 public class ServerPort implements IServerPort {
 	private String id;

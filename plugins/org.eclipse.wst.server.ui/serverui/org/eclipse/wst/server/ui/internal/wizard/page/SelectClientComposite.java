@@ -25,7 +25,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 /**
  * A wizard page used to select a server client.
  */
@@ -81,7 +82,8 @@ public class SelectClientComposite extends Composite {
 		layout.marginHeight = 0;
 		setLayout(layout);
 
-		WorkbenchHelp.setHelp(this, ContextIds.SELECT_CLIENT_WIZARD);
+		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
+		whs.setHelp(this, ContextIds.SELECT_CLIENT_WIZARD);
 	
 		Label label = new Label(this, SWT.WRAP);
 		label.setText(ServerUIPlugin.getResource("%wizSelectClientMessage"));
@@ -102,7 +104,7 @@ public class SelectClientComposite extends Composite {
 				//TODO: WizardUtil.defaultSelect(getWizard(), SelectClientWizardPage.this);
 			}
 		});
-		WorkbenchHelp.setHelp(elementTable, ContextIds.SELECT_CLIENT);
+		whs.setHelp(elementTable, ContextIds.SELECT_CLIENT);
 	
 		if (clients != null) {
 			int size = clients.length;

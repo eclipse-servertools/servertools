@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 /**
  * A wizard page used to select server and module tasks.
  */
@@ -84,7 +84,7 @@ public class TasksComposite extends Composite {
 		layout.marginHeight = 0;
 		layout.numColumns = 3;
 		setLayout(layout);
-		WorkbenchHelp.setHelp(this, ContextIds.SELECT_TASK_WIZARD);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, ContextIds.SELECT_TASK_WIZARD);
 		
 		int size = 0;
 		if (tasks != null)

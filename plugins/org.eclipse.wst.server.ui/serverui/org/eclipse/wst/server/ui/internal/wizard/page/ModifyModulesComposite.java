@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.*;
@@ -213,7 +213,7 @@ public class ModifyModulesComposite extends Composite {
 		layout.numColumns = 3;
 		setLayout(layout);
 		setFont(getParent().getFont());
-		WorkbenchHelp.setHelp(this, ContextIds.MODIFY_MODULES_COMPOSITE);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, ContextIds.MODIFY_MODULES_COMPOSITE);
 
 		Label label = new Label(this, SWT.NONE);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);

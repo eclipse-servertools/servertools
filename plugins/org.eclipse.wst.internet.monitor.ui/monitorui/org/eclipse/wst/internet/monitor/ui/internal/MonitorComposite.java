@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.internet.monitor.core.IMonitor;
 import org.eclipse.wst.internet.monitor.core.IMonitorWorkingCopy;
 import org.eclipse.wst.internet.monitor.core.MonitorCore;
@@ -73,7 +73,7 @@ public class MonitorComposite extends Composite {
 		table = new Table(this, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
 		data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
 		data.widthHint = 300;
-		WorkbenchHelp.setHelp(table, ContextIds.PREF_MONITORS);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(table, ContextIds.PREF_MONITORS);
 		
 		table.setLayoutData(data);
 		table.setHeaderVisible(true);

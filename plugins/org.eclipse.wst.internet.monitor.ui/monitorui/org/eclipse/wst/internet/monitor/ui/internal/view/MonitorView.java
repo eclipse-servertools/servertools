@@ -35,7 +35,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.*;
-import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wst.internet.monitor.core.*;
 import org.eclipse.wst.internet.monitor.core.internal.http.ResendHTTPRequest;
@@ -125,7 +124,7 @@ public class MonitorView extends ViewPart {
 		layout.verticalSpacing = 4;
 		sashFparent.setLayout(layout);
 		sashFparent.setLayoutData(new GridData(GridData.FILL_BOTH));
-		WorkbenchHelp.setHelp(sashFparent, ContextIds.VIEW);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(sashFparent, ContextIds.VIEW);
 		
 		// create tree panel
 		Composite treePanel = new Composite(sashFparent, SWT.NONE);
@@ -149,7 +148,7 @@ public class MonitorView extends ViewPart {
 		treeViewer.setInput(MonitorTreeContentProvider.ROOT);
 		treeViewer.setLabelProvider(new TreeLabelProvider());
 
-		WorkbenchHelp.setHelp(tree, ContextIds.VIEW_TREE);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(tree, ContextIds.VIEW_TREE);
 	
 		Composite detailsPanel = new Composite(treePanel, SWT.NONE);
 		layout = new GridLayout();

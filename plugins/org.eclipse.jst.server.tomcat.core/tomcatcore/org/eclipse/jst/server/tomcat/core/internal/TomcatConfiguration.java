@@ -26,7 +26,6 @@ import org.eclipse.jst.server.core.IWebModule;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServerPort;
-import org.eclipse.wst.server.core.util.FileUtil;
 /**
  * Generic Tomcat server configuration.
  */

@@ -34,7 +34,7 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 /**
  * Tomcat configuration port editor page.
  */
@@ -114,14 +114,15 @@ public class ConfigurationPortEditorSection extends ServerEditorSection {
 		layout.marginWidth = 8;
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.FILL_HORIZONTAL));
-		WorkbenchHelp.setHelp(composite, ContextIds.CONFIGURATION_EDITOR_PORTS);
+		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
+		whs.setHelp(composite, ContextIds.CONFIGURATION_EDITOR_PORTS);
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 
 		ports = toolkit.createTable(composite, SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION);
 		ports.setHeaderVisible(true);
 		ports.setLinesVisible(true);
-		WorkbenchHelp.setHelp(ports, ContextIds.CONFIGURATION_EDITOR_PORTS_LIST);
+		whs.setHelp(ports, ContextIds.CONFIGURATION_EDITOR_PORTS_LIST);
 		
 		TableLayout tableLayout = new TableLayout();
 	

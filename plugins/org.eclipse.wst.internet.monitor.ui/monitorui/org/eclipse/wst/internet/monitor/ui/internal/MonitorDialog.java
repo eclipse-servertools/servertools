@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.internet.monitor.core.IMonitorWorkingCopy;
 import org.eclipse.wst.internet.monitor.core.MonitorCore;
 import org.eclipse.wst.internet.monitor.core.internal.IProtocolAdapter;
@@ -135,7 +135,7 @@ public class MonitorDialog extends Dialog {
 		Composite composite = (Composite) super.createDialogArea(parent);
 		((GridLayout)composite.getLayout()).numColumns = 2;
 		
-		WorkbenchHelp.setHelp(composite, ContextIds.PREF_DIALOG);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, ContextIds.PREF_DIALOG);
 		
 		createLabel(composite, MonitorUIPlugin.getResource("%localPort"));		
 		monitorPort = createText(composite, monitor.getLocalPort() + "", new StringModifyListener() {

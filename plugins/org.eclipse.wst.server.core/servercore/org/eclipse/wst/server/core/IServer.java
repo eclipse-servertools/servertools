@@ -605,6 +605,8 @@ public interface IServer extends IServerAttributes {
 	 * 
 	 * @see IServerAttributes.getModules()
 	 *
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 * @return a possibly-empty array of modules
 	 */
 	public IModule[] getServerModules(IProgressMonitor monitor);

@@ -16,7 +16,6 @@ import java.text.DateFormat;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.wst.server.core.util.*;
 import org.osgi.framework.BundleContext;
 /**
  * The main server plugin class.
@@ -171,7 +170,7 @@ public class ServerPlugin extends Plugin {
 	 * Remove a temp directory.
 	 * @param key
 	 */
-	public void removeTempDirectory(String key, IProgressMonitor monitor) {
+	public void removeTempDirectory(String key) {
 		if (key == null)
 			return;
 		
@@ -181,7 +180,7 @@ public class ServerPlugin extends Plugin {
 			if (dir != null) {
 				tempDirHash.remove(key);
 				saveTempDirInfo();
-				FileUtil.deleteDirectory(statePath.append(dir.path).toFile(), monitor);
+				deleteDirectory(statePath.append(dir.path).toFile(), null);
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Could not remove temp directory", e);
@@ -247,9 +246,8 @@ public class ServerPlugin extends Plugin {
 					child.putString("key", key);
 					child.putString("path", d.path);
 					child.putInteger("age", d.age);
-				} else {
-					FileUtil.deleteDirectory(statePath.append(d.path).toFile(), new NullProgressMonitor());
-				}
+				} else
+					deleteDirectory(statePath.append(d.path).toFile(), null);
 			}
 	
 			memento.saveToFile(filename);
@@ -356,6 +354,39 @@ public class ServerPlugin extends Plugin {
 				return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Recursively delete a directory.
+	 *
+	 * @param dir java.io.File
+	 */
+	public static void deleteDirectory(File dir, IProgressMonitor monitor) {
+		try {
+			if (!dir.exists() || !dir.isDirectory())
+				return;
+	
+			File[] files = dir.listFiles();
+			int size = files.length;
+			monitor = ProgressUtil.getMonitorFor(monitor);
+			monitor.beginTask(ServerPlugin.getResource("%deletingTask", new String[] {dir.getAbsolutePath()}), size * 10);
+	
+			// cycle through files
+			for (int i = 0; i < size; i++) {
+				File current = files[i];
+				if (current.isFile()) {
+					current.delete();
+					monitor.worked(10);
+				} else if (current.isDirectory()) {
+					monitor.subTask(ServerPlugin.getResource("%deletingTask", new String[] {current.getAbsolutePath()}));
+					deleteDirectory(current, ProgressUtil.getSubMonitorFor(monitor, 10));
+				}
+			}
+			dir.delete();
+			monitor.done();
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error deleting directory " + dir.getAbsolutePath(), e);
+		}
 	}
 	
 	/**

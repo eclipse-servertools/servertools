@@ -25,7 +25,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 /**
  * Dialog to add or modify mime mappings.
  */
@@ -88,7 +89,8 @@ public class MimeMappingDialog extends Dialog {
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		composite.setFont(parent.getFont());
-		WorkbenchHelp.setHelp(composite, ContextIds.CONFIGURATION_EDITOR_MAPPING_DIALOG);
+		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
+		whs.setHelp(composite, ContextIds.CONFIGURATION_EDITOR_MAPPING_DIALOG);
 	
 		new Label(composite, SWT.NONE).setText(TomcatUIPlugin.getResource("%configurationEditorMimeMapppingDialogMimeType"));
 		final Text type = new Text(composite, SWT.BORDER);
@@ -102,7 +104,7 @@ public class MimeMappingDialog extends Dialog {
 				validate();
 			}
 		});
-		WorkbenchHelp.setHelp(type, ContextIds.CONFIGURATION_EDITOR_MAPPING_DIALOG_TYPE);
+		whs.setHelp(type, ContextIds.CONFIGURATION_EDITOR_MAPPING_DIALOG_TYPE);
 	
 		new Label(composite, SWT.NONE).setText(TomcatUIPlugin.getResource("%configurationEditorMimeMapppingDialogMimeExtension"));
 		final Text extension = new Text(composite, SWT.BORDER);
@@ -116,7 +118,7 @@ public class MimeMappingDialog extends Dialog {
 				validate();
 			}
 		});
-		WorkbenchHelp.setHelp(extension, ContextIds.CONFIGURATION_EDITOR_MAPPING_DIALOG_EXTENSION);
+		whs.setHelp(extension, ContextIds.CONFIGURATION_EDITOR_MAPPING_DIALOG_EXTENSION);
 		
 		Dialog.applyDialogFont(composite);
 	

@@ -29,10 +29,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 
 import org.eclipse.wst.server.ui.editor.*;
 /**
@@ -104,7 +105,8 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		layout.horizontalSpacing = 15;
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
-		WorkbenchHelp.setHelp(composite, ContextIds.SERVER_EDITOR);
+		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
+		whs.setHelp(composite, ContextIds.SERVER_EDITOR);
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 		
@@ -122,7 +124,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 				updating = false;
 			}
 		});
-		WorkbenchHelp.setHelp(testEnvironment, ContextIds.SERVER_EDITOR_TEST_ENVIRONMENT);
+		whs.setHelp(testEnvironment, ContextIds.SERVER_EDITOR_TEST_ENVIRONMENT);
 
 		// security
 		secure = toolkit.createButton(composite, TomcatUIPlugin.getResource("%serverEditorSecure"), SWT.CHECK);
@@ -138,7 +140,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 				updating = false;
 			}
 		});
-		WorkbenchHelp.setHelp(secure, ContextIds.SERVER_EDITOR_SECURE);
+		whs.setHelp(secure, ContextIds.SERVER_EDITOR_SECURE);
 	
 		// debug mode
 		debug = toolkit.createButton(composite, TomcatUIPlugin.getResource("%serverEditorDebugMode"), SWT.CHECK);
@@ -154,7 +156,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 				updating = false;
 			}
 		});
-		WorkbenchHelp.setHelp(debug, ContextIds.SERVER_EDITOR_DEBUG_MODE);
+		whs.setHelp(debug, ContextIds.SERVER_EDITOR_DEBUG_MODE);
 	
 		initialize();
 	}

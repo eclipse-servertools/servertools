@@ -1,14 +1,16 @@
-<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<?xml version="1.0" encoding="UTF-8"?>
 <html>
 <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-   <title>Package-level Javadoc</title>
+	<!--  Escape to the root of your source folder  -->
+	<meta
+		name="root"
+		content="../../../../../../" />
+	<title>WTP API overview</title>
 </head>
+
 <body>
 
-<h2>Package Specification for org.eclipse.wst.server.ui.editor</h2>
-
-<p>This package provides editor support for the server tools UI.</p>
+<p>Provides editor support for the server tools UI.</p>
 
 <p>Using extension points, clients can provide pages, sections, and
 actions to be added to the editor for a specific server type. This

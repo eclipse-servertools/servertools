@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.internet.monitor.ui.ContentViewer;
 import org.eclipse.wst.internet.monitor.ui.internal.ContextIds;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
@@ -149,7 +149,7 @@ public class XMLViewer extends ContentViewer {
 		messageText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL));
 		messageText.setFont(JFaceResources.getTextFont());
 		messageText.setVisible(true);
-		WorkbenchHelp.setHelp(messageText, ContextIds.VIEW_RESPONSE);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(messageText, ContextIds.VIEW_RESPONSE);
 		
 		messageLabel = new Label(viewerComp, SWT.NONE);
 		messageLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));

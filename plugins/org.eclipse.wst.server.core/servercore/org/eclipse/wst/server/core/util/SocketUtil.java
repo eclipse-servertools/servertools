@@ -20,10 +20,14 @@ import org.eclipse.wst.server.core.internal.Trace;
 
 import sun.net.spi.nameservice.dns.DNSNameService;
 /**
- * 
+ * A utility class for socket-related function. It's main purposes are to find
+ * unused ports, check whether a port is in use, and check whether a given
+ * address is a local(host) address.  
  */
 public class SocketUtil {
-	private static final Random fgRandom = new Random(System.currentTimeMillis());
+	private static final Random rand = new Random(System.currentTimeMillis());
+	
+	private static String dnsHostname;
 
 	/**
 	 * Finds an unused port between the given from and to values.
@@ -42,16 +46,26 @@ public class SocketUtil {
 		return -1;
 	}
 
+	/**
+	 * Return a random port number in the given range.
+	 * 
+	 * @param low lowest possible port number
+	 * @param high highest possible port number
+	 * @return a random port number in the given range
+	 */
 	private static int getRandomPort(int low, int high) {
-		return (int)(fgRandom.nextFloat()*(high-low))+low;
+		return rand.nextInt(high - low) + low;
 	}
 
 	/**
-	 * Returns true if this port is in use. Retries every 500ms for "count" tries.
+	 * Checks to see if the given port number is being used. 
+	 * Returns <code>true</code> if the given port is in use, and <code>false</code>
+	 * otherwise. Retries every 500ms for "count" tries.
 	 *
-	 * @return boolean
-	 * @param port int
-	 * @param count int
+	 * @param port the port number to check
+	 * @param count the number of times to retry
+	 * @return boolean <code>true</code> if the port is in use, and
+	 *    <code>false</code> otherwise
 	 */
 	public static boolean isPortInUse(int port, int count) {
 		boolean inUse = isPortInUse(port);
@@ -69,10 +83,13 @@ public class SocketUtil {
 	}
 
 	/**
-	 * Returns true if this port is in use.
+	 * Checks to see if the given port number is being used.
+	 * Returns <code>true</code> if the given port is in use, and <code>false</code>
+	 * otherwise.
 	 *
-	 * @return boolean
-	 * @param port int
+	 * @param port the port number to check
+	 * @return boolean <code>true</code> if the port is in use, and
+	 *    <code>false</code> otherwise
 	 */
 	public static boolean isPortInUse(int port) {
 		ServerSocket s = null;
@@ -96,9 +113,23 @@ public class SocketUtil {
 
 		return false;
 	}
-	
-	private static String dnsHostname; 
 
+	/**
+	 * Checks if the given host (name or IP address) is pointing to the local
+	 * machine.
+	 * Although this method is not foolproof (especially if the network
+	 * configuration of the current machine is incorrect or failing), it will
+	 * correctly identify just about all loopback adapters and the local hostname
+	 * or IP address.
+	 * <p>
+	 * This method will not attempt to make an external network connection, so
+	 * it returns quickly and is safe to use in UI interfaces.
+	 * </p>
+	 * 
+	 * @param host a hostname or IP address
+	 * @return <code>true</code> if the given host is localhost, and
+	 *    <code>false</code> otherwise
+	 */
 	public static boolean isLocalhost(String host) {
 		if (host == null)
 			return false;

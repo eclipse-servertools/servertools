@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.internet.monitor.core.Request;
 import org.eclipse.wst.internet.monitor.ui.internal.ContextIds;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
@@ -138,7 +138,7 @@ public class HeaderViewer {
 				headerText.setForeground(display.getSystemColor(SWT.COLOR_LIST_FOREGROUND));
 				headerText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL));
 				headerText.setFont(JFaceResources.getTextFont());
-				WorkbenchHelp.setHelp(headerText, ContextIds.VIEW_RESPONSE);
+				PlatformUI.getWorkbench().getHelpSystem().setHelp(headerText, ContextIds.VIEW_RESPONSE);
 
 				rootComp.layout(true);
 			} else {

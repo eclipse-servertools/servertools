@@ -27,9 +27,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.widgets.*;
-import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.util.SocketUtil;
@@ -148,7 +148,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		layout.horizontalSpacing = 15;
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
-		WorkbenchHelp.setHelp(composite, ContextIds.EDITOR_OVERVIEW_PAGE);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, ContextIds.EDITOR_OVERVIEW_PAGE);
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 

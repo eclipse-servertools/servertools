@@ -36,7 +36,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServerAttributes;
@@ -114,7 +115,8 @@ public class WebModuleDialog extends Dialog {
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		composite.setFont(parent.getFont());
-		WorkbenchHelp.setHelp(composite, ContextIds.CONFIGURATION_EDITOR_WEBMODULE_DIALOG);
+		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
+		whs.setHelp(composite, ContextIds.CONFIGURATION_EDITOR_WEBMODULE_DIALOG);
 		// add project field if we are adding a project
 		if (!isEdit && isProject) {
 			Label l = new Label(composite, SWT.NONE);
@@ -127,7 +129,7 @@ public class WebModuleDialog extends Dialog {
 			data.widthHint = 150;
 			data.heightHint = 75;
 			projTable.setLayoutData(data);
-			WorkbenchHelp.setHelp(projTable, ContextIds.CONFIGURATION_EDITOR_WEBMODULE_DIALOG_PROJECT);
+			whs.setHelp(projTable, ContextIds.CONFIGURATION_EDITOR_WEBMODULE_DIALOG_PROJECT);
 	
 			// fill table with web module projects
 			IModule[] modules = ServerUtil.getModules(server2.getServerType().getRuntimeType().getModuleTypes());
@@ -155,7 +157,7 @@ public class WebModuleDialog extends Dialog {
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		docBase.setLayoutData(data);
 		docBase.setText(module.getDocumentBase());
-		WorkbenchHelp.setHelp(docBase, ContextIds.CONFIGURATION_EDITOR_WEBMODULE_DIALOG_DOCBASE);
+		whs.setHelp(docBase, ContextIds.CONFIGURATION_EDITOR_WEBMODULE_DIALOG_DOCBASE);
 	
 		// disable document base for project modules
 		if (isProject || (module.getMemento() != null && module.getMemento().length() > 0))
@@ -201,7 +203,7 @@ public class WebModuleDialog extends Dialog {
 				module = new WebModule(path.getText(), module.getDocumentBase(), module.getMemento(), module.isReloadable());
 			}
 		});
-		WorkbenchHelp.setHelp(path, ContextIds.CONFIGURATION_EDITOR_WEBMODULE_DIALOG_PATH);
+		whs.setHelp(path, ContextIds.CONFIGURATION_EDITOR_WEBMODULE_DIALOG_PATH);
 	
 		new Label(composite, SWT.NONE).setText("");
 		
@@ -217,7 +219,7 @@ public class WebModuleDialog extends Dialog {
 				module = new WebModule(module.getPath(), module.getDocumentBase(), module.getMemento(), reloadable.getSelection());
 			}
 		});
-		WorkbenchHelp.setHelp(reloadable, ContextIds.CONFIGURATION_EDITOR_WEBMODULE_DIALOG_RELOAD);
+		whs.setHelp(reloadable, ContextIds.CONFIGURATION_EDITOR_WEBMODULE_DIALOG_RELOAD);
 	
 		if (!isEdit && isProject) {
 			projTable.addSelectionListener(new SelectionAdapter() {

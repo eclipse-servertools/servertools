@@ -27,17 +27,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 
-import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerAttributes;
-import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.ui.internal.ContextIds;
-import org.eclipse.wst.server.ui.internal.ImageResource;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.Trace;
-
+import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.ui.internal.*;
+/**
+ * Server launch configuration tab.
+ */
 public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab {
 	protected String[] serverTypeIds;
 
@@ -90,7 +86,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 				handleServerSelection();
 			}
 		});
-		WorkbenchHelp.setHelp(serverCombo, ContextIds.LAUNCH_CONFIGURATION_SERVER_COMBO);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(serverCombo, ContextIds.LAUNCH_CONFIGURATION_SERVER_COMBO);
 
 		runtimeLabel = new Label(composite, SWT.NONE);
 		runtimeLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

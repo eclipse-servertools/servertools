@@ -36,6 +36,8 @@ public class ServerUtil {
 	 *
 	 * @param server org.eclipse.wst.server.core.IServer
 	 * @param module org.eclipse.wst.server.core.IModule
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 * @return boolean
 	 */
 	public static boolean containsModule(IServer server, IModule module, IProgressMonitor monitor) {
@@ -64,7 +66,9 @@ public class ServerUtil {
 	 * children, and their children...
 	 *
 	 * @param server org.eclipse.wst.server.core.IServer
-	 * @return java.util.List
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return a possibly-empty array of module instances {@link IModule}
 	 */
 	public static IModule[] getAllContainedModules(IServer server, IProgressMonitor monitor) {
 		//Trace.trace("> getAllContainedModules: " + getName(configuration));
@@ -114,12 +118,10 @@ public class ServerUtil {
 	/**
 	 * Returns a list of all servers that this module is configured on.
 	 * 
-	 * <p>
-	 * [issue: Possibly empty array...
-	 * </p>
-	 *
 	 * @param module org.eclipse.wst.server.core.model.IModule
-	 * @return java.util.List
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return a possibly-empty array of server instances {@link IServer}
 	 */
 	public static IServer[] getServersByModule(IModule module, IProgressMonitor monitor) {
 		if (module == null)
@@ -364,7 +366,8 @@ public class ServerUtil {
 	 * @param server
 	 * @param add
 	 * @param remove
-	 * @param monitor
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 * @throws CoreException
 	 */
 	public static void modifyModules(IServerWorkingCopy server, IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
@@ -450,6 +453,9 @@ public class ServerUtil {
 
 	/**
 	 * Visit all the modules in the server with the given module visitor.
+	 * 
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 */
 	public static void visit(IServerAttributes server, IModuleVisitor visitor, IProgressMonitor monitor) {
 		if (server == null)
@@ -467,6 +473,9 @@ public class ServerUtil {
 
 	/**
 	 * Returns true to keep visiting, and false to stop.
+	 * 
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 */
 	private static boolean visitModule(IServerAttributes server, IModule[] parents, IModule module, IModuleVisitor visitor, IProgressMonitor monitor) {
 		if (server == null || module == null || parents == null)
@@ -635,13 +644,9 @@ public class ServerUtil {
 	 * Return a list of all runtime targets that match the given type and version.
 	 * If type or version is null, it matches all of that type or version.
 	 * 
-	 * <p>
-	 * [issue: Possibly empty array...
-	 * </p>
-	 * 
 	 * @param type
 	 * @param version
-	 * @return 
+	 * @return a possibly-empty array of runtime instances {@link IRuntime}
 	 */
 	public static IRuntime[] getRuntimes(String type, String version) {
 		List list = new ArrayList();
@@ -665,13 +670,9 @@ public class ServerUtil {
 	 * Return a list of all runtime types that match the given type and version.
 	 * If type or version is null, it matches all of that type or version.
 	 * 
-	 * <p>
-	 * [issue: Possibly empty array...
-	 * </p>
-	 * 
 	 * @param type
 	 * @param version
-	 * @return 
+	 * @return a possibly-empty array of runtime type instances {@link IRuntimeType}
 	 */
 	public static IRuntimeType[] getRuntimeTypes(String type, String version) {
 		List list = new ArrayList();
@@ -695,13 +696,9 @@ public class ServerUtil {
 	 * and partial runtime type id. If type, version, or runtimeTypeId is null,
 	 * it matches all of that type or version.
 	 * 
-	 * <p>
-	 * [issue: Possibly empty array...
-	 * </p>
-	 * 
 	 * @param type
 	 * @param version
-	 * @return 
+	 * @return a possibly-empty array of runtime type instances {@link IRuntimeType}
 	 */
 	public static IRuntimeType[] getRuntimeTypes(String type, String version, String runtimeTypeId) {
 		List list = new ArrayList();
@@ -728,6 +725,9 @@ public class ServerUtil {
 	 * instance, this deployable may be the wrong spec level.
 	 *
 	 * @param module com.ibm.etools.server.core.IModule
+	 * @param includeErrors
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 * @return com.ibm.etools.server.core.IServer[]
 	 */
 	public static IServer[] getAvailableServersForModule(IModule module, boolean includeErrors, IProgressMonitor monitor) {

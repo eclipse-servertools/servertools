@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.IRuntime;
@@ -233,7 +233,7 @@ public class NewServerComposite extends Composite {
 					preferred = pref.getSelection();
 				}
 			});
-			WorkbenchHelp.setHelp(pref, ContextIds.SELECT_SERVER_PREFERENCE);
+			PlatformUI.getWorkbench().getHelpSystem().setHelp(pref, ContextIds.SELECT_SERVER_PREFERENCE);
 		}
 		
 		Dialog.applyDialogFont(this);

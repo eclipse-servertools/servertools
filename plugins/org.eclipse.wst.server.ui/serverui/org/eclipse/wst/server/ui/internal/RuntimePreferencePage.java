@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
@@ -86,7 +86,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		composite.setLayout(layout);
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL);
 		composite.setLayoutData(data);
-		WorkbenchHelp.setHelp(composite, ContextIds.PREF_GENERAL);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, ContextIds.PREF_GENERAL);
 		
 		Label label = new Label(composite, SWT.WRAP);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);

@@ -20,7 +20,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 /**
  * The preference page that holds monitor properties.
  */
@@ -54,7 +54,7 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 		composite.setLayout(layout);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
 		composite.setLayoutData(data);
-		WorkbenchHelp.setHelp(composite, ContextIds.PREF);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, ContextIds.PREF);
 		
 		Label label = new Label(composite, SWT.WRAP);
 		label.setText(MonitorUIPlugin.getResource("%preferenceDescription"));
@@ -64,7 +64,7 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 		displayButton = new Button(composite, SWT.CHECK);
 		displayButton.setText(MonitorUIPlugin.getResource("%prefShowView"));
 		displayButton.setSelection(MonitorUIPlugin.getShowOnActivityPreference());
-		WorkbenchHelp.setHelp(displayButton, ContextIds.PREF_SHOW);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(displayButton, ContextIds.PREF_SHOW);
 		
 		label = new Label(composite, SWT.NONE);
 		label.setText("");

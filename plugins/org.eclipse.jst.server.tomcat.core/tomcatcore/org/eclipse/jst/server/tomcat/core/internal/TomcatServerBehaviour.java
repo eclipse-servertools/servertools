@@ -28,7 +28,6 @@ import org.eclipse.jst.server.tomcat.core.ITomcatServerBehaviour;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.*;
-import org.eclipse.wst.server.core.util.FileUtil;
 import org.eclipse.wst.server.core.util.PingThread;
 import org.eclipse.wst.server.core.util.SocketUtil;
 /**

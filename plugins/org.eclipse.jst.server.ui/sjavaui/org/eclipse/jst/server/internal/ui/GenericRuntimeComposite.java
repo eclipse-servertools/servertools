@@ -33,7 +33,6 @@ import org.eclipse.jst.server.core.IGenericRuntimeWorkingCopy;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.help.WorkbenchHelp;
 /**
  * Wizard page to set the server install directory.
  */
@@ -89,7 +88,7 @@ public class GenericRuntimeComposite extends Composite {
 		layout.numColumns = 2;
 		setLayout(layout);
 		setLayoutData(new GridData(GridData.FILL_BOTH));
-		WorkbenchHelp.setHelp(this, ContextIds.RUNTIME_TARGET_COMPOSITE);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, ContextIds.RUNTIME_TARGET_COMPOSITE);
 		
 		Label label = new Label(this, SWT.NONE);
 		label.setText(JavaServerUIPlugin.getResource("%runtimeTypeName"));

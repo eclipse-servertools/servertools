@@ -1,14 +1,16 @@
-<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<?xml version="1.0" encoding="UTF-8"?>
 <html>
 <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-   <title>Package-level Javadoc</title>
+	<!--  Escape to the root of your source folder  -->
+	<meta
+		name="root"
+		content="../../../../../../" />
+	<title>WTP API overview</title>
 </head>
+
 <body>
 
-<h2>Package Specification for org.eclipse.wst.server.core.model</h2>
-
-<p>This package provides SPI support for the server tools framework.</p>
+<p>SPI support for the server tools framework.</p>
 
 <p>The classes in this package would typically be extended or used by
 SPI clients of the server tools framework who are providing a new server

@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core.util;
+package org.eclipse.jst.server.tomcat.core.internal;
 
 import java.io.*;
 import java.util.zip.*;
@@ -19,8 +19,6 @@ import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.Trace;
 /**
  * Utility class with an assortment of useful file methods.
- * 
- * @deprecated This class will be removed in M4
  */
 public class FileUtil {
 	// size of the buffer

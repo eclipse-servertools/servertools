@@ -431,7 +431,7 @@ public class ResourceManager {
 		Trace.trace(Trace.RESOURCES, "Deregistering server: " + server.getName());
 		
 		((Server) server).deleteLaunchConfigurations();
-		ServerPlugin.getInstance().removeTempDirectory(server.getId(), new NullProgressMonitor());
+		ServerPlugin.getInstance().removeTempDirectory(server.getId());
 
 		((Server)server).dispose();
 		fireServerEvent(server, EVENT_REMOVED);

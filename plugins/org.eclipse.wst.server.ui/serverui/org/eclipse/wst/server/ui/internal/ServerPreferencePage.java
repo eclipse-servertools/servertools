@@ -28,7 +28,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 /**
  * The preference page that holds server properties.
  */
@@ -84,7 +85,8 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		composite.setLayout(layout);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
 		composite.setLayoutData(data);
-		WorkbenchHelp.setHelp(composite, ContextIds.PREF_GENERAL);
+		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
+		whs.setHelp(composite, ContextIds.PREF_GENERAL);
 		
 		publishBeforeStart = new Button(composite, SWT.CHECK);
 		publishBeforeStart.setText(ServerUIPlugin.getResource("%prefAutoPublish"));
@@ -92,8 +94,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		data.horizontalSpan = 3;
 		publishBeforeStart.setLayoutData(data);
 		publishBeforeStart.setSelection(preferences.isAutoPublishing());
-		WorkbenchHelp.setHelp(publishBeforeStart, ContextIds.PREF_GENERAL_PUBLISH_BEFORE_START);
-		
+		whs.setHelp(publishBeforeStart, ContextIds.PREF_GENERAL_PUBLISH_BEFORE_START);
 		
 		autoPublishLocal = new Button(composite, SWT.CHECK);
 		autoPublishLocal.setText(ServerUIPlugin.getResource("%prefAutoPublishLocal"));
@@ -121,7 +122,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 			}
 		});
 		
-		
 		autoPublishRemote = new Button(composite, SWT.CHECK);
 		autoPublishRemote.setText(ServerUIPlugin.getResource("%prefAutoPublishRemote"));
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -148,14 +148,13 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
 		label.setLayoutData(data);
 		
-		
 		autoRestart = new Button(composite, SWT.CHECK);
 		autoRestart.setText(ServerUIPlugin.getResource("%prefAutoRestart"));
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 3;
 		autoRestart.setLayoutData(data);
 		autoRestart.setSelection(preferences.isAutoRestarting());
-		WorkbenchHelp.setHelp(autoRestart, ContextIds.PREF_GENERAL_AUTO_RESTART);
+		whs.setHelp(autoRestart, ContextIds.PREF_GENERAL_AUTO_RESTART);
 		
 		promptIrreversible = new Button(composite, SWT.CHECK);
 		promptIrreversible.setText(ServerUIPlugin.getResource("%prefPromptIrreversible"));
@@ -163,7 +162,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		data.horizontalSpan = 3;
 		promptIrreversible.setLayoutData(data);
 		promptIrreversible.setSelection(uiPreferences.getPromptBeforeIrreversibleChange());
-		WorkbenchHelp.setHelp(promptIrreversible, ContextIds.PREF_GENERAL_PROMPT_IRREVERSIBLE);
+		whs.setHelp(promptIrreversible, ContextIds.PREF_GENERAL_PROMPT_IRREVERSIBLE);
 		
 		createInWorkspace = new Button(composite, SWT.CHECK);
 		createInWorkspace.setText(ServerUIPlugin.getResource("%prefCreateInWorkspace"));
@@ -171,7 +170,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		data.horizontalSpan = 3;
 		createInWorkspace.setLayoutData(data);
 		createInWorkspace.setSelection(preferences.isCreateResourcesInWorkspace());
-		WorkbenchHelp.setHelp(createInWorkspace, ContextIds.PREF_GENERAL_CREATE_IN_WORKSPACE);
+		whs.setHelp(createInWorkspace, ContextIds.PREF_GENERAL_CREATE_IN_WORKSPACE);
 		
 		// save editors group
 		Group saveEditorGroup = new Group(composite, SWT.NONE);
@@ -191,7 +190,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 				saveEditors = ServerUIPreferences.SAVE_EDITORS_NEVER;
 			}
 		});
-		WorkbenchHelp.setHelp(saveNever, ContextIds.PREF_GENERAL_SAVE_EDITORS);
+		whs.setHelp(saveNever, ContextIds.PREF_GENERAL_SAVE_EDITORS);
 		
 		savePrompt = new Button(saveEditorGroup, SWT.RADIO);
 		savePrompt.setText(ServerUIPlugin.getResource("%prefSaveEditorsPrompt"));
@@ -200,7 +199,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 				saveEditors = ServerUIPreferences.SAVE_EDITORS_PROMPT;
 			}
 		});
-		WorkbenchHelp.setHelp(savePrompt, ContextIds.PREF_GENERAL_SAVE_EDITORS);
+		whs.setHelp(savePrompt, ContextIds.PREF_GENERAL_SAVE_EDITORS);
 		
 		saveAuto = new Button(saveEditorGroup, SWT.RADIO);
 		saveAuto.setText(ServerUIPlugin.getResource("%prefSaveEditorsAutosave"));
@@ -209,7 +208,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 				saveEditors = ServerUIPreferences.SAVE_EDITORS_AUTO;
 			}
 		});
-		WorkbenchHelp.setHelp(saveAuto, ContextIds.PREF_GENERAL_SAVE_EDITORS);
+		whs.setHelp(saveAuto, ContextIds.PREF_GENERAL_SAVE_EDITORS);
 		
 		setSaveEditorStatus(uiPreferences.getSaveEditors());
 		

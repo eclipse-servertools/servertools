@@ -29,7 +29,8 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.util.SocketUtil;
@@ -105,7 +106,8 @@ public class NewManualServerComposite extends Composite {
 		setLayout(layout);
 
 		this.setFont(getParent().getFont());
-		WorkbenchHelp.setHelp(this, ContextIds.NEW_SERVER_WIZARD);
+		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
+		whs.setHelp(this, ContextIds.NEW_SERVER_WIZARD);
 		
 		serverTypeComposite = new ServerTypeComposite(this, SWT.NONE, moduleType, new ServerTypeComposite.ServerTypeSelectionListener() {
 			public void serverTypeSelected(IServerType type2) {
@@ -117,7 +119,7 @@ public class NewManualServerComposite extends Composite {
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
 		data.horizontalSpan = 2;
 		serverTypeComposite.setLayoutData(data);
-		WorkbenchHelp.setHelp(serverTypeComposite, ContextIds.NEW_SERVER_INSTANCE_FACTORY);
+		whs.setHelp(serverTypeComposite, ContextIds.NEW_SERVER_INSTANCE_FACTORY);
 		
 		runtimeLabel = new Label(this, SWT.NONE);
 		runtimeLabel.setText(ServerUIPlugin.getResource("%wizNewServerRuntime"));

@@ -42,11 +42,12 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
@@ -123,14 +124,15 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 		layout.horizontalSpacing = 15;
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
-		WorkbenchHelp.setHelp(composite, ContextIds.CONFIGURATION_EDITOR_WEBMODULES);
+		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
+		whs.setHelp(composite, ContextIds.CONFIGURATION_EDITOR_WEBMODULES);
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 		
 		webAppTable = toolkit.createTable(composite, SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		webAppTable.setHeaderVisible(true);
 		webAppTable.setLinesVisible(true);
-		WorkbenchHelp.setHelp(webAppTable, ContextIds.CONFIGURATION_EDITOR_WEBMODULES_LIST);
+		whs.setHelp(webAppTable, ContextIds.CONFIGURATION_EDITOR_WEBMODULES_LIST);
 		//toolkit.paintBordersFor(webAppTable);
 		
 		TableLayout tableLayout = new TableLayout();
@@ -181,7 +183,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 		addProject = toolkit.createButton(rightPanel, TomcatUIPlugin.getResource("%configurationEditorAddProjectModule"), SWT.PUSH);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		addProject.setLayoutData(data);
-		WorkbenchHelp.setHelp(addProject, ContextIds.CONFIGURATION_EDITOR_WEBMODULES_ADD_PROJECT);
+		whs.setHelp(addProject, ContextIds.CONFIGURATION_EDITOR_WEBMODULES_ADD_PROJECT);
 	
 		// disable the add project module button if there are no
 		// web projects in the workbench
@@ -211,7 +213,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 				}
 			}
 		});
-		WorkbenchHelp.setHelp(addExtProject, ContextIds.CONFIGURATION_EDITOR_WEBMODULES_ADD_EXTERNAL);
+		whs.setHelp(addExtProject, ContextIds.CONFIGURATION_EDITOR_WEBMODULES_ADD_EXTERNAL);
 		
 		edit = toolkit.createButton(rightPanel, TomcatUIPlugin.getResource("%editorEdit"), SWT.PUSH);
 		data = new GridData(GridData.FILL_HORIZONTAL);
@@ -229,7 +231,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 				}
 			}
 		});
-		WorkbenchHelp.setHelp(edit, ContextIds.CONFIGURATION_EDITOR_WEBMODULES_EDIT);
+		whs.setHelp(edit, ContextIds.CONFIGURATION_EDITOR_WEBMODULES_EDIT);
 	
 		remove = toolkit.createButton(rightPanel, TomcatUIPlugin.getResource("%editorRemove"), SWT.PUSH);
 		data = new GridData(GridData.FILL_HORIZONTAL);
@@ -245,7 +247,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 				selection = -1;
 			}
 		});
-		WorkbenchHelp.setHelp(remove, ContextIds.CONFIGURATION_EDITOR_WEBMODULES_REMOVE);
+		whs.setHelp(remove, ContextIds.CONFIGURATION_EDITOR_WEBMODULES_REMOVE);
 		
 		form.setContent(section);
 		form.reflow(true);

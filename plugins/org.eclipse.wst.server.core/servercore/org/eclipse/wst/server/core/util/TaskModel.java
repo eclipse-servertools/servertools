@@ -15,11 +15,15 @@ import java.util.Map;
 
 import org.eclipse.wst.server.core.*;
 /**
- * 
+ * An implementation of the org.eclipse.wst.server.core.ITaskModel interface
+ * that provides a default implementation of the methods. 
  */
 public class TaskModel implements ITaskModel {
-	protected Map map = new HashMap();
+	private Map map = new HashMap();
 
+	/*
+	 * @see org.eclipse.wst.server.core.ITaskModel.getObject(String)
+	 */
 	public Object getObject(String id) {
 		try {
 			return map.get(id);
@@ -27,7 +31,10 @@ public class TaskModel implements ITaskModel {
 			return null;
 		}
 	}
-	
+
+	/*
+	 * @see org.eclipse.wst.server.core.ITaskModel.putObject(String, Object)
+	 */
 	public void putObject(String id, Object obj) {
 		map.put(id, obj);
 	}

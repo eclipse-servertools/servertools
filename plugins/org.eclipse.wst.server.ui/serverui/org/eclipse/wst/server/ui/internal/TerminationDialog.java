@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 /**
  * Dialog that prompts a user to see if a server should
  * be terminated.
@@ -68,7 +68,7 @@ public class TerminationDialog extends Dialog {
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		composite.setFont(parent.getFont());
-		WorkbenchHelp.setHelp(composite, ContextIds.TERMINATE_SERVER_DIALOG);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, ContextIds.TERMINATE_SERVER_DIALOG);
 	
 		Label label = new Label(composite, SWT.WRAP);
 		label.setText(ServerUIPlugin.getResource("%terminateServerDialogMessage", new String[] {serverName}));
