@@ -25,7 +25,18 @@ import org.eclipse.wst.internet.monitor.core.internal.MonitorPlugin;
  * @since 1.0
  */
 public final class MonitorCore {
-	private static MonitorManager manager = MonitorManager.getInstance();
+	private static MonitorManager manager;
+	
+	/**
+	 * Returns a monitor manager instance.
+	 * 
+	 * @return the monitor manager
+	 */
+	private static MonitorManager getManager() {
+		if (manager == null)
+			manager = MonitorManager.getInstance();
+		return manager;
+	}
 
 	/**
 	 * Returns a list of all known monitor instances. The list will not contain any
@@ -37,7 +48,7 @@ public final class MonitorCore {
 	 * @return a possibly-empty array of monitor instances
 	 */
 	public static IMonitor[] getMonitors() {
-		List list = manager.getMonitors();
+		List list = getManager().getMonitors();
 		IMonitor[] m = new IMonitor[list.size()];
 		list.toArray(m);
 		return m;
@@ -60,7 +71,7 @@ public final class MonitorCore {
 	 * @return a monitor working copy
 	 */
 	public static IMonitorWorkingCopy createMonitor() {
-		return manager.createMonitor();
+		return getManager().createMonitor();
 	}
 
 	/**
@@ -109,7 +120,7 @@ public final class MonitorCore {
 	public static void addMonitorListener(IMonitorListener listener) {
 		if (listener == null)
 			throw new IllegalArgumentException();
-		manager.addMonitorListener(listener);
+		getManager().addMonitorListener(listener);
 	}
 
 	/**
@@ -122,6 +133,6 @@ public final class MonitorCore {
 	public static void removeMonitorListener(IMonitorListener listener) {
 		if (listener == null)
 			throw new IllegalArgumentException();
-		manager.removeMonitorListener(listener);
+		getManager().removeMonitorListener(listener);
 	}
 }

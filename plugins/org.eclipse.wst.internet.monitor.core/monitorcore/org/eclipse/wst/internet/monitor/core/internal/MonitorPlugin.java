@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -179,7 +179,7 @@ public class MonitorPlugin extends Plugin {
 		}
 	}
 	
-	protected synchronized void loadStartups() {
+	protected synchronized void executeStartups() {
 		if (startupsLoaded)
 			return;
 		
@@ -193,7 +193,11 @@ public class MonitorPlugin extends Plugin {
 			Trace.trace(Trace.CONFIG, "Loading startup: " + id);
 			try {
 				IStartup startup = (IStartup) cf[i].createExecutableExtension("class");
-				startup.startup();
+				try {
+					startup.startup();
+				} catch (Exception ex) {
+					Trace.trace(Trace.SEVERE, "Startup failed" + startup.toString(), ex);
+				}
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Could not create startup: " + id, e);
 			}

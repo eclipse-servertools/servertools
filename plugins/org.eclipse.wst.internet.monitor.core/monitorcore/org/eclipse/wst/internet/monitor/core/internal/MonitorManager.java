@@ -44,11 +44,14 @@ public class MonitorManager {
 	
 	protected static MonitorManager instance;
 	
+	static {
+		MonitorPlugin.getInstance().executeStartups();
+	}
+	
 	public static MonitorManager getInstance() {
-		if (instance == null) {
-			MonitorPlugin.getInstance().loadStartups();
+		if (instance == null)
 			instance = new MonitorManager();
-		}
+	
 		return instance;
 	}
 	
