@@ -30,11 +30,11 @@ public class GenericRuntime extends RuntimeDelegate implements IGenericRuntime, 
 		// do nothing
 	}
 
-	public String getVMInstallTypeId() {
+	protected String getVMInstallTypeId() {
 		return getAttribute(PROP_VM_INSTALL_TYPE_ID, (String)null);
 	}
 
-	public String getVMInstallId() {
+	protected String getVMInstallId() {
 		return getAttribute(PROP_VM_INSTALL_ID, (String)null);
 	}
 
@@ -72,13 +72,20 @@ public class GenericRuntime extends RuntimeDelegate implements IGenericRuntime, 
 		else
 			return new Status(IStatus.OK, JavaServerPlugin.PLUGIN_ID, 0, "", null);
 	}
-	
+
 	public void setDefaults() {
 		IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
 		setVMInstall(vmInstall.getVMInstallType().getId(), vmInstall.getId());
 	}
 
-	public void setVMInstall(String typeId, String id) {
+	public void setVMInstall(IVMInstall vmInstall) {
+		if (vmInstall == null) {
+			setVMInstall(null, null);
+		} else
+			setVMInstall(vmInstall.getVMInstallType().getId(), vmInstall.getId());
+	}
+
+	protected void setVMInstall(String typeId, String id) {
 		if (typeId == null)
 			setAttribute(PROP_VM_INSTALL_TYPE_ID, (String)null);
 		else

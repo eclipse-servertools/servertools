@@ -21,6 +21,7 @@ public interface ITomcatConfigurationWorkingCopy extends ITomcatConfiguration {
 	
 	/**
 	 * Change a web module.
+	 * 
 	 * @param index int
 	 * @param docBase java.lang.String
 	 * @param path java.lang.String
@@ -29,7 +30,8 @@ public interface ITomcatConfigurationWorkingCopy extends ITomcatConfiguration {
 	public void modifyWebModule(int index, String docBase, String path, boolean reloadable);
 
 	/**
-	 * Removes a web module.
+	 * Remove a web module.
+	 * 
 	 * @param index int
 	 */
 	public void removeWebModule(int index);
@@ -44,6 +46,7 @@ public interface ITomcatConfigurationWorkingCopy extends ITomcatConfiguration {
 
 	/**
 	 * Change a mime mapping.
+	 * 
 	 * @param index int
 	 * @param map MimeMapping
 	 */
@@ -58,7 +61,8 @@ public interface ITomcatConfigurationWorkingCopy extends ITomcatConfiguration {
 	public void modifyServerPort(String id, int port);
 
 	/**
-	 * Removes a mime mapping.
+	 * Remove a mime mapping.
+	 * 
 	 * @param index int
 	 */
 	public void removeMimeMapping(int index);

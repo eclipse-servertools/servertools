@@ -152,7 +152,7 @@ public class GenericRuntimeComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				int sel = combo.getSelectionIndex();
 				IVMInstall vmInstall = (IVMInstall) installedJREs.get(sel);
-				runtime.setVMInstall(vmInstall.getVMInstallType().getId(), vmInstall.getId());
+				runtime.setVMInstall(vmInstall);
 				validate();
 			}
 
@@ -241,8 +241,7 @@ public class GenericRuntimeComposite extends Composite {
 		int size = installedJREs.size();
 		for (int i = 0; i < size; i++) {
 			IVMInstall vmInstall = (IVMInstall) installedJREs.get(i);
-			if (vmInstall.getVMInstallType().getId().equals(runtime.getVMInstallTypeId())
-					&& vmInstall.getId().equals(runtime.getVMInstallId())) {
+			if (vmInstall.equals(runtime.getVMInstall())) {
 				combo.select(i);
 				found = true;
 			}
@@ -257,7 +256,7 @@ public class GenericRuntimeComposite extends Composite {
 			return;
 		}
 
-		IStatus status = runtime.validate();
+		IStatus status = runtimeWC.validate(null);
 		if (status == null || status.isOK())
 			wizard.setMessage(null, IMessageProvider.NONE);
 		else

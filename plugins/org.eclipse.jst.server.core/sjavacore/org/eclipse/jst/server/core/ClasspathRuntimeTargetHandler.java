@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -72,7 +72,8 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 			if (ids != null) {
 				size = ids.length;
 				for (int i = 0; i < size; i++) {
-					IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER).append(getId()).append(runtime.getId());
+					String id2 = getRuntimeTargetHandler().getId();
+					IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER).append(id2).append(runtime.getId());
 					if (ids[i] != null)
 						path.append(ids[i]);
 					add.add(JavaCore.newContainerEntry(path));
@@ -296,8 +297,6 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 		list.toArray(entries);
 		return entries;
 	}
-
-	public abstract String getId();
 
 	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
 		return null;

@@ -14,7 +14,7 @@ package org.eclipse.jst.server.tomcat.core;
  */
 public interface ITomcatServerWorkingCopy extends ITomcatServer {
 	/**
-	 * Sets this process to debug mode. This feature only works
+	 * Sets this process to Tomcat debug mode. This feature only works
 	 * with Tomcat v4.0 and above.
 	 *
 	 * @param b boolean

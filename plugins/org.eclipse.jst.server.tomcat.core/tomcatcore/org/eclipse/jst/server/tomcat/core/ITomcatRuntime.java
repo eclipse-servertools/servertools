@@ -17,11 +17,17 @@ import org.eclipse.jdt.launching.IVMInstall;
  * 
  */
 public interface ITomcatRuntime {
-	public String getVMInstallTypeId();
-
-	public String getVMInstallId();
-
+	/**
+	 * Return the VM install (installed JRE) that this runtime is using.
+	 * 
+	 * @return the current VM install
+	 */
 	public IVMInstall getVMInstall();
-	
+
+	/**
+	 * Returns the runtime classpath that is used by this runtime.
+	 * 
+	 * @return the runtime classpath
+	 */
 	public List getRuntimeClasspath();
 }

@@ -15,13 +15,15 @@ package org.eclipse.jst.server.tomcat.core;
 public interface IMimeMapping {
 	/**
 	 * Returns the extension.
-	 * @return java.lang.String
+	 * 
+	 * @return the extension
 	 */
 	public String getExtension();
 
 	/**
 	 * Returns the mime type.
-	 * @return java.lang.String
+	 * 
+	 * @return the mime type
 	 */
 	public String getMimeType();
 }

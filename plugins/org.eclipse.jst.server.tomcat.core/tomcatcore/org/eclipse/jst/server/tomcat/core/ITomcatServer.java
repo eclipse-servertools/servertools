@@ -25,7 +25,8 @@ public interface ITomcatServer extends IURLProvider {
 	public static final String PROPERTY_TEST_ENVIRONMENT = "testEnvironment";
 
 	/**
-	 * Returns true if the process is set to run in debug mode.
+	 * Returns <code>true</code> if the server is set to run in Tomcat debug mode, and
+	 * <code>false</code> otherwise.
 	 * This feature only works with Tomcat v4.0.
 	 *
 	 * @return boolean
@@ -38,14 +39,15 @@ public interface ITomcatServer extends IURLProvider {
 	 * @return boolean
 	 */
 	public boolean isSecure();
-	
+
 	/**
-	 * Returns true if this is a test (run code out of the workbench) environment server.
+	 * Returns true if this is a test (publish and run code out of the
+	 * workbench) environment server.
 	 *
 	 * @return boolean
 	 */
 	public boolean isTestEnvironment();
-	
+
 	/**
 	 * Returns the main class that is used to launch the Tomcat server.
 	 * 

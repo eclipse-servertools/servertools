@@ -17,20 +17,22 @@ import java.util.List;
 public interface ITomcatConfiguration {
 	/**
 	 * Returns a list of mime mappings.
-	 * @return java.util.List
+	 * 
+	 * @return mime mappings
 	 */
 	public List getMimeMappings();
 	
 	/**
 	 * Returns a list of ServerPorts that this configuration uses.
 	 *
-	 * @return java.util.List
+	 * @return the server ports
 	 */
 	public List getServerPorts();
 
 	/**
 	 * Return a list of the web modules in this server.
-	 * @return java.util.List
+	 * 
+	 * @return the web modules
 	 */
 	public List getWebModules();
 }

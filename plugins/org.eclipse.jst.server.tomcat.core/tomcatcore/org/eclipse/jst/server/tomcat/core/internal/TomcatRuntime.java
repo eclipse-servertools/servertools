@@ -42,11 +42,11 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 		return TomcatPlugin.getTomcatVersionHandler(type.getId());
 	}
 
-	public String getVMInstallTypeId() {
+	protected String getVMInstallTypeId() {
 		return getAttribute(PROP_VM_INSTALL_TYPE_ID, (String)null);
 	}
 
-	public String getVMInstallId() {
+	protected String getVMInstallId() {
 		return getAttribute(PROP_VM_INSTALL_ID, (String)null);
 	}
 
@@ -101,7 +101,14 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 		getRuntimeWC().setLocation(new Path(TomcatPlugin.getPreference("location" + type.getId())));
 	}
 
-	public void setVMInstall(String typeId, String id) {
+	public void setVMInstall(IVMInstall vmInstall) {
+		if (vmInstall == null) {
+			setVMInstall(null, null);
+		} else
+			setVMInstall(vmInstall.getVMInstallType().getId(), vmInstall.getId());
+	}
+	
+	protected void setVMInstall(String typeId, String id) {
 		if (typeId == null)
 			setAttribute(PROP_VM_INSTALL_TYPE_ID, (String)null);
 		else

@@ -374,8 +374,11 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer {
 
 	public void setLaunchDefaults(ILaunchConfigurationWorkingCopy workingCopy) {
 		ITomcatRuntime runtime = getTomcatRuntime();
-		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_TYPE, runtime.getVMInstallTypeId());
-		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_NAME, runtime.getVMInstall().getName());
+		IVMInstall vmInstall = runtime.getVMInstall();
+		if (vmInstall != null) {
+			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_TYPE, vmInstall.getVMInstallType().getId());
+			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_NAME, vmInstall.getName());
+		}
 		
 		String[] args = getRuntimeProgramArguments(true);
 		String args2 = renderCommandLine(args, " ");
@@ -388,7 +391,6 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer {
 		List cp = runtime.getRuntimeClasspath();
 		
 		// add tools.jar to the path
-		IVMInstall vmInstall = runtime.getVMInstall();
 		if (vmInstall != null) {
 			try {
 				cp.add(JavaRuntime.newRuntimeContainerClasspathEntry(new Path(JavaRuntime.JRE_CONTAINER).append("org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType").append(vmInstall.getName()), IRuntimeClasspathEntry.BOOTSTRAP_CLASSES));

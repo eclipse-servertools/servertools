@@ -10,7 +10,7 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.core;
 /**
- * 
+ * A Web module deployed on Tomcat.
  */
 public interface ITomcatWebModule {
 	/**
