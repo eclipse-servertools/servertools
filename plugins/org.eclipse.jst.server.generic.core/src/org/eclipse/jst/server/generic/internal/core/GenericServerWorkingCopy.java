@@ -30,11 +30,8 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-
-import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.IServerState;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ITask;
@@ -78,32 +75,7 @@ public class GenericServerWorkingCopy extends GenericServer implements
 	 */
 	public void modifyModules(IModule[] add, IModule[] remove,
 			IProgressMonitor monitor) throws CoreException {
-
-		IServerConfigurationWorkingCopy scwc = liveServer
-				.getServerConfiguration().getWorkingCopy();
-
-		Object wc = scwc.getWorkingCopyDelegate();
-		boolean change = false;
-
-		if (add != null) {
-			int size = add.length;
-			for (int i = 0; i < size; i++) {
-				IModule module3 = add[i];
-				change = true;
-			}
-		}
-
-		if (remove != null) {
-			int size2 = remove.length;
-			for (int j = 0; j < size2; j++) {
-				IModule module3 = remove[j];
-				String memento = module3.getFactoryId() + ":" + module3.getId();
-			}
-		}
-		if (!change)
-			scwc.release();
-		else
-			scwc.save(new NullProgressMonitor());
+	    //todo implement module add/remove.
 	}
 
 	/*
