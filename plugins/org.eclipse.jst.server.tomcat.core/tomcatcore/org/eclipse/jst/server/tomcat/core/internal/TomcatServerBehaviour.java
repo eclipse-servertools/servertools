@@ -235,10 +235,28 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	
 		// check that ports are free
 		Iterator iterator = configuration.getServerPorts().iterator();
+		List usedPorts = new ArrayList();
 		while (iterator.hasNext()) {
 			IServerPort sp = (IServerPort) iterator.next();
-			if (SocketUtil.isPortInUse(sp.getPort(), 5))
-				throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPortInUse", new String[] {sp.getPort() + "", sp.getName()}), null));
+			if (SocketUtil.isPortInUse(sp.getPort(), 5)) {
+				usedPorts.add(sp);
+			}
+		}
+		if (usedPorts.size() == 1) {
+			IServerPort port = (IServerPort) usedPorts.get(0);
+			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPortInUse", new String[] {port.getPort() + "", getServer().getName()}), null));
+		} else if (usedPorts.size() > 1) {
+			String portStr = "";
+			iterator = usedPorts.iterator();
+			boolean first = true;
+			while (iterator.hasNext()) {
+				if (!first)
+					portStr += ", ";
+				first = false;
+				IServerPort sp = (IServerPort) iterator.next();
+				portStr += "" + sp.getPort();
+			}
+			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPortsInUse", new String[] {portStr, getServer().getName()}), null));
 		}
 		
 		setServerState(IServer.STATE_STARTING);
