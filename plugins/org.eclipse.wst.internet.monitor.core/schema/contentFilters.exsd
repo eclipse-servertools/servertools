@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.wst.monitor.core">
+<schema targetNamespace="org.eclipse.wst.internet.monitor.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.wst.monitor.core" id="contentFilters" name="Content Filters"/>
+         <meta.schema plugin="org.eclipse.wst.internet.monitor.core" id="contentFilters" name="Content Filters"/>
       </appInfo>
       <documentation>
          This extension point is used to filter content received in a monitor.
@@ -58,11 +58,11 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of a Java class that extends &lt;samp&gt;org.eclipse.wst.monitor.core.ContentFilterDelegate&lt;/samp&gt;.
+                  specifies the fully qualified name of a Java class that extends &lt;samp&gt;org.eclipse.wst.internet.monitor.core.ContentFilterDelegate&lt;/samp&gt;.
 Content filter instances of this type will delegate to instances of this class.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.wst.monitor.core.ContentFilterDelegate"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.internet.monitor.core.ContentFilterDelegate"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -92,7 +92,7 @@ Content filter instances of this type will delegate to instances of this class.
 
 &lt;p&gt;
 &lt;pre&gt;
- &lt;extension point=&quot;org.eclipse.wst.monitor.core.contentFilter&quot;&gt;
+ &lt;extension point=&quot;org.eclipse.wst.internet.monitor.core.contentFilter&quot;&gt;
   &lt;filter
    id=&quot;com.example.ExampleIdentifier&quot;
    name=&quot;%exampleName&quot;
@@ -107,7 +107,7 @@ Content filter instances of this type will delegate to instances of this class.
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends the abstract class &lt;b&gt;org.eclipse.wst.monitor.core.ContentFilterDelegate&lt;/b&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends the abstract class &lt;b&gt;org.eclipse.wst.internet.monitor.core.ContentFilterDelegate&lt;/b&gt;.
       </documentation>
    </annotation>
 

@@ -2,4 +2,4 @@ bin
 monitorcore.jar
 build.xml
 temp.folder
-org.eclipse.wst.monitor.core_3.0.0.jar
+org.eclipse.wst.internet.monitor.core_3.0.0.jar

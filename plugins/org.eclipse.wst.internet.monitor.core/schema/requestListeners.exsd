@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.wst.monitor.core">
+<schema targetNamespace="org.eclipse.wst.internet.monitor.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.wst.monitor.core" id="requestListeners" name="Request Listeners"/>
+         <meta.schema plugin="org.eclipse.wst.internet.monitor.core" id="requestListeners" name="Request Listeners"/>
       </appInfo>
       <documentation>
          This extension point is used to listen for new monitor traffic (requests), or changes to existing requests. The extension point will be called whenever the monitor adds, changes, or removes a request.
@@ -58,11 +58,11 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;org.eclipse.wst.monitor.core.IRequestListener&lt;/samp&gt;
+                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;org.eclipse.wst.internet.monitor.core.IRequestListener&lt;/samp&gt;
 RequestListener instances of this type will delegate to instances of this class.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.wst.monitor.core.IRequestListener"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.internet.monitor.core.IRequestListener"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -78,7 +78,7 @@ RequestListener instances of this type will delegate to instances of this class.
 
 &lt;p&gt;
 &lt;pre&gt;
-&lt;extension point=&quot;org.eclipse.wst.monitor.core.requestListeners&quot;&gt;
+&lt;extension point=&quot;org.eclipse.wst.internet.monitor.core.requestListeners&quot;&gt;
   &lt;requestListener
     id=&quot;com.example.requestListener&quot;
     class=&quot;com.example.MyRequestListener&quot;/&gt;
@@ -93,7 +93,7 @@ RequestListener instances of this type will delegate to instances of this class.
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.monitor.core.IRequestListener&lt;/b&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.internet.monitor.core.IRequestListener&lt;/b&gt;.
       </documentation>
    </annotation>
 

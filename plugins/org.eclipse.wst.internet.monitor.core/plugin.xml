@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 
-<plugin id="org.eclipse.wst.monitor.core"
+<plugin id="org.eclipse.wst.internet.monitor.core"
   name="%pluginName"
   version="1.0.0"
   provider-name="%providerName"
-  class="org.eclipse.wst.monitor.core.internal.MonitorPlugin">
+  class="org.eclipse.wst.internet.monitor.core.internal.MonitorPlugin">
 
 <requires>
   <import plugin="org.eclipse.core.runtime"/>
@@ -21,14 +21,14 @@
 <extension-point name="%extensionPointContentFilters" id="contentFilters" schema="schema/contentFilters.exsd"/>
 <extension-point name="%extensionPointRequestListeners" id="requestListeners" schema="schema/requestListeners.exsd"/>
 
-<extension point="org.eclipse.wst.monitor.core.protocolAdapters">
+<extension point="org.eclipse.wst.internet.monitor.core.protocolAdapters">
   <protocolAdapter
     id="TCPIP"
-    class="org.eclipse.wst.monitor.core.internal.TCPIPProtocolAdapter"
+    class="org.eclipse.wst.internet.monitor.core.internal.TCPIPProtocolAdapter"
     name="%TCPIP"/>
   <protocolAdapter
     id="HTTP"
-    class="org.eclipse.wst.monitor.core.internal.http.HTTPProtocolAdapter"
+    class="org.eclipse.wst.internet.monitor.core.internal.http.HTTPProtocolAdapter"
     name="%HTTP"/>
 </extension>
 
