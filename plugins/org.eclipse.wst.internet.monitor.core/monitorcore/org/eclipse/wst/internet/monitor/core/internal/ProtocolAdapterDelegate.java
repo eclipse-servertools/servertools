@@ -18,7 +18,7 @@ import org.eclipse.wst.internet.monitor.core.IMonitor;
  * implementation behind a particular protocol adapter.
  * A protocol adapter watches the message traffic passing between client and
  * server; it parses the messages and reports them in the form of 
- * {@link Request} objects.
+ * Request objects.
  * <p>
  * This abstract class is intended to be subclassed only by clients
  * to extend the <code>protocolAdapters</code> extension point.

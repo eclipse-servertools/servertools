@@ -14,9 +14,7 @@ import java.io.IOException;
 import org.eclipse.wst.internet.monitor.core.Request;
 /**
  * A content filter that filters specific contents from the monitor traffic
- * of a request.
- * The global list of known content filters is available via
- * {@link MonitorCore.getContentFilters()}. 
+ * of a request. 
  * <p>
  * This interface is not intended to be implemented by clients.
  * </p>

@@ -41,8 +41,9 @@ public class HTTPConnection {
 
 	/**
 	 * Add a request.
-	 * @param req byte[]
-	 * @param isNew boolean
+	 * 
+	 * @param b the request data
+	 * @param isNew true if new
 	 */
 	public void addRequest(byte[] b, boolean isNew) {
 		if (isNew)
@@ -53,8 +54,9 @@ public class HTTPConnection {
 
 	/**
 	 * Add a response.
-	 * @param req byte[]
-	 * @param isNew boolean
+	 * 
+	 * @param b the response data
+	 * @param isNew true if new
 	 */
 	public void addResponse(byte[] b, boolean isNew) {
 		if (isNew)
@@ -96,8 +98,9 @@ public class HTTPConnection {
 	}
 
 	/**
-	 * Set the title
-	 * @param req byte[]
+	 * Set the title.
+	 * 
+	 * @param title the title
 	 * @param isNew boolean
 	 */
 	public void setLabel(String title, boolean isNew) {

@@ -80,9 +80,9 @@ public class MonitorPlugin extends Plugin {
 	 * Returns the translated String found with the given key,
 	 * and formatted with the given arguments using java.text.MessageFormat.
 	 *
-	 * @param key java.lang.String
-	 * @param arguments java.lang.Object[]
-	 * @return java.lang.String
+	 * @param key the key
+	 * @param arg an argument
+	 * @return the translated string
 	 */
 	public static String getResource(String key, String arg) {
 		return getResource(key, new String[] { arg });
@@ -96,9 +96,9 @@ public class MonitorPlugin extends Plugin {
 	 * Returns the protocol adapter with the given id, or <code>null</code>
 	 * if none. This convenience method searches the list of known
 	 * protocol adapters ({@link #getProtocolAdapters()}) for the one with a
-	 * matching id ({@link IProtocolAdater#getId()}).
+	 * matching id.
 	 *
-	 * @param the protocol adapter id; must not be <code>null</code>
+	 * @param id the protocol adapter id; must not be <code>null</code>
 	 * @return the protocol adapter instance, or <code>null</code> if there
 	 *   is no protocol adapter with the given id
 	 */

@@ -25,6 +25,11 @@ public class ContentFilter implements IContentFilter {
 		this.element = element;
 	}
 
+	/**
+	 * Return the id.
+	 * 
+	 * @return the id
+	 */
 	public String getId() {
 		return element.getAttribute("id");
 	}
@@ -40,10 +45,23 @@ public class ContentFilter implements IContentFilter {
 		}
 	}
 
+	/**
+	 * Returns the name.
+	 * 
+	 * @return the name
+	 */
 	public String getName() {
 		return element.getAttribute("name");
 	}
 
+	/**
+	 * Do the filtering.
+	 * 
+	 * @param request the request
+	 * @param isRequest true if request, false if response
+	 * @param content the content
+	 * @return the filtered content
+	 */
 	public byte[] filter(Request request, boolean isRequest, byte[] content) throws IOException {
 		if (delegate == null) {
 			try {

@@ -406,8 +406,8 @@ Host: localhost:8081
 	 * Remove data from the buffer up to the absolute index n.
 	 * Return the data from between bufferIndex and n.
 	 *
-	 * @return byte[]
-	 * @param index int
+	 * @param n the bytes to remove
+	 * @return a byte array
 	 */
 	protected byte[] removeFromBuffer(int n) {
 		// copy line out of buffer

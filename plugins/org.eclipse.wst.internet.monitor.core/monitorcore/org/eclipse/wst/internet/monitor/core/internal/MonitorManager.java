@@ -157,8 +157,9 @@ public class MonitorManager {
 	
 	/**
 	 * Fire a monitor event.
-	 * @param rr
-	 * @param type
+	 * 
+	 * @param monitor the monitor
+	 * @param type the type of event
 	 */
 	protected void fireMonitorEvent(IMonitor monitor, int type) {
 		Object[] obj = monitorListeners.toArray();
@@ -183,7 +184,7 @@ public class MonitorManager {
 		String xmlString = prefs.getString("monitors");
 		if (xmlString != null && xmlString.length() > 0) {
 			try {
-				ByteArrayInputStream in = new ByteArrayInputStream(xmlString.getBytes());
+				ByteArrayInputStream in = new ByteArrayInputStream(xmlString.getBytes("UTF-8"));
 				IMemento memento = XMLMemento.loadMemento(in);
 		
 				IMemento[] children = memento.getChildren("monitor");

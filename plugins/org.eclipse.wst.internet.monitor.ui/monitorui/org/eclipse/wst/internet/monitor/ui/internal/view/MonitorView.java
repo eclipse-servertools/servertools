@@ -194,51 +194,26 @@ public class MonitorView extends ViewPart {
 
 		Composite requestHeader = new Composite(request, SWT.NONE);
 		layout = new GridLayout();
-		layout.verticalSpacing = 0;
+		layout.verticalSpacing = 1;
 		layout.numColumns = 2;
 		layout.marginHeight = 0;
 		layout.marginWidth = 2;
 		data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
-		data.heightHint = 30;
 		requestHeader.setLayout(layout);
 		requestHeader.setLayoutData(data);
 
-		Composite requestHeaderLeft = new Composite(requestHeader, SWT.NONE);
-		layout = new GridLayout();
-		layout.verticalSpacing = 2;
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
-		data = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
-		data.heightHint = 30;
-		requestHeaderLeft.setLayout(layout);
-		requestHeaderLeft.setLayoutData(data);
-
-		Label empty1 = new Label(requestHeaderLeft, SWT.NONE);
-		empty1.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL));
-		
-		final Label requestLabel = new Label(requestHeaderLeft, SWT.NONE);
+		final Label requestLabel = new Label(requestHeader, SWT.NONE);
 		requestLabel.setText(MonitorUIPlugin.getResource("%viewRequest", ""));
-		requestLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_END));
+		requestLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		Combo requestViewerCombo = new Combo(requestHeader, SWT.DROP_DOWN | SWT.READ_ONLY);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
+		data.verticalSpan = 2;
+		requestViewerCombo.setLayoutData(data);
 
-		final Label requestSizeLabel = new Label(requestHeaderLeft, SWT.NONE);
+		final Label requestSizeLabel = new Label(requestHeader, SWT.NONE);
 		requestSizeLabel.setText(MonitorUIPlugin.getResource("%viewSize", ""));
-		requestSizeLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_END));
-
-		Composite requestHeaderRight = new Composite(requestHeader, SWT.NONE);
-		layout = new GridLayout();
-		layout.verticalSpacing = 0;
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
-		data = new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.FILL_VERTICAL);
-		data.heightHint = 30;
-		requestHeaderRight.setLayout(layout);
-		requestHeaderRight.setLayoutData(data);
-		
-		Label empty2 = new Label(requestHeaderRight, SWT.NONE);
-		empty2.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL));
-		
-		Combo requestViewerCombo = new Combo(requestHeaderRight, SWT.DROP_DOWN | SWT.READ_ONLY);	
-		requestViewerCombo.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.VERTICAL_ALIGN_END));
+		requestSizeLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		// response panel
 		Composite response = new Composite(sashFchild, SWT.NONE);
@@ -251,51 +226,26 @@ public class MonitorView extends ViewPart {
 
 		Composite responseHeader = new Composite(response, SWT.NONE);
 		layout = new GridLayout();
-		layout.verticalSpacing = 0;
+		layout.verticalSpacing = 1;
 		layout.numColumns = 2;
 		layout.marginHeight = 0;
 		layout.marginWidth = 2;
 		data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
-		data.heightHint = 30;
 		responseHeader.setLayout(layout);
 		responseHeader.setLayoutData(data);
 
-		Composite responseHeaderLeft = new Composite(responseHeader, SWT.NONE);
-		layout = new GridLayout();
-		layout.verticalSpacing = 2;
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
-		data = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
-		data.heightHint = 30;
-		responseHeaderLeft.setLayout(layout);
-		responseHeaderLeft.setLayoutData(data);
-
-		Label empty3 = new Label(responseHeaderLeft, SWT.NONE);
-		empty3.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL));
-	
-		final Label responseLabel = new Label(responseHeaderLeft, SWT.NONE);
+		final Label responseLabel = new Label(responseHeader, SWT.NONE);
 		responseLabel.setText(MonitorUIPlugin.getResource("%viewResponse", ""));
-		responseLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
+		responseLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		Combo responseViewerCombo = new Combo(responseHeader, SWT.DROP_DOWN | SWT.READ_ONLY);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
+		data.verticalSpan = 2;
+		responseViewerCombo.setLayoutData(data);
 	
-		final Label responseSizeLabel = new Label(responseHeaderLeft, SWT.NONE);
+		final Label responseSizeLabel = new Label(responseHeader, SWT.NONE);
 		responseSizeLabel.setText(MonitorUIPlugin.getResource("%viewSize", ""));
-		responseSizeLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_END));
-
-		Composite responseHeaderRight = new Composite(responseHeader, SWT.NONE);
-		layout = new GridLayout();
-		layout.verticalSpacing = 0;
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
-		data = new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.FILL_VERTICAL);
-		data.heightHint = 30;
-		responseHeaderRight.setLayout(layout);
-		responseHeaderRight.setLayoutData(data);
-		
-		Label empty4 = new Label(responseHeaderRight, SWT.NONE);
-		empty4.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL));
-		
-		Combo responseViewerCombo = new Combo(responseHeaderRight, SWT.DROP_DOWN | SWT.READ_ONLY);	
-		responseViewerCombo.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.VERTICAL_ALIGN_END));
+		responseSizeLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	
 		// viewer manager
 		vm = new ViewerManager(request, request, response, response);

@@ -37,9 +37,6 @@ import java.util.List;
  * </p><p>
  * This interface is not intended to be implemented by clients.
  * </p>
- *
- * @see IPersistableElement
- * @see IElementFactory
  */
 public interface IMemento {
 	/**
