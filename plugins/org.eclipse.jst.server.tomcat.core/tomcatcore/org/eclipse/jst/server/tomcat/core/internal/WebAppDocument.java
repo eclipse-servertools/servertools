@@ -60,7 +60,7 @@ public class WebAppDocument {
 	 * @param map org.eclipse.jst.server.tomcat.MimeMapping
 	 */
 	public void addMimeMapping(int index, IMimeMapping map) {
-		Trace.trace("Adding mime mapping " + index + " " + map.getMimeType() + " " + map.getExtension());
+		Trace.trace(Trace.FINER, "Adding mime mapping " + index + " " + map.getMimeType() + " " + map.getExtension());
 		Element element = webAppDocument.getDocumentElement();
 		Element mapping = XMLUtil.createChildElement(webAppDocument, element, index, "mime-mapping");
 		XMLUtil.insertText(webAppDocument, mapping, "\n\t");

@@ -28,7 +28,7 @@ public class TomcatLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
 	 * @see LaunchableAdapterDelegate#getLaunchable(IServer, IModuleArtifact)
 	 */
 	public ILaunchable getLaunchable(IServer server, IModuleArtifact moduleObject) {
-		Trace.trace("TomcatLaunchableAdapter " + server + "-" + moduleObject);
+		Trace.trace(Trace.FINER, "TomcatLaunchableAdapter " + server + "-" + moduleObject);
 		if (server.getAdapter(TomcatServer.class) == null)
 			return null;
 		if (!(moduleObject instanceof Servlet) &&
@@ -40,7 +40,7 @@ public class TomcatLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
 		try {
 			URL url = ((IURLProvider) server.getAdapter(IURLProvider.class)).getModuleRootURL(moduleObject.getModule());
 			
-			Trace.trace("root: " + url);
+			Trace.trace(Trace.FINER, "root: " + url);
 
 			if (moduleObject instanceof Servlet) {
 				Servlet servlet = (Servlet) moduleObject;
@@ -54,7 +54,7 @@ public class TomcatLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
 			} else if (moduleObject instanceof WebResource) {
 				WebResource resource = (WebResource) moduleObject;
 				String path = resource.getPath().toString();
-				Trace.trace("path: " + path);
+				Trace.trace(Trace.FINER, "path: " + path);
 				if (path != null && path.startsWith("/") && path.length() > 0)
 					path = path.substring(1);
 				if (path != null && path.length() > 0)
@@ -62,7 +62,7 @@ public class TomcatLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
 			}
 			return new HttpLaunchable(url);
 		} catch (Exception e) {
-			Trace.trace("Error getting URL for " + moduleObject, e);
+			Trace.trace(Trace.SEVERE, "Error getting URL for " + moduleObject, e);
 			return null;
 		}
 	}
