@@ -21,6 +21,10 @@ public abstract class ServerEditorPageSectionFactoryDelegate {
 	 * server and configuration combination. This allows (for
 	 * instance) complex configuration pages to only be shown when used
 	 * with non-unittest servers.
+	 * 
+	 * @param server the server being edited
+	 * @return <code>true</code> if the section should be displayed, or
+	 *    <code>false</code> otherwise
 	 */
 	public boolean shouldCreateSection(IServerWorkingCopy server) {
 		return true;
@@ -28,6 +32,8 @@ public abstract class ServerEditorPageSectionFactoryDelegate {
 
 	/**
 	 * Create the editor page section.
+	 * 
+	 * @return the server editor section
 	 */
 	public abstract IServerEditorSection createSection();
 }

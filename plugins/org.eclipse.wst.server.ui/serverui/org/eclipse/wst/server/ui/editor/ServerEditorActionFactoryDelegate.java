@@ -24,7 +24,9 @@ public abstract class ServerEditorActionFactoryDelegate {
 	 * server. This allows actions to be filtered based on the server type
 	 * or server attributes.
 	 * 
-	 * @param server
+	 * @param server the server being edited
+	 * @return <code>true</code> if the action should be displayed, or
+	 *    <code>false</code> otherwise
 	 */
 	public boolean shouldDisplay(IServerWorkingCopy server) {
 		return true;
@@ -32,6 +34,10 @@ public abstract class ServerEditorActionFactoryDelegate {
 
 	/**
 	 * Create the action.
+	 * 
+	 * @param site the editor site
+	 * @param input the server editor port input
+	 * @return an action that can be run against the server
 	 */
 	public abstract IAction createAction(IEditorSite site, IServerEditorPartInput input);
 }
