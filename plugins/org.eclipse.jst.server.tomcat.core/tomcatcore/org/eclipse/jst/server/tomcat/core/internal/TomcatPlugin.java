@@ -11,6 +11,7 @@
 package org.eclipse.jst.server.tomcat.core.internal;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
 /**
  * The Tomcat plugin.
  */
@@ -286,5 +288,27 @@ public class TomcatPlugin extends Plugin {
 				return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Return a <code>java.io.File</code> object that corresponds to the specified
+	 * <code>IPath</code> in the plugin directory.
+	 */
+	public static File getFileInPlugin(IPath path) {
+		try {
+			URL installURL = new URL(getInstance().getBundle().getEntry("/"), path.toString());
+			URL localURL = Platform.asLocalURL(installURL);
+			return new File(localURL.getFile());
+		} catch (IOException ioe) {
+			return null;
+		}
+	}
+
+	public static void log(String message) {
+		log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.ERROR, message, null));
+	}
+
+	public static void log(Throwable e) {
+		log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.ERROR, e.getMessage(), e));
 	}
 }

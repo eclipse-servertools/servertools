@@ -104,7 +104,7 @@ public class TomcatRuntimeLocator extends RuntimeLocatorDelegate {
 				ITomcatRuntimeWorkingCopy wc = (ITomcatRuntimeWorkingCopy) runtime.getAdapter(ITomcatRuntimeWorkingCopy.class);
 				wc.setVMInstall(JavaRuntime.getDefaultVMInstall());
 				IStatus status = runtime.validate(monitor);
-				if (status == null || status.isOK())
+				if (status == null || status.getSeverity() != IStatus.ERROR)
 					return runtime;
 				
 				Trace.trace(Trace.FINER, "False runtime found at " + dir.getAbsolutePath() + ": " + status.getMessage());

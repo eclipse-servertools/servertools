@@ -68,7 +68,7 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 					add.add(entries[i]);
 			}
 			
-			String[] ids = getClasspathEntryIds(runtime);
+			String[] ids = getClasspathEntryIds();
 			if (ids != null) {
 				size = ids.length;
 				for (int i = 0; i < size; i++) {
@@ -298,15 +298,57 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 		return entries;
 	}
 
+	/**
+	 * Returns the classpath entries that correspond to the given runtime.
+	 * 
+	 * @param runtime
+	 * @param monitor
+	 * @return an array of classpath entries
+	 */
 	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
 		return null;
 	}
-	
-	public String[] getClasspathEntryIds(IRuntime runtime) {
-		return null;
+
+	/**
+	 * Returns the classpath entry ids for this runtime target handler. These
+	 * ids will be added to the classpath container id to create a new fully
+	 * qualified classpath container id.
+	 * <p>
+	 * By default, there is a single classpath entry for the runtime, with no
+	 * extra id (<code>new String[1]</code>). To create multiple ids, just
+	 * return a string array containing the ids. For instance, to have two
+	 * classpath containers with ids "id1" and "id2", use
+	 * <code>new String[] { "id1", "id2" }</code>
+	 * </p>
+	 * 
+	 * @param runtime
+	 * @return
+	 */
+	public String[] getClasspathEntryIds() {
+		return new String[1];
 	}
 
+	/**
+	 * Returns the classpath container label for the given runtime and the given
+	 * classpath container id (returned from getClasspathEntryIds()). This method
+	 * must not return null.
+	 * 
+	 * @param runtime the runtime to resolve the container label for
+	 * @param id the classpath entry id
+	 * @return a classpath container label
+	 */
 	public abstract String getClasspathContainerLabel(IRuntime runtime, String id);
 
+	/**
+	 * Resolves (creates the classpath entries for) the classpath container with
+	 * the given runtime and the given classpath container id (returned from
+	 * getClasspathEntryIds()). If the classpath container cannot be resolved
+	 * (for instance, if the runtime does not exist), return null.
+	 * 
+	 * @param runtime the runtime to resolve the container for
+	 * @param id the classpath entry id
+	 * @return an array of classpath entries for the container, or null if the
+	 *   container could not be resolved
+	 */
 	public abstract IClasspathEntry[] resolveClasspathContainer(IRuntime runtime, String id);
 }

@@ -38,10 +38,6 @@ public class TomcatRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
 		return null;
 	}
 
-	public String[] getClasspathEntryIds(IRuntime runtime) {
-		return new String[1];
-	}
-
 	/**
 	 * Return a label for the classpath container.
 	 *  
