@@ -467,8 +467,8 @@ public class ServerUtil {
 				if (modules != null) {
 					int size2 = modules.length;
 					for (int j = 0; j < size2; j++) {
-						if (!list.contains(modules[i]))
-							list.add(modules[i]);
+						if (!list.contains(modules[j]))
+							list.add(modules[j]);
 					}
 				}
 			}
