@@ -171,6 +171,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	}
 
 	public void publishServer(int kind, IProgressMonitor monitor) throws CoreException {
+		IPath installDir = getServer().getRuntime().getLocation();
 		IPath confDir = null;
 		if (getTomcatServer().isTestEnvironment()) {
 			confDir = getTempDirectory();
@@ -178,10 +179,20 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			if (!temp.exists())
 				temp.mkdirs();
 		} else
-			confDir = getServer().getRuntime().getLocation();
-		IStatus status = getTomcatConfiguration().backupAndPublish(confDir, !getTomcatServer().isTestEnvironment(), monitor);
+			confDir = installDir;
+
+		monitor = ProgressUtil.getMonitorFor(monitor);
+		monitor.beginTask(TomcatPlugin.getResource("%publishServerTask"), 500);
+		
+		IStatus status = getTomcatConfiguration().cleanupServer(confDir, installDir, ProgressUtil.getSubMonitorFor(monitor, 100));
 		if (status != null && !status.isOK())
 			throw new CoreException(status);
+		
+		status = getTomcatConfiguration().backupAndPublish(confDir, !getTomcatServer().isTestEnvironment(), ProgressUtil.getSubMonitorFor(monitor, 400));
+		if (status != null && !status.isOK())
+			throw new CoreException(status);
+		
+		monitor.done();
 		
 		setServerPublishState(IServer.PUBLISH_STATE_NONE);
 		setModules(getServer().getModules());

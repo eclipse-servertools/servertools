@@ -12,8 +12,10 @@ package org.eclipse.jst.server.tomcat.core.internal;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -658,7 +660,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 			factory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server40");
 			Server publishedServer = (Server) factory.loadDocument(new FileInputStream(confDir.append("server.xml").toFile()));
 			monitor.worked(100);
-			
+
 			boolean modified = false;
 
 			int size = publishedServer.getServiceCount();
@@ -745,4 +747,99 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 		}
 		return null;
  	}
+
+	protected IStatus cleanupServer(IPath confDir, IPath installDir, IProgressMonitor monitor) {
+		MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0,
+				TomcatPlugin.getResource("%cleanupServerTask"), null);
+		monitor = ProgressUtil.getMonitorFor(monitor);
+		monitor.beginTask(TomcatPlugin.getResource("%cleanupServerTask"), 200);
+
+		try {
+			monitor.subTask(TomcatPlugin.getResource("%detectingRemovedProjects"));
+
+			// Try to read old server configuration
+			Factory factory = new Factory();
+			factory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server40");
+			File serverFile = confDir.append("conf").append("server.xml").toFile();
+			if (serverFile.exists()) {
+				Server oldServer = (Server) factory.loadDocument(new FileInputStream(serverFile));
+				
+				// Begin building path to context directory
+				IPath contextDir = installDir.append("conf");
+
+				// Collect paths of old web modules managed by WTP
+				Set oldPaths = new HashSet();
+				int size = oldServer.getServiceCount();
+				for (int i = 0; i < size; i++) {
+					Service service = oldServer.getService(i);
+					if (service.getName().equalsIgnoreCase(DEFAULT_SERVICE)) {
+						Engine engine = service.getEngine();
+						Host host = engine.getHost();
+						// Finish path to context directory
+						contextDir = contextDir.append(engine.getName()).append(host.getName());
+						int size2 = host.getContextCount();
+						for (int j = 0; j < size2; j++) {
+							Context context = host.getContext(j);
+							String source = context.getSource();
+							if (source != null && source.length() > 0 )	{
+								oldPaths.add(context.getPath());
+							}
+						}
+					}
+				}
+
+				// Remove paths for web modules that are staying around
+				List modules = getWebModules();
+				size = modules.size();
+				for (int i = 0; i < size; i++) {
+					WebModule module = (WebModule) modules.get(i);
+					oldPaths.remove(module.getPath());
+				}
+				monitor.worked(100);
+
+				// Delete context files for managed web modules that have gone away
+				if (oldPaths.size() > 0 ) {
+					IProgressMonitor subMonitor = ProgressUtil.getSubMonitorFor(monitor, 100);
+					subMonitor.beginTask(TomcatPlugin.getResource("%deletingContextFilesTask"), oldPaths.size() * 100);
+					
+					Iterator iter = oldPaths.iterator();
+					while (iter.hasNext()) {
+						// Derive the context file name from the path + ".xml", minus the leading '/'
+						String fileName = ((String)iter.next()).substring(1) + ".xml";
+						IPath contextPath = contextDir.append(fileName);
+						File contextFile = contextPath.toFile();
+						if (contextFile.exists()) {
+							subMonitor.subTask(TomcatPlugin.getResource("%deletingContextFile", fileName));
+							if (contextFile.delete()) {
+								Trace.trace("Leftover context file " + fileName + " deleted.");
+								ms.add(new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0,
+										TomcatPlugin.getResource("%deletedContextFile", fileName), null));
+								
+							} else {
+								Trace.trace(Trace.SEVERE, "Could not delete obsolete context file " + contextPath.toOSString());
+								ms.add(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0,
+										TomcatPlugin.getResource("%errorCouldNotDeleteContextFile", contextPath.toOSString()), null));
+							}
+							subMonitor.worked(100);
+						}
+					}
+					subMonitor.done();
+				} else {
+					monitor.worked(100);
+				}
+			}
+			// Else no server.xml.  Assume first publish to new temp directory
+			else {
+				monitor.worked(200);
+			}
+			Trace.trace("Server cleaned");
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Could not cleanup server at " + confDir.toOSString() + ": " + e.getMessage());
+			ms.add(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0,
+					TomcatPlugin.getResource("%errorCleanupServer", new String[] {e.getLocalizedMessage()}), e));
+		}
+		
+		monitor.done();
+		return ms;
+	}
 }

@@ -185,6 +185,14 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 			monitor.worked(100);
 		}
 	}
+	
+	protected IStatus cleanupServer(IPath confDir, IPath installDir, IProgressMonitor monitor) {
+		// Default implementation assumes nothing to clean
+		monitor = ProgressUtil.getMonitorFor(monitor);
+		monitor.done();
+		return Status.OK_STATUS;
+	}
+	
 
 	/**
 	 * Returns the root of the docbase parameter.
