@@ -78,7 +78,7 @@ public interface IServer extends IServerAttributes {
 	 * server is in an unknown state.
 	 * 
 	 * @see #getServerState()
-	 * @see #getModuleState(IModule)
+	 * @see #getModuleState(IModule[], IModule)
 	 */
 	public static final int STATE_UNKNOWN = 0;
 
@@ -87,7 +87,7 @@ public interface IServer extends IServerAttributes {
 	 * server is starting, but not yet ready to serve content.
 	 * 
 	 * @see #getServerState()
-	 * @see #getModuleState(IModule)
+	 * @see #getModuleState(IModule[], IModule)
 	 */
 	public static final int STATE_STARTING = 1;
 
@@ -96,7 +96,7 @@ public interface IServer extends IServerAttributes {
 	 * server is ready to serve content.
 	 * 
 	 * @see #getServerState()
-	 * @see #getModuleState(IModule)
+	 * @see #getModuleState(IModule[], IModule)
 	 */
 	public static final int STATE_STARTED = 2;
 
@@ -105,7 +105,7 @@ public interface IServer extends IServerAttributes {
 	 * server is shutting down.
 	 * 
 	 * @see #getServerState()
-	 * @see #getModuleState(IModule)
+	 * @see #getModuleState(IModule[], IModule)
 	 */
 	public static final int STATE_STOPPING = 3;
 
@@ -114,7 +114,7 @@ public interface IServer extends IServerAttributes {
 	 * server is stopped.
 	 * 
 	 * @see #getServerState()
-	 * @see #getModuleState(IModule)
+	 * @see #getModuleState(IModule[], IModule)
 	 */
 	public static final int STATE_STOPPED = 4;
 
@@ -123,7 +123,7 @@ public interface IServer extends IServerAttributes {
 	 * in an unknown state.
 	 * 
 	 * @see #getServerPublishState()
-	 * @see #getModulePublishState(IModule)
+	 * @see #getModulePublishState(IModule[], IModule)
 	 */
 	public static final int PUBLISH_STATE_UNKNOWN = 0;
 
@@ -132,7 +132,7 @@ public interface IServer extends IServerAttributes {
 	 * is no publish required.
 	 * 
 	 * @see #getServerPublishState()
-	 * @see #getModulePublishState(IModule)
+	 * @see #getModulePublishState(IModule[], IModule)
 	 */
 	public static final int PUBLISH_STATE_NONE = 1;
 
@@ -141,7 +141,7 @@ public interface IServer extends IServerAttributes {
 	 * incremental publish is required.
 	 * 
 	 * @see #getServerPublishState()
-	 * @see #getModulePublishState(IModule)
+	 * @see #getModulePublishState(IModule[], IModule)
 	 */
 	public static final int PUBLISH_STATE_INCREMENTAL = 2;
 
@@ -150,7 +150,7 @@ public interface IServer extends IServerAttributes {
 	 * full publish is required.
 	 * 
 	 * @see #getServerPublishState()
-	 * @see #getModulePublishState(IModule)
+	 * @see #getModulePublishState(IModule[], IModule)
 	 */
 	public static final int PUBLISH_STATE_FULL = 3;
 
@@ -212,20 +212,21 @@ public interface IServer extends IServerAttributes {
 	 *    <code>null</code> if the server is stopped.
 	 */
 	public String getMode();
-	
+
 	/**
 	 * Returns the server's sync state.
 	 *
 	 * @return one of the PUBLISH_XXX state flags
 	 */
 	public int getServerPublishState();
-	
+
 	/**
 	 * Returns the module's sync state.
 	 * 
+	 * @param module the module
 	 * @return one of the PUBLISH_XXX state flags
 	 */
-	public int getModulePublishState(IModule module);
+	public int getModulePublishState(IModule[] module);
 
 	/**
 	 * Adds the given server state listener to this server.
@@ -298,26 +299,19 @@ public interface IServer extends IServerAttributes {
 	 * be started in the given mode.
 	 *
 	 * @param launchMode a mode in which a server can be launched,
-	 * one of the mode constants defined by
-	 * {@link org.eclipse.debug.core.ILaunchManager}
+	 *    one of the mode constants defined by
+	 *    {@link org.eclipse.debug.core.ILaunchManager}
 	 * @return a status object with code <code>IStatus.OK</code> if the server can
-	 *   be started, otherwise a status object indicating why it can't
+	 *    be started, otherwise a status object indicating why it can't
 	 */
 	public IStatus canStart(String launchMode);
-
-	/**
-	 * Returns an existing launch for this server, or null if there is
-	 * no existing launch.
-	 * 
-	 * @return
-	 */
-	//public ILaunch getExistingLaunch();
 
 	/**
 	 * Return the launch configuration for this server. If one does not exist, it
 	 * will be created if "create" is true, and otherwise will return null.
 	 * 
-	 * @param create
+	 * @param create <code>true</code> if a new launch configuration should be
+	 *    created if there are none already
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return the launch configuration, no <code>null</code> if there was no
@@ -325,16 +319,6 @@ public interface IServer extends IServerAttributes {
 	 * @throws CoreException
 	 */
 	public ILaunchConfiguration getLaunchConfiguration(boolean create, IProgressMonitor monitor) throws CoreException;
-
-	/**
-	 * Configure the given launch configuration to start this server. This method is called whenever
-	 * the server is started to ensure that the launch configuration is accurate and up to date.
-	 * 
-	 * @param workingCopy
-	 * @param monitor
-	 * @throws CoreException
-	 */
-	//public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Asynchronously starts this server in the given launch mode.
@@ -352,8 +336,8 @@ public interface IServer extends IServerAttributes {
 	 * </p>
 	 *
 	 * @param launchMode a mode in which a server can be launched,
-	 * one of the mode constants defined by
-	 * {@link org.eclipse.debug.core.ILaunchManager}
+	 *    one of the mode constants defined by
+	 *    {@link org.eclipse.debug.core.ILaunchManager}
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return a debug launch object
@@ -388,7 +372,7 @@ public interface IServer extends IServerAttributes {
 	 *    one of the mode constants defined by
 	 *    {@link org.eclipse.debug.core.ILaunchManager}
 	 * @return a status object with code <code>IStatus.OK</code> if the server can
-	 *   be restarted, otherwise a status object indicating why it can't
+	 *    be restarted, otherwise a status object indicating why it can't
 	 */
 	public IStatus canRestart(String mode);
 	
@@ -498,22 +482,22 @@ public interface IServer extends IServerAttributes {
 	 * server. If it is not fast, the method should take a progress
 	 * monitor.]
 	 * </p>
-	 *
+	 * 
 	 * @param module the module
 	 * @return a status object with code <code>IStatus.OK</code> if the module can
-	 *   be restarted, otherwise a status object indicating why it can't
+	 *    be restarted, otherwise a status object indicating why it can't
 	 */
-	public IStatus canRestartModule(IModule module);
+	public IStatus canRestartModule(IModule[] module);
 
 	/**
 	 * Check if the given module is in sync on the server. It should
 	 * return true if the module should be restarted (is out of
 	 * sync) or false if the module does not need to be restarted.
 	 *
-	 * @param module org.eclipse.wst.server.core.model.IModule
+	 * @param module the module
 	 * @return boolean
 	 */
-	public boolean getModuleRestartState(IModule module);
+	public boolean getModuleRestartState(IModule[] module);
 
 	/**
 	 * Asynchronously restarts the given module on the server.
@@ -547,7 +531,7 @@ public interface IServer extends IServerAttributes {
 	 * @return status object
 	 * @exception CoreException if an error occurs while trying to restart the module
 	 */
-	public void restartModule(IModule module, IProgressMonitor monitor) throws CoreException;
+	public void restartModule(IModule[] module, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Restarts the given module and waits until it has finished restarting.
@@ -561,19 +545,19 @@ public interface IServer extends IServerAttributes {
 	 *    reporting and cancellation are not desired
 	 * @exception CoreException if an error occurs while trying to restart the module
 	 */
-	public void synchronousRestartModule(IModule module, IProgressMonitor monitor) throws CoreException;
+	public void synchronousRestartModule(IModule[] module, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Returns the current state of the given module on this server.
 	 * Returns <code>STATE_UNKNOWN</code> if the module
 	 * is not among the ones associated with this server.
-	 *
+	 * 
 	 * @param module the module
-	 * @return one of the state (<code>STATE_XXX</code>)
-	 * constants declared on {@link IServer}
+	 * @return one of the state (<code>STATE_XXX</code>) constants declared
+	 *    on {@link IServer}
 	 */
-	public int getModuleState(IModule module);
-	
+	public int getModuleState(IModule[] module);
+
 	/**
 	 * Returns an array of modules that are deployed to this server. This
 	 * list may contain user applications as well as any other applications

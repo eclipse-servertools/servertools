@@ -17,7 +17,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 
+import org.eclipse.wst.server.core.internal.IModuleVisitor;
 import org.eclipse.wst.server.core.internal.ModuleFactory;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.Trace;
 /**
@@ -655,23 +657,26 @@ public class ServerUtil {
 	 *    reporting and cancellation are not desired
 	 * @return boolean
 	 */
-	public static boolean containsModule(IServer server, IModule module, IProgressMonitor monitor) {
+	public static boolean containsModule(IServer server, final IModule module, IProgressMonitor monitor) {
 		if (server == null)
 			return false;
 		Trace.trace(Trace.FINEST, "containsModule() " + server + " " + module);
-		try {
-			IModule[] modules = ServerPlugin.getAllContainedModules(server, monitor);
-			if (modules != null) {
-				int size = modules.length;
-				for (int i = 0; i < size; i++) {
-					Trace.trace(Trace.FINEST, "module: " + modules[i] + " " + module.equals(modules[i]));
-					if (module.equals(modules[i]))
-						return true;
-				}
-			}
-		} catch (Throwable t) {
-			// ignore
+		
+		class Helper {
+			boolean b;
 		}
-		return false;
+		final Helper h = new Helper();
+
+		((Server)server).visit(new IModuleVisitor() {
+			public boolean visit(IModule[] modules) {
+				int size = modules.length;
+				if (modules[size - 1].equals(module)) {
+					h.b = true;
+					return false;
+				}
+				return true;
+			}
+		}, null);
+		return h.b;
 	}
 }

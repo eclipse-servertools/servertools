@@ -42,21 +42,19 @@ public interface IPublishListener {
 	 * is starting.
 	 * 
 	 * @param server
-	 * @param parents
 	 * @param module
 	 */
-	public void publishModuleStarted(IServer server, IModule[] parents, IModule module);
+	public void publishModuleStarted(IServer server, IModule[] module);
 
 	/**
 	 * The event is fired when the module has finished publishing,
 	 * and includes the status.
 	 * 
 	 * @param server
-	 * @param parents
 	 * @param module
 	 * @param status
 	 */
-	public void publishModuleFinished(IServer server, IModule[] parents, IModule module, IStatus status);
+	public void publishModuleFinished(IServer server, IModule[] module, IStatus status);
 
 	/**
 	 * Publishing has finished. Returns the overall status.

@@ -22,16 +22,15 @@ package org.eclipse.wst.server.core;
  * stopped event cannot directly trigger a start(). Doing this may cause
  * the thread to hang.</p>
  * 
+ * required events:
+ *   state change (server + module)
+ *   publish change (server + module)
+ *   add/remove module
+ *   restart mode (server + module)
+ *   
  * @since 1.0
  */
 public interface IServerListener {
-	/**
-	 * Called when the server configuration's sync state changes.
-	 *
-	 * @param server the affected server
-	 */
-	public void configurationSyncStateChange(IServer server);
-
 	/**
 	 * Called when the server isRestartNeeded() property changes.
 	 *
@@ -59,8 +58,7 @@ public interface IServerListener {
 	 * changed.
 	 *
 	 * @param server the affected server
-	 * @param parents the module's parents
 	 * @param module the module
 	 */
-	public void moduleStateChange(IServer server, IModule[] parents, IModule module);
+	public void moduleStateChange(IServer server, IModule[] module);
 }

@@ -77,21 +77,15 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 				return;
 			IServerWorkingCopy server = (IServerWorkingCopy) taskModel.getObject(TaskModel.TASK_SERVER);
 			if (server == null) {
-				taskModel.putObject(TaskModel.TASK_MODULE_PARENTS, null);
 				taskModel.putObject(TaskModel.TASK_MODULES, null);
 				return;
 			}
 			
-			class Helper {
-				List parentList = new ArrayList();
-				List moduleList = new ArrayList();
-			}
-			final Helper help = new Helper();
+			final List moduleList = new ArrayList();
 			if (server != null) {
 				((Server) server).visit(new IModuleVisitor() {
-					public boolean visit(IModule[] parents2, IModule module2) {
-						help.parentList.add(parents2);
-						help.moduleList.add(module2);
+					public boolean visit(IModule[] module2) {
+						moduleList.add(module2);
 						return true;
 					}
 				}, null);
@@ -107,22 +101,15 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 					parent = parents[0];
 					list.add(parent);
 				}
-				if (!help.moduleList.contains(module)) {
-					help.moduleList.add(module);
-					help.parentList.add(list);
+				// TODO - get parent modules correct
+				if (!moduleList.contains(module)) {
+					moduleList.add(new IModule[] { module });
 				}
 			} catch (Exception e) {
 				Trace.trace(Trace.WARNING, "Could not find parent module", e);
 			}
 			
-			int size = help.parentList.size();
-			List[] parents = new List[size];
-			help.parentList.toArray(parents);
-			IModule[] modules = new IModule[size];
-			help.moduleList.toArray(modules);
-			
-			taskModel.putObject(TaskModel.TASK_MODULE_PARENTS, parents);
-			taskModel.putObject(TaskModel.TASK_MODULES, modules);
+			taskModel.putObject(TaskModel.TASK_MODULES, moduleList);
 		}
 	}
 

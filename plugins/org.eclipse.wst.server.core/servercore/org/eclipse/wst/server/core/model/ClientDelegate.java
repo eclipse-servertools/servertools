@@ -12,7 +12,6 @@ package org.eclipse.wst.server.core.model;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunch;
-import org.eclipse.wst.server.core.ILaunchable;
 import org.eclipse.wst.server.core.IServer;
 /**
  * A launchable client is a client side application or test harness that can
@@ -34,7 +33,7 @@ public abstract class ClientDelegate {
 	 * @return <code>true</code> if the client supports this combination, and <code>false</code>
 	 *    otherwise
 	 */
-	public abstract boolean supports(IServer server, ILaunchable launchable, String launchMode);
+	public abstract boolean supports(IServer server, Object launchable, String launchMode);
 
 	/**
 	 * Opens or executes on the launchable.
@@ -45,5 +44,5 @@ public abstract class ClientDelegate {
 	 * @param launch
 	 * @return status indicating what (if anything) went wrong
 	 */
-	public abstract IStatus launch(IServer server, ILaunchable launchable, String launchMode, ILaunch launch);
+	public abstract IStatus launch(IServer server, Object launchable, String launchMode, ILaunch launch);
 }

@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerType;
+import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.DefaultServerLabelDecorator;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -97,6 +98,14 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 	}
 
 	public Image getColumnImage(Object element, int columnIndex) {
+		if (element instanceof ModuleServer) {
+			ModuleServer ms = (ModuleServer) element;
+			if (columnIndex == 0)
+				ServerUICore.getLabelProvider().getImage(ms.module);
+			if (columnIndex == 1)
+				return getStateImage(ms.server.getModuleState(ms.module), null);
+			return null;
+		}
 		IServer server = (IServer) element;
 		if (columnIndex == 0) {
 			if (server.getServerType() != null) {
@@ -109,7 +118,7 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 				return image;
 			}
 			return null;
-		} else if (columnIndex == 2) {
+		} else if (columnIndex == 1) {
 			IServerType serverType = server.getServerType();
 			if (serverType == null)
 				return null;
@@ -121,18 +130,29 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
+		if (element instanceof ModuleServer) {
+			ModuleServer ms = (ModuleServer) element;
+			if (columnIndex == 0) {
+				int size = ms.module.length;
+				return ms.module[size - 1].getName();
+			}
+			else if (columnIndex == 1)
+				return getStateLabel(ms.server.getModuleState(ms.module), null, IServerType.SERVER_STATE_SET_MANAGED);
+			else if (columnIndex == 2)
+				return "-";
+		}
 		IServer server = (IServer) element;
 		if (columnIndex == 0)
 			return notNull(server.getName());
+		//else if (columnIndex == 1)
+		//	return notNull(server.getHost());
 		else if (columnIndex == 1) {
-			return notNull(server.getHost());
-		} else if (columnIndex == 2) {
 			IServerType serverType = server.getServerType();
 			if (serverType != null)
 				return getServerStateLabel(server, serverType.getServerStateSet());
 			
 			return "";
-		} else if (columnIndex == 3) {
+		} else if (columnIndex == 2) {
 			if (server.getServerType() == null)
 				return "";
 			
@@ -159,7 +179,7 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 				return syncState[i];
 			return syncStateUnmanaged[i];
 		} else
-			return "X";
+			return "-";
 	}
 	
 	protected String notNull(String s) {
@@ -178,11 +198,20 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 
 	/**
 	 * Returns an image representing the server's state.
+	 * 
 	 * @return org.eclipse.jface.parts.IImage
 	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	protected Image getServerStateImage(IServer server) {
-		int state = server.getServerState();
+		return getStateImage(server.getServerState(), server.getMode());
+	}
+
+	/**
+	 * Returns an image representing the given state.
+	 * 
+	 * @return org.eclipse.jface.parts.IImage
+	 */
+	protected Image getStateImage(int state, String mode) {
 		if (state == IServer.STATE_UNKNOWN)
 			return null;
 		else if (state == IServer.STATE_STARTING)
@@ -192,7 +221,7 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 		else if (state == IServer.STATE_STOPPED)
 			return ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STOPPED);
 		else { //if (state == IServer.STATE_STARTED) {
-			String mode = server.getMode();
+			//String mode = server.getMode();
 			if (ILaunchManager.DEBUG_MODE.equals(mode))
 				return ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTED_DEBUG);
 			else if (ILaunchManager.PROFILE_MODE.equals(mode))
@@ -209,10 +238,18 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	protected String getServerStateLabel(IServer server, int stateSet) {
+		return getStateLabel(server.getServerState(), server.getMode(), stateSet);
+	}
+
+	/**
+	 * Returns a string representing the given state.
+	 *
+	 * @return java.lang.String
+	 */
+	protected String getStateLabel(int state, String mode, int stateSet) {
 		if (stateSet == IServerType.SERVER_STATE_SET_PUBLISHED)
 			return "";
 		
-		int state = server.getServerState();
 		if (stateSet == IServerType.SERVER_STATE_SET_MANAGED) {
 			if (state == IServer.STATE_UNKNOWN)
 				return "";
@@ -221,7 +258,6 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 			else if (state == IServer.STATE_STOPPING)
 				return stoppingText[count];
 			else if (state == IServer.STATE_STARTED) {
-				String mode = server.getMode();
 				if (ILaunchManager.DEBUG_MODE.equals(mode))
 					return ServerUIPlugin.getResource("%viewStatusStartedDebug");
 				else if (ILaunchManager.PROFILE_MODE.equals(mode))

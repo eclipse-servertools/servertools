@@ -161,7 +161,7 @@ public class ModifyModulesComposite extends Composite {
 		while (iterator.hasNext()) {
 			IModule module = (IModule) iterator.next();
 			try {
-				IModule[] children = server.getChildModules(module, null);
+				IModule[] children = server.getChildModules(new IModule[] { module }, null);
 				childModuleMap.put(module, children);
 			} catch (Exception e) {
 				// ignore
@@ -172,7 +172,7 @@ public class ModifyModulesComposite extends Composite {
 		while (iterator.hasNext()) {
 			IModule module = (IModule) iterator.next();
 			try {
-				IModule[] children = server.getChildModules(module, null);
+				IModule[] children = server.getChildModules(new IModule[] { module }, null);
 				childModuleMap.put(module, children);
 			} catch (Exception e) {
 				// ignore
@@ -357,7 +357,7 @@ public class ModifyModulesComposite extends Composite {
 			removeAll.setEnabled(deployedTree.getItemCount() > 1);
 	}
 
-	protected void addChildren(TreeItem item, IModule module) {
+	protected void addChildren(TreeItem item, IModule[] module) {
 		try {
 			IModule[] children = (IModule[]) childModuleMap.get(module);
 			if (children != null) {
@@ -369,7 +369,12 @@ public class ModifyModulesComposite extends Composite {
 					childItem.setImage(slp.getImage(child));
 					childItem.setData(child);
 					parentTreeItemMap.put(childItem, item);
-					addChildren(childItem, child);
+					
+					int size2 = module.length;
+					IModule[] module2 = new IModule[size2 + 1];
+					System.arraycopy(module, 0, module2, 0, size2);
+					module2[size2] = child;
+					addChildren(childItem, module2);
 				}
 			}
 		} catch (Exception e) {
@@ -388,7 +393,7 @@ public class ModifyModulesComposite extends Composite {
 			item.setImage(slp.getImage(module));
 			item.setData(module);
 			parentTreeItemMap.put(item, item);
-			addChildren(item, module);
+			addChildren(item, new IModule[] { module });
 		}
 	}
 
@@ -442,17 +447,7 @@ public class ModifyModulesComposite extends Composite {
 		if (taskModel == null)
 			return;
 
-		ModuleMap map = getModuleMap();
-		int size = map.parentList.size();
-		List[] parents = new List[size];
-		map.parentList.toArray(parents);
-	
-		size = map.parentList.size();
-		IModule[] modules2 = new IModule[size];
-		map.moduleList.toArray(modules2);
-		
-		taskModel.putObject(TaskModel.TASK_MODULE_PARENTS, parents);
-		taskModel.putObject(TaskModel.TASK_MODULES, modules2);
+		taskModel.putObject(TaskModel.TASK_MODULES, getModuleMap());
 		wizard.update();
 	}
 
@@ -486,46 +481,39 @@ public class ModifyModulesComposite extends Composite {
 		return list;
 	}
 	
-	public class ModuleMap {
-		public List parentList = new ArrayList();
-		public List moduleList = new ArrayList();
-	}
-	
-	private void addChildMap(ModuleMap help, List parents, IModule[] children) {
+	private void addChildMap(List map, IModule[] parents, IModule[] children) {
 		if (children == null)
 			return;
 		
 		int size = children.length;
 		for (int i = 0; i < size; i++) {
 			IModule module = children[i];
-			help.parentList.add(parents);
-			help.moduleList.add(module);
+			
+			int size2 = parents.length;
+			IModule[] modules2 = new IModule[size2 + 1];
+			System.arraycopy(parents, 0, modules2, 0, size2);
+			modules2[size2] = module;
+			map.add(modules2);
+			
 			IModule[] children2 = (IModule[]) childModuleMap.get(module);
-			if (children2 != null) {
-				List parents2 = new ArrayList();
-				parents2.addAll(parents);
-				parents2.add(module);
-				addChildMap(help, parents2, children2);
-			}
+			if (children2 != null)
+				addChildMap(map, modules2, children2);
 		}
 	}
 
-	public ModuleMap getModuleMap() {
-		final ModuleMap help = new ModuleMap();
+	public List getModuleMap() {
+		final List map = new ArrayList();
 	
 		Iterator iterator = deployed.iterator();
 		while (iterator.hasNext()) {
 			IModule module = (IModule) iterator.next();
-			help.parentList.add(null);
-			help.moduleList.add(module);
+			IModule[] moduleTree = new IModule[] { module };
+			map.add(moduleTree);
 			IModule[] children = (IModule[]) childModuleMap.get(module);
-			if (children != null) {
-				List parents = new ArrayList();
-				parents.add(module);
-				addChildMap(help, parents, children);
-			}
+			if (children != null)
+				addChildMap(map, moduleTree, children);
 		}
 		
-		return help;
+		return map;
 	}
 }

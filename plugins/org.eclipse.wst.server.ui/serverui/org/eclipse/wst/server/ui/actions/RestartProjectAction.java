@@ -12,18 +12,16 @@ package org.eclipse.wst.server.ui.actions;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.actions.RestartProjectActionDelegate;
 /**
  * Action to restart an individual project on servers that
  * support it.
  * 
+ * @deprecated too many modules could be in a single project - it no
+ *    longer makes sense to restart them all on every server they are on.
  * @since 1.0
  */
 public class RestartProjectAction extends Action {
-	protected RestartProjectActionDelegate delegate;
-
 	/**
 	 * RestartProjectAction constructor comment.
 	 * 
@@ -31,16 +29,12 @@ public class RestartProjectAction extends Action {
 	 */
 	public RestartProjectAction(IProject project) {
 		super(ServerUIPlugin.getResource("%actionRestartProject"));
-	
-		delegate = new RestartProjectActionDelegate();
-		StructuredSelection sel = new StructuredSelection(project);
-		delegate.selectionChanged(this, sel);
 	}
 
 	/**
 	 * Implementation of method defined on <code>IAction</code>.
 	 */
 	public void run() {
-		delegate.run(this);
+		// do nothing
 	}
 }

@@ -126,7 +126,7 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		monitor.subTask(ServerPlugin.getResource("%savingTask", getName()));
 		
 		if (!force && getOriginal() != null)
-			wch.validateTimestamp(getOriginal().getTimestamp());
+			wch.validateTimestamp(((Runtime) getOriginal()).getTimestamp());
 		
 		IRuntime origRuntime = runtime;
 		if (runtime == null)

@@ -21,9 +21,9 @@ public interface IModuleVisitor {
 	 * Visit a single module. Returns true to keep visiting, and
 	 * false if it should stop visiting the module. 
 	 * 
-	 * @param parents org.eclipse.wst.server.core.IModule[]
-	 * @param module org.eclipse.wst.server.core.IModule
-	 * @return boolean
+	 * @param module a module on the server
+	 * @return boolean <code>true</code> to visit the next module, or
+	 *    <code>false</code> to stop visiting
 	 */
-	public boolean visit(IModule[] parents, IModule module);
+	public boolean visit(IModule[] module);
 }

@@ -22,19 +22,19 @@ import org.eclipse.wst.server.core.internal.*;
  */
 public class LaunchClientJob extends Job {
 	protected IServer server;
-	protected IModule module;
+	protected IModule[] module;
 	protected IClient client;
 	protected ILaunchableAdapter launchableAdapter;
 	protected String launchMode;
 	protected IModuleArtifact moduleArtifact;
 
-	public static void launchClient(IServer server, IModule module, String launchMode, IModuleArtifact moduleArtifact, ILaunchableAdapter launchableAdapter, IClient client) {
+	public static void launchClient(IServer server, IModule[] module, String launchMode, IModuleArtifact moduleArtifact, ILaunchableAdapter launchableAdapter, IClient client) {
 		LaunchClientJob job = new LaunchClientJob(server, module, launchMode, moduleArtifact, launchableAdapter, client);
 		//job.setUser(true);
 		job.schedule();
 	}
 
-	public LaunchClientJob(IServer server, IModule module, String launchMode, IModuleArtifact moduleArtifact, ILaunchableAdapter launchableAdapter, IClient client) {
+	public LaunchClientJob(IServer server, IModule[] module, String launchMode, IModuleArtifact moduleArtifact, ILaunchableAdapter launchableAdapter, IClient client) {
 		super("Launch client");
 		this.server = server;
 		this.module = module;
@@ -82,7 +82,7 @@ public class LaunchClientJob extends Job {
 			public void run() {
 				Trace.trace(Trace.FINEST, "Attempting to load client: " + client);
 				try {
-					ILaunchable launchable = launchableAdapter.getLaunchable(server, moduleArtifact);
+					Object launchable = launchableAdapter.getLaunchable(server, moduleArtifact);
 					client.launch(server, launchable, launchMode, ((Server) server).getExistingLaunch());
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Server client failed", e);

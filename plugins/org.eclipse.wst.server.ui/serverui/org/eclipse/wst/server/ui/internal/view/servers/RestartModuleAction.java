@@ -10,47 +10,30 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.ui.internal.EclipseUtil;
+import org.eclipse.wst.server.ui.ServerUICore;
+import org.eclipse.wst.server.ui.internal.ServerLabelProvider;
 /**
  * Restart a module on a server.
  */
 public class RestartModuleAction extends Action {
 	protected IServer server;
-	protected IModule module;
+	protected IModule[] module;
 
-	public RestartModuleAction(IServer server, IModule module) {
+	public RestartModuleAction(IServer server, IModule[] module) {
 		super();
 		this.server = server;
 		this.module = module;
 	
-		setText(module.getName());
+		int size = module.length;
+		setText(module[size - 1].getName());
 		
-		IProject project = module.getProject();
-		if (project != null) {
-			ImageDescriptor descriptor = EclipseUtil.getProjectImageDescriptor(project);
-			if (descriptor != null)
-				setImageDescriptor(descriptor);
-		}
-	
-		// enable or disable
-		if (server == null || module == null) {
-			setEnabled(false);
-			return;
-		}
-
-		/*if (!(dr.getServerState() == IServer2.STATE_STARTED ||
-			dr.getServerState() == IServer2.STATE_STARTED_DEBUG) ||
-			!dr.canRestartModule(module)) {
-			setEnabled(false);
-			return;
-		}*/
+		ServerLabelProvider slp = (ServerLabelProvider) ServerUICore.getLabelProvider();
+		setImageDescriptor(slp.getImageDescriptor(module[size - 1]));
 	
 		setEnabled(server.canRestartModule(module).isOK());
 	}

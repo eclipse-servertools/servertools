@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunch;
 
-import org.eclipse.wst.server.core.ILaunchable;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.ClientDelegate;
 /**
@@ -76,7 +75,7 @@ public class Client implements IClient {
 	/**
 	 * 
 	 */
-	public boolean supports(IServer server, ILaunchable launchable, String launchMode) {
+	public boolean supports(IServer server, Object launchable, String launchMode) {
 		try {
 			return getDelegate().supports(server, launchable, launchMode);
 		} catch (Exception e) {
@@ -88,7 +87,7 @@ public class Client implements IClient {
 	/**
 	 * Opens or executes on the launchable.
 	 */
-	public IStatus launch(IServer server, ILaunchable launchable, String launchMode, ILaunch launch) {
+	public IStatus launch(IServer server, Object launchable, String launchMode, ILaunch launch) {
 		try {
 			return getDelegate().launch(server, launchable, launchMode, launch);
 		} catch (Exception e) {

@@ -11,7 +11,6 @@
 package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.wst.server.core.ILaunchable;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IServer;
 /**
@@ -41,5 +40,5 @@ public interface ILaunchableAdapter {
 	 * @return a launchable object
 	 * @exception CoreException thrown if there is a problem returning the launchable
 	 */
-	public ILaunchable getLaunchable(IServer server, IModuleArtifact moduleArtifact) throws CoreException;
+	public Object getLaunchable(IServer server, IModuleArtifact moduleArtifact) throws CoreException;
 }

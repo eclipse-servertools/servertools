@@ -31,12 +31,6 @@ import org.eclipse.core.runtime.*;
  * loading, and should not be called from popup menus, etc.
  * </p>
  * <p>
- * [issue: As mentioned in IRuntimeType, the term "runtime"
- * is misleading, given that the main reason is for build time classpath
- * contributions, not for actually running anything. "libraries" might be a
- * better choice.]
- * </p>
- * <p>
  * The server framework maintains a global list of all known runtime instances
  * ({@link ServerCore#getRuntimes()}).
  * </p>
@@ -45,12 +39,6 @@ import org.eclipse.core.runtime.*;
  * working copy) with the same id are equal, and two runtimes with different ids
  * are never equal.
  * </p>
- * 
- * [issue: Why are attributes exposed? The attribute ids and
- * values are passed to property change listeners. However,
- * they are not useful unless there is a spec'd correlation
- * between methods like getName and an attribute "name". The
- * constants are declared on Base, which is internal.]
  * <p>
  * Two runtimes are identical if and only if they have the same id.
  * </p>
@@ -88,6 +76,7 @@ public interface IRuntime extends IAdaptable {
 	 * Deletes the persistent representation of this runtime.
 	 * 
 	 * @throws CoreException if there was any error received while deleting the runtime
+	 *    or if this method is called on a working copy
 	 */
 	public void delete() throws CoreException;
 
@@ -108,7 +97,7 @@ public interface IRuntime extends IAdaptable {
 	 * @return <code>true</code> if this runtime is private,
 	 *    and <code>false</code> otherwise
 	 */
-	public boolean isPrivate();
+	//public boolean isPrivate();
 
 	/**
 	 * Returns true if this is a working copy.
@@ -135,7 +124,7 @@ public interface IRuntime extends IAdaptable {
 	 * 
 	 * @return the runtime's timestamp
 	 */
-	public int getTimestamp();
+	//public int getTimestamp();
 
 	/**
 	 * Returns the type of this runtime instance.

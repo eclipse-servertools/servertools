@@ -28,11 +28,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * This interface is not intended to be implemented by clients.
  * </p>
  * <p>
- * [issue: The term "runtime" is misleading, given that the main
- * reason is for build time classpath contributions, not for actually
- * running anything. "libraries" might be a better choice.]
- * </p>
- * <p>
  * [issue: What value do runtimes add?
  * It's main role is for setting up the Java build classpath
  * for projects holding modules that must be Java compiled.
@@ -113,7 +108,7 @@ public interface IRuntimeType {
 	 * @return the array of module types {@link IModuleType}
 	 */
 	public IModuleType[] getModuleTypes();
-	
+
 	/**
 	 * Returns whether this runtime type can be instantiated.
 	 * <p>

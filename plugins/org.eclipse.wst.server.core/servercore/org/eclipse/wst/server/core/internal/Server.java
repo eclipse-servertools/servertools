@@ -277,7 +277,7 @@ public class Server extends Base implements IServer {
 	/**
 	 * Fire a server listener configuration sync state change event.
 	 */
-	protected void fireConfigurationSyncStateChangeEvent() {
+	/*protected void fireConfigurationSyncStateChangeEvent() {
 		Trace.trace(Trace.LISTENERS, "->- Firing server configuration change event: " + getName() + " ->-");
 	
 		if (serverListeners == null || serverListeners.isEmpty())
@@ -296,7 +296,7 @@ public class Server extends Base implements IServer {
 			}
 		}
 		Trace.trace(Trace.LISTENERS, "-<- Done firing server configuration change event -<-");
-	}
+	}*/
 	
 	/**
 	 * Fire a server listener restart state change event.
@@ -373,7 +373,7 @@ public class Server extends Base implements IServer {
 	/**
 	 * Fire a server listener module state change event.
 	 */
-	protected void fireServerModuleStateChangeEvent(IModule module) {
+	protected void fireServerModuleStateChangeEvent(IModule[] module) {
 		Trace.trace(Trace.LISTENERS, "->- Firing server module state change event: " + getName() + ", " + getServerState() + " ->-");
 		
 		if (serverListeners == null || serverListeners.isEmpty())
@@ -381,18 +381,12 @@ public class Server extends Base implements IServer {
 		
 		int size = serverListeners.size();
 		IServerListener[] sil = new IServerListener[size];
-		IModule[] parents = new IModule[0];
-		try {
-			parents = getRootModules(module, null);
-		} catch (Exception e) {
-			// ignore
-		}
 		serverListeners.toArray(sil);
 		
 		for (int i = 0; i < size; i++) {
 			try {
 				Trace.trace(Trace.LISTENERS, "  Firing server module state change event to: " + sil[i]);
-				sil[i].moduleStateChange(this, parents, module);
+				sil[i].moduleStateChange(this, module);
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "  Error firing server module state change event", e);
 			}
@@ -408,21 +402,21 @@ public class Server extends Base implements IServer {
 		this.serverModules = modules;
 	}
 
-	public void setModuleState(IModule module, int state) {
+	public void setModuleState(IModule[] module, int state) {
 		Integer in = new Integer(state);
-		moduleState.put(module.getId(), in);
+		moduleState.put(getKey(module), in);
 		fireServerModuleStateChangeEvent(module);
 	}
 	
-	public void setModulePublishState(IModule module, int state) {
+	public void setModulePublishState(IModule[] module, int state) {
 		Integer in = new Integer(state);
-		modulePublishState.put(module.getId(), in);
+		modulePublishState.put(getKey(module), in);
 		//fireServerModuleStateChangeEvent(module);
 	}
 
-	public void setModuleRestartState(IModule module, boolean r) {
+	public void setModuleRestartState(IModule[] module, boolean r) {
 		Boolean b = new Boolean(r);
-		moduleState.put(module.getId(), b);
+		moduleState.put(getKey(module), b);
 		//fireServerModuleStateChangeEvent(module);
 	}
 
@@ -435,12 +429,14 @@ public class Server extends Base implements IServer {
 		final Helper helper = new Helper();
 		
 		IModuleVisitor visitor = new IModuleVisitor() {
-			public boolean visit(IModule[] parents2, IModule module2) {
-				if (module2.getProject() == null)
+			public boolean visit(IModule[] module2) {
+				int size = module2.length;
+				IModule m = module2[size - 1];
+				if (m.getProject() == null)
 					return true;
 				
-				if (module.equals(module2)) {
-					IModuleResourceDelta[] delta2 = getPublishedResourceDelta(parents2, module2);
+				if (module.equals(m)) {
+					IModuleResourceDelta[] delta2 = getPublishedResourceDelta(module2);
 					if (delta2.length > 0)
 						helper.changed = true;
 					
@@ -515,7 +511,7 @@ public class Server extends Base implements IServer {
 		if (state == serverSyncState)
 			return;
 		serverSyncState = state;
-		fireConfigurationSyncStateChangeEvent();
+		//fireConfigurationSyncStateChangeEvent();
 	}
 
 	/**
@@ -579,7 +575,7 @@ public class Server extends Base implements IServer {
 	 *
 	 * @param 
 	 */
-	private void fireModulePublishStarted(IModule[] parents, IModule module) {
+	private void fireModulePublishStarted(IModule[] module) {
 		Trace.trace(Trace.FINEST, "->- Firing module publish started event: " + module + " ->-");
 	
 		if (publishListeners == null || publishListeners.isEmpty())
@@ -592,7 +588,7 @@ public class Server extends Base implements IServer {
 		for (int i = 0; i < size; i++) {
 			Trace.trace(Trace.FINEST, "  Firing module publish started event to " + srl[i]);
 			try {
-				srl[i].publishModuleStarted(this, parents, module);
+				srl[i].publishModuleStarted(this, module);
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "  Error firing module publish started event to " + srl[i], e);
 			}
@@ -606,7 +602,7 @@ public class Server extends Base implements IServer {
 	 *
 	 * @param 
 	 */
-	private void fireModulePublishFinished(IModule[] parents, IModule module, IStatus status) {
+	private void fireModulePublishFinished(IModule[] module, IStatus status) {
 		Trace.trace(Trace.FINEST, "->- Firing module finished event: " + module + " " + status + " ->-");
 	
 		if (publishListeners == null || publishListeners.isEmpty())
@@ -619,7 +615,7 @@ public class Server extends Base implements IServer {
 		for (int i = 0; i < size; i++) {
 			Trace.trace(Trace.FINEST, "  Firing module finished event to " + srl[i]);
 			try {
-				srl[i].publishModuleFinished(this, parents, module, status);
+				srl[i].publishModuleFinished(this, module, status);
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "  Error firing module finished event to " + srl[i], e);
 			}
@@ -658,7 +654,7 @@ public class Server extends Base implements IServer {
 	/**
 	 * Fire a publish state change event.
 	 */
-	protected void firePublishStateChange(IModule[] parents, IModule module) {
+	protected void firePublishStateChange(IModule[] module) {
 		Trace.trace(Trace.FINEST, "->- Firing publish state change event: " + module + " ->-");
 	
 		if (serverListeners == null || serverListeners.isEmpty())
@@ -671,7 +667,7 @@ public class Server extends Base implements IServer {
 		for (int i = 0; i < size; i++) {
 			Trace.trace(Trace.FINEST, "  Firing publish state change event to " + sl[i]);
 			try {
-				sl[i].moduleStateChange(this, parents, module);
+				sl[i].moduleStateChange(this, module);
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "  Error firing publish state change event to " + sl[i], e);
 			}
@@ -741,35 +737,6 @@ public class Server extends Base implements IServer {
 	
 		//return false;
 	}
-	
-
-	/**
-	 * Returns a list of the projects that have not been published
-	 * since the last modification. (i.e. the projects that are
-	 * out of sync with the server.
-	 *
-	 * @return java.util.List
-	 */
-	/*public IModule[] getUnpublishedModules() {
-		final List modules = new ArrayList();
-		IModuleVisitor visitor = new IModuleVisitor() {
-			public boolean visit(IModule[] parents, IModule module) {
-				if (getModulePublishState(module) != PUBLISH_STATE_NONE && !modules.contains(module)) {
-					ModulePublishInfo control = PublishInfo.getPublishInfo().getPublishControl(Server.this, parents, module);
-					if (control.isDirty)
-						modules.add(module);
-				}
-				return true;
-			}
-		};
-		ServerUtil.visit(this, visitor, null);
-		
-		Trace.trace(Trace.FINEST, "Unpublished modules: " + modules);
-		
-		IModule[] m = new IModule[modules.size()];
-		modules.toArray(m);
-		return m;
-	}*/
 
 	protected ServerPublishInfo getServerPublishInfo() {
 		if (publishInfo == null) {
@@ -804,29 +771,18 @@ public class Server extends Base implements IServer {
 	protected IStatus doPublish(int kind, IProgressMonitor monitor) {
 		Trace.trace(Trace.FINEST, "-->-- Publishing to server: " + toString() + " -->--");
 
-		final List parentList = new ArrayList();
 		final List moduleList = new ArrayList();
-		final List taskParentList = new ArrayList();
+		//final List taskParentList = new ArrayList();
 		final List kindList = new ArrayList();
 		
 		final ServerPublishInfo spi = getServerPublishInfo();
 		
 		IModuleVisitor visitor = new IModuleVisitor() {
-			public boolean visit(IModule[] parents, IModule module) {
-				int size = parents.length;
-				List list = new ArrayList(size);
-				for (int i = 0; i < size; i++)
-					list.add(parents[i]);
-				
-				taskParentList.add(list);
-				if (parents != null)
-					parentList.add(parents);
-				else
-					parentList.add(EMPTY_LIST);
+			public boolean visit(IModule[] module) {
 				moduleList.add(module);
 				
-				if (spi.hasModulePublishInfo(parents, module)) {
-					if (getPublishedResourceDelta(parents, module).length == 0)
+				if (spi.hasModulePublishInfo(module)) {
+					if (getPublishedResourceDelta(module).length == 0)
 						kindList.add(new Integer(NO_CHANGE));
 					else
 						kindList.add(new Integer(CHANGED));
@@ -839,31 +795,32 @@ public class Server extends Base implements IServer {
 		visit(visitor, monitor);
 		
 		// build arrays & lists
-		List[] taskParents = new List[taskParentList.size()];
-		taskParentList.toArray(taskParents);
-		List parents = parentList;
-		IModule[] modules2 = new IModule[moduleList.size()];
-		moduleList.toArray(modules2);
+		//List[] taskParents = new List[taskParentList.size()];
+		//taskParentList.toArray(taskParents);
+		//List parents = parentList;
+		//IModule[] modules2 = new IModule[moduleList.size()];
+		//moduleList.toArray(modules2);
 		
-		List tasks = getTasks(taskParents, modules2);
+		List tasks = getTasks(moduleList);
 		
-		spi.addRemovedModules(parentList, moduleList, kindList);
+		spi.addRemovedModules(moduleList, kindList);
 		
-		parents = parentList;
-		modules2 = new IModule[moduleList.size()];
-		moduleList.toArray(modules2);
+		while (moduleList.size() > kindList.size()) {
+			kindList.add(new Integer(REMOVED));
+		}
 		
-		int size = parents.size();
+		//parents = parentList;
+		//modules2 = new IModule[moduleList.size()];
+		//moduleList.toArray(modules2);
+		
+		/*int size = parents.size();
 		int[] deltaKind = new int[size];
 		for (int i = 0; i < size; i++) {
 			Integer in = (Integer) kindList.get(i);
 			deltaKind[i] = in.intValue();
-		}
+		}*/
 
-		size = 2000 + 3500 * parentList.size();
-		
-		// find tasks
-		size += tasks.size() * 500;
+		int size = 2000 + 3500 * moduleList.size() + 500 * tasks.size();
 		
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.beginTask(ServerPlugin.getResource("%publishing", toString()), size);
@@ -906,7 +863,7 @@ public class Server extends Base implements IServer {
 		// publish modules
 		if (!monitor.isCanceled()) {
 			try {
-				publishModules(kind, parents, modules2, deltaKind, multi, monitor);
+				publishModules(kind, moduleList, kindList, multi, monitor);
 			} catch (Exception e) {
 				multi.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorPublishing"), e));
 			}
@@ -948,20 +905,22 @@ public class Server extends Base implements IServer {
 	/**
 	 * Publish a single module.
 	 */
-	protected IStatus publishModule(int kind, IModule[] parents, IModule module, int deltaKind, IProgressMonitor monitor) {
+	protected IStatus publishModule(int kind, IModule[] module, int deltaKind, IProgressMonitor monitor) {
 		Trace.trace(Trace.FINEST, "Publishing module: " + module);
 		
-		monitor.beginTask(ServerPlugin.getResource("%publishingModule", module.getName()), 1000);
+		int size = module.length;
+		IModule m = module[size - 1];
+		monitor.beginTask(ServerPlugin.getResource("%publishingModule", m.getName()), 1000);
 		
-		fireModulePublishStarted(parents, module);
+		fireModulePublishStarted(module);
 		
-		IStatus status = new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%publishedModule", module.getName()), null);
+		IStatus status = new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%publishedModule", m.getName()), null);
 		try {
-			getBehaviourDelegate().publishModule(kind, deltaKind, parents, module, monitor);
+			getBehaviourDelegate().publishModule(kind, deltaKind, module, monitor);
 		} catch (CoreException ce) {
 			status = ce.getStatus();
 		}
-		fireModulePublishFinished(parents, module, status);
+		fireModulePublishFinished(module, status);
 		
 		/*Trace.trace(Trace.FINEST, "Delta:");
 		IModuleResourceDelta[] delta = getServerPublishInfo().getDelta(parents, module);
@@ -970,9 +929,9 @@ public class Server extends Base implements IServer {
 			((ModuleResourceDelta)delta[i]).trace(">  ");
 		}*/
 		if (deltaKind == REMOVED)
-			getServerPublishInfo().removeModulePublishInfo(parents, module);
+			getServerPublishInfo().removeModulePublishInfo(module);
 		else
-			getServerPublishInfo().fill(parents, module);
+			getServerPublishInfo().fill(module);
 		
 		monitor.done();
 		
@@ -986,11 +945,11 @@ public class Server extends Base implements IServer {
 	 * 
 	 * Uses 500 ticks plus 3500 ticks per module
 	 */
-	protected void publishModules(int kind, List parents, IModule[] modules2, int[] deltaKind, MultiStatus multi, IProgressMonitor monitor) {
-		if (parents == null)
+	protected void publishModules(int kind, List modules2, List deltaKind, MultiStatus multi, IProgressMonitor monitor) {
+		if (modules2 == null)
 			return;
 
-		int size = parents.size();
+		int size = modules2.size();
 		if (size == 0)
 			return;
 		
@@ -999,7 +958,7 @@ public class Server extends Base implements IServer {
 
 		// publish modules
 		for (int i = 0; i < size; i++) {
-			IStatus status = publishModule(kind, (IModule[]) parents.get(i), modules2[i], deltaKind[i], ProgressUtil.getSubMonitorFor(monitor, 3000));
+			IStatus status = publishModule(kind, (IModule[]) modules2.get(i), ((Integer)deltaKind.get(i)).intValue(), ProgressUtil.getSubMonitorFor(monitor, 3000));
 			multi.add(status);
 		}
 	}
@@ -1009,8 +968,8 @@ public class Server extends Base implements IServer {
 	 * 
 	 * @see ServerBehaviourDelegate.getPublishedResources(IModule[], IModule)
 	 */
-	public IModuleResource[] getPublishedResources(IModule[] parents, IModule module) {
-		return getServerPublishInfo().getModulePublishInfo(parents, module).getResources();
+	public IModuleResource[] getPublishedResources(IModule[] module) {
+		return getServerPublishInfo().getModulePublishInfo(module).getResources();
 	}
 
 	/*
@@ -1019,11 +978,11 @@ public class Server extends Base implements IServer {
 	 * 
 	 * @see ServerBehaviourDelegate.getPublishedResourceDelta(IModule[], IModule)
 	 */
-	public IModuleResourceDelta[] getPublishedResourceDelta(IModule[] parents, IModule module) {
-		return getServerPublishInfo().getDelta(parents, module);
+	public IModuleResourceDelta[] getPublishedResourceDelta(IModule[] module) {
+		return getServerPublishInfo().getDelta(module);
 	}
 
-	protected List getTasks(List[] parents, IModule[] modules2) {
+	protected List getTasks(List modules2) {
 		List tasks = new ArrayList();
 		
 		String serverTypeId = getServerType().getId();
@@ -1034,7 +993,7 @@ public class Server extends Base implements IServer {
 			for (int i = 0; i < size; i++) {
 				IServerTask task = serverTasks[i];
 				if (task.supportsType(serverTypeId)) {
-					IOptionalTask[] tasks2 = task.getTasks(this, parents, modules2);
+					IOptionalTask[] tasks2 = task.getTasks(this, modules2);
 					if (tasks2 != null) {
 						int size2 = tasks2.length;
 						for (int j = 0; j < size2; j++) {
@@ -1585,7 +1544,7 @@ public class Server extends Base implements IServer {
 	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
 	 * @exception org.eclipse.core.runtime.CoreException - thrown if an error occurs while trying to restart the module
 	 */
-	public void synchronousRestartModule(final IModule module, IProgressMonitor monitor) throws CoreException {
+	public void synchronousRestartModule(final IModule[] module, IProgressMonitor monitor) throws CoreException {
 		Trace.trace(Trace.FINEST, "synchronousModuleRestart 1");
 
 		final Object mutex = new Object();
@@ -1811,9 +1770,9 @@ public class Server extends Base implements IServer {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.IServer#getModuleState()
 	 */
-	public int getModuleState(IModule module) {
+	public int getModuleState(IModule[] module) {
 		try {
-			Integer in = (Integer) moduleState.get(module.getId());
+			Integer in = (Integer) moduleState.get(getKey(module));
 			if (in != null)
 				return in.intValue();
 		} catch (Exception e) {
@@ -1825,9 +1784,9 @@ public class Server extends Base implements IServer {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.IServer#getModuleState()
 	 */
-	public int getModulePublishState(IModule module) {
+	public int getModulePublishState(IModule[] module) {
 		try {
-			Integer in = (Integer) modulePublishState.get(module.getId());
+			Integer in = (Integer) modulePublishState.get(getKey(module));
 			if (in != null)
 				return in.intValue();
 		} catch (Exception e) {
@@ -1837,9 +1796,9 @@ public class Server extends Base implements IServer {
 	}
 
 	/*
-	 * @see IServer#getChildModule(IModule)
+	 * @see IServer#getChildModule(IModule[])
 	 */
-	public IModule[] getChildModules(IModule module, IProgressMonitor monitor) {
+	public IModule[] getChildModules(IModule[] module, IProgressMonitor monitor) {
 		try {
 			return getDelegate().getChildModules(module);
 		} catch (Exception e) {
@@ -1883,7 +1842,7 @@ public class Server extends Base implements IServer {
 	 *    restarted, and <code>false</code> otherwise
 	 * TODO: fix return strings
 	 */
-	public IStatus canRestartModule(IModule module) {
+	public IStatus canRestartModule(IModule[] module) {
 		try {
 			boolean b = getBehaviourDelegate().canRestartModule(module);
 			if (b)
@@ -1902,9 +1861,9 @@ public class Server extends Base implements IServer {
 	 * @param module org.eclipse.wst.server.core.model.IModule
 	 * @return boolean
 	 */
-	public boolean getModuleRestartState(IModule module) {
+	public boolean getModuleRestartState(IModule[] module) {
 		try {
-			Boolean b = (Boolean) moduleRestartState.get(module.getId());
+			Boolean b = (Boolean) moduleRestartState.get(getKey(module));
 			if (b != null)
 				return b.booleanValue();
 		} catch (Exception e) {
@@ -1914,9 +1873,9 @@ public class Server extends Base implements IServer {
 	}
 
 	/*
-	 * @see IServer#restartModule(IModule, IProgressMonitor)
+	 * @see IServer#restartModule(IModule[], IProgressMonitor)
 	 */
-	public void restartModule(IModule module, IProgressMonitor monitor) throws CoreException {
+	public void restartModule(IModule[] module, IProgressMonitor monitor) throws CoreException {
 		try {
 			getBehaviourDelegate().restartModule(module, monitor);
 		} catch (Exception e) {
@@ -1949,7 +1908,7 @@ public class Server extends Base implements IServer {
 		if (modules2 != null) { 
 			int size = modules2.length;
 			for (int i = 0; i < size; i++) {
-				if (!visitModule(new IModule[0], modules2[i], visitor, monitor))
+				if (!visitModule(new IModule[] { modules2[i] }, visitor, monitor))
 					return;
 			}
 		}
@@ -1961,27 +1920,41 @@ public class Server extends Base implements IServer {
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 */
-	private boolean visitModule(IModule[] parents, IModule module, IModuleVisitor visitor, IProgressMonitor monitor) {
-		if (module == null || parents == null)
+	private boolean visitModule(IModule[] module, IModuleVisitor visitor, IProgressMonitor monitor) {
+		if (module == null)
 			return true;
 		
-		if (!visitor.visit(parents, module))
+		if (!visitor.visit(module))
 			return false;
 		
 		IModule[] children = getChildModules(module, monitor);
 		if (children != null) {
 			int size = children.length;
 			for (int i = 0; i < size; i++) {
-				IModule module2 = children[i];
-				IModule[] parents2 = new IModule[parents.length + 1];
-				System.arraycopy(parents, 0, parents2, 0, parents.length);
-				parents2[parents.length] = module;
+				IModule[] module2 = new IModule[module.length + 1];
+				System.arraycopy(module, 0, module2, 0, module.length);
+				module2[module.length] = children[i];
 				
-				if (!visitModule(parents2, module2, visitor, monitor))
+				if (!visitModule(module2, visitor, monitor))
 					return false;
 			}
 		}
-			
+		
 		return true;
+	}
+	
+	private String getKey(IModule[] module) {
+		StringBuffer sb = new StringBuffer();
+		
+		if (module != null) {
+			int size = module.length;
+			for (int i = 0; i < size; i++) {
+				if (i != 0)
+					sb.append("#");
+				sb.append(module[i].getId());
+			}
+		}
+		
+		return sb.toString();
 	}
 }

@@ -28,7 +28,7 @@ import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.view.tree.ServerTreeAction;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -36,7 +36,7 @@ import org.eclipse.ui.actions.ActionFactory;
 /**
  * Tree view showing servers and their associations.
  */
-public class ServerTableViewer extends TableViewer {
+public class ServerTableViewer extends TreeViewer {
 	protected static final String ROOT = "root";
 
 	protected IServerLifecycleListener serverResourceListener;
@@ -54,8 +54,8 @@ public class ServerTableViewer extends TableViewer {
 
 	protected ServersView view;
 	
-	public class ServerContentProvider implements IStructuredContentProvider {
-		public Object[] getElements(Object inputElement) {
+	public class ServerContentProvider implements IStructuredContentProvider, ITreeContentProvider {
+		public Object[] getElements(Object element) {
 			List list = new ArrayList();
 			IServer[] servers = ServerCore.getServers();
 			if (servers != null) {
@@ -74,6 +74,39 @@ public class ServerTableViewer extends TableViewer {
 		
 		public void dispose() {
 			// do nothing
+		}
+
+		// TODO: support multi-level modules (trees like EAR > Web module)
+		public Object[] getChildren(Object element) {
+			if (element instanceof ModuleServer)
+				return null;
+			
+			IServer server = (IServer) element;
+			IModule[] modules = server.getModules(); 
+			int size = modules.length;
+			ModuleServer[] ms = new ModuleServer[size];
+			for (int i = 0; i < size; i++) {
+				ms[i] = new ModuleServer();
+				ms[i].server = server;
+				ms[i].module = new IModule[] { modules[i] };
+			}
+			return ms;
+		}
+
+		public Object getParent(Object element) {
+			if (element instanceof ModuleServer) {
+				ModuleServer ms = (ModuleServer) element;
+				return ms.server;
+			}
+			return null;
+		}
+
+		public boolean hasChildren(Object element) {
+			if (element instanceof ModuleServer)
+				return false;
+			
+			IServer server = (IServer) element;
+			return server.getModules().length > 0;
 		}
 	}
 
@@ -125,7 +158,7 @@ public class ServerTableViewer extends TableViewer {
 						labelProvider.animate();
 						Display.getDefault().asyncExec(new Runnable() {
 							public void run() {
-								if (getTable() != null && !getTable().isDisposed())
+								if (getTree() != null && !getTree().isDisposed())
 									refresh();
 							}
 						});
@@ -148,8 +181,8 @@ public class ServerTableViewer extends TableViewer {
 	/**
 	 * ServerTableViewer constructor comment.
 	 */
-	public ServerTableViewer(final ServersView view, final Table table) {
-		super(table);
+	public ServerTableViewer(final ServersView view, final Tree tree) {
+		super(tree);
 		this.view = view;
 		/*table.addMouseTrackListener(new MouseTrackListener() {
 			public void mouseEnter(MouseEvent event) {
@@ -201,7 +234,7 @@ public class ServerTableViewer extends TableViewer {
 					final IProject project = proj;
 					Display.getDefault().asyncExec(new Runnable() {
 						public void run() {
-							if (getTable() == null || getTable().isDisposed())
+							if (getTree() == null || getTree().isDisposed())
 								return;
 
 							IServer defaultServer = null;
@@ -256,7 +289,7 @@ public class ServerTableViewer extends TableViewer {
 		};
 		
 		serverListener = new IServerListener() {
-			public void moduleStateChange(IServer server, IModule[] parents, IModule module) {
+			public void moduleStateChange(IServer server, IModule[] module) {
 				refreshServer(server);
 			}
 		
@@ -302,29 +335,6 @@ public class ServerTableViewer extends TableViewer {
 			}
 		}
 	}
-
-	/**
-	 * Respond to a configuration being added or deleted.
-	 * @param configuration org.eclipse.wst.server.core.IServerConfiguration
-	 * @param add boolean
-	 */
-	/*protected void configurationChange(IServerConfiguration configuration, boolean add) {
-		if (configuration == null)
-			return;
-
-		if (!add)
-			deletedElement = configuration;
-	
-		IServer[] servers = ServerCore.getServers();
-		if (servers != null) {
-			int size = servers.length;
-			for (int i = 0; i < size; i++) {
-				if (configuration.equals(servers[i].getServerConfiguration()))
-					refresh(servers[i]);
-			}
-		}
-		deletedElement = null;
-	}*/
 	
 	protected void refreshServer(final IServer server) {
 		Display.getDefault().asyncExec(new Runnable() {
@@ -395,7 +405,7 @@ public class ServerTableViewer extends TableViewer {
 	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	protected void handleServerResourceAdded(IServer server) {
-		add(server);
+		add(null, server);
 	}
 	
 	/*protected void handleServerResourceAdded(IServerConfiguration configuration) {
@@ -442,7 +452,7 @@ public class ServerTableViewer extends TableViewer {
 	protected void addServer(final IServer server) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				add(server);
+				add(null, server);
 			}
 		});
 	}

@@ -11,13 +11,11 @@
 package org.eclipse.wst.server.core.util;
 
 import java.net.URL;
-
-import org.eclipse.wst.server.core.ILaunchable;
 /**
  *
  * @since 1.0
  */
-public class HttpLaunchable implements ILaunchable {
+public class HttpLaunchable {
 	private URL url;
 
 	/**

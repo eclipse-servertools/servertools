@@ -10,11 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.debug.ui.IDebugView;
@@ -23,7 +20,6 @@ import org.eclipse.jface.viewers.*;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.ui.internal.*;
-import org.eclipse.wst.server.ui.internal.view.tree.DisabledMenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -34,9 +30,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.*;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.part.ViewPart;
@@ -45,7 +41,7 @@ import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
  * View of server, their configurations and status.
  */
 public class ServersView extends ViewPart {
-	protected Table table;
+	protected Tree treeTable;
 	protected ServerTableViewer tableViewer;
 
 	// actions on a server
@@ -63,42 +59,46 @@ public class ServersView extends ViewPart {
 	 * createPartControl method comment.
 	 */
 	public void createPartControl(Composite parent) {
-		table = new Table(parent, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.NONE);
-		table.setHeaderVisible(true);
-		table.setLinesVisible(false);
-		table.setLayoutData(new GridData(GridData.FILL_BOTH));
-		table.setFont(parent.getFont());
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(table, ContextIds.VIEW_CONTROL);
+		treeTable = new Tree(parent, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.NONE);
+		treeTable.setHeaderVisible(true);
+		treeTable.setLinesVisible(false);
+		treeTable.setLayoutData(new GridData(GridData.FILL_BOTH));
+		treeTable.setFont(parent.getFont());
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(treeTable, ContextIds.VIEW_CONTROL);
 		
-		TableLayout tableLayout = new TableLayout();
+		//TableLayout tableLayout = new TableLayout();
 	
 		// add columns
-		TableColumn column = new TableColumn(table, SWT.SINGLE);
+		TreeColumn column = new TreeColumn(treeTable, SWT.SINGLE);
 		column.setText(ServerUIPlugin.getResource("%viewServer"));
-		ColumnWeightData colData = new ColumnWeightData(200, 200, true);
-		tableLayout.addColumnData(colData);
+		column.setWidth(200);
+		//ColumnWeightData colData = new ColumnWeightData(200, 200, true);
+		//tableLayout.addColumnData(colData);
 		
-		column = new TableColumn(table, SWT.SINGLE);
+		/*column = new TreeColumn(treeTable, SWT.SINGLE);
 		column.setText(ServerUIPlugin.getResource("%viewHost"));
+		column.setWidth(200);
 		colData = new ColumnWeightData(100, 150, true);
-		tableLayout.addColumnData(colData);
+		//tableLayout.addColumnData(colData);*/
 	
-		column = new TableColumn(table, SWT.SINGLE);
+		column = new TreeColumn(treeTable, SWT.SINGLE);
 		column.setText(ServerUIPlugin.getResource("%viewStatus"));
-		colData = new ColumnWeightData(100, 150, true);
-		tableLayout.addColumnData(colData);
+		column.setWidth(200);
+		//colData = new ColumnWeightData(100, 150, true);
+		//tableLayout.addColumnData(colData);
 	
-		column = new TableColumn(table, SWT.SINGLE);
+		column = new TreeColumn(treeTable, SWT.SINGLE);
 		column.setText(ServerUIPlugin.getResource("%viewSync"));
-		colData = new ColumnWeightData(100, 150, true);
-		tableLayout.addColumnData(colData);
+		column.setWidth(200);
+		//colData = new ColumnWeightData(100, 150, true);
+		//tableLayout.addColumnData(colData);
 		
-		table.setLayout(tableLayout);
+		//treeTable.setLayout(tableLayout);
 	
-		tableViewer = new ServerTableViewer(this, table);
+		tableViewer = new ServerTableViewer(this, treeTable);
 		initializeActions(tableViewer);
 	
-		table.addSelectionListener(new SelectionAdapter() {
+		treeTable.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				try {
 					/*TableItem item = table.getSelection()[0];
@@ -130,7 +130,7 @@ public class ServersView extends ViewPart {
 			}
 			public void widgetDefaultSelected(SelectionEvent event) {
 				try {
-					TableItem item = table.getSelection()[0];
+					TreeItem item = treeTable.getSelection()[0];
 					IServer server = (IServer) item.getData();
 					ServerUIPlugin.editServer(server);
 				} catch (Exception e) {
@@ -141,14 +141,14 @@ public class ServersView extends ViewPart {
 		
 		MenuManager menuManager = new MenuManager("#PopupMenu");
 		menuManager.setRemoveAllWhenShown(true);
-		final Shell shell = table.getShell();
+		final Shell shell = treeTable.getShell();
 		menuManager.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager mgr) {
 				fillContextMenu(shell, mgr);
 			}
 		});
 		Menu menu = menuManager.createContextMenu(parent);
-		table.setMenu(menu);
+		treeTable.setMenu(menu);
 		getSite().registerContextMenu(menuManager, tableViewer);
 		getSite().setSelectionProvider(tableViewer);
 		
@@ -291,12 +291,22 @@ public class ServersView extends ViewPart {
 	protected void fillContextMenu(Shell shell, IMenuManager menu) {
 		// get selection but avoid no selection or multiple selection
 		IServer server = null;
+		IModule[] module = null;
 		IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
 		if (!selection.isEmpty()) {
 			Iterator iterator = selection.iterator();
-			server = (IServer) iterator.next();
-			if (iterator.hasNext())
+			Object obj = iterator.next();
+			if (obj instanceof IServer)
+				server = (IServer) obj;
+			if (obj instanceof ModuleServer) {
+				ModuleServer ms = (ModuleServer) obj;
+				server = ms.server;
+				module = ms.module;
+			}
+			if (iterator.hasNext()) {
 				server = null;
+				module = null;
+			}
 		}
 		
 		// new action
@@ -366,10 +376,10 @@ public class ServersView extends ViewPart {
 			}
 		}
 	
-		if (server != null && server.isDelegateLoaded()) {
+		if (server != null && server.isDelegateLoaded() && module != null) {
 			menu.add(new Separator());
 	
-			MenuManager restartProjectMenu = new MenuManager(ServerUIPlugin.getResource("%actionRestartProject"));
+			/*MenuManager restartProjectMenu = new MenuManager(ServerUIPlugin.getResource("%actionRestartProject"));
 	
 			if (server != null) {
 				IModule[] modules = getAllContainedModules(server, null);
@@ -384,7 +394,9 @@ public class ServersView extends ViewPart {
 			if (restartProjectMenu.isEmpty())
 				menu.add(new DisabledMenuManager(ServerUIPlugin.getResource("%actionRestartProject")));
 			else
-				menu.add(restartProjectMenu);
+				menu.add(restartProjectMenu);*/
+			Action action = new RestartModuleAction(server, module);
+			menu.add(action);
 		}
 		
 		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -423,8 +435,8 @@ public class ServersView extends ViewPart {
 	 * 
 	 */
 	public void setFocus() {
-		if (table != null)
-			table.setFocus();
+		if (treeTable != null)
+			treeTable.setFocus();
 	}
 
 	/**
@@ -436,60 +448,5 @@ public class ServersView extends ViewPart {
 			ResourceTransfer.getInstance(), FileTransfer.getInstance() };
 		//tableViewer.addDragSupport(ops, transfers, new ServersViewDragAdapter(viewer));
 		tableViewer.addDropSupport(ops | DND.DROP_DEFAULT, transfers, new ServersViewDropAdapter(tableViewer));
-	}
-
-	/**
-	 * Returns all projects contained by the server. This included the
-	 * projects that are in the configuration, as well as their
-	 * children, and their children...
-	 *
-	 * @param server org.eclipse.wst.server.core.IServer
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @return a possibly-empty array of module instances {@link IModule}
-	 */
-	public static IModule[] getAllContainedModules(IServer server, IProgressMonitor monitor) {
-		//Trace.trace("> getAllContainedModules: " + getName(configuration));
-		List modules = new ArrayList();
-		if (server == null)
-			return new IModule[0];
-
-		// get all of the directly contained projects
-		IModule[] deploys = server.getModules();
-		if (deploys == null || deploys.length == 0)
-			return new IModule[0];
-
-		int size = deploys.length;
-		for (int i = 0; i < size; i++) {
-			if (deploys[i] != null && !modules.contains(deploys[i]))
-				modules.add(deploys[i]);
-		}
-
-		//Trace.trace("  getAllContainedModules: root level done");
-
-		// get all of the module's children
-		int count = 0;
-		while (count < modules.size()) {
-			IModule module = (IModule) modules.get(count);
-			try {
-				IModule[] children = server.getChildModules(module, monitor);
-				if (children != null) {
-					size = children.length;
-					for (int i = 0; i < size; i++) {
-						if (children[i] != null && !modules.contains(children[i]))
-							modules.add(children[i]);
-					}
-				}
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error getting child modules for: " + module.getName(), e);
-			}
-			count ++;
-		}
-
-		//Trace.trace("< getAllContainedModules");
-
-		IModule[] modules2 = new IModule[modules.size()];
-		modules.toArray(modules2);
-		return modules2;
-	}
+   }
 }

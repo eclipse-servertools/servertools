@@ -14,7 +14,6 @@ import java.net.URL;
 
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.core.Servlet;
-import org.eclipse.wst.server.core.ILaunchable;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.*;
@@ -27,7 +26,7 @@ public class TomcatLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
 	/*
 	 * @see LaunchableAdapterDelegate#getLaunchable(IServer, IModuleArtifact)
 	 */
-	public ILaunchable getLaunchable(IServer server, IModuleArtifact moduleObject) {
+	public Object getLaunchable(IServer server, IModuleArtifact moduleObject) {
 		Trace.trace(Trace.FINER, "TomcatLaunchableAdapter " + server + "-" + moduleObject);
 		if (server.getAdapter(TomcatServer.class) == null)
 			return null;

@@ -12,7 +12,6 @@ package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 
-import org.eclipse.wst.server.core.ILaunchable;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.*;
@@ -54,7 +53,7 @@ public class LaunchableAdapter implements ILaunchableAdapter {
 	/**
 	 * 
 	 */
-	public ILaunchable getLaunchable(IServer server, IModuleArtifact object) {
+	public Object getLaunchable(IServer server, IModuleArtifact object) {
 		try {
 			return getDelegate().getLaunchable(server, object);
 		} catch (Exception e) {

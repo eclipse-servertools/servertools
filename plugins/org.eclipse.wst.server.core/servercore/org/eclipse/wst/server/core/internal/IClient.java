@@ -12,7 +12,6 @@ package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunch;
-import org.eclipse.wst.server.core.ILaunchable;
 import org.eclipse.wst.server.core.IServer;
 /**
  * A launchable client is a client side application or test
@@ -61,7 +60,7 @@ public interface IClient {
 	 * @param launchMode the mode
 	 * @return boolean
 	 */
-	public boolean supports(IServer server, ILaunchable launchable, String launchMode);
+	public boolean supports(IServer server, Object launchable, String launchMode);
 
 	/**
 	 * Launches the client.
@@ -73,5 +72,5 @@ public interface IClient {
 	 * @return a status object with code <code>IStatus.OK</code> if the launch was
 	 *   successful, otherwise a status object indicating what went wrong
 	 */
-	public IStatus launch(IServer server, ILaunchable launchable, String launchMode, ILaunch launch);
+	public IStatus launch(IServer server, Object launchable, String launchMode, ILaunch launch);
 }

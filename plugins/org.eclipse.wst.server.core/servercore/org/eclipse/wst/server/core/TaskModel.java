@@ -31,14 +31,10 @@ public class TaskModel {
 	 * Task model id for an IServer.
 	 */
 	public static final String TASK_SERVER = "server";
-	
-	/**
-	 * Task model id for an array of module parents.
-	 */
-	public static final String TASK_MODULE_PARENTS = "module-parents";
-	
+
 	/**
 	 * Task model id for an array of modules.
+	 * The value is a List containing IModule[] arrays.
 	 */
 	public static final String TASK_MODULES = "modules";
 	

@@ -225,14 +225,14 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		
 		// get the launchable adapter and module object
 		ILaunchableAdapter launchableAdapter = null;
-		ILaunchable launchable = null;
+		Object launchable = null;
 		ILaunchableAdapter[] adapters = ServerPlugin.getLaunchableAdapters();
 		if (adapters != null) {
 			int size2 = adapters.length;
 			for (int j = 0; j < size2; j++) {
 				ILaunchableAdapter adapter = adapters[j];
 				try {
-					ILaunchable launchable2 = adapter.getLaunchable(server, moduleArtifact);
+					Object launchable2 = adapter.getLaunchable(server, moduleArtifact);
 					Trace.trace(Trace.FINEST, "adapter= " + adapter + ", launchable= " + launchable2);
 					if (launchable2 != null) {
 						launchableAdapter = adapter;
@@ -270,9 +270,10 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 
 		// start server if it's not already started
 		// and cue the client to start
+		IModule[] modules = new IModule[] { module }; // TODO: get parent heirarchy correct
 		int state = server.getServerState();
 		if (state == IServer.STATE_STARTING) {
-			LaunchClientJob.launchClient(server, module, launchMode, moduleArtifact, launchableAdapter, client);
+			LaunchClientJob.launchClient(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
 		} else if (state == IServer.STATE_STARTED) {
 			boolean restart = false;
 			String mode = server.getMode();
@@ -298,15 +299,15 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			
 			PublishServerJob publishJob = new PublishServerJob(server);
 			publishJob.schedule();
-			LaunchClientJob.launchClient(server, module, launchMode, moduleArtifact, launchableAdapter, client);
+			LaunchClientJob.launchClient(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
 		} else if (state != IServer.STATE_STOPPING) {
 			PublishServerJob publishJob = new PublishServerJob(server);
 			publishJob.schedule();
 			StartServerJob.startServer(server, launchMode);
-			LaunchClientJob.launchClient(server, module, launchMode, moduleArtifact, launchableAdapter, client);
+			LaunchClientJob.launchClient(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
 		}
 	}
-	
+
 	/**
 	 * Returns the launchable clients for the given server and launchable
 	 * object.
@@ -316,7 +317,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * @param launchMode String
 	 * @return an array of clients
 	 */
-	public static IClient[] getClients(IServer server, ILaunchable launchable, String launchMode) {
+	public static IClient[] getClients(IServer server, Object launchable, String launchMode) {
 		ArrayList list = new ArrayList();
 		IClient[] clients = ServerPlugin.getClients();
 		if (clients != null) {

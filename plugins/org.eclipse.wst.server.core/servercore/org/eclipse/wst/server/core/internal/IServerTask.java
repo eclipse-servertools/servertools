@@ -11,7 +11,6 @@
 package org.eclipse.wst.server.core.internal;
 
 import java.util.List;
-import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IOptionalTask;
 import org.eclipse.wst.server.core.IServer;
 /**
@@ -42,9 +41,8 @@ public interface IServerTask {
 	 * be used to clean out any previously cached information, or start to
 	 * create a new cache.
 	 * 
-	 * @param server org.eclipse.wst.server.core.IServer
-	 * @param parents java.util.List[]
-	 * @param modules org.eclipse.wst.server.core.IModule[]
+	 * @param server the server
+	 * @param modules a list containing IModule arrays
 	 */
-	public IOptionalTask[] getTasks(IServer server, List[] parents, IModule[] modules);
+	public IOptionalTask[] getTasks(IServer server, List modules);
 }

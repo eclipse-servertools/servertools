@@ -37,7 +37,7 @@ public class ServerAdapter implements IServerListener {
 		// do nothing
 	}
 	
-	public void moduleStateChange(IServer server, IModule[] parents, IModule module) {
+	public void moduleStateChange(IServer server, IModule[] module) {
 		// do nothing
 	}
 }

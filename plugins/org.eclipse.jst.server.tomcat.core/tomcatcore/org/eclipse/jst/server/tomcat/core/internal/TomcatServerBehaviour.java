@@ -188,7 +188,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	/*
 	 * Publishes the given module to the server.
 	 */
-	public void publishModule(int kind, int deltaKind, IModule[] parents, IModule module, IProgressMonitor monitor) throws CoreException {
+	public void publishModule(int kind, int deltaKind, IModule[] moduleTree, IProgressMonitor monitor) throws CoreException {
 		if (getTomcatServer().isTestEnvironment())
 			return;
 
@@ -199,6 +199,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		} catch (Exception e) {
 			// ignore
 		}
+		
+		IModule module = moduleTree[0];
 		
 		if (deltaKind == IServer.REMOVED) {
 			try {
@@ -213,7 +215,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			IPath to = getServer().getRuntime().getLocation().append("webapps").append(webModule.getContextRoot());
 			FileUtil.smartCopyDirectory(from.toOSString(), to.toOSString(), monitor);
 			p.put(module.getId(), to.toOSString());
-			setModulePublishState(module, IServer.PUBLISH_STATE_NONE);
+			setModulePublishState(new IModule[] { module }, IServer.PUBLISH_STATE_NONE);
 		}
 		
 		try {

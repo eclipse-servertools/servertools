@@ -198,7 +198,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	/*
 	 * Returns the child module(s) of this module.
 	 */
-	public IModule[] getChildModules(IModule module) {
+	public IModule[] getChildModules(IModule[] module) {
 		return new IModule[0];
 	}
 

@@ -110,39 +110,23 @@ public class TasksWizardFragment extends WizardFragment {
 			return;
 
 		IServer server = (IServer) getTaskModel().getObject(TaskModel.TASK_SERVER);
+		List modules = (List) getTaskModel().getObject(TaskModel.TASK_MODULES);
 		
-		List[] parents = (List[]) getTaskModel().getObject(TaskModel.TASK_MODULE_PARENTS);
-		IModule[] modules = (IModule[]) getTaskModel().getObject(TaskModel.TASK_MODULES);
-		
-		if (server != null && (parents == null || modules == null)) {
-			class Helper {
-				List parentList = new ArrayList();
-				List moduleList = new ArrayList();
-			}
-			final Helper help = new Helper();
+		if (server != null && modules == null) {
+			final List moduleList = new ArrayList();
 			((Server) server).visit(new IModuleVisitor() {
-				public boolean visit(IModule[] parents2, IModule module2) {
-					int size = parents2.length;
-					List list = new ArrayList(size);
-					for (int i = 0; i < size; i++)
-						list.add(parents2[i]);
-					
-					help.parentList.add(list);
-					help.moduleList.add(module2);
+				public boolean visit(IModule[] module2) {
+					moduleList.add(module2);
 					return true;
 				}
 			}, null);
 
-			int size = help.parentList.size();
-			parents = new List[size];
-			help.parentList.toArray(parents);
-			modules = new IModule[size];
-			help.moduleList.toArray(modules);
+			modules = moduleList;
 		}
 		
-		if (server != null && parents != null || modules != null) {
+		if (server != null && modules != null) {
 			tasks = new ArrayList();
-			createTasks(server, parents, modules);
+			createTasks(server, modules);
 		}
 		
 		if (comp != null)
@@ -153,7 +137,7 @@ public class TasksWizardFragment extends WizardFragment {
 			});
 	}
 	
-	protected void createTasks(IServer server, List[] parents, IModule[] modules) {
+	protected void createTasks(IServer server, List modules) {
 		String serverTypeId = null;
 		if (server != null)
 			serverTypeId = server.getServerType().getId();
@@ -165,7 +149,7 @@ public class TasksWizardFragment extends WizardFragment {
 			for (int i = 0; i < size; i++) {
 				IServerTask task = serverTasks[i];
 				if (serverTypeId != null && task.supportsType(serverTypeId)) {
-					IOptionalTask[] tasks2 = task.getTasks(server, parents, modules);
+					IOptionalTask[] tasks2 = task.getTasks(server, modules);
 					if (tasks2 != null) {
 						int size2 = tasks2.length;
 						for (int j = 0; j < size2; j++) {

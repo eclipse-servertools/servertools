@@ -144,28 +144,30 @@ public abstract class ServerBehaviourDelegate {
 	/**
 	 * Hook to fire an event when a module state changes.
 	 * 
-	 * @param module
+	 * @param module the module
 	 * @param state
 	 */
-	public final void setModuleState(IModule module, int state) {
+	public final void setModuleState(IModule[] module, int state) {
 		server.setModuleState(module, state);
 	}
 
 	/**
 	 * Sets the module publish state.
 	 *
+	 * @param module the module
 	 * @param state int
 	 */
-	public final void setModulePublishState(IModule module, int state) {
+	public final void setModulePublishState(IModule[] module, int state) {
 		server.setModulePublishState(module, state);
 	}
-	
+
 	/**
 	 * Sets the module restart state.
 	 *
+	 * @param module the module
 	 * @param state int
 	 */
-	public final void setModuleRestartState(IModule module, boolean state) {
+	public final void setModuleRestartState(IModule[] module, boolean state) {
 		server.setModuleRestartState(module, state);
 	}
 
@@ -245,7 +247,6 @@ public abstract class ServerBehaviourDelegate {
 	 *      out all state and cleans up the module on the server before doing a
 	 *      full publish.
 	 *    </ul>
-	 * @param parents the parent modules of this module
 	 * @param module the module to publish
 	 * @param deltaKind one of the IServer publish change constants. Valid values are
 	 *    <ul>
@@ -262,7 +263,7 @@ public abstract class ServerBehaviourDelegate {
 	 * @param monitor
 	 * @throws CoreException
 	 */
-	public abstract void publishModule(int kind, int deltaKind, IModule[] parents, IModule module, IProgressMonitor monitor) throws CoreException;
+	public abstract void publishModule(int kind, int deltaKind, IModule[] module, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Methods called to notify that publishing has finished.
@@ -316,12 +317,12 @@ public abstract class ServerBehaviourDelegate {
 	 * server. If it is not fast, the method should take a progress
 	 * monitor.]
 	 * </p>
-	 *
+	 * 
 	 * @param module the module
 	 * @return <code>true</code> if the given module can be
 	 * restarted, and <code>false</code> otherwise 
 	 */
-	public boolean canRestartModule(IModule module) {
+	public boolean canRestartModule(IModule[] module) {
 		return false;
 	}
 
@@ -353,7 +354,7 @@ public abstract class ServerBehaviourDelegate {
 	 *    reporting and cancellation are not desired
 	 * @exception CoreException if an error occurs while trying to restart the module
 	 */
-	public void restartModule(IModule module, IProgressMonitor monitor) throws CoreException {
+	public void restartModule(IModule[] module, IProgressMonitor monitor) throws CoreException {
 		// do nothing
 	}
 
@@ -389,8 +390,8 @@ public abstract class ServerBehaviourDelegate {
 	 * @param module
 	 * @return an array containing the published module resource
 	 */
-	public IModuleResource[] getPublishedResources(IModule[] parents, IModule module) {
-		return server.getPublishedResources(parents, module);
+	public IModuleResource[] getPublishedResources(IModule[] module) {
+		return server.getPublishedResources(module);
 	}
 
 	/**
@@ -401,8 +402,8 @@ public abstract class ServerBehaviourDelegate {
 	 * @param module
 	 * @return an array containing the publish resource delta
 	 */
-	public IModuleResourceDelta[] getPublishedResourceDelta(IModule[] parents, IModule module) {
-		return server.getPublishedResourceDelta(parents, module);
+	public IModuleResourceDelta[] getPublishedResourceDelta(IModule[] module) {
+		return server.getPublishedResourceDelta(module);
 	}
 	
 	/**

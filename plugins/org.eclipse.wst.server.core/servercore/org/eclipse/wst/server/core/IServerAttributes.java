@@ -346,12 +346,12 @@ public interface IServerAttributes extends IAdaptable {
 	 * To obtain the full module tree, this method may be
 	 * recursively called on the children.</p>
 	 *
-	 * @param module org.eclipse.wst.server.core.IModule
+	 * @param module a module
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
-	 * @return array
+	 * @return an array of direct module children
 	 */
-	public IModule[] getChildModules(IModule module, IProgressMonitor monitor);
+	public IModule[] getChildModules(IModule module[], IProgressMonitor monitor);
 
 	/**
 	 * Returns the parent module(s) of this module. When determining if a given
@@ -369,7 +369,7 @@ public interface IServerAttributes extends IAdaptable {
 	 * the topmost parent module(s), even if there are a few levels
 	 * (a heirarchy) of modules.</p>
 	 *
-	 * @param module org.eclipse.wst.server.core.IModule
+	 * @param module a module
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return an array of possible root modules

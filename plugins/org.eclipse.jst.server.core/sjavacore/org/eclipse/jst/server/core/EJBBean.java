@@ -39,7 +39,7 @@ public class EJBBean implements IModuleArtifact {
 		this.local = local;
 	}
 
-	/*
+	/**
 	 * @see IModuleArtifact#getModule()
 	 */
 	public IModule getModule() {

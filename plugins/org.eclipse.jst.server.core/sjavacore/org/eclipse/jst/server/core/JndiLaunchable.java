@@ -11,13 +11,11 @@
 package org.eclipse.jst.server.core;
 
 import java.util.Properties;
-
-import org.eclipse.wst.server.core.ILaunchable;
 /**
  * 
  * @since 1.0
  */
-public class JndiLaunchable implements ILaunchable {
+public class JndiLaunchable {
 	private Properties props;
 	private String jndiName;
 

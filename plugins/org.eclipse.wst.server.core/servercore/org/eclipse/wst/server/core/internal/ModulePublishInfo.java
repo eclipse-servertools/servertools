@@ -19,8 +19,7 @@ import org.eclipse.wst.server.core.model.IModuleResource;
  * Publish information for a specific module on a specific server.
  */
 public class ModulePublishInfo {
-	private static final String MODULE_ID = "module-id";
-	private static final String PARENT_IDS = "parent-ids";
+	private static final String MODULE_ID = "module-ids";
 	private static final String NAME = "name";
 	private static final String PATH = "path";
 	private static final String STAMP = "stamp";
@@ -28,16 +27,14 @@ public class ModulePublishInfo {
 	private static final String FOLDER = "folder";
 
 	private String moduleId;
-	private String parentsId;
 	private IModuleResource[] resources = new IModuleResource[0];
 
 	/**
 	 * ModulePublishInfo constructor comment.
 	 */
-	public ModulePublishInfo(String parentsId, String moduleId) {
+	public ModulePublishInfo(String moduleId) {
 		super();
 
-		this.parentsId = parentsId;
 		this.moduleId = moduleId;
 	}
 	
@@ -52,10 +49,6 @@ public class ModulePublishInfo {
 	
 	public String getModuleId() {
 		return moduleId;
-	}
-	
-	public String getParentsId() {
-		return parentsId;
 	}
 	
 	public IModuleResource[] getResources() {
@@ -74,7 +67,6 @@ public class ModulePublishInfo {
 	
 		try {
 			moduleId = memento.getString(MODULE_ID);
-			parentsId = memento.getString(PARENT_IDS);
 	
 			resources = loadResource(memento);
 		} catch (Exception e) {
@@ -121,7 +113,6 @@ public class ModulePublishInfo {
 	protected void save(IMemento memento) {
 		try {
 			memento.putString(MODULE_ID, moduleId);
-			memento.putString(PARENT_IDS, parentsId);
 			
 			saveResource(memento, resources);
 		} catch (Exception e) {

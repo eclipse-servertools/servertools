@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.Viewer;
 
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.Runtime;
 /**
  * Runtime content provider.
  */
@@ -47,7 +48,7 @@ public class RuntimeContentProvider implements IStructuredContentProvider {
 		if (runtimes != null) {
 			int size = runtimes.length;
 			for (int i = 0; i < size; i++) {
-				if (!runtimes[i].isPrivate())
+				if (!((Runtime)runtimes[i]).isPrivate())
 					list.add(runtimes[i]);
 			}
 		}

@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.view.tree;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
@@ -55,11 +52,11 @@ public class ModuleResourceAdapter implements IAdaptable, IWorkbenchAdapter, ISe
 	 * @see IWorkbenchAdapter#getChildren(Object)
 	 */
 	public Object[] getChildren(Object o) {
-		IModule[] childModules = server.getChildModules(module, null);
-		if (childModules == null)
+		//IModule[] childModules = server.getChildModules(module, null);
+		//if (childModules == null)
 			return NO_CHILDREN;
 		
-		List child = new ArrayList();
+		/*List child = new ArrayList();
 		if (childModules != null) {
 			int size = childModules.length;
 			for (int i = 0; i < size; i++)
@@ -68,7 +65,7 @@ public class ModuleResourceAdapter implements IAdaptable, IWorkbenchAdapter, ISe
 
 		ModuleResourceAdapter[] adapters = new ModuleResourceAdapter[child.size()];
 		child.toArray(adapters);
-		return adapters;
+		return adapters;*/
 	}
 
 	/*

@@ -16,9 +16,7 @@ import java.text.DateFormat;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
-import org.eclipse.wst.server.core.IServer;
 import org.osgi.framework.BundleContext;
 /**
  * The main server plugin class.
@@ -626,12 +624,12 @@ public class ServerPlugin extends Plugin {
 	 * projects that are in the configuration, as well as their
 	 * children, and their children...
 	 *
-	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param server a server
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return a possibly-empty array of module instances {@link IModule}
 	 */
-	public static IModule[] getAllContainedModules(IServer server, IProgressMonitor monitor) {
+	/*public static IModule[] getAllContainedModules(IServer server, IProgressMonitor monitor) {
 		//Trace.trace("> getAllContainedModules: " + getName(configuration));
 		List modules = new ArrayList();
 		if (server == null)
@@ -674,7 +672,7 @@ public class ServerPlugin extends Plugin {
 		IModule[] modules2 = new IModule[modules.size()];
 		modules.toArray(modules2);
 		return modules2;
-	}
+	}*/
 	
 	/**
 	 * Returns an array of all known server monitor instances.

@@ -25,11 +25,11 @@ public class PublishAdapter implements IPublishListener {
 		// do nothing
 	}
 
-	public void publishModuleStarted(IServer server, IModule[] parents, IModule module) {
+	public void publishModuleStarted(IServer server, IModule[] module) {
 		// do nothing
 	}
 
-	public void publishModuleFinished(IServer server, IModule[] parents, IModule module, IStatus status) {
+	public void publishModuleFinished(IServer server, IModule[] module, IStatus status) {
 		// do nothing
 	}
 

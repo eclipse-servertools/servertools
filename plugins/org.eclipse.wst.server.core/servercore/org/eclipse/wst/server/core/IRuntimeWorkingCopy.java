@@ -32,6 +32,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public interface IRuntimeWorkingCopy extends IRuntime {
 	public static final int TIMESTAMP_ERROR = 5;
+	
+	public static final String PROPERTY_NAME = "name";
+	
+	public static final String PROPERTY_LOCATION = "location";
 
 	/**
 	 * Sets the displayable name for this runtime.
@@ -64,7 +68,7 @@ public interface IRuntimeWorkingCopy extends IRuntime {
 	 *    and <code>false</code> otherwise
 	 * @see IRuntime#isPrivate()
 	 */
-	public void setPrivate(boolean p);
+	//public void setPrivate(boolean p);
 	
 	/**
 	 * Returns whether this working copy has unsaved changes.
@@ -91,7 +95,7 @@ public interface IRuntimeWorkingCopy extends IRuntime {
 	/**
 	 * Fires a property change event.
 	 */
-	public void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue);
+	//public void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue);
 
 	/**
 	 * Returns the runtime instance that this working copy is

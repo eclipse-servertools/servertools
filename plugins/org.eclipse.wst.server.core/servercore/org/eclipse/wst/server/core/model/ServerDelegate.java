@@ -176,9 +176,10 @@ public abstract class ServerDelegate {
 	 * To obtain the full module tree, this method may be
 	 * recursively called on the children.</p>
 	 *
+	 * @param module a module
 	 * @see org.eclipse.wst.server.core.IServerAttributes#getChildModules(IModule, IProgressMonitor)
 	 */
-	public abstract IModule[] getChildModules(IModule module);
+	public abstract IModule[] getChildModules(IModule[] module);
 
 	/**
 	 * Returns the parent module(s) of this module. When determining if a given
