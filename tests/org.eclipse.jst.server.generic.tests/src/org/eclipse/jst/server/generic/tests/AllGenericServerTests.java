@@ -33,18 +33,18 @@ package org.eclipse.jst.server.generic.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-
 public class AllGenericServerTests {
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite(
-				"Test for org.eclipse.jst.server.generic.tests");
-		//$JUnit-BEGIN$
-		suite.addTestSuite(PluginIntegrityTest.class);
-		suite.addTestSuite(ModuleFactoryTests.class);
-		suite.addTestSuite(ServerDefinitionTypeTest.class);
-		suite.addTestSuite(ServerCreationTest.class);
-		//$JUnit-END$
-		return suite;
-	}
+    public static Test suite() {
+        TestSuite suite = new TestSuite(
+            "Test for org.eclipse.jst.server.generic.tests");
+        //$JUnit-BEGIN$
+        suite.addTestSuite(ModuleFactoryTests.class);
+        suite.addTestSuite(ServerDefinitionTypeTest.class);
+        suite.addTestSuite(GenericServerClasspathRuntimeHandlerTest.class);
+        suite.addTestSuite(PluginIntegrityTest.class);
+        suite.addTestSuite(ServerCreationTest.class);
+        //$JUnit-END$
+        return suite;
+    }
 }
