@@ -36,9 +36,9 @@ import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.core.util.HttpLaunchable;
+import org.eclipse.wst.server.core.util.WebResource;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.core.Servlet;
-import org.eclipse.jst.server.core.WebResource;
 /**
  * Web Launchable adapter delegate
  * @author Gorkem Ercan 
@@ -48,7 +48,6 @@ public class GenericServerLaunchableAdapterDelegate extends LaunchableAdapterDel
 	 * @see ILaunchableAdapterDelegate#getLaunchable(IServer, IModuleObject)
 	 */
 	public ILaunchable getLaunchable(IServer server, IModuleArtifact moduleObject) {
-		
 		ServerDelegate delegate = (ServerDelegate)server.getAdapter(ServerDelegate.class);
 		if (!(delegate instanceof GenericServer))
 			return null;
