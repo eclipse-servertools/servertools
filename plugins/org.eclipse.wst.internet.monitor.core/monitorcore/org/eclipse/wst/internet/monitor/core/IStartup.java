@@ -16,6 +16,8 @@ package org.eclipse.wst.internet.monitor.core;
  * implemented using the normal contribution mechanisms.
  * 
  * @since 1.0
+ * 
+ * [issue : CS -  Why do we need to load other plugins from this plugin's startup method?  Isn't this bad practise?]  
  */
 public interface IStartup {
 	/**

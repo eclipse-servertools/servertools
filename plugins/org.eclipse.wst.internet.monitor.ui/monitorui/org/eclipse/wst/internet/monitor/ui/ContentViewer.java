@@ -30,7 +30,9 @@ import org.eclipse.swt.widgets.Composite;
  * views for the user to make a manual selection from, regardless
  * of the actual content of the message traffic?]
  * </p>
- * 
+ *  [issue: CS - If a ContentViewer is editable, does that mean we can edit the 
+ *  bytes of the message and resend it across the wire?  How is an editable ContentViewer
+ *  handled differently by the framework? Perhaps an example of what an editeable viewer would do. ]
  * @since 1.0
  */
 public abstract class ContentViewer {

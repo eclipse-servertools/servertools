@@ -16,6 +16,8 @@ package org.eclipse.wst.internet.monitor.core;
  * 
  * @see IMonitor#addRequestListener(IRequestListener)
  * @since 1.0
+ * 
+ * [issue : CS - how come there's no requestRemoved() or requestComplete()?  Perhaps this just doesn't make sense in this context? ]
  */
 public interface IRequestListener {
 	/**

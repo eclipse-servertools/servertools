@@ -25,6 +25,10 @@ import java.io.IOException;
  * functionality. The contentFilters extension point, IContentFilter,
  * and ContentFilterDelegate should all move to the o.e.wst.internet.monitor.ui
  * plug-in.]
+ * [issue: CS - I'd echo the comment above that this seems like a UI concern.  
+ * I noticed there's also a viewer on the UI side, so i'm not sure how these would interact. 
+ * I assume that filters operate on the byte stream and aren't concerned with UI presentation...
+ * but usually UI's and filters are tightly coupled.
  * </p>
  * 
  * @since 1.0
