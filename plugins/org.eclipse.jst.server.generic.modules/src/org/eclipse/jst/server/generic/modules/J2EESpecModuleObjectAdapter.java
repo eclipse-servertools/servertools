@@ -30,7 +30,6 @@
 
 package org.eclipse.jst.server.generic.modules;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.wst.server.core.model.IModuleObject;
 import org.eclipse.wst.server.core.model.IModuleObjectAdapterDelegate;
@@ -44,7 +43,6 @@ public class J2EESpecModuleObjectAdapter implements IModuleObjectAdapterDelegate
 		if (!(obj instanceof IResource))
 			return null;
 		IResource resource = (IResource) obj;
-		IProject project = resource.getProject();
 		J2EEModule module = null;
 		module = (J2EEModule)J2eeSpecModuleFactoryDelegate.getInstance().getModule(resource);
 		if (module == null)

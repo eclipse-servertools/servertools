@@ -135,18 +135,18 @@ public class XMLReader extends DefaultHandler
 		return cf.getConfigObject();
 	}
 	
-	private static Object parseString(String content, IXMLTagProcessor cf)
-		throws
-			FileNotFoundException,
-			IOException, ParserConfigurationException, SAXException
-	{
-		SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();;
-		javax.xml.parsers.SAXParser parser =  saxParserFactory.newSAXParser();
-		saxParserFactory.setValidating(false);
-		parser.getXMLReader().setFeature("http://xml.org/sax/features/validation", false);
-		InputSource source = new InputSource(new CharArrayReader(content.toCharArray()));
-		parser.parse(source, new XMLReader(cf));
-		return cf.getConfigObject();
-	}
+//	private static Object parseString(String content, IXMLTagProcessor cf)
+//		throws
+//			FileNotFoundException,
+//			IOException, ParserConfigurationException, SAXException
+//	{
+//		SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();;
+//		javax.xml.parsers.SAXParser parser =  saxParserFactory.newSAXParser();
+//		saxParserFactory.setValidating(false);
+//		parser.getXMLReader().setFeature("http://xml.org/sax/features/validation", false);
+//		InputSource source = new InputSource(new CharArrayReader(content.toCharArray()));
+//		parser.parse(source, new XMLReader(cf));
+//		return cf.getConfigObject();
+//	}
 	
 }

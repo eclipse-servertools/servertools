@@ -118,7 +118,7 @@ public class XMLUtils {
 				
 				for (int i = 0; i < allServers.length; i++) {
 					File file = allServers[i];
-					ServerTypeDefinition def = (ServerTypeDefinition)XMLReader.getServerDefinition(file.getCanonicalPath());
+					ServerTypeDefinition def = XMLReader.getServerDefinition(file.getCanonicalPath());
 					if(def != null){
 						def.setDefinitionFile(file);
 						all.add(def);
