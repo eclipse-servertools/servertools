@@ -19,14 +19,25 @@ import org.eclipse.wst.server.core.IModuleArtifact;
 public class NullModuleArtifact implements IModuleArtifact {
 	private IModule module;
 
+	/**
+	 * Create a new reference to a module.
+	 * 
+	 * @param module the module
+	 */
 	public NullModuleArtifact(IModule module) {
 		this.module = module;
 	}
 
+	/**
+	 * @see IModuleArtifact#getModule()
+	 */
 	public IModule getModule() {
 		return module;
 	}
 
+	/**
+	 * @see Object#toString()
+	 */
 	public String toString() {
 		return "NullModuleArtifact [module=" + module + "]";
 	}
