@@ -75,6 +75,6 @@ public class RuntimeTableLabelProvider extends BaseLabelProvider implements ITab
 	
 	public boolean isLocked(Object element) {
 		IRuntime runtime = (IRuntime) element;
-		return runtime.isLocked();
+		return runtime.isReadOnly();
 	}
 }

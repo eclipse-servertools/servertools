@@ -18,9 +18,7 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.core.util.Task;
-import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.ServerUIPreferences;
 import org.eclipse.wst.server.ui.internal.task.*;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment;
@@ -52,7 +50,7 @@ public class SelectServerWizard extends TaskWizard {
 						
 						try {
 							IServer server = (IServer) getTaskModel().getObject(ITaskModel.TASK_SERVER);
-							((ServerUIPreferences)ServerUICore.getPreferences()).addHostname(server.getHost());
+							ServerUIPlugin.getPreferences().addHostname(server.getHost());
 						} catch (Exception e) {
 							// ignore
 						}

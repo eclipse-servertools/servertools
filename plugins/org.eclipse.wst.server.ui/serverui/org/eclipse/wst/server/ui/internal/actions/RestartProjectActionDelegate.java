@@ -72,7 +72,7 @@ public class RestartProjectActionDelegate implements IActionDelegate {
 									try {
 										servers[j].restartModule(module, new NullProgressMonitor());
 									} catch (Exception e) {
-										Trace.trace("Error restarting project", e);
+										Trace.trace(Trace.SEVERE, "Error restarting project", e);
 									}
 								}
 							}

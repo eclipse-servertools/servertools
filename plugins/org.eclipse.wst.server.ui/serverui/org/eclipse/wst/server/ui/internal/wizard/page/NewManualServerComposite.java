@@ -137,6 +137,7 @@ public class NewManualServerComposite extends Composite {
 							IFolder folder = WizardUtil.getServerProject().getFolder(server.getName() + "-config");
 							server.setServerConfiguration(folder);
 						}
+						wizard.update();
 					}
 				} catch (Exception ex) {
 					// ignore
@@ -267,7 +268,7 @@ public class NewManualServerComposite extends Composite {
 		}
 
 		IRuntimeType runtimeType = serverType.getRuntimeType();
-		runtimes = ServerUtil.getRuntimes(runtimeType);
+		runtimes = ServerUIPlugin.getRuntimes(runtimeType);
 		
 		if (server != null && SocketUtil.isLocalhost(server.getHost()) && runtimes != null) {
 			List runtimes2 = new ArrayList();

@@ -183,7 +183,7 @@ public class WebModuleDialog extends Dialog {
 						if (selectedDirectory != null)
 							docBase.setText(selectedDirectory);
 					} catch (Exception e) {
-						Trace.trace("Error browsing", e);
+						Trace.trace(Trace.SEVERE, "Error browsing", e);
 					}
 				}
 			});

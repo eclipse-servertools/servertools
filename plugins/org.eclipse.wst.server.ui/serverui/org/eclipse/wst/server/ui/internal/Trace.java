@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,11 +23,12 @@ public class Trace {
 	public static byte FINEST = 4;
 	public static byte FINER = 5;
 	public static byte PERFORMANCE = 6;
+	public static byte EXTENSION_POINT = 7;
 	
 	protected static int pluginLength = -1;
 	
 	private static final String[] levelNames = new String[] {
-		"CONFIG ", "INFO   ", "WARNING", "SEVERE ", "FINER  ", "FINEST ", "PERF   "};
+		"CONFIG ", "INFO   ", "WARNING", "SEVERE ", "FINER  ", "FINEST ", "PERF   ", "EXTENSION"};
 	private static final String spacer = "                                   ";
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm.ss.SSS");
@@ -73,24 +74,5 @@ public class Trace {
 		System.out.println(sb.toString());
 		if (t != null)
 			t.printStackTrace();
-	}
-
-	/**
-	 * Trace the given text.
-	 *
-	 * @param s java.lang.String
-	 */
-	public static void trace(String s) {
-		trace(s, null);
-	}
-	
-	/**
-	 * Trace the given message and exception.
-	 *
-	 * @param s java.lang.String
-	 * @param t java.lang.Throwable
-	 */
-	public static void trace(String s, Throwable t) {
-		trace(FINEST, s, t);
 	}
 }

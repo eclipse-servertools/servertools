@@ -254,10 +254,18 @@ public abstract class ServerBehaviourDelegate {
 	}
 
 	/**
+	 * Configure the given launch configuration to start this server. This method is called whenever
+	 * the server is started to ensure that the launch configuration is accurate and up to date.
+	 * This method should not blindly update the launch configuration in cases where the user has
+	 * access to change the launch configuration by hand.
 	 * 
-	 * @see IServer#setLaunchDefaults(ILaunchConfigurationWorkingCopy)
+	 * @param workingCopy
+	 * @param monitor
+	 * @throws CoreException
 	 */
-	public abstract void setLaunchDefaults(ILaunchConfigurationWorkingCopy workingCopy);
+	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException {
+		// do nothing
+	}
 
 	/**
 	 * Restart this server. The server should use the server
@@ -290,18 +298,6 @@ public abstract class ServerBehaviourDelegate {
 	}
 
 	/**
-	 * Check if the given module is in sync on the server. It should
-	 * return true if the module should be restarted (is out of
-	 * sync) or false if the module does not need to be restarted.
-	 *
-	 * @param module org.eclipse.wst.server.core.model.IModule
-	 * @return boolean
-	 */
-	/*public boolean isModuleRestartNeeded(IModule module) {
-		return false;
-	}*/
-
-	/**
 	 * Asynchronously restarts the given module on the server.
 	 * See the specification of 
 	 * {@link IServer#synchronousRestartModule(IModule, IProgressMonitor)}
@@ -311,18 +307,12 @@ public abstract class ServerBehaviourDelegate {
 	 * an event for the module.
 	 * </p>
 	 * <p>
-	 * [issue: It should probably be spec'd to throw an exception error if the
-	 * given module is not associated with the server.]
+	 * This method will throw an exception if the module does not exist on
+	 * the server.
 	 * </p>
 	 * <p>
 	 * [issue: Since this method is ascynchronous, is there
 	 * any need for the progress monitor?]
-	 * </p>
-	 * <p>
-	 * [issue: Since this method is ascynchronous, how can
-	 * it return a meaningful IStatus? 
-	 * And IServer.synchronousModuleRestart throws CoreException
-	 * if anything goes wrong.]
 	 * </p>
 	 * <p>
 	 * [issue: If the module was just published to the server
@@ -333,7 +323,6 @@ public abstract class ServerBehaviourDelegate {
 	 * @param module the module to be started
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
-	 * @return status object
 	 * @exception CoreException if an error occurs while trying to restart the module
 	 */
 	public void restartModule(IModule module, IProgressMonitor monitor) throws CoreException {

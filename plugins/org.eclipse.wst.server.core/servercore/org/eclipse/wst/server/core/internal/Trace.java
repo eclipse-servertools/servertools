@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -70,7 +70,7 @@ public class Trace {
 	 * @param s java.lang.String
 	 * @param t java.lang.Throwable
 	 */
-	public static void trace(String pluginId, int level, String s, Throwable t) {
+	protected static void trace(String pluginId, int level, String s, Throwable t) {
 		if (pluginId == null || s == null)
 			return;
 
@@ -93,24 +93,5 @@ public class Trace {
 		System.out.println(sb.toString());
 		if (t != null)
 			t.printStackTrace();
-	}
-
-	/**
-	 * Trace the given text.
-	 *
-	 * @param s java.lang.String
-	 */
-	public static void trace(String s) {
-		trace(s, null);
-	}
-
-	/**
-	 * Trace the given message and exception.
-	 *
-	 * @param s java.lang.String
-	 * @param t java.lang.Throwable
-	 */
-	public static void trace(String s, Throwable t) {
-		trace(FINER, s, t);
 	}
 }

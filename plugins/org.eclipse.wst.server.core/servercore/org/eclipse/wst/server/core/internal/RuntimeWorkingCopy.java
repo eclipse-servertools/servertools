@@ -106,7 +106,7 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		return runtime;
 	}
 
-	public void setLocked(boolean b) {
+	public void setReadOnly(boolean b) {
 		wch.setLocked(b);
 	}
 
@@ -125,8 +125,8 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.subTask(ServerPlugin.getResource("%savingTask", getName()));
 		
-		if (!force)
-			wch.validateTimestamp(getOriginal());
+		if (!force && getOriginal() != null)
+			wch.validateTimestamp(getOriginal().getTimestamp());
 		
 		IRuntime origRuntime = runtime;
 		if (runtime == null)

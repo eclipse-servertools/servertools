@@ -63,7 +63,7 @@
 Module factory instances of this type will delegate to instances of this class.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.StartupDelegate"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.IStartup"/>
                </appInfo>
             </annotation>
          </attribute>

@@ -186,8 +186,8 @@ public class ResourceManager {
 	}
 	
 	public class ModuleFactoryListener implements IModuleFactoryListener {
-		public void moduleFactoryChanged(IModuleFactoryEvent event) {
-			Trace.trace(Trace.FINEST, "Module factory changed: " + event.getFactoryId());
+		public void moduleFactoryChanged(ModuleFactoryEvent event) {
+			Trace.trace(Trace.FINEST, "Module factory changed");
 			moduleFactoryEvents.add(event);
 
 			// add new listeners
@@ -213,7 +213,7 @@ public class ResourceManager {
 	}
 
 	public class ModuleListener implements IModuleListener {
-		public void moduleChanged(IModuleEvent event) {
+		public void moduleChanged(ModuleEvent event) {
 			Trace.trace(Trace.FINEST, "Module changed: " + event);
 			if (!moduleEvents.contains(event))
 				moduleEvents.add(event);
@@ -714,17 +714,23 @@ public class ResourceManager {
 	}
 
 	/**
-	 * Returns an array of all servers.
+	 * Returns an array containing all servers.
 	 *
 	 * @return
 	 */
 	public IServer[] getServers() {
-		List list = new ArrayList(servers);
-		List list2 = ServerPlugin.sortServerList(list);
+		IServer[] servers2 = new IServer[servers.size()];
+		servers.toArray(servers2);
 		
-		IServer[] s = new IServer[list2.size()];
-		list2.toArray(s);
-		return s;
+		Arrays.sort(servers2, new Comparator() {
+			public int compare(Object o1, Object o2) {
+				IServer a = (IServer) o1;
+				IServer b = (IServer) o2;
+				return a.getName().compareToIgnoreCase(b.getName());
+			}
+		});
+		
+		return servers2;
 	}
 
 	/**
@@ -828,7 +834,7 @@ public class ResourceManager {
 		monitor.beginTask("", 2000);
 		
 		// try loading a server
-		if (file.getFileExtension().equals(IServer.FILE_EXTENSION)) {
+		if (file.getFileExtension().equals(IServerAttributes.FILE_EXTENSION)) {
 			try {
 				IServer server = loadServer(file, ProgressUtil.getSubMonitorFor(monitor, 1000));
 				if (server != null) {
@@ -844,6 +850,31 @@ public class ResourceManager {
 		monitor.done();
 		return false;
 	}
+	
+	/**
+	 * Returns the server that came from the given file, or <code>null</code>
+	 * if none. This convenience method searches the list of known
+	 * servers ({@link #getServers()}) for the one with a matching
+	 * location ({@link IServer#getFile()}). The file may not be null.
+	 *
+	 * @param a server file
+	 * @return the server instance, or <code>null</code> if 
+	 * there is no server associated with the given file
+	 */
+	public static IServer findServer(IFile file) {
+		if (file == null)
+			throw new IllegalArgumentException();
+		
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				if (file.equals(servers[i].getFile()))
+					return servers[i];
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Tries to handle a resource change. Returns true if the reload
@@ -858,7 +889,7 @@ public class ResourceManager {
 		monitor.beginTask("", 1000);
 		boolean found = false;
 	
-		IServer server = ServerUtil.findServer(file);
+		IServer server = findServer(file);
 		if (server != null) {
 			found = true;
 			try {
@@ -887,7 +918,7 @@ public class ResourceManager {
 	protected boolean handleRemovedFile(IFile file) {
 		Trace.trace(Trace.RESOURCES, "handleRemovedServerResource: " + file);
 	
-		IServer server = ServerUtil.findServer(file);
+		IServer server = findServer(file);
 		if (server != null) {
 			deregisterServer(server);
 			return true;
@@ -1047,19 +1078,19 @@ public class ResourceManager {
 		Trace.trace(Trace.LISTENERS, "->- Firing moduleEvents " + moduleEvents.size() + " " + moduleFactoryEvents.size());
 		Iterator iterator = moduleEvents.iterator();
 		while (iterator.hasNext()) {
-			IModuleEvent event = (IModuleEvent) iterator.next();
+			ModuleEvent event = (ModuleEvent) iterator.next();
 			Trace.trace(Trace.LISTENERS, "  1> " + event);
 		}
 		iterator = moduleFactoryEvents.iterator();
 		while (iterator.hasNext()) {
-			IModuleFactoryEvent event = (IModuleFactoryEvent) iterator.next();
+			ModuleFactoryEvent event = (ModuleFactoryEvent) iterator.next();
 			Trace.trace(Trace.LISTENERS, "  2> " + event);
 		}
 
-		IModuleEvent[] events = new IModuleEvent[moduleEvents.size()];
+		ModuleEvent[] events = new ModuleEvent[moduleEvents.size()];
 		moduleEvents.toArray(events);
 		
-		IModuleFactoryEvent[] factoryEvents = new IModuleFactoryEvent[moduleFactoryEvents.size()];
+		ModuleFactoryEvent[] factoryEvents = new ModuleFactoryEvent[moduleFactoryEvents.size()];
 		moduleFactoryEvents.toArray(factoryEvents);
 		
 		if (moduleEventListeners != null) {
@@ -1085,7 +1116,7 @@ public class ResourceManager {
 		Trace.trace(Trace.LISTENERS, "-<- Firing moduleEvents " + moduleEvents.size() + " " + moduleFactoryEvents.size());
 	}
 
-	protected void fireModuleServerEvent(IModuleFactoryEvent[] factoryEvents, IModuleEvent[] events) {
+	protected void fireModuleServerEvent(ModuleFactoryEvent[] factoryEvents, ModuleEvent[] events) {
 		// do nothing
 	}
 }

@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 
+import java.beans.PropertyChangeListener;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -36,7 +37,69 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * 
  * @since 1.0
  */
-public interface IServerWorkingCopy extends IServerAttributes, IElementWorkingCopy {
+public interface IServerWorkingCopy extends IServerAttributes {
+	public static final int TIMESTAMP_ERROR = 5;
+
+	/**
+	 * Sets the displayable name for this server.
+	 * <p>
+	 * The name should be appropriate for the current locale.
+	 * </p>
+	 *
+	 * @param name a displayable name
+	 * @see IServerAttributes#getName()
+	 */
+	public void setName(String name);
+	
+	/**
+	 * Sets or unsets whether this server is marked as read only.
+	 * When a server is read only, working copies can be created but
+	 * they cannot be saved.
+	 *
+	 * @param readOnly <code>true</code> to set this server to be marked
+	 *    read only, and <code>false</code> to unset
+	 */
+	public void setReadOnly(boolean readOnly);
+	
+	/**
+	 * Sets whether this element is private.
+	 * Generally speaking, elements marked private are internal ones
+	 * that should not be shown to users (because they won't know
+	 * anything about them).
+	 * 
+	 * @param b <code>true</code> if this element is private,
+	 * and <code>false</code> otherwise
+	 * @see IServerAttributes#isPrivate()
+	 */
+	public void setPrivate(boolean b);
+	
+	/**
+	 * Returns whether this working copy has unsaved changes.
+	 * 
+	 * @return <code>true</code> if this working copy has unsaved
+	 *    changes, and <code>false</code> otherwise
+	 */
+	public boolean isDirty();
+
+	/**
+	 * Adds a property change listener to this server.
+	 *
+	 * @param listener java.beans.PropertyChangeListener
+	 */
+	public void addPropertyChangeListener(PropertyChangeListener listener);
+
+	/**
+	 * Removes a property change listener from this server.
+	 *
+	 * @param listener java.beans.PropertyChangeListener
+	 */
+	public void removePropertyChangeListener(PropertyChangeListener listener);
+	
+	/**
+	 * Fires a property change event.
+	 */
+	public void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue);
+
 	/**
 	 * Sets the server configuration associated with this server working copy.
 	 * <p>
@@ -97,16 +160,11 @@ public interface IServerWorkingCopy extends IServerAttributes, IElementWorkingCo
 	 * properties before saving.
 	 * </p>
 	 * <p>
-	 * [issue: What is relationship to 
-	 * this.getOriginal() and the IServer returned by this.save()?
-	 * The answer should be: they're the same server, for an
-	 * appropriate notion of "same". As currently implemented, they
-	 * are different IServer instances but have the same server
-	 * id and same server types. Clienst that are hanging on to
-	 * the old server instance will not see the changes. 
-	 * If IServer were some kind of handle object as elsewhere in 
-	 * Eclipse Platform, this kind of change could be done much
-	 * more smoothly.]
+	 * If there an existing server instance with a matching id and
+	 * erver type, this will change the server instance accordingly.
+	 * The returned server will be the same server this is returned
+	 * from getOriginal(), after the changes have been applied.
+	 * Otherwise, this method will return a newly created server.
 	 * </p>
 	 * <p>
 	 * [issue: What is lifecycle for ServerWorkingCopyDelegate

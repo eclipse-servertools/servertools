@@ -15,8 +15,6 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerPreferences;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.ui.IServerUIPreferences;
-import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -47,7 +45,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	protected Button createInWorkspace;
 
 	protected IServerPreferences preferences;
-	protected IServerUIPreferences uiPreferences;
+	protected ServerUIPreferences uiPreferences;
 
 	/**
 	 * ServerPreferencesPage constructor comment.
@@ -56,7 +54,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		super();
 	
 		preferences = ServerCore.getServerPreferences();
-		uiPreferences = ServerUICore.getPreferences();
+		uiPreferences = ServerUIPlugin.getPreferences();
 	}
 	
 	/**
@@ -127,7 +125,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		saveNever.setText(ServerUIPlugin.getResource("%prefSaveEditorsNever"));
 		saveNever.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				saveEditors = IServerUIPreferences.SAVE_EDITORS_NEVER;
+				saveEditors = ServerUIPreferences.SAVE_EDITORS_NEVER;
 			}
 		});
 		WorkbenchHelp.setHelp(saveNever, ContextIds.PREF_GENERAL_SAVE_EDITORS);
@@ -136,7 +134,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		savePrompt.setText(ServerUIPlugin.getResource("%prefSaveEditorsPrompt"));
 		savePrompt.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				saveEditors = IServerUIPreferences.SAVE_EDITORS_PROMPT;
+				saveEditors = ServerUIPreferences.SAVE_EDITORS_PROMPT;
 			}
 		});
 		WorkbenchHelp.setHelp(savePrompt, ContextIds.PREF_GENERAL_SAVE_EDITORS);
@@ -145,7 +143,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		saveAuto.setText(ServerUIPlugin.getResource("%prefSaveEditorsAutosave"));
 		saveAuto.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				saveEditors = IServerUIPreferences.SAVE_EDITORS_AUTO;
+				saveEditors = ServerUIPreferences.SAVE_EDITORS_AUTO;
 			}
 		});
 		WorkbenchHelp.setHelp(saveAuto, ContextIds.PREF_GENERAL_SAVE_EDITORS);
@@ -160,9 +158,9 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	
 	protected void setSaveEditorStatus(byte status) {
 		saveEditors = status;
-		saveNever.setSelection(saveEditors == IServerUIPreferences.SAVE_EDITORS_NEVER);
-		savePrompt.setSelection(saveEditors == IServerUIPreferences.SAVE_EDITORS_PROMPT);
-		saveAuto.setSelection(saveEditors == IServerUIPreferences.SAVE_EDITORS_AUTO); 
+		saveNever.setSelection(saveEditors == ServerUIPreferences.SAVE_EDITORS_NEVER);
+		savePrompt.setSelection(saveEditors == ServerUIPreferences.SAVE_EDITORS_PROMPT);
+		saveAuto.setSelection(saveEditors == ServerUIPreferences.SAVE_EDITORS_AUTO); 
 	}
 	
 	/**

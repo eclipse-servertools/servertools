@@ -20,6 +20,7 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.model.IModuleListener;
 import org.eclipse.wst.server.core.model.ModuleDelegate;
+import org.eclipse.wst.server.core.model.ModuleEvent;
 /**
  * A simple IModuleProject that maps a folder within a project
  * (or the root of the project itself) to the module.

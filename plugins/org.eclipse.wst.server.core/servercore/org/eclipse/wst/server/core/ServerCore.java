@@ -55,9 +55,6 @@ public class ServerCore {
 	// cached copy of all module factories
 	private static List moduleFactories;
 
-	// cached copy of all module object adapters
-	private static List moduleArtifactAdapters;
-
 	// cached copy of all launchable adapters
 	private static List launchableAdapters;
 
@@ -310,20 +307,6 @@ public class ServerCore {
 	}
 
 	/**
-	 * Returns an array of all module artifact adapters.
-	 *
-	 * @return
-	 */
-	public static IModuleArtifactAdapter[] getModuleArtifactAdapters() {
-		if (moduleArtifactAdapters == null)
-			loadModuleArtifactAdapters();
-		
-		IModuleArtifactAdapter[] moa = new IModuleArtifactAdapter[moduleArtifactAdapters.size()];
-		moduleArtifactAdapters.toArray(moa);
-		return moa;
-	}
-
-	/**
 	 * Returns an array of all launchable adapters.
 	 *
 	 * @return
@@ -386,7 +369,7 @@ public class ServerCore {
 		int size = cf.length;
 		for (int i = 0; i < size; i++) {
 			try {
-				StartupDelegate startup = (StartupDelegate) cf[i].createExecutableExtension("class");
+				IStartup startup = (IStartup) cf[i].createExecutableExtension("class");
 				try {
 					startup.startup();
 				} catch (Exception ex) {
@@ -527,29 +510,6 @@ public class ServerCore {
 		sortOrderedList(moduleFactories);
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleFactories extension point -<-");
-	}
-
-	/**
-	 * Load the module artifact adapters extension point.
-	 */
-	private static synchronized void loadModuleArtifactAdapters() {
-		if (moduleArtifactAdapters != null)
-			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleArtifactAdapters extension point ->-");
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleArtifactAdapters");
-
-		int size = cf.length;
-		moduleArtifactAdapters = new ArrayList(size);
-		for (int i = 0; i < size; i++) {
-			try {
-				moduleArtifactAdapters.add(new ModuleArtifactAdapter(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded moduleArtifactAdapter: " + cf[i].getAttribute("id"));
-			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load moduleArtifactAdapter: " + cf[i].getAttribute("id"), t);
-			}
-		}
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleArtifactAdapters extension point -<-");
 	}
 	
 	/**
@@ -789,8 +749,7 @@ public class ServerCore {
 	}
 
 	/**
-	 * Sort the given list of IOrdered items into indexed order. This method
-	 * modifies the original list, but returns the value for convenience.
+	 * Sort the given list of IOrdered items into indexed order.
 	 *
 	 * @param list java.util.List
 	 * @return java.util.List

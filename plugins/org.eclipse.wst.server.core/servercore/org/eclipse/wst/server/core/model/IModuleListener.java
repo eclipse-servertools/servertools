@@ -16,7 +16,7 @@ public interface IModuleListener {
 	/**
 	 * A module has been changed as specified in the event.
 	 *
-	 * @param event org.eclipse.wst.server.core.model.IModuleEvent
+	 * @param event org.eclipse.wst.server.core.model.ModuleEvent
 	 */
-	public void moduleChanged(IModuleEvent event);
+	public void moduleChanged(ModuleEvent event);
 }

@@ -42,11 +42,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * be tied to the particular servers involved.]
  * </p>
  * <p>
- * [issue: Equality/identify for runtime types? Are IRuntimeType
- * instances guaranteed to be canonical (client can use ==),
- * or is it possible for there to be non-identical IRuntimeType
- * objects in play that both represent the same runtime type?
- * The latter is the more common; type should spec equals.]
+ * Two runtime types are identical if and only if they have the same id.
  * </p>
  * <p>
  * <it>Caveat: The server core API is still in an early form, and is

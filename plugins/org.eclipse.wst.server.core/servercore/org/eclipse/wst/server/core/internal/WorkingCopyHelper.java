@@ -20,8 +20,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.wst.server.core.IElement;
-import org.eclipse.wst.server.core.IElementWorkingCopy;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
 /**
  * 
  */
@@ -111,13 +110,10 @@ public class WorkingCopyHelper {
 	public boolean isDirty() {
 		return isDirty;
 	}
-	
-	protected void validateTimestamp(IElement element) throws CoreException {
-		if (element == null) // newly created
-			return;
 
-		if (base.getTimestamp() != element.getTimestamp())
-			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, IElementWorkingCopy.TIMESTAMP_ERROR, ServerPlugin.getResource("%errorWorkingCopyTimestamp"), null));
+	protected void validateTimestamp(int timestamp) throws CoreException {
+		if (base.getTimestamp() != timestamp)
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, IServerWorkingCopy.TIMESTAMP_ERROR, ServerPlugin.getResource("%errorWorkingCopyTimestamp"), null));
 	}
 
 	/**
@@ -156,11 +152,11 @@ public class WorkingCopyHelper {
 					PropertyChangeListener listener = (PropertyChangeListener) iterator.next();
 					listener.propertyChange(event);
 				} catch (Exception e) {
-					Trace.trace("Error firing property change event", e);
+					Trace.trace(Trace.SEVERE, "Error firing property change event", e);
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace("Error in property event", e);
+			Trace.trace(Trace.SEVERE, "Error in property event", e);
 		}
 	}
 	

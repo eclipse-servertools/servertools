@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.editor.ICommandManager;
 import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -144,7 +143,7 @@ public class GlobalCommandManager {
 	 * 
 	 */
 	public void getCommandManager(String id) {
-		Trace.trace("Getting command manager for " + id);
+		Trace.trace(Trace.FINEST, "Getting command manager for " + id);
 		try {
 			CommandManagerInfo info = (CommandManagerInfo) commandManagers.get(id);
 			if (info != null) {
@@ -152,9 +151,9 @@ public class GlobalCommandManager {
 				return;
 			}
 		} catch (Exception e) {
-			Trace.trace("Could not find existing command manager", e);
+			Trace.trace(Trace.WARNING, "Could not find existing command manager", e);
 		}
-		Trace.trace("Creating new command manager for " + id);
+		Trace.trace(Trace.FINEST, "Creating new command manager for " + id);
 		try {
 			CommandManagerInfo info = new CommandManagerInfo();
 			info.count = 1;
@@ -169,7 +168,7 @@ public class GlobalCommandManager {
 			commandManagers.put(id, info);
 			updateTimestamps(id);
 		} catch (Exception e) {
-			Trace.trace("Could not obtain command manager", e);
+			Trace.trace(Trace.SEVERE, "Could not obtain command manager", e);
 		}
 		return;
 	}
@@ -178,7 +177,7 @@ public class GlobalCommandManager {
 	 * 
 	 */
 	public void releaseCommandManager(String id) {
-		Trace.trace("Releasing command manager for " + id);
+		Trace.trace(Trace.FINEST, "Releasing command manager for " + id);
 		try {
 			CommandManagerInfo info = (CommandManagerInfo) commandManagers.get(id);
 			if (info != null) {
@@ -190,7 +189,7 @@ public class GlobalCommandManager {
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace("Could not release command manager", e);
+			Trace.trace(Trace.SEVERE, "Could not release command manager", e);
 		}
 	}
 
@@ -211,7 +210,7 @@ public class GlobalCommandManager {
 				firePropertyChangeEvent(PROP_RELOAD, id, null);
 			}
 		} catch (Exception e) {
-			Trace.trace("Could not release command manager", e);
+			Trace.trace(Trace.SEVERE, "Could not release command manager", e);
 		}
 	}
 	
@@ -222,7 +221,7 @@ public class GlobalCommandManager {
 		try {
 			return (CommandManagerInfo) commandManagers.get(id);
 		} catch (Exception e) {
-			Trace.trace("Could not find existing command manager info");
+			Trace.trace(Trace.SEVERE, "Could not find existing command manager info");
 		}
 		return null;
 	}
@@ -270,7 +269,7 @@ public class GlobalCommandManager {
 	 * @param command ICommand
 	 */
 	public void executeCommand(String id, ITask command) {
-		if (!command.canUndo() && !undoList.isEmpty() && ServerUICore.getPreferences().getPromptBeforeIrreversibleChange()) {
+		if (!command.canUndo() && !undoList.isEmpty() && ServerUIPlugin.getPreferences().getPromptBeforeIrreversibleChange()) {
 			try {
 				Display d = Display.getCurrent();
 				if (d == null)
@@ -563,7 +562,7 @@ public class GlobalCommandManager {
 			list.toArray(files);
 			return files;
 		} catch (Exception e) {
-			Trace.trace("getReadOnlyFiles", e);
+			Trace.trace(Trace.SEVERE, "getReadOnlyFiles", e);
 		}
 		return null;
 	}
@@ -623,11 +622,10 @@ public class GlobalCommandManager {
 	}
 	
 	protected static int getTimestamp(CommandManagerInfo info) {
-		IServerAttributes element = info.wc;
-		IServerAttributes element2 = ((IServerWorkingCopy) element).getOriginal();
+		IServer server = info.wc.getOriginal();
 
-		if (element2 != null)
-			return element2.getTimestamp();
+		if (server != null)
+			return server.getTimestamp();
 		return -1;
 	}
 

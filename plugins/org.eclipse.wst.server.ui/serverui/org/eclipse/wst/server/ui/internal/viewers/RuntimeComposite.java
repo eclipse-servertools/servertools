@@ -72,7 +72,7 @@ public class RuntimeComposite extends AbstractTableComposite {
 					try {
 						IRuntime runtime = getSelectedRuntime();
 						IRuntimeWorkingCopy wc = runtime.createWorkingCopy();
-						wc.setLocked(!runtime.isLocked());
+						wc.setReadOnly(!runtime.isReadOnly());
 						wc.save(false, null);
 						refresh(runtime);
 					} catch (Exception ex) {

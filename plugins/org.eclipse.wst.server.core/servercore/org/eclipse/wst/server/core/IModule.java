@@ -168,7 +168,7 @@ public interface IModule extends IAdaptable {
 	public IProject getProject();
 
 	/**
-	 * Add a listener for child module that are added/removed from this
+	 * Add a listener for child modules that are added/removed from this
 	 * module.
 	 * Has no effect if an identical listener is already registered.
 	 * 

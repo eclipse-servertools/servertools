@@ -14,21 +14,14 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerListener;
 /**
- * Helper class which implements all of the IServerListener
- * interface with empty methods.
+ * Helper class which implements the IServerListener interface
+ * with empty methods.
  */
-public class ServerAdapter implements IServerListener {
-	/**
-	 * ServerAdapter constructor comment.
-	 */
-	public ServerAdapter() {
-		super();
-	}
-
+public abstract class ServerAdapter implements IServerListener {
 	/**
 	 * Called when the server configuration's sync state changes.
 	 *
-	 * @param server org.eclipse.wst.server.model.IServer
+	 * @param server org.eclipse.wst.server.IServer
 	 */
 	public void configurationSyncStateChange(IServer server) {
 		// do nothing
@@ -37,7 +30,7 @@ public class ServerAdapter implements IServerListener {
 	/**
 	 * Called when the server isRestartNeeded() property changes.
 	 *
-	 * @param server org.eclipse.wst.server.model.IServer
+	 * @param server org.eclipse.wst.server.IServer
 	 */
 	public void restartStateChange(IServer server) {
 		// do nothing
@@ -46,30 +39,31 @@ public class ServerAdapter implements IServerListener {
 	/**
 	 * Notification when the server state has changed.
 	 *
-	 * @param server org.eclipse.wst.server.model.IServer
+	 * @param server org.eclipse.wst.server.IServer
 	 */
 	public void serverStateChange(IServer server) {
 		// do nothing
 	}
 
 	/**
-	 * Notification when the state of a module has changed.
+	 * Called when the modules tree of this server has changed.
 	 *
-	 * @param server org.eclipse.wst.server.model.IServer
+	 * @param server org.eclipse.wst.server.IServer
 	 */
-	public void moduleStateChange(IServer server, IModule module) {
-		// do nothing
-	}
-
 	public void modulesChanged(IServer server) {
 		// do nothing
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.model.IPublishListener#moduleStateChange(org.eclipse.wst.server.core.IServer2, java.util.List, org.eclipse.wst.server.core.model.IModule)
+	/**
+	 * Fired when a module on this server needs to be published
+	 * or no longer needs to be published, or it's state has
+	 * changed.
+	 *
+	 * @param server org.eclipse.wst.server.IServer
+	 * @param parents org.eclipse.wst.server.IModule[]
+	 * @param module org.eclipse.wst.server.IModule
 	 */
 	public void moduleStateChange(IServer server, IModule[] parents, IModule module) {
 		// do nothing
 	}
-
 }

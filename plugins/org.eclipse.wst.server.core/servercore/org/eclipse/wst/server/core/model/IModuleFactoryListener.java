@@ -16,7 +16,7 @@ public interface IModuleFactoryListener {
 	/**
 	 * Fired when modules have been added or removed from this factory.
 	 *
-	 * @param event org.eclipse.wst.server.core.model.IModuleFactoryEvent
+	 * @param event org.eclipse.wst.server.core.model.ModuleFactoryEvent
 	 */
-	public void moduleFactoryChanged(IModuleFactoryEvent event);
+	public void moduleFactoryChanged(ModuleFactoryEvent event);
 }

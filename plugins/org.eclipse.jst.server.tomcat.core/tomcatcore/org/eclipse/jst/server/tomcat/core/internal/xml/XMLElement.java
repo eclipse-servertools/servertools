@@ -205,4 +205,28 @@ public class XMLElement {
 			}
 		}
 	}
+	
+	public boolean hasChildNodes() {
+		return xmlElement.hasChildNodes();
+	}
+	
+	public void removeChildren()
+	{
+		while (xmlElement.hasChildNodes()) {
+			xmlElement.removeChild(xmlElement.getFirstChild());
+		}
+	}
+	
+	public void copyChildrenTo(XMLElement destination) {
+		NodeList nodelist = xmlElement.getChildNodes();
+		int len = nodelist == null ? 0 : nodelist.getLength();
+		for (int i = 0; i < len; i++) {
+			Node node = nodelist.item(i);
+			destination.importNode(node, true);
+		}
+	}
+	
+	void importNode(Node node, boolean deep) {
+		xmlElement.appendChild(xmlElement.getOwnerDocument().importNode(node, deep));
+	}
 }

@@ -18,7 +18,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
@@ -108,7 +107,7 @@ public class WizardUtil {
 	
 			if (resource instanceof IFile) {
 				IFile file = (IFile) resource;
-				if (ServerUtil.findServer(file) != null)
+				if (ServerUIPlugin.findServer(file) != null)
 				return null;
 			}
 	
@@ -197,7 +196,7 @@ public class WizardUtil {
 			while (temp != null && !(temp instanceof IProject)) {
 				if (temp instanceof IFile) {
 					IFile file = (IFile) temp;
-					if (ServerUtil.findServer(file) != null)
+					if (ServerUIPlugin.findServer(file) != null)
 						return error;
 				}
 				temp = temp.getParent();

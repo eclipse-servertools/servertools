@@ -31,10 +31,12 @@ import org.eclipse.ui.help.WorkbenchHelp;
 
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerAttributes;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Trace;
 
 public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab {
 	protected String[] serverTypeIds;
@@ -188,9 +190,12 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		
 		if (servers != null) {
 			server = (IServer) servers.get(serverCombo.getSelectionIndex());
-			if (server != null) {
-				server.setLaunchDefaults(configuration, null);
-			}
+			if (server != null)
+				try {
+					server.setupLaunchConfiguration(configuration, null);
+				} catch (CoreException ce) {
+					Trace.trace(Trace.SEVERE, "Error setting up launch configuration", ce);
+				}
 		}
 	}
 
@@ -203,7 +208,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		setErrorMessage(null);
 
 		try {
-			String serverId = configuration.getAttribute(IServer.ATTR_SERVER_ID, "");
+			String serverId = configuration.getAttribute(IServerAttributes.ATTR_SERVER_ID, "");
 			if (serverId != null && !serverId.equals("")) {
 				server = ServerCore.findServer(serverId);
 
@@ -234,9 +239,9 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	 */
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		if (server != null)
-			configuration.setAttribute(IServer.ATTR_SERVER_ID, server.getId());
+			configuration.setAttribute(IServerAttributes.ATTR_SERVER_ID, server.getId());
 		else
-			configuration.setAttribute(IServer.ATTR_SERVER_ID, (String)null);
+			configuration.setAttribute(IServerAttributes.ATTR_SERVER_ID, (String)null);
 	}
 
 	/**
@@ -253,7 +258,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	 */
 	public boolean isValid(ILaunchConfiguration launchConfig) {
 		try {
-			String id = launchConfig.getAttribute(IServer.ATTR_SERVER_ID, "");
+			String id = launchConfig.getAttribute(IServerAttributes.ATTR_SERVER_ID, "");
 			if (id != null && !id.equals("")) {
 				IServer server2 = ServerCore.findServer(id);
 				if (server2 == null)

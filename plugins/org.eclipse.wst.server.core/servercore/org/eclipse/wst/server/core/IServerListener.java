@@ -27,30 +27,23 @@ public interface IServerListener {
 	/**
 	 * Called when the server configuration's sync state changes.
 	 *
-	 * @param server org.eclipse.wst.server.model.IServer
+	 * @param server org.eclipse.wst.server.IServer
 	 */
 	public void configurationSyncStateChange(IServer server);
 
 	/**
 	 * Called when the server isRestartNeeded() property changes.
 	 *
-	 * @param server org.eclipse.wst.server.model.IServer
+	 * @param server org.eclipse.wst.server.IServer
 	 */
 	public void restartStateChange(IServer server);
 
 	/**
 	 * Notification when the server state has changed.
 	 *
-	 * @param server org.eclipse.wst.server.model.IServer
+	 * @param server org.eclipse.wst.server.IServer
 	 */
 	public void serverStateChange(IServer server);
-
-	/**
-	 * Notification when the state of a module has changed.
-	 *
-	 * @param server org.eclipse.wst.server.model.IServer
-	 */
-	public void moduleStateChange(IServer server, IModule module);
 
 	/**
 	 * Called when the modules tree of this server has changed.
@@ -61,21 +54,12 @@ public interface IServerListener {
 
 	/**
 	 * Fired when a module on this server needs to be published
-	 * or no longer needs to be published.
+	 * or no longer needs to be published, or it's state has
+	 * changed.
 	 *
-	 * @param server org.eclipse.wst.server.model.IServer
-	 * @param parents org.eclipse.wst.server.model.IModule[]
-	 * @param module org.eclipse.wst.server.model.IModule
+	 * @param server org.eclipse.wst.server.IServer
+	 * @param parents org.eclipse.wst.server.IModule[]
+	 * @param module org.eclipse.wst.server.IModule
 	 */
 	public void moduleStateChange(IServer server, IModule[] parents, IModule module);
-
-	/**
-	 * Called when a project's restart state has changed. This state
-	 * lets the user know whether a project should be restarted or
-	 * does not need to be.
-	 *
-	 * @param server org.eclipse.wst.server.model.IServer
-	 * @param project org.eclipse.core.resources.IProject
-	 */
-	//public void moduleRestartStateChange(IServer server, IModule module);
 }

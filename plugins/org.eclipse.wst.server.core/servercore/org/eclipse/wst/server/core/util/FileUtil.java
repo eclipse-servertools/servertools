@@ -73,7 +73,7 @@ public class FileUtil {
 			}
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace("Error copying directory", e);
+			Trace.trace(Trace.SEVERE, "Error copying directory", e);
 		}
 	}
 
@@ -96,7 +96,7 @@ public class FileUtil {
 			}
 			return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%copyingTask", new String[] {to}), null);
 		} catch (Exception e) {
-			Trace.trace("Error copying file", e);
+			Trace.trace(Trace.SEVERE, "Error copying file", e);
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
 		} finally {
 			try {
@@ -124,7 +124,7 @@ public class FileUtil {
 		try {
 			return copyFile(new FileInputStream(from), to);
 		} catch (Exception e) {
-			Trace.trace("Error copying file", e);
+			Trace.trace(Trace.SEVERE, "Error copying file", e);
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
 		}
 	}
@@ -139,7 +139,7 @@ public class FileUtil {
 		try {
 			return copyFile(from.openStream(), to);
 		} catch (Exception e) {
-			Trace.trace("Error copying file", e);
+			Trace.trace(Trace.SEVERE, "Error copying file", e);
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
 		}
 	}
@@ -172,7 +172,7 @@ public class FileUtil {
 			dir.delete();
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace("Error deleting directory " + dir.getAbsolutePath(), e);
+			Trace.trace(Trace.SEVERE, "Error deleting directory " + dir.getAbsolutePath(), e);
 		}
 	}
 
@@ -218,7 +218,7 @@ public class FileUtil {
 						}
 					}
 				} catch (FileNotFoundException ex) {
-					Trace.trace("Error extracting " + ze.getName() + " from zip " + zipFile.getAbsolutePath(), ex);
+					Trace.trace(Trace.SEVERE, "Error extracting " + ze.getName() + " from zip " + zipFile.getAbsolutePath(), ex);
 				} finally {
 					try {
 						if (out != null)
@@ -234,7 +234,7 @@ public class FileUtil {
 			}
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace("Error expanding zip file " + zipFile.getAbsolutePath(), e);
+			Trace.trace(Trace.SEVERE, "Error expanding zip file " + zipFile.getAbsolutePath(), e);
 		} finally {
 			try {
 				if (zis != null)
@@ -340,7 +340,7 @@ public class FileUtil {
 			monitor.worked(500 - dw * toSize);
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace("Error smart copying directory " + from + " - " + to, e);
+			Trace.trace(Trace.SEVERE, "Error smart copying directory " + from + " - " + to, e);
 		}
 	}
 }

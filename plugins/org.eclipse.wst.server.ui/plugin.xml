@@ -29,9 +29,9 @@
   <extension-point id="editorPages" name="%extensionPointEditorPages" schema="schema/editorPages.exsd"/>
   <extension-point id="editorPageSections" name="%extensionPointEditorPageSections" schema="schema/editorPageSections.exsd"/>
   <extension-point id="editorActions" name="%extensionPointEditorActions" schema="schema/editorActions.exsd"/>
-  <extension-point id="serverActions" name="%extensionPointServerActions" schema="schema/serverActions.exsd"/>
   <extension-point id="serverImages" name="%extensionPointServerImages" schema="schema/serverImages.exsd"/>
   <extension-point id="wizardFragments" name="%extensionPointWizardFragments" schema="schema/wizardFragments.exsd"/>
+  <extension-point id="moduleArtifactAdapters" name="%extensionPointModuleArtifactAdapters" schema="schema/moduleArtifactAdapters.exsd"/>
 
 <extension point="org.eclipse.ui.ide.projectNatureImages">
   <image
@@ -107,7 +107,7 @@
   <editor id="org.eclipse.wst.server.ui.editor"
     name="%serverEditor"
     icon="icons/obj16/server.gif"
-    extensions="server, config"
+    extensions="server"
     default="true"
     class="org.eclipse.wst.server.ui.internal.editor.ServerEditor"
     contributorClass="org.eclipse.wst.server.ui.internal.editor.ServerEditorActionBarContributor"/>
@@ -191,24 +191,36 @@
    </propertyTester>
 </extension>
 
-<extension point="org.eclipse.wst.server.ui.serverActions">
-  <serverAction id="org.eclipse.wst.server.ui.projects"
-    typeIds="*"
-    label="%actionModifyModules"
-    category="control"
-    icon="icons/ctool16/wiz_modify_modules.gif"
-    order="50"
-    class="org.eclipse.wst.server.ui.internal.actions.AddRemoveModulesAction"/>
-</extension>
+  <extension point="org.eclipse.ui.popupMenus">
+    <objectContribution
+      id="org.eclipse.wst.server.ui.popupMenu"
+      objectClass="org.eclipse.wst.server.core.IServer"
+      adaptable="true">
+      <action
+        id="org.eclipse.wst.server.ui.action.modifyModules"
+        label="%actionModifyModules"
+        icon="icons/ctool16/wiz_modify_modules.gif"
+        class="org.eclipse.wst.server.ui.internal.actions.ModifyModulesAction">
+      </action>
+    </objectContribution>
+  </extension>
 
-   <extension point="org.eclipse.wst.server.ui.editorPages">
-      <page
-         id="org.eclipse.wst.server.editor.overview"
-         order="-10000"
-         name="%serverEditorOverviewPage"
-         typeIds="*"
-         insertionIds="org.eclipse.wst.server.editor.overview.left, org.eclipse.wst.server.editor.overview.right"
-         class="org.eclipse.wst.server.ui.internal.editor.OverviewEditorFactory"/>
-   </extension>
+  <extension point="org.eclipse.wst.server.ui.editorPages">
+     <page
+        id="org.eclipse.wst.server.editor.overview"
+        order="-10000"
+        name="%serverEditorOverviewPage"
+        typeIds="*"
+        insertionIds="org.eclipse.wst.server.editor.overview.left, org.eclipse.wst.server.editor.overview.right"
+        class="org.eclipse.wst.server.ui.internal.editor.OverviewEditorFactory"/>
+  </extension>
+
+  <extension point="org.eclipse.core.runtime.adapters">
+    <factory
+      class="org.eclipse.wst.server.ui.internal.ServerAdapterFactory"
+      adaptableType="org.eclipse.wst.server.core.IServer">
+      <adapter type="org.eclipse.ui.IActionFilter"/>
+    </factory>
+  </extension>
 
 </plugin>

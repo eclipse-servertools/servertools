@@ -94,11 +94,9 @@ public class ImageResource {
 	// Wizard Banner Images
 	public static final String IMG_WIZBAN_NEW_RUNTIME = "newServerWiz";
 	public static final String IMG_WIZBAN_NEW_SERVER = "newServerWiz";
-	public static final String IMG_WIZBAN_NEW_SERVER_PROJECT = "newServerProjectWiz";
 	public static final String IMG_WIZBAN_SELECT_SERVER_CLIENT = "wizClient";
 	public static final String IMG_WIZBAN_SELECT_SERVER = "selectServer";
 	public static final String IMG_WIZBAN_IMPORT_SERVER_CONFIGURATION = "importConfigWiz";
-	public static final String IMG_WIZBAN_VISUAL_PUBLISHER = "visualPublisher";
 
 	public static final String IMG_SERVER_STATE_STARTED = "stateStarted";
 	public static final String IMG_SERVER_STATE_STARTED_DEBUG = "stateStartedDebug";
@@ -119,7 +117,6 @@ public class ImageResource {
 	public static final String IMG_CTOOL_PROFILE_ON_SERVER = "IMG_CTOOL_CLIENT3";
 	public static final String IMG_CTOOL_NEW_SERVER = "IMG_CTOOL_NEW_SERVER";
 	public static final String IMG_CTOOL_NEW_SERVER_INSTANCE = "IMG_CTOOL_NEW_SERVER_INSTANCE";
-	public static final String IMG_CTOOL_NEW_SERVER_CONFIGURATION = "IMG_CTOOL_NEW_SERVER_CONFIGURATION";
 	public static final String IMG_CTOOL_MODIFY_MODULES = "IMG_CTOOL_MODIFY_MODULES";
 
 	public static final String IMG_ETOOL_RUN_ON_SERVER = "IMG_ETOOL_CLIENT";
@@ -133,8 +130,6 @@ public class ImageResource {
 	public static final String IMG_DTOOL_MODIFY_MODULES = "IMG_DTOOL_MODIFY_MODULES";
 
 	// General Object Images
-	public static final String IMG_SERVER_PROJECT = "serverProject";
-	public static final String IMG_SERVER_CONFIGURATION = "configuration";
 	public static final String IMG_SERVER = "server";
 	public static final String IMG_SERVER_CONFIGURATION_NONE = "noConfiguration";
 	public static final String IMG_SERVER_CONFIGURATION_MISSING = "configurationMissing";
@@ -162,14 +157,14 @@ public class ImageResource {
 	protected static void dispose() {
 		if (elementImages != null) {
 			try {
-				Trace.trace("Disposing of element images");
+				Trace.trace(Trace.FINEST, "Disposing of element images");
 				Iterator iterator = elementImages.values().iterator();
 				while (iterator.hasNext()) {
 					Image image = (Image) iterator.next();
 					image.dispose();
 				}
 			} catch (Exception e) {
-				Trace.trace("Could not dispose of images");
+				Trace.trace(Trace.WARNING, "Could not dispose of images");
 			}
 		}
 	}
@@ -216,11 +211,9 @@ public class ImageResource {
 
 		// wizard banners
 		registerImage(IMG_WIZBAN_NEW_SERVER, URL_WIZBAN + "new_server_wiz.gif");
-		registerImage(IMG_WIZBAN_NEW_SERVER_PROJECT, URL_WIZBAN + "new_server_project_wiz.gif");
 		registerImage(IMG_WIZBAN_IMPORT_SERVER_CONFIGURATION, URL_WIZBAN + "import_configuration_wiz.gif");
 		registerImage(IMG_WIZBAN_SELECT_SERVER_CLIENT, URL_WIZBAN + "select_client_wiz.gif");
 		registerImage(IMG_WIZBAN_SELECT_SERVER, URL_WIZBAN + "select_server_wiz.gif");
-		registerImage(IMG_WIZBAN_VISUAL_PUBLISHER, URL_WIZBAN + "pub_resource_server_wiz.gif");
 
 		// client images
 		registerImage(IMG_ETOOL_RUN_ON_SERVER, URL_ETOOL + "run_on_server.gif");
@@ -233,7 +226,6 @@ public class ImageResource {
 		registerImage(IMG_CTOOL_PROFILE_ON_SERVER, URL_CTOOL + "profile_on_server.gif");
 		registerImage(IMG_CTOOL_NEW_SERVER, URL_CTOOL + "wiz_new_server.gif");
 		registerImage(IMG_CTOOL_NEW_SERVER_INSTANCE, URL_CTOOL + "wiz_new_instance.gif");
-		registerImage(IMG_CTOOL_NEW_SERVER_CONFIGURATION, URL_CTOOL + "wiz_new_configuration.gif");
 		registerImage(IMG_CTOOL_MODIFY_MODULES, URL_CTOOL + "wiz_modify_modules.gif");
 
 		registerImage(IMG_DTOOL_RUN_ON_SERVER, URL_DTOOL + "run_on_server.gif");
@@ -281,9 +273,7 @@ public class ImageResource {
 		registerImage(IMG_DLCL_DISCONNECT, URL_DLCL + "launch_disconnect.gif");
 	
 		// load general object images
-		registerImage(IMG_SERVER_PROJECT, URL_OBJ + "server_project.gif");
 		registerImage(IMG_SERVER, URL_OBJ + "server.gif");
-		registerImage(IMG_SERVER_CONFIGURATION, URL_OBJ + "configuration.gif");
 		registerImage(IMG_SERVER_CONFIGURATION_NONE, URL_OBJ + "configuration_none.gif");
 		registerImage(IMG_SERVER_CONFIGURATION_MISSING, URL_OBJ + "configuration_missing.gif");
 		registerImage(IMG_PROJECT_MISSING, URL_OBJ + "project_missing.gif");
@@ -312,7 +302,7 @@ public class ImageResource {
 			imageRegistry.put(key, id);
 			imageDescriptors.put(key, id);
 		} catch (Exception e) {
-			Trace.trace("Error registering image " + key + " from " + partialURL, e);
+			Trace.trace(Trace.SEVERE, "Error registering image " + key + " from " + partialURL, e);
 		}
 	}
 	

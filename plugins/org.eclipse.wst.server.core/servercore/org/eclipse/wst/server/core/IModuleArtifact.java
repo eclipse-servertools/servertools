@@ -10,23 +10,17 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 /**
- * A module object is a resource within a module,
- * which can be launched on the server. Examples of module
- * objects could include servlets, HTML pages, or EJB beans.
+ * A module artifact is a resource within a module, which can be launched
+ * on the server. Examples of module artifacts are servlets, HTML pages,
+ * or EJB beans.
+ * <p>
+ * Objects that provide an adapter of this type will be considered by the
+ * contextual Run on Server launch support. 
+ * </p>
  */
 public interface IModuleArtifact {
 	/**
-	 * Returns the id of this module object. Each known
-	 * module object has a distinct id. 
-	 * Ids are intended to be used internally as keys; they are not
-	 * intended to be shown to end users.
-	 * 
-	 * @return the module object id
-	 */
-	public String getId();
-
-	/**
-	 * Returns the module that this object is a part of.
+	 * Returns the module that this artifact is a part of.
 	 * 
 	 * @return org.eclipse.wst.server.core.IModule
 	 */

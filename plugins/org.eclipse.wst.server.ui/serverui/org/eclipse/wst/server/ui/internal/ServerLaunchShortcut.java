@@ -10,14 +10,13 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 
-import org.eclipse.wst.server.core.IModuleArtifact;
-import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -52,20 +51,14 @@ public class ServerLaunchShortcut implements ILaunchShortcut {
 		// check if the editor input itself can be run. Otherwise, check if
 		// the editor has a file input that can be run
 		IEditorInput input = editor.getEditorInput();
-		IModuleArtifact[] mo = ServerUtil.getModuleObjects(input);
-		if (mo != null && mo.length > 0) {
+
+		if (ServerUIPlugin.hasModuleArtifact(input)) {
 			launch(new StructuredSelection(input), mode);
 		} else if (input instanceof IFileEditorInput) {
 			IFileEditorInput fei = (IFileEditorInput) input;
-			ISelection sel = new StructuredSelection(fei.getFile());
-			launch(sel, mode);
+			IFile file = fei.getFile();
+			if (ServerUIPlugin.hasModuleArtifact(file))
+				launch(new StructuredSelection(file), mode);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.debug.ui.ILaunchFilter#testAttribute(org.eclipse.core.resources.IResource, java.lang.String, java.lang.String)
-	 */
-	/*public boolean testAttribute(IResource target, String name, String value) {
-		return true;
-	}*/
 }

@@ -38,7 +38,7 @@ public class OpenAction extends Action {
 		try {
 			ServerUIUtil.editServer(server);
 		} catch (Exception e) {
-			Trace.trace("Error editing element", e);
+			Trace.trace(Trace.SEVERE, "Error editing element", e);
 		}
 	}
 }

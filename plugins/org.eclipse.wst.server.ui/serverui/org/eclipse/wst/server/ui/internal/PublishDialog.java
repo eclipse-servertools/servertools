@@ -8,7 +8,7 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.server.ui.internal.publish;
+package org.eclipse.wst.server.ui.internal;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -28,9 +28,6 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IPublishListener;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.ServerUICore;
-import org.eclipse.wst.server.ui.internal.ContextIds;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyledText;
@@ -196,13 +193,12 @@ public class PublishDialog extends Dialog implements IRunnableContext {
 	 *
 	 * @param parent the parent shell
 	 */
-	public PublishDialog(Shell parent, boolean keepOpen) {
+	public PublishDialog(Shell parent) {
 		super(parent);
 		setShellStyle(SWT.BORDER | SWT.TITLE | SWT.APPLICATION_MODAL | SWT.RESIZE); // no close button
 		setBlockOnOpen(false);
 		taskList = new ArrayList();
 	
-		remainOpen = keepOpen;
 		if (!remainOpen) // part of a bigger task
 			showCancel = true;
 		
@@ -683,7 +679,7 @@ public class PublishDialog extends Dialog implements IRunnableContext {
 	 * @param control org.eclipse.wst.server.core.IServerControl
 	 * @param keepOpen boolean
 	 */
-	public static IStatus publish(Shell shell, final IServer server2, boolean keepOpen) {
+	public static IStatus publish(Shell shell, final IServer server2) {
 		globalStatus = null;
 	
 		// create listener
@@ -691,7 +687,7 @@ public class PublishDialog extends Dialog implements IRunnableContext {
 	
 		// publish the code
 		try {
-			final PublishDialog dialog = new PublishDialog(shell, keepOpen);
+			final PublishDialog dialog = new PublishDialog(shell);
 	
 			listener = new IPublishListener() {
 				public void publishStarted(IServer server) {

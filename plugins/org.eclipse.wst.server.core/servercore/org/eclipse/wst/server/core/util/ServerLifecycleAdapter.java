@@ -13,7 +13,8 @@ package org.eclipse.wst.server.core.util;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
 /**
- * 
+ * Helper class which implements the IServerLifecycleListener interface
+ * with empty methods.
  */
 public class ServerLifecycleAdapter implements IServerLifecycleListener {
 	public void serverAdded(IServer server) {

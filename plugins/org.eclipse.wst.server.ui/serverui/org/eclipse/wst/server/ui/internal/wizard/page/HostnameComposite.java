@@ -15,10 +15,8 @@ import java.util.List;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
 
-import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.ServerUIPreferences;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -103,7 +101,7 @@ public class HostnameComposite extends Composite {
 
 		createLabel(this, ServerUIPlugin.getResource("%hostname"), 1, false, true);
 		
-		List hosts = ((ServerUIPreferences)ServerUICore.getPreferences()).getHostnames();
+		List hosts = ServerUIPlugin.getPreferences().getHostnames();
 		String[] s = new String[hosts.size()];
 		hosts.toArray(s);
 		combo = createCombo(this, s, LOCALHOST, 2);

@@ -16,15 +16,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.*;
 import org.eclipse.jface.dialogs.IDialogConstants;
 
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerListener;
+import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.util.ServerAdapter;
-import org.eclipse.wst.server.ui.IServerUIPreferences;
-import org.eclipse.wst.server.ui.ServerUICore;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -44,6 +42,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	protected Map imageDescriptors = new HashMap();
 
 	protected static List terminationWatches = new ArrayList();
+
 	// server UI plugin id
 	public static final String PLUGIN_ID = "org.eclipse.wst.server.ui";
 
@@ -115,6 +114,15 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	public static void log(IStatus status) {
 		getInstance().getLog().log(status);
 	}
+	
+	/**
+	 * Return the UI preferences.
+	 * 
+	 * @return ServerUIPreferences
+	 */
+	public static ServerUIPreferences getPreferences() {
+		return new ServerUIPreferences();
+	}
 
 	/**
 	 * Start up this plug-in.
@@ -125,8 +133,8 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		Trace.trace(Trace.CONFIG, "----->----- Server UI plugin start ----->-----");
 		super.start(context);
 	
-		IServerUIPreferences prefs = ServerUICore.getPreferences();
-		((ServerUIPreferences) prefs).setDefaults();
+		ServerUIPreferences prefs = getPreferences();
+		prefs.setDefaults();
 	}
 	
 	/**
@@ -217,5 +225,216 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		server.addServerListener(listener);
 	
 		t.start();
+	}
+	
+	//protected static final String MODULE_ARTIFACT_CLASS = "org.eclipse.wst.server.core.IModuleArtifact";
+	
+	/**
+	 * Returns the module artifact for the given object, or null if a module artifact
+	 * can't be found.
+	 *
+	 * @return the module artifact
+	 */
+	/*public static boolean hasModuleArtifact(Object adaptable) {
+		if (adaptable instanceof IModuleArtifact)
+			return true;
+		
+		return Platform.getAdapterManager().hasAdapter(adaptable, MODULE_ARTIFACT_CLASS);
+	}*/
+	
+	/**
+	 * Returns the module artifact for the given object, or null if a module artifact
+	 * can't be found.
+	 *
+	 * @return the module artifact
+	 */
+	/*public static IModuleArtifact getModuleArtifact(Object adaptable) {
+		if (adaptable instanceof IModuleArtifact)
+			return (IModuleArtifact) adaptable;
+		
+		if (Platform.getAdapterManager().hasAdapter(adaptable, MODULE_ARTIFACT_CLASS)) {
+			return (IModuleArtifact) Platform.getAdapterManager().getAdapter(adaptable, MODULE_ARTIFACT_CLASS);
+		}
+		
+		return null;
+	}*/
+
+	/**
+	 * Returns the module artifact for the given object, or null if a module artifact
+	 * can't be found.
+	 *
+	 * @return the module artifact
+	 */
+	/*public static IModuleArtifact loadModuleArtifact(Object obj) {
+		if (obj instanceof IModuleArtifact)
+			return (IModuleArtifact) obj;
+		
+		if (Platform.getAdapterManager().hasAdapter(obj, MODULE_ARTIFACT_CLASS)) {
+			return (IModuleArtifact) Platform.getAdapterManager().loadAdapter(obj, MODULE_ARTIFACT_CLASS);
+		}
+		
+		return null;
+	}*/
+
+	// cached copy of all module artifact adapters
+	private static List moduleArtifactAdapters;
+
+	/**
+	 * Returns an array of all module artifact adapters.
+	 *
+	 * @return
+	 */
+	protected static ModuleArtifactAdapter[] getModuleArtifactAdapters() {
+		if (moduleArtifactAdapters == null)
+			loadModuleArtifactAdapters();
+		
+		ModuleArtifactAdapter[] moa = new ModuleArtifactAdapter[moduleArtifactAdapters.size()];
+		moduleArtifactAdapters.toArray(moa);
+		return moa;
+	}
+	
+	/**
+	 * Load the module artifact adapters extension point.
+	 */
+	private static synchronized void loadModuleArtifactAdapters() {
+		if (moduleArtifactAdapters != null)
+			return;
+		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleArtifactAdapters extension point ->-");
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleArtifactAdapters");
+
+		int size = cf.length;
+		moduleArtifactAdapters = new ArrayList(size);
+		for (int i = 0; i < size; i++) {
+			try {
+				moduleArtifactAdapters.add(new ModuleArtifactAdapter(cf[i]));
+				Trace.trace(Trace.EXTENSION_POINT, "  Loaded moduleArtifactAdapter: " + cf[i].getAttribute("id"));
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "  Could not load moduleArtifactAdapter: " + cf[i].getAttribute("id"), t);
+			}
+		}
+		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleArtifactAdapters extension point -<-");
+	}
+	
+	/**
+	 * Returns a module artifact for the given object.
+	 *
+	 * @return IModuleArtifact
+	 */
+	public static boolean hasModuleArtifact(Object obj) {
+		Trace.trace(Trace.FINEST, "ServerUtil.hasModuleArtifact()");
+		ModuleArtifactAdapter[] adapters = getModuleArtifactAdapters();
+		if (adapters != null) {
+			int size = adapters.length;
+			for (int i = 0; i < size; i++) {
+				try {
+					if (adapters[i].isEnabled(obj))
+						return true;
+				} catch (CoreException ce) {
+					Trace.trace(Trace.WARNING, "Could not use moduleArtifactAdapter", ce);
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	protected static final String MODULE_ARTIFACT_CLASS = "org.eclipse.wst.server.core.IModuleArtifact";
+
+	public static IModuleArtifact getModuleArtifact(Object obj) {
+		Trace.trace(Trace.FINEST, "ServerUtil.loadModuleArtifact()");
+		ModuleArtifactAdapter[] adapters = getModuleArtifactAdapters();
+		if (adapters != null) {
+			int size = adapters.length;
+			for (int i = 0; i < size; i++) {
+				try {
+					if (adapters[i].isEnabled(obj)) {
+						if (Platform.getAdapterManager().hasAdapter(obj, MODULE_ARTIFACT_CLASS)) {
+							return (IModuleArtifact) Platform.getAdapterManager().getAdapter(obj, MODULE_ARTIFACT_CLASS);
+						}
+					}
+				} catch (CoreException ce) {
+					Trace.trace(Trace.WARNING, "Could not use moduleArtifactAdapter", ce);
+				}
+			}
+		}
+		
+		return null;
+	}
+
+	public static IModuleArtifact loadModuleArtifact(Object obj) {
+		Trace.trace(Trace.FINEST, "ServerUtil.loadModuleArtifact()");
+		ModuleArtifactAdapter[] adapters = getModuleArtifactAdapters();
+		if (adapters != null) {
+			int size = adapters.length;
+			for (int i = 0; i < size; i++) {
+				try {
+					if (adapters[i].isEnabled(obj)) {
+						if (Platform.getAdapterManager().hasAdapter(obj, MODULE_ARTIFACT_CLASS)) {
+							return (IModuleArtifact) Platform.getAdapterManager().loadAdapter(obj, MODULE_ARTIFACT_CLASS);
+						}
+					}
+				} catch (CoreException ce) {
+					Trace.trace(Trace.WARNING, "Could not use moduleArtifactAdapter", ce);
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Returns the server that came from the given file, or <code>null</code>
+	 * if none. This convenience method searches the list of known
+	 * servers ({@link #getServers()}) for the one with a matching
+	 * location ({@link IServer#getFile()}). The file may not be null.
+	 *
+	 * @param a server file
+	 * @return the server instance, or <code>null</code> if 
+	 * there is no server associated with the given file
+	 */
+	public static IServer findServer(IFile file) {
+		if (file == null)
+			throw new IllegalArgumentException();
+		
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				if (file.equals(servers[i].getFile()))
+					return servers[i];
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns an array of all known runtime instances of
+	 * the given runtime type. This convenience method filters the list of known
+	 * runtime ({@link #getRuntimes()}) for ones with a matching
+	 * runtime type ({@link IRuntime#getRuntimeType()}). The array will not
+	 * contain any working copies.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @param runtimeType the runtime type
+	 * @return a possibly-empty list of runtime instances {@link IRuntime}
+	 * of the given runtime type
+	 */
+	public static IRuntime[] getRuntimes(IRuntimeType runtimeType) {
+		List list = new ArrayList();
+		IRuntime[] runtimes = ServerCore.getRuntimes();
+		if (runtimes != null) {
+			int size = runtimes.length;
+			for (int i = 0; i < size; i++) {
+				if (runtimes[i].getRuntimeType() != null && runtimes[i].getRuntimeType().equals(runtimeType))
+					list.add(runtimes[i]);
+			}
+		}
+		
+		IRuntime[] r = new IRuntime[list.size()];
+		list.toArray(r);
+		return r;
 	}
 }

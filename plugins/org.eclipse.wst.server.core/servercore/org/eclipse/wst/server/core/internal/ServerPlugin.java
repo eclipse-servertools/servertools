@@ -12,13 +12,10 @@ package org.eclipse.wst.server.core.internal;
 
 import java.io.*;
 import java.util.*;
-import java.text.Collator;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.util.*;
 import org.osgi.framework.BundleContext;
 /**
@@ -282,65 +279,7 @@ public class ServerPlugin extends Plugin {
 		ResourceManager.shutdown();
 		ServerMonitorManager.shutdown();
 	}
-	
-	/**
-	 * Sort the given runtimes into alphabetical order. This
-	 * method modifies the original list, but returns the value
-	 * for convenience.
-	 *
-	 * @param list java.util.List
-	 * @return java.util.List
-	 */
-	public static List sortRuntimeList(List list) {
-		if (list == null)
-			return null;
-	
-		Collator collator = Collator.getInstance();
-	
-		int size = list.size();
-		for (int i = 0; i < size - 1; i++) {
-			for (int j = i + 1; j < size; j++) {
-				IRuntime a = (IRuntime) list.get(i);
-				IRuntime b = (IRuntime) list.get(j);
-				if (collator.compare(a.getName(), b.getName()) > 0) {
-					Object temp = a;
-					list.set(i, b);
-					list.set(j, temp);
-				}
-			}
-		}
-		return list;
-	}
 
-	/**
-	 * Sort the given servers into alphabetical order. This
-	 * method modifies the original list, but returns the value
-	 * for convenience.
-	 *
-	 * @param list java.util.List
-	 * @return java.util.List
-	 */
-	public static List sortServerList(List list) {
-		if (list == null)
-			return null;
-	
-		Collator collator = Collator.getInstance();
-	
-		int size = list.size();
-		for (int i = 0; i < size - 1; i++) {
-			for (int j = i + 1; j < size; j++) {
-				IServer a = (IServer) list.get(i);
-				IServer b = (IServer) list.get(j);
-				if (collator.compare(a.getName(), b.getName()) > 0) {
-					Object temp = a;
-					list.set(i, b);
-					list.set(j, temp);
-				}
-			}
-		}
-		return list;
-	}
-	
 	public static String[] tokenize(String param, String delim) {
 		if (param == null)
 			return new String[0];

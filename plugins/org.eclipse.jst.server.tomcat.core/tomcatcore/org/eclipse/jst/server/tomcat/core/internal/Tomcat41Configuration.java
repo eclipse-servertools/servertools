@@ -13,8 +13,11 @@ package org.eclipse.jst.server.tomcat.core.internal;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -651,4 +654,118 @@ public class Tomcat41Configuration extends TomcatConfiguration {
 			Trace.trace("Error removing module ref " + index, e);
 		}
 	}
+
+	protected IStatus backupAndPublish(IPath confDir, boolean doBackup, IProgressMonitor monitor) {
+		MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%publishConfigurationTask"), null);
+		Trace.trace("Backup and publish");
+		monitor = ProgressUtil.getMonitorFor(monitor);
+
+		backupAndPublish(confDir, doBackup, ms, monitor, 300);
+		// TODO Refactor success detection once Bug 81060 is addressed
+		// This approach avoids refactoring to TomcatConfiguration.backupFolder()
+		// and backupPath() for now.
+		if (ms.isOK() && ms.getChildren().length > 0)
+			publishContextConfig(confDir, ms, monitor);
+
+		monitor.done();
+		return ms;
+	}
+	
+	protected void publishContextConfig(IPath confDir, MultiStatus ms, IProgressMonitor monitor) {
+		Trace.trace("Apply context configurations");
+		try {
+			confDir = confDir.append("conf");
+			
+			monitor.subTask(TomcatPlugin.getResource("%publishContextConfigTask"));
+			Factory factory = new Factory();
+			factory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server40");
+			Server publishedServer = (Server) factory.loadDocument(new FileInputStream(confDir.append("server.xml").toFile()));
+			monitor.worked(100);
+			
+			boolean modified = false;
+
+			int size = publishedServer.getServiceCount();
+			for (int i = 0; i < size; i++) {
+				Service service = publishedServer.getService(i);
+				if (service.getName().equalsIgnoreCase(DEFAULT_SERVICE)) {
+					Engine engine = service.getEngine();
+					Host host = engine.getHost();
+					int size2 = host.getContextCount();
+					for (int j = 0; j < size2; j++) {
+						Context context = host.getContext(j);
+						monitor.subTask(TomcatPlugin.getResource("%checkingContextTask",
+								new String[] {context.getPath()}));
+						if (addContextConfig(context)) {
+							modified = true;
+						}
+					}
+				}
+			}
+			monitor.worked(100);
+			if (modified) {
+				monitor.subTask(TomcatPlugin.getResource("%savingContextConfigTask"));
+				factory.save(confDir.append("server.xml").toOSString());
+			}
+			monitor.worked(100);
+			
+			Trace.trace("Server.xml updated with context.xml configurations");
+			ms.add(new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%serverPostProcessingComplete"), null));
+		} catch (Exception e) {
+			Trace.trace(Trace.WARNING, "Could not apply context configurations published Tomcat v5.0 configuration from " + confDir.toOSString() + ": " + e.getMessage());
+			IStatus s = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPublishConfiguration", new String[] {e.getLocalizedMessage()}), e);
+			ms.add(s);
+		}
+	}
+	
+	/**
+	 * If the specified Context is linked to a project, try to
+	 * update any configuration found a META-INF/context.xml found
+	 * relative to the specified docBase.
+	 * @param context Context object to receive context.xml contents.
+	 * @return Returns true if context is modified.
+	 */
+	protected boolean addContextConfig(Context context) {
+		boolean modified = false;
+		String source = context.getSource();
+		if (source != null && source.length() > 0 )
+		{
+			if (context.hasChildNodes()) {
+				context.removeChildren();
+				modified = true;
+			}
+			String docBase = context.getDocBase();
+			Context contextConfig = loadContextConfig(docBase);
+			if (null != contextConfig) {
+				contextConfig.copyChildrenTo(context);
+				modified = true;
+			}
+		}
+		return modified;
+	}
+	
+	/**
+	 * Tries to read a META-INF/context.xml file relative to the
+	 * specified docBase.  If found, it creates a Context object
+	 * containing the contexts of that file.
+	 * @param docBase
+	 * @return Context element created from context.xml, or null if not found.
+	 */
+	protected Context loadContextConfig(String docBase) {
+		File contexXML = new File(docBase + File.separator + "META-INF" + File.separator + "context.xml");
+		if (contexXML.exists()) {
+			try {
+				InputStream is = new FileInputStream(contexXML);
+				Factory ctxFactory = new Factory();
+				ctxFactory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server40");
+				Context ctx = (Context)ctxFactory.loadDocument(is);
+				is.close();
+				return ctx;
+			} catch (FileNotFoundException e) {
+				// Ignore, should never occur
+			} catch (IOException e) {
+				Trace.trace("Error reading web module's context.xml file: " + docBase, e);
+			}
+		}
+		return null;
+ 	}
 }

@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 
+import java.beans.PropertyChangeListener;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -40,7 +41,69 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @see IRuntime
  * @since 1.0
  */
-public interface IRuntimeWorkingCopy extends IRuntime, IElementWorkingCopy {	
+public interface IRuntimeWorkingCopy extends IRuntime {
+	public static final int TIMESTAMP_ERROR = 5;
+
+	/**
+	 * Sets the displayable name for this runtime.
+	 * <p>
+	 * The name should be appropriate for the current locale.
+	 * </p>
+	 *
+	 * @param name a displayable name
+	 * @see IRuntime#getName()
+	 */
+	public void setName(String name);
+	
+	/**
+	 * Sets or unsets whether this runtime is marked as read only.
+	 * When a runtime is read only, working copies can be created but
+	 * they cannot be saved.
+	 *
+	 * @param readOnly <code>true</code> to set this runtime to be marked
+	 *    read only, and <code>false</code> to unset
+	 */
+	public void setReadOnly(boolean readOnly);
+	
+	/**
+	 * Sets whether this runtime is private.
+	 * Generally speaking, runtimes marked private are internal ones
+	 * that should not be shown to users (because they won't know
+	 * anything about them).
+	 * 
+	 * @param p <code>true</code> if this runtime is private,
+	 *    and <code>false</code> otherwise
+	 * @see IRuntime#isPrivate()
+	 */
+	public void setPrivate(boolean p);
+	
+	/**
+	 * Returns whether this working copy has unsaved changes.
+	 * 
+	 * @return <code>true</code> if this working copy has unsaved
+	 *    changes, and <code>false</code> otherwise
+	 */
+	public boolean isDirty();
+
+	/**
+	 * Adds a property change listener to this server.
+	 *
+	 * @param listener java.beans.PropertyChangeListener
+	 */
+	public void addPropertyChangeListener(PropertyChangeListener listener);
+
+	/**
+	 * Removes a property change listener from this server.
+	 *
+	 * @param listener java.beans.PropertyChangeListener
+	 */
+	public void removePropertyChangeListener(PropertyChangeListener listener);
+	
+	/**
+	 * Fires a property change event.
+	 */
+	public void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue);
+
 	/**
 	 * Returns the runtime instance that this working copy is
 	 * associated with.
@@ -88,6 +151,7 @@ public interface IRuntimeWorkingCopy extends IRuntime, IElementWorkingCopy {
 	 * runtime type, this will change the runtime instance accordingly.
 	 * The returned runtime will be the same runtime this is returned
 	 * from getOriginal(), after the changes have been applied.
+	 * Otherwise, this method will return a newly created runtime.
 	 * </p>
 	 * Runtimes can be saved even when they have invalid properties. It
 	 * is the clients responsibility to call validate() or check the

@@ -43,13 +43,9 @@ public class ImageResource {
 		}
 	}
 
-	private static final String URL_OBJ = "obj16/";
 	private static final String URL_WIZBAN = "wizban/";
 
 	// Java images
-	public static final String IMG_JAVA_CLASSPATH_JAR = "classpathJar";
-	public static final String IMG_JAVA_CLASSPATH_VAR = "classpathVar";
-	public static final String IMG_JAVA_SYSTEM_PROPERTY = "systemProperty";
 	public static final String IMG_RUNTIME_TYPE = "runtimeType";
 
 	/**
@@ -106,10 +102,6 @@ public class ImageResource {
 		imageRegistry = new ImageRegistry();
 		imageDescriptors = new HashMap();
 	
-		// Java images
-		registerImage(IMG_JAVA_SYSTEM_PROPERTY, URL_OBJ + "java_system_property.gif");
-		registerImage(IMG_JAVA_CLASSPATH_JAR, URL_OBJ + "java_jar.gif");
-		registerImage(IMG_JAVA_CLASSPATH_VAR, URL_OBJ + "java_var.gif");
 		registerImage(IMG_RUNTIME_TYPE, URL_WIZBAN + "new_runtime_wiz.gif");
 	}
 

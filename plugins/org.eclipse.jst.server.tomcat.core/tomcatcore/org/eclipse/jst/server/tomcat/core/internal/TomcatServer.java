@@ -12,20 +12,14 @@ package org.eclipse.jst.server.tomcat.core.internal;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IProcess;
-import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
-import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
-import org.eclipse.jdt.launching.IVMInstall;
-import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.j2ee.IWebModule;
 import org.eclipse.jst.server.tomcat.core.ITomcatConfiguration;
-import org.eclipse.jst.server.tomcat.core.ITomcatRuntime;
 import org.eclipse.jst.server.tomcat.core.ITomcatServer;
 import org.eclipse.jst.server.tomcat.core.ITomcatServerWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.WebModule;
@@ -160,7 +154,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 
 			return new URL(url);
 		} catch (Exception e) {
-			Trace.trace("Could not get root URL", e);
+			Trace.trace(Trace.SEVERE, "Could not get root URL", e);
 			return null;
 		}
 	}
@@ -255,71 +249,6 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	 */
 	public String toString() {
 		return "TomcatServer";
-	}
-
-	/**
-	 * Update the given configuration in the server.
-	 * (i.e. publish any changes to the server, and restart if necessary)
-	 * @param config org.eclipse.wst.server.core.model.IServerConfiguration
-	 */
-	/*public void updateConfiguration() {
-		Trace.trace(Trace.FINEST, "Configuration updated " + this);
-		//setConfigurationSyncState(SYNC_STATE_DIRTY);
-		//setRestartNeeded(true);
-	}*/
-
-	/**
-	 * Respond to updates within the project tree.
-	 */
-	//public void updateModule(final IModule module, IModuleResourceDelta delta) { }
-
-	public void setLaunchDefaults(ILaunchConfigurationWorkingCopy workingCopy) {
-		ITomcatRuntime runtime = getTomcatRuntime();
-		IVMInstall vmInstall = runtime.getVMInstall();
-		if (vmInstall != null) {
-			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_TYPE, vmInstall.getVMInstallType().getId());
-			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_NAME, vmInstall.getName());
-		}
-		
-		String[] args = getRuntimeProgramArguments(true);
-		String args2 = renderCommandLine(args, " ");
-		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, args2);
-
-		args = getRuntimeVMArguments();
-		args2 = renderCommandLine(args, " ");
-		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, args2);
-		
-		List cp = runtime.getRuntimeClasspath();
-		
-		// add tools.jar to the path
-		if (vmInstall != null) {
-			try {
-				cp.add(JavaRuntime.newRuntimeContainerClasspathEntry(new Path(JavaRuntime.JRE_CONTAINER).append("org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType").append(vmInstall.getName()), IRuntimeClasspathEntry.BOOTSTRAP_CLASSES));
-			} catch (Exception e) {
-				// ignore
-			}			
-			
-			IPath jrePath = new Path(vmInstall.getInstallLocation().getAbsolutePath());
-			if (jrePath != null) {
-				IPath toolsPath = jrePath.append("lib").append("tools.jar");
-				if (toolsPath.toFile().exists()) {
-					cp.add(JavaRuntime.newArchiveRuntimeClasspathEntry(toolsPath));
-				}
-			}
-		}
-		
-		Iterator cpi = cp.iterator();
-		List list = new ArrayList();
-		while (cpi.hasNext()) {
-			IRuntimeClasspathEntry entry = (IRuntimeClasspathEntry) cpi.next();
-			try {
-				list.add(entry.getMemento());
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Could not resolve classpath entry: " + entry, e);
-			}
-		}
-		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, list);
-		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, false);
 	}
 
 	/**

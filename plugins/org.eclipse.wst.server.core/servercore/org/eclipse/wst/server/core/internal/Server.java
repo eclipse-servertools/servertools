@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.*;
 import org.osgi.framework.Bundle;
 
@@ -33,6 +34,8 @@ public class Server extends Base implements IServer {
 	protected static final String SERVER_ID = "server-id";
 	protected static final String RUNTIME_ID = "runtime-id";
 	protected static final String CONFIGURATION_ID = "configuration-id";
+	
+	protected static final char[] INVALID_CHARS = new char[] {'\\', '/', ':', '*', '?', '"', '<', '>', '|', '\0', '@', '&'};
 
 	protected IServerType serverType;
 	protected ServerDelegate delegate;
@@ -182,25 +185,6 @@ public class Server extends Base implements IServer {
 		IConfigurationElement element = ((ServerType) serverType).getElement();
 		String pluginId = element.getDeclaringExtension().getNamespace();
 		return Platform.getBundle(pluginId).getState() == Bundle.ACTIVE;
-	}
-	
-	/**
-	 * Returns true if this is a configuration that is
-	 * applicable to (can be used with) this server.
-	 *
-	 * @param configuration
-	 * @return boolean
-	 */
-	public boolean isSupportedConfiguration(IPath configuration2) {
-		/*if (!getServerType().hasServerConfiguration() || configuration2 == null)
-			return false;
-		return getServerType().getServerConfigurationType().equals(configuration2.getServerConfigurationType());*/
-		try {
-			return getDelegate().isSupportedConfiguration(configuration2);
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate getModules() " + toString(), e);
-			return false;
-		}
 	}
 
 	public String getHost() {
@@ -360,12 +344,18 @@ public class Server extends Base implements IServer {
 		
 		int size = serverListeners.size();
 		IServerListener[] sil = new IServerListener[size];
+		IModule[] parents = new IModule[0];
+		try {
+			parents = getParentModules(module, null);
+		} catch (Exception e) {
+			// ignore
+		}
 		serverListeners.toArray(sil);
 		
 		for (int i = 0; i < size; i++) {
 			try {
 				Trace.trace(Trace.LISTENERS, "  Firing server module state change event to: " + sil[i]);
-				sil[i].moduleStateChange(this, module);
+				sil[i].moduleStateChange(this, parents, module);
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "  Error firing server module state change event", e);
 			}
@@ -715,7 +705,29 @@ public class Server extends Base implements IServer {
 		// check what is out of sync and publish
 		if (getServerType().hasServerConfiguration() && configuration == null)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorNoConfiguration"), null);
+		
+		class PublishJob extends Job {
+			public PublishJob() {
+				super(ServerPlugin.getResource("%publishingTask", Server.this.toString()));
+			}
+
+			public IStatus run(IProgressMonitor monitor2) {
+				return doPublish(monitor2);
+			}
+		}
+		
+		PublishJob publishJob = new PublishJob();
+		publishJob.setUser(true);
+		publishJob.schedule();
+		try {
+			publishJob.join();
+		} catch (InterruptedException e) {
+			// ignore
+		}
+		return publishJob.getResult();
+	}
 	
+	protected IStatus doPublish(IProgressMonitor monitor) {
 		Trace.trace(Trace.FINEST, "-->-- Publishing to server: " + toString() + " -->--");
 
 		final List parentList = new ArrayList();
@@ -905,35 +917,20 @@ public class Server extends Base implements IServer {
 			}
 		}
 
-		sortOrderedList(tasks);
-		
-		return tasks;
-	}
-
-	/**
-	 * Sort the given list of IOrdered items into indexed order. This method
-	 * modifies the original list, but returns the value for convenience.
-	 *
-	 * @param list java.util.List
-	 * @return java.util.List
-	 */
-	private static List sortOrderedList(List list) {
-		if (list == null)
-			return null;
-
-		int size = list.size();
+		int size = tasks.size();
 		for (int i = 0; i < size - 1; i++) {
 			for (int j = i + 1; j < size; j++) {
-				IOrdered a = (IOrdered) list.get(i);
-				IOrdered b = (IOrdered) list.get(j);
+				IOrdered a = (IOrdered) tasks.get(i);
+				IOrdered b = (IOrdered) tasks.get(j);
 				if (a.getOrder() > b.getOrder()) {
 					Object temp = a;
-					list.set(i, b);
-					list.set(j, temp);
+					tasks.set(i, b);
+					tasks.set(j, temp);
 				}
 			}
 		}
-		return list;
+		
+		return tasks;
 	}
 
 	protected IStatus performTasks(List tasks, IProgressMonitor monitor) {
@@ -979,7 +976,7 @@ public class Server extends Base implements IServer {
 		ServerBehaviourDelegate delegate3 = getBehaviourDelegate();
 		if (adapter.isInstance(delegate3))
 			return delegate3;
-		return null;
+		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
 	public String toString() {
@@ -1027,9 +1024,9 @@ public class Server extends Base implements IServer {
 		return null;
 	}
 
-	public void setLaunchDefaults(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) {
+	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException {
 		try {
-			getBehaviourDelegate().setLaunchDefaults(workingCopy);
+			getBehaviourDelegate().setupLaunchConfiguration(workingCopy, monitor);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate setLaunchDefaults() " + toString(), e);
 		}
@@ -1059,8 +1056,13 @@ public class Server extends Base implements IServer {
 			for (int i = 0; i < size; i++) {
 				try {
 					String serverId = launchConfigs[i].getAttribute(SERVER_ID, (String) null);
-					if (getId().equals(serverId))
+					if (getId().equals(serverId)) {
+						ILaunchConfigurationWorkingCopy wc = launchConfigs[i].getWorkingCopy();
+						setupLaunchConfiguration(wc, monitor);
+						if (wc.isDirty())
+							return wc.doSave();
 						return launchConfigs[i];
+					}
 				} catch (CoreException e) {
 					// ignore
 				}
@@ -1071,11 +1073,22 @@ public class Server extends Base implements IServer {
 			return null;
 		
 		// create a new launch configuration
-		String name = launchManager.generateUniqueLaunchConfigurationNameFrom(getName()); 
-		ILaunchConfigurationWorkingCopy wc = launchConfigType.newInstance(null, name);
+		String launchName = getValidLaunchConfigurationName(getName());
+		launchName = launchManager.generateUniqueLaunchConfigurationNameFrom(launchName); 
+		ILaunchConfigurationWorkingCopy wc = launchConfigType.newInstance(null, launchName);
 		wc.setAttribute(SERVER_ID, getId());
-		setLaunchDefaults(wc, monitor);
+		setupLaunchConfiguration(wc, monitor);
 		return wc.doSave();
+	}
+
+	protected String getValidLaunchConfigurationName(String s) {
+		if (s == null || s.length() == 0)
+			return "1";
+		int size = INVALID_CHARS.length;
+		for (int i = 0; i < size; i++) {
+			s = s.replace(INVALID_CHARS[i], '_');
+		}
+		return s;
 	}
 
 	/**
@@ -1262,7 +1275,7 @@ public class Server extends Base implements IServer {
 	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
 	 * @exception org.eclipse.core.runtime.CoreException - thrown if an error occurs while trying to start the server
 	 */
-	public void synchronousStart(String mode2, IProgressMonitor monitor) throws CoreException {
+	public ILaunch synchronousStart(String mode2, IProgressMonitor monitor) throws CoreException {
 		Trace.trace(Trace.FINEST, "synchronousStart 1");
 		final Object mutex = new Object();
 	
@@ -1314,8 +1327,9 @@ public class Server extends Base implements IServer {
 		Trace.trace(Trace.FINEST, "synchronousStart 2");
 	
 		// start the server
+		ILaunch launch;
 		try {
-			start(mode2, monitor);
+			launch = start(mode2, monitor);
 		} catch (CoreException e) {
 			removeServerListener(listener);
 			throw e;
@@ -1342,6 +1356,8 @@ public class Server extends Base implements IServer {
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStartFailed", getName()), null));
 	
 		Trace.trace(Trace.FINEST, "synchronousStart 4");
+		
+		return launch;
 	}
 	
 	/*
@@ -1354,7 +1370,7 @@ public class Server extends Base implements IServer {
 	/*
 	 * @see IServer#synchronousStop()
 	 */
-	public void synchronousStop() {
+	public void synchronousStop(boolean force) {
 		if (getServerState() == IServer.STATE_STOPPED)
 			return;
 		
@@ -1405,7 +1421,7 @@ public class Server extends Base implements IServer {
 		thread.start();
 	
 		// stop the server
-		stop(false);
+		stop(force);
 	
 		// wait for it! wait for it!
 		synchronized (mutex) {

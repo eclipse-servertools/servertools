@@ -46,6 +46,14 @@ import org.eclipse.core.runtime.*;
  * are never equal.
  * </p>
  * 
+ * [issue: Why are attributes exposed? The attribute ids and
+ * values are passed to property change listeners. However,
+ * they are not useful unless there is a spec'd correlation
+ * between methods like getName and an attribute "name". The
+ * constants are declared on Base, which is internal.]
+ * <p>
+ * Two runtimes are identical if and only if they have the same id.
+ * </p>
  * <p>This interface is not intended to be implemented by clients.</p>
  * <p>
  * <it>Caveat: The server core API is still in an early form, and is
@@ -54,7 +62,86 @@ import org.eclipse.core.runtime.*;
  * 
  * @since 1.0
  */
-public interface IRuntime extends IElement, IAdaptable {
+public interface IRuntime extends IAdaptable {
+	/**
+	 * Returns the displayable name for this runtime.
+	 * <p>
+	 * Note that this name is appropriate for the current locale.
+	 * </p>
+	 *
+	 * @return a displayable name
+	 */
+	public String getName();
+	
+	/**
+	 * Returns the id of this runtime.
+	 * Each runtime (of a given type) has a distinct id, fixed for
+	 * its lifetime. Ids are intended to be used internally as keys;
+	 * they are not intended to be shown to end users.
+	 * 
+	 * @return the runtime id
+	 */
+	public String getId();
+
+	/**
+	 * Deletes the persistent representation of this runtime.
+	 * 
+	 * @throws CoreException if there was any error received while deleting the runtime
+	 */
+	public void delete() throws CoreException;
+
+	/**
+	 * Returns whether this runtime is marked read only.
+	 * When a runtime is read only, working copies can be created but
+	 * they cannot be saved.
+	 *
+	 * @return <code>true</code> if this runtime is marked as read only,
+	 *    and <code>false</code> otherwise
+	 */
+	public boolean isReadOnly();
+
+	/**
+	 * Returns <code>true</code> if this runtime is private (not shown
+	 * in the UI to the users), and <code>false</code> otherwise.
+	 * 
+	 * @return <code>true</code> if this runtime is private,
+	 *    and <code>false</code> otherwise
+	 */
+	public boolean isPrivate();
+
+	/**
+	 * Returns true if this is a working copy.
+	 * 
+	 * @return <code>true</code> if this runtime is a working copy
+	 *    (can be cast to IRuntimeWorkingCopy), and
+	 *    <code>false</code> otherwise
+	 */
+	public boolean isWorkingCopy();
+
+	/**
+	 * Returns true if the plugin containing the delegate is loaded.
+	 * 
+	 * @return boolean
+	 */
+	public boolean isDelegatePluginActivated();
+	
+	/**
+	 * Returns true if the delegate has been loaded.
+	 * 
+	 * @return
+	 */
+	public boolean isDelegateLoaded();
+	
+	/**
+	 * Returns the timestamp of this runtime.
+	 * Timestamps are monotonically increased each time the runtime is saved
+	 * and can be used to determine if any changes have been made on disk
+	 * since the runtime was loaded.
+	 * 
+	 * @return the runtime's timestamp
+	 */
+	public int getTimestamp();
+
 	/**
 	 * Returns the type of this runtime instance.
 	 * 
@@ -100,9 +187,11 @@ public interface IRuntime extends IElement, IAdaptable {
 	public IPath getLocation();
 
 	/**
-	 * Returns whether this runtime is a stub (used for compilation only) or a full runtime.
+	 * Returns whether this runtime is a stub (used for compilation only)
+	 * or a full runtime.
 	 * 
-	 * @return <code>true</code> if this runtime is a stub, and <code>false</code> otherwise
+	 * @return <code>true</code> if this runtime is a stub, and
+	 *    <code>false</code> otherwise
 	 */
 	public boolean isStub();
 

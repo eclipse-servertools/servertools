@@ -239,7 +239,7 @@ public class ServerEditor extends MultiPageEditorPart {
 			}
 			updateActions();
 		} catch (Exception e) {
-			Trace.trace("Error creating server editor pages", e);
+			Trace.trace(Trace.SEVERE, "Error creating server editor pages", e);
 		}
 	}
 
@@ -327,7 +327,7 @@ public class ServerEditor extends MultiPageEditorPart {
 			if (server != null)
 				setPartName(labelProvider.getText(server));
 		} catch (Exception e) {
-			Trace.trace("Error saving from configuration editor", e);
+			Trace.trace(Trace.SEVERE, "Error saving from configuration editor", e);
 	
 			monitor.setCanceled(true);
 	
@@ -621,7 +621,7 @@ public class ServerEditor extends MultiPageEditorPart {
 			IFileEditorInput fei = (IFileEditorInput) input;
 			IFile file = fei.getFile();
 			if (file != null && file.exists()) {
-				IServer server2 = ServerUtil.findServer(file);
+				IServer server2 = ServerUIPlugin.findServer(file);
 				if (server2 != null)
 					serverId = server2.getId();
 			}
@@ -815,7 +815,7 @@ public class ServerEditor extends MultiPageEditorPart {
 			try {
 				part.init(part.getEditorSite(), editorPartInput);
 			} catch (Exception e) {
-				Trace.trace("Error refresh()ing editor part", e);
+				Trace.trace(Trace.SEVERE, "Error refresh()ing editor part", e);
 			}
 		}	
 	}
@@ -842,7 +842,7 @@ public class ServerEditor extends MultiPageEditorPart {
 				//wc.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
 				//TODO: refresh local server
 			} catch (Exception e) {
-				Trace.trace("Error refreshing server", e);
+				Trace.trace(Trace.SEVERE, "Error refreshing server", e);
 			}
 			commandManager.reload(id, new NullProgressMonitor());
 		}

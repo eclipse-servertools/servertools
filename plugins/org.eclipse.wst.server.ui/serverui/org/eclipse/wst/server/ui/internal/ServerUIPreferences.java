@@ -16,17 +16,19 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.Preferences;
-
-import org.eclipse.wst.server.ui.IServerUIPreferences;
 /**
  * Helper class that stores preference information for
  * the server tools.
  */
-public class ServerUIPreferences implements IServerUIPreferences {
+public class ServerUIPreferences {
 	private static final String PREF_PROMPT_IRREVERSIBLE = "prompt-irreversible";
 	private static final String PREF_IMPORT_LOCATION = "import-location";
 	private static final String PREF_SAVE_EDITORS = "save-editors";
 	private static final String PREF_HOST_NAMES = "host-names";
+	
+	public static final byte SAVE_EDITORS_NEVER = 0;
+	public static final byte SAVE_EDITORS_PROMPT = 1;
+	public static final byte SAVE_EDITORS_AUTO = 2;
 	
 	private static final int MAX_HOSTNAMES = 10;
 

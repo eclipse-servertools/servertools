@@ -59,7 +59,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace("Error caching modules", e);
+			Trace.trace(Trace.SEVERE, "Error caching modules", e);
 		}
 		fireEvents();
 	}
@@ -250,7 +250,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 						}
 					});
 				} catch (Exception e) {
-					Trace.trace("Error searching for listening paths", e);
+					Trace.trace(Trace.SEVERE, "Error searching for listening paths", e);
 				}
 			}
 		}
@@ -286,7 +286,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 				removed = new ArrayList(2);
 			removed.add(module);
 		} catch (Exception e) {
-			Trace.trace("Error removing module project", e);
+			Trace.trace(Trace.SEVERE, "Error removing module project", e);
 		}
 	}
 

@@ -165,7 +165,7 @@ public class ServerEditorPartFactory implements IServerEditorPartFactory {
 			try {
 				delegate = (ServerEditorPartFactoryDelegate) element.createExecutableExtension("class");
 			} catch (Exception e) {
-				Trace.trace("Could not create server editorpage delegate", e);
+				Trace.trace(Trace.SEVERE, "Could not create server editorpage delegate", e);
 			}
 		}
 		return delegate;
@@ -180,7 +180,7 @@ public class ServerEditorPartFactory implements IServerEditorPartFactory {
 		try {
 			return getDelegate().shouldCreatePage(server);
 		} catch (Exception e) {
-			Trace.trace("Error calling delegate", e);
+			Trace.trace(Trace.SEVERE, "Error calling delegate", e);
 			return false;
 		}
 	}
@@ -192,7 +192,7 @@ public class ServerEditorPartFactory implements IServerEditorPartFactory {
 		try {
 			return getDelegate().createPage();
 		} catch (Exception e) {
-			Trace.trace("Error calling delegate", e);
+			Trace.trace(Trace.SEVERE, "Error calling delegate", e);
 			return null;
 		}
 	}

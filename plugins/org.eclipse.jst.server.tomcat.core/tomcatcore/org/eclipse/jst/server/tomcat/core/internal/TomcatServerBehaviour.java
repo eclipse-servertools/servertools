@@ -299,23 +299,17 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		return "TomcatServer";
 	}
 
-	/**
-	 * Update the given configuration in the server.
-	 * (i.e. publish any changes to the server, and restart if necessary)
-	 * @param config org.eclipse.wst.server.core.model.IServerConfiguration
-	 */
-	/*public void updateConfiguration() {
-		Trace.trace(Trace.FINEST, "Configuration updated " + this);
-		//setConfigurationSyncState(SYNC_STATE_DIRTY);
-		//setRestartNeeded(true);
-	}*/
+	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException {
+		if (workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, (String) null) == null) {
+			String[] args = getRuntimeProgramArguments(true);
+			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, renderCommandLine(args, " "));
+		}
 
-	/**
-	 * Respond to updates within the project tree.
-	 */
-	//public void updateModule(final IModule module, IModuleResourceDelta delta) { }
-
-	public void setLaunchDefaults(ILaunchConfigurationWorkingCopy workingCopy) {
+		if (workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, (String) null) == null) {
+			String[] args = getRuntimeVMArguments();
+			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, renderCommandLine(args, " "));
+		}
+		
 		ITomcatRuntime runtime = getTomcatRuntime();
 		IVMInstall vmInstall = runtime.getVMInstall();
 		if (vmInstall != null) {
@@ -323,17 +317,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_NAME, vmInstall.getName());
 		}
 		
-		String[] args = getRuntimeProgramArguments(true);
-		String args2 = renderCommandLine(args, " ");
-		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, args2);
-
-		args = getRuntimeVMArguments();
-		args2 = renderCommandLine(args, " ");
-		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, args2);
-		
-		List cp = runtime.getRuntimeClasspath();
-		
 		// add tools.jar to the path
+		List cp = runtime.getRuntimeClasspath();
 		if (vmInstall != null) {
 			try {
 				cp.add(JavaRuntime.newRuntimeContainerClasspathEntry(new Path(JavaRuntime.JRE_CONTAINER).append("org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType").append(vmInstall.getName()), IRuntimeClasspathEntry.BOOTSTRAP_CLASSES));

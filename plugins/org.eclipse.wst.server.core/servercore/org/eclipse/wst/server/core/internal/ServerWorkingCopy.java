@@ -129,7 +129,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		setAttribute(PROP_NAME, name);
 	}
 	
-	public void setLocked(boolean b) {
+	public void setReadOnly(boolean b) {
 		setAttribute(PROP_LOCKED, b);
 	}
 
@@ -195,8 +195,8 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.subTask(ServerPlugin.getResource("%savingTask", getName()));
 
-		if (!force)
-			wch.validateTimestamp(getOriginal());
+		if (!force && getOriginal() != null)
+			wch.validateTimestamp(getOriginal().getTimestamp());
 
 		if (server == null) {
 			server = new Server(file);

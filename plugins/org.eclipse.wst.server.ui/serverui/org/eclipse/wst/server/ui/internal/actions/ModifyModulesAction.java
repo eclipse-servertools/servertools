@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,31 +12,62 @@ package org.eclipse.wst.server.ui.internal.actions;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
-
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.*;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.ui.actions.IServerAction;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.wst.server.ui.internal.wizard.ModifyModulesWizard;
-import org.eclipse.swt.widgets.Shell;
 /**
- * 
+ * Action to modify the modules of a server.
  */
-public class AddRemoveModulesAction implements IServerAction {
-	public boolean supports(IServer server) {
-		if (server == null)
-			return false;
-		IFolder configuration = server.getServerConfiguration();
-		return (!server.getServerType().hasServerConfiguration() || configuration != null);
+public class ModifyModulesAction implements IObjectActionDelegate {
+	protected IWorkbenchPart part;
+	protected IServer server;
+
+	/**
+	 * ModifyModulesAction constructor comment.
+	 */
+	public ModifyModulesAction() {
+		super();
 	}
 
-	public void run(Shell shell, IServer server) {
+	/*
+	 * Notifies this action delegate that the selection in the workbench has changed. 
+	 */
+	public void selectionChanged(IAction action, ISelection selection) {
+		server = null;
+		
+		if (selection instanceof IStructuredSelection) {
+			IStructuredSelection sel = (IStructuredSelection) selection;
+			Object obj = sel.getFirstElement();
+			if (obj instanceof IServer)
+				server = (IServer) obj;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
+	 */
+	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+		part = targetPart;
+	}
+
+	/*
+	 * Performs this action.
+	 */
+	public void run(IAction action) {
+		if (server == null)
+			return;
+		
+		Shell shell = part.getSite().getShell();
 		//if (!ServerUIUtil.promptIfDirty(shell, server))
 		//	return;
 		

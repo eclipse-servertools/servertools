@@ -124,7 +124,7 @@ public abstract class Base {
 		return getAttribute(PROP_NAME, "");
 	}
 
-	public boolean isLocked() {
+	public boolean isReadOnly() {
 		return getAttribute(PROP_LOCKED, false);
 	}
 

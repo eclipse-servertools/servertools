@@ -119,10 +119,7 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 	}
 
 	public ImageDescriptor getImageDescriptor() {
-		if (serverId != null)
-			return ImageResource.getImageDescriptor(ImageResource.IMG_SERVER);
-		
-		return ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_CONFIGURATION);
+		return ImageResource.getImageDescriptor(ImageResource.IMG_SERVER);
 	}
 	
 	/**

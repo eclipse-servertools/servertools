@@ -39,7 +39,7 @@ public class ModuleType implements IModuleType {
 	}
 	
 	public String getName() {
-		ModuleKind mt = getModuleType(id);
+		ModuleKind mt = findModuleType(id);
 		if (mt != null)
 			return mt.getName();
 		return null;
@@ -71,16 +71,12 @@ public class ModuleType implements IModuleType {
 	 * if none. This convenience method searches the list of known
 	 * module types ({@link #getModuleTypes()}) for the one a matching
 	 * module type id ({@link ModuleKind#getId()}). The id may not be null.
-	 * <p>
-	 * [issue: Consider renaming this method findModuleType
-	 * to make it clear that it is searching.]
-	 * </p>
 	 *
 	 * @param the module type id
 	 * @return the module type, or <code>null</code> if there is no module type
 	 * with the given id
 	 */
-	public static ModuleKind getModuleType(String id) {
+	public static ModuleKind findModuleType(String id) {
 		if (id == null)
 			throw new IllegalArgumentException();
 

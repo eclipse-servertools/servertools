@@ -23,7 +23,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 
 import org.eclipse.wst.server.ui.internal.ServerLabelProvider;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.ServerUIPreferences;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
@@ -52,15 +51,6 @@ public class ServerUICore {
 	 */
 	private ServerUICore() {
 		super();
-	}
-
-	/**
-	 * Return the UI preferences.
-	 * 
-	 * @return IServerUIPreferences
-	 */
-	public static IServerUIPreferences getPreferences() {
-		return new ServerUIPreferences();
 	}
 	
 	/**

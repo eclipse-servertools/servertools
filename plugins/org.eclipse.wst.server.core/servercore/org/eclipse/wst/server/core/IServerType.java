@@ -28,11 +28,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * This interface is not intended to be implemented by clients.
  * </p>
  * <p>
- * [issue: Equality/identify for server types? Are IServerType
- * instances guaranteed to be canonical (client can use ==),
- * or is it possible for there to be non-identical IServerType
- * objects in play that both represent the same server type?
- * The latter is the more common; type should spec equals.]
+ * Two server types are identical if and only if they have the same id.
  * </p>
  * <p>
  * <it>Caveat: The server core API is still in an early form, and is

@@ -69,7 +69,7 @@ public class ProjectProperties implements IProjectProperties {
 			else
 				serverProject = false;
 		} catch (Exception e) {
-			Trace.trace("Could not load preferences: " + e.getMessage());
+			Trace.trace(Trace.SEVERE, "Could not load preferences: " + e.getMessage());
 		} finally {
 			try {
 				in.close();

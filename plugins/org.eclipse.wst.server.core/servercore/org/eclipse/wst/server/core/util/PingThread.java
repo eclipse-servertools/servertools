@@ -117,7 +117,7 @@ public class PingThread {
 	 * Tell the pinging to stop.
 	 */
 	public void stopPinging() {
-		Trace.trace("Ping: stopping");
+		Trace.trace(Trace.FINEST, "Ping: stopping");
 		stop = true;
 	}
 }

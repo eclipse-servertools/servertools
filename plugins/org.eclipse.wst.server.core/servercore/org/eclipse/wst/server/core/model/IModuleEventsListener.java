@@ -16,8 +16,8 @@ public interface IModuleEventsListener {
 	/**
 	 * A module or factory has been changed as specified in the event.
 	 *
-	 * @param factoryEvent org.eclipse.wst.server.core.model.IModuleFactoryEvent[]
-	 * @param event org.eclipse.wst.server.core.model.IModuleEvent[]
+	 * @param factoryEvent org.eclipse.wst.server.core.model.ModuleFactoryEvent[]
+	 * @param event org.eclipse.wst.server.core.model.ModuleEvent[]
 	 */
-	public void moduleEvents(IModuleFactoryEvent[] factoryEvent, IModuleEvent[] event);
+	public void moduleEvents(ModuleFactoryEvent[] factoryEvent, ModuleEvent[] event);
 }

@@ -20,7 +20,6 @@ import org.eclipse.jface.viewers.*;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.*;
-import org.eclipse.wst.server.ui.internal.actions.ServerAction;
 import org.eclipse.wst.server.ui.internal.view.tree.DisabledMenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -146,6 +145,7 @@ public class ServersView extends ViewPart {
 		Menu menu = menuManager.createContextMenu(parent);
 		table.setMenu(menu);
 		getSite().registerContextMenu(menuManager, tableViewer);
+		getSite().setSelectionProvider(tableViewer);
 	}
 
 	protected void selectServerProcess(Object process) {
@@ -380,10 +380,6 @@ public class ServersView extends ViewPart {
 				menu.add(restartProjectMenu);
 		}
 		
-		if (server != null) {
-			ServerAction.addServerMenuItems(shell, menu, server);
-		}
-	
 		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS+"-end"));
 	}
@@ -415,6 +411,13 @@ public class ServersView extends ViewPart {
 		list.toArray(sc);
 		return sc;
 	}*/
+	
+	/*
+    * @see IWorkbenchPart#getAdapter(Class)
+    */
+   /*public Object getAdapter(Class adapter) {
+       return null;
+   }*/
 	
 	/**
 	 * 

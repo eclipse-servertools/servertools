@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.ui.ServerImageResource;
+import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -93,7 +93,7 @@ public class TextResourceAdapter implements IAdaptable, IWorkbenchAdapter, IServ
 	 */
 	public ImageDescriptor getImageDescriptor(Object object) {
 		if (thisStyle == STYLE_SERVERS)
-			return ServerImageResource.getImageDescriptor(ServerImageResource.IMG_SERVER_FOLDER);
+			return null;
 		//else if (thisStyle == STYLE_SERVERS_AND_CONFIGURATIONS)
 		//	return ServerImageResource.getImageDescriptor(ServerImageResource.IMG_SERVER_PROJECT);
 		//else if (thisStyle == STYLE_NO_CONFIGURATION)
@@ -103,7 +103,7 @@ public class TextResourceAdapter implements IAdaptable, IWorkbenchAdapter, IServ
 			return sharedImages.getImageDescriptor(IDE.SharedImages.IMG_OBJ_PROJECT);
 		}
 		else if (thisStyle == STYLE_NO_SERVERS)
-			return ServerImageResource.getImageDescriptor(ServerImageResource.IMG_SERVER_CONFIGURATION_MISSING);
+			return ImageResource.getImageDescriptor(ImageResource.IMG_SERVER_CONFIGURATION_MISSING);
 		else
 			return null;
 	}

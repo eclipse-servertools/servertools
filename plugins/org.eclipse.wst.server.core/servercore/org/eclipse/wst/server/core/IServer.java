@@ -62,15 +62,7 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
  * ]
  * </p>
  * <p>
- * [issue: The information actually stored in the (.server) file is:
- * server id and name, server type id, runtime id, server configuration id,
- * and test-environment. It's unclear what's gained by storing this
- * information in a workspace file. Is it so that this information
- * can be shared between users via a repository? Or is it just so that
- * there would be something to open in the resource navigator view?]
- * </p>
- * <p>
- * [issue: Equality/identify for servers?]
+ * Two servers are identical if and only if they have the same id.
  * </p>
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
@@ -82,32 +74,6 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
  * @since 1.0
  */
 public interface IServer extends IServerAttributes, IAdaptable {
-	/**
-	 * File extension (value "server") for serialized representation of
-	 * server instances.
-	 * <p>
-	 * [issue: What is relationship between this file extension and
-	 * the file passed to IServerType.create(...) or returned by
-	 * IServer.getFile()? That is, are server files expected to end
-	 * in ".server", or is this just a default? If the former
-	 * (as I suspect), then IServerType.create needs to say so,
-	 * and the implementation should enforce the restriction.]
-	 * </p>
-	 */
-	public static final String FILE_EXTENSION = "server";
-
-	/**
-	 * Server id attribute (value "server-id") of launch configurations.
-	 * This attribute is used to tag a launch configuration with th
-	 * id of the corresponding server.
-	 * <p>
-	 * [issue: This feels like an implementation detail. If it is to
-	 * remain API, need to explain how a client uses this attribute.]
-	 * </p>
-	 * @see ILaunchConfiguration
-	 */
-	public static final String ATTR_SERVER_ID = "server-id";
-
 	/**
 	 * Server state constant (value 0) indicating that the
 	 * server is in an unknown state.
@@ -366,7 +332,15 @@ public interface IServer extends IServerAttributes, IAdaptable {
 	 */
 	public ILaunchConfiguration getLaunchConfiguration(boolean create, IProgressMonitor monitor) throws CoreException;
 
-	public void setLaunchDefaults(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor);
+	/**
+	 * Configure the given launch configuration to start this server. This method is called whenever
+	 * the server is started to ensure that the launch configuration is accurate and up to date.
+	 * 
+	 * @param workingCopy
+	 * @param monitor
+	 * @throws CoreException
+	 */
+	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Asynchronously starts this server in the given launch mode.
@@ -401,19 +375,15 @@ public interface IServer extends IServerAttributes, IAdaptable {
 	 * to start the server, and an internal thread and listener to detect
 	 * when the server has finished starting.
 	 * </p>
-	 * <p>
-	 * [issue: Is there are particular reason why this method
-	 * does not return the ILaunch that was used?]
-	 * </p>
 	 *
 	 * @param launchMode a mode in which a server can be launched,
-	 * one of the mode constants defined by
-	 * {@link org.eclipse.debug.core.ILaunchManager}
+	 *    one of the mode constants defined by
+	 *    {@link org.eclipse.debug.core.ILaunchManager}
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @exception CoreException if an error occurs while trying to start the server
 	 */
-	public void synchronousStart(String launchMode, IProgressMonitor monitor) throws CoreException;
+	public ILaunch synchronousStart(String launchMode, IProgressMonitor monitor) throws CoreException;
 	
 	/**
 	 * Returns whether this server is in a state that it can
@@ -421,12 +391,11 @@ public interface IServer extends IServerAttributes, IAdaptable {
 	 * that are currently running can be restarted.
 	 *
 	 * @param launchMode a mode in which a server can be launched,
-	 * one of the mode constants defined by
-	 * {@link org.eclipse.debug.core.ILaunchManager}
-	 * @return <code>true</code> if this server can be restarted
-	 * in the given mode, and <code>false</code> if it is either
-	 * not ready to be restarted or if it does not support the given
-	 * mode
+	 *    one of the mode constants defined by
+	 *    {@link org.eclipse.debug.core.ILaunchManager}
+	 * @return <code>true</code> if this server can be restarted in the
+	 *    given mode, and <code>false</code> if it is either not ready
+	 *    to be restarted or if it does not support the given mode
 	 */
 	public boolean canRestart(String mode);
 	
@@ -476,24 +445,19 @@ public interface IServer extends IServerAttributes, IAdaptable {
 	 * </p>
 	 *
 	 * @param launchMode a mode in which a server can be launched,
-	 * one of the mode constants defined by
-	 * {@link org.eclipse.debug.core.ILaunchManager}
+	 *    one of the mode constants defined by
+	 *    {@link org.eclipse.debug.core.ILaunchManager}
 	 */
 	public void synchronousRestart(String launchMode, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Returns whether this server is in a state that it can
 	 * be stopped.
-	 * <p>
-	 * [issue: Are there servers (or server types) that cannot be
-	 * stopped? For instance, a server running on a remote host that 
-	 * can be attached to, a published to, but neither started or
-	 * stopped via this API. Or are we only talking about whether
-	 * it is inconvenient to stop at this time?]
-	 * </p>
+	 * Servers can be stopped if they are not already stopped and if
+	 * they belong to a state-set that can be stopped.
 	 *
 	 * @return <code>true</code> if this server can be stopped,
-	 * and <code>false</code> otherwise
+	 *    and <code>false</code> otherwise
 	 */
 	public boolean canStop();
 
@@ -512,6 +476,7 @@ public interface IServer extends IServerAttributes, IAdaptable {
 	 * should be a mechanism that allows failing asynch operations
 	 * to be diagnosed.]
 	 * </p>
+	 * 
 	 * @param force <code>true</code> to kill the server, or <code>false</code>
 	 *    to stop normally
 	 */
@@ -524,8 +489,11 @@ public interface IServer extends IServerAttributes, IAdaptable {
 	 * to stop the server, and an internal thread and listener to detect
 	 * when the server has complied.
 	 * </p>
+	 * 
+	 * @param force <code>true</code> to kill the server, or <code>false</code>
+	 *    to stop normally
 	 */
-	public void synchronousStop();
+	public void synchronousStop(boolean force);
 
 	/**
 	 * Returns whether the given module can be restarted.

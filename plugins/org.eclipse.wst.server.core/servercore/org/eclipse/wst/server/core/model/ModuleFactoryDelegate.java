@@ -18,7 +18,6 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.internal.Module;
 import org.eclipse.wst.server.core.internal.ModuleFactory;
 import org.eclipse.wst.server.core.internal.Trace;
-import org.eclipse.wst.server.core.util.ModuleFactoryEvent;
 /**
  * A module factory delegate provides a mechanism for discovering
  * modules. A module factory delegate is specified by the
@@ -205,7 +204,7 @@ public abstract class ModuleFactoryDelegate {
 		IModuleFactoryListener[] dfl = new IModuleFactoryListener[size];
 		listeners.toArray(dfl);
 		
-		IModuleFactoryEvent event = new ModuleFactoryEvent(factory.getId(), added, removed);
+		ModuleFactoryEvent event = new ModuleFactoryEvent(added, removed);
 		
 		for (int i = 0; i < size; i++) {
 			try {

@@ -6,13 +6,11 @@
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
- *    IBM - Initial API and implementation
+ *     IBM - Initial API and implementation
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal;
 
 import org.eclipse.core.expressions.PropertyTester;
-import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.ServerUtil;
 /**
  * 
  */
@@ -21,11 +19,6 @@ public class ServerPropertyTester extends PropertyTester {
 	 * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[], java.lang.Object)
 	 */
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-		try {
-			IModule module = ServerUtil.getModule(receiver, false);
-			return (module != null);
-		} catch (Exception e) {
-			return true;
-		}
+		return ServerUIPlugin.hasModuleArtifact(receiver);
 	}
 }

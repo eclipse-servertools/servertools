@@ -72,7 +72,7 @@ public interface IRuntimeLocator {
 	public boolean supportsType(String runtimeTypeId);
 
 	/**
-	 * Searches for local runtimes. 
+	 * Searches for local runtimes.
 	 * It uses the callback listener to report runtimes that are found.
 	 * The path contains the absolute path of the folder to search in,
 	 * or <code>null</code> to search the entire machine.

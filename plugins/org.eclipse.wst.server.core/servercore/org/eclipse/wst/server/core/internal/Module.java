@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.IModuleListener;
 import org.eclipse.wst.server.core.model.ModuleDelegate;
-import org.eclipse.wst.server.core.util.ModuleEvent;
+import org.eclipse.wst.server.core.model.ModuleEvent;
 /**
  * 
  */

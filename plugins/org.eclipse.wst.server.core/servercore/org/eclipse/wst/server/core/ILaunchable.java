@@ -10,8 +10,8 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 /**
- * A launchable is a "reference" to a module object. The
- * module object is the actual resource on the server; the
+ * A launchable is a "reference" to a module artifact. The
+ * module artifact is the actual resource on the server; the
  * launchable is the information necessary to access that
  * resource. Examples may include HTTP requests and JNDI names.
  */

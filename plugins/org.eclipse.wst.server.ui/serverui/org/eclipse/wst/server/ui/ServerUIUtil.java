@@ -17,10 +17,11 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.ui.editor.IServerEditorInput;
+import org.eclipse.wst.server.ui.internal.PublishDialog;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.ServerUIPreferences;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorInput;
-import org.eclipse.wst.server.ui.internal.publish.PublishDialog;
 import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
 import org.eclipse.wst.server.ui.internal.task.InputWizardFragment;
 import org.eclipse.wst.server.ui.internal.task.SaveRuntimeTask;
@@ -79,16 +80,12 @@ public class ServerUIUtil {
 
 	/**
 	 * Publish the given server, and display the publishing in a dialog.
-	 * If keepOpen is true, the publish dialog will remain open after
-	 * publishing. If false, it will only remain open if there was an
-	 * error, info, or warning message.
 	 *
 	 * @param server
-	 * @param keepOpen
 	 * @return IStatus
 	 */
-	public static IStatus publishWithDialog(Shell shell, IServer server, boolean keepOpen) {
-		return PublishDialog.publish(shell, server, keepOpen);
+	public static IStatus publishWithDialog(Shell shell, IServer server) {
+		return PublishDialog.publish(shell, server);
 	}
 
 	/**
@@ -126,10 +123,10 @@ public class ServerUIUtil {
 	 * @return boolean  - Returns false if the user cancelled the operation
 	 */
 	public static boolean saveEditors() {
-		byte b = ServerUICore.getPreferences().getSaveEditors();
-		if (b == IServerUIPreferences.SAVE_EDITORS_NEVER)
+		byte b = ServerUIPlugin.getPreferences().getSaveEditors();
+		if (b == ServerUIPreferences.SAVE_EDITORS_NEVER)
 			return true;
-		return ServerUIPlugin.getInstance().getWorkbench().saveAllEditors(b == IServerUIPreferences.SAVE_EDITORS_PROMPT);			
+		return ServerUIPlugin.getInstance().getWorkbench().saveAllEditors(b == ServerUIPreferences.SAVE_EDITORS_PROMPT);			
 	}
 
 	/**
@@ -140,7 +137,7 @@ public class ServerUIUtil {
 	public static boolean publish(Shell shell, IServer server) {
 		if (ServerCore.getServerPreferences().isAutoPublishing() && server.shouldPublish()) {
 			// publish first
-			IStatus status = publishWithDialog(shell, server, false);
+			IStatus status = publishWithDialog(shell, server);
 
 			if (status == null || status.getSeverity() == IStatus.ERROR) // user cancelled
 				return false;

@@ -24,9 +24,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.launching.JavaSourceLookupUtil;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.*;
 /**
  *
  */
@@ -37,7 +35,7 @@ public class TomcatSourcePathComputerDelegate implements ISourcePathComputerDele
 	public ISourceContainer[] computeSourceContainers(ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException {
 		IRuntimeClasspathEntry[] entries = JavaRuntime.computeUnresolvedSourceLookupPath(configuration);
 
-		String serverId = configuration.getAttribute(IServer.ATTR_SERVER_ID, (String) null);
+		String serverId = configuration.getAttribute(IServerAttributes.ATTR_SERVER_ID, (String) null);
 
 		IServer server = null;
 		if (serverId != null)

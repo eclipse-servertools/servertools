@@ -10,12 +10,9 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.actions;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
@@ -30,7 +27,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.wizard.*;
@@ -47,14 +43,10 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	protected Object selection;
 
 	protected IWorkbenchWindow window;
-	
-	protected static boolean initialized = false;
-	
+
 	protected static Object globalSelection;
 
 	protected static Map globalLaunchMode;
-
-	private static transient List propertyListeners;
 
 	/**
 	 * RunOnServerActionDelegate constructor comment.
@@ -79,50 +71,6 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	public void init(IWorkbenchWindow newWindow) {
 		window = newWindow;
 	}
-	
-	/**
-	 * Add a property change listener to this server.
-	 *
-	 * @param listener java.beans.PropertyChangeListener
-	 */
-	public static void addPropertyChangeListener(PropertyChangeListener listener) {
-		if (propertyListeners == null)
-			propertyListeners = new ArrayList();
-		propertyListeners.add(listener);
-	}
-	
-	/**
-	 * Remove a property change listener from this server.
-	 *
-	 * @param listener java.beans.PropertyChangeListener
-	 */
-	public static void removePropertyChangeListener(PropertyChangeListener listener) {
-		if (propertyListeners != null)
-			propertyListeners.remove(listener);
-	}
-	
-	/**
-	 * Fire a property change event.
-	 */
-	protected void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue) {
-		if (propertyListeners == null)
-			return;
-	
-		PropertyChangeEvent event = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
-		try {
-			Iterator iterator = propertyListeners.iterator();
-			while (iterator.hasNext()) {
-				try {
-					PropertyChangeListener listener = (PropertyChangeListener) iterator.next();
-					listener.propertyChange(event);
-				} catch (Exception e) {
-					Trace.trace("Error firing property change event", e);
-				}
-			}
-		} catch (Exception e) {
-			Trace.trace("Error in property event", e);
-		}
-	}
 
 	/**
 	 * Run the resource on a server.
@@ -131,9 +79,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 */
 	protected void run(IProgressMonitor monitor) {
 		String launchMode = getLaunchMode();
-		firePropertyChangeEvent("launchMode", null, launchMode);
-
-		IModuleArtifact[] moduleObjects = ServerUtil.getModuleObjects(selection);
+		IModuleArtifact moduleArtifact = ServerUIPlugin.loadModuleArtifact(selection);
 		
 		Shell shell;
 		if (window != null)
@@ -141,24 +87,12 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		else
 			shell = ServerUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
 
-		if (moduleObjects == null || moduleObjects.length == 0) {
+		if (moduleArtifact == null) {
 			EclipseUtil.openError(ServerUIPlugin.getResource("%errorNoModules"));
 			Trace.trace(Trace.FINEST, "No modules");
 			return;
 		}
-		IModule module = moduleObjects[0].getModule();
-		if (moduleObjects.length > 1) {
-			// check if the modules are all in the same module
-			int size = moduleObjects.length;
-			for (int i = 0; i < size; i++) {
-				IModule module2 = moduleObjects[i].getModule();
-				if (!module.equals(module2)) {
-					EclipseUtil.openError("Too many module objects");
-					Trace.trace(Trace.SEVERE, "Too many module objects! Unsupported!");
-					return;
-				}
-			}
-		}
+		IModule module = moduleArtifact.getModule();
 
 		// check for servers with the given start mode
 		IServer[] servers = ServerCore.getServers();
@@ -208,10 +142,20 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		if (project != null)
 			server = ServerCore.getProjectProperties(project).getDefaultServer();
 		
-		
 		// ignore preference if the server doesn't support this mode.
 		if (server != null && !ServerUtil.isCompatibleWithLaunchMode(server, launchMode))
 			server = null;
+		
+		if (server != null && !ServerUtil.containsModule(server, module, monitor)) {
+			IServerWorkingCopy wc = server.createWorkingCopy();
+			try {
+				ServerUtil.modifyModules(wc, new IModule[] { module }, new IModule[0], monitor);
+				wc.save(false, monitor);
+			} catch (CoreException ce) {
+				Trace.trace(Trace.SEVERE, "Could not add module to server", ce);
+				server = null;
+			}
+		}
 
 		boolean tasksRun = false;	
 		if (server == null) {
@@ -260,31 +204,21 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		
 		// get the launchable adapter and module object
 		ILaunchableAdapter launchableAdapter = null;
-		IModuleArtifact moduleObject = null;
 		ILaunchable launchable = null;
-		//IModuleArtifact[] mo = moduleObjects.iterator();
-		if (moduleObjects != null) {
-			int size = moduleObjects.length;
-			for (int i = 0; i < size; i++) {
-				IModuleArtifact moduleObject2 = moduleObjects[i];
-				
-				ILaunchableAdapter[] adapters = ServerCore.getLaunchableAdapters();
-				if (adapters != null) {
-					int size2 = adapters.length;
-					for (int j = 0; j < size2 && moduleObject == null; j++) {
-						ILaunchableAdapter adapter = adapters[j];
-						try {
-							ILaunchable launchable2 = adapter.getLaunchable(server, moduleObject2);
-							Trace.trace(Trace.FINEST, "adapter= " + adapter + ", launchable= " + launchable2);
-							if (launchable2 != null) {
-								launchableAdapter = adapter;
-								moduleObject = moduleObject2;
-								launchable = launchable2;
-							}
-						} catch (Exception e) {
-							Trace.trace(Trace.SEVERE, "Error in launchable adapter", e);
-						}
+		ILaunchableAdapter[] adapters = ServerCore.getLaunchableAdapters();
+		if (adapters != null) {
+			int size2 = adapters.length;
+			for (int j = 0; j < size2; j++) {
+				ILaunchableAdapter adapter = adapters[j];
+				try {
+					ILaunchable launchable2 = adapter.getLaunchable(server, moduleArtifact);
+					Trace.trace(Trace.FINEST, "adapter= " + adapter + ", launchable= " + launchable2);
+					if (launchable2 != null) {
+						launchableAdapter = adapter;
+						launchable = launchable2;
 					}
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Error in launchable adapter", e);
 				}
 			}
 		}
@@ -319,7 +253,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		// and cue the client to start
 		int state = server.getServerState();
 		if (state == IServer.STATE_STARTING) {
-			ServerStartupListener listener = new ServerStartupListener(shell, server, client, launchableAdapter, moduleObject, launchMode, module);
+			ServerStartupListener listener = new ServerStartupListener(shell, server, client, launchableAdapter, moduleArtifact, launchMode, module);
 			listener.setEnabled(true);
 		} else if (state == IServer.STATE_STARTED) {
 			boolean restart = false;
@@ -346,16 +280,16 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				
 				if (preferences.isAutoPublishing() && !autoPublish(shell, server))
 					return;
-				ServerStartupListener.launchClientUtil(server, module, launchableAdapter, moduleObject, launchMode, client);
+				ServerStartupListener.launchClientUtil(server, module, launchableAdapter, moduleArtifact, launchMode, client);
 			} else {
 				if (preferences.isAutoPublishing() && !autoPublish(shell, server))
 					return;
 	
 				// open client
-				ServerStartupListener.launchClientUtil(server, module, launchableAdapter, moduleObject, launchMode, client);
+				ServerStartupListener.launchClientUtil(server, module, launchableAdapter, moduleArtifact, launchMode, client);
 			}
 		} else if (state != IServer.STATE_STOPPING) {
-			ServerStartupListener listener = new ServerStartupListener(shell, server, client, launchableAdapter, moduleObject, launchMode, module);
+			ServerStartupListener listener = new ServerStartupListener(shell, server, client, launchableAdapter, moduleArtifact, launchMode, module);
 			if (preferences.isAutoPublishing() && !autoPublish(shell, server))
 				return;
 
@@ -402,7 +336,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	protected boolean autoPublish(Shell shell, IServer server) {
 		// publish first
 		if (server.shouldPublish()) {
-			IStatus publishStatus = ServerUIUtil.publishWithDialog(shell, server, false);
+			IStatus publishStatus = ServerUIUtil.publishWithDialog(shell, server);
 	
 			if (publishStatus == null || publishStatus.getSeverity() == IStatus.ERROR)
 				return false;
@@ -433,30 +367,6 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 */
 	public void run(IAction action) {
 		Trace.trace(Trace.FINEST, "Running on Server...");
-		if (!initialized) {
-			initialized = true;
-			
-			/*IModuleFactory[] factories = ServerCore.getModuleFactories();
-			if (factories != null) {
-				int size = factories.length;
-				for (int i = 0; i < size; i++)
-					factories[i].getModules();
-			}*/
-			
-			try {
-				IModule module = ServerUtil.getModule(globalSelection, true);
-				findGlobalLaunchModes(module);
-				action.setEnabled(isEnabled());
-			} catch (Exception e) {
-				// ignore
-			}
-			if (!isEnabled()) {
-				EclipseUtil.openError(ServerUIPlugin.getResource("%errorNoServer"));
-				Trace.trace(Trace.FINEST, "Uninitialized");
-				return;
-			}
-		}
-
 		try {
 			run(new NullProgressMonitor());
 		} catch (Exception e) {
@@ -508,19 +418,26 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			return;
 		}
 
-		if (selection != globalSelection || !initialized) {
+		if (selection != globalSelection) {
 			Trace.trace(Trace.FINEST, "Selection: " + selection);
 			if (selection != null)	
 				Trace.trace(Trace.FINEST, "Selection type: " + selection.getClass().getName());
 			globalSelection = selection;
 			globalLaunchMode = new HashMap();
-			try {
-				Trace.trace(Trace.FINEST, "calling getModule() " + initialized);
-				IModule module = ServerUtil.getModule(globalSelection, initialized);
-				Trace.trace(Trace.FINEST, "module: " + module);
+			if (!ServerUIPlugin.hasModuleArtifact(globalSelection)) {
+				action.setEnabled(false);
+				return;
+			}
+			
+			Trace.trace(Trace.FINEST, "checking for module artifact");
+			IModuleArtifact moduleArtifact = ServerUIPlugin.getModuleArtifact(globalSelection);
+			IModule module = null;
+			if (moduleArtifact != null)
+				module = moduleArtifact.getModule();
+			Trace.trace(Trace.FINEST, "moduleArtifact= " + moduleArtifact + ", module= " + module);
+			if (module != null)
 				findGlobalLaunchModes(module);
-			} catch (Exception e) {
-				Trace.trace(Trace.FINEST, "not initialized");
+			else {
 				globalLaunchMode.put(ILaunchManager.RUN_MODE, new Boolean(true));
 				globalLaunchMode.put(ILaunchManager.DEBUG_MODE, new Boolean(true));
 				globalLaunchMode.put(ILaunchManager.PROFILE_MODE, new Boolean(true));

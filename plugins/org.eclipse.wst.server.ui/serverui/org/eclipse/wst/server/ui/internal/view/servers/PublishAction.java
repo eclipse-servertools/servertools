@@ -48,6 +48,6 @@ public class PublishAction extends AbstractServerAction {
 		if (!ServerUIUtil.saveEditors())
 			return;
 
-		ServerUIUtil.publishWithDialog(shell, server, true);
+		ServerUIUtil.publishWithDialog(shell, server);
 	}
 }

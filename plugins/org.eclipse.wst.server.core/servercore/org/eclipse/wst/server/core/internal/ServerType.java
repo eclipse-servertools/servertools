@@ -10,6 +10,8 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.internal;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -155,6 +157,36 @@ public class ServerType implements IServerType, IOrdered {
 		swc.setDefaults(monitor);
 		return swc;
 	}
+	
+	/**
+	 * Returns an array of all known runtime instances of
+	 * the given runtime type. This convenience method filters the list of known
+	 * runtime ({@link #getRuntimes()}) for ones with a matching
+	 * runtime type ({@link IRuntime#getRuntimeType()}). The array will not
+	 * contain any working copies.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @param runtimeType the runtime type
+	 * @return a possibly-empty list of runtime instances {@link IRuntime}
+	 * of the given runtime type
+	 */
+	protected static IRuntime[] getRuntimes(IRuntimeType runtimeType) {
+		List list = new ArrayList();
+		IRuntime[] runtimes = ServerCore.getRuntimes();
+		if (runtimes != null) {
+			int size = runtimes.length;
+			for (int i = 0; i < size; i++) {
+				if (runtimes[i].getRuntimeType() != null && runtimes[i].getRuntimeType().equals(runtimeType))
+					list.add(runtimes[i]);
+			}
+		}
+		
+		IRuntime[] r = new IRuntime[list.size()];
+		list.toArray(r);
+		return r;
+	}
 
 	public IServerWorkingCopy createServer(String id, IFile file, IProgressMonitor monitor) throws CoreException {
 		if (id == null || id.length() == 0)
@@ -164,7 +196,7 @@ public class ServerType implements IServerType, IOrdered {
 		if (hasRuntime()) {
 			// look for existing runtime
 			IRuntimeType runtimeType = getRuntimeType();
-			IRuntime[] runtimes = ServerUtil.getRuntimes(runtimeType);
+			IRuntime[] runtimes = getRuntimes(runtimeType);
 			if (runtimes != null && runtimes.length > 0)
 				runtime = runtimes[0];
 			else {

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 /**
  * Server type content provider.
@@ -123,7 +124,7 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 
 	protected boolean checkForNonStubEnvironmentRuntime(IServerType serverType) {
 		IRuntimeType runtimeType = serverType.getRuntimeType();
-		IRuntime[] runtimes = ServerUtil.getRuntimes(runtimeType);
+		IRuntime[] runtimes = ServerUIPlugin.getRuntimes(runtimeType);
 		if (runtimes == null || runtimes.length == 0)
 			return false;
 		

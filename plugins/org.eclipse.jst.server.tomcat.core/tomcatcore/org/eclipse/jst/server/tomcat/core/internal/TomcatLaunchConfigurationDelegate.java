@@ -17,13 +17,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate;
-import org.eclipse.jdt.launching.ExecutionArguments;
-import org.eclipse.jdt.launching.IVMInstall;
-import org.eclipse.jdt.launching.IVMRunner;
-import org.eclipse.jdt.launching.VMRunnerConfiguration;
+import org.eclipse.jdt.launching.*;
 
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerAttributes;
 import org.eclipse.wst.server.core.ServerCore;
 /**
  * 
@@ -31,7 +28,7 @@ import org.eclipse.wst.server.core.ServerCore;
 public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigurationDelegate {
 
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
-		String serverId = configuration.getAttribute(IServer.ATTR_SERVER_ID, (String) null);
+		String serverId = configuration.getAttribute(IServerAttributes.ATTR_SERVER_ID, (String) null);
 
 		IServer server = null;
 		if (serverId != null)

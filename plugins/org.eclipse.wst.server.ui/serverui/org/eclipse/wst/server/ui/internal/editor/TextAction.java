@@ -258,7 +258,7 @@ public class TextAction extends Action {
 				setEnabled(newText != null && newText.length() > 0);
 			}
 		} catch (Exception e) {
-			Trace.trace("Error updating text action", e);
+			Trace.trace(Trace.SEVERE, "Error updating text action", e);
 		}
 	}
 }

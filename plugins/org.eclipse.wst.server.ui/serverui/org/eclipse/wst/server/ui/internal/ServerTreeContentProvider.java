@@ -16,9 +16,9 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IModuleEvent;
+import org.eclipse.wst.server.core.model.ModuleEvent;
 import org.eclipse.wst.server.core.model.IModuleEventsListener;
-import org.eclipse.wst.server.core.model.IModuleFactoryEvent;
+import org.eclipse.wst.server.core.model.ModuleFactoryEvent;
 import org.eclipse.wst.server.core.util.ServerAdapter;
 import org.eclipse.wst.server.ui.internal.view.tree.ModuleResourceAdapter;
 import org.eclipse.wst.server.ui.internal.view.tree.ServerElementAdapter;
@@ -215,7 +215,7 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 	 */
 	private void addModuleEventsListener() {
 		moduleEventsListener = new IModuleEventsListener() {
-			public void moduleEvents(IModuleFactoryEvent[] factoryEvent, IModuleEvent[] event) {
+			public void moduleEvents(ModuleFactoryEvent[] factoryEvent, ModuleEvent[] event) {
 				Display.getDefault().syncExec(new Runnable() {
 					public void run() {
 						if (viewer != null)

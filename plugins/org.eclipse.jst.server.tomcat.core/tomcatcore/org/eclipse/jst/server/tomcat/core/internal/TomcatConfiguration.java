@@ -70,7 +70,8 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 
 	/**
 	 * Copies all files from the given directory in the workbench
-	 * to the given location.
+	 * to the given location.  Can be overridden by version specific
+	 * class to modify or enhance what publish does.
 	 *
 	 * @param from java.io.File
 	 * @param to java.io.File
@@ -79,9 +80,16 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	protected IStatus backupAndPublish(IPath confDir, boolean doBackup, IProgressMonitor monitor) {
 		MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%publishConfigurationTask"), null);
 		Trace.trace("Backup and publish");
-		try {
-			monitor = ProgressUtil.getMonitorFor(monitor);
+		monitor = ProgressUtil.getMonitorFor(monitor);
+
+		backupAndPublish(confDir, doBackup, ms, monitor, 0);
+
+		monitor.done();
+		return ms;
+	}
 	
+	protected void backupAndPublish(IPath confDir, boolean doBackup, MultiStatus ms, IProgressMonitor monitor, int additionalWork) {
+		try {
 			IPath backup = null;
 			if (doBackup) {
 				// create backup directory
@@ -99,24 +107,22 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 			else {
 				IPath path = config.getConfigurationDataPath();
 				backupPath(configPath, confDir, backup, ms, monitor);*/
-				backupFolder(getFolder(), confDir, backup, ms, monitor);
+				backupFolder(getFolder(), confDir, backup, ms, monitor, additionalWork);
 			//}
 		} catch (Exception e) {
 			Trace.trace("backupAndPublish() error", e);
 			IStatus s = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPublishConfiguration", new String[] {e.getLocalizedMessage()}), e);
 			ms.add(s);
 		}
-		monitor.done();
-		return ms;
 	}
 	
-	protected void backupFolder(IFolder folder, IPath confDir, IPath backup, MultiStatus ms, IProgressMonitor monitor) throws CoreException {
+	protected void backupFolder(IFolder folder, IPath confDir, IPath backup, MultiStatus ms, IProgressMonitor monitor, int additionalWork) throws CoreException {
 		IResource[] children = folder.members();
 		if (children == null)
 			return;
 		
 		int size = children.length;
-		monitor.beginTask(TomcatPlugin.getResource("%publishConfigurationTask"), size * 100);
+		monitor.beginTask(TomcatPlugin.getResource("%publishConfigurationTask"), size * 100 + additionalWork);
 		for (int i = 0; i < size; i++) {
 			if (children[i] instanceof IFile) {
 				try {

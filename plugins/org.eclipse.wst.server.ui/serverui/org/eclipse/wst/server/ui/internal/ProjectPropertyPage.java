@@ -159,7 +159,7 @@ public class ProjectPropertyPage extends PropertyPage {
 
 			return composite;
 		} catch (Exception e) {
-			Trace.trace("Error creating project property page", e);
+			Trace.trace(Trace.SEVERE, "Error creating project property page", e);
 			return null;
 		}
 	}

@@ -70,7 +70,7 @@ public class RuntimeTargetHandler implements IRuntimeTargetHandler, IOrdered {
 			list.toArray(s);
 			return s;
 		} catch (Exception e) {
-			Trace.trace("Could not parse runtime type ids: " + element);
+			Trace.trace(Trace.SEVERE, "Could not parse runtime type ids: " + element);
 			return null;
 		}
 	}

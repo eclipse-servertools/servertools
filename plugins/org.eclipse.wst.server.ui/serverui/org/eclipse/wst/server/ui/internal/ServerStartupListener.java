@@ -208,12 +208,12 @@ public class ServerStartupListener {
 					// display client on UI thread
 					Display.getDefault().asyncExec(new Runnable() {
 						public void run() {
-							Trace.trace("Attempting to load client: " + client);
+							Trace.trace(Trace.FINEST, "Attempting to load client: " + client);
 							try {
 								ILaunchable launchable = la.getLaunchable(server, mo);
 								client.launch(server, launchable, launchMode, server.getExistingLaunch());
 							} catch (Exception e) {
-								Trace.trace("Server client failed", e);
+								Trace.trace(Trace.SEVERE, "Server client failed", e);
 							}
 						}
 					});
@@ -228,12 +228,12 @@ public class ServerStartupListener {
 		// display client on UI thread
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				Trace.trace("Attempting to load client: " + client);
+				Trace.trace(Trace.FINEST, "Attempting to load client: " + client);
 				try {
 					ILaunchable launchable = la.getLaunchable(server, mo);
 					client.launch(server, launchable, launchMode, server.getExistingLaunch());
 				} catch (Exception e) {
-					Trace.trace("Server client failed", e);
+					Trace.trace(Trace.SEVERE, "Server client failed", e);
 				}
 			}
 		});

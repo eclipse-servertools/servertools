@@ -100,7 +100,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					edit.setEnabled(false);
 					remove.setEnabled(false);
 					pathLabel.setText("");
-				} else if (runtime.isLocked()) {
+				} else if (runtime.isReadOnly()) {
 					edit.setEnabled(false);
 					remove.setEnabled(false);
 					pathLabel.setText(runtime.getLocation() + "");

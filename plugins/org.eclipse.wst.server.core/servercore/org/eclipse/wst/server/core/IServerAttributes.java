@@ -69,7 +69,7 @@ import org.eclipse.core.runtime.*;
  * there would be something to open in the resource navigator view?]
  * </p>
  * <p>
- * [issue: Equality/identify for servers?]
+ * Two servers are identical if and only if they have the same id.
  * </p>
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
@@ -80,7 +80,7 @@ import org.eclipse.core.runtime.*;
  * 
  * @since 1.0
  */
-public interface IServerAttributes extends IElement, IAdaptable {
+public interface IServerAttributes extends IAdaptable {
 	/**
 	 * File extension (value "server") for serialized representation of
 	 * server instances.
@@ -106,6 +106,85 @@ public interface IServerAttributes extends IElement, IAdaptable {
 	 * @see ILaunchConfiguration
 	 */
 	public static final String ATTR_SERVER_ID = "server-id";
+	
+	/**
+	 * Returns the displayable name for this server.
+	 * <p>
+	 * Note that this name is appropriate for the current locale.
+	 * </p>
+	 *
+	 * @return a displayable name
+	 */
+	public String getName();
+	
+	/**
+	 * Returns the id of this server.
+	 * Each server (of a given type) has a distinct id, fixed for
+	 * its lifetime. Ids are intended to be used internally as keys;
+	 * they are not intended to be shown to end users.
+	 * 
+	 * @return the server id
+	 */
+	public String getId();
+
+	/**
+	 * Deletes the persistent representation of this server.
+	 * 
+	 * @throws CoreException if there was any error received while deleting the server
+	 */
+	public void delete() throws CoreException;
+
+	/**
+	 * Returns whether this server is marked read only.
+	 * When a server is read only, working copies can be created but
+	 * they cannot be saved.
+	 *
+	 * @return <code>true</code> if this server is marked as read only,
+	 *    and <code>false</code> otherwise
+	 */
+	public boolean isReadOnly();
+
+	/**
+	 * Returns true if this server is private (not shown in the UI).
+	 * 
+	 * @return <code>true</code> if this server is private,
+	 *    and <code>false</code> otherwise
+	 */
+	public boolean isPrivate();
+
+	/**
+	 * Returns true if this is a working copy.
+	 * 
+	 * @return <code>true</code> if this server is a working copy,
+	 *    and <code>false</code> otherwise
+	 */
+	public boolean isWorkingCopy();
+
+	/**
+	 * Returns true if the plugin containing the delegate is loaded.
+	 * 
+	 * @return boolean
+	 */
+	public boolean isDelegatePluginActivated();
+
+	/**
+	 * Returns true if the delegate has been loaded.
+	 * 
+	 * @return
+	 */
+	public boolean isDelegateLoaded();
+
+	public IStatus validateEdit(Object context);
+
+	/**
+	 * Returns the timestamp of this server.
+	 * Timestamps are monotonically increased each time the server is saved
+	 * and can be used to determine if any changes have been made on disk
+	 * since the server was loaded.
+	 * 
+	 * @return the server's timestamp
+	 */
+	public int getTimestamp();
 
 	/**
 	 * Returns the host for the server.
@@ -221,29 +300,6 @@ public interface IServerAttributes extends IElement, IAdaptable {
 	 * @return a new working copy
 	 */
 	public IServerWorkingCopy createWorkingCopy();
-	
-	/**
-	 * Returns whether the given server configuration can be used with
-	 * this server.
-	 * <p>
-	 * [issue: This seems to be just a convenience method. Given that it's 
-	 * straightforward enought for a client to compare 
-	 * this.getServerType().getServerConfiguration()
-	 * to configuration.getServerConfigurationType(),
-	 * it's not clear that there is a great need for this method.]
-	 * </p>
-	 * <p>
-	 * [issue: It does not make sense to allow a null configuration.]
-	 * </p>
-	 * 
-	 * Returns true if this is a configuration that is
-	 * applicable to (can be used with) this server.
-	 *
-	 * @param configuration the server configuration
-	 * @return <code>true</code> if this server supports the given server
-	 * configuration, and <code>false/code> otherwise
-	 */
-	public boolean isSupportedConfiguration(IPath configuration);
 
 	/**
 	 * Returns a temporary directory that the requestor can use
@@ -266,17 +322,15 @@ public interface IServerAttributes extends IElement, IAdaptable {
 	public IPath getTempDirectory();
 
 	/**
-	 * Returns an array of modules that are associated with
-	 * this server.
-	 * <p>
-	 * [issue: Clarify that these are root modules, not ones parented
-	 * by some other module.]
-	 * </p>
+	 * Returns an array of modules that are associated with this server.
+	 * This method returns the root modules, which are not parented within
+	 * another modules. They may contain child modules, which are also
+	 * deployed to this server.
 	 *
 	 * @return a possibly-empty array of modules
 	 */
 	public IModule[] getModules(IProgressMonitor monitor);
-	
+
 	/**
 	 * Returns whether the specified module modifications could be made to this
 	 * server at this time.

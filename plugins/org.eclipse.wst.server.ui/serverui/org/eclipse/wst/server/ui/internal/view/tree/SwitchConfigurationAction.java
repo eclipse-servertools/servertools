@@ -80,7 +80,7 @@ public class SwitchConfigurationAction extends Action {
 			ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
 			dialog.run(true, true, runnable);
 		} catch (Exception e) {
-			Trace.trace("Error switching server configuration", e);
+			Trace.trace(Trace.SEVERE, "Error switching server configuration", e);
 		}
 	}
 }
