@@ -30,15 +30,14 @@
 
 package org.eclipse.jst.server.generic.tests;
 
-import java.util.List;
-
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jst.server.generic.modules.J2eeSpecModuleFactoryDelegate;
-import org.eclipse.wst.server.core.model.IModule;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IModuleType;
 
 
 public class ModuleFactoryTests extends TestCase {
@@ -90,13 +89,15 @@ public class ModuleFactoryTests extends TestCase {
 	}
 	
 	public void testModules(){
-		List moduleList = J2eeSpecModuleFactoryDelegate.getInstance().getModules();	
+		IModule[] moduleList = J2eeSpecModuleFactoryDelegate.getInstance().getModules();	
 		assertNotNull(moduleList);
-		assertEquals(1,moduleList.size());
-		IModule aWebModule = (IModule)moduleList.get(0);
+		assertEquals(1,moduleList.length);
+		IModule aWebModule = (IModule)moduleList[0];
 		assertNotNull(aWebModule);
 		assertEquals("myWebApp",aWebModule.getName());
-		assertEquals("j2ee.web",aWebModule.getType());
+		IModuleType moduleType = aWebModule.getModuleType();
+		assertNotNull("Web module does not have a type",moduleType);
+		assertEquals("j2ee.web",moduleType.getId());
 	}
 	
 

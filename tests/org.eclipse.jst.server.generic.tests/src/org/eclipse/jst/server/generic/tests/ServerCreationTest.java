@@ -31,48 +31,43 @@
 package org.eclipse.jst.server.generic.tests;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jst.server.generic.internal.core.GenericServer;
 import org.eclipse.jst.server.generic.internal.core.GenericServerRuntime;
-import org.eclipse.jst.server.generic.internal.core.GenericServerWorkingCopy;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
-import org.eclipse.wst.server.core.IServerConfigurationType;
-import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
-import org.eclipse.wst.server.core.IServerState;
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.internal.RuntimeType;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IServerWorkingCopyDelegate;
+import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
+import org.eclipse.wst.server.core.model.RuntimeDelegate;
+import org.eclipse.wst.server.core.model.ServerDelegate;
 
 public class ServerCreationTest extends TestCase {
 
 	RuntimeType j2eeRuntimeType = null;
+	private final static String ID = "org.eclipse.jst.server.generic";
+
 	/*
 	 * @see TestCase#setUp()
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
-		List listAll = ServerCore.getRuntimeTypes();
-		if( listAll != null){
-			Iterator iterator = listAll.iterator();
-			while (iterator.hasNext()) {
-				RuntimeType runtimeType = (RuntimeType) iterator.next();
-				if("J2EE Runtime Library".equals(runtimeType.getName()))
-					j2eeRuntimeType = runtimeType;
+		IRuntimeType[] listAll = ServerCore.getRuntimeTypes();
+		if (listAll != null) {
+			for (int i = 0; i < listAll.length; i++) {
+				IRuntimeType runtimeType = listAll[i];
+
+				if ("J2EE Runtime Library".equals(runtimeType.getName()))
+					j2eeRuntimeType = (RuntimeType) runtimeType;
 			}
 		}
-		
+
 	}
 
 	/*
@@ -91,83 +86,99 @@ public class ServerCreationTest extends TestCase {
 		super(name);
 	}
 
-	public void testGetTypes() {	
+	public void testGetTypes() {
 		assertNotNull(j2eeRuntimeType);
 	}
-	
-	public void testCreateServer() throws Exception{	
-		assertNotNull(j2eeRuntimeType);
-		IRuntimeWorkingCopy runtimeWorkingCopy = j2eeRuntimeType.createRuntime(null);
-		ServerUtil.setRuntimeDefaultName(runtimeWorkingCopy);
-		assertNotNull(runtimeWorkingCopy.getName());
-		HashMap props = new HashMap();
-		props.put("mappernames","");
-		props.put("classPathVariableName","JONAS");
-		props.put("serverAddress","127.0.0.1");
-		props.put("jonasBase","C:\\nmd\\dev\\java\\appservers\\JOnAS-4.1.4");
-		props.put("jonasRoot","C:\\nmd\\dev\\java\\appservers\\JOnAS-4.1.4");
-		props.put("classPath","C:\\nmd\\dev\\java\\appservers\\JOnAS-4.1.4");
-		props.put("protocols","C:\\nmd\\dev\\java\\appservers\\JOnAS-4.1.4");
-		props.put("port","9000");
-		runtimeWorkingCopy.setAttribute(GenericServerRuntime.SERVER_DEFINITION_ID, "JonAS 4.1.4");
-		runtimeWorkingCopy.setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,props);
-		runtimeWorkingCopy.save(null);
-		List sTypes = ServerCore.getServerTypes();
-		Iterator sTypeIter = sTypes.iterator();
+
+	public void testCreateServer() throws Exception {
+		
+		// Finds the generic server type
+		IServerType[] sTypes = ServerCore.getServerTypes();
 		IServerType serverType = null;
-		while (sTypeIter.hasNext()) {
-			IServerType sType = (IServerType) sTypeIter.next();
-			if("org.eclipse.jst.server.generic".equals(sType.getId()))
+		for (int i = 0; i < sTypes.length; i++) {
+			IServerType sType = sTypes[i];
+			if (ID.equals(sType.getId()))
 				serverType = sType;
 		}
-		IServerWorkingCopy server = serverType.createServer(null, null, (IRuntime)null);
-		assertNotNull(server);
-		IRuntimeType runtimeType = serverType.getRuntimeType();
-		IRuntimeWorkingCopy runtime = null;
-		runtime = runtimeType.createRuntime(null);
-		runtime.setName(server.getName());
-		server.setRuntime(runtime);
-		IServerWorkingCopyDelegate wcd = getWorkingCopyDelegate(server,serverType);
-		IServerConfigurationWorkingCopy serverConfiguration = getServerConfiguration(serverType.getServerConfigurationType(), null, runtime);
-		if(serverConfiguration!=null)
-		    server.setServerConfiguration(serverConfiguration);
-		wcd.modifyModules(new IModule[0], new IModule[0], null);
-		runtime.save(new NullProgressMonitor());
-		server.save(new NullProgressMonitor());
-		if(serverConfiguration!=null)
-		    serverConfiguration.save(new NullProgressMonitor());
-	
-	}
-	
-	private IServerWorkingCopyDelegate getWorkingCopyDelegate(IServerWorkingCopy server,IServerType serverType) {
-	
-			GenericServerWorkingCopy workingCopyDelegate = new GenericServerWorkingCopy();
-			workingCopyDelegate.initialize((IServerState) server);
-			workingCopyDelegate.initialize(server);
-			return workingCopyDelegate;
-	}	
+		assertNotNull("Could not find org.eclipse.jst.server.generic server type",serverType);
 
-	private IServerConfigurationWorkingCopy getServerConfiguration(IServerConfigurationType type, IFile file, IRuntime runtime) throws CoreException {
-	    if(type==null)
-	        return null;
-		IServerConfigurationWorkingCopy serverConfiguration = type.importFromRuntime(null, file, runtime, new NullProgressMonitor());
-		ServerUtil.setServerConfigurationDefaultName(serverConfiguration);
-		return serverConfiguration;
-	}	
-	
-	public void testGetWebTypes() {
+		//Finds the generic server runtime type
+		IRuntimeType runtimeType = serverType.getRuntimeType();
+		assertNotNull("Could not find runtime type for the generic server type",runtimeType);
 		
-		List listWeb = ServerUtil.getRuntimeTypes("j2ee.web",null);
+	
+		//Create a new server instance from the type
+		IServerWorkingCopy server = serverType.createServer(ID+".Jonas.Server", null,
+				(IRuntime) null, null);
+		assertNotNull("Could not create server",server);
+
+		
+		//Create a new runtime instance from the type
+		IRuntime runtime  = runtimeType.createRuntime(ID+".Jonas.Runtime",null);
+
+		assertNotNull("Could not create runtime",runtime);
+	
+		
+		//Set the runtime for the server
+		server.setRuntime(runtime);
+		
+		//Save the server
+		server.save(false,null);
+		
+		// Set properties for the runtime
+		IRuntimeWorkingCopy runtimeWorkingCopy = runtime.createWorkingCopy();
+		assertNotNull("Could not create runtime working copy",runtimeWorkingCopy);
+		
+		// Set the JONAS runtime as the default runtime
+		ServerUtil.setRuntimeDefaultName(runtimeWorkingCopy);
+		assertNotNull("Runtime working copy has no name",runtimeWorkingCopy.getName());
+		
+		// Set properties for the JONAS runtime
+		RuntimeDelegate runtimeDelegate = (RuntimeDelegate)runtimeWorkingCopy.getAdapter(RuntimeDelegate.class);
+		assertNotNull("Could not obtain runtime delegate",runtimeDelegate);
+		
+		HashMap props = new HashMap();
+		props.put("mappernames", "");
+		props.put("classPathVariableName", "JONAS");
+		props.put("serverAddress", "127.0.0.1");
+		props.put("jonasBase", "C:\\nmd\\dev\\java\\appservers\\JOnAS-4.1.4");
+		props.put("jonasRoot", "C:\\nmd\\dev\\java\\appservers\\JOnAS-4.1.4");
+		props.put("classPath", "C:\\nmd\\dev\\java\\appservers\\JOnAS-4.1.4");
+		props.put("protocols", "C:\\nmd\\dev\\java\\appservers\\JOnAS-4.1.4");
+		props.put("port", "9000");		
+	    runtimeDelegate.setAttribute(
+				GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, props);
+	    
+	    //Save the runtime working copy 
+		runtimeWorkingCopy.save(false,null);
+		
+	}
+
+	
+
+
+	public void testGetWebTypes() {
+
+		IRuntimeType listWeb[] = ServerUtil.getRuntimeTypes("j2ee.web", null);
 		assertNotNull(listWeb);
-		Iterator iterator = listWeb.iterator();
+
 		boolean found = false;
-		while (iterator.hasNext()) {
-			RuntimeType runtimeType = (RuntimeType) iterator.next();
-			if("J2EE Runtime Library".equals(runtimeType.getName()))
+		for (int i = 0; i < listWeb.length; i++) {
+			IRuntimeType runtimeType = listWeb[i];
+			if ("J2EE Runtime Library".equals(runtimeType.getName()))
 				found = true;
 		}
 		assertTrue(found);
 	}
 
+  
+
+	private ServerDelegate getDelegate(
+			IServerWorkingCopy serverWC, IServerType serverType) {
+	
+		GenericServer server = new GenericServer();
+		server.initialize((ServerWorkingCopy)serverWC);
+		return server;
+	}
 
 }
