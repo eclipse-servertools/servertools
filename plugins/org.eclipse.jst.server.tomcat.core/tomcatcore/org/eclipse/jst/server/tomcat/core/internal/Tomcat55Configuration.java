@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -183,7 +183,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace("Error getting project refs", e);
+			Trace.trace(Trace.SEVERE, "Error getting project refs", e);
 		}
 		return list;
 	}
@@ -350,7 +350,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 				return;
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace("Could not save Tomcat v5.5 configuration to " + path, e);
+			Trace.trace(Trace.SEVERE, "Could not save Tomcat v5.5 configuration to " + path, e);
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotSaveConfiguration", new String[] {e.getLocalizedMessage()}), e));
 		}
 	}
@@ -409,7 +409,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 				return;
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace("Could not save Tomcat v5.5 configuration to " + folder.toString(), e);
+			Trace.trace(Trace.SEVERE, "Could not save Tomcat v5.5 configuration to " + folder.toString(), e);
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotSaveConfiguration", new String[] {e.getLocalizedMessage()}), e));
 		}
 	}
@@ -464,7 +464,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace("Error adding web module " + module.getPath(), e);
+			Trace.trace(Trace.SEVERE, "Error adding web module " + module.getPath(), e);
 		}
 	}
 
@@ -500,7 +500,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 			if (!monitor.isCanceled())
 				monitor.done();
 		} catch (Exception e) {
-			Trace.trace("Error localizing configuration", e);
+			Trace.trace(Trace.SEVERE, "Error localizing configuration", e);
 		}
 	}
 	
@@ -560,7 +560,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 			isServerDirty = true;
 			firePropertyChangeEvent(MODIFY_PORT_PROPERTY, id, new Integer(port));
 		} catch (Exception e) {
-			Trace.trace("Error modifying server port " + id, e);
+			Trace.trace(Trace.SEVERE, "Error modifying server port " + id, e);
 		}
 	}
 	/**
@@ -589,7 +589,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace("Error modifying web module " + index, e);
+			Trace.trace(Trace.SEVERE, "Error modifying web module " + index, e);
 		}
 	}
 
@@ -621,13 +621,13 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace("Error removing module ref " + index, e);
+			Trace.trace(Trace.SEVERE, "Error removing module ref " + index, e);
 		}
 	}
 
 	protected IStatus backupAndPublish(IPath confDir, boolean doBackup, IProgressMonitor monitor) {
 		MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%publishConfigurationTask"), null);
-		Trace.trace("Backup and publish");
+		Trace.trace(Trace.FINER, "Backup and publish");
 		monitor = ProgressUtil.getMonitorFor(monitor);
 
 		backupAndPublish(confDir, doBackup, ms, monitor, 300);
@@ -642,7 +642,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	}
 	
 	protected void publishContextConfig(IPath confDir, MultiStatus ms, IProgressMonitor monitor) {
-		Trace.trace("Apply context configurations");
+		Trace.trace(Trace.FINER, "Apply context configurations");
 		try {
 			confDir = confDir.append("conf");
 			
@@ -678,7 +678,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 			}
 			monitor.worked(100);
 			
-			Trace.trace("Server.xml updated with context.xml configurations");
+			Trace.trace(Trace.FINER, "Server.xml updated with context.xml configurations");
 			ms.add(new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%serverPostProcessingComplete"), null));
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Could not apply context configurations published Tomcat v5.0 configuration from " + confDir.toOSString() + ": " + e.getMessage());
@@ -733,7 +733,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 			} catch (FileNotFoundException e) {
 				// Ignore, should never occur
 			} catch (IOException e) {
-				Trace.trace("Error reading web module's context.xml file: " + docBase, e);
+				Trace.trace(Trace.SEVERE, "Error reading web module's context.xml file: " + docBase, e);
 			}
 		}
 		return null;

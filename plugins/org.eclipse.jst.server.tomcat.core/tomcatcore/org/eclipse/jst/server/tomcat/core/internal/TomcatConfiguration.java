@@ -75,7 +75,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	 */
 	protected IStatus backupAndPublish(IPath confDir, boolean doBackup, IProgressMonitor monitor) {
 		MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%publishConfigurationTask"), null);
-		Trace.trace("Backup and publish");
+		Trace.trace(Trace.FINER, "Backup and publish");
 		monitor = ProgressUtil.getMonitorFor(monitor);
 
 		backupAndPublish(confDir, doBackup, ms, monitor, 0);
@@ -106,7 +106,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 				backupFolder(getFolder(), confDir, backup, ms, monitor, additionalWork);
 			//}
 		} catch (Exception e) {
-			Trace.trace("backupAndPublish() error", e);
+			Trace.trace(Trace.SEVERE, "backupAndPublish() error", e);
 			IStatus s = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPublishConfiguration", new String[] {e.getLocalizedMessage()}), e);
 			ms.add(s);
 		}
@@ -141,7 +141,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 						ms.add(FileUtil.copyFile(in, confDir.append(name).toOSString()));
 					}
 				} catch (Exception e) {
-					Trace.trace("backupAndPublish() error", e);
+					Trace.trace(Trace.SEVERE, "backupAndPublish() error", e);
 					ms.add(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPublishConfiguration", new String[] {e.getLocalizedMessage()}), e));
 				}
 			}
@@ -175,7 +175,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 				if (copy)
 					ms.add(FileUtil.copyFile(file.getAbsolutePath(), confDir.append(name).toOSString()));
 			} catch (Exception e) {
-				Trace.trace("backupAndPublish() error", e);
+				Trace.trace(Trace.SEVERE, "backupAndPublish() error", e);
 				ms.add(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPublishConfiguration", new String[] {e.getLocalizedMessage()}), e));
 			}
 			monitor.worked(100);
@@ -278,11 +278,11 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 					PropertyChangeListener listener = (PropertyChangeListener) iterator.next();
 					listener.propertyChange(event);
 				} catch (Exception e) {
-					Trace.trace("Error firing property change event", e);
+					Trace.trace(Trace.SEVERE, "Error firing property change event", e);
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace("Error in property event", e);
+			Trace.trace(Trace.SEVERE, "Error in property event", e);
 		}
 	}
 

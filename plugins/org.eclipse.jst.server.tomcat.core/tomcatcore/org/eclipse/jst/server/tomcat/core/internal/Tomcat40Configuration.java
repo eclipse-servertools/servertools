@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -169,7 +169,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace("Error getting server ports", e);
+			Trace.trace(Trace.SEVERE, "Error getting server ports", e);
 		}
 		return ports;
 	}
@@ -202,7 +202,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace("Error getting modules", e);
+			Trace.trace(Trace.SEVERE, "Error getting modules", e);
 		}
 		return list;
 	}
@@ -369,7 +369,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 				return;
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace("Could not save Tomcat v4.0 configuration to " + path, e);
+			Trace.trace(Trace.SEVERE, "Could not save Tomcat v4.0 configuration to " + path, e);
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotSaveConfiguration", new String[] {e.getLocalizedMessage()}), e));
 		}
 	}
@@ -428,7 +428,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 				return;
 			monitor.done();
 		} catch (Exception e) {
-			Trace.trace("Could not save Tomcat v4.0 configuration to " + folder.toString(), e);
+			Trace.trace(Trace.SEVERE, "Could not save Tomcat v4.0 configuration to " + folder.toString(), e);
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotSaveConfiguration", new String[] {e.getLocalizedMessage()}), e));
 		}
 	}
@@ -467,7 +467,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace("Error adding web module " + module.getPath(), e);
+			Trace.trace(Trace.SEVERE, "Error adding web module " + module.getPath(), e);
 		}
 	}
 	
@@ -504,7 +504,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 			if (!monitor.isCanceled())
 				monitor.done();
 		} catch (Exception e) {
-			Trace.trace("Error localizing configuration", e);
+			Trace.trace(Trace.SEVERE, "Error localizing configuration", e);
 		}
 	}
 	
@@ -564,7 +564,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 			isServerDirty = true;
 			firePropertyChangeEvent(MODIFY_PORT_PROPERTY, id, new Integer(port));
 		} catch (Exception e) {
-			Trace.trace("Error modifying server port " + id, e);
+			Trace.trace(Trace.SEVERE, "Error modifying server port " + id, e);
 		}
 	}
 	/**
@@ -593,7 +593,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace("Error modifying web module " + index, e);
+			Trace.trace(Trace.SEVERE, "Error modifying web module " + index, e);
 		}
 	}
 	
@@ -625,7 +625,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 				}
 			}
 		} catch (Exception e) {
-			Trace.trace("Error removing module ref " + index, e);
+			Trace.trace(Trace.SEVERE, "Error removing module ref " + index, e);
 		}
 	}
 }

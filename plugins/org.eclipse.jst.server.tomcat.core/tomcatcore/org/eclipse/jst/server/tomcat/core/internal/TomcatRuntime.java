@@ -11,7 +11,6 @@
 package org.eclipse.jst.server.tomcat.core.internal;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -20,15 +19,15 @@ import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.Launch;
-import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IStreamsProxy;
-import org.eclipse.jdt.internal.launching.StandardVMType;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMInstallType;
+import org.eclipse.jdt.launching.IVMRunner;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.eclipse.jst.server.tomcat.core.ITomcatRuntime;
 import org.eclipse.jst.server.tomcat.core.ITomcatRuntimeWorkingCopy;
 
@@ -103,7 +102,7 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 	
 		if (!verifyLocation())
 			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorInstallDir"), null);
-		else if (getVMInstall() == null)
+		if (getVMInstall() == null)
 			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorJRE"), null);
 
 		// check for tools.jar (contains the javac compiler on Windows & Linux) to see whether
@@ -119,7 +118,7 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 		// on Mac, tools.jar is merged into classes.zip. if tools.jar wasn't found,
 		// try loading the javac class by running a check inside the VM
 		if (!found)
-			found = checkForCompiler(getVMInstall().getInstallLocation());
+			found = checkForCompiler();
 		
 		if (!found)
 			return new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%warningJRE"), null);
@@ -163,8 +162,9 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 	 * 
 	 * @return true if the compiler was found
 	 */	
-	protected boolean checkForCompiler(File javaHome) {
+	protected boolean checkForCompiler() {
 		// first try the cache
+		File javaHome = getVMInstall().getInstallLocation();
 		try {
 			Boolean b = (Boolean) sdkMap.get(javaHome);
 			return b.booleanValue();
@@ -174,17 +174,16 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 
 		// locate tomcatcore.jar - it contains the class detector main program
 		File file = TomcatPlugin.getFileInPlugin(new Path("tomcatcore.jar"));
-		if (file != null && file.exists()) {	
-			File javaExecutable = StandardVMType.findJavaExecutable(javaHome);
-			String javaExecutablePath = javaExecutable.getAbsolutePath();
-			String[] cmdLine = new String[] {javaExecutablePath, "-classpath", file.getAbsolutePath(), "org.eclipse.jst.server.tomcat.core.internal.ClassDetector", "com.sun.tools.javac.Main"};
-			Process p = null;
+		if (file != null && file.exists()) {
+			IVMRunner vmRunner = getVMInstall().getVMRunner(ILaunchManager.RUN_MODE);
+			VMRunnerConfiguration config = new VMRunnerConfiguration("org.eclipse.jst.server.tomcat.core.internal.ClassDetector", new String[] { file.getAbsolutePath() });
+			config.setProgramArguments(new String[] { "com.sun.tools.javac.Main" });
+			ILaunch launch = new Launch(null, ILaunchManager.RUN_MODE, null);
 			try {
-				p = Runtime.getRuntime().exec(cmdLine);
-				IProcess process = DebugPlugin.newProcess(new Launch(null, ILaunchManager.RUN_MODE, null), p, "Compiler Detection");
-				for (int i= 0; i < 200; i++) {
+				vmRunner.run(config, launch, null);
+				for (int i = 0; i < 200; i++) {
 					// wait no more than 10 seconds (200 * 50 mils)
-					if (process.isTerminated()) {
+					if (launch.isTerminated()) {
 						break;
 					}
 					try {
@@ -193,7 +192,7 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 						// ignore
 					}
 				}
-				IStreamsProxy streamsProxy = process.getStreamsProxy();
+				IStreamsProxy streamsProxy = launch.getProcesses()[0].getStreamsProxy();
 				String text = null;
 				if (streamsProxy != null) {
 					text = streamsProxy.getOutputStreamMonitor().getContents();
@@ -207,11 +206,15 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 						return found;
 					}
 				}
-			} catch (IOException ioe) {
-				TomcatPlugin.log(ioe);
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Error checking for JDK", e);
 			} finally {
-				if (p != null) {
-					p.destroy();
+				if (!launch.isTerminated()) {
+					try {
+						launch.terminate();
+					} catch (Exception ex) {
+						// ignore
+					}
 				}
 			}
 		}
