@@ -13,6 +13,7 @@ package org.eclipse.wst.server.ui.internal;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.internal.ServerSchedulingRule;
 /**
  * 
  */

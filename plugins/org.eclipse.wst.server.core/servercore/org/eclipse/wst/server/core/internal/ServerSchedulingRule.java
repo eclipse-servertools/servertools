@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.server.ui.internal;
+package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.wst.server.core.IServer;

@@ -957,21 +957,21 @@ public class ResourceManager {
 		if (isDeltaOnlyMarkers(delta))
 			return;
 
-		final IModule[] moduleProject = ServerUtil.getModules(project);
-		if (moduleProject == null)
+		final IModule[] modules = ServerUtil.getModules(project);
+		if (modules == null)
 			return;
 		
 		Trace.trace(Trace.FINEST, "- publishHandleProjectChange");
 
-		if (moduleProject != null) {
-			int size2 = moduleProject.length;
+		if (modules != null) {
+			int size2 = modules.length;
 			for (int j = 0; j < size2; j++) {
 				IServer[] servers2 = getServers();
 				if (servers2 != null) {
 					int size = servers2.length;
 					for (int i = 0; i < size; i++) {
 					if (servers2[i].isDelegateLoaded())
-						((Server) servers2[i]).handleModuleProjectChange(delta, new IModule[] { moduleProject[j] });
+						((Server) servers2[i]).handleModuleProjectChange(modules[j]);
 					}
 				}
 			}

@@ -13,10 +13,7 @@ package org.eclipse.wst.server.core.util;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.*;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.internal.ModuleFile;
@@ -50,7 +47,12 @@ public abstract class ProjectModule extends ModuleDelegate {
 	}
 
 	/**
-	 * Returns the root folder.
+	 * Returns the root folder. The root folder is the project relative path
+	 * that points to the root directory of the module. All resources contained
+	 * within this folder belong to the module.
+	 * 
+	 * @return the root project-relative folder that contains the contents
+	 *    of the module
 	 */
 	public IPath getRootFolder() {
 		return root;
@@ -135,28 +137,23 @@ public abstract class ProjectModule extends ModuleDelegate {
 	}*/
 
 	/*
-	 * @see IModule#getMemento()
+	 * Helper method - returns the module's id.
+	 * 
+	 * @see ModuleDelegate#getId()
 	 */
 	public String getId() {
-		return getProject().getName();
+		return getModule().getId();
 	}
-	
+
 	/*
-	 * @see IModule#getPublishStatus()
+	 * @see ModuleDelegate#validate()
 	 */
 	public IStatus validate() {
 		return null;
 	}
 
 	/*
-	 * @see IModule#getPublishStatus()
-	 */
-	public IStatus canPublish() {
-		return null;
-	}
-
-	/*
-	 * @see IModule#members()
+	 * @see ModuleDelegate#members()
 	 */
 	public IModuleResource[] members() throws CoreException {
 		IPath root2 = null;
@@ -201,11 +198,12 @@ public abstract class ProjectModule extends ModuleDelegate {
 	 	return moduleResources;
 	}
 
-	/*
-	 * @see IModule#getName()
+	/**
+	 * Helper method - returns the module's name.
+	 * @see ModuleDelegate#getName()
 	 */
 	public String getName() {
-		return getProject().getName();
+		return getModule().getName();
 	}
 	
 	/**
@@ -288,7 +286,7 @@ public abstract class ProjectModule extends ModuleDelegate {
 	 * Fire a module change event.
 	 */
 	protected void fireModuleChangeEvent(boolean isChange, IModule[] added, IModule[] changed, IModule[] removed) {
-		Trace.trace(Trace.FINEST, "->- Firing module change event: " + getName() + " (" + isChange + ") ->-");
+		Trace.trace(Trace.FINEST, "->- Firing module change event: " + getModule().getName() + " (" + isChange + ") ->-");
 	
 		if (listeners == null || listeners.isEmpty())
 			return;
@@ -312,7 +310,7 @@ public abstract class ProjectModule extends ModuleDelegate {
 	
 	/**
 	 * Called when the listener paths from the module factory change.
-	 * Use this method to recache information about the module.
+	 * Use this method to re-cache information about the module.
 	 */
 	protected void update() {
 		// do nothing

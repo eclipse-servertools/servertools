@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.ServerPreferences;
+import org.eclipse.wst.server.core.internal.ServerSchedulingRule;
 /**
  * 
  */

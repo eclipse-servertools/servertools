@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,6 @@ import java.util.*;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
@@ -23,6 +22,7 @@ import org.osgi.framework.Bundle;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.core.util.ServerAdapter;
+import org.eclipse.wst.server.core.util.SocketUtil;
 /**
  * 
  */
@@ -34,6 +34,8 @@ public class Server extends Base implements IServer {
 	protected static final String RUNTIME_ID = "runtime-id";
 	protected static final String CONFIGURATION_ID = "configuration-id";
 	protected static final String MODULE_LIST = "modules";
+	protected static final String PROP_AUTO_PUBLISH_TIME = "auto-publish-time";
+	protected static final String PROP_AUTO_PUBLISH_DEFAULT = "auto-publish-default";
 
 	protected static final char[] INVALID_CHARS = new char[] {'\\', '/', ':', '*', '?', '"', '<', '>', '|', '\0', '@', '&'};
 
@@ -48,17 +50,18 @@ public class Server extends Base implements IServer {
 	protected List modules;
 	
 	// transient fields
-	protected String mode = ILaunchManager.RUN_MODE;
-	protected IModule[] serverModules;
-	protected int serverState = STATE_UNKNOWN;
-	protected int serverSyncState;
-	protected boolean serverRestartNeeded;
+	protected transient String mode = ILaunchManager.RUN_MODE;
+	protected transient IModule[] serverModules;
+	protected transient int serverState = STATE_UNKNOWN;
+	protected transient int serverSyncState;
+	protected transient boolean serverRestartNeeded;
 
-	protected Map moduleState = new HashMap();
-	protected Map modulePublishState = new HashMap();
-	protected Map moduleRestartState = new HashMap();
+	protected transient Map moduleState = new HashMap();
+	protected transient Map modulePublishState = new HashMap();
+	protected transient Map moduleRestartState = new HashMap();
 
-	protected ServerPublishInfo publishInfo;
+	protected transient ServerPublishInfo publishInfo;
+	protected transient AutoPublishThread autoPublishThread;
 
 /*	private static final String[] stateStrings = new String[] {
 		"unknown", "starting", "started", "started_debug",
@@ -70,6 +73,31 @@ public class Server extends Base implements IServer {
 	
 	// server listeners
 	protected transient List serverListeners;
+	
+	public class AutoPublishThread extends Thread {
+		public boolean stop;
+		public int time = 0; 
+		
+		public void run() {
+			Trace.trace(Trace.FINEST, "Auto-publish thread starting for " + Server.this + " - " + time + "s");
+			if (stop)
+				return;
+			
+			try {
+				sleep(time * 1000);
+			} catch (Exception e) {
+				// ignore
+			}
+			
+			if (stop)
+				return;
+			
+			Trace.trace(Trace.FINEST, "Auto-publish thread publishing " + Server.this);
+
+			PublishServerJob publishJob = new PublishServerJob(Server.this, IServer.PUBLISH_AUTO, false);
+			publishJob.schedule();
+		}
+	}
 
 	// working copy, loaded resource
 	public Server(IFile file) {
@@ -196,6 +224,14 @@ public class Server extends Base implements IServer {
 
 	public String getHost() {
 		return getAttribute(PROP_HOSTNAME, "localhost");
+	}
+	
+	public int getAutoPublishTime() {
+		return getAttribute(PROP_AUTO_PUBLISH_TIME, -1);
+	}
+	
+	public boolean getAutoPublishDefault() {
+		return getAttribute(PROP_AUTO_PUBLISH_DEFAULT, true);
 	}
 
 	/**
@@ -396,39 +432,74 @@ public class Server extends Base implements IServer {
 		//fireServerModuleStateChangeEvent(module);
 	}
 
-	protected void handleModuleProjectChange(final IResourceDelta delta, final IModule[] moduleProjects) {
-		//Trace.trace(Trace.FINEST, "> handleDeployableProjectChange() " + server + " " + delta + " " + moduleProjects);
-		final int size = moduleProjects.length;
-		//final IModuleResourceDelta[] deployableDelta = new IModuleResourceDelta[size];
-		// TODO: module changes
+	protected void handleModuleProjectChange(final IModule module) {
+		Trace.trace(Trace.FINEST, "> handleDeployableProjectChange() " + this + " " + module);
+		
+		class Helper {
+			boolean changed;
+		}
+		final Helper helper = new Helper();
+		
 		IModuleVisitor visitor = new IModuleVisitor() {
-			public boolean visit(IModule[] parents, IModule module) {
-				if (module.getProject() == null)
+			public boolean visit(IModule[] parents2, IModule module2) {
+				if (module2.getProject() == null)
 					return true;
 				
-				for (int i = 0; i < size; i++) {
-					if (moduleProjects[i].equals(module)) {
-						/*if (deployableDelta[i] == null)
-							deployableDelta[i] = moduleProjects[i].getModuleResourceDelta(delta);
-						
-						if (deployableDelta[i] != null) {
-							// updateDeployable(module, deployableDelta[i]);
+				if (module.equals(module2)) {
+					IModuleResourceDelta[] delta2 = getPublishedResourceDelta(parents2, module2);
+					if (delta2.length > 0)
+						helper.changed = true;
+					
+					// TODO
+					/*if (deployableDelta[i] == null)
+						deployableDelta[i] = moduleProjects[i].getModuleResourceDelta(delta);
+					
+					if (deployableDelta[i] != null) {
+						// updateDeployable(module, deployableDelta[i]);
 
-							ModulePublishInfo control = PublishInfo.getPublishInfo().getPublishControl(Server.this, parents, module);
-							if (control.isDirty())
-								return true;
-		
-							control.setDirty(true);
-							firePublishStateChange(parents, module);
-						}*/
-						return true;
-					}
+						ModulePublishInfo control = PublishInfo.getPublishInfo().getPublishControl(Server.this, parents, module);
+						if (control.isDirty())
+							return true;
+	
+						control.setDirty(true);
+						firePublishStateChange(parents, module);
+					}*/
+					return true;
 				}
 				return true;
 			}
 		};
 
 		ServerUtil.visit(this, visitor, null);
+		
+		if (!helper.changed)
+			return;
+		
+		// check for auto-publish
+		if (autoPublishThread != null) {
+			autoPublishThread.stop = true;
+			autoPublishThread.interrupt();
+			autoPublishThread = null;
+		}
+		
+		int time = 0;
+		if (getAutoPublishDefault()) {
+			boolean local = SocketUtil.isLocalhost(getHost());
+			if (local && ServerPreferences.getInstance().getAutoPublishLocal())
+				time = ServerPreferences.getInstance().getAutoPublishLocalTime();
+			else if (!local && ServerPreferences.getInstance().getAutoPublishRemote())
+				time = ServerPreferences.getInstance().getAutoPublishRemoteTime();
+		} else {
+			time = getAutoPublishTime();
+		}
+		
+		if (time > 5) {
+			autoPublishThread = new AutoPublishThread();
+			autoPublishThread.time = time;
+			autoPublishThread.setPriority(Thread.MIN_PRIORITY + 1);
+			autoPublishThread.start();
+		}
+		
 		//Trace.trace(Trace.FINEST, "< handleDeployableProjectChange()");
 	}
 
@@ -798,7 +869,7 @@ public class Server extends Base implements IServer {
 		size += tasks.size() * 500;
 		
 		monitor = ProgressUtil.getMonitorFor(monitor);
-		monitor.beginTask(ServerPlugin.getResource("%publishingTask", toString()), size);
+		monitor.beginTask(ServerPlugin.getResource("%publishing", toString()), size);
 
 		MultiStatus multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%publishingStatus"), null);
 		
@@ -811,7 +882,7 @@ public class Server extends Base implements IServer {
 			return new Status(IStatus.INFO, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%publishingCancelled"), null);
 		
 		// start publishing
-		Trace.trace(Trace.FINEST, "Opening connection to the remote server");
+		Trace.trace(Trace.FINEST, "Calling publishStart()");
 		firePublishStarted();
 		try {
 			getBehaviourDelegate().publishStart(ProgressUtil.getSubMonitorFor(monitor, 1000));
@@ -840,7 +911,7 @@ public class Server extends Base implements IServer {
 		}
 		
 		// end the publishing
-		Trace.trace(Trace.FINEST, "Closing connection with the remote server");
+		Trace.trace(Trace.FINEST, "Calling publishFinish()");
 		try {
 			getBehaviourDelegate().publishFinish(ProgressUtil.getSubMonitorFor(monitor, 500));
 		} catch (CoreException ce) {
@@ -874,17 +945,17 @@ public class Server extends Base implements IServer {
 	protected IStatus publishModule(int kind, IModule[] parents, IModule module, int deltaKind, IProgressMonitor monitor) {
 		Trace.trace(Trace.FINEST, "Publishing module: " + module);
 		
-		monitor.beginTask(ServerPlugin.getResource("%publishingProject", module.getName()), 1000);
+		monitor.beginTask(ServerPlugin.getResource("%publishingModule", module.getName()), 1000);
 		
 		fireModulePublishStarted(parents, module);
 		
-		Status multi = new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%publishingProject", module.getName()), null);
+		IStatus status = new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%publishedModule", module.getName()), null);
 		try {
 			getBehaviourDelegate().publishModule(kind, deltaKind, parents, module, monitor);
 		} catch (CoreException ce) {
-			// ignore
+			status = ce.getStatus();
 		}
-		fireModulePublishFinished(parents, module, multi);
+		fireModulePublishFinished(parents, module, status);
 		
 		/*Trace.trace(Trace.FINEST, "Delta:");
 		IModuleResourceDelta[] delta = getServerPublishInfo().getDelta(parents, module);
@@ -900,7 +971,7 @@ public class Server extends Base implements IServer {
 		monitor.done();
 		
 		Trace.trace(Trace.FINEST, "Done publishing: " + module);
-		return multi;
+		return status;
 	}
 
 	/**

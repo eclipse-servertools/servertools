@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -130,7 +130,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	public void setName(String name) {
 		setAttribute(PROP_NAME, name);
 	}
-	
+
 	public void setReadOnly(boolean b) {
 		setAttribute(PROP_LOCKED, b);
 	}
@@ -142,7 +142,15 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	public void setHost(String host) {
 		setAttribute(PROP_HOSTNAME, host);
 	}
+
+	public void setAutoPublishTime(int p) {
+		setAttribute(PROP_AUTO_PUBLISH_TIME, p);
+	}
 	
+	public void setAutoPublishDefault(boolean p) {
+		setAttribute(PROP_AUTO_PUBLISH_DEFAULT, p);
+	}
+
 	public void setServerConfiguration(IFolder config) {
 		this.configuration = config;
 		if (configuration == null)

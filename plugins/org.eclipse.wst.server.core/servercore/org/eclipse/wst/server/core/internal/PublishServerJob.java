@@ -8,30 +8,40 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.server.ui.internal;
+package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.internal.ServerPreferences;
 /**
- * 
+ * Job to publish to a particular server.
  */
 public class PublishServerJob extends Job {
 	protected IServer server;
+	protected int kind;
+	protected boolean check; 
+
+	public PublishServerJob(IServer server, int kind, boolean check) {
+		super(ServerPlugin.getResource("%publishing", server.getName()));
+		this.server = server;
+		this.kind = kind;
+		this.check = check;
+		setRule(new ServerSchedulingRule(server));
+		if (kind != IServer.PUBLISH_AUTO)
+			setUser(true);
+	}
 
 	public PublishServerJob(IServer server) {
-		super(ServerUIPlugin.getResource("%publishingJob", server.getName()));
-		this.server = server;
-		setRule(new ServerSchedulingRule(server));
-		setUser(true);
+		this(server, IServer.PUBLISH_INCREMENTAL, true);
 	}
 
 	/*
 	 * Returns whether this job should be run.
 	 */
 	public boolean shouldRun() {
+		if (!check)
+			return true;
 		return ServerPreferences.getInstance().isAutoPublishing() && server.shouldPublish();
 	}
 
@@ -39,6 +49,6 @@ public class PublishServerJob extends Job {
 	 * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	protected IStatus run(IProgressMonitor monitor) {
-		return server.publish(IServer.PUBLISH_INCREMENTAL, monitor);
+		return server.publish(kind, monitor);
 	}
 }

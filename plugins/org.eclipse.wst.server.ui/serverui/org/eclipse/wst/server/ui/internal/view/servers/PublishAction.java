@@ -13,7 +13,7 @@ package org.eclipse.wst.server.ui.internal.view.servers;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.ui.internal.PublishServerJob;
+import org.eclipse.wst.server.core.internal.PublishServerJob;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.swt.widgets.Shell;
 /**
@@ -49,7 +49,7 @@ public class PublishAction extends AbstractServerAction {
 		if (!ServerUIPlugin.saveEditors())
 			return;
 
-		PublishServerJob publishJob = new PublishServerJob(server);
+		PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, false);
 		publishJob.schedule();
 	}
 }

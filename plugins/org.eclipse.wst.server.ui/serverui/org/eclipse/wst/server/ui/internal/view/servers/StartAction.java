@@ -16,7 +16,7 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.ui.internal.PublishServerJob;
+import org.eclipse.wst.server.core.internal.PublishServerJob;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.StartServerJob;
 import org.eclipse.swt.widgets.Shell;

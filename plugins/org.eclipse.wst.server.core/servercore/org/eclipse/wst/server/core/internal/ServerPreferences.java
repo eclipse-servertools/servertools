@@ -23,13 +23,9 @@ public class ServerPreferences {
 	private static final String PREF_MODULE_START_TIMEOUT = "module-start-timeout";
 	
 	private static final String PREF_AUTO_PUBLISH_LOCAL = "auto-publish-local";
+	private static final String PREF_AUTO_PUBLISH_LOCAL_TIME = "auto-publish-local-time";
 	private static final String PREF_AUTO_PUBLISH_REMOTE = "auto-publish-remote";
-
-	public static final byte AUTO_PUBLISH_NEVER = 0;
-	public static final byte AUTO_PUBLISH_IMMEDIATE = -1;
-	public static final byte AUTO_PUBLISH_MINUTE = -2;
-	public static final byte AUTO_PUBLISH_FIVE_MINUTE = -3;
-	public static final byte AUTO_PUBLISH_HOURLY = -4;
+	private static final String PREF_AUTO_PUBLISH_REMOTE_TIME = "auto-publish-remote-time";
 
 	private Preferences preferences;
 
@@ -158,8 +154,8 @@ public class ServerPreferences {
 	 * 
 	 * @return int
 	 */
-	public int getDefaultAutoPublishLocal() {
-		return AUTO_PUBLISH_IMMEDIATE;
+	public boolean getDefaultAutoPublishLocal() {
+		return false;
 	}
 
 	/**
@@ -167,8 +163,8 @@ public class ServerPreferences {
 	 * 
 	 * @return int
 	 */
-	public int getAutoPublishLocal() {
-		return (byte) preferences.getInt(PREF_AUTO_PUBLISH_LOCAL);
+	public boolean getAutoPublishLocal() {
+		return preferences.getBoolean(PREF_AUTO_PUBLISH_LOCAL);
 	}
 
 	/**
@@ -176,8 +172,36 @@ public class ServerPreferences {
 	 * 
 	 * @param int
 	 */
-	public void setAutoPublishLocal(int auto) {
+	public void setAutoPublishLocal(boolean auto) {
 		preferences.setValue(PREF_AUTO_PUBLISH_LOCAL, auto);
+		ServerPlugin.getInstance().savePluginPreferences();
+	}
+	
+	/**
+	 * Returns the default setting for local auto-publishing.
+	 * 
+	 * @return int
+	 */
+	public int getDefaultAutoPublishLocalTime() {
+		return 15;
+	}
+
+	/**
+	 * Returns the setting for local auto-publishing.
+	 * 
+	 * @return int
+	 */
+	public int getAutoPublishLocalTime() {
+		return preferences.getInt(PREF_AUTO_PUBLISH_LOCAL_TIME);
+	}
+
+	/**
+	 * Sets the value for local auto-publishing.
+	 * 
+	 * @param int
+	 */
+	public void setAutoPublishLocalTime(int auto) {
+		preferences.setValue(PREF_AUTO_PUBLISH_LOCAL_TIME, auto);
 		ServerPlugin.getInstance().savePluginPreferences();
 	}
 
@@ -186,8 +210,8 @@ public class ServerPreferences {
 	 * 
 	 * @return int
 	 */
-	public int getDefaultAutoPublishRemote() {
-		return AUTO_PUBLISH_IMMEDIATE;
+	public boolean getDefaultAutoPublishRemote() {
+		return false;
 	}
 
 	/**
@@ -195,8 +219,8 @@ public class ServerPreferences {
 	 * 
 	 * @return int
 	 */
-	public int getAutoPublishRemote() {
-		return (byte) preferences.getInt(PREF_AUTO_PUBLISH_REMOTE);
+	public boolean getAutoPublishRemote() {
+		return preferences.getBoolean(PREF_AUTO_PUBLISH_REMOTE);
 	}
 
 	/**
@@ -204,8 +228,36 @@ public class ServerPreferences {
 	 * 
 	 * @param int
 	 */
-	public void setAutoPublishRemote(int auto) {
+	public void setAutoPublishRemote(boolean auto) {
 		preferences.setValue(PREF_AUTO_PUBLISH_REMOTE, auto);
+		ServerPlugin.getInstance().savePluginPreferences();
+	}
+
+	/**
+	 * Returns the default setting for remote auto-publishing.
+	 * 
+	 * @return int
+	 */
+	public int getDefaultAutoPublishRemoteTime() {
+		return 60;
+	}
+
+	/**
+	 * Returns the setting for remote auto-publishing.
+	 * 
+	 * @return int
+	 */
+	public int getAutoPublishRemoteTime() {
+		return preferences.getInt(PREF_AUTO_PUBLISH_REMOTE_TIME);
+	}
+
+	/**
+	 * Sets the value for remote auto-publishing.
+	 * 
+	 * @param int
+	 */
+	public void setAutoPublishRemoteTime(int auto) {
+		preferences.setValue(PREF_AUTO_PUBLISH_REMOTE_TIME, auto);
 		ServerPlugin.getInstance().savePluginPreferences();
 	}
 
@@ -215,7 +267,9 @@ public class ServerPreferences {
 		preferences.setDefault(PREF_STARTUP_TIMEOUT, 210001);
 		
 		preferences.setDefault(PREF_AUTO_PUBLISH_LOCAL, getDefaultAutoPublishLocal());
+		preferences.setDefault(PREF_AUTO_PUBLISH_LOCAL_TIME, getDefaultAutoPublishLocalTime());
 		preferences.setDefault(PREF_AUTO_PUBLISH_REMOTE, getDefaultAutoPublishRemote());
+		preferences.setDefault(PREF_AUTO_PUBLISH_REMOTE_TIME, getDefaultAutoPublishRemoteTime());
 		
 		preferences.setDefault(PREF_RESTART_MODULE_TIMEOUT, 120001);
 		preferences.setDefault(PREF_MODULE_START_TIMEOUT, 300001);

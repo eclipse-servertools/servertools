@@ -21,11 +21,11 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.help.WorkbenchHelp;
@@ -49,8 +49,11 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	protected ServerPreferences preferences;
 	protected ServerUIPreferences uiPreferences;
 	
-	protected Combo autoPublishLocal;
-	protected Combo autoPublishRemote;
+	protected Button autoPublishOnAction;
+	protected Button autoPublishLocal;
+	protected Text autoPublishLocalTime;
+	protected Button autoPublishRemote;
+	protected Text autoPublishRemoteTime;
 
 	/**
 	 * ServerPreferencesPage constructor comment.
@@ -84,12 +87,67 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		WorkbenchHelp.setHelp(composite, ContextIds.PREF_GENERAL);
 		
 		publishBeforeStart = new Button(composite, SWT.CHECK);
-		publishBeforeStart.setText(ServerUIPlugin.getResource("%prefPublishBeforeStarting"));
+		publishBeforeStart.setText(ServerUIPlugin.getResource("%prefAutoPublish"));
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 3;
 		publishBeforeStart.setLayoutData(data);
 		publishBeforeStart.setSelection(preferences.isAutoPublishing());
 		WorkbenchHelp.setHelp(publishBeforeStart, ContextIds.PREF_GENERAL_PUBLISH_BEFORE_START);
+		
+		
+		autoPublishLocal = new Button(composite, SWT.CHECK);
+		autoPublishLocal.setText(ServerUIPlugin.getResource("%prefAutoPublishLocal"));
+		data = new GridData(GridData.FILL_HORIZONTAL);
+		data.horizontalSpan = 1;
+		autoPublishLocal.setLayoutData(data);
+		autoPublishLocal.setSelection(preferences.getAutoPublishLocal());
+		//WorkbenchHelp.setHelp(savePrompt, ContextIds.);
+		
+		autoPublishLocalTime = new Text(composite, SWT.BORDER);
+		autoPublishLocalTime.setText(preferences.getAutoPublishLocalTime() + "");
+		autoPublishLocalTime.setEnabled(autoPublishLocal.getSelection());
+		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
+		data.widthHint = 75;
+		autoPublishLocalTime.setLayoutData(data);
+		
+		Label label = new Label(composite, SWT.NONE);
+		label.setText(ServerUIPlugin.getResource("%prefAutoPublishSeconds"));
+		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
+		label.setLayoutData(data);
+		
+		autoPublishLocal.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				autoPublishLocalTime.setEnabled(autoPublishLocal.getSelection());
+			}
+		});
+		
+		
+		autoPublishRemote = new Button(composite, SWT.CHECK);
+		autoPublishRemote.setText(ServerUIPlugin.getResource("%prefAutoPublishRemote"));
+		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		data.horizontalSpan = 1;
+		autoPublishRemote.setLayoutData(data);
+		autoPublishRemote.setSelection(preferences.getAutoPublishRemote());
+		//WorkbenchHelp.setHelp(autoPublishRemote, ContextIds.);
+		
+		autoPublishRemoteTime = new Text(composite, SWT.BORDER);
+		autoPublishRemoteTime.setText(preferences.getAutoPublishRemoteTime() + "");
+		autoPublishRemoteTime.setEnabled(autoPublishRemote.getSelection());
+		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		data.widthHint = 75;
+		autoPublishRemoteTime.setLayoutData(data);
+		
+		autoPublishRemote.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				autoPublishRemoteTime.setEnabled(autoPublishRemote.getSelection());
+			}
+		});
+		
+		label = new Label(composite, SWT.NONE);
+		label.setText(ServerUIPlugin.getResource("%prefAutoPublishSeconds"));
+		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
+		label.setLayoutData(data);
+		
 		
 		autoRestart = new Button(composite, SWT.CHECK);
 		autoRestart.setText(ServerUIPlugin.getResource("%prefAutoRestart"));
@@ -153,35 +211,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		});
 		WorkbenchHelp.setHelp(saveAuto, ContextIds.PREF_GENERAL_SAVE_EDITORS);
 		
-		
-		String[] items = new String[4];
-		items[0] = "Never";
-		items[1] = "Automatically";
-		items[2] = "Every minute";
-		items[3] = "Every hour";
-		
-		Label label = new Label(composite, SWT.NONE);
-		label.setText("Automatically publish to local servers:");
-		
-		autoPublishLocal = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
-		data = new GridData(GridData.FILL_HORIZONTAL);
-		data.horizontalSpan = 2;
-		autoPublishLocal.setLayoutData(data);
-		autoPublishLocal.setItems(items);
-		autoPublishLocal.select(0);
-		
-		label = new Label(composite, SWT.NONE);
-		label.setText("Automatically publish to remote servers:");
-		
-		autoPublishRemote = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
-		data = new GridData(GridData.FILL_HORIZONTAL);
-		data.horizontalSpan = 2;
-		autoPublishRemote.setLayoutData(data);
-		autoPublishRemote.setItems(items);
-		autoPublishRemote.select(0);
-		
 		setSaveEditorStatus(uiPreferences.getSaveEditors());
-		
 		
 		Dialog.applyDialogFont(composite);
 	
@@ -218,6 +248,11 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		promptIrreversible.setSelection(uiPreferences.getDefaultPromptBeforeIrreversibleChange());
 		createInWorkspace.setSelection(preferences.isDefaultCreateResourcesInWorkspace());
 		
+		autoPublishLocal.setSelection(preferences.getDefaultAutoPublishLocal());
+		autoPublishLocalTime.setText(preferences.getDefaultAutoPublishLocalTime() + "");
+		autoPublishRemote.setSelection(preferences.getDefaultAutoPublishRemote());
+		autoPublishRemoteTime.setText(preferences.getDefaultAutoPublishRemoteTime() + "");
+		
 		setSaveEditorStatus(uiPreferences.getDefaultSaveEditors());
 	
 		super.performDefaults();
@@ -233,6 +268,11 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		uiPreferences.setSaveEditors(saveEditors);
 		uiPreferences.setPromptBeforeIrreversibleChange(promptIrreversible.getSelection());
 		preferences.setCreateResourcesInWorkspace(createInWorkspace.getSelection());
+		
+		preferences.setAutoPublishLocal(autoPublishLocal.getSelection());
+		preferences.setAutoPublishLocalTime(Integer.parseInt(autoPublishLocalTime.getText()));
+		preferences.setAutoPublishRemote(autoPublishRemote.getSelection());
+		preferences.setAutoPublishRemoteTime(Integer.parseInt(autoPublishRemoteTime.getText()));
 	
 		// auto restart any servers that are ready for restart
 		if (autoRestart.getSelection())

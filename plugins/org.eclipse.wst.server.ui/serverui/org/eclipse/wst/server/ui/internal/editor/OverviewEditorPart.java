@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -30,13 +31,12 @@ import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.widgets.*;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.util.SocketUtil;
 import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.command.SetServerHostnameCommand;
-import org.eclipse.wst.server.ui.internal.command.SetServerNameCommand;
-import org.eclipse.wst.server.ui.internal.command.SetServerRuntimeCommand;
+import org.eclipse.wst.server.ui.internal.command.*;
 /**
  * Server general editor page.
  */
@@ -45,9 +45,12 @@ public class OverviewEditorPart extends ServerEditorPart {
 	protected Label serverConfigurationName;
 	protected Text hostname;
 	protected Combo runtimeCombo;
-	
+	protected Button autoPublishDefault;
+	protected Button autoPublishOverride;
+	protected Text autoPublishTime;
+
 	protected boolean updating;
-	
+
 	protected IRuntime[] runtimes;
 
 	protected PropertyChangeListener listener;
@@ -58,7 +61,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 	protected OverviewEditorPart() {
 		super();
 	}
-	
+
 	protected ICommandManager getCommandManager() {
 		return commandManager;
 	}
@@ -241,6 +244,52 @@ public class OverviewEditorPart extends ServerEditorPart {
 					}
 				});
 			}
+		}
+		
+		// auto-publish
+		if (server != null) {
+			//Label label = createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewServerHostname"));
+			//label.
+			
+			autoPublishDefault = toolkit.createButton(composite, ServerUIPlugin.getResource("%serverEditorOverviewAutoPublishDefault"), SWT.RADIO);
+			GridData data = new GridData(GridData.FILL_HORIZONTAL);
+			data.horizontalSpan = 2;
+			autoPublishDefault.setLayoutData(data);
+			Server svr = (Server) server;
+			autoPublishDefault.setSelection(svr.getAutoPublishDefault());
+			
+			autoPublishOverride = toolkit.createButton(composite, ServerUIPlugin.getResource("%serverEditorOverviewAutoPublishOverride"), SWT.RADIO);
+			autoPublishOverride.setSelection(!svr.getAutoPublishDefault());
+			
+			autoPublishOverride.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+					if (updating)
+						return;
+					updating = true;
+					getCommandManager().executeCommand(new SetServerAutoPublishDefaultCommand(getServer(), autoPublishDefault.getSelection()));
+					updating = false;
+					autoPublishTime.setEnabled(autoPublishOverride.getSelection());
+				}
+			});
+			
+			autoPublishTime = toolkit.createText(composite, svr.getAutoPublishTime() + "");
+			data = new GridData(GridData.FILL_HORIZONTAL);
+			autoPublishTime.setLayoutData(data);
+			autoPublishTime.setEnabled(autoPublishOverride.getSelection());
+			autoPublishTime.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					if (updating)
+						return;
+					updating = true;
+					try {
+						int time = Integer.parseInt(autoPublishTime.getText()); 
+						getCommandManager().executeCommand(new SetServerAutoPublishTimeCommand(getServer(), time));
+					} catch (Exception ex) {
+						// ignore
+					}
+					updating = false;
+				}
+			});
 		}
 		
 		insertSections(leftColumnComp, "org.eclipse.wst.server.editor.overview.left");
