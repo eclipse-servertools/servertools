@@ -623,7 +623,7 @@ public class ServerPlugin extends Plugin {
 	 *    reporting and cancellation are not desired
 	 * @return a possibly-empty array of module instances {@link IModule}
 	 */
-	private static IModule[] getAllContainedModules(IServer server, IProgressMonitor monitor) {
+	public static IModule[] getAllContainedModules(IServer server, IProgressMonitor monitor) {
 		//Trace.trace("> getAllContainedModules: " + getName(configuration));
 		List modules = new ArrayList();
 		if (server == null)
@@ -666,35 +666,6 @@ public class ServerPlugin extends Plugin {
 		IModule[] modules2 = new IModule[modules.size()];
 		modules.toArray(modules2);
 		return modules2;
-	}
-	
-	/**
-	 * Returns true if the given server currently contains the given module.
-	 *
-	 * @param server org.eclipse.wst.server.core.IServer
-	 * @param module org.eclipse.wst.server.core.IModule
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @return boolean
-	 */
-	public static boolean containsModule(IServer server, IModule module, IProgressMonitor monitor) {
-		if (server == null)
-			return false;
-		Trace.trace(Trace.FINEST, "containsModule() " + server + " " + module);
-		try {
-			IModule[] modules = getAllContainedModules(server, monitor);
-			if (modules != null) {
-				int size = modules.length;
-				for (int i = 0; i < size; i++) {
-					Trace.trace(Trace.FINEST, "module: " + modules[i] + " " + module.equals(modules[i]));
-					if (module.equals(modules[i]))
-						return true;
-				}
-			}
-		} catch (Throwable t) {
-			// ignore
-		}
-		return false;
 	}
 	
 	/**

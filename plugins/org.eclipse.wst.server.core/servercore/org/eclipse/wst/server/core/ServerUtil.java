@@ -549,7 +549,7 @@ public class ServerUtil {
 	 *    reporting and cancellation are not desired
 	 * @return com.ibm.etools.server.core.IServer[]
 	 */
-	/*public static IServer[] getAvailableServersForModule(IModule module, boolean includeErrors, IProgressMonitor monitor) {
+	public static IServer[] getAvailableServersForModule(IModule module, boolean includeErrors, IProgressMonitor monitor) {
 		if (module == null)
 			return new IServer[0];
 
@@ -561,7 +561,7 @@ public class ServerUtil {
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
-				if (!ServerPlugin.containsModule(servers[i], module, monitor)) {
+				if (!containsModule(servers[i], module, monitor)) {
 					try {
 						IModule[] parents = servers[i].getRootModules(module, monitor);
 						if (parents != null && parents.length > 0) {
@@ -596,5 +596,63 @@ public class ServerUtil {
 		IServer[] allServers = new IServer[list.size()];
 		list.toArray(allServers);
 		return allServers;
-	}*/
+	}
+
+	/**
+	 * Returns a list of all servers that this module is configured on.
+	 * 
+	 * @param module org.eclipse.wst.server.core.model.IModule
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return a possibly-empty array of server instances {@link IServer}
+	 */
+	public static IServer[] getServersByModule(IModule module, IProgressMonitor monitor) {
+		if (module == null)
+			return new IServer[0];
+
+		// do it the slow way - go through all servers and
+		// see if this module is configured in it
+		List list = new ArrayList();
+		IServer[] servers = ServerCore.getServers();
+		if (servers != null) {
+			int size = servers.length;
+			for (int i = 0; i < size; i++) {
+				if (containsModule(servers[i], module, monitor))
+					list.add(servers[i]);
+			}
+		}
+		
+		IServer[] allServers = new IServer[list.size()];
+		list.toArray(allServers);
+		return allServers;
+	}
+
+	/**
+	 * Returns true if the given server currently contains the given module.
+	 *
+	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param module org.eclipse.wst.server.core.IModule
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return boolean
+	 */
+	public static boolean containsModule(IServer server, IModule module, IProgressMonitor monitor) {
+		if (server == null)
+			return false;
+		Trace.trace(Trace.FINEST, "containsModule() " + server + " " + module);
+		try {
+			IModule[] modules = ServerPlugin.getAllContainedModules(server, monitor);
+			if (modules != null) {
+				int size = modules.length;
+				for (int i = 0; i < size; i++) {
+					Trace.trace(Trace.FINEST, "module: " + modules[i] + " " + module.equals(modules[i]));
+					if (module.equals(modules[i]))
+						return true;
+				}
+			}
+		} catch (Throwable t) {
+			// ignore
+		}
+		return false;
+	}
 }

@@ -87,7 +87,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		if (server != null && !ServerUIPlugin.isCompatibleWithLaunchMode(server, launchMode))
 			server = null;
 		
-		if (server != null && !ServerPlugin.containsModule(server, module, monitor)) {
+		if (server != null && !ServerUtil.containsModule(server, module, monitor)) {
 			IServerWorkingCopy wc = server.createWorkingCopy();
 			try {
 				ServerUtil.modifyModules(wc, new IModule[] { module }, new IModule[0], monitor);

@@ -10,12 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.actions;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -23,9 +20,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
@@ -44,35 +39,6 @@ public class RestartProjectActionDelegate implements IActionDelegate {
 	 */
 	public RestartProjectActionDelegate() {
 		super();
-	}
-	
-	/**
-	 * Returns a list of all servers that this module is configured on.
-	 * 
-	 * @param module org.eclipse.wst.server.core.model.IModule
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @return a possibly-empty array of server instances {@link IServer}
-	 */
-	protected static IServer[] getServersByModule(IModule module, IProgressMonitor monitor) {
-		if (module == null)
-			return new IServer[0];
-
-		// do it the slow way - go through all servers and
-		// see if this module is configured in it
-		List list = new ArrayList();
-		IServer[] servers = ServerCore.getServers();
-		if (servers != null) {
-			int size = servers.length;
-			for (int i = 0; i < size; i++) {
-				if (ServerPlugin.containsModule(servers[i], module, monitor))
-					list.add(servers[i]);
-			}
-		}
-		
-		IServer[] allServers = new IServer[list.size()];
-		list.toArray(allServers);
-		return allServers;
 	}
 	
 	/**
@@ -96,7 +62,7 @@ public class RestartProjectActionDelegate implements IActionDelegate {
 				IModule[] modules = ServerUtil.getModules(project);
 				if (modules != null && modules.length > 0) {
 					IModule module = modules[0];
-					IServer[] servers = getServersByModule(module, null);
+					IServer[] servers = ServerUtil.getServersByModule(module, null);
 					if (servers != null) {
 						int size2 = servers.length;
 						for (int j = 0; j < size2; j++) {
@@ -157,7 +123,7 @@ public class RestartProjectActionDelegate implements IActionDelegate {
 		IModule[] modules = ServerUtil.getModules(project);
 		if (modules != null && modules.length > 0) {
 			IModule module = modules[0];
-			IServer[] servers = getServersByModule(module, null);
+			IServer[] servers = ServerUtil.getServersByModule(module, null);
 			if (servers != null) {
 				int size2 = servers.length;
 				for (int j = 0; j < size2; j++) {
