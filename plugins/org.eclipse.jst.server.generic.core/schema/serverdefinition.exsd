@@ -58,6 +58,9 @@
                <documentation>
                   location of the generic server definition file
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="resource"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
