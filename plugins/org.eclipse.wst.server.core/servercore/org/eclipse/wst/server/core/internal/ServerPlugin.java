@@ -26,6 +26,12 @@ public class ServerPlugin extends Plugin {
 	
 	protected static final DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 	protected static int num = 0;
+	
+	// cached copy of all launchable adapters
+	private static List launchableAdapters;
+
+	// cached copy of all launchable clients
+	private static List clients;
 
 	// singleton instance of this class
 	private static ServerPlugin singleton;
@@ -350,5 +356,83 @@ public class ServerPlugin extends Plugin {
 				return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Returns an array of all known launchable adapters.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return a possibly-empty array of launchable adapters {@link ILaunchableAdapter}
+	 */
+	public static ILaunchableAdapter[] getLaunchableAdapters() {
+		if (launchableAdapters == null)
+			loadLaunchableAdapters();
+		ILaunchableAdapter[] la = new ILaunchableAdapter[launchableAdapters.size()];
+		launchableAdapters.toArray(la);
+		return la;
+	}
+
+	/**
+	 * Returns an array of all known client instances.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return a possibly-empty array of client instances {@link IClient}
+	 */
+	public static IClient[] getClients() {
+		if (clients == null)
+			loadClients();
+		IClient[] c = new IClient[clients.size()];
+		clients.toArray(c);
+		return c;
+	}
+	
+	/**
+	 * Load the launchable adapters extension point.
+	 */
+	private static synchronized void loadLaunchableAdapters() {
+		if (launchableAdapters != null)
+			return;
+		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .launchableAdapters extension point ->-");
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "launchableAdapters");
+
+		int size = cf.length;
+		launchableAdapters = new ArrayList(size);
+		for (int i = 0; i < size; i++) {
+			try {
+				launchableAdapters.add(new LaunchableAdapter(cf[i]));
+				Trace.trace(Trace.EXTENSION_POINT, "  Loaded launchableAdapter: " + cf[i].getAttribute("id"));
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "  Could not load launchableAdapter: " + cf[i].getAttribute("id"), t);
+			}
+		}
+		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .launchableAdapters extension point -<-");
+	}
+
+	/**
+	 * Load the client extension point.
+	 */
+	private static synchronized void loadClients() {
+		if (clients != null)
+			return;
+		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .clients extension point ->-");
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "clients");
+
+		int size = cf.length;
+		clients = new ArrayList(size);
+		for (int i = 0; i < size; i++) {
+			try {
+				clients.add(new Client(cf[i]));
+				Trace.trace(Trace.EXTENSION_POINT, "  Loaded clients: " + cf[i].getAttribute("id"));
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "  Could not load clients: " + cf[i].getAttribute("id"), t);
+			}
+		}
+		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .clients extension point -<-");
 	}
 }

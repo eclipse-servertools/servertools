@@ -37,12 +37,6 @@ import org.eclipse.wst.server.core.internal.*;
 public class ServerCore {
 	// cached copy of all module factories
 	private static List moduleFactories;
-
-	// cached copy of all launchable adapters
-	private static List launchableAdapters;
-
-	// cached copy of all launchable clients
-	private static List clients;
 	
 	// cached copy of all server tasks
 	private static List serverTasks;
@@ -294,38 +288,6 @@ public class ServerCore {
 	}
 
 	/**
-	 * Returns an array of all known launchable adapters.
-	 * <p>
-	 * A new array is returned on each call, so clients may store or modify the result.
-	 * </p>
-	 * 
-	 * @return a possibly-empty array of launchable adapters {@link ILaunchableAdapter}
-	 */
-	public static ILaunchableAdapter[] getLaunchableAdapters() {
-		if (launchableAdapters == null)
-			loadLaunchableAdapters();
-		ILaunchableAdapter[] la = new ILaunchableAdapter[launchableAdapters.size()];
-		launchableAdapters.toArray(la);
-		return la;
-	}
-
-	/**
-	 * Returns an array of all known client instances.
-	 * <p>
-	 * A new array is returned on each call, so clients may store or modify the result.
-	 * </p>
-	 * 
-	 * @return a possibly-empty array of client instances {@link IClient}
-	 */
-	public static IClient[] getClients() {
-		if (clients == null)
-			loadClients();
-		IClient[] c = new IClient[clients.size()];
-		clients.toArray(c);
-		return c;
-	}
-
-	/**
 	 * Returns an array of all known server tasks.
 	 * <p>
 	 * A new array is returned on each call, so clients may store or modify the result.
@@ -510,52 +472,6 @@ public class ServerCore {
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleFactories extension point -<-");
 	}
-	
-	/**
-	 * Load the launchable adapters extension point.
-	 */
-	private static synchronized void loadLaunchableAdapters() {
-		if (launchableAdapters != null)
-			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .launchableAdapters extension point ->-");
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "launchableAdapters");
-
-		int size = cf.length;
-		launchableAdapters = new ArrayList(size);
-		for (int i = 0; i < size; i++) {
-			try {
-				launchableAdapters.add(new LaunchableAdapter(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded launchableAdapter: " + cf[i].getAttribute("id"));
-			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load launchableAdapter: " + cf[i].getAttribute("id"), t);
-			}
-		}
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .launchableAdapters extension point -<-");
-	}
-
-	/**
-	 * Load the client extension point.
-	 */
-	private static synchronized void loadClients() {
-		if (clients != null)
-			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .clients extension point ->-");
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "clients");
-
-		int size = cf.length;
-		clients = new ArrayList(size);
-		for (int i = 0; i < size; i++) {
-			try {
-				clients.add(new Client(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded clients: " + cf[i].getAttribute("id"));
-			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load clients: " + cf[i].getAttribute("id"), t);
-			}
-		}
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .clients extension point -<-");
-	}
 
 	/**
 	 * Load the server task extension point.
@@ -699,32 +615,6 @@ public class ServerCore {
 	 */
 	public static void removeServerLifecycleListener(IServerLifecycleListener listener) {
 		getResourceManager().removeServerLifecycleListener(listener);
-	}
-
-	/**
-	 * Returns the default runtime. Test API - do not use.
-	 * <p>
-	 * [issue: This is marked "Test API - do not use."]
-	 * </p>
-	 *
-	 * @return a runtime instance, or <code>null</code> if none
-	 * @see #setDefaultRuntime(IRuntime)
-	 */
-	public static IRuntime getDefaultRuntime() {
-		return getResourceManager().getDefaultRuntime();
-	}
-
-	/**
-	 * Sets the default runtime.
-	 * <p>
-	 * [issue: This is marked "Test API - do not use."]
-	 * </p>
-	 *
-	 * @param runtime a runtime instance, or <code>null</code>
-	 * @see #getDefaultRuntime()
-	 */
-	public static void setDefaultRuntime(IRuntime runtime) {
-		getResourceManager().setDefaultRuntime(runtime);
 	}
 
 	/**

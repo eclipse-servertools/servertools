@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.IClient;
+import org.eclipse.wst.server.core.internal.ILaunchableAdapter;
 import org.eclipse.wst.server.core.internal.PublishServerJob;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.wizard.*;
 import org.eclipse.swt.widgets.Shell;
@@ -206,7 +209,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		// get the launchable adapter and module object
 		ILaunchableAdapter launchableAdapter = null;
 		ILaunchable launchable = null;
-		ILaunchableAdapter[] adapters = ServerCore.getLaunchableAdapters();
+		ILaunchableAdapter[] adapters = ServerPlugin.getLaunchableAdapters();
 		if (adapters != null) {
 			int size2 = adapters.length;
 			for (int j = 0; j < size2; j++) {
@@ -298,7 +301,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 */
 	public static IClient[] getClients(IServer server, ILaunchable launchable, String launchMode) {
 		ArrayList list = new ArrayList();
-		IClient[] clients = ServerCore.getClients();
+		IClient[] clients = ServerPlugin.getClients();
 		if (clients != null) {
 			int size = clients.length;
 			for (int i = 0; i < size; i++) {

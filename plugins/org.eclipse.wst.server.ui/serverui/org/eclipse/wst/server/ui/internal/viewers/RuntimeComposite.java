@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.ResourceManager;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 /**
@@ -86,7 +86,8 @@ public class RuntimeComposite extends AbstractTableComposite {
 			}
 		});
 		
-		defaultRuntime = ServerCore.getDefaultRuntime();
+		final ResourceManager rm = ResourceManager.getInstance();
+		defaultRuntime = rm.getDefaultRuntime();
 		if (defaultRuntime != null)
 			((CheckboxTableViewer)tableViewer).setChecked(defaultRuntime, true);
 
@@ -97,10 +98,10 @@ public class RuntimeComposite extends AbstractTableComposite {
 					if (event.getChecked()) {
 						if (defaultRuntime != null && !runtime.equals(defaultRuntime))
 							((CheckboxTableViewer)tableViewer).setChecked(defaultRuntime, false);
-						ServerCore.setDefaultRuntime(runtime);
+						rm.setDefaultRuntime(runtime);
 						defaultRuntime = runtime;
 					} else
-						ServerCore.setDefaultRuntime(null);
+						rm.setDefaultRuntime(null);
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Error setting default runtime", e);
 				}

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,9 +8,12 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.server.core;
+package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.wst.server.core.ILaunchable;
+import org.eclipse.wst.server.core.IModuleArtifact;
+import org.eclipse.wst.server.core.IServer;
 /**
  * This interface, typically implemented by the server
  * code, converts from an IModuleArtifact to an
