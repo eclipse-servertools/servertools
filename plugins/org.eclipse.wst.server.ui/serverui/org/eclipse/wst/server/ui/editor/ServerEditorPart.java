@@ -264,4 +264,5 @@ public abstract class ServerEditorPart extends EditorPart {
 		if (toolkit == null)
 			toolkit = new FormToolkit(display);
 		return toolkit;
-	}}
+	}
+}

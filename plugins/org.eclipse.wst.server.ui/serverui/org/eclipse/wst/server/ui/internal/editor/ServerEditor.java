@@ -22,6 +22,7 @@ import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
@@ -911,5 +912,9 @@ public class ServerEditor extends MultiPageEditorPart {
 			return server.getName();
 		else
 			return "error";
+	}
+	
+	public int getOrientation() {
+		return Window.getDefaultOrientation();
 	}
 }
