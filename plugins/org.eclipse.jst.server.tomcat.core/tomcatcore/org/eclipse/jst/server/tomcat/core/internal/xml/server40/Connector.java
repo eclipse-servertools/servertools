@@ -51,6 +51,10 @@ public class Connector extends XMLElement {
 		return getAttributeValue("protocol");
 	}
 
+	public String getProtocolHandlerClassName() {
+		return getAttributeValue("protocolHandlerClassName");
+	}
+
 	public void setAcceptCount(String acceptCount) {
 		setAttributeValue("acceptCount", acceptCount);
 	}
@@ -73,5 +77,9 @@ public class Connector extends XMLElement {
 
 	public void setPort(String port) {
 		setAttributeValue("port", port);
+	}
+	
+	public void setProtocolHandlerClassName(String protocolHandlerClassName) {
+		setAttributeValue("protocolHandlerClassName", protocolHandlerClassName);
 	}
 }

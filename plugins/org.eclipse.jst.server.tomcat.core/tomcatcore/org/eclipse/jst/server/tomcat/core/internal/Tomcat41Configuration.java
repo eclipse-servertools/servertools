@@ -42,6 +42,7 @@ import org.eclipse.wst.server.core.util.ServerPort;
 public class Tomcat41Configuration extends TomcatConfiguration {
 	protected static final String DEFAULT_SERVICE = "Tomcat-Standalone";
 	protected static final String HTTP_CONNECTOR = "org.apache.coyote.tomcat4.CoyoteConnector";
+	protected static final String JK_PROTOCOL_HANDLER = "org.apache.jk.server.JkCoyoteHandler";
 	protected static final String SSL_SOCKET_FACTORY = "org.apache.coyote.tomcat4.CoyoteServerSocketFactory";
 	//protected static final String TEST_CONNECTOR = "org.apache.catalina.connector.test.HttpConnector";
 	//org.apache.ajp.tomcat4.Ajp13Connector
@@ -154,15 +155,22 @@ public class Tomcat41Configuration extends TomcatConfiguration {
 						name = "HTTP Connector";
 						protocol = "HTTP";
 						contentTypes = new String[] { "web", "webservices" };
-						// check for SSL connector
-						try {
-							Element element = connector.getSubElement("Factory");
-							if (SSL_SOCKET_FACTORY.equals(element.getAttribute("className"))) {
-								name = "SSL Connector";
-								protocol = "SSL";
+						// check for AJP/1.3 Coyote connector
+						String protocolHandler = connector.getProtocolHandlerClassName();
+						if (JK_PROTOCOL_HANDLER.equals(protocolHandler)) {
+							name = "AJP/1.3 Connector";
+							protocol = "AJP/1.3"; 
+						} else {
+							// assume HTTP, check for HTTP SSL connector
+							try {
+								Element element = connector.getSubElement("Factory");
+								if (SSL_SOCKET_FACTORY.equals(element.getAttribute("className"))) {
+									name = "SSL Connector";
+									protocol = "SSL";
+								}
+							} catch (Exception e) {
+								// ignore
 							}
-						} catch (Exception e) {
-							// ignore
 						}
 						if ("HTTP".equals(protocol))
 							advanced = false;
