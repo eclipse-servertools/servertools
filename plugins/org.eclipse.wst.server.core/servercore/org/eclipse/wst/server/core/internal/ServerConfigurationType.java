@@ -71,12 +71,16 @@ public class ServerConfigurationType implements IServerConfigurationType {
 	}
 	
 	/**
-	 * Return the label of this factory.
+	 * Return the import extensions.
 	 *
 	 * @return java.lang.String
 	 */
 	public String[] getImportFilterExtensions() {
-		return ServerPlugin.tokenize(element.getAttribute("importExtensions"), ",");
+		String importExt = element.getAttribute("importExtensions");
+		if (importExt == null || importExt.length() < 1)
+			return null;
+		else
+			return ServerPlugin.tokenize(importExt, ",");
 	}
 	
 	public IServerConfigurationWorkingCopy createServerConfiguration(String id, IFile file, IProgressMonitor monitor) {

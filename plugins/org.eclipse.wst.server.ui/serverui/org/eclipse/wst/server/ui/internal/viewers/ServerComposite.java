@@ -1,3 +1,13 @@
+/**********************************************************************
+ * Copyright (c) 2003 IBM Corporation and others.
+ * All rights reserved.   This program and the accompanying materials
+ * are made available under the terms of the Common Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/cpl-v10.html
+ *
+ * Contributors:
+ *    IBM - Initial API and implementation
+ **********************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -21,6 +31,7 @@ public class ServerComposite extends AbstractTreeComposite {
 	
 	protected IModule module;
 	protected String launchMode;
+	protected boolean includeIncompatibleVersions;
 	
 	public interface ServerSelectionListener {
 		public void serverSelected(IServer server);
@@ -58,6 +69,14 @@ public class ServerComposite extends AbstractTreeComposite {
 	public ServerComposite(Composite parent, int style, ServerSelectionListener listener2) {
 		this(parent, style, listener2, null, null);
 	}
+	
+	public void setIncludeIncompatibleVersions(boolean b) {
+		includeIncompatibleVersions = b;
+		ISelection sel = treeViewer.getSelection();
+		contentProvider.setIncludeIncompatibleVersions(b);
+		treeViewer.refresh();
+		treeViewer.setSelection(sel, true);
+	}
 
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
@@ -71,31 +90,29 @@ public class ServerComposite extends AbstractTreeComposite {
 	public void refreshAll() {
 		ISelection sel = treeViewer.getSelection();
 		contentProvider = new ServerTreeContentProvider(viewOption, module, launchMode);
+		contentProvider.setIncludeIncompatibleVersions(includeIncompatibleVersions);
 		treeViewer.setContentProvider(contentProvider);
 		treeViewer.setSelection(sel);
 	}
-	
-	/*protected boolean hasDescription() {
-		return true;
-	}*/
-	
+
 	protected String getDescriptionLabel() {
 		return null; //ServerUIPlugin.getResource("%serverTypeCompDescription");
 	}
 	
 	protected String getTitleLabel() {
-		return "Select the server that you want to use:";
+		return ServerUIPlugin.getResource("%wizNewServerSelectExisting");
 	}
 
 	protected String[] getComboOptions() {
 		return new String[] { ServerUIPlugin.getResource("%name"), ServerUIPlugin.getResource("%host"), 
-			ServerUIPlugin.getResource("%vendor"), ServerUIPlugin.getResource("%version")};
+			ServerUIPlugin.getResource("%vendor"), ServerUIPlugin.getResource("%version") };
 	}
 
 	protected void viewOptionSelected(byte option) {
 		ISelection sel = treeViewer.getSelection();
 		viewOption = option;
 		contentProvider = new ServerTreeContentProvider(option, module, launchMode);
+		contentProvider.setIncludeIncompatibleVersions(includeIncompatibleVersions);
 		treeViewer.setContentProvider(contentProvider);
 		treeViewer.setSelection(sel);
 	}

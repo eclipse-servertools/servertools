@@ -35,8 +35,8 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 	}
 
 	protected Object[] elements;
-	protected Map elementToParentMap = new HashMap();
-	protected Map textMap = new HashMap();
+	protected Map elementToParentMap = new HashMap(2);
+	protected Map textMap = new HashMap(2);
 
 	/**
 	 * AbstractTreeContentProvider constructor comment.
@@ -54,7 +54,16 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 	}
 	
 	protected abstract void fillTree();
-	
+
+	protected void clean() {
+		elements = null;
+		elementToParentMap = new HashMap(2);
+		textMap = new HashMap(2);
+		
+		initialSelection = null;
+		initialSelectionOrder = -1000;
+	}
+
 	protected TreeElement getOrCreate(List list, String text) {
 		try {
 			Object obj = textMap.get(text);

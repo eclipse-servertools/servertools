@@ -20,6 +20,9 @@ public interface IStartableServer extends IServerDelegate {
 	 * workbench shutdown, then the server should get reconnected
 	 * in the server load when the workbench startsup.
 	 * 
+	 * @deprecated Server tools framework can no longer stop the (downstream)
+	 *    server due to plugin dependancy/shutdown issues. This method should not
+	 *    be used and will eventually be removed.
 	 * @return boolean
 	 */
 	public boolean isTerminateOnShutdown();

@@ -85,7 +85,7 @@ public class TomcatRuntime implements ITomcatRuntime {
 		if (runtime.getName() == null || runtime.getName().length() == 0)
 			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorRuntimeName"), null);
 
-		if (ServerUtil.isNameInUse(runtime))
+		if (runtime.isWorkingCopy() && ServerUtil.isNameInUse(runtime))
 			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorDuplicateRuntimeName"), null);
 	
 		IPath path = runtime.getLocation();

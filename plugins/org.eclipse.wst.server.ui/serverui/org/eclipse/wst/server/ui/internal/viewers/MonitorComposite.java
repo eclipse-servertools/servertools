@@ -10,6 +10,8 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
@@ -22,7 +24,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-
 import org.eclipse.wst.server.core.IMonitoredServerPort;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerMonitorManager;
@@ -133,7 +134,9 @@ public class MonitorComposite extends Composite {
 				MonitorDialog dialog = new MonitorDialog(getShell(), server2);
 				if (dialog.open() != Window.CANCEL) {
 					IServerPort port = dialog.getServerPort();
-					monitorTableViewer.add(smm.createMonitor(server2, port, dialog.getMonitorPort(), dialog.getContentTypes()));
+					IMonitoredServerPort sp = smm.createMonitor(server2, port, dialog.getMonitorPort(), dialog.getContentTypes());
+					if (sp != null)
+						monitorTableViewer.add(sp);
 				}
 			}
 		});
@@ -148,8 +151,10 @@ public class MonitorComposite extends Composite {
 					smm.removeMonitor(port);
 					monitorTableViewer.remove(port);
 					port = smm.createMonitor(server2, dialog.getServerPort(), dialog.getMonitorPort(), dialog.getContentTypes());
-					monitorTableViewer.add(port);
-					monitorTableViewer.setSelection(new StructuredSelection(port));
+					if (port != null) {
+						monitorTableViewer.add(port);
+						monitorTableViewer.setSelection(new StructuredSelection(port));
+					}
 				}
 			}
 		});
@@ -212,8 +217,9 @@ public class MonitorComposite extends Composite {
 			}
 		});
 		
-		// TODO - if elements > 0
-		//tableViewer.setSelection(new StructuredSelection(tableViewer.getElementAt(0)));
+		List list = ServerCore.getServerMonitorManager().getMonitoredPorts(server); 
+		if (!list.isEmpty())
+			monitorTableViewer.setSelection(new StructuredSelection(list.get(0)));
 	}
 	
 	protected Object getSelection(ISelection sel2) {

@@ -49,7 +49,11 @@ public abstract class Base {
 		//this.map = map;
 		map.put(PROP_ID, id);
 	}
-	
+
+	public int getTimestamp() {
+		return getAttribute("timestamp", -1);
+	}
+
 	public IFile getFile() {
 		return file;
 	}
@@ -332,7 +336,7 @@ public abstract class Base {
 	}
 	
 	public boolean isWorkingCopiesExist() {
-		return (workingCopies == null || workingCopies.size() > 0);
+		return (workingCopies != null && workingCopies.size() > 0);
 	}
 
 	public boolean isAWorkingCopyDirty() {

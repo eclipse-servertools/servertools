@@ -131,7 +131,7 @@ public class ServerTableViewer extends TableViewer {
 									refresh();
 							}
 						});
-						Thread.sleep(150);
+						Thread.sleep(200);
 					} catch (Exception e) {
 						Trace.trace(Trace.FINEST, "Error in animated server view", e);
 					}

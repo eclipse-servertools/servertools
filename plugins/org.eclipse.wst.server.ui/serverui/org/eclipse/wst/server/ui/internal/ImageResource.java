@@ -213,7 +213,7 @@ public class ImageResource {
 		// wizard banners
 		registerImage(IMG_WIZBAN_NEW_SERVER, URL_WIZBAN + "new_server_wiz.gif");
 		registerImage(IMG_WIZBAN_NEW_SERVER_PROJECT, URL_WIZBAN + "new_server_project_wiz.gif");
-		registerImage(IMG_WIZBAN_IMPORT_SERVER_CONFIGURATION, URL_WIZBAN + "import_server_wiz.gif");
+		registerImage(IMG_WIZBAN_IMPORT_SERVER_CONFIGURATION, URL_WIZBAN + "import_configuration_wiz.gif");
 		registerImage(IMG_WIZBAN_SELECT_SERVER_CLIENT, URL_WIZBAN + "select_client_wiz.gif");
 		registerImage(IMG_WIZBAN_SELECT_SERVER, URL_WIZBAN + "select_server_wiz.gif");
 		registerImage(IMG_WIZBAN_VISUAL_PUBLISHER, URL_WIZBAN + "pub_resource_server_wiz.gif");

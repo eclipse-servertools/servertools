@@ -15,10 +15,11 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.EditorPart;
-
 import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorCore;
@@ -42,6 +43,8 @@ public abstract class ServerResourceEditorPart extends EditorPart {
 	protected IServerConfigurationWorkingCopy serverConfiguration;
 	protected ICommandManager commandManager;
 	protected boolean readOnly;
+	
+	private FormToolkit toolkit;
 
 	public ServerResourceEditorPart() {
 		super();
@@ -228,5 +231,20 @@ public abstract class ServerResourceEditorPart extends EditorPart {
 			IServerEditorSection section = (IServerEditorSection) iterator.next();
 			section.dispose();
 		}
+		
+		if (toolkit != null)
+			toolkit.dispose();
 	}
-}
+
+	/**
+	 * Get a form toolkit to create widgets. It will automatically be disposed
+	 * when the editor is disposed.
+	 * 
+	 * @param display
+	 * @return FormToolkit
+	 */
+	public FormToolkit getFormToolkit(Display display) {
+		if (toolkit == null)
+			toolkit = new FormToolkit(display);
+		return toolkit;
+	}}

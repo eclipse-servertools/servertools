@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.wizard;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,19 +20,29 @@ import java.util.Map;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.wst.server.core.ITask;
-import org.eclipse.wst.server.core.ITaskModel;
-import org.eclipse.wst.server.core.util.TaskModel;
-import org.eclipse.wst.server.ui.internal.Trace;
-import org.eclipse.wst.server.ui.internal.wizard.page.WorkspaceRunnableAdapter;
+
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ITask;
+import org.eclipse.wst.server.core.ITaskModel;
+import org.eclipse.wst.server.core.model.IRunningActionServer;
+import org.eclipse.wst.server.core.model.IServerDelegate;
+import org.eclipse.wst.server.core.util.TaskModel;
+import org.eclipse.wst.server.ui.ServerUICore;
+import org.eclipse.wst.server.ui.internal.EclipseUtil;
+import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.wst.server.ui.internal.wizard.page.WorkspaceRunnableAdapter;
 
 /**
  * A wizard used to execute tasks.
@@ -41,6 +52,7 @@ public class TaskWizard implements IWizard {
 	private static final byte CANCEL = 3;
 
 	private List pages;
+	private boolean addingPages;
 	private Map fragmentData = new HashMap();
 	protected ITaskModel taskModel = new TaskModel();
 	
@@ -63,7 +75,7 @@ public class TaskWizard implements IWizard {
 	private IWizardFragment rootFragment;
 	private IWizardFragment currentFragment;
 	
-	private static TaskWizard current; // TODO temp fix
+	private static TaskWizard current;
 
 	class FragmentData {
 		public TaskWizardPage page;
@@ -90,7 +102,7 @@ public class TaskWizard implements IWizard {
 		setNeedsProgressMonitor(true);
 		setForcePreviousAndNextButtons(true);
 		
-		current = this; // TODO temp fix
+		current = this;
 	}
 
 	/**
@@ -126,20 +138,39 @@ public class TaskWizard implements IWizard {
 	 */
 	public boolean performCancel() {
 		final List list = getAllWizardFragments();
-		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
-			public void run(IProgressMonitor monitor) throws CoreException {
-				Iterator iterator = list.iterator();
-				while (iterator.hasNext())
-					executeTask((IWizardFragment) iterator.next(), CANCEL);
+		IRunnableWithProgress runnable = new IRunnableWithProgress() {
+			public void run(IProgressMonitor monitor) throws InvocationTargetException {
+				try {
+					Iterator iterator = list.iterator();
+					while (iterator.hasNext())
+						executeTask((IWizardFragment) iterator.next(), CANCEL, monitor);
+				} catch (CoreException ce) {
+					throw new InvocationTargetException(ce);
+				}
 			}
 		};
 		
+		Throwable t = null;
 		try {
-			getContainer().run(true, true, new WorkspaceRunnableAdapter(runnable));
+			if (getContainer() != null)
+				getContainer().run(true, true, runnable);
+			else
+				runnable.run(new NullProgressMonitor());
 			return true;
+		} catch (InvocationTargetException te) {
+			t = te.getCause();
 		} catch (Exception e) {
-			return false;
+			t = e;
 		}
+		Trace.trace(Trace.SEVERE, "Error cancelling task wizard", t);
+		
+		if (t instanceof CoreException) {
+			EclipseUtil.openError(t.getLocalizedMessage(), ((CoreException)t).getStatus());
+		} else
+			EclipseUtil.openError(t.getLocalizedMessage());
+		
+		return false;
+		
 	}
 
 	public boolean performFinish() {
@@ -163,23 +194,64 @@ public class TaskWizard implements IWizard {
 					}
 				}
 				
-				// finish
-				Iterator iterator = list.iterator();
-				while (iterator.hasNext())
-					executeTask((IWizardFragment) iterator.next(), FINISH);
+				boolean useJob = false;
+				try {
+					IServer server = (IServer) taskModel.getObject(ITaskModel.TASK_SERVER);
+					IServerDelegate delegate = server.getDelegate();
+					if (delegate instanceof IRunningActionServer)
+						useJob = true;
+				} catch (Exception e) { }
+				
+				if (useJob) {
+					class FinishWizardJob extends Job {
+						public FinishWizardJob() {
+							super(getWindowTitle()); //ServerUIPlugin.getResource("%publishingStart"));
+						}
+
+						public IStatus run(IProgressMonitor monitor2) {
+							try {
+								Iterator iterator = list.iterator();
+								while (iterator.hasNext())
+									executeTask((IWizardFragment) iterator.next(), FINISH, monitor2);
+							} catch (CoreException ce) {
+								Trace.trace(Trace.SEVERE, "Error finishing wizard job", ce);
+								return new Status(IStatus.ERROR, ServerUICore.PLUGIN_ID, 0, ce.getLocalizedMessage(), null);
+							}
+							return new Status(IStatus.OK, ServerUICore.PLUGIN_ID, 0, "", null);
+						}
+					}
+					
+					FinishWizardJob job = new FinishWizardJob();
+					job.setUser(true);
+					job.schedule();
+				} else {
+					Iterator iterator = list.iterator();
+					while (iterator.hasNext())
+						executeTask((IWizardFragment) iterator.next(), FINISH, monitor);
+				}
 			}
 		};
 		
+		Throwable t = null;
 		try {
 			if (getContainer() != null)
 				getContainer().run(true, true, new WorkspaceRunnableAdapter(runnable));
 			else
 				runnable.run(new NullProgressMonitor());
 			return true;
+		} catch (InvocationTargetException te) {
+			t = te.getCause();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error finishing task wizard", e);
-			return false;
+			t = e;
 		}
+		Trace.trace(Trace.SEVERE, "Error finishing task wizard", t);
+		
+		if (t instanceof CoreException) {
+			EclipseUtil.openError(t.getLocalizedMessage(), ((CoreException)t).getStatus());
+		} else
+			EclipseUtil.openError(t.getLocalizedMessage());
+		
+		return false;
 	}
 	
 	public void addPage(IWizardPage page) {
@@ -187,25 +259,15 @@ public class TaskWizard implements IWizard {
 		page.setWizard(this);
 	}
 	
-	protected void executeTask(IWizardFragment fragment, byte type) throws CoreException {
+	protected void executeTask(IWizardFragment fragment, byte type, IProgressMonitor monitor) throws CoreException {
 		if (fragment == null)
 			return;
 		
 		FragmentData data = getFragmentData(fragment);
 		if (type == FINISH && data.finishTask != null)
-			data.finishTask.execute(new NullProgressMonitor());
+			data.finishTask.execute(monitor);
 		else if (type == CANCEL && data.cancelTask != null)
-			data.cancelTask.execute(new NullProgressMonitor());
-	}
-	
-	protected boolean safeExecuteTask(IWizardFragment fragment, byte type) {
-		try {
-			executeTask(fragment, type);
-			return true;
-		} catch (CoreException ce) {
-			Trace.trace(Trace.SEVERE, "Error executing wizard fragment task", ce);
-			return false;
-		}
+			data.cancelTask.execute(monitor);
 	}
 	
 	protected IWizardFragment getCurrentWizardFragment() {
@@ -272,27 +334,35 @@ public class TaskWizard implements IWizard {
 	 * @see org.eclipse.jface.wizard.IWizard#addPages()
 	 */
 	public void addPages() {
+		if (addingPages)
+			return;
+		
 		try {
+			addingPages = true;
 			pages = new ArrayList();
 			Iterator iterator = getAllWizardFragments().iterator();
 			while (iterator.hasNext()) {
 				IWizardFragment fragment = (IWizardFragment) iterator.next();
 				FragmentData data = getFragmentData(fragment);
-				if (data.page != null) {
-					addPage(data.page);
-				} else if (fragment.hasComposite()) {
-					TaskWizardPage page = new TaskWizardPage(fragment);
-					data.page = page;
-					addPage(page);
+				if (fragment.hasComposite()) {
+					if (data.page != null)
+						addPage(data.page);
+					else {
+						TaskWizardPage page = new TaskWizardPage(fragment);
+						data.page = page;
+						addPage(page);
+					}
 				}	
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error adding fragments to wizard", e);
+		} finally {
+			addingPages = false;
 		}
 	}
 	
 	protected static void updateWizardPages() {
-		try { // TODO temp fix
+		try {
 			current.updatePages();
 			current.getContainer().updateButtons();
 		} catch (Exception e) {

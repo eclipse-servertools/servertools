@@ -16,13 +16,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.*;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IServerDelegate;
-import org.eclipse.wst.server.core.model.IServerWorkingCopyDelegate;
+import org.eclipse.wst.server.core.model.*;
+import org.eclipse.wst.server.core.util.ProgressUtil;
 /**
  * 
  */
@@ -47,6 +44,8 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		super(id, file, runtime, serverType);
 		//server = this;
 		wch = new WorkingCopyHelper(this);
+		wch.setDirty(true);
+		serverState = ((ServerType)serverType).getInitialState();
 	}
 
 	public boolean isWorkingCopy() {
@@ -59,6 +58,20 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	
 	public IServerWorkingCopy getWorkingCopy() {
 		return this;
+	}
+	
+	public byte getServerState() {
+		if (server != null)
+			return server.getServerState();
+		else
+			return serverState;
+	}
+	
+	public void setServerState(byte state) {
+		if (server != null)
+			server.setServerState(state);
+		else
+			super.setServerState(state);
 	}
 
 	public void setAttribute(String attributeName, int value) {
@@ -127,14 +140,26 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	}
 	
 	public IServerWorkingCopyDelegate getWorkingCopyDelegate() {
-		if (workingCopyDelegate == null && serverType != null) {
-			try {
-				IConfigurationElement element = ((ServerType) serverType).getElement();
-				workingCopyDelegate = (IServerWorkingCopyDelegate) element.createExecutableExtension("workingCopyClass");
-				workingCopyDelegate.initialize((IServerState) this);
-				workingCopyDelegate.initialize((IServerWorkingCopy) this);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);
+		// make sure that the regular delegate is loaded 
+		//getDelegate();
+		
+		if (workingCopyDelegate != null)
+			return workingCopyDelegate;
+		
+		if (serverType != null) {
+			synchronized (this) {
+				if (workingCopyDelegate == null) {
+					try {
+						long time = System.currentTimeMillis();
+						IConfigurationElement element = ((ServerType) serverType).getElement();
+						workingCopyDelegate = (IServerWorkingCopyDelegate) element.createExecutableExtension("workingCopyClass");
+						workingCopyDelegate.initialize((IServerState) this);
+						workingCopyDelegate.initialize((IServerWorkingCopy) this);
+						Trace.trace(Trace.PERFORMANCE, "ServerWorkingCopy.getWorkingCopyDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
+					} catch (Exception e) {
+						Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);
+					}
+				}
 			}
 		}
 		return workingCopyDelegate;
@@ -147,34 +172,48 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	}
 	
 	public IServer save(IProgressMonitor monitor) throws CoreException {
+		monitor = ProgressUtil.getMonitorFor(monitor);
+		monitor.subTask(ServerPlugin.getResource("%savingTask", getName()));
 		if (wch.isReleased())
 			return null;
 		if (server == null) {
 			server = new Server(file);
-			server.setServerState(((ServerType)serverType).getInitialState());
+			server.setServerState(serverState);
+			server.publishListeners = publishListeners;
+			server.serverListeners = serverListeners;
 		}
+		
+		getWorkingCopyDelegate().handleSave(IServerWorkingCopyDelegate.PRE_SAVE, monitor);
 		server.setInternal(this);
 		server.doSave(monitor);
 		wch.setDirty(false);
 		release();
+		getWorkingCopyDelegate().handleSave(IServerWorkingCopyDelegate.POST_SAVE, monitor);
+		
 		return server;
 	}
-	
+
 	public IServer save(IProgressMonitor monitor, boolean release) throws CoreException {
+		monitor = ProgressUtil.getMonitorFor(monitor);
+		monitor.subTask(ServerPlugin.getResource("%savingTask", getName()));
 		if (wch.isReleased())
 			return null;
 		if (server == null) {
 			server = new Server(file);
-			server.setServerState(((ServerType)serverType).getInitialState());
+			server.setServerState(serverState);
+			server.publishListeners = publishListeners;
+			server.serverListeners = serverListeners;
 		}
+		getWorkingCopyDelegate().handleSave(IServerWorkingCopyDelegate.PRE_SAVE, monitor);
 		server.setInternal(this);
 		server.doSave(monitor);
 		wch.setDirty(false);
 		if (release)
 			release();
+		getWorkingCopyDelegate().handleSave(IServerWorkingCopyDelegate.POST_SAVE, monitor);
 		return server;
 	}
-	
+
 	public IServer saveAll(IProgressMonitor monitor) throws CoreException {
 		if (runtime != null && runtime.isWorkingCopy()) {
 			IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy) runtime;
@@ -214,6 +253,34 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		wch.firePropertyChangeEvent(propertyName, oldValue, newValue);
 	}
 	
+	public void addServerListener(IServerListener listener) {
+		if (server != null)
+			server.addServerListener(listener);
+		else
+			super.addServerListener(listener);
+	}
+	
+	public void removeServerListener(IServerListener listener) {
+		if (server != null)
+			server.removeServerListener(listener);
+		else
+			super.removeServerListener(listener);
+	}
+	
+	public void addPublishListener(IPublishListener listener) {
+		if (server != null)
+			server.addPublishListener(listener);
+		else
+			super.addPublishListener(listener);
+	}
+	
+	public void removePublishListener(IPublishListener listener) {
+		if (server != null)
+			server.removePublishListener(listener);
+		else
+			super.removePublishListener(listener);
+	}
+
 	public void setRuntime(IRuntime runtime) {
 		this.runtime = runtime;
 		if (runtime != null)
@@ -221,17 +288,34 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		else
 			setAttribute(RUNTIME_ID, (String)null);
 	}
+	
+	public void setRuntimeId(String runtimeId) {
+		setAttribute(RUNTIME_ID, runtimeId);
+		resolve();
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.IServer#modifyModule(org.eclipse.wst.server.core.model.IModule)
 	 */
-	public void modifyModules(IModule[] add, IModule[] remove,IProgressMonitor monitor) throws CoreException {
+	public void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
+		int i = 0;
+		while (getServerState() == IServer.SERVER_UNKNOWN && i < 10) {
+			try {
+				Thread.sleep(1000);
+			} catch (Exception e) { }
+			i++;
+		}
+		
 		try {
+			monitor = ProgressUtil.getMonitorFor(monitor);
+			monitor.subTask(ServerPlugin.getResource("%taskModifyModules"));
 			getWorkingCopyDelegate().modifyModules(add, remove, monitor);
+			wch.setDirty(true);
 		} catch (CoreException ce) {
 			throw ce;
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate modifyModule() " + toString(), e);
+			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, e.getLocalizedMessage(), e));
 		}
 	}
 

@@ -102,8 +102,6 @@ public class RuntimeType implements IRuntimeType {
 	}
 
 	public IRuntimeWorkingCopy createRuntime(String id) {
-		if (id == null || id.length() == 0)
-			id = ServerPlugin.generateId();
 		RuntimeWorkingCopy rwc = new RuntimeWorkingCopy(null, id, this);
 		rwc.setDefaults();
 		return rwc;

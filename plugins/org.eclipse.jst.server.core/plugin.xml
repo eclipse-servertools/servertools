@@ -19,7 +19,7 @@
   <runtime>
     <library name="sjavacore.jar">
       <export name="*"/>
-     </library>
+    </library>
   </runtime>
 
   <extension point="org.eclipse.jdt.core.classpathContainerInitializer">

@@ -70,6 +70,9 @@ public class TomcatServer implements ITomcatServer, IStartableServer, IMonitorab
 	}
 	
 	public ITomcatVersionHandler getTomcatVersionHandler() {
+		if (server.getRuntime() == null)
+			return null;
+
 		TomcatRuntime runtime = (TomcatRuntime) server.getRuntime().getDelegate();
 		return runtime.getVersionHandler();
 	}
@@ -556,7 +559,7 @@ public class TomcatServer implements ITomcatServer, IStartableServer, IMonitorab
 			for (int i = 0; i < size; i++) {
 				IModule module = add[i];
 				if (!(module instanceof IWebModule))
-					return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, "%errorWebModulesOnly", null);
+					return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorWebModulesOnly"), null);
 				
 				IStatus status = getTomcatVersionHandler().canAddModule((IWebModule) module);
 				if (status != null && !status.isOK())

@@ -8,15 +8,14 @@ package org.eclipse.wst.server.ui.internal.wizard;
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
 import java.util.List;
 
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
-import org.eclipse.wst.server.core.model.IModule;
+import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
+import org.eclipse.wst.server.ui.internal.task.InputWizardFragment;
 import org.eclipse.wst.server.ui.internal.task.SaveServerTask;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
 import org.eclipse.wst.server.ui.wizard.TaskWizard;
@@ -31,13 +30,13 @@ public class SelectTasksWizard extends TaskWizard {
 	/**
 	 * SelectTasksWizard constructor comment.
 	 */
-	public SelectTasksWizard(final IServer server, final IServerConfiguration configuration,
-			final List[] parents, final IModule[] modules) {
+	public SelectTasksWizard(final IServer server) {
 		super(ServerUIPlugin.getResource("%wizTaskWizardTitle"));
 		
 		setRootFragment(new WizardFragment() {
 			public void createSubFragments(List list) {
-				fragment = new TasksWizardFragment(server, configuration, parents, modules);
+				list.add(new InputWizardFragment(new String[] { ITaskModel.TASK_SERVER }, new Object[] { server }));
+				fragment = new TasksWizardFragment();
 				list.add(fragment);
 				list.add(new FinishWizardFragment(new SaveServerTask()));
 			}

@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jst.server.core.ClasspathRuntimeTargetHandler;
 import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IRuntimeTargetHandler;
 import org.eclipse.wst.server.core.ServerCore;
 /**
  * 
@@ -31,7 +32,9 @@ public class RuntimeClasspathContainerInitializer extends ClasspathContainerInit
 				IRuntime runtime = null;
 				String id = "";
 				if (containerPath.segmentCount() > 2) {
-					delegate = (ClasspathRuntimeTargetHandler) ServerCore.getRuntimeTargetHandler(containerPath.segment(1)).getDelegate();
+					IRuntimeTargetHandler handler = ServerCore.getRuntimeTargetHandler(containerPath.segment(1));
+					if (handler != null)
+						delegate = (ClasspathRuntimeTargetHandler) handler.getDelegate();
 					String runtimeId = containerPath.segment(2);
 					runtime = ServerCore.getResourceManager().getRuntime(runtimeId);
 					if (containerPath.segmentCount() > 3)
@@ -41,18 +44,6 @@ public class RuntimeClasspathContainerInitializer extends ClasspathContainerInit
 				JavaCore.setClasspathContainer(containerPath, new IJavaProject[] {project}, new IClasspathContainer[] {container}, null);
 			}
 		}
-		
-		/*int size = containerPath.segmentCount();
-		if (size > 0) {
-			if (containerPath.segment(0).equals(JavaRuntime.JRE_CONTAINER)) {
-				IVMInstall vm = resolveVM(containerPath);
-				JREContainer container = null;
-				if (vm != null) {
-					container = new JREContainer(vm, containerPath);
-				}
-				JavaCore.setClasspathContainer(containerPath, new IJavaProject[] {project}, new IClasspathContainer[] {container}, null);
-			}
-		}*/
 	}
 	
 	/**

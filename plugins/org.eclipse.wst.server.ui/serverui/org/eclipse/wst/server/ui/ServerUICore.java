@@ -91,7 +91,9 @@ public class ServerUICore {
 	/**
 	 * Load the server startups.
 	 */
-	private static void loadWizardFragments() {
+	private static synchronized void loadWizardFragments() {
+		if (wizardFragments != null)
+			return;
 		Trace.trace(Trace.CONFIG, "->- Loading .wizardFragments extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUICore.PLUGIN_ID, "wizardFragments");

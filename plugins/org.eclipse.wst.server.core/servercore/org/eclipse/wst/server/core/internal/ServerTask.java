@@ -148,6 +148,7 @@ public class ServerTask implements IServerTask {
 	 */
 	public void init(IServer server, IServerConfiguration configuration, List[] parents, IModule[] modules) {
 		try {
+			Trace.trace(Trace.FINEST, "Task.init " + this);
 			getDelegate().init(server, configuration, parents, modules);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
@@ -161,6 +162,7 @@ public class ServerTask implements IServerTask {
 	 */
 	public byte getTaskStatus() {
 		try {
+			Trace.trace(Trace.FINEST, "Task.getTaskStatus " + this);
 			return getDelegate().getTaskStatus();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
@@ -175,6 +177,7 @@ public class ServerTask implements IServerTask {
 	 */
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		try {
+			Trace.trace(Trace.FINEST, "Task.execute " + this);
 			getDelegate().execute(monitor);
 		} catch (CoreException ce) {
 			Trace.trace(Trace.FINER, "Task error " + toString(), ce);

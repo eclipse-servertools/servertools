@@ -99,7 +99,7 @@ public abstract class AbstractTreeComposite extends Composite {
 		final Combo combo = new Combo(comp, SWT.DROP_DOWN | SWT.READ_ONLY);
 		combo.setItems(getComboOptions());
 		combo.select(1);
-		combo.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.VERTICAL_ALIGN_CENTER));
+		combo.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.GRAB_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER));
 		combo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				int sel = combo.getSelectionIndex();

@@ -17,10 +17,9 @@ import java.text.DateFormat;
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.*;
-import org.osgi.framework.BundleContext;
-import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.*;
+import org.eclipse.wst.server.core.IElement;
 import org.eclipse.wst.server.core.util.*;
+import org.osgi.framework.BundleContext;
 /**
  * The main server plugin class.
  */
@@ -249,8 +248,7 @@ public class ServerPlugin extends Plugin {
 	}
 	
 	protected void initializeDefaultPluginPreferences() {
-		IServerPreferences prefs = ServerCore.getServerPreferences();
-		((ServerPreferences) prefs).setDefaults();
+		ServerPreferences.getServerPreferences().setDefaults();
 	}
 
 	/**
@@ -264,20 +262,6 @@ public class ServerPlugin extends Plugin {
 
 		// load temp directory information
 		loadTempDirInfo();
-		
-		try {
-			Iterator iterator = ServerCore.getStartups().iterator();
-			while (iterator.hasNext()) {
-				IStartup startup = (IStartup) iterator.next();
-				try {
-					startup.startup();
-				} catch (Exception ex) {
-					Trace.trace(Trace.SEVERE, "Startup failed" + startup.toString(), ex);
-				}
-			}
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error with startup", e);
-		}
 	}
 
 	/**
@@ -321,6 +305,9 @@ public class ServerPlugin extends Plugin {
 	}
 	
 	public static String[] tokenize(String param, String delim) {
+		if (param == null)
+			return new String[0];
+		
 		List list = new ArrayList();
 		
 		StringTokenizer st = new StringTokenizer(param, delim);

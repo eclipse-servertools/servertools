@@ -16,11 +16,13 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -37,7 +39,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.help.WorkbenchHelp;
-
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.IRuntimeLocatorListener;
 import org.eclipse.wst.server.ui.ServerUICore;
@@ -55,6 +56,7 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
 public class RuntimePreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 	protected Button edit;
 	protected Button remove;
+	protected Label pathLabel;
 
 	/**
 	 * RuntimePreferencesPage constructor comment.
@@ -93,12 +95,18 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		
 		final RuntimeComposite runtimeComp = new RuntimeComposite(composite, SWT.NONE, new RuntimeComposite.RuntimeSelectionListener() {
 			public void runtimeSelected(IRuntime runtime) {
-				if (runtime == null || runtime.isLocked()) {
+				if (runtime == null) {
 					edit.setEnabled(false);
 					remove.setEnabled(false);
+					pathLabel.setText("");
+				} else if (runtime.isLocked()) {
+					edit.setEnabled(false);
+					remove.setEnabled(false);
+					pathLabel.setText(runtime.getLocation() + "");
 				} else {
 					edit.setEnabled(true);
 					remove.setEnabled(true);
+					pathLabel.setText(runtime.getLocation() + "");
 				}
 			}
 		});
@@ -158,49 +166,73 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		search.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());
+					final ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());
 					dialog.setBlockOnOpen(false);
+					dialog.setCancelable(true);
 					dialog.open();
 					final IProgressMonitor monitor = dialog.getProgressMonitor();
+					monitor.beginTask(ServerUIPlugin.getResource("%search"), 100 * ServerCore.getRuntimeLocators().size() + 10);
 					final List list = new ArrayList();
 					
-					IRuntimeLocatorListener listener = new IRuntimeLocatorListener() {
-						public void runtimeFound(IRuntime runtime) {
-							monitor.subTask(runtime.getName());
+					final IRuntimeLocatorListener listener = new IRuntimeLocatorListener() {
+						public void runtimeFound(final IRuntime runtime) {
+							dialog.getShell().getDisplay().syncExec(new Runnable() {
+								public void run() {
+									monitor.subTask(runtime.getName());
+								}
+							});
 							list.add(runtime);
 						}
 					};
-					Iterator iterator = ServerCore.getRuntimeLocators().iterator();
-					while (iterator.hasNext()) {
-						IRuntimeLocator locator = (IRuntimeLocator) iterator.next();
-						locator.searchForRuntimes(listener, monitor);
-					}
+					
+					IRunnableWithProgress runnable = new IRunnableWithProgress() {
+						public void run(IProgressMonitor monitor2) {
+							Iterator iterator = ServerCore.getRuntimeLocators().iterator();
+							while (iterator.hasNext()) {
+								IRuntimeLocator locator = (IRuntimeLocator) iterator.next();
+								if (!monitor2.isCanceled())
+									try {
+										locator.searchForRuntimes(listener, monitor2);
+									} catch (CoreException ce) {
+										Trace.trace(Trace.WARNING, "Error locating runtimes: " + locator.getId(), ce);
+									}
+							}
+							System.out.println("done");
+						}
+					};
+					dialog.run(true, true, runnable);
+					
 					Trace.trace(Trace.FINER, "Found runtimes: " + list.size());
 					
-					// remove duplicates from list (based on location)
-					Trace.trace(Trace.FINER, "Removing duplicates");
-					List good = new ArrayList();
-					Iterator iterator2 = list.iterator();
-					while (iterator2.hasNext()) {
-						boolean dup = false;
-						IRuntime wc = (IRuntime) iterator2.next();
-						
-						iterator = ServerCore.getResourceManager().getRuntimes().iterator();
-						while (iterator.hasNext()) {
-							IRuntime runtime = (IRuntime) iterator.next();
-							if (runtime.getLocation().equals(wc.getLocation()))
-								dup = true;
+					if (!monitor.isCanceled()) {
+						monitor.worked(5);
+						// remove duplicates from list (based on location)
+						Trace.trace(Trace.FINER, "Removing duplicates");
+						List good = new ArrayList();
+						Iterator iterator2 = list.iterator();
+						while (iterator2.hasNext()) {
+							boolean dup = false;
+							IRuntime wc = (IRuntime) iterator2.next();
+							
+							Iterator iterator = ServerCore.getResourceManager().getRuntimes().iterator();
+							while (iterator.hasNext()) {
+								IRuntime runtime = (IRuntime) iterator.next();
+								if (runtime.getLocation().equals(wc.getLocation()))
+									dup = true;
+							}
+							if (!dup)
+								good.add(wc);
 						}
-						if (!dup)
-							good.add(wc);
-					}
-					
-					// add to list
-					Trace.trace(Trace.FINER, "Adding runtimes: " + good.size());
-					iterator = good.iterator();
-					while (iterator.hasNext()) {
-						IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy) iterator.next();
-						wc.save(monitor);
+						monitor.worked(5);
+						
+						// add to list
+						Trace.trace(Trace.FINER, "Adding runtimes: " + good.size());
+						Iterator iterator = good.iterator();
+						while (iterator.hasNext()) {
+							IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy) iterator.next();
+							wc.save(monitor);
+						}
+						monitor.done();
 					}
 					dialog.close();
 				} catch (Exception ex) {
@@ -209,6 +241,9 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 				runtimeComp.refresh();
 			}
 		});
+		
+		pathLabel = new Label(parent, SWT.NONE);
+		pathLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		Dialog.applyDialogFont(composite);
 	

@@ -58,7 +58,7 @@ public class Server extends Base implements IServer, IServerState {
 	protected transient List publishListeners;
 	
 	// server listeners
-	private transient List serverListeners;
+	protected transient List serverListeners;
 	
 	class ServerTaskInfo implements IOrdered {
 		IServerTask task;
@@ -128,32 +128,46 @@ public class Server extends Base implements IServer, IServerState {
 	}
 	
 	protected void saveToMetadata(IProgressMonitor monitor) {
+		super.saveToMetadata(monitor);
 		ResourceManager rm = (ResourceManager) ServerCore.getResourceManager();
 		rm.addServer(this);
 	}
-	
+
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.IServer2#getRuntime()
+	 * @see com.ibm.wtp.server.core.IServer2#getRuntime()
 	 */
 	public IRuntime getRuntime() {
 		return runtime;
 	}
 
+	protected String getRuntimeId() {
+		return getAttribute(RUNTIME_ID, (String) null);
+	}
+
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.IServer2#getServerConfiguration()
+	 * @see com.ibm.wtp.server.core.IServer2#getServerConfiguration()
 	 */
 	public IServerConfiguration getServerConfiguration() {
 		return configuration;
 	}
 
 	public IServerDelegate getDelegate() {
-		if (delegate == null && serverType != null) {
-			try {
-				IConfigurationElement element = ((ServerType) serverType).getElement();
-				delegate = (IServerDelegate) element.createExecutableExtension("class");
-				delegate.initialize(this);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);
+		if (delegate != null)
+			return delegate;
+		
+		if (serverType != null) {
+			synchronized (this) {
+				if (delegate == null) {
+					try {
+						long time = System.currentTimeMillis();
+						IConfigurationElement element = ((ServerType) serverType).getElement();
+						delegate = (IServerDelegate) element.createExecutableExtension("class");
+						delegate.initialize(this);
+						Trace.trace(Trace.PERFORMANCE, "Server.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
+					} catch (Exception e) {
+						Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);
+					}
+				}
 			}
 		}
 		return delegate;
@@ -368,41 +382,39 @@ public class Server extends Base implements IServer, IServerState {
 		final int size = moduleProjects.length;
 		final IModuleResourceDelta[] deployableDelta = new IModuleResourceDelta[size];
 		
-		if (configuration != null) {
-			IModuleVisitor visitor = new IModuleVisitor() {
-				public boolean visit(List parents, IModule module) {
-					if (!(module instanceof IProjectModule))
-						return true;
-					
-					IPublisher publisher = getPublisher(parents, module);
-					if (publisher == null)
-						return true;
-
-					for (int i = 0; i < size; i++) {
-						if (moduleProjects[i].equals(module)) {
-							if (deployableDelta[i] == null)
-								deployableDelta[i] = moduleProjects[i].getModuleResourceDelta(delta);
-							
-							if (deployableDelta[i] != null) {
-								// TODO updateDeployable(module, deployableDelta[i]);
-
-								PublishControl control = PublishInfo.getPublishInfo().getPublishControl(Server.this, parents, module);
-								if (control.isDirty())
-									return true;
-			
-								control.setDirty(true);
-								firePublishStateChange(parents, module);
-							}
-							return true;
-						}
-					}
+		IModuleVisitor visitor = new IModuleVisitor() {
+			public boolean visit(List parents, IModule module) {
+				if (!(module instanceof IProjectModule))
 					return true;
+				
+				IPublisher publisher = getPublisher(parents, module);
+				if (publisher == null)
+					return true;
+
+				for (int i = 0; i < size; i++) {
+					if (moduleProjects[i].equals(module)) {
+						if (deployableDelta[i] == null)
+							deployableDelta[i] = moduleProjects[i].getModuleResourceDelta(delta);
+						
+						if (deployableDelta[i] != null) {
+							// TODO updateDeployable(module, deployableDelta[i]);
+
+							PublishControl control = PublishInfo.getPublishInfo().getPublishControl(Server.this, parents, module);
+							if (control.isDirty())
+								return true;
+		
+							control.setDirty(true);
+							firePublishStateChange(parents, module);
+						}
+						return true;
+					}
 				}
-			};
-	
-			ServerUtil.visit(this, visitor);
-			//Trace.trace(Trace.FINEST, "< handleDeployableProjectChange()");
-		}
+				return true;
+			}
+		};
+
+		ServerUtil.visit(this, visitor);
+		//Trace.trace(Trace.FINEST, "< handleDeployableProjectChange()");
 	}
 	
 	/**

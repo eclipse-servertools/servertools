@@ -211,8 +211,14 @@ public class MonitorDialog extends Dialog {
 			tableViewer.setSelection(new StructuredSelection(port));
 			if (ct != null)
 				combo.setText(MonitorLabelProvider.getContentTypeString(ct[0]));
-		} else
-			tableViewer.setSelection(new StructuredSelection(tableViewer.getElementAt(0)));
+		} else if (tableViewer != null) {
+			try {
+				Object obj = tableViewer.getElementAt(0);
+				if (obj != null)
+				tableViewer.setSelection(new StructuredSelection(obj));
+			} catch (Exception e) { }
+		}
+		
 		portChanged = false;
 	
 		return composite;

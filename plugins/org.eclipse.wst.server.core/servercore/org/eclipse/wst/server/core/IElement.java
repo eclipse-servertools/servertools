@@ -97,4 +97,6 @@ public interface IElement {
 	public Map getAttribute(String attributeName, Map defaultValue);
 
 	public IStatus validateEdit(Object context);
+	
+	public int getTimestamp();
 }

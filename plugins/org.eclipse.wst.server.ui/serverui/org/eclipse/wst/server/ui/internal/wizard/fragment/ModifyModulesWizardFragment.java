@@ -10,14 +10,22 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.wizard.fragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ITask;
 import org.eclipse.wst.server.core.ITaskModel;
+import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.core.model.IModule;
+import org.eclipse.wst.server.core.model.IModuleVisitor;
+import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.task.ModifyModulesTask;
 import org.eclipse.wst.server.ui.internal.wizard.page.ModifyModulesComposite;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
-import org.eclipse.swt.widgets.Composite;
 
 /**
  * 
@@ -25,8 +33,14 @@ import org.eclipse.swt.widgets.Composite;
 public class ModifyModulesWizardFragment extends WizardFragment {
 	protected ModifyModulesComposite comp;
 	protected ModifyModulesTask task;
+	
+	protected IModule module;
 
 	public ModifyModulesWizardFragment() { }
+	
+	public ModifyModulesWizardFragment(IModule module) {
+		this.module = module;
+	}
 	
 	public boolean hasComposite() {
 		return true;
@@ -36,14 +50,82 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 	 * @see org.eclipse.wst.server.ui.internal.task.WizardTask#getWizardPage()
 	 */
 	public Composite createComposite(Composite parent, IWizardHandle handle) {
-		comp = new ModifyModulesComposite(parent, handle);
+		comp = new ModifyModulesComposite(parent, handle, module);
 		return comp;
+	}
+	
+	public void setTaskModel(ITaskModel taskModel) {
+		super.setTaskModel(taskModel);
+		if (comp != null)
+			comp.setTaskModel(taskModel);
+	}
+	
+	public List getChildFragments() {
+		updateModules();
+		return super.getChildFragments();
 	}
 
 	public void enter() {
+		updateModules();
+	}
+	
+	protected void updateModules() {
 		if (comp != null) {
 			IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER);
 			comp.setServer(server);
+			comp.setTaskModel(getTaskModel());
+		} else if (module != null) {
+			ITaskModel taskModel = getTaskModel();
+			if (taskModel == null)
+				return;
+			IServerWorkingCopy server = (IServerWorkingCopy) taskModel.getObject(ITaskModel.TASK_SERVER);
+			if (server == null) {
+				taskModel.putObject(ITaskModel.TASK_MODULE_PARENTS, null);
+				taskModel.putObject(ITaskModel.TASK_MODULES, null);
+				return;
+			}
+			
+			class Helper {
+				List parentList = new ArrayList();
+				List moduleList = new ArrayList();
+			}
+			final Helper help = new Helper();
+			if (server != null) {
+				ServerUtil.visit(server, new IModuleVisitor() {
+					public boolean visit(List parents2, IModule module2) {
+						help.parentList.add(parents2);
+						help.moduleList.add(module2);
+						return true;
+					}
+				});
+			}
+			
+			// add module
+			IModule parent = null;
+			try {
+				List parents = server.getParentModules(module);
+				List list = new ArrayList();
+				
+				if (parents != null && parents.size() > 0) {
+					parent = (IModule) parents.get(0);
+					list.add(parent);
+				}
+				if (!help.moduleList.contains(module)) {
+					help.moduleList.add(module);
+					help.parentList.add(list);
+				}
+			} catch (Exception e) {
+				Trace.trace(Trace.WARNING, "Could not find parent module", e);
+			}
+			
+			int size = help.parentList.size();
+			List[] parents = new List[size];
+			help.parentList.toArray(parents);
+			IModule[] modules = new IModule[size];
+			help.moduleList.toArray(modules);
+			
+			taskModel.putObject(ITaskModel.TASK_MODULE_PARENTS, parents);
+			taskModel.putObject(ITaskModel.TASK_MODULES, modules);
 		}
 	}
 

@@ -18,6 +18,16 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.util.ProgressUtil;
 import org.eclipse.wst.server.core.util.SocketUtil;
@@ -26,12 +36,6 @@ import org.eclipse.wst.server.ui.internal.SWTUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.viewers.ServerTypeComposite;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.help.WorkbenchHelp;
 
 /**
  * Wizard page used to create a server and configuration at the same time.
@@ -51,13 +55,19 @@ public class NewManualServerComposite extends Composite {
 	//private IContainer defaultContainer;
 	//private String defaultServerTypeId;
 	private ServerTypeComposite serverTypeComposite;
+	
+	protected Label runtimeLabel;
+	protected Combo runtimeCombo;
+	protected List runtimes;
 
-	//protected IRuntimeWorkingCopy runtime;
 	protected IRuntime runtime;
 	protected IServerWorkingCopy server;
 	protected ServerSelectionListener listener;
 	
 	protected String host;
+	
+	protected String type;
+	protected String version;
 
 	protected ElementCreationCache cache = new ElementCreationCache();
 
@@ -68,10 +78,13 @@ public class NewManualServerComposite extends Composite {
 	 *
 	 * @param org.eclipse.jface.wizard.IWizard parent
 	 */
-	public NewManualServerComposite(Composite parent, IWizardHandle2 wizard, ServerSelectionListener listener) {
+	public NewManualServerComposite(Composite parent, IWizardHandle2 wizard, String type, String version, ServerSelectionListener listener) {
 		super(parent, SWT.NONE);
 		this.wizard = wizard;
 		this.listener = listener;
+		
+		this.type = type;
+		this.version = version;
 
 		createControl();
 		wizard.setMessage("", IMessageProvider.ERROR);
@@ -96,17 +109,37 @@ public class NewManualServerComposite extends Composite {
 		this.setFont(getParent().getFont());
 		WorkbenchHelp.setHelp(this, ContextIds.NEW_SERVER_WIZARD);
 		
-		serverTypeComposite = new ServerTypeComposite(this, SWT.NONE, new ServerTypeComposite.ServerTypeSelectionListener() {
-			public void serverTypeSelected(IServerType type) {
-				handleTypeSelection(type);
+		serverTypeComposite = new ServerTypeComposite(this, SWT.NONE, type, version, new ServerTypeComposite.ServerTypeSelectionListener() {
+			public void serverTypeSelected(IServerType type2) {
+				handleTypeSelection(type2);
 				//WizardUtil.defaultSelect(parent, CreateServerWizardPage.this);
 			}
 		});
 		serverTypeComposite.setIncludeTestEnvironments(false);
+		serverTypeComposite.setIncludeIncompatibleVersions(true);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
 		data.horizontalSpan = 2;
 		serverTypeComposite.setLayoutData(data);
 		WorkbenchHelp.setHelp(serverTypeComposite, ContextIds.NEW_SERVER_INSTANCE_FACTORY);
+		
+		runtimeLabel = new Label(this, SWT.NONE);
+		runtimeLabel.setText(ServerUIPlugin.getResource("%wizNewServerRuntime"));
+		
+		runtimeCombo = new Combo(this, SWT.READ_ONLY);
+		data = new GridData(GridData.FILL_HORIZONTAL);
+		runtimeCombo.setLayoutData(data);
+		runtimeCombo.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					runtime = (IRuntime) runtimes.get(runtimeCombo.getSelectionIndex());
+					if (server != null)
+						server.setRuntime(runtime);
+				} catch (Exception ex) { }
+			}
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+		});
 		
 		Dialog.applyDialogFont(this);
 	}
@@ -131,14 +164,14 @@ public class NewManualServerComposite extends Composite {
 	 * Return the current editable element.
 	 * @return org.eclipse.wst.server.core.model.IServer
 	 */
-	protected void loadServerImpl(final IServerType type) {
-		runtime = null;
+	protected void loadServerImpl(final IServerType serverType) {
+		//runtime = null;
 		server = null;
 		
-		if (type == null)
+		if (serverType == null)
 			return;
 	
-		server = cache.getCachedServer(type);
+		server = cache.getCachedServer(serverType, host);
 		if (server != null) {
 			server.setHostname(host);
 			ServerUtil.setServerDefaultName(server);
@@ -153,30 +186,15 @@ public class NewManualServerComposite extends Composite {
 				try {
 					monitor = ProgressUtil.getMonitorFor(monitor);
 					int ticks = 200;
-					monitor.beginTask(ServerUIPlugin.getResource("%loadingTask", type.getName()), ticks);
+					monitor.beginTask(ServerUIPlugin.getResource("%loadingTask", serverType.getName()), ticks);
 	
-					server = cache.getServer(type, ProgressUtil.getSubMonitorFor(monitor, 200));
+					server = cache.getServer(serverType, host, ProgressUtil.getSubMonitorFor(monitor, 200));
 					if (server != null) {
 						server.setHostname(host);
 						ServerUtil.setServerDefaultName(server);
 					
-						if (type.hasRuntime() && server.getRuntime() == null) {
-							// look for existing runtime
-							IServerType serverType = server.getServerType();
-							IRuntimeType runtimeType = serverType.getRuntimeType();
-							runtime = getRuntime(runtimeType, serverType);
-							if (runtime == null) {
-								// create runtime
-								try {
-									IRuntimeWorkingCopy runtimeWC = runtimeType.createRuntime(null);
-									runtimeWC.setName(server.getName());
-									runtime = runtimeWC;
-								} catch (Exception e) {
-									Trace.trace(Trace.SEVERE, "Couldn't create runtime", e);
-								}
-							}
+						if (serverType.hasRuntime() && server.getRuntime() == null)
 							server.setRuntime(runtime);
-						}
 					}
 				} catch (CoreException cex) {
 					ce[0] = cex;
@@ -206,8 +224,7 @@ public class NewManualServerComposite extends Composite {
 	 * @param serverType
 	 * @return
 	 */
-	protected IRuntime getRuntime(IRuntimeType runtimeType, IServerType serverType) {
-		List list = ServerCore.getResourceManager().getRuntimes(runtimeType);
+	protected IRuntime getDefaultRuntime(List list) {
 		if (list.isEmpty())
 			return null;
 		Iterator iterator = list.iterator();
@@ -216,18 +233,101 @@ public class NewManualServerComposite extends Composite {
 			if (runtime2.isTestEnvironment())
 				return runtime2;
 		}
+		list.iterator();
+		while (iterator.hasNext()) {
+			IRuntime runtime2 = (IRuntime) iterator.next();
+			if (!runtime2.getAttribute("stub", false))
+				return runtime;
+		}
 		return (IRuntime) list.get(0);
+	}
+	
+	protected void updateRuntimeCombo(IServerType serverType) {
+		runtime = null;
+		
+		if (serverType == null || !serverType.hasRuntime()) {
+			if (runtimeLabel != null) {
+				runtimeLabel.setEnabled(false);
+				runtimeCombo.setItems(new String[0]);
+				runtimeCombo.setEnabled(false);
+				runtimeLabel.setVisible(false);
+				runtimeCombo.setVisible(false);
+			}
+			return;
+		}
+
+		IRuntimeType runtimeType = serverType.getRuntimeType();
+		runtimes = ServerCore.getResourceManager().getRuntimes(runtimeType);
+		
+		if (SocketUtil.isLocalhost(host)) {
+			int size = runtimes.size();
+			int i = 0;
+			while (i < size) {
+				IRuntime runtime2 = (IRuntime) runtimes.get(i);
+				if (runtime2.getAttribute("stub", false)) {
+					size --;
+					runtimes.remove(i);
+				} else
+					i++;
+			}
+		}
+		
+		if (runtimes.isEmpty()) {
+			// create new runtime
+			try {
+				IRuntimeWorkingCopy runtimeWC = runtimeType.createRuntime(null);
+				ServerUtil.setRuntimeDefaultName(runtimeWC);
+				runtimes.add(runtimeWC);
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Couldn't create runtime", e);
+			}
+		}
+		
+		int size = runtimes.size();
+		String[] items = new String[size];
+		for (int i = 0; i < size; i++) {
+			IRuntime runtime2 = (IRuntime) runtimes.get(i);
+			items[i] = runtime2.getName();
+		}
+		
+		runtime = getDefaultRuntime(runtimes);
+		if (runtimeCombo != null) {
+			runtimeCombo.setItems(items);
+			if (runtimes.size() > 0)
+				runtimeCombo.select(runtimes.indexOf(runtime));
+			runtimeCombo.setEnabled(size > 1);
+			runtimeLabel.setEnabled(size > 1);
+			runtimeLabel.setVisible(size > 1);
+			runtimeCombo.setVisible(size > 1);
+		}
 	}
 
 	/**
 	 * Handle the server type selection.
 	 */
-	protected void handleTypeSelection(IServerType type) {
-		if (type == null) {
+	protected void handleTypeSelection(IServerType serverType) {
+		boolean wrong = false;
+		if (serverType != null && type != null) {
+			IRuntimeType runtimeType = serverType.getRuntimeType();
+			if (!ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), type, version)) {
+				serverType = null;
+				wrong = true;
+				//wizard.setMessage("Not the right spec level2", IMessageProvider.ERROR);
+			}
+		}
+		
+		updateRuntimeCombo(serverType);
+		if (wrong) {
+			IModuleKind mk = ServerCore.getModuleKind(type);
+			String type2 = null;
+			if (mk != null)
+				type2 = mk.getName();
+			wizard.setMessage(ServerUIPlugin.getResource("%errorVersionLevel", new Object[] { type2, version }), IMessageProvider.ERROR);
+		} else if (serverType == null)
 			wizard.setMessage("", IMessageProvider.ERROR);
-		} else {
+		else {
 			wizard.setMessage(null, IMessageProvider.NONE);
-			loadServerImpl(type);
+			loadServerImpl(serverType);
 		}
 		listener.serverSelected(server);
 		wizard.update();
@@ -257,9 +357,11 @@ public class NewManualServerComposite extends Composite {
 		if (c != null) {
 			int size = c.length;
 			for (int i = 0; i < size; i++)
-				if (c[i] != null)
+				if (c[i] != null && c[i] instanceof ServerTypeComposite)
 					c[i].setVisible(visible);
 		}
+		if (visible)
+			handleTypeSelection(serverTypeComposite.getSelectedServerType());
 	}
 	
 	public IRuntime getRuntime() {

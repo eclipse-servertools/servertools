@@ -11,16 +11,10 @@
 package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.osgi.framework.Bundle;
-
+import org.eclipse.core.runtime.*;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.IRuntimeDelegate;
+import org.osgi.framework.Bundle;
 /**
  * 
  */
@@ -64,13 +58,20 @@ public class Runtime extends Base implements IRuntime {
 	}
 
 	public IRuntimeDelegate getDelegate() {
-		if (delegate == null) {
-			try {
-				RuntimeType runtimeType2 = (RuntimeType) runtimeType;
-				delegate = (IRuntimeDelegate) runtimeType2.getElement().createExecutableExtension("class");
-				delegate.initialize(this);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);
+		if (delegate != null)
+			return delegate;
+		
+		synchronized (this) {
+			if (delegate == null) {
+				try {
+					long time = System.currentTimeMillis();
+					RuntimeType runtimeType2 = (RuntimeType) runtimeType;
+					delegate = (IRuntimeDelegate) runtimeType2.getElement().createExecutableExtension("class");
+					delegate.initialize(this);
+					Trace.trace(Trace.PERFORMANCE, "Runtime.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getRuntimeType().getId());
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);
+				}
 			}
 		}
 		return delegate;
@@ -123,6 +124,7 @@ public class Runtime extends Base implements IRuntime {
 	}
 
 	protected void saveToMetadata(IProgressMonitor monitor) {
+		super.saveToMetadata(monitor);
 		ResourceManager rm = (ResourceManager) ServerCore.getResourceManager();
 		rm.addRuntime(this);
 	}
@@ -140,6 +142,9 @@ public class Runtime extends Base implements IRuntime {
 		runtimeType = wc.runtimeType;
 		file = wc.file;
 		delegate = wc.delegate;
+		
+		int timestamp = wc.getTimestamp();
+		map.put("timestamp", Integer.toString(timestamp+1));
 	}
 
 	protected void loadState(IMemento memento) {

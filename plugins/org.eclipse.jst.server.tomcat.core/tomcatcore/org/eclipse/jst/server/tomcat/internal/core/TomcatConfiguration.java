@@ -195,7 +195,7 @@ public abstract class TomcatConfiguration extends ServerConfigurationDelegate im
 		if (module != null)
 			return module.getPath();
 		else
-			return null;
+			return webModule.getContextRoot();
 	}
 
 	/**

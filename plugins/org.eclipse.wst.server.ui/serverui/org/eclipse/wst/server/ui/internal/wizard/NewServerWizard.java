@@ -24,6 +24,7 @@ import org.eclipse.wst.server.ui.internal.ServerUIPreferences;
 import org.eclipse.wst.server.ui.internal.task.*;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment;
+import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
 import org.eclipse.wst.server.ui.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 import org.eclipse.ui.INewWizard;
@@ -36,11 +37,20 @@ public class NewServerWizard extends TaskWizard implements INewWizard {
 	 * NewServerWizard constructor comment.
 	 */
 	public NewServerWizard() {
+		this(null, null);
+	}
+
+	public NewServerWizard(final String[] ids, final String[] values) {
 		super(ServerUIPlugin.getResource("%wizNewServerWizardTitle"), new WizardFragment() {
 			public void createSubFragments(List list) {
+				if (ids != null)
+					list.add(new InputWizardFragment(ids, values));
 				list.add(new NewServerWizardFragment());
-				//list.add(new ServerConfigurationWizardFragment());
+				list.add(new FinishWizardFragment(new TempSaveRuntimeTask()));
+				list.add(new FinishWizardFragment(new TempSaveServerTask()));
+				list.add(new FinishWizardFragment(new TempSaveServerConfigurationTask()));
 				list.add(new ModifyModulesWizardFragment());
+				list.add(new TasksWizardFragment());
 				list.add(new FinishWizardFragment(new SaveRuntimeTask()));
 				list.add(new FinishWizardFragment(new SaveServerTask()));
 				list.add(new FinishWizardFragment(new SaveServerConfigurationTask()));
@@ -59,12 +69,4 @@ public class NewServerWizard extends TaskWizard implements INewWizard {
 	}
 	
 	public void init(IWorkbench newWorkbench, IStructuredSelection newSelection) { }
-	
-	public IServer getServer() {
-		try {
-			return (IServer) getRootFragment().getTaskModel().getObject(ITaskModel.TASK_SERVER);
-		} catch (Exception e) {
-			return null;
-		}
-	}
 }

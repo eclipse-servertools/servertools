@@ -228,14 +228,9 @@ public class ServerMonitorManager implements IServerMonitorManager {
 		if (port == null || monitor == null)
 			return null;
 		
-		//int mport = monitor.startMonitoring(server, port, monitorPort);
 		MonitoredPort mp = new MonitoredPort(server, port, monitorPort, content);
 		ports.add(mp);
 		return mp;
-		/*} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not monitor", e);
-			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, "Error creating monitor", null));
-		}*/
 	}
 
 	/**

@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.*;
@@ -241,7 +242,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			return;
 		
 		if (!tasksRun) {
-			SelectTasksWizard wizard = getTasksWizard(server, module);
+			SelectTasksWizard wizard = new SelectTasksWizard(server);
 			if (wizard.hasTasks() && wizard.hasOptionalTasks()) {
 				WizardDialog dialog = new WizardDialog(shell, wizard);
 				if (dialog.open() == Window.CANCEL)
@@ -249,8 +250,32 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			} else
 				wizard.performFinish();
 		}
-
-		ILaunchable launchable = ServerUtil.getLaunchable(server, moduleObjects);
+		
+		// get the launchable adapter and module object
+		ILaunchableAdapter launchableAdapter = null;
+		IModuleObject moduleObject = null;
+		ILaunchable launchable = null;
+		iterator = moduleObjects.iterator();
+		while (moduleObject == null && iterator.hasNext()) {
+			IModuleObject moduleObject2 = (IModuleObject) iterator.next();
+			
+			Iterator iterator2 = ServerCore.getLaunchableAdapters().iterator();
+			while (moduleObject == null && iterator2.hasNext()) {
+				ILaunchableAdapter adapter = (ILaunchableAdapter) iterator2.next();
+				try {
+					ILaunchable launchable2 = adapter.getLaunchable(server, moduleObject2);
+					Trace.trace(Trace.FINEST, "adapter= " + adapter + ", launchable= " + launchable2);
+					if (launchable2 != null) {
+						launchableAdapter = adapter;
+						moduleObject = moduleObject2;
+						launchable = launchable2;
+					}
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Error in launchable adapter", e);
+				}
+			}
+		}
+		
 		List list = new ArrayList();
 		if (launchable != null)
 			list = ServerUtil.getLaunchableClients(server, launchable, launchMode);
@@ -281,7 +306,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		// and cue the client to start
 		byte state = server.getServerState();
 		if (state == IServer.SERVER_STARTING) {
-			ServerStartupListener listener = new ServerStartupListener(shell, server, client, launchable, launchMode, module);
+			ServerStartupListener listener = new ServerStartupListener(shell, server, client, launchableAdapter, moduleObject, launchMode, module);
 			listener.setEnabled(true);
 		} else if (state == IServer.SERVER_STARTED || state == IServer.SERVER_STARTED_DEBUG || state == IServer.SERVER_STARTED_PROFILE) {
 			boolean restart = false;
@@ -309,24 +334,30 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 					return;
 			}
 			if (restart) {
-				server.synchronousStop();
-			
-				ServerStartupListener listener = new ServerStartupListener(shell, server, client, launchable, launchMode, module);
-				if (preferences.isAutoPublishing() && !autoPublish(server))
-					return;
-
-				try {
-					EclipseUtil.startServer(shell, server, launchMode, listener);
-				} catch (CoreException e) { }
+				IServerDelegate delegate = server.getDelegate();
+				if (delegate instanceof IRestartableServer) {
+					new ServerStartupListener(shell, server, client, launchableAdapter, moduleObject, launchMode, module, true);
+					((IRestartableServer) delegate).restart(launchMode);
+				} else {
+					server.synchronousStop();
+				
+					ServerStartupListener listener = new ServerStartupListener(shell, server, client, launchableAdapter, moduleObject, launchMode, module);
+					if (preferences.isAutoPublishing() && !autoPublish(server))
+						return;
+	
+					try {
+						EclipseUtil.startServer(shell, server, launchMode, listener);
+					} catch (CoreException e) { }
+				}
 			} else {
 				if (preferences.isAutoPublishing() && !autoPublish(server))
 					return;
 	
 				// open client
-				ServerStartupListener.launchClientUtil(server, module, launchable, launchMode, client);
+				ServerStartupListener.launchClientUtil(server, module, launchableAdapter, moduleObject, launchMode, client);
 			}
 		} else if (state != IServer.SERVER_STOPPING) {
-			ServerStartupListener listener = new ServerStartupListener(shell, server, client, launchable, launchMode, module);
+			ServerStartupListener listener = new ServerStartupListener(shell, server, client, launchableAdapter, moduleObject, launchMode, module);
 			if (preferences.isAutoPublishing() && !autoPublish(server))
 				return;
 
@@ -334,34 +365,6 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				EclipseUtil.startServer(shell, server, launchMode, listener);
 			} catch (CoreException e) { }
 		}
-	}
-	
-	private SelectTasksWizard getTasksWizard(IServer server, IModule module) {
-		// ---- temp
-		class Helper {
-			List parentList = new ArrayList();
-			List moduleList = new ArrayList();
-		}
-		final Helper help = new Helper();
-		ServerUtil.visit(server, new IModuleVisitor() {
-			public boolean visit(List parents, IModule module2) {
-				help.parentList.add(parents);
-				help.moduleList.add(module2);
-				return true;
-			}
-		});
-		if (!help.moduleList.contains(module)) {
-			help.parentList.add(new ArrayList()); // FIX-ME
-			help.moduleList.add(module);
-		}
-		int size = help.parentList.size();
-		List[] parents = new List[size];
-		help.parentList.toArray(parents);
-		IModule[] modules = new IModule[size];
-		help.moduleList.toArray(modules);
-		// ---- temp
-	
-		return new SelectTasksWizard(server, server.getServerConfiguration(), parents, modules);
 	}
 
 	/**

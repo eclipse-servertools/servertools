@@ -156,26 +156,28 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 		} else if (columnIndex == 3) {
 			if (server.getServerType() == null)
 				return "";
+			
 			if (server.getServerType().hasServerConfiguration() && server.getServerConfiguration() == null)
 				return ServerUIPlugin.getResource("%viewNoConfiguration");
+			
+			if (server.getServerState() == IServer.SERVER_UNKNOWN)
+				return "";
 			
 			String serverId = server.getId();
 			if (ServerTableViewer.publishing.contains(serverId))
 				return syncState[4];
 			
-			boolean republish = false;
-			if (server.getConfigurationSyncState() != IServer.SYNC_STATE_IN_SYNC)
-				republish = true;
-			else {
-				if (!server.getUnpublishedModules().isEmpty())
-					republish = true;
-			}
-			
 			int i = 0;
 			if (server.isRestartNeeded())
 				i = 1;
-			if (republish)
+			
+			// republish
+			if (server.getConfigurationSyncState() != IServer.SYNC_STATE_IN_SYNC)
 				i += 2;
+			else {
+				if (!server.getUnpublishedModules().isEmpty())
+					i += 2;
+			}
 			
 			IServerType serverType = server.getServerType();
 			if (serverType.getServerStateSet() == IServerType.SERVER_STATE_SET_MANAGED)

@@ -43,14 +43,21 @@ public class TomcatRuntimeLocator implements IRuntimeLocatorDelegate {
 		File[] files = File.listRoots();
 		if (files != null) {
 			int size = files.length;
+			int work = 100 / size;
+			int workLeft = 100 - (work * size);
 			for (int i = 0; i < size; i++) {
+				if (monitor.isCanceled())
+					return;
 				if (files[i] != null && files[i].isDirectory())
-					searchDir(listener, files[i], 4);
+					searchDir(listener, files[i], 4, monitor);
+				monitor.worked(work);
 			}
-		}
+			monitor.worked(workLeft);
+		} else
+			monitor.worked(100);
 	}
 
-	protected void searchDir(IRuntimeLocatorListener listener, File dir, int depth) {
+	protected void searchDir(IRuntimeLocatorListener listener, File dir, int depth, IProgressMonitor monitor) {
 		if ("conf".equals(dir.getName())) {
 			IRuntimeWorkingCopy runtime = getRuntimeFromDir(dir.getParentFile());
 			if (runtime != null) {
@@ -69,8 +76,11 @@ public class TomcatRuntimeLocator implements IRuntimeLocatorDelegate {
 		});
 		if (files != null) {
 			int size = files.length;
-			for (int i = 0; i < size; i++)
-				searchDir(listener, files[i], depth - 1);
+			for (int i = 0; i < size; i++) {
+				if (monitor.isCanceled())
+					return;
+				searchDir(listener, files[i], depth - 1, monitor);
+			}
 		}
 	}
 

@@ -645,6 +645,8 @@ public class ServerEditor extends MultiPageEditorPart {
 						serverConfigurationId = configuration.getId();
 				}
 			}
+			if (serverId == null && serverConfigurationId == null)
+				throw new PartInitException(ServerUIPlugin.getResource("%errorEditor", file.getName()));
 		} else if (input instanceof IServerEditorInput) {
 			IServerEditorInput sei = (IServerEditorInput) input;
 			serverId = sei.getServerId();

@@ -14,7 +14,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -38,14 +37,6 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 		//data.heightHint = convertVerticalDLUsToPixels(350);
 		comp.setLayoutData(data);
 		setControl(comp);
-	}
-
-	public IWizardPage getNextPage() {
-		return getWizard().getNextPage(this);
-	}
-
-	public IWizardPage getPreviousPage() {
-		return getWizard().getPreviousPage(this);
 	}
 
 	public boolean isPageComplete() {

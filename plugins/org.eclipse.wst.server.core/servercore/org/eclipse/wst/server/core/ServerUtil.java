@@ -213,6 +213,26 @@ public class ServerUtil {
 		}
 		return null;
 	}
+	
+	/**
+	 * Returns the project modules attached to a project.
+	 */
+	public static List getModuleProjects(IProject project) {
+		if (project == null)
+			return null;
+
+		List list = new ArrayList();
+		Iterator iterator = getModules(null, null, true).iterator();
+		while (iterator.hasNext()) {
+			IModule module = (IModule) iterator.next();
+			if (module != null && module instanceof IProjectModule) {
+				IProjectModule moduleProject = (IProjectModule) module;
+				if (project.equals(moduleProject.getProject()))
+					list.add(moduleProject);
+			}
+		}
+		return list;
+	}
 
 	/**
 	 * Returns a module from the given factoryId and memento.
@@ -660,8 +680,10 @@ public class ServerUtil {
 		Iterator iterator = ServerCore.getResourceManager().getRuntimes().iterator();
 		while (iterator.hasNext()) {
 			IRuntime runtime2 = (IRuntime) iterator.next();
-			if (!runtime.equals(runtime2) && runtime.getName().equals(runtime2.getName()))
-				return true;
+			if (!runtime.equals(runtime2) && runtime.getName().equals(runtime2.getName())) {
+				if (!runtime.isWorkingCopy() || !runtime2.equals(((IRuntimeWorkingCopy)runtime).getOriginal()))
+					return true;
+			}
 		}
 		return false;
 	}

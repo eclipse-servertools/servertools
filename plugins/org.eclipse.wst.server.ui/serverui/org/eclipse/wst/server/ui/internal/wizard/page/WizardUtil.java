@@ -74,6 +74,9 @@ public class WizardUtil {
 				}
 			}
 		}
+		
+		list.add(0, "metadata");
+		size++;
 	
 		String[] s = new String[size];
 		list.toArray(s);

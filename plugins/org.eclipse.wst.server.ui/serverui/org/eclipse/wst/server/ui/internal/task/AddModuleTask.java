@@ -62,6 +62,6 @@ public class AddModuleTask extends Task {
 
 		IServerWorkingCopy workingCopy = server.getWorkingCopy();
 		workingCopy.modifyModules(new IModule[] { parentModule }, new IModule[0], monitor);
-		workingCopy.save(monitor);
+		getTaskModel().putObject(ITaskModel.TASK_SERVER, workingCopy.save(monitor));
 	}
 }

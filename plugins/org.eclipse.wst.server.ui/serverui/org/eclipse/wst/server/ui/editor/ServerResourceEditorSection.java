@@ -2,10 +2,11 @@ package org.eclipse.wst.server.ui.editor;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 /**
@@ -82,4 +83,14 @@ public abstract class ServerResourceEditorSection implements IServerEditorSectio
 		if (editor != null)
 			editor.updateErrorMessage();
 	}
-}
+
+	/**
+	 * Get a form toolkit to create widgets. It will automatically be disposed
+	 * when the editor is disposed.
+	 * 
+	 * @param display
+	 * @return FormToolkit
+	 */
+	public FormToolkit getFormToolkit(Display display) {
+		return editor.getFormToolkit(display);
+	}}

@@ -8,34 +8,16 @@ package org.eclipse.wst.server.ui.internal.wizard.page;
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.wst.server.core.IServerConfiguration;
-import org.eclipse.wst.server.core.IServerConfigurationType;
-import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
-import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
-import org.eclipse.wst.server.ui.ServerUICore;
-import org.eclipse.wst.server.ui.internal.ContextIds;
-import org.eclipse.wst.server.ui.internal.EclipseUtil;
-import org.eclipse.wst.server.ui.internal.ImageResource;
-import org.eclipse.wst.server.ui.internal.SWTUtil;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.ServerUIPreferences;
-import org.eclipse.wst.server.ui.internal.Trace;
-import org.eclipse.wst.server.ui.internal.viewers.ServerConfigurationTypeComposite;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -54,6 +36,14 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.wst.server.core.IServerConfiguration;
+import org.eclipse.wst.server.core.IServerConfigurationType;
+import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
+import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
+import org.eclipse.wst.server.ui.ServerUICore;
+import org.eclipse.wst.server.ui.internal.*;
+import org.eclipse.wst.server.ui.internal.viewers.ServerConfigurationTypeComposite;
 
 /**
  * Wizard page to import a configuration.
@@ -70,8 +60,6 @@ public class ImportConfigurationWizardPage extends WizardPage {
 	protected Button browse;
 	private IContainer defaultContainer;
 	
-	protected boolean createServerProject = false;
-
 	private String[] validationErrors = new String[5];
 	private static final int INVALID_NAME = 0;
 	private static final int INVALID_FOLDER = 1;
@@ -85,6 +73,7 @@ public class ImportConfigurationWizardPage extends WizardPage {
 	class LoadThread extends Thread {
 		final int DELAY = 800;
 		String filename2;
+		IFile file;
 		public void run() {
 			boolean b = true;
 			while (b) {
@@ -95,7 +84,7 @@ public class ImportConfigurationWizardPage extends WizardPage {
 				} catch (InterruptedException ie) { }
 			}
 			try {
-				performLoadConfiguration(filename2);
+				performLoadConfiguration(file, filename2);
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
 						validatePage(INVALID_IMPORT);
@@ -139,7 +128,7 @@ public class ImportConfigurationWizardPage extends WizardPage {
 		data.heightHint = convertVerticalDLUsToPixels(470);
 		WorkbenchHelp.setHelp(composite, ContextIds.IMPORT_CONFIGURATION_WIZARD);
 	
-		new Label(composite, SWT.NONE).setText(ServerUIPlugin.getResource("%wizNewConfigurationName"));
+		new Label(composite, SWT.NONE).setText(ServerUIPlugin.getResource("%serverEditorOverviewServerConfigurationName"));
 	
 		name = new Text(composite, SWT.BORDER);
 		data = new GridData(GridData.FILL_HORIZONTAL);
@@ -172,7 +161,6 @@ public class ImportConfigurationWizardPage extends WizardPage {
 	
 		serverProject.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent me) {
-				createServerProject = false;
 				validateName();
 				validateFolder();
 				validatePage(INVALID_FOLDER);
@@ -184,11 +172,6 @@ public class ImportConfigurationWizardPage extends WizardPage {
 			}
 		});
 		WorkbenchHelp.setHelp(serverProject, ContextIds.IMPORT_CONFIGURATION_FOLDER);
-
-		Label label2 = new Label(composite, SWT.NONE);
-		label2.setText(ServerUIPlugin.getResource("%wizImportConfigurationType"));
-		data = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
-		label2.setLayoutData(data);
 	
 		configTypeComposite = new ServerConfigurationTypeComposite(composite, SWT.NONE, new ServerConfigurationTypeComposite.ServerConfigurationTypeSelectionListener() {
 			public void configurationTypeSelected(IServerConfigurationType type) {
@@ -199,7 +182,7 @@ public class ImportConfigurationWizardPage extends WizardPage {
 		});
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.heightHint = 130;
-		data.horizontalSpan = 2;
+		data.horizontalSpan = 3;
 		configTypeComposite.setLayoutData(data);
 		WorkbenchHelp.setHelp(configTypeComposite, ContextIds.IMPORT_CONFIGURATION_FACTORY);
 	
@@ -289,6 +272,14 @@ public class ImportConfigurationWizardPage extends WizardPage {
 			try {
 				thread.interrupt();
 				thread.filename2 = filename.getText();
+				IFile file = null;
+				String theName = name.getText();
+				if (theName != null && !theName.endsWith(IServerConfiguration.FILE_EXTENSION))
+					theName += "." + IServerConfiguration.FILE_EXTENSION;
+				String projectName = serverProject.getText();
+				if (!"metadata".equals(projectName))
+					file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(projectName).append(theName));
+				thread.file = file;
 			} catch (Exception e) { }
 		} else {
 			// try to avoid multiple threads
@@ -301,6 +292,14 @@ public class ImportConfigurationWizardPage extends WizardPage {
 				return;
 			thread = new LoadThread();
 			thread.filename2 = filename.getText();
+			IFile file = null;
+			String theName = name.getText();
+			if (theName != null && !theName.endsWith(IServerConfiguration.FILE_EXTENSION))
+				theName += "." + IServerConfiguration.FILE_EXTENSION;
+			String projectName = serverProject.getText();
+			if (!"metadata".equals(projectName))
+				file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(projectName).append(theName));
+			thread.file = file;
 			getContainer().updateButtons();
 			threadDone = false;
 			thread.start();
@@ -348,11 +347,10 @@ public class ImportConfigurationWizardPage extends WizardPage {
 		}
 	}
 	
-	protected void performLoadConfiguration(String filename2) {
+	protected void performLoadConfiguration(IFile file, String filename2) {
 		try {
 			try {
-				//configuration = selectedFactory.load(file.toURL(), null, new NullProgressMonitor());
-				configuration = selectedConfigType.importFromPath(null, null, new Path(filename2), new NullProgressMonitor());
+				configuration = selectedConfigType.importFromPath(null, file, new Path(filename2), new NullProgressMonitor());
 				if (configuration == null)
 					validationErrors[INVALID_IMPORT] = ServerUIPlugin.getResource("%wizErrorImport");
 				else
@@ -402,26 +400,12 @@ public class ImportConfigurationWizardPage extends WizardPage {
 			
 		ServerUIPreferences sp = (ServerUIPreferences) ServerUICore.getPreferences();
 		sp.setImportLocation(filename.getText());
-
-		// prompt for server project creation
-		final String projectName = serverProject.getText();
-		IContainer container2 = WizardUtil.findContainer(projectName);
-		if ((container2 == null || !container2.exists()) && !createServerProject) {
-			IStatus status = ResourcesPlugin.getWorkspace().validateName(projectName, IResource.PROJECT);
-			if (status.isOK()) {
-				if (ServerCore.getServerProjects().isEmpty() || WizardUtil.promptForServerProjectCreation(getShell(), projectName))
-					createServerProject = true;
-				else
-					return false;
-			} else
-				return false;
-		}
 	
 		try {
 			final String theName = name.getText();
 			IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
 				public void run(IProgressMonitor monitor) throws CoreException {
-					saveConfiguration(configuration, theName, projectName, new NullProgressMonitor());
+					saveConfiguration(configuration, theName, new NullProgressMonitor());
 				}
 			};
 			
@@ -440,17 +424,14 @@ public class ImportConfigurationWizardPage extends WizardPage {
 	 * @param name java.lang.String
 	 * @param org.eclipse.core.runtime.IProgressMonitor monitor
 	 */
-	protected void saveConfiguration(IServerConfigurationWorkingCopy config, String theName, String projectName, IProgressMonitor monitor) throws CoreException {
+	protected void saveConfiguration(IServerConfigurationWorkingCopy config, String theName, IProgressMonitor monitor) throws CoreException {
 		// save the element
 		try {
-			if (createServerProject) {
-				if (!EclipseUtil.createNewServerProject(getShell(), projectName, null, monitor).isOK())
-					throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, "Could not create server project", null));
+			IFile file = config.getFile();
+			if (file != null && !file.getProject().exists()) {
+				IProject project = file.getProject();
+				ServerCore.createServerProject(project.getName(), null, monitor);
 			}
-			IContainer container = WizardUtil.findContainer(projectName);
-			if (container == null)
-				throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, "Could not find container", null));
-
 			config.setName(theName);
 			config.save(monitor);
 		} catch (Exception e) {

@@ -38,11 +38,6 @@ public class RuntimeContentProvider implements IStructuredContentProvider {
 	/**
 	 * Returns the elements to display in the viewer 
 	 * when its input is set to the given element. 
-	 * These elements can be presented as rows in a table, items in a list, etc.
-	 * The result is not modified by the viewer.
-	 *
-	 * @param inputElement the input element
-	 * @return the array of elements to display in the viewer
 	 */
 	public Object[] getElements(Object inputElement) {
 		List list = new ArrayList();
@@ -58,18 +53,6 @@ public class RuntimeContentProvider implements IStructuredContentProvider {
 	/**
 	 * Notifies this content provider that the given viewer's input
 	 * has been switched to a different element.
-	 * <p>
-	 * A typical use for this method is registering the content provider as a listener
-	 * to changes on the new input (using model-specific means), and deregistering the viewer 
-	 * from the old input. In response to these change notifications, the content provider
-	 * propagates the changes to the viewer.
-	 * </p>
-	 *
-	 * @param viewer the viewer
-	 * @param oldInput the old input element, or <code>null</code> if the viewer
-	 *   did not previously have an input
-	 * @param newInput the new input element, or <code>null</code> if the viewer
-	 *   does not have an input
 	 */
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
 }

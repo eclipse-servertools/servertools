@@ -47,7 +47,8 @@ public class LockedCheckboxTableViewer extends CheckboxTableViewer {
 				if (provider.isLocked(element)) {
 					item.setBackground(color);
 					item.setImage(0, null);
-				}
+				} else
+					item.setBackground(null);
 			}
 		}
 		super.doUpdateItem(widget, element, fullMap);

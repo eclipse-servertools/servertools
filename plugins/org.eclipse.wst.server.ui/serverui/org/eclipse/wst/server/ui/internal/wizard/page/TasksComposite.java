@@ -8,7 +8,6 @@ package org.eclipse.wst.server.ui.internal.wizard.page;
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
 import java.util.List;
 
@@ -29,6 +28,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.help.WorkbenchHelp;
@@ -38,6 +38,8 @@ import org.eclipse.ui.help.WorkbenchHelp;
  */
 public class TasksComposite extends Composite {
 	protected IWizardHandle wizard;
+	
+	protected Composite comp;
 
 	// the list of elements to select from
 	protected List tasks;
@@ -47,16 +49,28 @@ public class TasksComposite extends Composite {
 	 *
 	 * @param elements java.util.List
 	 */
-	public TasksComposite(Composite parent, IWizardHandle wizard, List tasks) {
+	public TasksComposite(Composite parent, IWizardHandle wizard) {
 		super(parent, SWT.NONE);
 		this.wizard = wizard;
-		this.tasks = tasks;
 	
 		wizard.setTitle(ServerUIPlugin.getResource("%wizTaskTitle"));
 		wizard.setDescription(ServerUIPlugin.getResource("%wizTaskDescription"));
 		wizard.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_WIZBAN_SELECT_SERVER));
+	}
+	
+	public void setTasks(List tasks) {
+		this.tasks = tasks;
+		
+		Control[] children = getChildren();
+		if (children != null) {
+			int size = children.length;
+			for (int i = 0; i < size; i++) {
+				children[i].dispose();
+			}
+		}
 		
 		createControl();
+		layout(true);
 	}
 
 	/**
@@ -74,7 +88,9 @@ public class TasksComposite extends Composite {
 		setLayout(layout);
 		WorkbenchHelp.setHelp(this, ContextIds.SELECT_TASK_WIZARD);
 		
-		int size = tasks.size();
+		int size = 0;
+		if (tasks != null)
+			size = tasks.size();
 		
 		Object cont = null;
 		Group group = null;
@@ -118,10 +134,10 @@ public class TasksComposite extends Composite {
 			
 				checkbox.addSelectionListener(new SelectionListener() {
 					public void widgetSelected(SelectionEvent event) {
-						sti.selected = checkbox.getSelection();
+						sti.setSelected(checkbox.getSelection());
 					}
 					public void widgetDefaultSelected(SelectionEvent event) {
-						sti.selected = checkbox.getSelection();
+						sti.setSelected(checkbox.getSelection());
 					}
 				});
 				
@@ -181,10 +197,10 @@ public class TasksComposite extends Composite {
 				
 				checkbox.addSelectionListener(new SelectionListener() {
 					public void widgetSelected(SelectionEvent event) {
-						dti.selected = checkbox.getSelection();
+						dti.setSelected(checkbox.getSelection());
 					}
 					public void widgetDefaultSelected(SelectionEvent event) {
-						dti.selected = checkbox.getSelection();
+						dti.setSelected(checkbox.getSelection());
 					}
 				});
 				
@@ -213,6 +229,11 @@ public class TasksComposite extends Composite {
 		if (group != null && count == 0)
 			group.setEnabled(false);
 
+		if (size == 0) {
+			Label label = new Label(this, SWT.NONE);
+			label.setText(ServerUIPlugin.getResource("%wizTaskNone"));
+		}
+		
 		Dialog.applyDialogFont(this);
 	}
 }

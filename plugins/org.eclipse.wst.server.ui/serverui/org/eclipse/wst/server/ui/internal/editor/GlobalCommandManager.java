@@ -80,6 +80,8 @@ public class GlobalCommandManager {
 		
 		// files and timestamps
 		Map fileMap;
+		
+		int timestamp;
 	}
 
 	protected Map commandManagers = new HashMap();
@@ -618,7 +620,7 @@ public class GlobalCommandManager {
 	}
 	
 	protected IFile[] getReadOnlyFiles(String id) {
-		java.util.List list = new ArrayList();
+		List list = new ArrayList();
 		IFile[] files = getServerResourceFiles(id);
 		int size = files.length;
 		for (int i = 0; i < size; i++) {
@@ -638,25 +640,38 @@ public class GlobalCommandManager {
 		CommandManagerInfo info = getExistingCommandManagerInfo(id);
 		if (info == null)
 			return;
-			
+		
 		info.fileMap = new HashMap();
 		IFile[] files = getServerResourceFiles(id);
-		if (files == null)
-			return;
-
-		int size = files.length;
+		if (files != null) {
+			int size = files.length;
 		
-		for (int i = 0; i < size; i++) {
-			if (files[i] != null) {
-				File f = files[i].getLocation().toFile();
-				if (f != null) {
-					long time = f.lastModified();
-					info.fileMap.put(files[i], new Long(time));
+			for (int i = 0; i < size; i++) {
+				if (files[i] != null) {
+					File f = files[i].getLocation().toFile();
+					if (f != null) {
+						long time = f.lastModified();
+						info.fileMap.put(files[i], new Long(time));
+					}
 				}
 			}
 		}
+		info.timestamp = getTimestamp(info);
 	}
 	
+	protected static int getTimestamp(CommandManagerInfo info) {
+		IElement element = info.wc;
+		IElement element2 = null;
+		if (element instanceof IServer)
+			element2 = ((IServerWorkingCopy) element).getOriginal();
+		else if (element instanceof IServerConfiguration)
+			element2 = ((IServerConfigurationWorkingCopy) element).getOriginal();
+
+		if (element2 != null)
+			return element2.getTimestamp();
+		return -1;
+	}
+
 	/**
 	 * 
 	 */
@@ -679,6 +694,10 @@ public class GlobalCommandManager {
 				return true;
 			}
 		}
+		
+		int timestamp = getTimestamp(info);
+		if (info.timestamp != timestamp)
+			return true;
 
 		if (count != info.fileMap.size())
 			return true;

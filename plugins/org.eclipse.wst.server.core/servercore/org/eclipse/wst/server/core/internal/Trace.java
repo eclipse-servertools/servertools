@@ -29,10 +29,11 @@ public class Trace {
 	public static int EXTENSION_POINT = 7;
 	public static int LISTENERS = 8;
 	public static int RUNTIME_TARGET = 9;
+	public static int PERFORMANCE = 10;
 
 	private static final String[] levelNames = new String[] {
 		"CONFIG   ", "INFO     ", "WARNING  ", "SEVERE   ", "FINER    ", "FINEST   ",
-		"RESOURCES", "EXTENSION", "LISTENERS", "TARGET   "};
+		"RESOURCES", "EXTENSION", "LISTENERS", "TARGET   ", "PERF     "};
 	private static final String spacer = "                                   ";
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm.ss.SSS");

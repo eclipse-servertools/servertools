@@ -1,13 +1,13 @@
-/**
+/**********************************************************************
  * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
+ * All rights reserved.   This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
  *    IBM - Initial API and implementation
- */
+ **********************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
 import java.util.ArrayList;
@@ -35,6 +35,7 @@ public class ServerConfigurationTypeTreeContentProvider extends AbstractTreeCont
 	}
 	
 	public void fillTree() {
+		clean();
 		List list = new ArrayList();
 		Iterator iterator = ServerCore.getServerConfigurationTypes().iterator();
 		while (iterator.hasNext()) {
@@ -45,13 +46,11 @@ public class ServerConfigurationTypeTreeContentProvider extends AbstractTreeCont
 				try {
 					/*TreeElement ele = null;
 					if (style == STYLE_VENDOR)
-						ele = getOrCreate(list, runtimeType.getVendor());
+						ele = getOrCreate(list, type.getVendor());
 					else if (style == STYLE_VERSION)
-						ele = getOrCreate(list, runtimeType.getVersion());
-					else if (style == STYLE_HOST)
-						ele = getOrCreate(list, runtime.getHost());
+						ele = getOrCreate(list, type.getVersion());
 					else if (style == STYLE_TYPE)
-						ele = getOrCreate(list, runtimeType.getLabel());
+						ele = getOrCreate(list, type.getLabel());
 					ele.contents.add(type);
 					elementToParentMap.put(type, ele);*/
 				} catch (Exception e) {

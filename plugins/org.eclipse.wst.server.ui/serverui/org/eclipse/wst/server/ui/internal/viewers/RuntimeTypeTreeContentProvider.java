@@ -51,8 +51,7 @@ public class RuntimeTypeTreeContentProvider extends AbstractTreeContentProvider 
 	}
 	
 	public void fillTree() {
-		initialSelection = null;
-		initialSelectionOrder = -1000;
+		clean();
 		List list = new ArrayList();
 		if (style != STYLE_FLAT) {
 			Iterator iterator = ServerUtil.getRuntimeTypes(type, version, runtimeTypeId).iterator();

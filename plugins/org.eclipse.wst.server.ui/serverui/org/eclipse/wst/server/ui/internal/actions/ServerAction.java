@@ -190,7 +190,7 @@ public class ServerAction implements IOrdered {
 			try {
 				delegate = (IServerAction) element.createExecutableExtension("class");
 			} catch (Exception e) {
-				Trace.trace("Could not create action delegate", e);
+				Trace.trace("Could not create action delegate: " + getId(), e);
 			}
 		}
 		return delegate;
@@ -251,6 +251,7 @@ public class ServerAction implements IOrdered {
 				category = serverAction.getCategory();
 				menu.add(new Separator());
 			}
+			long time = System.currentTimeMillis();
 			if ((server != null && server.getServerType() != null && serverAction.supportsServerResource(server.getServerType().getId())) ||
 					(configuration != null && serverAction.supportsServerResource(configuration.getServerConfigurationType().getId()))) {
 				if (!addedSeparator) {
@@ -259,6 +260,7 @@ public class ServerAction implements IOrdered {
 				}
 				try {
 					Action action = new RealServerAction(shell, serverAction, server, configuration);
+					Trace.trace(Trace.PERFORMANCE, "ServerAction.supports(): " + (System.currentTimeMillis() - time) + " " + serverAction.getId() + "/" + serverAction.getLabel());
 					menu.add(action);
 				} catch (Exception e) {
 					// could not add menu item

@@ -335,7 +335,10 @@ public class ResourceManager implements IResourceManager {
 	
 	protected void shutdownImpl() {
 		// stop all running servers
-		Iterator iterator = getServers().iterator();
+		// REMOVING FEATURE - can't be supported since we can't reload downstream plugins
+		// during shutdown. Individual downstream plugins should contain their own similar
+		// code to stop the servers.
+		/*Iterator iterator = getServers().iterator();
 		while (iterator.hasNext()) {
 			IServer server = (IServer) iterator.next();
 			try {
@@ -345,7 +348,7 @@ public class ResourceManager implements IResourceManager {
 						((IStartableServer) delegate).terminate();
 				}
 			} catch (Exception e) { }
-		}
+		}*/
 
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		if (workspace != null) {
@@ -736,12 +739,15 @@ public class ResourceManager implements IResourceManager {
 	}
 	
 	protected void addRuntime(IRuntime runtime) {
+		if (runtime == null)
+			return;
 		if (!runtimes.contains(runtime))
 			registerRuntime(runtime);
 		else
 			fireServerResourceChanged(runtime);
 		saveRuntimesList();
 		resolveServers();
+		RuntimeWorkingCopy.rebuildRuntime(runtime, true);
 	}
 
 	protected void removeRuntime(IRuntime runtime) {
@@ -749,6 +755,7 @@ public class ResourceManager implements IResourceManager {
 			deregisterRuntime(runtime);
 			saveRuntimesList();
 			resolveServers();
+			RuntimeWorkingCopy.rebuildRuntime(runtime, false);
 		}
 	}
 
@@ -799,7 +806,8 @@ public class ResourceManager implements IResourceManager {
 			for (int j = i + 1; j < size; j++) {
 				IRuntime a = (IRuntime) list.get(i);
 				IRuntime b = (IRuntime) list.get(j);
-				if (a.getRuntimeType().getOrder() < b.getRuntimeType().getOrder()) {
+				if (a.getRuntimeType() != null && b.getRuntimeType() != null &&
+						a.getRuntimeType().getOrder() < b.getRuntimeType().getOrder()) {
 					Object temp = a;
 					list.set(i, b);
 					list.set(j, temp);

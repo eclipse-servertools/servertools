@@ -51,10 +51,11 @@ import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.IModule;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.editor.ICommandManager;
+import org.eclipse.wst.server.ui.editor.ServerResourceEditorPart;
 /**
  * Tomcat configuration web module editor page.
  */
-public class ConfigurationWebModuleEditorPart extends TomcatEditorPart {
+public class ConfigurationWebModuleEditorPart extends ServerResourceEditorPart {
 	protected ITomcatServerWorkingCopy server2;
 	protected ITomcatConfigurationWorkingCopy configuration;
 
@@ -100,13 +101,13 @@ public class ConfigurationWebModuleEditorPart extends TomcatEditorPart {
 	 * Creates the SWT controls for this workbench part.
 	 */
 	public void createPartControl(Composite parent) {
-		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
+		FormToolkit toolkit = getFormToolkit(parent.getDisplay());
 
 		ScrolledForm form = toolkit.createScrolledForm(parent);
 		form.setText(TomcatUIPlugin.getResource("%configurationEditorWebModulesPageTitle"));
 		form.getBody().setLayout(new GridLayout());
 	
-		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TWISTIE|ExpandableComposite.EXPANDED|ExpandableComposite.TITLE_BAR|Section.DESCRIPTION);
+		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TWISTIE|ExpandableComposite.EXPANDED|ExpandableComposite.TITLE_BAR|Section.DESCRIPTION|ExpandableComposite.FOCUS_TITLE);
 		section.setText(TomcatUIPlugin.getResource("%configurationEditorWebModulesSection"));
 		section.setDescription(TomcatUIPlugin.getResource("%configurationEditorWebModulesDescription"));
 		section.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL));

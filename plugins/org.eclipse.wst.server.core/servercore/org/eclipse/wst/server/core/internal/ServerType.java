@@ -124,13 +124,12 @@ public class ServerType implements IServerType {
 	}
 	
 	public byte getInitialState() {
-		byte state = IServer.SERVER_UNKNOWN;
 		String stateString = element.getAttribute("initialState");
 		if ("stopped".equals(stateString))
-			state = IServer.SERVER_STOPPED;
+			return IServer.SERVER_STOPPED;
 		else if ("started".equals(stateString))
-			state = IServer.SERVER_STARTED;
-		return state;
+			return IServer.SERVER_STARTED;
+		return IServer.SERVER_UNKNOWN;
 	}
 
 	/**

@@ -10,20 +10,13 @@ package org.eclipse.wst.server.ui.internal.wizard.page;
  *    IBM - Initial API and implementation
  **********************************************************************/
 import java.lang.reflect.InvocationTargetException;
+import java.util.Iterator;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.JFaceResources;
 
-import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ITaskModel;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.ui.internal.*;
-import org.eclipse.wst.server.ui.internal.viewers.ServerComposite;
-import org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment;
-import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -36,6 +29,19 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.wst.server.core.IModuleKind;
+import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerType;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.core.ITaskModel;
+import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.core.model.IModule;
+import org.eclipse.wst.server.ui.internal.*;
+import org.eclipse.wst.server.ui.internal.viewers.ServerComposite;
+import org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment;
+import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 
 /**
  * A wizard page used to select a server client.
@@ -66,6 +72,8 @@ public class NewServerComposite extends Composite {
 	
 	protected Button pref;
 	protected boolean preferred;
+	
+	protected IServerWorkingCopy existingWC;
 
 	/**
 	 * Create a new NewServerComposite.
@@ -140,11 +148,12 @@ public class NewServerComposite extends Composite {
 		setLayout(layout);
 		//WorkbenchHelp.setHelp(this, ContextIds.SELECT_CLIENT_WIZARD);
 	
-		createHeadingLabel(this, "How do you want to select the server?", 1);
-		
+		if (module != null)
+			createHeadingLabel(this, ServerUIPlugin.getResource("%wizNewServerSelect"), 1);
+			
 		Button existing = null;
 		if (module != null) {
-			final Button predefined = createRadioButton(this, "Choose an e&xisting server", 1);
+			final Button predefined = createRadioButton(this, ServerUIPlugin.getResource("%wizNewServerExisting"), 1);
 			predefined.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					if (predefined.getSelection())
@@ -154,23 +163,26 @@ public class NewServerComposite extends Composite {
 			existing = predefined;
 		}
 		
-		
-		final Button auto = createRadioButton(this, "&Automatically detect servers", 1);
+		/*final Button auto = createRadioButton(this, ServerUIPlugin.getResource("%wizNewServerDetect"), 1);
 		auto.setEnabled(false);
 		auto.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				if (auto.getSelection())
 					toggleMode(MODE_DETECT);
 			}
-		});
+		});*/
 	
-		final Button manual = createRadioButton(this, "&Manually define a server", 1);
-		manual.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				if (manual.getSelection())
-					toggleMode(MODE_MANUAL);
-			}
-		});
+		Button manual = null;
+		if (module != null) {
+			final Button manualButton = createRadioButton(this, ServerUIPlugin.getResource("%wizNewServerManual"), 1);
+			manualButton.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+					if (manualButton.getSelection())
+						toggleMode(MODE_MANUAL);
+				}
+			});
+			manual = manualButton;
+		}
 		
 		stack = new Composite(this, SWT.NONE);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
@@ -186,14 +198,25 @@ public class NewServerComposite extends Composite {
 		createManualComposite(stack);
 	
 		if (existingComp != null) {
-			mode = MODE_EXISTING;
-			stackLayout.topControl = existingComp;
-			existing.setSelection(true);
+			if (isExistingServer()) {
+				mode = MODE_EXISTING;
+				stackLayout.topControl = existingComp;
+				existing.setSelection(true);
+			} else {
+				mode = MODE_MANUAL;
+				stackLayout.topControl = manualComp2;
+				manualComp.setVisible(true);
+				if (manual != null)
+					manual.setSelection(true);
+				existing.setEnabled(false);
+				existingComp.setEnabled(false);
+			}
 		} else {
 			mode = MODE_MANUAL;
 			stackLayout.topControl = manualComp2;
 			manualComp.setVisible(true);
-			manual.setSelection(true);
+			if (manual != null)
+				manual.setSelection(true);
 		}
 		
 		if (module != null) {
@@ -224,10 +247,12 @@ public class NewServerComposite extends Composite {
 			return;
 		
 		mode = newMode;
+		wizard.setMessage(null, IMessageProvider.NONE);
 		
-		if (mode == MODE_EXISTING)
+		if (mode == MODE_EXISTING) {
 			stackLayout.topControl = existingComp;
-		else if (mode == MODE_DETECT) {
+			existingComp.setSelection(existingComp.getSelectedServer());
+		} else if (mode == MODE_DETECT) {
 			stackLayout.topControl = detectComp2;
 			detectComp.setVisible(true);
 		} else {
@@ -292,13 +317,50 @@ public class NewServerComposite extends Composite {
 		existingComp = new ServerComposite(comp, SWT.NONE, new ServerComposite.ServerSelectionListener() {
 			public void serverSelected(IServer server) {
 				wizard.setMessage(null, IMessageProvider.NONE);
+				
+				// check for compatibility
+				if (server != null && module != null) {
+					IServerType serverType = server.getServerType();
+					if (!ServerUtil.isSupportedModule(serverType, module)) {
+						IModuleKind mk = ServerCore.getModuleKind(module.getType());
+						String type = null;
+						if (mk != null)
+							type = mk.getName();
+						wizard.setMessage(ServerUIPlugin.getResource("%errorVersionLevel", new Object[] { type, module.getVersion() }), IMessageProvider.ERROR);
+						server = null;
+					}
+				}
+				
+				if (existingWC != null) {
+					if (server != null && server.equals(existingWC.getOriginal()))
+						return;
+					existingWC.release();
+					existingWC = null;
+				}
+				if (server != null)
+					existingWC = server.getWorkingCopy();
 				updateTaskModel();
 			}
 		}, module, launchMode);
+		existingComp.setIncludeIncompatibleVersions(true);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
 		data.horizontalSpan = 3;
 		data.heightHint = 120;
 		existingComp.setLayoutData(data);
+	}
+	
+	protected boolean isExistingServer() {
+		if (module == null || launchMode == null)
+			return false;
+		
+		Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
+		while (iterator.hasNext()) {
+			IServer server = (IServer) iterator.next();
+			if (ServerUtil.isCompatibleWithLaunchMode(server, launchMode) &&
+				ServerUtil.isSupportedModule(server.getServerType().getRuntimeType().getModuleTypes(), module.getType(), module.getVersion()))
+					return true;
+		}
+		return false;
 	}
 
 	protected void createManualComposite(Composite comp) {
@@ -313,6 +375,13 @@ public class NewServerComposite extends Composite {
 		
 		manualHostComp = createHostComposite(manualComp2);
 		
+		String type = null;
+		String version = null;
+		if (module != null) {
+			type = module.getType();
+			version = module.getVersion();
+		}
+
 		manualComp = new NewManualServerComposite(manualComp2, new NewManualServerComposite.IWizardHandle2() {
 			public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable) throws InterruptedException, InvocationTargetException {
 				wizard.run(fork, cancelable, runnable);
@@ -323,7 +392,7 @@ public class NewServerComposite extends Composite {
 			public void setMessage(String newMessage, int newType) {
 				wizard.setMessage(newMessage, newType);
 			}
-		}, new NewManualServerComposite.ServerSelectionListener() {
+		}, type, version, new NewManualServerComposite.ServerSelectionListener() {
 			public void serverSelected(IServer server) {
 				updateTaskModel();
 			}
@@ -343,11 +412,13 @@ public class NewServerComposite extends Composite {
 	protected void updateTaskModel() {
 		if (taskModel != null) {
 			IServer server = getServer();
-			taskModel.putObject(ITaskModel.TASK_SERVER, server);
-			if (server != null)
+			if (server != null) {
+				taskModel.putObject(ITaskModel.TASK_SERVER, server);
 				taskModel.putObject(ITaskModel.TASK_RUNTIME, server.getRuntime());
-			else
+			} else {
+				taskModel.putObject(ITaskModel.TASK_SERVER, null);
 				taskModel.putObject(ITaskModel.TASK_RUNTIME, null);
+			}
 			wizard.update();
 		}
 	}
@@ -360,7 +431,7 @@ public class NewServerComposite extends Composite {
 
 	public IServer getServer() {
 		if (mode == MODE_EXISTING)
-			return existingComp.getSelectedServer();
+			return existingWC; //existingComp.getSelectedServer();
 		else if (mode == MODE_DETECT)
 			return detectComp.getServer();
 		else

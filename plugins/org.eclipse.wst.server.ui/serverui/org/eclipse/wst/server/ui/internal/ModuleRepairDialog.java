@@ -275,7 +275,7 @@ public class ModuleRepairDialog extends Dialog {
 						//resource.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 					} catch (Exception e) { }
 					
-					ITask[] tasks = mse.getTasks(); 
+					ITask[] tasks = mse.getTasks();
 					int size2 = tasks.length;
 					for (int j = 0; j < size2; j++) {
 						if (checkedList.contains(tasks[j])) {

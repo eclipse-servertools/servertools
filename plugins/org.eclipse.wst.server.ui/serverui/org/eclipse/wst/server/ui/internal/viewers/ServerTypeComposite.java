@@ -29,15 +29,24 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 	protected ServerTypeTreeContentProvider contentProvider;
 	protected boolean initialSelection = true;
 	
+	protected String type;
+	protected String version;
+	
+	protected boolean includeTestEnvironments = true;
+	protected boolean isLocalhost;
+	protected boolean includeIncompatibleVersions;
+	
 	public interface ServerTypeSelectionListener {
 		public void serverTypeSelected(IServerType type);
 	}
 	
-	public ServerTypeComposite(Composite parent, int style, ServerTypeSelectionListener listener2) {
+	public ServerTypeComposite(Composite parent, int style, String type, String version, ServerTypeSelectionListener listener2) {
 		super(parent, style);
 		this.listener = listener2;
+		this.type = type;
+		this.version = version;
 	
-		contentProvider = new ServerTypeTreeContentProvider(ServerTypeTreeContentProvider.STYLE_VENDOR);
+		contentProvider = new ServerTypeTreeContentProvider(ServerTypeTreeContentProvider.STYLE_VENDOR, type, version);
 		treeViewer.setContentProvider(contentProvider);
 		treeViewer.setLabelProvider(new ServerTypeTreeLabelProvider());
 		treeViewer.setInput(AbstractTreeContentProvider.ROOT);
@@ -86,25 +95,35 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 		}
 	}
 	
-	public void setHost(boolean localhost) {
-		if (localhost == contentProvider.getHost())
+	public void setHost(boolean newHost) {
+		if (isLocalhost == newHost)
 			return;
 		
+		isLocalhost = newHost;
 		ISelection sel = treeViewer.getSelection();
-		contentProvider.setHost(localhost);
-		contentProvider.fillTree();
+		contentProvider.setLocalhost(isLocalhost);
 		treeViewer.refresh();
 		//treeViewer.expandToLevel(2);
 		treeViewer.setSelection(sel, true);
 	}
-	
+
 	public void setIncludeTestEnvironments(boolean b) {
+		includeTestEnvironments = b;
+		ISelection sel = treeViewer.getSelection();
 		contentProvider.setIncludeTestEnvironments(b);
-		contentProvider.fillTree();
 		treeViewer.refresh();
+		treeViewer.setSelection(sel, true);
 		//treeViewer.expandToLevel(2);
 	}
 	
+	public void setIncludeIncompatibleVersions(boolean b) {
+		includeIncompatibleVersions = b;
+		ISelection sel = treeViewer.getSelection();
+		contentProvider.setIncludeIncompatibleVersions(b);
+		treeViewer.refresh();
+		treeViewer.setSelection(sel, true);
+	}
+
 	protected String getDescriptionLabel() {
 		return null; //ServerUIPlugin.getResource("%serverTypeCompDescription");
 	}
@@ -121,7 +140,11 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 
 	protected void viewOptionSelected(byte option) {
 		ISelection sel = treeViewer.getSelection();
-		treeViewer.setContentProvider(new ServerTypeTreeContentProvider(option));
+		contentProvider = new ServerTypeTreeContentProvider(option, type, version);
+		contentProvider.setLocalhost(isLocalhost);
+		contentProvider.setIncludeTestEnvironments(includeTestEnvironments);
+		contentProvider.setIncludeIncompatibleVersions(includeIncompatibleVersions);
+		treeViewer.setContentProvider(contentProvider);
 		treeViewer.setSelection(sel);
 	}
 

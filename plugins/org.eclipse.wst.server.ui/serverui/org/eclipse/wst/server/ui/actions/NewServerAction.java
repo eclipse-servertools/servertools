@@ -8,16 +8,18 @@ package org.eclipse.wst.server.ui.actions;
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.NewServerWizard;
-import org.eclipse.ui.IWorkbenchWizard;
 /**
  * An action to invoke the new server and server configuration wizard.
  */
 public class NewServerAction extends LaunchWizardAction {
+	protected String[] ids;
+	protected String[] values;
+
 	/**
 	 * NewServerAction constructor comment.
 	 */
@@ -28,12 +30,18 @@ public class NewServerAction extends LaunchWizardAction {
 		setText(ServerUIPlugin.getResource("%actionSetNewServer"));
 	}
 
+	public NewServerAction(String[] ids, String[] values) {
+		this();
+		this.ids = ids;
+		this.values = values;
+	}
+
 	/**
 	 * Return the wizard that should be opened.
 	 *
 	 * @return org.eclipse.ui.IWorkbenchWizard
 	 */
 	public IWorkbenchWizard getWizard() {
-		return new NewServerWizard();
+		return new NewServerWizard(ids, values);
 	}
 }

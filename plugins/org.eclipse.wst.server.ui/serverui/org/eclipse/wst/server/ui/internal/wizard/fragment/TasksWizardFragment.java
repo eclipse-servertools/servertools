@@ -11,23 +11,19 @@
 package org.eclipse.wst.server.ui.internal.wizard.fragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.wst.server.core.IModuleTask;
-import org.eclipse.wst.server.core.IOrdered;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
-import org.eclipse.wst.server.core.IServerTask;
-import org.eclipse.wst.server.core.ITask;
-import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IModuleTaskDelegate;
-import org.eclipse.wst.server.core.model.IServerTaskDelegate;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.core.util.ProgressUtil;
 import org.eclipse.wst.server.core.util.Task;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -35,9 +31,6 @@ import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.wizard.page.TasksComposite;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 
 /**
  * 
@@ -46,8 +39,41 @@ public class TasksWizardFragment extends WizardFragment {
 	public abstract class TaskInfo implements IOrdered {
 		public IServer server;
 		public IServerConfiguration configuration;
-		public boolean selected;
 		public byte status;
+		
+		private static final String DEFAULT = "default:";
+		
+		public boolean isSelected() {
+			try {
+				Boolean b = (Boolean) selectedTaskMap.get(getId());
+				return b.booleanValue();
+			} catch (Exception e) {
+				// ignore
+			}
+			
+			try {
+				Boolean b = (Boolean) selectedTaskMap.get(DEFAULT + getId());
+				return b.booleanValue();
+			} catch (Exception e) {
+				// ignore
+			}
+			return false;
+		}
+		
+		public void setDefaultSelected(boolean sel) {
+			selectedTaskMap.put(DEFAULT + getId(), new Boolean(sel));
+		}
+		
+		public void setSelected(boolean sel) {
+			selectedTaskMap.put(getId(), new Boolean(sel));
+		}
+		
+		protected String getId() {
+			String id = server.getId();
+			if (configuration != null)
+				id += "|" + configuration.getId();
+			return id;
+		}
 	}
 
 	public class ServerTaskInfo extends TaskInfo {
@@ -57,6 +83,10 @@ public class TasksWizardFragment extends WizardFragment {
 		
 		public int getOrder() {
 			return task2.getOrder();
+		}
+		
+		protected String getId() {
+			return super.getId() + "|" + task2.getId();
 		}
 	}
 	
@@ -68,15 +98,82 @@ public class TasksWizardFragment extends WizardFragment {
 		public int getOrder() {
 			return task2.getOrder();
 		}
+		
+		protected String getId() {
+			return super.getId() + "|" + task2.getId() + "|" + module.getId();
+		}
 	}
 
 	protected TasksComposite comp;
 
-	protected List tasks = new ArrayList();
+	protected List tasks;
 	protected boolean hasOptionalTasks;
 	
-	public TasksWizardFragment(IServer server, IServerConfiguration configuration, List[] parents, IModule[] modules) {
-		createTasks(server, configuration, parents, modules);
+	//protected List selectedTasks = new ArrayList(2);
+	protected Map selectedTaskMap = new HashMap();
+	
+	public TasksWizardFragment() { }
+	
+	public void enter() {
+		updateTasks();
+	}
+	
+	public List getChildFragments() {
+		updateTasks();
+		return super.getChildFragments();
+	}
+	
+	public void setTaskModel(ITaskModel taskModel) {
+		super.setTaskModel(taskModel);
+		updateTasks();
+	}
+		
+	public void updateTasks() {
+		tasks = null;
+		if (getTaskModel() == null)
+			return;
+
+		IServer server = (IServer) getTaskModel().getObject(ITaskModel.TASK_SERVER);
+		
+		IServerConfiguration configuration = null;
+		if (server != null)
+			configuration = server.getServerConfiguration();
+		
+		List[] parents = (List[]) getTaskModel().getObject(ITaskModel.TASK_MODULE_PARENTS);
+		IModule[] modules = (IModule[]) getTaskModel().getObject(ITaskModel.TASK_MODULES);
+		
+		if (server != null && (parents == null || modules == null)) {
+			class Helper {
+				List parentList = new ArrayList();
+				List moduleList = new ArrayList();
+			}
+			final Helper help = new Helper();
+			ServerUtil.visit(server, new IModuleVisitor() {
+				public boolean visit(List parents2, IModule module2) {
+					help.parentList.add(parents2);
+					help.moduleList.add(module2);
+					return true;
+				}
+			});
+
+			int size = help.parentList.size();
+			parents = new List[size];
+			help.parentList.toArray(parents);
+			modules = new IModule[size];
+			help.moduleList.toArray(modules);
+		}
+		
+		if (server != null && parents != null || modules != null) {
+			tasks = new ArrayList();
+			createTasks(server, configuration, parents, modules);
+		}
+		
+		if (comp != null)
+			Display.getDefault().syncExec(new Runnable() {
+				public void run() {
+					comp.setTasks(tasks);
+				}
+			});
 	}
 	
 	protected void createTasks(IServer server, IServerConfiguration configuration, List[] parents, IModule[] modules) {
@@ -119,7 +216,7 @@ public class TasksWizardFragment extends WizardFragment {
 		sti.task2 = task2;
 		sti.status = task2.getTaskStatus();
 		if (sti.status == IModuleTaskDelegate.TASK_PREFERRED || sti.status == IModuleTaskDelegate.TASK_MANDATORY)
-			sti.selected = true;
+			sti.setDefaultSelected(true);
 		
 		tasks.add(sti);
 	}
@@ -133,25 +230,25 @@ public class TasksWizardFragment extends WizardFragment {
 		dti.task2 = task2;
 		dti.status = task2.getTaskStatus();
 		if (dti.status == IModuleTaskDelegate.TASK_PREFERRED || dti.status == IModuleTaskDelegate.TASK_MANDATORY)
-			dti.selected = true;
+			dti.setDefaultSelected(true);
 		tasks.add(dti);
 	}
 	
 	public boolean hasComposite() {
-		return true;
+		return hasTasks();
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.ui.internal.task.WizardTask#getWizardPage()
 	 */
 	public Composite createComposite(Composite parent, IWizardHandle wizard) {
-		comp = new TasksComposite(parent, wizard, tasks);
+		comp = new TasksComposite(parent, wizard);
 		return comp;
 	}
 
 	public ITask createFinishTask() {
 		return new Task() {
-			public void execute(IProgressMonitor monitor) {
+			public void execute(IProgressMonitor monitor) throws CoreException {
 				performFinish(monitor);
 			}
 		};
@@ -163,58 +260,115 @@ public class TasksWizardFragment extends WizardFragment {
 	 * @param monitor
 	 * @return int
 	 */
-	public void performFinish(IProgressMonitor monitor) {
+	protected void performFinish(IProgressMonitor monitor) throws CoreException {
 		List performTasks = new ArrayList();
 
+		if (tasks == null)
+			return;
 		int size = tasks.size();
-		int count = 0;
 		for (int i = 0; i < size; i++) {
 			TaskInfo ti = (TaskInfo) tasks.get(i);
-			if (ti.selected)
+			if (ti.isSelected())
 				performTasks.add(tasks.get(i));
 		}
 		
-		monitor.beginTask(ServerUIPlugin.getResource("%performingTasks"), count * 1000);
+		Trace.trace(Trace.FINEST, "Performing wizard tasks: " + performTasks.size());
+		
+		if (performTasks.size() == 0)
+			return;
+		
+		// get most recent server/configuration
+		boolean createdServerWC = false;
+		boolean createdConfigWC = false;
+		ITaskModel taskModel = getTaskModel();
+		IServer server = (IServer) taskModel.getObject(ITaskModel.TASK_SERVER);
+		if (server == null)
+			return;
+		IServerConfiguration configuration = null;
+		configuration = server.getServerConfiguration();
+
+		// get working copies
+		IServerWorkingCopy serverWC = null;
+		if (server instanceof IServerWorkingCopy)
+			serverWC = (IServerWorkingCopy) server;
+		else {
+			serverWC = server.getWorkingCopy();
+			createdServerWC = true;
+		}
+		
+		IServerConfigurationWorkingCopy configWC = null;
+		if (configuration != null) {
+			if (configuration instanceof IServerConfigurationWorkingCopy)
+				configWC = (IServerConfigurationWorkingCopy) configuration;
+			else {
+				configWC = configuration.getWorkingCopy();
+				createdConfigWC = true;
+			}
+		}
+		taskModel.putObject(ITaskModel.TASK_SERVER, serverWC);
+		taskModel.putObject(ITaskModel.TASK_SERVER_CONFIGURATION, configWC);
+		
+		// begin task
+		monitor.beginTask(ServerUIPlugin.getResource("%performingTasks"), performTasks.size() * 1000);
 		
 		ServerUtil.sortOrderedList(performTasks);
 
 		Iterator iterator = performTasks.iterator();
 		while (iterator.hasNext()) {
-			count++;
 			IProgressMonitor subMonitor = ProgressUtil.getSubMonitorFor(monitor, 1000);
 			Object obj = iterator.next();
 			if (obj instanceof TasksWizardFragment.ServerTaskInfo) {
 				TasksWizardFragment.ServerTaskInfo sti = (TasksWizardFragment.ServerTaskInfo) obj;
 				try {
 					Trace.trace(Trace.FINER, "Executing task: " + sti.task2.getId());
+					sti.task2.setTaskModel(taskModel);
+					sti.task2.init(serverWC, configWC, sti.parents, sti.modules);
 					sti.task2.execute(subMonitor);
 				} catch (final CoreException ce) {
 					Trace.trace(Trace.SEVERE, "Error executing task " + sti.task2.getId(), ce);
-					Display.getDefault().syncExec(new Runnable() {
-						public void run() {
-							Shell shell = Display.getDefault().getActiveShell();
-							MessageDialog.openError(shell, ServerUIPlugin.getResource("%defaultDialogTitle"), ce.getMessage());
-						}
-					});
-					return;
+					throw ce;
 				}
 			} else if (obj instanceof ModuleTaskInfo) {
 				ModuleTaskInfo dti = (ModuleTaskInfo) obj;
 				try {
 					Trace.trace(Trace.FINER, "Executing task: " + dti.task2.getId());
+					dti.task2.setTaskModel(taskModel);
+					dti.task2.init(serverWC, configWC, dti.parents, dti.module);
 					dti.task2.execute(subMonitor);
 				} catch (final CoreException ce) {
 					Trace.trace(Trace.SEVERE, "Error executing task " + dti.task2.getId(), ce);
-					Display.getDefault().syncExec(new Runnable() {
-						public void run() {
-							Shell shell = Display.getDefault().getActiveShell();
-							MessageDialog.openError(shell, ServerUIPlugin.getResource("%defaultDialogTitle"), ce.getMessage());
-						}
-					});
-					return;
+					throw ce;
 				}
 			}
 			subMonitor.done();
+		}
+		
+		if (createdServerWC) {
+			if (serverWC.isDirty()) {
+				IFile file = serverWC.getFile();
+				if (file != null && !file.getProject().exists()) {
+					IProject project = file.getProject();
+					ServerCore.createServerProject(project.getName(), null, monitor);
+				}
+				taskModel.putObject(ITaskModel.TASK_SERVER, serverWC.save(monitor));
+			} else {
+				serverWC.release();
+				taskModel.putObject(ITaskModel.TASK_SERVER, serverWC.getOriginal());
+			}
+		}
+		
+		if (createdConfigWC) {
+			if (configWC.isDirty()) {
+				IFile file = configWC.getFile();
+				if (file != null && !file.getProject().exists()) {
+					IProject project = file.getProject();
+					ServerCore.createServerProject(project.getName(), null, monitor);
+				}
+				taskModel.putObject(ITaskModel.TASK_SERVER_CONFIGURATION, configWC.save(monitor));
+			} else {
+				configWC.release();
+				taskModel.putObject(ITaskModel.TASK_SERVER_CONFIGURATION, configWC.getOriginal());
+			}
 		}
 		
 		monitor.done();
@@ -224,7 +378,7 @@ public class TasksWizardFragment extends WizardFragment {
 	 * 
 	 */
 	public boolean hasTasks() {
-		return !tasks.isEmpty();
+		return tasks == null || !tasks.isEmpty();
 	}
 	
 	public boolean hasOptionalTasks() {

@@ -21,7 +21,6 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.actions.IServerAction;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
@@ -39,8 +38,8 @@ public class AddRemoveModulesAction implements IServerAction {
 	}
 
 	public void run(Shell shell, IServer server, IServerConfiguration configuration) {
-		if (!ServerUIUtil.promptIfDirty(shell, server))
-			return;
+		//if (!ServerUIUtil.promptIfDirty(shell, server))
+		//	return;
 		
 		// check if there are any projects first
 		// get currently deployed modules

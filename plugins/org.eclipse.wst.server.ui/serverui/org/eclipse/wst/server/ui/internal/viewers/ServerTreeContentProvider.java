@@ -31,6 +31,7 @@ public class ServerTreeContentProvider extends AbstractTreeContentProvider {
 	
 	protected IModule module;
 	protected String launchMode;
+	protected boolean includeIncompatibleVersions;
 
 	/**
 	 * ServerTreeContentProvider constructor comment.
@@ -47,7 +48,13 @@ public class ServerTreeContentProvider extends AbstractTreeContentProvider {
 		fillTree();
 	}
 	
+	public void setIncludeIncompatibleVersions(boolean b) {
+		includeIncompatibleVersions = b;
+		fillTree();
+	}
+	
 	protected void fillTree() {
+		clean();
 		List list = new ArrayList();
 		if (style != STYLE_FLAT) {
 			Iterator iterator = ServerCore.getResourceManager().getServers().iterator();
@@ -100,8 +107,13 @@ public class ServerTreeContentProvider extends AbstractTreeContentProvider {
 			return true;
 		if (!ServerUtil.isCompatibleWithLaunchMode(server, launchMode))
 			return false;
-		if (!ServerUtil.isSupportedModule(server.getServerType().getRuntimeType().getModuleTypes(), module.getType(), module.getVersion()))
-			return false;
+		if (includeIncompatibleVersions) {
+			if (!ServerUtil.isSupportedModule(server.getServerType().getRuntimeType().getModuleTypes(), module.getType(), null))
+				return false;
+		} else {
+			if (!ServerUtil.isSupportedModule(server.getServerType().getRuntimeType().getModuleTypes(), module.getType(), module.getVersion()))
+				return false;
+		}
 		return true;
 	}
 }

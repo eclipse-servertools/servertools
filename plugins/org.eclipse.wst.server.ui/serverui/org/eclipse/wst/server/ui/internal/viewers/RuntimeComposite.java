@@ -1,5 +1,6 @@
 package org.eclipse.wst.server.ui.internal.viewers;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -8,11 +9,13 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-
 import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
@@ -62,6 +65,22 @@ public class RuntimeComposite extends AbstractTableComposite {
 					selection = null;
 				listener.runtimeSelected(selection);
 			}
+		});
+		
+		table.addKeyListener(new KeyListener() {
+			public void keyPressed(KeyEvent e) {
+				if (e.character == 'l') {
+					try {
+						IRuntime runtime = getSelectedRuntime();
+						IRuntimeWorkingCopy wc = runtime.getWorkingCopy();
+						wc.setLocked(!runtime.isLocked());
+						wc.save(new NullProgressMonitor());
+						refresh(runtime);
+					} catch (Exception ex) { }
+				}
+			}
+
+			public void keyReleased(KeyEvent e) { }
 		});
 		
 		defaultRuntime = ServerCore.getResourceManager().getDefaultRuntime();

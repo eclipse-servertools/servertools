@@ -64,31 +64,33 @@ public class RuntimeTargetComposite {
 		
 		// get child modules
 		IProjectModule projectModule = ServerUtil.getModuleProject(project);
-		List children = new ArrayList();
-		IModule[] child = projectModule.getChildModules();
-		if (child != null) {
-			int size = child.length;
-			for (int i = 0; i < size; i++)
-				children.add(child[i]);
-			int a = 0;
-			while (a < children.size()) {
-				IModule module = (IModule) children.get(a);
-				IModule[] child2 = module.getChildModules();
-				if (child2 != null) {
-					size = child2.length;
-					for (int i = 0; i < size; i++)
-						children.add(child2[i]);
-				}
-				a++;
-			}
-		}
-		
 		childProjects = new ArrayList();
-		Iterator iterator = children.iterator();
-		while (iterator.hasNext()) {
-			IModule module = (IModule) iterator.next();
-			if (module instanceof IProjectModule)
-				childProjects.add(module);
+		if (projectModule != null) {
+			List children = new ArrayList();
+			IModule[] child = projectModule.getChildModules();
+			if (child != null) {
+				int size = child.length;
+				for (int i = 0; i < size; i++)
+					children.add(child[i]);
+				int a = 0;
+				while (a < children.size()) {
+					IModule module = (IModule) children.get(a);
+					IModule[] child2 = module.getChildModules();
+					if (child2 != null) {
+						size = child2.length;
+						for (int i = 0; i < size; i++)
+							children.add(child2[i]);
+					}
+					a++;
+				}
+			}
+			
+			Iterator iterator = children.iterator();
+			while (iterator.hasNext()) {
+				IModule module = (IModule) iterator.next();
+				if (module instanceof IProjectModule)
+					childProjects.add(module);
+			}
 		}
 		
 		createContents(parent);
@@ -163,15 +165,6 @@ public class RuntimeTargetComposite {
 			}
 		});
 		
-		/*label = new Label(parent, SWT.NONE);
-		label.setText("");
-		
-		label = new Label(parent, SWT.WRAP);
-		label.setText(ServerUIPlugin.getResource("%runtimeTargetInformation"));
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 2;
-		label.setLayoutData(data);*/
-		
 		// child module selection
 		if (!childProjects.isEmpty()) {
 			final Button includeChildren = new Button(parent, SWT.CHECK);
@@ -230,9 +223,10 @@ public class RuntimeTargetComposite {
 			return false;
 		return true;
 	}
-	
+
 	public void apply(IProgressMonitor monitor) throws CoreException {
-		props.setRuntimeTarget(newRuntime, monitor);
+		if (newRuntime == null || !newRuntime.equals(props.getRuntimeTarget()))
+			props.setRuntimeTarget(newRuntime, monitor);
 		
 		if (setChildren) {
 			Iterator iterator = childProjects.iterator();
@@ -240,7 +234,9 @@ public class RuntimeTargetComposite {
 				IProjectModule module = (IProjectModule) iterator.next();
 				IProject proj = module.getProject();
 				props = ServerCore.getProjectProperties(proj);
-				props.setRuntimeTarget(newRuntime, monitor);
+				
+				if (newRuntime == null || !newRuntime.equals(props.getRuntimeTarget()))
+					props.setRuntimeTarget(newRuntime, monitor);
 			}
 		}
 	}

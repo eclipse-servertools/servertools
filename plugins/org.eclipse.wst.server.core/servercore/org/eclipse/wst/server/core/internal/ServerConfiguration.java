@@ -40,14 +40,21 @@ public class ServerConfiguration extends Base implements IServerConfiguration {
 	}
 
 	public IServerConfigurationDelegate getDelegate() {
-		if (delegate == null) {
-			try {
-				ServerConfigurationType configType = (ServerConfigurationType) configurationType;
-				delegate = (IServerConfigurationDelegate) configType.getElement().createExecutableExtension("class");
-				delegate.initialize(this);
-				loadData();
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);
+		if (delegate != null)
+			return delegate;
+		
+		synchronized (this) {
+			if (delegate == null) {
+				try {
+					long time = System.currentTimeMillis();
+					ServerConfigurationType configType = (ServerConfigurationType) configurationType;
+					delegate = (IServerConfigurationDelegate) configType.getElement().createExecutableExtension("class");
+					delegate.initialize(this);
+					loadData();
+					Trace.trace(Trace.PERFORMANCE, "ServerConfiguration.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerConfigurationType().getId());
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);
+				}
 			}
 		}
 		return delegate;
@@ -198,6 +205,7 @@ public class ServerConfiguration extends Base implements IServerConfiguration {
 	}
 
 	protected void saveToMetadata(IProgressMonitor monitor) {
+		super.saveToMetadata(monitor);
 		ResourceManager rm = (ResourceManager) ServerCore.getResourceManager();
 		rm.addServerConfiguration(this);
 		
@@ -213,6 +221,9 @@ public class ServerConfiguration extends Base implements IServerConfiguration {
 		configurationType = wc.configurationType;
 		isDataLoaded = false; //wc.isDataLoaded; let the wc save it
 		delegate = wc.delegate;
+		
+		int timestamp = wc.getTimestamp();
+		map.put("timestamp", Integer.toString(timestamp+1));
 	}
 	
 	protected void loadFromMemento(IMemento memento, IProgressMonitor monitor) {

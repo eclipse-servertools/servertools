@@ -11,26 +11,30 @@ package org.eclipse.wst.server.ui.internal.editor;
  **********************************************************************/
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.widgets.*;
 import org.eclipse.ui.help.WorkbenchHelp;
-
-import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
-import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.util.SocketUtil;
 import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.command.SetServerConfigurationNameCommand;
 import org.eclipse.wst.server.ui.internal.command.SetServerHostnameCommand;
 import org.eclipse.wst.server.ui.internal.command.SetServerNameCommand;
+import org.eclipse.wst.server.ui.internal.command.SetServerRuntimeCommand;
 /**
  * Server general editor page.
  */
@@ -38,8 +42,11 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 	protected Text serverName;
 	protected Text serverConfigurationName;
 	protected Text hostname;
+	protected Combo runtimeCombo;
 	
 	protected boolean updating;
+	
+	protected List runtimes;
 
 	protected PropertyChangeListener listener;
 
@@ -98,7 +105,7 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 	 * @param parent the parent control
 	 */
 	public final void createPartControl(Composite parent) {
-		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
+		FormToolkit toolkit = getFormToolkit(parent.getDisplay());
 		
 		ScrolledForm form = toolkit.createScrolledForm(parent);
 		form.setText(ServerUIPlugin.getResource("%serverEditorOverviewPageTitle"));
@@ -125,8 +132,7 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 		leftColumnComp.setLayout(layout);
 		leftColumnComp.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL));
 		
-		//Composite section = toolkit.createSectionComposite(leftColumnComp, ServerUIPlugin.getResource("%serverEditorOverviewSection"), ServerUIPlugin.getResource("%serverEditorOverviewDescription"));
-		Section section = toolkit.createSection(leftColumnComp, ExpandableComposite.TWISTIE|ExpandableComposite.EXPANDED|ExpandableComposite.TITLE_BAR|Section.DESCRIPTION);
+		Section section = toolkit.createSection(leftColumnComp, ExpandableComposite.TWISTIE|ExpandableComposite.EXPANDED | ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
 		section.setText(ServerUIPlugin.getResource("%serverEditorOverviewSection"));
 		section.setDescription(ServerUIPlugin.getResource("%serverEditorOverviewDescription"));
 		section.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL));
@@ -198,6 +204,46 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 			});
 		}
 		
+		if (server != null && server.getServerType() != null && server.getServerType().hasRuntime()) {
+			IRuntime runtime = server.getRuntime();
+			createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewRuntime"));
+			
+			IRuntimeType runtimeType = server.getServerType().getRuntimeType();
+			runtimes = ServerCore.getResourceManager().getRuntimes(runtimeType);
+			
+			if (runtimes.size() < 2) {
+				if (runtime == null)
+					toolkit.createLabel(composite, "");
+				else
+					toolkit.createLabel(composite, runtime.getName());
+			} else {
+				runtimeCombo = new Combo(composite, SWT.READ_ONLY);
+				GridData data = new GridData(GridData.FILL_HORIZONTAL);
+				runtimeCombo.setLayoutData(data);
+				updateRuntimeCombo();
+				
+				int index = runtimes.indexOf(runtime);
+				if (index >= 0)
+					runtimeCombo.select(index);
+				
+				runtimeCombo.addSelectionListener(new SelectionListener() {
+					public void widgetSelected(SelectionEvent e) {
+						try {
+							if (updating)
+								return;
+							updating = true;
+							IRuntime newRuntime = (IRuntime) runtimes.get(runtimeCombo.getSelectionIndex());
+							getCommandManager().executeCommand(new SetServerRuntimeCommand(getServer(), newRuntime));
+							updating = false;
+						} catch (Exception ex) { }
+					}
+					public void widgetDefaultSelected(SelectionEvent e) {
+						widgetSelected(e);
+					}
+				});
+			}
+		}
+		
 		insertSections(leftColumnComp, "org.eclipse.wst.server.editor.overview.left");
 		
 		// left column
@@ -215,6 +261,32 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 		initialize();
 	}
 	
+	protected void updateRuntimeCombo() {
+		IRuntimeType runtimeType = server.getServerType().getRuntimeType();
+		runtimes = ServerCore.getResourceManager().getRuntimes(runtimeType);
+		
+		if (SocketUtil.isLocalhost(server.getHostname())) {
+			int size = runtimes.size();
+			int i = 0;
+			while (i < size) {
+				IRuntime runtime2 = (IRuntime) runtimes.get(i);
+				if (runtime2.getAttribute("stub", false)) {
+					size --;
+					runtimes.remove(i);
+				} else
+					i++;
+			}
+		}
+		
+		int size = runtimes.size();
+		String[] items = new String[size];
+		for (int i = 0; i < size; i++) {
+			IRuntime runtime2 = (IRuntime) runtimes.get(i);
+			items[i] = runtime2.getName();
+		}
+		runtimeCombo.setItems(items);
+	}
+
 	protected Label createLabel(FormToolkit toolkit, Composite parent, String text) {
 		Label label = toolkit.createLabel(parent, text);
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
@@ -222,6 +294,8 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 	}
 	
 	public void dispose() {
+		super.dispose();
+		
 		if (server != null)
 			server.removePropertyChangeListener(listener);
 		if (serverConfiguration != null)
@@ -230,17 +304,6 @@ public class OverviewEditorPart extends ServerResourceEditorPart {
 	
 	/* (non-Javadoc)
 	 * Initializes the editor part with a site and input.
-	 * <p>
-	 * Subclasses of <code>EditorPart</code> must implement this method.  Within
-	 * the implementation subclasses should verify that the input type is acceptable
-	 * and then save the site and input.  Here is sample code:
-	 * </p>
-	 * <pre>
-	 *		if (!(input instanceof IFileEditorInput))
-	 *			throw new PartInitException("Invalid Input: Must be IFileEditorInput");
-	 *		setSite(site);
-	 *		setInput(editorInput);
-	 * </pre>
 	 */
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);

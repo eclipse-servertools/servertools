@@ -8,17 +8,22 @@ package org.eclipse.wst.server.ui.internal;
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.wst.server.core.IClient;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.model.ILaunchable;
-import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IServerListener;
-import org.eclipse.wst.server.core.util.ServerAdapter;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.wst.server.core.IClient;
+import org.eclipse.wst.server.core.ILaunchableAdapter;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.ServerPreferences;
+import org.eclipse.wst.server.core.model.*;
+import org.eclipse.wst.server.core.util.ServerAdapter;
+import org.eclipse.wst.server.ui.ServerUICore;
 
 /**
  * A class that listens to the startup of a server. To use
@@ -36,7 +41,8 @@ public class ServerStartupListener {
 	protected IServerListener listener;
 
 	protected IClient client;
-	protected ILaunchable launchable;
+	protected ILaunchableAdapter launchableAdapter;
+	protected IModuleObject moduleObject;
 	protected String launchMode;
 	protected IModule module;
 
@@ -69,12 +75,21 @@ public class ServerStartupListener {
 	/**
 	 * ServerStartupListener constructor comment.
 	 */
-	public ServerStartupListener(Shell shell, IServer server, IClient client, ILaunchable launchable, String launchMode, IModule module) {
+	public ServerStartupListener(Shell shell, IServer server, IClient client, ILaunchableAdapter launchableAdapter, IModuleObject moduleObject, String launchMode, IModule module) {
 		this(shell, server);
 		this.client = client;
-		this.launchable = launchable;
+		this.launchableAdapter = launchableAdapter;
 		this.launchMode = launchMode;
 		this.module = module;
+		this.moduleObject = moduleObject;
+	}
+
+	/**
+	 * ServerStartupListener constructor comment.
+	 */
+	public ServerStartupListener(Shell shell, IServer server, IClient client, ILaunchableAdapter launchableAdapter, IModuleObject moduleObject, String launchMode, IModule module, boolean ignoreShutdown) {
+		this(shell, server, client, launchableAdapter, moduleObject, launchMode, module);
+		this.ignoreShutdown = ignoreShutdown;
 	}
 
 	/**
@@ -144,7 +159,7 @@ public class ServerStartupListener {
 		if (client == null)
 			return;
 		
-		launchClientUtil(server, module, launchable, launchMode, client);
+		launchClientUtil(server, module, launchableAdapter, moduleObject, launchMode, client);
 	}
 
 	/**
@@ -161,23 +176,58 @@ public class ServerStartupListener {
 		} else
 			dispose();
 	}
-	
-	public static void launchClientUtil(final IServer server, final IModule module, final ILaunchable launchable, final String launchMode, final IClient client) {
+
+	public static void launchClientUtil(final IServer server, final IModule module, final ILaunchableAdapter la, final IModuleObject mo, final String launchMode, final IClient client) {
 		if (client == null || server == null)
 			return;
 	
 		// initial implementation - should just wait for a module state change event
 		if (server.getModuleState(module) == IServer.MODULE_STATE_STARTING) {
-			boolean started = false;
-			int count = 10;
-			while (!started && count > 0) {
-				try {
-					Thread.sleep(3000);
-				} catch (Exception e) { }
-				count --;
-				if (server.getModuleState(module) != IServer.MODULE_STATE_STARTING)
-					started = false;
+			class DisplayClientJob extends Job {
+				public DisplayClientJob() {
+					super(ServerUIPlugin.getResource("%viewStatusStarting3"));
+				}
+
+				public IStatus run(IProgressMonitor monitor) {
+					IStatus status = new Status(IStatus.OK, ServerUICore.PLUGIN_ID, 0, "", null);
+
+					// wait for up to 5 minutes
+					byte state = server.getModuleState(module);
+					int count = ((ServerPreferences)ServerCore.getServerPreferences()).getModuleStartTimeout();
+					while (state == IServer.MODULE_STATE_STARTING && count > 0) {
+						if (monitor.isCanceled())
+							return status;
+						try {
+							Thread.sleep(2000);
+						} catch (Exception e) { }
+						count -= 2000;
+						state = server.getModuleState(module);
+					}
+					
+					if (monitor.isCanceled())
+						return status;
+					
+					if (state != IServer.MODULE_STATE_STARTED)
+						return status;
+					
+					// display client on UI thread
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							Trace.trace("Attempting to load client: " + client);
+							try {
+								ILaunchable launchable = la.getLaunchable(server, mo);
+								client.launch(server, launchable, launchMode, server.getExistingLaunch());
+							} catch (Exception e) {
+								Trace.trace("Server client failed", e);
+							}
+						}
+					});
+					return status;
+				}
 			}
+			DisplayClientJob job = new DisplayClientJob();
+			job.schedule();
+			return;
 		}
 	
 		// display client on UI thread
@@ -185,6 +235,7 @@ public class ServerStartupListener {
 			public void run() {
 				Trace.trace("Attempting to load client: " + client);
 				try {
+					ILaunchable launchable = la.getLaunchable(server, mo);
 					client.launch(server, launchable, launchMode, server.getExistingLaunch());
 				} catch (Exception e) {
 					Trace.trace("Server client failed", e);

@@ -21,6 +21,7 @@ import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.internal.core.JavaServerPlugin;
 import org.eclipse.jst.server.internal.core.RuntimeClasspathContainer;
 import org.eclipse.jst.server.internal.core.Trace;
@@ -51,10 +52,11 @@ public abstract class ClasspathRuntimeTargetHandler implements IRuntimeTargetHan
 			IClasspathEntry[] cp = javaProject.getRawClasspath();
 			int size = cp.length;
 			for (int i = 0; i < size; i++) {
-				if (cp[i].getEntryKind() != IClasspathEntry.CPE_CONTAINER ||
-						!cp[i].getPath().segment(0).equals(RuntimeClasspathContainer.SERVER_CONTAINER)) {
+				if (cp[i].getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
+					if (!cp[i].getPath().segment(0).equals(RuntimeClasspathContainer.SERVER_CONTAINER))
+						list.add(cp[i]);
+				} else
 					list.add(cp[i]);
-				}
 			}
 			
 			List add = new ArrayList();
@@ -71,9 +73,13 @@ public abstract class ClasspathRuntimeTargetHandler implements IRuntimeTargetHan
 				for (int i = 0; i < size; i++) {
 					IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER).append(getId()).append(runtime.getId());
 					if (ids[i] != null)
-						add.add(JavaCore.newContainerEntry(path.append(ids[i])));
-					else
-						add.add(JavaCore.newContainerEntry(path));
+						path.append(ids[i]);
+					add.add(JavaCore.newContainerEntry(path));
+					String id = "";
+					if (path.segmentCount() > 3)
+						id = path.segment(3);
+					RuntimeClasspathContainer rcc = new RuntimeClasspathContainer(path, this, runtime, id);
+					JavaCore.setClasspathContainer(path, new IJavaProject[] { javaProject}, new IClasspathContainer[] { rcc }, monitor);
 				}
 			}
 			
@@ -105,6 +111,23 @@ public abstract class ClasspathRuntimeTargetHandler implements IRuntimeTargetHan
 		}
 		if (sourceOnly)
 			return;
+		
+		// remove any of our own containers
+		List remove = new ArrayList();
+		iterator = current.iterator();
+		while (iterator.hasNext()) {
+			IClasspathEntry entry = (IClasspathEntry) iterator.next();
+			
+			if (entry.getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
+				try {
+					if (RuntimeClasspathContainer.SERVER_CONTAINER.equals(entry.getPath().segment(0))
+						|| JavaRuntime.JRE_CONTAINER.equals(entry.getPath().segment(0)))
+						remove.add(entry);
+				} catch (Exception e) {
+					Trace.trace(Trace.FINEST, "Error resolving classpath container", e);
+				}
+			}
+		}
 
 		// expand the "add" list
 		List addExpanded = new ArrayList();
@@ -121,7 +144,7 @@ public abstract class ClasspathRuntimeTargetHandler implements IRuntimeTargetHan
 							addExpanded.add(entries[i]);
 					}
 				} catch (Exception e) {
-					Trace.trace(Trace.FINEST, "Error resolving classpath container", e);
+					Trace.trace(Trace.FINEST, "Error resolving classpath container 2", e);
 				}
 			} else if (entry.getEntryKind() == IClasspathEntry.CPE_VARIABLE) {
 				entry = JavaCore.getResolvedClasspathEntry(entry);
@@ -132,7 +155,6 @@ public abstract class ClasspathRuntimeTargetHandler implements IRuntimeTargetHan
 		}
 		
 		// check for duplicates by also expanding the current list
-		List remove = new ArrayList();
 		iterator = current.iterator();
 		while (iterator.hasNext()) {
 			IClasspathEntry entry = (IClasspathEntry) iterator.next();
@@ -148,7 +170,7 @@ public abstract class ClasspathRuntimeTargetHandler implements IRuntimeTargetHan
 							currentExpanded.add(entries[i]);
 					}
 				} catch (Exception e) {
-					Trace.trace(Trace.FINEST, "Error resolving classpath container", e);
+					Trace.trace(Trace.FINEST, "Error resolving classpath container 3", e);
 				}
 			} else if (entry.getEntryKind() == IClasspathEntry.CPE_VARIABLE) {
 				entry = JavaCore.getResolvedClasspathEntry(entry);
@@ -169,7 +191,7 @@ public abstract class ClasspathRuntimeTargetHandler implements IRuntimeTargetHan
 						dup = true;
 				}
 			}
-			if (dup)
+			if (dup && !remove.contains(entry))
 				remove.add(entry);
 		}
 		

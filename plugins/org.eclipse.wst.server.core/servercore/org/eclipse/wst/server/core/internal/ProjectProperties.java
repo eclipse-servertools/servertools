@@ -21,8 +21,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.IProjectPropertiesListener;
 /**
- * Helper class that stores preference information for
- * the server tools.
+ * Helper class that stores preference information for the server tools.
  */
 public class ProjectProperties implements IProjectProperties {
 	private static final String PROJECT_PREFERENCE_FILE = ".runtime";
@@ -50,13 +49,16 @@ public class ProjectProperties implements IProjectProperties {
 	private void loadPreferences() {
 		Trace.trace(Trace.FINEST, "Loading project preferences: " + project);
 		
+		InputStream in = null;
 		try {
 			IMemento memento = null;
 			if (!project.exists() || !project.isOpen())
 				return;
 			IFile file = project.getFile(PROJECT_PREFERENCE_FILE);
-			if (file != null && file.exists())
-				memento = XMLMemento.loadMemento(file.getContents());
+			if (file != null && file.exists()) {
+				in = file.getContents();
+				memento = XMLMemento.loadMemento(in);
+			}
 			
 			if (memento == null)
 				return;
@@ -65,6 +67,10 @@ public class ProjectProperties implements IProjectProperties {
 			runtimeId = memento.getString("runtime-id");
 		} catch (Exception e) {
 			Trace.trace("Could not load preferences: " + e.getMessage());
+		} finally {
+			try {
+				in.close();
+			} catch (Exception e) { }
 		}
 	}
 	
@@ -137,6 +143,17 @@ public class ProjectProperties implements IProjectProperties {
 		savePreferences(monitor);
 		fireDefaultServerChanged(server);
 	}
+	
+	protected String getRuntimeTargetId() {
+		loadPreferences();
+		return runtimeId;
+	}
+	
+	protected void setRuntimeTargetId(String newRuntimeId, IProgressMonitor monitor) throws CoreException {
+		loadPreferences();
+		runtimeId = newRuntimeId;
+		savePreferences(monitor);
+	}
 
 	/**
 	 * Returns the current runtime target type for the given project.
@@ -155,39 +172,52 @@ public class ProjectProperties implements IProjectProperties {
 	 * @param monitor
 	 */
 	public void setRuntimeTarget(IRuntime runtime, IProgressMonitor monitor) throws CoreException {
-		if (runtime != null)
-			Trace.trace(Trace.RUNTIME_TARGET, "setRuntimeTarget : " + runtime + " " + runtime.getRuntimeType());
-		else
-			Trace.trace(Trace.RUNTIME_TARGET, "setRuntimeTarget : null");
-		// remove old target
 		loadPreferences();
 		IRuntime oldRuntime = ServerCore.getResourceManager().getRuntime(runtimeId);
+		setRuntimeTarget(oldRuntime, runtime, true, monitor);
+	}
+
+	public void setRuntimeTarget(IRuntime oldRuntime, IRuntime newRuntime, boolean save, IProgressMonitor monitor) throws CoreException {
+		Trace.trace(Trace.RUNTIME_TARGET, "setRuntimeTarget : " + oldRuntime + " -> " + newRuntime);
+		
+		// remove old target
 		if (oldRuntime != null) {
 			IRuntimeType runtimeType = oldRuntime.getRuntimeType();
 			Iterator iterator = ServerCore.getRuntimeTargetHandlers().iterator();
 			while (iterator.hasNext()) {
 				IRuntimeTargetHandler handler = (IRuntimeTargetHandler) iterator.next();
-				Trace.trace(Trace.RUNTIME_TARGET, "  < " + handler + " " + handler.supportsRuntimeType(runtimeType));
-				if (handler.supportsRuntimeType(runtimeType))
+				long time = System.currentTimeMillis();
+				boolean supports = handler.supportsRuntimeType(runtimeType);
+				Trace.trace(Trace.RUNTIME_TARGET, "  < " + handler + " " + supports);
+				if (supports)
 					handler.removeRuntimeTarget(project, oldRuntime, monitor);
+				Trace.trace(Trace.PERFORMANCE, "Runtime target: <" + (System.currentTimeMillis() - time) + "> " + handler.getId());
 			}
 		}
 		
 		// add new target
-		if (runtime != null) {
-			runtimeId = runtime.getId();
-			IRuntimeType runtimeType = runtime.getRuntimeType();
+		if (newRuntime != null) {
+			runtimeId = newRuntime.getId();
+			if (save)
+				savePreferences(monitor);
+			IRuntimeType runtimeType = newRuntime.getRuntimeType();
 			Iterator iterator = ServerCore.getRuntimeTargetHandlers().iterator();
 			while (iterator.hasNext()) {
 				IRuntimeTargetHandler handler = (IRuntimeTargetHandler) iterator.next();
-				Trace.trace(Trace.RUNTIME_TARGET, "  > " + handler + " " + handler.supportsRuntimeType(runtimeType));
-				if (handler.supportsRuntimeType(runtimeType))
-					handler.setRuntimeTarget(project, runtime, monitor);
+				long time = System.currentTimeMillis();
+				boolean supports = handler.supportsRuntimeType(runtimeType);
+				Trace.trace(Trace.RUNTIME_TARGET, "  > " + handler + " " + supports);
+				if (supports)
+					handler.setRuntimeTarget(project, newRuntime, monitor);
+				Trace.trace(Trace.PERFORMANCE, "Runtime target: <" + (System.currentTimeMillis() - time) + "> " + handler.getId());
 			}
-		} else
+		} else {
 			runtimeId = null;
-		savePreferences(monitor);
-		fireRuntimeTargetChanged(runtime);
+			if (save)
+				savePreferences(monitor);
+		}
+		
+		fireRuntimeTargetChanged(newRuntime);
 		Trace.trace(Trace.RUNTIME_TARGET, "setRuntimeTarget <");
 	}
 

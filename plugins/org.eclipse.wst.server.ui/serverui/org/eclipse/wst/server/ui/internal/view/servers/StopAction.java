@@ -38,7 +38,9 @@ public class StopAction extends AbstractServerAction {
 	 * @param server org.eclipse.wst.server.core.model.IServer
 	 */
 	public boolean accept(IServer server) {
-		return server.getServerType() != null && server.getServerType().getServerStateSet() == serverStateSet && server.canStop();
+		if (server.getServerType() == null || server.getServerType().getServerStateSet() != serverStateSet)
+			return false;
+		return server.getServerType() != null && server.canStop();
 	}
 
 	/**

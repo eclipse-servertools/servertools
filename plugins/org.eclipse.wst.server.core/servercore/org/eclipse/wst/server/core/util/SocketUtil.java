@@ -17,6 +17,8 @@ import java.net.SocketException;
 import java.util.Random;
 
 import org.eclipse.wst.server.core.internal.Trace;
+
+import sun.net.spi.nameservice.dns.DNSNameService;
 /**
  * 
  */
@@ -90,6 +92,8 @@ public class SocketUtil {
 
 		return false;
 	}
+	
+	private static String dnsHostname; 
 
 	public static boolean isLocalhost(String host) {
 		if (host == null)
@@ -97,8 +101,23 @@ public class SocketUtil {
 		try {
 			if ("localhost".equals(host) || "127.0.0.1".equals(host))
 				return true;
+			
 			InetAddress localHostaddr = InetAddress.getLocalHost();
-			if (localHostaddr.getHostName().equals(host))
+			if (localHostaddr.getHostName().equals(host) || host.equals(localHostaddr.getCanonicalHostName()))
+				return true;
+			
+			if (localHostaddr.getHostAddress().equals(host))
+				return true;
+			
+			if (dnsHostname == null)
+				try {
+					DNSNameService dns = new DNSNameService();
+					dnsHostname = dns.getHostByAddr(localHostaddr.getAddress());
+				} catch (Throwable t) {
+					dnsHostname = "*****************";
+				}
+			
+			if (dnsHostname != null && dnsHostname.equals(host))
 				return true;
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Error checking for localhost", e);

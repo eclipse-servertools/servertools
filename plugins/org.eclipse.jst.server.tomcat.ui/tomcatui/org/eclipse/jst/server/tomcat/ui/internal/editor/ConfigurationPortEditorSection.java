@@ -98,9 +98,9 @@ public class ConfigurationPortEditorSection extends ServerResourceEditorSection 
 	 */
 	public void createSection(Composite parent) {
 		super.createSection(parent);
-		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
+		FormToolkit toolkit = getFormToolkit(parent.getDisplay());
 		
-		Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE|ExpandableComposite.EXPANDED|ExpandableComposite.TITLE_BAR|Section.DESCRIPTION);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE|ExpandableComposite.EXPANDED|ExpandableComposite.TITLE_BAR|Section.DESCRIPTION|ExpandableComposite.FOCUS_TITLE);
 		section.setText(TomcatUIPlugin.getResource("%configurationEditorPortsSection"));
 		section.setDescription(TomcatUIPlugin.getResource("%configurationEditorPortsDescription"));
 		section.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL));

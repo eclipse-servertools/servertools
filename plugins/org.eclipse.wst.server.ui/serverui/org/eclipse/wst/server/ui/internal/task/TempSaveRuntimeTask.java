@@ -12,22 +12,30 @@ package org.eclipse.wst.server.ui.internal.task;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
+import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.ITaskModel;
 import org.eclipse.wst.server.core.util.Task;
+
 
 /**
  * 
  */
-public class ReleaseServerConfigurationTask extends Task {
-	public ReleaseServerConfigurationTask() { }
+public class TempSaveRuntimeTask extends Task {
+	public TempSaveRuntimeTask() { }
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.ui.internal.task.ITask#doTask()
+	 * @see com.ibm.wtp.server.ui.internal.task.ITask#doTask()
 	 */
 	public void execute(IProgressMonitor monitor) throws CoreException {
-		IServerConfigurationWorkingCopy workingCopy = (IServerConfigurationWorkingCopy) getTaskModel().getObject(ITaskModel.TASK_SERVER_CONFIGURATION);
-		if (workingCopy != null)
-			workingCopy.release();
+		IRuntime runtime = (IRuntime) getTaskModel().getObject(ITaskModel.TASK_RUNTIME);
+		if (runtime != null && runtime instanceof IRuntimeWorkingCopy) {
+			IRuntimeWorkingCopy workingCopy = (IRuntimeWorkingCopy) runtime;
+			if (!workingCopy.isDirty())
+				return;
+		
+			runtime = workingCopy.save(monitor);
+			getTaskModel().putObject(ITaskModel.TASK_RUNTIME, runtime.getWorkingCopy());
+		}
 	}
 }

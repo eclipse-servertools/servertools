@@ -15,9 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.IModule;
-import org.eclipse.wst.server.core.model.IModuleVisitor;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.wizard.page.NewServerComposite;
@@ -25,11 +29,6 @@ import org.eclipse.wst.server.ui.internal.wizard.page.WizardUtil;
 import org.eclipse.wst.server.ui.wizard.IWizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.swt.widgets.Composite;
 
 /**
  * 
@@ -57,11 +56,11 @@ public class NewServerWizardFragment extends WizardFragment {
 	public boolean hasComposite() {
 		return true;
 	}
-	
-	/*public void exit() {
-		if (comp != null)
-			getTaskModel().putObject(ITaskModel.TASK_SERVER, comp.getServer());
-	}*/
+
+	public void enter() {
+		super.enter();
+		getTaskModel().putObject(ITaskModel.TASK_LAUNCH_MODE, launchMode);
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.ui.internal.task.WizardTask#getWizardPage()
@@ -161,41 +160,13 @@ public class NewServerWizardFragment extends WizardFragment {
 						list.add(sub);
 				}
 			}
+			//list.add(new TasksWizardFragment());
 		} else if (b != null && b.byteValue() == MODE_EXISTING) {
-			if (comp == null)
-				return;
-			
-			IServer server = comp.getServer();
-			if (server == null)
-				return;
-
-			// ---- temp
-			class Helper {
-				List parentList = new ArrayList();
-				List moduleList = new ArrayList();
-			}
-			final Helper help = new Helper();
-			ServerUtil.visit(server, new IModuleVisitor() {
-				public boolean visit(List parents, IModule module2) {
-					help.parentList.add(parents);
-					help.moduleList.add(module2);
-					return true;
-				}
-			});
-			if (!help.moduleList.contains(module)) {
-				help.parentList.add(new ArrayList()); // FIX-ME
-				help.moduleList.add(module);
-			}
-			int size = help.parentList.size();
-			List[] parents = new List[size];
-			help.parentList.toArray(parents);
-			IModule[] modules = new IModule[size];
-			help.moduleList.toArray(modules);
-			// ---- temp
-			
-			TasksWizardFragment fragment = new TasksWizardFragment(server, server.getServerConfiguration(), parents, modules);
-			if (fragment.hasTasks())
-				list.add(fragment);
+			/*if (comp != null) {
+				IServer server = comp.getServer();
+				if (server != null)
+					list.add(new TasksWizardFragment());
+			}*/
 		}
 	}
 	

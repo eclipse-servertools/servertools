@@ -13,13 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.*;
-import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IServerLifecycleEventHandler;
-import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.dialogs.ListSelectionDialog;
+import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.model.IServerLifecycleEventHandler;
+import org.eclipse.wst.server.ui.ServerUICore;
 
 /**
  * 
@@ -31,21 +30,18 @@ public class ModuleRepairSupport implements IServerLifecycleEventHandler {
 	
 	// content and label provider for server editor save dialog
 	public class ServerEditorContentProvider implements IStructuredContentProvider {
-		protected List editors;
+		protected Object[] elements;
 		
-		public ServerEditorContentProvider(List editors) {
-			this.editors = editors;	
+		public ServerEditorContentProvider(Object[] elements) {
+			this.elements = elements;	
 		}
 		
 		public void dispose() { }
 		
 		public Object[] getElements(Object element) {
-			if (ROOT.equals(element)) {
-				int size = editors.size();
-				IServerConfiguration[] config = new IServerConfiguration[size];
-				editors.toArray(config);
-				return config;
-			} else
+			if (ROOT.equals(element))
+				return elements;
+			else
 				return EMPTY;
 		}
 		
@@ -75,7 +71,7 @@ public class ModuleRepairSupport implements IServerLifecycleEventHandler {
 	public boolean[] handleModuleServerEvents(final IServerLifecycleEvent[] events) {
 		if (ServerCore.getServerPreferences().getModuleRepairStatus() == IServerPreferences.REPAIR_NEVER)
 			return null;
-			
+		
 		// save open editors
 		final List list = new ArrayList();
 		int size = events.length;
@@ -84,18 +80,18 @@ public class ModuleRepairSupport implements IServerLifecycleEventHandler {
 			bool[i] = true;
 			IServer server = events[i].getServer();
 			
-			if (!list.contains(server) && server.isWorkingCopiesExist())
+			if (!list.contains(server) && server.isWorkingCopiesExist() && server.isAWorkingCopyDirty())
 				list.add(server);
 		}
 		
-		final ILabelProvider labelProvider = new ModuleRepairSupport.ServerEditorLabelProvider();
-		final IStructuredContentProvider contentProvider = new ServerEditorContentProvider(list);
+		//final ILabelProvider labelProvider = new ModuleRepairSupport.ServerEditorLabelProvider();
+		//final IStructuredContentProvider contentProvider = new ServerEditorContentProvider(list.toArray());
 		
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				Shell shell = EclipseUtil.getShell();
 				
-				if (!list.isEmpty()) {
+				/*if (!list.isEmpty()) {
 					ListSelectionDialog dialog1 = new ListSelectionDialog(shell, ROOT,
 						contentProvider, labelProvider, ServerUIPlugin.getResource("%dialogRepairConfigurationSaveMessage"));
 					dialog1.setTitle(ServerUIPlugin.getResource("%dialogRepairConfigurationTitle"));
@@ -108,7 +104,7 @@ public class ModuleRepairSupport implements IServerLifecycleEventHandler {
 					if (result != null) {
 						int size2 = result.length;
 						for (int i = 0; i < size2; i++) {
-							/*IServerConfiguration config = (IServerConfiguration) result[i];
+							IServerConfiguration config = (IServerConfiguration) result[i];
 							IResource resource = ServerCore.getResourceManager().getServerResourceLocation(config);
 							IServerResource serverResource = ServerCore.getEditManager().getEditModel(resource, new NullProgressMonitor());
 							try {
@@ -120,7 +116,7 @@ public class ModuleRepairSupport implements IServerLifecycleEventHandler {
 								list.remove(config);
 							} catch (CoreException e) {
 								// ignore error for now
-							}*/
+							}
 						}
 					}
 					
@@ -136,8 +132,8 @@ public class ModuleRepairSupport implements IServerLifecycleEventHandler {
 								size2--;
 							}
 						}
-					}*/
-				}
+					}
+				}*/
 				
 				ModuleRepairDialog dialog = new ModuleRepairDialog(shell, events);
 				dialog.open();

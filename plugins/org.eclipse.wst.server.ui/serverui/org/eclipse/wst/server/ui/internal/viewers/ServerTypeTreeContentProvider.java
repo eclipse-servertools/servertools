@@ -11,7 +11,6 @@
 package org.eclipse.wst.server.ui.internal.viewers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,37 +28,41 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 	
 	protected boolean localhost;
 	protected boolean includeTestEnvironments = true;
+	
+	protected String type;
+	protected String version;
+	protected boolean includeIncompatibleVersions;
 
 	/**
 	 * ServerTypeTreeContentProvider constructor comment.
 	 */
-	public ServerTypeTreeContentProvider(byte style) {
+	public ServerTypeTreeContentProvider(byte style, String type, String version) {
 		super(style, false);
 		localhost = true;
+		
+		this.type = type;
+		this.version = version;
 		
 		fillTree();
 	}
 	
 	public void fillTree() {
-		elementToParentMap = new HashMap();
-		textMap = new HashMap();
-		initialSelection = null;
-		initialSelectionOrder = -1000;
+		clean();
 
 		List list = new ArrayList();
 		Iterator iterator = ServerCore.getServerTypes().iterator();
 		while (iterator.hasNext()) {
-			IServerType type = (IServerType) iterator.next();
-			if (include(type)) {
-				if (type.getOrder() > initialSelectionOrder) {
-					initialSelection = type;
-					initialSelectionOrder = type.getOrder();
+			IServerType serverType = (IServerType) iterator.next();
+			if (include(serverType)) {
+				if (serverType.getOrder() > initialSelectionOrder) {
+					initialSelection = serverType;
+					initialSelectionOrder = serverType.getOrder();
 				}
 				if (style == STYLE_FLAT) {
-					list.add(type);
+					list.add(serverType);
 				} else if (style != STYLE_MODULE_TYPE) {
 					try {
-						IRuntimeType runtimeType = type.getRuntimeType();
+						IRuntimeType runtimeType = serverType.getRuntimeType();
 						TreeElement ele = null;
 						if (style == STYLE_VENDOR)
 							ele = getOrCreate(list, runtimeType.getVendor());
@@ -67,13 +70,13 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 							ele = getOrCreate(list, runtimeType.getVersion());
 						else if (style == STYLE_TYPE)
 							ele = getOrCreate(list, runtimeType.getName());
-						ele.contents.add(type);
-						elementToParentMap.put(type, ele);
+						ele.contents.add(serverType);
+						elementToParentMap.put(serverType, ele);
 					} catch (Exception e) {
 						Trace.trace(Trace.WARNING, "Error in server configuration content provider", e);
 					}
 				} else { // style = MODULE_TYPE
-					IRuntimeType runtimeType = type.getRuntimeType();
+					IRuntimeType runtimeType = serverType.getRuntimeType();
 					Iterator iterator2 = runtimeType.getModuleTypes().iterator();
 					while (iterator2.hasNext()) {
 						IModuleType mb = (IModuleType) iterator2.next();
@@ -81,8 +84,8 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 						if (mt != null) {
 							TreeElement ele = getOrCreate(list, mt.getName());
 							TreeElement ele2 = getOrCreate(ele.contents, mt.getName() + "/" + mb.getVersion(), mb.getVersion());
-							ele2.contents.add(type);
-							elementToParentMap.put(type, ele2);
+							ele2.contents.add(serverType);
+							elementToParentMap.put(serverType, ele2);
 							elementToParentMap.put(ele2, ele);
 						}
 					}
@@ -92,15 +95,28 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 		elements = list.toArray();
 	}
 
-	protected boolean include(IServerType type) {
-		if (!includeTestEnvironments && type.isTestEnvironment()) {
-			if (!checkForTestEnvironmentRuntime(type))
+	protected boolean include(IServerType serverType) {
+		IRuntimeType runtimeType = serverType.getRuntimeType();
+		if (runtimeType == null)
+			return false;
+		if (includeIncompatibleVersions) {
+			if (!ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), type, null))
+				return false;
+		} else {
+			if (!ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), type, version))
 				return false;
 		}
-		if (type.supportsRemoteHosts())
+		
+		if (!includeTestEnvironments && serverType.isTestEnvironment()) {
+			if (!checkForTestEnvironmentRuntime(serverType))
+				return false;
+		}
+		
+		if (serverType.supportsRemoteHosts())
 			return true;
-		if (localhost && type.supportsLocalhost())
+		if (localhost && serverType.supportsLocalhost())
 			return true;
+		
 		return false;
 	}
 
@@ -118,16 +134,34 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 		}
 		return false;
 	}
-	
-	public boolean getHost() {
-		return localhost;
+
+	protected boolean checkForNonStubEnvironmentRuntime(IServerType serverType) {
+		IRuntimeType runtimeType = serverType.getRuntimeType();
+		List list = ServerCore.getResourceManager().getRuntimes(runtimeType);
+		if (list.isEmpty())
+			return false;
+		
+		Iterator iterator = list.iterator();
+		while (iterator.hasNext()) {
+			IRuntime runtime = (IRuntime) iterator.next();
+			if (!runtime.getAttribute("stub", false))
+				return true;
+		}
+		return false;
 	}
 
-	public void setHost(boolean local) {
+	public void setLocalhost(boolean local) {
 		localhost = local;
+		fillTree();
 	}
 	
 	public void setIncludeTestEnvironments(boolean te) {
 		includeTestEnvironments = te;
+		fillTree();
+	}
+	
+	public void setIncludeIncompatibleVersions(boolean b) {
+		includeIncompatibleVersions = b;
+		fillTree();
 	}
 }

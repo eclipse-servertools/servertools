@@ -9,21 +9,10 @@
  *     IBM Corporation - Initial API and implementation
  **********************************************************************/
 package org.eclipse.wst.server.core.model;
-
-import org.eclipse.wst.server.core.IServerLifecycleEvent;
 /**
- * An event that is fired when lifecycle events happen on a server and need to
- * be reacted to.
+ * This interface is a tag for a server that should be running before calling
+ * modifyModules(). It will be implemented by delegate classes of servers that
+ * should be started before calling API.
  */
-public interface IServerLifecycleEventHandler {
-	/**
-	 * Handle module server events.
-	 * 
-	 * true - change has been handled (typically by calling execute() on the task)
-	 *    or task should not be run.
-	 * false - was not handled - let another handler deal with the change.
-	 * 
-	 * @return boolean[]
-	 */
-	public boolean[] handleModuleServerEvents(IServerLifecycleEvent[] events);
+public interface IRunningActionServer {
 }

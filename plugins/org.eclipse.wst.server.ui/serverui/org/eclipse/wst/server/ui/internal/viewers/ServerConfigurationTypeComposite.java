@@ -1,11 +1,21 @@
+/**********************************************************************
+ * Copyright (c) 2003 IBM Corporation and others.
+ * All rights reserved.   This program and the accompanying materials
+ * are made available under the terms of the Common Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/cpl-v10.html
+ *
+ * Contributors:
+ *    IBM - Initial API and implementation
+ **********************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.widgets.Composite;
-
 import org.eclipse.wst.server.core.IServerConfigurationType;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 /**
  * 
  */
@@ -21,7 +31,7 @@ public class ServerConfigurationTypeComposite extends AbstractTreeComposite {
 		super(parent, style);
 		this.listener = listener2;
 	
-		treeViewer.setContentProvider(new ServerConfigurationTypeTreeContentProvider(RuntimeTreeContentProvider.STYLE_VENDOR));
+		treeViewer.setContentProvider(new ServerConfigurationTypeTreeContentProvider(AbstractTreeContentProvider.STYLE_FLAT));
 		treeViewer.setLabelProvider(new ServerConfigurationTypeTreeLabelProvider());
 		treeViewer.setInput(AbstractTreeContentProvider.ROOT);
 
@@ -41,15 +51,20 @@ public class ServerConfigurationTypeComposite extends AbstractTreeComposite {
 	}
 	
 	protected String getDescriptionLabel() {
-		return null; //ServerUIPlugin.getResource("%serverTypeCompDescription");
+		return null;
+	}
+
+	protected boolean hasDescription() {
+		return false;
 	}
 
 	protected String getTitleLabel() {
-		return "Select the server configuration type:";
+		return ServerUIPlugin.getResource("%wizImportConfigurationType");
 	}
 
 	protected String[] getComboOptions() {
-		return new String[] {"Name", "Vendor", "Version"};
+		return new String[] { ServerUIPlugin.getResource("%name") };
+			//, ServerUIPlugin.getResource("%vendor"), ServerUIPlugin.getResource("%version") }; 
 	}
 
 	protected void viewOptionSelected(byte option) {

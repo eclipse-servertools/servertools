@@ -16,6 +16,7 @@ import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.task.ReleaseServerTask;
 import org.eclipse.wst.server.ui.internal.task.SaveServerTask;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
+import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
 import org.eclipse.wst.server.ui.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 
@@ -37,14 +38,16 @@ public class ModifyModulesWizard extends TaskWizard {
 				}
 			});
 			list.add(new ModifyModulesWizardFragment());
-		}
-		
-		public ITask createCancelTask() {
-			return new ReleaseServerTask();
-		}
-		
-		public ITask createFinishTask() {
-			return new SaveServerTask();
+			list.add(new TasksWizardFragment());
+			list.add(new WizardFragment() {
+				public ITask createCancelTask() {
+					return new ReleaseServerTask();
+				}
+				
+				public ITask createFinishTask() {
+					return new SaveServerTask();
+				}
+			});
 		}
 	}
 

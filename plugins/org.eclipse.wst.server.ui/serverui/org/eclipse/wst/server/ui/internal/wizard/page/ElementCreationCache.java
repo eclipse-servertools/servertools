@@ -45,8 +45,8 @@ public class ElementCreationCache {
 	 * @param factory
 	 * @return
 	 */
-	protected String getKey(IServerType type) {
-		return type.getId() + "|";
+	protected String getKey(IServerType type, String host) {
+		return type.getId() + "|" + host + "|";
 	}
 
 	protected String getKey(IServerConfigurationType type) {
@@ -86,9 +86,9 @@ public class ElementCreationCache {
 	 * @param type org.eclipse.wst.server.core.IServerType
 	 * @return org.eclipse.wst.server.core.IServerWorkingCopy
 	 */
-	public IServerWorkingCopy getServer(IServerType type, IProgressMonitor monitor) throws CoreException {
+	public IServerWorkingCopy getServer(IServerType type, String host, IProgressMonitor monitor) throws CoreException {
 		try {
-			IServerWorkingCopy server = getCachedServer(type);
+			IServerWorkingCopy server = getCachedServer(type, host);
 			if (server != null)
 				return server;
 		} catch (Exception e) { }
@@ -99,7 +99,7 @@ public class ElementCreationCache {
 				file = ServerUtil.getUnusedServerFile(WizardUtil.getServerProject(), type);
 			
 			IServerWorkingCopy server = type.createServer(null, file, (IRuntime)null);
-			elementCache.put(getKey(type), server);
+			elementCache.put(getKey(type, host), server);
 			return server;
 		} catch (CoreException ce) {
 			throw ce;
@@ -112,9 +112,9 @@ public class ElementCreationCache {
 	 * @param factory org.eclipse.wst.server.core.model.IServerFactory
 	 * @return org.eclipse.wst.server.core.model.IServerResource
 	 */
-	public IServerWorkingCopy getCachedServer(IServerType type) {
+	public IServerWorkingCopy getCachedServer(IServerType type, String host) {
 		try {
-			IServerWorkingCopy server = (IServerWorkingCopy) elementCache.get(getKey(type));
+			IServerWorkingCopy server = (IServerWorkingCopy) elementCache.get(getKey(type, host));
 			if (server != null)
 				return server;
 		} catch (Exception e) { }
@@ -137,27 +137,4 @@ public class ElementCreationCache {
 
 		return null;
 	}
-
-	/**
-	 * Returns an element's wizard. 
-	 *
-	 * @param parent org.eclipse.jface.wizard.IWizard
-	 * @param element org.eclipse.wst.server.core.model.IServerResource
-	 * @return org.eclipse.jface.wizard.IWizard
-	 */
-	/*public IWizardFragment getCreationTask(IElement element) {
-		try {
-			IWizardFragment task = (IWizardFragment) taskCache.get(element);
-			if (task != null)
-				return task;
-		} catch (Exception e) { }
-	
-		try {
-			IWizardFragment task = ServerUICore.getServerWizardFragment(element.getId());
-			taskCache.put(element, task);
-			return task;
-		} catch (Exception e) { }
-	
-		return null;
-	}*/
 }

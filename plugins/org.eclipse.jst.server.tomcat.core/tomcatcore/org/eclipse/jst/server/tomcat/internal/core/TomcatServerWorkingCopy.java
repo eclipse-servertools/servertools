@@ -20,6 +20,7 @@ import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.ITomcatServerWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.WebModule;
 
+import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.model.IModule;
@@ -115,7 +116,6 @@ public class TomcatServerWorkingCopy extends TomcatServer implements ITomcatServ
 					if (memento.equals(module.getMemento())) {
 						wc.removeWebModule(i);
 						change = true;
-						//return;
 					}
 				}
 			}
@@ -124,6 +124,7 @@ public class TomcatServerWorkingCopy extends TomcatServer implements ITomcatServ
 			scwc.release();
 		else
 			scwc.save(new NullProgressMonitor());
+		server.setConfigurationSyncState(IServer.SYNC_STATE_DIRTY);
 	}
 	
 	public void handleSave(byte id, IProgressMonitor monitor) { }

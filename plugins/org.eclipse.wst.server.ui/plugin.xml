@@ -10,6 +10,7 @@
 <requires>
   <import plugin="org.eclipse.core.runtime"/>
   <import plugin="org.eclipse.core.resources"/>
+  <import plugin="org.eclipse.core.expressions"/>
   <import plugin="org.eclipse.ui"/>
   <import plugin="org.eclipse.ui.ide"/>
   <import plugin="org.eclipse.ui.views"/>
@@ -171,14 +172,11 @@
         <enablement>
            <with variable="selection">
              <count value="1"/>
-             <!--<iterate>
-               <or>
-                 <test property="org.eclipse.debug.ui.matchesPattern" value="*.txt"/>
-                 <test property="org.eclipse.debug.ui.matchesPattern" value="*.java"/>
-                 <test property="org.eclipse.debug.ui.matchesPattern" value="*.class"/>
-               </or>
-               <test property="org.eclipse.wst.server.ui.isRunnable"/>
-             </iterate>-->
+             <iterate>
+                <and>
+                  <test property="org.eclipse.wst.server.ui.isRunnable" value="true"/>
+                </and>
+             </iterate>
            </with>
          </enablement>
       
@@ -192,14 +190,24 @@
            mode="profile"
            label="%actionProfileOnServer"/>
       </contextualLaunch>
-<!--    <perspective id="org.eclipse.wst.server.ui.perspective"/>
+    <perspective id="org.eclipse.wst.server.ui.perspective"/>
     <perspective id="org.eclipse.jdt.ui.JavaPerspective"/>
     <perspective id="org.eclipse.jdt.ui.JavaHierarchyPerspective"/>
     <perspective id="org.eclipse.jdt.ui.JavaBrowsingPerspective"/>
     <perspective id="org.eclipse.debug.ui.DebugPerspective"/>
     <perspective id="com.ibm.etools.j2ee.J2EEPerspective"/>
-    <perspective id="org.eclipse.ui.resourcePerspective"/>-->
+    <perspective id="org.eclipse.ui.resourcePerspective"/>
    </shortcut>
+</extension>
+
+<extension point="org.eclipse.core.expressions.propertyTesters">
+   <propertyTester
+      id="org.eclipse.wst.server.ui.propertyTester"
+      namespace="org.eclipse.wst.server.ui"
+      properties="isRunnable"
+      type="java.lang.Object"
+      class="org.eclipse.wst.server.ui.internal.ServerPropertyTester">
+   </propertyTester>
 </extension>
 
 <extension point="org.eclipse.wst.server.core.publish">

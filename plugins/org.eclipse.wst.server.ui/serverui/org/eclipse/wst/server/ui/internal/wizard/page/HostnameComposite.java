@@ -24,6 +24,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -112,7 +113,9 @@ public class HostnameComposite extends Composite {
 		});
 		combo.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
+				Point p = combo.getSelection();
 				hostnameChanged(combo.getText());
+				combo.setSelection(p);
 			}
 		});
 	

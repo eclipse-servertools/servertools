@@ -9,34 +9,18 @@ package org.eclipse.jst.server.tomcat.internal.core;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.tomcat.core.WebModule;
 import org.eclipse.jst.server.tomcat.core.internal.xml.Factory;
 import org.eclipse.jst.server.tomcat.core.internal.xml.XMLUtil;
-import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Connector;
-import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Context;
-import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Engine;
-import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Host;
-import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Listener;
-import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Server;
-import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Service;
+import org.eclipse.jst.server.tomcat.core.internal.xml.server40.*;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -139,7 +123,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 				for (int j = 0; j < size2; j++) {
 					Connector connector = service.getConnector(j);
 					String name = "HTTP";
-					String protocol2 = "TCPIP";
+					String protocol2 = "HTTP";
 					boolean advanced = true;
 					String[] contentTypes = null;
 					int port = -1;

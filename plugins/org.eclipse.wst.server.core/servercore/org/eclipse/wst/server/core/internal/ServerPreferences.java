@@ -22,17 +22,28 @@ public class ServerPreferences implements IServerPreferences {
 	private static final String PREF_AUTO_REPAIR_MODULES = "auto-repair-modules";
 	private static final String PREF_PUBLISHER = "publisher";
 	private static final String PREF_CREATE_IN_WORKSPACE = "create-workspace";
+	private static final String PREF_STARTUP_TIMEOUT = "start-timeout";
+	private static final String PREF_RESTART_MODULE_TIMEOUT = "restart-module-timeout";
+	private static final String PREF_MODULE_START_TIMEOUT = "module-start-timeout";
 
-	public static final String DEFAULT_PUBLISH_MANAGER = "org.eclipse.wst.server.core.publish.smart";
-	
+	public static final String DEFAULT_PUBLISH_MANAGER = "com.ibm.wtp.server.core.publish.smart";
+
 	private Preferences preferences;
+
+	protected static ServerPreferences instance;
 
 	/**
 	 * ServerPreference constructor comment.
 	 */
-	public ServerPreferences() {
+	private ServerPreferences() {
 		super();
 		preferences = ServerPlugin.getInstance().getPluginPreferences();
+	}
+
+	public static ServerPreferences getServerPreferences() {
+		if (instance == null)
+			instance = new ServerPreferences();
+		return instance;
 	}
 
 	/**
@@ -174,6 +185,18 @@ public class ServerPreferences implements IServerPreferences {
 		return REPAIR_PROMPT;
 	}
 
+	public int getStartupTimeout() {
+		return preferences.getInt(PREF_STARTUP_TIMEOUT);
+	}
+
+	public int getRestartModuleTimeout() {
+		return preferences.getInt(PREF_RESTART_MODULE_TIMEOUT);
+	}
+
+	public int getModuleStartTimeout() {
+		return preferences.getInt(PREF_MODULE_START_TIMEOUT);
+	}
+
 	/**
 	 * Sets whether changes to modules should be automatically fixed
 	 * in the server configurations.
@@ -190,5 +213,22 @@ public class ServerPreferences implements IServerPreferences {
 		preferences.setDefault(PREF_AUTO_RESTART, isDefaultAutoRestarting());
 		preferences.setDefault(PREF_PUBLISHER, getDefaultPublishManager());
 		preferences.setDefault(PREF_AUTO_REPAIR_MODULES, getDefaultModuleRepairStatus());
+		preferences.setDefault(PREF_STARTUP_TIMEOUT, 210001);
+		preferences.setDefault(PREF_RESTART_MODULE_TIMEOUT, 120001);
+		preferences.setDefault(PREF_MODULE_START_TIMEOUT, 300001);
+		boolean save = false;
+		if (preferences.isDefault(PREF_STARTUP_TIMEOUT)) {
+			preferences.setValue(PREF_STARTUP_TIMEOUT, 210000);
+			save = true;
+		}
+		if (preferences.isDefault(PREF_RESTART_MODULE_TIMEOUT)) {
+			preferences.setValue(PREF_RESTART_MODULE_TIMEOUT, 120000);
+			save = true;
+		}		if (preferences.isDefault(PREF_MODULE_START_TIMEOUT)) {
+			preferences.setValue(PREF_MODULE_START_TIMEOUT, 300000);
+			save = true;
+		}
+		if (save)
+			ServerPlugin.getInstance().savePluginPreferences();
 	}
 }

@@ -72,9 +72,10 @@ public class ServerCore {
 	// cached copy of the server publisher classes
 	// keyed from String id to IPublishManager
 	private static Map publishManagers;
-	
-	// preferences
-	private static IServerPreferences preferences;
+
+	static {
+		executeStartups();
+	}
 
 	/**
 	 * ServerCore constructor comment.
@@ -134,9 +135,7 @@ public class ServerCore {
 	 * @return org.eclipse.wst.server.core.IServerPreferences
 	 */
 	public static IServerPreferences getServerPreferences() {
-		if (preferences == null)
-			preferences = new ServerPreferences();
-		return preferences;
+		return ServerPreferences.getServerPreferences();
 	}
 	
 	/**
@@ -578,11 +577,29 @@ public class ServerCore {
 			monitor.done();
 		}
 	}
+	
+	private static void executeStartups() {
+		try {
+			Iterator iterator = getStartups().iterator();
+			while (iterator.hasNext()) {
+				IStartup startup = (IStartup) iterator.next();
+				try {
+					startup.startup();
+				} catch (Exception ex) {
+					Trace.trace(Trace.SEVERE, "Startup failed" + startup.toString(), ex);
+				}
+			}
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error with startup", e);
+		}
+	}
 
 	/**
 	 * Load the server startups.
 	 */
-	private static void loadStartups() {
+	private static synchronized void loadStartups() {
+		if (startups != null)
+			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .startup extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "startup");
@@ -605,7 +622,9 @@ public class ServerCore {
 	/**
 	 * Load the module kinds.
 	 */
-	private static void loadModuleKinds() {
+	private static synchronized void loadModuleKinds() {
+		if (moduleKinds != null)
+			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleKinds extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "moduleKinds");
@@ -628,7 +647,9 @@ public class ServerCore {
 	/**
 	 * Load the runtime types.
 	 */
-	private static void loadRuntimeTypes() {
+	private static synchronized void loadRuntimeTypes() {
+		if (runtimeTypes != null)
+			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .runtimeTypes extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "runtimeTypes");
@@ -652,7 +673,9 @@ public class ServerCore {
 	/**
 	 * Load the runtime locators.
 	 */
-	private static void loadRuntimeLocators() {
+	private static synchronized void loadRuntimeLocators() {
+		if (runtimeLocators != null)
+			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .runtimeLocators extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "runtimeLocators");
@@ -675,7 +698,9 @@ public class ServerCore {
 	/**
 	 * Load the runtime target listeners.
 	 */
-	private static void loadRuntimeTargetHandlers() {
+	private static synchronized void loadRuntimeTargetHandlers() {
+		if (runtimeTargetHandlers != null)
+			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .runtimeTargetHandlers extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "runtimeTargetHandlers");
@@ -699,7 +724,9 @@ public class ServerCore {
 	/**
 	 * Load the server types.
 	 */
-	private static void loadServerTypes() {
+	private static synchronized void loadServerTypes() {
+		if (serverTypes != null)
+			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .serverTypes extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "serverTypes");
@@ -723,7 +750,9 @@ public class ServerCore {
 	/**
 	 * Load the server configuration types.
 	 */
-	private static void loadServerConfigurationTypes() {
+	private static synchronized void loadServerConfigurationTypes() {
+		if (serverConfigurationTypes != null)
+			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .serverConfigurationTypes extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "serverConfigurationTypes");
@@ -747,7 +776,9 @@ public class ServerCore {
 	/**
 	 * Load the publish manager extension point.
 	 */
-	private static void loadPublishManagers() {
+	private static synchronized void loadPublishManagers() {
+		if (publishManagers != null)
+			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .publish extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "publish");
@@ -770,7 +801,9 @@ public class ServerCore {
 	/**
 	 * Load the module factories extension point.
 	 */
-	private static void loadModuleFactories() {
+	private static synchronized void loadModuleFactories() {
+		if (moduleFactories != null)
+			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleFactories extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "moduleFactories");
@@ -792,7 +825,9 @@ public class ServerCore {
 	/**
 	 * Load the module object adapters extension point.
 	 */
-	private static void loadModuleObjectAdapters() {
+	private static synchronized void loadModuleObjectAdapters() {
+		if (moduleObjectAdapters != null)
+			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleObjectAdapters extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "moduleObjectAdapters");
@@ -813,7 +848,9 @@ public class ServerCore {
 	/**
 	 * Load the launchable adapters extension point.
 	 */
-	private static void loadLaunchableAdapters() {
+	private static synchronized void loadLaunchableAdapters() {
+		if (launchableAdapters != null)
+			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .launchableAdapters extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "launchableAdapters");
@@ -834,7 +871,9 @@ public class ServerCore {
 	/**
 	 * Load the launchable client extension point.
 	 */
-	private static void loadLaunchableClients() {
+	private static synchronized void loadLaunchableClients() {
+		if (launchableClients != null)
+			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .clients extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "clients");
@@ -855,7 +894,9 @@ public class ServerCore {
 	/**
 	 * Load the module task extension point.
 	 */
-	private static void loadModuleTasks() {
+	private static synchronized void loadModuleTasks() {
+		if (moduleTasks != null)
+			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleTasks extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "moduleTasks");
@@ -877,7 +918,9 @@ public class ServerCore {
 	/**
 	 * Load the server task extension point.
 	 */
-	private static void loadServerTasks() {
+	private static synchronized void loadServerTasks() {
+		if (serverTasks != null)
+			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .serverTasks extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "serverTasks");
@@ -900,7 +943,9 @@ public class ServerCore {
 	/**
 	 * Load the server monitor extension point.
 	 */
-	private static void loadServerMonitors() {
+	private static synchronized void loadServerMonitors() {
+		if (monitors != null)
+			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .serverMonitors extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerCore.PLUGIN_ID, "serverMonitors");

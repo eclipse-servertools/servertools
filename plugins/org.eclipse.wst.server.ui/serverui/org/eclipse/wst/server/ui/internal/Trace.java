@@ -25,11 +25,12 @@ public class Trace {
 	public static byte SEVERE = 3;
 	public static byte FINEST = 4;
 	public static byte FINER = 5;
+	public static byte PERFORMANCE = 6;
 	
 	protected static int pluginLength = -1;
 	
 	private static final String[] levelNames = new String[] {
-		"CONFIG ", "INFO   ", "WARNING", "SEVERE ", "FINER  ", "FINEST "};
+		"CONFIG ", "INFO   ", "WARNING", "SEVERE ", "FINER  ", "FINEST ", "PERF   "};
 	private static final String spacer = "                                   ";
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm.ss.SSS");

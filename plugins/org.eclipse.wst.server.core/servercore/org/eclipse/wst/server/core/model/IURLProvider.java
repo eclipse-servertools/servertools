@@ -25,6 +25,11 @@ public interface IURLProvider {
 	 * 
 	 * <p>If the module is null, the returned URL will just be to the root of
 	 * the server (e.g. "http://localhost:8080")</p>
+	 * 
+	 * <p>If the module is not already added to the server, the method will return
+	 * as close an approximation as possible. (for instance, for a web project it
+	 * may use the project's context root, which may not be the same when deployed
+	 * to a server)</p>
 	 *
 	 * @param module com.ibm.etools.server.core.model.IModule
 	 * @return java.net.URL
