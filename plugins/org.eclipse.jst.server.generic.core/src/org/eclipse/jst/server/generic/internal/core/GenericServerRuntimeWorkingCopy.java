@@ -34,9 +34,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jst.server.core.IGenericRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
-import org.eclipse.wst.server.core.model.IServerResourceListener;
-
-import com.sun.corba.se.ActivationIDL.Server;
 
 /**
  * Working copy. This does not really do much delegates 
