@@ -33,7 +33,8 @@ package org.eclipse.jst.server.generic.tests;
 import java.util.HashMap;
 
 import junit.framework.TestCase;
-import org.eclipse.jst.server.generic.internal.core.GenericServerRuntime;
+
+import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;

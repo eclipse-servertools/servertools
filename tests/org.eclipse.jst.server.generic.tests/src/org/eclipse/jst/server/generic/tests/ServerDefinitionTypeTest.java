@@ -33,8 +33,8 @@ package org.eclipse.jst.server.generic.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.IExtension;
-import org.eclipse.jst.server.generic.core.CorePlugin;
-import org.eclipse.jst.server.generic.internal.core.ServerTypeDefinitionManager;
+import org.eclipse.jst.server.generic.core.internal.CorePlugin;
+import org.eclipse.jst.server.generic.core.internal.ServerTypeDefinitionManager;
 import org.eclipse.jst.server.generic.internal.core.util.ExtensionPointUtil;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 

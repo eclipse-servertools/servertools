@@ -9,8 +9,8 @@ package org.eclipse.jst.server.generic.tests;
 import java.util.HashMap;
 
 import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jst.server.generic.internal.core.GenericServerRuntime;
-import org.eclipse.jst.server.generic.internal.core.GenericServerRuntimeTargetHandler;
+import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
+import org.eclipse.jst.server.generic.core.internal.GenericServerRuntimeTargetHandler;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;

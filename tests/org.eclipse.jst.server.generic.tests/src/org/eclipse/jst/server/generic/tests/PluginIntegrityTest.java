@@ -30,8 +30,8 @@
 
 package org.eclipse.jst.server.generic.tests;
 
-import org.eclipse.jst.server.generic.core.CorePlugin;
-import org.eclipse.jst.server.generic.ui.GenericUiPlugin;
+import org.eclipse.jst.server.generic.core.internal.CorePlugin;
+import org.eclipse.jst.server.generic.ui.internal.GenericUiPlugin;
 
 
 import junit.framework.TestCase;
