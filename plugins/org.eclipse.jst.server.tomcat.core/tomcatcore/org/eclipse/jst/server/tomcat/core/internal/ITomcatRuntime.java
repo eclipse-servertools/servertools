@@ -25,6 +25,8 @@ public interface ITomcatRuntime {
 	 * @return the current VM install
 	 */
 	public IVMInstall getVMInstall();
+	
+	public boolean isUsingDefaultJRE();
 
 	/**
 	 * Returns the runtime classpath that is used by this runtime.

@@ -155,6 +155,8 @@ public interface IRuntimeWorkingCopy extends IRuntime {
 	 * associated with this working copy?]
 	 * </p>
 	 * 
+	 * @param force <code>true</code> to force the save, or <code>false</code>
+	 *    otherwise
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return a new runtime instance

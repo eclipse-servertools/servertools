@@ -42,8 +42,8 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 	
 	protected List sourceAttachments;
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.model.IRuntimeTargetDelegate#setRuntimeTarget(org.eclipse.core.resources.IProject, org.eclipse.wst.server.core.IRuntime)
+	/** (non-Javadoc)
+	 * @see RuntimeTargetHandlerDelegate#setRuntimeTarget(IProject, IRuntime, IProgressMonitor)
 	 */
 	public void setRuntimeTarget(IProject project, IRuntime runtime, IProgressMonitor monitor) throws CoreException {
 		if (project == null || runtime == null)
@@ -218,8 +218,8 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.model.IRuntimeTargetDelegate#removeRuntimeTarget(org.eclipse.core.resources.IProject, org.eclipse.wst.server.core.IRuntime)
+	/** (non-Javadoc)
+	 * @see RuntimeTargetHandlerDelegate#removeRuntimeTarget(IProject, IRuntime, IProgressMonitor)
 	 */
 	public void removeRuntimeTarget(IProject project, IRuntime runtime, IProgressMonitor monitor) {
 		Trace.trace(Trace.FINEST, "Removing runtime target");
@@ -399,6 +399,13 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 	 */
 	public abstract String getClasspathContainerLabel(IRuntime runtime, String id);
 
+	/**
+	 * Resolve the classpath container.
+	 * 
+	 * @param runtime a runtime
+	 * @param id a container id
+	 * @return a possibly empty array of classpath entries
+	 */
 	public IClasspathEntry[] resolveClasspathContainerImpl(IRuntime runtime, String id) {
 		IClasspathEntry[] entries = resolveClasspathContainer(runtime, id);
 		

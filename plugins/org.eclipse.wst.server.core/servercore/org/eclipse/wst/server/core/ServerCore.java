@@ -67,7 +67,8 @@ public class ServerCore {
 	 * Returns the preference information for the project. The project may not
 	 * be null.
 	 *
-	 * @return org.eclipse.wst.server.core.IServerProjectPreferences
+	 * @param project a project
+	 * @return the properties of the project
 	 */
 	public static IProjectProperties getProjectProperties(IProject project) {
 		if (project == null)

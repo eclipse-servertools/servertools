@@ -544,6 +544,7 @@ public class ServerUtil {
 	 * 
 	 * @param type a module type
 	 * @param version a module version
+	 * @param runtimeTypeId the id of a runtime type
 	 * @return a possibly-empty array of runtime type instances {@link IRuntimeType}
 	 */
 	public static IRuntimeType[] getRuntimeTypes(String type, String version, String runtimeTypeId) {

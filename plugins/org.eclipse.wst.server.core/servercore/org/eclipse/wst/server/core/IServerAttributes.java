@@ -237,7 +237,6 @@ public interface IServerAttributes extends IAdaptable {
 	 * </p>
 	 * 
 	 * @return a possibly-empty array of modules
-	 * @see IServer#getServerModules()
 	 */
 	public IModule[] getModules();
 

@@ -192,6 +192,10 @@ public class TaskWizard implements IWizard {
 						public FinishWizardJob() {
 							super(getJobTitle());
 						}
+						
+						public boolean belongsTo(Object family) {
+							return "org.eclipse.wst.server.ui.family".equals(family);
+						}
 
 						public IStatus run(IProgressMonitor monitor2) {
 							try {

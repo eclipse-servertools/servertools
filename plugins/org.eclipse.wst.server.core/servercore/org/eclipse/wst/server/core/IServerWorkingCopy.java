@@ -159,6 +159,8 @@ public interface IServerWorkingCopy extends IServerAttributes {
 	 * normal save, and the saveAll method eliminated.]
 	 * </p>
 	 * 
+	 * @param force <code>true</code> to force the save, or <code>false</code>
+	 *    otherwise
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return a new server instance
@@ -193,6 +195,8 @@ public interface IServerWorkingCopy extends IServerAttributes {
 	 * normal save, and the saveAll method eliminated.]
 	 * </p>
 	 * 
+	 * @param force <code>true</code> to force the save, or <code>false</code>
+	 *    otherwise
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return a new server instance

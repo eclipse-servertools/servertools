@@ -77,10 +77,26 @@ public class ServerTableViewer extends TreeViewer {
 			// do nothing
 		}
 
-		// TODO: support multi-level modules (trees like EAR > Web module)
 		public Object[] getChildren(Object element) {
-			if (element instanceof ModuleServer)
-				return null;
+			if (element instanceof ModuleServer) {
+				ModuleServer ms = (ModuleServer) element;
+				try {
+					IModule[] children = ms.server.getChildModules(ms.module, null);
+					int size = children.length;
+					ModuleServer[] ms2 = new ModuleServer[size];
+					for (int i = 0; i < size; i++) {
+						ms2[i] = new ModuleServer();
+						ms2[i].server = ms.server;
+						int size2 = ms.module.length;
+						ms2[i].module = new IModule[size2 + 1];
+						System.arraycopy(ms.module, 0, ms2[i].module, 0, size2);
+						ms2[i].module[size2] = children[i];
+					}
+					return ms2;
+				} catch (Exception e) {
+					return null;
+				}
+			}
 			
 			IServer server = (IServer) element;
 			IModule[] modules = server.getModules(); 
@@ -325,14 +341,6 @@ public class ServerTableViewer extends TreeViewer {
 					} 
 				}
 			}
-
-			// TODO: these two events are not handled.
-//			public void configurationSyncStateChange(IServer server) {
-//				refreshServer(server);
-//			}
-//			public void modulesChanged(IServer server) {
-//				handleServerModulesChanged(server);
-//			}
 		};
 		
 		// add listeners to servers

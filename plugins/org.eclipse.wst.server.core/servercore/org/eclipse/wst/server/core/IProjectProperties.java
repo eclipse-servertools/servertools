@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  *
  * <p>This interface is not intended to be implemented by clients.</p>
  * 
- * @see IProjectPropertiesListener
  * @since 1.0
  */
 public interface IProjectProperties {

@@ -21,4 +21,6 @@ public interface IGenericRuntime {
 	 * @return the current VM install
 	 */
 	public IVMInstall getVMInstall();
+	
+	public boolean isUsingDefaultJRE();
 }

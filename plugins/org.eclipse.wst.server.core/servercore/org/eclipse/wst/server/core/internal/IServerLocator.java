@@ -57,17 +57,10 @@ public interface IServerLocator {
 	/**
 	 * Returns <code>true</code> if this type of server can run on a remote host.
 	 * Returns <code>false</code> if the server type can only be run on "localhost"
-	 * (the local machine). 
-	 * <p>
-	 * [issue: Should be renamed "supportsRemoteHost" (no "s").]
-	 * </p>
-	 * <p>
-	 * [issue: Again, it seems odd to me that this is something
-	 * hard-wired to a server type.]
-	 * </p>
+	 * (the local machine).
 	 * 
 	 * @return <code>true</code> if this type of server can run on
-	 * a remote host, and <code>false</code> if it cannot
+	 *    a remote host, and <code>false</code> if it cannot
 	 */
 	public boolean supportsRemoteHosts();
 

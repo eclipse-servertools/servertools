@@ -17,6 +17,7 @@ import org.eclipse.jdt.launching.IVMInstall;
 public interface IGenericRuntimeWorkingCopy extends IGenericRuntime {
 	/**
 	 * Set the VM install (installed JRE) that this runtime is using.
+	 * Use <code>null</code> to use the Eclipse default JRE.
 	 * 
 	 * @param vmInstall the VM install to use
 	 */

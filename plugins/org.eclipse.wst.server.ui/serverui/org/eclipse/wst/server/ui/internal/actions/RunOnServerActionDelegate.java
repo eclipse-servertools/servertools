@@ -113,7 +113,11 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				return null;
 			}
 
-			// TODO - this can't be called until the wizard's job finishes!!
+			try {
+				Platform.getJobManager().join("org.eclipse.wst.server.ui.family", new NullProgressMonitor());
+			} catch (Exception e) {
+				Trace.trace(Trace.WARNING, "Error waiting for job", e);
+			}
 			server = wizard.getServer();
 			boolean preferred = wizard.isPreferredServer();
 			tasksRun = true;
@@ -128,6 +132,13 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				}
 			}
 		}
+		
+		try {
+			Platform.getJobManager().join("org.eclipse.wst.server.ui.family", new NullProgressMonitor());
+		} catch (Exception e) {
+			Trace.trace(Trace.WARNING, "Error waiting for job", e);
+		}
+		
 		return server;
 	}
 

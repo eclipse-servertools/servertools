@@ -74,21 +74,19 @@ public class ServerEvent {
 	public static final int MODULE_CHANGE = 0x0020;
 
 	/**
-	 * For server change events.
-	 * [issue: should we check the mutually exclusive flags and throw an InstantiationError 
-	 * if the mutually exclusive flag condition is not satisify.] 
+	 * Create a new server event for server change events.
 	 * 
-	 * @param the kind of the change. (<code>XXX_CHANGE</code>). If the kind does not 
+	 * @param kind the kind of the change. (<code>XXX_CHANGE</code>). If the kind does not 
 	 *    include the <code>SERVER_CHANGE</code> kind, the SERVER_CHANGE will be added automatically.  
 	 *    constants declared on {@link ServerEvent}
-	 * @param server the server that the server event takes place.
+	 * @param server the server that the server event takes place
 	 * @param state the server state after the change (<code>STATE_XXX</code>)
 	 *    constants declared on {@link IServer}
 	 * @param publishingState the server publishing state after the 
 	 *    change (<code>PUBLISH_STATE_XXX</code>)
 	 *    constants declared on {@link IServer}
 	 * @param restartState get the server restart state after the server is restart 
-	 *    needed property change event.
+	 *    needed property change event
 	 */
 	public ServerEvent(int kind, IServer server, int state, int publishingState, boolean restartState) {
 		this.kind = kind |= SERVER_CHANGE;
@@ -96,18 +94,23 @@ public class ServerEvent {
 		this.state = state;
 		this.publishState = publishingState;
 		this.restartState = restartState;
+		
+		if (server == null)
+			throw new IllegalArgumentException("Server parameter must not be null");
+		if ((kind & MODULE_CHANGE) != 0)
+			throw new IllegalArgumentException("Kind parameter invalid");
+		
+		checkKind();
 	}
 
 	/**
-	 * For module change events.
-	 * [issue: should we check the mutually exclusive flags and throw an InstantiationError 
-	 * if the mutually exclusive flag condition is not satisify. Also, should we check for
-	 * moduleTree to make sure it is not null or empty.] 
+	 * Create a new ServerEvent for module change events.
 	 * 
-	 * @param the kind of the change. (<code>XXX_CHANGE</code>). If the kind does not 
+	 * @param kind the kind of the change. (<code>XXX_CHANGE</code>). If the kind does not 
 	 *    include the <code>MODULE_CHANGE</code> kind, the MODULE_CHANGE will be added automatically.  
 	 *    constants declared on {@link ServerEvent}
-	 * @param server the server that the module event takes place.
+	 * @param server the server that the module event takes place
+	 * @param module the module that has changed
 	 * @param state the module state after the change (<code>STATE_XXX</code>)
 	 *    constants declared on {@link IServer}
 	 * @param publishingState the module publishing state after the 
@@ -115,15 +118,34 @@ public class ServerEvent {
 	 *    constants declared on {@link IServer}
 	 * @param restartState get the module restart state after the module is restart 
 	 *    needed property change event.
-	 * @exception InstantiationError will be throw if the module tree is null or empty.
 	 */
-	public ServerEvent(int kind, IServer server, IModule[] moduleTree, int state, int publishingState, boolean restartState) {
+	public ServerEvent(int kind, IServer server, IModule[] module, int state, int publishingState, boolean restartState) {
 		this.kind = kind |= MODULE_CHANGE;
 		this.server = server;
-		this.moduleTree = moduleTree;
+		this.moduleTree = module;
 		this.state = state;
 		this.publishState = publishingState;
 		this.restartState = restartState;
+		
+		if (moduleTree == null || moduleTree.length == 0)
+			throw new IllegalArgumentException("Module parameter invalid");
+		if ((kind & SERVER_CHANGE) != 0)
+			throw new IllegalArgumentException("Kind parameter invalid");
+		
+		checkKind();
+	}
+	
+	private void checkKind() {
+		int i = 0;
+		if ((kind & STATE_CHANGE) != 0)
+			i++;
+		if ((kind & RESTART_STATE_CHANGE) != 0)
+			i++;
+		if ((kind & PUBLISH_STATE_CHANGE) != 0)
+			i++;
+		
+		if (i != 1)
+			throw new IllegalArgumentException("Kind parameter invalid");
 	}
 
 	/**

@@ -185,6 +185,8 @@ public interface IServerType {
 	 *    particular workspace resource
 	 * @param runtime the runtime to associate with the server instance,
 	 *    or <code>null</code> if none
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 * @return a new server working copy with the given id
 	 * @throws CoreException if an exception occurs while creating this runtime
 	 *    or setting it's default values

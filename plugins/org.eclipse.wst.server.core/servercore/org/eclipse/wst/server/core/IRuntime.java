@@ -170,6 +170,8 @@ public interface IRuntime extends IAdaptable {
 	 * any time.
 	 * </p>
 	 *
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 * @return a status object with code <code>IStatus.OK</code> if this
 	 *   runtime is valid, otherwise a status object indicating what is
 	 *   wrong with it

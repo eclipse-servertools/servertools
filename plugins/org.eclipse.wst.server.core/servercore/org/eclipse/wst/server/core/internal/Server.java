@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.*;
 
 import org.eclipse.wst.server.core.*;
@@ -187,14 +188,25 @@ public class Server extends Base implements IServer {
 		if (serverType != null) {
 			synchronized (this) {
 				if (delegate == null) {
+					Job job = new Job("Load delegate") {
+						protected IStatus run(IProgressMonitor monitor) {
+							try {
+								long time = System.currentTimeMillis();
+								IConfigurationElement element = ((ServerType) serverType).getElement();
+								delegate = (ServerDelegate) element.createExecutableExtension("class");
+								delegate.initialize(Server.this);
+								Trace.trace(Trace.PERFORMANCE, "Server.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
+							} catch (Throwable t) {
+								Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
+							}
+							return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null);
+						}
+					};
+					job.schedule();
 					try {
-						long time = System.currentTimeMillis();
-						IConfigurationElement element = ((ServerType) serverType).getElement();
-						delegate = (ServerDelegate) element.createExecutableExtension("class");
-						delegate.initialize(this);
-						Trace.trace(Trace.PERFORMANCE, "Server.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
-					} catch (Throwable t) {
-						Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
+						job.join();
+					} catch (Exception e) {
+						// ignore
 					}
 				}
 			}
@@ -209,14 +221,25 @@ public class Server extends Base implements IServer {
 		if (serverType != null) {
 			synchronized (this) {
 				if (behaviourDelegate == null) {
+					Job job = new Job("Load delegate") {
+						protected IStatus run(IProgressMonitor monitor) {
+							try {
+								long time = System.currentTimeMillis();
+								IConfigurationElement element = ((ServerType) serverType).getElement();
+								behaviourDelegate = (ServerBehaviourDelegate) element.createExecutableExtension("behaviourClass");
+								behaviourDelegate.initialize(Server.this);
+								Trace.trace(Trace.PERFORMANCE, "Server.getBehaviourDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
+							} catch (Throwable t) {
+								Trace.trace(Trace.SEVERE, "Could not create behaviour delegate " + toString(), t);
+							}
+							return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null);
+						}
+					};
+					job.schedule();
 					try {
-						long time = System.currentTimeMillis();
-						IConfigurationElement element = ((ServerType) serverType).getElement();
-						behaviourDelegate = (ServerBehaviourDelegate) element.createExecutableExtension("behaviourClass");
-						behaviourDelegate.initialize(this);
-						Trace.trace(Trace.PERFORMANCE, "Server.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
-					} catch (Throwable t) {
-						Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
+						job.join();
+					} catch (Exception e) {
+						// ignore
 					}
 				}
 			}
@@ -303,30 +326,6 @@ public class Server extends Base implements IServer {
 	}
 	
 	/**
-	 * Fire a server listener configuration sync state change event.
-	 */
-	/*protected void fireConfigurationSyncStateChangeEvent() {
-		Trace.trace(Trace.LISTENERS, "->- Firing server configuration change event: " + getName() + " ->-");
-	
-		if (serverListeners == null || serverListeners.isEmpty())
-			return;
-	
-		int size = serverListeners.size();
-		IServerListener[] sil = new IServerListener[size];
-		serverListeners.toArray(sil);
-	
-		for (int i = 0; i < size; i++) {
-			try {
-				Trace.trace(Trace.LISTENERS, "  Firing server configuration change event to: " + sil[i]);
-				sil[i].configurationSyncStateChange(this);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing server configuration change event", e);
-			}
-		}
-		Trace.trace(Trace.LISTENERS, "-<- Done firing server configuration change event -<-");
-	}*/
-	
-	/**
 	 * Fire a server listener restart state change event.
 	 */
 	protected void fireRestartStateChangeEvent() {
@@ -352,21 +351,6 @@ public class Server extends Base implements IServer {
 		notificationManager.broadcastChange(
 			new ServerEvent(ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE, this, getServerState(), 
 				getServerPublishState(), getServerRestartState()));
-	}
-	
-	/**
-	 * Fire a server listener module change event.
-	 * [issue: should this be removed?]
-	 */
-	protected void fireServerModuleChangeEvent() {
-//		Trace.trace(Trace.LISTENERS, "->- Firing server module change event: " + getName() + ", " + getServerState() + " ->-");
-//		
-//		if (notificationManager == null || notificationManager.hasListenerEntries())
-//			return;
-//	
-//		notificationManager.boardcastChange(
-//				new ServerEvent(ServerEvent.MODULE_CHANGE | ServerEvent.STATE_CHANGE, this, getServerState(), 
-//						getServerPublishState(), getServerRestartState()));
 	}
 
 	/**
@@ -666,21 +650,20 @@ public class Server extends Base implements IServer {
 	 * be published to.
 	 *
 	 * @return boolean
-	 * TODO: fix return strings 
 	 */
 	public IStatus canPublish() {
 		// can't publish if the server is starting or stopping
 		int state = getServerState();
 		if (state == STATE_STARTING || state == STATE_STOPPING)
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorPublishStarting"), null);
 	
 		// can't publish if there is no configuration
 		if (getServerType() == null || getServerType().hasServerConfiguration() && configuration == null)
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorPublishNoConfiguration"), null);
 	
 		// return true if the configuration can be published
 		if (getServerPublishState() != PUBLISH_STATE_NONE)
-			return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
+			return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%canPublishOk"), null);
 
 		// return true if any modules can be published
 		class Temp {
@@ -688,7 +671,7 @@ public class Server extends Base implements IServer {
 		}
 		//final Temp temp = new Temp();
 		
-		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
+		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%canPublishOk"), null);
 	
 		/*IModuleVisitor visitor = new IModuleVisitor() {
 			public boolean visit(IModule[] parents, IModule module) {
@@ -1229,7 +1212,6 @@ public class Server extends Base implements IServer {
 	 * be restarted.
 	 *
 	 * @return boolean
-	 * TODO: fix return strings
 	 */
 	public IStatus canRestart(String mode2) {
 		if (!getServerType().supportsLaunchMode(mode2))
@@ -1237,9 +1219,9 @@ public class Server extends Base implements IServer {
 
 		int state = getServerState();
 		if (state == STATE_STARTED)
-			return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
+			return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%canRestartOk"), null);
 		
-		return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
+		return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorRestartNotStarted"), null);
 	}
 
 	/**
@@ -1333,13 +1315,12 @@ public class Server extends Base implements IServer {
 	 * be stopped.
 	 *
 	 * @return boolean
-	 * TODO: fix return strings
 	 */
 	public IStatus canStop() {
 		if (getServerState() == STATE_STOPPED)
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStopAlreadyStopped"), null);
 
-		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
+		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%canStopOk"), null);
 	}
 
 	/**
@@ -1855,17 +1836,16 @@ public class Server extends Base implements IServer {
 	 * @param module the module
 	 * @return <code>true</code> if the given module can be
 	 *    restarted, and <code>false</code> otherwise
-	 * TODO: fix return strings
 	 */
 	public IStatus canRestartModule(IModule[] module) {
 		try {
 			boolean b = getBehaviourDelegate().canRestartModule(module);
 			if (b)
-				return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
+				return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%canRestartModuleOk"), null);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate canRestartRuntime() " + toString(), e);
 		}
-		return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
+		return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorRestartModule"), null);
 	}
 
 	/**

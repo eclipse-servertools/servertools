@@ -120,7 +120,7 @@ public interface IRuntimeType {
 	 * </p>
 	 * 
 	 * @return <code>true</code> if this type of runtime can be
-	 * instantiated, and <code>false</code> if it cannot
+	 *    instantiated, and <code>false</code> if it cannot
 	 * @see #createRuntime(String, IProgressMonitor)
 	 */
 	public boolean canCreate();
@@ -137,7 +137,9 @@ public interface IRuntimeType {
 	 * </p>
 	 * 
 	 * @param id the id to assign to the runtime instance; a generated
-	 * id is used if id is <code>null</code> or an empty string
+	 *    id is used if id is <code>null</code> or an empty string
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 * @return a new runtime working copy with the given id
 	 * @throws CoreException if an exception occurs while creating this runtime
 	 *    or setting it's default values

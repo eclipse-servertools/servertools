@@ -17,8 +17,7 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 /**
- * TODO: allow a "default" setting on the VM that will use the Eclipse
- * default VM, even if it changes.
+ *
  */
 public class GenericRuntime extends RuntimeDelegate implements IGenericRuntime, IGenericRuntimeWorkingCopy {
 	protected static final String PROP_VM_INSTALL_TYPE_ID = "vm-install-type-id";
@@ -35,8 +34,14 @@ public class GenericRuntime extends RuntimeDelegate implements IGenericRuntime, 
 	protected String getVMInstallId() {
 		return getAttribute(PROP_VM_INSTALL_ID, (String)null);
 	}
+	
+	public boolean isUsingDefaultJRE() {
+		return getVMInstallTypeId() == null;
+	}
 
 	public IVMInstall getVMInstall() {
+		if (getVMInstallTypeId() == null)
+			return JavaRuntime.getDefaultVMInstall();
 		try {
 			IVMInstallType vmInstallType = JavaRuntime.getVMInstallType(getVMInstallTypeId());
 			IVMInstall[] vmInstalls = vmInstallType.getVMInstalls();

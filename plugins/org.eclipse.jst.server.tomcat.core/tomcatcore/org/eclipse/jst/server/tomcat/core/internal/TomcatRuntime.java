@@ -28,8 +28,7 @@ import org.eclipse.jdt.launching.*;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 /**
- * TODO: allow a "default" setting on the VM that will use the Eclipse
- * default VM, even if it changes.
+ * 
  */
 public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, ITomcatRuntimeWorkingCopy {
 	protected static final String PROP_VM_INSTALL_TYPE_ID = "vm-install-type-id";
@@ -41,9 +40,6 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 		// do nothing
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.model.IRuntime#getLocation()
-	 */
 	public ITomcatVersionHandler getVersionHandler() {
 		IRuntimeType type = getRuntime().getRuntimeType();
 		return TomcatPlugin.getTomcatVersionHandler(type.getId());
@@ -56,8 +52,14 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 	protected String getVMInstallId() {
 		return getAttribute(PROP_VM_INSTALL_ID, (String)null);
 	}
+	
+	public boolean isUsingDefaultJRE() {
+		return getVMInstallTypeId() == null;
+	}
 
 	public IVMInstall getVMInstall() {
+		if (getVMInstallTypeId() == null)
+			return JavaRuntime.getDefaultVMInstall();
 		try {
 			IVMInstallType vmInstallType = JavaRuntime.getVMInstallType(getVMInstallTypeId());
 			IVMInstall[] vmInstalls = vmInstallType.getVMInstalls();

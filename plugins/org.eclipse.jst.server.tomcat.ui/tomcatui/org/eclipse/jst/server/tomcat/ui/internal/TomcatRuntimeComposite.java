@@ -58,7 +58,6 @@ public class TomcatRuntimeComposite extends Composite {
 	protected Combo combo;
 	protected List installedJREs;
 	protected String[] jreNames;
-	protected int defaultVMIndex;
 
 	/**
 	 * TomcatRuntimeWizardPage constructor comment.
@@ -161,7 +160,10 @@ public class TomcatRuntimeComposite extends Composite {
 		combo.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				int sel = combo.getSelectionIndex();
-				IVMInstall vmInstall = (IVMInstall) installedJREs.get(sel);
+				IVMInstall vmInstall = null;
+				if (sel > 0)
+					vmInstall = (IVMInstall) installedJREs.get(sel - 1);
+				
 				runtime.setVMInstall(vmInstall);
 				validate();
 			}
@@ -180,7 +182,7 @@ public class TomcatRuntimeComposite extends Composite {
 					combo.setItems(jreNames);
 					combo.setText(currentVM);
 					if (combo.getSelectionIndex() == -1)
-						combo.select(defaultVMIndex);
+						combo.select(0);
 				}
 			}
 		});
@@ -208,14 +210,12 @@ public class TomcatRuntimeComposite extends Composite {
 		
 		// get names
 		size = installedJREs.size();
-		jreNames = new String[size];
+		jreNames = new String[size+1];
+		jreNames[0] = TomcatUIPlugin.getResource("%runtimeDefaultJRE");
 		for (int i = 0; i < size; i++) {
 			IVMInstall vmInstall = (IVMInstall) installedJREs.get(i);
-			jreNames[i] = vmInstall.getName();
+			jreNames[i+1] = vmInstall.getName();
 		}
-		
-		IVMInstall defaultVM = JavaRuntime.getDefaultVMInstall();
-		defaultVMIndex = installedJREs.indexOf(defaultVM);
 	}
 
 	protected boolean showPreferencePage() {
@@ -250,17 +250,21 @@ public class TomcatRuntimeComposite extends Composite {
 			installDir.setText("");
 		
 		// set selection
-		boolean found = false;
-		int size = installedJREs.size();
-		for (int i = 0; i < size; i++) {
-			IVMInstall vmInstall = (IVMInstall) installedJREs.get(i);
-			if (vmInstall.equals(runtime.getVMInstall())) {
-				combo.select(i);
-				found = true;
+		if (runtime.isUsingDefaultJRE())
+			combo.select(0);
+		else {
+			boolean found = false;
+			int size = installedJREs.size();
+			for (int i = 0; i < size; i++) {
+				IVMInstall vmInstall = (IVMInstall) installedJREs.get(i);
+				if (vmInstall.equals(runtime.getVMInstall())) {
+					combo.select(i + 1);
+					found = true;
+				}
 			}
+			if (!found)
+				combo.select(0);
 		}
-		if (!found)
-			combo.select(defaultVMIndex);
 	}
 
 	protected void validate() {

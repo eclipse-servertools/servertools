@@ -332,6 +332,7 @@ public interface IServer extends IServerAttributes {
 	 *    {@link org.eclipse.debug.core.ILaunchManager}
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
+	 * @return the launch
 	 * @exception CoreException if an error occurs while trying to start the server
 	 */
 	public ILaunch synchronousStart(String launchMode, IProgressMonitor monitor) throws CoreException;
@@ -399,6 +400,7 @@ public interface IServer extends IServerAttributes {
 	 *    {@link org.eclipse.debug.core.ILaunchManager}
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
+	 * @throws CoreException if there was an error
 	 */
 	public void synchronousRestart(String launchMode, IProgressMonitor monitor) throws CoreException;
 
@@ -501,7 +503,6 @@ public interface IServer extends IServerAttributes {
 	 * @param module the module to be started
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
-	 * @return status object
 	 * @exception CoreException if an error occurs while trying to restart the module
 	 */
 	public void restartModule(IModule[] module, IProgressMonitor monitor) throws CoreException;

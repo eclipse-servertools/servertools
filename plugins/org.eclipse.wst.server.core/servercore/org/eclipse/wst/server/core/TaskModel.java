@@ -28,16 +28,16 @@ public class TaskModel {
 	/**
 	 * Task model id for an IRuntime.
 	 * 
-	 * @see getObject(String)
-	 * @see putObject(String, Object)
+	 * @see #getObject(String)
+	 * @see #putObject(String, Object)
 	 */
 	public static final String TASK_RUNTIME = "runtime";
 	
 	/**
 	 * Task model id for an IServer.
 	 * 
-	 * @see getObject(String)
-	 * @see putObject(String, Object)
+	 * @see #getObject(String)
+	 * @see #putObject(String, Object)
 	 */
 	public static final String TASK_SERVER = "server";
 
@@ -45,16 +45,16 @@ public class TaskModel {
 	 * Task model id for an array of modules.
 	 * The value is a List containing IModule[] arrays.
 	 * 
-	 * @see getObject(String)
-	 * @see putObject(String, Object)
+	 * @see #getObject(String)
+	 * @see TaskModel#putObject(String, Object)
 	 */
 	public static final String TASK_MODULES = "modules";
 	
 	/**
 	 * Task model id for a launch mode.
 	 * 
-	 * @see getObject(String)
-	 * @see putObject(String, Object)
+	 * @see #getObject(String)
+	 * @see #putObject(String, Object)
 	 */
 	public static final String TASK_LAUNCH_MODE = "launch-mode";
 	

@@ -107,11 +107,6 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 				showServersView();
 			}
 		}
-
-		// TODO: handle module change. 
-		public void modulesChanged(IServer server) {
-			showServersView();
-		}
 	};
 	
 	protected static IPublishListener publishListener = new PublishAdapter() {
