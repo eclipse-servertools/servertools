@@ -160,7 +160,6 @@ public abstract class Base {
 	protected void saveMap(IMemento memento, String key, Map map) {
 		IMemento child = memento.createChild("map");
 		child.putString("key", key);
-		int i = 1;
 		Iterator iterator = map.keySet().iterator();
 		while (iterator.hasNext()) {
 			String s = (String) iterator.next();
