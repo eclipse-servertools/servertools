@@ -31,7 +31,6 @@
 package org.eclipse.jst.server.generic.tests;
 
 import org.eclipse.jst.server.generic.core.CorePlugin;
-import org.eclipse.jst.server.generic.modules.ModulesPlugin;
 import org.eclipse.jst.server.generic.ui.GenericUiPlugin;
 
 
@@ -69,9 +68,6 @@ public class PluginIntegrityTest extends TestCase {
 	
 	public void testGenericUiPluginExists(){
 		assertNotNull(GenericUiPlugin.getDefault());
-	}
-	public void testModulesPluginExists(){
-		assertNotNull(ModulesPlugin.getDefault());
 	}
 	public void testCorePluginExists(){
 		assertNotNull(CorePlugin.getDefault());

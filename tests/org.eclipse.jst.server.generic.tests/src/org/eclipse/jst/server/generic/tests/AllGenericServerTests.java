@@ -39,7 +39,6 @@ public class AllGenericServerTests {
         TestSuite suite = new TestSuite(
             "Test for org.eclipse.jst.server.generic.tests");
         //$JUnit-BEGIN$
-        suite.addTestSuite(ModuleFactoryTests.class);
         suite.addTestSuite(ServerDefinitionTypeTest.class);
         suite.addTestSuite(GenericServerClasspathRuntimeHandlerTest.class);
         suite.addTestSuite(PluginIntegrityTest.class);
