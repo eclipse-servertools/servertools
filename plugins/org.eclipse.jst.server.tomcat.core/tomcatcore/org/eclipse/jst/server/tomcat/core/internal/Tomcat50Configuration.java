@@ -242,6 +242,26 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 		}
 	}
 
+	public void importFromPath(IPath path, boolean isTestEnv, IProgressMonitor monitor) throws CoreException {
+		load(path, monitor);
+		
+		// for test environment, remove existing contexts since a separate
+		// catalina.base will be used
+		if (isTestEnv) {
+			int size = server.getServiceCount();
+			for (int i = 0; i < size; i++) {
+				Service service = server.getService(i);
+				if (service.getName().equalsIgnoreCase(DEFAULT_SERVICE)) {
+					Host host = service.getEngine().getHost();
+					int size2 = host.getContextCount();
+					for (int j = 0; j < size2; j++) {
+						host.removeElement("Context", 0);
+					}
+				}
+			}
+		}
+	}
+
 	/**
 	 * Reload the configuration.
 	 * 
@@ -762,7 +782,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 				Server oldServer = (Server) factory.loadDocument(new FileInputStream(serverFile));
 				
 				// Begin building path to context directory
-				IPath contextDir = installDir.append("conf");
+				IPath contextDir = confDir.append("conf");
 
 				// Collect paths of old web modules managed by WTP
 				Set oldPaths = new HashSet();
@@ -838,5 +858,27 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 		
 		monitor.done();
 		return ms;
+	}
+
+	protected IStatus prepareRuntimeDirectory(IPath confDir) {
+		Trace.trace(Trace.FINER, "Preparing runtime directory");
+		// Prepare a catalina.base directory structure
+		File temp = confDir.append("conf").toFile();
+		if (!temp.exists())
+			temp.mkdirs();
+		temp = confDir.append("logs").toFile();
+		if (!temp.exists())
+			temp.mkdirs();
+		temp = confDir.append("temp").toFile();
+		if (!temp.exists())
+			temp.mkdirs();
+		temp = confDir.append("webapps").toFile();
+		if (!temp.exists())
+			temp.mkdirs();
+		temp = confDir.append("work").toFile();
+		if (!temp.exists())
+			temp.mkdirs();
+
+		return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%runtimeDirPrepared"), null);		
 	}
 }

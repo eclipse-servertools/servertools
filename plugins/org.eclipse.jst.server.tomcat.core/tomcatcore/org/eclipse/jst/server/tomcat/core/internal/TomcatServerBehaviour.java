@@ -110,7 +110,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			configPath = getTempDirectory();
 		else
 			configPath = installPath;
-		return getTomcatVersionHandler().getRuntimeVMArguments(installPath, configPath, getTomcatServer().isSecure());
+		return getTomcatVersionHandler().getRuntimeVMArguments(installPath, configPath,
+				getTomcatServer().isTestEnvironment(), getTomcatServer().isSecure());
 	}
 	
 	protected static String renderCommandLine(String[] commandLine, String separator) {
@@ -163,9 +164,12 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		IPath confDir = null;
 		if (getTomcatServer().isTestEnvironment()) {
 			confDir = getTempDirectory();
-			File temp = confDir.append("conf").toFile();
+			IStatus status = getTomcatConfiguration().prepareRuntimeDirectory(confDir);
+			if (status != null && !status.isOK())
+				throw new CoreException(status);
+/*			File temp = confDir.append("conf").toFile();
 			if (!temp.exists())
-				temp.mkdirs();
+				temp.mkdirs();*/
 		} else
 			confDir = installDir;
 

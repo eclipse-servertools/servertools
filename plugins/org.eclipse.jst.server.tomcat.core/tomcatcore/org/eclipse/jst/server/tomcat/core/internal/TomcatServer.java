@@ -98,7 +98,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		else if (id.indexOf("55") > 0)
 			configuration = new Tomcat55Configuration(folder);
 		try {
-			configuration.load(path, monitor);
+			configuration.importFromPath(path, isTestEnvironment(), monitor);
 		} catch (CoreException ce) {
 			// ignore
 			configuration = null;

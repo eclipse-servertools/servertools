@@ -27,7 +27,7 @@ public interface ITomcatVersionHandler {
 	
 	public String[] getRuntimeProgramArguments(IPath configPath, boolean debug, boolean starting);
 	
-	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isSecure);
+	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isTestEnv, boolean isSecure);
 
 	/**
 	 * Returns true if the given project is supported by this

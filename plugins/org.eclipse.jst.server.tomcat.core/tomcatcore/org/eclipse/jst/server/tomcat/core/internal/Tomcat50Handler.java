@@ -61,9 +61,6 @@ public class Tomcat50Handler implements ITomcatVersionHandler {
 	 */
 	public String[] getRuntimeProgramArguments(IPath configPath, boolean debug, boolean starting) {
 		List list = new ArrayList();
-		if (configPath != null) {
-			list.add("-config \"" + configPath.append("conf").append("server.xml").toOSString() + "\"");
-		}
 		
 		if (debug)
 			list.add("-debug");
@@ -83,8 +80,12 @@ public class Tomcat50Handler implements ITomcatVersionHandler {
 	 *
 	 * @return java.lang.String[]
 	 */
-	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isSecure) {
+	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isTestEnv, boolean isSecure) {
 		List list = new ArrayList();
+		if (isTestEnv)
+			list.add("-Dcatalina.base=\"" + configPath.toOSString() + "\"");
+		else 
+			list.add("-Dcatalina.base=\"" + installPath.toOSString() + "\"");
 		list.add("-Dcatalina.home=\"" + installPath.toOSString() + "\"");
 		list.add("-Djava.endorsed.dirs=\"" + installPath.append("common").append("endorsed").toOSString() + "\"");
 		

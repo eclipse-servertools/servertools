@@ -186,6 +186,13 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 		return Status.OK_STATUS;
 	}
 	
+	protected IStatus prepareRuntimeDirectory(IPath confDir) {
+		File temp = confDir.append("conf").toFile();
+		if (!temp.exists())
+			temp.mkdirs();
+
+		return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, "Runtime configuration directory prepared" /* TomcatPlugin.getResource("%canAddModule") */, null);		
+	}
 
 	/**
 	 * Returns the root of the docbase parameter.
@@ -296,11 +303,11 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 			propertyListeners.remove(listener);
 	}
 
-	/*public void importFromPath(IPath path, IProgressMonitor monitor) throws CoreException {
+	public void importFromPath(IPath path, boolean isTestEnv, IProgressMonitor monitor) throws CoreException {
 		load(path, monitor);
 	}
 
-	public void importFromRuntime(IRuntime runtime, IProgressMonitor monitor) throws CoreException {
+	/*public void importFromRuntime(IRuntime runtime, IProgressMonitor monitor) throws CoreException {
 		load(runtime.getLocation().append("conf"), monitor);
 	}*/
 	

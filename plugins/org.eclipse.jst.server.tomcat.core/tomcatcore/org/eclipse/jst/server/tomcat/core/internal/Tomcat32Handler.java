@@ -77,7 +77,7 @@ public class Tomcat32Handler implements ITomcatVersionHandler {
 	 *
 	 * @return java.lang.String[]
 	 */
-	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isSecure) {
+	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isTestEnv, boolean isSecure) {
 		List list = new ArrayList();
 		list.add("-Dtomcat.home=\"" + installPath.toOSString() + "\"");
 		
