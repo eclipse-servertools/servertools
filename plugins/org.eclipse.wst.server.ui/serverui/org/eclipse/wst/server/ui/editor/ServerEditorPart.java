@@ -173,7 +173,16 @@ public abstract class ServerEditorPart extends EditorPart {
 						if (section instanceof ServerEditorSection)
 							((ServerEditorSection) section).setServerResourceEditorPart(this);
 						sections.add(section);
-						sectionToInsertionId.put(section, insertionId);
+						List list = null;
+						try {
+							list = (List) sectionToInsertionId.get(insertionId);
+						} catch (Exception e) {
+							// ignore
+						}
+						if (list == null)
+							list = new ArrayList();
+						list.add(section);
+						sectionToInsertionId.put(insertionId, list);
 					}
 				}
 			}
@@ -187,12 +196,14 @@ public abstract class ServerEditorPart extends EditorPart {
 		
 		getSections();
 		List list = new ArrayList();
-		Iterator iterator = sectionToInsertionId.keySet().iterator();
-		while (iterator.hasNext()) {
-			IServerEditorSection section = (IServerEditorSection) iterator.next();
-			String insertionId2 = (String) sectionToInsertionId.get(section);
-			if (insertionId.equals(insertionId2))
-				list.add(section);
+		try {
+			List sections2 = (List) sectionToInsertionId.get(insertionId);
+			Iterator iterator = sections2.iterator();
+			while (iterator.hasNext()) {
+				list.add(iterator.next());
+			}
+		} catch (Exception e) {
+			// ignore
 		}
 		return list;
 	}

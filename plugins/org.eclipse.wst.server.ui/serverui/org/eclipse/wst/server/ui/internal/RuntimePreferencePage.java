@@ -17,8 +17,10 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -35,6 +37,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -168,13 +171,24 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		search.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				try {
+					// select a target directory for the search
+					DirectoryDialog directoryDialog = new DirectoryDialog(getShell());
+					directoryDialog.setMessage(ServerUIPlugin.getResource("%dialogRuntimeSearchMessage"));
+					directoryDialog.setText(ServerUIPlugin.getResource("%dialogRuntimeSearchTitle"));
+
+					String pathStr = directoryDialog.open();
+					if (pathStr == null)
+						return;
+					
+					final IPath path = new Path(pathStr);
+					
 					final ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());
 					dialog.setBlockOnOpen(false);
 					dialog.setCancelable(true);
 					dialog.open();
 					final IProgressMonitor monitor = dialog.getProgressMonitor();
 					final IRuntimeLocator[] locators = ServerCore.getRuntimeLocators();
-					monitor.beginTask(ServerUIPlugin.getResource("%search"), 100 * locators.length + 10);
+					monitor.beginTask(ServerUIPlugin.getResource("%dialogRuntimeSearchProgress"), 100 * locators.length + 10);
 					final List list = new ArrayList();
 					
 					final IRuntimeLocator.RuntimeSearchListener listener = new IRuntimeLocator.RuntimeSearchListener() {
@@ -195,7 +209,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 								for (int i = 0; i < size; i++) {
 									if (!monitor2.isCanceled())
 										try {
-											locators[i].searchForRuntimes(null, listener, monitor2);
+											locators[i].searchForRuntimes(path, listener, monitor2);
 										} catch (CoreException ce) {
 											Trace.trace(Trace.WARNING, "Error locating runtimes: " + locators[i].getId(), ce);
 										}

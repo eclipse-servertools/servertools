@@ -162,15 +162,14 @@ public class ImageResource {
 	protected static void dispose() {
 		if (elementImages != null) {
 			try {
-				Trace.trace("Disposing of element images"); //$NON-NLS-1$
+				Trace.trace("Disposing of element images");
 				Iterator iterator = elementImages.values().iterator();
 				while (iterator.hasNext()) {
 					Image image = (Image) iterator.next();
 					image.dispose();
 				}
-			}
-			catch (Exception e) {
-				Trace.trace("Could not dispose of images"); //$NON-NLS-1$
+			} catch (Exception e) {
+				Trace.trace("Could not dispose of images");
 			}
 		}
 	}

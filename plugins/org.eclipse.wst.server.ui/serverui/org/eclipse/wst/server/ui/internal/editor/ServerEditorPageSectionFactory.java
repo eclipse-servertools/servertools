@@ -166,4 +166,8 @@ public class ServerEditorPageSectionFactory implements IServerEditorPageSectionF
 			return null;
 		}
 	}
+	
+	public String toString() {
+		return "ServerEditorSection [" + getId() + ", " + getInsertionId() + ", " + getOrder() + "]";
+	}
 }

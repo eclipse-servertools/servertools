@@ -15,10 +15,6 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.preference.IPreferenceNode;
-import org.eclipse.jface.preference.PreferenceDialog;
-import org.eclipse.jface.preference.PreferenceManager;
-import org.eclipse.jface.window.Window;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.ui.editor.IServerEditorInput;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -32,11 +28,9 @@ import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewRuntimeWizardFragment;
 import org.eclipse.wst.server.ui.wizard.*;
 
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 /**
  * Server UI utility methods.
  */
@@ -152,26 +146,6 @@ public class ServerUIUtil {
 				return false;
 		}
 		return true;
-	}
-	
-	/**
-	 * @deprecated - use showNewRuntimeWizard
-	 */
-	public static boolean showRuntimePreferencePage(Shell shell) {
-		PreferenceManager manager = PlatformUI.getWorkbench().getPreferenceManager();
-		IPreferenceNode node = manager.find("org.eclipse.wst.server.ui.preferencePage").findSubNode("org.eclipse.wst.server.ui.runtime.preferencePage");
-		PreferenceManager manager2 = new PreferenceManager();
-		manager2.addToRoot(node);
-		final PreferenceDialog dialog = new PreferenceDialog(shell, manager2);
-		final boolean[] result = new boolean[] { false };
-		BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
-			public void run() {
-				dialog.create();
-				if (dialog.open() == Window.OK)
-					result[0] = true;
-			}
-		});
-		return result[0];
 	}
 
 	/**

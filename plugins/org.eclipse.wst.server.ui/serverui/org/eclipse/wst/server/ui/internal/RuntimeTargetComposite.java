@@ -17,9 +17,15 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.preference.IPreferenceNode;
+import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.jface.preference.PreferenceManager;
+import org.eclipse.jface.window.Window;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -28,23 +34,19 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 /**
  * Dialog that prompts a user to change the target runtime.
  * 
  * TODO - must support multiple modules per project (remove [0] from getModules(IProject))
  */
 public class RuntimeTargetComposite {
-	public interface RuntimeSelectionListener {
-		public void runtimeSelected(IRuntime runtime);
-	}
-
 	protected IProject project;
 	protected IProjectProperties props;
 	protected IRuntime currentRuntime;
 	protected IRuntime newRuntime;
 	protected IRuntime[] targets;
 	protected String[] items;
-	protected RuntimeSelectionListener listener;
 	
 	protected List childProjects;
 	protected boolean setChildren = true;
@@ -55,7 +57,7 @@ public class RuntimeTargetComposite {
 	 * @param parent Composite
 	 * @param project IProject
 	 */
-	public RuntimeTargetComposite(Composite parent, IProject project) {
+	protected RuntimeTargetComposite(Composite parent, IProject project) {
 		this.project = project;
 		props = ServerCore.getProjectProperties(project);
 		currentRuntime = props.getRuntimeTarget();
@@ -95,16 +97,6 @@ public class RuntimeTargetComposite {
 		
 		createContents(parent);
 	}
-	
-	/**
-	 * RuntimeTargetComposite constructor comment.
-	 * @param parentShell org.eclipse.swt.widgets.Shell
-	 * @param project IProject
-	 */
-	public RuntimeTargetComposite(Composite parent, IProject project, RuntimeSelectionListener listener) {
-		this(parent, project);
-		this.listener = listener;
-	}
 
 	/**
 	 * 
@@ -131,8 +123,6 @@ public class RuntimeTargetComposite {
 						newRuntime = null;
 					else
 						newRuntime = targets[select - offset];
-					if (listener != null)
-						listener.runtimeSelected(newRuntime);
 				}
 			});
 			if (sel >= 0) {
@@ -145,8 +135,8 @@ public class RuntimeTargetComposite {
 
 		final IModule projectModule = ServerUtil.getModules(project)[0];
 		
-		Button button = SWTUtil.createButton(parent, ServerUIPlugin.getResource("%runtimeTargetNewRuntime"));
-		button.addSelectionListener(new SelectionAdapter() {
+		Button newButton = SWTUtil.createButton(parent, ServerUIPlugin.getResource("%runtimeTargetNewRuntime"));
+		newButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				String currentRuntime2 = combo.getText();
 				String type = null;
@@ -171,7 +161,7 @@ public class RuntimeTargetComposite {
 			final Button includeChildren = new Button(parent, SWT.CHECK);
 			includeChildren.setText(ServerUIPlugin.getResource("%runtimeTargetChildren"));
 			data = new GridData();
-			data.horizontalSpan = 3;
+			data.horizontalSpan = 2;
 			includeChildren.setLayoutData(data);
 			includeChildren.setSelection(true);
 			
@@ -184,7 +174,41 @@ public class RuntimeTargetComposite {
 					widgetSelected(e);
 				}
 			});
+		} else {
+			new Label(parent, SWT.NONE);
+			new Label(parent, SWT.NONE);
 		}
+		
+		Button prefsButton = SWTUtil.createButton(parent, ServerUIPlugin.getResource("%runtimeTargetRuntimePreferences"));
+		prefsButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				String currentRuntime2 = combo.getText();
+				if (showRuntimePreferencePage(parent.getShell())) {
+					int sel2 = updateRuntimes();
+					combo.setItems(items);
+					combo.setText(currentRuntime2);
+					if (combo.getSelectionIndex() == -1)
+						combo.select(sel2);
+				}
+			}
+		});
+	}
+	
+	protected static boolean showRuntimePreferencePage(Shell shell) {
+		PreferenceManager manager = PlatformUI.getWorkbench().getPreferenceManager();
+		IPreferenceNode node = manager.find("org.eclipse.wst.server.ui.preferencePage").findSubNode("org.eclipse.wst.server.ui.runtime.preferencePage");
+		PreferenceManager manager2 = new PreferenceManager();
+		manager2.addToRoot(node);
+		final PreferenceDialog dialog = new PreferenceDialog(shell, manager2);
+		final boolean[] result = new boolean[] { false };
+		BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
+			public void run() {
+				dialog.create();
+				if (dialog.open() == Window.OK)
+					result[0] = true;
+			}
+		});
+		return result[0];
 	}
 	
 	protected int updateRuntimes() {
