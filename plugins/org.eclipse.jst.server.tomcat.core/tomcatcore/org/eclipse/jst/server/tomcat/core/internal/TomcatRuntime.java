@@ -157,7 +157,7 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 	protected boolean checkForCompiler(File javaHome, File javaExecutable) {
 		// locate the JSP support jar - it contains the main program to run
 		File file = TomcatPlugin.getFileInPlugin(new Path("tomcatcore.jar"));
-		if (file.exists()) {	
+		if (file != null && file.exists()) {	
 			String javaExecutablePath = javaExecutable.getAbsolutePath();
 			String[] cmdLine = new String[] {javaExecutablePath, "-classpath", file.getAbsolutePath(), "org.eclipse.jst.server.tomcat.core.internal.ClassDetector", "com.sun.tools.javac.Main"};
 			Process p = null;
