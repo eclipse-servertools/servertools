@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Project.java,v 1.2 2005/01/30 21:47:27 gercan Exp $
+ * $Id: Project.java,v 1.3 2005/03/22 22:52:55 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -49,6 +49,7 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getProject()
  * @model 
  * @generated
+ * @since 1.0
  */
 public interface Project extends EObject{
     /**

@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ArchiveType.java,v 1.3 2005/03/14 20:54:15 gercan Exp $
+ * $Id: ArchiveType.java,v 1.4 2005/03/22 22:52:55 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -48,6 +48,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getArchiveType()
  * @model extendedMetaData="name='archive_._type' kind='empty'"
+ * @since 1.0
  * @generated
  */
 public interface ArchiveType extends EObject{
@@ -57,8 +58,10 @@ public interface ArchiveType extends EObject{
 	 * <p>
 	 * If the meaning of the '<em>Path</em>' attribute isn't clear,
 	 * there really should be more of a description here...
+     * 
 	 * </p>
-	 * <!-- end-user-doc -->
+	 * @since 1.0
+     * <!-- end-user-doc -->
      * @return the value of the '<em>Path</em>' attribute.
      * @see #setPath(String)
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getArchiveType_Path()
@@ -71,6 +74,7 @@ public interface ArchiveType extends EObject{
     /**
      * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.ArchiveType#getPath <em>Path</em>}' attribute.
      * <!-- begin-user-doc -->
+     * @since 1.0
 	 * <!-- end-user-doc -->
      * @param value the new value of the '<em>Path</em>' attribute.
      * @see #getPath()
