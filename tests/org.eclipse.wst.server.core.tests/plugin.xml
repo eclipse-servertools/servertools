@@ -5,7 +5,7 @@
    name="org.eclipse.wst.server.core.tests"
    version="1.0.0"
    provider-name="Eteration.com"
-   class="org.eclipse.wtp.wst.server.core.tests.TestsPlugin">
+   class="org.eclipse.wst.server.core.tests.TestsPlugin">
 
    <runtime>
       <library name="servertests.jar">
