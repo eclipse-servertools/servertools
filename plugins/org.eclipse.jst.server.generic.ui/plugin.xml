@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.eclipse.jst.server.generic.ui"
+   name="%pluginName"
+   version="1.0.0"
+   provider-name="%providerName"
+   class="org.eclipse.jst.server.generic.ui.GenericUiPlugin"
+   description="%pluginDescription">
+
+   <runtime>
+      <library name="genericui.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.wst.server.ui"/>
+       <import plugin="org.eclipse.debug.ui"/>
+      <import plugin="org.eclipse.jdt.debug.ui"/>
+      <import plugin="org.eclipse.jst.server.generic.core"/>
+      <import plugin="org.eclipse.wst.server.core" />
+      <import plugin="org.eclipse.jst.server.core"/>
+      <import plugin="org.eclipse.emf"/>
+      <import plugin="org.eclipse.emf.ecore"/>
+      <import plugin="org.eclipse.emf.ecore.xmi"/>
+   </requires>
+
+ <extension
+       point="org.eclipse.wst.server.ui.wizardFragments">
+     <fragment
+        id="org.eclipse.jst.server.generic.runtime"
+        typeIds="org.eclipse.jst.server.generic.runtime"
+        class="org.eclipse.jst.server.generic.internal.ui.GenericServerRuntimeWizardFragment"/>       
+ </extension>
+
+<extension
+       point="org.eclipse.wst.server.ui.wizardFragments">
+     <fragment
+        id="org.eclipse.jst.server.generic.server"
+        typeIds="org.eclipse.jst.server.generic"
+        class="org.eclipse.jst.server.generic.internal.ui.GenericServerWizardFragment"/>       
+ </extension>
+  <extension point="org.eclipse.wst.server.ui.editorPages">
+      <page
+         id="org.eclipse.jst.server.generic.configuration.editor.webmodule"
+         order="20"
+         name="Lomboz server Edit"
+         typeIds="org.eclipse.jst.server.generic.*"
+         class="org.eclipse.jst.server.generic.internal.ui.GenericServerEditorPartFactory"/>
+   </extension>
+   
+    <extension point="org.eclipse.wst.server.ui.editorPageSections">
+      <section
+         id="org.eclipse.jst.server.generic.editor.general"
+         order="0"
+         insertionId="org.eclipse.wst.server.editor.overview.left"
+         typeIds="org.eclipse.jst.server.generic.*"
+         class="org.eclipse.jst.server.generic.internal.ui.GenericServerEditorSectionFactory"/>
+ <!--     <section
+         id="org.eclipse.jst.server.tomcat.configuration.editor.port"
+         order="10"
+         insertionId="org.eclipse.wst.server.editor.overview.right"
+         typeIds="org.eclipse.jst.server.tomcat.*"
+         class="org.eclipse.jst.server.tomcat.ui.internal.editor.ConfigurationPortEditorSectionFactory"/>
+      <section
+         id="org.eclipse.jst.server.tomcat.configuration.editor.mime"
+         order="20"
+         insertionId="org.eclipse.wst.server.editor.overview.right"
+         typeIds="org.eclipse.jst.server.tomcat.*"
+         class="org.eclipse.jst.server.tomcat.ui.internal.editor.ConfigurationMimeEditorSectionFactory"/>
+ -->        
+   </extension>
+   <extension point="org.eclipse.wst.server.ui.serverImages">
+      <image
+         id="org.eclipse.jst.server.generic.image"
+         icon="icons/obj16/lomboz.gif"
+         typeIds="org.eclipse.jst.server.generic.runtime"/>
+     <image
+         id="org.eclipse.jst.server.generic.image"
+         icon="icons/obj16/lomboz.gif"
+         typeIds="org.eclipse.jst.server.generic"/>
+	</extension>
+  <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+    <launchConfigurationTypeImage
+      id="org.eclipse.jst.server.generic.image.ui.launchConfigurationTypeImage"
+      configTypeID="org.eclipse.jst.server.generic.core.launchConfigurationType"
+      icon="icons/obj16/lomboz.gif">
+    </launchConfigurationTypeImage>
+  </extension>
+  
+  <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+    <launchConfigurationTabGroup
+      id="org.eclipse.jst.server.generic.internal.ui.launchConfigurationTabGroup"
+      type="org.eclipse.jst.server.generic.core.launchConfigurationType"
+      class="org.eclipse.jst.server.generic.internal.ui.GenericLaunchConfigurationTabGroup">
+    </launchConfigurationTabGroup>
+  </extension>
+   
+
+</plugin>

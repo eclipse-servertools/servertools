@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:ServerRuntime
+	xmlns:tns="http://eclipse.org/jst/server/generic/ServerTypeDefinition"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://eclipse.org/jst/server/generic/ServerTypeDefinition ServerTypeDefinitionSchema.xsd "
+	name="JBOSS 3.2.3" version="v3.2.3">
+<property id="serverRootDirectory"
+	label="Application Server Directory:"
+	type="directory"
+	context="runtime"
+	default="/your_server_root/appservers/jboss-3.2.3" />
+<property id="serverAddress"
+	label="Address:"
+	type="string"
+	context="server"
+	default="127.0.0.1" />
+<property id="port"
+	label="Port:"
+	type="string"
+	context="server"
+	default="8080" />
+<property id="serverConfig"
+	label="Server Configuration (minimal/default/all):"
+	type="string"
+	context="server"
+	default="default" />
+<property id="classPath"
+	label="Classpath Variable:"
+	type="directory"
+	context="runtime"
+	default="/your_server_root/appservers/jboss-3.2.3" />
+
+	<port>
+		<no>${port}</no>
+		<name>Http</name>
+		<protocol>http</protocol>
+	</port>
+
+	<module>
+		<type>j2ee.web</type>
+		<publishDir>${serverRootDirectory}/server/${serverConfig}/deploy</publishDir>
+		<publisherReference>jboss.web</publisherReference>
+	</module>
+
+
+	<project>
+		<classpathReference>jboss.project</classpathReference>
+	</project>
+	
+	<start>
+		<class>org.jboss.Main</class>
+		<workingDirectory>${serverRootDirectory}/bin</workingDirectory>
+		<programArguments>-c ${serverConfig}</programArguments>
+		<vmParameters></vmParameters>
+		<classpathReference>jboss</classpathReference>
+	</start>
+
+	<stop>
+		<class>org.jboss.Shutdown</class>
+		<workingDirectory>${serverRootDirectory}/bin</workingDirectory>
+		<programArguments>-S</programArguments>
+		<vmParameters></vmParameters>
+		<classpathReference>jboss</classpathReference>
+	</stop>
+	<publisher id="jboss.web">
+		<publish>
+			<task>
+		<![CDATA[
+			
+				<project name="deployextension"  default="deploy"  basedir=".">
+				    <target name="deploy">
+						<jar destfile="${deploymentUnitName}.war"> 
+							<zipfileset dir="${moduleDir}">
+	        					<include name="**/*.*"/>
+						        <exclude name="**/*.war"/>
+							</zipfileset>
+						</jar>
+  				  		<move file="${deploymentUnitName}.war" todir="${deployDir}"/>
+  					  </target>
+				</project>
+				
+		]]>			
+			</task>
+			<classpathReference>jboss</classpathReference>
+		</publish>
+		<unpublish>
+			<task>
+				<![CDATA[<project name="deployextension"  default="deploy"  basedir=".">
+				    <target name="deploy">
+  				  		<delete file="${deployDir}/${deploymentUnitName}.war"/>
+  					  </target>
+				</project>]]>
+			</task>
+			<classpathReference>jboss</classpathReference>
+		</unpublish>
+	</publisher>
+
+	<classpath id="jboss" isLibrary="true">
+		<archive path="${classPath}/bin/run.jar" />
+		<archive path="${classPath}/bin/shutdown.jar" />
+		<archive path="${classPath}/client/jboss-j2ee.jar" />
+		<archive path="${classPath}/server/${serverConfig}/lib/javax.servlet.jar" />
+		<archive path="${classPath}/lib/jboss-boot.jar" />
+		<archive path="${classPath}/lib/jboss-system.jar" />
+		<archive path="${classPath}/lib/concurrent.jar" />
+		<archive path="${classPath}/server/${serverConfig}/lib/jboss.jar" />
+		<archive path="${classPath}/server/${serverConfig}/lib/jnpserver.jar" />
+		<archive path="${classPath}/server/${serverConfig}/lib/jpl-pattern.jar" />
+		<archive path="${classPath}/server/${serverConfig}/lib/jpl-util.jar" />
+		<archive path="${classPath}/server/${serverConfig}/lib/jboss-transaction.jar" />
+		<archive path="${classPath}/server/${serverConfig}/lib/bcel.jar" />
+		<archive path="${classPath}/lib/jdom.jar" />
+		<archive path="${classPath}/lib/xercesImpl.jar" />
+		<archive path="${classPath}/lib/xml-apis.jar" />
+		<archive path="${classPath}/lib/gnu-regexp.jar" />
+		<archive path="${classPath}/lib/getopt.jar" />
+	</classpath>
+
+	<classpath id="jboss.project" isLibrary="false">
+		<archive path="${classPath}/client/jboss-j2ee.jar" />
+	</classpath>
+
+</tns:ServerRuntime>

@@ -1,0 +1,6 @@
+bin
+build.xml
+genericserver.jar
+org.eclipse.jst.server.generic.core_1.0.0.jar
+temp.folder
+*.settings

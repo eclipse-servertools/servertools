@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:ServerRuntime
+	xmlns:tns="http://eclipse.org/jst/server/generic/ServerTypeDefinition"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://eclipse.org/jst/server/generic/ServerTypeDefinition ServerTypeDefinitionSchema.xsd "
+	name="JonAS 4.1.4" version="v4.1.4">
+	<property id="jonasRoot"
+		label="JonAS Installation Directory:"
+		type="directory"
+		context="runtime"
+		default="/your_server_root/JOnAS-4.1.4" />
+	<property id="jonasBase"
+		label="JonAS Configuration Directory:"
+		type="directory"
+		context="runtime"
+		default="/your_server_root/JOnAS-4.1.4" />
+	<property id="serverAddress"
+		label="Address:"
+		type="string"
+		context="server"
+		default="127.0.0.1" />
+	<property id="port"
+		label="Port:"
+		type="string"
+		context="server"
+		default="9000" />
+	<property id="protocols"
+		label="Ejb Protocols:"
+		type="string"
+		context="server"
+		default="jrmp" />
+	<property id="mappernames"
+		label="Mapper names:"
+		type="string"
+		context="server"
+		default="" />
+	<property id="classPath"
+		label="Classpath Variable:"
+		type="directory"
+		context="runtime"
+		default="/your_server_root/JOnAS-4.1.4" />
+
+	<port>
+		<no>${port}</no>
+		<name>Http</name>
+		<protocol>http</protocol>
+	</port>
+
+	<module>
+		<type>j2ee.web</type>
+		<publishDir>${jonasBase}/webapps/autoload</publishDir>
+		<publisherReference>jonas.web</publisherReference>
+	</module>
+
+
+	<project>
+		<classpathReference>jonas.project</classpathReference>
+	</project>
+	
+	<start>
+		<class>org.objectweb.jonas.server.Bootstrap</class>
+		<workingDirectory>${jonasRoot}</workingDirectory>
+		<programArguments>org.objectweb.jonas.server.Server</programArguments>
+		<vmParameters>-Dinstall.root=${jonasRoot} -Djonas.base=${jonasBase} -Djava.security.policy=${jonasRoot}/conf/java.policy -Djonas.classpath= -Djonas.default.classloader=true -Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate -Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory -Djava.security.auth.login.config=${jonasRoot}/conf/jaas.config  -Djava.endorsed.dirs=${jonasRoot}/lib/endorsed -Djava.rmi.server.RMIClassLoaderSpi=org.objectweb.jonas.server.RemoteClassLoaderSpi</vmParameters>
+		<classpathReference>jonas</classpathReference>
+	</start>
+
+	<stop>
+		<class>org.objectweb.jonas.server.Bootstrap</class>
+		<workingDirectory>${jonasRoot}</workingDirectory>
+		<programArguments>org.objectweb.jonas.adm.JonasAdmin -s</programArguments>
+		<vmParameters>-Dinstall.root=${jonasRoot} -Djonas.base=${jonasBase} -Djava.security.policy=${jonasRoot}/conf/java.policy -Djonas.classpath= -Djonas.default.classloader=true -Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate -Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory -Djava.security.auth.login.config=${jonasRoot}/conf/jaas.config  -Djava.endorsed.dirs=${jonasRoot}/lib/endorsed -Djava.rmi.server.RMIClassLoaderSpi=org.objectweb.jonas.server.RemoteClassLoaderSpi</vmParameters>
+		<classpathReference>jonas</classpathReference>
+	</stop>
+	<publisher id="jonas.web">
+		<publish>
+			<task><![CDATA[
+			
+				<project name="deployextension"  default="deploy"  basedir=".">
+				    <target name="deploy">
+						<jar destfile="${deploymentUnitName}.war"> 
+							<zipfileset dir="${moduleDir}">
+	        					<include name="**/*.*"/>
+						        <exclude name="**/*.war"/>
+							</zipfileset>
+						</jar>
+  				  		<move file="${deploymentUnitName}.war" todir="${deployDir}"/>
+  					  </target>
+				</project>
+				
+		]]></task>
+			<classpathReference>jonas</classpathReference>
+		</publish>
+		<unpublish>
+			<task>
+				<![CDATA[<project name="deployextension"  default="deploy"  basedir=".">
+				    <target name="deploy">
+  				  		<delete file="${deployDir}/${deploymentUnitName}.war"/>
+  					  </target>
+				</project>]]>
+			</task>
+			<classpathReference>weblogic.admin</classpathReference>
+		</unpublish>
+	</publisher>
+
+	<classpath id="jonas" isLibrary="true">
+		<archive path="${classPath}/lib/common/ow_jonas_bootstrap.jar" />
+		<archive path="${classPath}/conf" />
+	</classpath>
+
+	<classpath id="jonas.project" isLibrary="false">
+		<archive path="${classPath}/lib/common/ow_jonas_bootstrap.jar" />
+		<archive path="${classPath}/lib/commons/j2ee/ejb-2_1-api.jar" />
+		<archive path="${classPath}/lib/commons/j2ee/servlet-2_4.jar" />
+		<archive path="${classPath}/lib/commons/j2ee/jms.jar" />
+	</classpath>
+
+</tns:ServerRuntime>
