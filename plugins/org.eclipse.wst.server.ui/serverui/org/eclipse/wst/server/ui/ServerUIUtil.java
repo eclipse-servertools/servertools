@@ -29,10 +29,11 @@ public class ServerUIUtil {
 	/**
 	 * Open the new runtime wizard.
 	 * 
-	 * @param shell
-	 * @param type
-	 * @param version
-	 * @return
+	 * @param shell a shell to use when creating the wizard
+	 * @param type the type of module to create a runtime for
+	 * @param version the version of module to create a runtime for
+	 * @return <code>true</code> if a runtime was created, or
+	 *    <code>false</code> otherwise
 	 */
 	public static boolean showNewRuntimeWizard(Shell shell, final String type, final String version) {
 		return ServerUIPlugin.showNewRuntimeWizard(shell, type, version, null);

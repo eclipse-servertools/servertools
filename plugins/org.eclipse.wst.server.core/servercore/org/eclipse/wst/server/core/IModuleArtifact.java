@@ -24,7 +24,7 @@ public interface IModuleArtifact {
 	/**
 	 * Returns the module that this artifact is a part of.
 	 * 
-	 * @return org.eclipse.wst.server.core.IModule
+	 * @return the module that this artifact is contained in
 	 */
 	public IModule getModule();
 }

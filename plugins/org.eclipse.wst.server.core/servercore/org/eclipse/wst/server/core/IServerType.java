@@ -192,8 +192,8 @@ public interface IServerType {
 	 * </p>
 	 *
 	 * @return one of {@link #SERVER_STATE_SET_MANAGED},
-	 * {@link #SERVER_STATE_SET_ATTACHED}, or
-	 * {@link #SERVER_STATE_SET_PUBLISHED}
+	 *    {@link #SERVER_STATE_SET_ATTACHED}, or
+	 *    {@link #SERVER_STATE_SET_PUBLISHED}
 	 */
 	public int getServerStateSet();
 
@@ -206,8 +206,7 @@ public interface IServerType {
 	 * </p>
 	 * 
 	 * @return <code>true</code> if this type of server requires
-	 * a server configuration, and <code>false</code> if it does not
-	 * @see #getServerConfigurationType()
+	 *    a server configuration, and <code>false</code> if it does not
 	 */
 	public boolean hasServerConfiguration();
 
@@ -224,7 +223,7 @@ public interface IServerType {
 	 * </p>
 	 * 
 	 * @return <code>true</code> if this type of server can run on
-	 * a remote host, and <code>false</code> if it cannot
+	 *    a remote host, and <code>false</code> if it cannot
 	 */
 	public boolean supportsRemoteHosts();
 
@@ -266,7 +265,7 @@ public interface IServerType {
 	/**
 	 * Creates a working copy instance of this server type.
 	 * After setting various properties of the working copy,
-	 * the client should call {@link IServerWorkingCopy#save(IProgressMonitor)}
+	 * the client should call {@link IServerWorkingCopy#save(boolean, IProgressMonitor)}
 	 * to bring the server instance into existence.
 	 * <p>
 	 * [issue: Since this method just creates a working copy,
@@ -287,9 +286,9 @@ public interface IServerType {
 	 * @param id the id to assign to the server instance; a generated
 	 *    id is used if id is <code>null</code> or an empty string
 	 * @param file the file in the workspace where the server instance
-	 * is to be serialized, or <code>null</code> if the information is
-	 * instead to be persisted with the workspace but not with any
-	 * particular workspace resource
+	 *    is to be serialized, or <code>null</code> if the information is
+	 *    instead to be persisted with the workspace but not with any
+	 *    particular workspace resource
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return a new server working copy with the given id

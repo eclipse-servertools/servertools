@@ -22,7 +22,7 @@ public interface ICommandManager {
 	 * If the command cannot be undone, the user will be notifed
 	 * before it is executed.
 	 *
-	 * @param task
+	 * @param task a task to execute
 	 */
 	public void executeCommand(ITask task);
 }

@@ -56,7 +56,6 @@ public interface IModuleResourceDelta {
 	 * @see IModuleResourceDelta#ADDED
 	 * @see IModuleResourceDelta#REMOVED
 	 * @see IModuleResourceDelta#CHANGED
-	 * @see #getAffectedChildren(int)
 	 */
 	public IModuleResourceDelta[] getAffectedChildren();
 	

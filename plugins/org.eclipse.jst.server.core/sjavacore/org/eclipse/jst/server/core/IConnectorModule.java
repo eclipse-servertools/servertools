@@ -20,7 +20,7 @@ public interface IConnectorModule extends IJ2EEModule {
 	/**
 	 * Returns the classpath as an array of absolute IPaths.
 	 * 
-	 * return an array of classpath entries
+	 * @return an array of classpath entries
 	 */
 	public IPath[] getClasspath();
 }

@@ -22,6 +22,16 @@ public class EJBBean implements IModuleArtifact {
 	private boolean local;
 	private boolean remote;
 
+	/**
+	 * Create a new EJBBean.
+	 * 
+	 * @param module the module that the EJB is contained in
+	 * @param jndiName the JNDI name of the EJB
+	 * @param remote <code>true</code> if the EJB has a remote interface, and
+	 *    <code>false</code> otherwise
+	 * @param local <code>true</code> if the EJB has a local interface, and
+	 *    <code>false</code> otherwise
+	 */
 	public EJBBean(IModule module, String jndiName, boolean remote, boolean local) {
 		this.module = module;
 		this.jndiName = jndiName;
@@ -36,14 +46,31 @@ public class EJBBean implements IModuleArtifact {
 		return module;
 	}
 
+	/**
+	 * Returns the JNDI name of the EJB.
+	 * 
+	 * @return the JNDI name of the EJB
+	 */
 	public String getJndiName() {
 		return jndiName;
 	}
 
+	/**
+	 * Returns whether the EJB has a remote interface.
+	 * 
+	 * @return <code>true</code> if the EJB has a remote interface, and
+	 *    <code>false</code> otherwise
+	 */
 	public boolean hasRemoteInterface() {
 		return remote;
 	}
-	
+
+	/**
+	 * Returns whether the EJB has a local interface.
+	 * 
+	 * @return <code>true</code> if the EJB has a local interface, and
+	 *    <code>false</code> otherwise
+	 */
 	public boolean hasLocalInterface() {
 		return local;
 	}

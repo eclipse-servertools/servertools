@@ -16,10 +16,10 @@ package org.eclipse.wst.server.core.model;
  */
 public interface IModuleFile extends IModuleResource {
 	/**
-	 * Returns the monotonically increasing modification
-	 * stamp.
+	 * Returns a modification stamp. Whenever the modification
+	 * stamp changes, there may have been a change to the file.
 	 * 
-	 * @return
+	 * @return the modification stamp
 	 */
 	public long getModificationStamp();
 }

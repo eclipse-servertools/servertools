@@ -20,27 +20,33 @@ import org.eclipse.wst.server.core.ILaunchable;
 public class JndiLaunchable implements ILaunchable {
 	private Properties props;
 	private String jndiName;
-	private String server;
-	private int port;
 
+	/**
+	 * Create a reference to an object that is launchable via JNDI.
+	 * 
+	 * @param props the JNDI properties required to connect to the object
+	 * @param jndiName the JNDI name of the object
+	 */
 	public JndiLaunchable(Properties props, String jndiName) {
 		this.jndiName = jndiName;
 		this.props = props;
 	}
 
+	/**
+	 * Returns the JNDI properties required to connect to the object.
+	 * 
+	 * @return the JNDI properties required to connect to the object
+	 */
 	public Properties getProperties() {
 		return props;
 	}
 
+	/**
+	 * Returns the JNDI name of the object.
+	 * 
+	 * @return the JNDI name of the object
+	 */
 	public String getJNDIName() {
 		return jndiName;
-	}
-	
-	public String getServer() {
-		return server;
-	}
-	
-	public int getHTTPPort() {
-		return port;
 	}
 }

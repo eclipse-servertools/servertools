@@ -759,7 +759,7 @@ public class ServerPlugin extends Plugin {
 	/**
 	 * Returns an array of all module artifact adapters.
 	 *
-	 * @return
+	 * @return a possibly empty array of module artifact adapters
 	 */
 	protected static ModuleArtifactAdapter[] getModuleArtifactAdapters() {
 		if (moduleArtifactAdapters == null)

@@ -24,7 +24,7 @@ public abstract class ServerMonitorDelegate {
 	 * -1 to pick a random port.
 	 * 
 	 * @param port
-	 * @return
+	 * @return the port used for monitoring
 	 */
 	public abstract int startMonitoring(IServer server, IServerPort port, int monitorPort) throws CoreException;
 

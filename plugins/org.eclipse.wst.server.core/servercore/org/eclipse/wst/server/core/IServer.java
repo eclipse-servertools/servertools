@@ -157,28 +157,28 @@ public interface IServer extends IServerAttributes {
 	/**
 	 * Publish kind constant (value 1) indicating an incremental publish request.
 	 * 
-	 * @see publish(int, IProgressMonitor)
+	 * @see #publish(int, IProgressMonitor)
 	 */
 	public static final int PUBLISH_INCREMENTAL = 1;
 
 	/**
 	 * Publish kind constant (value 2) indicating a full publish request.
 	 * 
-	 * @see publish(int, IProgressMonitor)
+	 * @see #publish(int, IProgressMonitor)
 	 */
 	public static final int PUBLISH_FULL = 2;
 
 	/**
 	 * Publish kind constant (value 3) indicating an automatic publish request.
 	 * 
-	 * @see publish(int, IProgressMonitor)
+	 * @see #publish(int, IProgressMonitor)
 	 */
 	public static final int PUBLISH_AUTO = 3;
 
 	/**
 	 * Publish kind constant (value 4) indicating a publish clean request
 	 * 
-	 * @see publish(int, IProgressMonitor)
+	 * @see #publish(int, IProgressMonitor)
 	 */
 	public static final int PUBLISH_CLEAN = 4;
 
@@ -216,13 +216,14 @@ public interface IServer extends IServerAttributes {
 	/**
 	 * Returns the server's sync state.
 	 *
-	 * @return int
+	 * @return one of the PUBLISH_XXX state flags
 	 */
 	public int getServerPublishState();
 	
 	/**
 	 * Returns the module's sync state.
-	 * @return
+	 * 
+	 * @return one of the PUBLISH_XXX state flags
 	 */
 	public int getModulePublishState(IModule module);
 
@@ -319,7 +320,8 @@ public interface IServer extends IServerAttributes {
 	 * @param create
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
-	 * @return
+	 * @return the launch configuration, no <code>null</code> if there was no
+	 *    existing launch configuration and <code>create</code> was false
 	 * @throws CoreException
 	 */
 	public ILaunchConfiguration getLaunchConfiguration(boolean create, IProgressMonitor monitor) throws CoreException;
@@ -426,7 +428,7 @@ public interface IServer extends IServerAttributes {
 	
 	/**
 	 * Synchronously restarts this server. This operation does
-	 * nothing if this server cannot be stopped ({@link #canRestart()}
+	 * nothing if this server cannot be stopped ({@link #canRestart(String)}
 	 * returns <code>false</code>.
 	 * <p>
 	 * [issue: There is no way to communicate failure to the
@@ -478,7 +480,7 @@ public interface IServer extends IServerAttributes {
 	/**
 	 * Stops this server and waits until the server has completely stopped.
 	 * <p>
-	 * This convenience method uses {@link #stop()}
+	 * This convenience method uses {@link #stop(boolean)}
 	 * to stop the server, and an internal thread and listener to detect
 	 * when the server has complied.
 	 * </p>
@@ -582,12 +584,11 @@ public interface IServer extends IServerAttributes {
 	 * another modules. Each of these may contain child modules, which are
 	 * also deployed to this server.
 	 * </p>
-	 * 
-	 * @see IServerAttributes.getModules()
 	 *
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return a possibly-empty array of modules
+	 * @see IServerAttributes.getModules()
 	 */
 	public IModule[] getServerModules(IProgressMonitor monitor);
 }

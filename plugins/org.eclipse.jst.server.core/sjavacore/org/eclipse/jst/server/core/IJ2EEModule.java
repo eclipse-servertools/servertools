@@ -20,7 +20,7 @@ public interface IJ2EEModule {
 	/**
 	 * Returns a version number in the form "x.y.z".
 	 * 
-	 * @param the J2EE specification version
+	 * @return the J2EE specification version
 	 */
 	public String getJ2EESpecificationVersion();
 

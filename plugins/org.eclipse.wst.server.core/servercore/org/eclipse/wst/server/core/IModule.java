@@ -76,7 +76,7 @@ public interface IModule extends IAdaptable {
 	/**
 	 * Returns the type of this module.
 	 * 
-	 * @return
+	 * @return the module type
 	 */
 	public IModuleType getModuleType();
 

@@ -21,24 +21,47 @@ public class Servlet implements IModuleArtifact {
 	private String className;
 	private String alias;
 	
+	/**
+	 * Create a reference to a servlet.
+	 * 
+	 * @param module the module that the servlet is contained in
+	 * @param className the class name of the servlet
+	 * @param alias the servlet's alias
+	 */
 	public Servlet(IModule module, String className, String alias) {
 		this.module = module;
 		this.className = className;
 		this.alias = alias;
 	}
 
+	/*
+	 * @see IModuleArtifact#getModule()
+	 */
 	public IModule getModule() {
 		return module;
 	}
 
+	/**
+	 * Return the class name of the servlet.
+	 * 
+	 * @return the class name of the servlet
+	 */
 	public String getServletClassName() {
 		return className;
 	}
 	
+	/**
+	 * Return the servlet's alias.
+	 * 
+	 * @return the servlet's alias
+	 */
 	public String getAlias() {
 		return alias;
 	}
-	
+
+	/*
+	 * @see Object#toString()
+	 */
 	public String toString() {
 		return "Servlet [module=" + module + ", class=" + className + ", alias=" + alias + "]";
 	}

@@ -20,14 +20,27 @@ import org.eclipse.wst.server.core.ILaunchable;
 public class HttpLaunchable implements ILaunchable {
 	private URL url;
 
+	/**
+	 * Create a reference to something accessible via HTTP.
+	 * 
+	 * @param url the URL to the object
+	 */
 	public HttpLaunchable(URL url) {
 		this.url = url;
 	}
 
+	/**
+	 * Return the URL to the object.
+	 * 
+	 * @return the URL to the object
+	 */
 	public URL getURL() {
 		return url;
 	}
 
+	/*
+	 * @see Object#toString()
+	 */
 	public String toString() {
 		return "HttpLaunchable[url=" + url.toString() + "]";
 	}

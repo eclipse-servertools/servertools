@@ -27,7 +27,9 @@ public class RunOnServerAction extends Action {
 	protected RunOnServerActionDelegate delegate;
 
 	/**
-	 * RunOnServerAction constructor comment.
+	 * Run on server action.
+	 * 
+	 * @param the object to attempt to debug
 	 */
 	public RunOnServerAction(Object object) {
 		super(ServerUIPlugin.getResource("%actionRunOnServer"));

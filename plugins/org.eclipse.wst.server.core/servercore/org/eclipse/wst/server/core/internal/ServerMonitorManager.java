@@ -188,7 +188,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	/**
 	 * Returns the monitor that is currently being used.
 	 *  
-	 * @return
+	 * @return the current server monitor
 	 */
 	public IServerMonitor getCurrentServerMonitor() {
 		return monitor;
@@ -208,7 +208,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	/**
 	 * Returns the list of ports that are currently being monitored.
 	 *
-	 * @return
+	 * @return a possibly empty array of monitored server ports
 	 */
 	public IMonitoredServerPort[] getMonitoredPorts(IServer server) {
 		List list = new ArrayList();
@@ -229,7 +229,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	 * route to the monitored port.
 	 * 
 	 * @param port
-	 * @return
+	 * @return a monitored server port
 	 * @throws org.eclipse.core.runtime.CoreException
 	 */
 	public IMonitoredServerPort createMonitor(IServer server, IServerPort port, int monitorPort, String[] content) {
@@ -295,7 +295,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	 * monitored.
 	 * 
 	 * @param port
-	 * @return
+	 * @return the port used for monitoring
 	 */
 	public int getMonitoredPort(IServer server, int port, String content) {
 		try {

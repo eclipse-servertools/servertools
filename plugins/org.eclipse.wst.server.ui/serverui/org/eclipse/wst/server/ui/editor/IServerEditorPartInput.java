@@ -22,14 +22,15 @@ public interface IServerEditorPartInput extends IEditorInput {
 	/**
 	 * Returns the server to be edited.
 	 *
-	 * @return IServerWorkingCopy
+	 * @return a working copy of the server
 	 */
 	public IServerWorkingCopy getServer();
 
 	/**
 	 * Returns true if the server is read-only.
 	 * 
-	 * @return boolean
+	 * @return boolean <code>true</code> if the server is read-only,
+	 *    and <code>false</code> otherwise
 	 */
 	public boolean isServerReadOnly();
 	
@@ -38,7 +39,7 @@ public interface IServerEditorPartInput extends IEditorInput {
 	 * ICommand and passing it to the command manager, which actually performs
 	 * the action and updates the server.
 	 *
-	 * @param commandManager ICommandManager
+	 * @return commandManager the command manager
 	 */
 	public ICommandManager getServerCommandManager();
 }

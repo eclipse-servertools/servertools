@@ -28,6 +28,12 @@ public class ServerUICore {
 		super();
 	}
 
+	/**
+	 * Returns a label provider that can be used for all server
+	 * objects in the UI.
+	 * 
+	 * @return a label provider
+	 */
 	public static ILabelProvider getLabelProvider() {
 		if (labelProvider == null)
 			labelProvider = new ServerLabelProvider();

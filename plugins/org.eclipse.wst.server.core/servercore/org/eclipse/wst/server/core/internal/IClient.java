@@ -68,7 +68,8 @@ public interface IClient {
 	 * @param launchable
 	 * @param launchMode
 	 * @param launch
-	 * @return
+	 * @return a status object with code <code>IStatus.OK</code> if the launch was
+	 *   successful, otherwise a status object indicating what went wrong
 	 */
 	public IStatus launch(IServer server, ILaunchable launchable, String launchMode, ILaunch launch);
 }

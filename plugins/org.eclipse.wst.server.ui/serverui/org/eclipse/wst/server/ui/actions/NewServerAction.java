@@ -24,7 +24,7 @@ public class NewServerAction extends LaunchWizardAction {
 	protected String[] values;
 
 	/**
-	 * NewServerAction constructor comment.
+	 * New server action.
 	 */
 	public NewServerAction() {
 		super();
@@ -32,7 +32,13 @@ public class NewServerAction extends LaunchWizardAction {
 		setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CTOOL_NEW_SERVER));
 		setText(ServerUIPlugin.getResource("%actionSetNewServer"));
 	}
-
+	
+	/**
+	 * New server action.
+	 * 
+	 * @param ids ids to pass into the action
+	 * @param values values to pass into the action
+	 */
 	public NewServerAction(String[] ids, String[] values) {
 		this();
 		this.ids = ids;

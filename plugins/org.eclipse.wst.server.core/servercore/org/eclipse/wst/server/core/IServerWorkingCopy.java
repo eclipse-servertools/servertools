@@ -244,7 +244,7 @@ public interface IServerWorkingCopy extends IServerAttributes {
 	 * 
 	 * @param host a host string conforming to RFC 2732
 	 * @see IServer#getHost()
-	 * @see java.net.URL.getHost()
+	 * @see java.net.URL#getHost()
 	 */
 	public void setHost(String host);
 

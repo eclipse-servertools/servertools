@@ -1930,7 +1930,7 @@ public class Server extends Base implements IServer {
 	/**
 	 * Returns an array of IServerPorts that this server has.
 	 *
-	 * @return 
+	 * @return a possibly empty array of servers ports
 	 */
 	public IServerPort[] getServerPorts() {
 		try {

@@ -23,7 +23,6 @@ import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
  * 
- * @see ServerCore
  * @since 1.0
  */
 public interface IRuntimeLocator {

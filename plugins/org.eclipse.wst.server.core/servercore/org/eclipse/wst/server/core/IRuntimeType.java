@@ -126,14 +126,14 @@ public interface IRuntimeType {
 	 * 
 	 * @return <code>true</code> if this type of runtime can be
 	 * instantiated, and <code>false</code> if it cannot
-	 * @see #createRuntime(String)
+	 * @see #createRuntime(String, IProgressMonitor)
 	 */
 	public boolean canCreate();
 
 	/**
 	 * Creates a working copy instance of this runtime type.
 	 * After setting various properties of the working copy,
-	 * the client should call {@link IRuntimeWorkingCopy#save(IProgressMonitor)}
+	 * the client should call {@link IRuntimeWorkingCopy#save(boolean, IProgressMonitor)}
 	 * to bring the runtime instance into existence.
 	 * <p>
 	 * Default values are set by calling the instance's delegate.

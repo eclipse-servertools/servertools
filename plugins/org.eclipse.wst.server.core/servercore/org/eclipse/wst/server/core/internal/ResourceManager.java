@@ -716,7 +716,7 @@ public class ResourceManager {
 	/**
 	 * Returns an array containing all servers.
 	 *
-	 * @return
+	 * @return an array containing all servers
 	 */
 	public IServer[] getServers() {
 		IServer[] servers2 = new IServer[servers.size()];
@@ -736,7 +736,7 @@ public class ResourceManager {
 	/**
 	 * Returns the server with the given id.
 	 *
-	 * @return
+	 * @return a server
 	 */
 	public IServer getServer(String id) {
 		if (id == null)

@@ -43,14 +43,14 @@ public interface IServerMonitorManager {
 	 * Stop monitoring the given port. Throws a CoreException if there was a problem
 	 * stopping the monitoring
 	 *
-	 * @param port
+	 * @param msp the monitored port
 	 */
 	public void removeMonitor(IMonitoredServerPort msp);
 
 	/**
 	 * Start the monitor. If the msp port is -1, it will be updated to the port that is actually in use.
 	 * 
-	 * @param port
+	 * @param msp the monitored port 
 	 * @throws CoreException
 	 */
 	public void startMonitor(IMonitoredServerPort msp) throws CoreException;
@@ -58,9 +58,9 @@ public interface IServerMonitorManager {
 	/**
 	 * Stop monitoring.
 	 * 
-	 * @param port
+	 * @param msp the monitored port
 	 */
-	public void stopMonitor(IMonitoredServerPort port);
+	public void stopMonitor(IMonitoredServerPort msp);
 
 	/**
 	 * Returns the monitored port to use when making requests to the given server, port number,

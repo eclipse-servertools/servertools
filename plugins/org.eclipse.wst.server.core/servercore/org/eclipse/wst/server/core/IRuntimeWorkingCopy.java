@@ -101,7 +101,7 @@ public interface IRuntimeWorkingCopy extends IRuntime {
 	 * {@link IRuntime#createWorkingCopy()},
 	 * <code>this.getOriginal()</code> returns the original
 	 * runtime object. For a runtime working copy just created by
-	 * a call to {@link IRuntimeType#createRuntime(String)},
+	 * a call to {@link IRuntimeType#createRuntime(String, IProgressMonitor)},
 	 * <code>this.getOriginal()</code> returns <code>null</code>.
 	 * </p>
 	 * 

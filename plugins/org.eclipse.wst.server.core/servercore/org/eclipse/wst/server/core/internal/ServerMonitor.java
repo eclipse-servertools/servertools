@@ -74,7 +74,7 @@ public class ServerMonitor implements IServerMonitor {
 	 * Start monitoring the given port, and return the port number to
 	 * tunnel requests through.
 	 * @param port
-	 * @return
+	 * @return the port used for monitoring
 	 */
 	public int startMonitoring(IServer server, IServerPort port, int monitorPort) throws CoreException {
 		try {

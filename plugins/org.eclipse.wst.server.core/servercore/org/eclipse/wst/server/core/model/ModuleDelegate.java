@@ -95,23 +95,22 @@ public abstract class ModuleDelegate {
 	 * </p>
 	 *
 	 * @return a status object with code <code>IStatus.OK</code> if this
-	 * runtime is valid, otherwise a status object indicating what is
-	 * wrong with it
+	 *   runtime is valid, otherwise a status object indicating what is
+	 *   wrong with it
 	 */
 	public abstract IStatus validate();
 
 	/**
 	 * Returns the child modules of this module.
 	 *
-	 * @return org.eclipse.wst.server.core.IModule[]
+	 * @return a possibly empty array of child modules
 	 */
 	public abstract IModule[] getChildModules();
 	
 	/**
 	 * Returns the current array of module artifacts.
 	 * 
-	 * @param module
-	 * @return an array containing the module resources
+	 * @return a possibly empty array containing the module resources
 	 */
 	public abstract IModuleResource[] members() throws CoreException;
 }

@@ -62,8 +62,9 @@ public interface ITask {
 	/**
 	 * Execute (perform) the task.
 	 * 
-	 * @param monitor
-	 * @throws CoreException
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException if there was an error while executing the task
 	 */
 	public void execute(IProgressMonitor monitor) throws CoreException;
 

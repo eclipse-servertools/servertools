@@ -180,7 +180,7 @@ public abstract class ServerDelegate {
 	 * To obtain the full module tree, this method may be
 	 * recursively called on the children.</p>
 	 *
-	 * @see IServer#getChildModules(IModule)
+	 * @see IServerAttributes#getChildModules(IModule)
 	 */
 	public abstract IModule[] getChildModules(IModule module);
 
@@ -204,7 +204,7 @@ public abstract class ServerDelegate {
 	 * @return an array of possible root modules
 	 * @throws org.eclipse.core.runtime.CoreException
 	 *
-	 * @see IServer#getRootModules(IModule)
+	 * @see IServerAttributes#getRootModules(IModule)
 	 */
 	public abstract IModule[] getRootModules(IModule module) throws CoreException;
 	
@@ -232,7 +232,7 @@ public abstract class ServerDelegate {
 	 * 
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
-	 * @see getAttribute(String, int)
+	 * @see #getAttribute(String, int)
 	 */
 	public final void setAttribute(String id, int value) {
 		serverWC.setAttribute(id, value);
@@ -244,7 +244,7 @@ public abstract class ServerDelegate {
 	 * 
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
-	 * @see getAttribute(String, boolean)
+	 * @see #getAttribute(String, boolean)
 	 */
 	public final void setAttribute(String id, boolean value) {
 		serverWC.setAttribute(id, value);
@@ -256,7 +256,7 @@ public abstract class ServerDelegate {
 	 * 
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
-	 * @see getAttribute(String, String)
+	 * @see #getAttribute(String, String)
 	 */
 	public final void setAttribute(String id, String value) {
 		serverWC.setAttribute(id, value);
@@ -268,7 +268,7 @@ public abstract class ServerDelegate {
 	 * 
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
-	 * @see getAttribute(String, List)
+	 * @see #getAttribute(String, List)
 	 */
 	public final void setAttribute(String id, List value) {
 		serverWC.setAttribute(id, value);
@@ -280,7 +280,7 @@ public abstract class ServerDelegate {
 	 * 
 	 * @param id the attribute id
 	 * @param value the value of the specified attribute
-	 * @see getAttribute(String, Map)
+	 * @see #getAttribute(String, Map)
 	 */
 	public final void setAttribute(String id, Map value) {
 		serverWC.setAttribute(id, value);

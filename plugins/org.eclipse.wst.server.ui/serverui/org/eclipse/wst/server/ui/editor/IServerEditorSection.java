@@ -19,16 +19,30 @@ import org.eclipse.ui.IEditorSite;
  * @since 1.0
  */
 public interface IServerEditorSection {
+	/**
+	 * Initialize the section.
+	 * 
+	 * @param site the editor site
+	 * @param input the editor input
+	 */
 	public void init(IEditorSite site, IEditorInput input);
 	
+	/**
+	 * Create the section.
+	 * 
+	 * @param parent the parent composite
+	 */
 	public void createSection(Composite parent);
-	
+
+	/**
+	 * Disposes of the section.
+	 */
 	public void dispose();
 	
 	/**
 	 * Return the error message for this page.
 	 * 
-	 * @return java.lang.String
+	 * @return the error message
 	 */
 	public String getErrorMessage();
 
@@ -37,7 +51,9 @@ public interface IServerEditorSection {
 	 * server resource is saved. If there are any error messages, the
 	 * user will be unable to save the editor.
 	 * 
-	 * @return org.eclipse.core.runtime.IStatus
+	 * @return a status object with code <code>IStatus.OK</code> if this
+	 *   server can be saved, otherwise a status object indicating why
+	 *   it can't be
 	 */
 	public IStatus[] getSaveStatus();
 }

@@ -179,7 +179,9 @@ public interface IServerAttributes extends IAdaptable {
 	 * Validates whether this server can be editted.
 	 * 
 	 * @param context
-	 * @return
+	 * @return a status object with code <code>IStatus.OK</code> if the server
+	 *   can be edited, otherwise a status object indicating what when wrong
+	 *   with the checkout
 	 */
 	public IStatus validateEdit(Object context);
 
@@ -199,7 +201,7 @@ public interface IServerAttributes extends IAdaptable {
 	 * or an IP address and must conform to RFC 2732.
 	 * 
 	 * @return a host string conforming to RFC 2732
-	 * @see java.net.URL.getHost()
+	 * @see java.net.URL#getHost()
 	 */
 	public String getHost();
 	
@@ -305,9 +307,8 @@ public interface IServerAttributes extends IAdaptable {
 	 * also deployed to this server.
 	 * </p>
 	 * 
-	 * @see IServer.getModules()
-	 *
 	 * @return a possibly-empty array of modules
+	 * @see IServer.getServerModules()
 	 */
 	public IModule[] getModules();
 
@@ -379,7 +380,7 @@ public interface IServerAttributes extends IAdaptable {
 	/**
 	 * Returns an array of IServerPorts that this server has.
 	 *
-	 * @return the servers ports
+	 * @return a possibly empty array of servers ports
 	 */
 	public IServerPort[] getServerPorts();
 }

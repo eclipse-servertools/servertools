@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.wst.server.core.model.IModuleFile;
 /**
  * 
+ * @since 1.0
  */
 public class ModuleFile implements IModuleFile {
 	protected String name;

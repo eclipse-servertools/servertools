@@ -27,8 +27,8 @@ public abstract class RuntimeTargetHandlerDelegate {
 	 * 
 	 * @param handler2
 	 */
-	public final void initialize(IRuntimeTargetHandler handler2) {
-		handler = handler2;
+	public final void initialize(IRuntimeTargetHandler newHandler) {
+		handler = newHandler;
 	}
 
 	/**
@@ -43,20 +43,22 @@ public abstract class RuntimeTargetHandlerDelegate {
 	/**
 	 * Set the runtime target on the given project.
 	 * 
-	 * @param project
-	 * @param runtime
-	 * @param monitor
-	 * @throws CoreException
+	 * @param project the project to set the runtime on
+	 * @param runtime the target runtime
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException thrown if there is a problem setting the runtime
 	 */
 	public abstract void setRuntimeTarget(IProject project, IRuntime runtime, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Remove the runtime target from the given project.
 	 * 
-	 * @param project
-	 * @param runtime
-	 * @param monitor
-	 * @throws CoreException
+	 * @param project the project to remove the runtime from
+	 * @param runtime the target runtime
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException thrown if there is a problem removing the runtime
 	 */
 	public abstract void removeRuntimeTarget(IProject project, IRuntime runtime, IProgressMonitor monitor) throws CoreException;
 }

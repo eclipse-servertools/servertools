@@ -146,7 +146,8 @@ public class ServerUtil {
 	 * @param moduleTypes
 	 * @param typeId
 	 * @param versionId
-	 * @return
+	 * @return <code>true</code> if the module type is supported, and
+	 *    <code>false</code> otherwise
 	 */
 	public static boolean isSupportedModule(IModuleType[] moduleTypes, String typeId, String versionId) {
 		if (moduleTypes != null) {
@@ -176,7 +177,8 @@ public class ServerUtil {
 	 * 
 	 * @param moduleTypes
 	 * @param mt
-	 * @return
+	 * @return <code>true</code> if the module type is supported, and
+	 *    <code>false</code> otherwise
 	 */
 	public static boolean isSupportedModule(IModuleType[] moduleTypes, IModuleType mt) {
 		if (moduleTypes != null) {
@@ -205,7 +207,8 @@ public class ServerUtil {
 	 * 
 	 * @param moduleType
 	 * @param mt
-	 * @return
+	 * @return <code>true</code> if the module type is supported, and
+	 *    <code>false</code> otherwise
 	 */
 	public static boolean isSupportedModule(IModuleType moduleType, IModuleType mt) {
 		if (moduleType == null || mt == null)

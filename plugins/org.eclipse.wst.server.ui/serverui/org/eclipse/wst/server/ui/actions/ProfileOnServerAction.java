@@ -27,7 +27,9 @@ public class ProfileOnServerAction extends Action {
 	protected ProfileOnServerActionDelegate delegate;
 
 	/**
-	 * ProfileOnServerAction constructor comment.
+	 * Profile an object on server.
+	 * 
+	 * @param the object to attempt to debug
 	 */
 	public ProfileOnServerAction(Object object) {
 		super(ServerUIPlugin.getResource("%actionProfileOnServer"));

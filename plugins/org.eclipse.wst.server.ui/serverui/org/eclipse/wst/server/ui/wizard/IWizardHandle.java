@@ -26,26 +26,29 @@ public interface IWizardHandle extends IMessageProvider {
 	/**
 	 * Sets the title of this wizard page.
 	 *  
-	 * @param title
+	 * @param title the title of the wizard page
 	 */
 	public void setTitle(String title);
 
 	/**
+	 * The page's description.
 	 * 
-	 * @param desc
+	 * @param desc the page's description
 	 */
 	public void setDescription(String desc);
 
 	/**
+	 * The page's image descriptor.
 	 * 
-	 * @param image
+	 * @param image the page's image descriptor
 	 */
 	public void setImageDescriptor(ImageDescriptor image);
 
 	/**
+	 * Set an error or warning message.
 	 * 
-	 * @param newMessage
-	 * @param newType
+	 * @param newMessage the new message
+	 * @param newType the new type, from IStatus
 	 */
 	public void setMessage(String newMessage, int newType);
 

@@ -20,15 +20,29 @@ public class JndiObject implements IModuleArtifact {
 	private IModule module;
 	private String jndiName;
 	
+	/**
+	 * Create a reference to an object in JNDI.
+	 * 
+	 * @param module the module that the object is contained in
+	 * @param jndiName the JNDI name of the object
+	 */
 	public JndiObject(IModule module, String jndiName) {
 		this.module = module;
 		this.jndiName = jndiName;
 	}
 
+	/*
+	 * @see IModuleArtifact#getModule()
+	 */
 	public IModule getModule() {
 		return module;
 	}
 
+	/**
+	 * Return the JNDI name of the object.
+	 * 
+	 * @return the JNDI name of the object
+	 */
 	public String getJndiName() {
 		return jndiName;
 	}

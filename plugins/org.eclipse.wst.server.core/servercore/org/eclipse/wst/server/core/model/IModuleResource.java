@@ -20,14 +20,14 @@ public interface IModuleResource {
 	/**
 	 * Returns the module relative path to this resource.
 	 * 
-	 * @return
+	 * @return the module relative path to this resource
 	 */
 	public IPath getModuleRelativePath();
 	
 	/**
 	 * Returns the name of this resource.
 	 * 
-	 * @return
+	 * @return the name of this resource
 	 */
 	public String getName();
 }
