@@ -535,7 +535,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * Determines whether there is a server factory available for the given module
 	 * and the various start modes.
 	 */
-	protected boolean findGlobalLaunchModes(IModule module) {
+	protected void findGlobalLaunchModes(IModule module) {
 		IServerType[] serverTypes = ServerCore.getServerTypes();
 		if (serverTypes != null) {
 			int size = serverTypes.length;
@@ -550,7 +550,6 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				}
 			}
 		}
-		return false;
 	}
 
 	/**
