@@ -634,7 +634,7 @@ public class ServerEditor extends MultiPageEditorPart {
 
 		if (serverId != null) {
 			commandManager.getCommandManager(serverId);
-			server = (IServerWorkingCopy) commandManager.getServerResource(serverId);
+			server = commandManager.getServerResource(serverId);
 		}
 
 		ILabelProvider labelProvider = ServerUICore.getLabelProvider();
@@ -666,7 +666,7 @@ public class ServerEditor extends MultiPageEditorPart {
 				} else if (GlobalCommandManager.PROP_RELOAD.equals(event.getPropertyName())) {
 					Object obj = event.getOldValue();
 					if (obj == serverId) {
-						server = (IServerWorkingCopy) commandManager.getServerResource(serverId);
+						server = commandManager.getServerResource(serverId);
 						refresh();
 					}
 				}

@@ -720,7 +720,7 @@ public class ResourceManager {
 	 */
 	public IServer[] getServers() {
 		List list = new ArrayList(servers);
-		List list2 = ServerPlugin.sortServerResourceList(list);
+		List list2 = ServerPlugin.sortServerList(list);
 		
 		IServer[] s = new IServer[list2.size()];
 		list2.toArray(s);

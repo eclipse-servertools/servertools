@@ -40,6 +40,8 @@ import org.eclipse.wst.server.core.util.ModuleFactoryEvent;
  * likely to change significantly before the initial release.</it>
  * </p>
  * 
+ * @see org.eclipse.wst.server.core.IModule
+ * @see ModuleDelegate
  * @since 1.0
  */
 public abstract class ModuleFactoryDelegate {
@@ -47,6 +49,13 @@ public abstract class ModuleFactoryDelegate {
 	private transient List listeners;
 
 	private ModuleFactory factory;
+	
+	/**
+	 * Delegates must have a public 0-arg constructor.
+	 */
+	public ModuleFactoryDelegate() {
+		// do nothing
+	}
 
 	/**
 	 * Initializes this module factory delegate with its life-long module
@@ -62,10 +71,28 @@ public abstract class ModuleFactoryDelegate {
 		factory = newFactory;
 	}
 
+	/**
+	 * Returns the id of this factory.
+	 * Each factory has a distinct id, fixed for its lifetime. Ids are intended to
+	 * be used internally as keys; they are not intended to be shown to end users.
+	 * 
+	 * @return the factory id
+	 */
 	protected String getId() {
 		return factory.getId();
 	}
-	
+
+	/**
+	 * Creates a module instance with the given static information. This method is used
+	 * by module factory delegates to create module instances.
+	 *  
+	 * @param id the module id
+	 * @param name the module name
+	 * @param type the module type id
+	 * @param version the module version id
+	 * @param project the project that the module is contained in
+	 * @return a module instance
+	 */
 	public IModule createModule(String id, String name, String type, String version, IProject project) {
 		return new Module(factory, id, name, type, version, project);
 	}
@@ -87,6 +114,14 @@ public abstract class ModuleFactoryDelegate {
 	 */
 	//public abstract IModule getModule(String memento);
 
+	/**
+	 * Creates the module delegate for a module with the given information.
+	 * This method is called when a client needs to access the module delegate
+	 * associated with the given module.
+	 * 
+	 * @param module a module
+	 * @return
+	 */
 	public abstract ModuleDelegate getModuleDelegate(IModule module);
 
 	/**
@@ -126,11 +161,11 @@ public abstract class ModuleFactoryDelegate {
 	public void addModuleFactoryListener(IModuleFactoryListener listener) {
 		Trace.trace(Trace.FINEST, "Adding module factory listener " + listener + " to " + this);
 		
-			if (listeners == null)
-				listeners = new ArrayList();
-			else if (listeners.contains(listener))
-				return;
-			listeners.add(listener);
+		if (listeners == null)
+			listeners = new ArrayList();
+		else if (listeners.contains(listener))
+			return;
+		listeners.add(listener);
 	}
 
 	/**
@@ -152,9 +187,13 @@ public abstract class ModuleFactoryDelegate {
 		if (listeners != null)
 			listeners.remove(listener);
 	}
-	
+
 	/**
-	 * Fire a module factory event.
+	 * Fire a module factory event. This method is used by the factory delegate to
+	 * fire events about module changes.
+	 * 
+	 * @param added a non-null array of modules that have been added
+	 * @param removed a non-null array of modules that have been removed
 	 */
 	protected void fireModuleFactoryEvent(IModule[] added, IModule[] removed) {
 		Trace.trace(Trace.FINEST, "->- Firing module factory event: " + toString() + " ->-");

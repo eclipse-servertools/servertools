@@ -71,7 +71,7 @@ public abstract class RuntimeDelegate {
 	 * Clients should never call this method.
 	 * </p>
 	 * 
-	 * @param server the runtime instance
+	 * @param newRuntime the runtime instance
 	 */
 	public final void initialize(Runtime newRuntime) {
 		runtime = newRuntime;

@@ -37,7 +37,7 @@ public class MimeMappingDialog extends Dialog {
 	 * MimeMappingDialog constructor comment.
 	 * @param parentShell org.eclipse.swt.widgets.Shell
 	 */
-	protected MimeMappingDialog(Shell parentShell) {
+	public MimeMappingDialog(Shell parentShell) {
 		this(parentShell, new MimeMapping("", ""));
 		isEdit = false;
 	}
@@ -46,7 +46,7 @@ public class MimeMappingDialog extends Dialog {
 	 * SystemPropertyDialog constructor comment.
 	 * @param parentShell org.eclipse.swt.widgets.Shell
 	 */
-	protected MimeMappingDialog(Shell parentShell, MimeMapping map) {
+	public MimeMappingDialog(Shell parentShell, MimeMapping map) {
 		super(parentShell);
 		this.map = map;
 		isEdit = true;

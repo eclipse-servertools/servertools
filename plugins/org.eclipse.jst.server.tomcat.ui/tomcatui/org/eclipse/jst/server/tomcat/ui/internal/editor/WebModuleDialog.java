@@ -60,7 +60,7 @@ public class WebModuleDialog extends Dialog {
 	 * WebModuleDialog constructor comment.
 	 * @param parentShell org.eclipse.swt.widgets.Shell
 	 */
-	protected WebModuleDialog(Shell parentShell, IServerAttributes server2, ITomcatServer server, ITomcatConfiguration config, WebModule module) {
+	public WebModuleDialog(Shell parentShell, IServerAttributes server2, ITomcatServer server, ITomcatConfiguration config, WebModule module) {
 		super(parentShell);
 		this.module = module;
 		this.server2 = server2;
@@ -73,7 +73,7 @@ public class WebModuleDialog extends Dialog {
 	 * WebModuleDialog constructor comment.
 	 * @param parentShell org.eclipse.swt.widgets.Shell
 	 */
-	protected WebModuleDialog(Shell parentShell, IServerAttributes server2, ITomcatServer server, ITomcatConfiguration config, boolean isProject) {
+	public WebModuleDialog(Shell parentShell, IServerAttributes server2, ITomcatServer server, ITomcatConfiguration config, boolean isProject) {
 		this(parentShell, server2, server, config, new WebModule("/", "", null, true));
 		isEdit = false;
 		this.isProject = isProject;

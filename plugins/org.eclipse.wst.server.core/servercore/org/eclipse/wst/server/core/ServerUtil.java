@@ -721,8 +721,10 @@ public class ServerUtil {
 
 		Iterator iterator = list.iterator();
 		while (iterator.hasNext()) {
-			IElement element = (IElement) iterator.next();
-			if (name.equalsIgnoreCase(element.getName()))
+			Object obj = iterator.next();
+			if (obj instanceof IServerAttributes && name.equalsIgnoreCase(((IServerAttributes)obj).getName()))
+				return true;
+			if (obj instanceof IRuntime && name.equalsIgnoreCase(((IRuntime)obj).getName()))
 				return true;
 		}
 

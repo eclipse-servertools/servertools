@@ -15,10 +15,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.wst.server.core.IElement;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.core.ITask;
+import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.ui.editor.ICommandManager;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 /**
@@ -89,7 +86,7 @@ public class ServerResourceCommandManager implements ICommandManager {
 			return false;
 		}
 		// check file timestamp
-		IElement serverfile = commandManager.getServerResource(id);
+		IServerAttributes serverfile = commandManager.getServerResource(id);
 		if (commandManager.hasChanged(id)) {
 			if (serverfile instanceof IServer)
 				editor.promptReloadServerFile(id, (IServerWorkingCopy) serverfile);

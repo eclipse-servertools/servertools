@@ -24,12 +24,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.wst.server.core.IElement;
-import org.eclipse.wst.server.core.IElementWorkingCopy;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.core.ITask;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.editor.ICommandManager;
 import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
@@ -74,7 +69,7 @@ public class GlobalCommandManager {
 		String id;
 		
 		// the working copy
-		IElementWorkingCopy wc;
+		IServerWorkingCopy wc;
 		
 		// files and timestamps
 		Map fileMap;
@@ -249,7 +244,7 @@ public class GlobalCommandManager {
 			if (serverInfo == null)
 				return null;
 			
-			server = (IServerWorkingCopy) serverInfo.wc;
+			server = serverInfo.wc;
 			serverReadOnly = serverInfo.isReadOnly;
 		}
 
@@ -259,7 +254,7 @@ public class GlobalCommandManager {
 	/**
 	 * 
 	 */
-	protected IElement getServerResource(String id) {
+	protected IServerWorkingCopy getServerResource(String id) {
 		CommandManagerInfo info = getExistingCommandManagerInfo(id);
 		if (info == null)
 			return null;
@@ -553,12 +548,10 @@ public class GlobalCommandManager {
 	/**
 	 * 
 	 */
-	public static IFile[] getReadOnlyFiles(IElement element) {
+	public static IFile[] getReadOnlyFiles(IServerAttributes server) {
 		try {
 			List list = new ArrayList();
-			IFile file = null;
-			if (element instanceof IServer)
-				file = ((IServer) element).getFile();
+			IFile file = server.getFile();
 			
 			if (file != null)
 				list.add(file);
@@ -630,10 +623,8 @@ public class GlobalCommandManager {
 	}
 	
 	protected static int getTimestamp(CommandManagerInfo info) {
-		IElement element = info.wc;
-		IElement element2 = null;
-		if (element instanceof IServer)
-			element2 = ((IServerWorkingCopy) element).getOriginal();
+		IServerAttributes element = info.wc;
+		IServerAttributes element2 = ((IServerWorkingCopy) element).getOriginal();
 
 		if (element2 != null)
 			return element2.getTimestamp();

@@ -13,20 +13,71 @@ package org.eclipse.wst.server.core.model;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IModule;
 /**
- * A module.
+ * A module delegate provides a mechanism for discovering information
+ * about individual modules. Modules are returned from module factory
+ * delegates; their delegates are created when
+ * ModuleFactoryDelegate.createModule() is called.
+ * <p>
+ * When the module needs to be given a delegate, the delegate class
+ * specified for the module is instantiated with a 0-argument
+ * constructor.
+ * </p>
+ * <p>
+ * Module delegates may keep state in instance fields, but that state is
+ * transient and will not be persisted across workbench sessions.
+ * </p>
+ * <p>
+ * This interface is intended to be implemented by clients.
+ * </p>
+ * <p>
+ * <it>Caveat: The server core API is still in an early form, and is
+ * likely to change significantly before the initial release.</it>
+ * </p>
  * 
- * <p>This is the implementation of a module delegate, returned from the
- * module factories extension point.</p>
+ * @see org.eclipse.wst.server.core.IModule
+ * @see ModuleFactoryDelegate
+ * @since 1.0
  */
 public abstract class ModuleDelegate {
 	private IModule module;
-	
-	public void initialize(IModule module2) {
-		this.module = module2;
+
+	/**
+	 * Delegates must have a public 0-arg constructor.
+	 */
+	public ModuleDelegate() {
+		// do nothing
 	}
 
 	/**
+	 * Initializes this module delegate with its life-long module instance.
+	 * <p>
+	 * This method is called by the server core framework.
+	 * Clients should never call this method.
+	 * </p>
 	 * 
+	 * @param newModule the module instance
+	 */
+	public final void initialize(IModule newModule) {
+		this.module = newModule;
+		initialize();
+	}
+
+	/**
+	 * Initializes this module delegate. This method gives delegates a chance
+	 * to do their own initialization.
+	 * <p>
+	 * This method is called by the server core framework.
+	 * Clients should never call this method.
+	 * </p>
+	 */
+	public void initialize() {
+		// do nothing
+	}
+
+	/**
+	 * Returns the module that this module delegate corresponds to.
+	 * 
+	 * @return the module
 	 */
 	public IModule getModule() {
 		return module;
