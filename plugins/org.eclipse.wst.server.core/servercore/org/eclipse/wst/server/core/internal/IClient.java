@@ -56,9 +56,9 @@ public interface IClient {
 	/**
 	 * Returns true if this launchable can be run by this client.
 	 * 
-	 * @param server org.eclipse.wst.server.core.IServer
-	 * @param launchable org.eclipse.wst.server.core.ILaunchable
-	 * @param launchMode String
+	 * @param server the server
+	 * @param launchable the launchable object
+	 * @param launchMode the mode
 	 * @return boolean
 	 */
 	public boolean supports(IServer server, ILaunchable launchable, String launchMode);
@@ -66,10 +66,10 @@ public interface IClient {
 	/**
 	 * Launches the client.
 	 * 
-	 * @param server
-	 * @param launchable
-	 * @param launchMode
-	 * @param launch
+	 * @param server the server
+	 * @param launchable the launchable object
+	 * @param launchMode the mode
+	 * @param launch the launch
 	 * @return a status object with code <code>IStatus.OK</code> if the launch was
 	 *   successful, otherwise a status object indicating what went wrong
 	 */

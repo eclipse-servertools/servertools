@@ -12,11 +12,11 @@ package org.eclipse.wst.server.core;
 /**
  * An optional task. 
  * 
- * issue: EY It is not clear to me that when this task will be run. Is this task be used for
+ * [issue: EY It is not clear to me that when this task will be run. Is this task be used for
  * both the server task and the module task? Will the place where the
  * task is being run depends on the server, e.g. the TDC tasks for the v6 server should be run
  * after the server is started the modules are added to the server; however, the EJB deploy task
- * makes more sense to be run before adding the project to the server.
+ * makes more sense to be run before adding the project to the server.]
  * 
  * @since 1.0
  */

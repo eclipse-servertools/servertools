@@ -36,10 +36,10 @@ public interface ILaunchableAdapter {
 	/**
 	 * Returns a launchable object from this module object.
 	 * 
-	 * @param server
-	 * @param moduleObject
+	 * @param server the server
+	 * @param moduleArtifact an artifact in the module
 	 * @return a launchable object
-	 * @exception thrown if there is a problem returning the launchable
+	 * @exception CoreException thrown if there is a problem returning the launchable
 	 */
-	public ILaunchable getLaunchable(IServer server, IModuleArtifact moduleObject) throws CoreException;
+	public ILaunchable getLaunchable(IServer server, IModuleArtifact moduleArtifact) throws CoreException;
 }
