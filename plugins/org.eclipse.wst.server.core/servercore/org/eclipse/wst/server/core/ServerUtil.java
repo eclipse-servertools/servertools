@@ -849,7 +849,7 @@ public class ServerUtil {
 	 * @param module com.ibm.etools.server.core.IModule
 	 * @return com.ibm.etools.server.core.IServer[]
 	 */
-	/*public static IServer[] getAvailableServersForModule(IModule module, boolean includeErrors, IProgressMonitor monitor) {
+	public static IServer[] getAvailableServersForModule(IModule module, boolean includeErrors, IProgressMonitor monitor) {
 		if (module == null)
 			return new IServer[0];
 
@@ -896,7 +896,7 @@ public class ServerUtil {
 		IServer[] allServers = new IServer[list.size()];
 		list.toArray(allServers);
 		return allServers;
-	}*/
+	}
 
 	/*public static boolean isDefaultAvailable(IServerType serverType, IModuleType moduleType) {
 		if (!isSupportedModule(serverType, moduleType))
