@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
@@ -52,9 +52,9 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	
 	protected Button autoPublishOnAction;
 	protected Button autoPublishLocal;
-	protected Text autoPublishLocalTime;
+	protected Spinner autoPublishLocalTime;
 	protected Button autoPublishRemote;
-	protected Text autoPublishRemoteTime;
+	protected Spinner autoPublishRemoteTime;
 
 	/**
 	 * ServerPreferencesPage constructor comment.
@@ -104,8 +104,10 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		autoPublishLocal.setSelection(preferences.getAutoPublishLocal());
 		//WorkbenchHelp.setHelp(savePrompt, ContextIds.);
 		
-		autoPublishLocalTime = new Text(composite, SWT.BORDER);
-		autoPublishLocalTime.setText(preferences.getAutoPublishLocalTime() + "");
+		autoPublishLocalTime = new Spinner(composite, SWT.BORDER);
+		autoPublishLocalTime.setMinimum(0);
+		autoPublishLocalTime.setMaximum(120);
+		autoPublishLocalTime.setSelection(preferences.getAutoPublishLocalTime());
 		autoPublishLocalTime.setEnabled(autoPublishLocal.getSelection());
 		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
 		data.widthHint = 75;
@@ -130,8 +132,10 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		autoPublishRemote.setSelection(preferences.getAutoPublishRemote());
 		//WorkbenchHelp.setHelp(autoPublishRemote, ContextIds.);
 		
-		autoPublishRemoteTime = new Text(composite, SWT.BORDER);
-		autoPublishRemoteTime.setText(preferences.getAutoPublishRemoteTime() + "");
+		autoPublishRemoteTime = new Spinner(composite, SWT.BORDER);
+		autoPublishLocalTime.setMinimum(0);
+		autoPublishLocalTime.setMaximum(120);
+		autoPublishRemoteTime.setSelection(preferences.getAutoPublishRemoteTime());
 		autoPublishRemoteTime.setEnabled(autoPublishRemote.getSelection());
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.widthHint = 75;
@@ -248,9 +252,9 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		createInWorkspace.setSelection(preferences.isDefaultCreateResourcesInWorkspace());
 		
 		autoPublishLocal.setSelection(preferences.getDefaultAutoPublishLocal());
-		autoPublishLocalTime.setText(preferences.getDefaultAutoPublishLocalTime() + "");
+		autoPublishLocalTime.setSelection(preferences.getDefaultAutoPublishLocalTime());
 		autoPublishRemote.setSelection(preferences.getDefaultAutoPublishRemote());
-		autoPublishRemoteTime.setText(preferences.getDefaultAutoPublishRemoteTime() + "");
+		autoPublishRemoteTime.setSelection(preferences.getDefaultAutoPublishRemoteTime());
 		
 		setSaveEditorStatus(uiPreferences.getDefaultSaveEditors());
 	
@@ -269,9 +273,9 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		preferences.setCreateResourcesInWorkspace(createInWorkspace.getSelection());
 		
 		preferences.setAutoPublishLocal(autoPublishLocal.getSelection());
-		preferences.setAutoPublishLocalTime(Integer.parseInt(autoPublishLocalTime.getText()));
+		preferences.setAutoPublishLocalTime(autoPublishLocalTime.getSelection());
 		preferences.setAutoPublishRemote(autoPublishRemote.getSelection());
-		preferences.setAutoPublishRemoteTime(Integer.parseInt(autoPublishRemoteTime.getText()));
+		preferences.setAutoPublishRemoteTime(autoPublishRemoteTime.getSelection());
 	
 		// auto restart any servers that are ready for restart
 		if (autoRestart.getSelection())

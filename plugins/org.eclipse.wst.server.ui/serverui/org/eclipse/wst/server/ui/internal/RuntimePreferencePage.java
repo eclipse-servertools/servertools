@@ -79,7 +79,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.horizontalSpacing = convertHorizontalDLUsToPixels(4);
-		layout.verticalSpacing = convertVerticalDLUsToPixels(4);
+		layout.verticalSpacing = convertVerticalDLUsToPixels(3);
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
 		layout.numColumns = 2;
@@ -93,6 +93,12 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		data.horizontalSpan = 2;
 		label.setLayoutData(data);
 		label.setText(ServerUIPlugin.getResource("%preferenceRuntimesDescription"));
+		
+		label = new Label(composite, SWT.WRAP);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		data.horizontalSpan = 2;
+		label.setLayoutData(data);
+		label.setText(ServerUIPlugin.getResource("%preferenceRuntimesTable"));
 		
 		final RuntimeComposite runtimeComp = new RuntimeComposite(composite, SWT.NONE, new RuntimeComposite.RuntimeSelectionListener() {
 			public void runtimeSelected(IRuntime runtime) {
@@ -116,7 +122,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		Composite buttonComp = new Composite(composite, SWT.NONE);
 		layout = new GridLayout();
 		layout.horizontalSpacing = 0;
-		layout.verticalSpacing = convertVerticalDLUsToPixels(4);
+		layout.verticalSpacing = convertVerticalDLUsToPixels(3);
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
 		layout.numColumns = 1;
@@ -168,6 +174,8 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		});
 		
 		Button search = SWTUtil.createButton(buttonComp, ServerUIPlugin.getResource("%search"));
+		data = (GridData) search.getLayoutData();
+		data.verticalIndent = 9;
 		search.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				try {

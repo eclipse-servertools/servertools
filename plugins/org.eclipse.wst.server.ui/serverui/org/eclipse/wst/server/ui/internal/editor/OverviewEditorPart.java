@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -47,7 +48,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 	protected Combo runtimeCombo;
 	protected Button autoPublishDefault;
 	protected Button autoPublishOverride;
-	protected Text autoPublishTime;
+	protected Spinner autoPublishTime;
 
 	protected boolean updating;
 
@@ -271,7 +272,11 @@ public class OverviewEditorPart extends ServerEditorPart {
 				}
 			});
 			
-			autoPublishTime = toolkit.createText(composite, svr.getAutoPublishTime() + "");
+			//autoPublishTime = toolkit.createText(composite, svr.getAutoPublishTime() + "");
+			autoPublishTime = new Spinner(composite, SWT.BORDER);
+			autoPublishTime.setMinimum(0);
+			autoPublishTime.setMaximum(120);
+			autoPublishTime.setSelection(svr.getAutoPublishTime());
 			data = new GridData(GridData.FILL_HORIZONTAL);
 			autoPublishTime.setLayoutData(data);
 			autoPublishTime.setEnabled(autoPublishOverride.getSelection());
@@ -281,8 +286,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 						return;
 					updating = true;
 					try {
-						int time = Integer.parseInt(autoPublishTime.getText()); 
-						getCommandManager().executeCommand(new SetServerAutoPublishTimeCommand(getServer(), time));
+						getCommandManager().executeCommand(new SetServerAutoPublishTimeCommand(getServer(), autoPublishTime.getSelection()));
 					} catch (Exception ex) {
 						// ignore
 					}
