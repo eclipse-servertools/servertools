@@ -15,4 +15,5 @@ package org.eclipse.wst.server.core.model;
  * should be started before calling API.
  */
 public interface IRunningActionServer {
+	// marker interface
 }

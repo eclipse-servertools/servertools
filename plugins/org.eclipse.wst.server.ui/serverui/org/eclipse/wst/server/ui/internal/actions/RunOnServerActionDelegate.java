@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.action.IAction;
@@ -29,7 +30,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Trace;
-import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.wizard.*;
@@ -188,7 +188,8 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				for (int i = 0; i < size && !found2; i++) {
 					IServerType type = serverTypes[i];
 					IModuleType2[] moduleTypes = type.getRuntimeType().getModuleTypes();
-					if (type.supportsLaunchMode(launchMode) && ServerUtil.isSupportedModule(moduleTypes, module.getType(), module.getVersion())) {
+					IModuleType2 mt = module.getModuleType();
+					if (type.supportsLaunchMode(launchMode) && ServerUtil.isSupportedModule(moduleTypes, mt.getId(), mt.getVersion())) {
 						found2 = true;
 					}
 				}
@@ -204,10 +205,10 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			return;
 
 		IServer server = null;
-		if (module instanceof IProjectModule) {
-			IProjectModule dp = (IProjectModule) module;
-			server = ServerCore.getProjectProperties(dp.getProject()).getDefaultServer();
-		}
+		IProject project = module.getProject();
+		if (project != null)
+			server = ServerCore.getProjectProperties(project).getDefaultServer();
+		
 		
 		// ignore preference if the server doesn't support this mode.
 		if (server != null && !ServerUtil.isCompatibleWithLaunchMode(server, launchMode))
@@ -227,10 +228,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			tasksRun = true;
 
 			// set preferred server if requested
-			if (server != null && preferred && module instanceof IProjectModule) {
+			if (server != null && preferred && project != null) {
 				try {
-					IProjectModule dp = (IProjectModule) module;
-					ServerCore.getProjectProperties(dp.getProject()).setDefaultServer(server, new NullProgressMonitor());
+					ServerCore.getProjectProperties(project).setDefaultServer(server, new NullProgressMonitor());
 				} catch (CoreException ce) {
 					String message = ServerUIPlugin.getResource("%errorCouldNotSavePreference");
 					ErrorDialog.openError(shell, ServerUIPlugin.getResource("%errorDialogTitle"), message, ce.getStatus());
@@ -531,7 +531,8 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	protected boolean isValidServerType(IServerType type, IModule module) {
 		try {
 			IRuntimeType runtimeType = type.getRuntimeType();
-			ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), module.getType(), module.getVersion());
+			IModuleType2 mt = module.getModuleType();
+			ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), mt.getId(), mt.getVersion());
 		} catch (Exception e) {
 			return false;
 		}

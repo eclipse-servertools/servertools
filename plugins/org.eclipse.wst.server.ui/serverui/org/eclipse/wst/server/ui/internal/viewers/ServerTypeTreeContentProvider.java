@@ -82,7 +82,7 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 							int size2 = moduleTypes.length;
 							for (int j = 0; j < size2; j++) {
 								IModuleType2 mb = moduleTypes[j];
-								IModuleType mt = ServerCore.getModuleType(mb.getType());
+								IModuleType mt = ServerCore.getModuleType(mb.getId());
 								if (mt != null) {
 									TreeElement ele = getOrCreate(list, mt.getName());
 									TreeElement ele2 = getOrCreate(ele.contents, mt.getName() + "/" + mb.getVersion(), mb.getVersion());

@@ -18,16 +18,15 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.model.IProjectModule;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
-
 /**
  * Action delegate for restarting a project within a running
  * server.
@@ -60,7 +59,7 @@ public class RestartProjectActionDelegate implements IActionDelegate {
 				dialog.setBlockOnOpen(false);
 				dialog.open();
 	
-				IProjectModule module = ServerUtil.getModuleProject(project);
+				IModule module = ServerUtil.getModuleProject(project);
 				if (module != null) {
 					IServer[] servers = ServerUtil.getServersByModule(module, null);
 					if (servers != null) {
@@ -120,7 +119,7 @@ public class RestartProjectActionDelegate implements IActionDelegate {
 			return;
 		}
 	
-		IProjectModule module = ServerUtil.getModuleProject(project);
+		IModule module = ServerUtil.getModuleProject(project);
 		if (module != null) {
 			IServer[] servers = ServerUtil.getServersByModule(module, null);
 			if (servers != null) {

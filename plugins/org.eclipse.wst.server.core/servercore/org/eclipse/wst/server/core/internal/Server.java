@@ -399,14 +399,14 @@ public class Server extends Base implements IServer {
 		//fireServerModuleStateChangeEvent(module);
 	}
 
-	protected void handleModuleProjectChange(final IResourceDelta delta, final IProjectModule[] moduleProjects) {
+	protected void handleModuleProjectChange(final IResourceDelta delta, final IModule[] moduleProjects) {
 		//Trace.trace(Trace.FINEST, "> handleDeployableProjectChange() " + server + " " + delta + " " + moduleProjects);
 		final int size = moduleProjects.length;
 		//final IModuleResourceDelta[] deployableDelta = new IModuleResourceDelta[size];
 		// TODO
 		IModuleVisitor visitor = new IModuleVisitor() {
 			public boolean visit(List parents, IModule module) {
-				if (!(module instanceof IProjectModule))
+				if (module.getProject() == null)
 					return true;
 				
 				for (int i = 0; i < size; i++) {
@@ -876,7 +876,7 @@ public class Server extends Base implements IServer {
 		try {
 			getDelegate(monitor).publishModule(parents, module, monitor);
 		} catch (CoreException ce) {
-			
+			// ignore
 		}
 		multi.setTime(System.currentTimeMillis() - time);
 		fireModulePublishFinished(parents, module, multi);
@@ -914,19 +914,26 @@ public class Server extends Base implements IServer {
 	protected List getTasks(List[] parents, IModule[] modules) {
 		List tasks = new ArrayList();
 		
+		String serverTypeId = getServerType().getId();
+		String serverConfigurationTypeId = null;
+		if (configuration != null)
+			serverConfigurationTypeId = configuration.getServerConfigurationType().getId();
+		
 		IServerTask[] serverTasks = ServerCore.getServerTasks();
 		if (serverTasks != null) {
 			int size = serverTasks.length;
 			for (int i = 0; i < size; i++) {
 				IServerTask task = serverTasks[i];
-				task.init(this, configuration, parents, modules);
-				byte status = task.getTaskStatus();
-				if (status == ServerTaskDelegate.TASK_MANDATORY) {
-					ServerTaskInfo info = new ServerTaskInfo();
-					info.task = task;
-					info.parents = parents;
-					info.modules = modules;
-					tasks.add(info);
+				if ((task.supportsType(serverTypeId)) || (serverConfigurationTypeId != null && task.supportsType(serverConfigurationTypeId))) {
+					task.init(this, configuration, parents, modules);
+					byte status = task.getTaskStatus();
+					if (status == ServerTaskDelegate.TASK_MANDATORY) {
+						ServerTaskInfo info = new ServerTaskInfo();
+						info.task = task;
+						info.parents = parents;
+						info.modules = modules;
+						tasks.add(info);
+					}
 				}
 			}
 		}
@@ -938,14 +945,16 @@ public class Server extends Base implements IServer {
 				int size2 = moduleTasks.length;
 				for (int j = 0; j < size2; j++) {
 					IModuleTask task = moduleTasks[j];
-					task.init(this, configuration, parents[i], modules[i]);
-					byte status = task.getTaskStatus();
-					if (status == ModuleTaskDelegate.TASK_MANDATORY) {
-						ModuleTaskInfo info = new ModuleTaskInfo();
-						info.task = task;
-						info.parents = parents[i];
-						info.module = modules[i];
-						tasks.add(info);
+					if ((task.supportsType(serverTypeId)) || (serverConfigurationTypeId != null && task.supportsType(serverConfigurationTypeId))) {
+						task.init(this, configuration, parents[i], modules[i]);
+						byte status = task.getTaskStatus();
+						if (status == ModuleTaskDelegate.TASK_MANDATORY) {
+							ModuleTaskInfo info = new ModuleTaskInfo();
+							info.task = task;
+							info.parents = parents[i];
+							info.module = modules[i];
+							tasks.add(info);
+						}
 					}
 				}
 			}
@@ -1032,7 +1041,9 @@ public class Server extends Base implements IServer {
 							return launches[i];
 					}
 				}
-			} catch (CoreException e) { }
+			} catch (CoreException e) {
+				// ignore
+			}
 		}
 		
 		return null;
@@ -1053,7 +1064,9 @@ public class Server extends Base implements IServer {
 		ILaunchConfiguration[] launchConfigs = null;
 		try {
 			launchConfigs = launchManager.getLaunchConfigurations(launchConfigType);
-		} catch (CoreException e) { }
+		} catch (CoreException e) {
+			// ignore
+		}
 		
 		if (launchConfigs != null) {
 			int size = launchConfigs.length;
@@ -1062,7 +1075,9 @@ public class Server extends Base implements IServer {
 					String serverId = launchConfigs[i].getAttribute(SERVER_ID, (String) null);
 					if (getId().equals(serverId))
 						return launchConfigs[i];
-				} catch (CoreException e) { }
+				} catch (CoreException e) {
+					// ignore
+				}
 			}
 		}
 		
@@ -1117,9 +1132,13 @@ public class Server extends Base implements IServer {
 				try {
 					if (getId().equals(configs[i].getAttribute(SERVER_ID, (String) null)))
 						configs[i].delete();
-				} catch (Exception e) { }
+				} catch (Exception e) {
+					// ignore
+				}
 			}
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 
 	/**
@@ -1195,7 +1214,9 @@ public class Server extends Base implements IServer {
 							public void run() {
 								try {
 									Thread.sleep(250);
-								} catch (Exception e) { }
+								} catch (Exception e) {
+									// ignore
+								}
 								try {
 									Server.this.start(mode2, new NullProgressMonitor());
 								} catch (Exception e) {

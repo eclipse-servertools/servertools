@@ -167,7 +167,9 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 						if (oldId.equals(props.getRuntimeTargetId())) {
 							try {
 								props.setRuntimeTargetId(newId, monitor);
-							} catch (Exception e) { }
+							} catch (Exception e) {
+								// ignore
+							}
 						}
 					}
 				}
@@ -184,7 +186,9 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 									ServerWorkingCopy wc = (ServerWorkingCopy) servers[i].createWorkingCopy();
 									wc.setRuntimeId(newId);
 									wc.save(false, monitor);
-								} catch (Exception e) { }
+								} catch (Exception e) {
+									// ignore
+								}
 							}
 						}
 					}

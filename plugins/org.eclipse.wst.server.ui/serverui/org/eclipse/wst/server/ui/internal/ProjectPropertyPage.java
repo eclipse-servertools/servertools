@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,13 +8,14 @@ package org.eclipse.wst.server.ui.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IProjectModule;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -28,13 +28,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.dialogs.PropertyPage;
-
 /**
  * PropertyPage for IProjects. It shows the server and runtime preference for the project.
  */
 public class ProjectPropertyPage extends PropertyPage {
 	protected IProject project;
-	protected IProjectModule module;
+	protected IModule module;
 	protected IServer server;
 	
 	protected RuntimeTargetComposite rtComp;
@@ -83,7 +82,7 @@ public class ProjectPropertyPage extends PropertyPage {
 				data.horizontalSpan = 3;
 				label.setLayoutData(data);
 			} else {
-				IModuleType mk = ServerCore.getModuleType(module.getType());
+				IModuleType mk = ServerCore.getModuleType(module.getModuleType().getId());
 				if (mk != null) {
 					label = new Label(composite, SWT.NONE);
 					label.setText(ServerUIPlugin.getResource("%prefProject"));

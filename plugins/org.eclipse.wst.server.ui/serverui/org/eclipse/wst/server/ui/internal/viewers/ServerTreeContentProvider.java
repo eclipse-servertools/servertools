@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IModuleType2;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerType;
@@ -110,11 +111,13 @@ public class ServerTreeContentProvider extends AbstractTreeContentProvider {
 			return true;
 		if (!ServerUtil.isCompatibleWithLaunchMode(server, launchMode))
 			return false;
+		
+		IModuleType2 mt = module.getModuleType();
 		if (includeIncompatibleVersions) {
-			if (!ServerUtil.isSupportedModule(server.getServerType().getRuntimeType().getModuleTypes(), module.getType(), null))
+			if (!ServerUtil.isSupportedModule(server.getServerType().getRuntimeType().getModuleTypes(), mt.getId(), null))
 				return false;
 		} else {
-			if (!ServerUtil.isSupportedModule(server.getServerType().getRuntimeType().getModuleTypes(), module.getType(), module.getVersion()))
+			if (!ServerUtil.isSupportedModule(server.getServerType().getRuntimeType().getModuleTypes(), mt.getId(), mt.getVersion()))
 				return false;
 		}
 		return true;

@@ -27,7 +27,6 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.model.IProjectModule;
 /**
  *
  */
@@ -46,9 +45,8 @@ public class TomcatSourcePathComputerDelegate implements ISourcePathComputerDele
 			List pathList = new ArrayList();
 			IModule[] modules = server.getModules(monitor);
 			for (int i = 0; i < modules.length; i++) {
-				if (modules[i] instanceof IProjectModule) {
-					IProjectModule dp = (IProjectModule) modules[i];
-					IProject project = dp.getProject();
+				IProject project = modules[i].getProject();
+				if (project != null) {
 					try {
 						if (project.hasNature(JavaCore.NATURE_ID)) {
 							IJavaProject javaProject = (IJavaProject) project.getNature(JavaCore.NATURE_ID);

@@ -1,7 +1,6 @@
-package org.eclipse.wst.server.ui.internal;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -9,6 +8,8 @@ package org.eclipse.wst.server.ui.internal;
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -17,7 +18,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IProjectModule;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -28,7 +28,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-
 /**
  * Dialog that prompts a user to change the target runtime.
  */
@@ -62,11 +61,11 @@ public class RuntimeTargetComposite {
 			offset = 1;
 		
 		// get child modules
-		IProjectModule projectModule = ServerUtil.getModuleProject(project);
+		IModule projectModule = ServerUtil.getModuleProject(project);
 		childProjects = new ArrayList();
 		if (projectModule != null) {
 			List children = new ArrayList();
-			IModule[] child = projectModule.getChildModules();
+			IModule[] child = projectModule.getChildModules(null);
 			if (child != null) {
 				int size = child.length;
 				for (int i = 0; i < size; i++)
@@ -74,7 +73,7 @@ public class RuntimeTargetComposite {
 				int a = 0;
 				while (a < children.size()) {
 					IModule module = (IModule) children.get(a);
-					IModule[] child2 = module.getChildModules();
+					IModule[] child2 = module.getChildModules(null);
 					if (child2 != null) {
 						size = child2.length;
 						for (int i = 0; i < size; i++)
@@ -87,7 +86,7 @@ public class RuntimeTargetComposite {
 			Iterator iterator = children.iterator();
 			while (iterator.hasNext()) {
 				IModule module = (IModule) iterator.next();
-				if (module instanceof IProjectModule)
+				if (module.getProject() != null)
 					childProjects.add(module);
 			}
 		}
@@ -142,7 +141,7 @@ public class RuntimeTargetComposite {
 				combo.select(0);
 		}
 
-		final IProjectModule projectModule = ServerUtil.getModuleProject(project);
+		final IModule projectModule = ServerUtil.getModuleProject(project);
 		
 		Button button = SWTUtil.createButton(parent, ServerUIPlugin.getResource("%runtimeTargetNewRuntime"));
 		button.addSelectionListener(new SelectionAdapter() {
@@ -151,8 +150,9 @@ public class RuntimeTargetComposite {
 				String type = null;
 				String version = null;
 				if (projectModule != null) {
-					type = projectModule.getType();
-					version = projectModule.getVersion();
+					IModuleType2 mt = projectModule.getModuleType();
+					type = mt.getId();
+					version = mt.getVersion();
 				}
 				if (ServerUIUtil.showNewRuntimeWizard(parent.getShell(), type, version)) {
 					int sel2 = updateRuntimes();
@@ -186,9 +186,11 @@ public class RuntimeTargetComposite {
 	}
 	
 	protected int updateRuntimes() {
-		IProjectModule pm = ServerUtil.getModuleProject(project);
-		if (pm != null)
-			targets = ServerUtil.getRuntimes(pm.getType(), pm.getVersion());
+		IModule pm = ServerUtil.getModuleProject(project);
+		if (pm != null) {
+			IModuleType2 mt = pm.getModuleType();
+			targets = ServerUtil.getRuntimes(mt.getId(), mt.getVersion());
+		}
 
 		items = new String[0];
 		int sel = -1;
@@ -230,7 +232,7 @@ public class RuntimeTargetComposite {
 		if (setChildren) {
 			Iterator iterator = childProjects.iterator();
 			while (iterator.hasNext()) {
-				IProjectModule module = (IProjectModule) iterator.next();
+				IModule module = (IModule) iterator.next();
 				IProject proj = module.getProject();
 				props = ServerCore.getProjectProperties(proj);
 				

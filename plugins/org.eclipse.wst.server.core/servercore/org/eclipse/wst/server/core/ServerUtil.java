@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.IStatus;
 
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.Trace;
-import org.eclipse.wst.server.core.model.*;
 /**
  * Server utility methods.
  */
@@ -26,7 +25,9 @@ public class ServerUtil {
 	/**
 	 * Static class - cannot create an instance.
 	 */
-	private ServerUtil() { }
+	private ServerUtil() {
+		// do nothing
+	}
 
 	/**
 	 * Returns true if the given configuration currently contains
@@ -48,7 +49,9 @@ public class ServerUtil {
 				if (module.equals(module2))
 					return true;
 			}
-		} catch (Throwable t) { }
+		} catch (Throwable t) {
+			// ignore
+		}
 		return false;
 	}
 
@@ -148,7 +151,7 @@ public class ServerUtil {
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
-				if (isSupportedModule(servers[i].getServerType(), module))
+				if (isSupportedModule(servers[i].getServerType(), module.getModuleType()))
 					list.add(servers[i]);
 			}
 		}
@@ -200,7 +203,7 @@ public class ServerUtil {
 	/**
 	 * Returns the project modules attached to a project.
 	 */
-	public static IProjectModule getModuleProject(IProject project) {
+	/*public static IProjectModule getModuleProject(IProject project) {
 		if (project == null)
 			return null;
 
@@ -214,12 +217,12 @@ public class ServerUtil {
 			}
 		}
 		return null;
-	}
+	}*/
 	
 	/**
 	 * Returns the project modules attached to a project.
 	 */
-	public static List getModuleProjects(IProject project) {
+	public static IModule[] getModules(IProject project) {
 		if (project == null)
 			return null;
 
@@ -227,13 +230,13 @@ public class ServerUtil {
 		Iterator iterator = getModules(null, null, true).iterator();
 		while (iterator.hasNext()) {
 			IModule module = (IModule) iterator.next();
-			if (module != null && module instanceof IProjectModule) {
-				IProjectModule moduleProject = (IProjectModule) module;
-				if (project.equals(moduleProject.getProject()))
-					list.add(moduleProject);
-			}
+			if (module != null && project.equals(module.getProject()))
+				list.add(module);
 		}
-		return list;
+		
+		IModule[] modules = new IModule[list.size()];
+		list.toArray(modules);
+		return modules;
 	}
 
 	/**
@@ -415,7 +418,7 @@ public class ServerUtil {
 	 * @param org.eclipse.wst.server.core.IModule
 	 * @return org.eclipse.wst.server.core.IModuleFactory
 	 */
-	public static IModuleFactory getModuleFactory(IModule module) {
+	/*public static IModuleFactory getModuleFactory(IModule module) {
 		String id = module.getFactoryId();
 		if (id == null)
 			return null;
@@ -429,7 +432,7 @@ public class ServerUtil {
 			}
 		}
 		return null;
-	}
+	}*/
 
 	/**
 	 * Return all the available modules from all factories whose
@@ -463,7 +466,7 @@ public class ServerUtil {
 	
 	public static boolean isSupportedModule(IServerType serverType, IModuleType2 moduleType) {
 		IRuntimeType runtimeType = serverType.getRuntimeType();
-		return isSupportedModule(runtimeType.getModuleTypes(), moduleType.getType(), moduleType.getVersion());
+		return isSupportedModule(runtimeType.getModuleTypes(), moduleType.getId(), moduleType.getVersion());
 	}
 	
 	public static boolean isSupportedModule(IModuleType2[] moduleTypes, String type, String version) {
@@ -478,7 +481,7 @@ public class ServerUtil {
 	}
 	
 	public static boolean isSupportedModule(IModuleType2 moduleType, String type, String version) {
-		String type2 = moduleType.getType();
+		String type2 = moduleType.getId();
 		if (matches(type, type2)) {
 			String version2 = moduleType.getVersion();
 			if (matches(version, version2))

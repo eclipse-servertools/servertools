@@ -19,7 +19,9 @@ public abstract class Task implements ITask {
 	protected String label;
 	protected String description;
 	
-	public Task() { }
+	public Task() {
+		// do nothing
+	}
 	
 	public Task(String label, String description) {
 		this.label = label;
@@ -53,5 +55,7 @@ public abstract class Task implements ITask {
 		return false;
 	}
 	
-	public void undo() { }
+	public void undo() {
+		// do nothing
+	}
 }

@@ -49,6 +49,7 @@ public class ServerBuilder extends IncrementalProjectBuilder {
 	 * startupOnInitialize method comment.
 	 */
 	protected void startupOnInitialize() {
+		// do nothing
 	}
 
 	/**

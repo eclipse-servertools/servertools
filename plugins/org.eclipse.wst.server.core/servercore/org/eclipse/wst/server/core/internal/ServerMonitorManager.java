@@ -307,7 +307,9 @@ public class ServerMonitorManager implements IServerMonitorManager {
 						return mp.newPort;
 				}
 			}
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		return port;
 	}
 	

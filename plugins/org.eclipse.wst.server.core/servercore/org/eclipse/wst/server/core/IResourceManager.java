@@ -42,6 +42,7 @@ import org.eclipse.wst.server.core.model.IServerResourceListener;
 public interface IResourceManager {
 	/**
 	 * Adds a new server resource listener.
+	 * Has no effect if an identical listener is already registered.
 	 *
 	 * @param listener org.eclipse.wst.server.model.IServerResourceListener
 	 */
@@ -49,34 +50,20 @@ public interface IResourceManager {
 
 	/**
 	 * Removes a server resource listener.
+	 * Has no effect if the listener is not registered.
 	 *
 	 * @param listener org.eclipse.wst.server.model.IServerResourceListener
 	 */
 	public void removeResourceListener(IServerResourceListener listener);
 
 	/**
-	 * Returns the list of all known runtime instances.
+	 * Returns an array of all known runtime instances. The list will not contain any
+	 * working copies.
 	 * <p>
-	 * Clients must not modify the list that is returned.
-	 * If the set of runtimes changes, the affect on
-	 * the returned list is unspecified.
-	 * </p>
-	 * <p>
-	 * [issue: The list returned is precious. You would not want a client
-	 * to accidentally or malicously whack it. Normal practice is to
-	 * return an array instead of a List, and to return a new copy each call.
-	 * This allows the spec to say that the client can do what they want
-	 * with the result, and that it won't change under foot.
-	 * Another alternative is to return a UnmodifiableList implementation
-	 * so that clients cannot modify. But if you don't copy, you still
-	 * have the problem of the list changing under foot as runtime instances
-	 * come and go.]
-	 * </p>
-	 * <p>
-	 * [issue: Clarify whether the list may include working copies.]
+	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
 	 * 
-	 * @return a possibly-empty list of runtime instances (element type: {@link IRuntime})
+	 * @return a possibly-empty array of runtime instances {@link IRuntime}
 	 */
 	public IRuntime[] getRuntimes();
 	
@@ -301,6 +288,7 @@ public interface IResourceManager {
 
 	/**
 	 * Adds a new module events listener.
+	 * Has no effect if an identical listener is already registered.
 	 *
 	 * @param listener org.eclipse.wst.server.model.IModuleEventsListener
 	 */
@@ -308,6 +296,7 @@ public interface IResourceManager {
 	
 	/**
 	 * Removes an existing module events listener.
+	 * Has no effect if the listener is not registered.
 	 *
 	 * @param listener org.eclipse.wst.server.model.IModuleEventsListener
 	 */

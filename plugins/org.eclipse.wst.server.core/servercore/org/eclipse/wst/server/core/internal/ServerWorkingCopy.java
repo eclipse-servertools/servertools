@@ -276,7 +276,9 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		while (getServerState() == IServer.STATE_UNKNOWN && i < 10) {
 			try {
 				Thread.sleep(1000);
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 			i++;
 		}
 		

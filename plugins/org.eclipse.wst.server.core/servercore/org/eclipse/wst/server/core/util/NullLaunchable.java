@@ -17,7 +17,9 @@ import org.eclipse.wst.server.core.ILaunchable;
 public class NullLaunchable implements ILaunchable {
 	public static final String ID = "null.launchable";
 
-	public NullLaunchable() { }
+	public NullLaunchable() {
+		// do nothing
+	}
 
 	public String getId() {
 		return ID;

@@ -101,11 +101,15 @@ public class FileUtil {
 			try {
 				if (in != null)
 					in.close();
-			} catch (Exception ex) { }
+			} catch (Exception ex) {
+				// ignore
+			}
 			try {
 				if (out != null)
 					out.close();
-			} catch (Exception ex) { }
+			} catch (Exception ex) {
+				// ignore
+			}
 		}
 	}
 
@@ -218,7 +222,9 @@ public class FileUtil {
 					try {
 						if (out != null)
 							out.close();
-					} catch (Exception e) { }
+					} catch (Exception e) {
+						// ignore
+					}
 				}
 				ze = zis.getNextEntry();
 				monitor.worked(1);
@@ -233,6 +239,7 @@ public class FileUtil {
 				if (zis != null)
 					zis.close();
 			} catch (Exception ex) {
+				// ignore
 			}
 		}
 	}

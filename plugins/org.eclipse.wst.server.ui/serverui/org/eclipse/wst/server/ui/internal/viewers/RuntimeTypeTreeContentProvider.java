@@ -77,7 +77,7 @@ public class RuntimeTypeTreeContentProvider extends AbstractTreeContentProvider 
 							int size = moduleTypes.length;
 							for (int i = 0; i < size; i++) {
 								IModuleType2 mb = moduleTypes[i];
-								IModuleType mt = ServerCore.getModuleType(mb.getType());
+								IModuleType mt = ServerCore.getModuleType(mb.getId());
 								if (mt != null) {
 									ele = getOrCreate(list, mt.getName());
 									TreeElement ele2 = getOrCreate(ele.contents, mt.getName() + "/" + mb.getVersion(), mb.getVersion());

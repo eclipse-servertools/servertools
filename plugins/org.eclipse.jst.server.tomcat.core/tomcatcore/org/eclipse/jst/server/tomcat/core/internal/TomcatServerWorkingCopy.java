@@ -92,12 +92,12 @@ public class TomcatServerWorkingCopy extends TomcatServer implements ITomcatServ
 			int size = add.length;
 			for (int i = 0; i < size; i++) {
 				IModule module3 = add[i];
-				IWebModule module = (IWebModule) module3;
+				IWebModule module = (IWebModule) module3.getExtension(monitor);
 				String contextRoot = module.getContextRoot();
 				if (contextRoot != null && !contextRoot.startsWith("/"))
 					contextRoot = "/" + contextRoot;
 				WebModule module2 = new WebModule(contextRoot,
-						module.getLocation().toOSString(), module.getFactoryId() + ":" + module.getId(), true);
+						module.getLocation().toOSString(), module3.getId(), true);
 				wc.addWebModule(-1, module2);
 				change = true;
 			}
@@ -107,7 +107,7 @@ public class TomcatServerWorkingCopy extends TomcatServer implements ITomcatServ
 			int size2 = remove.length;
 			for (int j = 0; j < size2; j++) {
 				IModule module3 = remove[j];
-				String memento = module3.getFactoryId() + ":" + module3.getId();
+				String memento = module3.getId();
 				List modules = getTomcatConfiguration().getWebModules();
 				int size = modules.size();
 				for (int i = 0; i < size; i++) {

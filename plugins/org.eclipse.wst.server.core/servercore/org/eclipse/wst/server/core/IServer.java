@@ -380,9 +380,7 @@ public interface IServer extends IElement {
 	 * Once registered, a listener starts receiving notification of 
 	 * state changes to this server. The listener continues to receive
 	 * notifications until it is removed.
-	 * <p>
-	 * [issue: Duplicate server listeners should be ignored.]
-	 * </p>
+	 * Has no effect if an identical listener is already registered.
 	 *
 	 * @param listener the server listener
 	 * @see #removeServerListener(IServerListener)
@@ -400,13 +398,15 @@ public interface IServer extends IElement {
 
 	/**
 	 * Adds a publish listener to this server.
+	 * Has no effect if an identical listener is already registered.
 	 *
 	 * @param listener org.eclipse.wst.server.core.model.IPublishListener
 	 */
 	public void addPublishListener(IPublishListener listener);
-	
+
 	/**
 	 * Removes a publish listener from this server.
+	 * Has no effect if the listener is not registered.
 	 *
 	 * @param listener org.eclipse.wst.server.core.model.IPublishListener
 	 */

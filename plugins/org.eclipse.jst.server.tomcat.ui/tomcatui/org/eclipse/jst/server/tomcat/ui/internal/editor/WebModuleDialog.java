@@ -42,6 +42,7 @@ import org.eclipse.ui.help.WorkbenchHelp;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerExtension;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.ui.ServerUICore;
 /**
@@ -134,10 +135,11 @@ public class WebModuleDialog extends Dialog {
 			// fill table with web module projects
 			Iterator iterator = ServerUtil.getModules("j2ee.web", "*", false).iterator();
 			while (iterator.hasNext()) {
-				Object module3 = iterator.next();
-				if (module3 instanceof IWebModule) {
-					IWebModule module2 = (IWebModule) module3;
-					IStatus status = server2.canModifyModules(new IModule[] { module2}, null, null);
+				IModule module3 = (IModule) iterator.next();
+				IServerExtension extension = module3.getExtension(null);
+				if (extension instanceof IWebModule) {
+					IWebModule module2 = (IWebModule) extension;
+					IStatus status = server2.canModifyModules(new IModule[] { module3 }, null, null);
 					if (status != null && status.isOK()) {
 						TableItem item = new TableItem(projTable, SWT.NONE);
 						item.setText(0, ServerUICore.getLabelProvider().getText(module2));
@@ -226,7 +228,7 @@ public class WebModuleDialog extends Dialog {
 						String contextRoot = module2.getContextRoot();
 						if (contextRoot != null && !contextRoot.startsWith("/"))
 							contextRoot = "/" + contextRoot;
-						module = new WebModule(contextRoot, module2.getLocation().toOSString(), module2.getFactoryId() + ":" + module2.getId(), module.isReloadable());
+						module = new WebModule(contextRoot, module2.getLocation().toOSString(), module2.getId(), module.isReloadable());
 						docBase.setText(module2.getLocation().toOSString());
 					} catch (Exception e) {
 						// ignore

@@ -45,28 +45,36 @@ public class ServerListener extends ServerResourceAdapter implements IServerList
 	 *
 	 * @param server org.eclipse.wst.server.model.IServer
 	 */
-	public void configurationSyncStateChange(IServer server) { }
+	public void configurationSyncStateChange(IServer server) {
+		// do nothing
+	}
 
 	/**
 	 * Notification when the server state has changed.
 	 *
 	 * @param server org.eclipse.wst.server.model.IServer
 	 */
-	public void serverStateChange(IServer server) { }
+	public void serverStateChange(IServer server) {
+		// do nothing
+	}
 
 	/**
 	 * Notification when the server state has changed.
 	 *
 	 * @param server org.eclipse.wst.server.model.IServer
 	 */
-	public void modulesChanged(IServer server) { }
+	public void modulesChanged(IServer server) {
+		// do nothing
+	}
 
 	/**
 	 * Notification when the state of a module has changed.
 	 *
 	 * @param server org.eclipse.wst.server.model.IServer
 	 */
-	public void moduleStateChange(IServer server, IModule module) { }
+	public void moduleStateChange(IServer server, IModule module) {
+		// do nothing
+	}
 
 	/**
 	 * Called when the server isRestartNeeded() property changes.

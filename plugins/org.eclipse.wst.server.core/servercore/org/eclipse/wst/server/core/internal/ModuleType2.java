@@ -15,17 +15,17 @@ import org.eclipse.wst.server.core.IModuleType2;
  * 
  */
 public class ModuleType2 implements IModuleType2 {
-	protected String type;
+	protected String id;
 	protected String version;
 	
-	public ModuleType2(String type, String version) {
+	public ModuleType2(String id, String version) {
 		super();
-		this.type = type;
+		this.id = id;
 		this.version = version;
 	}
 
-	public String getType() {
-		return type;
+	public String getId() {
+		return id;
 	}
 
 	public String getVersion() {
@@ -33,6 +33,6 @@ public class ModuleType2 implements IModuleType2 {
 	}
 
 	public String toString() {
-		return "ModuleType2[" + type + ", " + version + "]";
+		return "ModuleType2[" + id + ", " + version + "]";
 	}
 }

@@ -82,13 +82,14 @@ public final class XMLMemento implements IMemento {
 			Node node = document.getFirstChild();
 			if (node instanceof Element)
 				return new XMLMemento(document, (Element) node);
-		} catch (ParserConfigurationException e) {
-		} catch (IOException e) {
-		} catch (SAXException e) {
+		} catch (Exception e) {
+			// ignore
 		} finally {
 			try {
 				reader.close();
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 		}
 		return null;
 	}
@@ -277,13 +278,14 @@ public final class XMLMemento implements IMemento {
 			Node node = document.getFirstChild();
 			if (node instanceof Element)
 				return new XMLMemento(document, (Element) node);
-		} catch (ParserConfigurationException e) {
-		} catch (IOException e) {
-		} catch (SAXException e) {
+		} catch (Exception e) {
+			// ignore
 		} finally {
 			try {
 				in.close();
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 		}
 		return null;
 	}
@@ -416,7 +418,9 @@ public final class XMLMemento implements IMemento {
 			if (w != null) {
 				try {
 					w.close();
-				} catch (Exception e) { }
+				} catch (Exception e) {
+					// ignore
+				}
 			}
 		}
 	}

@@ -13,13 +13,17 @@ package org.eclipse.wst.server.core.model;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IElement;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.IServerExtension;
+import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.internal.Runtime;
 import org.eclipse.wst.server.core.internal.RuntimeWorkingCopy;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 /**
  * A runtime delegate provides the implementation for various 
  * generic and server-type-specific operations for a specific type of runtime.
@@ -143,21 +147,31 @@ public abstract class RuntimeDelegate implements IServerExtension {
 
 	/**
 	 * Validates this runtime instance. See the specification of
-	 * {@link IRuntime#validate()} for further details. 
+	 * {@link IRuntime#validate()} for further details. Subclasses should
+	 * override and call super.validate() for basic validation. 
 	 * <p>
 	 * This method is called by the web server core framework,
 	 * in response to a call to <code>IRuntime.validate()</code>.
 	 * Clients should never call this method.
-	 * </p>
-	 * <p>
-	 * [issue: see issues flagged on IRuntime.validate().]
 	 * </p>
 	 *
 	 * @return a status object with code <code>IStatus.OK</code> if this
 	 * runtime is valid, otherwise a status object indicating what is
 	 * wrong with it
 	 */
-	public abstract IStatus validate();
+	public IStatus validate() {
+		if (runtime.getName() == null || runtime.getName().length() == 0)
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorRuntimeName"), null);
+
+		if (runtime.isWorkingCopy() && ServerUtil.isNameInUse(runtime))
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorDuplicateRuntimeName"), null);
+	
+		IPath path = runtime.getLocation();
+		if (path == null || path.isEmpty())
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, "", null);
+		
+		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null);
+	}
 
 	public final int getAttribute(String attributeName, int defaultValue) {
 		return runtime.getAttribute(attributeName, defaultValue);

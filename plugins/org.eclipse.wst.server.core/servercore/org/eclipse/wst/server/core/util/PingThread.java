@@ -66,7 +66,9 @@ public class PingThread {
 		int count = 0;
 		try {
 			Thread.sleep(PING_DELAY);
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		while (!stop) {
 			try {
 				if (count == MAX_PINGS) {
@@ -101,7 +103,9 @@ public class PingThread {
 				if (!stop) {
 					try {
 						Thread.sleep(PING_INTERVAL);
-					} catch (InterruptedException e2) { }
+					} catch (InterruptedException e2) {
+						// ignore
+					}
 				}
 			}
 		}

@@ -81,12 +81,13 @@ public class ModuleFactory implements IModuleFactory {
 	}
 
 	/*
-	 * @see IPublishManager#getDelegate()
+	 * @see IModuleFactoryDelegate#getDelegate()
 	 */
 	public ModuleFactoryDelegate getDelegate() {
 		if (delegate == null) {
 			try {
 				delegate = (ModuleFactoryDelegate) element.createExecutableExtension("class");
+				delegate.initialize(this);
 				ResourceManager rm = (ResourceManager) ServerCore.getResourceManager();
 				rm.addModuleFactoryListener(delegate);
 			} catch (Exception e) {

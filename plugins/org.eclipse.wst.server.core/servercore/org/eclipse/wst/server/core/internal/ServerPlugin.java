@@ -138,7 +138,9 @@ public class ServerPlugin extends Plugin {
 				dir.age = 0;
 				return statePath.append(dir.path);
 			}
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 	
 		// otherwise, create a new directory
 	

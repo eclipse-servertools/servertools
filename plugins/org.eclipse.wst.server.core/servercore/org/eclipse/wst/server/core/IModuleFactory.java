@@ -136,14 +136,16 @@ public interface IModuleFactory extends IOrdered {
 	/**
 	 * Add a listener for modules that are added/removed from this
 	 * factory.
+	 * Has no effect if an identical listener is already registered.
 	 * 
 	 * @param listener org.eclipse.wst.server.core.model.IModuleFactoryListener
 	 */
 	public void addModuleFactoryListener(IModuleFactoryListener listener);
-	
+
 	/**
 	 * Add a listener for modules that are added/removed from this
 	 * factory.
+	 * Has no effect if the listener is not registered.
 	 * 
 	 * @param listener org.eclipse.wst.server.core.model.IModuleFactoryListener
 	 */

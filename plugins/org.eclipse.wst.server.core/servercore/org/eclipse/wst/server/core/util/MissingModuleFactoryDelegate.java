@@ -29,7 +29,7 @@ public class MissingModuleFactoryDelegate extends ModuleFactoryDelegate {
 				return null;
 			String id = memento.substring(0, index);
 			String name = memento.substring(index + 1);
-			return new MissingModule(id, name);
+			return new MissingModule();
 		} catch (Exception e) {
 			Trace.trace("Could not create module: " + e.getMessage());
 		}
@@ -42,18 +42,4 @@ public class MissingModuleFactoryDelegate extends ModuleFactoryDelegate {
 	public IModule[] getModules() {
 		return new IModule[0];
 	}
-	
-	/**
-	 * Add a listener to the module factory.
-	 *
-	 * @param listener org.eclipse.wst.server.core.model.IModuleFactoryListener
-	 */
-	public void addModuleFactoryListener(IModuleFactoryListener listener) { }
-	
-	/**
-	 * Remove a listener from the module factory.
-	 *
-	 * @param listener org.eclipse.wst.server.core.model.IModuleFactoryListener
-	 */
-	public void removeModuleFactoryListener(IModuleFactoryListener listener) { }
 }

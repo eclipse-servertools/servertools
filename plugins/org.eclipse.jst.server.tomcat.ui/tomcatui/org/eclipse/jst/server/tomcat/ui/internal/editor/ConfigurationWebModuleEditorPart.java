@@ -48,6 +48,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.help.WorkbenchHelp;
 
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IServerExtension;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.editor.ICommandManager;
@@ -247,20 +248,21 @@ public class ConfigurationWebModuleEditorPart extends ServerResourceEditorPart {
 
 		initialize();
 	}
-	
+
 	protected boolean canAddWebModule() {
 		Iterator iterator = ServerUtil.getModules("j2ee.web", "*", false).iterator();
 		while (iterator.hasNext()) {
-			Object module = iterator.next();
-			if (module instanceof IWebModule) {
-				IStatus status = server.canModifyModules(new IModule[] { (IWebModule) module }, null, null);
+			IModule module = (IModule) iterator.next();
+			IServerExtension extension = module.getExtension(null);
+			if (extension instanceof IWebModule) {
+				IStatus status = server.canModifyModules(new IModule[] { module }, null, null);
 				if (status != null && status.isOK())
 					return true;
 			}
 		}
 		return false;
 	}
-	
+
 	public void dispose() {
 		if (serverConfiguration != null)
 			serverConfiguration.removePropertyChangeListener(listener);

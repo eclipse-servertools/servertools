@@ -10,13 +10,13 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.model.IProjectModule;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 /**
  * Restart a module on a server.
@@ -32,9 +32,9 @@ public class RestartModuleAction extends Action {
 	
 		setText(module.getName());
 		
-		if (module instanceof IProjectModule) {
-			IProjectModule project = (IProjectModule) module;
-			ImageDescriptor descriptor = EclipseUtil.getProjectImageDescriptor(project.getProject());
+		IProject project = module.getProject();
+		if (project != null) {
+			ImageDescriptor descriptor = EclipseUtil.getProjectImageDescriptor(project);
 			if (descriptor != null)
 				setImageDescriptor(descriptor);
 		}

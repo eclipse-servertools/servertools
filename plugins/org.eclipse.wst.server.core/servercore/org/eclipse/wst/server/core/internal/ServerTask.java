@@ -190,7 +190,9 @@ public class ServerTask implements IServerTask {
 		return false;
 	}
 	
-	public void undo() { }
+	public void undo() {
+		// do nothing
+	}
 	
 	/**
 	 * Return a string representation of this object.

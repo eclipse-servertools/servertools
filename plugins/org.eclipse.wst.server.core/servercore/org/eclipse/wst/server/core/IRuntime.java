@@ -95,7 +95,7 @@ public interface IRuntime extends IElement {
 	 * @return a new working copy
 	 */
 	public IRuntimeWorkingCopy createWorkingCopy();
-	
+
 	/**
 	 * Returns the absolute path in the local file system to the root of the runtime,
 	 * typically the installation directory.
@@ -103,7 +103,7 @@ public interface IRuntime extends IElement {
 	 * @return the location of this runtime, or <code>null</code> if none
 	 */
 	public IPath getLocation();
-	
+
 	/**
 	 * Returns whether this runtime can be used as a test environment.
 	 * <p>
@@ -124,15 +124,13 @@ public interface IRuntime extends IElement {
 	 * @return <code>true</code> if this runtime is a stub, and <code>false</code> otherwise
 	 */
 	public boolean isStub();
-	
+
 	/**
-	 * Validates this runtime instance.
+	 * Validates this runtime instance. This method should return an error if the runtime
+	 * is pointing to a null or invalid location (e.g. not pointing to the correct installation
+	 * directory), or if the runtime-type-specific properties are missing or invalid.
 	 * <p>
-	 * [issue: Need to explain what could be wrong with a runtime.]
-	 * </p>
-	 * <p>
-	 * [issue: Would it make more sense to validate working copies
-	 * before prior to save?]
+	 * This method is not on the working copy so that the runtime can be validated at any time.
 	 * </p>
 	 *
 	 * @return a status object with code <code>IStatus.OK</code> if this

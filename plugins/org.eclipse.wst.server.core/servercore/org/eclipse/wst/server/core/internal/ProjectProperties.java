@@ -69,7 +69,9 @@ public class ProjectProperties implements IProjectProperties {
 		} finally {
 			try {
 				in.close();
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 		}
 	}
 	
@@ -103,7 +105,9 @@ public class ProjectProperties implements IProjectProperties {
 			} finally {
 				try {
 					in.close();
-				} catch (Exception e) { }
+				} catch (Exception e) {
+					// ignore
+				}
 			}
 			return;
 		}

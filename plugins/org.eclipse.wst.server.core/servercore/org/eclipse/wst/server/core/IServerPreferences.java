@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -89,28 +89,4 @@ public interface IServerPreferences {
 	 * @param boolean
 	 */
 	public void setCreateResourcesInWorkspace(boolean b);
-
-	/**
-	 * Returns whether changes to modules should be automatically fixed
-	 * in the server configurations. Returns one of the REPAIR_* constants.
-	 *
-	 * @return byte
-	 */
-	public byte getModuleRepairStatus();
-
-	/**
-	 * Returns the default module fix state. Returns one of the
-	 * REPAIR_* constants.
-	 *
-	 * @return byte
-	 */
-	public byte getDefaultModuleRepairStatus();
-
-	/**
-	 * Sets whether changes to modules should be automatically fixed
-	 * in the server configurations. Use one of the REPAIR_* constants.
-	 *
-	 * @return byte
-	 */
-	public void setModuleRepairStatus(byte b);
 }

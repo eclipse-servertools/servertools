@@ -76,7 +76,8 @@ public class ServerLabelProvider implements ILabelProvider {
 				return ImageResource.getImageDescriptor(config.getServerConfigurationType().getId());
 			} else if (element instanceof IModule) {
 				IModule module = (IModule) element;
-				return getModuleImageDescriptor(module.getType());
+				IModuleType2 mt = module.getModuleType();
+				return getModuleImageDescriptor(mt.getId());
 			} else if (element instanceof IWorkbenchAdapter) {
 				return ((IWorkbenchAdapter) element).getImageDescriptor(null);
 			}
@@ -114,7 +115,8 @@ public class ServerLabelProvider implements ILabelProvider {
 				return ImageResource.getImage(config.getServerConfigurationType().getId());
 			} else if (element instanceof IModule) {
 				IModule module = (IModule) element;
-				return getModuleImage(module.getType());
+				IModuleType2 mt = module.getModuleType();
+				return getModuleImage(mt.getId());
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not get image descriptor", e);

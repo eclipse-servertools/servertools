@@ -18,21 +18,39 @@ import org.eclipse.wst.server.core.model.IServerResourceListener;
  * 
  */
 public class ServerResourceAdapter implements IServerResourceListener {
-	public void runtimeAdded(IRuntime runtime) { }
+	public void runtimeAdded(IRuntime runtime) {
+		// do nothing
+	}
 
-	public void runtimeChanged(IRuntime runtime) { }
+	public void runtimeChanged(IRuntime runtime) {
+		// do nothing
+	}
 
-	public void runtimeRemoved(IRuntime runtime) { }
+	public void runtimeRemoved(IRuntime runtime) {
+		// do nothing
+	}
 
-	public void serverAdded(IServer server) { }
+	public void serverAdded(IServer server) {
+		// do nothing
+	}
 
-	public void serverChanged(IServer server) { }
+	public void serverChanged(IServer server) {
+		// do nothing
+	}
 
-	public void serverRemoved(IServer server) { }
+	public void serverRemoved(IServer server) {
+		// do nothing
+	}
 
-	public void serverConfigurationAdded(IServerConfiguration serverConfiguration) { }
+	public void serverConfigurationAdded(IServerConfiguration serverConfiguration) {
+		// do nothing
+	}
 
-	public void serverConfigurationChanged(IServerConfiguration serverConfiguration) { }
+	public void serverConfigurationChanged(IServerConfiguration serverConfiguration) {
+		// do nothing
+	}
 
-	public void serverConfigurationRemoved(IServerConfiguration serverConfiguration) { }
+	public void serverConfigurationRemoved(IServerConfiguration serverConfiguration) {
+		// do nothing
+	}
 }

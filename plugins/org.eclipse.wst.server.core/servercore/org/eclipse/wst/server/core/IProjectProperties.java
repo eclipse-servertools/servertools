@@ -56,12 +56,16 @@ public interface IProjectProperties {
 	public void setRuntimeTarget(IRuntime runtime, IProgressMonitor monitor) throws CoreException;
 
 	/**
+	 * Adds a new project properties listener.
+	 * Has no effect if an identical listener is already registered.
 	 * 
 	 * @param listener
 	 */
 	public void addProjectPropertiesListener(IProjectPropertiesListener listener);
 
 	/**
+	 * Removes an existing project properties listener.
+	 * Has no effect if the listener is not registered.
 	 * 
 	 * @param listener
 	 */

@@ -71,7 +71,9 @@ public class ServerProjectNature implements IServerProject, IProjectNature {
 	/**
 	 * Nothing to deconfigure in this nature.
 	 */
-	public void deconfigure() {	}
+	public void deconfigure() {
+		// do nothing
+	}
 
 	/**
 	 * Returns a list of the available folders.
@@ -92,7 +94,9 @@ public class ServerProjectNature implements IServerProject, IProjectNature {
 							list.add(members[j]);
 					}
 				}
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 			t++;
 		}
 		return list;

@@ -19,12 +19,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.model.IModuleListener;
-import org.eclipse.wst.server.core.model.IProjectModule;
+import org.eclipse.wst.server.core.model.ModuleDelegate;
 /**
  * A simple IModuleProject that maps a folder within a project
  * (or the root of the project itself) to the module.
  */
-public abstract class ProjectModule implements IProjectModule {
+public abstract class ProjectModule extends ModuleDelegate {
 	protected IProject project;
 	protected IPath root;
 	
@@ -32,6 +32,7 @@ public abstract class ProjectModule implements IProjectModule {
 	private transient List listeners;
 
 	public ProjectModule() {
+		// do nothing
 	}
 
 	public ProjectModule(IProject project) {
@@ -222,18 +223,22 @@ public abstract class ProjectModule implements IProjectModule {
 			return false;
 
 		ProjectModule dp = (ProjectModule) obj;
-		if (getFactoryId() != null && !getFactoryId().equals(dp.getFactoryId()))
-			return false;
+		//if (getFactoryId() != null && !getFactoryId().equals(dp.getFactoryId()))
+		//	return false;
 			
 		IPath root2 = null;
 		try {
 			root2 = getRootFolder();
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		
 		IPath root3 = null;
 		try {
 			root3 = dp.getRootFolder();
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		
 		if (project != null && project.exists() && !project.equals(dp.getProject()))
 			return false;
@@ -304,6 +309,7 @@ public abstract class ProjectModule implements IProjectModule {
 	 * Use this method to recache information about the module.
 	 */
 	protected void update() {
+		// do nothing
 	}
 
 	/**

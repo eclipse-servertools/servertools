@@ -10,6 +10,8 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.model.IModuleListener;
 /**
@@ -36,14 +38,6 @@ import org.eclipse.wst.server.core.model.IModuleListener;
  * with.
  * </p>
  * <p>
- * [issue: IModule is something that is exposed to normal 
- * clients; it should move to org.eclipse.wst.server.core package.]
- * </p>
- * <p>
- * [issue: See issues on IModuleType2 about why it should not
- * be a superinterface of IModule.]
- * </p>
- * <p>
  * [issue: Equality/identify for modules?]
  * </p>
  * <p>
@@ -58,8 +52,7 @@ import org.eclipse.wst.server.core.model.IModuleListener;
  * 
  * @since 1.0
  */
-public interface IModule extends IModuleType2 {
-	
+public interface IModule {
 	/**
 	 * Returns the id of this module.
 	 * Each module has a distinct id, used to distinguish this
@@ -72,10 +65,7 @@ public interface IModule extends IModuleType2 {
 	public String getId();
 
 	/**
-	 * Validates the contents of this module.
-	 * <p>
-	 * [issue: Need to define what the "contents" of a module means.]
-	 * </p>
+	 * Validates this module.
 	 * <p>
 	 * [issue: Conjecture: Each different type of module prescribes
 	 * legal arrangements of, and the significance of, the files within
@@ -97,27 +87,11 @@ public interface IModule extends IModuleType2 {
 	 * [issue: All existing implementations of this return null,
 	 * which is illegal.]
 	 * </p>
-	 *
-	 * @return a status object with code <code>IStatus.OK</code> if the given
-	 * module is valid, otherwise a status object indicating what is
-	 * wrong with it
-	 */
-	public IStatus validate();
-
-	/**
-	 * Determines whether this module can be published.
 	 * <p>
 	 * [issue: Old comment said: "Returns an IStatus that is used to determine if this object can
 	 * be published to the server." Since the same module can
 	 * be associated with any number of servers, "the server" is
 	 * ill-defined.]
-	 * </p>
-	 * <p>
-	 * [issue: How is this predicate different from validate()?]
-	 * </p>
-	 * <p>
-	 * [issue: All existing implementations of this return null,
-	 * which is illegal.]
 	 * </p>
 	 * <p>
 	 * [issue: Old comment said: "Should return an error if there
@@ -128,10 +102,10 @@ public interface IModule extends IModuleType2 {
 	 * </p>
 	 *
 	 * @return a status object with code <code>IStatus.OK</code> if the given
-	 * module can be published, otherwise a status object indicating what is
+	 * module is valid, otherwise a status object indicating what is
 	 * wrong with it
 	 */
-	public IStatus canPublish();
+	public IStatus validate(IProgressMonitor monitor);
 
 	/**
 	 * Returns the root resources of this module. All members
@@ -161,18 +135,11 @@ public interface IModule extends IModuleType2 {
 	public String getName();
 
 	/**
-	 * Returns the id of the module factory that created this module.
-	 * <p>
-	 * [issue: What is the rationale for exposing the module factory
-	 * at all. Is there a reason a client would want to know this?]
-	 * </p>
-	 * <p>
-	 * [issue: Consider returning the IModuleFactory instead.]
-	 * </p>
-	 *
-	 * @return the module factory id
+	 * Returns the type of this module.
+	 * 
+	 * @return
 	 */
-	public String getFactoryId();
+	public IModuleType2 getModuleType();
 
 	/**
 	 * Returns whether this module currently exists.
@@ -190,10 +157,21 @@ public interface IModule extends IModuleType2 {
 	 * <code>false</code> if it has been deleted or moved
 	 */
 	//public boolean exists();
+	
+	/**
+	 * Returns the workbench project that this module is contained in,
+	 * or null if the module is outside of the workspace.
+	 * 
+	 * @return org.eclipse.core.resources.IProject
+	 */
+	public IProject getProject();
+	
+	public IServerExtension getExtension(IProgressMonitor monitor);
 
 	/**
 	 * Add a listener for child module that are added/removed from this
 	 * module.
+	 * Has no effect if an identical listener is already registered.
 	 * 
 	 * @param listener org.eclipse.wst.server.core.model.IModuleListener
 	 */
@@ -202,6 +180,7 @@ public interface IModule extends IModuleType2 {
 	/**
 	 * Add a listener for child modules that are added/removed from this
 	 * module.
+	 * Has no effect if the listener is not registered.
 	 * 
 	 * @param listener org.eclipse.wst.server.core.model.IModuleListener
 	 */
@@ -212,5 +191,5 @@ public interface IModule extends IModuleType2 {
 	 *
 	 * @return org.eclipse.wst.server.core.model.IModule[]
 	 */
-	public IModule[] getChildModules();
+	public IModule[] getChildModules(IProgressMonitor monitor);
 }

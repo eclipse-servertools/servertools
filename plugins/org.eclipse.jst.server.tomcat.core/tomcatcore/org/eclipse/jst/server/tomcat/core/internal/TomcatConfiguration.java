@@ -27,6 +27,7 @@ import org.eclipse.jst.server.j2ee.IWebModule;
 import org.eclipse.jst.server.tomcat.core.ITomcatConfiguration;
 import org.eclipse.jst.server.tomcat.core.WebModule;
 
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.core.model.IServerPort;
@@ -194,12 +195,13 @@ public abstract class TomcatConfiguration extends ServerConfigurationDelegate im
 	 * @return java.lang.String
 	 * @param module IWebModule
 	 */
-	protected String getWebModuleURL(IWebModule webModule) {
+	protected String getWebModuleURL(IModule webModule) {
 		WebModule module = getWebModule(webModule);
 		if (module != null)
 			return module.getPath();
 		
-		return webModule.getContextRoot();
+		IWebModule webModule2 = (IWebModule) webModule.getExtension(null);
+		return webModule2.getContextRoot();
 	}
 
 	/**
@@ -208,11 +210,11 @@ public abstract class TomcatConfiguration extends ServerConfigurationDelegate im
 	 * @return java.lang.String
 	 * @param project org.eclipse.core.resources.IProject
 	 */
-	protected WebModule getWebModule(IWebModule webModule) {
+	protected WebModule getWebModule(IModule webModule) {
 		if (webModule == null)
 			return null;
 	
-		String memento = webModule.getFactoryId() + ":" + webModule.getId();
+		String memento = webModule.getId();
 	
 		List modules = getWebModules();
 		int size = modules.size();

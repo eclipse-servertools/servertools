@@ -60,7 +60,9 @@ public abstract class Base {
 			if (obj == null)
 				return defaultValue;
 			return (String) obj;
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		return defaultValue;
 	}
 
@@ -70,7 +72,9 @@ public abstract class Base {
 			if (obj == null)
 				return defaultValue;
 			return Integer.parseInt((String) obj);
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		return defaultValue;
 	}
 
@@ -80,7 +84,9 @@ public abstract class Base {
 			if (obj == null)
 				return defaultValue;
 			return Boolean.valueOf((String) obj).booleanValue();
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		return defaultValue;
 	}
 	
@@ -92,7 +98,9 @@ public abstract class Base {
 			List list = (List) obj;
 			if (list != null)
 				return list;
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		return defaultValue;
 	}
 	
@@ -104,7 +112,9 @@ public abstract class Base {
 			Map map2 = (Map) obj;
 			if (map2 != null)
 				return map2;
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		return defaultValue;
 	}
 
@@ -303,7 +313,9 @@ public abstract class Base {
 		} finally {
 			try {
 				in.close();
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 		}
 	}
 	
@@ -326,7 +338,9 @@ public abstract class Base {
 		} finally {
 			try {
 				fin.close();
-			} catch (Exception e) {}
+			} catch (Exception e) {
+				// ignore
+			}
 		}
 	}
 	

@@ -102,7 +102,9 @@ public abstract class ServerDelegate implements IServerExtension {
 		initialize();
 	}
 
-	public abstract void initialize();
+	public void initialize() {
+		// do nothing
+	}
 
 	public final IServer getServer() {
 		return server;

@@ -58,7 +58,9 @@ public class SocketUtil {
 		while (inUse && count > 0) {
 			try {
 				Thread.sleep(500);
-			} catch (Exception e) { }
+			} catch (Exception e) {
+				// ignore
+			}
 			inUse = isPortInUse(port);
 			count --;
 		}
@@ -86,7 +88,9 @@ public class SocketUtil {
 			if (s != null) {
 				try {
 					s.close();
-				} catch (Exception e) { }
+				} catch (Exception e) {
+					// ignore
+				}
 			}
 		}
 

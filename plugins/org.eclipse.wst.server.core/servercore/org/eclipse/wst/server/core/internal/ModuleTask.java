@@ -92,7 +92,9 @@ public class ModuleTask implements IModuleTask {
 		return false;
 	}
 	
-	public void undo() { }
+	public void undo() {
+		// do nothing
+	}
 	
 	/**
 	 * Return the type ids that may be supported.

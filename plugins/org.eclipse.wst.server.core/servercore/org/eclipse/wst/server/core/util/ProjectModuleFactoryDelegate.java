@@ -20,7 +20,6 @@ import org.eclipse.wst.server.core.IResourceManager;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.ResourceManager;
 import org.eclipse.wst.server.core.internal.Trace;
-import org.eclipse.wst.server.core.model.*;
 /**
  * 
  */
@@ -82,10 +81,12 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * @param project org.eclipse.core.resources.IProject
 	 * @return org.eclipse.wst.server.core.model.IModuleProject
 	 */
-	public IProjectModule getModuleProject(IProject project) {
+	public IModule getModuleProject(IProject project) {
 		try {
-			return (IProjectModule) projects.get(project);
-		} catch (Exception e) { }
+			return (IModule) projects.get(project);
+		} catch (Exception e) {
+			// ignore
+		}
 		return null;
 	}
 
@@ -268,7 +269,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 			cacheModules();
 		}
 
-		IProjectModule module = createModule(project);
+		IModule module = createModule(project);
 		if (module == null)
 			return;
 		projects.put(project, module);
@@ -290,7 +291,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		}
 
 		try {
-			IProjectModule module = (IProjectModule) projects.get(project);
+			IModule module = (IModule) projects.get(project);
 			projects.remove(project);
 			modules.remove(module.getId());
 			if (removed == null)
@@ -339,7 +340,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * @param project org.eclipse.core.resources.IProject
 	 * @return org.eclipse.wst.server.core.model.IModuleProject
 	 */
-	protected abstract IProjectModule createModule(IProject project);
+	protected abstract IModule createModule(IProject project);
 
 	/**
 	 * Returns the list of resources that the module should listen to

@@ -676,7 +676,9 @@ public class ResourceManager implements IResourceManager {
 				try {
 					int ind = Integer.parseInt(s);
 					defaultRuntime = (IRuntime) runtimes.get(ind);
-				} catch (Exception ex) { }
+				} catch (Exception ex) {
+					// ignore
+				}
 			} catch (Exception e) {
 				Trace.trace(Trace.WARNING, "Could not load runtimes: " + e.getMessage());
 			}
@@ -1176,7 +1178,7 @@ public class ResourceManager implements IResourceManager {
 		if (isDeltaOnlyMarkers(delta))
 			return;
 
-		final IProjectModule moduleProject = ServerUtil.getModuleProject(project);
+		final IModule moduleProject = ServerUtil.getModuleProject(project);
 		if (moduleProject == null)
 			return;
 		
@@ -1187,7 +1189,7 @@ public class ResourceManager implements IResourceManager {
 			int size = servers2.length;
 			for (int i = 0; i < size; i++) {
 			if (servers2[i].isDelegateLoaded())
-				((Server) servers2[i]).handleModuleProjectChange(delta, new IProjectModule[] { moduleProject });
+				((Server) servers2[i]).handleModuleProjectChange(delta, new IModule[] { moduleProject });
 			}
 		}
 		Trace.trace(Trace.FINEST, "< publishHandleProjectChange");
@@ -1211,7 +1213,9 @@ public class ResourceManager implements IResourceManager {
 					return true;
 				}
 			});
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		return t.b;
 	}
 	
@@ -1371,5 +1375,6 @@ public class ResourceManager implements IResourceManager {
 	}
 
 	protected void fireModuleServerEvent(IModuleFactoryEvent[] factoryEvents, IModuleEvent[] events) {
+		// do nothing
 	}
 }

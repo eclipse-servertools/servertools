@@ -101,8 +101,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer {
 			if (port != 80)
 				url += ":" + port;
 
-			IWebModule module2 = (IWebModule) module;
-			url += config.getWebModuleURL(module2);
+			url += config.getWebModuleURL(module);
 			
 			if (!url.endsWith("/"))
 				url += "/";
