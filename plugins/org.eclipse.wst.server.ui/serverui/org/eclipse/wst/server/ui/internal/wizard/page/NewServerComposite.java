@@ -308,7 +308,7 @@ public class NewServerComposite extends Composite {
 			detectComp.setHost("localhost");
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
 		data.horizontalSpan = 3;
-		data.heightHint = 120;
+		data.heightHint = 150;
 		detectComp.setLayoutData(data);
 	}
 
@@ -341,7 +341,7 @@ public class NewServerComposite extends Composite {
 		existingComp.setIncludeIncompatibleVersions(true);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
 		data.horizontalSpan = 3;
-		data.heightHint = 120;
+		data.heightHint = 150;
 		existingComp.setLayoutData(data);
 	}
 	
@@ -400,7 +400,7 @@ public class NewServerComposite extends Composite {
 
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
 		data.horizontalSpan = 3;
-		data.heightHint = 250;
+		data.heightHint = 300;
 		manualComp.setLayoutData(data);
 	}
 
