@@ -1,9 +1,9 @@
 /**********************************************************************
  * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Common Public License v1.0
+ * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/cpl-v10.html
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    IBM - Initial API and implementation
@@ -23,11 +23,7 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.Launch;
 import org.eclipse.debug.core.model.IStreamsProxy;
-import org.eclipse.jdt.launching.IVMInstall;
-import org.eclipse.jdt.launching.IVMInstallType;
-import org.eclipse.jdt.launching.IVMRunner;
-import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jdt.launching.VMRunnerConfiguration;
+import org.eclipse.jdt.launching.*;
 import org.eclipse.jst.server.tomcat.core.ITomcatRuntime;
 import org.eclipse.jst.server.tomcat.core.ITomcatRuntimeWorkingCopy;
 
