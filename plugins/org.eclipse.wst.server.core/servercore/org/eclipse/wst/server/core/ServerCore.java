@@ -56,7 +56,7 @@ public class ServerCore {
 	private static List moduleFactories;
 
 	// cached copy of all module object adapters
-	private static List moduleObjectAdapters;
+	private static List moduleArtifactAdapters;
 
 	// cached copy of all launchable adapters
 	private static List launchableAdapters;
@@ -315,11 +315,11 @@ public class ServerCore {
 	 * @return
 	 */
 	public static IModuleArtifactAdapter[] getModuleArtifactAdapters() {
-		if (moduleObjectAdapters == null)
-			loadModuleObjectAdapters();
+		if (moduleArtifactAdapters == null)
+			loadModuleArtifactAdapters();
 		
-		IModuleArtifactAdapter[] moa = new IModuleArtifactAdapter[moduleObjectAdapters.size()];
-		moduleObjectAdapters.toArray(moa);
+		IModuleArtifactAdapter[] moa = new IModuleArtifactAdapter[moduleArtifactAdapters.size()];
+		moduleArtifactAdapters.toArray(moa);
 		return moa;
 	}
 
@@ -530,26 +530,26 @@ public class ServerCore {
 	}
 
 	/**
-	 * Load the module object adapters extension point.
+	 * Load the module artifact adapters extension point.
 	 */
-	private static synchronized void loadModuleObjectAdapters() {
-		if (moduleObjectAdapters != null)
+	private static synchronized void loadModuleArtifactAdapters() {
+		if (moduleArtifactAdapters != null)
 			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleObjectAdapters extension point ->-");
+		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleArtifactAdapters extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleObjectAdapters");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleArtifactAdapters");
 
 		int size = cf.length;
-		moduleObjectAdapters = new ArrayList(size);
+		moduleArtifactAdapters = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
-				moduleObjectAdapters.add(new ModuleArtifactAdapter(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded moduleObjectAdapter: " + cf[i].getAttribute("id"));
+				moduleArtifactAdapters.add(new ModuleArtifactAdapter(cf[i]));
+				Trace.trace(Trace.EXTENSION_POINT, "  Loaded moduleArtifactAdapter: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load moduleObjectAdapter: " + cf[i].getAttribute("id"), t);
+				Trace.trace(Trace.SEVERE, "  Could not load moduleArtifactAdapter: " + cf[i].getAttribute("id"), t);
 			}
 		}
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleObjectAdapters extension point -<-");
+		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleArtifactAdapters extension point -<-");
 	}
 	
 	/**
