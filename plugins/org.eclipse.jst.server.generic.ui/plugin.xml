@@ -17,11 +17,11 @@
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.wst.server.ui"/>
-      <import plugin="org.eclipse.debug.ui"/>
+       <import plugin="org.eclipse.debug.ui"/>
       <import plugin="org.eclipse.jdt.debug.ui"/>
       <import plugin="org.eclipse.jst.server.generic.core"/>
-      <import plugin="org.eclipse.wst.server.core" />
-      <import plugin="org.eclipse.jst.server.core" />
+      <import plugin="org.eclipse.wst.server.core" version="3.0.0" match="equivalent"/>
+      <import plugin="org.eclipse.jst.server.core" version="3.0.0" match="equivalent"/>
    </requires>
 
  <extension
@@ -29,9 +29,16 @@
      <fragment
         id="org.eclipse.jst.server.generic.runtime"
         typeIds="org.eclipse.jst.server.generic.runtime"
-        class="org.eclipse.jst.server.generic.internal.ui.GenericServerWizardFragment"/>       
+        class="org.eclipse.jst.server.generic.internal.ui.GenericServerRuntimeWizardFragment"/>       
  </extension>
 
+<!-- <extension
+       point="org.eclipse.wst.server.ui.wizardFragments">
+     <fragment
+        id="org.eclipse.jst.server.generic.server"
+        typeIds="org.eclipse.jst.server.generic.configuration"
+        class="org.eclipse.jst.server.generic.internal.ui.GenericServerWizardFragment"/>       
+ </extension>-->
   <extension point="org.eclipse.wst.server.ui.editorPages">
       <page
          id="org.eclipse.jst.server.generic.configuration.editor.webmodule"
