@@ -58,7 +58,6 @@ import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.generic.core.CorePlugin;
-import org.eclipse.jst.server.generic.internal.xml.ClasspathItem;
 import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinition;
 import org.eclipse.jst.server.generic.modules.J2eeSpecModuleFactoryDelegate;
 import org.eclipse.jst.server.j2ee.IWebModule;
@@ -256,8 +255,8 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 			ArrayList l = new ArrayList();
 			l.add(webModule);
 			return l;
-		} else
-			return null;
+		}
+		return null;
 	
 	}
 
@@ -301,42 +300,19 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 	}
 
 	private List getClasspathMementos() {
-		List cpathList = getServerDefinition().getServerClassPath();
-		ArrayList mementoList = new ArrayList();
-		for (int i = 0; i < cpathList.size(); i++) {
-			ClasspathItem item = (ClasspathItem) cpathList.get(i);
-			String cpath = getServerDefinition().resolveProperties(
-					item.getClasspath());
-			String memento = null;
-			try {
-				memento = JavaRuntime.newArchiveRuntimeClasspathEntry(
-						new Path(cpath)).getMemento();
-			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			mementoList.add(memento);
-		}
-		return mementoList;
+		return getServerDefinition().getServerClasspathMementos();
 	}
 
 	private String getVmArguments() {
-		String vmParams = getServerDefinition().resolveProperties(
-				getServerDefinition().getStartVmParameters());
-		return vmParams;
+		return getServerDefinition().getStartVmParameters();
 	}
 
 	private String getProgramArguments() {
-		String startParams = getServerDefinition().resolveProperties(
-				getServerDefinition().getStartProgramArguments());
-		return startParams;
+		return getServerDefinition().getStartProgramArguments();
 	}
 
 	private String getWorkingDirectory() {
-		String wDirectory = getServerDefinition().resolveProperties(
-				getServerDefinition().getStartWorkingDirectory());
-		return wDirectory;
-
+		return getServerDefinition().getStartWorkingDirectory();
 	}
 
 	public String getStartClassName() {
@@ -494,12 +470,10 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 					getWorkingDirectory());
 			wc.setAttribute(
 					IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
-					getServerDefinition().resolveProperties(
-							getServerDefinition().getStopProgramArguments()));
+							getServerDefinition().getStopProgramArguments());
 			wc.setAttribute(
 					IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
-					getServerDefinition().resolveProperties(
-							getServerDefinition().getStopVmParameters()));				
+							getServerDefinition().getStopVmParameters());				
 			wc.setAttribute(ATTR_STOP, "true");
 			wc.launch(ILaunchManager.RUN_MODE, new NullProgressMonitor());
 		} catch (Exception e) {

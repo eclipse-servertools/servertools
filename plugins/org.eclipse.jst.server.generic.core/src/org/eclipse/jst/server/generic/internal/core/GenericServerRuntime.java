@@ -93,8 +93,7 @@ public class GenericServerRuntime implements IGenericRuntime
 //		else 
 		if (getVMInstall() == null)
 			return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, CorePlugin.getResourceString("%errorJRE"), null);
-		else
-			return new Status(IStatus.OK, JavaServerPlugin.PLUGIN_ID, 0, "", null);
+		return new Status(IStatus.OK, JavaServerPlugin.PLUGIN_ID, 0, "", null);
 	}
 
 	/* (non-Javadoc)
