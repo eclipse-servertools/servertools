@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.core.runtime.*;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.internet.monitor.core.*;
+import org.eclipse.wst.internet.monitor.core.internal.IContentFilter;
 import org.eclipse.wst.internet.monitor.core.internal.http.ResendHTTPRequest;
 import org.eclipse.wst.internet.monitor.ui.ContentViewer;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;

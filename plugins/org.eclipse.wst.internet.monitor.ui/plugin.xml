@@ -22,7 +22,7 @@
 
 <extension-point name="%extensionPointViewers" id="viewers" schema="schema/viewers.exsd"/>
 
-<extension point="org.eclipse.wst.internet.monitor.core.startups">
+<extension point="org.eclipse.wst.internet.monitor.core.internalStartup">
   <startup
     id="org.eclipse.wst.internet.monitor.ui"
     class="org.eclipse.wst.internet.monitor.ui.internal.Startup"/>

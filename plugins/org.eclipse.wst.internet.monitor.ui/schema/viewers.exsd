@@ -61,7 +61,7 @@
                   specifies the fully qualified name of the Java class that extends &lt;samp&gt;org.eclipse.wst.internet.monitor.ui.ContentViewer&lt;/samp&gt;. Viewers instances of this type will delegate to instances of this class.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.IStartup"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.internet.monitor.ui.ContentViewer"/>
                </appInfo>
             </annotation>
          </attribute>

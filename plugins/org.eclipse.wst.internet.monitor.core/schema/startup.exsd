@@ -3,10 +3,12 @@
 <schema targetNamespace="org.eclipse.wst.internet.monitor.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.wst.internet.monitor.core" id="startups" name="Startup"/>
+         <meta.schema plugin="org.eclipse.wst.internet.monitor.core" id="internalStartup" name="Startup"/>
       </appInfo>
       <documentation>
          This extension point is used to load a secondary plugin. The extension point will be called when the monitor core plugin starts up.
+
+This extension point is internal and should not be used by any other plugins.
       </documentation>
    </annotation>
 
@@ -61,7 +63,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.internet.monitor.core.internal.IStartup"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -77,7 +79,7 @@
 
 &lt;p&gt;
 &lt;pre&gt;
-&lt;extension point=&quot;org.eclipse.wst.internet.monitor.core.startups&quot;&gt;
+&lt;extension point=&quot;org.eclipse.wst.internet.monitor.core.internal.startups&quot;&gt;
   &lt;startup
     id=&quot;com.example.myplugin&quot;
     class=&quot;com.example.myplugin.Startup&quot;/&gt;
@@ -92,7 +94,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         
+         This extension point is internal and should not be used by any other plugins.
       </documentation>
    </annotation>
 

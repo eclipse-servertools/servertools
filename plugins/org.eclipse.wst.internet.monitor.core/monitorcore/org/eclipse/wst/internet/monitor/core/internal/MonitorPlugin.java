@@ -14,7 +14,6 @@ import java.text.MessageFormat;
 import java.util.*;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.wst.internet.monitor.core.IContentFilter;
 /**
  * The monitor core plugin.
  */
@@ -143,6 +142,8 @@ public class MonitorPlugin extends Plugin {
 	}
 	
 	public IContentFilter findContentFilter(String id) {
+		if (id == null)
+			throw new IllegalArgumentException();
 		return (IContentFilter) contentFilters.get(id);
 	}
 
@@ -151,7 +152,7 @@ public class MonitorPlugin extends Plugin {
 			return;
 		Trace.trace(Trace.CONFIG, "Loading protocol adapters"); 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(MonitorPlugin.PLUGIN_ID, "protocolAdapters");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(MonitorPlugin.PLUGIN_ID, "internalProtocolAdapters");
 
 		int size = cf.length;
 		protocolAdapters = new HashMap(size);
@@ -184,7 +185,7 @@ public class MonitorPlugin extends Plugin {
 		
 		Trace.trace(Trace.CONFIG, "Loading startups"); 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(MonitorPlugin.PLUGIN_ID, "startups");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(MonitorPlugin.PLUGIN_ID, "internalStartup");
 
 		int size = cf.length;
 		for (int i = 0; i < size; i++) {

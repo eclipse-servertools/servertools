@@ -13,8 +13,8 @@ package org.eclipse.wst.internet.monitor.ui.internal.view;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.wst.internet.monitor.core.IContentFilter;
 import org.eclipse.wst.internet.monitor.core.Request;
+import org.eclipse.wst.internet.monitor.core.internal.IContentFilter;
 import org.eclipse.wst.internet.monitor.ui.ContentViewer;
 import org.eclipse.wst.internet.monitor.ui.internal.viewers.HeaderViewer;
 /**

@@ -37,6 +37,8 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.*;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wst.internet.monitor.core.*;
+import org.eclipse.wst.internet.monitor.core.internal.IContentFilter;
+import org.eclipse.wst.internet.monitor.core.internal.MonitorPlugin;
 import org.eclipse.wst.internet.monitor.core.internal.http.ResendHTTPRequest;
 import org.eclipse.wst.internet.monitor.ui.internal.*;
 /**
@@ -481,7 +483,7 @@ public class MonitorView extends ViewPart {
 		tbm.add(sortByResponseTimeAction);
 		tbm.add(clearAction);
 		
-		IContentFilter[] filters = MonitorCore.getContentFilters();
+		IContentFilter[] filters = MonitorPlugin.getInstance().getContentFilters();
 		IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
 		menuManager.add(httpHeaderAction);
 		int size = filters.length;

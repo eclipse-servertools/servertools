@@ -12,7 +12,7 @@ package org.eclipse.wst.internet.monitor.ui.internal.view;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.wst.internet.monitor.core.IContentFilter;
+import org.eclipse.wst.internet.monitor.core.internal.IContentFilter;
 /**
  * 
  */

@@ -13,7 +13,6 @@ package org.eclipse.wst.internet.monitor.core;
 import java.util.List;
 
 import org.eclipse.wst.internet.monitor.core.internal.MonitorManager;
-import org.eclipse.wst.internet.monitor.core.internal.MonitorPlugin;
 /**
  * Main class for creating new monitors and locating existing ones. The methods on
  * this class are thread safe.
@@ -72,39 +71,6 @@ public final class MonitorCore {
 	 */
 	public static IMonitorWorkingCopy createMonitor() {
 		return getManager().createMonitor();
-	}
-
-	/**
-	 * Returns an array of all known content filters.
-	 * <p>
-	 * Content filters are registered via the <code>contentFilters</code>
-	 * extension point in the <code>org.eclipse.wst.internet.monitor.core</code>
-	 * plug-in.
-	 * </p>
-	 * <p>
-	 * A new array is returned on each call; clients may safely store or modify the result.
-	 * </p>
-	 * 
-	 * @return a possibly-empty array of content filter instances
-	 */
-	public static IContentFilter[] getContentFilters() {
-		return MonitorPlugin.getInstance().getContentFilters();
-	}
-
-	/**
-	 * Returns the content filter with the given id, or <code>null</code>
-	 * if none. This convenience method searches the list of known
-	 * content filters ({@link #getContentFilters()}) for the one with a
-	 * matching id ({@link IContentFilter#getId()})
-	 *
-	 * @param id the content filter id; must not be <code>null</code>
-	 * @return the content filter instance, or <code>null</code> if there
-	 *   is no content filter with the given id
-	 */
-	public static IContentFilter findContentFilter(String id) {
-		if (id == null)
-			throw new IllegalArgumentException();
-		return MonitorPlugin.getInstance().findContentFilter(id);
 	}
 
 	/**
