@@ -27,10 +27,15 @@ public class AllTests {
 		suite.addTest(new OrderedTestSuite(WebModuleTestCase.class));
 		suite.addTest(new OrderedTestSuite(EnterpriseApplicationTestCase.class));
 		
+		suite.addTest(new OrderedTestSuite(LooseArchiveTestCase.class));
+		suite.addTest(new OrderedTestSuite(LooseArchiveSupportTestCase.class));
+		
 		suite.addTest(new OrderedTestSuite(EJBBeanTestCase.class));
 		suite.addTest(new OrderedTestSuite(ServletTestCase.class));
 		suite.addTest(new OrderedTestSuite(JndiObjectTestCase.class));
 		suite.addTest(new OrderedTestSuite(JndiLaunchableTestCase.class));
+		
+		suite.addTest(new OrderedTestSuite(ClasspathRuntimeTargetHandlerTestCase.class));
 		//$JUnit-END$
 		return suite;
 	}

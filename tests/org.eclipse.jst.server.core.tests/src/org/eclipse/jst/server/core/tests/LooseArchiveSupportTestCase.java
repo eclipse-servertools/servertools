@@ -10,35 +10,27 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core.tests;
 
-import org.eclipse.jst.server.core.IConnectorModule;
-import org.eclipse.jst.server.core.tests.impl.TestConnectorModule;
+import org.eclipse.jst.server.core.ILooseArchiveSupport;
+import org.eclipse.jst.server.core.tests.impl.TestLooseArchiveSupport;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-public class ConnectorModuleTestCase extends TestCase {
-	protected static IConnectorModule module;
+public class LooseArchiveSupportTestCase extends TestCase {
+	protected static ILooseArchiveSupport archive;
 	
 	public static Test suite() {
-		return new OrderedTestSuite(ConnectorModuleTestCase.class, "ConnectorModuleTestCase");
+		return new OrderedTestSuite(LooseArchiveSupportTestCase.class, "LooseArchiveSupportTestCase");
 	}
 
 	public void test00Create() {
-		module = new TestConnectorModule();
+		archive = new TestLooseArchiveSupport();
 	}
 	
-	public void test01SpecVersion() {
-		module.getJ2EESpecificationVersion();
+	public void test01GetLooseArchives() {
+		archive.getLooseArchives();
 	}
 	
-	public void test02Location() {
-		module.getLocation();
-	}
-	
-	public void test03Binary() {
-		module.isBinary();
-	}
-	
-	public void test04Classpath() {
-		module.getClasspath();
+	public void test02GetURI() {
+		archive.getURI(null);
 	}
 }

@@ -12,6 +12,6 @@ package org.eclipse.jst.server.core.tests.impl;
 
 import org.eclipse.jst.server.core.IApplicationClientModule;
 
-public class ApplicationClientModule extends J2EEModule implements IApplicationClientModule {
+public class TestApplicationClientModule extends TestJ2EEModule implements IApplicationClientModule {
 	// no additonal methods
 }

@@ -13,7 +13,7 @@ package org.eclipse.jst.server.core.tests.impl;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jst.server.core.IConnectorModule;
 
-public class ConnectorModule extends J2EEModule implements IConnectorModule {
+public class TestConnectorModule extends TestJ2EEModule implements IConnectorModule {
 	public IPath[] getClasspath() {
 		return null;
 	}

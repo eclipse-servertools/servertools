@@ -10,19 +10,20 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core.tests;
 
-import org.eclipse.jst.server.core.tests.impl.ApplicationClientModule;
+import org.eclipse.jst.server.core.IApplicationClientModule;
+import org.eclipse.jst.server.core.tests.impl.TestApplicationClientModule;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class ApplicationClientTestCase extends TestCase {
-	protected static ApplicationClientModule module;
+	protected static IApplicationClientModule module;
 	
 	public static Test suite() {
 		return new OrderedTestSuite(ApplicationClientTestCase.class, "ApplicationClientTestCase");
 	}
 
 	public void test00Create() {
-		module = new ApplicationClientModule();
+		module = new TestApplicationClientModule();
 	}
 	
 	public void test01SpecVersion() {

@@ -10,10 +10,15 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core.tests.impl;
 
-import org.eclipse.jst.server.core.IEJBModule;
+import org.eclipse.jst.server.core.ILooseArchive;
+import org.eclipse.jst.server.core.ILooseArchiveSupport;
 
-public class EJBModule extends J2EEModule implements IEJBModule {
-	public String getEJBSpecificationVersion() {
+public class TestLooseArchiveSupport implements ILooseArchiveSupport {
+	public ILooseArchive[] getLooseArchives() {
+		return null;
+	}
+
+	public String getURI(ILooseArchive archive) {
 		return null;
 	}
 }

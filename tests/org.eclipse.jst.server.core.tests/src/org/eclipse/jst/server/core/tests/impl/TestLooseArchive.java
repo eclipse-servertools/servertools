@@ -11,13 +11,9 @@
 package org.eclipse.jst.server.core.tests.impl;
 
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jst.server.core.IJ2EEModule;
+import org.eclipse.jst.server.core.ILooseArchive;
 
-public class J2EEModule implements IJ2EEModule {
-	public String getJ2EESpecificationVersion() {
-		return null;
-	}
-
+public class TestLooseArchive implements ILooseArchive {
 	public IPath getLocation() {
 		return null;
 	}

@@ -10,28 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core.tests.impl;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.jst.server.core.IEnterpriseApplication;
-import org.eclipse.jst.server.core.IJ2EEModule;
+import org.eclipse.jst.server.core.IEJBModule;
 
-public class EnterpriseApplication implements IEnterpriseApplication {
-	public String getJ2EESpecificationVersion() {
+public class TestEJBModule extends TestJ2EEModule implements IEJBModule {
+	public String getEJBSpecificationVersion() {
 		return null;
-	}
-
-	public IPath getLocation() {
-		return null;
-	}
-
-	public IJ2EEModule[] getModules() {
-		return null;
-	}
-
-	public String getURI(IJ2EEModule module) {
-		return null;
-	}
-
-	public boolean containsLooseModules() {
-		return false;
 	}
 }

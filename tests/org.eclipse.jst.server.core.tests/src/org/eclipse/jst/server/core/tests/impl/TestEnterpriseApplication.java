@@ -10,22 +10,28 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core.tests.impl;
 
-import org.eclipse.jst.server.core.IWebModule;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.jst.server.core.IEnterpriseApplication;
+import org.eclipse.jst.server.core.IJ2EEModule;
 
-public class WebModule extends J2EEModule implements IWebModule {
-	public String getServletSpecificationVersion() {
+public class TestEnterpriseApplication implements IEnterpriseApplication {
+	public String getJ2EESpecificationVersion() {
 		return null;
 	}
 
-	public String getJSPSpecificationVersion() {
+	public IPath getLocation() {
 		return null;
 	}
 
-	public String getContextRoot() {
+	public IJ2EEModule[] getModules() {
 		return null;
 	}
 
-	public boolean isPublishRequired() {
+	public String getURI(IJ2EEModule module) {
+		return null;
+	}
+
+	public boolean containsLooseModules() {
 		return false;
 	}
 }

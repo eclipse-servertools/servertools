@@ -8,26 +8,32 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.server.core.tests;
+package org.eclipse.jst.server.core.tests.impl;
 
+import java.util.*;
+import java.io.File;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jst.server.core.ClasspathRuntimeTargetHandler;
 import org.eclipse.wst.server.core.IRuntime;
 /**
  * 
  */
-public class TestClasspathRuntimeTargetHandler extends ClasspathRuntimeTargetHandler{
-	/* (non-Javadoc)
-	 * @see org.eclipse.jst.server.core.ClasspathRuntimeTargetHandler#getClasspathContainerLabel(org.eclipse.wst.server.core.IRuntime, java.lang.String)
-	 */
+public class TestClasspathRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
 	public String getClasspathContainerLabel(IRuntime runtime, String id) {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jst.server.core.ClasspathRuntimeTargetHandler#resolveClasspathContainer(org.eclipse.wst.server.core.IRuntime, java.lang.String)
-	 */
 	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime, String id) {
 		return null;
+	}
+	
+	public void testAddMethods() {
+		List list = new ArrayList();
+		addJarFiles(null, list, false);
+		addLibraryEntries(list, null, false);
+		addLibraryEntry(list, (File) null);
+		addLibraryEntry(list, (IPath) null);
+		addLibraryEntry(list, null, null, null);
 	}
 }

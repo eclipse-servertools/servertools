@@ -10,19 +10,20 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core.tests;
 
-import org.eclipse.jst.server.core.tests.impl.EJBModule;
+import org.eclipse.jst.server.core.IEJBModule;
+import org.eclipse.jst.server.core.tests.impl.TestEJBModule;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class EJBModuleTestCase extends TestCase {
-	protected static EJBModule module;
+	protected static IEJBModule module;
 	
 	public static Test suite() {
 		return new OrderedTestSuite(EJBModuleTestCase.class, "EJBModuleTestCase");
 	}
 
 	public void test00Create() {
-		module = new EJBModule();
+		module = new TestEJBModule();
 	}
 	
 	public void test01SpecVersion() {
