@@ -39,6 +39,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jst.server.generic.core.CorePlugin;
+import org.eclipse.jst.server.generic.internal.xml.Resolver;
 import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
@@ -70,7 +71,7 @@ public class ServerTypeDefinitionUtil
 		ArrayList entryList = new ArrayList();
 		while (archives.hasNext()) {
 			ArchiveType archive = (ArchiveType) archives.next();
-			String item = (String) archive.getPath();
+			String item = definition.getResolver().resolveProperties(archive.getPath());
 			IClasspathEntry entry = JavaCore.newLibraryEntry(new Path(item),null,null );
 			entryList.add(entry);
 		}
