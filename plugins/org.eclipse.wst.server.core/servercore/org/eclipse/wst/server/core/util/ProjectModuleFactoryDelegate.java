@@ -32,7 +32,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	protected List added;
 	protected List removed;
 
-	// map from IProject to IModuleProject
+	// map from IProject to IModule[]
 	protected Map projects;
 
 	/**
@@ -57,7 +57,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 			for (int i = 0; i < size; i++) {
 				//Trace.trace("caching: " + this + " " + projects[i] + " " + isValidModule(projects[i]));
 				if (isValidModule(projects2[i])) {
-					addModuleProject(projects2[i]);
+					addModules(projects2[i]);
 				}
 			}
 		} catch (Exception e) {
@@ -69,22 +69,22 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	/**
 	 * Return the workspace root.
 	 * 
-	 * @return org.eclipse.core.resources.IWorkspaceRoot
+	 * @return the workspace root
 	 */
-	protected static IWorkspaceRoot getWorkspaceRoot() {
+	private static IWorkspaceRoot getWorkspaceRoot() {
 		return ResourcesPlugin.getWorkspace().getRoot();
 	}
 
 	/**
-	 * Returns the module project for the given project, or null
+	 * Returns the modules for the given project, or null
 	 * if this factory does not have a module for the given project.
 	 * 
-	 * @param project org.eclipse.core.resources.IProject
-	 * @return org.eclipse.wst.server.core.model.IModuleProject
+	 * @param project a project
+	 * @return an array of modules.
 	 */
-	public IModule getModuleProject(IProject project) {
+	public IModule[] getModules(IProject project) {
 		try {
-			return (IModule) projects.get(project);
+			return (IModule[]) projects.get(project);
 		} catch (Exception e) {
 			// ignore
 		}
@@ -137,8 +137,8 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	/**
 	 * Handle changes to a project.
 	 * 
-	 * @param project org.eclipse.core.resources.IProject
-	 * @param delta org.eclipse.core.resources.IResourceDelta
+	 * @param project a project
+	 * @param delta a resource delta
 	 */
 	protected static void handleGlobalProjectChange(final IProject project, IResourceDelta delta) {
 		// handle project level changes
@@ -195,19 +195,19 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	/**
 	 * Handle changes to a project.
 	 * 
-	 * @param project org.eclipse.core.resources.IProject
-	 * @param delta org.eclipse.core.resources.IResourceDelta
+	 * @param project a project
+	 * @param delta a resource delta
 	 */
-	protected void handleProjectChange(final IProject project, IResourceDelta delta) {
+	private void handleProjectChange(final IProject project, IResourceDelta delta) {
 		if (projects.containsKey(project)) {
 			// already a module
 			if (((delta.getKind() &  IResourceDelta.REMOVED) != 0) || !isValidModule(project)) {
-				removeModuleProject(project);
+				removeModules(project);
 			}
 		} else {
 			// not a module
 			if (isValidModule(project)) {
-				addModuleProject(project);
+				addModules(project);
 			}
 		}
 	}
@@ -215,51 +215,54 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	/**
 	 * Handle changes to a project.
 	 * 
-	 * @param project org.eclipse.core.resources.IProject
-	 * @param delta org.eclipse.core.resources.IResourceDelta
+	 * @param project a project
+	 * @param delta a resource delta
 	 */
-	protected void handleProjectInternalChange(final IProject project, IResourceDelta delta) {
+	private void handleProjectInternalChange(final IProject project, IResourceDelta delta) {
 		final IPath[] paths = getListenerPaths();
 		if (paths != null) {
-			final IModule module = getModuleProject(project);
-			if (module != null && module instanceof ProjectModule) {
-				// check for any changes to the module
-				final IPath root = ((ProjectModule) module).getRootFolder();
-				IResourceDelta rootDelta = delta.findMember(root);
-				if (rootDelta != null)
-					((ProjectModule) module).fireModuleChangeEvent(true, null, null, null);
-				
-				// check for listener paths
-				final int size = paths.length;
-				class Temp {
-					boolean found = false;
-				}
-				final Temp temp = new Temp();
-				try {
-					delta.accept(new IResourceDeltaVisitor() {
-						public boolean visit(IResourceDelta visitorDelta) {
-							if (temp.found)
-								return false;
-							IPath path = visitorDelta.getProjectRelativePath();
-							
-							boolean prefix = false;
-							for (int i = 0; i < size && !temp.found; i++) {
-								if (paths[i].equals(path))
-									temp.found = true;
-								else if (path.isPrefixOf(paths[i]))
-									prefix = true;
+			final IModule[] modules = getModules(project);
+			for (int i = 0; i < modules.length; i++) {
+				final IModule module = modules[i];
+				if (module != null && module instanceof ProjectModule) {
+					// check for any changes to the module
+					final IPath root = ((ProjectModule) module).getRootFolder();
+					IResourceDelta rootDelta = delta.findMember(root);
+					if (rootDelta != null)
+						((ProjectModule) module).fireModuleChangeEvent(true, null, null, null);
+					
+					// check for listener paths
+					final int size = paths.length;
+					class Temp {
+						boolean found = false;
+					}
+					final Temp temp = new Temp();
+					try {
+						delta.accept(new IResourceDeltaVisitor() {
+							public boolean visit(IResourceDelta visitorDelta) {
+								if (temp.found)
+									return false;
+								IPath path = visitorDelta.getProjectRelativePath();
+								
+								boolean prefix = false;
+								for (int j = 0; j < size && !temp.found; j++) {
+									if (paths[j].equals(path))
+										temp.found = true;
+									else if (path.isPrefixOf(paths[j]))
+										prefix = true;
+								}
+								if (temp.found) {
+									((ProjectModule) module).update();
+									return false;
+								} else if (prefix)
+									return true;
+								else
+									return false;
 							}
-							if (temp.found) {
-								((ProjectModule) module).update();
-								return false;
-							} else if (prefix)
-								return true;
-							else
-								return false;
-						}
-					});
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error searching for listening paths", e);
+						});
+					} catch (Exception e) {
+						Trace.trace(Trace.SEVERE, "Error searching for listening paths", e);
+					}
 				}
 			}
 		}
@@ -268,32 +271,29 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	/**
 	 * Add a module for the given project.
 	 * 
-	 * @param project org.eclipse.core.resources.IProject
+	 * @param project a project
 	 */
-	protected void addModuleProject(IProject project) {
-		IModule module = createModule(project);
-		if (module == null)
+	private void addModules(IProject project) {
+		IModule[] modules = createModules(project);
+		if (modules == null || modules.length == 0)
 			return;
-		projects.put(project, module);
-		//modules.put(module.getId(), module);
-		if (added == null)
-			added = new ArrayList(2);
-		added.add(module);
+		projects.put(project, modules);
+		added = new ArrayList(2);
+		added.addAll(Arrays.asList(modules));
 	}
 
 	/**
-	 * Remove the module that represents the given project.
+	 * Remove the modules that represents the given project.
 	 * 
-	 * @param project org.eclipse.core.resources.IProject
+	 * @param project a project
 	 */
-	protected void removeModuleProject(IProject project) {
+	private void removeModules(IProject project) {
 		try {
-			IModule module = (IModule) projects.get(project);
+			IModule[] modules = (IModule[]) projects.get(project);
 			projects.remove(project);
-			//modules.remove(module.getId());
 			if (removed == null)
 				removed = new ArrayList(2);
-			removed.add(module);
+			removed.addAll(Arrays.asList(modules));
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error removing module project", e);
 		}
@@ -323,28 +323,29 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	}
 
 	/**
-	 * Returns true if the project represents a module project
-	 * of this type.
+	 * Returns true if the project may contain modules of the correct type.
+	 * This method is used only to improve performance.
 	 * 
-	 * @param project org.eclipse.core.resources.IProject
-	 * @return boolean
+	 * @param project a project
+	 * @return <code>true</code> if the project may contain modules, and
+	 *    <code>false</code> if it definitely does not
 	 */
 	protected abstract boolean isValidModule(IProject project);
 
 	/**
-	 * Creates the module project for the given project.
+	 * Creates the modules for a given project.
 	 * 
-	 * @param project org.eclipse.core.resources.IProject
-	 * @return org.eclipse.wst.server.core.model.IModuleProject
+	 * @param project a project to create modules for
+	 * @return a possibly empty array of modules
 	 */
-	protected abstract IModule createModule(IProject project);
+	protected abstract IModule[] createModules(IProject project);
 
 	/**
 	 * Returns the list of resources that the module should listen to
 	 * for state changes. The paths should be project relative paths.
 	 * Subclasses can override this method to provide the paths.
 	 *
-	 * @return org.eclipse.core.runtime.IPath[]
+	 * @return a possibly empty array of paths
 	 */
 	protected IPath[] getListenerPaths() {
 		return null;
