@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import org.eclipse.wst.internet.monitor.core.*;
-import org.eclipse.wst.internet.monitor.core.internal.Monitor;
 import junit.framework.Test;
 import junit.framework.TestCase;
 /**
@@ -41,19 +40,6 @@ public class RequestTestCase extends TestCase {
 			changeCount++;
 		}
 	};
-	
-	class MyRequest extends Request {
-		public MyRequest(Monitor monitor, String protocolId, int localPort, String remoteHost, int remotePort) {
-			super(monitor, protocolId, localPort, remoteHost, remotePort);
-		}
-		
-		public void testProtected() {
-			super.setName("test");
-			super.setRequest(null);
-			super.setResponse(null);
-			super.fireChangedEvent();
-		}
-	}
 
 	public RequestTestCase() {
 		super();
@@ -200,7 +186,15 @@ public class RequestTestCase extends TestCase {
 	}
 	
 	public void test26TestProtectedMethods() {
-		MyRequest mr = new MyRequest(null, null, 0, null, 0);
-		mr.testProtected();
+		Request mr = new Request(null, null, 0, null, 0) {			
+			public Object getAdapter(Class c) {
+				setName("test");
+				setRequest(null);
+				setResponse(null);
+				fireChangedEvent();
+				return super.getAdapter(c);
+			}
+		};
+		mr.getAdapter(null);
 	}
 }

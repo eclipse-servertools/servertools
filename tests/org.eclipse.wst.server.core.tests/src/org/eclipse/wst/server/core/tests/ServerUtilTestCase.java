@@ -129,4 +129,20 @@ public class ServerUtilTestCase extends TestCase {
 	public void testContainsModule() throws Exception {
 		ServerUtil.containsModule(null, null, null);
 	}
+	
+	public void testGetServer() throws Exception {
+		try {
+			ServerUtil.getServer(null);
+		} catch (Exception e) {
+			// ignore
+		}
+	}
+	
+	public void testValidateEdit() throws Exception {
+		try {
+			ServerUtil.validateEdit(null, null);
+		} catch (Exception e) {
+			// ignore
+		}
+	}
 }

@@ -13,26 +13,26 @@ package org.eclipse.wst.server.core.tests.model;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.wst.server.core.model.IModuleResource;
+import org.eclipse.wst.server.core.IModuleArtifact;
+import org.eclipse.wst.server.core.model.ModuleArtifactAdapterDelegate;
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
-import org.eclipse.wst.server.core.tests.impl.TestModuleResource;
 
-public class ModuleResourceTestCase extends TestCase {
-	protected static IModuleResource resource;
+public class ModuleArtifactAdapterDelegateTestCase extends TestCase {
+	protected static ModuleArtifactAdapterDelegate delegate;
 
 	public static Test suite() {
-		return new OrderedTestSuite(ModuleResourceTestCase.class, "ModuleResourceTestCase");
+		return new OrderedTestSuite(ModuleArtifactAdapterDelegateTestCase.class, "ModuleArtifactAdapterDelegateTestCase");
 	}
 
-	public void test00CreateDelegate() throws Exception {
-		resource = new TestModuleResource();
+	public void test00CreateDelegate() {
+		delegate = new ModuleArtifactAdapterDelegate() {
+			public IModuleArtifact getModuleArtifact(Object obj) {
+				return null;
+			}
+		};
 	}
 	
-	public void test01Name() throws Exception {
-		assertNull(resource.getName());
-	}
-	
-	public void test02Path() throws Exception {
-		assertNull(resource.getModuleRelativePath());
+	public void test01GetModuleArtifact() {
+		delegate.getModuleArtifact(null);
 	}
 }

@@ -202,7 +202,7 @@ public class ServerEventTestCase extends TestCase {
 	}
 	
 	public void test013ServerGetPublishingState() {
-		assertEquals(SAMPLE_PUBLISHING_STATE, event.getPublishingState());
+		assertEquals(SAMPLE_PUBLISHING_STATE, event.getPublishState());
 	}
 	
 	public void test014ServerGetRestartState() {
@@ -226,11 +226,11 @@ public class ServerEventTestCase extends TestCase {
 	}
 	
 	public void test112ModuleGetModuleTree() {
-		assertEquals(SAMPLE_MODULE_TREE, event.getModuleTree());
+		assertEquals(SAMPLE_MODULE_TREE, event.getModule());
 	}
 
 	public void test113ModuleGetPublishingState() {
-		assertEquals(SAMPLE_PUBLISHING_STATE, event.getPublishingState());
+		assertEquals(SAMPLE_PUBLISHING_STATE, event.getPublishState());
 	}
 	
 	public void test114ModuleGetRestartState() {

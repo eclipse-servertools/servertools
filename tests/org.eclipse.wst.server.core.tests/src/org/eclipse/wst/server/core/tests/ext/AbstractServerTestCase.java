@@ -42,8 +42,13 @@ public abstract class AbstractServerTestCase extends TestCase {
 	}
 	
 	protected IServer getServer() throws Exception {
-		if (server == null)
+		if (server == null) {
 			server = createServer();
+			
+			// test save all
+			IServerWorkingCopy wc = server.createWorkingCopy();
+			wc.saveAll(false, null);
+		}
 		
 		return server;
 	}
@@ -134,6 +139,9 @@ public abstract class AbstractServerTestCase extends TestCase {
 				ports[i].getPort();
 				ports[i].getProtocol();
 				ports[i].isAdvanced();
+				ports[i].toString();
+				ports[i].equals(null);
+				ports[i].hashCode();
 			}
 		}
 	}
@@ -260,7 +268,8 @@ public abstract class AbstractServerTestCase extends TestCase {
 	
 	public void test0045Delete() {
 		try {
-			serverAttr.createWorkingCopy().delete();
+			IServerAttributes sa = serverAttr.createWorkingCopy();
+			sa.delete();
 		} catch (Exception e) {
 			// ignore
 		}

@@ -28,4 +28,8 @@ public class NullModuleArtifactTestCase extends TestCase {
 	public void test01GetModule() {
 		assertNull(nma.getModule());
 	}
+	
+	public void test02ToString() {
+		nma.toString();
+	}
 }

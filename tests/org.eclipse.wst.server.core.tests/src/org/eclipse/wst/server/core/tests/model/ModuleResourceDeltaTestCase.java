@@ -13,26 +13,34 @@ package org.eclipse.wst.server.core.tests.model;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.wst.server.core.model.IModuleResource;
+import org.eclipse.wst.server.core.model.IModuleResourceDelta;
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
-import org.eclipse.wst.server.core.tests.impl.TestModuleResource;
+import org.eclipse.wst.server.core.tests.impl.TestModuleResourceDelta;
 
-public class ModuleResourceTestCase extends TestCase {
-	protected static IModuleResource resource;
+public class ModuleResourceDeltaTestCase extends TestCase {
+	protected static IModuleResourceDelta delta;
 
 	public static Test suite() {
-		return new OrderedTestSuite(ModuleResourceTestCase.class, "ModuleResourceTestCase");
+		return new OrderedTestSuite(ModuleResourceDeltaTestCase.class, "ModuleResourceDeltaTestCase");
 	}
 
-	public void test00CreateDelegate() throws Exception {
-		resource = new TestModuleResource();
+	public void test00CreateDelegate() {
+		delta = new TestModuleResourceDelta();
 	}
 	
-	public void test01Name() throws Exception {
-		assertNull(resource.getName());
+	public void test01GetModuleResource() {
+		assertNull(delta.getModuleResource());
 	}
 	
-	public void test02Path() throws Exception {
-		assertNull(resource.getModuleRelativePath());
+	public void test02GetAffectedChildren() {
+		assertNull(delta.getAffectedChildren());
+	}
+	
+	public void test03GetModuleRelativePath() {
+		assertNull(delta.getModuleRelativePath());
+	}
+	
+	public void test04GetKind() {
+		delta.getKind();
 	}
 }

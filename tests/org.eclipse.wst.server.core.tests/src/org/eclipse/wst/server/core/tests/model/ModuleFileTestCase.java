@@ -14,10 +14,11 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.server.core.internal.ModuleFile;
+import org.eclipse.wst.server.core.model.IModuleFile;
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 
 public class ModuleFileTestCase extends TestCase {
-	protected static ModuleFile delegate;
+	protected static IModuleFile delegate;
 
 	public static Test suite() {
 		return new OrderedTestSuite(ModuleFileTestCase.class, "ModuleFileTestCase");

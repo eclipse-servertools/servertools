@@ -10,29 +10,30 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.model;
 
+import java.net.URL;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.wst.server.core.model.IModuleResource;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.model.IURLProvider;
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
-import org.eclipse.wst.server.core.tests.impl.TestModuleResource;
 
-public class ModuleResourceTestCase extends TestCase {
-	protected static IModuleResource resource;
+public class IURLProviderTestCase extends TestCase {
+	protected static IURLProvider urlProvider;
 
 	public static Test suite() {
-		return new OrderedTestSuite(ModuleResourceTestCase.class, "ModuleResourceTestCase");
+		return new OrderedTestSuite(IURLProviderTestCase.class, "IURLProviderTestCase");
 	}
 
 	public void test00CreateDelegate() throws Exception {
-		resource = new TestModuleResource();
+		urlProvider = new IURLProvider() {
+			public URL getModuleRootURL(IModule module) {
+				return null;
+			}
+		};
 	}
 	
-	public void test01Name() throws Exception {
-		assertNull(resource.getName());
-	}
-	
-	public void test02Path() throws Exception {
-		assertNull(resource.getModuleRelativePath());
+	public void test01GetModuleRootURL() throws Exception {
+		urlProvider.getModuleRootURL(null);
 	}
 }

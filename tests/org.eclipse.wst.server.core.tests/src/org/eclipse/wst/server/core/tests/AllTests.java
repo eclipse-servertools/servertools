@@ -59,6 +59,7 @@ public class AllTests {
 		suite.addTestSuite(ServerUtilTestCase.class);
 		suite.addTest(new OrderedTestSuite(ProjectPropertiesTestCase.class));
 		suite.addTest(new OrderedTestSuite(ServerPreferencesTestCase.class));
+		suite.addTest(new OrderedTestSuite(ServerPortTestCase.class));
 		
 		suite.addTestSuite(IModuleTestCase.class);
 		suite.addTestSuite(IModuleArtifactTestCase.class);
@@ -86,6 +87,10 @@ public class AllTests {
 		suite.addTest(new OrderedTestSuite(ModuleFileTestCase.class));
 		suite.addTest(new OrderedTestSuite(ModuleFolderTestCase.class));
 		suite.addTest(new OrderedTestSuite(ModuleResourceTestCase.class));
+		suite.addTest(new OrderedTestSuite(ModuleResourceDeltaTestCase.class));
+		suite.addTest(new OrderedTestSuite(ModuleResourceDeltaVisitorTestCase.class));
+		suite.addTest(new OrderedTestSuite(ModuleArtifactAdapterDelegateTestCase.class));
+		suite.addTest(new OrderedTestSuite(LaunchableAdapterDelegateTestCase.class));
 		
 		suite.addTest(new OrderedTestSuite(HTTPLaunchableTestCase.class));
 		suite.addTest(new OrderedTestSuite(StaticWebTestCase.class));

@@ -13,26 +13,28 @@ package org.eclipse.wst.server.core.tests.model;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.wst.server.core.model.IModuleResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.wst.server.core.IModuleArtifact;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.model.LaunchableAdapterDelegate;
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
-import org.eclipse.wst.server.core.tests.impl.TestModuleResource;
 
-public class ModuleResourceTestCase extends TestCase {
-	protected static IModuleResource resource;
+public class LaunchableAdapterDelegateTestCase extends TestCase {
+	protected static LaunchableAdapterDelegate delegate;
 
 	public static Test suite() {
-		return new OrderedTestSuite(ModuleResourceTestCase.class, "ModuleResourceTestCase");
+		return new OrderedTestSuite(LaunchableAdapterDelegateTestCase.class, "LaunchableAdapterDelegateTestCase");
 	}
 
-	public void test00CreateDelegate() throws Exception {
-		resource = new TestModuleResource();
+	public void test00CreateDelegate() {
+		delegate = new LaunchableAdapterDelegate() {
+			public Object getLaunchable(IServer server, IModuleArtifact moduleArtifact) throws CoreException {
+				return null;
+			}
+		};
 	}
 	
-	public void test01Name() throws Exception {
-		assertNull(resource.getName());
-	}
-	
-	public void test02Path() throws Exception {
-		assertNull(resource.getModuleRelativePath());
+	public void test01GetLaunchable() throws Exception {
+		delegate.getLaunchable(null, null);
 	}
 }

@@ -13,26 +13,22 @@ package org.eclipse.wst.server.core.tests.model;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.wst.server.core.model.IModuleResource;
+import org.eclipse.wst.server.core.model.IModuleResourceDeltaVisitor;
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
-import org.eclipse.wst.server.core.tests.impl.TestModuleResource;
+import org.eclipse.wst.server.core.tests.impl.TestModuleResourceDeltaVisitor;
 
-public class ModuleResourceTestCase extends TestCase {
-	protected static IModuleResource resource;
+public class ModuleResourceDeltaVisitorTestCase extends TestCase {
+	protected static IModuleResourceDeltaVisitor delta;
 
 	public static Test suite() {
-		return new OrderedTestSuite(ModuleResourceTestCase.class, "ModuleResourceTestCase");
+		return new OrderedTestSuite(ModuleResourceDeltaVisitorTestCase.class, "ModuleResourceDeltaVisitorTestCase");
 	}
 
-	public void test00CreateDelegate() throws Exception {
-		resource = new TestModuleResource();
+	public void test00CreateDelegate() {
+		delta = new TestModuleResourceDeltaVisitor();
 	}
 	
-	public void test01Name() throws Exception {
-		assertNull(resource.getName());
-	}
-	
-	public void test02Path() throws Exception {
-		assertNull(resource.getModuleRelativePath());
+	public void test01Visit() throws Exception {
+		delta.visit(null);
 	}
 }

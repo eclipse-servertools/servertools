@@ -28,4 +28,12 @@ public class HTTPLaunchableTestCase extends TestCase {
 	public void test01GetURL() {
 		assertNull(launch.getURL());
 	}
+	
+	public void test02ToString() {
+		try {
+			launch.toString();
+		} catch (Exception e) {
+			// ignore
+		}
+	}
 }

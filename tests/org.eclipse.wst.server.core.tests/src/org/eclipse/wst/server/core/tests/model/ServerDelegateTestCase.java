@@ -95,4 +95,36 @@ public class ServerDelegateTestCase extends TestCase {
 	public void test17SetAttribute() throws Exception {
 		delegate.setAttribute("test", "test");
 	}
+	
+	public void test18CanModifyModules() throws Exception {
+		delegate.canModifyModules(null, null);
+	}
+	
+	public void test19GetChildModules() throws Exception {
+		delegate.getChildModules(null);
+	}
+	
+	public void test20GetRootModules() throws Exception {
+		delegate.getRootModules(null);
+	}
+	
+	public void test21GetServerPorts() throws Exception {
+		delegate.getServerPorts();
+	}
+	
+	public void test22ModifyModules() throws Exception {
+		delegate.modifyModules(null, null, null);
+	}
+	
+	public void test23ImportConfiguration() throws Exception {
+		delegate.importConfiguration(null, null);
+	}
+	
+	public void test24ImportConfiguration() throws Exception {
+		delegate.saveConfiguration(null);
+	}
+	
+	public void test25ConfigurationChanged() throws Exception {
+		delegate.configurationChanged();
+	}
 }
