@@ -111,6 +111,7 @@ public class RuntimeTargetHandler implements IRuntimeTargetHandler, IOrdered {
 		if (delegate == null) {
 			try {
 				delegate = (RuntimeTargetHandlerDelegate) element.createExecutableExtension("class");
+				delegate.initialize(this);
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + e.getMessage());
 			}
