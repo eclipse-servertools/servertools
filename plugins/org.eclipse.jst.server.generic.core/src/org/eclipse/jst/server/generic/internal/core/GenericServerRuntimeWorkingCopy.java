@@ -32,95 +32,52 @@ package org.eclipse.jst.server.generic.internal.core;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jst.server.core.IGenericRuntimeWorkingCopy;
-
-import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
+import org.eclipse.wst.server.core.model.IServerResourceListener;
 
-public class GenericServerRuntimeWorkingCopy implements
-		IGenericRuntimeWorkingCopy {
+import com.sun.corba.se.ActivationIDL.Server;
 
-	/* (non-Javadoc)
-	 * @see com.ibm.wtp.server.java.core.IGenericRuntimeWorkingCopy#setVMInstall(java.lang.String, java.lang.String)
-	 */
-	public void setVMInstall(String typeId, String id) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/* (non-Javadoc)
-	 * @see com.ibm.wtp.server.java.core.IGenericRuntime#getVMInstallTypeId()
-	 */
-	public String getVMInstallTypeId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.ibm.wtp.server.java.core.IGenericRuntime#getVMInstallId()
-	 */
-	public String getVMInstallId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.ibm.wtp.server.java.core.IGenericRuntime#getVMInstall()
-	 */
-	public IVMInstall getVMInstall() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.ibm.wtp.server.core.model.IRuntimeDelegate#validate()
-	 */
-	public IStatus validate() {
-		// TODO Auto-generated method stub
-		return Status.OK_STATUS;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.ibm.wtp.server.core.model.IRuntimeWorkingCopyDelegate#initialize(com.ibm.wtp.server.core.IRuntimeWorkingCopy)
-	 */
+/**
+ * Working copy. This does not really do much delegates 
+ * to GenericServerRuntime.
+ * 
+ * @author Gorkem Ercan
+ * @see org.eclipse.jst.server.generic.internal.core.GenericServerRuntime
+ */
+public class GenericServerRuntimeWorkingCopy extends GenericServerRuntime implements IGenericRuntimeWorkingCopy 
+{
+//	private IRuntimeWorkingCopy wc;
+	
 	public void initialize(IRuntimeWorkingCopy runtime) {
-		
-		// TODO Auto-generated method stub
-
+//		wc = runtime;
 	}
+    
+    public IStatus validate() {
+        return super.validate();
+    }
 
-	/* (non-Javadoc)
-	 * @see com.ibm.wtp.server.core.model.IRuntimeWorkingCopyDelegate#setDefaults()
-	 */
-	public void setDefaults() {
-		// TODO Auto-generated method stub
+    /* (non-Javadoc)
+     * @see org.eclipse.jst.server.core.IGenericRuntimeWorkingCopy#setVMInstall(java.lang.String, java.lang.String)
+     */
+    public void setVMInstall(String typeId, String id) {
+        // TODO Auto-generated method stub
+        
+    }
 
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.wst.server.core.model.IRuntimeWorkingCopyDelegate#setDefaults()
+     */
+    public void setDefaults() {
+        // TODO Auto-generated method stub
+        
+    }
 
-	/* (non-Javadoc)
-	 * @see com.ibm.wtp.server.core.model.IRuntimeWorkingCopyDelegate#handleSave(byte, org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	public void handleSave(byte id, IProgressMonitor monitor) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/* (non-Javadoc)
-	 * @see com.ibm.wtp.server.core.model.IRuntimeDelegate#initialize(com.ibm.wtp.server.core.IRuntime)
-	 */
-	public void initialize(IRuntime runtime) {
-		
-		// TODO Auto-generated method stub
-
-	}
-
-	/* (non-Javadoc)
-	 * @see com.ibm.wtp.server.core.model.IRuntimeDelegate#dispose()
-	 */
-	public void dispose() {
-		// TODO Auto-generated method stub
-
-	}
+    /* (non-Javadoc)
+     * @see org.eclipse.wst.server.core.model.IRuntimeWorkingCopyDelegate#handleSave(byte, org.eclipse.core.runtime.IProgressMonitor)
+     */
+    public void handleSave(byte id, IProgressMonitor monitor) {
+        // TODO Auto-generated method stub
+        
+    }
 }
