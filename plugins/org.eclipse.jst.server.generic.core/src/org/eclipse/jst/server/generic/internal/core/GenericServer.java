@@ -48,6 +48,7 @@ import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.Port;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.core.IEJBModule;
+import org.eclipse.jst.server.core.IEnterpriseApplication;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerCore;
@@ -118,25 +119,13 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
         {
             for (int i = 0; i < remove.length; i++) {
                 modules.remove(createModuleId(remove[i]));
-                removeFromServer(remove[i],monitor);
              }
         }
         if(modules!=null)    
             setAttribute(ATTR_GENERIC_SERVER_MODULES,modules);
         
     }
-    private void removeFromServer(IModule module, IProgressMonitor monitor) throws CoreException
-    {
-        Module m = getServerDefinition().getModule(module.getModuleType().getId());
-        String publisherId = m.getPublisherReference();
-        GenericPublisher publisher = PublishManager.getPublisher(publisherId);  
-        if(publisher==null){
-            IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,"Unable to create publisher to remove module",null);
-            throw new CoreException(status);
-        }
-        publisher.initialize(null,module,getServerDefinition());
-        publisher.unpublish(monitor);
-    }
+
     
     
 	/*
@@ -281,7 +270,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
     public IModule[] getRootModules(IModule module) throws CoreException {
 
         String type = module.getModuleType().getId();
-//FIXME this is j2ee only stuff.
+
         if (type.equals("j2ee.ejb")) {
             IEJBModule ejbModule = (IEJBModule) module.getAdapter(IEJBModule.class);
             if (ejbModule != null) {
@@ -292,6 +281,19 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
                 return new IModule[] { module };
             }
         }
+
+        if (type.equals("j2ee.ear")) {
+
+            IEnterpriseApplication enterpriseApplication = (IEnterpriseApplication) module.getAdapter(IEnterpriseApplication.class);
+            if (enterpriseApplication != null) {
+                IStatus status = canModifyModules(new IModule[] { module },
+                        null);
+                if (status == null || !status.isOK())
+                    throw new CoreException(status);
+                return new IModule[] { module };
+            }
+        }
+        
         if (type.equals("j2ee.web")) {
 
             IWebModule webModule = (IWebModule) module.getAdapter(IWebModule.class);
