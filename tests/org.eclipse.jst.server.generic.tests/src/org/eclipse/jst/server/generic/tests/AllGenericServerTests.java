@@ -43,6 +43,7 @@ public class AllGenericServerTests {
         suite.addTestSuite(GenericServerClasspathRuntimeHandlerTest.class);
         suite.addTestSuite(PluginIntegrityTest.class);
         suite.addTestSuite(ServerCreationTest.class);
+        suite.addTestSuite(ServerTypeDefinitionModelTest.class);
         //$JUnit-END$
         return suite;
     }
