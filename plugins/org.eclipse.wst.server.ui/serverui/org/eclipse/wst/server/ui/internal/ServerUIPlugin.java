@@ -328,8 +328,10 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 			int size = adapters.length;
 			for (int i = 0; i < size; i++) {
 				try {
-					if (adapters[i].isEnabled(obj))
+					if (adapters[i].isEnabled(obj)) {
+						Trace.trace(Trace.FINER, "Run On Server for " + obj + " is enabled by " + adapters[i].getId());
 						return true;
+					}
 				} catch (CoreException ce) {
 					Trace.trace(Trace.WARNING, "Could not use moduleArtifactAdapter", ce);
 				}
