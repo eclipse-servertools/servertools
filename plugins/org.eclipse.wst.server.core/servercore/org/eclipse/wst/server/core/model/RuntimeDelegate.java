@@ -131,7 +131,7 @@ public abstract class RuntimeDelegate {
 		if (runtime.getName() == null || runtime.getName().length() == 0)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorRuntimeName"), null);
 
-		if (runtime.isWorkingCopy() && isNameInUse(runtime))
+		if (isNameInUse())
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorDuplicateRuntimeName"), null);
 	
 		IPath path = runtime.getLocation();
@@ -141,15 +141,17 @@ public abstract class RuntimeDelegate {
 		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null);
 	}
 	
-	protected static boolean isNameInUse(IRuntime runtime) {
+	protected boolean isNameInUse() {
+		IRuntime orig = runtime;
+		if (runtimeWC != null)
+			orig = runtimeWC.getOriginal();
+		
 		IRuntime[] runtimes = ServerCore.getRuntimes();
 		if (runtimes != null) {
 			int size = runtimes.length;
 			for (int i = 0; i < size; i++) {
-				if (!runtime.equals(runtimes[i]) && runtime.getName().equals(runtimes[i].getName())) {
-					if (!runtime.isWorkingCopy() || !runtimes[i].equals(((IRuntimeWorkingCopy)runtime).getOriginal()))
-						return true;
-				}
+				if (orig != runtimes[i] && runtime.getName().equals(runtimes[i].getName()))
+					return true;
 			}
 		}
 		return false;
