@@ -60,6 +60,17 @@ public class DeletedModule implements IModule {
 		return null;
 	}
 	
+	public boolean equals(Object obj) {
+		if (!(obj instanceof IModule))
+			return false;
+			
+		IModule m = (IModule) obj;
+		if (!getId().equals(m.getId()))
+			return false;
+			
+		return true;
+	}
+	
 	public String toString() {
 		return "Deleted module (" + getId() + ")";
 	}

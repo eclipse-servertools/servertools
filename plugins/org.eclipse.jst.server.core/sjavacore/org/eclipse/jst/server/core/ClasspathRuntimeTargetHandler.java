@@ -119,8 +119,11 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 			throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, e.getLocalizedMessage(), e));
 		}
 	}
-	
-	protected void cleanupDuplicateClasspath(IJavaProject project, List current, List add) {
+
+	private void cleanupDuplicateClasspath(IJavaProject project, List current, List add) {
+		if (project == null || current == null || add == null)
+			throw new IllegalArgumentException();
+		
 		// check if we even have to bother
 		boolean sourceOnly = true;
 		Iterator iterator = current.iterator();
@@ -325,6 +328,8 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 	}
 
 	protected static IClasspathEntry[] resolveList(List list) {
+		if (list == null)
+			return new IClasspathEntry[0];
 		IClasspathEntry[] entries = new IClasspathEntry[list.size()]; 
 		list.toArray(entries);
 		return entries;

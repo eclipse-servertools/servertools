@@ -13,7 +13,6 @@ package org.eclipse.wst.server.core.internal;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.core.ServerCore;
 /**
  * A server locator provides the ability to locate or search for additional
  * servers of a particular type, on a particular host.

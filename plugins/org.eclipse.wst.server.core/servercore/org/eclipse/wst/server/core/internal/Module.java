@@ -232,20 +232,16 @@ public class Module implements IModule {
 	}
 	
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Module))
+		if (!(obj instanceof IModule))
 			return false;
 		
-		Module m = (Module) obj;
-		if (!factory.equals(m.factory))
+		IModule m = (IModule) obj;
+		if (!getId().equals(m.getId()))
 			return false;
-		if (!id.equals(m.id))
-			return false;
-		if (!project.equals(m.project))
-			return false;
-		if (!type.equals(m.type))
-			return false;
-		if (!version.equals(m.version))
-			return false;
+		//if (!project.equals(m.getProject()))
+		//	return false;
+		//if (!getModuleType().equals(m.getModuleType()))
+		//	return false;
 		
 		return true;
 	}

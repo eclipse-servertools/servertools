@@ -139,7 +139,7 @@ public class TasksComposite extends Composite {
 			});
 			
 			Label description = new Label(group, SWT.WRAP);
-			data = new GridData(GridData.VERTICAL_ALIGN_BEGINNING | GridData.HORIZONTAL_ALIGN_FILL);
+			data = new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL);
 			data.heightHint = 50;
 			data.horizontalIndent = 20;
 			description.setLayoutData(data);
