@@ -32,11 +32,11 @@ public class ModuleEvent {
 	/**
 	 * Create a new module event.
 	 * 
-	 * @param module
-	 * @param isChanged
-	 * @param added
-	 * @param changed
-	 * @param removed
+	 * @param module the module that has been changed
+	 * @param isChanged true if the module has changed
+	 * @param added added child modules
+	 * @param changed changed child modules
+	 * @param removed removed child modules
 	 */
 	public ModuleEvent(IModule module, boolean isChanged, IModule[] added, IModule[] changed, IModule[] removed) {
 		this.module = module;
@@ -58,7 +58,7 @@ public class ModuleEvent {
 	/**
 	 * Returns true if this module's settings have changed.
 	 * 
-	 * @return boolean
+	 * @return <code>true</code> if the contents have changed
 	 */
 	public boolean isChanged() {
 		return isChanged;

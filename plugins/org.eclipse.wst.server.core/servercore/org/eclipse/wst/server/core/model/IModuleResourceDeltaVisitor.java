@@ -48,9 +48,10 @@ public interface IModuleResourceDeltaVisitor {
 	/** 
 	 * Visits the given module resource delta.
 	 * 
+	 * @param delta the resource delta
 	 * @return <code>true</code> if the resource delta's children should
 	 *		be visited; <code>false</code> if they should be skipped.
-	 * @exception CoreException if the visit fails for some reason.
+	 * @throws CoreException if the visit fails for some reason.
 	 */
 	public boolean visit(IModuleResourceDelta delta) throws CoreException;
 }

@@ -32,8 +32,8 @@ public abstract class Task implements ITask {
 	/**
 	 * Create a new task with the given label and description.
 	 * 
-	 * @param name
-	 * @param description
+	 * @param name the task name
+	 * @param description the task description
 	 */
 	public Task(String name, String description) {
 		this.name = name;

@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.*;

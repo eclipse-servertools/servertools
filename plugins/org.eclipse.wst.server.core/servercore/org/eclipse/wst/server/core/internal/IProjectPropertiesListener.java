@@ -11,7 +11,6 @@
 package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.wst.server.core.IProjectProperties;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
 /**

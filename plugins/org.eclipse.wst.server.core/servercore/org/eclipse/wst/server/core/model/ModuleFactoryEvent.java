@@ -20,6 +20,12 @@ public class ModuleFactoryEvent {
 	protected IModule[] added;
 	protected IModule[] removed;
 
+	/**
+	 * Create a new event.
+	 * 
+	 * @param added added modules
+	 * @param removed removed modules
+	 */
 	public ModuleFactoryEvent(IModule[] added, IModule[] removed) {
 		this.added = added;
 		this.removed = removed;

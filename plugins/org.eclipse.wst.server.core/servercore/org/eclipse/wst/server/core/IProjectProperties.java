@@ -12,7 +12,6 @@ package org.eclipse.wst.server.core;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.internal.IProjectPropertiesListener;
 /**
  * This interface holds information on the properties of a given project.
  *
