@@ -109,28 +109,45 @@ public class Resolver {
 		String proppedString,
 		HashMap cache) {
 		String resolvedString = proppedString;
-		if (isPropertyLeft(resolvedString)) {
-			resolvedString = resolveProperty(resolvedString, cache);
+		int start = skipToProperty(resolvedString,cache);
+		if (start >= 0) {
+			resolvedString = resolveProperty(resolvedString, start, cache);
 			resolvedString = resolvePropertiesFromCache(resolvedString, cache);
 		}
 		return resolvedString;
 	}
 
-	private boolean isPropertyLeft(String str) {
-		return str.indexOf("${") >= 0;
+	private int skipToProperty(String str,HashMap cache) {
+		int start = -1; 
+		int end =  0;
+		String value = null;
+		do {
+			start =  str.indexOf("${",end);
+			if( start < 0)
+				return start;
+			end = str.indexOf("}", start);
+			
+			String key = str.substring(start + 2, end);
+			value = (String)cache.get(key);
+		}
+		while(value == null);
+		return start;
 	}
+	
 	private boolean isPassPropertyLeft(String str) {
 		return str.indexOf("%{") >= 0;
 	}
 
-	private String resolveProperty(String proppedString, HashMap cache) {
+	private String resolveProperty(String proppedString, int start, HashMap cache) {
 		String str = proppedString;
-		int start = str.indexOf("${");
+		start = str.indexOf("${");
 		int end = str.indexOf("}", start);
 		String key = str.substring(start + 2, end);
-
+		String value = (String)cache.get(key);
+		if(value == null )
+			return str;
 		return str.substring(0, start)
-			+ cache.get(key)
+			+ value
 			+ str.substring(end + 1);
 	}
 	
