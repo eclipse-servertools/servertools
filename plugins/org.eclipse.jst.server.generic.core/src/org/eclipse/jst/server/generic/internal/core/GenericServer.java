@@ -32,10 +32,10 @@ package org.eclipse.jst.server.generic.internal.core;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -58,6 +58,7 @@ import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.generic.core.CorePlugin;
+import org.eclipse.jst.server.generic.core.GenericServerCoreMessages;
 import org.eclipse.jst.server.generic.internal.xml.ServerTypeDefinition;
 import org.eclipse.jst.server.generic.modules.J2eeSpecModuleFactoryDelegate;
 import org.eclipse.jst.server.j2ee.IWebModule;
@@ -111,7 +112,6 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 	 */
 	public void dispose() {
 		this.fLiveServer = null;
-
 	}
 
 	/**
@@ -154,6 +154,8 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 	 * @see org.eclipse.wst.server.core.model.IServerDelegate#publishStart(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public IStatus publishStart(IProgressMonitor monitor) {
+	    if(getModules().length<1)
+	        return new Status(IStatus.CANCEL,CorePlugin.PLUGIN_ID,0,GenericServerCoreMessages.getString("cancelNoPublish"),null);
 		return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "PublishingStarted", null);
 	}
 
@@ -199,22 +201,16 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 		return (IModule[])list.toArray(new IModule[list.size()]);
 	}
 
-	
-	protected IWebModule getWebModule(IProject project) throws CoreException {
-	
-		return null;
-	}
-
-
-		
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.wst.server.core.model.IServerDelegate#getModuleState(org.eclipse.wst.server.core.model.IModule)
 	 */
 	public byte getModuleState(IModule module) {
-		// TODO Auto-generated method stub
-		return IServer.MODULE_STATE_STARTED;
+		IModule[] modules = getModules();
+	    if (modules!= null && modules.length>0)
+	        return IServer.MODULE_STATE_STARTED;
+	    return IServer.MODULE_STATE_UNKNOWN;
 	}
 
 	/*
@@ -266,7 +262,6 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 	 * @see org.eclipse.wst.server.core.model.IServerDelegate#setLaunchDefaults(org.eclipse.debug.core.ILaunchConfigurationWorkingCopy)
 	 */
 	public void setLaunchDefaults(ILaunchConfigurationWorkingCopy workingCopy) {
-		fLiveServer.getRuntime().getDelegate();
 		workingCopy.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
 				getStartClassName());
@@ -294,13 +289,23 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 		workingCopy.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
 				getVmArguments());
-
-		//workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_TYPE_SPECIFIC_ATTRS_MAP,);
-
 	}
 
 	private List getClasspathMementos() {
-		return getServerDefinition().getServerClasspathMementos();
+	    List classpathList = getServerDefinition().getServerClassPath();
+	    List mementoList = new ArrayList(classpathList.size());
+	    Iterator iterator= classpathList.iterator();
+	    while(iterator.hasNext())
+	    {
+	        String cpath = (String)iterator.next();
+			try {
+				mementoList.add(JavaRuntime.newArchiveRuntimeClasspathEntry(
+						new Path(cpath)).getMemento());
+			} catch (CoreException e) {
+			    //ignored
+			}
+	    }
+		return mementoList;
 	}
 
 	private String getVmArguments() {
@@ -323,13 +328,16 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 	 * @return
 	 */
 	private Map getServerInstanceProperties() {
-		Map instanceProperties = fLiveServer.getRuntime().getAttribute(
-				GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, (Map) null);
+		Map runtimeProperties = fLiveServer.getRuntime().getAttribute(
+				GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, new HashMap());
+		Map serverProperties = this.fLiveServer.getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,new HashMap(1));
+		Map instanceProperties = new HashMap(runtimeProperties.size()+serverProperties.size());
+		instanceProperties.putAll(runtimeProperties);
+		instanceProperties.putAll(serverProperties);
 		return instanceProperties;
 	}
 
 	public ServerTypeDefinition getServerDefinition() {
-		
 		if (fServerDefinition == null)
 			fServerDefinition = CorePlugin.getDefault()
 					.getServerTypeDefinitionManager()
@@ -340,6 +348,10 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 		return fServerDefinition;
 	}
 
+
+	
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -362,8 +374,7 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 	 * @see org.eclipse.wst.server.core.model.IStartableServer#isTerminateOnShutdown()
 	 */
 	public boolean isTerminateOnShutdown() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	/**
@@ -386,7 +397,7 @@ public class GenericServer implements IServerDelegate, IStartableServer, IMonito
 		while (iterator.hasNext()) {
 			sp = (IServerPort) iterator.next();
 			if (SocketUtil.isPortInUse(sp.getPort(), 5))
-				throw new CoreException(new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, "Server Part In Use "+sp.getPort() + "- " +sp.getName() ,null));
+				throw new CoreException(new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.getFormattedString("errorPortInUse",new String[] {Integer.toString(sp.getPort()),sp.getName()}),null));
 		}
 		
 		fLiveServer.setServerState(IServer.SERVER_STARTING);
