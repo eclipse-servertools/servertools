@@ -92,7 +92,7 @@ public class ModuleFactoryTests extends TestCase {
 		IModule[] moduleList = J2eeSpecModuleFactoryDelegate.getInstance().getModules();	
 		assertNotNull(moduleList);
 		assertEquals(1,moduleList.length);
-		IModule aWebModule = (IModule)moduleList[0];
+		IModule aWebModule = moduleList[0];
 		assertNotNull(aWebModule);
 		assertEquals("myWebApp",aWebModule.getName());
 		IModuleType moduleType = aWebModule.getModuleType();
