@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,9 +15,8 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.wst.server.core.ILaunchable;
 import org.eclipse.wst.server.core.IServer;
 /**
- * A launchable client is a client side application or test
- * harness that can be launched (run) against a resource
- * running on a server.
+ * A launchable client is a client side application or test harness that can
+ * be launched (run) against a resource running on a server.
  * <p>
  * This abstract class is intended to be extended only by clients
  * to extend the <code>clients</code> extension point.
@@ -27,21 +26,21 @@ public abstract class ClientDelegate {
 	/**
 	 * Returns true if this launchable can be run by this client.
 	 * 
-	 * @param server org.eclipse.wst.server.core.model.IServer
-	 * @param launchable org.eclipse.wst.server.core.model.ILaunchable
-	 * @param launchMode String
-	 * @return boolean
+	 * @param server
+	 * @param launchable
+	 * @param launchMode
+	 * @return 
 	 */
 	public abstract boolean supports(IServer server, ILaunchable launchable, String launchMode);
 
 	/**
 	 * Opens or executes on the launchable.
 	 * 
-	 * @param server org.eclipse.wst.server.core.model.IServer
-	 * @param launchable org.eclipse.wst.server.core.model.ILaunchable
-	 * @param launchMode String
-	 * @param launch org.eclipse.debug.core.ILaunch
-	 * @return org.eclipse.core.runtime.IStatus
+	 * @param server
+	 * @param launchable
+	 * @param launchMode
+	 * @param launch
+	 * @return 
 	 */
 	public abstract IStatus launch(IServer server, ILaunchable launchable, String launchMode, ILaunch launch);
 }

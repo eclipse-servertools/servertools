@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,11 +21,11 @@ import org.eclipse.swt.widgets.Composite;
  * 
  */
 class TaskWizardPage extends WizardPage implements IWizardHandle {
-	protected IWizardFragment fragment;
+	protected WizardFragment fragment;
 	
 	protected boolean isEmptyError = false;
 
-	public TaskWizardPage(IWizardFragment fragment) {
+	public TaskWizardPage(WizardFragment fragment) {
 		super(fragment.toString());
 		this.fragment = fragment;
 	}
@@ -74,7 +74,7 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 		} else
 			isEmptyError = false;
 		super.setMessage(message, type);
-		IWizardFragment frag = ((TaskWizard) getWizard()).getCurrentWizardFragment();
+		WizardFragment frag = ((TaskWizard) getWizard()).getCurrentWizardFragment();
 		if (!fragment.equals(frag))
 			return;
 		getContainer().updateButtons();
@@ -85,7 +85,7 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 	}
 
 	public void update() {
-		fragment.updateSubFragments();
+		fragment.updateChildFragments();
 		((TaskWizard) getWizard()).updatePages();
 		if (getContainer().getCurrentPage() != null)
 			getContainer().updateButtons();

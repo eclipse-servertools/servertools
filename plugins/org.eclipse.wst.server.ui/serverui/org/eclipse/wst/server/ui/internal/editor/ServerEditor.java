@@ -191,7 +191,7 @@ public class ServerEditor extends MultiPageEditorPart {
 			String id = server.getServerType().getId();
 			while (iterator.hasNext()) {
 				ServerEditorActionFactory factory = (ServerEditorActionFactory) iterator.next();
-				if (factory.supportsServerElementType(id) && factory.shouldDisplay(server, serverConfiguration))
+				if (factory.supportsServerElementType(id) && factory.shouldDisplay(server))
 					actionList.add(factory.createAction(getEditorSite(), editorPartInput));
 			}
 		}
@@ -202,7 +202,7 @@ public class ServerEditor extends MultiPageEditorPart {
 			String id = serverConfiguration.getServerConfigurationType().getId();
 			while (iterator.hasNext()) {
 				ServerEditorActionFactory factory = (ServerEditorActionFactory) iterator.next();
-				if (factory.supportsServerElementType(id) && factory.shouldDisplay(server, serverConfiguration))
+				if (factory.supportsServerElementType(id) && factory.shouldDisplay(server))
 					actionList.add(factory.createAction(getEditorSite(), editorPartInput));
 			}
 		}
@@ -237,7 +237,7 @@ public class ServerEditor extends MultiPageEditorPart {
 				IServerEditorPartFactory factory = (IServerEditorPartFactory) iterator.next();
 				if (((serverTypeId != null && factory.supportsType(serverTypeId)) || 
 						(serverConfigurationTypeId != null && factory.supportsType(serverConfigurationTypeId)))
-						&& factory.shouldCreatePage(server, serverConfiguration)) {
+						&& factory.shouldCreatePage(server)) {
 					Trace.trace(Trace.FINEST, "Adding page: " + factory.getId() + " " + editorPartInput);
 					try {
 						IEditorPart page = factory.createPage();

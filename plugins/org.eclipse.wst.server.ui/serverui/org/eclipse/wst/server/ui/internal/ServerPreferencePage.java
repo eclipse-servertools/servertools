@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,7 +33,6 @@ import org.eclipse.ui.help.WorkbenchHelp;
  * The preference page that holds server properties.
  */
 public class ServerPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
-	protected Button publishDetailsButton;
 	protected Button publishBeforeStart;
 	protected Button autoRestart;
 
@@ -89,14 +88,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		publishBeforeStart.setSelection(preferences.isAutoPublishing());
 		WorkbenchHelp.setHelp(publishBeforeStart, ContextIds.PREF_GENERAL_PUBLISH_BEFORE_START);
 		
-		publishDetailsButton = new Button(composite, SWT.CHECK);
-		publishDetailsButton.setText(ServerUIPlugin.getResource("%prefShowPublishingDetails"));
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 3;
-		publishDetailsButton.setLayoutData(data);
-		publishDetailsButton.setSelection(uiPreferences.getShowPublishingDetails());
-		WorkbenchHelp.setHelp(publishDetailsButton, ContextIds.PREF_GENERAL_SHOW_PUBLISHING_DETAILS);
-	
 		autoRestart = new Button(composite, SWT.CHECK);
 		autoRestart.setText(ServerUIPlugin.getResource("%prefAutoRestart"));
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -192,7 +183,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	 * </p>
 	 */
 	protected void performDefaults() {
-		publishDetailsButton.setSelection(uiPreferences.getDefaultShowPublishingDetails());
 		autoRestart.setSelection(preferences.isDefaultAutoRestarting());
 		publishBeforeStart.setSelection(preferences.isDefaultAutoPublishing());
 		promptIrreversible.setSelection(uiPreferences.getDefaultPromptBeforeIrreversibleChange());
@@ -208,7 +198,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	 * Subclasses should override
 	 */
 	public boolean performOk() {
-		uiPreferences.setShowPublishingDetails(publishDetailsButton.getSelection());
 		preferences.setAutoPublishing(publishBeforeStart.getSelection());
 		preferences.setAutoRestarting(autoRestart.getSelection());
 		uiPreferences.setSaveEditors(saveEditors);

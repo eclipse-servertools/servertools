@@ -31,10 +31,10 @@ public interface ILaunchableAdapter {
 	/**
 	 * Returns a launchable object from this module object.
 	 * 
-	 * @param server org.eclipse.wst.server.core.IServer
-	 * @param moduleObject org.eclipse.wst.server.core.IModuleObject
-	 * @param org.eclipse.wst.server.core.ILaunchable
-	 * @exception org.eclipse.core.runtime.CoreException
+	 * @param server
+	 * @param moduleObject
+	 * @return
+	 * @exception
 	 */
 	public ILaunchable getLaunchable(IServer server, IModuleObject moduleObject) throws CoreException;
 }

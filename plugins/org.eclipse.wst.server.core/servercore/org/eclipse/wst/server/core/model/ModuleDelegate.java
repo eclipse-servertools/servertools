@@ -15,9 +15,23 @@ import org.eclipse.wst.server.core.IModule;
 /**
  * A module.
  * 
- * <p>This is the implementation of a module factory extension point.</p>
+ * <p>This is the implementation of a module delegate, returned from the
+ * module factories extension point.</p>
  */
 public abstract class ModuleDelegate {
+	private IModule module;
+	
+	public void initialize(IModule module2) {
+		this.module = module2;
+	}
+
+	/**
+	 * 
+	 */
+	protected IModule getModule() {
+		return module;
+	}
+
 	/**
 	 * Validates this module instance. See the specification of
 	 * {@link IModule#validate()} for further details. Subclasses should

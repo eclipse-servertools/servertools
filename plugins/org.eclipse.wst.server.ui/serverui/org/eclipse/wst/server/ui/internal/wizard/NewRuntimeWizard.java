@@ -30,7 +30,7 @@ public class NewRuntimeWizard extends TaskWizard implements INewWizard {
 	 */
 	public NewRuntimeWizard() {
 		super(ServerUIPlugin.getResource("%wizNewRuntimeWizardTitle"), new WizardFragment() {
-			public void createSubFragments(List list) {
+			protected void createChildFragments(List list) {
 				list.add(new NewRuntimeWizardFragment());
 				list.add(new FinishWizardFragment(new SaveRuntimeTask()));
 			}

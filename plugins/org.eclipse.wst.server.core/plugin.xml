@@ -47,13 +47,4 @@
            id="org.eclipse.wst.server.core.missingModuleFactory">
      </moduleFactory>
   </extension>
-
-   <extension point="org.eclipse.wst.server.core.clients">
-     <client
-           id="org.eclipse.wst.server.core.client.null"
-           name="%nullLaunchableClient"
-           description="%nullLaunchableClientDescription"
-           class="org.eclipse.wst.server.core.util.NullLaunchableClient">
-     </client>
-  </extension>
 </plugin>

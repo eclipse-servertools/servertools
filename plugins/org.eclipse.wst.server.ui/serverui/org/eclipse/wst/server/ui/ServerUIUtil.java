@@ -49,9 +49,9 @@ public class ServerUIUtil {
 	}
 
 	/**
-	 * Open the passed server resources in the server editor.
+	 * Open the passed server in the server editor.
 	 *
-	 * @param resource org.eclipse.core.resources.IServerResource
+	 * @param server
 	 */
 	public static void editServer(IServer server, IServerConfiguration configuration) {
 		if (server == null && configuration == null)
@@ -67,9 +67,9 @@ public class ServerUIUtil {
 	}
 
 	/**
-	 * Open the passed resources in the server editor.
+	 * Open the passed server id into the server editor.
 	 *
-	 * @param resource org.eclipse.core.resources.IServerResource
+	 * @param serverId
 	 */
 	public static void editServer(String serverId, String configurationId) {
 		if (serverId == null && configurationId == null)
@@ -85,32 +85,15 @@ public class ServerUIUtil {
 			Trace.trace(Trace.SEVERE, "Error opening server editor", e);
 		}
 	}
-	
-	/**
-	 * Publish with the given server control, and display
-	 * the publishing in a dialog. If keepOpen is true, the publish
-	 * dialog will remain open after publishing. If false, it will
-	 * only remain open if there was an error, info, or warning
-	 * message.
-	 *
-	 * @param control org.eclipse.wst.server.core.IServerControl
-	 * @param keepOpen boolean
-	 * @return IStatus
-	 */
-	/*public static IStatus publishWithDialog(IServer server, boolean keepOpen) {
-		Shell shell = ServerUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
-		return PublishDialog.publish(shell, server, keepOpen);
-	}*/
 
 	/**
-	 * Publish with the given server control, and display
-	 * the publishing in a dialog. If keepOpen is true, the publish
-	 * dialog will remain open after publishing. If false, it will
-	 * only remain open if there was an error, info, or warning
-	 * message.
+	 * Publish the given server, and display the publishing in a dialog.
+	 * If keepOpen is true, the publish dialog will remain open after
+	 * publishing. If false, it will only remain open if there was an
+	 * error, info, or warning message.
 	 *
-	 * @param control org.eclipse.wst.server.core.IServerControl
-	 * @param keepOpen boolean
+	 * @param server
+	 * @param keepOpen
 	 * @return IStatus
 	 */
 	public static IStatus publishWithDialog(Shell shell, IServer server, boolean keepOpen) {
@@ -219,17 +202,28 @@ public class ServerUIUtil {
 		return result[0];
 	}
 
+	/**
+	 * 
+	 * @param shell
+	 * @return
+	 */
 	public static boolean showNewRuntimeWizard(Shell shell) {
 		return showNewRuntimeWizard(shell, null, null);
 	}
-	
+
+	/**
+	 * 
+	 * @param shell
+	 * @param runtimeTypeId
+	 * @return
+	 */
 	public static boolean showNewRuntimeWizard(Shell shell, final String runtimeTypeId) {
 		IRuntimeType runtimeType = ServerCore.getRuntimeType(runtimeTypeId);
 		if (runtimeType != null) {
 			try {
 				final IRuntimeWorkingCopy runtime = runtimeType.createRuntime(null, null);
-				IWizardFragment fragment = new WizardFragment() {
-					public void createSubFragments(List list) {
+				WizardFragment fragment = new WizardFragment() {
+					protected void createChildFragments(List list) {
 						list.add(new InputWizardFragment(ITaskModel.TASK_RUNTIME, runtime));
 						list.add(ServerUICore.getWizardFragment(runtimeTypeId));
 						list.add(new FinishWizardFragment(new SaveRuntimeTask()));
@@ -246,13 +240,28 @@ public class ServerUIUtil {
 		return showNewRuntimeWizard(shell, null, null, runtimeTypeId);
 	}
 
+	/**
+	 * 
+	 * @param shell
+	 * @param type
+	 * @param version
+	 * @return
+	 */
 	public static boolean showNewRuntimeWizard(Shell shell, final String type, final String version) {
 		return showNewRuntimeWizard(shell, type, version, null);
 	}
 
+	/**
+	 * 
+	 * @param shell
+	 * @param type
+	 * @param version
+	 * @param runtimeTypeId
+	 * @return
+	 */
 	public static boolean showNewRuntimeWizard(Shell shell, final String type, final String version, final String runtimeTypeId) {
-		IWizardFragment fragment = new WizardFragment() {
-			public void createSubFragments(List list) {
+		WizardFragment fragment = new WizardFragment() {
+			protected void createChildFragments(List list) {
 				list.add(new NewRuntimeWizardFragment(type, version, runtimeTypeId));
 				list.add(new FinishWizardFragment(new SaveRuntimeTask()));
 			}

@@ -1,3 +1,13 @@
+/**********************************************************************
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Common Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/cpl-v10.html
+ *
+ * Contributors:
+ *    IBM - Initial API and implementation
+ **********************************************************************/
 package org.eclipse.wst.server.ui.editor;
 
 import org.eclipse.core.runtime.IStatus;
@@ -62,7 +72,7 @@ public abstract class ServerResourceEditorSection implements IServerEditorSectio
 	public IStatus[] getSaveStatus() {
 		return null;
 	}
-	
+
 	public void setServerResourceEditorPart(ServerResourceEditorPart editor) {
 		this.editor = editor;
 	}
@@ -93,4 +103,5 @@ public abstract class ServerResourceEditorSection implements IServerEditorSectio
 	 */
 	public FormToolkit getFormToolkit(Display display) {
 		return editor.getFormToolkit(display);
-	}}
+	}
+}

@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 /**
@@ -70,6 +71,16 @@ public interface IServerConfigurationWorkingCopy extends IServerConfiguration, I
 	 * @return the extension for the server configuration working copy
 	 */
 	//public IServerExtension getWorkingCopyExtension(IProgressMonitor monitor);
+	
+	/**
+	 * Sets the file where this server instance is serialized.
+	 * 
+	 * @param the file in the workspace where the server instance
+	 * is serialized, or <code>null</code> if the information is
+	 * instead to be persisted with the workspace but not with any
+	 * particular workspace resource
+	 */
+	public void setFile(IFile file);
 	
 	/**
 	 * Commits the changes made in this working copy. If there is

@@ -22,8 +22,8 @@ public class J2EEUtil {
 	/**
 	 * Returns the enterprise applications that the module is contained within.
 	 * 
-	 * @param module org.eclipse.jst.server.j2ee.IJ2EEModule
-	 * @return org.eclipse.jst.server.j2ee.IEnterpriseApplication
+	 * @param module
+	 * @return
 	 */
 	public static IEnterpriseApplication[] getEnterpriseApplications(IJ2EEModule module) {
 		List list = new ArrayList();
@@ -32,8 +32,8 @@ public class J2EEUtil {
 			int size = modules.length;
 			for (int i = 0; i < size; i++) {
 				IModule module2 = modules[i];
-				if (module2 instanceof IEnterpriseApplication) {
-					IEnterpriseApplication ear = (IEnterpriseApplication) module2;
+				IEnterpriseApplication ear = (IEnterpriseApplication) module2.getAdapter(IEnterpriseApplication.class);
+				if (ear != null) {
 					IJ2EEModule[] modules2 = ear.getModules();
 					if (modules2 != null) {
 						int size2 = modules2.length;

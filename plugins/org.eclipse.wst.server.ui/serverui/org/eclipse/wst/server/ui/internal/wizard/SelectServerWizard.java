@@ -38,7 +38,7 @@ public class SelectServerWizard extends TaskWizard {
 	 */
 	public SelectServerWizard(final IModule module, final String launchMode) {
 		super(ServerUIPlugin.getResource("%wizSelectServerWizardTitle"), new WizardFragment() {
-			public void createSubFragments(List list) {
+			protected void createChildFragments(List list) {
 				task = new NewServerWizardFragment(module, launchMode);
 				list.add(task);
 				list.add(new FinishWizardFragment(new TempSaveRuntimeTask()));

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,21 +11,19 @@
 package org.eclipse.wst.server.core.model;
 
 import org.eclipse.wst.server.core.IModuleObject;
-
 /**
  * A module object adapter converts from some view's model
  * object into a module object that is recognized by the
  * server.
  * 
- * <p>This is the implementation of a moduleObjectAdapter
- * extension point.</p>
+ * <p>This is the implementation of a moduleObjectAdapter extension point.</p>
  */
 public abstract class ModuleObjectAdapterDelegate {
 	/**
 	 * Converts from a model object to an IModuleObject.
 	 *
-	 * @param obj java.lang.Object
-	 * @return org.eclipse.wst.server.core.model.IModuleObject
+	 * @param obj
+	 * @return
 	 */
 	public abstract IModuleObject getModuleObject(Object obj);
 }

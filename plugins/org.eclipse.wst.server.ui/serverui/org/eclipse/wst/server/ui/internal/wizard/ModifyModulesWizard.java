@@ -30,7 +30,7 @@ public class ModifyModulesWizard extends TaskWizard {
 			this.server = server;
 		}
 
-		public void createSubFragments(List list) {
+		protected void createChildFragments(List list) {
 			list.add(new WizardFragment() {
 				public void enter() {
 					getTaskModel().putObject(ITaskModel.TASK_SERVER, server);

@@ -171,7 +171,7 @@ public abstract class ServerResourceEditorPart extends EditorPart {
 						serverConfigurationTypeId = serverConfiguration.getServerConfigurationType().getId();
 					if (((serverTypeId != null && factory.supportsType(serverTypeId)) || 
 							(serverConfigurationTypeId != null && factory.supportsType(serverConfigurationTypeId)))
-							&& factory.shouldCreateSection(server, serverConfiguration)) {
+							&& factory.shouldCreateSection(server)) {
 						IServerEditorSection section = factory.createSection();
 						if (section instanceof ServerResourceEditorSection)
 							((ServerResourceEditorSection) section).setServerResourceEditorPart(this);

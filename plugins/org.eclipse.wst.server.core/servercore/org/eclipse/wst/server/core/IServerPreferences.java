@@ -15,10 +15,6 @@ package org.eclipse.wst.server.core;
  * <p>This interface is not intended to be implemented by clients.</p>
  */
 public interface IServerPreferences {
-	public static final byte REPAIR_NEVER = 0;
-	public static final byte REPAIR_PROMPT = 1;
-	public static final byte REPAIR_ALWAYS = 2;
-
 	/**
 	 * Returns whether servers will be automatically restarted when
 	 * required.
@@ -44,23 +40,22 @@ public interface IServerPreferences {
 	public void setAutoRestarting(boolean b);
 
 	/**
-	 * Returns whether automatic publishing should occur before
-	 * starting a server.
+	 * Returns whether publishing should automatically occur when necessary.
 	 *
 	 * @return boolean
 	 */
 	public boolean isAutoPublishing();
 	
 	/**
-	 * Returns whether automatic publishing should occur before
-	 * starting a server.
+	 * Returns the default setting of whether publishing should automatically
+	 * occur when necessary.
 	 *
 	 * @return boolean
 	 */
 	public boolean isDefaultAutoPublishing();
 
 	/**
-	 * Set whether publishing should happen before the server starts.
+	 * Set whether publishing should occur automatically.
 	 *
 	 * @param boolean
 	 */

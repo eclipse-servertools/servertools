@@ -16,7 +16,6 @@ import java.util.StringTokenizer;
 import org.eclipse.core.runtime.IConfigurationElement;
 
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.wst.server.ui.internal.Trace;
 
@@ -25,7 +24,7 @@ import org.eclipse.wst.server.ui.internal.Trace;
  */
 public class ServerEditorPageSectionFactory implements IServerEditorPageSectionFactory {
 	private IConfigurationElement element;
-	private IServerEditorPageSectionFactoryDelegate delegate;
+	private ServerEditorPageSectionFactoryDelegate delegate;
 
 	/**
 	 * ServerEditorPageSectionFactory constructor comment.
@@ -127,10 +126,10 @@ public class ServerEditorPageSectionFactory implements IServerEditorPageSectionF
 	/*
 	 * 
 	 */
-	public IServerEditorPageSectionFactoryDelegate getDelegate() {
+	public ServerEditorPageSectionFactoryDelegate getDelegate() {
 		if (delegate == null) {
 			try {
-				delegate = (IServerEditorPageSectionFactoryDelegate) element.createExecutableExtension("class");
+				delegate = (ServerEditorPageSectionFactoryDelegate) element.createExecutableExtension("class");
 			} catch (Exception e) {
 				Trace.trace("Could not create server editorpage delegate", e);
 			}
@@ -147,9 +146,9 @@ public class ServerEditorPageSectionFactory implements IServerEditorPageSectionF
 	 * <p>If the instance or configuration is being opened by itself, the
 	 * other value (instance or configuration) will be null.
 	 */
-	public boolean shouldCreateSection(IServer server, IServerConfiguration serverConfiguration) {
+	public boolean shouldCreateSection(IServer server) {
 		try {
-			return getDelegate().shouldCreateSection(server, serverConfiguration);
+			return getDelegate().shouldCreateSection(server);
 		} catch (Exception e) {
 			Trace.trace("Error calling delegate", e);
 			return false;

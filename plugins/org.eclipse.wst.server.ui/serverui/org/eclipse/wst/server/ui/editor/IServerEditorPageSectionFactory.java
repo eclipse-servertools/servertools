@@ -11,7 +11,6 @@ package org.eclipse.wst.server.ui.editor;
  **********************************************************************/
 import org.eclipse.wst.server.core.IOrdered;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
 /**
  *
  */
@@ -33,15 +32,11 @@ public interface IServerEditorPageSectionFactory extends IOrdered {
 	public String getInsertionId();
 	
 	/**
-	 * Returns true if this editor page section should be visible with the given
-	 * server and configuration combination. This allows (for
-	 * instance) complex configuration pages to only be shown when used
+	 * Returns true if this editor page section should be visible with the given server.
+	 * This allows (for instance) complex configuration pages to only be shown when used
 	 * with non-unittest servers.
-	 *
-	 * <p>If the server or configuration is being opened by itself, the
-	 * other value (server or configuration) will be null.
 	 */
-	public boolean shouldCreateSection(IServer server, IServerConfiguration configuration);
+	public boolean shouldCreateSection(IServer server);
 
 	/**
 	 * Create the editor page section.

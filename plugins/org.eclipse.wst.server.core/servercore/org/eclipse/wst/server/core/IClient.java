@@ -62,11 +62,11 @@ public interface IClient {
 	/**
 	 * Launches the client.
 	 * 
-	 * @param server org.eclipse.wst.server.core.IServer
-	 * @param launchable org.eclipse.wst.server.core.ILaunchable
-	 * @param launchMode String
-	 * @param launch org.eclipse.debug.core.ILaunch
-	 * @return org.eclipse.core.runtime.IStatus
+	 * @param server
+	 * @param launchable
+	 * @param launchMode
+	 * @param launch
+	 * @return
 	 */
 	public IStatus launch(IServer server, ILaunchable launchable, String launchMode, ILaunch launch);
 }

@@ -1,16 +1,22 @@
-package org.eclipse.wst.server.ui.editor;
-/*
- * Licensed Material - Property of IBM 
- * (C) Copyright IBM Corp. 2002, 2003 - All Rights Reserved. US Government Users
- * Restricted Rights - Use, duplication or disclosure restricted by GSA ADP
- * Schedule Contract with IBM Corp.
- */
+/**********************************************************************
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Common Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/cpl-v10.html
+ *
+ * Contributors:
+ *    IBM - Initial API and implementation
+ **********************************************************************/
+package org.eclipse.wst.server.ui.internal.editor;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IPersistableElement;
 
 import org.eclipse.wst.server.core.IServerConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-
+import org.eclipse.wst.server.ui.editor.ICommandManager;
+import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
 /**
  * 
  */

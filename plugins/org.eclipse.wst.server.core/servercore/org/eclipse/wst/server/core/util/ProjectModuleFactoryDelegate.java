@@ -266,7 +266,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		if (module == null)
 			return;
 		projects.put(project, module);
-		modules.put(module.getId(), module);
+		//modules.put(module.getId(), module);
 		if (added == null)
 			added = new ArrayList(2);
 		added.add(module);
@@ -281,7 +281,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		try {
 			IModule module = (IModule) projects.get(project);
 			projects.remove(project);
-			modules.remove(module.getId());
+			//modules.remove(module.getId());
 			if (removed == null)
 				removed = new ArrayList(2);
 			removed.add(module);

@@ -46,9 +46,8 @@ import org.eclipse.wst.server.ui.internal.task.SaveRuntimeTask;
 import org.eclipse.wst.server.ui.internal.viewers.RuntimeComposite;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewRuntimeWizardFragment;
-import org.eclipse.wst.server.ui.wizard.IWizardFragment;
-import org.eclipse.wst.server.ui.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
+import org.eclipse.wst.server.ui.wizard.TaskWizard;
 /**
  * The preference page that holds server runtimes.
  */
@@ -297,24 +296,24 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 	
 	protected int showWizard(final IRuntimeWorkingCopy runtimeWorkingCopy) {
 		String title = null;
-		IWizardFragment fragment = null;
+		WizardFragment fragment = null;
 		if (runtimeWorkingCopy == null) {
 			title = ServerUIPlugin.getResource("%wizNewRuntimeWizardTitle");
 			fragment = new WizardFragment() {
-				public void createSubFragments(List list) {
+				protected void createChildFragments(List list) {
 					list.add(new NewRuntimeWizardFragment());
 					list.add(new FinishWizardFragment(new SaveRuntimeTask()));
 				}
 			};
 		} else {
 			title = ServerUIPlugin.getResource("%wizEditRuntimeWizardTitle");
-			final IWizardFragment fragment2 = ServerUICore.getWizardFragment(runtimeWorkingCopy.getRuntimeType().getId());
+			final WizardFragment fragment2 = ServerUICore.getWizardFragment(runtimeWorkingCopy.getRuntimeType().getId());
 			if (fragment2 == null) {
 				edit.setEnabled(false);
 				return Window.CANCEL;
 			}
 			fragment = new WizardFragment() {
-				public void createSubFragments(List list) {
+				protected void createChildFragments(List list) {
 					list.add(new WizardFragment() {
 						public void enter() {
 							getTaskModel().putObject(ITaskModel.TASK_RUNTIME, runtimeWorkingCopy);

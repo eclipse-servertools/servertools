@@ -176,6 +176,8 @@ public class ProjectProperties implements IProjectProperties {
 	 */
 	public IRuntime getRuntimeTarget() {
 		loadPreferences();
+		if (runtimeId == null)
+			return null;
 		return ServerCore.getRuntime(runtimeId);
 	}
 

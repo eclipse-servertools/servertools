@@ -715,8 +715,7 @@ public class Server extends Base implements IServer {
 		taskModuleList.toArray(taskModules);
 
 		// get arrays with the server configuration
-		List[] parents = new List[parentList.size()];
-		parentList.toArray(parents);
+		List parents = parentList;
 		IModule[] modules = new IModule[moduleList.size()];
 		moduleList.toArray(modules);
 
@@ -824,11 +823,11 @@ public class Server extends Base implements IServer {
 	 * 
 	 * Uses 500 ticks plus 3500 ticks per module
 	 */
-	protected void publishModules(List[] parents, IModule[] modules, MultiStatus multi, IProgressMonitor monitor) {
+	protected void publishModules(List parents, IModule[] modules, MultiStatus multi, IProgressMonitor monitor) {
 		if (parents == null)
 			return;
 
-		int size = parents.length;
+		int size = parents.size();
 		if (size == 0)
 			return;
 		
@@ -837,7 +836,7 @@ public class Server extends Base implements IServer {
 
 		// publish modules
 		for (int i = 0; i < size; i++) {
-			IStatus status = publishModule(parents[i], modules[i], ProgressUtil.getSubMonitorFor(monitor, 3000));
+			IStatus status = publishModule((IModule[]) parents.get(i), modules[i], ProgressUtil.getSubMonitorFor(monitor, 3000));
 			multi.add(status);
 		}
 	}

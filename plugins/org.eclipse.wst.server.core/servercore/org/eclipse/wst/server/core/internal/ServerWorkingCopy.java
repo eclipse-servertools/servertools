@@ -119,6 +119,10 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			setAttribute(CONFIGURATION_ID, configuration.getId());
 	}
 
+	public void setFile(IFile file) {
+		this.file = file;
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.IServerWorkingCopy#isDirty()
 	 */

@@ -13,12 +13,12 @@ package org.eclipse.wst.server.core;
 import org.eclipse.core.runtime.IStatus;
 /**
  * A publish listener is used to listen for publishing events from a server.
- * The events are received in the following order:
+ * The events are typically received in the following order:
  * 
  * publishStarted() - The publish operation is starting
- *   publishModuleStarting() - This section is fired for each module in the server
- *   publishModuleFinished() - This module is done
- * publishFinished() - The publish operation is over
+ *   publishModuleStarted() - This section is fired for each module in the server
+ *   publishModuleFinished() - This module is finished publishing
+ * publishFinished() - The publish operation is finished
  */
 public interface IPublishListener {
 	/**

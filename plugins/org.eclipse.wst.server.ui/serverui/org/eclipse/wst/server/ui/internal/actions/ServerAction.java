@@ -39,20 +39,18 @@ public class ServerAction implements IOrdered {
 		protected Shell shell;
 		protected ServerAction action;
 		protected IServer server;
-		protected IServerConfiguration configuration;
 		
-		public RealServerAction(Shell shell, ServerAction action, IServer server, IServerConfiguration configuration) {
+		public RealServerAction(Shell shell, ServerAction action, IServer server) {
 			super(action.getLabel());
 			this.shell = shell;
 			this.action = action;
 			this.server = server;
-			this.configuration = configuration;
 			setImageDescriptor(action.getImageDescriptor());
-			setEnabled(action.getDelegate().supports(server, configuration));
+			setEnabled(action.getDelegate().supports(server));
 		}
 		
 		public void run() {
-			action.getDelegate().run(shell, server, configuration);
+			action.getDelegate().run(shell, server);
 		}
 	}
 	
@@ -259,7 +257,7 @@ public class ServerAction implements IOrdered {
 					menu.add(new Separator());
 				}
 				try {
-					Action action = new RealServerAction(shell, serverAction, server, configuration);
+					Action action = new RealServerAction(shell, serverAction, server);
 					Trace.trace(Trace.PERFORMANCE, "ServerAction.supports(): " + (System.currentTimeMillis() - time) + " " + serverAction.getId() + "/" + serverAction.getLabel());
 					menu.add(action);
 				} catch (Exception e) {

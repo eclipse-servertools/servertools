@@ -1,15 +1,15 @@
-package org.eclipse.wst.server.ui.internal;
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
  *    IBM - Initial API and implementation
- *
  **********************************************************************/
+package org.eclipse.wst.server.ui.internal;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -23,7 +23,6 @@ import org.eclipse.wst.server.ui.IServerUIPreferences;
  * the server tools.
  */
 public class ServerUIPreferences implements IServerUIPreferences {
-	private static final String PREF_PUBLISHING_DETAILS = "publishing-details";
 	private static final String PREF_PROMPT_IRREVERSIBLE = "prompt-irreversible";
 	private static final String PREF_IMPORT_LOCATION = "import-location";
 	private static final String PREF_SAVE_EDITORS = "save-editors";
@@ -42,41 +41,11 @@ public class ServerUIPreferences implements IServerUIPreferences {
 	}
 
 	public void setDefaults() {
-		preferences.setDefault(PREF_PUBLISHING_DETAILS, getDefaultShowPublishingDetails());
 		preferences.setDefault(PREF_PROMPT_IRREVERSIBLE, getDefaultPromptBeforeIrreversibleChange());
-		//preferences.setDefault(PREF_SERVER_SHUTDOWN_DELAY, getDefaultServerShutdownDelay());
 		preferences.setDefault(PREF_SAVE_EDITORS, getDefaultSaveEditors());
 		preferences.setDefault(PREF_HOST_NAMES, "localhost");
 	}
 
-	/**
-	 * Returns whether the publishing details should be shown.
-	 *
-	 * @return boolean
-	 */
-	public boolean getShowPublishingDetails() {
-		return preferences.getBoolean(PREF_PUBLISHING_DETAILS);
-	}
-	
-	/**
-	 * Returns whether the publishing details should be shown.
-	 *
-	 * @return boolean
-	 */
-	public boolean getDefaultShowPublishingDetails() {
-		return false;
-	}
-	
-	/**
-	 * Returns whether the publishing details should be shown.
-	 *
-	 * @return boolean
-	 */
-	public void setShowPublishingDetails(boolean b) {
-		preferences.setValue(PREF_PUBLISHING_DETAILS, b);
-		ServerUIPlugin.getInstance().savePluginPreferences();
-	}
-	
 	/**
 	 * Returns whether the user should be prompted before making an
 	 * irreversible change in the editor.

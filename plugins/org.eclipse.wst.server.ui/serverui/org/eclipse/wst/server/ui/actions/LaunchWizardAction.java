@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,21 +24,21 @@ import org.eclipse.ui.PlatformUI;
  */
 abstract class LaunchWizardAction extends Action {
 	/**
-	 * NewServerAction constructor comment.
+	 * LaunchWizardAction
 	 */
 	public LaunchWizardAction() {
 		super();
 	}
 
 	/**
-	 * Return the wizard that should be opened.
+	 * Return the workbench wizard that should be opened.
 	 *
-	 * @return org.eclipse.ui.IWorkbenchWizard
+	 * @return the wizard to open
 	 */
 	protected abstract IWorkbenchWizard getWizard();
 
-	/**
-	 * Implementation of method defined on <code>IAction</code>.
+	/*
+	 * @see IAction.run()
 	 */
 	public void run() {
 		IWorkbench workbench = PlatformUI.getWorkbench();

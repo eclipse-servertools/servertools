@@ -21,27 +21,6 @@ public interface IServerUIPreferences {
 	public static final byte SAVE_EDITORS_AUTO = 2;
 
 	/**
-	 * Returns whether the publishing details should be shown.
-	 *
-	 * @return boolean
-	 */
-	public boolean getShowPublishingDetails();
-
-	/**
-	 * Returns whether the publishing details should be shown by default.
-	 *
-	 * @return boolean
-	 */
-	public boolean getDefaultShowPublishingDetails();
-
-	/**
-	 * Sets whether the publishing details should be shown.
-	 *
-	 * @return boolean
-	 */
-	public void setShowPublishingDetails(boolean b);
-
-	/**
 	 * Returns whether the user should be prompted before making an
 	 * irreversible change in the editor.
 	 * 
@@ -64,7 +43,7 @@ public interface IServerUIPreferences {
 	 * @return boolean
 	 */
 	public void setPromptBeforeIrreversibleChange(boolean b);
-	
+
 	/**
 	 * Returns the default setting for saving editors before launching.
 	 * 

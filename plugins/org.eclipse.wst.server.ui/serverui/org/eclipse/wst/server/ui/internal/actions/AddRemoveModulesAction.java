@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -29,13 +29,14 @@ import org.eclipse.swt.widgets.Shell;
  * 
  */
 public class AddRemoveModulesAction implements IServerAction {
-	public boolean supports(IServer server, IServerConfiguration configuration) {
+	public boolean supports(IServer server) {
 		if (server == null)
 			return false;
+		IServerConfiguration configuration = server.getServerConfiguration();
 		return (!server.getServerType().hasServerConfiguration() || configuration != null);
 	}
 
-	public void run(Shell shell, IServer server, IServerConfiguration configuration) {
+	public void run(Shell shell, IServer server) {
 		//if (!ServerUIUtil.promptIfDirty(shell, server))
 		//	return;
 		

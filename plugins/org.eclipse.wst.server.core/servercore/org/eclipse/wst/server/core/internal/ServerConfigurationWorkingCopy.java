@@ -95,6 +95,10 @@ public class ServerConfigurationWorkingCopy extends ServerConfiguration implemen
 		wch.setPrivate(b);
 	}
 
+	public void setFile(IFile file) {
+		this.file = file;
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.IServerWorkingCopy#isDirty()
 	 */

@@ -42,7 +42,7 @@ public class NewServerWizard extends TaskWizard implements INewWizard {
 
 	public NewServerWizard(final String[] ids, final String[] values) {
 		super(ServerUIPlugin.getResource("%wizNewServerWizardTitle"), new WizardFragment() {
-			public void createSubFragments(List list) {
+			protected void createChildFragments(List list) {
 				if (ids != null)
 					list.add(new InputWizardFragment(ids, values));
 				list.add(new NewServerWizardFragment());

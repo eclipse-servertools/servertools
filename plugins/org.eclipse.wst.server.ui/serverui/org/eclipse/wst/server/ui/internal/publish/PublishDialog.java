@@ -743,7 +743,7 @@ public class PublishDialog extends Dialog implements IRunnableContext {
 			ModalContext.run(runnable, fork, getProgressMonitor(), getShell().getDisplay());
 		} finally {	
 			runningRunnables--;
-			if (remainOpen || ServerUICore.getPreferences().getShowPublishingDetails()) {
+			if (remainOpen) {
 				try {
 					updateTaskLabel();
 					cancel.setEnabled(showCancel);

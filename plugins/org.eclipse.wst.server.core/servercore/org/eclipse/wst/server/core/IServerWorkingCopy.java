@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.core;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 /**
@@ -183,6 +184,16 @@ public interface IServerWorkingCopy extends IServer, IElementWorkingCopy {
 	 * @throws CoreException [missing]
 	 */
 	public IServer saveAll(boolean force, IProgressMonitor monitor) throws CoreException;
+
+	/**
+	 * Sets the file where this server instance is serialized.
+	 * 
+	 * @param the file in the workspace where the server instance
+	 * is serialized, or <code>null</code> if the information is
+	 * instead to be persisted with the workspace but not with any
+	 * particular workspace resource
+	 */
+	public void setFile(IFile file);
 
 	/**
 	 * Sets the runtime associated with this server working copy.

@@ -291,7 +291,7 @@ public abstract class ProjectModule extends ModuleDelegate {
 		IModuleListener[] dcl = new IModuleListener[size];
 		listeners.toArray(dcl);
 		
-		ModuleEvent event = new ModuleEvent(this, isChange, added, changed, removed);
+		ModuleEvent event = new ModuleEvent(getModule(), isChange, added, changed, removed);
 	
 		for (int i = 0; i < size; i++) {
 			try {

@@ -1,6 +1,6 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
- * All rights reserved.   This program and the accompanying materials
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
@@ -20,8 +20,6 @@ import org.eclipse.wst.server.core.IModuleObject;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.core.util.HttpLaunchable;
-import org.eclipse.wst.server.core.util.NullLaunchable;
-import org.eclipse.wst.server.core.util.NullModuleObject;
 /**
  * Launchable adapter delegate for Web resources in Tomcat.
  */
@@ -34,10 +32,9 @@ public class TomcatLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
 		if (server.getAdapter(TomcatServer.class) == null)
 			return null;
 		if (!(moduleObject instanceof Servlet) &&
-			!(moduleObject instanceof WebResource) &&
-			!(moduleObject instanceof NullModuleObject))
+			!(moduleObject instanceof WebResource))
 			return null;
-		if (!(moduleObject.getModule() instanceof IWebModule))
+		if (moduleObject.getModule().getAdapter(IWebModule.class) == null)
 			return null;
 
 		try {
@@ -62,8 +59,6 @@ public class TomcatLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
 					path = path.substring(1);
 				if (path != null && path.length() > 0)
 					url = new URL(url, path);
-			} else { // null
-				return new NullLaunchable();
 			}
 			return new HttpLaunchable(url);
 		} catch (Exception e) {

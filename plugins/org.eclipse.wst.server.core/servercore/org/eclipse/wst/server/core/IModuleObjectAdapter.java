@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003 IBM Corporation and others.
+ * Copyright (c) 2003, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,6 @@
  *     IBM Corporation - Initial API and implementation
  **********************************************************************/
 package org.eclipse.wst.server.core;
-
 /**
  * A module object adapter converts from some view's model
  * object into a module object that is recognized by the
@@ -26,14 +25,14 @@ public interface IModuleObjectAdapter {
 	 * @return the adapter id
 	 */
 	public String getId();
-	
+
 	/**
 	 * Returns the (super) class name that this adapter can work with.
 	 *
 	 * @return java.lang.String
 	 */
 	public String getObjectClassName();
-	
+
 	/**
 	 * Returns true if the plugin that loaded this class has been loaded.
 	 *
@@ -44,8 +43,8 @@ public interface IModuleObjectAdapter {
 	/**
 	 * Converts from a model object to an IModuleObject.
 	 * 
-	 * @param obj java.lang.Object
-	 * @return org.eclipse.wst.server.core.model.IModuleObject
+	 * @param obj
+	 * @return
 	 */
 	public IModuleObject getModuleObject(Object obj);
 }

@@ -15,18 +15,16 @@ import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerConfiguration;
 import org.eclipse.wst.server.ui.editor.IServerEditorPartFactory;
-import org.eclipse.wst.server.ui.editor.IServerEditorPartFactoryDelegate;
+import org.eclipse.wst.server.ui.editor.ServerEditorPartFactoryDelegate;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.ui.IEditorPart;
-
 /**
  * 
  */
 public class ServerEditorPartFactory implements IServerEditorPartFactory {
 	private IConfigurationElement element;
-	private IServerEditorPartFactoryDelegate delegate;
+	private ServerEditorPartFactoryDelegate delegate;
 
 	/**
 	 * ServerEditorPartFactory constructor comment.
@@ -162,10 +160,10 @@ public class ServerEditorPartFactory implements IServerEditorPartFactory {
 		return false;
 	}
 
-	public IServerEditorPartFactoryDelegate getDelegate() {
+	public ServerEditorPartFactoryDelegate getDelegate() {
 		if (delegate == null) {
 			try {
-				delegate = (IServerEditorPartFactoryDelegate) element.createExecutableExtension("class");
+				delegate = (ServerEditorPartFactoryDelegate) element.createExecutableExtension("class");
 			} catch (Exception e) {
 				Trace.trace("Could not create server editorpage delegate", e);
 			}
@@ -174,17 +172,13 @@ public class ServerEditorPartFactory implements IServerEditorPartFactory {
 	}
 	
 	/**
-	 * Returns true if this editor page should be visible with the given
-	 * server and server configuration combination. This allows (for
-	 * instance) complex configuration pages to only be shown when used
+	 * Returns true if this editor page should be visible with the given server.
+	 * This allows (for instance) complex configuration pages to only be shown when used
 	 * with non-unittest servers.
-	 *
-	 * <p>If the server or server configuration is being opened by itself, the
-	 * other value (server or configuration) will be null.
 	 */
-	public boolean shouldCreatePage(IServer server, IServerConfiguration serverConfiguration) {
+	public boolean shouldCreatePage(IServer server) {
 		try {
-			return getDelegate().shouldCreatePage(server, serverConfiguration);
+			return getDelegate().shouldCreatePage(server);
 		} catch (Exception e) {
 			Trace.trace("Error calling delegate", e);
 			return false;
