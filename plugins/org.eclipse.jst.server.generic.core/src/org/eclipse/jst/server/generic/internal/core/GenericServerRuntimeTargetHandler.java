@@ -48,14 +48,14 @@ public class GenericServerRuntimeTargetHandler extends
 		ClasspathRuntimeTargetHandler {
 
 	/* (non-Javadoc)
-	 * @see com.ibm.wtp.server.java.core.ClasspathRuntimeTargetHandler#getId()
+	 * @see ClasspathRuntimeTargetHandler#getId()
 	 */
 	public String getId() {
 		return "org.eclipse.jst.server.generic.runtimeTarget";
 	}          
 
 	/* (non-Javadoc)
-	 * @see com.ibm.wtp.server.java.core.ClasspathRuntimeTargetHandler#getClasspathContainerLabel(com.ibm.wtp.server.core.IRuntime, java.lang.String)
+	 * @see ClasspathRuntimeTargetHandler#getClasspathContainerLabel(IRuntime, java.lang.String)
 	 */
 	public String getClasspathContainerLabel(IRuntime runtime, String id) {
 		ServerRuntime definition= ServerTypeDefinitionUtil.getServerTypeDefinition(runtime);
@@ -63,7 +63,7 @@ public class GenericServerRuntimeTargetHandler extends
 	}
 
 	/* (non-Javadoc)
-	 * @see com.ibm.wtp.server.java.core.ClasspathRuntimeTargetHandler#resolveClasspathContainer(com.ibm.wtp.server.core.IRuntime, java.lang.String)
+	 * @see ClasspathRuntimeTargetHandler#resolveClasspathContainer(IRuntime, java.lang.String)
 	 */
 	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime,
 			String id) 
