@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jst.server.j2ee.IWebModule;
+import org.eclipse.jst.server.core.IWebModule;
 /**
  * 
  */

@@ -69,7 +69,7 @@ public class ServerElementAdapter implements IAdaptable, IWorkbenchAdapter, ISer
 		if (resource instanceof IServer) {
 			IServer server = (IServer) resource;
 			
-			IModule[] modules = server.getModules(null);
+			IModule[] modules = server.getModules();
 			if (modules == null || modules.length == 0) {
 				//return new Object[] { new TextResourceAdapter(this, TextResourceAdapter.STYLE_NO_MODULES)};
 				return NO_CHILDREN;

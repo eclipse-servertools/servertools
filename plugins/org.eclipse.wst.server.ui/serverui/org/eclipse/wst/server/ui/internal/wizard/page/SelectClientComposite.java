@@ -129,7 +129,7 @@ public class SelectClientComposite extends Composite {
 	/**
 	 * Return the selected client.
 	 *
-	 * @return org.eclipse.wst.server.core.model.IServerClient
+	 * @return org.eclipse.wst.server.core.IClient
 	 */
 	public IClient getSelectedClient() {
 		return selectedClient;

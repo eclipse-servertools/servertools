@@ -48,7 +48,7 @@ public class SelectClientWizard extends TaskWizard {
 
 	/**
 	 * Return the selected client.
-	 * @return org.eclipse.wst.server.core.model.IServerClient
+	 * @return org.eclipse.wst.server.core.IClient
 	 */
 	public IClient getSelectedClient() {
 		return comp.getSelectedClient();

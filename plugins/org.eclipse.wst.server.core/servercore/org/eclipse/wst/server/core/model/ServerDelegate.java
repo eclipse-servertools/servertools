@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,9 @@ import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
  * being discarded, the delegate is expected to let go of the server instance.
  * </p>
  * <p>
+ * ServerDelegate supports an open-ended set of attribute-value pairs. All
+ * state stored in this manner will be saved when the server working copy is
+ * saved, and persisted across workbench sessions.
  * Server delegates may keep state in instance fields, but that state is
  * transient and will not be persisted across workbench sessions. To save
  * state across workbench sessions, it must be persisted using the
@@ -169,24 +172,6 @@ public abstract class ServerDelegate {
 	public abstract IStatus canModifyModules(IModule[] add, IModule[] remove);
 
 	/**
-	 * Returns the list of modules that are associated with
-	 * this server. See the specification of
-	 * {@link IServer#getModules()} for further details. 
-	 * <p>
-	 * This method is called by the web server core framework,
-	 * in response to a call to <code>IServer.getModules</code>.
-	 * Clients should never call this method.
-	 * </p>
-	 * <p>
-	 * [issue: Where does the delegate get these objects from,
-	 * especially at the start of a follow-on session?]
-	 * </p>
-	 *
-	 * @return a possibly-empty list of modules
-	 */
-	public abstract IModule[] getModules();
-
-	/**
 	 * Returns the child module(s) of this module. If this
 	 * module contains other modules, it should list those
 	 * modules. If not, it should return an empty list.
@@ -200,27 +185,28 @@ public abstract class ServerDelegate {
 	public abstract IModule[] getChildModules(IModule module);
 
 	/**
-	 * Returns the parent module(s) of this module. When
-	 * determining if a given project can run on a server
-	 * configuration, this method will be used to find the
-	 * actual module(s) that may be run on the server. For
-	 * instance, a Web module may return a list of Ear
-	 * modules that it is contained in if the server only
-	 * supports configuring Ear modules.
+	 * Returns the parent module(s) of this module. When determining if a given
+	 * project can run on a server, this method will be used to find the actual
+	 * module(s) that may be run on the server. For instance, a Web module may
+	 * return a list of EAR modules that it is contained in if the server only
+	 * supports configuring EAR modules.
 	 *
-	 * <p>If the module type is not supported, this method
-	 * may return null. If the type is normally supported but there
-	 * is a configuration problem or missing parent, etc., this
-	 * method may fire a CoreException that may then be presented
-	 * to the user.</p>
+	 * <p>If the module type is not supported, this method will return null.
+	 * If the type is normally supported but there is a configuration
+	 * problem or missing parent, etc., this method will fire a CoreException
+	 * that may then be presented to the user.</p>
 	 *
-	 * <p>If it does return valid parent(s), this method should
-	 * always return the topmost parent module(s), even if
-	 * there are a few levels (a heirarchy) of modules.</p>
+	 * <p>If it does return valid parent(s), this method will always return
+	 * the topmost parent module(s), even if there are a few levels
+	 * (a heirarchy) of modules.</p>
 	 *
-	 * @see IServer#getParentModules(IModule)
+	 * @param module org.eclipse.wst.server.core.IModule
+	 * @return an array of possible root modules
+	 * @throws org.eclipse.core.runtime.CoreException
+	 *
+	 * @see IServer#getRootModules(IModule)
 	 */
-	public abstract IModule[] getParentModules(IModule module) throws CoreException;
+	public abstract IModule[] getRootModules(IModule module) throws CoreException;
 	
 	/**
 	 * Returns an array of IServerPorts that this server has.
@@ -310,6 +296,17 @@ public abstract class ServerDelegate {
 	 * in response to a call to <code>IServerWorkingCopy.modifyModules</code>.
 	 * Clients should never call this method.
 	 * </p>
+	 * <p>
+	 * This method is called to update the server configuration (if any)
+	 * or update the delegates internal state. Note that the actual list
+	 * of modules is stored on the server and can be accessed at any time
+	 * using server.getModules(). getModules() will not be updated until
+	 * after this method successfully returns.
+	 * </p>
+	 * <p>
+	 * This method will not communicate with the server. After saving,
+	 * publish() can be used to sync up with the server.
+	 * </p>
 	 *
 	 * @param add a possibly-empty list of modules to add
 	 * @param remove a possibly-empty list of modules to remove
@@ -319,6 +316,14 @@ public abstract class ServerDelegate {
 	 */
 	public abstract void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException;
 
+	/**
+	 * This method is called to import the server configuration from the given
+	 * runtime.
+	 * 
+	 * @param runtime
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 */
 	public void importConfiguration(IRuntime runtime, IProgressMonitor monitor) {
 		// do nothing
 	}

@@ -318,9 +318,9 @@ public class OverviewEditorPart extends ServerEditorPart {
 		if (server != null) {
 			serverName.setText(server.getName());
 			if (readOnly)
-				serverName.setEnabled(false);
+				serverName.setEditable(false);
 			else
-				serverName.setEnabled(true);
+				serverName.setEditable(true);
 		}
 		
 		updating = false;

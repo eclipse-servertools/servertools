@@ -8,7 +8,7 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.jst.server.j2ee;
+package org.eclipse.jst.server.core;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,20 +1,23 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
- *    IBM - Initial API and implementation
+ *     IBM Corporation - Initial API and implementation
  **********************************************************************/
-package org.eclipse.jst.server.j2ee;
-
-public interface IEJBModule extends IJ2EEModule {
+package org.eclipse.wst.server.core.model;
+/**
+ * A file within a module.
+ */
+public interface IModuleFile extends IModuleResource {
 	/**
-	 * Returns a version number in the form "x.y.z".
-	 *
-	 * @return java.lang.String
+	 * Returns the monotonically increasing modification
+	 * stamp.
+	 * 
+	 * @return
 	 */
-	public String getEJBSpecificationVersion();
+	public long getModificationStamp();
 }

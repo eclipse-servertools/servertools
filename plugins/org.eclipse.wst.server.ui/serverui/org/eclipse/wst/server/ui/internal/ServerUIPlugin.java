@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,12 +19,17 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.util.ServerAdapter;
+import org.eclipse.wst.server.ui.editor.IServerEditorInput;
+import org.eclipse.wst.server.ui.internal.editor.ServerEditorInput;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 /**
@@ -153,7 +158,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	 * reasonable amount of time, the user will be prompted to
 	 * terminate the server.
 	 *
-	 * @param server org.eclipse.wst.server.core.model.IServer
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	public static void addTerminationWatch(final Shell shell, final IServer server, final int mode) {
 		if (terminationWatches.contains(server))
@@ -437,5 +442,78 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		IRuntime[] r = new IRuntime[list.size()];
 		list.toArray(r);
 		return r;
+	}
+	
+	/**
+	 * Open the given server with the server editor.
+	 *
+	 * @param server
+	 */
+	public static void editServer(IServer server) {
+		if (server == null)
+			return;
+
+		editServer(server.getId());
+	}
+
+	/**
+	 * Open the given server id with the server editor.
+	 *
+	 * @param serverId
+	 */
+	protected static void editServer(String serverId) {
+		if (serverId == null)
+			return;
+
+		IWorkbenchWindow workbenchWindow = ServerUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchPage page = workbenchWindow.getActivePage();
+
+		try {
+			IServerEditorInput input = new ServerEditorInput(serverId);
+			page.openEditor(input, IServerEditorInput.EDITOR_ID);
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error opening server editor", e);
+		}
+	}
+	
+	/**
+	 * Use the preference to prompt the user to save dirty editors, if applicable.
+	 * 
+	 * @return boolean  - Returns false if the user cancelled the operation
+	 */
+	public static boolean saveEditors() {
+		byte b = ServerUIPlugin.getPreferences().getSaveEditors();
+		if (b == ServerUIPreferences.SAVE_EDITORS_NEVER)
+			return true;
+		return ServerUIPlugin.getInstance().getWorkbench().saveAllEditors(b == ServerUIPreferences.SAVE_EDITORS_PROMPT);			
+	}
+	
+	/**
+	 * Prompts the user if the server is dirty. Returns true if the server was
+	 * not dirty or if the user decided to continue anyway. Returns false if
+	 * the server is dirty and the user chose to cancel the operation.
+	 *
+	 * @return boolean
+	 */
+	public static boolean promptIfDirty(Shell shell, IServer server) {
+		if (server == null)
+			return false;
+		
+		if (!(server instanceof IServerWorkingCopy))
+			return true;
+
+		String title = ServerUIPlugin.getResource("%resourceDirtyDialogTitle");
+		
+		IServerWorkingCopy wc = (IServerWorkingCopy) server;
+		if (wc.isDirty()) {
+			String message = ServerUIPlugin.getResource("%resourceDirtyDialogMessage", server.getName());
+			String[] labels = new String[] {ServerUIPlugin.getResource("%resourceDirtyDialogContinue"), IDialogConstants.CANCEL_LABEL};
+			MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.INFORMATION, labels, 0);
+	
+			if (dialog.open() != 0)
+				return false;
+		}
+	
+		return true;
 	}
 }

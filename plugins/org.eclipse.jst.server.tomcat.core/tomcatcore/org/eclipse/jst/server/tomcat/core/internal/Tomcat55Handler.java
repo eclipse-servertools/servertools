@@ -13,7 +13,7 @@ package org.eclipse.jst.server.tomcat.core.internal;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jst.server.j2ee.IWebModule;
+import org.eclipse.jst.server.core.IWebModule;
 /**
  * Tomcat 55 handler.
  */

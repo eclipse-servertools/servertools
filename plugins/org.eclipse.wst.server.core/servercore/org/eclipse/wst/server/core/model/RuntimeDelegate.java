@@ -36,6 +36,9 @@ import org.eclipse.wst.server.core.internal.ServerPlugin;
  * being discarded, the delegate is expected to let go of the runtime instance.
  * </p>
  * <p>
+ * RuntimeDelegate supports an open-ended set of attribute-value pairs. All
+ * state stored in this manner will be saved when the runtime working copy is
+ * saved, and persisted across workbench sessions.
  * Runtime delegates may keep state in instance fields, but that state is
  * transient and will not be persisted across workbench sessions. To save state
  * across workbench sessions, it must be persisted using the attributes.

@@ -22,7 +22,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
-import org.eclipse.jst.server.j2ee.IWebModule;
+import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.tomcat.core.ITomcatConfiguration;
 import org.eclipse.jst.server.tomcat.core.ITomcatConfigurationWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.ITomcatWebModule;

@@ -25,7 +25,7 @@ public class ModuleSloshAction extends AbstractServerAction {
 	/**
 	 * Return true if this server can currently be acted on.
 	 * @return boolean
-	 * @param server org.eclipse.wst.server.core.model.IServer
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	public boolean accept(IServer server) {
 		return true;
@@ -33,7 +33,7 @@ public class ModuleSloshAction extends AbstractServerAction {
 
 	/**
 	 * Perform action on this server.
-	 * @param server org.eclipse.wst.server.core.model.IServer
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	public void perform(final IServer server) {
 		/*if (!ServerUIUtil.promptIfDirty(shell, server))

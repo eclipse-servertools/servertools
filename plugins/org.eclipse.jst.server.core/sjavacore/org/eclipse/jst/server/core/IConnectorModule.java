@@ -8,23 +8,17 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.jst.server.j2ee;
+package org.eclipse.jst.server.core;
 
-public interface ILooseArchiveSupport {
+import org.eclipse.core.runtime.IPath;
+/**
+ * A J2EE connector module.
+ */
+public interface IConnectorModule extends IJ2EEModule {
 	/**
-	 * Return the loose archives that are contained within this enterprise
-	 * application.
-	 *
-	 * @return ILooseArchive[]
+	 * Returns the classpath as an array of absolute IPaths.
+	 * 
+	 * @param the classpath array
 	 */
-	public ILooseArchive[] getLooseArchives();
-
-	/**
-	 * Returns the URI of the given loose archive within this
-	 * enterprise application.
-	 *
-	 * @param com.ibm.etools.server.j2ee.ILooseArchive
-	 * @return java.lang.String
-	 */
-	public String getURI(ILooseArchive jar);
+	public IPath[] getClasspath();
 }

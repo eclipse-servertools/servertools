@@ -73,7 +73,7 @@ public class ServerUtil {
 			return new IModule[0];
 
 		// get all of the directly contained projects
-		IModule[] deploys = server.getModules(monitor);
+		IModule[] deploys = server.getModules();
 		if (deploys == null || deploys.length == 0)
 			return new IModule[0];
 
@@ -349,7 +349,7 @@ public class ServerUtil {
 		for (int i = 0; i < size; i++) {
 			boolean found = false;
 			try {
-				IModule[] parents = server.getParentModules(add[i], monitor);
+				IModule[] parents = server.getRootModules(add[i], monitor);
 				if (parents != null) {
 					found = true;
 					if (parents.length > 0) {				
@@ -372,7 +372,7 @@ public class ServerUtil {
 		for (int i = 0; i < size; i++) {
 			boolean found = false;
 			try {
-				IModule[] parents = server.getParentModules(remove[i], monitor);
+				IModule[] parents = server.getRootModules(remove[i], monitor);
 				if (parents != null) {
 					found = true;
 					if (parents.length > 0) {				
@@ -426,7 +426,7 @@ public class ServerUtil {
 		if (server == null)
 			return;
 		
-		IModule[] modules = server.getModules(monitor);
+		IModule[] modules = server.getModules();
 		if (modules != null) { 
 			int size = modules.length;
 			for (int i = 0; i < size; i++) {
@@ -685,7 +685,7 @@ public class ServerUtil {
 			for (int i = 0; i < size; i++) {
 				if (!containsModule(servers[i], module, monitor)) {
 					try {
-						IModule[] parents = servers[i].getParentModules(module, monitor);
+						IModule[] parents = servers[i].getRootModules(module, monitor);
 						if (parents != null && parents.length > 0) {
 							boolean found = false;
 							if (parents != null) {

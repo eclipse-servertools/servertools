@@ -34,13 +34,13 @@ public abstract class AbstractServerAction extends SelectionProviderAction {
 	 * Return true if this server can currently be acted on.
 	 *
 	 * @return boolean
-	 * @param server org.eclipse.wst.server.core.model.IServer
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	public abstract boolean accept(IServer server);
 
 	/**
 	 * Perform action on this server.
-	 * @param server org.eclipse.wst.server.core.model.IServer
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	public abstract void perform(IServer server);
 

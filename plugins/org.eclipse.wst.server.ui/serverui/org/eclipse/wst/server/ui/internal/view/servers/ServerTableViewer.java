@@ -11,9 +11,7 @@
 package org.eclipse.wst.server.ui.internal.view.servers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -23,7 +21,6 @@ import org.eclipse.jface.viewers.*;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.util.PublishAdapter;
-import org.eclipse.wst.server.ui.internal.ServerStartupListener;
 import org.eclipse.wst.server.ui.internal.ServerTree;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.view.tree.ServerTreeAction;
@@ -52,8 +49,6 @@ public class ServerTableViewer extends TableViewer {
 	
 	protected ServerTableLabelProvider labelProvider;
 	protected ISelectionListener dsListener;
-
-	protected static Map startupWatch = new HashMap();
 
 	protected ServersView view;
 	
@@ -308,7 +303,7 @@ public class ServerTableViewer extends TableViewer {
 
 	/**
 	 * Respond to a configuration being added or deleted.
-	 * @param configuration org.eclipse.wst.server.core.model.IServerConfiguration
+	 * @param configuration org.eclipse.wst.server.core.IServerConfiguration
 	 * @param add boolean
 	 */
 	/*protected void configurationChange(IServerConfiguration configuration, boolean add) {
@@ -364,7 +359,7 @@ public class ServerTableViewer extends TableViewer {
 
 	/**
 	 * Called when the publish state changes.
-	 * @param element org.eclipse.wst.server.core.model.IServerResource
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	protected void handlePublishChange(IServer server, boolean isPublishing) {
 		String serverId = server.getId();
@@ -395,7 +390,7 @@ public class ServerTableViewer extends TableViewer {
 	
 	/**
 	 * Called when an element is added.
-	 * @param element org.eclipse.wst.server.core.model.IServerResource
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	protected void handleServerResourceAdded(IServer server) {
 		add(server);
@@ -407,7 +402,7 @@ public class ServerTableViewer extends TableViewer {
 	
 	/**
 	 * Called when an element is changed.
-	 * @param element org.eclipse.wst.server.core.model.IServerResource
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	protected void handleServerResourceChanged(IServer server) {
 		refresh(server);
@@ -427,7 +422,7 @@ public class ServerTableViewer extends TableViewer {
 	
 	/**
 	 * Called when an element is removed.
-	 * @param element org.eclipse.wst.server.core.model.IServerResource
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	protected void handleServerResourceRemoved(IServer server) {
 		remove(server);
@@ -441,34 +436,6 @@ public class ServerTableViewer extends TableViewer {
 	/*protected void handleServerResourceRemoved(IServerConfiguration configuration) {
 		configurationChange(configuration, false);
 	}*/
-	
-	/**
-	 * Register a startup listener.
-	 *
-	 * @param server org.eclipse.wst.server.core.model.IServer
-	 * @param listener org.eclipse.wst.server.core.internal.ServerStartupListener
-	 */
-	protected static void registerStartupListener(IServer server, ServerStartupListener listener) {
-		String id = server.getId();
-		startupWatch.put(id, listener);
-	}
-	
-	/**
-	 * Remove a startup listener.
-	 *
-	 * @param server org.eclipse.wst.server.core.model.IServer
-	 */
-	protected static void removeStartupListener(IServer server) {
-		/*String ref = ServerCore.getServerRef(server);
-		try {
-			ServerStartupListener listener = (ServerStartupListener) startupWatch.get(ref);
-			if (listener != null)
-				listener.setEnabled(false);
-		} catch (Exception e) {
-		}
-	
-		startupWatch.remove(ref);*/
-	}
 	
 	protected void addServer(final IServer server) {
 		Display.getDefault().asyncExec(new Runnable() {

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,14 +13,16 @@ package org.eclipse.wst.server.core.util;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.internal.ModuleFile;
+import org.eclipse.wst.server.core.internal.ModuleFolder;
 import org.eclipse.wst.server.core.internal.Trace;
-import org.eclipse.wst.server.core.model.IModuleListener;
-import org.eclipse.wst.server.core.model.ModuleDelegate;
-import org.eclipse.wst.server.core.model.ModuleEvent;
+import org.eclipse.wst.server.core.model.*;
 /**
  * A simple IModuleProject that maps a folder within a project
  * (or the root of the project itself) to the module.
@@ -156,27 +158,25 @@ public abstract class ProjectModule extends ModuleDelegate {
 	/*
 	 * @see IModule#members()
 	 */
-	/*public IModuleResource[] members() throws CoreException {
+	public IModuleResource[] members() throws CoreException {
 		IPath root2 = null;
 		try {
 			root2 = getRootFolder();
-		} catch (Exception e) { }
+		} catch (Exception e) {
+			// ignore
+		}
 		try {
 			if (root2 == null || root2.isRoot() || root2.equals(new Path("")) || root2.equals(new Path("/")))
-				return getModuleResources(getProject(), null);
+				return getModuleResources(Path.EMPTY, getProject());
 			
 			IFolder folder = project.getFolder(root2);
-			return getModuleResources(folder, null);
+			return getModuleResources(Path.EMPTY, folder);
 		} catch (CoreException e) {
 			throw e;
 		}
-	}*/
-	
-	/*protected IModuleResource getModuleResources(IFile file) {
-		return new ProjectModuleFile(this, null, file);
 	}
 
-	protected IModuleResource[] getModuleResources(IContainer container, IModuleFolder parent) throws CoreException {
+	protected IModuleResource[] getModuleResources(IPath path, IContainer container) throws CoreException {
 		List list = new ArrayList();
 
  		IResource[] resources = container.members();
@@ -185,11 +185,13 @@ public abstract class ProjectModule extends ModuleDelegate {
 	 		for (int i = 0; i < size; i++) {
 				IResource resource = resources[i];
 				if (resource instanceof IContainer) {
-					ProjectModuleFolder pdf = new ProjectModuleFolder(this, parent, (IContainer) resource);	
-					list.add(pdf);
+					IContainer container2 = (IContainer) resource;
+					ModuleFolder mf = new ModuleFolder(container2.getName(), path);
+					mf.setMembers(getModuleResources(path.append(container2.getName()), container2));
+					list.add(mf);
 				} else if (resource instanceof IFile) {
-					ProjectModuleFile pdf = new ProjectModuleFile(this, parent, (IFile) resource);
-					list.add(pdf);
+					IFile file = (IFile) resource;
+					list.add(new ModuleFile(file.getName(), path, file.getModificationStamp()));
 				}
 			}
 	 	}
@@ -197,7 +199,7 @@ public abstract class ProjectModule extends ModuleDelegate {
 	 	IModuleResource[] moduleResources = new IModuleResource[list.size()];
 	 	list.toArray(moduleResources);
 	 	return moduleResources;
-	}*/
+	}
 
 	/*
 	 * @see IModule#getName()

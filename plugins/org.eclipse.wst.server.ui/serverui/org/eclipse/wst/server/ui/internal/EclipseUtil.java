@@ -14,14 +14,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.internal.ui.DebugUIPlugin;
+import org.eclipse.core.runtime.*;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -204,7 +197,8 @@ public class EclipseUtil {
 	/**
 	 * Start a server and display a dialog if it fails.
 	 */
-	public static ILaunch startServer(final Shell shell, final IServer server, final String mode, final ServerStartupListener listener) throws CoreException {
+	/*public static ILaunch startServer(final Shell shell, final IServer server, final String mode) throws CoreException {
+			//, final ServerStartupListener listener) throws CoreException {
 		// Eclipse v2 workaround to make sure that the debug UI listeners are setup
 		DebugUIPlugin.getDefault();
 
@@ -220,7 +214,7 @@ public class EclipseUtil {
 			});
 			throw e;
 		}
-	}
+	}*/
 
 	/**
 	 * Do a validateEdit() on the given server.
@@ -229,7 +223,7 @@ public class EclipseUtil {
 		IStatus status = server.validateEdit(shell);
 		return validateEdit(shell, status);
 	}
-		
+
 	protected static boolean validateEdit(Shell shell, IStatus status) {
 		if (status != null && status.getSeverity() == IStatus.ERROR) {
 			// inform user

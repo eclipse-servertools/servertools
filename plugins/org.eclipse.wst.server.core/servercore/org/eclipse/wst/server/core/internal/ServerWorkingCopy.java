@@ -11,7 +11,9 @@
 package org.eclipse.wst.server.core.internal;
 
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -305,21 +307,36 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	 * @see org.eclipse.wst.server.core.IServer#modifyModule(org.eclipse.wst.server.core.model.IModule)
 	 */
 	public void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
-		int i = 0;
-		while (getServerState() == IServer.STATE_UNKNOWN && i < 10) {
-			try {
-				Thread.sleep(1000);
-			} catch (Exception e) {
-				// ignore
-			}
-			i++;
-		}
-		
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
 			monitor.subTask(ServerPlugin.getResource("%taskModifyModules"));
 			getWorkingCopyDelegate(monitor).modifyModules(add, remove, monitor);
 			wch.setDirty(true);
+			
+			if (add != null) {
+				int size = add.length;
+				for (int i = 0; i < size; i++) {
+					if (!modules.contains(add[i]))
+						modules.add(add[i]);
+				}
+			}
+			
+			if (remove != null) {
+				int size = remove.length;
+				for (int i = 0; i < size; i++) {
+					if (modules.contains(remove[i]))
+						modules.remove(remove[i]);
+				}
+			}
+			
+			// convert to attribute
+			List list = new ArrayList();
+			Iterator iterator = modules.iterator();
+			while (iterator.hasNext()) {
+				IModule module = (IModule) iterator.next();
+				list.add(module.getId());
+			}
+			setAttribute(MODULE_LIST, list);
 		} catch (CoreException ce) {
 			throw ce;
 		} catch (Exception e) {

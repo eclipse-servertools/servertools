@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,11 +25,11 @@ public class ServerUIPreferences {
 	private static final String PREF_IMPORT_LOCATION = "import-location";
 	private static final String PREF_SAVE_EDITORS = "save-editors";
 	private static final String PREF_HOST_NAMES = "host-names";
-	
+
 	public static final byte SAVE_EDITORS_NEVER = 0;
 	public static final byte SAVE_EDITORS_PROMPT = 1;
 	public static final byte SAVE_EDITORS_AUTO = 2;
-	
+
 	private static final int MAX_HOSTNAMES = 10;
 
 	private Preferences preferences;

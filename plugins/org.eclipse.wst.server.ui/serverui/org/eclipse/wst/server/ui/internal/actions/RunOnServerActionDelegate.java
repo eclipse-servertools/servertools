@@ -27,7 +27,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.wizard.*;
 import org.eclipse.swt.widgets.Shell;
@@ -102,7 +101,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			for (int i = 0; i < size && !found; i++) {
 				if (ServerUtil.isCompatibleWithLaunchMode(servers[i], launchMode)) {
 					try {
-						IModule[] parents = servers[i].getParentModules(module, monitor);
+						IModule[] parents = servers[i].getRootModules(module, monitor);
 						if (parents != null && parents.length > 0)
 							found = true;
 					} catch (Exception e) {
@@ -134,7 +133,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			}
 		}
 		
-		if (!ServerUIUtil.saveEditors())
+		if (!ServerUIPlugin.saveEditors())
 			return;
 
 		IServer server = null;
@@ -160,7 +159,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		boolean tasksRun = false;	
 		if (server == null) {
 			// try the full wizard
-			SelectServerWizard wizard = new SelectServerWizard(module, launchMode);
+			RunOnServerWizard wizard = new RunOnServerWizard(module, launchMode);
 			ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
 			if (dialog.open() == Window.CANCEL) {
 				return;
@@ -188,7 +187,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			return;
 		}
 
-		if (!ServerUIUtil.promptIfDirty(shell, server))
+		if (!ServerUIPlugin.promptIfDirty(shell, server))
 			return;
 		
 		if (!tasksRun) {
@@ -247,14 +246,11 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 
 		Trace.trace(Trace.FINEST, "Ready to launch");
 
-		final IServerPreferences preferences = ServerCore.getServerPreferences();
-
 		// start server if it's not already started
 		// and cue the client to start
 		int state = server.getServerState();
 		if (state == IServer.STATE_STARTING) {
-			ServerStartupListener listener = new ServerStartupListener(shell, server, client, launchableAdapter, moduleArtifact, launchMode, module);
-			listener.setEnabled(true);
+			LaunchClientJob.launchClient(server, module, launchMode, moduleArtifact, launchableAdapter, client);
 		} else if (state == IServer.STATE_STARTED) {
 			boolean restart = false;
 			String mode = server.getMode();
@@ -275,29 +271,17 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				else
 					return;
 			}
-			if (restart) {
-				server.restart(launchMode);
-				
-				if (preferences.isAutoPublishing() && !autoPublish(shell, server))
-					return;
-				ServerStartupListener.launchClientUtil(server, module, launchableAdapter, moduleArtifact, launchMode, client);
-			} else {
-				if (preferences.isAutoPublishing() && !autoPublish(shell, server))
-					return;
-	
-				// open client
-				ServerStartupListener.launchClientUtil(server, module, launchableAdapter, moduleArtifact, launchMode, client);
-			}
+			if (restart)
+				RestartServerJob.restartServer(server, launchMode);
+			
+			PublishServerJob publishJob = new PublishServerJob(server);
+			publishJob.schedule();
+			LaunchClientJob.launchClient(server, module, launchMode, moduleArtifact, launchableAdapter, client);
 		} else if (state != IServer.STATE_STOPPING) {
-			ServerStartupListener listener = new ServerStartupListener(shell, server, client, launchableAdapter, moduleArtifact, launchMode, module);
-			if (preferences.isAutoPublishing() && !autoPublish(shell, server))
-				return;
-
-			try {
-				EclipseUtil.startServer(shell, server, launchMode, listener);
-			} catch (CoreException e) {
-				// ignore
-			}
+			PublishServerJob publishJob = new PublishServerJob(server);
+			publishJob.schedule();
+			StartServerJob.startServer(server, launchMode);
+			LaunchClientJob.launchClient(server, module, launchMode, moduleArtifact, launchableAdapter, client);
 		}
 	}
 	
@@ -325,23 +309,6 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		IClient[] clients2 = new IClient[list.size()];
 		list.toArray(clients2);
 		return clients2;
-	}
-
-	/**
-	 * Automatically publish to the given server.
-	 *
-	 * @param server
-	 * @return boolean - false if the current operation should be stopped
-	 */
-	protected boolean autoPublish(Shell shell, IServer server) {
-		// publish first
-		if (server.shouldPublish()) {
-			IStatus publishStatus = ServerUIUtil.publishWithDialog(shell, server);
-	
-			if (publishStatus == null || publishStatus.getSeverity() == IStatus.ERROR)
-				return false;
-		}
-		return true;
 	}
 
 	/**

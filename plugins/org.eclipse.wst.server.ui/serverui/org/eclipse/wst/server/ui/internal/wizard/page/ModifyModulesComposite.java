@@ -101,7 +101,7 @@ public class ModifyModulesComposite extends Composite {
 			return;
 
 		// get currently deployed modules
-		IModule[] currentModules = server.getModules(null);
+		IModule[] currentModules = server.getModules();
 		if (currentModules != null) {
 			int size = currentModules.length;
 			for (int i = 0; i < size; i++) {
@@ -114,7 +114,7 @@ public class ModifyModulesComposite extends Composite {
 		newModule = null;
 		if (origNewModule != null) {
 			try {
-				IModule[] parents = server.getParentModules(origNewModule, null);
+				IModule[] parents = server.getRootModules(origNewModule, null);
 				if (parents != null && parents.length > 0)
 					newModule = parents[0];
 				else
@@ -136,7 +136,7 @@ public class ModifyModulesComposite extends Composite {
 				IModule module = modules2[i];
 				if (!deployed.contains(module)) {
 					try {
-						IModule[] parents = server.getParentModules(module, null);
+						IModule[] parents = server.getRootModules(module, null);
 						if (parents != null) {
 							int size2 = parents.length;
 							for (int j = 0; j < size2; j++) {

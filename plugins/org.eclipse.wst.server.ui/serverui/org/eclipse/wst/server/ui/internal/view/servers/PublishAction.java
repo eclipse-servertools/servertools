@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,8 @@ package org.eclipse.wst.server.ui.internal.view.servers;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.ui.ServerUIUtil;
+import org.eclipse.wst.server.ui.internal.PublishServerJob;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.swt.widgets.Shell;
 /**
  * Publish to a server.
@@ -31,7 +32,7 @@ public class PublishAction extends AbstractServerAction {
 	/**
 	 * Return true if this server can currently be acted on.
 	 * @return boolean
-	 * @param server org.eclipse.wst.server.core.model.IServer
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	public boolean accept(IServer server) {
 		return server.canPublish();
@@ -39,15 +40,16 @@ public class PublishAction extends AbstractServerAction {
 
 	/**
 	 * Perform action on this server.
-	 * @param server org.eclipse.wst.server.core.model.IServer
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	public void perform(final IServer server) {
-		if (!ServerUIUtil.promptIfDirty(shell, server))
+		if (!ServerUIPlugin.promptIfDirty(shell, server))
 			return;
 		
-		if (!ServerUIUtil.saveEditors())
+		if (!ServerUIPlugin.saveEditors())
 			return;
 
-		ServerUIUtil.publishWithDialog(shell, server);
+		PublishServerJob publishJob = new PublishServerJob(server);
+		publishJob.schedule();
 	}
 }

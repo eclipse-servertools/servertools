@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ITaskModel;
@@ -28,14 +29,14 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * A wizard used to select a server from various lists.
  */
-public class SelectServerWizard extends TaskWizard {
+public class RunOnServerWizard extends TaskWizard {
 	protected static NewServerWizardFragment task;
 
 	/**
-	 * SelectServerWizard constructor comment.
+	 * RunOnServerWizard constructor comment.
 	 */
-	public SelectServerWizard(final IModule module, final String launchMode) {
-		super(ServerUIPlugin.getResource("%wizSelectServerWizardTitle"), new WizardFragment() {
+	public RunOnServerWizard(final IModule module, final String launchMode) {
+		super(ServerUIPlugin.getResource("%wizRunOnServerTitle"), new WizardFragment() {
 			protected void createChildFragments(List list) {
 				task = new NewServerWizardFragment(module, launchMode);
 				list.add(task);
@@ -47,7 +48,6 @@ public class SelectServerWizard extends TaskWizard {
 				list.add(new FinishWizardFragment(new SaveServerTask()));
 				list.add(new FinishWizardFragment(new Task() {
 					public void execute(IProgressMonitor monitor) throws CoreException {
-						
 						try {
 							IServer server = (IServer) getTaskModel().getObject(ITaskModel.TASK_SERVER);
 							ServerUIPlugin.getPreferences().addHostname(server.getHost());
@@ -57,14 +57,21 @@ public class SelectServerWizard extends TaskWizard {
 					}
 				}));
 			}
+			protected boolean useJob() {
+				return true;
+			}
 		});
 	
 		setNeedsProgressMonitor(true);
+		if (ILaunchManager.DEBUG_MODE.equals(launchMode))
+			setWindowTitle(ServerUIPlugin.getResource("%wizDebugOnServerTitle"));
+		else if (ILaunchManager.PROFILE_MODE.equals(launchMode))
+			setWindowTitle(ServerUIPlugin.getResource("%wizProfileOnServerTitle"));
 	}
 
 	/**
 	 * Return the server.
-	 * @return org.eclipse.wst.server.core.model.IServer
+	 * @return org.eclipse.wst.server.core.IServer
 	 */
 	public IServer getServer() {
 		try {

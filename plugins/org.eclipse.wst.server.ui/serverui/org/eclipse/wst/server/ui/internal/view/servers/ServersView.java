@@ -18,7 +18,6 @@ import org.eclipse.debug.ui.IDebugView;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.view.tree.DisabledMenuManager;
 import org.eclipse.swt.SWT;
@@ -127,7 +126,7 @@ public class ServersView extends ViewPart {
 				try {
 					TableItem item = table.getSelection()[0];
 					IServer server = (IServer) item.getData();
-					ServerUIUtil.editServer(server);
+					ServerUIPlugin.editServer(server);
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Could not open server", e);
 				}

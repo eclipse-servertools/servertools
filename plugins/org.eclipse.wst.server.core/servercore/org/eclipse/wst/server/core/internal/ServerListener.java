@@ -78,7 +78,7 @@ public class ServerListener extends ServerLifecycleAdapter implements IServerLis
 	/**
 	 * Called when the server isRestartNeeded() property changes.
 	 *
-	 * @param instance org.eclipse.wst.server.core.model.IServer
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	public void restartStateChange(IServer server) {
 		/*if (server.isRestartNeeded() == false)
@@ -100,7 +100,7 @@ public class ServerListener extends ServerLifecycleAdapter implements IServerLis
 	/**
 	 * A new resource has been added.
 	 *
-	 * @param event org.eclipse.wst.server.core.model.IServerResource
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	public void serverAdded(IServer server) {
 		server.addServerListener(this);
@@ -109,7 +109,7 @@ public class ServerListener extends ServerLifecycleAdapter implements IServerLis
 	/**
 	 * A existing resource has been removed.
 	 *
-	 * @param event org.eclipse.wst.server.core.model.IServerResource
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	public void serverRemoved(IServer server) {
 		server.removeServerListener(this);

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -73,7 +73,7 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
  * 
  * @since 1.0
  */
-public interface IServer extends IServerAttributes, IAdaptable {
+public interface IServer extends IServerAttributes {
 	/**
 	 * Server state constant (value 0) indicating that the
 	 * server is in an unknown state.
@@ -147,13 +147,49 @@ public interface IServer extends IServerAttributes, IAdaptable {
 	public static final int PUBLISH_STATE_INCREMENTAL = 2;
 
 	/**
-	 * Publish state constant (value 1) indicating that a
+	 * Publish state constant (value 3) indicating that a
 	 * full publish is required.
 	 * 
 	 * @see #getServerPublishState()
 	 * @see #getModulePublishState(IModule)
 	 */
 	public static final int PUBLISH_STATE_FULL = 3;
+
+	/**
+	 * Publish kind constant (value 1) indicating an incremental publish request.
+	 * 
+	 * @see publish(int, IProgressMonitor)
+	 */
+	public static final int PUBLISH_INCREMENTAL = 1;
+
+	/**
+	 * Publish kind constant (value 2) indicating a full publish request.
+	 * 
+	 * @see publish(int, IProgressMonitor)
+	 */
+	public static final int PUBLISH_FULL = 2;
+
+	/**
+	 * Publish kind constant (value 3) indicating an automatic publish request.
+	 * 
+	 * @see publish(int, IProgressMonitor)
+	 */
+	public static final int PUBLISH_AUTO = 3;
+
+	/**
+	 * Publish kind constant (value 4) indicating a publish clean request
+	 * 
+	 * @see publish(int, IProgressMonitor)
+	 */
+	public static final int PUBLISH_CLEAN = 4;
+
+	/**
+	 * Publish kind constants
+	 */
+	public static final int NO_CHANGE = 0;
+	public static final int ADDED = 1;
+	public static final int CHANGED = 2;
+	public static final int REMOVED = 3;
 
 	/**
 	 * Returns the current state of this server.
@@ -171,8 +207,10 @@ public interface IServer extends IServerAttributes, IAdaptable {
 	/**
 	 * Returns the ILaunchManager mode that the server is in. This method will
 	 * return null if the server is not running.
-	 *  
-	 * @return
+	 * 
+	 * @return the mode in which a server is running, one of the mode constants
+	 *    defined by {@link org.eclipse.debug.core.ILaunchManager}, or
+	 *    <code>null</code> if the server is stopped.
 	 */
 	public String getMode();
 	
@@ -188,50 +226,6 @@ public interface IServer extends IServerAttributes, IAdaptable {
 	 * @return
 	 */
 	public int getModulePublishState(IModule module);
-
-	/**
-	 * Returns the server extension for this server.
-	 * The server extension is a server-type-specific object.
-	 * By casting the server extension to the type prescribed in
-	 * the API documentation for that particular server type, 
-	 * the client can access server-type-specific properties and
-	 * methods.
-	 * 
-	 * @return the server extension
-	 */
-	//public IServerExtension getExtension(IProgressMonitor monitor);
-
-	/**
-	 * Returns a server working copy for modifying this server instance.
-	 * If this instance is already a working copy, it is returned.
-	 * If this instance is not a working copy, a new server working copy
-	 * is created with the same id and attributes.
-	 * Clients are responsible for saving or releasing the working copy when
-	 * they are done with it.
-	 * <p>
-	 * The server working copy is related to this server instance
-	 * in the following ways:
-	 * <pre>
-	 * this.getWorkingCopy().getId() == this.getId()
-	 * this.getWorkingCopy().getFile() == this.getFile()
-	 * this.getWorkingCopy().getOriginal() == this
-	 * this.getWorkingCopy().getRuntime() == this.getRuntime()
-	 * this.getWorkingCopy().getServerConfiguration() == this.getServerConfiguration()
-	 * </pre>
-	 * </p>
-	 * <p>
-	 * [issue: IServerWorkingCopy extends IServer. 
-	 * Server.getWorkingCopy() create a new working copy;
-	 * ServerWorkingCopy.getWorkingCopy() returns this.
-	 * This may be convenient in code that is ignorant of
-	 * whether they are dealing with a working copy or not.
-	 * However, it is hard for clients to manage working copies
-	 * with this design.]
-	 * </p>
-	 * 
-	 * @return a new working copy
-	 */
-	public IServerWorkingCopy createWorkingCopy();
 
 	/**
 	 * Adds the given server state listener to this server.
@@ -298,6 +292,24 @@ public interface IServer extends IServerAttributes, IAdaptable {
 	public IStatus publish(IProgressMonitor monitor);
 
 	/**
+	 * Publish to the server using the progress monitor. The result of the
+	 * publish operation is returned as an IStatus.
+	 * 
+	 * @param kind the kind of publish being requested. Valid values are
+	 *    <ul>
+	 *    <li><code>PUBLSIH_FULL</code>- indicates a full publish.</li>
+	 *    <li><code>PUBLISH_INCREMENTAL</code>- indicates a incremental publish.
+	 *    <li><code>PUBLISH_CLEAN</code>- indicates a clean request. Clean throws
+	 *      out all state and cleans up the module on the server before doing a
+	 *      full publish.
+	 *    </ul>
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return status indicating what (if anything) went wrong
+	 */
+	public IStatus publish(int kind, IProgressMonitor monitor);
+
+	/**
 	 * Returns whether this server is in a state that it can
 	 * be started in the given mode.
 	 *
@@ -311,6 +323,12 @@ public interface IServer extends IServerAttributes, IAdaptable {
 	 */
 	public boolean canStart(String launchMode);
 
+	/**
+	 * Returns an existing launch for this server, or null if there is
+	 * no existing launch.
+	 * 
+	 * @return
+	 */
 	public ILaunch getExistingLaunch();
 
 	/**
@@ -318,6 +336,8 @@ public interface IServer extends IServerAttributes, IAdaptable {
 	 * will be created if "create" is true, and otherwise will return null.
 	 * 
 	 * @param create
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 * @return
 	 * @throws CoreException
 	 */
@@ -438,6 +458,8 @@ public interface IServer extends IServerAttributes, IAdaptable {
 	 * @param launchMode a mode in which a server can be launched,
 	 *    one of the mode constants defined by
 	 *    {@link org.eclipse.debug.core.ILaunchManager}
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 */
 	public void synchronousRestart(String launchMode, IProgressMonitor monitor) throws CoreException;
 
@@ -569,4 +591,21 @@ public interface IServer extends IServerAttributes, IAdaptable {
 	 * constants declared on {@link IServer}
 	 */
 	public int getModuleState(IModule module);
+	
+	/**
+	 * Returns an array of modules that are deployed to this server. This
+	 * list may contain user applications as well as any other applications
+	 * (e.g. published from a different workspace) that are running on the
+	 * server.
+	 * <p>
+	 * This method returns the root modules, which are not parented within
+	 * another modules. Each of these may contain child modules, which are
+	 * also deployed to this server.
+	 * </p>
+	 * 
+	 * @see IServerAttributes.getModules()
+	 *
+	 * @return a possibly-empty array of modules
+	 */
+	public IModule[] getServerModules(IProgressMonitor monitor);
 }

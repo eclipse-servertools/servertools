@@ -103,7 +103,7 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 			// add module
 			IModule parent = null;
 			try {
-				IModule[] parents = server.getParentModules(module, null);
+				IModule[] parents = server.getRootModules(module, null);
 				List list = new ArrayList();
 				
 				if (parents != null && parents.length > 0) {

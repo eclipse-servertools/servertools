@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,13 +10,15 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerType;
-import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.ui.ServerUIUtil;
+import org.eclipse.wst.server.ui.internal.PublishServerJob;
+import org.eclipse.wst.server.ui.internal.RestartServerJob;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.swt.widgets.Shell;
 /**
  * Restart a server.
@@ -42,7 +44,7 @@ public class RestartAction extends AbstractServerAction {
 	 * Return true if this server can currently be acted on.
 	 *
 	 * @return boolean
-	 * @param server org.eclipse.wst.server.core.model.IServer
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	public boolean accept(IServer server) {
 		String mode2 = mode;
@@ -53,23 +55,28 @@ public class RestartAction extends AbstractServerAction {
 
 	/**
 	 * Perform action on this server.
-	 * @param server org.eclipse.wst.server.core.model.IServer
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	public void perform(IServer server) {
-		if (!ServerUIUtil.promptIfDirty(shell, server))
+		if (!ServerUIPlugin.promptIfDirty(shell, server))
 			return;
-	
-		if (ServerCore.getServerPreferences().isAutoPublishing() && server.shouldPublish()) {
-			// publish first
-			IStatus status = status = ServerUIUtil.publishWithDialog(shell, server);
-	
-			if (status == null || status.getSeverity() == IStatus.ERROR) // user cancelled
-				return;
-		}
 		
-		String mode2 = mode;
-		if (mode2 == null)
-			mode2 = server.getMode();
-		server.restart(mode2);
+		IProgressMonitor pm = Platform.getJobManager().createProgressGroup();
+		try {
+			pm.beginTask("Restarting", 100);
+			PublishServerJob publishJob = new PublishServerJob(server); 
+			publishJob.setProgressGroup(pm, 50);
+			publishJob.schedule();
+			String launchMode = mode;
+			if (launchMode == null)
+				launchMode = server.getMode();
+			RestartServerJob restartJob = new RestartServerJob(server, launchMode);
+			restartJob.setProgressGroup(pm, 50);
+			restartJob.schedule();
+		} catch (Exception e) {
+			// ignore
+		} finally {
+			pm.done();
+		}	
 	}
 }

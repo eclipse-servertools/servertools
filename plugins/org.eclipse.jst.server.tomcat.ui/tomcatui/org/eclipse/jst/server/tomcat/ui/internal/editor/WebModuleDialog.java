@@ -13,7 +13,7 @@ package org.eclipse.jst.server.tomcat.ui.internal.editor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jst.server.j2ee.IWebModule;
+import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.tomcat.core.ITomcatConfiguration;
 import org.eclipse.jst.server.tomcat.core.ITomcatServer;
 import org.eclipse.jst.server.tomcat.core.WebModule;

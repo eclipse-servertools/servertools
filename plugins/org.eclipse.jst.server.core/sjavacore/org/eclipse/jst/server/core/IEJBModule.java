@@ -8,17 +8,13 @@
  * Contributors:
  *    IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.jst.server.j2ee;
+package org.eclipse.jst.server.core;
 
-import org.eclipse.core.runtime.IPath;
-/**
- * A J2EE connector module.
- */
-public interface IConnectorModule extends IJ2EEModule {
+public interface IEJBModule extends IJ2EEModule {
 	/**
-	 * Returns the classpath as an array of absolute IPaths.
-	 * 
-	 * @param the classpath array
+	 * Returns a version number in the form "x.y.z".
+	 *
+	 * @return java.lang.String
 	 */
-	public IPath[] getClasspath();
+	public String getEJBSpecificationVersion();
 }

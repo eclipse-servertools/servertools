@@ -11,12 +11,11 @@
 package org.eclipse.jst.server.tomcat.core.internal;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.*;
-import org.eclipse.jst.server.j2ee.IWebModule;
+import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.tomcat.core.ITomcatConfiguration;
 import org.eclipse.jst.server.tomcat.core.ITomcatServer;
 import org.eclipse.jst.server.tomcat.core.ITomcatServerWorkingCopy;
@@ -200,34 +199,17 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		return "TomcatServer";
 	}
 
-	/**
-	 * Returns the child project(s) of this project. If this
-	 * project contains other projects, it should list those
-	 * projects. If not, it should return an empty list.
-	 *
-	 * @param project org.eclipse.core.resources.IProject
-	 * @return java.util.List
+	/*
+	 * Returns the child module(s) of this module.
 	 */
-	public IModule[] getChildModules(IModule project) {
+	public IModule[] getChildModules(IModule module) {
 		return new IModule[0];
 	}
 
-	/**
-	 * Returns the parent project(s) of this project. When
-	 * determining if a given project can run on a server
-	 * configuration, this method will be used to find the
-	 * actual project that will be run on the server. For
-	 * instance, a Web project may return a list of Ear projects
-	 * that it is contained in if the server only supports Ear
-	 * projects.
-	 *
-	 * <p>If the given project will directly run on the server,
-	 * it should just be returned.</p>
-	 *
-	 * @param project org.eclipse.core.resources.IProject
-	 * @return java.util.List
+	/*
+	 * Returns the root module(s) of this module.
 	 */
-	public IModule[] getParentModules(IModule module) throws CoreException {
+	public IModule[] getRootModules(IModule module) throws CoreException {
 		if (module.getAdapter(IWebModule.class) != null) {
 			IStatus status = canModifyModules(new IModule[] { module }, null);
 			if (status == null || !status.isOK())
@@ -243,7 +225,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	 *
 	 * @return java.lang.String[]
 	 */
-	public IModule[] getModules() {
+	/*public IModule[] getModules() {
 		List list = new ArrayList();
 		
 		ITomcatConfiguration config = getTomcatConfiguration();
@@ -266,7 +248,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		list.toArray(s);
 		
 		return s;
-	}
+	}*/
 	
 	public byte getModuleState(IModule module) {
 		return IServer.STATE_STARTED;

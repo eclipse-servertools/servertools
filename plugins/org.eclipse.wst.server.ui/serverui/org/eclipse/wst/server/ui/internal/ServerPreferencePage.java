@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,9 +21,11 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.help.WorkbenchHelp;
@@ -46,6 +48,9 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 
 	protected IServerPreferences preferences;
 	protected ServerUIPreferences uiPreferences;
+	
+	protected Combo autoPublishLocal;
+	protected Combo autoPublishRemote;
 
 	/**
 	 * ServerPreferencesPage constructor comment.
@@ -147,6 +152,33 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 			}
 		});
 		WorkbenchHelp.setHelp(saveAuto, ContextIds.PREF_GENERAL_SAVE_EDITORS);
+		
+		
+		String[] items = new String[4];
+		items[0] = "Never";
+		items[1] = "Automatically";
+		items[2] = "Every minute";
+		items[3] = "Every hour";
+		
+		Label label = new Label(composite, SWT.NONE);
+		label.setText("Automatically publish to local servers:");
+		
+		autoPublishLocal = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
+		data = new GridData(GridData.FILL_HORIZONTAL);
+		data.horizontalSpan = 2;
+		autoPublishLocal.setLayoutData(data);
+		autoPublishLocal.setItems(items);
+		autoPublishLocal.select(0);
+		
+		label = new Label(composite, SWT.NONE);
+		label.setText("Automatically publish to remote servers:");
+		
+		autoPublishRemote = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
+		data = new GridData(GridData.FILL_HORIZONTAL);
+		data.horizontalSpan = 2;
+		autoPublishRemote.setLayoutData(data);
+		autoPublishRemote.setItems(items);
+		autoPublishRemote.select(0);
 		
 		setSaveEditorStatus(uiPreferences.getSaveEditors());
 		

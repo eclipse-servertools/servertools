@@ -127,7 +127,7 @@ public class ProjectProperties implements IProjectProperties {
 	 * server is recreated or was in a closed project, etc. this method will return
 	 * the original value if it becomes available again)
 	 *
-	 * @return server org.eclipse.wst.server.core.model.IServer
+	 * @return server org.eclipse.wst.server.core.IServer
 	 */
 	public IServer getDefaultServer() {
 		loadPreferences();

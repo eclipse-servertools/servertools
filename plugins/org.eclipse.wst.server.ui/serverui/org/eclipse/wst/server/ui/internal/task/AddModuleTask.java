@@ -36,7 +36,7 @@ public class AddModuleTask extends Task {
 		IServer server = (IServer) getTaskModel().getObject(ITaskModel.TASK_SERVER);
 		IModule parentModule = null;
 		try {
-			IModule[] parents = server.getParentModules(module, monitor);
+			IModule[] parents = server.getRootModules(module, monitor);
 			if (parents != null && parents.length > 0) {
 				parentModule = parents[0];
 			}
@@ -49,7 +49,7 @@ public class AddModuleTask extends Task {
 			parentModule = module;
 		}
 
-		IModule[] modules = server.getModules(monitor);
+		IModule[] modules = server.getModules();
 		int size = modules.length;
 		for (int i = 0; i < size; i++) {
 			if (parentModule.equals(modules[i]))

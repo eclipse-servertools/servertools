@@ -75,7 +75,7 @@ public class ModifyModulesAction implements IObjectActionDelegate {
 		// get currently deployed modules
 		List deployed = new ArrayList();
 		List modules = new ArrayList();
-		IModule[] currentModules = server.getModules(null);
+		IModule[] currentModules = server.getModules();
 		if (currentModules != null) {
 			int size = currentModules.length;
 			for (int i = 0; i < size; i++) {

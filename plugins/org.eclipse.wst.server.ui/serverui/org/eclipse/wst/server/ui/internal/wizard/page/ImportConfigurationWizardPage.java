@@ -425,7 +425,7 @@ public class ImportConfigurationWizardPage extends WizardPage {
 	
 	/**
 	 * Save the element to the given file name.
-	 * @param element org.eclipse.wst.server.core.model.IServerResource
+	 * @param element org.eclipse.wst.server.core.IServer
 	 * @param name java.lang.String
 	 * @param org.eclipse.core.runtime.IProgressMonitor monitor
 	 */

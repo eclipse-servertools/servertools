@@ -1006,8 +1006,7 @@ public class ResourceManager {
 	/**
 	 * Registers a new runtime.
 	 *
-	 * @param resource org.eclipse.core.resources.IResource
-	 * @param element org.eclipse.wst.server.core.model.IServerResource
+	 * @param runtime org.eclipse.wst.server.core.IRuntime
 	 */
 	protected void registerRuntime(IRuntime runtime) {
 		if (runtime == null)
@@ -1022,8 +1021,7 @@ public class ResourceManager {
 	/**
 	 * Registers a new server.
 	 *
-	 * @param resource org.eclipse.core.resources.IResource
-	 * @param element org.eclipse.wst.server.core.model.IServerResource
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	protected void registerServer(IServer server) {
 		if (server == null)

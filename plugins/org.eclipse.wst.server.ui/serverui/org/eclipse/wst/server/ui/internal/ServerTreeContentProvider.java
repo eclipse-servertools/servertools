@@ -229,9 +229,9 @@ public class ServerTreeContentProvider implements ITreeContentProvider {
 	}
 
 	/**
-	 * Updates an element in the tree.
+	 * Updates a server in the tree.
 	 *
-	 * @param element org.eclipse.wst.server.core.model.IServerResource
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	protected void handleServerModulesChanged(IServer server2) {
 		if (viewer != null) {

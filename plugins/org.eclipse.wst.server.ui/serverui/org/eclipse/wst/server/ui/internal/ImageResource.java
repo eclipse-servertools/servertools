@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,6 @@ package org.eclipse.wst.server.ui.internal;
 
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -33,9 +32,6 @@ public class ImageResource {
 	// map of image descriptors since these
 	// will be lost by the image registry
 	private static Map imageDescriptors;
-
-	// map of IElement images
-	private static Map elementImages;
 
 	// base urls for images
 	private static URL ICON_BASE_URL;
@@ -155,18 +151,7 @@ public class ImageResource {
 	 * Dispose of element images that were created.
 	 */
 	protected static void dispose() {
-		if (elementImages != null) {
-			try {
-				Trace.trace(Trace.FINEST, "Disposing of element images");
-				Iterator iterator = elementImages.values().iterator();
-				while (iterator.hasNext()) {
-					Image image = (Image) iterator.next();
-					image.dispose();
-				}
-			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Could not dispose of images");
-			}
-		}
+		// do nothing
 	}
 
 	/**

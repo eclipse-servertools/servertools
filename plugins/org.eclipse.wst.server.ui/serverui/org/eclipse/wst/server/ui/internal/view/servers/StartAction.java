@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,14 +10,15 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.ui.ServerUIUtil;
-import org.eclipse.wst.server.ui.internal.EclipseUtil;
-import org.eclipse.wst.server.ui.internal.ServerStartupListener;
+import org.eclipse.wst.server.ui.internal.PublishServerJob;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.StartServerJob;
 import org.eclipse.swt.widgets.Shell;
 /**
  * Start a server.
@@ -38,7 +39,7 @@ public class StartAction extends AbstractServerAction {
 	/**
 	 * Return true if this server can currently be acted on.
 	 * @return boolean
-	 * @param server org.eclipse.wst.server.core.model.IServer
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	public boolean accept(IServer server) {
 		return server.canStart(launchMode);
@@ -46,23 +47,28 @@ public class StartAction extends AbstractServerAction {
 
 	/**
 	 * Perform action on this server.
-	 * @param server org.eclipse.wst.server.core.model.IServer
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	public void perform(final IServer server) {
 		//if (!ServerUIUtil.promptIfDirty(shell, server))
 		//	return;				
 	
-		if (!ServerUIUtil.saveEditors())
+		if (!ServerUIPlugin.saveEditors())
 			return;
 		
-		if (!ServerUIUtil.publish(shell, server))
-			return;
-		
-		ServerStartupListener listener = new ServerStartupListener(shell, server);
+		IProgressMonitor pm = Platform.getJobManager().createProgressGroup();
 		try {
-			EclipseUtil.startServer(shell, server, launchMode, listener);
-		} catch (CoreException e) {
+			pm.beginTask("Starting", 10);
+			PublishServerJob publishJob = new PublishServerJob(server); 
+			publishJob.setProgressGroup(pm, 5);
+			publishJob.schedule();
+			StartServerJob startJob = new StartServerJob(server, launchMode);
+			startJob.setProgressGroup(pm, 5);
+			startJob.schedule();
+		} catch (Exception e) {
 			// ignore
+		} finally {
+			pm.done();
 		}
 	}
 }

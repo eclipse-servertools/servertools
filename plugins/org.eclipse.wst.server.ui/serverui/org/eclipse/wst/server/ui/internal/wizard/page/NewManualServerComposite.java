@@ -169,7 +169,7 @@ public class NewManualServerComposite extends Composite {
 	
 	/**
 	 * Return the current editable element.
-	 * @return org.eclipse.wst.server.core.model.IServer
+	 * @return org.eclipse.wst.server.core.IServer
 	 */
 	protected void loadServerImpl(final IServerType serverType) {
 		//runtime = null;

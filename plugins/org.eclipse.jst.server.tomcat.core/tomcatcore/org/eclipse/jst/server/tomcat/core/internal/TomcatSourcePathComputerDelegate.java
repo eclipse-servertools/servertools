@@ -43,7 +43,7 @@ public class TomcatSourcePathComputerDelegate implements ISourcePathComputerDele
 		if (server != null) {
 			List list = new ArrayList();
 			List pathList = new ArrayList();
-			IModule[] modules = server.getModules(monitor);
+			IModule[] modules = server.getModules();
 			for (int i = 0; i < modules.length; i++) {
 				IProject project = modules[i].getProject();
 				if (project != null) {

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.*;
 /**
- * 
+ * Helper class for storing runtime and server attributes.
  */
 public abstract class Base {
 	protected static final String PROP_LOCKED = "locked";
@@ -157,8 +157,8 @@ public abstract class Base {
 				List list = (List) obj;
 				saveList(child, key, list);
 			} else if (obj instanceof Map) {
-				Map vMap = (Map) obj;
-				saveMap(child,key,vMap);
+				Map map2 = (Map) obj;
+				saveMap(child, key, map2);
 				
 			}
 		}
@@ -170,18 +170,18 @@ public abstract class Base {
 		Iterator iterator = map2.keySet().iterator();
 		while (iterator.hasNext()) {
 			String s = (String) iterator.next();
-			child.putString(s,(String)map2.get(s));
+			child.putString(s, (String)map2.get(s));
 		}
 	}
 	
 	protected void saveList(IMemento memento, String key, List list) {
 		IMemento child = memento.createChild("list");
 		child.putString("key", key);
-		int i = 1;
+		int i = 0;
 		Iterator iterator = list.iterator();
 		while (iterator.hasNext()) {
 			String s = (String) iterator.next();
-			child.putString(s + (i++), s);
+			child.putString("value" + (i++), s);
 		}
 	}
 
@@ -246,8 +246,7 @@ public abstract class Base {
 		Map vMap = new HashMap();
 		List keys = memento.getNames();
 		Iterator iterator = keys.iterator();
-		while(iterator.hasNext())
-		{
+		while(iterator.hasNext()) {
 			String s = (String)iterator.next();
 			String v = memento.getString(s);
 			vMap.put(s,v);
@@ -259,7 +258,7 @@ public abstract class Base {
 	protected void loadList(IMemento memento) {
 		String key = memento.getString("key");
 		List list = new ArrayList();
-		int i = 1;
+		int i = 0;
 		String key2 = memento.getString("value" + (i++));
 		while (key2 != null) {
 			list.add(key2);

@@ -206,7 +206,7 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 	 * Returns a string representing the server's state.
 	 *
 	 * @return java.lang.String
-	 * @param server org.eclipse.wst.server.core.model.IServer
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	protected String getServerStateLabel(IServer server, int stateSet) {
 		if (stateSet == IServerType.SERVER_STATE_SET_PUBLISHED)

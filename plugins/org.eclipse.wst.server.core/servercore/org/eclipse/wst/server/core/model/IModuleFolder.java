@@ -1,15 +1,22 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/cpl-v10.html
  *
  * Contributors:
- *    IBM - Initial API and implementation
+ *     IBM Corporation - Initial API and implementation
  **********************************************************************/
-package org.eclipse.jst.server.j2ee;
-
-public interface IApplicationClientModule extends IJ2EEModule {
-	// no additional methods
+package org.eclipse.wst.server.core.model;
+/**
+ * A folder within a module.
+ */
+public interface IModuleFolder extends IModuleResource {
+	/**
+	 * Returns the members (contents) of this folder.
+	 * 
+	 * @return
+	 */
+	public IModuleResource[] members();
 }

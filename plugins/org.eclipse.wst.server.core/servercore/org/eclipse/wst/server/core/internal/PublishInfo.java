@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,8 +13,6 @@ package org.eclipse.wst.server.core.internal;
 import java.util.*;
 import java.io.File;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 /**
  * Helper to obtain and store the global publish information.
@@ -26,14 +24,11 @@ public class PublishInfo {
 
 	protected static final String PUBLISH_DIR = "publish";
 
-	// map of server refs to IPaths
-	protected Map servers;
+	// map of server ids to Strings of filename containing publish data
+	protected Map serverIdToPath;
 
-	// map of control ref to PublishControl
-	protected Map publishControls;
-
-	// list of serverRefs that have been loaded
-	protected List loadedServers;
+	// map of loaded serverIds to publish info
+	protected Map serverIdToPublishInfo;
 
 	/**
 	 * PublishInfo constructor comment.
@@ -41,9 +36,8 @@ public class PublishInfo {
 	private PublishInfo() {
 		super();
 	
-		servers = new HashMap();
-		loadedServers = new ArrayList();
-		publishControls = new HashMap();
+		serverIdToPath = new HashMap();
+		serverIdToPublishInfo = new HashMap();
 		load();
 	}
 
@@ -52,111 +46,55 @@ public class PublishInfo {
 	 * 
 	 * @return org.eclipse.wst.server.core.internal.PublishInfo
 	 */
-	public static PublishInfo getPublishInfo() {
+	public static PublishInfo getInstance() {
 		if (instance == null)
 			instance = new PublishInfo();
 		return instance;
-	}
-
-	protected String getPublishControlRef(IServer server, IModule[] parents, IModule module) {
-		StringBuffer sb = new StringBuffer();
-		sb.append(server.getId());
-
-		if (parents != null) {
-			int size = parents.length;
-			for (int i = 0; i < size; i++) {
-				sb.append("#");
-				sb.append(parents[i].getId());
-			}
-		}
-		
-		sb.append("#");
-		sb.append(module.getId());
-		return sb.toString();
-	}
-	
-	protected String getPublishControlRef(String serverId, String parentsRef, String memento) {
-		StringBuffer sb = new StringBuffer();
-		sb.append(serverId);
-		
-		if (parentsRef != null && parentsRef.length() > 0) {
-			sb.append("#");
-			sb.append(parentsRef);
-		}
-		
-		sb.append("#");
-		sb.append(memento);
-		return sb.toString();
-	}
-	
-	protected String getParentsMemento(IModule[] parents) {
-		StringBuffer sb = new StringBuffer();
-		boolean first = true;
-		
-		if (parents != null) {
-			int size = parents.length;
-			for (int i = 0; i < size; i++) {
-				if (!first)
-					sb.append("#");
-				else
-					first = false;
-				sb.append(parents[i].getId());
-			}
-		}
-		
-		return sb.toString();
 	}
 
 	/**
 	 * Return the publish state.
 	 * 
 	 * @return org.eclipse.wst.server.core.internal.PublishState
-	 * @param server org.eclipse.wst.server.core.model.IServer
+	 * @param server org.eclipse.wst.server.core.IServer
 	 */
-	public PublishControl getPublishControl(IServer server, IModule[] parents, IModule module) {
-		String controlRef = getPublishControlRef(server, parents, module);
-		
+	public ServerPublishInfo getServerPublishInfo(IServer server) {
 		// have we tried loading yet?
 		String serverId = server.getId();
-		if (servers.containsKey(serverId)) {
-			if (!loadedServers.contains(serverId)) {
-				loadServerPublishControls(serverId);
-				loadedServers.add(serverId);
-			} else {
-				// already loaded
+		if (serverIdToPath.containsKey(serverId)) {
+			if (!serverIdToPublishInfo.containsKey(serverId)) {
+				String partialPath = (String) serverIdToPath.get(serverId);
+				IPath path = ServerPlugin.getInstance().getStateLocation().append(PUBLISH_DIR).append(partialPath);
+				ServerPublishInfo spi = new ServerPublishInfo(path);
+				serverIdToPublishInfo.put(serverId, spi);
+				return spi;
 			}
-		} else {
-			// first time server is being used
-			IPath path = ServerPlugin.getInstance().getStateLocation().append(PUBLISH_DIR);
-			File file = new File(path.toOSString());
-			if (!file.exists())
-				file.mkdir();
-	
-			file = null;
-			int i = 0;
-			while (file == null || file.exists()) {
-				path = ServerPlugin.getInstance().getStateLocation().append(PUBLISH_DIR).append("data" + i + ".xml");
-				if (servers.get(path) == null)
-					file = new File(path.toOSString());
-				i++;
-			}
-			
-			servers.put(serverId, path);
-			loadedServers.add(serverId);
-			save();
+			// already loaded
+			return (ServerPublishInfo) serverIdToPublishInfo.get(serverId); 
 		}
+		
+		// first time server is being used
+		IPath path = ServerPlugin.getInstance().getStateLocation().append(PUBLISH_DIR);
+		File file = new File(path.toOSString());
+		if (!file.exists())
+			file.mkdir();
 
-		// check if it now exists
-		if (publishControls.containsKey(controlRef)) {
-			PublishControl control = (PublishControl) publishControls.get(controlRef);
-			if (control != null)
-				return control;
+		file = null;
+		int i = 0;
+		String partialPath = null;
+		while (file == null || file.exists()) {
+			partialPath = "publish" + i + ".xml";
+			path = ServerPlugin.getInstance().getStateLocation().append(PUBLISH_DIR).append(partialPath);
+			if (serverIdToPath.get(partialPath) == null)
+				file = new File(path.toOSString());
+			i++;
 		}
-	
-		// have to create a new one
-		PublishControl control = new PublishControl(getParentsMemento(parents), module.getId());
-		publishControls.put(controlRef, control);
-		return control;
+		
+		ServerPublishInfo spi = new ServerPublishInfo(path);
+		serverIdToPath.put(serverId, partialPath);
+		serverIdToPublishInfo.put(serverId, spi);
+		save();
+		return spi;
 	}
 
 	/**
@@ -171,13 +109,12 @@ public class PublishInfo {
 	
 			IMemento[] serverChild = memento.getChildren("server");
 			int size = serverChild.length;
-			servers = new HashMap(size + 2);
+			serverIdToPath = new HashMap(size + 2);
 	
 			for (int i = 0; i < size; i++) {
 				String id = serverChild[i].getString("id");
-				String path = serverChild[i].getString("path");
-	
-				servers.put(id, new Path(path));
+				String partialPath = serverChild[i].getString("path");
+				serverIdToPath.put(id, partialPath);
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Could not load global publish info: " + e.getMessage());
@@ -193,14 +130,14 @@ public class PublishInfo {
 		try {
 			XMLMemento memento = XMLMemento.createWriteRoot("publish-info");
 	
-			Iterator iterator = servers.keySet().iterator();
+			Iterator iterator = serverIdToPath.keySet().iterator();
 			while (iterator.hasNext()) {
 				String serverId = (String) iterator.next();
-				IPath path = (IPath) servers.get(serverId);
+				String partialPath = (String) serverIdToPath.get(serverId);
 	
 				IMemento server = memento.createChild("server");
 				server.putString("id", serverId);
-				server.putString("path", path.toString());
+				server.putString("path", partialPath);
 			}
 	
 			memento.saveToFile(filename);
@@ -210,57 +147,7 @@ public class PublishInfo {
 	}
 	
 	public void save(IServer server) {
-		saveServerPublishControls(server.getId());
-	}
-
-	/**
-	 * 
-	 */
-	protected void loadServerPublishControls(String serverRef) {
-		IPath path = (IPath) servers.get(serverRef);
-		String filename = path.toOSString();
-		Trace.trace(Trace.FINEST, "Loading publish controls from " + filename);
-
-		try {
-			IMemento memento2 = XMLMemento.loadMemento(filename);
-			IMemento[] children = memento2.getChildren("module");
-	
-			int size = children.length;
-			for (int i = 0; i < size; i++) {
-				PublishControl control = new PublishControl(children[i]);
-				publishControls.put(getPublishControlRef(serverRef, control.getParentsRef(), control.getMemento()), control);
-			}
-		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not load publish control information: " + e.getMessage());
-		}
-	}
-	
-	/**
-	 * 
-	 */
-	protected void saveServerPublishControls(String serverRef) {
-		if (!servers.containsKey(serverRef))
-			return;
-
-		IPath path = (IPath) servers.get(serverRef);
-		String filename = path.toOSString();
-		Trace.trace(Trace.FINEST, "Saving publish controls to " + filename);
-	
-		try {
-			XMLMemento memento = XMLMemento.createWriteRoot("server");
-
-			Iterator iterator = publishControls.keySet().iterator();
-			while (iterator.hasNext()) {
-				String controlRef = (String) iterator.next();
-				if (controlRef.startsWith(serverRef + "#")) {
-					PublishControl control = (PublishControl) publishControls.get(controlRef);
-					IMemento child = memento.createChild("module");
-					control.save(child);
-				}
-			}
-			memento.saveToFile(filename);
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not save publish control information", e);
-		}
+		ServerPublishInfo spi = getServerPublishInfo(server);
+		spi.save();
 	}
 }

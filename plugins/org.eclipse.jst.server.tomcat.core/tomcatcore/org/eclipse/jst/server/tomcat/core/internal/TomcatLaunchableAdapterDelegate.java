@@ -12,9 +12,9 @@ package org.eclipse.jst.server.tomcat.core.internal;
 
 import java.net.URL;
 
-import org.eclipse.jst.server.j2ee.IWebModule;
-import org.eclipse.jst.server.j2ee.Servlet;
-import org.eclipse.jst.server.j2ee.WebResource;
+import org.eclipse.jst.server.core.IWebModule;
+import org.eclipse.jst.server.core.Servlet;
+import org.eclipse.jst.server.core.WebResource;
 import org.eclipse.wst.server.core.ILaunchable;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IServer;

@@ -79,8 +79,8 @@ public class ElementCreationCache {
 	/**
 	 * Returns a cached server resource. 
 	 *
-	 * @param factory org.eclipse.wst.server.core.model.IServerFactory
-	 * @return org.eclipse.wst.server.core.model.IServerResource
+	 * @param factory org.eclipse.wst.server.core.IServerType
+	 * @return org.eclipse.wst.server.core.IServerWorkingCopy
 	 */
 	public IServerWorkingCopy getCachedServer(IServerType type, String host) {
 		try {

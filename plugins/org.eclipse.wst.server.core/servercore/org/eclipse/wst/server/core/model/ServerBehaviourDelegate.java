@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,10 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.model;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
@@ -104,9 +101,26 @@ public abstract class ServerBehaviourDelegate {
 	public final void setServerState(int state) {
 		server.setServerState(state);
 	}
-	
+
+	/**
+	 * Sets the ILaunchManager mode that the server is running in. The server
+	 * implementation will automatically return <code>null</code> to clients
+	 * when the server is stopped, so you only need to update the mode when
+	 * it changes.
+	 * 
+	 * @param mode the mode in which a server is running, one of the mode constants
+	 *    defined by {@link org.eclipse.debug.core.ILaunchManager}
+	 */
 	public final void setMode(String mode) {
 		server.setMode(mode);
+	}
+
+	/**
+	 * 
+	 * @param modules
+	 */
+	public final void setModules(IModule[] modules) {
+		server.setModules(modules);
 	}
 
 	/**
@@ -171,27 +185,6 @@ public abstract class ServerBehaviourDelegate {
 	}
 
 	/**
-	 * The server configuration has changed. This method should return
-	 * quickly. If any republishing must occur, the relevant in-sync
-	 * methods should return a new value. If the server must be restarted,
-	 * the isRestartNeeded() method should return true.
-	 * 
-	 * @see IServer#updateConfiguration()
-	 */
-	//public abstract void updateConfiguration();
-
-	/**
-	 * A module resource has changed. This method should return
-	 * quickly. If the server must be restarted to handle the
-	 * change of this file, the isRestartNeeded() method should
-	 * return true and the event should be fired.
-	 *
-	 * @param module org.eclipse.wst.server.core.IModule
-	 * @param delta org.eclipse.wst.server.core.IModuleResourceDelta
-	 */
-	//public abstract void updateModule(IModule module, IModuleResourceDelta delta);
-
-	/**
 	 * Methods called to notify that publishing is about to begin.
 	 * This allows the server to open a connection to the server
 	 * or get any global information ready.
@@ -216,25 +209,55 @@ public abstract class ServerBehaviourDelegate {
 	 * Clients should never call this method.
 	 * </p>
 	 * 
+	 * @param kind one of the IServer.PUBLISH_XX constants. Valid values are
+	 *    <ul>
+	 *    <li><code>PUBLSIH_FULL</code>- indicates a full publish.</li>
+	 *    <li><code>PUBLISH_INCREMENTAL</code>- indicates a incremental publish.
+	 *    <li><code>PUBLSIH_AUTO</code>- indicates an automatic incremental publish.</li>
+	 *    <li><code>PUBLISH_CLEAN</code>- indicates a clean request. Clean throws
+	 *      out all state and cleans up the module on the server before doing a
+	 *      full publish.
+	 *    </ul>
 	 * @param monitor
 	 * @throws CoreException
 	 */
-	public abstract void publishServer(IProgressMonitor monitor) throws CoreException;
+	public abstract void publishServer(int kind, IProgressMonitor monitor) throws CoreException;
 
 	/**
-	 * Publish an individual module to the server.
+	 * Publish a single module to the server.
 	 * <p>
 	 * This method is called by the server core framework,
 	 * in response to a call to <code>IServer.publish()</code>.
 	 * Clients should never call this method.
 	 * </p>
 	 * 
-	 * @param parents
-	 * @param module
+	 * @param kind one of the IServer.PUBLISH_XX constants. Valid values are
+	 *    <ul>
+	 *    <li><code>PUBLSIH_FULL</code>- indicates a full publish.</li>
+	 *    <li><code>PUBLISH_INCREMENTAL</code>- indicates a incremental publish.
+	 *    <li><code>PUBLSIH_AUTO</code>- indicates an automatic incremental publish.</li>
+	 *    <li><code>PUBLISH_CLEAN</code>- indicates a clean request. Clean throws
+	 *      out all state and cleans up the module on the server before doing a
+	 *      full publish.
+	 *    </ul>
+	 * @param parents the parent modules of this module
+	 * @param module the module to publish
+	 * @param deltaKind one of the IServer publish change constants. Valid values are
+	 *    <ul>
+	 *    <li><code>ADDED</code>- indicates the module has just been added to the server
+	 *      and this is the first publish.
+	 *    <li><code>NO_CHANGE</code>- indicates that nothing has changed in the module
+	 *      since the last publish.</li>
+	 *    <li><code>CHANGED</code>- indicates that the module has been changed since
+	 *      the last publish. Call <code>getPublishedResourceDelta()</code> for
+	 *      details of the change.
+	 *    <li><code>REMOVED</code>- indicates the module has been removed and should be
+	 *      removed/cleaned up from the server.
+	 *    </ul>
 	 * @param monitor
 	 * @throws CoreException
 	 */
-	public abstract void publishModule(IModule[] parents, IModule module, IProgressMonitor monitor) throws CoreException;
+	public abstract void publishModule(int kind, int deltaKind, IModule[] parents, IModule module, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * Methods called to notify that publishing has finished.
@@ -328,7 +351,7 @@ public abstract class ServerBehaviourDelegate {
 	public void restartModule(IModule module, IProgressMonitor monitor) throws CoreException {
 		// do nothing
 	}
-	
+
 	/**
 	 * Shuts down and stops this server. The server should return from this method
 	 * quickly and use the server listener to notify shutdown progress.
@@ -347,4 +370,33 @@ public abstract class ServerBehaviourDelegate {
 	 *    to stop normally
 	 */
 	public abstract void stop(boolean force);
+
+	/**
+	 * Returns the module resources that have been published to the server.
+	 * 
+	 * <p>
+	 * If the module has just been added to the server, an empty list will
+	 * be returned. If the module has never existed on the server, a CoreException
+	 * will be thrown.
+	 * </p>
+	 * 
+	 * @param parents
+	 * @param module
+	 * @return
+	 */
+	public IModuleResource[] getPublishedResources(IModule[] parents, IModule module) {
+		return server.getPublishedResources(parents, module);
+	}
+
+	/**
+	 * Returns the delta of the current module resources that have been
+	 * published compared to the current state of the module.
+	 *
+	 * @param parents
+	 * @param module
+	 * @return
+	 */
+	public IModuleResourceDelta[] getPublishedResourceDelta(IModule[] parents, IModule module) {
+		return server.getPublishedResourceDelta(parents, module);
+	}
 }

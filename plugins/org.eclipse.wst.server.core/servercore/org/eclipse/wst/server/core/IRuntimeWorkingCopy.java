@@ -20,17 +20,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * working copy do not occur (and are not persisted) until a
  * save() is performed. 
  * <p>
- * [issue: IElementWorkingCopy and IElement support an open-ended set
- * of attribute-value pairs. What is relationship between these
- * attributes and (a) the get/setXXX methods found on this interface,
- * and (b) get/setXXX methods provided by specific server types?
- * Is it the case that these attribute-values pairs are the only
- * information about a runtime instance that can be preserved
- * between workbench sessions? That is, any information recorded
- * just in instance fields of an RuntimeDelegate implementation
- * will be lost when the session ends.]
- * </p>
- * <p>
  * This interface is not intended to be implemented by clients.
  * </p>
  * <p>

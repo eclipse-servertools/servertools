@@ -33,10 +33,8 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ITask;
 import org.eclipse.wst.server.core.ITaskModel;
-import org.eclipse.wst.server.core.model.IRunningActionServer;
 import org.eclipse.wst.server.core.util.TaskModel;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -192,20 +190,10 @@ public class TaskWizard implements IWizard {
 					}
 				}
 				
-				boolean useJob = false;
-				try {
-					IServer server = (IServer) taskModel.getObject(ITaskModel.TASK_SERVER);
-					Object obj = server.getAdapter(IRunningActionServer.class);
-					if (obj != null)
-						useJob = true;
-				} catch (Exception e) {
-					// ignore
-				}
-				
-				if (useJob) {
+				if (useJob()) {
 					class FinishWizardJob extends Job {
 						public FinishWizardJob() {
-							super(getWindowTitle()); //ServerUIPlugin.getResource("%publishingStart"));
+							super(getJobTitle());
 						}
 
 						public IStatus run(IProgressMonitor monitor2) {
@@ -565,5 +553,13 @@ public class TaskWizard implements IWizard {
 	
 	public void setWindowTitle(String title) {
 		windowTitle = title;
+	}
+
+	protected boolean useJob() {
+		return false;
+	}
+
+	protected String getJobTitle() {
+		return getWindowTitle();
 	}
 }

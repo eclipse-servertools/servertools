@@ -22,7 +22,7 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jst.server.j2ee.IWebModule;
+import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.tomcat.core.ITomcatRuntime;
 import org.eclipse.jst.server.tomcat.core.ITomcatServerBehaviour;
 
@@ -52,7 +52,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	}
 	
 	public void initialize() {
-		// do nothing
+		setModules(getServer().getModules());
 	}
 
 	public TomcatRuntime getTomcatRuntime() {
@@ -170,7 +170,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		setServerState(IServer.STATE_STOPPED);
 	}
 
-	public void publishServer(IProgressMonitor monitor) throws CoreException {
+	public void publishServer(int kind, IProgressMonitor monitor) throws CoreException {
 		IPath confDir = null;
 		if (getTomcatServer().isTestEnvironment()) {
 			confDir = getTempDirectory();
@@ -184,20 +184,23 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			throw new CoreException(status);
 		
 		setServerPublishState(IServer.PUBLISH_STATE_NONE);
+		setModules(getServer().getModules());
 	}
 
-	/**
-	 * Returns the project publisher that can be used to
-	 * publish the given project.
+	/*
+	 * Publishes the given module to the server.
 	 */
-	public void publishModule(IModule[] parents, IModule module, IProgressMonitor monitor) {
+	public void publishModule(int kind, int deltaKind, IModule[] parents, IModule module, IProgressMonitor monitor) {
 		if (getTomcatServer().isTestEnvironment())
 			return;
 
 		IWebModule webModule = (IWebModule) module.getAdapter(IWebModule.class);
 		IPath from = webModule.getLocation();
 		IPath to = getServer().getRuntime().getLocation().append("webapps").append(webModule.getContextRoot());
-		FileUtil.smartCopyDirectory(from.toOSString(), to.toOSString(), monitor);
+		if (deltaKind == IServer.REMOVED)
+			FileUtil.deleteDirectory(to.toFile(), monitor);
+		else
+			FileUtil.smartCopyDirectory(from.toOSString(), to.toOSString(), monitor);
 		
 		setModulePublishState(module, IServer.PUBLISH_STATE_NONE);
 	}

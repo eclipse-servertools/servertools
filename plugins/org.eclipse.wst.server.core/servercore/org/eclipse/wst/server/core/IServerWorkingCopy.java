@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,17 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * A working copy server object used for formulating changes
  * to a server instance ({@link IServer}).
- * <p>
- * [issue: IElementWorkingCopy and IElement support an open-ended set
- * of attribute-value pairs. What is relationship between these
- * attributes and (a) the get/setXXX methods found on this interface,
- * and (b) get/setXXX methods provided by specific server types?
- * Is it the case that these attribute-values pairs are the only
- * information about a server instance that can be preserved
- * between workbench sessions? That is, any information recorded
- * just in instance fields of an ServerDelegate implementation
- * will be lost when the session ends.]
- * </p>
+ *
  * <p>This interface is not intended to be implemented by clients.</p>
  * <p>
  * <it>Caveat: The server core API is still in an early form, and is
@@ -134,18 +124,6 @@ public interface IServerWorkingCopy extends IServerAttributes {
 	 * @return the associated server instance, or <code>null</code> if none
 	 */
 	public IServer getOriginal();
-	
-	/**
-	 * Returns the extension for this server working copy.
-	 * The server working copy extension is a
-	 * server-type-specific object. By casting the server working copy
-	 * extension to the type prescribed in the API documentation for that
-	 * particular server working copy type, the client can access
-	 * server-type-specific properties and methods.
-	 * 
-	 * @return the extension for the server working copy
-	 */
-	//public IServerExtension getWorkingCopyExtension(IProgressMonitor monitor);
 
 	/**
 	 * Commits the changes made in this working copy. If there is
@@ -155,16 +133,21 @@ public interface IServerWorkingCopy extends IServerAttributes {
 	 * instance with a matching id and server type, this will
 	 * change the server instance accordingly.
 	 * <p>
+	 * If there an existing server instance with a matching id and
+	 * server type, this will change the server instance accordingly.
+	 * The returned server will be the same server this is returned
+	 * from getOriginal(), after the changes have been applied.
+	 * Otherwise, this method will return a newly created server.
+	 * </p>
+	 * <p>
 	 * Servers can be saved even when they have invalid properties. It
 	 * is the clients responsibility to validate or check the
 	 * properties before saving.
 	 * </p>
 	 * <p>
-	 * If there an existing server instance with a matching id and
-	 * erver type, this will change the server instance accordingly.
-	 * The returned server will be the same server this is returned
-	 * from getOriginal(), after the changes have been applied.
-	 * Otherwise, this method will return a newly created server.
+	 * This method does not apply changes to the server. A publish()
+	 * must be completed to push out after the save to push out any
+	 * changes to the server.
 	 * </p>
 	 * <p>
 	 * [issue: What is lifecycle for ServerWorkingCopyDelegate
@@ -273,6 +256,10 @@ public interface IServerWorkingCopy extends IServerAttributes {
 	 * The modules included in the <code>remove</code> list
 	 * must be associated with the server, but may or may not exist
 	 * in the workspace.
+	 * <p>
+	 * This method will not communicate with the server. After saving,
+	 * publish() can be used to sync up with the server.
+	 * </p>
 	 * <p>
 	 * [issue: How to formulate what it means
 	 * to say "the module must exist in the workspace"?]

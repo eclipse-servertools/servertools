@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.model;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IModule;
 /**
@@ -105,4 +106,12 @@ public abstract class ModuleDelegate {
 	 * @return org.eclipse.wst.server.core.IModule[]
 	 */
 	public abstract IModule[] getChildModules();
+	
+	/**
+	 * Returns the current array of module artifacts.
+	 * 
+	 * @param module
+	 * @return
+	 */
+	public abstract IModuleResource[] members() throws CoreException;
 }

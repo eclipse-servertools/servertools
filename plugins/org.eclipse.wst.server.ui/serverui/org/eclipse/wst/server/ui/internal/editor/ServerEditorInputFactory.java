@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,12 +29,8 @@ public class ServerEditorInputFactory implements IElementFactory {
 		// do nothing
 	}
 
-	/**
-	 * Creates an <code>IElement</code> from the state captured within 
-	 * an <code>IMemento</code>.
-	 *
-	 * @param memento a memento containing the state for an element
-	 * @return an element, or <code>null</code> if the element could not be created
+	/*
+	 * Creates editor input based on the state in the memento.
 	 */
 	public IAdaptable createElement(IMemento memento) {
 		// get the resource names

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,6 +42,14 @@ import org.eclipse.core.runtime.*;
  * In this picture, an <code>IServer</code> object is a proxy for the real web
  * server. Through this proxy, a client can configure the server, and start,
  * stop, and restart it.
+ * </p>
+ * <p>
+ * IServerAttributes implements IAdaptable to allow users to obtain a
+ * server-type-specific class. By casting the runtime extension to the type
+ * prescribed in the API documentation for that particular server type, the
+ * client can access server-type-specific properties and methods.
+ * getAdapter() may involve plugin loading, and should not be called from
+ * popup menus, etc.
  * </p>
  * <p>
  * The server framework maintains a global list of all known server instances
@@ -174,6 +182,12 @@ public interface IServerAttributes extends IAdaptable {
 	 */
 	public boolean isDelegateLoaded();
 
+	/**
+	 * Validates whether this server can be editted.
+	 * 
+	 * @param context
+	 * @return
+	 */
 	public IStatus validateEdit(Object context);
 
 	/**
@@ -258,18 +272,6 @@ public interface IServerAttributes extends IAdaptable {
 	public IFolder getServerConfiguration();
 
 	/**
-	 * Returns the server extension for this server.
-	 * The server extension is a server-type-specific object.
-	 * By casting the server extension to the type prescribed in
-	 * the API documentation for that particular server type, 
-	 * the client can access server-type-specific properties and
-	 * methods.
-	 * 
-	 * @return the server extension
-	 */
-	//public IServerExtension getExtension(IProgressMonitor monitor);
-
-	/**
 	 * Returns a server working copy for modifying this server instance.
 	 * If this instance is already a working copy, it is returned.
 	 * If this instance is not a working copy, a new server working copy
@@ -322,14 +324,19 @@ public interface IServerAttributes extends IAdaptable {
 	public IPath getTempDirectory();
 
 	/**
-	 * Returns an array of modules that are associated with this server.
+	 * Returns an array of user modules that are currently being published to
+	 * this server.
+	 * <p>
 	 * This method returns the root modules, which are not parented within
-	 * another modules. They may contain child modules, which are also
-	 * deployed to this server.
+	 * another modules. Each of these may contain child modules, which are
+	 * also deployed to this server.
+	 * </p>
+	 * 
+	 * @see IServer.getModules()
 	 *
 	 * @return a possibly-empty array of modules
 	 */
-	public IModule[] getModules(IProgressMonitor monitor);
+	public IModule[] getModules();
 
 	/**
 	 * Returns whether the specified module modifications could be made to this
@@ -366,39 +373,40 @@ public interface IServerAttributes extends IAdaptable {
 	 * recursively called on the children.</p>
 	 *
 	 * @param module org.eclipse.wst.server.core.IModule
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 * @return array
 	 */
 	public IModule[] getChildModules(IModule module, IProgressMonitor monitor);
 
 	/**
-	 * Returns the parent module(s) of this module. When
-	 * determining if a given project can run on a server
-	 * configuration, this method will be used to find the
-	 * actual module(s) that may be run on the server. For
-	 * instance, a Web module may return a list of Ear
-	 * modules that it is contained in if the server only
-	 * supports configuring Ear modules.
+	 * Returns the parent module(s) of this module. When determining if a given
+	 * project can run on a server, this method will be used to find the actual
+	 * module(s) that may be run on the server. For instance, a Web module may
+	 * return a list of EAR modules that it is contained in if the server only
+	 * supports configuring EAR modules.
 	 *
-	 * <p>If the module type is not supported, this method
-	 * may return null. If the type is normally supported but there
-	 * is a configuration problem or missing parent, etc., this
-	 * method may fire a CoreException that may then be presented
-	 * to the user.</p>
+	 * <p>If the module type is not supported, this method will return null.
+	 * If the type is normally supported but there is a configuration
+	 * problem or missing parent, etc., this method will fire a CoreException
+	 * that may then be presented to the user.</p>
 	 *
-	 * <p>If it does return valid parent(s), this method should
-	 * always return the topmost parent module(s), even if
-	 * there are a few levels (a heirarchy) of modules.</p>
+	 * <p>If it does return valid parent(s), this method will always return
+	 * the topmost parent module(s), even if there are a few levels
+	 * (a heirarchy) of modules.</p>
 	 *
 	 * @param module org.eclipse.wst.server.core.IModule
-	 * @return array
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return an array of possible root modules
 	 * @throws org.eclipse.core.runtime.CoreException
 	 */
-	public IModule[] getParentModules(IModule module, IProgressMonitor monitor) throws CoreException;
-	
+	public IModule[] getRootModules(IModule module, IProgressMonitor monitor) throws CoreException;
+
 	/**
 	 * Returns an array of IServerPorts that this server has.
 	 *
-	 * @return
+	 * @return the servers ports
 	 */
 	public IServerPort[] getServerPorts();
 }

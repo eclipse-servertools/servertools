@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2004 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,13 +19,19 @@ import org.eclipse.wst.server.core.*;
 public class ServerPreferences implements IServerPreferences {
 	private static final String PREF_AUTO_RESTART = "auto-restart";
 	private static final String PREF_AUTO_PUBLISH = "auto-publish";
-	//private static final String PREF_AUTO_REPAIR_MODULES = "auto-repair-modules";
 	private static final String PREF_CREATE_IN_WORKSPACE = "create-workspace";
 	private static final String PREF_STARTUP_TIMEOUT = "start-timeout";
 	private static final String PREF_RESTART_MODULE_TIMEOUT = "restart-module-timeout";
 	private static final String PREF_MODULE_START_TIMEOUT = "module-start-timeout";
+	
+	private static final String PREF_AUTO_PUBLISH_LOCAL = "auto-publish-local";
+	private static final String PREF_AUTO_PUBLISH_REMOTE = "auto-publish-remote";
 
-	public static final String DEFAULT_PUBLISH_MANAGER = "org.eclipse.wst.server.core.publish.smart";
+	public static final byte AUTO_PUBLISH_NEVER = 0;
+	public static final byte AUTO_PUBLISH_IMMEDIATE = -1;
+	public static final byte AUTO_PUBLISH_MINUTE = -2;
+	public static final byte AUTO_PUBLISH_FIVE_MINUTE = -3;
+	public static final byte AUTO_PUBLISH_HOURLY = -4;
 
 	private Preferences preferences;
 
@@ -148,12 +154,71 @@ public class ServerPreferences implements IServerPreferences {
 	public int getModuleStartTimeout() {
 		return preferences.getInt(PREF_MODULE_START_TIMEOUT);
 	}
+	
+	/**
+	 * Returns the default setting for local auto-publishing.
+	 * 
+	 * @return int
+	 */
+	public int getDefaultAutoPublishLocal() {
+		return AUTO_PUBLISH_IMMEDIATE;
+	}
+
+	/**
+	 * Returns the setting for local auto-publishing.
+	 * 
+	 * @return int
+	 */
+	public int getAutoPublishLocal() {
+		return (byte) preferences.getInt(PREF_AUTO_PUBLISH_LOCAL);
+	}
+
+	/**
+	 * Sets the value for local auto-publishing.
+	 * 
+	 * @param int
+	 */
+	public void setAutoPublishLocal(int auto) {
+		preferences.setValue(PREF_AUTO_PUBLISH_LOCAL, auto);
+		ServerPlugin.getInstance().savePluginPreferences();
+	}
+
+	/**
+	 * Returns the default setting for remote auto-publishing.
+	 * 
+	 * @return int
+	 */
+	public int getDefaultAutoPublishRemote() {
+		return AUTO_PUBLISH_IMMEDIATE;
+	}
+
+	/**
+	 * Returns the setting for remote auto-publishing.
+	 * 
+	 * @return int
+	 */
+	public int getAutoPublishRemote() {
+		return (byte) preferences.getInt(PREF_AUTO_PUBLISH_REMOTE);
+	}
+
+	/**
+	 * Sets the value for remote auto-publishing.
+	 * 
+	 * @param int
+	 */
+	public void setAutoPublishRemote(int auto) {
+		preferences.setValue(PREF_AUTO_PUBLISH_REMOTE, auto);
+		ServerPlugin.getInstance().savePluginPreferences();
+	}
 
 	public void setDefaults() {
 		preferences.setDefault(PREF_AUTO_PUBLISH, isDefaultAutoPublishing());
 		preferences.setDefault(PREF_AUTO_RESTART, isDefaultAutoRestarting());
-		//preferences.setDefault(PREF_AUTO_REPAIR_MODULES, getDefaultModuleRepairStatus());
 		preferences.setDefault(PREF_STARTUP_TIMEOUT, 210001);
+		
+		preferences.setDefault(PREF_AUTO_PUBLISH_LOCAL, getDefaultAutoPublishLocal());
+		preferences.setDefault(PREF_AUTO_PUBLISH_REMOTE, getDefaultAutoPublishRemote());
+		
 		preferences.setDefault(PREF_RESTART_MODULE_TIMEOUT, 120001);
 		preferences.setDefault(PREF_MODULE_START_TIMEOUT, 300001);
 		boolean save = false;
