@@ -28,6 +28,7 @@ import org.eclipse.jst.server.generic.core.CorePlugin;
 import org.eclipse.jst.server.generic.core.GenericServerCoreMessages;
 import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
+import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
@@ -65,49 +66,23 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
      */
     public void publishModule(IModule[] parents, IModule module,
             IProgressMonitor monitor) throws CoreException {
-        AntPublisher publisher = new AntPublisher(null,module,getServerDefinition());
-        publisher.publish(null,monitor);
-        setModulePublishState(module,IServer.PUBLISH_STATE_NONE);
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.wst.server.core.model.ServerBehaviourDelegate#setLaunchDefaults(org.eclipse.debug.core.ILaunchConfigurationWorkingCopy)
-     */
-    public void setLaunchDefaults(ILaunchConfigurationWorkingCopy workingCopy) {
-
-		workingCopy.setAttribute(
-				IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
-				getStartClassName());
-
-		GenericServerRuntime runtime = (GenericServerRuntime) getRuntimeDelegate();
-
-		IVMInstall vmInstall = runtime.getVMInstall();
-		workingCopy.setAttribute(
-				IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_TYPE, runtime
-						.getVMInstallTypeId());
-		workingCopy.setAttribute(
-				IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_NAME,
-				vmInstall.getName());
-
-		setupLaunchClasspath(workingCopy, vmInstall, getStartClasspath());
-
-
-		workingCopy.setAttribute(
-				IJavaLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY,
-				getWorkingDirectory());
-		workingCopy.setAttribute(
-				IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
-				getProgramArguments());
-		workingCopy.setAttribute(
-				IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
-				getVmArguments());
+ 
+        Module m = getServerDefinition().getModule(module.getModuleType().getId());
+        String publisherId = m.getPublisherReference();
+        GenericPublisher publisher = PublishManager.getPublisher(publisherId);
+        if(publisher==null){
+            IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,"Unable to create publisher",null);
+            throw new CoreException(status);
+        }
+        publisher.initialize(parents,module,getServerDefinition());
+        IStatus[] status= publisher.publish(null,monitor);
+        if(status==null)
+            setModulePublishState(module,IServer.PUBLISH_STATE_NONE);
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.wst.server.core.model.ServerBehaviourDelegate#stop(boolean)
      */
- 
-    
     public void stop(boolean force) {
 		if (force) {
 			terminate();
@@ -285,6 +260,39 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     	return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getVmParameters());
     }
 
+    public void setupLaunchConfiguration(
+            ILaunchConfigurationWorkingCopy workingCopy,
+            IProgressMonitor monitor) throws CoreException {
+
+
+        workingCopy.setAttribute(
+                IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
+                getStartClassName());
+
+        GenericServerRuntime runtime = (GenericServerRuntime) getRuntimeDelegate();
+
+        IVMInstall vmInstall = runtime.getVMInstall();
+        workingCopy.setAttribute(
+                IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_TYPE, runtime
+                        .getVMInstallTypeId());
+        workingCopy.setAttribute(
+                IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_NAME,
+                vmInstall.getName());
+
+        setupLaunchClasspath(workingCopy, vmInstall, getStartClasspath());
+
+
+        workingCopy.setAttribute(
+                IJavaLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY,
+                getWorkingDirectory());
+        workingCopy.setAttribute(
+                IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
+                getProgramArguments());
+        workingCopy.setAttribute(
+                IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
+                getVmArguments());
+    
+    }
     /**
     	 * Setup for starting the server.
     	 * 

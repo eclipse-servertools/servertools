@@ -30,82 +30,94 @@
 package org.eclipse.jst.server.generic.internal.core;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 import org.eclipse.ant.core.AntRunner;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.generic.core.CorePlugin;
+import org.eclipse.jst.server.generic.internal.core.util.FileUtil;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
-import org.eclipse.jst.server.generic.servertype.definition.PublishType;
-import org.eclipse.jst.server.generic.servertype.definition.Publisher;
-import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
+import org.eclipse.jst.server.generic.servertype.definition.PublisherData;
 import org.eclipse.jst.server.j2ee.IWebModule;
-import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
+import org.osgi.framework.Bundle;
 /**
  * Ant based publisher.
  *
  * @author Gorkem Ercan
  */
 
-public class AntPublisher{
+public class AntPublisher extends GenericPublisher{
 
-	/**
-	 * @param parents
-	 * @param module
-	 * @param serverDefinition
-	 */
-	private List parents;
-	private IModule module;
-	private ServerRuntime serverTypeDefinition;
-	
-	public AntPublisher(List parents, IModule module, ServerRuntime serverDefinition) {
-		this.parents = parents;
-		this.module = module;
-		this.serverTypeDefinition = serverDefinition;
-	}
-	/* (non-Javadoc)
+    private static final String MODULE_TARGET_PREFIX = "target.";
+    public static final String PUBLISHER_ID="org.eclipse.jst.server.generic.antpublisher"; 
+    private static final String DATA_NAME_BUILD_FILE="build.file";
+
+    /* (non-Javadoc)
 	 * @see org.eclipse.wtp.server.core.model.IPublisher#publish(org.eclipse.wtp.server.core.resources.IModuleResource[], org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public IStatus[] publish(IModuleArtifact[] resource,
-			IProgressMonitor monitor) throws CoreException {
-		Module sModule =  serverTypeDefinition.getModule("j2ee.web");
-		Publisher publisher =  serverTypeDefinition.getPublisher(sModule.getPublisherReference());
-		String deployAnt = ((PublishType)publisher.getPublish().get(0)).getTask();
-		deployAnt = serverTypeDefinition.getResolver().resolveProperties(deployAnt);
-		
-		if(deployAnt == null || deployAnt.length()<1)
-			return new IStatus[]{new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,"AntBuildFileDoesNotExist",null)};
-		
-		
-		IPath file = CorePlugin.getDefault().getStateLocation().append("tempAnt.xml");
-		try {
-			createNewFile(file.toFile(),deployAnt.getBytes());
-		} catch (IOException e) {
-			return null;
-		}
-				
-		runAnt(file.toString(),new String[]{"deploy"},getPublishProperties(resource),monitor);
-		
-		file.toFile().delete();
+			IProgressMonitor monitor){
+        
+        Bundle bundle = Platform.getBundle(fServerRuntime.getConfigurationElementNamespace());
+        File file = FileUtil.resolveFileFrom(bundle,getBuildFile());
+        try{
+            runAnt(file.toString(),getTargetsForModule(),getPublishProperties(resource),monitor);
+        }
+        catch(CoreException e){
+            IStatus s = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,"Publish failed using Ant publisher",e);
+            return new IStatus[] {s};
+        }
 		return null;
 	}
+    
+    /**
+     * @return
+     */
+    private String[] getTargetsForModule() {
+        String dataname = MODULE_TARGET_PREFIX+getModuleTypeId();
+        ArrayList list = new ArrayList();
+        Iterator iterator = fServerRuntime.getPublisher(PUBLISHER_ID).getPublisherdata().iterator();
+        while(iterator.hasNext()){
+            PublisherData data = (PublisherData)iterator.next();
+            if(dataname.equals(data.getDataname())) {
+                list.add(data.getDatavalue());
+            }   
+        }
+        return (String[])list.toArray(new String[list.size()]);
+    }
+
+    private String getModuleTypeId()
+    {
+        return fModule.getModuleType().getId();
+    }
+    
+	private String getBuildFile()
+    {
+        Iterator iterator = fServerRuntime.getPublisher(PUBLISHER_ID).getPublisherdata().iterator();
+        while(iterator.hasNext())
+        {
+            PublisherData data = (PublisherData)iterator.next();
+            if(DATA_NAME_BUILD_FILE.equals(data.getDataname()))
+                return fServerRuntime.getResolver().resolveProperties(data.getDatavalue());
+        }
+        return null;
+    }
 	private Map getPublishProperties(IModuleArtifact[] resource)
 	{
-		Module module =  serverTypeDefinition.getModule("j2ee.web");
+		Module module =  fServerRuntime.getModule("j2ee.web");
 
 		Map props = new HashMap();
 		String modDir = module.getPublishDir();
-		modDir = serverTypeDefinition.getResolver().resolveProperties(modDir);
+		modDir = fServerRuntime.getResolver().resolveProperties(modDir);
 
-		IWebModule webModule = (IWebModule)this.module.getAdapter(IWebModule.class);
+		IWebModule webModule = (IWebModule)fModule.getAdapter(IWebModule.class);
 		String moduleName = this.guessModuleName(webModule);
 		props.put("module.name",moduleName);
 		props.put("module.dir",webModule.getLocation().toString());
@@ -120,7 +132,7 @@ public class AntPublisher{
 	 * @return
 	 */
 	private String guessModuleName(IWebModule webModule) {
-		String moduleName = this.module.getName(); 
+		String moduleName = fModule.getName(); 
 		//Default to project name but not a good guess
 		//may have blanks etc.
 		
@@ -140,29 +152,4 @@ public class AntPublisher{
 		runner.addUserProperties(properties);
 		runner.run(monitor);
 	}
-	
-	
-	
-
-    public boolean createNewFile(File f,byte[] content) throws IOException {
-        if (f != null) {
-            if (f.exists()) {
-                return false;
-            }
-            FileOutputStream fos = null;
-            try {
-                fos = new FileOutputStream(f);
-                fos.write(content);
-            } finally {
-                if (fos != null) {
-                    fos.close();
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
-	
-
 }
