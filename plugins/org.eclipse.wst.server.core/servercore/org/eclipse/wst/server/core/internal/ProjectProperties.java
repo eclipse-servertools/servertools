@@ -150,10 +150,15 @@ public class ProjectProperties implements IProjectProperties {
 	 */
 	public void setDefaultServer(IServer server, IProgressMonitor monitor) throws CoreException {
 		loadPreferences();
-		if (server == null)
-			serverId = null;
-		else
-			serverId = server.getId();
+		
+		String newServerId = null;
+		if (server != null)
+			newServerId = server.getId();
+		if (serverId == null && newServerId == null)
+			return;
+		if (serverId != null && serverId.equals(newServerId))
+			return;
+		
 		savePreferences(monitor);
 		fireDefaultServerChanged(server);
 	}
@@ -197,6 +202,11 @@ public class ProjectProperties implements IProjectProperties {
 
 	protected void setRuntimeTarget(IRuntime oldRuntime, IRuntime newRuntime, boolean save, IProgressMonitor monitor) throws CoreException {
 		Trace.trace(Trace.RUNTIME_TARGET, "setRuntimeTarget : " + oldRuntime + " -> " + newRuntime);
+		
+		if (oldRuntime == null && newRuntime == null)
+			return;
+		if (oldRuntime != null && oldRuntime.equals(newRuntime))
+			return;
 		
 		IRuntimeTargetHandler[] handlers = ServerCore.getRuntimeTargetHandlers();
 		if (handlers == null)

@@ -70,12 +70,14 @@ public class ProjectPropertyPage extends PropertyPage {
 			
 			Label label = new Label(composite, SWT.WRAP);
 			label.setText(ServerUIPlugin.getResource("%prefProjectDescription"));
-			GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+			GridData data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalSpan = 3;
 			data.widthHint = 200;
 			label.setLayoutData(data);
 
-			module = ServerUtil.getModules(project)[0];
+			IModule[] modules = ServerUtil.getModules(project);
+			if (modules != null && modules.length > 0)
+				module = modules[0];
 
 			if (module == null) {
 				label = new Label(composite, SWT.NONE);

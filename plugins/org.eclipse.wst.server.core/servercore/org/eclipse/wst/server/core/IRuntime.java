@@ -31,7 +31,7 @@ import org.eclipse.core.runtime.*;
  * loading, and should not be called from popup menus, etc.
  * </p>
  * <p>
- * [issue: As mentioned in an issue on IRuntimeType, the term "runtime"
+ * [issue: As mentioned in IRuntimeType, the term "runtime"
  * is misleading, given that the main reason is for build time classpath
  * contributions, not for actually running anything. "libraries" might be a
  * better choice.]
@@ -107,16 +107,18 @@ public interface IRuntime extends IElement, IAdaptable {
 	public boolean isStub();
 
 	/**
-	 * Validates this runtime instance. This method should return an error if the runtime
-	 * is pointing to a null or invalid location (e.g. not pointing to the correct installation
-	 * directory), or if the runtime-type-specific properties are missing or invalid.
+	 * Validates this runtime instance. This method returns an error if the runtime
+	 * is pointing to a null or invalid location (e.g. not pointing to the correct
+	 * installation directory), or if the runtime-type-specific properties are missing
+	 * or invalid.
 	 * <p>
-	 * This method is not on the working copy so that the runtime can be validated at any time.
+	 * This method is not on the working copy so that the runtime can be validated at
+	 * any time.
 	 * </p>
 	 *
 	 * @return a status object with code <code>IStatus.OK</code> if this
-	 * runtime is valid, otherwise a status object indicating what is
-	 * wrong with it
+	 *   runtime is valid, otherwise a status object indicating what is
+	 *   wrong with it
 	 */
 	public IStatus validate(IProgressMonitor monitor);
 }

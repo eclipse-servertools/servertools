@@ -140,15 +140,16 @@ public interface IRuntimeType {
 	 * the client should call {@link IRuntimeWorkingCopy#save(IProgressMonitor)}
 	 * to bring the runtime instance into existence.
 	 * <p>
-	 * [issue: This method is declared as throwing CoreException.
-	 * From a clients's point of view, what are the circumstances that
-	 * cause this operation to fail?]
+	 * Default values are set by calling the instance's delegate.
+	 * Clients should assume that the location and other properties are
+	 * not set and must be explicitly set by the client.
 	 * </p>
 	 * 
 	 * @param id the id to assign to the runtime instance; a generated
 	 * id is used if id is <code>null</code> or an empty string
 	 * @return a new runtime working copy with the given id
-	 * @throws CoreException [missing]
+	 * @throws CoreException if an exception occurs while creating this runtime
+	 *    or setting it's default values
 	 */
 	public IRuntimeWorkingCopy createRuntime(String id, IProgressMonitor monitor) throws CoreException;
 }

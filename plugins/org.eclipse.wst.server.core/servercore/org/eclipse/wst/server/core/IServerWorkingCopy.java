@@ -18,21 +18,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * A working copy server object used for formulating changes
  * to a server instance ({@link IServer}).
  * <p>
- * [issue: The default value of runtime should be specified
- * here (or in IServerType.createServer). If the initial value is null (or
- * something simularly unsuitable for actual use), then IServer.getRuntime
- * needs to be spec'd to allow null return (it does), and save needs to deal
- * with the case where the client forgets to initialize this property.]
- * </p>
- * <p>
- * [issue: The default value of server configuration should be specified
- * here (or in IServerType.createServer). If the initial value is null (or
- * something simularly unsuitable for actual use), then
- * IServer.getServerConfiguration needs to be spec'd to allow null return
- * (it does), and save needs to deal with the case where the client forgets
- * to initialize this property.]
- * </p>
- * <p>
  * [issue: IElementWorkingCopy and IElement support an open-ended set
  * of attribute-value pairs. What is relationship between these
  * attributes and (a) the get/setXXX methods found on this interface,
@@ -42,15 +27,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * between workbench sessions? That is, any information recorded
  * just in instance fields of an ServerDelegate implementation
  * will be lost when the session ends.]
- * </p>
- * <p>
- * [issue: It seems strange that IServerWorkingCopy extends IServer, which
- * has all sorts of method for starting and stopping the server, none of
- * which are relevant to working copies. It should be changed so
- * that IServerWorkingCopy does not extend IServer. This will requires
- * copying getters from IServer to IServerWorkingCopy to make it
- * self-sufficient: getHostname, getServerConfiguration, getRuntime, getId,
- * getFile, getServerType, etc.]
  * </p>
  * <p>This interface is not intended to be implemented by clients.</p>
  * <p>
@@ -115,6 +91,11 @@ public interface IServerWorkingCopy extends IServerAttributes, IElementWorkingCo
 	 * taken from this working copy. If there an existing server
 	 * instance with a matching id and server type, this will
 	 * change the server instance accordingly.
+	 * <p>
+	 * Servers can be saved even when they have invalid properties. It
+	 * is the clients responsibility to validate or check the
+	 * properties before saving.
+	 * </p>
 	 * <p>
 	 * [issue: What is relationship to 
 	 * this.getOriginal() and the IServer returned by this.save()?

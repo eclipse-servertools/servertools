@@ -15,6 +15,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.GridData;
@@ -179,7 +180,11 @@ public class OverviewEditorPart extends ServerEditorPart {
 		if (server != null && server.getServerType().hasServerConfiguration()) {
 			createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewServerConfigurationPath"));
 			
-			serverConfigurationName = toolkit.createLabel(composite, "" + server.getServerConfiguration());
+			IFolder folder = server.getServerConfiguration();
+			if (folder == null)
+				serverConfigurationName = toolkit.createLabel(composite, ServerUIPlugin.getResource("%elementUnknownName"));
+			else
+				serverConfigurationName = toolkit.createLabel(composite, "" + server.getServerConfiguration().getFullPath());
 			GridData data = new GridData(GridData.FILL_HORIZONTAL);
 			serverConfigurationName.setLayoutData(data);
 		}

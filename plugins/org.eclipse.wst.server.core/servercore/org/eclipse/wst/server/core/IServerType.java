@@ -163,8 +163,8 @@ public interface IServerType {
 	 * </p>
 	 * 
 	 * @param launchMode a mode in which a server can be launched,
-	 * one of the mode constants defined by
-	 * {@link org.eclipse.debug.core.ILaunchManager}
+	 *    one of the mode constants defined by
+	 *    {@link org.eclipse.debug.core.ILaunchManager}
 	 * @return whether this type of server supports the given mode
 	 */
 	public boolean supportsLaunchMode(String launchMode);
@@ -187,8 +187,7 @@ public interface IServerType {
 	 * is that there are 3 different styles of servers, and this
 	 * has a bearing on how you control them. That would suggest
 	 * there will be different rules for operating on them, and
-	 * that they might cycle through different sets of states.
-	 *  ]
+	 * that they might cycle through different sets of states.]
 	 * </p>
 	 * <p>
 	 * [issue: It also seems odd that this is part of the server type
@@ -249,28 +248,25 @@ public interface IServerType {
 	 * Consider combining the method with the other.]
 	 * </p>
 	 * <p>
-	 * The server returned from this method will have it's
-	 * host set to "localhost".
-	 * </p>
-	 * <p>
-	 * [issue: This method is declared as throwing CoreException.
-	 * From a clients's point of view, what are the circumstances that
-	 * cause this operation to fail?]
+	 * The server returned from this method will have it's host set to
+	 * "localhost". Other defaults will be set by calling the server
+	 * delegate's setDefaults() method.
 	 * </p>
 	 * 
 	 * @param id the id to assign to the server instance; a generated
-	 * id is used if id is <code>null</code> or an empty string
+	 *    id is used if id is <code>null</code> or an empty string
 	 * @param file the file in the workspace where the server instance
-	 * is to be serialized, or <code>null</code> if the information is
-	 * instead to be persisted with the workspace but not with any
-	 * particular workspace resource
+	 *    is to be serialized, or <code>null</code> if the information is
+	 *    instead to be persisted with the workspace but not with any
+	 *    particular workspace resource
 	 * @param runtime the runtime to associate with the server instance,
-	 * or <code>null</code> if none
+	 *    or <code>null</code> if none
 	 * @return a new server working copy with the given id
-	 * @throws CoreException [missing]
+	 * @throws CoreException if an exception occurs while creating this runtime
+	 *    or setting it's default values
 	 */
 	public IServerWorkingCopy createServer(String id, IFile file, IRuntime runtime, IProgressMonitor monitor) throws CoreException;
-	
+
 	/**
 	 * Creates a working copy instance of this server type.
 	 * After setting various properties of the working copy,
@@ -282,18 +278,14 @@ public interface IServerType {
 	 * of a progress monitor.]
 	 * </p>
 	 * <p>
-	 * The server returned from this method will have it's
-	 * host set to "localhost".
+	 * The server returned from this method will have it's host set to
+	 * "localhost". Other defaults will be set by calling the server
+	 * delegate's setDefaults() method.
 	 * </p>
 	 * <p>
 	 * [issue: The implementation of this method creates a server
 	 * config working copy, whereas the other one does not!?
 	 * Consider combining the method with the other.]
-	 * </p>
-	 * <p>
-	 * [issue: This method is declared as throwing CoreException.
-	 * From a clients's point of view, what are the circumstances that
-	 * cause this operation to fail?]
 	 * </p>
 	 * 
 	 * @param id the id to assign to the server instance; a generated
@@ -305,7 +297,8 @@ public interface IServerType {
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return a new server working copy with the given id
-	 * @throws CoreException [missing]
+	 * @throws CoreException if an exception occurs while creating this runtime
+	 *    or setting it's default values
 	 */
 	public IServerWorkingCopy createServer(String id, IFile file, IProgressMonitor monitor) throws CoreException;
 

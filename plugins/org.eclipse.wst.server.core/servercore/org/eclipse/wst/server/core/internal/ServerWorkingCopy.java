@@ -187,6 +187,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 				if (project != null && !project.exists()) {
 					project.create(null);
 					project.open(null);
+					ServerCore.getProjectProperties(project).setServerProject(true, monitor);
 				}
 				if (!folder.exists())
 					folder.create(IResource.FORCE, true, null);

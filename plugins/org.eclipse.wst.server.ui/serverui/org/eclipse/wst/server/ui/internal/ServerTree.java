@@ -339,14 +339,14 @@ public class ServerTree {
 				
 				if (obj instanceof ServerElementAdapter)
 					list.add(((ServerElementAdapter) obj).getObject());
-				else
+				else if (obj instanceof IServer)
 					list.add(obj);
 			}
 			
-			Object[] res = new Object[list.size()];
-			list.toArray(res);
+			IServer[] servers = new IServer[list.size()];
+			list.toArray(servers);
 			
-			Action delete = new DeleteAction(shell, res);
+			Action delete = new DeleteAction(shell, servers);
 			delete.run();
 			return true;
 		}

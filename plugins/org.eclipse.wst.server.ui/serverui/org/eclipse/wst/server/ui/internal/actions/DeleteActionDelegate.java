@@ -17,7 +17,6 @@ import java.util.List;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.view.servers.DeleteAction;
 import org.eclipse.wst.server.ui.internal.view.tree.ServerElementAdapter;
@@ -28,7 +27,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  * 
  */
 public class DeleteActionDelegate implements IWorkbenchWindowActionDelegate {
-	protected Object[] resources;
+	protected IServer[] servers;
 	protected Shell shell;
 
 	/**
@@ -50,9 +49,9 @@ public class DeleteActionDelegate implements IWorkbenchWindowActionDelegate {
 	 * @see org.eclipse.ui.IActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
-		if (action != null && action.isEnabled() && resources != null)
+		if (action != null && action.isEnabled() && servers != null)
 			return;
-		DeleteAction delete = new DeleteAction(shell, resources);
+		DeleteAction delete = new DeleteAction(shell, servers);
 		delete.run();
 	}
 
@@ -60,7 +59,7 @@ public class DeleteActionDelegate implements IWorkbenchWindowActionDelegate {
 	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(IAction, ISelection)
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
-		resources = null;
+		servers = null;
 		if (selection == null || selection.isEmpty() || !(selection instanceof IStructuredSelection)) {
 			action.setEnabled(false);
 			return;
@@ -73,9 +72,7 @@ public class DeleteActionDelegate implements IWorkbenchWindowActionDelegate {
 		
 		while (iterator.hasNext()) {
 			Object obj = iterator.next();
-			if (obj instanceof IRuntime)
-				list.add(obj);
-			else if (obj instanceof IServer)
+			if (obj instanceof IServer)
 				list.add(obj);
 			else if (obj instanceof ServerElementAdapter)
 				list.add(((ServerElementAdapter) obj).getObject());
@@ -85,8 +82,8 @@ public class DeleteActionDelegate implements IWorkbenchWindowActionDelegate {
 			}
 		}
 		
-		resources = new Object[list.size()];
-		list.toArray(resources);
+		servers = new IServer[list.size()];
+		list.toArray(servers);
 		action.setEnabled(true);
 	}
 }

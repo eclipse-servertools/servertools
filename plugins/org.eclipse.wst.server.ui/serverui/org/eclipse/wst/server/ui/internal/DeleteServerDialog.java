@@ -10,10 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
@@ -29,31 +26,28 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
-import org.eclipse.wst.server.core.IElement;
+import org.eclipse.wst.server.core.IServer;
 /**
  * Dialog that prompts a user to delete server(s) and/or server configuration(s).
  */
 public class DeleteServerDialog extends Dialog {
-	protected List deleteList;
-	protected List configList;
+	protected IServer[] servers;
+	protected IFolder[] configs;
 
 	protected Button check;
 
 	/**
 	 * DeleteServerDialog constructor comment.
 	 * @param parentShell org.eclipse.swt.widgets.Shell
-	 * @
 	 */
-	public DeleteServerDialog(Shell parentShell, List deleteList, List configList) {
+	public DeleteServerDialog(Shell parentShell, IServer[] servers, IFolder[] configs) {
 		super(parentShell);
 		
-		if (deleteList == null)
-			deleteList = new ArrayList(0);
-		if (configList == null)
-			configList = new ArrayList(0);
+		if (servers == null || configs == null)
+			throw new IllegalArgumentException();
 		
-		this.deleteList = deleteList;
-		this.configList = configList;
+		this.servers = servers;
+		this.configs = configs;
 
 		setBlockOnOpen(true);
 	}
@@ -83,21 +77,19 @@ public class DeleteServerDialog extends Dialog {
 		//WorkbenchHelp.setHelp(composite, ContextIds.TERMINATE_SERVER_DIALOG);
 	
 		Label label = new Label(composite, SWT.NONE);
-		if (deleteList.size() == 1) {
-			IElement element = (IElement) deleteList.get(0);
-			label.setText(ServerUIPlugin.getResource("%deleteServerResourceDialogMessage", element.getName()));
+		if (servers.length == 1) {
+			label.setText(ServerUIPlugin.getResource("%deleteServerResourceDialogMessage", servers[0].getName()));
 		} else
-			label.setText(ServerUIPlugin.getResource("%deleteServerResourceDialogMessageMany", deleteList.size() + ""));
+			label.setText(ServerUIPlugin.getResource("%deleteServerResourceDialogMessageMany", servers.length + ""));
 		label.setLayoutData(new GridData());
 		
-		if (!configList.isEmpty()) {
+		if (configs.length > 0) {
 			check = new Button(composite, SWT.CHECK);
 		
-			if (configList.size() == 1) {
-				IElement element = (IElement) configList.get(0);
-				check.setText(ServerUIPlugin.getResource("%deleteServerResourceDialogLooseConfigurations", element.getName()));
+			if (configs.length == 1) {
+				check.setText(ServerUIPlugin.getResource("%deleteServerResourceDialogLooseConfigurations", configs[0].getName()));
 			} else
-				check.setText(ServerUIPlugin.getResource("%deleteServerResourceDialogLooseConfigurationsMany", configList.size() + ""));
+				check.setText(ServerUIPlugin.getResource("%deleteServerResourceDialogLooseConfigurationsMany", configs.length + ""));
 			check.setSelection(true);
 			check.setLayoutData(new GridData());
 		}
@@ -114,17 +106,15 @@ public class DeleteServerDialog extends Dialog {
 			WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 				protected void execute(IProgressMonitor monitor) throws CoreException {
 					try {
-						Iterator iterator = deleteList.iterator();
-						while (iterator.hasNext()) {
-							IElement element = (IElement) iterator.next();
-							element.delete();
+						int size = servers.length;
+						for (int i = 0; i < size; i++) {
+							servers[0].delete();
 						}
 						
 						if (checked) {
-							iterator = configList.iterator();
-							while (iterator.hasNext()) {
-								IElement element = (IElement) iterator.next();
-								element.delete();
+							size = configs.length;
+							for (int i = 0; i < size; i++) {
+								configs[i].delete(true, true, monitor);
 							}
 						}
 					} catch (Exception e) {

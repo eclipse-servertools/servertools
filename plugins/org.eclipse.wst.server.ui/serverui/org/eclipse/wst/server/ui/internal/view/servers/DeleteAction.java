@@ -13,7 +13,10 @@ package org.eclipse.wst.server.ui.internal.view.servers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.Action;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.ui.internal.DeleteServerDialog;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.swt.widgets.Shell;
@@ -21,55 +24,61 @@ import org.eclipse.swt.widgets.Shell;
  * Action for deleting server resources.
  */
 public class DeleteAction extends Action {
-	protected List deleteList = new ArrayList();
-	protected List deleteExtraList = new ArrayList();
+	protected IServer[] servers;
+	protected IFolder[] configs;
 	protected Shell shell;
 
 	/**
 	 * DeleteAction constructor comment.
 	 */
-	public DeleteAction(Shell shell, Object serverResource) {
-		this(shell, new Object[] { serverResource });
+	public DeleteAction(Shell shell, IServer server) {
+		this(shell, new IServer[] { server });
 	}
 
 	/**
 	 * DeleteAction constructor comment.
 	 */
-	public DeleteAction(Shell shell, Object[] serverResources) {
+	public DeleteAction(Shell shell, IServer[] servers) {
 		super(ServerUIPlugin.getResource("%actionDelete"));
 		this.shell = shell;
 		
-		int size = serverResources.length;
+		this.servers = servers;
+		
+		List list = new ArrayList();
+		
+		int size = servers.length;
 		for (int i = 0; i < size; i++) {
-			deleteList.add(serverResources[i]);
+			if (servers[i].getServerConfiguration() != null)
+				list.add(servers[i].getServerConfiguration());
 		}
 		
-		// TODO: delete server config
-		/*for (int i = 0; i < size; i++) {
-			if (serverResources[i] instanceof IServer) {
-				IServer server = (IServer) serverResources[i];
-			}
-		}
-		
-		// remove configurations that are still referenced
-		IServer[] servers = ServerCore.getServers();
-		if (servers != null) {
-			int size2 = servers.length;
-			for (int i = 0; i < size2; i++) {
-				if (!deleteList.contains(servers[i])) {
-					IServerConfiguration config = servers[i].getServerConfiguration();
-					if (deleteExtraList.contains(config))
-						deleteExtraList.remove(config);
+		// remove configurations that are still referenced by other servers
+		IServer[] servers2 = ServerCore.getServers();
+		if (servers2 != null) {
+			int size2 = servers2.length;
+			for (int j = 0; j < size2; j++) {
+				boolean found = false;
+				for (int i = 0; i < size; i++) {
+					if (servers[i].equals(servers2[j]))
+						found = true;
+				}
+				if (!found) {
+					IFolder folder = servers2[j].getServerConfiguration();
+					if (folder != null && list.contains(folder))
+						list.remove(folder);
 				}
 			}
-		}*/
+		}
+		
+		configs = new IFolder[list.size()];
+		list.toArray(configs);
 	}
 
 	/**
 	 * Invoked when an action occurs. 
 	 */
 	public void run() {
-		DeleteServerDialog dsd = new DeleteServerDialog(shell, deleteList, deleteExtraList);
+		DeleteServerDialog dsd = new DeleteServerDialog(shell, servers, configs);
 		dsd.open();
 	}
 }

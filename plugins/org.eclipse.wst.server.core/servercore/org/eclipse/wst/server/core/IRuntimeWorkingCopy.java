@@ -19,13 +19,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * working copy do not occur (and are not persisted) until a
  * save() is performed. 
  * <p>
- * [issue: The default value of location and test environment
- * should be specified here (or in IServerType.createRuntime).
- * If the initial value is unsuitable for actual use, then
- * save needs to deal with the case where the client forgets
- * to initialize this property.]
- * </p>
- * <p>
  * [issue: IElementWorkingCopy and IElement support an open-ended set
  * of attribute-value pairs. What is relationship between these
  * attributes and (a) the get/setXXX methods found on this interface,
@@ -96,6 +89,9 @@ public interface IRuntimeWorkingCopy extends IRuntime, IElementWorkingCopy {
 	 * The returned runtime will be the same runtime this is returned
 	 * from getOriginal(), after the changes have been applied.
 	 * </p>
+	 * Runtimes can be saved even when they have invalid properties. It
+	 * is the clients responsibility to call validate() or check the
+	 * properties before saving.
 	 * <p>
 	 * [issue: What is lifecycle for RuntimeWorkingCopyDelegate
 	 * associated with this working copy?]
@@ -104,7 +100,7 @@ public interface IRuntimeWorkingCopy extends IRuntime, IElementWorkingCopy {
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return a new runtime instance
-	 * @throws CoreException thrown if the save could not be completed
+	 * @throws CoreException if the save could not be completed
 	 */
 	public IRuntime save(boolean force, IProgressMonitor monitor) throws CoreException;
 }
