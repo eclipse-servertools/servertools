@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,8 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.wst.server.core.ILaunchableAdapter;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.ILaunchableAdapter;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 
 public class LaunchableAdaptersTestCase extends TestCase {
 	public static Test suite() {
@@ -23,7 +23,7 @@ public class LaunchableAdaptersTestCase extends TestCase {
 	}
 
 	public void testLaunchableAdaptersExtension() throws Exception {
-		ILaunchableAdapter[] la = ServerCore.getLaunchableAdapters();
+		ILaunchableAdapter[] la = ServerPlugin.getLaunchableAdapters();
 		if (la != null) {
 			int size = la.length;
 			for (int i = 0; i < size; i++)

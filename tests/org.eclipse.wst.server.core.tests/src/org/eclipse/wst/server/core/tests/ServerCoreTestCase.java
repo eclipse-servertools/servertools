@@ -17,6 +17,7 @@ import junit.framework.TestSuite;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.ResourceManager;
 
 public class ServerCoreTestCase extends TestCase {
 	public static Test suite() {
@@ -68,6 +69,6 @@ public class ServerCoreTestCase extends TestCase {
 	}
 	
 	public void testDefaultRuntimeExtension() throws Exception {
-		ServerCore.getDefaultRuntime();
+		ResourceManager.getInstance().getDefaultRuntime();
 	}
 }

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,8 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.wst.server.core.IClient;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.IClient;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 
 public class ClientsTestCase extends TestCase {
 	public static Test suite() {
@@ -23,7 +23,7 @@ public class ClientsTestCase extends TestCase {
 	}
 
 	public void testClientsExtension() throws Exception {
-		IClient[] clients = ServerCore.getClients();
+		IClient[] clients = ServerPlugin.getClients();
 		if (clients != null) {
 			int size = clients.length;
 			for (int i = 0; i < size; i++)
