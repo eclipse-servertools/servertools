@@ -150,11 +150,23 @@ public class ServerType implements IServerType, IOrdered {
 		return ("true".equalsIgnoreCase(element.getAttribute("hasConfiguration")));
 	}
 
-	public IServerWorkingCopy createServer(String id, IFile file, IRuntime runtime, IProgressMonitor monitor) {
+	public IServerWorkingCopy createServer(String id, IFile file, IRuntime runtime, IProgressMonitor monitor) throws CoreException {
 		if (id == null || id.length() == 0)
 			id = ServerPlugin.generateId();
 		ServerWorkingCopy swc = new ServerWorkingCopy(id, file, runtime, this);
 		swc.setDefaults(monitor);
+		swc.setRuntime(runtime);
+		
+		// TODO
+		if (swc.getServerType().hasServerConfiguration()) {
+			IFolder folder = getServerProject().getFolder(swc.getName() + "-config");
+			if (!folder.exists())
+				folder.create(true, true, null);
+			swc.setServerConfiguration(folder);
+			
+			((Server)swc).importConfiguration(runtime, null);
+		}
+		
 		return swc;
 	}
 	
@@ -218,9 +230,12 @@ public class ServerType implements IServerType, IOrdered {
 		
 		if (swc.getServerType().hasServerConfiguration()) {
 			// TODO: config
-			((Server)swc).importConfiguration(runtime, null);
 			IFolder folder = getServerProject().getFolder(swc.getName() + "-config");
+			if (!folder.exists())
+				folder.create(true, true, null);
 			swc.setServerConfiguration(folder);
+			
+			((Server)swc).importConfiguration(runtime, null);
 		}
 		
 		//TODO: import server config
@@ -240,7 +255,7 @@ public class ServerType implements IServerType, IOrdered {
 		return swc;
 	}
 	
-	public static IProject getServerProject() {
+	public static IProject getServerProject() throws CoreException {
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		if (projects != null) {
 			int size = projects.length;
@@ -251,9 +266,12 @@ public class ServerType implements IServerType, IOrdered {
 		}
 		
 		String s = findUnusedServerProjectName();
-		return ResourcesPlugin.getWorkspace().getRoot().getProject(s);
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(s);
+		project.create(null);
+		project.open(null);
+		return project;
 	}
-	
+
 	/**
 	 * Finds an unused project name to use as a server project.
 	 * 
