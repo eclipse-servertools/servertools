@@ -215,8 +215,8 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	 */
 	public URL getModuleRootURL(IModule module) {
 
-		try {
-			if (module == null || !(module instanceof IWebModule))
+		try {			
+            if (module == null || module.getAdapter(IWebModule.class)==null )
 				return null;
 
 			String url = "http://localhost";
