@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerRuntimeImpl.java,v 1.1 2004/11/20 21:18:10 ndai Exp $
+ * $Id: ServerRuntimeImpl.java,v 1.2 2004/12/02 17:56:53 ndai Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition.impl;
 
@@ -802,7 +802,7 @@ public class ServerRuntimeImpl extends EObjectImpl implements ServerRuntime {
 	 * @generated NOT
 	 */
 	public Publisher getPublisher(String id) {
-		Iterator iterator = this.getModule().iterator();
+		Iterator iterator = this.getPublisher().iterator();
 		while (iterator.hasNext()) {
 			Publisher publisher = (Publisher) iterator.next();
 			if(id.equals(publisher.getId()))
