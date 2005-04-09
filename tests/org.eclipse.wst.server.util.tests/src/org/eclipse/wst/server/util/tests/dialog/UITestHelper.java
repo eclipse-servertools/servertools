@@ -104,7 +104,7 @@ public class UITestHelper extends TestCase {
 		if (!pages.hasNext())
 			return null;
 		
-		title = WorkbenchMessages.format("PropertyDialog.propertyMessage", new Object[] {name});
+		title = WorkbenchMessages.bind(WorkbenchMessages.PropertyDialog_propertyMessage, new Object[] {name});
 		dialog = new PropertyDialogWrapper(getShell(), manager, new StructuredSelection(element)); 
 		dialog.create();
 		dialog.getShell().setText(title);

@@ -135,7 +135,7 @@ public class ScanAction extends TestCase {
 	/**
 	 * Scan a java file and return all of the "%xxx" found.
 	 * @param file
-	 * @return
+	 * @return List of matching strings.
 	 */
 	protected String[] scanFile(IFile file) {
 		if (file == null || !file.exists())
