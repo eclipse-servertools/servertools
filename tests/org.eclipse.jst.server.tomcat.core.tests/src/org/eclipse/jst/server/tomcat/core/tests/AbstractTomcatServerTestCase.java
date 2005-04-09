@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.core.tests;
 
+import java.util.List;
 import junit.framework.Test;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfigurationWorkingCopy;
@@ -64,6 +65,13 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 		ServerPort[] ports = wc.getServerPorts();
 		TomcatServer tomcatServer = (TomcatServer) wc.getAdapter(TomcatServer.class);
 		ITomcatConfigurationWorkingCopy configuration = (ITomcatConfigurationWorkingCopy) tomcatServer.getServerConfiguration();
+		// if no ports from the server, use the configuration
+		if (ports == null || ports.length == 0) {
+			List portsList = configuration.getServerPorts();
+			if (portsList != null && portsList.size() > 0) {
+				ports = (ServerPort[])portsList.toArray(new ServerPort[portsList.size()]);
+			}
+		}
 		if (ports != null) {
 			int size = ports.length;
 			for (int i = 0; i < size; i++) {
