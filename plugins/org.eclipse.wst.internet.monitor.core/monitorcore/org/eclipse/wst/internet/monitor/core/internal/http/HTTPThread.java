@@ -119,7 +119,7 @@ Host: localhost:8081
 	/**
 	 * Read more data into the buffer.
 	 *
-	 * @return byte[]
+	 * @returns byte[]
 	 */
 	protected void fillBuffer() throws IOException {
 		int n = in.read(readBuffer);

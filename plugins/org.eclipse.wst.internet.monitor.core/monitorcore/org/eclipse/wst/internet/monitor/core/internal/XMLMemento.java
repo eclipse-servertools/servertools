@@ -248,7 +248,6 @@ public final class XMLMemento implements IMemento {
 	 *
 	 * @param in the input stream
 	 * @return a memento
-	 * @exception java.io.IOException
 	 */
 	public static IMemento loadMemento(InputStream in) {
 		return createReadRoot(in);
