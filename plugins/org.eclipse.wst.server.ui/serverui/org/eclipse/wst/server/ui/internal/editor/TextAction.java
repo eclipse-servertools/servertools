@@ -111,7 +111,7 @@ public class TextAction extends Action {
 	 * clipboard in plain text format.
 	 * <p>
 	 *
-	 * @exception SWTException <ul>
+	 * @exception org.eclipse.swt.SWTException <ul>
 	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
 	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 * </ul>
@@ -141,7 +141,7 @@ public class TextAction extends Action {
 	 * clipboard in plain text format and RTF format.
 	 * <p>
 	 *
-	 * @exception SWTException <ul>
+	 * @exception org.eclipse.swt.SWTException <ul>
 	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
 	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 * </ul>
@@ -181,7 +181,7 @@ public class TextAction extends Action {
 	 * inserted in the widget.
 	 * <p>
 	 *
-	 * @exception SWTException <ul>
+	 * @exception org.eclipse.swt.SWTException <ul>
 	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
 	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
 	 * </ul>

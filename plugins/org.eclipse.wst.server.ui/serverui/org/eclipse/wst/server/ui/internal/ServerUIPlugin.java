@@ -380,7 +380,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	 * Returns the server that came from the given file, or <code>null</code>
 	 * if none. This convenience method searches the list of known
 	 * servers ({@link ServerCore#getServers()}) for the one with a matching
-	 * location ({@link IServer#getFile()}). The file may not be null.
+	 * location ({@link Server#getFile()}). The file may not be null.
 	 *
 	 * @param file a server file
 	 * @return the server instance, or <code>null</code> if 

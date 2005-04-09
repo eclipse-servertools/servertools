@@ -230,7 +230,6 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	 * 
 	 * @param port
 	 * @return a monitored server port
-	 * @throws org.eclipse.core.runtime.CoreException
 	 */
 	public IMonitoredServerPort createMonitor(IServer server, ServerPort port, int monitorPort, String[] content) {
 		if (port == null || monitor == null)
@@ -246,7 +245,6 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	 * stopping the monitoring
 	 *
 	 * @param port
-	 * @throws org.eclipse.core.runtime.CoreException
 	 */
 	public void removeMonitor(IMonitoredServerPort port) {
 		if (port == null)

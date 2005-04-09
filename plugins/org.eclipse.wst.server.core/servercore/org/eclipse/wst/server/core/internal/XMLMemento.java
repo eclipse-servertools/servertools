@@ -255,7 +255,6 @@ public final class XMLMemento implements IMemento {
 	 *
 	 * @param in java.io.InputStream
 	 * @return org.eclipse.ui.IMemento
-	 * @exception java.io.IOException
 	 */
 	public static IMemento loadMemento(InputStream in) {
 		return createReadRoot(in);

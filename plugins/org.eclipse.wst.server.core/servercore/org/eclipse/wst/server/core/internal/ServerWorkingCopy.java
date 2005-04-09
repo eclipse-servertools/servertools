@@ -143,7 +143,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	 * 
 	 * @param b <code>true</code> if this element is private,
 	 * and <code>false</code> otherwise
-	 * @see IServerAttributes#isPrivate()
+	 * @see #isPrivate()
 	 */
 	public void setPrivate(boolean b) {
 		setAttribute(PROP_PRIVATE, b);

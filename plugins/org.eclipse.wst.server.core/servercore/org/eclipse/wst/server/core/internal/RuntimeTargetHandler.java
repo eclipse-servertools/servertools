@@ -126,7 +126,6 @@ public class RuntimeTargetHandler implements IRuntimeTargetHandler, IOrdered {
 	 * @param runtime the target runtime
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
-	 * @throws CoreException thrown if there is a problem setting the runtime
 	 */
 	public void setRuntimeTarget(IProject project, IRuntime runtime, IProgressMonitor monitor) {
 		if (project == null || runtime == null)
@@ -146,7 +145,6 @@ public class RuntimeTargetHandler implements IRuntimeTargetHandler, IOrdered {
 	 * @param runtime the target runtime
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
-	 * @throws CoreException thrown if there is a problem removing the runtime
 	 */
 	public void removeRuntimeTarget(IProject project, IRuntime runtime, IProgressMonitor monitor) {
 		if (project == null || runtime == null)

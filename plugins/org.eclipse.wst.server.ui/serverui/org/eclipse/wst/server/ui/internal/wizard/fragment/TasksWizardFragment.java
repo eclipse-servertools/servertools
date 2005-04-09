@@ -203,7 +203,7 @@ public class TasksWizardFragment extends WizardFragment {
 	 * Returns the number of tasks run, or -1 if there was an error.
 	 *
 	 * @param monitor
-	 * @return int
+	 * @returns int
 	 */
 	protected void performFinish(IProgressMonitor monitor) throws CoreException {
 		List performTasks = new ArrayList();

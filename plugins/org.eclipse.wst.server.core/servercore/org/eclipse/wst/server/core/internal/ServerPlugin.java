@@ -823,7 +823,6 @@ public class ServerPlugin extends Plugin {
 	 * 
 	 * @param obj
 	 * @return a module artifact, or null
-	 * @throws Exception
 	 */
 	public static IModuleArtifact getModuleArtifact(Object obj) {
 		Trace.trace(Trace.FINEST, "ServerUIPlugin.getModuleArtifact() " + obj);

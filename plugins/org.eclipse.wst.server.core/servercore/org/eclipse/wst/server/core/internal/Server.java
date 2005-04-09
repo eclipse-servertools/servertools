@@ -525,8 +525,6 @@ public class Server extends Base implements IServer {
 	
 	/**
 	 * Fire a publish start event.
-	 *
-	 * @param 
 	 */
 	private void firePublishStarted() {
 		Trace.trace(Trace.FINEST, "->- Firing publish started event ->-");
@@ -553,7 +551,7 @@ public class Server extends Base implements IServer {
 	/**
 	 * Fire a publish target event.
 	 *
-	 * @param 
+	 * @param module the firing module
 	 */
 	private void fireModulePublishStarted(IModule[] module) {
 		Trace.trace(Trace.FINEST, "->- Firing module publish started event: " + module + " ->-");
@@ -580,7 +578,8 @@ public class Server extends Base implements IServer {
 	/**
 	 * Fire a publish target event.
 	 *
-	 * @param 
+	 * @param module the firing module
+	 * @param status publishing status
 	 */
 	private void fireModulePublishFinished(IModule[] module, IStatus status) {
 		Trace.trace(Trace.FINEST, "->- Firing module finished event: " + module + " " + status + " ->-");
@@ -607,7 +606,7 @@ public class Server extends Base implements IServer {
 	/**
 	 * Fire a publish stop event.
 	 *
-	 * @param 
+	 * @param status publishing status
 	 */
 	private void firePublishFinished(IStatus status) {
 		Trace.trace(Trace.FINEST, "->- Firing publishing finished event: " + status + " ->-");

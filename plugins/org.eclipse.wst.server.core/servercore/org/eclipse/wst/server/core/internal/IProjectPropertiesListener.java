@@ -25,7 +25,7 @@ import org.eclipse.wst.server.core.IServer;
  * will allow ordering of setting/unsetting the runtime target.
  * </p>
  * 
- * @see IProjectProperties
+ * @see org.eclipse.wst.server.core.IProjectProperties
  * @since 1.0
  */
 public interface IProjectPropertiesListener {

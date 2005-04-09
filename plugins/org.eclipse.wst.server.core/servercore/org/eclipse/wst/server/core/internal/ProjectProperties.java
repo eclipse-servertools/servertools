@@ -312,7 +312,7 @@ public class ProjectProperties implements IProjectProperties {
 	/**
 	 * Fire a event because the runtime target changed.
 	 *
-	 * @param server org.eclipse.wst.server.core.IRuntime
+	 * @param runtime org.eclipse.wst.server.core.IRuntime
 	 */
 	private void fireRuntimeTargetChanged(IRuntime runtime) {
 		Trace.trace(Trace.LISTENERS, "->- Firing runtimeTargetChanged event: " + runtime + " ->-");
@@ -351,7 +351,7 @@ public class ProjectProperties implements IProjectProperties {
 	/**
 	 * Sets whether the project can contain server resources.
 	 * 
-	 * @param sp <code>true</code> to allow the project to contain server
+	 * @param b <code>true</code> to allow the project to contain server
 	 *    resources, or <code>false</code> to not allow the project to contain
 	 *    servers
 	 * @param monitor a progress monitor, or <code>null</code> if progress

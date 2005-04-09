@@ -649,7 +649,7 @@ public class ResourceManager {
 	/**
 	 * Sets the default runtime. Test API - do not use.
 	 *
-	 * @return java.util.List
+	 * @returns java.util.List
 	 */
 	public void setDefaultRuntime(IRuntime runtime) {
 		defaultRuntime = runtime;
@@ -820,7 +820,7 @@ public class ResourceManager {
 	 * Returns the server that came from the given file, or <code>null</code>
 	 * if none. This convenience method searches the list of known
 	 * servers ({@link #getServers()}) for the one with a matching
-	 * location ({@link IServer#getFile()}). The file may not be null.
+	 * location ({@link Server#getFile()}). The file may not be null.
 	 *
 	 * @param file a server file
 	 * @return the server instance, or <code>null</code> if 
