@@ -28,15 +28,15 @@ public class ByteViewer extends ContentViewer {
 	protected Text text;
 	protected Composite comp;
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.ui.IContentViewer#dispose()
+	/** (non-Javadoc)
+	 * @see ContentViewer#dispose()
 	 */
 	public void dispose() {
 		comp.dispose();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.ui.IContentViewer#setContent()
+	/** (non-Javadoc)
+	 * @see ContentViewer#setContent(byte[])
 	 */
 	public void setContent(byte[] b) {
 		String out = "";
@@ -53,8 +53,8 @@ public class ByteViewer extends ContentViewer {
 		text.setText(out);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.ui.IContentViewer#init(Composite)
+	/** (non-Javadoc)
+	 * @see ContentViewer#init(Composite)
 	 */
 	public void init(Composite parent) {
 		comp = new Composite(parent, SWT.NONE);
@@ -75,15 +75,15 @@ public class ByteViewer extends ContentViewer {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(text, ContextIds.VIEW_RESPONSE);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.ui.IEditableContentViewer#setEditable(boolean)
+	/** (non-Javadoc)
+	 * @see ContentViewer#setEditable(boolean)
 	 */
 	public void setEditable(boolean editable) {
 		text.setEditable(editable);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.ui.IEditableContentViewer#getContent()
+	/** (non-Javadoc)
+	 * @see ContentViewer#getContent()
 	 */
 	public byte[] getContent() {
 		if (text == null) {

@@ -31,8 +31,8 @@ public class ImageViewer extends ContentViewer {
 	
 	protected byte[] content;
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.ui.IContentViewer#init(Composite)
+	/** (non-Javadoc)
+	 * @see ContentViewer#init(Composite)
 	 */
 	public void init(Composite parent) {
 		rootComp = parent;
@@ -50,8 +50,8 @@ public class ImageViewer extends ContentViewer {
 		messageLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.ui.IContentViewer#setContent()
+	/** (non-Javadoc)
+	 * @see ContentViewer#setContent(byte[])
 	 */
 	public void setContent(byte[] b) {
 		content = b;
@@ -87,12 +87,15 @@ public class ImageViewer extends ContentViewer {
 		viewerComp.layout(true);
 	}
 	
+	/**
+	 * @see ContentViewer#getContent()
+	 */
 	public byte[] getContent() {
 		return content;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.ui.IContentViewer#dispose()
+	/** (non-Javadoc)
+	 * @see ContentViewer#dispose()
 	 */
 	public void dispose() {
 		viewerComp.dispose();

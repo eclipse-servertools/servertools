@@ -43,9 +43,23 @@ public class HeaderViewer {
 
 	protected static int HEADER_LABEL_SIZE = 15;
 	protected static int HEADER_TEXT_SIZE = 110;
+	
+	/**
+	 * Request header constant.
+	 */
 	public static byte REQUEST_HEADER = 0;
+	
+	/**
+	 * Response header constant.
+	 */
 	public static byte RESPONSE_HEADER = 1;
 
+	/**
+	 * Create a new header viewer.
+	 * 
+	 * @param parent
+	 * @param message
+	 */
 	public HeaderViewer(Composite parent, byte message) {
 		rootComp = parent;
 		displayHeader = true;
@@ -76,12 +90,20 @@ public class HeaderViewer {
 		setDisplayHeader(false);
 	}
 	
-	public void setRequestResponse(Request reqresp) {
-		rr = reqresp;
+	/**
+	 * 
+	 * @param request
+	 */
+	public void setRequestResponse(Request request) {
+		rr = request;
 		if (!hidden)
 			getView();
 	}
 
+	/**
+	 * 
+	 * @param b
+	 */
 	public void setDisplayHeader(boolean b) {
 		if (displayHeader != b) {
 			displayHeader = b;
@@ -163,6 +185,10 @@ public class HeaderViewer {
 		}
 	}
 
+	/**
+	 * Dispose the 
+	 *
+	 */
 	public void dispose() {
 		headerComp.dispose();
 	}

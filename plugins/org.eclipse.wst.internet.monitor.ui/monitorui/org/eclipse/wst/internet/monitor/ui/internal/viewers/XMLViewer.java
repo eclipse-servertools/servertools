@@ -59,15 +59,15 @@ public class XMLViewer extends ContentViewer {
 	
 	protected byte[] content;
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.ui.IContentViewer#dispose()
+	/** (non-Javadoc)
+	 * @see ContentViewer#dispose()
 	 */
 	public void dispose() {
 		viewerComp.dispose();
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.ui.IContentViewer#setContent()
+	/** (non-Javadoc)
+	 * @see ContentViewer#setContent(byte[])
 	 */
 	public void setContent(byte[] b) {
 		content = b;
@@ -124,12 +124,15 @@ public class XMLViewer extends ContentViewer {
 			messageText.setText(out);
 	}
 	
+	/**
+	 * @see ContentViewer#getContent()
+	 */
 	public byte[] getContent() {
 		return content;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.ui.IContentViewer#init(Composite)
+	/** (non-Javadoc)
+	 * @see ContentViewer#init(Composite)
 	 */
 	public void init(Composite parent) {
 		rootComp = parent;
