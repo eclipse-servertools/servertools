@@ -209,7 +209,6 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	/**
 	 * Load a Tomcat configuration from the given directory.
 	 * @param path
-	 * @return org.eclipse.jst.server.tomcat.internal.Tomcat32Configuration
 	 */
 	public void load(IPath path, IProgressMonitor monitor) throws CoreException {
 		try {

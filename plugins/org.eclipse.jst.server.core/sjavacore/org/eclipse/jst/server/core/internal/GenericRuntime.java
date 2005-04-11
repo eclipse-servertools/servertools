@@ -23,6 +23,9 @@ public class GenericRuntime extends RuntimeDelegate implements IGenericRuntime, 
 	protected static final String PROP_VM_INSTALL_TYPE_ID = "vm-install-type-id";
 	protected static final String PROP_VM_INSTALL_ID = "vm-install-id";
 
+	/**
+	 * Create a new generic runtime.
+	 */
 	public GenericRuntime() {
 		// do nothing
 	}
@@ -34,11 +37,20 @@ public class GenericRuntime extends RuntimeDelegate implements IGenericRuntime, 
 	protected String getVMInstallId() {
 		return getAttribute(PROP_VM_INSTALL_ID, (String)null);
 	}
-	
+
+	/**
+	 * Returns <code>true</code> if the runtime is using the default JRE.
+	 * 
+	 * @return <code>true</code> if the runtime is using the default JRE,
+	 *    and <code>false</code> otherwise
+	 */
 	public boolean isUsingDefaultJRE() {
 		return getVMInstallTypeId() == null;
 	}
 
+	/**
+	 * @see IGenericRuntime#getVMInstall()
+	 */
 	public IVMInstall getVMInstall() {
 		if (getVMInstallTypeId() == null)
 			return JavaRuntime.getDefaultVMInstall();
@@ -57,6 +69,9 @@ public class GenericRuntime extends RuntimeDelegate implements IGenericRuntime, 
 		return null;
 	}
 	
+	/**
+	 * @see RuntimeDelegate#validate()
+	 */
 	public IStatus validate() {
 		IStatus status = super.validate();
 		if (!status.isOK())
@@ -66,18 +81,24 @@ public class GenericRuntime extends RuntimeDelegate implements IGenericRuntime, 
 
 		IPath path = runtime.getLocation();
 		if (!path.toFile().exists())
-			return new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, JavaServerPlugin.getResource("%errorLocation"), null);
+			return new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, Messages.errorLocation, null);
 		else if (getVMInstall() == null)
-			return new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, JavaServerPlugin.getResource("%errorJRE"), null);
+			return new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, Messages.errorJRE, null);
 		else
 			return new Status(IStatus.OK, JavaServerPlugin.PLUGIN_ID, 0, "", null);
 	}
 
+	/**
+	 * @see RuntimeDelegate#setDefaults()
+	 */
 	public void setDefaults() {
 		IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
 		setVMInstall(vmInstall.getVMInstallType().getId(), vmInstall.getId());
 	}
 
+	/**
+	 * @see IGenericRuntimeWorkingCopy#setVMInstall(IVMInstall)
+	 */
 	public void setVMInstall(IVMInstall vmInstall) {
 		if (vmInstall == null) {
 			setVMInstall(null, null);

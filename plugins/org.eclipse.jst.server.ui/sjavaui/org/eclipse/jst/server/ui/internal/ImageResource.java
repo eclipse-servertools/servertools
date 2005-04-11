@@ -45,8 +45,7 @@ public class ImageResource {
 
 	private static final String URL_WIZBAN = "wizban/";
 
-	// Java images
-	public static final String IMG_RUNTIME_TYPE = "runtimeType";
+	protected static final String IMG_RUNTIME_TYPE = "runtimeType";
 
 	/**
 	 * Cannot construct an ImageResource. Use static methods only.

@@ -22,6 +22,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.ServerDelegate;
 /**
@@ -221,7 +222,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	
 	public IServer save(boolean force, IProgressMonitor monitor) throws CoreException {
 		monitor = ProgressUtil.getMonitorFor(monitor);
-		monitor.subTask(ServerPlugin.getResource("%savingTask", getName()));
+		monitor.subTask(NLS.bind(Messages.savingTask, getName()));
 
 		if (!force && getOriginal() != null)
 			wch.validateTimestamp(((Server)getOriginal()).getTimestamp());
@@ -345,7 +346,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	public void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.subTask(ServerPlugin.getResource("%taskModifyModules"));
+			monitor.subTask(Messages.taskModifyModules);
 			getWorkingCopyDelegate(monitor).modifyModules(add, remove, monitor);
 			wch.setDirty(true);
 			

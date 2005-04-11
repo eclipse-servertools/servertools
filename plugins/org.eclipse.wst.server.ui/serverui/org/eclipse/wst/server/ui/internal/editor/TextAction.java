@@ -109,12 +109,6 @@ public class TextAction extends Action {
 	/**
 	 * Copies the selected text to the clipboard.  The text will be put in the 
 	 * clipboard in plain text format.
-	 * <p>
-	 *
-	 * @exception org.eclipse.swt.SWTException <ul>
-	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
 	 */
 	public void copy() {
 		Point selection = getControlSelection();
@@ -139,12 +133,6 @@ public class TextAction extends Action {
 	/**
 	 * Moves the selected text to the clipboard.  The text will be put in the 
 	 * clipboard in plain text format and RTF format.
-	 * <p>
-	 *
-	 * @exception org.eclipse.swt.SWTException <ul>
-	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
 	 */
 	public void cut(){
 		Point selection = getControlSelection();
@@ -179,12 +167,6 @@ public class TextAction extends Action {
 	 * If the widget has the SWT.SINGLE style and the clipboard text contains
 	 * more than one line, only the first line without line delimiters is 
 	 * inserted in the widget.
-	 * <p>
-	 *
-	 * @exception org.eclipse.swt.SWTException <ul>
-	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
-	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
-	 * </ul>
 	 */
 	public void paste() {
 		TextTransfer transfer = TextTransfer.getInstance();

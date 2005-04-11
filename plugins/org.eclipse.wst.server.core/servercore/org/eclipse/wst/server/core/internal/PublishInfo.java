@@ -146,7 +146,7 @@ public class PublishInfo {
 		}
 	}
 	
-	public void save(IServer server) {
+	protected void save(IServer server) {
 		ServerPublishInfo spi = getServerPublishInfo(server);
 		spi.save();
 	}

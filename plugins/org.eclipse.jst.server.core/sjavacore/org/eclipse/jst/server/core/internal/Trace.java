@@ -13,9 +13,21 @@ package org.eclipse.jst.server.core.internal;
  * Helper class to route trace output.
  */
 public class Trace {
+	/**
+	 * Config tracing
+	 */
 	public static byte CONFIG = 0;
+	/**
+	 * Warning tracing
+	 */
 	public static byte WARNING = 1;
+	/**
+	 * Severe tracing
+	 */
 	public static byte SEVERE = 2;
+	/**
+	 * Finest tracing
+	 */
 	public static byte FINEST = 3;
 
 	/**
@@ -28,7 +40,8 @@ public class Trace {
 	/**
 	 * Trace the given text.
 	 *
-	 * @param s java.lang.String
+	 * @param level trace level
+	 * @param s String
 	 */
 	public static void trace(byte level, String s) {
 		Trace.trace(level, s, null);
@@ -37,8 +50,9 @@ public class Trace {
 	/**
 	 * Trace the given message and exception.
 	 *
-	 * @param s java.lang.String
-	 * @param t java.lang.Throwable
+	 * @param level trace level
+	 * @param s String
+	 * @param t Throwable
 	 */
 	public static void trace(byte level, String s, Throwable t) {
 		if (!JavaServerPlugin.getInstance().isDebugging())

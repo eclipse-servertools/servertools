@@ -18,10 +18,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.Messages;
 import org.eclipse.wst.server.core.internal.ProjectProperties;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 /**
  * A helper class for wizards.
@@ -34,6 +35,11 @@ public class WizardUtil {
 		// do nothing
 	}
 
+	/**
+	 * Return a new or existing server project.
+	 * 
+	 * @return the server project
+	 */
 	public static IProject getServerProject() {
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		if (projects != null) {
@@ -55,10 +61,10 @@ public class WizardUtil {
 	 */
 	protected static String findUnusedServerProjectName() {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		String name = ServerPlugin.getResource("%defaultServerProjectName", "");
+		String name = NLS.bind(Messages.defaultServerProjectName, "");
 		int count = 1;
 		while (root.getProject(name).exists()) {
-			name = ServerPlugin.getResource("%defaultServerProjectName", ++count + "");
+			name = NLS.bind(Messages.defaultServerProjectName, ++count + "");
 		}
 		return name;
 	}
@@ -157,7 +163,9 @@ public class WizardUtil {
 	 * Return true if the container is a valid server project
 	 * folder and is not "within" a server instance or configuration.
 	 *
-	 * @param name a container name 
+	 * @param name a container name
+	 * @return <code>null</code> if the container is fine, and an error message
+	 *    otherwise 
 	 */
 	public static String validateContainer(String name) {
 		IContainer container = WizardUtil.findContainer(name);
@@ -210,8 +218,10 @@ public class WizardUtil {
 	/**
 	 * Returns true if the user said okay to creating a new server
 	 * project.
-	 *
-	 * @return boolean
+	 * 
+	 * @param shell a shell
+	 * @param projectName a project name
+	 * @return <code>true</code> if the user wants to create a server project
 	 */
 	public static boolean promptForServerProjectCreation(Shell shell, String projectName) {
 		String msg = ServerUIPlugin.getResource("%createServerProjectDialogMessage", projectName);
@@ -221,6 +231,9 @@ public class WizardUtil {
 	/**
 	 * Handles default selection within a wizard by going to the next
 	 * page, or finishing the wizard if possible.
+	 * 
+	 * @param wizard a wizard
+	 * @param page a wizard page
 	 */
 	public static void defaultSelect(IWizard wizard, IWizardPage page) {
 		if (page.canFlipToNextPage() && page.getNextPage() != null)

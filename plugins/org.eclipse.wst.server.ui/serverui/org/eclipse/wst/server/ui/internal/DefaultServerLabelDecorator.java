@@ -14,16 +14,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.wst.server.core.internal.Server;
 /**
  * 
  */
 public class DefaultServerLabelDecorator implements ILabelDecorator {
 	protected Map map = new HashMap();
-
-	//protected Image image2;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ILabelDecorator#decorateImage(org.eclipse.swt.graphics.Image, java.lang.Object)
@@ -37,7 +38,22 @@ public class DefaultServerLabelDecorator implements ILabelDecorator {
 			// ignore
 		}
 		
-		DefaultServerImageDescriptor dsid = new DefaultServerImageDescriptor(image);
+		DefaultServerImageDescriptor dsid = null;
+		if (element instanceof Server) {
+			IStatus status = ((Server) element).getServerStatus();
+			if (status != null) {
+				ISharedImages sharedImages = ServerUIPlugin.getInstance().getWorkbench().getSharedImages();
+				if (status.getSeverity() == IStatus.ERROR)
+					dsid = new DefaultServerImageDescriptor(image, sharedImages.getImage(ISharedImages.IMG_OBJS_ERROR_TSK));
+				else if (status.getSeverity() == IStatus.WARNING)
+					dsid = new DefaultServerImageDescriptor(image, sharedImages.getImage(ISharedImages.IMG_OBJS_WARN_TSK));
+				else if (status.getSeverity() == IStatus.INFO)
+					dsid = new DefaultServerImageDescriptor(image, sharedImages.getImage(ISharedImages.IMG_OBJS_INFO_TSK));
+			}
+		}
+		
+		if (dsid == null)
+			dsid = new DefaultServerImageDescriptor(image);
 		Image image2 = dsid.createImage();
 		map.put(element, image2);
 		return image2;

@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 /**
@@ -123,7 +124,7 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 
 	public IRuntime save(boolean force, IProgressMonitor monitor) throws CoreException {
 		monitor = ProgressUtil.getMonitorFor(monitor);
-		monitor.subTask(ServerPlugin.getResource("%savingTask", getName()));
+		monitor.subTask(NLS.bind(Messages.savingTask, getName()));
 		
 		if (!force && getOriginal() != null)
 			wch.validateTimestamp(((Runtime) getOriginal()).getTimestamp());
@@ -153,7 +154,7 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 	protected void updateRuntimeReferences(final String oldId, final String newId, final IRuntime origRuntime) {
 		class UpdateRuntimeReferencesJob extends Job {
 			public UpdateRuntimeReferencesJob() {
-				super(ServerPlugin.getResource("%savingTask", newId));
+				super(NLS.bind(Messages.savingTask, newId));
 			}
 
 			public IStatus run(IProgressMonitor monitor) {
@@ -212,7 +213,7 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 
 		class RebuildRuntimeReferencesJob extends Job {
 			public RebuildRuntimeReferencesJob() {
-				super(ServerPlugin.getResource("%taskPerforming"));
+				super(Messages.taskPerforming);
 			}
 
 			public IStatus run(IProgressMonitor monitor) {

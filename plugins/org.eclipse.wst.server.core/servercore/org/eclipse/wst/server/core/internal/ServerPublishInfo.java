@@ -56,20 +56,6 @@ public class ServerPublishInfo {
 	private String getKey(String moduleId) {
 		return moduleId;
 	}
-
-	/*private String getParentsId(IModule[] parents) {
-		StringBuffer sb = new StringBuffer();
-		
-		if (parents != null) {
-			int size = parents.length;
-			for (int i = 0; i < size; i++) {
-				sb.append(parents[i].getId());
-				sb.append("#");
-			}
-		}
-		
-		return sb.toString();
-	}*/
 	
 	private IModule[] getModule(String moduleId) {
 		if (moduleId == null || moduleId.length() == 0)
@@ -89,12 +75,12 @@ public class ServerPublishInfo {
 		return modules;
 	}
 
-	public boolean hasModulePublishInfo(IModule[] module) {
+	protected boolean hasModulePublishInfo(IModule[] module) {
 		String key = getKey(module);
 		return modulePublishInfo.containsKey(key);
 	}
 
-	public void removeModulePublishInfo(IModule[] module) {
+	protected void removeModulePublishInfo(IModule[] module) {
 		String key = getKey(module);
 		modulePublishInfo.remove(key);
 	}
@@ -102,7 +88,7 @@ public class ServerPublishInfo {
 	/**
 	 * Return the publish state.
 	 */
-	public ModulePublishInfo getModulePublishInfo(IModule[] module) {
+	protected ModulePublishInfo getModulePublishInfo(IModule[] module) {
 		String key = getKey(module);
 
 		// check if it now exists
@@ -115,7 +101,7 @@ public class ServerPublishInfo {
 		return mpi;
 	}
 
-	public void addRemovedModules(List moduleList, List kindList) {
+	protected void addRemovedModules(List moduleList, List kindList) {
 		int size = moduleList.size();
 		List removed = new ArrayList();
 		Iterator iterator = modulePublishInfo.keySet().iterator();
@@ -200,7 +186,7 @@ public class ServerPublishInfo {
 		}
 	}
 	
-	public void fill(IModule[] module) {
+	protected void fill(IModule[] module) {
 		ModulePublishInfo mpi = getModulePublishInfo(module);
 		int size = module.length;
 		ModuleDelegate pm = (ModuleDelegate) module[size - 1].getAdapter(ModuleDelegate.class);
@@ -211,7 +197,7 @@ public class ServerPublishInfo {
 		}
 	}
 
-	public IModuleResourceDelta[] getDelta(IModule[] module) {
+	protected IModuleResourceDelta[] getDelta(IModule[] module) {
 		if (module == null)
 			return new IModuleResourceDelta[0];
 		

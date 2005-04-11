@@ -42,6 +42,13 @@ public class SWTUtil {
 		return Math.max(widthHint, button.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x);
 	}
 
+	/**
+	 * Create a new button with the standard size.
+	 * 
+	 * @param comp the component to add the button to
+	 * @param label the button label
+	 * @return a button
+	 */
 	public static Button createButton(Composite comp, String label) {
 		Button b = new Button(comp, SWT.PUSH);
 		b.setText(label);

@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.*;
+import org.eclipse.osgi.util.NLS;
 /**
  * Helper class for storing runtime and server attributes.
  */
@@ -34,10 +35,21 @@ public abstract class Base {
 	// file loaded from, or null if it is saved in metadata
 	protected IFile file;
 	
+	/**
+	 * Create a new object.
+	 * 
+	 * @param file
+	 */
 	public Base(IFile file) {
 		this.file = file;
 	}
 
+	/**
+	 * Create a new object.
+	 * 
+	 * @param file
+	 * @param id
+	 */
 	public Base(IFile file, String id) {
 		this.file = file;
 		//this.map = map;
@@ -220,7 +232,7 @@ public abstract class Base {
 				file.create(in, true, ProgressUtil.getSubMonitorFor(monitor, 1000));
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not save " + getXMLRoot(), e);
-			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorSaving", getFile().toString()), e));
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorSaving, getFile().toString()), e));
 		}
 	}
 	
@@ -331,7 +343,7 @@ public abstract class Base {
 			load(memento);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not load from file" + e.getMessage(), e);
-			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLoading", getFile().toString()), e));
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorLoading, getFile().toString()), e));
 		} finally {
 			try {
 				in.close();
@@ -356,7 +368,7 @@ public abstract class Base {
 			load(memento);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not load from path: " + e.getMessage(), e);
-			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLoading", path.toString()), e));
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorLoading, path.toString()), e));
 		} finally {
 			try {
 				fin.close();

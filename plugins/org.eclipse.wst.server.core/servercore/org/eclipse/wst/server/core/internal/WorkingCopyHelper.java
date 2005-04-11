@@ -113,7 +113,7 @@ public class WorkingCopyHelper {
 
 	protected void validateTimestamp(int timestamp) throws CoreException {
 		if (base.getTimestamp() != timestamp)
-			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, IServerWorkingCopy.SAVE_CONFLICT, ServerPlugin.getResource("%errorWorkingCopyTimestamp"), null));
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, IServerWorkingCopy.SAVE_CONFLICT, Messages.errorWorkingCopyTimestamp, null));
 	}
 
 	/**

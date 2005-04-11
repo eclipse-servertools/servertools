@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.Messages;
 import org.eclipse.wst.server.core.internal.Runtime;
 import org.eclipse.wst.server.core.internal.RuntimeWorkingCopy;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
@@ -128,10 +129,10 @@ public abstract class RuntimeDelegate {
 	 */
 	public IStatus validate() {
 		if (runtime.getName() == null || runtime.getName().length() == 0)
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorRuntimeName"), null);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorRuntimeName, null);
 
 		if (isNameInUse())
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorDuplicateRuntimeName"), null);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorDuplicateRuntimeName, null);
 	
 		IPath path = runtime.getLocation();
 		if (path == null || path.isEmpty())

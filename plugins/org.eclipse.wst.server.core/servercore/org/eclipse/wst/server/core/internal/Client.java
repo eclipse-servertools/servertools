@@ -25,7 +25,9 @@ public class Client implements IClient {
 	private ClientDelegate delegate;
 
 	/**
-	 * LaunchableClient constructor comment.
+	 * Create a new client.
+	 * 
+	 * @param element a configuration element
 	 */
 	public Client(IConfigurationElement element) {
 		super();
@@ -33,16 +35,14 @@ public class Client implements IClient {
 	}
 
 	/**
-	 * Returns the id of this LaunchableClient.
-	 *
-	 * @return java.lang.String
+	 * @see IClient#getId()
 	 */
 	public String getId() {
 		return element.getAttribute("id");
 	}
 
-	/*
-	 * @see IPublishManager#getDescription()
+	/**
+	 * @see IClient#getDescription()
 	 */
 	public String getDescription() {
 		return element.getAttribute("description");
@@ -52,8 +52,8 @@ public class Client implements IClient {
 		return element.getAttribute("launchable");
 	}
 
-	/*
-	 * @see IPublishManager#getLabel()
+	/**
+	 * @see IClient#getName()
 	 */
 	public String getName() {
 		String label = element.getAttribute("name");
@@ -62,8 +62,10 @@ public class Client implements IClient {
 		return label;
 	}
 
-	/*
-	 * @see IPublishManager#getDelegate()
+	/**
+	 * Return the delegate.
+	 * 
+	 * @return the delegate, or <code>null</code> if it couldn't be loaded
 	 */
 	public ClientDelegate getDelegate() {
 		if (delegate == null) {
@@ -77,7 +79,7 @@ public class Client implements IClient {
 	}
 
 	/**
-	 * 
+	 * @see IClient#supports(IServer, Object, String)
 	 */
 	public boolean supports(IServer server, Object launchable, String launchMode) {
 		if (launchable == null)
@@ -93,7 +95,7 @@ public class Client implements IClient {
 	}
 
 	/**
-	 * Opens or executes on the launchable.
+	 * @see IClient#launch(IServer, Object, String, ILaunch)
 	 */
 	public IStatus launch(IServer server, Object launchable, String launchMode, ILaunch launch) {
 		try {
@@ -107,7 +109,7 @@ public class Client implements IClient {
 	/**
 	 * Return a string representation of this object.
 	 * 
-	 * @return java.lang.String
+	 * @return String
 	 */
 	public String toString() {
 		return "Client[" + getId() + "]";

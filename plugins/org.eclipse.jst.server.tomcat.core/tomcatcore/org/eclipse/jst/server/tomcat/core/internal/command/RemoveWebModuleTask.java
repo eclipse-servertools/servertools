@@ -29,6 +29,8 @@ public class RemoveWebModuleTask extends Task {
 
 	/**
 	 * RemoveWebModuleTask constructor comment.
+	 * 
+	 * @param index
 	 */
 	public RemoveWebModuleTask(int index) {
 		super();
@@ -37,7 +39,9 @@ public class RemoveWebModuleTask extends Task {
 
 	/**
 	 * Execute the command.
-	 * @return boolean
+	 * 
+	 * @param monitor a progress monitor
+	 * @throws CoreException
 	 */
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		IServerWorkingCopy wc = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
@@ -51,7 +55,8 @@ public class RemoveWebModuleTask extends Task {
 
 	/**
 	 * Returns this command's description.
-	 * @return java.lang.String
+	 * 
+	 * @return String
 	 */
 	public String getDescription() {
 		if (module == null) {
@@ -71,8 +76,9 @@ public class RemoveWebModuleTask extends Task {
 	}
 
 	/**
-	 * Returns this command's label.
-	 * @return java.lang.String
+	 * Returns this command's name.
+	 * 
+	 * @return String
 	 */
 	public String getName() {
 		return TomcatPlugin.getResource("%configurationEditorActionRemoveWebModule");

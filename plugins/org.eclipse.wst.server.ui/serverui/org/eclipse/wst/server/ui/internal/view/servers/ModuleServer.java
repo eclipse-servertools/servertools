@@ -12,8 +12,67 @@ package org.eclipse.wst.server.ui.internal.view.servers;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-
+/**
+ * A utility class for referencing a server and a module at the same time.
+ */
 public class ModuleServer {
+	/**
+	 * The server
+	 */
 	public IServer server;
+	
+	/**
+	 * The module
+	 */
 	public IModule[] module;
+	
+	/**
+	 * Create a new module-server.
+	 * 
+	 * @param server the server
+	 * @param module the module
+	 */
+	public ModuleServer(IServer server, IModule[] module) {
+		this.server = server;
+		this.module = module;
+	}
+	
+	/**
+	 * @see Object#equals(Object)
+	 */
+	public boolean equals(Object obj) {
+		if (!(obj instanceof ModuleServer))
+			return false;
+		
+		ModuleServer ms = (ModuleServer) obj;
+		if (!ms.server.equals(server))
+			return false;
+		
+		if (ms.module.length != module.length)
+			return false;
+		
+		int size = module.length;
+		for (int i = 0; i < size; i++) {
+			if (!module[i].equals(ms.module[i]))
+				return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * @see Object#toString()
+	 */
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("Server-Module [" + server.getId() + "/" + server.getName() + ", (");
+		
+		int size = module.length;
+		for (int i = 0; i < size; i++) {
+			if (i > 0)
+				sb.append(", ");
+			sb.append(module[i].getName());
+		}
+		sb.append(")]");
+		return sb.toString();
+	}
 }

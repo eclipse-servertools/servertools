@@ -161,7 +161,6 @@ public class NewManualServerComposite extends Composite {
 	
 	/**
 	 * Return the current editable element.
-	 * @returns org.eclipse.wst.server.core.IServer
 	 */
 	protected void loadServerImpl(final IServerType serverType) {
 		//runtime = null;

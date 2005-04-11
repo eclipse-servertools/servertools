@@ -72,14 +72,14 @@ public class RuntimeType implements IRuntimeType, IOrdered {
 	public String getVendor() {
 		String vendor = element.getAttribute("vendor");
 		if (vendor == null)
-			return ServerPlugin.getResource("%defaultVendor");
+			return Messages.defaultVendor;
 		return vendor;
 	}
 	
 	public String getVersion() {
 		String version = element.getAttribute("version");
 		if (version == null)
-			return ServerPlugin.getResource("%defaultVersion");
+			return Messages.defaultVersion;
 		return version;
 	}
 	

@@ -57,8 +57,8 @@ public class GenericRuntimeComposite extends Composite {
 		super(parent, SWT.NONE);
 		this.wizard = wizard;
 		
-		wizard.setTitle(JavaServerUIPlugin.getResource("%runtimeTypeTitle"));
-		wizard.setDescription(JavaServerUIPlugin.getResource("%runtimeTypeDescription"));
+		wizard.setTitle(Messages.runtimeTypeTitle);
+		wizard.setDescription(Messages.runtimeTypeDescription);
 		wizard.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_RUNTIME_TYPE));
 		
 		createControl();
@@ -88,7 +88,7 @@ public class GenericRuntimeComposite extends Composite {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, ContextIds.RUNTIME_TARGET_COMPOSITE);
 		
 		Label label = new Label(this, SWT.NONE);
-		label.setText(JavaServerUIPlugin.getResource("%runtimeTypeName"));
+		label.setText(Messages.runtimeTypeName);
 		GridData data = new GridData();
 		data.horizontalSpan = 2;
 		label.setLayoutData(data);
@@ -104,7 +104,7 @@ public class GenericRuntimeComposite extends Composite {
 		});
 	
 		label = new Label(this, SWT.NONE);
-		label.setText(JavaServerUIPlugin.getResource("%runtimeTypeLocation"));
+		label.setText(Messages.runtimeTypeLocation);
 		data = new GridData();
 		data.horizontalSpan = 2;
 		label.setLayoutData(data);
@@ -119,11 +119,11 @@ public class GenericRuntimeComposite extends Composite {
 			}
 		});
 	
-		Button browse = SWTUtil.createButton(this, JavaServerUIPlugin.getResource("%browse"));
+		Button browse = SWTUtil.createButton(this, Messages.browse);
 		browse.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent se) {
 				DirectoryDialog dialog = new DirectoryDialog(GenericRuntimeComposite.this.getShell());
-				dialog.setMessage(JavaServerUIPlugin.getResource("%runtimeTypeSelectLocation"));
+				dialog.setMessage(Messages.runtimeTypeSelectLocation);
 				dialog.setFilterPath(installDir.getText());
 				String selectedDirectory = dialog.open();
 				if (selectedDirectory != null)
@@ -135,7 +135,7 @@ public class GenericRuntimeComposite extends Composite {
 		
 		// JDK location
 		label = new Label(this, SWT.NONE);
-		label.setText(JavaServerUIPlugin.getResource("%runtimeTypeJRE"));
+		label.setText(Messages.runtimeTypeJRE);
 		data = new GridData();
 		data.horizontalSpan = 2;
 		label.setLayoutData(data);
@@ -161,7 +161,7 @@ public class GenericRuntimeComposite extends Composite {
 			}
 		});
 		
-		Button button = SWTUtil.createButton(this, JavaServerUIPlugin.getResource("%runtimeTypeInstalledJREs"));
+		Button button = SWTUtil.createButton(this, Messages.runtimeTypeInstalledJREs);
 		button.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				String currentVM = combo.getText();
@@ -199,7 +199,7 @@ public class GenericRuntimeComposite extends Composite {
 		// get names
 		size = installedJREs.size();
 		jreNames = new String[size+1];
-		jreNames[0] = JavaServerUIPlugin.getResource("%runtimeTypeDefaultJRE");
+		jreNames[0] = Messages.runtimeTypeDefaultJRE;
 		for (int i = 0; i < size; i++) {
 			IVMInstall vmInstall = (IVMInstall) installedJREs.get(i);
 			jreNames[i+1] = vmInstall.getName();

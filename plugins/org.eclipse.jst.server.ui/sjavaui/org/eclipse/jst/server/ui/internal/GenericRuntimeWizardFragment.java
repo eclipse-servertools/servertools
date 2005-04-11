@@ -22,19 +22,31 @@ import org.eclipse.swt.widgets.Composite;
 public class GenericRuntimeWizardFragment extends WizardFragment {
 	protected GenericRuntimeComposite comp;
 	
+	/**
+	 * Create a new fragment.
+	 */
 	public GenericRuntimeWizardFragment() {
 		// do nothing
 	}
 
+	/**
+	 * @see WizardFragment#hasComposite()
+	 */
 	public boolean hasComposite() {
 		return true;
 	}
 
+	/**
+	 * @see WizardFragment#createComposite(Composite, IWizardHandle)
+	 */
 	public Composite createComposite(Composite parent, IWizardHandle wizard) {
 		comp = new GenericRuntimeComposite(parent, wizard);
 		return comp;
 	}
 
+	/**
+	 * @see WizardFragment#isComplete()
+	 */
 	public boolean isComplete() {
 		IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 		
@@ -44,6 +56,9 @@ public class GenericRuntimeWizardFragment extends WizardFragment {
 		return (status != null && status.isOK());
 	}
 
+	/**
+	 * @see WizardFragment#enter()
+	 */
 	public void enter() {
 		if (comp != null) {
 			IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);

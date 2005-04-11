@@ -21,6 +21,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -57,6 +58,8 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	protected Spinner autoPublishLocalTime;
 	protected Button autoPublishRemote;
 	protected Spinner autoPublishRemoteTime;
+	
+	protected Combo machineSpeedCombo;
 
 	/**
 	 * ServerPreferencesPage constructor comment.
@@ -83,7 +86,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		layout.verticalSpacing = convertVerticalDLUsToPixels(4);
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
-		layout.numColumns = 3;
+		layout.numColumns = 4;
 		composite.setLayout(layout);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
 		composite.setLayoutData(data);
@@ -93,7 +96,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		publishBeforeStart = new Button(composite, SWT.CHECK);
 		publishBeforeStart.setText(ServerUIPlugin.getResource("%prefAutoPublish"));
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 3;
+		data.horizontalSpan = 4;
 		publishBeforeStart.setLayoutData(data);
 		publishBeforeStart.setSelection(preferences.isAutoPublishing());
 		whs.setHelp(publishBeforeStart, ContextIds.PREF_GENERAL_PUBLISH_BEFORE_START);
@@ -101,7 +104,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		autoPublishLocal = new Button(composite, SWT.CHECK);
 		autoPublishLocal.setText(ServerUIPlugin.getResource("%prefAutoPublishLocal"));
 		data = new GridData(GridData.FILL_HORIZONTAL);
-		data.horizontalSpan = 1;
+		data.horizontalSpan = 2;
 		autoPublishLocal.setLayoutData(data);
 		autoPublishLocal.setSelection(preferences.getAutoPublishLocal());
 		//WorkbenchHelp.setHelp(savePrompt, ContextIds.);
@@ -129,7 +132,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		autoPublishRemote = new Button(composite, SWT.CHECK);
 		autoPublishRemote.setText(ServerUIPlugin.getResource("%prefAutoPublishRemote"));
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 1;
+		data.horizontalSpan = 2;
 		autoPublishRemote.setLayoutData(data);
 		autoPublishRemote.setSelection(preferences.getAutoPublishRemote());
 		//WorkbenchHelp.setHelp(autoPublishRemote, ContextIds.);
@@ -157,7 +160,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		autoRestart = new Button(composite, SWT.CHECK);
 		autoRestart.setText(ServerUIPlugin.getResource("%prefAutoRestart"));
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 3;
+		data.horizontalSpan = 4;
 		autoRestart.setLayoutData(data);
 		autoRestart.setSelection(preferences.isAutoRestarting());
 		whs.setHelp(autoRestart, ContextIds.PREF_GENERAL_AUTO_RESTART);
@@ -165,7 +168,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		promptIrreversible = new Button(composite, SWT.CHECK);
 		promptIrreversible.setText(ServerUIPlugin.getResource("%prefPromptIrreversible"));
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 3;
+		data.horizontalSpan = 4;
 		promptIrreversible.setLayoutData(data);
 		promptIrreversible.setSelection(uiPreferences.getPromptBeforeIrreversibleChange());
 		whs.setHelp(promptIrreversible, ContextIds.PREF_GENERAL_PROMPT_IRREVERSIBLE);
@@ -173,7 +176,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		showOnActivity = new Button(composite, SWT.CHECK);
 		showOnActivity.setText(ServerUIPlugin.getResource("%prefShowOnActivity"));
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 3;
+		data.horizontalSpan = 4;
 		showOnActivity.setLayoutData(data);
 		showOnActivity.setSelection(uiPreferences.getShowOnActivity());
 		whs.setHelp(showOnActivity, ContextIds.PREF_GENERAL_SHOW_ON_ACTIVITY);
@@ -181,7 +184,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		createInWorkspace = new Button(composite, SWT.CHECK);
 		createInWorkspace.setText(ServerUIPlugin.getResource("%prefCreateInWorkspace"));
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 3;
+		data.horizontalSpan = 4;
 		createInWorkspace.setLayoutData(data);
 		createInWorkspace.setSelection(preferences.isCreateResourcesInWorkspace());
 		whs.setHelp(createInWorkspace, ContextIds.PREF_GENERAL_CREATE_IN_WORKSPACE);
@@ -194,7 +197,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		layout.numColumns = 3;
 		saveEditorGroup.setLayout(layout);
 		data = new GridData(GridData.FILL_HORIZONTAL);
-		data.horizontalSpan = 3;
+		data.horizontalSpan = 4;
 		saveEditorGroup.setLayoutData(data);
 		
 		saveNever = new Button(saveEditorGroup, SWT.RADIO);
@@ -223,6 +226,24 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 			}
 		});
 		whs.setHelp(saveAuto, ContextIds.PREF_GENERAL_SAVE_EDITORS);
+		
+		label = new Label(composite, SWT.NONE);
+		label.setText(ServerUIPlugin.getResource("%prefMachineSpeed"));
+		
+		machineSpeedCombo = new Combo(composite, SWT.READ_ONLY);
+		String[] items = new String[] {
+			ServerUIPlugin.getResource("%prefMachineSpeedVerySlow"),
+			ServerUIPlugin.getResource("%prefMachineSpeedSlow"),
+			ServerUIPlugin.getResource("%prefMachineSpeedAverage"),
+			ServerUIPlugin.getResource("%prefMachineSpeedFast"),
+			ServerUIPlugin.getResource("%prefMachineSpeedVeryFast")
+		};
+		machineSpeedCombo.setItems(items);
+		machineSpeedCombo.select(preferences.getMachineSpeed() / 2);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		data.horizontalSpan = 3;
+		machineSpeedCombo.setLayoutData(data);
+		//whs.setHelp(machineSpeedSlider, ContextIds.PREF_GENERAL_PROMPT_IRREVERSIBLE);
 		
 		setSaveEditorStatus(uiPreferences.getSaveEditors());
 		
@@ -262,14 +283,15 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		autoPublishRemote.setSelection(preferences.getDefaultAutoPublishRemote());
 		autoPublishRemoteTime.setSelection(preferences.getDefaultAutoPublishRemoteTime());
 		
+		machineSpeedCombo.select(preferences.getDefaultMachineSpeed() / 2);
+		
 		setSaveEditorStatus(uiPreferences.getDefaultSaveEditors());
 	
 		super.performDefaults();
 	}
 
 	/**
-	 * Method declared on IPreferencePage.
-	 * Subclasses should override
+	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
 	 */
 	public boolean performOk() {
 		preferences.setAutoPublishing(publishBeforeStart.getSelection());
@@ -283,6 +305,8 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		preferences.setAutoPublishLocalTime(autoPublishLocalTime.getSelection());
 		preferences.setAutoPublishRemote(autoPublishRemote.getSelection());
 		preferences.setAutoPublishRemoteTime(autoPublishRemoteTime.getSelection());
+		
+		preferences.setMachineSpeed(machineSpeedCombo.getSelectionIndex() * 2);
 	
 		// auto restart any servers that are ready for restart
 		if (autoRestart.getSelection())

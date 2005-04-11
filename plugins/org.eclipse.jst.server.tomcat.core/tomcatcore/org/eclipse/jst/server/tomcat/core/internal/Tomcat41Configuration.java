@@ -231,7 +231,6 @@ public class Tomcat41Configuration extends TomcatConfiguration {
 	
 	/**
 	 *
-	 * @return org.eclipse.jst.server.tomcat.internal.Tomcat40Configuration
 	 */
 	public void load(IPath path, IProgressMonitor monitor) throws CoreException {
 		try {

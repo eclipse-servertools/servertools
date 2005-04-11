@@ -13,6 +13,7 @@ package org.eclipse.wst.server.core.internal;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IServer;
 /**
  * Job to publish to a particular server.
@@ -22,8 +23,15 @@ public class PublishServerJob extends Job {
 	protected int kind;
 	protected boolean check; 
 
+	/**
+	 * Create a new publishing job.
+	 * 
+	 * @param server the server to publish to
+	 * @param kind the kind of publish
+	 * @param check
+	 */
 	public PublishServerJob(IServer server, int kind, boolean check) {
-		super(ServerPlugin.getResource("%publishing", server.getName()));
+		super(NLS.bind(Messages.publishing, server.getName()));
 		this.server = server;
 		this.kind = kind;
 		this.check = check;
@@ -32,12 +40,17 @@ public class PublishServerJob extends Job {
 			setUser(true);
 	}
 
+	/**
+	 * Create a new publishing job.
+	 * 
+	 * @param server the server to publish to
+	 */
 	public PublishServerJob(IServer server) {
 		this(server, IServer.PUBLISH_INCREMENTAL, true);
 	}
 
-	/*
-	 * Returns whether this job should be run.
+	/**
+	 * @see Job#shouldRun()
 	 */
 	public boolean shouldRun() {
 		if (!check)
@@ -45,8 +58,8 @@ public class PublishServerJob extends Job {
 		return ServerPreferences.getInstance().isAutoPublishing() && ((Server)server).shouldPublish();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
+	/**
+	 * @see Job#run(IProgressMonitor)
 	 */
 	protected IStatus run(IProgressMonitor monitor) {
 		return server.publish(kind, monitor);

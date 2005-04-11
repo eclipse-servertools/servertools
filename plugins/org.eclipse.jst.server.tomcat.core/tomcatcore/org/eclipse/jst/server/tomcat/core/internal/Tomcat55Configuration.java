@@ -330,7 +330,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	 * @param path a path
 	 * @param forceDirty boolean
 	 * @param monitor a progress monitor
-	 * @exception java.io.IOException
+	 * @exception CoreException
 	 */
 	protected void save(IPath path, boolean forceDirty, IProgressMonitor monitor) throws CoreException {
 		try {

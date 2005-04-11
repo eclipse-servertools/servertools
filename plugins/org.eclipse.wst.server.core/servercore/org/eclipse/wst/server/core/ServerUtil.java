@@ -18,7 +18,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunchConfiguration;
 
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.internal.IModuleVisitor;
+import org.eclipse.wst.server.core.internal.Messages;
 import org.eclipse.wst.server.core.internal.ModuleFactory;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
@@ -347,10 +349,10 @@ public class ServerUtil {
 	public static void setRuntimeDefaultName(IRuntimeWorkingCopy runtime) {
 		String typeName = runtime.getRuntimeType().getName();
 		
-		String name = ServerPlugin.getResource("%defaultRuntimeName", new String[] {typeName});
+		String name = NLS.bind(Messages.defaultRuntimeName, typeName);
 		int i = 2;
 		while (isNameInUse(name)) {
-			name = ServerPlugin.getResource("%defaultRuntimeName2", new String[] {typeName, i + ""});
+			name = NLS.bind(Messages.defaultRuntimeName2, new String[] {typeName, i + ""});
 			i++;
 		}
 		runtime.setName(name);
@@ -368,10 +370,10 @@ public class ServerUtil {
 		String typeName = server.getServerType().getName();
 		String host = server.getHost();
 		
-		String name = ServerPlugin.getResource("%defaultServerName", new String[] {typeName, host});
+		String name = NLS.bind(Messages.defaultServerName, new String[] {typeName, host});
 		int i = 2;
 		while (isNameInUse(name)) {
-			name = ServerPlugin.getResource("%defaultServerName2", new String[] {typeName, host, i + ""});
+			name = NLS.bind(Messages.defaultServerName2, new String[] {typeName, host, i + ""});
 			i++;
 		}
 		server.setName(name);
@@ -419,10 +421,10 @@ public class ServerUtil {
 			throw new IllegalArgumentException();
 		
 		String typeName = getValidFileName(type.getName());
-		String name = ServerPlugin.getResource("%defaultServerName3", new String[] {typeName})+ "."  + Server.FILE_EXTENSION;
+		String name = NLS.bind(Messages.defaultServerName3, typeName)+ "."  + Server.FILE_EXTENSION;
 		int i = 2;
 		while (isFileNameInUse(project, name)) {
-			name = ServerPlugin.getResource("%defaultServerName4", new String[] {typeName, i + ""}) + "."  + Server.FILE_EXTENSION;
+			name = NLS.bind(Messages.defaultServerName4, new String[] {typeName, i + ""}) + "."  + Server.FILE_EXTENSION;
 			i++;
 		}
 		return project.getFile(name);

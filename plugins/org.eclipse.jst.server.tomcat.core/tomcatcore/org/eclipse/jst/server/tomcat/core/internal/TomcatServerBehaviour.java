@@ -220,7 +220,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			IPath to = getServer().getRuntime().getLocation().append("webapps").append(webModule.getContextRoot());
 			FileUtil.smartCopyDirectory(from.toOSString(), to.toOSString(), monitor);
 			p.put(module.getId(), to.toOSString());
-			setModulePublishState(new IModule[] { module }, IServer.PUBLISH_STATE_NONE);
+			setModulePublishState(moduleTree, IServer.PUBLISH_STATE_NONE);
 		}
 		
 		try {
@@ -356,7 +356,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 * 
 	 * @param originalArg
 	 * @param vmArgs
-	 * @return
+	 * @return merged argument string
 	 */
 	public static String mergeArguments(String originalArg, String[] vmArgs) {
 		if (vmArgs == null)

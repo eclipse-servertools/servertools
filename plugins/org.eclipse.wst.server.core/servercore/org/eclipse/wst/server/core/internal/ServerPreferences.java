@@ -18,14 +18,14 @@ public class ServerPreferences {
 	private static final String PREF_AUTO_RESTART = "auto-restart";
 	private static final String PREF_AUTO_PUBLISH = "auto-publish";
 	private static final String PREF_CREATE_IN_WORKSPACE = "create-workspace";
-	private static final String PREF_STARTUP_TIMEOUT = "start-timeout";
-	private static final String PREF_RESTART_MODULE_TIMEOUT = "restart-module-timeout";
 	private static final String PREF_MODULE_START_TIMEOUT = "module-start-timeout";
 	
 	private static final String PREF_AUTO_PUBLISH_LOCAL = "auto-publish-local";
 	private static final String PREF_AUTO_PUBLISH_LOCAL_TIME = "auto-publish-local-time";
 	private static final String PREF_AUTO_PUBLISH_REMOTE = "auto-publish-remote";
 	private static final String PREF_AUTO_PUBLISH_REMOTE_TIME = "auto-publish-remote-time";
+	
+	private static final String PREF_MACHINE_SPEED = "machine-speed";
 
 	private Preferences preferences;
 
@@ -39,6 +39,11 @@ public class ServerPreferences {
 		preferences = ServerPlugin.getInstance().getPluginPreferences();
 	}
 
+	/**
+	 * Returns the static instance.
+	 * 
+	 * @return the static instance
+	 */
 	public static ServerPreferences getInstance() {
 		if (instance == null)
 			instance = new ServerPreferences();
@@ -137,16 +142,40 @@ public class ServerPreferences {
 		ServerPlugin.getInstance().savePluginPreferences();
 	}
 
-	public int getStartupTimeout() {
-		return preferences.getInt(PREF_STARTUP_TIMEOUT);
-	}
-
-	public int getRestartModuleTimeout() {
-		return preferences.getInt(PREF_RESTART_MODULE_TIMEOUT);
-	}
-
+	/**
+	 * Returns the module start timeout.
+	 * 
+	 * @return the module start timeout
+	 */
 	public int getModuleStartTimeout() {
 		return preferences.getInt(PREF_MODULE_START_TIMEOUT);
+	}
+
+	/**
+	 * Return the machine speed index, from 1 to 10.
+	 * 
+	 * @return the relative speed
+	 */
+	public int getMachineSpeed() {
+		return preferences.getInt(PREF_MACHINE_SPEED);
+	}
+	
+	/**
+	 * Return the default machine speed index, 6.
+	 * 
+	 * @return the default speed index
+	 */
+	public int getDefaultMachineSpeed() {
+		return 6;
+	}
+
+	/**
+	 * Sets the relative machine speed index, from 1 to 10.
+	 * 
+	 * @param speed the relative speed 
+	 */
+	public void setMachineSpeed(int speed) {
+		preferences.setValue(PREF_MACHINE_SPEED, speed);
 	}
 	
 	/**
@@ -261,27 +290,22 @@ public class ServerPreferences {
 		ServerPlugin.getInstance().savePluginPreferences();
 	}
 
+	/**
+	 * Set the default values.
+	 */
 	public void setDefaults() {
 		preferences.setDefault(PREF_AUTO_PUBLISH, isDefaultAutoPublishing());
 		preferences.setDefault(PREF_AUTO_RESTART, isDefaultAutoRestarting());
-		preferences.setDefault(PREF_STARTUP_TIMEOUT, 210001);
+		preferences.setDefault(PREF_MACHINE_SPEED, getDefaultMachineSpeed());
 		
 		preferences.setDefault(PREF_AUTO_PUBLISH_LOCAL, getDefaultAutoPublishLocal());
 		preferences.setDefault(PREF_AUTO_PUBLISH_LOCAL_TIME, getDefaultAutoPublishLocalTime());
 		preferences.setDefault(PREF_AUTO_PUBLISH_REMOTE, getDefaultAutoPublishRemote());
 		preferences.setDefault(PREF_AUTO_PUBLISH_REMOTE_TIME, getDefaultAutoPublishRemoteTime());
 		
-		preferences.setDefault(PREF_RESTART_MODULE_TIMEOUT, 120001);
 		preferences.setDefault(PREF_MODULE_START_TIMEOUT, 300001);
 		boolean save = false;
-		if (preferences.isDefault(PREF_STARTUP_TIMEOUT)) {
-			preferences.setValue(PREF_STARTUP_TIMEOUT, 210000);
-			save = true;
-		}
-		if (preferences.isDefault(PREF_RESTART_MODULE_TIMEOUT)) {
-			preferences.setValue(PREF_RESTART_MODULE_TIMEOUT, 120000);
-			save = true;
-		}		if (preferences.isDefault(PREF_MODULE_START_TIMEOUT)) {
+		if (preferences.isDefault(PREF_MODULE_START_TIMEOUT)) {
 			preferences.setValue(PREF_MODULE_START_TIMEOUT, 300000);
 			save = true;
 		}

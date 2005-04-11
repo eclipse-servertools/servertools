@@ -85,12 +85,11 @@ public class ServerTableViewer extends TreeViewer {
 					int size = children.length;
 					ModuleServer[] ms2 = new ModuleServer[size];
 					for (int i = 0; i < size; i++) {
-						ms2[i] = new ModuleServer();
-						ms2[i].server = ms.server;
 						int size2 = ms.module.length;
-						ms2[i].module = new IModule[size2 + 1];
+						IModule[] module = new IModule[size2 + 1];
 						System.arraycopy(ms.module, 0, ms2[i].module, 0, size2);
-						ms2[i].module[size2] = children[i];
+						module[size2] = children[i];
+						ms2[i] = new ModuleServer(ms.server, module);
 					}
 					return ms2;
 				} catch (Exception e) {
@@ -103,9 +102,7 @@ public class ServerTableViewer extends TreeViewer {
 			int size = modules.length;
 			ModuleServer[] ms = new ModuleServer[size];
 			for (int i = 0; i < size; i++) {
-				ms[i] = new ModuleServer();
-				ms[i].server = server;
-				ms[i].module = new IModule[] { modules[i] };
+				ms[i] = new ModuleServer(server, new IModule[] { modules[i] });
 			}
 			return ms;
 		}
@@ -190,13 +187,16 @@ public class ServerTableViewer extends TreeViewer {
 		thread.setDaemon(true);
 		thread.start();
 	}
-	
+
 	protected void stopThread() {
 		stopThread = true;
 	}
-	
+
 	/**
 	 * ServerTableViewer constructor comment.
+	 * 
+	 * @param view the view 
+	 * @param tree the tree
 	 */
 	public ServerTableViewer(final ServersView view, final Tree tree) {
 		super(tree);
@@ -313,7 +313,7 @@ public class ServerTableViewer extends TreeViewer {
 				int eventKind = event.getKind();
 				IServer server = event.getServer();
 				if ((eventKind & ServerEvent.SERVER_CHANGE) != 0) {
-					// Server change event
+					// server change event
 					if ((eventKind & ServerEvent.STATE_CHANGE) != 0) {
 						refreshServer(server);
 						int state = event.getState();
@@ -335,7 +335,7 @@ public class ServerTableViewer extends TreeViewer {
 						refreshServer(server);
 					} 
 				} else if ((eventKind & ServerEvent.MODULE_CHANGE) != 0) {
-					// Module change event
+					// module change event
 					if ((eventKind & ServerEvent.STATE_CHANGE) != 0) {
 						refreshServer(server);
 					} 

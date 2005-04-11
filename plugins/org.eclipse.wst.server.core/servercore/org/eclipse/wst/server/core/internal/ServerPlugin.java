@@ -13,9 +13,9 @@ package org.eclipse.wst.server.core.internal;
 import java.io.*;
 import java.util.*;
 import java.text.DateFormat;
-import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.*;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.osgi.framework.BundleContext;
 /**
@@ -81,49 +81,6 @@ public class ServerPlugin extends Plugin {
 	 */
 	public static ServerPlugin getInstance() {
 		return singleton;
-	}
-
-	/**
-	 * Returns the translated String found with the given key.
-	 *
-	 * @param key a key
-	 * @return a translated string
-	 */
-	public static String getResource(String key) {
-		try {
-			return Platform.getResourceString(getInstance().getBundle(), key);
-		} catch (Exception e) {
-			return key;
-		}
-	}
-
-	/**
-	 * Returns the translated String found with the given key,
-	 * and formatted with the given arguments using java.text.MessageFormat.
-	 *
-	 * @param key a key
-	 * @param args substitution arguments
-	 * @return a translated string
-	 */
-	public static String getResource(String key, Object[] args) {
-		try {
-			String text = getResource(key);
-			return MessageFormat.format(text, args);
-		} catch (Exception e) {
-			return key;
-		}
-	}
-	
-	/**
-	 * Returns the translated String found with the given key,
-	 * and formatted with the given arguments using java.text.MessageFormat.
-	 *
-	 * @param key a key
-	 * @param arg an argument
-	 * @return a translated string
-	 */
-	public static String getResource(String key, String arg) {
-		return getResource(key, new String[] { arg });
 	}
 
 	/**
@@ -386,7 +343,7 @@ public class ServerPlugin extends Plugin {
 			File[] files = dir.listFiles();
 			int size = files.length;
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(ServerPlugin.getResource("%deletingTask", new String[] {dir.getAbsolutePath()}), size * 10);
+			monitor.beginTask(NLS.bind(Messages.deletingTask, new String[] {dir.getAbsolutePath()}), size * 10);
 	
 			// cycle through files
 			for (int i = 0; i < size; i++) {
@@ -395,7 +352,7 @@ public class ServerPlugin extends Plugin {
 					current.delete();
 					monitor.worked(10);
 				} else if (current.isDirectory()) {
-					monitor.subTask(ServerPlugin.getResource("%deletingTask", new String[] {current.getAbsolutePath()}));
+					monitor.subTask(NLS.bind(Messages.deletingTask, new String[] {current.getAbsolutePath()}));
 					deleteDirectory(current, ProgressUtil.getSubMonitorFor(monitor, 10));
 				}
 			}

@@ -457,4 +457,23 @@ public abstract class ServerBehaviourDelegate {
 	public IPath getTempDirectory() {
 		return server.getTempDirectory();
 	}
+
+	/**
+	 * Set a global status on the server.
+	 *  
+	 * @param status the status
+	 */
+	public void setServerStatus(IStatus status) {
+		server.setServerStatus(status);
+	}
+
+	/**
+	 * Set a status on a specific module.
+	 * 
+	 * @param module the module
+	 * @param status the status
+	 */
+	public void setModuleStatus(IModule[] module, IStatus status) {
+		server.setModuleStatus(module, status);
+	}
 }

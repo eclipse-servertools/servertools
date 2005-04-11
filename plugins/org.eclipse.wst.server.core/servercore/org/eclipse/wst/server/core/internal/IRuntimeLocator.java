@@ -26,6 +26,9 @@ import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
  * @since 1.0
  */
 public interface IRuntimeLocator {
+	/**
+	 * A callback listener interface.
+	 */
 	public interface IRuntimeSearchListener {
 		/**
 		 * Called when a new runtime is found by the locator.

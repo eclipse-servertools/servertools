@@ -30,6 +30,9 @@ public class SetWebModulePathTask extends Task {
 
 	/**
 	 * SetWebModulePathTask constructor comment.
+	 * 
+	 * @param index
+	 * @param contextRoot
 	 */
 	public SetWebModulePathTask(int index, String contextRoot) {
 		super();
@@ -39,7 +42,9 @@ public class SetWebModulePathTask extends Task {
 
 	/**
 	 * Execute the command.
-	 * @return boolean
+	 * 
+	 * @param monitor a progress monitor
+	 * @throws CoreException
 	 */
 	public void execute(IProgressMonitor monitor) throws CoreException {
 		IServerWorkingCopy wc = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
@@ -54,7 +59,8 @@ public class SetWebModulePathTask extends Task {
 
 	/**
 	 * Returns this command's description.
-	 * @return java.lang.String
+	 * 
+	 * @return String
 	 */
 	public String getDescription() {
 		if (oldModule == null) {
@@ -75,8 +81,9 @@ public class SetWebModulePathTask extends Task {
 	}
 
 	/**
-	 * Returns this command's label.
-	 * @return java.lang.String
+	 * Returns this command's name.
+	 * 
+	 * @return String
 	 */
 	public String getName() {
 		return TomcatPlugin.getResource("%configurationEditorActionEditWebModulePath");

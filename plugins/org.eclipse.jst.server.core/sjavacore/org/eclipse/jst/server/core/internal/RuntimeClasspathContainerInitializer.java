@@ -21,7 +21,7 @@ import org.eclipse.wst.server.core.ServerCore;
  * 
  */
 public class RuntimeClasspathContainerInitializer extends ClasspathContainerInitializer {
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see org.eclipse.jdt.core.ClasspathContainerInitializer#initialize(org.eclipse.core.runtime.IPath, org.eclipse.jdt.core.IJavaProject)
 	 */
 	public void initialize(IPath containerPath, IJavaProject project) throws CoreException {
@@ -46,21 +46,21 @@ public class RuntimeClasspathContainerInitializer extends ClasspathContainerInit
 		}
 	}
 
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see org.eclipse.jdt.core.ClasspathContainerInitializer#getDescription(org.eclipse.core.runtime.IPath, org.eclipse.jdt.core.IJavaProject)
 	 */
 	public String getDescription(IPath containerPath, IJavaProject project) {
-		return JavaServerPlugin.getResource("%classpathContainerDescription");
+		return Messages.classpathContainerDescription;
 	}
 
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see org.eclipse.jdt.core.ClasspathContainerInitializer#canUpdateClasspathContainer(org.eclipse.core.runtime.IPath, org.eclipse.jdt.core.IJavaProject)
 	 */
 	public boolean canUpdateClasspathContainer(IPath containerPath, IJavaProject project) {
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see org.eclipse.jdt.core.ClasspathContainerInitializer#requestClasspathContainerUpdate(org.eclipse.core.runtime.IPath, org.eclipse.jdt.core.IJavaProject, org.eclipse.jdt.core.IClasspathContainer)
 	 */
 	public void requestClasspathContainerUpdate(IPath containerPath, IJavaProject project, IClasspathContainer containerSuggestion) throws CoreException {
@@ -85,7 +85,7 @@ public class RuntimeClasspathContainerInitializer extends ClasspathContainerInit
 		}
 	}
 
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see org.eclipse.jdt.core.ClasspathContainerInitializer#getComparisonID(org.eclipse.core.runtime.IPath, org.eclipse.jdt.core.IJavaProject)
 	 */
 	public Object getComparisonID(IPath containerPath, IJavaProject project) {

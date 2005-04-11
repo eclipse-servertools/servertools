@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.*;
 
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.core.util.ServerEvent;
@@ -82,6 +83,9 @@ public class Server extends Base implements IServer {
 	protected transient Map moduleState = new HashMap();
 	protected transient Map modulePublishState = new HashMap();
 	protected transient Map moduleRestartState = new HashMap();
+	
+	protected transient IStatus serverStatus;
+	protected transient Map moduleStatus = new HashMap();
 
 	protected transient ServerPublishInfo publishInfo;
 	protected transient AutoPublishThread autoPublishThread;
@@ -654,15 +658,15 @@ public class Server extends Base implements IServer {
 		// can't publish if the server is starting or stopping
 		int state = getServerState();
 		if (state == STATE_STARTING || state == STATE_STOPPING)
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorPublishStarting"), null);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishStarting, null);
 	
 		// can't publish if there is no configuration
 		if (getServerType() == null || getServerType().hasServerConfiguration() && configuration == null)
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorPublishNoConfiguration"), null);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishNoConfiguration, null);
 	
 		// return true if the configuration can be published
 		if (getServerPublishState() != PUBLISH_STATE_NONE)
-			return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%canPublishOk"), null);
+			return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, Messages.canPublishOk, null);
 
 		// return true if any modules can be published
 		class Temp {
@@ -670,7 +674,7 @@ public class Server extends Base implements IServer {
 		}
 		//final Temp temp = new Temp();
 		
-		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%canPublishOk"), null);
+		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, Messages.canPublishOk, null);
 	
 		/*IModuleVisitor visitor = new IModuleVisitor() {
 			public boolean visit(IModule[] parents, IModule module) {
@@ -726,11 +730,11 @@ public class Server extends Base implements IServer {
 	 */
 	public IStatus publish(final int kind, IProgressMonitor monitor) {
 		if (getServerType() == null)
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorPublishing"), null);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, null);
 
 		// check what is out of sync and publish
 		if (getServerType().hasServerConfiguration() && configuration == null)
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorNoConfiguration"), null);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorNoConfiguration, null);
 		
 		return doPublish(kind, monitor);
 	}
@@ -790,10 +794,10 @@ public class Server extends Base implements IServer {
 		int size = 2000 + 3500 * moduleList.size() + 500 * tasks.size();
 		
 		monitor = ProgressUtil.getMonitorFor(monitor);
-		monitor.beginTask(ServerPlugin.getResource("%publishing", toString()), size);
+		monitor.beginTask(NLS.bind(Messages.publishing, toString()), size);
 
 		// TODO - group up status until the end and use better message based on success or failure
-		MultiStatus multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%publishingStatus"), null);
+		MultiStatus multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.publishingStatus, null);
 		
 		// perform tasks
 		IStatus taskStatus = performTasks(tasks, monitor);
@@ -801,7 +805,7 @@ public class Server extends Base implements IServer {
 			multi.add(taskStatus);
 
 		if (monitor.isCanceled())
-			return new Status(IStatus.INFO, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%publishingCancelled"), null);
+			return new Status(IStatus.INFO, ServerPlugin.PLUGIN_ID, 0, Messages.publishingCancelled, null);
 		
 		// start publishing
 		Trace.trace(Trace.FINEST, "Calling publishStart()");
@@ -824,7 +828,7 @@ public class Server extends Base implements IServer {
 			multi.add(ce.getStatus());
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error publishing configuration to " + toString(), e);
-			multi.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorPublishing"), e));
+			multi.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
 		}
 		
 		// publish modules
@@ -833,7 +837,7 @@ public class Server extends Base implements IServer {
 				publishModules(kind, moduleList, kindList, multi, monitor);
 			} catch (Exception e) {
 				Trace.trace(Trace.WARNING, "Error while publishing modules", e);
-				multi.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorPublishing"), e));
+				multi.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
 			}
 		}
 		
@@ -846,15 +850,15 @@ public class Server extends Base implements IServer {
 			multi.add(ce.getStatus());
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error stopping publish to " + toString(), e);
-			multi.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorPublishing"), e));
+			multi.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
 		}
 		
 		if (monitor.isCanceled()) {
-			IStatus status = new Status(IStatus.INFO, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%publishingCancelled"), null);
+			IStatus status = new Status(IStatus.INFO, ServerPlugin.PLUGIN_ID, 0, Messages.publishingCancelled, null);
 			multi.add(status);
 		}
 
-		MultiStatus ps = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%publishingStop"), null);
+		MultiStatus ps = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.publishingStop, null);
 		ps.add(multi);
 		firePublishFinished(multi);
 		
@@ -878,11 +882,11 @@ public class Server extends Base implements IServer {
 		
 		int size = module.length;
 		IModule m = module[size - 1];
-		monitor.beginTask(ServerPlugin.getResource("%publishingModule", m.getName()), 1000);
+		monitor.beginTask(NLS.bind(Messages.publishingModule, m.getName()), 1000);
 		
 		fireModulePublishStarted(module);
 		
-		IStatus status = new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%publishedModule", m.getName()), null);
+		IStatus status = new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.publishedModule, m.getName()), null);
 		try {
 			getBehaviourDelegate().publishModule(kind, deltaKind, module, monitor);
 		} catch (CoreException ce) {
@@ -995,12 +999,12 @@ public class Server extends Base implements IServer {
 		if (tasks.isEmpty())
 			return null;
 		
-		Status multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%taskPerforming"), null);
+		Status multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.taskPerforming, null);
 
 		Iterator iterator = tasks.iterator();
 		while (iterator.hasNext()) {
 			IOptionalTask task = (IOptionalTask) iterator.next();
-			monitor.subTask(ServerPlugin.getResource("%taskPerforming", task.toString()));
+			monitor.subTask(NLS.bind(Messages.taskPerforming, task.toString()));
 			try {
 				task.execute(ProgressUtil.getSubMonitorFor(monitor, 500));
 			} catch (CoreException ce) {
@@ -1049,12 +1053,12 @@ public class Server extends Base implements IServer {
 	public IStatus canStart(String mode2) {
 		int state = getServerState();
 		if (state != STATE_STOPPED && state != STATE_UNKNOWN)
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%canStartErrorState"), null);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.canStartErrorState, null);
 		
 		if (getServerType() == null || !getServerType().supportsLaunchMode(mode2))
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorLaunchMode, null);
 
-		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%canStartOk"), null);
+		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, Messages.canStartOk, null);
 	}
 	
 	public ILaunch getExistingLaunch() {
@@ -1214,13 +1218,13 @@ public class Server extends Base implements IServer {
 	 */
 	public IStatus canRestart(String mode2) {
 		if (!getServerType().supportsLaunchMode(mode2))
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorLaunchMode"), null);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorLaunchMode, null);
 
 		int state = getServerState();
 		if (state == STATE_STARTED)
-			return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%canRestartOk"), null);
+			return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, Messages.canRestartOk, null);
 		
-		return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorRestartNotStarted"), null);
+		return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorRestartNotStarted, null);
 	}
 
 	/**
@@ -1317,9 +1321,9 @@ public class Server extends Base implements IServer {
 	 */
 	public IStatus canStop() {
 		if (getServerState() == STATE_STOPPED)
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStopAlreadyStopped"), null);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorStopAlreadyStopped, null);
 
-		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%canStopOk"), null);
+		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, Messages.canStopOk, null);
 	}
 
 	/**
@@ -1427,11 +1431,11 @@ public class Server extends Base implements IServer {
 		timer.alreadyDone = true;
 		
 		if (timer.timeout)
-			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStartTimeout", new String[] { getName(), serverTimeout + "" }), null));
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartTimeout, new String[] { getName(), serverTimeout + "" }), null));
 		timer.alreadyDone = true;
 		
 		if (getServerState() == IServer.STATE_STOPPED)
-			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStartFailed", getName()), null));
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), null));
 	
 		Trace.trace(Trace.FINEST, "synchronousStart 4");
 		
@@ -1613,11 +1617,11 @@ public class Server extends Base implements IServer {
 		}
 		removeServerListener(listener);
 		if (timer.timeout)
-			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorModuleRestartFailed", getName()), null));
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorModuleRestartFailed, getName()), null));
 		timer.alreadyDone = true;
 		
 		if (getModuleState(module) == IServer.STATE_STOPPED)
-			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorModuleRestartFailed", getName()), null));
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorModuleRestartFailed, getName()), null));
 	
 		Trace.trace(Trace.FINEST, "synchronousModuleRestart 4");
 	}
@@ -1840,11 +1844,11 @@ public class Server extends Base implements IServer {
 		try {
 			boolean b = getBehaviourDelegate().canRestartModule(module);
 			if (b)
-				return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%canRestartModuleOk"), null);
+				return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, Messages.canRestartModuleOk, null);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate canRestartRuntime() " + toString(), e);
 		}
-		return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, ServerPlugin.getResource("%errorRestartModule"), null);
+		return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorRestartModule, null);
 	}
 
 	/**
@@ -1950,5 +1954,27 @@ public class Server extends Base implements IServer {
 		}
 		
 		return sb.toString();
+	}
+	
+	public void setModuleStatus(IModule[] module, IStatus status) {
+		moduleStatus.put(getKey(module), status);
+		//fireServerModuleStateChangeEvent(module);
+	}
+	
+	public IStatus getModuleStatus(IModule[] module) {
+		try {
+			return (IStatus) moduleStatus.get(getKey(module));
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public void setServerStatus(IStatus status) {
+		serverStatus = status;
+		//fireServerStateChangeEvent();
+	}
+	
+	public IStatus getServerStatus() {
+		return serverStatus;
 	}
 }

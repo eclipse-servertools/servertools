@@ -27,6 +27,9 @@ import org.eclipse.wst.server.core.IRuntime;
  * 
  */
 public class GenericRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
+	/**
+	 * @see ClasspathRuntimeTargetHandler#getDelegateClasspathEntries(IRuntime, IProgressMonitor)
+	 */
 	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
 		GenericRuntime genericRuntime = (GenericRuntime) runtime.getAdapter(GenericRuntime.class);
 		IVMInstall vmInstall = genericRuntime.getVMInstall();
@@ -37,16 +40,15 @@ public class GenericRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
 		return null;
 	}
 
+	/**
+	 * @see ClasspathRuntimeTargetHandler#getClasspathContainerLabel(IRuntime, String)
+	 */
 	public String getClasspathContainerLabel(IRuntime runtime, String id) {
-		return JavaServerPlugin.getResource("%runtimeTypeName");
-	}
-	
-	public String[] getClasspathEntryIds(IRuntime runtime) {
-		return new String[1];
+		return Messages.runtimeTypeName;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.target.IServerTargetDelegate#getClasspathEntries()
+	/** (non-Javadoc)
+	 * @see ClasspathRuntimeTargetHandler#resolveClasspathContainer(IRuntime, String)
 	 */
 	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime, String id) {
 		IPath installPath = runtime.getLocation();
@@ -57,9 +59,5 @@ public class GenericRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
 		List list = new ArrayList();
 		addLibraryEntries(list, installPath.toFile(), false);
 		return resolveList(list);
-	}
-
-	public String getId() {
-		return "org.eclipse.jst.server.core.runtimeTarget";
 	}
 }

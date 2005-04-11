@@ -49,7 +49,7 @@ public final class XMLMemento implements IMemento {
 		element = el;
 	}
 
-	/*
+	/**
 	 * @see IMemento
 	 */
 	public IMemento createChild(String type) {
@@ -58,7 +58,7 @@ public final class XMLMemento implements IMemento {
 		return new XMLMemento(factory, child);
 	}
 
-	/*
+	/**
 	 * @see IMemento
 	 */
 	public IMemento createChild(String type, String id) {

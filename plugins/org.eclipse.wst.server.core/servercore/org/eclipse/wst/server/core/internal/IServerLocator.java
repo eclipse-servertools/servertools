@@ -25,6 +25,9 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
  * @since 1.0
  */
 public interface IServerLocator {
+	/**
+	 * A callback listener interface.
+	 */
 	public interface IServerSearchListener {
 		/**
 		 * Called when a new server is found by the locator.

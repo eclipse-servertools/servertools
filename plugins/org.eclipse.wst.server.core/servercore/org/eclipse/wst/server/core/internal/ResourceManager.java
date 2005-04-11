@@ -648,8 +648,6 @@ public class ResourceManager {
 	
 	/**
 	 * Sets the default runtime. Test API - do not use.
-	 *
-	 * @returns java.util.List
 	 */
 	public void setDefaultRuntime(IRuntime runtime) {
 		defaultRuntime = runtime;

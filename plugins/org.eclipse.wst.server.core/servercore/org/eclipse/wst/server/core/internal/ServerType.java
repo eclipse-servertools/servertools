@@ -20,6 +20,7 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchManager;
 
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.*;
 /**
  * 
@@ -239,10 +240,10 @@ public class ServerType implements IServerType, IOrdered {
 	 */
 	protected static String findUnusedServerProjectName() {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		String name = ServerPlugin.getResource("%defaultServerProjectName", "");
+		String name = NLS.bind(Messages.defaultServerProjectName, "");
 		int count = 1;
 		while (root.getProject(name).exists()) {
-			name = ServerPlugin.getResource("%defaultServerProjectName", ++count + "");
+			name = NLS.bind(Messages.defaultServerProjectName, ++count + "");
 		}
 		return name;
 	}
@@ -255,7 +256,10 @@ public class ServerType implements IServerType, IOrdered {
 	 */
 	public int getStartTimeout() {
 		try {
-			return Integer.parseInt(element.getAttribute("startTimeout"));
+			int i = Integer.parseInt(element.getAttribute("startTimeout"));
+			int s = ServerPreferences.getInstance().getMachineSpeed();
+			i = i * (10 - s) / 5;
+			return i;
 		} catch (NumberFormatException e) {
 			return -1;
 		}

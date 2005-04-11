@@ -21,6 +21,7 @@ import org.eclipse.swt.graphics.Point;
 public class DefaultServerImageDescriptor extends CompositeImageDescriptor {
 	private Image fBaseImage;
 	private Point fSize;
+	private Image overlay;
 	
 	/**
 	 * Create a new OverlayImageDescriptor.
@@ -28,7 +29,17 @@ public class DefaultServerImageDescriptor extends CompositeImageDescriptor {
 	 * @param baseImage an image descriptor used as the base image
 	 */
 	public DefaultServerImageDescriptor(Image baseImage) {
+		this(baseImage, ImageResource.getImage(ImageResource.IMG_DEFAULT_SERVER_OVERLAY));
+	}
+
+	/**
+	 * 
+	 * @param baseImage
+	 * @param overlay
+	 */
+	public DefaultServerImageDescriptor(Image baseImage, Image overlay) {
 		setBaseImage(baseImage);
+		this.overlay = overlay;
 	}
 
 	/**
@@ -76,7 +87,7 @@ public class DefaultServerImageDescriptor extends CompositeImageDescriptor {
 	 * Add any overlays to the image as specified in the flags.
 	 */
 	protected void drawOverlays() {
-		ImageData data = ImageResource.getImage(ImageResource.IMG_DEFAULT_SERVER_OVERLAY).getImageData();
+		ImageData data = overlay.getImageData();
 		int x = getSize().x - data.width;
 		drawImage(data, x, 0);
 	}

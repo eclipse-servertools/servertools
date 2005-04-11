@@ -10,11 +10,14 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerType;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.DefaultServerLabelDecorator;
 import org.eclipse.wst.server.ui.internal.ImageResource;
@@ -71,17 +74,30 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (element instanceof ModuleServer) {
 			ModuleServer ms = (ModuleServer) element;
-			if (columnIndex == 0)
+			if (columnIndex == 0) {
 				return ServerUICore.getLabelProvider().getImage(ms.module[ms.module.length - 1]);
-			if (columnIndex == 1)
+			} else if (columnIndex == 1)
 				return getStateImage(ms.server.getServerType(), ms.server.getModuleState(ms.module), null);
+			else if (columnIndex == 2) {
+				IStatus status = ((Server) ms.server).getModuleStatus(ms.module);
+				if (status != null) {
+					ISharedImages sharedImages = ServerUIPlugin.getInstance().getWorkbench().getSharedImages();
+					if (status.getSeverity() == IStatus.ERROR)
+						return sharedImages.getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
+					else if (status.getSeverity() == IStatus.WARNING)
+						return sharedImages.getImage(ISharedImages.IMG_OBJS_WARN_TSK);
+					else if (status.getSeverity() == IStatus.INFO)
+						return sharedImages.getImage(ISharedImages.IMG_OBJS_INFO_TSK);
+				}
+			}
 			return null;
 		}
 		IServer server = (IServer) element;
 		if (columnIndex == 0) {
 			if (server.getServerType() != null) {
 				Image image = ImageResource.getImage(server.getServerType().getId());
-				if (defaultServer != null && defaultServer.equals(server)) {
+				IStatus status = ((Server) server).getServerStatus();
+				if (defaultServer != null && defaultServer.equals(server) || status != null) {
 					Image decorated = decorator.decorateImage(image, element);
 					if (decorated != null)
 						return decorated;
@@ -106,17 +122,18 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 			if (columnIndex == 0) {
 				int size = ms.module.length;
 				return ms.module[size - 1].getName();
-			}
-			else if (columnIndex == 1)
+			} else if (columnIndex == 1)
 				return getStateLabel(ms.server.getServerType(), ms.server.getModuleState(ms.module), null);
-			else if (columnIndex == 2)
+			else if (columnIndex == 2) {
+				IStatus status = ((Server) ms.server).getModuleStatus(ms.module);
+				if (status != null)
+					return status.getMessage();
 				return "";
+			}
 		}
 		IServer server = (IServer) element;
 		if (columnIndex == 0)
 			return notNull(server.getName());
-		//else if (columnIndex == 1)
-		//	return notNull(server.getHost());
 		else if (columnIndex == 1) {
 			IServerType serverType = server.getServerType();
 			if (serverType != null)
@@ -124,6 +141,10 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 			
 			return "";
 		} else if (columnIndex == 2) {
+			IStatus status = ((Server) server).getServerStatus();
+			if (status != null)
+				return status.getMessage();
+			
 			if (server.getServerType() == null)
 				return "";
 			

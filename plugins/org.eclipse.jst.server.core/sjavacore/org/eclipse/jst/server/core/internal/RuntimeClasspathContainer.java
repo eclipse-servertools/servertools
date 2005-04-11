@@ -20,6 +20,9 @@ import org.eclipse.wst.server.core.IRuntime;
  * 
  */
 public class RuntimeClasspathContainer implements IClasspathContainer {
+	/**
+	 * The server container id.
+	 */
 	public static final String SERVER_CONTAINER = JavaServerPlugin.PLUGIN_ID + ".container";
 	
 	private IPath path;
@@ -28,6 +31,14 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	
 	private String id;
 	
+	/**
+	 * Create a new runtime classpath container.
+	 * 
+	 * @param path
+	 * @param delegate
+	 * @param runtime
+	 * @param id
+	 */
 	public RuntimeClasspathContainer(IPath path, ClasspathRuntimeTargetHandler delegate, IRuntime runtime, String id) {
 		this.path = path;
 		this.delegate = delegate;
@@ -35,7 +46,7 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 		this.id = id;
 	}
 
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see org.eclipse.jdt.core.IClasspathContainer#getClasspathEntries()
 	 */
 	public IClasspathEntry[] getClasspathEntries() {
@@ -49,7 +60,7 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 		return entries;
 	}
 
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see org.eclipse.jdt.core.IClasspathContainer#getDescription()
 	 */
 	public String getDescription() {
@@ -58,17 +69,17 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 		if (s != null)
 			return s;
 		
-		return JavaServerPlugin.getResource("%classpathContainerDescription");
+		return Messages.classpathContainerDescription;
 	}
 
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see org.eclipse.jdt.core.IClasspathContainer#getKind()
 	 */
 	public int getKind() {
 		return IClasspathContainer.K_APPLICATION;
 	}
 
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see org.eclipse.jdt.core.IClasspathContainer#getPath()
 	 */
 	public IPath getPath() {

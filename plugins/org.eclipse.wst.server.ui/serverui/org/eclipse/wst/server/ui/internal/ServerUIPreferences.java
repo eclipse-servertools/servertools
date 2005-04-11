@@ -74,7 +74,7 @@ public class ServerUIPreferences {
 	 * Sets whether the user should be prompted before making an
 	 * irreversible change in the editor.
 	 *
-	 * @returns boolean
+	 * @param b true to prompt before irreversible changes
 	 */
 	public void setPromptBeforeIrreversibleChange(boolean b) {
 		preferences.setValue(PREF_PROMPT_IRREVERSIBLE, b);
@@ -93,7 +93,7 @@ public class ServerUIPreferences {
 	/**
 	 * Sets the import location.
 	 *
-	 * @returns java.lang.String
+	 * @param s the import location
 	 */
 	public void setImportLocation(String s) {
 		preferences.setValue(PREF_IMPORT_LOCATION, s);

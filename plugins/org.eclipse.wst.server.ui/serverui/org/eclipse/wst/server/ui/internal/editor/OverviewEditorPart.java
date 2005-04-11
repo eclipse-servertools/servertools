@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.GridData;
@@ -30,6 +32,8 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.FormColors;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.*;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
@@ -38,6 +42,11 @@ import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.command.*;
+import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
+import org.eclipse.wst.server.ui.internal.task.SaveRuntimeTask;
+import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
+import org.eclipse.wst.server.ui.wizard.TaskWizard;
+import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * Server general editor page.
  */
@@ -191,7 +200,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		
 		// runtime
 		if (server != null && server.getServerType() != null && server.getServerType().hasRuntime()) {
-			IRuntime runtime = server.getRuntime();
+			final IRuntime runtime = server.getRuntime();
 			createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewRuntime"));
 			
 			IRuntimeType runtimeType = server.getServerType().getRuntimeType();
@@ -231,6 +240,25 @@ public class OverviewEditorPart extends ServerEditorPart {
 					}
 				});
 			}
+			
+			createLabel(toolkit, composite, "");
+			Hyperlink link = toolkit.createHyperlink(composite, "Edit runtime", SWT.NONE); // TODO: translate
+			//GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+			//link.setLayoutData(data);
+			link.addHyperlinkListener(new IHyperlinkListener() {
+				public void linkEntered(HyperlinkEvent e) {
+					// ignore
+				}
+
+				public void linkExited(HyperlinkEvent e) {
+					// ignore
+				}
+
+				public void linkActivated(HyperlinkEvent e) {
+					editRuntime(runtime);
+				}
+				
+			});
 		}
 		
 		// server configuration path
@@ -313,6 +341,41 @@ public class OverviewEditorPart extends ServerEditorPart {
 		form.reflow(true);
 
 		initialize();
+	}
+	
+	protected void editRuntime(IRuntime runtime) {
+		IRuntimeWorkingCopy runtimeWorkingCopy = runtime.createWorkingCopy();
+		if (showWizard(runtimeWorkingCopy) != Window.CANCEL) {
+			try {
+				runtimeWorkingCopy.save(false, new NullProgressMonitor());
+			} catch (Exception ex) {
+				// ignore
+			}
+		}
+	}
+	
+	protected int showWizard(final IRuntimeWorkingCopy runtimeWorkingCopy) {
+		String title = ServerUIPlugin.getResource("%wizEditRuntimeWizardTitle");
+		final WizardFragment fragment2 = ServerUIPlugin.getWizardFragment(runtimeWorkingCopy.getRuntimeType().getId());
+		if (fragment2 == null)
+			return Window.CANCEL;
+		
+		WizardFragment fragment = new WizardFragment() {
+			protected void createChildFragments(List list) {
+				list.add(new WizardFragment() {
+					public void enter() {
+						getTaskModel().putObject(TaskModel.TASK_RUNTIME, runtimeWorkingCopy);
+					}
+				});
+				list.add(fragment2);
+				list.add(new FinishWizardFragment(new SaveRuntimeTask()));
+			}
+		};
+		
+		TaskWizard wizard = new TaskWizard(title, fragment);
+		wizard.setForcePreviousAndNextButtons(true);
+		ClosableWizardDialog dialog = new ClosableWizardDialog(getEditorSite().getShell(), wizard);
+		return dialog.open();
 	}
 	
 	protected void updateRuntimeCombo() {
