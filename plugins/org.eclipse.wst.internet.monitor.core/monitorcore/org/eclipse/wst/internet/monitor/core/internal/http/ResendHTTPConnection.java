@@ -14,9 +14,14 @@ import org.eclipse.wst.internet.monitor.core.Request;
 /**
  * A resend HTTP connection wraps an HTTP connection to send an existing request.
  */
-public class ResendHTTPConnection extends HTTPConnection{
+public class ResendHTTPConnection extends HTTPConnection {
 	protected Request existingRequest;
 
+	/**
+	 * Create a new resend connection.
+	 * 
+	 * @param request
+	 */
 	public ResendHTTPConnection(Request request) {
 		super(null);
 		this.existingRequest = request;

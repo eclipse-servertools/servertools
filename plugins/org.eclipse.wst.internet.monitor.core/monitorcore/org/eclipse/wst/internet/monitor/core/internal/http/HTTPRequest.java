@@ -26,12 +26,20 @@ public class HTTPRequest extends Request {
 	protected static final byte[] EMPTY = new byte[0];
 
 	/**
-	 * HTTPRequestResponse constructor comment.
+	 * Create an HTTPRequest.
+	 * 
+	 * @param monitor
+	 * @param localPort
+	 * @param remoteHost
+	 * @param remotePort
 	 */
 	public HTTPRequest(Monitor monitor, int localPort, String remoteHost, int remotePort) {
 		super(monitor, IProtocolAdapter.HTTP_PROTOCOL_ID, localPort, remoteHost, remotePort);
 	}
 
+	/**
+	 * @see Request#getRequest(int)
+	 */
 	public byte[] getRequest(int type2) {
 		if (type2 == ALL)
 			return request;
@@ -41,6 +49,9 @@ public class HTTPRequest extends Request {
 			return getRequestContent();
 	}
 	
+	/**
+	 * @see Request#getResponse(int)
+	 */
 	public byte[] getResponse(int type2) {
 		if (type2 == ALL)
 			return response;

@@ -25,7 +25,13 @@ public class TCPIPThread extends Thread {
 	protected Request request;
 
 	/**
-	 * MonitorThread constructor comment.
+	 * Create a new TCP/IP thread.
+	 * 
+	 * @param conn
+	 * @param request
+	 * @param in
+	 * @param out
+	 * @param isRequest
 	 */
 	public TCPIPThread(Connection conn, Request request, InputStream in, OutputStream out, boolean isRequest) {
 		super();

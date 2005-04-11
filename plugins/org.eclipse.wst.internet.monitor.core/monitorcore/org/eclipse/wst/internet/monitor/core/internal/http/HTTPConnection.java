@@ -31,7 +31,9 @@ public class HTTPConnection {
 	protected List requests = new ArrayList();
 
 	/**
-	 * MonitorHTTPConnection constructor comment.
+	 * HTTPConnection constructor comment.
+	 * 
+	 * @param monitor a monitor
 	 */
 	public HTTPConnection(IMonitor monitor) {
 		super();
@@ -66,7 +68,10 @@ public class HTTPConnection {
 	}
 
 	/**
+	 * Add a property.
 	 * 
+	 * @param key
+	 * @param value
 	 */
 	public void addProperty(String key, Object value) {
 		Request request = getRequestResponse(req);
@@ -74,7 +79,10 @@ public class HTTPConnection {
 	}
 
 	/**
+	 * Get the request.
 	 * 
+	 * @param isRequest
+	 * @return the request
 	 */
 	public Request getRequestResponse(boolean isRequest) {
 		if (isRequest)

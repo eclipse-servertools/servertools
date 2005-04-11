@@ -18,6 +18,9 @@ import org.eclipse.core.runtime.*;
  * The monitor core plugin.
  */
 public class MonitorPlugin extends Plugin {
+	/**
+	 * The plugin/bundle id.
+	 */
 	public static final String PLUGIN_ID = "org.eclipse.wst.internet.monitor.core";
 
 	private static MonitorPlugin singleton;
@@ -88,6 +91,11 @@ public class MonitorPlugin extends Plugin {
 		return getResource(key, new String[] { arg });
 	}
 	
+	/**
+	 * Returns the default protocol type.
+	 * 
+	 * @return the protocol
+	 */
 	public String getDefaultType() {
 		return "HTTP";
 	}
@@ -130,6 +138,11 @@ public class MonitorPlugin extends Plugin {
 		return types;
 	}
 
+	/**
+	 * Return the content filters.
+	 * 
+	 * @return an array of content filters
+	 */
 	public IContentFilter[] getContentFilters() {
 		List list = new ArrayList();
 		Iterator iterator = contentFilters.values().iterator();
@@ -141,6 +154,12 @@ public class MonitorPlugin extends Plugin {
 		return cf;
 	}
 	
+	/**
+	 * Find a content filter by the id.
+	 * 
+	 * @param id an id
+	 * @return the content filter, or <code>null</code> if it couldn't be found
+	 */
 	public IContentFilter findContentFilter(String id) {
 		if (id == null)
 			throw new IllegalArgumentException();

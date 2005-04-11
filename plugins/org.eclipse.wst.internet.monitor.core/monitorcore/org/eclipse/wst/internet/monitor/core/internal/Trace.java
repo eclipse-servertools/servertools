@@ -13,11 +13,29 @@ package org.eclipse.wst.internet.monitor.core.internal;
  * Helper class to route trace output.
  */
 public class Trace {
+	/**
+	 * Config trace event.
+	 */
 	public static byte CONFIG = 0;
+	
+	/**
+	 * Warning trace event.
+	 */
 	public static byte WARNING = 1;
+	
+	/**
+	 * Severe trace event.
+	 */
 	public static byte SEVERE = 2;
+	
+	/**
+	 * Finest trace event.
+	 */
 	public static byte FINEST = 3;
 	
+	/**
+	 * Parsing trace event.
+	 */
 	public static byte PARSING = 4;
 
 	/**
@@ -30,6 +48,7 @@ public class Trace {
 	/**
 	 * Trace the given text.
 	 *
+	 * @param level trace level
 	 * @param s java.lang.String
 	 */
 	public static void trace(byte level, String s) {
@@ -39,6 +58,7 @@ public class Trace {
 	/**
 	 * Trace the given message and exception.
 	 *
+	 * @param level trace level
 	 * @param s java.lang.String
 	 * @param t java.lang.Throwable
 	 */

@@ -18,11 +18,20 @@ public class Connection {
 	protected Socket in;
 	protected Socket out;
 	
+	/**
+	 * Creates a new connection.
+	 * 
+	 * @param in inbound socket
+	 * @param out outbound socket
+	 */
 	public Connection(Socket in, Socket out) {
 		this.in = in;
 		this.out = out;
 	}
 
+	/**
+	 * Close the connection.
+	 */
 	public void close() {
 		Trace.trace(Trace.FINEST, "Closing connection");
 		try {

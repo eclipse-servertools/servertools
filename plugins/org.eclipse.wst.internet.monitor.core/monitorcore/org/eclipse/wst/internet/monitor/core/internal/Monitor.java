@@ -38,47 +38,50 @@ public class Monitor implements IMonitor {
 	
 	protected List requestListeners = new ArrayList(2);
 
+	/**
+	 * Create a new monitor.
+	 */
 	public Monitor() {
 		protocolId = MonitorPlugin.getInstance().getDefaultType();
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.internal.IMonitor#getId()
+	/** (non-Javadoc)
+	 * @see IMonitor#getId()
 	 */
 	public String getId() {
 		return id;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.internal.IMonitor#getRemoteHost()
+	/** (non-Javadoc)
+	 * @see IMonitor#getRemoteHost()
 	 */
 	public String getRemoteHost() {
 		return remoteHost;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.internal.IMonitor#getRemotePort()
+	/** (non-Javadoc)
+	 * @see IMonitor#getRemotePort()
 	 */
 	public int getRemotePort() {
 		return remotePort;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.internal.IMonitor#getLocalPort()
+	/** (non-Javadoc)
+	 * @see IMonitor#getLocalPort()
 	 */
 	public int getLocalPort() {
 		return localPort;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.internal.IMonitor#isHTTPEnabled()
+	/** (non-Javadoc)
+	 * @see IMonitor#getProtocol()
 	 */
 	public String getProtocol() {
 		return protocolId;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.internal.IMonitor#isRunning()
+	/** (non-Javadoc)
+	 * @see IMonitor#isRunning()
 	 */
 	public boolean isRunning() {
 		if (isWorkingCopy())
@@ -86,16 +89,25 @@ public class Monitor implements IMonitor {
 		return MonitorManager.getInstance().isRunning(this);
 	}
 	
+	/**
+	 * @see IMonitor#delete()
+	 */
 	public void delete() {
 		if (isWorkingCopy())
 			return;
 		MonitorManager.getInstance().removeMonitor(this);
 	}
 
+	/**
+	 * @see IMonitor#isWorkingCopy()
+	 */
 	public boolean isWorkingCopy() {
 		return false;
 	}
 	
+	/**
+	 * @see IMonitor#createWorkingCopy()
+	 */
 	public IMonitorWorkingCopy createWorkingCopy() {
 		return new MonitorWorkingCopy(this);
 	}
@@ -128,8 +140,8 @@ public class Monitor implements IMonitor {
 			remotePort = temp.intValue();
 	}
 	
-	/*
-	 * Starts the given monitor listening on its client port.
+	/**
+	 * @see IMonitor#start()
 	 */
 	public synchronized void start() throws CoreException {
 		if (isRunning())
@@ -144,9 +156,8 @@ public class Monitor implements IMonitor {
 		MonitorManager.getInstance().startMonitor(this);
 	}
 	
-	/*
-	 * Stops the given monitor and frees up all underlying operating 
-	 * system resources.
+	/**
+	 * @see IMonitor#start()
 	 */
 	public synchronized void stop() {
 		if (isWorkingCopy() || !MonitorManager.getInstance().exists(this))
@@ -156,8 +167,8 @@ public class Monitor implements IMonitor {
 		MonitorManager.getInstance().stopMonitor(this);
 	}
 	
-	/*
-	 * Adds a request listener.
+	/**
+	 * @see IMonitor#addRequestListener(IRequestListener)
 	 */
 	public synchronized void addRequestListener(IRequestListener listener) {
 		if (listener == null)
@@ -166,9 +177,8 @@ public class Monitor implements IMonitor {
 			requestListeners.add(listener);
 	}
 	
-	/*
-	 * Removes the given request listener. Has no
-	 * effect if the listener is not registered.
+	/**
+	 * @see IMonitor#removeRequestListener(IRequestListener)
 	 */
 	public synchronized void removeRequestListener(IRequestListener listener) {
 		if (listener == null)
@@ -197,15 +207,25 @@ public class Monitor implements IMonitor {
 	
 	/**
 	 * Add a new request response pair.
+	 * 
+	 * @param request a request
 	 */
-	public void addRequest(Request rr) {
-		fireRequestEvent(rr, ADD);
+	public void addRequest(Request request) {
+		fireRequestEvent(request, ADD);
 	}
 
-	public void requestChanged(Request rr) {
-		fireRequestEvent(rr, CHANGE);
+	/**
+	 * A request response pair has been changed.
+	 * 
+	 * @param request a request
+	 */
+	public void requestChanged(Request request) {
+		fireRequestEvent(request, CHANGE);
 	}
 	
+	/**
+	 * @see IMonitor#validate()
+	 */
 	public IStatus validate() {
 		if (localPort < 0)
 			return new Status(IStatus.ERROR, MonitorPlugin.PLUGIN_ID, 0, MonitorPlugin.getResource("%errorInvalidLocalPort"), null);
@@ -251,12 +271,18 @@ public class Monitor implements IMonitor {
 		}
 		return false;
 	}
-	
+
+	/**
+	 * @see Object#toString()
+	 */
 	public String toString() {
 		return "Monitor [" + getId() + ", " + getProtocol() + ", " + getLocalPort() + ", "
 			+ getRemoteHost() + ", " + getRemotePort() + "]";
 	}
 	
+	/**
+	 * @see Object#equals(Object)
+	 */
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Monitor))
 			return false;

@@ -17,67 +17,84 @@ import org.eclipse.wst.internet.monitor.core.*;
 public class MonitorWorkingCopy extends Monitor implements IMonitorWorkingCopy {
 	protected Monitor monitor;
 	
-	// creation
+	/**
+	 * Create a new monitor working copy. (used for initial creation)
+	 */
 	public MonitorWorkingCopy() {
 		// do nothing
 	}
 
-	// working copy
+	/**
+	 * Create a new monitor working copy. (used for working copies)
+	 * 
+	 * @param monitor the monitor this working copy is for
+	 */
 	public MonitorWorkingCopy(Monitor monitor) {
 		this.monitor = monitor;
 		setInternal(monitor);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.internal.IMonitorWorkingCopy#getOriginal()
+	/** (non-Javadoc)
+	 * @see IMonitorWorkingCopy#getOriginal()
 	 */
 	public IMonitor getOriginal() {
 		return monitor;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.internal.IMonitorWorkingCopy#setRemoteHost(java.lang.String)
+	/**
+	 * Set the id.
+	 * 
+	 * @param newId the id
 	 */
 	public void setId(String newId) {
 		id = newId;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.internal.IMonitorWorkingCopy#setRemoteHost(java.lang.String)
+	/** (non-Javadoc)
+	 * @see IMonitorWorkingCopy#setRemoteHost(String)
 	 */
 	public void setRemoteHost(String host) {
 		remoteHost = host;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.internal.IMonitorWorkingCopy#setRemotePort(int)
+	/** (non-Javadoc)
+	 * @see IMonitorWorkingCopy#setRemotePort(int)
 	 */
 	public void setRemotePort(int port) {
 		remotePort = port;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.internal.IMonitorWorkingCopy#setLocalPort(int)
+	/** (non-Javadoc)
+	 * @see IMonitorWorkingCopy#setLocalPort(int)
 	 */
 	public void setLocalPort(int port) {
 		localPort = port;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.internal.IMonitorWorkingCopy#setProtocolAdapter(IProtocolAdapter)
+	/** (non-Javadoc)
+	 * @see IMonitorWorkingCopy#setProtocol(String)
 	 */
 	public void setProtocol(String protocolId2) {
 		protocolId = protocolId2;
 	}
 	
+	/**
+	 * @see IMonitor#isWorkingCopy()
+	 */
 	public boolean isWorkingCopy() {
 		return true;
 	}
 	
+	/**
+	 * @see IMonitor#createWorkingCopy()
+	 */
 	public IMonitorWorkingCopy createWorkingCopy() {
 		return this;
 	}
 
+	/**
+	 * @see IMonitorWorkingCopy#save()
+	 */
 	public synchronized IMonitor save() {
 		MonitorManager mm = MonitorManager.getInstance();
 		if (monitor != null) {

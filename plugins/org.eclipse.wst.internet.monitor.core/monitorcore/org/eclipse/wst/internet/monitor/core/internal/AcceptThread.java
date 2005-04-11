@@ -66,13 +66,18 @@ public class AcceptThread {
 	}
 
 	/**
-	 * AcceptThread constructor comment.
+	 * AcceptThread constructor.
+	 * 
+	 * @param monitor a monitor
 	 */
 	public AcceptThread(IMonitor monitor) {
 		super();
 		this.monitor = monitor;
 	}
 	
+	/**
+	 * Start the server.
+	 */
 	public void startServer() {
 		if (thread != null)
 			return;
@@ -81,6 +86,12 @@ public class AcceptThread {
 		thread.start();
 	}
 
+	/**
+	 * Returns <code>true</code> if the server is running.
+	 * 
+	 * @return <code>true</code> if the server is running, and <code>false</code>
+	 *    otherwise
+	 */
 	public boolean isRunning() {
 		return (thread != null);
 	}

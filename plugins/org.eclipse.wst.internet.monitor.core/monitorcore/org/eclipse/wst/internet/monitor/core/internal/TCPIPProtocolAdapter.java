@@ -23,6 +23,9 @@ import org.eclipse.wst.internet.monitor.core.Request;
 public class TCPIPProtocolAdapter extends ProtocolAdapterDelegate {
 	protected Map map = new HashMap();
 	
+	/**
+	 * @see ProtocolAdapterDelegate#connect(IMonitor, Socket, Socket)
+	 */
 	public void connect(IMonitor monitor, Socket in, Socket out) throws IOException {
 		Request request = new Request((Monitor) monitor, IProtocolAdapter.TCPIP_PROTOCOL_ID, monitor.getLocalPort(), monitor.getRemoteHost(), monitor.getRemotePort());
 		Connection conn = new Connection(in, out);
@@ -32,6 +35,9 @@ public class TCPIPProtocolAdapter extends ProtocolAdapterDelegate {
 		new TCPIPThread(conn, request, out.getInputStream(), in.getOutputStream(), false).start();
 	}
 
+	/**
+	 * @see ProtocolAdapterDelegate#disconnect(IMonitor)
+	 */
 	public void disconnect(IMonitor monitor) throws IOException {
 		try {
 			Connection conn = (Connection) map.get(monitor);

@@ -71,7 +71,15 @@ Host: localhost:8081
    connection-token. */
 
 	/**
-	 * MonitorThread constructor comment.
+	 * Create a new HTTP thread.
+	 * 
+	 * @param conn2
+	 * @param in
+	 * @param out
+	 * @param conn
+	 * @param isRequest
+	 * @param host
+	 * @param port
 	 */
 	public HTTPThread(Connection conn2, InputStream in, OutputStream out, HTTPConnection conn, boolean isRequest, String host, int port) {
 		super();
@@ -91,7 +99,16 @@ Host: localhost:8081
 	}
 	
 	/**
-	 * MonitorThread constructor comment.
+	 * Create a new HTTP thread.
+	 * 
+	 * @param conn2
+	 * @param in
+	 * @param out
+	 * @param conn
+	 * @param isRequest
+	 * @param host
+	 * @param port
+	 * @param request
 	 */
 	public HTTPThread(Connection conn2, InputStream in, OutputStream out, HTTPConnection conn, boolean isRequest, String host, int port, HTTPThread request) {
 		this(conn2, in, out, conn, isRequest, host, port);
@@ -118,8 +135,6 @@ Host: localhost:8081
 
 	/**
 	 * Read more data into the buffer.
-	 *
-	 * @returns byte[]
 	 */
 	protected void fillBuffer() throws IOException {
 		int n = in.read(readBuffer);
@@ -168,6 +183,8 @@ Host: localhost:8081
 
 	/**
 	 * Parse the HTTP body.
+	 * 
+	 * @throws IOException
 	 */
 	public void parseBody() throws IOException {
 		Trace.trace(Trace.PARSING, "Parsing body for: " + this);
@@ -251,6 +268,8 @@ Host: localhost:8081
 
 	/**
 	 * Parse an HTTP chunk.
+	 * 
+	 * @throws IOException
 	 */
 	public void parseChunk() throws IOException {
 		Trace.trace(Trace.PARSING, "Parsing chunk for: " + this);
@@ -303,6 +322,8 @@ Host: localhost:8081
 
 	/**
 	 * Parse an HTTP header.
+	 * 
+	 * @throws IOException
 	 */
 	public void parseHeader() throws IOException {
 		Trace.trace(Trace.PARSING, "Parsing header for: " + this);

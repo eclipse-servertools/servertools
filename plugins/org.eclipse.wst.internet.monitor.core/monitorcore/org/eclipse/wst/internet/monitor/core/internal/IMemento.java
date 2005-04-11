@@ -145,6 +145,11 @@ public interface IMemento {
 	 */
 	public Boolean getBoolean(String key);
 	
+	/**
+	 * Returns a list of all the names in this memento.
+	 * 
+	 * @return a list of names
+	 */
 	public List getNames();
 	
 	/**

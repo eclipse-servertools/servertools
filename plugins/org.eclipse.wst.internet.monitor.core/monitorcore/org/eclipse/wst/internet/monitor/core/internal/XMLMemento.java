@@ -49,8 +49,8 @@ public final class XMLMemento implements IMemento {
 		element = el;
 	}
 
-	/*
-	 * @see IMemento
+	/**
+	 * @see IMemento#createChild(String)
 	 */
 	public IMemento createChild(String type) {
 		Element child = factory.createElement(type);
@@ -58,8 +58,8 @@ public final class XMLMemento implements IMemento {
 		return new XMLMemento(factory, child);
 	}
 
-	/*
-	 * @see IMemento
+	/**
+	 * @see IMemento#createChild(String, String)
 	 */
 	public IMemento createChild(String type, String id) {
 		Element child = factory.createElement(type);
@@ -99,6 +99,9 @@ public final class XMLMemento implements IMemento {
 	
 	/**
 	 * Answer a root memento for writing a document.
+	 * 
+	 * @param type
+	 * @return a memento
 	 */
 	public static XMLMemento createWriteRoot(String type) {
 		Document document;
@@ -112,8 +115,8 @@ public final class XMLMemento implements IMemento {
 		}
 	}
 	
-	/*
-	 * @see IMemento
+	/**
+	 * @see IMemento#getChild(String)
 	 */
 	public IMemento getChild(String type) {
 		// Get the nodes.
@@ -136,8 +139,8 @@ public final class XMLMemento implements IMemento {
 		return null;
 	}
 
-	/*
-	 * @see IMemento
+	/**
+	 * @see IMemento#getChildren(String)
 	 */
 	public IMemento [] getChildren(String type) {
 		// Get the nodes.
@@ -170,6 +173,7 @@ public final class XMLMemento implements IMemento {
 	 * Returns an input stream for writing to the disk with a local locale.
 	 *
 	 * @return the input stream
+	 * @throws IOException
 	 */
 	public InputStream getInputStream() throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -177,8 +181,8 @@ public final class XMLMemento implements IMemento {
 		return new ByteArrayInputStream(out.toByteArray());
 	}
 
-	/*
-	 * @see IMemento
+	/**
+	 * @see IMemento#getFloat(String)
 	 */
 	public Float getFloat(String key) {
 		Attr attr = element.getAttributeNode(key);
@@ -192,22 +196,22 @@ public final class XMLMemento implements IMemento {
 		}
 	}
 
-	/*
-	 * @see IMemento
+	/**
+	 * @see IMemento#getId()
 	 */
 	public String getId() {
 		return element.getAttribute(TAG_ID);
 	}
 	
-	/*
-	 * @see IMemento
+	/**
+	 * @see IMemento#getName()
 	 */
 	public String getName() {
 		return element.getNodeName();
 	}
 
-	/*
-	 * @see IMemento
+	/**
+	 * @see IMemento#getInteger(String)
 	 */
 	public Integer getInteger(String key) {
 		Attr attr = element.getAttributeNode(key);
@@ -221,8 +225,8 @@ public final class XMLMemento implements IMemento {
 		}
 	}
 
-	/*
-	 * @see IMemento
+	/**
+	 * @see IMemento#getString(String)
 	 */
 	public String getString(String key) {
 		Attr attr = element.getAttributeNode(key);
@@ -231,6 +235,9 @@ public final class XMLMemento implements IMemento {
 		return attr.getValue();
 	}
 	
+	/**
+	 * @see IMemento#getNames()
+	 */
 	public List getNames() {
 		NamedNodeMap map = element.getAttributes();
 		int size = map.getLength();
@@ -275,30 +282,30 @@ public final class XMLMemento implements IMemento {
 		}
 	}
 
-	/*
-	 * @see IMemento
+	/**
+	 * @see IMemento#putFloat(String, float)
 	 */
 	public void putFloat(String key, float f) {
 		element.setAttribute(key, String.valueOf(f));
 	}
 
-	/*
-	 * @see IMemento
+	/**
+	 * @see IMemento#putInteger(String, int)
 	 */
 	public void putInteger(String key, int n) {
 		element.setAttribute(key, String.valueOf(n));
 	}
 
-	/*
-	 * @see IMemento
+	/**
+	 * @see IMemento#putMemento(IMemento)
 	 */
 	public void putMemento(IMemento memento) {
 		XMLMemento xmlMemento = (XMLMemento) memento;
 		putElement(xmlMemento.element);
 	}
 
-	/*
-	 * @see IMemento
+	/**
+	 * @see IMemento#putString(String, String)
 	 */
 	public void putString(String key, String value) {
 		if (value == null)
@@ -308,6 +315,9 @@ public final class XMLMemento implements IMemento {
 	
 	/**
 	 * Save this Memento to an output stream.
+	 * 
+	 * @param os
+	 * @throws IOException
 	 */
 	public void save(OutputStream os) throws IOException {
 		Result result = new StreamResult(os);
@@ -323,13 +333,19 @@ public final class XMLMemento implements IMemento {
 		}
 	}
 
+	/**
+	 * Save to string.
+	 * 
+	 * @return the string
+	 * @throws IOException
+	 */
 	public String saveToString() throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		save(out);
 		return out.toString("UTF-8");
 	}
 
-	/*
+	/**
 	 * @see IMemento#getBoolean(String)
 	 */
 	public Boolean getBoolean(String key) {
@@ -343,7 +359,7 @@ public final class XMLMemento implements IMemento {
 		return new Boolean(false);
 	}
 
-	/*
+	/**
 	 * @see IMemento#putBoolean(String, boolean)
 	 */
 	public void putBoolean(String key, boolean value) {

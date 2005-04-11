@@ -25,10 +25,16 @@ public class ProtocolAdapter implements IProtocolAdapter {
 		this.element = element;
 	}
 
+	/**
+	 * @see IProtocolAdapter#getId()
+	 */
 	public String getId() {
 		return element.getAttribute("id");
 	}
 	
+	/**
+	 * @see IProtocolAdapter#getName()
+	 */
 	public String getName() {
 		return element.getAttribute("name");
 	}
@@ -45,10 +51,24 @@ public class ProtocolAdapter implements IProtocolAdapter {
 		return delegate;
 	}
 	
+	/**
+	 * Connect with the protocol.
+	 * 
+	 * @param monitor a monitor
+	 * @param in an inbound socket
+	 * @param out an outbound socket
+	 * @throws IOException
+	 */
 	public void connect(IMonitor monitor, Socket in, Socket out) throws IOException {
 		getDelegate().connect(monitor, in, out);
 	}
 	
+	/**
+	 * Disconnect from the sockets.
+	 * 
+	 * @param monitor a monitor
+	 * @throws IOException
+	 */
 	public void disconnect(IMonitor monitor) throws IOException {
 		getDelegate().disconnect(monitor);
 	}

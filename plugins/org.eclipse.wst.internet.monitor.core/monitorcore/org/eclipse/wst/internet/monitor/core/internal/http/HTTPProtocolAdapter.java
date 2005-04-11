@@ -24,6 +24,9 @@ import org.eclipse.wst.internet.monitor.core.internal.ProtocolAdapterDelegate;
 public class HTTPProtocolAdapter extends ProtocolAdapterDelegate {
 	protected Map map = new HashMap();
 	
+	/**
+	 * @see ProtocolAdapterDelegate#connect(IMonitor, Socket, Socket)
+	 */
 	public void connect(IMonitor monitor, Socket in, Socket out) throws IOException {
 		Connection conn2 = new Connection(in, out);
 		map.put(monitor, conn2);
@@ -34,6 +37,9 @@ public class HTTPProtocolAdapter extends ProtocolAdapterDelegate {
 		response.start();
 	}
 	
+	/**
+	 * @see ProtocolAdapterDelegate#disconnect(IMonitor)
+	 */
 	public void disconnect(IMonitor monitor) throws IOException {
 		try {
 			Connection conn = (Connection) map.get(monitor);

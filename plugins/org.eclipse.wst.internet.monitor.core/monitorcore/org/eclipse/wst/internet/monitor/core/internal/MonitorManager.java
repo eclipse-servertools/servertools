@@ -48,6 +48,11 @@ public class MonitorManager {
 		MonitorPlugin.getInstance().executeStartups();
 	}
 	
+	/**
+	 * Return a static instance.
+	 * 
+	 * @return the instance
+	 */
 	public static MonitorManager getInstance() {
 		if (instance == null)
 			instance = new MonitorManager();
@@ -76,10 +81,20 @@ public class MonitorManager {
 		MonitorPlugin.getInstance().getPluginPreferences().removePropertyChangeListener(pcl);
 	}
 	
+	/**
+	 * Create a new monitor.
+	 * 
+	 * @return the new monitor
+	 */
 	public IMonitorWorkingCopy createMonitor() {
 		return new MonitorWorkingCopy();
 	}
 	
+	/**
+	 * Return the list of monitors.
+	 * 
+	 * @return the list of monitors
+	 */
 	public List getMonitors() {
 		return new ArrayList(monitors);
 	}
@@ -95,6 +110,12 @@ public class MonitorManager {
 		return (threads.get(monitor) != null);
 	}
 
+	/**
+	 * Start a monitor.
+	 * 
+	 * @param monitor the monitor
+	 * @throws CoreException
+	 */
 	public void startMonitor(IMonitor monitor) throws CoreException {
 		if (!monitors.contains(monitor))
 			return;
@@ -107,6 +128,11 @@ public class MonitorManager {
 		threads.put(monitor, thread);
 	}
 	
+	/**
+	 * Stop a monitor.
+	 * 
+	 * @param monitor the monitor
+	 */
 	public void stopMonitor(IMonitor monitor) {
 		if (!monitors.contains(monitor))
 			return;
@@ -240,6 +266,7 @@ public class MonitorManager {
 	 * Adds a resend request to this request.
 	 * 
 	 * @param request the resend request to add
+	 * @param resendReq the resend request
 	 */
 	public void addResendRequest(Request request, ResendHTTPRequest resendReq) {
 		if (request == null || resendReq == null)
@@ -262,6 +289,7 @@ public class MonitorManager {
 	/**
 	 * Returns an array of resend requests based on this request. 
 	 * 
+	 * @param request a request
 	 * @return the array of resend requests based on this request
 	 */
 	public ResendHTTPRequest[] getResendRequests(Request request) {

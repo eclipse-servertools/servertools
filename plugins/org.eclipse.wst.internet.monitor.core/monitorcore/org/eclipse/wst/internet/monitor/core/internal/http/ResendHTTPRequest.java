@@ -34,6 +34,7 @@ public class ResendHTTPRequest extends HTTPRequest {
 	/**
 	 * Constructor.
 	 * 
+	 * @param monitor
 	 * @param req the request that is to be resent.
 	 */
 	public ResendHTTPRequest(Monitor monitor, Request req) {
@@ -47,8 +48,8 @@ public class ResendHTTPRequest extends HTTPRequest {
 		this.originalRequest = req;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.core.IResendRequest#sendRequest()
+	/**
+	 * Send the request.
 	 */
 	public void sendRequest() {
 		try {
@@ -75,17 +76,29 @@ public class ResendHTTPRequest extends HTTPRequest {
 		sent = true;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.core.internal.Request2#addToRequest(byte[])
+	/** (non-Javadoc)
+	 * @see Request#addToRequest(byte[])
 	 */
 	public void addToRequest(byte[] addRequest) {
 		// Don't want to add to the request as we already have the request.
 	}
 
+	/**
+	 * Returns <code>true</code> if the request has been sent.
+	 * 
+	 * @return <code>true</code> if the request has been sent, and <code>false</code>
+	 *    otherwise
+	 */
 	public boolean hasBeenSent() {
 		return sent;
 	}
 
+	/**
+	 * Set the request.
+	 * 
+	 * @param request
+	 * @param type
+	 */
 	public void setRequest(byte[] request, int type) {
 		if (type == TRANSPORT && request != null)
 			header = request;
@@ -108,22 +121,24 @@ public class ResendHTTPRequest extends HTTPRequest {
 		super.setRequest(newRequest);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.core.internal.http.HTTPRequest#getRequestContent()
+	/** (non-Javadoc)
+	 * @see HTTPRequest#getRequestContent()
 	 */
 	protected byte[] getRequestContent() {
 		return content;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.core.internal.http.HTTPRequest#getRequestHeader()
+	/** (non-Javadoc)
+	 * @see HTTPRequest#getRequestHeader()
 	 */
 	protected byte[] getRequestHeader() {
 		return header;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.internet.monitor.core.IResendRequest#getOriginalRequest()
+	/**
+	 * Returns the original request.
+	 * 
+	 * @return the original request
 	 */
 	public Request getOriginalRequest() {
 		return originalRequest;

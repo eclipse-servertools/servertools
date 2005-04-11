@@ -34,8 +34,10 @@ public class ContentFilter implements IContentFilter {
 		return element.getAttribute("id");
 	}
 	
-	/*
+	/**
 	 * Returns the relative order for this filter.
+	 * 
+	 * @return the order
 	 */ 
 	public int getOrder() {
 		try {
@@ -61,6 +63,7 @@ public class ContentFilter implements IContentFilter {
 	 * @param isRequest true if request, false if response
 	 * @param content the content
 	 * @return the filtered content
+	 * @throws IOException if there is a connection issue
 	 */
 	public byte[] filter(Request request, boolean isRequest, byte[] content) throws IOException {
 		if (delegate == null) {
