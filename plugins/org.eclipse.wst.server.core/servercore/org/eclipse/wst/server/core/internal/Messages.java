@@ -59,6 +59,6 @@ public class Messages extends NLS {
 	public static String canStopOk;
 	
 	static {
-		NLS.initializeMessages(ServerPlugin.PLUGIN_ID, Messages.class);
+		NLS.initializeMessages(ServerPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);
 	}
 }

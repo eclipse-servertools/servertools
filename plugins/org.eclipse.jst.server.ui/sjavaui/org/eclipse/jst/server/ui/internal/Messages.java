@@ -26,6 +26,6 @@ public class Messages extends NLS {
 	public static String runtimeTypeDefaultJRE;
 	
 	static {
-		NLS.initializeMessages(JavaServerUIPlugin.PLUGIN_ID, Messages.class);
+		NLS.initializeMessages(JavaServerUIPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);
 	}
 }

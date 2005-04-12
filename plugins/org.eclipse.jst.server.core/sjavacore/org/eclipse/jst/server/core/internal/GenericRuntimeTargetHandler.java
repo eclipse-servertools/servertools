@@ -44,7 +44,7 @@ public class GenericRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
 	 * @see ClasspathRuntimeTargetHandler#getClasspathContainerLabel(IRuntime, String)
 	 */
 	public String getClasspathContainerLabel(IRuntime runtime, String id) {
-		return Messages.runtimeTypeName;
+		return runtime.getRuntimeType().getName();
 	}
 
 	/** (non-Javadoc)

@@ -17,10 +17,9 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	public static String errorLocation;
 	public static String errorJRE;
-	public static String runtimeTypeName;
 	public static String classpathContainerDescription;
 	
 	static {
-		NLS.initializeMessages("plugin", Messages.class);
+		NLS.initializeMessages(JavaServerPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);
 	}
 }
