@@ -100,7 +100,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 	}
 	
 	/**
-	 * Creates the SWT controls for this workbench part.
+	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
 	public void createPartControl(Composite parent) {
 		FormToolkit toolkit = getFormToolkit(parent.getDisplay());

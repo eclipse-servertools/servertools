@@ -116,7 +116,7 @@ public class MonitorView extends ViewPart {
 	}
 
 	/**
-	 * Returns the inner component in a desktop part.
+	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
 	public void createPartControl(Composite parent) {
 		SashForm sashFparent = new SashForm(parent, SWT.VERTICAL);
@@ -463,7 +463,9 @@ public class MonitorView extends ViewPart {
 	}
 
 	/**
+	 * Open a request.
 	 * 
+	 * @param request the request
 	 */
 	public static void open(final Request request) {
 		Display.getDefault().asyncExec(new Runnable() {

@@ -44,8 +44,10 @@ public class MimeMappingDialog extends Dialog {
 	}
 
 	/**
-	 * SystemPropertyDialog constructor comment.
-	 * @param parentShell org.eclipse.swt.widgets.Shell
+	 * MimeMappingDialog constructor.
+	 * 
+	 * @param parentShell a shell
+	 * @param map a mime mapping
 	 */
 	public MimeMappingDialog(Shell parentShell, MimeMapping map) {
 		super(parentShell);

@@ -18,28 +18,30 @@ public class Trace {
 	public static byte SEVERE = 2;
 	public static byte FINEST = 3;
 	public static byte FINER = 4;
-	
+
 	/**
 	 * Trace constructor comment.
 	 */
 	private Trace() {
 		super();
 	}
-	
+
 	/**
 	 * Trace the given text.
 	 *
-	 * @param s java.lang.String
+	 * @param level the trace level
+	 * @param s a message
 	 */
 	public static void trace(byte level, String s) {
 		Trace.trace(level, s, null);
 	}
-	
+
 	/**
 	 * Trace the given message and exception.
 	 *
-	 * @param s java.lang.String
-	 * @param t java.lang.Throwable
+	 * @param level the trace level
+	 * @param s a message
+	 * @param t a throwable
 	 */
 	public static void trace(byte level, String s, Throwable t) {
 		if (!TomcatPlugin.getInstance().isDebugging())

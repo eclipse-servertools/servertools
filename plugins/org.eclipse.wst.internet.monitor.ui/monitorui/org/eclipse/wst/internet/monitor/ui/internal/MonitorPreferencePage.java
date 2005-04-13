@@ -288,8 +288,7 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 	}
 
 	/** 
-	 * Method declared on IPreferencePage.
-	 * Subclasses should override
+	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
 	 */
 	public boolean performOk() {
 		MonitorUIPlugin.setShowOnActivityPreference(displayButton.getSelection());

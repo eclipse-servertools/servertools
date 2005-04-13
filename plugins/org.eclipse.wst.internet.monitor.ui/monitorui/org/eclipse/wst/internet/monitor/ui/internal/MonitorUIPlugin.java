@@ -239,7 +239,7 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Start this plug-in.
+	 * @see AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -257,6 +257,9 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 		}
 	}
 
+	/**
+	 * @see AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+	 */
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		

@@ -55,7 +55,10 @@ public class MonitorDialog extends Dialog {
 	}
 
 	/**
+	 * Create a new monitor dialog.
+	 * 
 	 * @param parentShell
+	 * @param monitor
 	 */
 	public MonitorDialog(Shell parentShell, IMonitorWorkingCopy monitor) {
 		super(parentShell);
