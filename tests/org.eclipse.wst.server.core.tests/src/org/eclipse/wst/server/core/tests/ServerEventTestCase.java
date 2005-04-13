@@ -28,7 +28,7 @@ public class ServerEventTestCase extends TestCase {
 	
 	private static int SAMPLE_KIND = ServerEvent.STATE_CHANGE;
 	private static IServer SAMPLE_SERVER = createSampleServer(); 
-	private static IModule[] SAMPLE_MODULE_TREE = new IModule[0];
+	private static IModule[] SAMPLE_MODULE_TREE = new IModule[] { null };
 	private static int SAMPLE_STATE = 1;
 	private static int SAMPLE_PUBLISHING_STATE = 2;
 	private static boolean SAMPLE_RESTART_STATE = true;
