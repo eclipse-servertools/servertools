@@ -136,6 +136,15 @@ public interface IRuntimeWorkingCopy extends IRuntime {
 	public void setLocation(IPath path);
 
 	/**
+	 * Returns whether this runtime is a stub (used for compilation only)
+	 * or a full runtime.
+	 * 
+	 * @param stub <code>true</code> if this runtime is a stub, and
+	 *    <code>false</code> otherwise
+	 */
+	public void setStub(boolean stub);
+
+	/**
 	 * Commits the changes made in this working copy. If there is
 	 * no extant runtime instance with a matching id and runtime
 	 * type, this will create a runtime instance with attributes

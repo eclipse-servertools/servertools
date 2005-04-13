@@ -27,6 +27,8 @@ public class ModuleArtifactAdapter {
 
 	/**
 	 * ModuleArtifactAdapter constructor comment.
+	 * 
+	 * @param element a configuration element
 	 */
 	public ModuleArtifactAdapter(IConfigurationElement element) {
 		super();
@@ -126,7 +128,14 @@ public class ModuleArtifactAdapter {
 		
 		return context;
 	}*/
-	
+
+	/**
+	 * Returns true if enabled for the given object.
+	 * 
+	 * @param obj an object
+	 * @return <code>true</code> if enabled
+	 * @throws CoreException if anything goes wrong
+	 */
 	public boolean isEnabled(Object obj) throws CoreException {
 		IEvaluationContext context = new EvaluationContext(null, obj);
 		context.addVariable("selection", obj);
@@ -149,7 +158,10 @@ public class ModuleArtifactAdapter {
 	}
 
 	/**
+	 * Returns the module artifact.
 	 * 
+	 * @param obj an object
+	 * @return the module artifact, or <code>null</code>
 	 */
 	public IModuleArtifact getModuleArtifact(Object obj) {
 		try {

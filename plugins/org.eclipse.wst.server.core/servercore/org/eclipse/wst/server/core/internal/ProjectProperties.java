@@ -34,7 +34,9 @@ public class ProjectProperties implements IProjectProperties {
 	protected transient List listeners;
 
 	/**
-	 * ProjectProperties constructor comment.
+	 * ProjectProperties constructor.
+	 * 
+	 * @param project a project
 	 */
 	public ProjectProperties(IProject project) {
 		super();
@@ -144,9 +146,11 @@ public class ProjectProperties implements IProjectProperties {
 	}
 
 	/**
-	 * Sets the preferred runtime server for the project.
-	 *
-	 * @param server org.eclipse.wst.server.core.IServer
+	 * Sets the default server.
+	 * 
+	 * @param server a server
+	 * @param monitor a progress monitor
+	 * @throws CoreException if anything goes wrong
 	 */
 	public void setDefaultServer(IServer server, IProgressMonitor monitor) throws CoreException {
 		loadPreferences();
@@ -192,6 +196,7 @@ public class ProjectProperties implements IProjectProperties {
 	 * 
 	 * @param runtime the target runtime
 	 * @param monitor a progress monitor
+	 * @throws CoreException if anything goes wrong
 	 */
 	public void setRuntimeTarget(IRuntime runtime, IProgressMonitor monitor) throws CoreException {
 		loadPreferences();

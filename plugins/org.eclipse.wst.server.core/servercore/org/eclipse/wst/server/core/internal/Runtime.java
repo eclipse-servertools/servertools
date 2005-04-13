@@ -26,27 +26,37 @@ public class Runtime extends Base implements IRuntime {
 	protected IRuntimeType runtimeType;
 	protected RuntimeDelegate delegate;
 
+	/**
+	 * Create a new runtime.
+	 * 
+	 * @param file
+	 */
 	public Runtime(IFile file) {
 		super(file);
 	}
 
+	/**
+	 * Create a new runtime.
+	 * 
+	 * @param file
+	 * @param id
+	 * @param runtimeType
+	 */
 	public Runtime(IFile file, String id, IRuntimeType runtimeType) {
 		super(file, id);
 		this.runtimeType = runtimeType;
 		map.put(PROP_NAME, runtimeType.getName());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.model.IRuntime#getRuntimeType()
+	/**
+	 * @see IRuntime#getRuntimeType()
 	 */
 	public IRuntimeType getRuntimeType() {
 		return runtimeType;
 	}
 
 	/**
-	 * Return the validation status of the runtime.
-	 * 
-	 * @return the status
+	 * @see IRuntime#validate(IProgressMonitor)
 	 */
 	public IStatus validate(IProgressMonitor monitor) {
 		try {
@@ -57,7 +67,7 @@ public class Runtime extends Base implements IRuntime {
 		}
 	}
 
-	public RuntimeDelegate getDelegate(IProgressMonitor monitor) {
+	protected RuntimeDelegate getDelegate(IProgressMonitor monitor) {
 		if (delegate != null)
 			return delegate;
 		
@@ -92,16 +102,22 @@ public class Runtime extends Base implements IRuntime {
 			delegate.dispose();
 	}
 	
+	/**
+	 * @see IRuntime#createWorkingCopy()
+	 */
 	public IRuntimeWorkingCopy createWorkingCopy() {
 		return new RuntimeWorkingCopy(this); 
 	}
 
+	/**
+	 * @see IRuntime#isWorkingCopy()
+	 */
 	public boolean isWorkingCopy() {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.model.IRuntime#getLocation()
+	/**
+	 * @see IRuntime#getLocation()
 	 */
 	public IPath getLocation() {
 		String temp = getAttribute(PROP_LOCATION, (String)null);
@@ -127,6 +143,9 @@ public class Runtime extends Base implements IRuntime {
 		return getAttribute(PROP_TEST_ENVIRONMENT, false);
 	}
 
+	/**
+	 * @see IRuntime#isStub()
+	 */
 	public boolean isStub() {
 		return getAttribute(PROP_STUB, false);
 	}
@@ -154,6 +173,9 @@ public class Runtime extends Base implements IRuntime {
 			memento.putString(PROP_RUNTIME_TYPE_ID, runtimeType.getId());
 	}
 
+	/**
+	 * @see Object#equals(Object)
+	 */
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Runtime))
 			return false;
@@ -162,7 +184,7 @@ public class Runtime extends Base implements IRuntime {
 		return runtime.getId().equals(getId());
 	}
 	
-	/* (non-Javadoc)
+	/** (non-Javadoc)
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
 	public Object getAdapter(Class adapter) {
@@ -171,7 +193,10 @@ public class Runtime extends Base implements IRuntime {
 			return delegate;
 		return null;
 	}
-	
+
+	/**
+	 * @see Object#toString()
+	 */
 	public String toString() {
 		return "Runtime[" + getId() + ", " + getName() + ", " + getLocation() + ", " + getRuntimeType() + "]";
 	}

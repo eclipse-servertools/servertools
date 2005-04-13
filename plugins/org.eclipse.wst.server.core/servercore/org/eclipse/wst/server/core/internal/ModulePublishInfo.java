@@ -30,7 +30,9 @@ public class ModulePublishInfo {
 	private IModuleResource[] resources = new IModuleResource[0];
 
 	/**
-	 * ModulePublishInfo constructor comment.
+	 * ModulePublishInfo constructor.
+	 * 
+	 * @param moduleId a module id
 	 */
 	public ModulePublishInfo(String moduleId) {
 		super();
@@ -39,7 +41,9 @@ public class ModulePublishInfo {
 	}
 	
 	/**
-	 * ModulePublishInfo constructor comment.
+	 * ModulePublishInfo constructor.
+	 * 
+	 * @param memento a memento
 	 */
 	public ModulePublishInfo(IMemento memento) {
 		super();

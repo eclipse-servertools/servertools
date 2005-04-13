@@ -26,6 +26,11 @@ public class RuntimeTargetHandler implements IRuntimeTargetHandler, IOrdered {
 	private IConfigurationElement element;
 	private RuntimeTargetHandlerDelegate delegate;
 
+	/**
+	 * Create a new runtime target handler.
+	 * 
+	 * @param element a configuration element
+	 */
 	public RuntimeTargetHandler(IConfigurationElement element) {
 		super();
 		this.element = element;
@@ -80,6 +85,7 @@ public class RuntimeTargetHandler implements IRuntimeTargetHandler, IOrdered {
 	 * id) can be opened with this editor. This result is based on
 	 * the result of the getServerResources() method.
 	 *
+	 * @param runtimeType a runtime type
 	 * @return boolean
 	 */
 	public boolean supportsRuntimeType(IRuntimeType runtimeType) {

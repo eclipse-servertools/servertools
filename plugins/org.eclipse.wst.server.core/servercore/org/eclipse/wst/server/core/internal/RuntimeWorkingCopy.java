@@ -15,10 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
@@ -33,8 +30,12 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 	protected WorkingCopyHelper wch;
 	
 	protected RuntimeDelegate workingCopyDelegate;
-	
-	// from existing runtime
+
+	/**
+	 * Create a new runtime working copy from existing runtime.
+	 * 
+	 * @param runtime
+	 */
 	public RuntimeWorkingCopy(Runtime runtime) {
 		super(runtime.getFile());
 		this.runtime = runtime;
@@ -45,7 +46,13 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		wch = new WorkingCopyHelper(this);
 	}
 	
-	// new runtime
+	/**
+	 * Create a new runtime working copy for a new runtime.
+	 * 
+	 * @param file
+	 * @param id
+	 * @param runtimeType
+	 */
 	public RuntimeWorkingCopy(IFile file, String id, IRuntimeType runtimeType) {
 		super(file, id, runtimeType);
 		wch = new WorkingCopyHelper(this);
@@ -60,14 +67,23 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		// throw CoreException if the id already exists
 	}
 
+	/**
+	 * @see IRuntime#isWorkingCopy()
+	 */
 	public boolean isWorkingCopy() {
 		return true;
 	}
 
+	/**
+	 * @see IRuntime#createWorkingCopy()
+	 */
 	public IRuntimeWorkingCopy createWorkingCopy() {
 		return this;
 	}
 
+	/**
+	 * @see RuntimeDelegate#setAttribute(String, int)
+	 */
 	public void setAttribute(String attributeName, int value) {
 		wch.setAttribute(attributeName, value);
 	}
@@ -88,6 +104,9 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		wch.setAttribute(attributeName, value);
 	}
 
+	/**
+	 * @see IRuntimeWorkingCopy#setName(String)
+	 */
 	public void setName(String name) {
 		wch.setName(name);
 		boolean set = getAttribute(PROP_ID_SET, false);
@@ -98,15 +117,31 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 	public void setTestEnvironment(boolean b) {
 		setAttribute(PROP_TEST_ENVIRONMENT, b);
 	}
+	
+	/**
+	 * @see IRuntimeWorkingCopy#setStub(boolean)
+	 */
+	public void setStub(boolean b) {
+		setAttribute(PROP_STUB, b);
+	}
 
+	/**
+	 * @see IRuntimeWorkingCopy#isDirty()
+	 */
 	public boolean isDirty() {
 		return wch.isDirty();
 	}
 	
+	/**
+	 * @see IRuntimeWorkingCopy#getOriginal()
+	 */
 	public IRuntime getOriginal() {
 		return runtime;
 	}
 
+	/**
+	 * @see IRuntimeWorkingCopy#setReadOnly(boolean)
+	 */
 	public void setReadOnly(boolean b) {
 		wch.setLocked(b);
 	}
@@ -114,7 +149,10 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 	public void setPrivate(boolean b) {
 		wch.setPrivate(b);
 	}
-	
+
+	/**
+	 * @see IRuntimeWorkingCopy#setLocation(IPath)
+	 */
 	public void setLocation(IPath path) {
 		if (path == null)
 			setAttribute(PROP_LOCATION, (String)null);
@@ -122,6 +160,9 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 			setAttribute(PROP_LOCATION, path.toString());
 	}
 
+	/**
+	 * @see IRuntimeWorkingCopy#save(boolean, IProgressMonitor)
+	 */
 	public IRuntime save(boolean force, IProgressMonitor monitor) throws CoreException {
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.subTask(NLS.bind(Messages.savingTask, getName()));
@@ -153,6 +194,9 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 
 	protected void updateRuntimeReferences(final String oldId, final String newId, final IRuntime origRuntime) {
 		class UpdateRuntimeReferencesJob extends Job {
+			/**
+			 * A job that updates runtime references when a runtime changes.
+			 */
 			public UpdateRuntimeReferencesJob() {
 				super(NLS.bind(Messages.savingTask, newId));
 			}
@@ -212,6 +256,9 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 			return;
 
 		class RebuildRuntimeReferencesJob extends Job {
+			/**
+			 * A job that rebuilds projects when a runtime changes.
+			 */
 			public RebuildRuntimeReferencesJob() {
 				super(Messages.taskPerforming);
 			}
@@ -245,7 +292,7 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		job.schedule();
 	}
 
-	public RuntimeDelegate getWorkingCopyDelegate(IProgressMonitor monitor) {
+	protected RuntimeDelegate getWorkingCopyDelegate(IProgressMonitor monitor) {
 		if (workingCopyDelegate != null)
 			return workingCopyDelegate;
 		
@@ -296,7 +343,12 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		wch.firePropertyChangeEvent(propertyName, oldValue, newValue);
 	}
 	
-	public void setDefaults(IProgressMonitor monitor) {
+	/**
+	 * Set the defaults.
+	 * 
+	 * @param monitor
+	 */
+	protected void setDefaults(IProgressMonitor monitor) {
 		try {
 			getWorkingCopyDelegate(monitor).setDefaults();
 		} catch (Exception e) {

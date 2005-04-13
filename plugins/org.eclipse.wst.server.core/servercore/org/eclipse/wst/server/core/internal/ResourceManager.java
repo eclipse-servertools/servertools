@@ -621,7 +621,8 @@ public class ResourceManager {
 
 	/**
 	 * Returns the runtime with the given id.
-	 *
+	 * 
+	 * @param id a runtime id
 	 * @return IRuntime
 	 */
 	public IRuntime getRuntime(String id) {
@@ -648,6 +649,8 @@ public class ResourceManager {
 	
 	/**
 	 * Sets the default runtime. Test API - do not use.
+	 * 
+	 * @param runtime a runtime
 	 */
 	public void setDefaultRuntime(IRuntime runtime) {
 		defaultRuntime = runtime;
@@ -684,7 +687,8 @@ public class ResourceManager {
 
 	/**
 	 * Returns the server with the given id.
-	 *
+	 * 
+	 * @param id a server id
 	 * @return a server
 	 */
 	public IServer getServer(String id) {

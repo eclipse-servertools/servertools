@@ -31,6 +31,8 @@ public class ModuleFactory implements IOrdered {
 
 	/**
 	 * ModuleFactory constructor comment.
+	 * 
+	 * @param element a configuration element
 	 */
 	public ModuleFactory(IConfigurationElement element) {
 		super();

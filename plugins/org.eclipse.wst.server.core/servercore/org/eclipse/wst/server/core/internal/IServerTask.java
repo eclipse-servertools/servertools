@@ -31,7 +31,8 @@ public interface IServerTask {
 	/**
 	 * Returns true if the given type (given by the id) can use this task. This
 	 * result is based on the result of the getTypeIds() method.
-	 *
+	 * 
+	 * @param id a server type id
 	 * @return boolean
 	 */
 	public boolean supportsType(String id);
@@ -43,6 +44,7 @@ public interface IServerTask {
 	 * 
 	 * @param server the server
 	 * @param modules a list containing IModule arrays
+	 * @return a possibly empty array of optional tasks 
 	 */
 	public IOptionalTask[] getTasks(IServer server, List modules);
 }

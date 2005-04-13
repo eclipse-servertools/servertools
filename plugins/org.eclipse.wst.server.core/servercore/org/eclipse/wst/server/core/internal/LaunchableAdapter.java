@@ -24,6 +24,8 @@ public class LaunchableAdapter implements ILaunchableAdapter {
 
 	/**
 	 * LaunchableAdapter constructor comment.
+	 * 
+	 * @param element a configuration element
 	 */
 	public LaunchableAdapter(IConfigurationElement element) {
 		super();
@@ -51,7 +53,7 @@ public class LaunchableAdapter implements ILaunchableAdapter {
 	}
 
 	/**
-	 * 
+	 * @see ILaunchableAdapter#getLaunchable(IServer, IModuleArtifact)
 	 */
 	public Object getLaunchable(IServer server, IModuleArtifact object) {
 		try {

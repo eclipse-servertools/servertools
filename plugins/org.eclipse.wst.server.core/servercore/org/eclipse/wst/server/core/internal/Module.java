@@ -36,7 +36,14 @@ public class Module implements IModule {
 	private transient List listeners;
 
 	/**
-	 * Module constructor comment.
+	 * Module constructor.
+	 * 
+	 * @param factory
+	 * @param id
+	 * @param name
+	 * @param type
+	 * @param version
+	 * @param project
 	 */
 	public Module(ModuleFactory factory, String id, String name, String type, String version, IProject project) {
 		super();
@@ -107,7 +114,8 @@ public class Module implements IModule {
 	/**
 	 * Returns the child modules of this module.
 	 *
-	 * @return org.eclipse.wst.server.core.model.IModule[]
+	 * @param monitor a progress monitor
+	 * @return a possibly empty array of modules
 	 */
 	public IModule[] getChildModules(IProgressMonitor monitor) {
 		try {

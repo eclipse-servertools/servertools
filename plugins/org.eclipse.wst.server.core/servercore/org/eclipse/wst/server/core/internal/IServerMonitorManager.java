@@ -23,6 +23,7 @@ public interface IServerMonitorManager {
 	/**
 	 * Returns the array of ports that are currently being monitored.
 	 *
+	 * @param server a server
 	 * @return an array containing the monitored ports for this server
 	 */
 	public IMonitoredServerPort[] getMonitoredPorts(IServer server);
