@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.jst.server.ui.tests
+Bundle-SymbolicName: org.eclipse.jst.server.ui.tests
+Bundle-Version: 1.0.0
+Bundle-ClassPath: tests.jar
+Bundle-Activator: org.eclipse.jst.server.ui.tests.TestsPlugin
+Bundle-Vendor: Eclipse.org
+Bundle-Localization: plugin
+Export-Package: org.eclipse.jst.server.ui.tests
+Require-Bundle: org.eclipse.core.runtime,
+ org.junit,
+ org.eclipse.ui,
+ org.eclipse.jst.server.ui
+Eclipse-AutoStart: true

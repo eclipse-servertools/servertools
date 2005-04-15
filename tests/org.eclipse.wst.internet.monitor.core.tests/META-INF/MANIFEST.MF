@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.eclipse.wst.internet.monitor.core.tests
+Bundle-SymbolicName: org.eclipse.wst.internet.monitor.core.tests
+Bundle-Version: 1.0.0
+Bundle-Activator: org.eclipse.wst.internet.monitor.core.tests.TestsPlugin
+Bundle-Vendor: Eclipse.org
+Bundle-Localization: plugin
+Export-Package: org.eclipse.wst.internet.monitor.core.tests,
+ org.eclipse.wst.internet.monitor.core.tests.extension
+Require-Bundle: org.eclipse.core.runtime,
+ org.junit,
+ org.eclipse.wst.internet.monitor.core
+Eclipse-AutoStart: true

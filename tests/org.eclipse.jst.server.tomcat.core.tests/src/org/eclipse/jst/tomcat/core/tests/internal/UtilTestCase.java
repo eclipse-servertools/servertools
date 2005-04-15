@@ -59,4 +59,20 @@ public class UtilTestCase extends TestCase {
 	public void testArgMerge10() {
 		assertEquals("a b c d", TomcatServerBehaviour.mergeArguments("a b ", new String[] { "c", "d" }));
 	}
+	
+	public void testArgMerge11() {
+		assertEquals("a=b c=\"e\"", TomcatServerBehaviour.mergeArguments("a=b c=d", new String[] { "c=\"e\"" }));
+	}
+	
+	public void testArgMerge12() {
+		assertEquals("a=b c=\"e f\"", TomcatServerBehaviour.mergeArguments("a=b c=\"d e\"", new String[] { "c=\"e f\"" }));
+	}
+	
+	public void testArgMerge13() {
+		assertEquals("a=b -c \"e\"", TomcatServerBehaviour.mergeArguments("a=b -c d", new String[] { "-c \"e\"" }));
+	}
+	
+	public void testArgMerge14() {
+		assertEquals("a=b -c \"e f\"", TomcatServerBehaviour.mergeArguments("a=b -c \"d e\"", new String[] { "-c \"e f\"" }));
+	}
 }

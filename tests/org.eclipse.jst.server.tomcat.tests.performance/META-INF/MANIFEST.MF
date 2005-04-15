@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Server Tomcat Performance Plug-in
+Bundle-SymbolicName: org.eclipse.jst.server.tomcat.tests.performance
+Bundle-Version: 1.0.0
+Bundle-Activator: org.eclipse.jst.server.tomcat.tests.performance.PerformancePlugin
+Bundle-Localization: plugin
+Export-Package: org.eclipse.jst.server.tomcat.tests.performance,
+ org.eclipse.jst.server.tomcat.tests.performance.tomcat50
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.junit,
+ org.eclipse.jdt.launching,
+ org.eclipse.test.performance,
+ org.eclipse.wst.server.core,
+ org.eclipse.jst.server.tomcat.core,
+ org.eclipse.wst.server.tests.performance
+Eclipse-AutoStart: true
