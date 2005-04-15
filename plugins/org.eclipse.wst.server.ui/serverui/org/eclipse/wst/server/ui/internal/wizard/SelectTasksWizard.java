@@ -28,7 +28,9 @@ public class SelectTasksWizard extends TaskWizard {
 	protected TasksWizardFragment fragment;
 	
 	/**
-	 * SelectTasksWizard constructor comment.
+	 * SelectTasksWizard constructor.
+	 * 
+	 * @param server a server
 	 */
 	public SelectTasksWizard(final IServer server) {
 		super(ServerUIPlugin.getResource("%wizTaskWizardTitle"));
@@ -45,12 +47,21 @@ public class SelectTasksWizard extends TaskWizard {
 	}
 
 	/**
+	 * Return <code>true</code> if this wizard has tasks.
 	 * 
+	 * @return <code>true</code> if this wizard has tasks, and <code>false</code>
+	 *    otherwise
 	 */
 	public boolean hasTasks() {
 		return fragment.hasTasks();
 	}
 
+	/**
+	 * Return <code>true</code> if this wizard has optional tasks.
+	 * 
+	 * @return <code>true</code> if this wizard has optional tasks, and
+	 *    <code>false</code> otherwise
+	 */
 	public boolean hasOptionalTasks() {
 		return fragment.hasOptionalTasks();
 	}

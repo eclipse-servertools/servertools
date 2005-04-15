@@ -24,7 +24,11 @@ public class ModifyPortCommand extends ConfigurationCommand {
 	protected int oldPort;
 
 	/**
-	 * ChangePortCommand constructor comment.
+	 * ModifyPortCommand constructor.
+	 * 
+	 * @param configuration a Tomcat configuration
+	 * @param id a port id
+	 * @param port new port number
 	 */
 	public ModifyPortCommand(ITomcatConfigurationWorkingCopy configuration, String id, int port) {
 		super(configuration);

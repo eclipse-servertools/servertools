@@ -355,7 +355,12 @@ public class ServerTree {
 	}
 	
 	/**
-	 * Returns an action of the specified type, which can be used for global
+	 * Returns an action of the specified type, which can be used for global.
+	 * 
+	 * @param shell a shell
+	 * @param provider a selection provider
+	 * @param action an action
+	 * @return an action
 	 */
 	public static IAction getAction(Shell shell, ISelectionProvider provider, byte action) {
 		if (action == ACTION_DELETE) {

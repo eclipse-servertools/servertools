@@ -20,7 +20,10 @@ public class SetServerHostnameCommand extends ServerCommand {
 	protected String oldName;
 
 	/**
-	 * SetServerHostnameCommand constructor comment.
+	 * SetServerHostnameCommand constructor.
+	 * 
+	 * @param server a server
+	 * @param name a hostname or IP address
 	 */
 	public SetServerHostnameCommand(IServerWorkingCopy server, String name) {
 		super(server);

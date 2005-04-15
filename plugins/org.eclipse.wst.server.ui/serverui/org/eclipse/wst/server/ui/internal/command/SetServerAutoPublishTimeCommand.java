@@ -21,7 +21,10 @@ public class SetServerAutoPublishTimeCommand extends ServerCommand {
 	protected int oldTime;
 
 	/**
-	 * SetServerAutoPublishDefaultCommand constructor comment.
+	 * SetServerAutoPublishDefaultCommand constructor.
+	 * 
+	 * @param server a server
+	 * @param time a publish time
 	 */
 	public SetServerAutoPublishTimeCommand(IServerWorkingCopy server, int time) {
 		super(server);

@@ -1,24 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 
-<plugin id="org.eclipse.wst.internet.monitor.ui"
-  name="%pluginName"
-  version="1.0.0"
-  provider-name="%providerName"
-  class="org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin">
-
-<requires>
-  <import plugin="org.eclipse.core.runtime"/>
-  <import plugin="org.eclipse.ui.ide"/>
-  <import plugin="org.eclipse.ui"/>
-  <import plugin="org.eclipse.wst.internet.monitor.core"/>
-</requires>
-
-<runtime>
-  <library name="monitorui.jar">
-    <export name="*"/>
-  </library>
-</runtime>
+<plugin>
 
 <extension-point name="%extensionPointViewers" id="viewers" schema="schema/viewers.exsd"/>
 

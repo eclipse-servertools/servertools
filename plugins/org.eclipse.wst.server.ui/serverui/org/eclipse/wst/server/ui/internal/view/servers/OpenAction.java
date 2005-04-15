@@ -21,7 +21,9 @@ public class OpenAction extends Action {
 	protected IServer server;
 
 	/**
-	 * OpenAction constructor comment.
+	 * OpenAction constructor.
+	 * 
+	 * @param server a server
 	 */
 	public OpenAction(IServer server) {
 		super(ServerUIPlugin.getResource("%actionOpen"));

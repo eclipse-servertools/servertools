@@ -43,6 +43,19 @@ public class ModuleArtifactAdapter {
 	public String getId() {
 		return element.getAttribute("id");
 	}
+	
+	/**
+	 * Returns the index of this adapter.
+	 *
+	 * @return an index
+	 */
+	public int getIndex() {
+		try {
+			return Integer.parseInt(element.getAttribute("index"));
+		} catch (Exception e) {
+			return 0;
+		}
+	}
 
 	/**
 	 * Returns true if the plugin that loaded this class has been loaded.

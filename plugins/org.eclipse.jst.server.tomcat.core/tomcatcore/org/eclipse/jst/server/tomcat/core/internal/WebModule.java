@@ -20,6 +20,11 @@ public class WebModule implements ITomcatWebModule {
 
 	/**
 	 * WebModule constructor comment.
+	 * 
+	 * @param path a path
+	 * @param docBase a document base
+	 * @param memento a memento
+	 * @param reloadable <code>true</code> if reloadable
 	 */
 	public WebModule(String path, String docBase, String memento, boolean reloadable) {
 		super();

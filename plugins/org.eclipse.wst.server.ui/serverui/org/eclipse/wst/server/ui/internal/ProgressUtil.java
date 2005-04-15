@@ -54,9 +54,10 @@ public class ProgressUtil {
 	 * Return a sub-progress monitor with the given amount on the
 	 * current progress monitor.
 	 *
-	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
-	 * @param ticks int
-	 * @return org.eclipse.core.runtime.IProgressMonitor
+	 * @param monitor a progress monitor, or null
+	 * @param ticks a number of ticks
+	 * @param style a style
+	 * @return a progress monitor
 	 */
 	public static IProgressMonitor getSubMonitorFor(IProgressMonitor monitor, int ticks, int style) {
 		if (monitor == null)

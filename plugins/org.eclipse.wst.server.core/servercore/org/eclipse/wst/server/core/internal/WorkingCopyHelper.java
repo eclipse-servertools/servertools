@@ -139,6 +139,10 @@ public class WorkingCopyHelper {
 	
 	/**
 	 * Fire a property change event.
+	 * 
+	 * @param propertyName a property name
+	 * @param oldValue the old value
+	 * @param newValue the new value
 	 */
 	public void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue) {
 		if (propertyListeners == null)

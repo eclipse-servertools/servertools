@@ -68,6 +68,13 @@
                </appInfo>
             </annotation>
          </attribute>
+         <attribute name="index" type="string">
+            <annotation>
+               <documentation>
+                  an optional index atrribute which specifies a relative ordering of artifact adapters. Adapters with a lower order are always used first. To override another adapter, simply provide a lower index
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

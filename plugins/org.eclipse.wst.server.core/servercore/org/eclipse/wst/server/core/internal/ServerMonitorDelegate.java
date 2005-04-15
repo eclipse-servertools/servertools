@@ -23,14 +23,19 @@ public abstract class ServerMonitorDelegate {
 	 * tunnel requests through. The monitorPort is the new port to use, or
 	 * -1 to pick a random port.
 	 * 
-	 * @param port
+	 * @param server a server
+	 * @param port a port
+	 * @param monitorPort the port used for monitoring
 	 * @return the port used for monitoring
+	 * @throws CoreException if anything goes wrong
 	 */
 	public abstract int startMonitoring(IServer server, ServerPort port, int monitorPort) throws CoreException;
 
 	/**
 	 * Stop monitoring the given port.
-	 * @param port
+	 * 
+	 * @param server a server
+	 * @param port a port
 	 */
 	public abstract void stopMonitoring(IServer server, ServerPort port);
 }

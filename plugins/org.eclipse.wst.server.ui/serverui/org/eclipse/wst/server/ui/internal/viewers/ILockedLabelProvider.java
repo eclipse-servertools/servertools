@@ -21,6 +21,8 @@ public interface ILockedLabelProvider {
 	 * @param element the object representing the entire row, or 
 	 *    <code>null</code> indicating that no input object is set
 	 *    in the viewer
+	 * @return <code>true</code> if the item is locked, and <code>false</code>
+	 *    otherwise
 	 */
 	public boolean isLocked(Object element);
 }

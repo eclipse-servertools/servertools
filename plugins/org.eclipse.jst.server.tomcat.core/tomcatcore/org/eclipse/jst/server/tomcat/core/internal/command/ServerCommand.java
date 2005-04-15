@@ -22,6 +22,8 @@ public abstract class ServerCommand extends Task {
 
 	/**
 	 * ServerCommand constructor comment.
+	 * 
+	 * @param server a Tomcat server
 	 */
 	public ServerCommand(ITomcatServerWorkingCopy server) {
 		super();

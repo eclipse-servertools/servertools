@@ -21,6 +21,9 @@ public class SetSecureCommand extends ServerCommand {
 
 	/**
 	 * SetSecureCommand constructor comment.
+	 * 
+	 * @param server a Tomcat server
+	 * @param secure <code>true</code> for security on
 	 */
 	public SetSecureCommand(ITomcatServerWorkingCopy server, boolean secure) {
 		super(server);

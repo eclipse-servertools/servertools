@@ -25,6 +25,8 @@ public class SelectClientWizard extends TaskWizard {
 
 	/**
 	 * SelectClientWizard constructor comment.
+	 * 
+	 * @param clients an array of clients
 	 */
 	public SelectClientWizard(final IClient[] clients) {
 		super(ServerUIPlugin.getResource("%wizSelectClientWizardTitle"),

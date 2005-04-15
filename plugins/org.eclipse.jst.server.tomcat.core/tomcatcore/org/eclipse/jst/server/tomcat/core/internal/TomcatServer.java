@@ -245,10 +245,6 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		
 		return s;
 	}*/
-	
-	public byte getModuleState(IModule module) {
-		return IServer.STATE_STARTED;
-	}
 
 	/**
 	 * Returns true if the given project is supported by this
@@ -322,13 +318,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	}
 	
 	/**
-	 * Add the given project to this configuration. The project
-	 * has already been verified using isSupportedProject() and
-	 * does not already exist in the configuration.
-	 *
-	 * @param add modules
-	 * @param remove modules
-	 * @param monitor a progress monitor
+	 * @see ServerDelegate#modifyModules(IModule[], IModule[], IProgressMonitor)
 	 */
 	public void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
 		IStatus status = canModifyModules(add, remove);

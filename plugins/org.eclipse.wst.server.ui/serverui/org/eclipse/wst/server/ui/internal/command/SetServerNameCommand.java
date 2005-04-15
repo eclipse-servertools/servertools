@@ -20,7 +20,10 @@ public class SetServerNameCommand extends ServerCommand {
 	protected String oldName;
 
 	/**
-	 * SetServerNameCommand constructor comment.
+	 * SetServerNameCommand constructor.
+	 * 
+	 * @param server a server
+	 * @param name a name for the server
 	 */
 	public SetServerNameCommand(IServerWorkingCopy server, String name) {
 		super(server);

@@ -25,6 +25,8 @@ public class ServerTask implements IServerTask {
 
 	/**
 	 * ServerTask constructor comment.
+	 * 
+	 * @param element a configuration element 
 	 */
 	public ServerTask(IConfigurationElement element) {
 		super();

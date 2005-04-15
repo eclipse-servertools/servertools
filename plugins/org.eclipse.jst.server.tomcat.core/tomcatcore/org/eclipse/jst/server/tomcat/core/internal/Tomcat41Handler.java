@@ -22,6 +22,9 @@ import org.eclipse.jst.server.core.IWebModule;
  * Tomcat 41 handler.
  */
 public class Tomcat41Handler implements ITomcatVersionHandler {
+	/**
+	 * @see ITomcatVersionHandler#verifyInstallPath(IPath)
+	 */
 	public boolean verifyInstallPath(IPath installPath) {
 		if (installPath == null)
 			return false;
@@ -33,14 +36,15 @@ public class Tomcat41Handler implements ITomcatVersionHandler {
 	}
 	
 	/**
-	 * Return the runtime class name.
-	 *
-	 * @return java.lang.String
+	 * @see ITomcatVersionHandler#getRuntimeClass()
 	 */
 	public String getRuntimeClass() {
 		return "org.apache.catalina.startup.Bootstrap";
 	}
 	
+	/**
+	 * @see ITomcatVersionHandler#getRuntimeClasspath(IPath)
+	 */
 	public List getRuntimeClasspath(IPath installPath) {
 		List cp = new ArrayList();
 		
@@ -55,9 +59,7 @@ public class Tomcat41Handler implements ITomcatVersionHandler {
 	}
 
 	/**
-	 * Return the program's runtime arguments.
-	 *
-	 * @return java.lang.String[]
+	 * @see ITomcatVersionHandler#getRuntimeProgramArguments(IPath, boolean, boolean)
 	 */
 	public String[] getRuntimeProgramArguments(IPath configPath, boolean debug, boolean starting) {
 		List list = new ArrayList();
@@ -76,9 +78,7 @@ public class Tomcat41Handler implements ITomcatVersionHandler {
 	}
 
 	/**
-	 * Return the runtime (VM) arguments.
-	 *
-	 * @return java.lang.String[]
+	 * @see ITomcatVersionHandler#getRuntimeVMArguments(IPath, IPath, boolean, boolean)
 	 */
 	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isTestEnv, boolean isSecure) {
 		List list = new ArrayList();
@@ -102,11 +102,7 @@ public class Tomcat41Handler implements ITomcatVersionHandler {
 	}
 	
 	/**
-	 * Returns true if the given project is supported by this
-	 * server, and false otherwise.
-	 *
-	 * @param module a web module
-	 * @return the status
+	 * @see ITomcatVersionHandler#canAddModule(IWebModule)
 	 */
 	public IStatus canAddModule(IWebModule module) {
 		if ("1.2".equals(module.getJ2EESpecificationVersion()) || "1.3".equals(module.getJ2EESpecificationVersion()))

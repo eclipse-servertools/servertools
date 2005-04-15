@@ -367,21 +367,8 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		// do nothing
 	}
 
-	/**
-	 * Performs special processing when this page's Defaults button has been pressed.
-	 * <p>
-	 * This is a framework hook method for sublcasses to do special things when
-	 * the Defaults button has been pressed.
-	 * Subclasses may override, but should call <code>super.performDefaults</code>.
-	 * </p>
-	 */
-	protected void performDefaults() {
-		super.performDefaults();
-	}
-
 	/** 
-	 * Method declared on IPreferencePage.
-	 * Subclasses should override
+	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
 	 */
 	public boolean performOk() {
 		// TODO - should not save until user hits ok 
@@ -389,7 +376,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 	}
 
 	/**
-	 * 
+	 * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
 	 */
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);

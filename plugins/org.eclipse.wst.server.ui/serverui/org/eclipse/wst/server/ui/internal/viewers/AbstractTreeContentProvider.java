@@ -41,6 +41,8 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 
 	/**
 	 * AbstractTreeContentProvider constructor comment.
+	 * 
+	 * @param style a style parameter
 	 */
 	public AbstractTreeContentProvider(byte style) {
 		super();

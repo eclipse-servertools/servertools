@@ -208,6 +208,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	/**
 	 * Returns the list of ports that are currently being monitored.
 	 *
+	 * @param server a server
 	 * @return a possibly empty array of monitored server ports
 	 */
 	public IMonitoredServerPort[] getMonitoredPorts(IServer server) {
@@ -228,7 +229,10 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	 * Starts monitoring the given port, and returns the new port # to use that will
 	 * route to the monitored port.
 	 * 
-	 * @param port
+	 * @param server a server
+	 * @param port a port
+	 * @param monitorPort the port used for monitoring
+	 * @param content the content
 	 * @return a monitored server port
 	 */
 	public IMonitoredServerPort createMonitor(IServer server, ServerPort port, int monitorPort, String[] content) {
@@ -292,7 +296,9 @@ public class ServerMonitorManager implements IServerMonitorManager {
 	 * and port number. Returns the existing port number if the port is not being
 	 * monitored.
 	 * 
-	 * @param port
+	 * @param server a server
+	 * @param port a port number
+	 * @param content the content
 	 * @return the port used for monitoring
 	 */
 	public int getMonitoredPort(IServer server, int port, String content) {

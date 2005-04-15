@@ -163,9 +163,11 @@ public class Module implements IModule {
 	 * detect whether there are open editors with unsaved changes.]
 	 * </p>
 	 *
+	 * @param monitor a progress monitor, or <code>null</code> if no
+	 *    progress reporting is required
 	 * @return a status object with code <code>IStatus.OK</code> if the given
-	 * module is valid, otherwise a status object indicating what is
-	 * wrong with it
+	 *    module is valid, otherwise a status object indicating what is
+	 *    wrong with it
 	 */
 	public IStatus validate(IProgressMonitor monitor) {
 		try {

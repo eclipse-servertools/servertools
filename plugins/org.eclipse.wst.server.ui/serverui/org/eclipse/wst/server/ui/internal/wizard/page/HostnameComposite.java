@@ -44,7 +44,10 @@ public class HostnameComposite extends Composite {
 	}
 
 	/**
-	 * Create a new HostComposite.
+	 * Create a new HostnameComposite.
+	 * 
+	 * @param parent a parent composite
+	 * @param listener2 a hostname selection listener
 	 */
 	public HostnameComposite(Composite parent, IHostnameSelectionListener listener2) {
 		super(parent, SWT.NONE);

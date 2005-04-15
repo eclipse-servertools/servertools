@@ -236,6 +236,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 * @param launch ILaunch
 	 * @param launchMode String
 	 * @param monitor IProgressMonitor
+	 * @throws CoreException if anything goes wrong
 	 */
 	public void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException {
 		if ("true".equals(launch.getLaunchConfiguration().getAttribute(ATTR_STOP, "false")))
@@ -292,6 +293,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 
 	/**
 	 * Cleanly shuts down and terminates the server.
+	 * 
+	 * @param force <code>true</code> to kill the server
 	 */
 	public void stop(boolean force) {
 		if (force) {
@@ -350,6 +353,25 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		return "TomcatServer";
 	}
 	
+	protected static int getNextToken(String s, int start) {
+		int i = start;
+		int length = s.length();
+		char lookFor = ' ';
+		
+		while (i < length) {
+			char c = s.charAt(i);
+			if (lookFor == c) {
+				if (lookFor == '"')
+					return i+1;
+				return i;
+			}
+			if (c == '"')
+				lookFor = '"';
+			i++;
+		}
+		return -1;
+	}
+	
 	/**
 	 * Merge the given arguments into the original argument string, replacing
 	 * invalid values if they have been changed.
@@ -370,12 +392,12 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		for (int i = 0; i < size; i++) {
 			int ind = vmArgs[i].indexOf(" ");
 			int ind2 = vmArgs[i].indexOf("=");
-			if (ind >= 0) { // -a bc style
+			if (ind >= 0 && (ind2 == -1 || ind < ind2)) { // -a bc style
 				int index = originalArg.indexOf(vmArgs[i].substring(0, ind + 1));
 				if (index == 0 || (index > 0 && originalArg.charAt(index - 1) == ' ')) {
 					// replace
 					String s = originalArg.substring(0, index);
-					int index2 = originalArg.indexOf(" ", index + ind + 1);
+					int index2 = getNextToken(originalArg, index + ind + 1);
 					if (index2 >= 0)
 						originalArg = s + vmArgs[i] + originalArg.substring(index2);
 					else
@@ -387,7 +409,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 				if (index == 0 || (index > 0 && originalArg.charAt(index - 1) == ' ')) {
 					// replace
 					String s = originalArg.substring(0, index);
-					int index2 = originalArg.indexOf(" ", index);
+					int index2 = getNextToken(originalArg, index);
 					if (index2 >= 0)
 						originalArg = s + vmArgs[i] + originalArg.substring(index2);
 					else
@@ -399,7 +421,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 				if (index == 0 || (index > 0 && originalArg.charAt(index-1) == ' ')) {
 					// replace
 					String s = originalArg.substring(0, index);
-					int index2 = originalArg.indexOf(" ", index);
+					int index2 = getNextToken(originalArg, index);
 					if (index2 >= 0)
 						originalArg = s + vmArgs[i] + originalArg.substring(index2);
 					else

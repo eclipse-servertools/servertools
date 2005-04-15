@@ -47,7 +47,9 @@ public class ModifyModulesWizard extends TaskWizard {
 	}
 
 	/**
-	 * ModifyModulesWizard constructor comment.
+	 * ModifyModulesWizard constructor.
+	 * 
+	 * @param server a server
 	 */
 	public ModifyModulesWizard(IServer server) {
 		super(ServerUIPlugin.getResource("%wizModuleWizardTitle"), new ModifyModulesWizard2(server.createWorkingCopy()));

@@ -22,6 +22,9 @@ public class AddWebModuleCommand extends ConfigurationCommand {
 
 	/**
 	 * AddWebModuleCommand constructor comment.
+	 * 
+	 * @param configuration a tomcat configuration
+	 * @param module a web module
 	 */
 	public AddWebModuleCommand(ITomcatConfigurationWorkingCopy configuration, WebModule module) {
 		super(configuration);

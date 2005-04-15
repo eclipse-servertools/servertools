@@ -313,6 +313,7 @@ public class Server extends Base implements IServer {
 	 * Add a listener to this server with the given event mask.
 	 *
 	 * @param listener org.eclipse.wst.server.model.IServerListener
+	 * @param eventMask to limit listening to certain types of events
 	 */
 	public void addServerListener(IServerListener listener, int eventMask) {
 		Trace.trace(Trace.LISTENERS, "Adding server listener " + listener + " to " + this + " with eventMask " + eventMask);
@@ -1136,7 +1137,7 @@ public class Server extends Base implements IServer {
 						return launchConfigs[i];
 					}
 				} catch (CoreException e) {
-					// ignore
+					Trace.trace(Trace.SEVERE, "Error configuring launch", e);
 				}
 			}
 		}
@@ -1164,11 +1165,7 @@ public class Server extends Base implements IServer {
 	}
 
 	/**
-	 * Start the server in the given mode.
-	 *
-	 * @param mode2 
-	 * @param monitor a progress monitor
-	 * @return a launch
+	 * @see IServer#start(String, IProgressMonitor)
 	 */
 	public ILaunch start(String mode2, IProgressMonitor monitor) throws CoreException {
 		Trace.trace(Trace.FINEST, "Starting server: " + toString() + ", launchMode: " + mode2);
@@ -1211,10 +1208,7 @@ public class Server extends Base implements IServer {
 	}
 
 	/**
-	 * Returns true if the server is in a state that it can
-	 * be restarted.
-	 *
-	 * @return boolean
+	 * @see IServer#canRestart(String)
 	 */
 	public IStatus canRestart(String mode2) {
 		if (!getServerType().supportsLaunchMode(mode2))
@@ -1253,9 +1247,7 @@ public class Server extends Base implements IServer {
 	}
 
 	/**
-	 * Restart the server with the given debug mode.
-	 * A server may only be restarted when it is currently running.
-	 * This method is asynchronous.
+	 * @see IServer#restart(String)
 	 */
 	public void restart(final String mode2) {
 		if (getServerState() == STATE_STOPPED)
@@ -1327,7 +1319,7 @@ public class Server extends Base implements IServer {
 	}
 
 	/**
-	 * Stop the server if it is running.
+	 * @see IServer#stop(boolean)
 	 */
 	public void stop(boolean force) {
 		if (getServerState() == STATE_STOPPED)
@@ -1343,12 +1335,7 @@ public class Server extends Base implements IServer {
 	}
 	
 	/**
-	 * Start the server in the given start mode and waits until the server
-	 * has finished started.
-	 *
-	 * @param mode2 the launch mode
-	 * @param monitor a progress monitor
-	 * @exception org.eclipse.core.runtime.CoreException - thrown if an error occurs while trying to start the server
+	 * @see IServer#synchronousStart(String, IProgressMonitor)
 	 */
 	public ILaunch synchronousStart(String mode2, IProgressMonitor monitor) throws CoreException {
 		Trace.trace(Trace.FINEST, "synchronousStart 1");
@@ -1898,6 +1885,7 @@ public class Server extends Base implements IServer {
 	/**
 	 * Visit all the modules in the server with the given module visitor.
 	 * 
+	 * @param visitor the visitor
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 */

@@ -38,6 +38,7 @@ public class WebAppDocument {
 	 * Loads a web.xml from the given URL.
 	 *
 	 * @param path a path
+	 * @throws Exception if anything goes wrong
 	 */
 	public WebAppDocument(IPath path) throws Exception {
 		webAppDocument = XMLUtil.getDocumentBuilder().parse(new InputSource(new FileInputStream(path.toFile())));
@@ -47,6 +48,7 @@ public class WebAppDocument {
 	 * Loads a web.xml from the given resource.
 	 *
 	 * @param file a file
+	 * @throws Exception if anything goes wrong
 	 */
 	public WebAppDocument(IFile file) throws Exception {
 		webAppDocument = XMLUtil.getDocumentBuilder().parse(new InputSource(file.getContents()));
@@ -126,6 +128,7 @@ public class WebAppDocument {
 	 *
 	 * @param path a path
 	 * @param forceDirty true to force a save
+	 * @throws IOException if anything goes wrong
 	 */
 	public void save(String path, boolean forceDirty) throws IOException {
 		if (forceDirty || isWebAppDirty)
@@ -137,6 +140,7 @@ public class WebAppDocument {
 	 *
 	 * @param file a file
 	 * @param monitor a progress monitor
+	 * @throws Exception if anything goes wrong 
 	 */
 	public void save(IFile file, IProgressMonitor monitor) throws Exception {
 		byte[] data = XMLUtil.getContents(webAppDocument);

@@ -21,6 +21,13 @@ public class ModifyMimeMappingCommand extends ConfigurationCommand {
 	protected MimeMapping oldMap;
 	protected MimeMapping newMap;
 
+	/**
+	 * A command to modify a mime mapping.
+	 * 
+	 * @param configuration a tomcat configuration
+	 * @param index an index
+	 * @param map a mime mapping
+	 */
 	public ModifyMimeMappingCommand(ITomcatConfigurationWorkingCopy configuration, int index, MimeMapping map) {
 		super(configuration);
 		this.index = index;

@@ -295,6 +295,9 @@ public class TomcatPlugin extends Plugin {
 	/**
 	 * Return a <code>java.io.File</code> object that corresponds to the specified
 	 * <code>IPath</code> in the plugin directory.
+	 * 
+	 * @param path a path within the plugin
+	 * @return a file
 	 */
 	public static File getFileInPlugin(IPath path) {
 		try {

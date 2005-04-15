@@ -37,7 +37,9 @@ public abstract class AbstractServerActionDelegate implements IActionDelegate {
 
 	/**
 	 * Perform action on this server.
-	 * @param server org.eclipse.wst.server.core.IServer
+	 * 
+	 * @param shell a shell
+	 * @param server a server
 	 */
 	public abstract void perform(Shell shell, IServer server);
 

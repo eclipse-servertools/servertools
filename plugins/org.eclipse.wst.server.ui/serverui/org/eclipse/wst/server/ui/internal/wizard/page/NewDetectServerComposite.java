@@ -98,6 +98,9 @@ public class NewDetectServerComposite extends Composite {
 
 	/**
 	 * Create a new NewDetectServerComposite.
+	 * 
+	 * @param parent a parent composite
+	 * @param listener2 a server selection listener
 	 */
 	public NewDetectServerComposite(Composite parent, IServerSelectionListener listener2) {
 		super(parent, SWT.NONE);

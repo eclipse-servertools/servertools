@@ -84,9 +84,11 @@ public class EclipseUtil {
 	 * Creates a new server project with the given name. If path is
 	 * null, it will be created in the default location.
 	 *
-	 * @param name java.lang.String
-	 * @param path org.eclipse.core.resource.IPath
-	 * @return org.eclipse.core.resources.IProject
+	 * @param shell a shell
+	 * @param name a name
+	 * @param path a path
+	 * @param monitor a progress monitor, or null
+	 * @return a status object
 	 */
 	public static IStatus createNewServerProject(final Shell shell, String name, IPath path, IProgressMonitor monitor) {
 		final IStatus status = createServerProject(name, path, monitor);
@@ -134,6 +136,8 @@ public class EclipseUtil {
 	 * Returns the standard display to be used. The method first checks, if
 	 * the thread calling this method has an associated display. If so, this
 	 * display is returned. Otherwise the method returns the default display.
+	 * 
+	 * @return the display
 	 */
 	public static Display getStandardDisplay() {
 		Display display = Display.getCurrent();
@@ -185,8 +189,9 @@ public class EclipseUtil {
 	/**
 	 * Open a dialog window.
 	 *
-	 * @param message java.lang.String
-	 * @param status IStatus
+	 * @param shell a shell
+	 * @param message a message
+	 * @param status a status
 	 */
 	public static void openError(Shell shell, String message, IStatus status) {
 		ErrorDialog.openError(shell, ServerUIPlugin.getResource("%errorDialogTitle"), message, status);
@@ -194,6 +199,10 @@ public class EclipseUtil {
 
 	/**
 	 * Do a validateEdit() on the given server.
+	 * 
+	 * @param shell a shell
+	 * @param server a server
+	 * @return true if validate edit worked
 	 */
 	public static boolean validateEdit(Shell shell, IServer server) {
 		IStatus status = ServerUtil.validateEdit(shell, server);

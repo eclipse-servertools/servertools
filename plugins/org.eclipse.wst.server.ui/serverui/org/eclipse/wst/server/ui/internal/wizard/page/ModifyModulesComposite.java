@@ -73,6 +73,10 @@ public class ModifyModulesComposite extends Composite {
 
 	/**
 	 * Create a new ModifyModulesComposite.
+	 * 
+	 * @param parent a parent composite
+	 * @param wizard a wizard
+	 * @param module the module that is being added
 	 */
 	public ModifyModulesComposite(Composite parent, IWizardHandle wizard, IModule module) {
 		super(parent, SWT.NONE);
@@ -419,8 +423,9 @@ public class ModifyModulesComposite extends Composite {
 		for (int i = 0; i < size; i++) {
 			TreeItem item = (TreeItem) parentTreeItemMap.get(items[i]);
 			IModule module = (IModule) item.getData();
+			IStatus status = (IStatus) errorMap.get(module);
 			
-			if (!list.contains(module))
+			if (status == null && !list.contains(module))
 				list.add(module);
 		}
 

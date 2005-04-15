@@ -43,7 +43,8 @@ public class Trace {
 	/**
 	 * Trace the given text.
 	 *
-	 * @param s java.lang.String
+	 * @param level a trace level
+	 * @param s a message
 	 */
 	public static void trace(byte level, String s) {
 		trace(level, s, null);
@@ -52,8 +53,9 @@ public class Trace {
 	/**
 	 * Trace the given message and exception.
 	 *
-	 * @param s java.lang.String
-	 * @param t java.lang.Throwable
+	 * @param level a trace level
+	 * @param s a message
+	 * @param t a throwable
 	 */
 	public static void trace(byte level, String s, Throwable t) {
 		if (!ServerUIPlugin.getInstance().isDebugging())

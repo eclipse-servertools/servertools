@@ -81,9 +81,6 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		return this;
 	}
 
-	/**
-	 * @see RuntimeDelegate#setAttribute(String, int)
-	 */
 	public void setAttribute(String attributeName, int value) {
 		wch.setAttribute(attributeName, value);
 	}
@@ -338,6 +335,10 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 	
 	/**
 	 * Fire a property change event.
+	 * 
+	 * @param propertyName a property name
+	 * @param oldValue the old value
+	 * @param newValue the new value
 	 */
 	public void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue) {
 		wch.firePropertyChangeEvent(propertyName, oldValue, newValue);

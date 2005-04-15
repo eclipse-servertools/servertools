@@ -21,12 +21,16 @@ import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
  */
 public interface IServerEditorActionFactory extends IOrdered {
 	/**
+	 * Returns the id.
 	 * 
+	 * @return an id
 	 */
 	public String getId();
 
 	/**
+	 * Returns the name.
 	 * 
+	 * @return a name
 	 */
 	public String getName();
 
@@ -35,6 +39,7 @@ public interface IServerEditorActionFactory extends IOrdered {
 	 * id) can be opened with this editor. This result is based on
 	 * the result of the getFactoryIds() method.
 	 *
+	 * @param id an id
 	 * @return boolean
 	 */
 	public boolean supportsServerElementType(String id);
@@ -43,11 +48,18 @@ public interface IServerEditorActionFactory extends IOrdered {
 	 * Returns true if this editor page should be visible with the given server.
 	 * This allows (for instance) complex configuration pages to only be shown when used
 	 * with non-unittest servers.
+	 * 
+	 * @param server a server
+	 * @return <code>true</code> if the action should display
 	 */
 	public boolean shouldDisplay(IServerWorkingCopy server);
 
 	/**
 	 * Create the action.
+	 * 
+	 * @param site an editor site
+	 * @param input a server editor input
+	 * @return an action
 	 */
 	public IAction createAction(IEditorSite site, IServerEditorPartInput input);
 }

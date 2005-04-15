@@ -47,7 +47,9 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	protected String policyFile;
 
 	/**
-	 * Tomcat32Configuration constructor comment.
+	 * Tomcat32Configuration constructor.
+	 * 
+	 * @param path a path
 	 */
 	public Tomcat32Configuration(IFolder path) {
 		super(path);
@@ -207,8 +209,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	}
 	
 	/**
-	 * Load a Tomcat configuration from the given directory.
-	 * @param path
+	 * @see TomcatConfiguration#load(IPath, IProgressMonitor)
 	 */
 	public void load(IPath path, IProgressMonitor monitor) throws CoreException {
 		try {
@@ -263,10 +264,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	}
 	
 	/**
-	 * Reload a Tomcat configuration from the given resource.
-	 *
-	 * @param folder a folder
-	 * @param monitor a progress monitor
+	 * @see TomcatConfiguration#load(IFolder, IProgressMonitor)
 	 */
 	public void load(IFolder folder, IProgressMonitor monitor) throws CoreException {
 		try {
@@ -446,8 +444,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	
 	
 	/**
-	 * Adds a mime mapping.
-	 * @param map MimeMapping
+	 * @see ITomcatConfigurationWorkingCopy#addMimeMapping(int, IMimeMapping)
 	 */
 	public void addMimeMapping(int index, IMimeMapping map) {
 		webAppDocument.addMimeMapping(index, map);
@@ -455,8 +452,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	}
 
 	/**
-	 * Add a web module.
-	 * @param module org.eclipse.jst.server.tomcat.WebModule
+	 * @see ITomcatConfigurationWorkingCopy#addWebModule(int, ITomcatWebModule)
 	 */
 	public void addWebModule(int index, ITomcatWebModule module) {
 		try {
@@ -479,6 +475,8 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	 * Localize the web projects in this configuration.
 	 *
 	 * @param path a path
+	 * @param serverType a server type
+	 * @param runtime a runtime
 	 * @param monitor a progress monitor
 	 */
 	public void localizeConfiguration(IPath path, TomcatServer serverType, IRuntime runtime, IProgressMonitor monitor) {

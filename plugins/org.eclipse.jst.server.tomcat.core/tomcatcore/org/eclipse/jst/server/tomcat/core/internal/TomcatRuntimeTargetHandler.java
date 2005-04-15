@@ -38,9 +38,7 @@ public class TomcatRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
 	}
 
 	/**
-	 * Return a label for the classpath container.
-	 *  
-	 * @return the classpath container label
+	 * @see ClasspathRuntimeTargetHandler#getClasspathContainerLabel(IRuntime, String)
 	 */
 	public String getClasspathContainerLabel(IRuntime runtime, String id) {
 		String id2 = runtime.getRuntimeType().getId();
@@ -56,17 +54,17 @@ public class TomcatRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
 		return TomcatPlugin.getResource("%target55runtime");
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jst.server
+	/**
+	 * @see ClasspathRuntimeTargetHandler#resolveClasspathContainer(IRuntime, String)
 	 */
 	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime, String id) {
 		return resolveClasspathContainer(runtime);
 	}
 
 	/**
-	 * Resolve the classpath entries.
+	 * Resolve the classpath container.
 	 */
-	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime) {
+	protected IClasspathEntry[] resolveClasspathContainer(IRuntime runtime) {
 		IPath installPath = runtime.getLocation();
 		
 		if (installPath == null)

@@ -21,7 +21,10 @@ public class RemoveMimeMappingCommand extends ConfigurationCommand {
 	protected MimeMapping mapping;
 
 	/**
-	 * ModifyMimeTypeExtensionCommand constructor comment.
+	 * RemoveMimeMappingCommand constructor.
+	 * 
+	 * @param configuration a tomcat configuration
+	 * @param index an index
 	 */
 	public RemoveMimeMappingCommand(ITomcatConfigurationWorkingCopy configuration, int index) {
 		super(configuration);

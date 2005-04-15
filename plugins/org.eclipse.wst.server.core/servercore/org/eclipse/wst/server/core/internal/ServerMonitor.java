@@ -24,6 +24,8 @@ public class ServerMonitor implements IServerMonitor {
 
 	/**
 	 * Monitor constructor comment.
+	 * 
+	 * @param element a configuration element
 	 */
 	public ServerMonitor(IConfigurationElement element) {
 		super();
@@ -73,8 +75,12 @@ public class ServerMonitor implements IServerMonitor {
 	/**
 	 * Start monitoring the given port, and return the port number to
 	 * tunnel requests through.
-	 * @param port
+	 * 
+	 * @param server a server
+	 * @param port a port
+	 * @param monitorPort the port used for monitoring
 	 * @return the port used for monitoring
+	 * @throws CoreException if anything goes wrong
 	 */
 	public int startMonitoring(IServer server, ServerPort port, int monitorPort) throws CoreException {
 		try {
@@ -89,7 +95,9 @@ public class ServerMonitor implements IServerMonitor {
 
 	/**
 	 * Stop monitoring the given port.
-	 * @param port
+	 * 
+	 * @param server a server
+	 * @param port a port
 	 */
 	public void stopMonitoring(IServer server, ServerPort port) {
 		try {

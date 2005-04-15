@@ -284,12 +284,21 @@ public class TasksWizardFragment extends WizardFragment {
 	}
 
 	/**
+	 * Return <code>true</code> if this wizard has tasks.
 	 * 
+	 * @return <code>true</code> if this wizard has tasks, and <code>false</code>
+	 *    otherwise
 	 */
 	public boolean hasTasks() {
 		return tasks == null || !tasks.isEmpty();
 	}
 	
+	/**
+	 * Return <code>true</code> if this wizard has optional tasks.
+	 * 
+	 * @return <code>true</code> if this wizard has optional tasks, and
+	 *    <code>false</code> otherwise
+	 */
 	public boolean hasOptionalTasks() {
 		return hasOptionalTasks;
 	}

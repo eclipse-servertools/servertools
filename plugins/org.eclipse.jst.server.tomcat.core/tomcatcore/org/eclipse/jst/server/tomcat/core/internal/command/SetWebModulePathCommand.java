@@ -23,6 +23,10 @@ public class SetWebModulePathCommand extends ConfigurationCommand {
 
 	/**
 	 * SetWebModulePathCommand constructor comment.
+	 * 
+	 * @param configuration a tomcat configuration
+	 * @param index an index
+	 * @param contextRoot the context root
 	 */
 	public SetWebModulePathCommand(ITomcatConfigurationWorkingCopy configuration, int index, String contextRoot) {
 		super(configuration);

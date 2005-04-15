@@ -25,11 +25,7 @@ public abstract class AbstractTreeLabelProvider extends BaseLabelProvider {
 	}
 
 	/**
-	 * Returns the label image for the given column of the given element.
-	 *
-	 * @param element the object representing the entire row, or 
-	 *    <code>null</code> indicating that no input object is set
-	 *    in the viewer
+	 * @see BaseLabelProvider#getImage(Object)
 	 */
 	public Image getImage(Object element) {
 		if (element instanceof ServerTreeContentProvider.TreeElement) {
@@ -39,14 +35,16 @@ public abstract class AbstractTreeLabelProvider extends BaseLabelProvider {
 		return getImageImpl(element);
 	}
 	
+	/**
+	 * Return an image for the given element.
+	 *  
+	 * @param element an element
+	 * @return an image
+	 */
 	protected abstract Image getImageImpl(Object element);
 
 	/**
-	 * Returns the label text for the given column of the given element.
-	 *
-	 * @param element the object representing the entire row, or
-	 *   <code>null</code> indicating that no input object is set
-	 *   in the viewer
+	 * @see BaseLabelProvider#getText(Object)
 	 */
 	public String getText(Object element) {
 		if (element instanceof ServerTreeContentProvider.TreeElement) {
@@ -55,5 +53,11 @@ public abstract class AbstractTreeLabelProvider extends BaseLabelProvider {
 		return getTextImpl(element);
 	}
 	
+	/**
+	 * Return a label for the given element.
+	 *  
+	 * @param element an element
+	 * @return a label
+	 */
 	protected abstract String getTextImpl(Object element);
 }

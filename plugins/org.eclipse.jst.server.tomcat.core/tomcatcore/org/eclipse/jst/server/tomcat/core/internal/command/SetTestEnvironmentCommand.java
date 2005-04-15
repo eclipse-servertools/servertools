@@ -21,6 +21,9 @@ public class SetTestEnvironmentCommand extends ServerCommand {
 
 	/**
 	 * SetTestEnvironmentCommand constructor comment.
+	 * 
+	 * @param server a Tomcat server
+	 * @param te <code>true</code> for a test environment.
 	 */
 	public SetTestEnvironmentCommand(ITomcatServerWorkingCopy server, boolean te) {
 		super(server);

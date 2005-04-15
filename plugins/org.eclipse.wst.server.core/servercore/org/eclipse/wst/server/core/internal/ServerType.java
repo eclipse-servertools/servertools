@@ -30,6 +30,8 @@ public class ServerType implements IServerType, IOrdered {
 
 	/**
 	 * ServerType constructor comment.
+	 * 
+	 * @param element a configuration element
 	 */
 	public ServerType(IConfigurationElement element) {
 		super();

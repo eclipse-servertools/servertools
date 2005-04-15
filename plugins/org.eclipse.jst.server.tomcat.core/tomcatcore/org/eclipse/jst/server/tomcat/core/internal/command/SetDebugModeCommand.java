@@ -21,6 +21,9 @@ public class SetDebugModeCommand extends ServerCommand {
 
 	/**
 	 * SetDebugModeCommand constructor comment.
+	 * 
+	 * @param server a Tomcat server
+	 * @param debug <code>true</code> for debug mode
 	 */
 	public SetDebugModeCommand(ITomcatServerWorkingCopy server, boolean debug) {
 		super(server);

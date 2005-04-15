@@ -234,7 +234,7 @@ public class ServerPlugin extends Plugin {
 	}
 
 	/**
-	 * Start up this plug-in.
+	 * @see Plugin#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
 		Trace.trace(Trace.CONFIG, "----->----- Server Core plugin startup ----->-----");
@@ -247,7 +247,7 @@ public class ServerPlugin extends Plugin {
 	}
 
 	/**
-	 * Shuts down this plug-in and saves all plug-in state.
+	 * @see Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
 		Trace.trace(Trace.CONFIG, "-----<----- Server Core plugin shutdown -----<-----");
@@ -334,6 +334,8 @@ public class ServerPlugin extends Plugin {
 	 * Recursively delete a directory.
 	 *
 	 * @param dir java.io.File
+	 * @param monitor a progress monitor, or <code>null</code> if no progress
+	 *    reporting is required
 	 */
 	public static void deleteDirectory(File dir, IProgressMonitor monitor) {
 		try {
@@ -746,6 +748,20 @@ public class ServerPlugin extends Plugin {
 				Trace.trace(Trace.SEVERE, "  Could not load moduleArtifactAdapter: " + cf[i].getAttribute("id"), t);
 			}
 		}
+		
+		// sort by index to put lower numbers first in order
+		size = moduleArtifactAdapters.size();
+		for (int i = 0; i < size-1; i++) {
+			for (int j = i+1; j < size; j++) {
+				ModuleArtifactAdapter a = (ModuleArtifactAdapter) moduleArtifactAdapters.get(i);
+				ModuleArtifactAdapter b = (ModuleArtifactAdapter) moduleArtifactAdapters.get(j);
+				if (a.getIndex() > b.getIndex()) {
+					moduleArtifactAdapters.set(i, b);
+					moduleArtifactAdapters.set(j, a);
+				}
+			}
+		}
+		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleArtifactAdapters extension point -<-");
 	}
 	
@@ -753,7 +769,8 @@ public class ServerPlugin extends Plugin {
 	 * Returns <code>true</code> if a module artifact may be available for the given object,
 	 * and <code>false</code> otherwise.
 	 *
-	 * @return IModuleArtifact
+	 * @param obj an object
+	 * @return <code>true</code> if there is a module artifact adapter
 	 */
 	public static boolean hasModuleArtifact(Object obj) {
 		Trace.trace(Trace.FINEST, "ServerUIPlugin.hasModuleArtifact() " + obj);

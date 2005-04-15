@@ -38,7 +38,10 @@ public class DeleteServerDialog extends Dialog {
 
 	/**
 	 * DeleteServerDialog constructor comment.
-	 * @param parentShell org.eclipse.swt.widgets.Shell
+	 * 
+	 * @param parentShell a shell
+	 * @param servers an array of servers
+	 * @param configs an array of server configurations
 	 */
 	public DeleteServerDialog(Shell parentShell, IServer[] servers, IFolder[] configs) {
 		super(parentShell);

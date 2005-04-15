@@ -19,6 +19,9 @@ public class MimeMapping implements IMimeMapping {
 
 	/**
 	 * MimeMapping constructor comment.
+	 * 
+	 * @param extension an extension
+	 * @param mimeType a mime type
 	 */
 	public MimeMapping(String extension, String mimeType) {
 		super();

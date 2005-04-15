@@ -20,7 +20,9 @@ public abstract class ServerCommand extends Task {
 	protected IServerWorkingCopy server;
 
 	/**
-	 * ServerCommand constructor comment.
+	 * ServerCommand constructor.
+	 * 
+	 * @param server a server
 	 */
 	public ServerCommand(IServerWorkingCopy server) {
 		super();

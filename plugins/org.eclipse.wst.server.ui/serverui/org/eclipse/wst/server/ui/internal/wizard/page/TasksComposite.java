@@ -44,6 +44,9 @@ public class TasksComposite extends Composite {
 
 	/**
 	 * Create a new TasksComposite.
+	 * 
+	 * @param parent a parent composite
+	 * @param wizard a wizard handle
 	 */
 	public TasksComposite(Composite parent, IWizardHandle wizard) {
 		super(parent, SWT.NONE);

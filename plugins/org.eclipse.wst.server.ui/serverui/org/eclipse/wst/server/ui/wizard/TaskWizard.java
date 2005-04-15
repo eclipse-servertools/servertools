@@ -96,6 +96,8 @@ public class TaskWizard implements IWizard {
 
 	/**
 	 * TaskWizard constructor comment.
+	 * 
+	 * @param rootFragment a root fragment
 	 */
 	public TaskWizard(WizardFragment rootFragment) {
 		this();

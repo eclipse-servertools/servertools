@@ -44,7 +44,9 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 	protected boolean isPolicyDirty;
 
 	/**
-	 * Tomcat50Configuration constructor comment.
+	 * Tomcat50Configuration constructor.
+	 * 
+	 * @param path a path
 	 */
 	public Tomcat50Configuration(IFolder path) {
 		super(path);
@@ -190,8 +192,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 	}
 	
 	/**
-	 * @param path a path
-	 * @param monitor a progress monitor
+	 * @see TomcatConfiguration#load(IPath, IProgressMonitor)
 	 */
 	public void load(IPath path, IProgressMonitor monitor) throws CoreException {
 		try {
@@ -263,10 +264,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 	}
 
 	/**
-	 * Reload the configuration.
-	 * 
-	 * @param folder a folder
-	 * @param monitor a progress monitor
+	 * @see TomcatConfiguration#load(IFolder, IProgressMonitor)
 	 */
 	public void load(IFolder folder, IProgressMonitor monitor) throws CoreException {
 		try {
@@ -455,10 +453,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 	}
 	
 	/**
-	 * Adds a mime mapping.
-	 * 
-	 * @param index
-	 * @param map
+	 * @see ITomcatConfigurationWorkingCopy#addMimeMapping(int, IMimeMapping)
 	 */
 	public void addMimeMapping(int index, IMimeMapping map) {
 		webAppDocument.addMimeMapping(index, map);
@@ -466,8 +461,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 	}
 
 	/**
-	 * Add a web module.
-	 * @param module org.eclipse.jst.server.tomcat.WebModule
+	 * @see ITomcatConfigurationWorkingCopy#addWebModule(int, ITomcatWebModule)
 	 */
 	public void addWebModule(int index, ITomcatWebModule module) {
 		try {
@@ -497,6 +491,8 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 	 * Localize the web projects in this configuration.
 	 *
 	 * @param path a path
+	 * @param server2 a server type
+	 * @param runtime a runtime
 	 * @param monitor a progress monitor
 	 */
 	public void localizeConfiguration(IPath path, TomcatServer server2, TomcatRuntime runtime, IProgressMonitor monitor) {

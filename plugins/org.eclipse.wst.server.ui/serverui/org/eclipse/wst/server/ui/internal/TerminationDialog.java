@@ -29,7 +29,9 @@ public class TerminationDialog extends Dialog {
 
 	/**
 	 * TerminationDialog constructor comment.
-	 * @param parentShell org.eclipse.swt.widgets.Shell
+	 * 
+	 * @param parentShell a shell
+	 * @param serverName a server name
 	 */
 	public TerminationDialog(Shell parentShell, String serverName) {
 		super(parentShell);

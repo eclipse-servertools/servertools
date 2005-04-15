@@ -48,8 +48,8 @@ public class Trace {
 	/**
 	 * Trace the given text.
 	 *
-	 * @param level trace level
-	 * @param s java.lang.String
+	 * @param level the trace level
+	 * @param s a message
 	 */
 	public static void trace(byte level, String s) {
 		trace(level, s, null);
@@ -58,9 +58,9 @@ public class Trace {
 	/**
 	 * Trace the given message and exception.
 	 *
-	 * @param level trace level
-	 * @param s java.lang.String
-	 * @param t java.lang.Throwable
+	 * @param level the trace level
+	 * @param s a message
+	 * @param t a throwable
 	 */
 	public static void trace(byte level, String s, Throwable t) {
 		if (!MonitorPlugin.getInstance().isDebugging())

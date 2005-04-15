@@ -18,7 +18,10 @@ public class AddMimeMappingCommand extends ConfigurationCommand {
 	protected MimeMapping map;
 
 	/**
-	 * ModifyMimeTypeExtensionCommand constructor comment.
+	 * AddMimeMappingCommand constructor.
+	 * 
+	 * @param configuration a tomcat configuration
+	 * @param map a mime mapping
 	 */
 	public AddMimeMappingCommand(ITomcatConfigurationWorkingCopy configuration, MimeMapping map) {
 		super(configuration);

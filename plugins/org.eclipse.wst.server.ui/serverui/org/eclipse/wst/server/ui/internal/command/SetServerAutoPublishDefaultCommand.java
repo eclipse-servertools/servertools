@@ -21,7 +21,10 @@ public class SetServerAutoPublishDefaultCommand extends ServerCommand {
 	protected boolean oldTime;
 
 	/**
-	 * SetServerAutoPublishDefaultCommand constructor comment.
+	 * SetServerAutoPublishDefaultCommand constructor.
+	 * 
+	 * @param server a server
+	 * @param time <code>true</code> to use the default time
 	 */
 	public SetServerAutoPublishDefaultCommand(IServerWorkingCopy server, boolean time) {
 		super(server);

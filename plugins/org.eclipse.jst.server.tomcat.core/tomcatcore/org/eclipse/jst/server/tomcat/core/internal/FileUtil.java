@@ -35,6 +35,7 @@ public class FileUtil {
 	 *
 	 * @param from java.lang.String
 	 * @param to java.lang.String
+	 * @param monitor a progress monitor, or <code>null</code>
 	 */
 	public static void copyDirectory(String from, String to, IProgressMonitor monitor) {
 		try {
@@ -78,6 +79,7 @@ public class FileUtil {
 	 *
 	 * @param in java.io.InputStream
 	 * @param to java.lang.String
+	 * @return a status
 	 */
 	public static IStatus copyFile(InputStream in, String to) {
 		OutputStream out = null;
@@ -115,6 +117,7 @@ public class FileUtil {
 	 *
 	 * @param from java.lang.String
 	 * @param to java.lang.String
+	 * @return a status
 	 */
 	public static IStatus copyFile(String from, String to) {
 		try {
@@ -130,6 +133,7 @@ public class FileUtil {
 	 *
 	 * @param from java.net.URL
 	 * @param to java.lang.String
+	 * @return a status
 	 */
 	public static IStatus copyFile(URL from, String to) {
 		try {
@@ -144,6 +148,7 @@ public class FileUtil {
 	 * Recursively deletes a directory.
 	 *
 	 * @param dir java.io.File
+	 * @param monitor a progress monitor, or <code>null</code>
 	 */
 	public static void deleteDirectory(File dir, IProgressMonitor monitor) {
 		try {

@@ -53,7 +53,10 @@ public class ElementCreationCache {
 	 * Returns a server. 
 	 *
 	 * @param type
+	 * @param host a hostname or IP
+	 * @param monitor a progress monitor
 	 * @return a server working copy
+	 * @throws CoreException if anything goes wrong
 	 */
 	public IServerWorkingCopy getServer(IServerType type, String host, IProgressMonitor monitor) throws CoreException {
 		try {
@@ -81,6 +84,7 @@ public class ElementCreationCache {
 	 * Returns a cached server resource. 
 	 *
 	 * @param type the server type
+	 * @param host a hostname or IP
 	 * @return a working copy
 	 */
 	public IServerWorkingCopy getCachedServer(IServerType type, String host) {

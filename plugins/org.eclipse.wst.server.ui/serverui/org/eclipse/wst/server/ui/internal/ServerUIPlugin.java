@@ -198,9 +198,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Start up this plug-in.
-	 *
-	 * @throws Exception
+	 * @see Plugin#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
 		Trace.trace(Trace.CONFIG, "----->----- Server UI plugin start ----->-----");
@@ -222,9 +220,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Shuts down this plug-in and saves all plug-in state.
-	 *
-	 * @exception Exception
+	 * @see Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
 		Trace.trace(Trace.CONFIG, "-----<----- Server UI plugin stop -----<-----");
@@ -249,7 +245,9 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	 * reasonable amount of time, the user will be prompted to
 	 * terminate the server.
 	 *
-	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param shell a shell
+	 * @param server a server
+	 * @param mode a debug mode
 	 */
 	public static void addTerminationWatch(final Shell shell, final IServer server, final int mode) {
 		if (terminationWatches.contains(server))
@@ -480,6 +478,8 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	 * not dirty or if the user decided to continue anyway. Returns false if
 	 * the server is dirty and the user chose to cancel the operation.
 	 *
+	 * @param shell a shell
+	 * @param server a server
 	 * @return boolean
 	 */
 	public static boolean promptIfDirty(Shell shell, IServer server) {

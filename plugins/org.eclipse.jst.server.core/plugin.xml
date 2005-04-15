@@ -1,27 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 
-<plugin id="org.eclipse.jst.server.core"
-  name="%pluginName"
-  version="1.0.0"
-  provider-name="%providerName"
-  class="org.eclipse.jst.server.core.internal.JavaServerPlugin">
-
-  <requires>
-    <import plugin="org.eclipse.core.resources"/>
-    <import plugin="org.eclipse.debug.core"/>
-    <import plugin="org.eclipse.wst.server.core"/>
-    <import plugin="org.eclipse.jdt.core"/>
-    <import plugin="org.eclipse.jdt.launching"/>
-    <import plugin="org.eclipse.core.runtime"/>
-  </requires>
-
-  <runtime>
-    <library name="sjavacore.jar">
-      <export name="*"/>
-    </library>
-  </runtime>
-
+<plugin>
   <extension point="org.eclipse.jdt.core.classpathContainerInitializer">
     <classpathContainerInitializer
       id="org.eclipse.jst.server.core.container"

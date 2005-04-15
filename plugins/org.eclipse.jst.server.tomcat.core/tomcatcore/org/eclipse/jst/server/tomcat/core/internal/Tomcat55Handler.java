@@ -18,6 +18,9 @@ import org.eclipse.jst.server.core.IWebModule;
  * Tomcat 55 handler.
  */
 public class Tomcat55Handler extends Tomcat50Handler {
+	/**
+	 * @see ITomcatVersionHandler#verifyInstallPath(IPath)
+	 */
 	public boolean verifyInstallPath(IPath installPath) {
 		if (installPath == null)
 			return false;
@@ -29,11 +32,7 @@ public class Tomcat55Handler extends Tomcat50Handler {
 	}
 	
 	/**
-	 * Returns true if the given project is supported by this
-	 * server, and false otherwise.
-	 *
-	 * @param module a web module
-	 * @return the status
+	 * @see ITomcatVersionHandler#canAddModule(IWebModule)
 	 */
 	public IStatus canAddModule(IWebModule module) {
 		if ("1.2".equals(module.getJ2EESpecificationVersion()) || "1.3".equals(module.getJ2EESpecificationVersion()) || "1.4".equals(module.getJ2EESpecificationVersion()))

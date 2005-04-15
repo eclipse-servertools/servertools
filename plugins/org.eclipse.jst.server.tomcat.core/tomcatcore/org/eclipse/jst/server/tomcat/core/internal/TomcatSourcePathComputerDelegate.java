@@ -76,6 +76,6 @@ public class TomcatSourcePathComputerDelegate implements ISourcePathComputerDele
 		}
 		
 		IRuntimeClasspathEntry[] resolved = JavaRuntime.resolveSourceLookupPath(entries, configuration);
-		return JavaSourceLookupUtil.translate(resolved, true);
+		return JavaRuntime.getSourceContainers(resolved);
 	}
 }

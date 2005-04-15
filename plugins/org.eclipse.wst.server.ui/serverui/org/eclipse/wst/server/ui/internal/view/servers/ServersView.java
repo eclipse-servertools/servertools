@@ -57,6 +57,8 @@ public class ServersView extends ViewPart {
 	
 	/**
 	 * createPartControl method comment.
+	 * 
+	 * @param parent a parent composite
 	 */
 	public void createPartControl(Composite parent) {
 		treeTable = new Tree(parent, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.NONE);
@@ -176,6 +178,8 @@ public class ServersView extends ViewPart {
 	
 	/**
 	 * Initialize actions
+	 * 
+	 * @param provider a selection provider
 	 */
 	public void initializeActions(ISelectionProvider provider) {
 		Shell shell = getSite().getShell();

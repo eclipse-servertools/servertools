@@ -31,7 +31,12 @@ public class SwitchConfigurationAction extends Action {
 	protected IStatus status;
 
 	/**
-	 * SwitchConfigurationAction constructor comment.
+	 * SwitchConfigurationAction constructor.
+	 * 
+	 * @param shell a shell
+	 * @param label a label
+	 * @param server a server
+	 * @param config a server configuration
 	 */
 	public SwitchConfigurationAction(Shell shell, String label, IServer server, IFolder config) {
 		super(label);

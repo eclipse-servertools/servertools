@@ -294,6 +294,10 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	
 	/**
 	 * Fire a property change event.
+	 * 
+	 * @param propertyName a property name
+	 * @param oldValue the old value
+	 * @param newValue the new value
 	 */
 	public void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue) {
 		wch.firePropertyChangeEvent(propertyName, oldValue, newValue);

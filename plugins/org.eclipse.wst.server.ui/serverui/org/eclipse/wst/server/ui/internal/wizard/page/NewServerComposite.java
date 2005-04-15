@@ -77,6 +77,11 @@ public class NewServerComposite extends Composite {
 
 	/**
 	 * Create a new NewServerComposite.
+	 * 
+	 * @param parent a parent composite
+	 * @param wizard a wizard handle
+	 * @param module a module
+	 * @param launchMode a launch mode
 	 */
 	public NewServerComposite(Composite parent, IWizardHandle wizard, IModule module, String launchMode) {
 		super(parent, SWT.NONE);

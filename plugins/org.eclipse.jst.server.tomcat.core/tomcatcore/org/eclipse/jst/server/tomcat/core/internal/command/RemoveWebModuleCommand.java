@@ -22,6 +22,9 @@ public class RemoveWebModuleCommand extends ConfigurationCommand {
 
 	/**
 	 * RemoveWebModuleCommand constructor comment.
+	 * 
+	 * @param configuration a tomcat configuration
+	 * @param index an index
 	 */
 	public RemoveWebModuleCommand(ITomcatConfigurationWorkingCopy configuration, int index) {
 		super(configuration);

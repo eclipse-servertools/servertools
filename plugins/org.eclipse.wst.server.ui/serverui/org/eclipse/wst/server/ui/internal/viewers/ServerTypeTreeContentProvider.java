@@ -31,7 +31,10 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 	protected boolean includeIncompatibleVersions;
 
 	/**
-	 * ServerTypeTreeContentProvider constructor comment.
+	 * ServerTypeTreeContentProvider constructor.
+	 * 
+	 * @param style a style
+	 * @param moduleType a module type
 	 */
 	public ServerTypeTreeContentProvider(byte style, IModuleType moduleType) {
 		super(style, false);

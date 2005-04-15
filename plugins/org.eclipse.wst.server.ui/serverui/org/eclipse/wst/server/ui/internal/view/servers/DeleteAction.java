@@ -29,14 +29,20 @@ public class DeleteAction extends Action {
 	protected Shell shell;
 
 	/**
-	 * DeleteAction constructor comment.
+	 * DeleteAction constructor.
+	 * 
+	 * @param shell a shell
+	 * @param server a server
 	 */
 	public DeleteAction(Shell shell, IServer server) {
 		this(shell, new IServer[] { server });
 	}
 
 	/**
-	 * DeleteAction constructor comment.
+	 * DeleteAction constructor.
+	 * 
+	 * @param shell a shell
+	 * @param servers an array of servers
 	 */
 	public DeleteAction(Shell shell, IServer[] servers) {
 		super(ServerUIPlugin.getResource("%actionDelete"));

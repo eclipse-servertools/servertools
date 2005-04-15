@@ -34,6 +34,9 @@ public class RunOnServerWizard extends TaskWizard {
 
 	/**
 	 * RunOnServerWizard constructor comment.
+	 * 
+	 * @param module a module
+	 * @param launchMode a launch mode
 	 */
 	public RunOnServerWizard(final IModule module, final String launchMode) {
 		super(ServerUIPlugin.getResource("%wizRunOnServerTitle"), new WizardFragment() {

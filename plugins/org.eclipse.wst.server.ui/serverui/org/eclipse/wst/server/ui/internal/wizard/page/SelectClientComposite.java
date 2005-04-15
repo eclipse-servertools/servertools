@@ -47,6 +47,10 @@ public class SelectClientComposite extends Composite {
 
 	/**
 	 * Create a new SelectClientComposite.
+	 * 
+	 * @param parent a parent composite
+	 * @param wizard a wizard handle
+	 * @param clients an array of clients
 	 */
 	public SelectClientComposite(Composite parent, IWizardHandle wizard, IClient[] clients) {
 		super(parent, SWT.NONE);

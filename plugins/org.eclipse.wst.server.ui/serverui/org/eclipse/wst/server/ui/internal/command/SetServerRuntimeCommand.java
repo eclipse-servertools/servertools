@@ -21,7 +21,10 @@ public class SetServerRuntimeCommand extends ServerCommand {
 	protected IRuntime oldRuntime;
 
 	/**
-	 * SetServerRuntimeCommand constructor comment.
+	 * SetServerRuntimeCommand constructor.
+	 * 
+	 * @param server a server
+	 * @param runtime a server runtime
 	 */
 	public SetServerRuntimeCommand(IServerWorkingCopy server, IRuntime runtime) {
 		super(server);

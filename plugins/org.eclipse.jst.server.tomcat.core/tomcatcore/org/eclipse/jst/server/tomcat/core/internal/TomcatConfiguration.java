@@ -47,7 +47,9 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	private transient List propertyListeners;
 
 	/**
-	 * TomcatConfiguration constructor comment.
+	 * TomcatConfiguration constructor.
+	 * 
+	 * @param path a path
 	 */
 	public TomcatConfiguration(IFolder path) {
 		super();

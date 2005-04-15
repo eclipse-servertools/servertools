@@ -109,6 +109,8 @@ public class ImportConfigurationWizardPage extends WizardPage {
 	/**
 	 * Creates the UI part of the page. Subclasses must reimplement 
 	 * this method to provide their own graphical page content.
+	 * 
+	 * @param parent a parent composite
 	 */
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);

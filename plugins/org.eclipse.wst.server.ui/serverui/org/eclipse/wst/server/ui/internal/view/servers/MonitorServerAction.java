@@ -23,7 +23,10 @@ public class MonitorServerAction extends Action {
 	protected Shell shell;
 
 	/**
-	 * MonitorServerAction constructor comment.
+	 * MonitorServerAction constructor.
+	 * 
+	 * @param shell a shell
+	 * @param server a server
 	 */
 	public MonitorServerAction(Shell shell, IServer server) {
 		super(ServerUIPlugin.getResource("%actionMonitorProperties"));

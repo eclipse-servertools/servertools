@@ -192,8 +192,7 @@ public class ProjectPropertyPage extends PropertyPage {
 	}
 
 	/** 
-	 * Method declared on IPreferencePage.
-	 * Subclasses should override
+	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
 	 */
 	public boolean performOk() {
 		if (module != null) {

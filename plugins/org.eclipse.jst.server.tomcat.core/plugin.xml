@@ -1,28 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 
-<plugin id="org.eclipse.jst.server.tomcat.core"
-  name="%pluginName"
-  version="1.0.0"
-  provider-name="%providerName"
-  class="org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin">
-
-  <runtime>
-     <library name="tomcatcore.jar">
-        <export name="*"/>
-     </library>
-  </runtime>
-
-  <requires>
-     <import plugin="org.eclipse.core.runtime"/>
-     <import plugin="org.eclipse.core.resources"/>
-     <import plugin="org.eclipse.debug.core"/>
-     <import plugin="org.eclipse.jdt.core"/>
-     <import plugin="org.eclipse.jdt.launching"/>
-     <import plugin="org.eclipse.wst.server.core"/>
-     <import plugin="org.eclipse.jst.server.core"/>
-  </requires>
-
+<plugin>
   <extension point="org.eclipse.wst.server.core.runtimeTypes">
     <runtimeType
        id="org.eclipse.jst.server.tomcat.runtime.32"

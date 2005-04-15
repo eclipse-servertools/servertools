@@ -57,6 +57,8 @@ public abstract class AbstractServerAction extends SelectionProviderAction {
 
 	/**
 	 * Update the enable state.
+	 * 
+	 * @param sel a selection
 	 */
 	public void selectionChanged(IStructuredSelection sel) {
 		if (sel.isEmpty()) {

@@ -25,6 +25,14 @@ public interface ITomcatVersionHandler {
 	
 	public List getRuntimeClasspath(IPath installPath);
 	
+	/**
+	 * Return the program's runtime arguments.
+	 * 
+	 * @param configPath a config path
+	 * @param debug <code>true</code> if debug mode is on
+	 * @param starting <code>true</code> if the server is starting
+	 * @return a string array of program arguments
+	 */
 	public String[] getRuntimeProgramArguments(IPath configPath, boolean debug, boolean starting);
 	
 	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isTestEnv, boolean isSecure);

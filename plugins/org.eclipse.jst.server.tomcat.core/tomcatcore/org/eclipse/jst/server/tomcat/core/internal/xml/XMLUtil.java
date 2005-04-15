@@ -57,8 +57,12 @@ public class XMLUtil {
 
 	/**
 	 * Create a child of the given node at the given index.
+	 *
+	 * @param doc a document
+	 * @param element an element
+	 * @param index an index
+	 * @param nodeName a node name
 	 * @return org.w3c.dom.Element
-	 * @param nodeName java.lang.String
 	 */
 	public static Element createChildElement(Document doc, Element element, int index, String nodeName) {
 		Element element2 = doc.createElement(nodeName);
@@ -74,8 +78,11 @@ public class XMLUtil {
 
 	/**
 	 * Create a child of the given node.
+	 *
+	 * @param doc a document
+	 * @param node a node
+	 * @param nodeName a node name
 	 * @return org.w3c.dom.Element
-	 * @param nodeName java.lang.String
 	 */
 	public static Element createChildElement(Document doc, Node node, String nodeName) {
 		Element element = doc.createElement(nodeName);

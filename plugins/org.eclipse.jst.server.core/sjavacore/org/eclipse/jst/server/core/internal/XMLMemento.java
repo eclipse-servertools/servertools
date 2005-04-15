@@ -50,7 +50,7 @@ public final class XMLMemento implements IMemento {
 	}
 
 	/**
-	 * @see IMemento
+	 * @see IMemento#createChild(String)
 	 */
 	public IMemento createChild(String type) {
 		Element child = factory.createElement(type);
@@ -59,7 +59,7 @@ public final class XMLMemento implements IMemento {
 	}
 
 	/**
-	 * @see IMemento
+	 * @see IMemento#createChild(String, String)
 	 */
 	public IMemento createChild(String type, String id) {
 		Element child = factory.createElement(type);
@@ -95,6 +95,9 @@ public final class XMLMemento implements IMemento {
 	
 	/**
 	 * Answer a root memento for writing a document.
+	 * 
+	 * @param type a type
+	 * @return a memento
 	 */
 	public static XMLMemento createWriteRoot(String type) {
 		Document document;
@@ -166,6 +169,7 @@ public final class XMLMemento implements IMemento {
 	 * Return the contents of this memento as a byte array.
 	 *
 	 * @return byte[]
+	 * @throws IOException if anything goes wrong
 	 */
 	public byte[] getContents() throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -177,6 +181,7 @@ public final class XMLMemento implements IMemento {
 	 * Returns an input stream for writing to the disk with a local locale.
 	 *
 	 * @return java.io.InputStream
+	 * @throws IOException if anything goes wrong
 	 */
 	public InputStream getInputStream() throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -316,6 +321,9 @@ public final class XMLMemento implements IMemento {
 	
 	/**
 	 * Save this Memento to a Writer.
+	 * 
+	 * @param os an output stream
+	 * @throws IOException if anything goes wrong
 	 */
 	public void save(OutputStream os) throws IOException {
 		Result result = new StreamResult(os);

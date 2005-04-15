@@ -21,6 +21,8 @@ public abstract class ConfigurationCommand extends Task {
 
 	/**
 	 * ConfigurationCommand constructor comment.
+	 * 
+	 * @param configuration a Tomcat configuration
 	 */
 	public ConfigurationCommand(ITomcatConfigurationWorkingCopy configuration) {
 		super();

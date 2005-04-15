@@ -41,6 +41,7 @@ public interface ITomcatServerBehaviour {
 	 * @param launch ILaunch
 	 * @param launchMode String
 	 * @param monitor IProgressMonitor
+	 * @throws CoreException if anything goes wrong
 	 */
 	public void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException;
 }

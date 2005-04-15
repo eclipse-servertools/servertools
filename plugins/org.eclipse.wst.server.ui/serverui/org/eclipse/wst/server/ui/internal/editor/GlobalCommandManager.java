@@ -141,7 +141,9 @@ public class GlobalCommandManager {
 	}
 
 	/**
+	 * Get the command manager for a given id.
 	 * 
+	 * @param id an id
 	 */
 	public void getCommandManager(String id) {
 		Trace.trace(Trace.FINEST, "Getting command manager for " + id);
@@ -175,7 +177,9 @@ public class GlobalCommandManager {
 	}
 
 	/**
+	 * Release the command manager for a given id.
 	 * 
+	 * @param id an id
 	 */
 	public void releaseCommandManager(String id) {
 		Trace.trace(Trace.FINEST, "Releasing command manager for " + id);
@@ -195,7 +199,10 @@ public class GlobalCommandManager {
 	}
 
 	/**
+	 * Reload the command manager for a given id.
 	 * 
+	 * @param id an id
+	 * @param monitor a progress monitor
 	 */
 	public void reload(String id, IProgressMonitor monitor) {
 		try {

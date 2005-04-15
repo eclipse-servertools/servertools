@@ -75,7 +75,10 @@ public class NewManualServerComposite extends Composite {
 	 * resource selection contains exactly one container resource then it will be
 	 * used as the default container resource.
 	 *
-	 * @param parent
+	 * @param parent a parent composite
+	 * @param wizard a wizard handle
+	 * @param moduleType a module type
+	 * @param listener a server selection listener
 	 */
 	public NewManualServerComposite(Composite parent, IWizardHandle2 wizard, IModuleType moduleType, ServerSelectionListener listener) {
 		super(parent, SWT.NONE);
