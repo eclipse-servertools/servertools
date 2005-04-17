@@ -396,6 +396,9 @@ public class NewServerComposite extends Composite {
 			public void serverSelected(IServerAttributes server) {
 				updateTaskModel();
 			}
+			public void runtimeSelected(IRuntime runtime) {
+				updateTaskModel();
+			}
 		});
 		
 		if (lastHostname != null)
@@ -419,8 +422,8 @@ public class NewServerComposite extends Composite {
 				taskModel.putObject(TaskModel.TASK_SERVER, null);
 				taskModel.putObject(TaskModel.TASK_RUNTIME, null);
 			}
-			wizard.update();
 		}
+		wizard.update();
 	}
 
 	public void setTaskModel(TaskModel model) {

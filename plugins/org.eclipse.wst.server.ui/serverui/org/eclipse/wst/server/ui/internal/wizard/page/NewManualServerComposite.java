@@ -41,6 +41,7 @@ import org.eclipse.wst.server.ui.internal.viewers.ServerTypeComposite;
 public class NewManualServerComposite extends Composite {
 	public interface ServerSelectionListener {
 		public void serverSelected(IServerAttributes server);
+		public void runtimeSelected(IRuntime runtime);
 	}
 
 	public interface IWizardHandle2 {
@@ -64,10 +65,8 @@ public class NewManualServerComposite extends Composite {
 	
 	protected String host;
 	
-	//protected String type;
-	//protected String version;
 	protected IModuleType moduleType;
-
+	
 	protected ElementCreationCache cache = new ElementCreationCache();
 
 	/**
@@ -132,7 +131,7 @@ public class NewManualServerComposite extends Composite {
 					runtime = runtimes[runtimeCombo.getSelectionIndex()];
 					if (server != null) {
 						server.setRuntime(runtime);
-						wizard.update();
+						listener.runtimeSelected(runtime);
 					}
 				} catch (Exception ex) {
 					// ignore
