@@ -18,7 +18,9 @@ import org.eclipse.wst.server.ui.editor.IServerEditorSection;
  */
 public interface IServerEditorPageSectionFactory extends IOrdered {
 	/**
+	 * Returns the id.
 	 * 
+	 * @return the id
 	 */
 	public String getId();
 
@@ -27,6 +29,7 @@ public interface IServerEditorPageSectionFactory extends IOrdered {
 	 * id) can be opened with this editor. This result is based on
 	 * the result of the types attribute.
 	 *
+	 * @param id the type id
 	 * @return boolean
 	 */
 	public boolean supportsType(String id);
@@ -37,11 +40,16 @@ public interface IServerEditorPageSectionFactory extends IOrdered {
 	 * Returns true if this editor page section should be visible with the given server.
 	 * This allows (for instance) complex configuration pages to only be shown when used
 	 * with non-unittest servers.
+	 * 
+	 * @param server a server
+	 * @return <code>true</code> if the section should be shown, and <code>false</code> otherwise
 	 */
 	public boolean shouldCreateSection(IServerWorkingCopy server);
 
 	/**
 	 * Create the editor page section.
+	 * 
+	 * @return the section
 	 */
 	public IServerEditorSection createSection();
 }

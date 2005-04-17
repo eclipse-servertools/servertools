@@ -26,7 +26,9 @@ public class RuntimeTreeContentProvider extends AbstractTreeContentProvider {
 	public static final byte STYLE_TYPE = 3;
 
 	/**
-	 * RuntimeTreeContentProvider constructor comment.
+	 * RuntimeTreeContentProvider constructor.
+	 * 
+	 * @param style a style
 	 */
 	public RuntimeTreeContentProvider(byte style) {
 		super(style);

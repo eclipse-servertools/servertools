@@ -236,6 +236,9 @@ public class GlobalCommandManager {
 
 	/**
 	 * Returns true if there is only one command manager.
+	 * 
+	 * @param id an id
+	 * @return <code>true</code> if the only command manager
 	 */
 	public boolean isOnlyCommandManager(String id) {
 		CommandManagerInfo info = getExistingCommandManagerInfo(id);
@@ -274,7 +277,8 @@ public class GlobalCommandManager {
 	 * If the command cannot be undone, the user will be notifed
 	 * before it is executed.
 	 *
-	 * @param command ICommand
+	 * @param id an id
+	 * @param command a task
 	 */
 	public void executeCommand(String id, ITask command) {
 		if (!command.canUndo() && !undoList.isEmpty() && ServerUIPlugin.getPreferences().getPromptBeforeIrreversibleChange()) {
@@ -398,7 +402,8 @@ public class GlobalCommandManager {
 	/**
 	 * Returns the command that would be undone next.
 	 * 
-	 * @return org.eclipse.wst.server.ui.editor.ICommand
+	 * @param a an id
+	 * @return a task
 	 */
 	public ITask getUndoCommand(String a) {
 		int size = undoList.size();
@@ -413,7 +418,8 @@ public class GlobalCommandManager {
 	/**
 	 * Returns the command that would be redone next.
 	 * 
-	 * @return org.eclipse.wst.server.ui.editor.ICommand
+	 * @param a an id
+	 * @return a task
 	 */
 	public ITask getRedoCommand(String a) {
 		int size = redoList.size();
@@ -428,7 +434,8 @@ public class GlobalCommandManager {
 	/**
 	 * Returns true if the server resource is "dirty".
 	 *
-	 * @return boolean
+	 * @param id an id
+	 * @return a task
 	 */
 	public boolean isDirty(String id) {
 		CommandManagerInfo info = getExistingCommandManagerInfo(id);
@@ -441,6 +448,7 @@ public class GlobalCommandManager {
 	/**
 	 * Returns true if the server resource is read-only.
 	 *
+	 * @param id an id
 	 * @return boolean
 	 */
 	public boolean isReadOnly(String id) {
@@ -451,7 +459,10 @@ public class GlobalCommandManager {
 	}
 	
 	/**
-	 * Returns the server resource read-only flag.
+	 * Sets the server resource read-only flag.
+	 * 
+	 * @param id an id
+	 * @param readOnly <code>true</code> to set read-only, <code>false</code> otherwise
 	 */
 	public void setReadOnly(String id, boolean readOnly) {
 		CommandManagerInfo info = getExistingCommandManagerInfo(id);
@@ -467,7 +478,8 @@ public class GlobalCommandManager {
 	/**
 	 * Returns true if the server resource files are read-only.
 	 *
-	 * @return boolean
+	 * @param id an id
+	 * @return <code>true</code> if the files are read-only
 	 */
 	public boolean areFilesReadOnly(String id) {
 		CommandManagerInfo info = getExistingCommandManagerInfo(id);
@@ -543,6 +555,8 @@ public class GlobalCommandManager {
 
 	/**
 	 * Clears the history list.
+	 * 
+	 * @param id an id
 	 */
 	public void resourceSaved(String id) {
 		CommandManagerInfo info = getExistingCommandManagerInfo(id);
@@ -553,7 +567,10 @@ public class GlobalCommandManager {
 	}
 	
 	/**
+	 * Return an array of read-only files.
 	 * 
+	 * @param server a server
+	 * @return a possibly empty array of files
 	 */
 	public static IFile[] getReadOnlyFiles(IServerAttributes server) {
 		try {
@@ -604,7 +621,9 @@ public class GlobalCommandManager {
 	}
 
 	/**
+	 * Update the timestamps.
 	 * 
+	 * @param id an id
 	 */
 	public void updateTimestamps(String id) {
 		CommandManagerInfo info = getExistingCommandManagerInfo(id);

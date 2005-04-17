@@ -43,6 +43,7 @@ public class ServerEditorInputFactory implements IElementFactory {
 	 * Saves the state of an element within a memento.
 	 *
 	 * @param memento the storage area for element state
+	 * @param input server editor input
 	 */
 	public static void saveState(IMemento memento, ServerEditorInput input) {
 		if (input == null)

@@ -368,7 +368,9 @@ public class ServerEditor extends MultiPageEditorPart {
 	}
 
 	/**
+	 * Return the global command manager.
 	 * 
+	 * @return the global command manager
 	 */
 	public GlobalCommandManager getCommandManager() {
 		return commandManager;
@@ -508,7 +510,10 @@ public class ServerEditor extends MultiPageEditorPart {
 	}
 	
 	/**
+	 * Set the status.
 	 * 
+	 * @param status a status line manager
+	 * @param item a status contribution item
 	 */
 	public void setStatus(IStatusLineManager status, StatusLineContributionItem item) {
 		this.status = status;
@@ -904,7 +909,9 @@ public class ServerEditor extends MultiPageEditorPart {
 	}
 	
 	/**
-	 * Set the tooltip.
+	 * Set the title tooltip.
+	 * 
+	 * @return the title tooltip
 	 */
 	public String getTitleToolTip() {
 		Server server2 = (Server) server;

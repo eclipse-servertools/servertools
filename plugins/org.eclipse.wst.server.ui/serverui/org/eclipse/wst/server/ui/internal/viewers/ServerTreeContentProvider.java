@@ -34,7 +34,9 @@ public class ServerTreeContentProvider extends AbstractTreeContentProvider {
 	protected boolean includeIncompatibleVersions;
 
 	/**
-	 * ServerTreeContentProvider constructor comment.
+	 * ServerTreeContentProvider constructor.
+	 * 
+	 * @param style a style
 	 */
 	public ServerTreeContentProvider(byte style) {
 		super(style);

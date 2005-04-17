@@ -21,6 +21,9 @@ public abstract class UIDecorator {
 	/**
 	 * Returns a string representing the given state.
 	 *
+	 * @param state a server state
+	 * @param mode a launch mode
+	 * @param count a timer count
 	 * @return java.lang.String
 	 */
 	public abstract String getStateLabel(int state, String mode, int count);
@@ -28,6 +31,9 @@ public abstract class UIDecorator {
 	/**
 	 * Returns an image representing the given state.
 	 * 
+	 * @param state a server state
+	 * @param mode a launch mode
+	 * @param count a timer count
 	 * @return org.eclipse.jface.parts.IImage
 	 */
 	public abstract Image getStateImage(int state, String mode, int count);

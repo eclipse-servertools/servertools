@@ -27,13 +27,7 @@ public class RuntimeTableLabelProvider extends BaseLabelProvider implements ITab
 	}
 
 	/**
-	 * Returns the label image for the given column of the given element.
-	 *
-	 * @param element the object representing the entire row, or 
-	 *    <code>null</code> indicating that no input object is set
-	 *    in the viewer
-	 * @param columnIndex the zero-based index of the column in which
-	 *   the label appears
+	 * @see ITableLabelProvider#getColumnImage(Object, int)
 	 */
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (columnIndex == 0) {
@@ -46,12 +40,7 @@ public class RuntimeTableLabelProvider extends BaseLabelProvider implements ITab
 	}
 
 	/**
-	 * Returns the label text for the given column of the given element.
-	 *
-	 * @param element the object representing the entire row, or
-	 *   <code>null</code> indicating that no input object is set
-	 *   in the viewer
-	 * @param columnIndex the zero-based index of the column in which the label appears
+	 * @see ITableLabelProvider#getColumnText(Object, int)
 	 */
 	public String getColumnText(Object element, int columnIndex) {
 		IRuntime runtime = (IRuntime) element;

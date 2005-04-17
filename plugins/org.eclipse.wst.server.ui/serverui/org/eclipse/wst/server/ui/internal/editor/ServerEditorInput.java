@@ -43,6 +43,8 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 
 	/**
 	 * ServerEditorInput constructor comment.
+	 * 
+	 * @param serverId a server id
 	 */
 	public ServerEditorInput(String serverId) {
 		super();
@@ -58,8 +60,7 @@ public class ServerEditorInput implements IServerEditorInput, IPersistableElemen
 	}
 
 	/**
-	 * Indicates whether some other object is "equal to" this one.
-	 * In this case it means that the underlying IFolders are equal.
+	 * @see Object#equals(Object)
 	 */
 	public boolean equals(Object obj) {
 		if (this == obj)

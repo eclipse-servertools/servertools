@@ -47,9 +47,7 @@ public class PublishedUIDecorator extends UIDecorator {
 	};
 
 	/**
-	 * Returns a string representing the given state.
-	 *
-	 * @return java.lang.String
+	 * @see UIDecorator#getStateLabel(int, String, int)
 	 */
 	public String getStateLabel(int state, String mode, int count) {
 		if (state == IServer.STATE_UNKNOWN)
@@ -72,9 +70,7 @@ public class PublishedUIDecorator extends UIDecorator {
 	}
 
 	/**
-	 * Returns an image representing the given state.
-	 * 
-	 * @return org.eclipse.jface.parts.IImage
+	 * @see UIDecorator#getStateImage(int, String, int)
 	 */
 	public Image getStateImage(int state, String mode, int count) {
 		if (state == IServer.STATE_UNKNOWN)

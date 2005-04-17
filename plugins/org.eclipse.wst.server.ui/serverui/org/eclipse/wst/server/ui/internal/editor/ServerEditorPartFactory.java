@@ -27,7 +27,9 @@ public class ServerEditorPartFactory implements IServerEditorPartFactory {
 	private ServerEditorPartFactoryDelegate delegate;
 
 	/**
-	 * ServerEditorPartFactory constructor comment.
+	 * ServerEditorPartFactory constructor.
+	 * 
+	 * @param element a configuration element
 	 */
 	public ServerEditorPartFactory(IConfigurationElement element) {
 		super();
@@ -37,7 +39,7 @@ public class ServerEditorPartFactory implements IServerEditorPartFactory {
 	/**
 	 * 
 	 */
-	public IConfigurationElement getConfigurationElement() {
+	protected IConfigurationElement getConfigurationElement() {
 		return element;
 	}
 
@@ -76,7 +78,10 @@ public class ServerEditorPartFactory implements IServerEditorPartFactory {
 			return null;
 		}
 	}
-	
+
+	/**
+	 * @see IServerEditorPartFactory#supportsInsertionId(String)
+	 */
 	public boolean supportsInsertionId(String id) {
 		if (id == null || id.length() == 0)
 			return false;
@@ -95,7 +100,7 @@ public class ServerEditorPartFactory implements IServerEditorPartFactory {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Returns the order.
 	 *
@@ -135,11 +140,7 @@ public class ServerEditorPartFactory implements IServerEditorPartFactory {
 	}
 	
 	/**
-	 * Returns true if the given server or server configuration type id
-	 * can be opened with this editor. This result is based on
-	 * the result of the getTypeIds() method.
-	 *
-	 * @return boolean
+	 * @see IServerEditorPartFactory#supportsType(String)
 	 */
 	public boolean supportsType(String id) {
 		if (id == null || id.length() == 0)
@@ -172,9 +173,7 @@ public class ServerEditorPartFactory implements IServerEditorPartFactory {
 	}
 	
 	/**
-	 * Returns true if this editor page should be visible with the given server.
-	 * This allows (for instance) complex configuration pages to only be shown when used
-	 * with non-unittest servers.
+	 * @see IServerEditorPartFactory#shouldCreatePage(IServerWorkingCopy)
 	 */
 	public boolean shouldCreatePage(IServerWorkingCopy server) {
 		try {
@@ -186,7 +185,7 @@ public class ServerEditorPartFactory implements IServerEditorPartFactory {
 	}
 
 	/**
-	 * Create the editor page.
+	 * @see IServerEditorPartFactory#createPage()
 	 */
 	public IEditorPart createPage() {
 		try {

@@ -28,7 +28,10 @@ public class RuntimeTypeTreeContentProvider extends AbstractTreeContentProvider 
 	protected String runtimeTypeId;
 
 	/**
-	 * RuntimeTypeContentProvider constructor comment.
+	 * RuntimeTypeContentProvider constructor.
+	 * 
+	 * @param style a style
+	 * @param creation true to include runtimes that can be created
 	 */
 	public RuntimeTypeTreeContentProvider(byte style, boolean creation) {
 		super(style);

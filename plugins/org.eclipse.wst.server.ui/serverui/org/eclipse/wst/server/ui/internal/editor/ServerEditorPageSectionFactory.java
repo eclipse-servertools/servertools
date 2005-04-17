@@ -27,7 +27,9 @@ public class ServerEditorPageSectionFactory implements IServerEditorPageSectionF
 	private ServerEditorPageSectionFactoryDelegate delegate;
 
 	/**
-	 * ServerEditorPageSectionFactory constructor comment.
+	 * ServerEditorPageSectionFactory constructor.
+	 * 
+	 * @param element a configuration element
 	 */
 	public ServerEditorPageSectionFactory(IConfigurationElement element) {
 		super();
@@ -37,7 +39,7 @@ public class ServerEditorPageSectionFactory implements IServerEditorPageSectionF
 	/**
 	 * 
 	 */
-	public IConfigurationElement getConfigurationElement() {
+	protected IConfigurationElement getConfigurationElement() {
 		return element;
 	}
 
@@ -98,11 +100,7 @@ public class ServerEditorPageSectionFactory implements IServerEditorPageSectionF
 	}
 	
 	/**
-	 * Returns true if the given server resource type (given by the
-	 * id) can be opened with this editor. This result is based on
-	 * the result of the getServerResources() method.
-	 *
-	 * @return boolean
+	 * @see IServerEditorPageSectionFactory#supportsType(String)
 	 */
 	public boolean supportsType(String id) {
 		if (id == null || id.length() == 0)
@@ -138,13 +136,7 @@ public class ServerEditorPageSectionFactory implements IServerEditorPageSectionF
 	}
 	
 	/**
-	 * Returns true if this editor page should be visible with the given
-	 * server instance and configuration combination. This allows (for
-	 * instance) complex configuration pages to only be shown when used
-	 * with non-unittest servers.
-	 *
-	 * <p>If the instance or configuration is being opened by itself, the
-	 * other value (instance or configuration) will be null.
+	 * @see IServerEditorPageSectionFactory#shouldCreateSection(IServerWorkingCopy)
 	 */
 	public boolean shouldCreateSection(IServerWorkingCopy server) {
 		try {
@@ -156,7 +148,7 @@ public class ServerEditorPageSectionFactory implements IServerEditorPageSectionF
 	}
 
 	/**
-	 * Create the editor page.
+	 * @see IServerEditorPageSectionFactory#createSection()
 	 */
 	public IServerEditorSection createSection() {
 		try {

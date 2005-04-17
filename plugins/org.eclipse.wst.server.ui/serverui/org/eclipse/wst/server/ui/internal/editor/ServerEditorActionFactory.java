@@ -30,7 +30,9 @@ public class ServerEditorActionFactory implements IServerEditorActionFactory {
 	private ServerEditorActionFactoryDelegate delegate;
 
 	/**
-	 * ServerEditorActionFactory constructor comment.
+	 * ServerEditorActionFactory constructor.
+	 * 
+	 * @param element a configuration element
 	 */
 	public ServerEditorActionFactory(IConfigurationElement element) {
 		super();
@@ -40,7 +42,7 @@ public class ServerEditorActionFactory implements IServerEditorActionFactory {
 	/**
 	 * 
 	 */
-	public IConfigurationElement getConfigurationElement() {
+	protected IConfigurationElement getConfigurationElement() {
 		return element;
 	}
 
@@ -101,11 +103,7 @@ public class ServerEditorActionFactory implements IServerEditorActionFactory {
 	}
 	
 	/**
-	 * Returns true if the given server resource type (given by the
-	 * id) can be opened with this editor. This result is based on
-	 * the result of the getServerResources() method.
-	 *
-	 * @return boolean
+	 * @see IServerEditorActionFactory#supportsServerElementType(String)
 	 */
 	public boolean supportsServerElementType(String id) {
 		if (id == null || id.length() == 0)
@@ -127,7 +125,7 @@ public class ServerEditorActionFactory implements IServerEditorActionFactory {
 	}
 
 	/*
-	 * @see IPublishManager#getDelegate()
+	 * 
 	 */
 	public ServerEditorActionFactoryDelegate getDelegate() {
 		if (delegate == null) {
@@ -141,10 +139,7 @@ public class ServerEditorActionFactory implements IServerEditorActionFactory {
 	}
 	
 	/**
-	 * Returns true if this editor page should be visible with the given
-	 * server instance. This allows (for
-	 * instance) complex configuration pages to only be shown when used
-	 * with non-unittest servers.
+	 * @see IServerEditorActionFactory#shouldDisplay(IServerWorkingCopy)
 	 */
 	public boolean shouldDisplay(IServerWorkingCopy server) {
 		try {
@@ -156,7 +151,7 @@ public class ServerEditorActionFactory implements IServerEditorActionFactory {
 	}
 
 	/**
-	 * Create the editor page.
+	 * @see IServerEditorActionFactory#createAction(IEditorSite, IServerEditorPartInput)
 	 */
 	public IAction createAction(IEditorSite site, IServerEditorPartInput input) {
 		try {

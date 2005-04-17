@@ -25,7 +25,7 @@ public class ServerTreeLabelProvider extends AbstractTreeLabelProvider {
 	}
 
 	/**
-	 * 
+	 * @see AbstractTreeLabelProvider#getImageImpl(Object)
 	 */
 	public Image getImageImpl(Object element) {
 		IServer server = (IServer) element;
@@ -33,7 +33,7 @@ public class ServerTreeLabelProvider extends AbstractTreeLabelProvider {
 	}
 
 	/**
-	 * 
+	 * @see AbstractTreeLabelProvider#getTextImpl(Object)
 	 */
 	public String getTextImpl(Object element) {
 		IServer server = (IServer) element;
