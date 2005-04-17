@@ -742,13 +742,11 @@ public class Tomcat41Configuration extends TomcatConfiguration {
 		String source = context.getSource();
 		if (source != null && source.length() > 0 )
 		{
-			if (context.hasChildNodes()) {
-				context.removeChildren();
-				modified = true;
-			}
 			String docBase = context.getDocBase();
 			Context contextConfig = loadContextConfig(docBase);
 			if (null != contextConfig) {
+				if (context.hasChildNodes())
+					context.removeChildren();
 				contextConfig.copyChildrenTo(context);
 				modified = true;
 			}
