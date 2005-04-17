@@ -68,10 +68,10 @@
                </appInfo>
             </annotation>
          </attribute>
-         <attribute name="index" type="string">
+         <attribute name="priority" type="string">
             <annotation>
                <documentation>
-                  an optional index atrribute which specifies a relative ordering of artifact adapters. Adapters with a lower order are always used first. To override another adapter, simply provide a lower index
+                  an optional priority atrribute which specifies a relative ordering of artifact adapters. Adapters with a higher number are always used first. To override another adapter, simply provide a higher priority value that the other adapter. The priority is 0 if no priority is specified
                </documentation>
             </annotation>
          </attribute>

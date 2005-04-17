@@ -45,13 +45,13 @@ public class ModuleArtifactAdapter {
 	}
 	
 	/**
-	 * Returns the index of this adapter.
+	 * Returns the relative priority of this adapter.
 	 *
-	 * @return an index
+	 * @return a priority
 	 */
-	public int getIndex() {
+	public int getPriority() {
 		try {
-			return Integer.parseInt(element.getAttribute("index"));
+			return Integer.parseInt(element.getAttribute("priority"));
 		} catch (Exception e) {
 			return 0;
 		}

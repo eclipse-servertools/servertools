@@ -755,7 +755,7 @@ public class ServerPlugin extends Plugin {
 			for (int j = i+1; j < size; j++) {
 				ModuleArtifactAdapter a = (ModuleArtifactAdapter) moduleArtifactAdapters.get(i);
 				ModuleArtifactAdapter b = (ModuleArtifactAdapter) moduleArtifactAdapters.get(j);
-				if (a.getIndex() > b.getIndex()) {
+				if (a.getPriority() < b.getPriority()) {
 					moduleArtifactAdapters.set(i, b);
 					moduleArtifactAdapters.set(j, a);
 				}
