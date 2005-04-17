@@ -3,9 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.wst.server.util.tests
 Bundle-SymbolicName: org.eclipse.wst.server.util.tests
 Bundle-Version: 1.0.0
-Bundle-ClassPath: tests.jar
 Bundle-Activator: org.eclipse.wst.server.util.tests.TestsPlugin
-Bundle-Vendor: IBM
+Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.server.util.tests,
  org.eclipse.wst.server.util.tests.dialog
