@@ -207,20 +207,17 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     private List serverClasspath(String cpRef) {
     	Classpath classpath = getServerDefinition().getClasspath(cpRef);
     	
-        List mementoList = new ArrayList(classpath.getArchive().size());
+        List cpEntryList = new ArrayList(classpath.getArchive().size());
         Iterator iterator= classpath.getArchive().iterator();
         while(iterator.hasNext())
         {
         	ArchiveType archive = (ArchiveType)iterator.next();
         	String cpath = getServerDefinition().getResolver().resolveProperties(archive.getPath());
-    		try {
-    			mementoList.add(JavaRuntime.newArchiveRuntimeClasspathEntry(
-    					new Path(cpath)).getMemento());
-    		} catch (CoreException e) {
-    		    //ignored
-    		}
-        }
-    	return mementoList;
+    	
+    			cpEntryList.add(JavaRuntime.newArchiveRuntimeClasspathEntry(
+    					new Path(cpath)));
+         }
+    	return cpEntryList;
     }
 
     /**
@@ -228,8 +225,42 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
      * @param vmInstall
      */
     private void setupLaunchClasspath(ILaunchConfigurationWorkingCopy wc, IVMInstall vmInstall, List cp) {
-    	// add tools.jar to the path
-    	if (vmInstall != null) {
+		// TODO: Remove adding tools.jar after the configurable JREs
+    	addToolsJar(vmInstall, cp);
+	
+		//merge existing classpath with server classpath
+		try {
+			IRuntimeClasspathEntry[] existingCps = JavaRuntime.computeUnresolvedRuntimeClasspath(wc);
+			for (int i = 0; i < existingCps.length; i++) {
+				if(cp.contains(existingCps[i])==false){ 
+					cp.add(existingCps[i]);
+				}
+			}
+		} catch (CoreException e) {
+			// ignore
+		}
+		
+    	wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, convertCPEntryToMemento(cp));
+    	wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH,false);
+    }
+
+	private List convertCPEntryToMemento(List cpEntryList)
+	{
+		List list = new ArrayList(cpEntryList.size());
+		Iterator iterator = cpEntryList.iterator();
+		while(iterator.hasNext())
+		{
+			IRuntimeClasspathEntry entry = (IRuntimeClasspathEntry)iterator.next();
+			try {
+				list.add(entry.getMemento());
+			} catch (CoreException e) {
+				// ignore
+			}
+		}
+		return list;
+	}
+	private void addToolsJar(IVMInstall vmInstall, List cp) {
+		if (vmInstall != null) {
     		try {
     			cp.add(JavaRuntime
     							.newRuntimeContainerClasspathEntry(
@@ -238,7 +269,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     													"org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType")
     											.append(vmInstall.getName()),
     									IRuntimeClasspathEntry.BOOTSTRAP_CLASSES)
-    							.getMemento());
+    							);
     		} catch (Exception e) {
 				// ignore
     		}
@@ -248,22 +279,12 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     		if (jrePath != null) {
     			IPath toolsPath = jrePath.append("lib").append("tools.jar");
     			if (toolsPath.toFile().exists()) {
-    				try {
-    					cp.add(JavaRuntime.newArchiveRuntimeClasspathEntry(
-    							toolsPath).getMemento());
-    				} catch (CoreException e1) {
-						// ignore
-    				}
-    			}
+     					cp.add(JavaRuntime.newArchiveRuntimeClasspathEntry(
+    							toolsPath));
+     			}
     		}
     	}
-    
-    	wc.setAttribute(
-    			IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, cp);
-    	wc.setAttribute(
-    					IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH,
-    					false);
-    }
+	}
 
     private String getWorkingDirectory() {
     	return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getWorkingDirectory());

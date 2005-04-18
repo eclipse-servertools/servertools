@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: LaunchConfigurationImpl.java,v 1.2 2005/03/27 12:55:36 gercan Exp $
+ * $Id: LaunchConfigurationImpl.java,v 1.3 2005/04/18 19:32:07 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
@@ -227,9 +227,26 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
      * @generated
      */
 	public String getProgramArguments() {
-        return programArguments;
+		
+		return programArguments;
     }
 
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	private String cleanWhiteSpace(String string)
+	{
+		if(string==null)
+			return null;
+        char[] chars = string.toCharArray();
+		for (int i = 0; i < chars.length; i++) {
+			if(Character.isWhitespace(chars[i]))
+				chars[i]=' ';
+		}
+		return (new String(chars)).trim();
+		
+	}
     /**
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -237,7 +254,7 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
      */
 	public void setProgramArguments(String newProgramArguments) {
         String oldProgramArguments = programArguments;
-        programArguments = newProgramArguments;
+        programArguments = cleanWhiteSpace(newProgramArguments);
         if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.LAUNCH_CONFIGURATION__PROGRAM_ARGUMENTS, oldProgramArguments, programArguments));
     }
@@ -258,7 +275,7 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
      */
 	public void setVmParameters(String newVmParameters) {
         String oldVmParameters = vmParameters;
-        vmParameters = newVmParameters;
+        vmParameters = cleanWhiteSpace(newVmParameters);
         if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.LAUNCH_CONFIGURATION__VM_PARAMETERS, oldVmParameters, vmParameters));
     }
