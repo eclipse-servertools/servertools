@@ -107,8 +107,8 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
     public void enter() {
         IServerWorkingCopy server = getServer();
         ServerRuntime definition = getServerTypeDefinitionFor(server);
-        if(definition != null && fComposite!=null)
-            fComposite.reset(definition,ServerTypeDefinitionGroup.CONTEXT_SERVER,null);
+//        if(definition != null && fComposite!=null)
+//            fComposite.reset(definition,ServerTypeDefinitionGroup.CONTEXT_SERVER,null);
 	}
 	public void exit(){
 	        fProperties = fComposite.getProperties();

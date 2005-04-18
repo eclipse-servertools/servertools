@@ -46,10 +46,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
@@ -64,7 +62,7 @@ public class ServerTypeDefinitionGroup
     private List fPropertyControls = new ArrayList();
     private Map fPropertyMap =new HashMap();
     private String fContext="undefined";
-    private Group fDefinitionGroup;
+    private Composite fDefinitionComposite;
     private ServerDefinitionTypeAwareWizardFragment fAwareWizardFragment;
     private class PropertyModifyListener implements ModifyListener
     {
@@ -99,30 +97,30 @@ public class ServerTypeDefinitionGroup
         else
             fPropertyMap=new HashMap();
     }
-    /**
-     * Changes the values with the given ones. Renders the UI 
-     * with the given new values.
-     *  
-     * @param definition
-     * @param context
-     * @param initialProperties
-     */
-    public void reset(ServerRuntime definition, String context, Map initialProperties)
-    {
-        initServerTypeDefinition(definition, context, initialProperties);
-        fDefinitionGroup.setText(definition.getName());
-        Control[] allControls = fDefinitionGroup.getChildren();
-        for(int i= 0; i<allControls.length;i++)
-        {
-            Control c = allControls[i];
-            c.dispose();
-        }
-        fPropertyControls.clear();
-        createPropertyControls(fDefinitionGroup);
-        
-        fDefinitionGroup.layout(true);
-        
-    }
+//    /**
+//     * Changes the values with the given ones. Renders the UI 
+//     * with the given new values.
+//     *  
+//     * @param definition
+//     * @param context
+//     * @param initialProperties
+//     */
+//    public void reset(ServerRuntime definition, String context, Map initialProperties)
+//    {
+//        initServerTypeDefinition(definition, context, initialProperties);
+//        fDefinitionGroup.setText(definition.getName());
+//        Control[] allControls = fDefinitionGroup.getChildren();
+//        for(int i= 0; i<allControls.length;i++)
+//        {
+//            Control c = allControls[i];
+//            c.dispose();
+//        }
+//        fPropertyControls.clear();
+//        createPropertyControls(fDefinitionGroup);
+//        
+//        fDefinitionGroup.layout(true);
+//        
+//    }
     
     /**
      * @param definition
@@ -139,14 +137,12 @@ public class ServerTypeDefinitionGroup
      */
     private void createControl(Composite parent) {
 
-        fDefinitionGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);
-        fDefinitionGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
-        fDefinitionGroup.setLayout(new GridLayout(3,false));
+        fDefinitionComposite = new Composite(parent, SWT.SHADOW_ETCHED_IN);
+        fDefinitionComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+        fDefinitionComposite.setLayout(new GridLayout(3,false));
         if(fServerTypeDefinition!=null)
         {   
-            fDefinitionGroup.setText(fServerTypeDefinition.getName());
-
-            createPropertyControls(fDefinitionGroup);
+           createPropertyControls(fDefinitionComposite);
         }
     }
     /**
@@ -241,7 +237,7 @@ public class ServerTypeDefinitionGroup
     	
     	fButton.addSelectionListener(new SelectionListener() {
     		public void widgetSelected(SelectionEvent e) {
-    			FileDialog dlg = new FileDialog(fDefinitionGroup.getShell());
+    			FileDialog dlg = new FileDialog(fDefinitionComposite.getShell());
     			dlg.setFileName(fText.getText());
     			String res = dlg.open();
     			if (res != null) {
@@ -274,7 +270,7 @@ public class ServerTypeDefinitionGroup
     	Button fButton = SWTUtil.createButton(parent,GenericServerUIMessages.getString("serverTypeGroup.label.browse"));
     	fButton.addSelectionListener(new SelectionListener() {
     		public void widgetSelected(SelectionEvent e) {
-    			DirectoryDialog dlg = new DirectoryDialog(fDefinitionGroup.getShell());
+    			DirectoryDialog dlg = new DirectoryDialog(fDefinitionComposite.getShell());
     			dlg.setFilterPath(fText.getText());
     			String res = dlg.open();
     			if (res != null) {

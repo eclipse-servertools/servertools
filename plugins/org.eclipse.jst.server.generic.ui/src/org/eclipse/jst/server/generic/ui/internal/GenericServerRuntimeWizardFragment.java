@@ -117,7 +117,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	            properties = getRuntimeDelegate().getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map) null);
 	        }
 	        ServerRuntime definition = getServerTypeDefinition(serverDefinition,properties);
-	        fServerPanel.reset(definition,ServerTypeDefinitionGroup.CONTEXT_RUNTIME, properties);
+//	        fServerPanel.reset(definition,ServerTypeDefinitionGroup.CONTEXT_RUNTIME, properties);
 		}
         else{
             populateRuntimeDelegateProperties();
