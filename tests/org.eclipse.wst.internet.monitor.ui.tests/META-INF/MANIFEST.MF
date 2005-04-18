@@ -3,6 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.wst.internet.monitor.ui.tests
 Bundle-SymbolicName: org.eclipse.wst.internet.monitor.ui.tests
 Bundle-Version: 1.0.0
+Bundle-ClassPath: monitortests.jar
 Bundle-Activator: org.eclipse.wst.internet.monitor.ui.tests.TestsPlugin
 Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin

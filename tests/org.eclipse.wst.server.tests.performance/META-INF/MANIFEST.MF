@@ -3,6 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.wst.server.tests.performance
 Bundle-SymbolicName: org.eclipse.wst.server.tests.performance
 Bundle-Version: 1.0.0
+Bundle-ClassPath: performance.jar
 Bundle-Activator: org.eclipse.wst.server.tests.performance.PerformancePlugin
 Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
