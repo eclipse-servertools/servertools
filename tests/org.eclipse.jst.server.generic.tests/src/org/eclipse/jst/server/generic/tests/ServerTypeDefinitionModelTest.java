@@ -1,5 +1,8 @@
 package org.eclipse.jst.server.generic.tests;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
@@ -28,9 +31,9 @@ public class ServerTypeDefinitionModelTest extends TestCase {
        }
     }
 
-    public void testServerRuntime()
-    {
+    public void testServerRuntime(){
         assertTrue(subject.getClasspath()!=null && subject.getClasspath().size()>0);
+		assertTrue(subject.getConfigurationElementNamespace()!=null && subject.getConfigurationElementNamespace().length()>0);
         assertTrue(subject.getName()!= null && subject.getName().length()>0);
         assertTrue(subject.getVersion()!=null && subject.getVersion().length()>0);
         assertTrue(subject.getProperty()!=null && subject.getProperty().size()>0);
@@ -46,7 +49,19 @@ public class ServerTypeDefinitionModelTest extends TestCase {
         Module module = (Module)subject.getModule().get(0);
         assertEquals(module,subject.getModule(module.getType()));
     }
+	public void testSetServerRuntime()
+	{
+		subject.setId(TESTED_SERVER_ID);
+		subject.setConfigurationElementNamespace("test.namespace");
+		subject.setFilename("test.filename");
+		Map testMap =new HashMap();
+		subject.setPropertyValues(testMap);
+		assertEquals(TESTED_SERVER_ID,subject.getId());
+		assertEquals("test.namespace",subject.getConfigurationElementNamespace());
+		assertEquals("test.filename",subject.getFilename());
+	}
 
+	
     public void testClasspath()
     {
         Classpath cp =(Classpath)subject.getClasspath().get(0);
