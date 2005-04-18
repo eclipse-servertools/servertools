@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Classpath.java,v 1.5 2005/03/27 12:56:23 gercan Exp $
+ * $Id: Classpath.java,v 1.6 2005/04/18 00:18:06 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -116,7 +116,7 @@ public interface Classpath extends EObject{
      * @see #getId()
      * @generated
      */
-	void setId(String value);
+//	void setId(String value);
 
     /**
      * Returns the value of the '<em><b>Is Library</b></em>' attribute.
@@ -147,7 +147,7 @@ public interface Classpath extends EObject{
      * @see #isIsLibrary()
      * @generated
      */
-	void setIsLibrary(boolean value);
+//	void setIsLibrary(boolean value);
 
     /**
      * Unsets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.Classpath#isIsLibrary <em>Is Library</em>}' attribute.
@@ -158,7 +158,7 @@ public interface Classpath extends EObject{
      * @see #setIsLibrary(boolean)
      * @generated
      */
-	void unsetIsLibrary();
+//	void unsetIsLibrary();
 
     /**
      * Returns whether the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.Classpath#isIsLibrary <em>Is Library</em>}' attribute is set.

@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: LaunchConfiguration.java,v 1.4 2005/03/27 12:56:23 gercan Exp $
+ * $Id: LaunchConfiguration.java,v 1.5 2005/04/18 00:18:06 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -80,7 +80,7 @@ public interface LaunchConfiguration extends EObject{
      * @see #getMainClass()
      * @generated
      */
-    void setMainClass(String value);
+//    void setMainClass(String value);
 
     /**
      * Returns the value of the '<em><b>Working Directory</b></em>' attribute.
@@ -107,7 +107,7 @@ public interface LaunchConfiguration extends EObject{
      * @see #getWorkingDirectory()
      * @generated
      */
-	void setWorkingDirectory(String value);
+//	void setWorkingDirectory(String value);
 
     /**
      * Returns the value of the '<em><b>Program Arguments</b></em>' attribute.
@@ -134,7 +134,7 @@ public interface LaunchConfiguration extends EObject{
      * @see #getProgramArguments()
      * @generated
      */
-	void setProgramArguments(String value);
+//	void setProgramArguments(String value);
 
     /**
      * Returns the value of the '<em><b>Vm Parameters</b></em>' attribute.
@@ -161,7 +161,7 @@ public interface LaunchConfiguration extends EObject{
      * @see #getVmParameters()
      * @generated
      */
-	void setVmParameters(String value);
+//	void setVmParameters(String value);
 
     /**
      * Returns the value of the '<em><b>Classpath Reference</b></em>' attribute.
@@ -188,6 +188,6 @@ public interface LaunchConfiguration extends EObject{
      * @see #getClasspathReference()
      * @generated
      */
-	void setClasspathReference(String value);
+//	void setClasspathReference(String value);
 
 } // LaunchConfiguration

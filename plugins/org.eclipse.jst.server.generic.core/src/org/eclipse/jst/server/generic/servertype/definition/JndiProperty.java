@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: JndiProperty.java,v 1.1 2005/03/27 12:56:23 gercan Exp $
+ * $Id: JndiProperty.java,v 1.2 2005/04/18 00:18:06 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -51,7 +51,7 @@ public interface JndiProperty extends EObject {
      * @see #getName()
      * @generated
      */
-    void setName(String value);
+//    void setName(String value);
 
     /**
      * Returns the value of the '<em><b>Value</b></em>' attribute.
@@ -78,6 +78,6 @@ public interface JndiProperty extends EObject {
      * @see #getValue()
      * @generated
      */
-    void setValue(String value);
+//    void setValue(String value);
 
 } // JndiProperty

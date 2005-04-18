@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: PublisherData.java,v 1.2 2005/03/14 20:54:15 gercan Exp $
+ * $Id: PublisherData.java,v 1.3 2005/04/18 00:18:06 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -51,7 +51,7 @@ public interface PublisherData extends EObject{
      * @see #getDataname()
      * @generated
      */
-    void setDataname(String value);
+//    void setDataname(String value);
 
     /**
      * Returns the value of the '<em><b>Datavalue</b></em>' attribute.
@@ -78,6 +78,6 @@ public interface PublisherData extends EObject{
      * @see #getDatavalue()
      * @generated
      */
-    void setDatavalue(String value);
+//    void setDatavalue(String value);
 
 } // PublisherData

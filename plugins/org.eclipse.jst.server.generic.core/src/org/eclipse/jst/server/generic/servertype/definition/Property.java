@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Property.java,v 1.3 2005/03/14 20:54:14 gercan Exp $
+ * $Id: Property.java,v 1.4 2005/04/18 00:18:06 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -83,7 +83,7 @@ public interface Property extends EObject{
      * @see #getContext()
      * @generated
      */
-	void setContext(String value);
+//	void setContext(String value);
 
     /**
      * Returns the value of the '<em><b>Default</b></em>' attribute.
@@ -110,7 +110,7 @@ public interface Property extends EObject{
      * @see #getDefault()
      * @generated
      */
-	void setDefault(String value);
+//	void setDefault(String value);
 
     /**
      * Returns the value of the '<em><b>Id</b></em>' attribute.
@@ -137,7 +137,7 @@ public interface Property extends EObject{
      * @see #getId()
      * @generated
      */
-	void setId(String value);
+//	void setId(String value);
 
     /**
      * Returns the value of the '<em><b>Label</b></em>' attribute.
@@ -164,7 +164,7 @@ public interface Property extends EObject{
      * @see #getLabel()
      * @generated
      */
-	void setLabel(String value);
+//	void setLabel(String value);
 
     /**
      * Returns the value of the '<em><b>Type</b></em>' attribute.
@@ -191,6 +191,6 @@ public interface Property extends EObject{
      * @see #getType()
      * @generated
      */
-	void setType(String value);
+//	void setType(String value);
 
 } // Property

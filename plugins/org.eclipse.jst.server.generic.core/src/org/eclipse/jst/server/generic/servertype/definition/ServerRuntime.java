@@ -28,14 +28,13 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerRuntime.java,v 1.5 2005/03/27 12:56:23 gercan Exp $
+ * $Id: ServerRuntime.java,v 1.6 2005/04/18 00:18:06 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
 import java.util.List;
 import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.FeatureMap;
 
 import org.eclipse.jst.server.generic.internal.xml.Resolver;
 
@@ -90,7 +89,7 @@ public interface ServerRuntime extends EObject{
      *        extendedMetaData="kind='group' name='group:0'"
      * @generated
      */
-    FeatureMap getGroup();
+//    FeatureMap getGroup();
 
     /**
      * Returns the value of the '<em><b>Property</b></em>' containment reference list.
@@ -124,7 +123,7 @@ public interface ServerRuntime extends EObject{
      *        extendedMetaData="kind='group' name='group:2'"
      * @generated
      */
-    FeatureMap getGroup1();
+//    FeatureMap getGroup1();
 
     /**
      * Returns the value of the '<em><b>Port</b></em>' containment reference list.
@@ -158,7 +157,7 @@ public interface ServerRuntime extends EObject{
      *        extendedMetaData="kind='group' name='group:4'"
      * @generated
      */
-    FeatureMap getGroup2();
+//    FeatureMap getGroup2();
 
     /**
      * Returns the value of the '<em><b>Module</b></em>' containment reference list.
@@ -202,7 +201,7 @@ public interface ServerRuntime extends EObject{
      * @see #getProject()
      * @generated
      */
-	void setProject(Project value);
+//	void setProject(Project value);
 
     /**
      * Returns the value of the '<em><b>Start</b></em>' containment reference.
@@ -229,7 +228,7 @@ public interface ServerRuntime extends EObject{
      * @see #getStart()
      * @generated
      */
-	void setStart(LaunchConfiguration value);
+//	void setStart(LaunchConfiguration value);
 
     /**
      * Returns the value of the '<em><b>Stop</b></em>' containment reference.
@@ -256,7 +255,7 @@ public interface ServerRuntime extends EObject{
      * @see #getStop()
      * @generated
      */
-	void setStop(LaunchConfiguration value);
+//	void setStop(LaunchConfiguration value);
 
     /**
      * Returns the value of the '<em><b>Group3</b></em>' attribute list.
@@ -273,7 +272,7 @@ public interface ServerRuntime extends EObject{
      *        extendedMetaData="kind='group' name='group:9'"
      * @generated
      */
-    FeatureMap getGroup3();
+//    FeatureMap getGroup3();
 
     /**
      * Returns the value of the '<em><b>Publisher</b></em>' containment reference list.
@@ -307,7 +306,7 @@ public interface ServerRuntime extends EObject{
      *        extendedMetaData="kind='group' name='group:11'"
      * @generated
      */
-    FeatureMap getGroup4();
+//    FeatureMap getGroup4();
 
     /**
      * Returns the value of the '<em><b>Classpath</b></em>' containment reference list.
@@ -351,7 +350,7 @@ public interface ServerRuntime extends EObject{
      * @see #getJndiConnection()
      * @generated
      */
-    void setJndiConnection(JndiConnection value);
+//    void setJndiConnection(JndiConnection value);
 
     /**
      * Returns the value of the '<em><b>Name</b></em>' attribute.
@@ -378,7 +377,7 @@ public interface ServerRuntime extends EObject{
      * @see #getName()
      * @generated
      */
-	void setName(String value);
+//	void setName(String value);
 
     /**
      * Returns the value of the '<em><b>Version</b></em>' attribute.
@@ -405,7 +404,7 @@ public interface ServerRuntime extends EObject{
      * @see #getVersion()
      * @generated
      */
-	void setVersion(String value);
+//	void setVersion(String value);
 
 	/**
 	 * @param id the id of the '<em>Publisher</em>' attribute.
@@ -451,7 +450,7 @@ public interface ServerRuntime extends EObject{
     
 	/**
 	 * @generated NOT
-	 */
+ */
 	void setFilename(String fn);
 
 	/**

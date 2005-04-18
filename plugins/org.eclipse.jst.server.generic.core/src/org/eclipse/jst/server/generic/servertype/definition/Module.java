@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Module.java,v 1.3 2005/03/14 20:54:14 gercan Exp $
+ * $Id: Module.java,v 1.4 2005/04/18 00:18:06 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -78,7 +78,7 @@ public interface Module extends EObject{
      * @see #getType()
      * @generated
      */
-	void setType(String value);
+//	void setType(String value);
 
     /**
      * Returns the value of the '<em><b>Publish Dir</b></em>' attribute.
@@ -105,7 +105,7 @@ public interface Module extends EObject{
      * @see #getPublishDir()
      * @generated
      */
-	void setPublishDir(String value);
+//	void setPublishDir(String value);
 
     /**
      * Returns the value of the '<em><b>Publisher Reference</b></em>' attribute.
@@ -132,6 +132,6 @@ public interface Module extends EObject{
      * @see #getPublisherReference()
      * @generated
      */
-	void setPublisherReference(String value);
+//	void setPublisherReference(String value);
 
 } // Module

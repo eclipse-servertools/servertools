@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ArchiveType.java,v 1.5 2005/03/27 12:56:23 gercan Exp $
+ * $Id: ArchiveType.java,v 1.6 2005/04/18 00:18:06 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -79,6 +79,6 @@ public interface ArchiveType extends EObject{
      * @see #getPath()
      * @generated
      */
-	void setPath(String value);
+//	void setPath(String value);
 
 } // ArchiveType

@@ -2,14 +2,13 @@
  * <copyright>
  * </copyright>
  *
- * $Id: JndiConnection.java,v 1.1 2005/03/27 12:56:23 gercan Exp $
+ * $Id: JndiConnection.java,v 1.2 2005/04/18 00:18:06 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 
-import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**
  * <!-- begin-user-doc -->
@@ -56,7 +55,7 @@ public interface JndiConnection extends EObject{
      * @see #getProviderUrl()
      * @generated
      */
-    void setProviderUrl(String value);
+//    void setProviderUrl(String value);
 
     /**
      * Returns the value of the '<em><b>Group</b></em>' attribute list.
@@ -73,7 +72,7 @@ public interface JndiConnection extends EObject{
      *        extendedMetaData="kind='group' name='group:1'"
      * @generated
      */
-    FeatureMap getGroup();
+//    FeatureMap getGroup();
 
     /**
      * Returns the value of the '<em><b>Jndi Property</b></em>' containment reference list.
@@ -117,6 +116,6 @@ public interface JndiConnection extends EObject{
      * @see #getInitialContextFactory()
      * @generated
      */
-    void setInitialContextFactory(String value);
+//    void setInitialContextFactory(String value);
 
 } // JndiConnection

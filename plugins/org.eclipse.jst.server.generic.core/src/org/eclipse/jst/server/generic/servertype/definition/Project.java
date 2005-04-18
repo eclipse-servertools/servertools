@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Project.java,v 1.4 2005/03/27 12:56:23 gercan Exp $
+ * $Id: Project.java,v 1.5 2005/04/18 00:18:06 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -76,6 +76,6 @@ public interface Project extends EObject{
      * @see #getClasspathReference()
      * @generated
      */
-	void setClasspathReference(String value);
+//	void setClasspathReference(String value);
 
 } // Project

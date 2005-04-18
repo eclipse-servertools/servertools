@@ -28,14 +28,13 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Publisher.java,v 1.5 2005/03/27 12:56:23 gercan Exp $
+ * $Id: Publisher.java,v 1.6 2005/04/18 00:18:06 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 
-import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**
  * <!-- begin-user-doc -->
@@ -69,9 +68,9 @@ public interface Publisher extends EObject{
      * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPublisher_Group()
      * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
      *        extendedMetaData="kind='group' name='group:0'"
-     * @generated
+     * @generated NOT
      */
-    FeatureMap getGroup();
+//    FeatureMap getGroup();
 
     /**
      * Returns the value of the '<em><b>Publisherdata</b></em>' containment reference list.
@@ -115,6 +114,6 @@ public interface Publisher extends EObject{
      * @see #getId()
      * @generated
      */
-	void setId(String value);
+//	void setId(String value);
 
 } // Publisher

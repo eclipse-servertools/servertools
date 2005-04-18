@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Port.java,v 1.3 2005/03/14 20:54:14 gercan Exp $
+ * $Id: Port.java,v 1.4 2005/04/18 00:18:06 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -78,7 +78,7 @@ public interface Port extends EObject{
      * @see #getNo()
      * @generated
      */
-	void setNo(String value);
+//	void setNo(String value);
 
     /**
      * Returns the value of the '<em><b>Name</b></em>' attribute.
@@ -105,7 +105,7 @@ public interface Port extends EObject{
      * @see #getName()
      * @generated
      */
-	void setName(String value);
+//	void setName(String value);
 
     /**
      * Returns the value of the '<em><b>Protocol</b></em>' attribute.
@@ -132,6 +132,6 @@ public interface Port extends EObject{
      * @see #getProtocol()
      * @generated
      */
-	void setProtocol(String value);
+//	void setProtocol(String value);
 
 } // Port
