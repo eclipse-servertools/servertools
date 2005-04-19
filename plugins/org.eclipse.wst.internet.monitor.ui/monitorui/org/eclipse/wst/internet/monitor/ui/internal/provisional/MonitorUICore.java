@@ -8,7 +8,7 @@
  * Contributors:
  *    IBM Corporation - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.internet.monitor.ui;
+package org.eclipse.wst.internet.monitor.ui.internal.provisional;
 
 import org.eclipse.wst.internet.monitor.core.Request;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;

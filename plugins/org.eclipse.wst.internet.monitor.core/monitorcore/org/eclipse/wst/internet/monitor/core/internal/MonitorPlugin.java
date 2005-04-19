@@ -187,7 +187,7 @@ public class MonitorPlugin extends Plugin {
 			return;
 		Trace.trace(Trace.CONFIG, "Loading content filters"); 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(MonitorPlugin.PLUGIN_ID, "contentFilters");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(MonitorPlugin.PLUGIN_ID, "internalContentFilters");
 
 		int size = cf.length;
 		contentFilters = new HashMap(size);
