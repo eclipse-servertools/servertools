@@ -18,11 +18,11 @@ import org.eclipse.wst.server.core.IModule;
  * @since 1.0
  */
 public class ModuleEvent {
-	protected IModule module;
-	protected boolean isChanged;
-	protected IModule[] added;
-	protected IModule[] changed;
-	protected IModule[] removed;
+	private IModule module;
+	private boolean isChanged;
+	private IModule[] added;
+	private IModule[] changed;
+	private IModule[] removed;
 
 	class IModuleArtifact {
 		IPath path;
