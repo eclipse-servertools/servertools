@@ -83,6 +83,10 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	}
 
 	public void importConfiguration(IRuntime runtime, IProgressMonitor monitor) {
+		if (runtime == null) {
+			configuration = null;
+			return;
+		}
 		IPath path = runtime.getLocation().append("conf");
 		
 		String id = getServer().getServerType().getId();
