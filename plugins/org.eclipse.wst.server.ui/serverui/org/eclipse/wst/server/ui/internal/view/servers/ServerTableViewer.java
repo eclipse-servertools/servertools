@@ -23,7 +23,6 @@ import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.IPublishListener;
 import org.eclipse.wst.server.core.internal.PublishAdapter;
 import org.eclipse.wst.server.core.internal.Server;
-import org.eclipse.wst.server.core.util.ServerEvent;
 import org.eclipse.wst.server.ui.internal.ServerTree;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.view.tree.ServerTreeAction;

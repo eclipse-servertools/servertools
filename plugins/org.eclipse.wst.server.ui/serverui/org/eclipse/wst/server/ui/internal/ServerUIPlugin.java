@@ -29,7 +29,6 @@ import org.eclipse.wst.server.core.internal.IPublishListener;
 import org.eclipse.wst.server.core.internal.PublishAdapter;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.internal.ServerType;
-import org.eclipse.wst.server.core.util.ServerEvent;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 import org.eclipse.wst.server.ui.internal.editor.IServerEditorInput;

@@ -14,7 +14,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IEditorSite;
 
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.ui.editor.IOrdered;
 import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
 /**
  *

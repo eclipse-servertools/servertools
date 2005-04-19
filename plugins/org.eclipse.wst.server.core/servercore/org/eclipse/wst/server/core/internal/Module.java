@@ -17,9 +17,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.IModuleListener;
 import org.eclipse.wst.server.core.model.ModuleDelegate;
-import org.eclipse.wst.server.core.model.ModuleEvent;
 /**
  * 
  */
@@ -179,9 +177,11 @@ public class Module implements IModule {
 	}
 	
 	/**
-	 * Add a listener for the module.
-	 *
-	 * @param listener org.eclipse.wst.server.core.model.IModuleListener
+	 * Add a listener for child modules that are added/removed from this
+	 * module.
+	 * Has no effect if an identical listener is already registered.
+	 * 
+	 * @param listener a module listener
 	 */
 	public void addModuleListener(IModuleListener listener) {
 		Trace.trace(Trace.FINEST, "Adding module listener " + listener + " to " + this);
@@ -194,9 +194,11 @@ public class Module implements IModule {
 	}
 	
 	/**
-	 * Add a listener for the module.
-	 *
-	 * @param listener org.eclipse.wst.server.core.model.IModuleListener
+	 * Remove a listener for child modules that are added/removed from this
+	 * module.
+	 * Has no effect if the listener is not registered.
+	 * 
+	 * @param listener a module listener
 	 */
 	public void removeModuleListener(IModuleListener listener) {
 		Trace.trace(Trace.FINEST, "Removing module listener " + listener + " from " + this);

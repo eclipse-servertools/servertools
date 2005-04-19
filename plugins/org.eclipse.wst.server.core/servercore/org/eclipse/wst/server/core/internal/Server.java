@@ -22,7 +22,6 @@ import org.eclipse.debug.core.*;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.*;
-import org.eclipse.wst.server.core.util.ServerEvent;
 import org.eclipse.wst.server.core.util.SocketUtil;
 /**
  * 

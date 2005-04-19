@@ -10,14 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.internal.Module;
 import org.eclipse.wst.server.core.internal.ModuleFactory;
-import org.eclipse.wst.server.core.internal.Trace;
 /**
  * A module factory delegate provides a mechanism for discovering
  * modules. A module factory delegate is specified by the
@@ -44,9 +40,6 @@ import org.eclipse.wst.server.core.internal.Trace;
  * @since 1.0
  */
 public abstract class ModuleFactoryDelegate {
-	// module factory listeners
-	private transient List listeners;
-
 	private ModuleFactory factory;
 	
 	/**
@@ -97,23 +90,6 @@ public abstract class ModuleFactoryDelegate {
 	}
 
 	/**
-	 * Finds a module create by this factory with the given id.
-	 * See the specification of
-	 * {@link org.eclipse.wst.server.core.IModuleFactory#getModule(String)}
-	 * for further details. 
-	 * <p>
-	 * This method is normally called by the web server core framework,
-	 * in response to a call to {@link IModuleFactory#getModule(String)}.
-	 * Clients (other than the delegate) should never call this method.
-	 * </p>
-	 * 
-	 * @param id the module id
-	 * @return the module with the given id, or <code>null</code>
-	 * if none
-	 */
-	//public abstract IModule getModule(String memento);
-
-	/**
 	 * Creates the module delegate for a module with the given information.
 	 * This method is called when a client needs to access the module delegate
 	 * associated with the given module.
@@ -136,48 +112,6 @@ public abstract class ModuleFactoryDelegate {
 	 * @return a possibly-empty array of modules {@link IModule}
 	 */
 	public abstract IModule[] getModules();
-	
-	/**
-	 * Adds the given listener to this module factory.
-	 * Once registered, a listener starts receiving notification of 
-	 * modules are added/removed. The listener continues to receive
-	 * notifications until it is removed.
-	 * Has no effect if an identical listener is already registered.
-	 * <p>
-	 * This method is normally called by the web server core framework.
-	 * Clients (other than the delegate) should never call this method.
-	 * </p>
-	 *
-	 * @param listener the module factory listener to add
-	 * @see #removeModuleFactoryListener(IModuleFactoryListener)
-	 */
-	public void addModuleFactoryListener(IModuleFactoryListener listener) {
-		Trace.trace(Trace.FINEST, "Adding module factory listener " + listener + " to " + this);
-		
-		if (listeners == null)
-			listeners = new ArrayList();
-		else if (listeners.contains(listener))
-			return;
-		listeners.add(listener);
-	}
-
-	/**
-	 * Removes the given listener from this module factory.
-	 * Has no effect if the listener is not registered.
-	 * <p>
-	 * This method is normally called by the web server core framework.
-	 * Clients (other than the delegate) should never call this method.
-	 * </p>
-	 *
-	 * @param listener the module factory listener to remove
-	 * @see #addModuleFactoryListener(IModuleFactoryListener)
-	 */
-	public void removeModuleFactoryListener(IModuleFactoryListener listener) {
-		Trace.trace(Trace.FINEST, "Removing module factory listener " + listener + " from " + this);
-		
-		if (listeners != null)
-			listeners.remove(listener);
-	}
 
 	/**
 	 * Fire a module factory event. This method is used by the factory delegate to
@@ -187,25 +121,6 @@ public abstract class ModuleFactoryDelegate {
 	 * @param removed a non-null array of modules that have been removed
 	 */
 	protected void fireModuleFactoryEvent(IModule[] added, IModule[] removed) {
-		Trace.trace(Trace.FINEST, "->- Firing module factory event: " + toString() + " ->-");
-
-		if (listeners == null || listeners.isEmpty())
-			return;
-
-		int size = listeners.size();
-		IModuleFactoryListener[] dfl = new IModuleFactoryListener[size];
-		listeners.toArray(dfl);
-		
-		ModuleFactoryEvent event = new ModuleFactoryEvent(added, removed);
-		
-		for (int i = 0; i < size; i++) {
-			try {
-				Trace.trace(Trace.FINEST, "  Firing module factory event to: " + dfl[i]);
-				dfl[i].moduleFactoryChanged(event);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing module factory event", e);
-			}
-		}
-		Trace.trace(Trace.FINEST, "-<- Done firing module factory event -<-");
+		factory.fireModuleFactoryEvent(added, removed);
 	}
 }

@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core.model;
+package org.eclipse.wst.server.core.internal.provisional;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.IServerWorkingCopy;

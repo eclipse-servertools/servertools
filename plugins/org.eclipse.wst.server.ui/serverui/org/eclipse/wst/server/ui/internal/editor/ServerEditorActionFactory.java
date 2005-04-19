@@ -17,9 +17,9 @@ import java.util.StringTokenizer;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.ui.editor.ServerEditorActionFactoryDelegate;
 import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
 import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.wst.server.ui.internal.provisional.ServerEditorActionFactoryDelegate;
 import org.eclipse.ui.IEditorSite;
 /**
  * A default server that can be created for a set of given

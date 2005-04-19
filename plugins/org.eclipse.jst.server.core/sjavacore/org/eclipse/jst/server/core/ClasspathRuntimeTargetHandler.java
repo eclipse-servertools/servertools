@@ -31,17 +31,16 @@ import org.eclipse.wst.server.core.model.RuntimeTargetHandlerDelegate;
  * @since 1.0
  */
 public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandlerDelegate {
-	
-	class SourceAttachmentUpdate {
+	private class SourceAttachmentUpdate {
 		String runtimeId;
 		String id;
 		IPath entry;
 		IPath sourceAttachmentPath;
 		IPath sourceAttachmentRootPath;
 	}
-	
-	protected List sourceAttachments;
-	
+
+	private List sourceAttachments;
+
 	/** (non-Javadoc)
 	 * @see RuntimeTargetHandlerDelegate#setRuntimeTarget(IProject, IRuntime, IProgressMonitor)
 	 */
@@ -267,7 +266,7 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 		}
 	}
 	
-	protected static void addJarFiles(File dir, List list, boolean includeSubdirectories) {
+	private static void addJarFiles(File dir, List list, boolean includeSubdirectories) {
 		int depth = 0;
 		if (includeSubdirectories)
 			depth = 2;
@@ -292,47 +291,27 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 		}
 	}
 	
+	/**
+	 * Add library entries to the given list for every jar file found in the
+	 * given directory. Optionally search subdirectories as well.
+	 * 
+	 * @param list a list
+	 * @param dir a directory
+	 * @param includeSubdirectories <code>true</code> to include subdirectories, and
+	 *    <code>false</code> otherwise
+	 */
 	protected static void addLibraryEntries(List list, File dir, boolean includeSubdirectories) {
 		if (dir == null)
 			throw new IllegalArgumentException();
 		addJarFiles(dir, list, includeSubdirectories);
 	}
-	
-	protected static void addLibraryEntry(List list, File dir) {
-		if (dir == null)
-			throw new IllegalArgumentException();
-		
-		IPath path = new Path(dir.getAbsolutePath());
-		list.add(JavaCore.newLibraryEntry(path, null, null));
-	}
-	
-	protected static void addLibraryEntry(List list, IPath path) {
-		if (path == null)
-			throw new IllegalArgumentException();
-		
-		list.add(JavaCore.newLibraryEntry(path, null, null));
-	}
-	
-	protected static void addLibraryEntry(List list, IPath path, IPath source, IPath root) {
-		if (path == null)
-			throw new IllegalArgumentException();
-		
-		list.add(JavaCore.newLibraryEntry(path, source, root));
-	}
-
-	protected static IClasspathEntry[] resolveList(List list) {
-		if (list == null)
-			return new IClasspathEntry[0];
-		IClasspathEntry[] entries = new IClasspathEntry[list.size()]; 
-		list.toArray(entries);
-		return entries;
-	}
 
 	/**
 	 * Returns the classpath entries that correspond to the given runtime.
 	 * 
-	 * @param runtime
-	 * @param monitor
+	 * @param runtime a runtime
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 * @return an array of classpath entries
 	 */
 	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
@@ -361,9 +340,9 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 	 * Request that the classpath container for the given runtime and id be updated
 	 * with the given classpath container entries.
 	 * 
-	 * @param runtime
-	 * @param id
-	 * @param entries
+	 * @param runtime a runtime
+	 * @param id an id
+	 * @param entries an array of classpath entries
 	 */
 	public void requestClasspathContainerUpdate(IRuntime runtime, String id, IClasspathEntry[] entries) {
 		// default behaviour is to save the source path entries

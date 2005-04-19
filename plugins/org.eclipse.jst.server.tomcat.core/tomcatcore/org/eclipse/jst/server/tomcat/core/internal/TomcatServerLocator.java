@@ -13,7 +13,7 @@ package org.eclipse.jst.server.tomcat.core.internal;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.ServerLocatorDelegate;
+import org.eclipse.wst.server.core.internal.provisional.ServerLocatorDelegate;
 /**
  * 
  */

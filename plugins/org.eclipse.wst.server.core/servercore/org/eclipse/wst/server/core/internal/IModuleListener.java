@@ -8,14 +8,18 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core.model;
+package org.eclipse.wst.server.core.internal;
+
+
 /**
- * This interface is a tag for a server that should be running before calling
- * modifyModules(). It will be implemented by delegate classes of servers that
- * should be started before calling API.
  * 
  * @since 1.0
  */
-public interface IRunningActionServer {
-	// marker interface
+public interface IModuleListener {
+	/**
+	 * A module has been changed as specified in the event.
+	 *
+	 * @param event org.eclipse.wst.server.core.model.ModuleEvent
+	 */
+	public void moduleChanged(ModuleEvent event);
 }

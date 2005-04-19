@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.wst.server.core.IServerListener;
-import org.eclipse.wst.server.core.util.ServerEvent;
+import org.eclipse.wst.server.core.ServerEvent;
 /**
  * Notification manager for server.
  * 

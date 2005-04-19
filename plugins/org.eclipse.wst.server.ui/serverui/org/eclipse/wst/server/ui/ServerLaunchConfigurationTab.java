@@ -147,6 +147,10 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		return false;
 	}
 	
+	/**
+	 * Called when a server is selected.
+	 * This method should not be called directly.
+	 */
 	protected void handleServerSelection() {
 		if (servers.isEmpty())
 			server = null;
@@ -174,14 +178,6 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		 server.setLaunchDefaults(configuration);
 		 }*/
 		updateLaunchConfigurationDialog();
-	}
-
-	protected void setErrorMessage(String s) {
-		super.setErrorMessage(s);
-	}
-	
-	protected void updateLaunchConfigurationDialog() {
-		super.updateLaunchConfigurationDialog();
 	}
 
 	/**

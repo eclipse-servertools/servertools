@@ -8,16 +8,17 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core.model;
+package org.eclipse.wst.server.core.internal;
 /**
+ * 
  * 
  * @since 1.0
  */
-public interface IModuleListener {
+public interface IModuleFactoryListener {
 	/**
-	 * A module has been changed as specified in the event.
+	 * Fired when modules have been added or removed from this factory.
 	 *
-	 * @param event org.eclipse.wst.server.core.model.ModuleEvent
+	 * @param event org.eclipse.wst.server.core.model.ModuleFactoryEvent
 	 */
-	public void moduleChanged(ModuleEvent event);
+	public void moduleFactoryChanged(ModuleFactoryEvent event);
 }

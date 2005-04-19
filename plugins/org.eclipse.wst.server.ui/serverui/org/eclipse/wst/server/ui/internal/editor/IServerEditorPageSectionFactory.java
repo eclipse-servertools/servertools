@@ -11,7 +11,6 @@
 package org.eclipse.wst.server.ui.internal.editor;
 
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.ui.editor.IOrdered;
 import org.eclipse.wst.server.ui.editor.IServerEditorSection;
 /**
  *

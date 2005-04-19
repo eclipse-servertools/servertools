@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.server.core;
+package org.eclipse.jst.server.core.internal;
 
 import org.eclipse.wst.server.core.IRuntime;
 /**

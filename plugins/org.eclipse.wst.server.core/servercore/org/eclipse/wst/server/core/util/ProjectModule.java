@@ -29,9 +29,6 @@ import org.eclipse.wst.server.core.model.*;
 public abstract class ProjectModule extends ModuleDelegate {
 	protected IProject project;
 	protected IPath root;
-	
-	// change listeners
-	private transient List listeners;
 
 	/**
 	 * Create a new project module.
@@ -269,33 +266,6 @@ public abstract class ProjectModule extends ModuleDelegate {
 
 		return true;
 	}
-
-	/**
-	 * Add a listener for the module.
-	 *
-	 * @param listener org.eclipse.wst.server.core.model.IModuleListener
-	 */
-	public void addModuleListener(IModuleListener listener) {
-		Trace.trace(Trace.FINEST, "Adding module listener " + listener + " to " + this);
-	
-		if (listeners == null)
-			listeners = new ArrayList();
-		else if (listeners.contains(listener))
-			return;
-		listeners.add(listener);
-	}
-	
-	/**
-	 * Add a listener for the module.
-	 *
-	 * @param listener org.eclipse.wst.server.core.model.IModuleListener
-	 */
-	public void removeModuleListener(IModuleListener listener) {
-		Trace.trace(Trace.FINEST, "Removing module listener " + listener + " from " + this);
-	
-		if (listeners != null)
-			listeners.remove(listener);
-	}
 	
 	/**
 	 * Fire a module change event.
@@ -303,7 +273,8 @@ public abstract class ProjectModule extends ModuleDelegate {
 	protected void fireModuleChangeEvent(boolean isChange, IModule[] added, IModule[] changed, IModule[] removed) {
 		Trace.trace(Trace.FINEST, "->- Firing module change event: " + getModule().getName() + " (" + isChange + ") ->-");
 	
-		if (listeners == null || listeners.isEmpty())
+		// TODO: should module event still be here?
+		/*if (listeners == null || listeners.isEmpty())
 			return;
 	
 		int size = listeners.size();
@@ -319,7 +290,7 @@ public abstract class ProjectModule extends ModuleDelegate {
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "  Error firing module change event", e);
 			}
-		}
+		}*/
 		Trace.trace(Trace.FINEST, "-<- Done firing module change event -<-");
 	}
 	

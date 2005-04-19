@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.ui.editor;
+package org.eclipse.wst.server.ui.internal.editor;
 /**
  * An object that has an absolute ordering, and can be ordered against other objects.
  * 

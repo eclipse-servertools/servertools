@@ -58,10 +58,10 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;org.eclipse.wst.server.ui.editor.ServerEditorActionFactoryDelegate&lt;/samp&gt;.
+                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;org.eclipse.wst.server.ui.internal.provisional.ServerEditorActionFactoryDelegate&lt;/samp&gt;.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.ui.editor.ServerEditorActionFactoryDelegate"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.ui.internal.provisional.ServerEditorActionFactoryDelegate"/>
                </appInfo>
             </annotation>
          </attribute>

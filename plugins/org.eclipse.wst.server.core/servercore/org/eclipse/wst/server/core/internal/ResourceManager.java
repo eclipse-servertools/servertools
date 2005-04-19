@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.core.resources.*;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.*;
 /**
  * ResourceManager handles the mappings between resources
  * and servers or server configurations, and creates

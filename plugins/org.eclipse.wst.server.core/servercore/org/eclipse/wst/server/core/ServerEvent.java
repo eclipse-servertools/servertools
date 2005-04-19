@@ -8,10 +8,8 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.server.core.util;
+package org.eclipse.wst.server.core;
 
-import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IServer;
 /**
  * An event fired when a server change or module changes.
  * 

@@ -79,6 +79,6 @@ public class TomcatRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
 			addLibraryEntries(list, path.append("lib").toFile(), true);
 			addLibraryEntries(list, path.append("endorsed").toFile(), true);
 		}
-		return resolveList(list);
+		return (IClasspathEntry[])list.toArray(new IClasspathEntry[list.size()]);
 	}
 }

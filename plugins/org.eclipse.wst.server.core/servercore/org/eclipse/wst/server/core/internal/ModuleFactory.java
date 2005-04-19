@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
-import org.eclipse.wst.server.core.model.IModuleFactoryListener;
 /**
  * 
  */
@@ -28,6 +27,9 @@ public class ModuleFactory implements IOrdered {
 	private List moduleTypes;
 	
 	private List modules;
+	
+	// module factory listeners
+	private transient List listeners;
 
 	/**
 	 * ModuleFactory constructor comment.
@@ -142,31 +144,75 @@ public class ModuleFactory implements IOrdered {
 	}
 	
 	/**
-	 * Add a listener for modules that are added/removed from this
-	 * factory.
-	 * 
-	 * @param listener org.eclipse.wst.server.core.model.IModuleFactoryListener
+	 * Adds the given listener to this module factory.
+	 * Once registered, a listener starts receiving notification of 
+	 * modules are added/removed. The listener continues to receive
+	 * notifications until it is removed.
+	 * Has no effect if an identical listener is already registered.
+	 * <p>
+	 * This method is normally called by the web server core framework.
+	 * Clients (other than the delegate) should never call this method.
+	 * </p>
+	 *
+	 * @param listener the module factory listener to add
+	 * @see #removeModuleFactoryListener(IModuleFactoryListener)
 	 */
 	public void addModuleFactoryListener(IModuleFactoryListener listener) {
-		try {
-			getDelegate().addModuleFactoryListener(listener);
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
-		}
+		Trace.trace(Trace.FINEST, "Adding module factory listener " + listener + " to " + this);
+		
+		if (listeners == null)
+			listeners = new ArrayList();
+		else if (listeners.contains(listener))
+			return;
+		listeners.add(listener);
 	}
 	
 	/**
-	 * Add a listener for modules that are added/removed from this
-	 * factory.
-	 * 
-	 * @param listener org.eclipse.wst.server.core.model.IModuleFactoryListener
+	 * Removes the given listener from this module factory.
+	 * Has no effect if the listener is not registered.
+	 * <p>
+	 * This method is normally called by the web server core framework.
+	 * Clients (other than the delegate) should never call this method.
+	 * </p>
+	 *
+	 * @param listener the module factory listener to remove
+	 * @see #addModuleFactoryListener(IModuleFactoryListener)
 	 */
 	public void removeModuleFactoryListener(IModuleFactoryListener listener) {
-		try {
-			getDelegate().removeModuleFactoryListener(listener);
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
+		Trace.trace(Trace.FINEST, "Removing module factory listener " + listener + " from " + this);
+		
+		if (listeners != null)
+			listeners.remove(listener);
+	}
+	
+	/**
+	 * Fire a module factory event. This method is used by the factory delegate to
+	 * fire events about module changes.
+	 * 
+	 * @param added a non-null array of modules that have been added
+	 * @param removed a non-null array of modules that have been removed
+	 */
+	public void fireModuleFactoryEvent(IModule[] added, IModule[] removed) {
+		Trace.trace(Trace.FINEST, "->- Firing module factory event: " + toString() + " ->-");
+
+		if (listeners == null || listeners.isEmpty())
+			return;
+
+		int size = listeners.size();
+		IModuleFactoryListener[] dfl = new IModuleFactoryListener[size];
+		listeners.toArray(dfl);
+		
+		ModuleFactoryEvent event = new ModuleFactoryEvent(added, removed);
+		
+		for (int i = 0; i < size; i++) {
+			try {
+				Trace.trace(Trace.FINEST, "  Firing module factory event to: " + dfl[i]);
+				dfl[i].moduleFactoryChanged(event);
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "  Error firing module factory event", e);
+			}
 		}
+		Trace.trace(Trace.FINEST, "-<- Done firing module factory event -<-");
 	}
 	
 	/**

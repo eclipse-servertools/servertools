@@ -11,7 +11,6 @@
 package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.util.ServerEvent;
 import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
 /**
  * Listens for messages from the servers. This class keeps

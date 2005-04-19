@@ -9,8 +9,6 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.server.core;
-
-import org.eclipse.wst.server.core.util.ServerEvent;
 /**
  * This interface is used by the server to broadcast a change of state.
  * Usually, the change of state will be caused by some user action,

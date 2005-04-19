@@ -58,6 +58,6 @@ public class GenericRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
 		
 		List list = new ArrayList();
 		addLibraryEntries(list, installPath.toFile(), false);
-		return resolveList(list);
+		return (IClasspathEntry[])list.toArray(new IClasspathEntry[list.size()]);
 	}
 }

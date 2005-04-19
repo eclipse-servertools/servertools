@@ -12,7 +12,6 @@ package org.eclipse.wst.server.core;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.wst.server.core.model.IModuleListener;
 /**
  * A module is a unit of "content" that can be published to a
  * server.
@@ -79,47 +78,12 @@ public interface IModule extends IAdaptable {
 	 * @return the module type
 	 */
 	public IModuleType getModuleType();
-
-	/**
-	 * Returns whether this module currently exists.
-	 * <p>
-	 * [issue: The method touches on the important problem
-	 * of when a module ceases to exist. Need to explain
-	 * the full lifecycle of a module.
-	 * Should it be synonymous with the module root 
-	 * IContainer.exists()? That is, the module exists
-	 * as long as the IContainer that holds all its module
-	 * resources exists()?]
-	 * </p>
-	 *
-	 * @return <code>true</code> this module currently exists, and
-	 * <code>false</code> if it has been deleted or moved
-	 */
-	//public boolean exists();
 	
 	/**
 	 * Returns the workbench project that this module is contained in,
 	 * or null if the module is outside of the workspace.
 	 * 
-	 * @return org.eclipse.core.resources.IProject
+	 * @return a project
 	 */
 	public IProject getProject();
-
-	/**
-	 * Add a listener for child modules that are added/removed from this
-	 * module.
-	 * Has no effect if an identical listener is already registered.
-	 * 
-	 * @param listener org.eclipse.wst.server.core.model.IModuleListener
-	 */
-	public void addModuleListener(IModuleListener listener);
-
-	/**
-	 * Add a listener for child modules that are added/removed from this
-	 * module.
-	 * Has no effect if the listener is not registered.
-	 * 
-	 * @param listener org.eclipse.wst.server.core.model.IModuleListener
-	 */
-	public void removeModuleListener(IModuleListener listener);
 }

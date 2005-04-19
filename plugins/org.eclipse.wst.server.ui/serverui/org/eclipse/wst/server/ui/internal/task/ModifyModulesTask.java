@@ -20,7 +20,6 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.ProjectProperties;
 import org.eclipse.wst.server.core.internal.Server;
-import org.eclipse.wst.server.core.model.IRunningActionServer;
 import org.eclipse.wst.server.core.util.Task;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 /**
@@ -51,7 +50,8 @@ public class ModifyModulesTask extends Task {
 
 		IServerWorkingCopy workingCopy = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
 		
-		IRunningActionServer ras = (IRunningActionServer) workingCopy.getAdapter(IRunningActionServer.class);
+		// TODO: IRunningActionServer ras = (IRunningActionServer) workingCopy.getAdapter(IRunningActionServer.class);
+		String ras = null;
 		if (ras != null) {
 			IServer server = workingCopy.getOriginal();
 			int state = server.getServerState();

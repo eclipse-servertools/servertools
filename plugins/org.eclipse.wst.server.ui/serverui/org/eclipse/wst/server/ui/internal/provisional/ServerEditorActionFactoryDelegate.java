@@ -8,12 +8,13 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.ui.editor;
+package org.eclipse.wst.server.ui.internal.provisional;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IEditorSite;
 
 import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
 /**
  *
  * @since 1.0
