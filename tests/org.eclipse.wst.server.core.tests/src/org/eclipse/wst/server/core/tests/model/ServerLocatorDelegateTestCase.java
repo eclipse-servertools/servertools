@@ -14,7 +14,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.core.model.ServerLocatorDelegate;
+import org.eclipse.wst.server.core.internal.provisional.ServerLocatorDelegate;
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 import org.eclipse.wst.server.core.tests.impl.TestServerLocatorDelegate;
 

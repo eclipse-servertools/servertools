@@ -53,10 +53,6 @@ public class ClasspathRuntimeTargetHandlerTestCase extends TestCase {
 	public void test07RemoveRuntimeTarget() {
 		handler.removeRuntimeTarget(null, null, null);
 	}
-
-	public void test08ResolveList() {
-		((TestClasspathRuntimeTargetHandler) handler).testResolveList();
-	}
 	
 	public void test09GetDelegateClasspathEntries() {
 		handler.getDelegateClasspathEntries(null, null);

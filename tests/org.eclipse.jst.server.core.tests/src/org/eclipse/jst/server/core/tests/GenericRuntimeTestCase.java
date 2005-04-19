@@ -12,7 +12,7 @@ package org.eclipse.jst.server.core.tests;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jst.server.core.GenericRuntimeUtil;
+import org.eclipse.jst.server.core.internal.GenericRuntimeUtil;
 import org.eclipse.jst.server.core.internal.IGenericRuntime;
 import org.eclipse.jst.server.core.internal.IGenericRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.*;

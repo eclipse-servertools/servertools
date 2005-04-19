@@ -13,7 +13,7 @@ package org.eclipse.wst.server.core.tests.model;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.wst.server.core.model.ModuleFactoryEvent;
+import org.eclipse.wst.server.core.internal.ModuleFactoryEvent;
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 
 public class ModuleFactoryEventTestCase extends TestCase {

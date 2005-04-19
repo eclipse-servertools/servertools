@@ -24,7 +24,6 @@ public class TestProjectModuleFactoryDelegate extends ProjectModuleFactoryDelega
 		addListener();
 		fireEvents();
 		fireGlobalEvents();
-		fireModuleFactoryEvent(null, null);
 		cacheModules();
 		createModules(null);
 		getListenerPaths();

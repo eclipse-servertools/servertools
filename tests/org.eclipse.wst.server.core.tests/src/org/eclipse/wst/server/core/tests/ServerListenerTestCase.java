@@ -11,7 +11,7 @@
 package org.eclipse.wst.server.core.tests;
 
 import org.eclipse.wst.server.core.IServerListener;
-import org.eclipse.wst.server.core.util.ServerEvent;
+import org.eclipse.wst.server.core.ServerEvent;
 
 import junit.framework.TestCase;
 

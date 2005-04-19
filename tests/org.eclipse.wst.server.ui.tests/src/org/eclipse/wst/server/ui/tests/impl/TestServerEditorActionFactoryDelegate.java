@@ -13,7 +13,7 @@ package org.eclipse.wst.server.ui.tests.impl;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
-import org.eclipse.wst.server.ui.editor.ServerEditorActionFactoryDelegate;
+import org.eclipse.wst.server.ui.internal.provisional.ServerEditorActionFactoryDelegate;
 
 public class TestServerEditorActionFactoryDelegate extends ServerEditorActionFactoryDelegate {
 

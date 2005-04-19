@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.tests.editor;
 
-import org.eclipse.wst.server.ui.editor.IOrdered;
+import org.eclipse.wst.server.ui.internal.editor.IOrdered;
 import org.eclipse.wst.server.ui.tests.OrderedTestSuite;
 import org.eclipse.wst.server.ui.tests.impl.TestOrdered;
 

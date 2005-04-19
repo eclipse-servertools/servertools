@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.util.ServerEvent;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

@@ -44,14 +44,6 @@ public class ModuleFactoryDelegateTestCase extends TestCase {
 		delegate.getModules();
 	}
 
-	public void test05AddModuleFactoryListener() {
-		delegate.addModuleFactoryListener(null);
-	}
-
-	public void test06RemoveModuleFactoryListener() {
-		delegate.removeModuleFactoryListener(null);
-	}
-
 	public void test07TestProtected() {
 		((TestModuleFactoryDelegate)delegate).testProtectedMethods();
 	}

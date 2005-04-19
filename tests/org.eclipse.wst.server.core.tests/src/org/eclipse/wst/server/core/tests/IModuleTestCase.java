@@ -13,7 +13,7 @@ package org.eclipse.wst.server.core.tests;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
-import org.eclipse.wst.server.core.model.IModuleListener;
+import org.eclipse.wst.server.core.internal.IModuleListener;
 
 import junit.framework.TestCase;
 
@@ -55,8 +55,6 @@ public class IModuleTestCase extends TestCase {
 		module.getName();
 		module.getModuleType();
 		module.getProject();
-		module.addModuleListener(null);
-		module.removeModuleListener(null);
 		module.getAdapter(null);
 	}
 }

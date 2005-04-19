@@ -13,7 +13,7 @@ package org.eclipse.wst.server.core.tests.model;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.wst.server.core.model.IModuleFactoryListener;
+import org.eclipse.wst.server.core.internal.IModuleFactoryListener;
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 import org.eclipse.wst.server.core.tests.impl.TestModuleFactoryListener;
 

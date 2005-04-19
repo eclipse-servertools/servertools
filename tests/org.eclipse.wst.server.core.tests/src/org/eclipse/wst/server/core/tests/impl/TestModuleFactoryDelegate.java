@@ -29,6 +29,5 @@ public class TestModuleFactoryDelegate extends ModuleFactoryDelegate {
 		} catch (Exception e) {
 			// ignore
 		}
-		fireModuleFactoryEvent(null, null);
 	}
 }

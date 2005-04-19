@@ -11,7 +11,7 @@
 package org.eclipse.wst.server.core.tests.impl;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.model.ServerLocatorDelegate;
+import org.eclipse.wst.server.core.internal.provisional.ServerLocatorDelegate;
 
 public class TestServerLocatorDelegate extends ServerLocatorDelegate {
 	public void searchForServers(String host, IServerSearchListener listener, IProgressMonitor monitor) {

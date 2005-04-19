@@ -74,20 +74,12 @@ public class ProjectModuleTestCase extends TestCase {
 	public void test09Equals() {
 		pm.equals(null);
 	}
-	
-	public void test10AddModuleListener() {
-		pm.addModuleListener(null);
-	}
-	
-	public void test11RemoveModuleListener() {
-		pm.removeModuleListener(null);
-	}
-	
-	public void test12() {
+
+	public void test10() {
 		pm.getChildModules();
 	}
 	
-	public void test13TestProtected() throws Exception {
+	public void test11TestProtected() throws Exception {
 		((TestProjectModule)pm).testProtected();
 	}
 }

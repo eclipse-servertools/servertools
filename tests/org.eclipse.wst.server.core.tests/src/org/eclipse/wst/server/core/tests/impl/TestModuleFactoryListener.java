@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.impl;
 
-import org.eclipse.wst.server.core.model.IModuleFactoryListener;
-import org.eclipse.wst.server.core.model.ModuleFactoryEvent;
+import org.eclipse.wst.server.core.internal.IModuleFactoryListener;
+import org.eclipse.wst.server.core.internal.ModuleFactoryEvent;
 
 public class TestModuleFactoryListener implements IModuleFactoryListener {
 	public void moduleFactoryChanged(ModuleFactoryEvent event) {

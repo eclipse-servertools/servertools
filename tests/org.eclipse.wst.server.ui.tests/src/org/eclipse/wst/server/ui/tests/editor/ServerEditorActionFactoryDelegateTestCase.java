@@ -13,7 +13,7 @@ package org.eclipse.wst.server.ui.tests.editor;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.wst.server.ui.editor.ServerEditorActionFactoryDelegate;
+import org.eclipse.wst.server.ui.internal.provisional.ServerEditorActionFactoryDelegate;
 import org.eclipse.wst.server.ui.tests.OrderedTestSuite;
 import org.eclipse.wst.server.ui.tests.impl.TestServerEditorActionFactoryDelegate;
 

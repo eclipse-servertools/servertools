@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.tests.impl;
 
-import org.eclipse.wst.server.ui.editor.IOrdered;
+import org.eclipse.wst.server.ui.internal.editor.IOrdered;
 
 public class TestOrdered implements IOrdered {
 
