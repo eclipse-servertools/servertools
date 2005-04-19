@@ -115,7 +115,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		autoPublishLocalTime.setSelection(preferences.getAutoPublishLocalTime());
 		autoPublishLocalTime.setEnabled(autoPublishLocal.getSelection());
 		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
-		data.widthHint = 75;
+		data.widthHint = 60;
 		autoPublishLocalTime.setLayoutData(data);
 		
 		Label label = new Label(composite, SWT.NONE);
@@ -143,7 +143,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		autoPublishRemoteTime.setSelection(preferences.getAutoPublishRemoteTime());
 		autoPublishRemoteTime.setEnabled(autoPublishRemote.getSelection());
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.widthHint = 75;
+		data.widthHint = 60;
 		autoPublishRemoteTime.setLayoutData(data);
 		
 		autoPublishRemote.addSelectionListener(new SelectionAdapter() {
