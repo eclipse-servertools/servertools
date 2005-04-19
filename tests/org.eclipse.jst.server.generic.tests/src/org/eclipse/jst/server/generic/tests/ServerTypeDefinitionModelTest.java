@@ -16,6 +16,7 @@ import org.eclipse.jst.server.generic.servertype.definition.Property;
 import org.eclipse.jst.server.generic.servertype.definition.Publisher;
 import org.eclipse.jst.server.generic.servertype.definition.PublisherData;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
+import org.eclipse.jst.server.generic.servertype.definition.ServerTypeFactory;
 
 import junit.framework.TestCase;
 
@@ -31,6 +32,24 @@ public class ServerTypeDefinitionModelTest extends TestCase {
        }
     }
 
+	
+	public void testServerTypeFactory(){
+		ServerTypeFactory factory = ServerTypeFactory.eINSTANCE;
+		assertNotNull(factory.createArchiveType());
+		assertNotNull(factory.createClasspath());
+		assertNotNull(factory.createJndiConnection());
+		assertNotNull(factory.createJndiProperty());
+		assertNotNull(factory.createLaunchConfiguration());
+		assertNotNull(factory.createModule());
+		assertNotNull(factory.createPort());
+		assertNotNull(factory.createProject());
+		assertNotNull(factory.createProperty());
+		assertNotNull(factory.createPublisher());
+		assertNotNull(factory.createPublisherData());
+		assertNotNull(factory.createServerRuntime());
+		assertNotNull(factory.getServerTypePackage());
+		
+	}
     public void testServerRuntime(){
         assertTrue(subject.getClasspath()!=null && subject.getClasspath().size()>0);
 		assertTrue(subject.getConfigurationElementNamespace()!=null && subject.getConfigurationElementNamespace().length()>0);
@@ -48,6 +67,7 @@ public class ServerTypeDefinitionModelTest extends TestCase {
         assertEquals(cp,subject.getClasspath(cp.getId()));
         Module module = (Module)subject.getModule().get(0);
         assertEquals(module,subject.getModule(module.getType()));
+		assertNotNull(subject.getPublisher("org.eclipse.jst.server.generic.antpublisher"));
     }
 	public void testSetServerRuntime()
 	{
@@ -67,8 +87,10 @@ public class ServerTypeDefinitionModelTest extends TestCase {
         Classpath cp =(Classpath)subject.getClasspath().get(0);
         assertTrue(cp.getId()!=null && cp.getId().length()>0);
         assertTrue(cp.getArchive()!=null && cp.getArchive().size()>0);
-        ArchiveType archiveType = (ArchiveType)cp.getArchive().get(0);
+		assertTrue((cp.isIsLibrary()==true || cp.isIsLibrary()==false));
+		ArchiveType archiveType = (ArchiveType)cp.getArchive().get(0);
         assertTrue(archiveType.getPath()!=null && archiveType.getPath().length()>0);
+		
     }
     
     public void testLaunchConfiguration()
