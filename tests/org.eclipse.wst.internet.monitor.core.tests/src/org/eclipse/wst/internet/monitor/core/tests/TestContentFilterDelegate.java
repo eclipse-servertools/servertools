@@ -11,8 +11,8 @@
 package org.eclipse.wst.internet.monitor.core.tests;
 
 import java.io.IOException;
-import org.eclipse.wst.internet.monitor.core.ContentFilterDelegate;
 import org.eclipse.wst.internet.monitor.core.Request;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.ContentFilterDelegate;
 
 public class TestContentFilterDelegate extends ContentFilterDelegate{
 	public byte[] filter(Request request, boolean isRequest, byte[] content) throws IOException {
