@@ -157,7 +157,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		else
 			shell = ServerUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
 
-		if (moduleArtifact == null) {
+		if (moduleArtifact == null || moduleArtifact.getModule() == null) {
 			EclipseUtil.openError(ServerUIPlugin.getResource("%errorNoModules"));
 			Trace.trace(Trace.FINEST, "No modules");
 			return;

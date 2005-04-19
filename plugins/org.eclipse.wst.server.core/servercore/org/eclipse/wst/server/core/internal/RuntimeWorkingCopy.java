@@ -209,7 +209,7 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 							try {
 								props.setRuntimeTargetId(newId, monitor);
 							} catch (Exception e) {
-								// ignore
+								Trace.trace(Trace.SEVERE, "Error setting runtime target", e);
 							}
 						}
 					}
@@ -276,7 +276,7 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 									props.setRuntimeTarget(runtime, null, false, monitor);
 								projects[i].build(IncrementalProjectBuilder.FULL_BUILD, monitor);
 							} catch (Exception e) {
-								e.printStackTrace();
+								Trace.trace(Trace.SEVERE, "Error setting runtime target", e);
 							}
 						}
 					}

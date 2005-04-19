@@ -58,7 +58,7 @@ public class Trace {
 		if (!JavaServerPlugin.getInstance().isDebugging())
 			return;
 
-		System.out.println(s);
+		System.out.println(JavaServerPlugin.PLUGIN_ID + " " +s);
 		if (t != null)
 			t.printStackTrace();
 	}

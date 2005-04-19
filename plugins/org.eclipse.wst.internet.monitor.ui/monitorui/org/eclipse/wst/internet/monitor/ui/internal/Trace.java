@@ -46,7 +46,7 @@ public class Trace {
 		if (!MonitorUIPlugin.getInstance().isDebugging())
 			return;
 
-		System.out.println(s);
+		System.out.println(MonitorUIPlugin.PLUGIN_ID + " " + s);
 		if (t != null)
 			t.printStackTrace();
 	}

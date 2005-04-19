@@ -66,7 +66,7 @@ public class Trace {
 		if (!MonitorPlugin.getInstance().isDebugging())
 			return;
 
-		System.out.println(System.currentTimeMillis() + " " + s);
+		System.out.println(MonitorPlugin.PLUGIN_ID + " " + System.currentTimeMillis() + " " + s);
 		if (t != null)
 			t.printStackTrace();
 	}
