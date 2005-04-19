@@ -28,14 +28,12 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Classpath.java,v 1.6 2005/04/18 00:18:06 gercan Exp $
+ * $Id: Classpath.java,v 1.7 2005/04/19 17:49:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
 import java.util.List;
 import org.eclipse.emf.ecore.EObject;
-
-import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**
  * <!-- begin-user-doc -->
@@ -52,7 +50,7 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * </ul>
  * </p>
  *
- * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getClasspath()
+ * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getClasspath()
  * @model extendedMetaData="name='Classpath' kind='elementOnly'"
  * @generated
  */
@@ -67,12 +65,12 @@ public interface Classpath extends EObject{
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Group</em>' attribute list.
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getClasspath_Group()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getClasspath_Group()
      * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
      *        extendedMetaData="kind='group' name='group:0'"
      * @generated
      */
-    FeatureMap getGroup();
+//    FeatureMap getGroup();
 
     /**
      * Returns the value of the '<em><b>Archive</b></em>' containment reference list.
@@ -84,7 +82,7 @@ public interface Classpath extends EObject{
 	 * </p>
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Archive</em>' containment reference list.
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getClasspath_Archive()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getClasspath_Archive()
      * @model type="org.eclipse.jst.server.generic.servertype.definition.ArchiveType" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
      *        extendedMetaData="kind='element' name='archive' group='#group:0'"
      * @generated
@@ -101,7 +99,7 @@ public interface Classpath extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Id</em>' attribute.
      * @see #setId(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getClasspath_Id()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getClasspath_Id()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
      *        extendedMetaData="kind='attribute' name='id'"
      * @generated
@@ -130,7 +128,7 @@ public interface Classpath extends EObject{
      * @see #isSetIsLibrary()
      * @see #unsetIsLibrary()
      * @see #setIsLibrary(boolean)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getClasspath_IsLibrary()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getClasspath_IsLibrary()
      * @model unique="false" unsettable="true" dataType="org.eclipse.emf.ecore.xml.type.Boolean"
      *        extendedMetaData="kind='attribute' name='isLibrary'"
      * @generated
@@ -170,6 +168,6 @@ public interface Classpath extends EObject{
      * @see #setIsLibrary(boolean)
      * @generated
      */
-	boolean isSetIsLibrary();
+//	boolean isSetIsLibrary();
 
 } // Classpath

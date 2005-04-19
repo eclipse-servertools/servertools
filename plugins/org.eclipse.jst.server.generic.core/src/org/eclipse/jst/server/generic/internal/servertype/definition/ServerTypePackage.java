@@ -28,14 +28,15 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypePackage.java,v 1.4 2005/03/27 12:56:23 gercan Exp $
+ * $Id: ServerTypePackage.java,v 1.1 2005/04/19 17:49:01 gercan Exp $
  */
-package org.eclipse.jst.server.generic.servertype.definition;
+package org.eclipse.jst.server.generic.internal.servertype.definition;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.jst.server.generic.servertype.definition.ServerTypeFactory;
 
 /**
  * <!-- begin-user-doc -->

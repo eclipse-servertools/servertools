@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Publisher.java,v 1.6 2005/04/18 00:18:06 gercan Exp $
+ * $Id: Publisher.java,v 1.7 2005/04/19 17:49:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -50,7 +50,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * </p>
  *
- * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPublisher()
+ * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPublisher()
  * @model extendedMetaData="name='Publisher' kind='elementOnly'"
  * @generated
  */
@@ -82,7 +82,7 @@ public interface Publisher extends EObject{
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Publisherdata</em>' containment reference list.
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPublisher_Publisherdata()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPublisher_Publisherdata()
      * @model type="org.eclipse.jst.server.generic.servertype.definition.PublisherData" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
      *        extendedMetaData="kind='element' name='publisherdata' group='#group:0'"
      * @generated
@@ -99,7 +99,7 @@ public interface Publisher extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Id</em>' attribute.
      * @see #setId(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPublisher_Id()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPublisher_Id()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
      *        extendedMetaData="kind='attribute' name='id'"
      * @generated

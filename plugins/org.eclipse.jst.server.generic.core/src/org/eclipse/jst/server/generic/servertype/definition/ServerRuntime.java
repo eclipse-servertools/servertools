@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerRuntime.java,v 1.6 2005/04/18 00:18:06 gercan Exp $
+ * $Id: ServerRuntime.java,v 1.7 2005/04/19 17:49:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -69,7 +69,7 @@ import org.eclipse.jst.server.generic.internal.xml.Resolver;
  * </ul>
  * </p>
  *
- * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime()
+ * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime()
  * @model extendedMetaData="name='ServerRuntime' kind='elementOnly'"
  * @generated
  */
@@ -101,7 +101,7 @@ public interface ServerRuntime extends EObject{
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Property</em>' containment reference list.
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Property()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Property()
      * @model type="org.eclipse.jst.server.generic.servertype.definition.Property" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
      *        extendedMetaData="kind='element' name='property' group='#group:0'"
      * @generated
@@ -135,7 +135,7 @@ public interface ServerRuntime extends EObject{
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Port</em>' containment reference list.
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Port()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Port()
      * @model type="org.eclipse.jst.server.generic.servertype.definition.Port" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
      *        extendedMetaData="kind='element' name='port' group='#group:2'"
      * @generated
@@ -169,7 +169,7 @@ public interface ServerRuntime extends EObject{
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Module</em>' containment reference list.
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Module()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Module()
      * @model type="org.eclipse.jst.server.generic.servertype.definition.Module" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
      *        extendedMetaData="kind='element' name='module' group='#group:4'"
      * @generated
@@ -186,7 +186,7 @@ public interface ServerRuntime extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Project</em>' containment reference.
      * @see #setProject(Project)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Project()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Project()
      * @model containment="true" resolveProxies="false" required="true"
      *        extendedMetaData="kind='element' name='project'"
      * @generated
@@ -213,7 +213,7 @@ public interface ServerRuntime extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Start</em>' containment reference.
      * @see #setStart(LaunchConfiguration)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Start()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Start()
      * @model containment="true" resolveProxies="false" required="true"
      *        extendedMetaData="kind='element' name='start'"
      * @generated
@@ -240,7 +240,7 @@ public interface ServerRuntime extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Stop</em>' containment reference.
      * @see #setStop(LaunchConfiguration)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Stop()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Stop()
      * @model containment="true" resolveProxies="false" required="true"
      *        extendedMetaData="kind='element' name='stop'"
      * @generated
@@ -284,7 +284,7 @@ public interface ServerRuntime extends EObject{
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Publisher</em>' containment reference list.
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Publisher()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Publisher()
      * @model type="org.eclipse.jst.server.generic.servertype.definition.Publisher" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
      *        extendedMetaData="kind='element' name='publisher' group='#group:9'"
      * @generated
@@ -318,7 +318,7 @@ public interface ServerRuntime extends EObject{
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Classpath</em>' containment reference list.
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Classpath()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Classpath()
      * @model type="org.eclipse.jst.server.generic.servertype.definition.Classpath" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
      *        extendedMetaData="kind='element' name='classpath' group='#group:11'"
      * @generated
@@ -335,7 +335,7 @@ public interface ServerRuntime extends EObject{
      * <!-- end-user-doc -->
      * @return the value of the '<em>Jndi Connection</em>' containment reference.
      * @see #setJndiConnection(JndiConnection)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_JndiConnection()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_JndiConnection()
      * @model containment="true" resolveProxies="false" required="true"
      *        extendedMetaData="kind='element' name='jndiConnection'"
      * @generated
@@ -362,7 +362,7 @@ public interface ServerRuntime extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Name</em>' attribute.
      * @see #setName(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Name()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Name()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
      *        extendedMetaData="kind='attribute' name='name'"
      * @generated
@@ -389,7 +389,7 @@ public interface ServerRuntime extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Version</em>' attribute.
      * @see #setVersion(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getServerRuntime_Version()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Version()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
      *        extendedMetaData="kind='attribute' name='version'"
      * @generated

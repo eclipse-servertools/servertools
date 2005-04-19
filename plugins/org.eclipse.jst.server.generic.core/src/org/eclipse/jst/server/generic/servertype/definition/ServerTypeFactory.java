@@ -28,18 +28,19 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeFactory.java,v 1.4 2005/03/27 12:56:23 gercan Exp $
+ * $Id: ServerTypeFactory.java,v 1.5 2005/04/19 17:49:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
 import org.eclipse.emf.ecore.EFactory;
+import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 
 /**
  * <!-- begin-user-doc -->
  * The <b>Factory</b> for the model.
  * It provides a create method for each non-abstract class of the model.
  * <!-- end-user-doc -->
- * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage
+ * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage
  * @generated
  */
 public interface ServerTypeFactory extends EFactory{

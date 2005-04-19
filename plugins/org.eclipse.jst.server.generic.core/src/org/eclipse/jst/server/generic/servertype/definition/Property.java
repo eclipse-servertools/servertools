@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Property.java,v 1.4 2005/04/18 00:18:06 gercan Exp $
+ * $Id: Property.java,v 1.5 2005/04/19 17:49:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -50,7 +50,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * </p>
  *
- * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getProperty()
+ * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getProperty()
  * @model extendedMetaData="name='Property' kind='empty'"
  * @generated
  */
@@ -68,7 +68,7 @@ public interface Property extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Context</em>' attribute.
      * @see #setContext(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getProperty_Context()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getProperty_Context()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
      *        extendedMetaData="kind='attribute' name='context'"
      * @generated
@@ -95,7 +95,7 @@ public interface Property extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Default</em>' attribute.
      * @see #setDefault(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getProperty_Default()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getProperty_Default()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
      *        extendedMetaData="kind='attribute' name='default'"
      * @generated
@@ -122,7 +122,7 @@ public interface Property extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Id</em>' attribute.
      * @see #setId(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getProperty_Id()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getProperty_Id()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
      *        extendedMetaData="kind='attribute' name='id'"
      * @generated
@@ -149,7 +149,7 @@ public interface Property extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Label</em>' attribute.
      * @see #setLabel(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getProperty_Label()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getProperty_Label()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
      *        extendedMetaData="kind='attribute' name='label'"
      * @generated
@@ -176,7 +176,7 @@ public interface Property extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Type</em>' attribute.
      * @see #setType(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getProperty_Type()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getProperty_Type()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
      *        extendedMetaData="kind='attribute' name='type'"
      * @generated

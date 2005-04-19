@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerRuntimeImpl.java,v 1.3 2005/03/27 12:55:36 gercan Exp $
+ * $Id: ServerRuntimeImpl.java,v 1.4 2005/04/19 17:49:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
@@ -47,6 +47,7 @@ import org.eclipse.emf.ecore.util.BasicFeatureMap;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.jst.server.generic.servertype.definition.JndiConnection;
+import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.internal.xml.Resolver;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
 import org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration;
@@ -54,7 +55,6 @@ import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.Project;
 import org.eclipse.jst.server.generic.servertype.definition.Publisher;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
-import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
 
 /**
  * <!-- begin-user-doc -->

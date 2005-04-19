@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Project.java,v 1.5 2005/04/18 00:18:06 gercan Exp $
+ * $Id: Project.java,v 1.6 2005/04/19 17:49:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -46,7 +46,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * </p>
  *
- * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getProject()
+ * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getProject()
  * @model extendedMetaData="name='Project' kind='elementOnly'"
  * @generated
  */
@@ -61,7 +61,7 @@ public interface Project extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Classpath Reference</em>' attribute.
      * @see #setClasspathReference(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getProject_ClasspathReference()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getProject_ClasspathReference()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
      *        extendedMetaData="kind='element' name='classpathReference'"
      * @generated

@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: PortImpl.java,v 1.1 2005/03/14 20:54:15 gercan Exp $
+ * $Id: PortImpl.java,v 1.2 2005/04/19 17:49:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
@@ -40,8 +40,8 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
+import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.servertype.definition.Port;
-import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
 
 /**
  * <!-- begin-user-doc -->

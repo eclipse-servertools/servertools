@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeAdapterFactory.java,v 1.2 2005/03/27 12:56:23 gercan Exp $
+ * $Id: ServerTypeAdapterFactory.java,v 1.3 2005/04/19 17:49:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.util;
 
@@ -39,6 +39,7 @@ import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 
 import org.eclipse.emf.ecore.EObject;
 
+import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.servertype.definition.*;
 
 /**
@@ -46,7 +47,7 @@ import org.eclipse.jst.server.generic.servertype.definition.*;
  * The <b>Adapter Factory</b> for the model.
  * It provides an adapter <code>createXXX</code> method for each class of the model.
  * <!-- end-user-doc -->
- * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage
+ * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage
  * @generated
  */
 public class ServerTypeAdapterFactory extends AdapterFactoryImpl {

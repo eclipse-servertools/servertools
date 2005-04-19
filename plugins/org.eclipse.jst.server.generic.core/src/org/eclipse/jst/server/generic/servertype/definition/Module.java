@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Module.java,v 1.4 2005/04/18 00:18:06 gercan Exp $
+ * $Id: Module.java,v 1.5 2005/04/19 17:49:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -48,7 +48,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * </p>
  *
- * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getModule()
+ * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getModule()
  * @model extendedMetaData="name='Module' kind='elementOnly'"
  * @generated
  */
@@ -63,7 +63,7 @@ public interface Module extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Type</em>' attribute.
      * @see #setType(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getModule_Type()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getModule_Type()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
      *        extendedMetaData="kind='element' name='type'"
      * @generated
@@ -90,7 +90,7 @@ public interface Module extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Publish Dir</em>' attribute.
      * @see #setPublishDir(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getModule_PublishDir()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getModule_PublishDir()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
      *        extendedMetaData="kind='element' name='publishDir'"
      * @generated
@@ -117,7 +117,7 @@ public interface Module extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Publisher Reference</em>' attribute.
      * @see #setPublisherReference(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getModule_PublisherReference()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getModule_PublisherReference()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
      *        extendedMetaData="kind='element' name='publisherReference'"
      * @generated

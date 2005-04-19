@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypePackageImpl.java,v 1.2 2005/03/27 12:55:36 gercan Exp $
+ * $Id: ServerTypePackageImpl.java,v 1.3 2005/04/19 17:49:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
@@ -43,6 +43,7 @@ import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 
 import org.eclipse.emf.ecore.xml.type.impl.XMLTypePackageImpl;
 
+import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
 import org.eclipse.jst.server.generic.servertype.definition.JndiConnection;
@@ -56,7 +57,6 @@ import org.eclipse.jst.server.generic.servertype.definition.Publisher;
 import org.eclipse.jst.server.generic.servertype.definition.PublisherData;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ServerTypeFactory;
-import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -160,7 +160,7 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @see org.eclipse.emf.ecore.EPackage.Registry
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#eNS_URI
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#eNS_URI
      * @see #init()
      * @generated
      */

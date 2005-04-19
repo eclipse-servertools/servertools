@@ -47,9 +47,9 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.internal.core.util.ExtensionPointUtil;
 import org.eclipse.jst.server.generic.internal.core.util.FileUtil;
+import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.internal.servertype.definition.util.ServerTypeResourceFactoryImpl;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
-import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
 import org.osgi.framework.Bundle;
 
 public class XMLUtils {

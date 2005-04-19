@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: LaunchConfiguration.java,v 1.5 2005/04/18 00:18:06 gercan Exp $
+ * $Id: LaunchConfiguration.java,v 1.6 2005/04/19 17:49:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -50,7 +50,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * </p>
  *
- * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getLaunchConfiguration()
+ * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration()
  * @model extendedMetaData="name='LaunchConfiguration' kind='elementOnly'"
  * @generated
  */
@@ -65,7 +65,7 @@ public interface LaunchConfiguration extends EObject{
      * <!-- end-user-doc -->
      * @return the value of the '<em>Main Class</em>' attribute.
      * @see #setMainClass(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getLaunchConfiguration_MainClass()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_MainClass()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
      *        extendedMetaData="kind='element' name='mainClass'"
      * @generated
@@ -92,7 +92,7 @@ public interface LaunchConfiguration extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Working Directory</em>' attribute.
      * @see #setWorkingDirectory(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getLaunchConfiguration_WorkingDirectory()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_WorkingDirectory()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
      *        extendedMetaData="kind='element' name='workingDirectory'"
      * @generated
@@ -119,7 +119,7 @@ public interface LaunchConfiguration extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Program Arguments</em>' attribute.
      * @see #setProgramArguments(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getLaunchConfiguration_ProgramArguments()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_ProgramArguments()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
      *        extendedMetaData="kind='element' name='programArguments'"
      * @generated
@@ -146,7 +146,7 @@ public interface LaunchConfiguration extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Vm Parameters</em>' attribute.
      * @see #setVmParameters(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getLaunchConfiguration_VmParameters()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_VmParameters()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
      *        extendedMetaData="kind='element' name='vmParameters'"
      * @generated
@@ -173,7 +173,7 @@ public interface LaunchConfiguration extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Classpath Reference</em>' attribute.
      * @see #setClasspathReference(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getLaunchConfiguration_ClasspathReference()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_ClasspathReference()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
      *        extendedMetaData="kind='element' name='classpathReference'"
      * @generated

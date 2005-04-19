@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Port.java,v 1.4 2005/04/18 00:18:06 gercan Exp $
+ * $Id: Port.java,v 1.5 2005/04/19 17:49:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -48,7 +48,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * </p>
  *
- * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPort()
+ * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPort()
  * @model extendedMetaData="name='Port' kind='elementOnly'"
  * @generated
  */
@@ -63,7 +63,7 @@ public interface Port extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>No</em>' attribute.
      * @see #setNo(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPort_No()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPort_No()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
      *        extendedMetaData="kind='element' name='no'"
      * @generated
@@ -90,7 +90,7 @@ public interface Port extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Name</em>' attribute.
      * @see #setName(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPort_Name()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPort_Name()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
      *        extendedMetaData="kind='element' name='name'"
      * @generated
@@ -117,7 +117,7 @@ public interface Port extends EObject{
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Protocol</em>' attribute.
      * @see #setProtocol(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPort_Protocol()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPort_Protocol()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
      *        extendedMetaData="kind='element' name='protocol'"
      * @generated

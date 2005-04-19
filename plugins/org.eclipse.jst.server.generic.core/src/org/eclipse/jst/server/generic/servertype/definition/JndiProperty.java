@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: JndiProperty.java,v 1.2 2005/04/18 00:18:06 gercan Exp $
+ * $Id: JndiProperty.java,v 1.3 2005/04/19 17:49:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * </p>
  *
- * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getJndiProperty()
+ * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getJndiProperty()
  * @model extendedMetaData="name='jndiProperty' kind='elementOnly'"
  * @generated
  */
@@ -36,7 +36,7 @@ public interface JndiProperty extends EObject {
      * <!-- end-user-doc -->
      * @return the value of the '<em>Name</em>' attribute.
      * @see #setName(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getJndiProperty_Name()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getJndiProperty_Name()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
      *        extendedMetaData="kind='element' name='name'"
      * @generated
@@ -63,7 +63,7 @@ public interface JndiProperty extends EObject {
      * <!-- end-user-doc -->
      * @return the value of the '<em>Value</em>' attribute.
      * @see #setValue(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getJndiProperty_Value()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getJndiProperty_Value()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
      *        extendedMetaData="kind='element' name='value'"
      * @generated

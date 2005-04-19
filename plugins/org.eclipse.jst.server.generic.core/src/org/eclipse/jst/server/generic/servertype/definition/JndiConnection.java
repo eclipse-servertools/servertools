@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: JndiConnection.java,v 1.2 2005/04/18 00:18:06 gercan Exp $
+ * $Id: JndiConnection.java,v 1.3 2005/04/19 17:49:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * </p>
  *
- * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getJndiConnection()
+ * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getJndiConnection()
  * @model extendedMetaData="name='jndiConnection' kind='elementOnly'"
  * @generated
  */
@@ -40,7 +40,7 @@ public interface JndiConnection extends EObject{
      * <!-- end-user-doc -->
      * @return the value of the '<em>Provider Url</em>' attribute.
      * @see #setProviderUrl(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getJndiConnection_ProviderUrl()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getJndiConnection_ProviderUrl()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
      *        extendedMetaData="kind='element' name='providerUrl'"
      * @generated
@@ -84,7 +84,7 @@ public interface JndiConnection extends EObject{
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Jndi Property</em>' containment reference list.
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getJndiConnection_JndiProperty()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getJndiConnection_JndiProperty()
      * @model type="org.eclipse.jst.server.generic.servertype.definition.JndiProperty" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
      *        extendedMetaData="kind='element' name='jndiProperty' group='#group:1'"
      * @generated
@@ -101,7 +101,7 @@ public interface JndiConnection extends EObject{
      * <!-- end-user-doc -->
      * @return the value of the '<em>Initial Context Factory</em>' attribute.
      * @see #setInitialContextFactory(String)
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getJndiConnection_InitialContextFactory()
+     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getJndiConnection_InitialContextFactory()
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
      *        extendedMetaData="kind='element' name='initialContextFactory'"
      * @generated

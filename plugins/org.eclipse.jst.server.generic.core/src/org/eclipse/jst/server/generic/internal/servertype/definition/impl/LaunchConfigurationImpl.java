@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: LaunchConfigurationImpl.java,v 1.3 2005/04/18 19:32:07 gercan Exp $
+ * $Id: LaunchConfigurationImpl.java,v 1.4 2005/04/19 17:49:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
@@ -40,8 +40,8 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
+import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration;
-import org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage;
 
 /**
  * <!-- begin-user-doc -->

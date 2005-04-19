@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeSwitch.java,v 1.2 2005/03/27 12:56:23 gercan Exp $
+ * $Id: ServerTypeSwitch.java,v 1.3 2005/04/19 17:49:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.util;
 
@@ -37,6 +37,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
+import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.servertype.definition.*;
 
 /**
@@ -49,7 +50,7 @@ import org.eclipse.jst.server.generic.servertype.definition.*;
  * until a non-null result is returned,
  * which is the result of the switch.
  * <!-- end-user-doc -->
- * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage
+ * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage
  * @generated
  */
 public class ServerTypeSwitch {
