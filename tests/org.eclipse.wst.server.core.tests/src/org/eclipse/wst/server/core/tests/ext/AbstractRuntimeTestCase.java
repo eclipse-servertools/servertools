@@ -143,6 +143,11 @@ public abstract class AbstractRuntimeTestCase extends TestCase {
 		runtimeWC.setReadOnly(false);
 	}
 	
+	public void test0019SetStub() {
+		runtimeWC.setStub(true);
+		runtimeWC.setStub(false);
+	}
+	
 	public void test0019IsDirty() {
 		assertTrue(runtimeWC.isDirty());
 	}

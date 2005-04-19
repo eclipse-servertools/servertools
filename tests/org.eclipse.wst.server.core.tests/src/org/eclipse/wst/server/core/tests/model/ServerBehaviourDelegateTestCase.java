@@ -129,4 +129,12 @@ public class ServerBehaviourDelegateTestCase extends TestCase {
 	public void test24GetTempDirectory() {
 		delegate.getTempDirectory();
 	}
+	
+	public void test25SetServerStatus() {
+		delegate.setServerStatus(null);
+	}
+
+	public void test26SetModuleStatus() {
+		delegate.setModuleStatus(null, null);
+	}
 }

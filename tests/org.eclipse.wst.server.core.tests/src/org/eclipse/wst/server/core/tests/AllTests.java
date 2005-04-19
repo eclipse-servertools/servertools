@@ -33,6 +33,9 @@ import org.eclipse.wst.server.core.tests.extension.*;
 import org.eclipse.wst.server.core.tests.model.*;
 import org.eclipse.wst.server.core.tests.util.HTTPLaunchableTestCase;
 import org.eclipse.wst.server.core.tests.util.NullModuleArtifactTestCase;
+import org.eclipse.wst.server.core.tests.util.PingThreadTestCase;
+import org.eclipse.wst.server.core.tests.util.ProjectModuleFactoryDelegateTestCase;
+import org.eclipse.wst.server.core.tests.util.ProjectModuleTestCase;
 import org.eclipse.wst.server.core.tests.util.SocketUtilTestCase;
 import org.eclipse.wst.server.core.tests.util.StaticWebTestCase;
 import org.eclipse.wst.server.core.tests.util.TaskTestCase;
@@ -92,6 +95,15 @@ public class AllTests {
 		suite.addTest(new OrderedTestSuite(ModuleResourceDeltaVisitorTestCase.class));
 		suite.addTest(new OrderedTestSuite(ModuleArtifactAdapterDelegateTestCase.class));
 		suite.addTest(new OrderedTestSuite(LaunchableAdapterDelegateTestCase.class));
+		suite.addTest(new OrderedTestSuite(ModuleFactoryListenerTestCase.class));
+		suite.addTest(new OrderedTestSuite(ModuleListenerTestCase.class));
+		suite.addTest(new OrderedTestSuite(ModuleEventTestCase.class));
+		suite.addTest(new OrderedTestSuite(ModuleFactoryEventTestCase.class));
+		suite.addTest(new OrderedTestSuite(ModuleFactoryDelegateTestCase.class));
+		
+		suite.addTest(new OrderedTestSuite(PingThreadTestCase.class));
+		suite.addTest(new OrderedTestSuite(ProjectModuleTestCase.class));
+		suite.addTest(new OrderedTestSuite(ProjectModuleFactoryDelegateTestCase.class));
 		
 		suite.addTest(new OrderedTestSuite(HTTPLaunchableTestCase.class));
 		suite.addTest(new OrderedTestSuite(StaticWebTestCase.class));
