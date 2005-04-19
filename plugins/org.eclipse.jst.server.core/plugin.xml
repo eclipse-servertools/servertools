@@ -27,7 +27,7 @@
        description="%runtimeTypeDescription"
        class="org.eclipse.jst.server.core.internal.GenericRuntime">
        <moduleType
-         types="j2ee"
+         types="j2ee.*"
          versions="*"/>
        <moduleType
          types="utility"
