@@ -130,6 +130,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	 */
 	public void exit() {
 	    try {
+			populateRuntimeDelegateProperties(); 
 	        getRuntimeDelegate().getRuntimeWorkingCopy().save(true,new NullProgressMonitor());
 	    }
 	    catch(Exception e){//unhandled
