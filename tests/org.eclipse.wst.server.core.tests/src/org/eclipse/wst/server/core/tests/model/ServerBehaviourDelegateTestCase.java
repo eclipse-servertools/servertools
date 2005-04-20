@@ -74,10 +74,6 @@ public class ServerBehaviourDelegateTestCase extends TestCase {
 		delegate.setModuleRestartState(null, false);
 	}
 	
-	public void test12SetModules() {
-		delegate.setModules(null);
-	}
-	
 	public void test13PublishStart() throws Exception {
 		delegate.publishStart(null);
 	}
