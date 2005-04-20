@@ -431,7 +431,6 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     }
     public void initialize() {
       super.initialize();
-      setModules(getServer().getModules());
     }
     public void publishFinish(IProgressMonitor monitor) throws CoreException {
         IModule[] modules = this.getServer().getModules();
