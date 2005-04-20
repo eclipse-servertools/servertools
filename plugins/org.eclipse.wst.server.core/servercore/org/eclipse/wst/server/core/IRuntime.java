@@ -61,12 +61,15 @@ public interface IRuntime extends IAdaptable {
 	 * @return a displayable name
 	 */
 	public String getName();
-	
+
 	/**
-	 * Returns the id of this runtime.
+	 * Returns the id of this runtime instance.
 	 * Each runtime (of a given type) has a distinct id, fixed for
 	 * its lifetime. Ids are intended to be used internally as keys;
 	 * they are not intended to be shown to end users.
+	 * <p>
+	 * For the id of the runtime type, use {@link IRuntimeType#getId()}
+	 * </p>
 	 * 
 	 * @return the runtime id
 	 */

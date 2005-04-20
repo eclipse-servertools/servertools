@@ -122,8 +122,8 @@ public abstract class ServerBehaviourDelegate {
 	/**
 	 * Sets the current state of this server.
 	 *
-	 * @param state one of the server state (<code>STATE_XXX</code>)
-	 * constants declared on {@link IServer}
+	 * @param state the current state of the server, one of the state
+	 *    constants defined by {@link IServer}
 	 * @see IServer#getServerState()
 	 */
 	public final void setServerState(int state) {
@@ -144,17 +144,10 @@ public abstract class ServerBehaviourDelegate {
 	}
 
 	/**
-	 * 
-	 * @param modules
-	 */
-	public final void setModules(IModule[] modules) {
-		server.setModules(modules);
-	}
-
-	/**
 	 * Sets the server restart state.
 	 *
-	 * @param state boolean
+	 * @param state <code>true</code> if the server needs to be restarted,
+	 *    and <code>false</code> otherwise
 	 */
 	public final void setServerRestartState(boolean state) {
 		server.setServerRestartState(state);
@@ -163,7 +156,8 @@ public abstract class ServerBehaviourDelegate {
 	/**
 	 * Sets the server publish state.
 	 *
-	 * @param state int
+	 * @param state the current publish state of the server, one of the
+	 *    publish constants defined by {@link IServer}
 	 */
 	public final void setServerPublishState(int state) {
 		server.setServerPublishState(state);
@@ -173,7 +167,8 @@ public abstract class ServerBehaviourDelegate {
 	 * Hook to fire an event when a module state changes.
 	 * 
 	 * @param module the module
-	 * @param state
+	 * @param state the current state of the module, one of the state
+	 *    constants defined by {@link IServer}
 	 */
 	public final void setModuleState(IModule[] module, int state) {
 		server.setModuleState(module, state);
@@ -183,7 +178,8 @@ public abstract class ServerBehaviourDelegate {
 	 * Sets the module publish state.
 	 *
 	 * @param module the module
-	 * @param state int
+	 * @param state the current publish state of the module, one of the
+	 *    publish constants defined by {@link IServer}
 	 */
 	public final void setModulePublishState(IModule[] module, int state) {
 		server.setModulePublishState(module, state);
@@ -193,7 +189,8 @@ public abstract class ServerBehaviourDelegate {
 	 * Sets the module restart state.
 	 *
 	 * @param module the module
-	 * @param state int
+	 * @param state <code>true</code> if the module needs to be restarted,
+	 *    and <code>false</code> otherwise
 	 */
 	public final void setModuleRestartState(IModule[] module, boolean state) {
 		server.setModuleRestartState(module, state);
@@ -224,8 +221,9 @@ public abstract class ServerBehaviourDelegate {
 	 * Clients should never call this method.
 	 * </p>
 	 *
-	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
-	 * @throws CoreException
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException if there is a problem starting the publish
 	 */
 	public void publishStart(IProgressMonitor monitor) throws CoreException {
 		// do nothing
@@ -248,8 +246,9 @@ public abstract class ServerBehaviourDelegate {
 	 *      out all state and cleans up the module on the server before doing a
 	 *      full publish.
 	 *    </ul>
-	 * @param monitor
-	 * @throws CoreException
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException if there is a problem publishing the server
 	 */
 	public abstract void publishServer(int kind, IProgressMonitor monitor) throws CoreException;
 
@@ -288,8 +287,9 @@ public abstract class ServerBehaviourDelegate {
 	 *    <li><code>REMOVED</code>- indicates the module has been removed and should be
 	 *      removed/cleaned up from the server.
 	 *    </ul>
-	 * @param monitor
-	 * @throws CoreException
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException if there is a problem publishing the module
 	 */
 	public abstract void publishModule(int kind, int deltaKind, IModule[] module, IProgressMonitor monitor) throws CoreException;
 
@@ -303,8 +303,9 @@ public abstract class ServerBehaviourDelegate {
 	 * Clients should never call this method.
 	 * </p>
 	 *
-	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
-	 * @throws CoreException
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException if there is a problem stopping the publish
 	 */
 	public void publishFinish(IProgressMonitor monitor) throws CoreException {
 		// do nothing
@@ -316,9 +317,10 @@ public abstract class ServerBehaviourDelegate {
 	 * This method should not blindly update the launch configuration in cases where the user has
 	 * access to change the launch configuration by hand.
 	 * 
-	 * @param workingCopy
-	 * @param monitor
-	 * @throws CoreException
+	 * @param workingCopy a launch configuration working copy
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException if there is an error setting up the configuration
 	 */
 	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException {
 		// do nothing
@@ -435,26 +437,25 @@ public abstract class ServerBehaviourDelegate {
 	public IModuleResourceDelta[] getPublishedResourceDelta(IModule[] module) {
 		return server.getPublishedResourceDelta(module);
 	}
-	
+
 	/**
 	 * Returns a temporary directory that the requestor can use
 	 * throughout it's lifecycle. This is primary to be used by
 	 * servers for working directories, server specific
 	 * files, etc.
-	 *
-	 * <p>As long as the same key is used to call this method on
-	 * each use of the workbench, this method directory will return
-	 * the same directory. If the directory is not requested over a
-	 * period of time, the directory may be deleted and a new one
-	 * will be assigned on the next request. For this reason, a
-	 * server should request the temp directory on startup
-	 * if it wants to store files there. In all cases, the server
-	 * should have a backup plan to refill the directory
+	 * <p>
+	 * This method directory will return the same directory on
+	 * each use of the workbench. If the directory is not requested
+	 * over a period of time, the directory may be deleted and a
+	 * new one will be assigned on the next request. For this
+	 * reason, a server may want to request the temp directory on
+	 * startup if it wants to store files there. In any case, the
+	 * server should have a backup plan to refill the directory
 	 * in case it has been deleted since last use.</p>
 	 *
-	 * @return org.eclipse.core.runtime.IPath
+	 * @return a temporary directory
 	 */
-	public IPath getTempDirectory() {
+	public final IPath getTempDirectory() {
 		return server.getTempDirectory();
 	}
 
@@ -463,7 +464,7 @@ public abstract class ServerBehaviourDelegate {
 	 *  
 	 * @param status the status
 	 */
-	public void setServerStatus(IStatus status) {
+	public final void setServerStatus(IStatus status) {
 		server.setServerStatus(status);
 	}
 
@@ -473,7 +474,7 @@ public abstract class ServerBehaviourDelegate {
 	 * @param module the module
 	 * @param status the status
 	 */
-	public void setModuleStatus(IModule[] module, IStatus status) {
+	public final void setModuleStatus(IModule[] module, IStatus status) {
 		server.setModuleStatus(module, status);
 	}
 }

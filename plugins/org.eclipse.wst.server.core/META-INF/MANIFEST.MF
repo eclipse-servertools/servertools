@@ -9,6 +9,7 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.server.core,
  org.eclipse.wst.server.core.internal,
+ org.eclipse.wst.server.core.internal.provisional,
  org.eclipse.wst.server.core.model,
  org.eclipse.wst.server.core.util
 Require-Bundle: org.eclipse.core.runtime,

@@ -74,7 +74,6 @@ public class Server extends Base implements IServer {
 	
 	// transient fields
 	protected transient String mode = ILaunchManager.RUN_MODE;
-	protected transient IModule[] serverModules;
 	protected transient int serverState = STATE_UNKNOWN;
 	protected transient int serverSyncState;
 	protected transient boolean serverRestartNeeded;
@@ -373,10 +372,6 @@ public class Server extends Base implements IServer {
 
 	public void setMode(String m) {
 		this.mode = m;
-	}
-
-	public void setModules(IModule[] modules) {
-		this.serverModules = modules;
 	}
 
 	public void setModuleState(IModule[] module, int state) {
@@ -715,14 +710,6 @@ public class Server extends Base implements IServer {
 		}
 		return publishInfo;
 	}
-
-	/*
-	 * Publish to the server using the progress monitor. The result of the
-	 * publish operation is returned as an IStatus.
-	 */
-	/*public IStatus publish(IProgressMonitor monitor) {
-		return publish(PUBLISH_INCREMENTAL, monitor);
-	}*/
 
 	/*
 	 * Publish to the server using the progress monitor. The result of the
@@ -1719,18 +1706,6 @@ public class Server extends Base implements IServer {
 		IModule[] modules2 = new IModule[modules.size()];
 		modules.toArray(modules2);
 		return modules2;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.core.IServer#getServerModules()
-	 */
-	public IModule[] getServerModules(IProgressMonitor monitor) {
-		try {
-			return serverModules;
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate getModules() " + toString(), e);
-			return new IModule[0];
-		}
 	}
 
 	/* (non-Javadoc)

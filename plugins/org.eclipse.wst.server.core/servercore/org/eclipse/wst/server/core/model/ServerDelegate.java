@@ -238,15 +238,17 @@ public abstract class ServerDelegate {
 	 * <p>If it does return valid parent(s), this method will always return
 	 * the topmost parent module(s), even if there are a few levels
 	 * (a heirarchy) of modules.</p>
+	 * 
+	 * [issue: should the parameter be IModule[]?]
 	 *
-	 * @param module org.eclipse.wst.server.core.IModule
+	 * @param module a module
 	 * @return an array of possible root modules
-	 * @throws org.eclipse.core.runtime.CoreException
+	 * @throws CoreException if anything went wrong
 	 *
 	 * @see org.eclipse.wst.server.core.IServerAttributes#getRootModules(IModule, IProgressMonitor)
 	 */
 	public abstract IModule[] getRootModules(IModule module) throws CoreException;
-	
+
 	/**
 	 * Returns an array of IServerPorts that this server has.
 	 *
@@ -359,7 +361,7 @@ public abstract class ServerDelegate {
 	 * This method is called to import the server configuration from the given
 	 * runtime.
 	 * 
-	 * @param runtime
+	 * @param runtime a server runtime
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 */
@@ -370,8 +372,9 @@ public abstract class ServerDelegate {
 	/**
 	 * This method is called whenever the server configuration should be saved.
 	 * 
-	 * @param monitor
-	 * @throws CoreException
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException if there was a problem saving
 	 */
 	public void saveConfiguration(IProgressMonitor monitor) throws CoreException {
 		// do nothing

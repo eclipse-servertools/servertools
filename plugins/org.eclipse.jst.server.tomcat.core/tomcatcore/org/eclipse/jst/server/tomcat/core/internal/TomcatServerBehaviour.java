@@ -51,7 +51,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	}
 	
 	public void initialize() {
-		setModules(getServer().getModules());
+		// do nothing
 	}
 
 	public TomcatRuntime getTomcatRuntime() {
@@ -187,7 +187,6 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		monitor.done();
 		
 		setServerPublishState(IServer.PUBLISH_STATE_NONE);
-		setModules(getServer().getModules());
 	}
 
 	/*
