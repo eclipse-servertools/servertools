@@ -143,11 +143,11 @@ public class TasksWizardFragment extends WizardFragment {
 			serverTypeId = server.getServerType().getId();
 		
 		// server tasks
-		IServerTask[] serverTasks = ServerPlugin.getServerTasks();
-		if (serverTasks != null) {
-			int size = serverTasks.length;
+		IPublishTask[] publishTasks = ServerPlugin.getPublishTasks();
+		if (publishTasks != null) {
+			int size = publishTasks.length;
 			for (int i = 0; i < size; i++) {
-				IServerTask task = serverTasks[i];
+				IPublishTask task = publishTasks[i];
 				if (serverTypeId != null && task.supportsType(serverTypeId)) {
 					IOptionalTask[] tasks2 = task.getTasks(server, modules);
 					if (tasks2 != null) {

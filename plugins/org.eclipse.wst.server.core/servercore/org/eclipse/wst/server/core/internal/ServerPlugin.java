@@ -39,8 +39,8 @@ public class ServerPlugin extends Plugin {
 	// singleton instance of this class
 	private static ServerPlugin singleton;
 
-	// cached copy of all server tasks
-	private static List serverTasks;
+	// cached copy of all publish tasks
+	private static List publishTasks;
 	
 	//	cached copy of all server monitors
 	private static List monitors;
@@ -444,45 +444,45 @@ public class ServerPlugin extends Plugin {
 	}
 	
 	/**
-	 * Returns an array of all known server tasks.
+	 * Returns an array of all known publish tasks.
 	 * <p>
 	 * A new array is returned on each call, so clients may store or modify the result.
 	 * </p>
 	 * 
-	 * @return a possibly-empty array of server tasks instances {@link IServerTask}
+	 * @return a possibly-empty array of publish tasks instances {@link IPublishTask}
 	 */
-	public static IServerTask[] getServerTasks() {
-		if (serverTasks == null)
-			loadServerTasks();
-		IServerTask[] st = new IServerTask[serverTasks.size()];
-		serverTasks.toArray(st);
+	public static IPublishTask[] getPublishTasks() {
+		if (publishTasks == null)
+			loadPublishTasks();
+		IPublishTask[] st = new IPublishTask[publishTasks.size()];
+		publishTasks.toArray(st);
 		return st;
 	}
 	
 	/**
-	 * Load the server task extension point.
+	 * Load the publish task extension point.
 	 */
-	private static synchronized void loadServerTasks() {
-		if (serverTasks != null)
+	private static synchronized void loadPublishTasks() {
+		if (publishTasks != null)
 			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .serverTasks extension point ->-");
+		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .publishTasks extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "serverTasks");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "publishTasks");
 
 		int size = cf.length;
-		serverTasks = new ArrayList(size);
+		publishTasks = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
-				serverTasks.add(new ServerTask(cf[i]));
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded serverTask: " + cf[i].getAttribute("id"));
+				publishTasks.add(new PublishTask(cf[i]));
+				Trace.trace(Trace.EXTENSION_POINT, "  Loaded publishTask: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load serverTask: " + cf[i].getAttribute("id"), t);
+				Trace.trace(Trace.SEVERE, "  Could not load publishTask: " + cf[i].getAttribute("id"), t);
 			}
 		}
 		
-		sortOrderedList(serverTasks);
+		sortOrderedList(publishTasks);
 		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .serverTasks extension point -<-");
+		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .publishTasks extension point -<-");
 	}
 	
 	/**

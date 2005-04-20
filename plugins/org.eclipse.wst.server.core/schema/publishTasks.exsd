@@ -3,17 +3,17 @@
 <schema targetNamespace="org.eclipse.wst.server.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.wst.server.core" id="serverLocators" name="Server Locators"/>
+         <meta.schema plugin="org.eclipse.wst.server.core" id="publishTasks" name="Publish Tasks"/>
       </appInfo>
       <documentation>
-         This extension point is used to locate new servers on the local or remote machines.
+         This extension point is used to provide a task that is run while publishing to a server.
       </documentation>
    </annotation>
 
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="serverLocator" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="publishTask" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -39,13 +39,15 @@
       </complexType>
    </element>
 
-   <element name="serverLocator">
+   <element name="publishTask">
       <annotation>
          <appInfo>
             <meta.element labelAttribute="name"/>
          </appInfo>
       </annotation>
       <complexType>
+         <sequence>
+         </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
@@ -56,25 +58,18 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;ServerLocatorDelegate&lt;/samp&gt;.
-Server locator instances of this type will delegate to instances of this class.
+                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;org.eclipse.wst.server.core.model.PublishTaskDelegate&lt;/samp&gt;.
+Publish task instances of this type will delegate to instances of this class.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.PublishTaskDelegate"/>
                </appInfo>
-            </annotation>
-         </attribute>
-         <attribute name="supportsRemoteHosts" type="string" use="required">
-            <annotation>
-               <documentation>
-                  local and/or remote
-               </documentation>
             </annotation>
          </attribute>
          <attribute name="typeIds" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a comma separated list of server type ids that this task may apply to. Used for memory &amp; performance reasons
                </documentation>
             </annotation>
          </attribute>
@@ -86,17 +81,11 @@ Server locator instances of this type will delegate to instances of this class.
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         The following is an example of a server locator extension point:
+         The following is an example of a publish task extension point:
 
 &lt;p&gt;
 &lt;pre&gt;
-  &lt;extension point=&quot;org.eclipse.wst.server.core.serverLocators&quot;&gt;
-    &lt;serverLocator
-       id=&quot;com.example.locator&quot;
-       name=&quot;%serverLocatorName&quot;
-       description=&quot;%serverLocatorDescription&quot;
-       class=&quot;com.example.ExampleServerLocator&quot;/&gt;
-  &lt;/extension&gt;
+
 &lt;/pre&gt;
 &lt;/p&gt;
       </documentation>
@@ -107,7 +96,7 @@ Server locator instances of this type will delegate to instances of this class.
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.server.core.internal.provisional.ServerLocatorDelegate&lt;/b&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.server.core.model.PublishTaskDelegate&lt;/b&gt;.
       </documentation>
    </annotation>
 

@@ -20,7 +20,7 @@ import org.eclipse.wst.server.core.IServer;
  * 
  * @since 1.0
  */
-public interface IServerTask {
+public interface IPublishTask {
 	/**
 	 * Returns the id of the adapter.
 	 *

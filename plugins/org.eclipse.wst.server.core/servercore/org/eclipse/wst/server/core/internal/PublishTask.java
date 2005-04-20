@@ -19,16 +19,16 @@ import org.eclipse.wst.server.core.model.*;
 /**
  * 
  */
-public class ServerTask implements IServerTask {
+public class PublishTask implements IPublishTask {
 	private IConfigurationElement element;
-	private ServerTaskDelegate delegate;
+	private PublishTaskDelegate delegate;
 
 	/**
-	 * ServerTask constructor comment.
+	 * PublishTask constructor comment.
 	 * 
 	 * @param element a configuration element 
 	 */
-	public ServerTask(IConfigurationElement element) {
+	public PublishTask(IConfigurationElement element) {
 		super();
 		this.element = element;
 	}
@@ -59,12 +59,12 @@ public class ServerTask implements IServerTask {
 	}
 
 	/*
-	 * @see IServerTask#getDelegate()
+	 * @see IPublishTask#getDelegate()
 	 */
-	public ServerTaskDelegate getDelegate() {
+	public PublishTaskDelegate getDelegate() {
 		if (delegate == null) {
 			try {
-				delegate = (ServerTaskDelegate) element.createExecutableExtension("class");
+				delegate = (PublishTaskDelegate) element.createExecutableExtension("class");
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString() + ": " + t.getMessage());
 			}
@@ -91,6 +91,6 @@ public class ServerTask implements IServerTask {
 	 * @return java.lang.String
 	 */
 	public String toString() {
-		return "ServerTask[" + getId() + "]";
+		return "PublishTask[" + getId() + "]";
 	}
 }

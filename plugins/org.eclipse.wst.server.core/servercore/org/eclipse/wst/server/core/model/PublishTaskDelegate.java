@@ -15,15 +15,15 @@ import java.util.List;
 import org.eclipse.wst.server.core.IOptionalTask;
 import org.eclipse.wst.server.core.IServer;
 /**
- * A server task delegate.
+ * A publish task delegate.
  * 
- * <p>This is the implementation of a serverTask extension point.</p>
+ * <p>This is the implementation of a publishTask extension point.</p>
  * 
  * @since 1.0
  */
-public abstract class ServerTaskDelegate {
+public abstract class PublishTaskDelegate {
 	/**
-	 * Returns the tasks that should be performed on the server.
+	 * Returns the tasks that should be performed during publishing.
 	 * 
 	 * @param server the server
 	 * @param modules a list containing IModule arrays

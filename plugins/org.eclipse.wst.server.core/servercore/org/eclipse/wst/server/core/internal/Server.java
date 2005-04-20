@@ -29,7 +29,7 @@ import org.eclipse.wst.server.core.util.SocketUtil;
 public class Server extends Base implements IServer {
 	/**
 	 * Server id attribute (value "server-id") of launch configurations.
-	 * This attribute is used to tag a launch configuration with th
+	 * This attribute is used to tag a launch configuration with the
 	 * id of the corresponding server.
 	 * 
 	 * @see ILaunchConfiguration
@@ -743,7 +743,6 @@ public class Server extends Base implements IServer {
 		Trace.trace(Trace.FINEST, "-->-- Publishing to server: " + toString() + " -->--");
 
 		final List moduleList = new ArrayList();
-		//final List taskParentList = new ArrayList();
 		final List kindList = new ArrayList();
 		
 		final ServerPublishInfo spi = getServerPublishInfo();
@@ -765,13 +764,6 @@ public class Server extends Base implements IServer {
 
 		visit(visitor, monitor);
 		
-		// build arrays & lists
-		//List[] taskParents = new List[taskParentList.size()];
-		//taskParentList.toArray(taskParents);
-		//List parents = parentList;
-		//IModule[] modules2 = new IModule[moduleList.size()];
-		//moduleList.toArray(modules2);
-		
 		List tasks = getTasks(moduleList);
 		
 		spi.addRemovedModules(moduleList, kindList);
@@ -779,17 +771,6 @@ public class Server extends Base implements IServer {
 		while (moduleList.size() > kindList.size()) {
 			kindList.add(new Integer(ServerBehaviourDelegate.REMOVED));
 		}
-		
-		//parents = parentList;
-		//modules2 = new IModule[moduleList.size()];
-		//moduleList.toArray(modules2);
-		
-		/*int size = parents.size();
-		int[] deltaKind = new int[size];
-		for (int i = 0; i < size; i++) {
-			Integer in = (Integer) kindList.get(i);
-			deltaKind[i] = in.intValue();
-		}*/
 
 		int size = 2000 + 3500 * moduleList.size() + 500 * tasks.size();
 		
@@ -798,11 +779,6 @@ public class Server extends Base implements IServer {
 
 		// TODO - group up status until the end and use better message based on success or failure
 		MultiStatus multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.publishingStatus, null);
-		
-		// perform tasks
-		IStatus taskStatus = performTasks(tasks, monitor);
-		if (taskStatus != null)
-			multi.add(taskStatus);
 
 		if (monitor.isCanceled())
 			return new Status(IStatus.INFO, ServerPlugin.PLUGIN_ID, 0, Messages.publishingCancelled, null);
@@ -817,6 +793,11 @@ public class Server extends Base implements IServer {
 			firePublishFinished(ce.getStatus());
 			return ce.getStatus();
 		}
+		
+		// perform tasks
+		IStatus taskStatus = performTasks(tasks, monitor);
+		if (taskStatus != null)
+			multi.add(taskStatus);
 		
 		// publish the server
 		try {
@@ -959,11 +940,11 @@ public class Server extends Base implements IServer {
 		
 		String serverTypeId = getServerType().getId();
 		
-		IServerTask[] serverTasks = ServerPlugin.getServerTasks();
-		if (serverTasks != null) {
-			int size = serverTasks.length;
+		IPublishTask[] publishTasks = ServerPlugin.getPublishTasks();
+		if (publishTasks != null) {
+			int size = publishTasks.length;
 			for (int i = 0; i < size; i++) {
-				IServerTask task = serverTasks[i];
+				IPublishTask task = publishTasks[i];
 				if (task.supportsType(serverTypeId)) {
 					IOptionalTask[] tasks2 = task.getTasks(this, modules2);
 					if (tasks2 != null) {
