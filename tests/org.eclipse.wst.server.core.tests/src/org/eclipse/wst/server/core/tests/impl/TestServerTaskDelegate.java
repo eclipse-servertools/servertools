@@ -13,9 +13,9 @@ package org.eclipse.wst.server.core.tests.impl;
 import java.util.List;
 import org.eclipse.wst.server.core.IOptionalTask;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.model.ServerTaskDelegate;
+import org.eclipse.wst.server.core.model.PublishTaskDelegate;
 
-public class TestServerTaskDelegate extends ServerTaskDelegate {
+public class TestServerTaskDelegate extends PublishTaskDelegate {
 	public IOptionalTask[] getTasks(IServer server, List modules) {
 		return null;
 	}

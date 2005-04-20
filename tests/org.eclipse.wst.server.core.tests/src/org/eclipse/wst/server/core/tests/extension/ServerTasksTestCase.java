@@ -14,7 +14,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.wst.server.core.internal.IServerTask;
+import org.eclipse.wst.server.core.internal.IPublishTask;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 
 public class ServerTasksTestCase extends TestCase {
@@ -23,7 +23,7 @@ public class ServerTasksTestCase extends TestCase {
 	}
 
 	public void testServerTasksExtension() throws Exception {
-		IServerTask[] serverTasks = ServerPlugin.getServerTasks();
+		IPublishTask[] serverTasks = ServerPlugin.getPublishTasks();
 		if (serverTasks != null) {
 			int size = serverTasks.length;
 			for (int i = 0; i < size; i++)
