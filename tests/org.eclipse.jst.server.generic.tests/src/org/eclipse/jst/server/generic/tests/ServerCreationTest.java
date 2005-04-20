@@ -158,12 +158,7 @@ public class ServerCreationTest extends TestCase {
 		IRuntimeType listWeb[] = ServerUtil.getRuntimeTypes("j2ee.web", null);
 		assertNotNull(listWeb);
 
-		boolean found = false;
-		for (int i = 0; i < listWeb.length; i++) {
-			IRuntimeType runtimeType = listWeb[i];
-			if ("J2EE Runtime Library".equals(runtimeType.getName()))
-				found = true;
-		}
+		boolean found = listWeb.length>0;
 		assertTrue(found);
 	}
 
