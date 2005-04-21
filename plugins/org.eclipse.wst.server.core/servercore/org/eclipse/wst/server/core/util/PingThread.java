@@ -75,7 +75,11 @@ public class PingThread {
 		while (!stop) {
 			try {
 				if (count == maxPings) {
-					server2.stop(false);
+					try {
+						server2.stop(false);
+					} catch (Exception e) {
+						Trace.trace(Trace.FINEST, "Ping: could not stop server");
+					}
 					stop = true;
 					break;
 				}
