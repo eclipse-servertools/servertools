@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.tests.wizard;
 
+import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.tests.OrderedTestSuite;
-import org.eclipse.wst.server.ui.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 
 import junit.framework.Test;
