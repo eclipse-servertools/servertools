@@ -16,7 +16,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.wst.server.ui.editor.IServerEditorSection;
 
-public class TestServerEditorSection implements IServerEditorSection{
+public class TestServerEditorSection implements IServerEditorSection {
 	public void init(IEditorSite site, IEditorInput input) {
 		// ignore
 	}

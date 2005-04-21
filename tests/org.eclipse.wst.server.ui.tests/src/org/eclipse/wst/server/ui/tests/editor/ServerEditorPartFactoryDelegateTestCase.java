@@ -24,7 +24,7 @@ public class ServerEditorPartFactoryDelegateTestCase extends TestCase {
 		return new OrderedTestSuite(ServerEditorPartFactoryDelegateTestCase.class, "ServerEditorPartFactoryDelegateTestCase");
 	}
 
-	public void test00CreateDelegate() throws Exception {
+	public void test00CreateEditor() {
 		delegate = new TestServerEditorPartFactoryDelegate();
 	}
 	

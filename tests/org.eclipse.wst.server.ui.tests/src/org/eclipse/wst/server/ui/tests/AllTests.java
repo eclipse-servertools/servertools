@@ -15,6 +15,8 @@ import org.eclipse.wst.server.ui.tests.dialog.PreferencesTestCase;
 import org.eclipse.wst.server.ui.tests.dialog.ViewTestCase;
 import org.eclipse.wst.server.ui.tests.editor.*;
 import org.eclipse.wst.server.ui.tests.wizard.IWizardHandleTestCase;
+import org.eclipse.wst.server.ui.tests.wizard.TaskWizardTestCase;
+import org.eclipse.wst.server.ui.tests.wizard.WizardFragmentTestCase;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -27,10 +29,13 @@ public class AllTests {
 		
 		suite.addTestSuite(ServerUICoreTestCase.class);
 		suite.addTestSuite(ServerUIUtilTestCase.class);
+		suite.addTest(new OrderedTestSuite(ServerLaunchConfigurationTabTestCase.class));
 		
 		suite.addTest(new OrderedTestSuite(ICommandManagerTestCase.class));
 		suite.addTest(new OrderedTestSuite(IServerEditorPartInputTestCase.class));
 		suite.addTest(new OrderedTestSuite(IServerEditorSectionTestCase.class));
+		suite.addTest(new OrderedTestSuite(ServerEditorSectionTestCase.class));
+		suite.addTest(new OrderedTestSuite(ServerEditorPartTestCase.class));
 		
 		suite.addTestSuite(DialogsTestCase.class);
 		suite.addTestSuite(PreferencesTestCase.class);
@@ -42,6 +47,8 @@ public class AllTests {
 		suite.addTest(new OrderedTestSuite(ServerEditorPartFactoryDelegateTestCase.class));
 		
 		suite.addTestSuite(IWizardHandleTestCase.class);
+		suite.addTest(new OrderedTestSuite(TaskWizardTestCase.class));
+		suite.addTest(new OrderedTestSuite(WizardFragmentTestCase.class));
 		//$JUnit-END$
 		return suite;
 	}
