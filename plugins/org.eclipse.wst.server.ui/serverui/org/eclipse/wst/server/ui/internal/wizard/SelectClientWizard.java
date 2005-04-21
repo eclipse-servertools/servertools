@@ -14,7 +14,6 @@ import org.eclipse.wst.server.core.internal.IClient;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.page.SelectClientComposite;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
-import org.eclipse.wst.server.ui.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 import org.eclipse.swt.widgets.Composite;
 /**

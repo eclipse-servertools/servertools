@@ -24,7 +24,6 @@ import org.eclipse.wst.server.ui.internal.task.*;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
-import org.eclipse.wst.server.ui.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * A wizard used to select a server from various lists.

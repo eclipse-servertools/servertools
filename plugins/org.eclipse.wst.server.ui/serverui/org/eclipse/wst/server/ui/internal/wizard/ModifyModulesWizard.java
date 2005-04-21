@@ -17,7 +17,6 @@ import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.task.SaveServerTask;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
-import org.eclipse.wst.server.ui.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * A wizard used to add and remove modules.

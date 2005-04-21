@@ -45,7 +45,7 @@ import org.eclipse.wst.server.ui.internal.command.*;
 import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
 import org.eclipse.wst.server.ui.internal.task.SaveRuntimeTask;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
-import org.eclipse.wst.server.ui.wizard.TaskWizard;
+import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * Server general editor page.

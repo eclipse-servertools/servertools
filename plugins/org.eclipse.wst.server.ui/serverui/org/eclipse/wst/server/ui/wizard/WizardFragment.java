@@ -117,7 +117,7 @@ public abstract class WizardFragment {
 	/**
 	 * Gives the fragment a chance to update it's child fragments.
 	 */
-	protected void updateChildFragments() {
+	public void updateChildFragments() {
 		listImpl = null;
 	}
 

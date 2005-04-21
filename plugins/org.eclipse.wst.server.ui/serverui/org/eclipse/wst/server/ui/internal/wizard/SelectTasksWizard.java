@@ -19,7 +19,6 @@ import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
 import org.eclipse.wst.server.ui.internal.task.InputWizardFragment;
 import org.eclipse.wst.server.ui.internal.task.SaveServerTask;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
-import org.eclipse.wst.server.ui.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * A wizard used to select server and module tasks.

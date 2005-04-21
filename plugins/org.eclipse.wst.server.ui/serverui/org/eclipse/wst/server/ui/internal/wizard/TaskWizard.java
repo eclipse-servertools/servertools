@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.ui.wizard;
+package org.eclipse.wst.server.ui.internal.wizard;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -35,6 +35,7 @@ import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.wizard.page.WorkspaceRunnableAdapter;
+import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * A wizard used to execute tasks.
  * 

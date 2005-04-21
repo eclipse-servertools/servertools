@@ -49,9 +49,9 @@ import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
 import org.eclipse.wst.server.ui.internal.task.SaveRuntimeTask;
 import org.eclipse.wst.server.ui.internal.viewers.RuntimeComposite;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
+import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewRuntimeWizardFragment;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
-import org.eclipse.wst.server.ui.wizard.TaskWizard;
 /**
  * The preference page that holds server runtimes.
  */
