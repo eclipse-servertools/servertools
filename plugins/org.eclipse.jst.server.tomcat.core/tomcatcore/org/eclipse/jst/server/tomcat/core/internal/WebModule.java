@@ -69,4 +69,21 @@ public class WebModule implements ITomcatWebModule {
 	public boolean isReloadable() {
 		return reloadable;
 	}
+	
+	/**
+	 * @see Object#equals(Object)
+	 */
+	public boolean equals(Object obj) {
+		if (!(obj instanceof WebModule))
+			return false;
+		
+		WebModule wm = (WebModule) obj;
+		if (!getDocumentBase().equals(wm.getDocumentBase()))
+			return false;
+		if (!getPath().equals(wm.getPath()))
+			return false;
+		if (!getMemento().equals(wm.getMemento()))
+			return false;
+		return true;
+	}
 }

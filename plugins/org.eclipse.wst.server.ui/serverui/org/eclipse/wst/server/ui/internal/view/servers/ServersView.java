@@ -133,7 +133,10 @@ public class ServersView extends ViewPart {
 			public void widgetDefaultSelected(SelectionEvent event) {
 				try {
 					TreeItem item = treeTable.getSelection()[0];
-					IServer server = (IServer) item.getData();
+					Object data = item.getData();
+					if (!(data instanceof IServer))
+						return;
+					IServer server = (IServer) data;
 					ServerUIPlugin.editServer(server);
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Could not open server", e);
