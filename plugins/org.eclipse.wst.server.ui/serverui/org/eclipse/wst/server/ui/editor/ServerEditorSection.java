@@ -95,7 +95,7 @@ public abstract class ServerEditorSection implements IServerEditorSection {
 	 * 
 	 * @param editor the editor
 	 */
-	public void setServerResourceEditorPart(ServerEditorPart editor) {
+	public void setServerEditorPart(ServerEditorPart editor) {
 		this.editor = editor;
 	}
 
@@ -125,5 +125,12 @@ public abstract class ServerEditorSection implements IServerEditorSection {
 	 */
 	public FormToolkit getFormToolkit(Display display) {
 		return editor.getFormToolkit(display);
+	}
+
+	/**
+	 * @see IServerEditorSection#dispose()
+	 */
+	public void dispose() {
+		// ignore
 	}
 }

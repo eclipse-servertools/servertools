@@ -179,7 +179,7 @@ public abstract class ServerEditorPart extends EditorPart {
 							&& factory.shouldCreateSection(server)) {
 						IServerEditorSection section = factory.createSection();
 						if (section instanceof ServerEditorSection)
-							((ServerEditorSection) section).setServerResourceEditorPart(this);
+							((ServerEditorSection) section).setServerEditorPart(this);
 						sections.add(section);
 						List list = null;
 						try {
