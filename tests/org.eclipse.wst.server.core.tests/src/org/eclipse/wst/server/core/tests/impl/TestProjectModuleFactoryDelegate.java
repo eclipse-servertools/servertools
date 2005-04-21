@@ -28,6 +28,11 @@ public class TestProjectModuleFactoryDelegate extends ProjectModuleFactoryDelega
 		createModules(null);
 		getListenerPaths();
 		isValidModule(null);
+		try {
+			handleGlobalProjectChange(null, null);
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 
 	protected boolean isValidModule(IProject project) {

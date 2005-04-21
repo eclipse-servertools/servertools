@@ -26,7 +26,24 @@ public class PingThreadTestCase extends TestCase {
 		ping = new PingThread(null, null, null, 10);
 	}
 
-	public void test01Create() {
+	public void test01StopPinging() {
 		ping.stopPinging();
+	}
+	
+	public void test02TestProtected() {
+		class MyPingThread extends PingThread {
+			public MyPingThread() {
+				super(null, null, null, 0);
+			}
+			public void testProtected() {
+				try {
+					ping();
+				} catch (Exception e) {
+					// ignore
+				}
+			}
+		}
+		MyPingThread mpt = new MyPingThread();
+		mpt.testProtected();
 	}
 }
