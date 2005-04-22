@@ -104,7 +104,7 @@ public class ServerEventTestCase extends TestCase {
 			public void synchronousStop(boolean force) {
 				// do nothing.
 			}
-			public IStatus canRestartModule(IModule[] module) {
+			public IStatus canRestartModule(IModule[] module, IProgressMonitor monitor) {
 				return null;
 			}
 			public boolean getModuleRestartState(IModule[] module) {
@@ -143,6 +143,9 @@ public class ServerEventTestCase extends TestCase {
 			public boolean isDelegateLoaded() {
 				return false;
 			}
+			public Object loadAdapter(Class c, IProgressMonitor monitor) {
+				return null;
+			}
 			public IStatus validateEdit(Object context) {
 				return null;
 			}
@@ -179,7 +182,7 @@ public class ServerEventTestCase extends TestCase {
 			public IModule[] getRootModules(IModule module, IProgressMonitor monitor) throws CoreException {
 				return null;
 			}
-			public ServerPort[] getServerPorts() {
+			public ServerPort[] getServerPorts(IProgressMonitor monitor) {
 				return null;
 			}
 			public Object getAdapter(Class adapter) {

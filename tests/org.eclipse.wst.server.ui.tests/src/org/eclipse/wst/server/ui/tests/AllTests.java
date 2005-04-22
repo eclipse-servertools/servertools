@@ -43,8 +43,6 @@ public class AllTests {
 		
 		suite.addTest(new OrderedTestSuite(IOrderedTestCase.class));
 		suite.addTest(new OrderedTestSuite(ServerEditorActionFactoryDelegateTestCase.class));
-		suite.addTest(new OrderedTestSuite(ServerEditorPageSectionFactoryDelegateTestCase.class));
-		suite.addTest(new OrderedTestSuite(ServerEditorPartFactoryDelegateTestCase.class));
 		
 		suite.addTestSuite(IWizardHandleTestCase.class);
 		suite.addTest(new OrderedTestSuite(TaskWizardTestCase.class));

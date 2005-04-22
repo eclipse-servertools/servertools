@@ -129,7 +129,7 @@ public abstract class AbstractServerTestCase extends TestCase {
 	}
 	
 	public void test0016GetServerPorts() {
-		ServerPort[] ports = server.getServerPorts();
+		ServerPort[] ports = server.getServerPorts(null);
 		if (ports != null) {
 			int size = ports.length;
 			for (int i = 0; i < size; i++) {
@@ -183,7 +183,7 @@ public abstract class AbstractServerTestCase extends TestCase {
 	}
 	
 	public void test0026CanRestartModule() {
-		server.canRestartModule(null);
+		server.canRestartModule(null, null);
 	}
 	
 	public void test0027AddServerListener() {
@@ -216,10 +216,6 @@ public abstract class AbstractServerTestCase extends TestCase {
 	
 	public void test0034IsWorkingCopy() {
 		serverAttr.isWorkingCopy();
-	}
-	
-	public void test0034IsDelegateLoaded() {
-		serverAttr.isDelegateLoaded();
 	}
 	
 	public void test0035GetHost() {
@@ -263,7 +259,7 @@ public abstract class AbstractServerTestCase extends TestCase {
 	}
 	
 	public void test0044GetServerPorts() {
-		serverAttr.getServerPorts();
+		serverAttr.getServerPorts(null);
 	}
 	
 	public void test0045Delete() {

@@ -21,7 +21,7 @@ public class ServerEditorPartTestCase extends TestCase {
 	protected static ServerEditorPart editor;
 
 	public static Test suite() {
-		return new OrderedTestSuite(ServerEditorPartFactoryDelegateTestCase.class, "ServerEditorPartFactoryDelegateTestCase");
+		return new OrderedTestSuite(ServerEditorPartTestCase.class, "ServerEditorPartTestCase");
 	}
 
 	public void test00CreateEditor() {

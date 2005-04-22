@@ -109,11 +109,7 @@ public abstract class AbstractRuntimeTestCase extends TestCase {
 	public void test0010IsReadOnly() {
 		runtime.isReadOnly();
 	}
-	
-	public void test0011IsDelegateLoaded() {
-		runtime.isDelegateLoaded();
-	}
-	
+
 	public void test0012GetTimestamp() {
 		((Runtime)runtime).getTimestamp();
 	}
