@@ -112,7 +112,7 @@ public class ServerPublishInfo {
 			for (int i = 0; i < size; i++) {
 				IModule[] module = (IModule[]) moduleList.get(i);
 				String key2 = getKey(module);
-				if (key.equals(key2))
+				if (key != null && key.equals(key2))
 					found = true;
 			}
 			if (!found) {
