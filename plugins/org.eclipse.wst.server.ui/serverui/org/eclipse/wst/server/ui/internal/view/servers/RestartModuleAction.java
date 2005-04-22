@@ -35,7 +35,7 @@ public class RestartModuleAction extends Action {
 		ServerLabelProvider slp = (ServerLabelProvider) ServerUICore.getLabelProvider();
 		setImageDescriptor(slp.getImageDescriptor(module[size - 1]));
 	
-		setEnabled(server.canRestartModule(module).isOK());
+		setEnabled(server.canRestartModule(module, null).isOK());
 	}
 
 	/**

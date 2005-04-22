@@ -19,6 +19,7 @@ import org.eclipse.jface.action.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Trace;
+import org.eclipse.wst.server.core.model.ServerDelegate;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -361,8 +362,8 @@ public class ServersView extends ViewPart {
 				menuManager.addMenuListener(new IMenuListener() {
 					public void menuAboutToShow(IMenuManager manager) {
 						menuManager.removeAll();
-						if (server2.isDelegateLoaded()) {
-							ServerPort[] ports = server2.getServerPorts();
+						if (server2.getAdapter(ServerDelegate.class) != null) {
+							ServerPort[] ports = server2.getServerPorts(null);
 							if (ports != null) {
 								int size = ports.length;
 								for (int i = 0; i < size; i++) {
@@ -382,7 +383,7 @@ public class ServersView extends ViewPart {
 			}
 		}
 	
-		if (server != null && server.isDelegateLoaded() && module != null) {
+		if (server != null && module != null) {
 			menu.add(new Separator());
 	
 			/*MenuManager restartProjectMenu = new MenuManager(ServerUIPlugin.getResource("%actionRestartProject"));

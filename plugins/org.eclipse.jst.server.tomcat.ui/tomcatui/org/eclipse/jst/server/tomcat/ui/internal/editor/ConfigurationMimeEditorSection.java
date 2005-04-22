@@ -55,7 +55,7 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 	/**
 	 * ConfigurationMimeEditorSection constructor comment.
 	 */
-	protected ConfigurationMimeEditorSection() {
+	public ConfigurationMimeEditorSection() {
 		super();
 	}
 

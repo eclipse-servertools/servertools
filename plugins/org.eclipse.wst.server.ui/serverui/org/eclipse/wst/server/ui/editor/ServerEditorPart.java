@@ -178,19 +178,21 @@ public abstract class ServerEditorPart extends EditorPart {
 					if (serverTypeId != null && factory.supportsType(serverTypeId)
 							&& factory.shouldCreateSection(server)) {
 						IServerEditorSection section = factory.createSection();
-						if (section instanceof ServerEditorSection)
-							((ServerEditorSection) section).setServerEditorPart(this);
-						sections.add(section);
-						List list = null;
-						try {
-							list = (List) sectionToInsertionId.get(insertionId);
-						} catch (Exception e) {
-							// ignore
+						if (section != null) {
+							if (section instanceof ServerEditorSection)
+								((ServerEditorSection) section).setServerEditorPart(this);
+							sections.add(section);
+							List list = null;
+							try {
+								list = (List) sectionToInsertionId.get(insertionId);
+							} catch (Exception e) {
+								// ignore
+							}
+							if (list == null)
+								list = new ArrayList();
+							list.add(section);
+							sectionToInsertionId.put(insertionId, list);
 						}
-						if (list == null)
-							list = new ArrayList();
-						list.add(section);
-						sectionToInsertionId.put(insertionId, list);
 					}
 				}
 			}

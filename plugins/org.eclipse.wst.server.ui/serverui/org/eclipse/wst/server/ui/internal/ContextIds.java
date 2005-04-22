@@ -84,4 +84,11 @@ public interface ContextIds {
 	public static final String PROMPT_IRREVERSIBLE_DIALOG = ServerUIPlugin.PLUGIN_ID + ".sdpi0000";
 	
 	public static final String EDITOR_OVERVIEW_PAGE = ServerUIPlugin.PLUGIN_ID + ".seop0000";
+	public static final String EDITOR_SERVER = ServerUIPlugin.PLUGIN_ID + ".seop0002";
+	public static final String EDITOR_CONFIGURATION = ServerUIPlugin.PLUGIN_ID + ".seop0004";
+	public static final String EDITOR_HOSTNAME = ServerUIPlugin.PLUGIN_ID + ".seop0006";
+	public static final String EDITOR_RUNTIME = ServerUIPlugin.PLUGIN_ID + ".seop0008";
+	public static final String EDITOR_AUTOPUBLISH_DEFAULT = ServerUIPlugin.PLUGIN_ID + ".seop0010";
+	public static final String EDITOR_AUTOPUBLISH_OVERRIDE = ServerUIPlugin.PLUGIN_ID + ".seop0012";
+	public static final String EDITOR_AUTOPUBLISH_TIME = ServerUIPlugin.PLUGIN_ID + ".seop0014";
 }

@@ -254,7 +254,6 @@ public class ServerCore {
 				Trace.trace(Trace.SEVERE, "  Could not load runtimeType: " + cf[i].getAttribute("id"), t);
 			}
 		}
-		sortOrderedList(runtimeTypes);
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .runtimeTypes extension point -<-");
 	}
@@ -306,7 +305,6 @@ public class ServerCore {
 				Trace.trace(Trace.SEVERE, "  Could not load serverType: " + cf[i].getAttribute("id"), t);
 			}
 		}
-		sortOrderedList(serverTypes);
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .serverTypes extension point -<-");
 	}

@@ -215,16 +215,18 @@ public class ServerEditor extends MultiPageEditorPart {
 					Trace.trace(Trace.FINEST, "Adding page: " + factory.getId() + " " + editorPartInput);
 					try {
 						IEditorPart page = factory.createPage();
-						if (page instanceof ServerEditorPart) {
-							ServerEditorPart srep = (ServerEditorPart) page;
-							srep.setPageFactory(factory);
+						if (page != null) {
+							if (page instanceof ServerEditorPart) {
+								ServerEditorPart srep = (ServerEditorPart) page;
+								srep.setPageFactory(factory);
+							}
+							index = addPage(page, editorPartInput);
+							serverPages.add(page);
+		
+							setPageText(index, factory.getName());
+					
+							pageCount ++;
 						}
-						index = addPage(page, editorPartInput);
-						serverPages.add(page);
-	
-						setPageText(index, factory.getName());
-				
-						pageCount ++;
 					} catch (Exception e) {
 						Trace.trace(Trace.SEVERE, "Could not display editor page " + factory.getId(), e);
 					}

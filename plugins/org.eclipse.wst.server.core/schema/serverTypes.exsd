@@ -55,6 +55,9 @@
                <documentation>
                   a translatable name used to identify this server type
                </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="description" type="string" use="required">
@@ -62,6 +65,9 @@
                <documentation>
                   a translatable description of this server type
                </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
@@ -97,20 +103,6 @@ Server instances of this type will delegate to instances of this class. Delegate
             <annotation>
                <documentation>
                   
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="startable" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="order" type="string">
-            <annotation>
-               <documentation>
-                  an integer order specifying the relative importance of this server type
                </documentation>
             </annotation>
          </attribute>
@@ -160,6 +152,13 @@ Server instances of this type will delegate to instances of this class. Delegate
             <annotation>
                <documentation>
                   
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="startBeforePublish" type="string">
+            <annotation>
+               <documentation>
+                  boolean value &quot;true&quot; or &quot;false&quot; to specify whether the server needs to be started for publishing to occur. If &quot;true&quot;, the server will be started on every call to publish() before executing the publish code
                </documentation>
             </annotation>
          </attribute>

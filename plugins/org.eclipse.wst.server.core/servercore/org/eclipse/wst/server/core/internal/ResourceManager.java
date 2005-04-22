@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.core.resources.*;
 
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.model.ServerDelegate;
 /**
  * ResourceManager handles the mappings between resources
  * and servers or server configurations, and creates
@@ -594,7 +595,7 @@ public class ResourceManager {
 	public IRuntime[] getRuntimes() {
 		List list = new ArrayList(runtimes);
 		
-		int size = list.size();
+		/*int size = list.size();
 		for (int i = 0; i < size - 1; i++) {
 			for (int j = i + 1; j < size; j++) {
 				IRuntime a = (IRuntime) list.get(i);
@@ -606,7 +607,7 @@ public class ResourceManager {
 					list.set(j, temp);
 				}
 			}
-		}
+		}*/
 		
 		if (defaultRuntime != null) {
 			list.remove(defaultRuntime);
@@ -736,9 +737,9 @@ public class ResourceManager {
 		while (iterator.hasNext()) {
 			IServer server = (IServer) iterator.next();
 			if (server.getServerType().hasServerConfiguration() && folder.equals(server.getServerConfiguration())
-					&& server.isDelegateLoaded()) {
+					&& server.getAdapter(ServerDelegate.class) != null) {
 				try {
-					((Server)server).getDelegate().configurationChanged();
+					((Server)server).getDelegate(null).configurationChanged();
 				} catch (Exception e) {
 					Trace.trace(Trace.WARNING, "Server failed on configuration change");
 				}
@@ -924,7 +925,7 @@ public class ResourceManager {
 				if (servers2 != null) {
 					int size = servers2.length;
 					for (int i = 0; i < size; i++) {
-					if (servers2[i].isDelegateLoaded())
+					if (servers2[i].getAdapter(ServerDelegate.class) != null)
 						((Server) servers2[i]).handleModuleProjectChange(modules[j]);
 					}
 				}

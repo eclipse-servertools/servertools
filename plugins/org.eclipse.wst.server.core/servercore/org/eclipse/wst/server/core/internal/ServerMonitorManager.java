@@ -136,7 +136,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 				newPort = Integer.parseInt(newPortStr);
 			String portId = memento.getString("portId");
 			
-			ServerPort[] ports2 = server.getServerPorts();
+			ServerPort[] ports2 = server.getServerPorts(monitor2);
 			if (ports2 != null) {
 				int size = ports2.length;
 				for (int i = 0; port == null && i < size; i++) {

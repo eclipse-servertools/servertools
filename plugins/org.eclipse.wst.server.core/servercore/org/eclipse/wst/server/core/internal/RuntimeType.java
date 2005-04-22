@@ -18,7 +18,7 @@ import org.eclipse.wst.server.core.*;
 /**
  * 
  */
-public class RuntimeType implements IRuntimeType, IOrdered {
+public class RuntimeType implements IRuntimeType {
 	private IConfigurationElement element;
 	private List moduleTypes;
 
@@ -53,20 +53,6 @@ public class RuntimeType implements IRuntimeType, IOrdered {
 	 */
 	public String getDescription() {
 		return element.getAttribute("description");
-	}
-
-	/**
-	 * Returns the order.
-	 *
-	 * @return the order
-	 */
-	public int getOrder() {
-		try {
-			String o = element.getAttribute("order");
-			return Integer.parseInt(o);
-		} catch (NumberFormatException e) {
-			return -1;
-		}
 	}
 	
 	public String getVendor() {

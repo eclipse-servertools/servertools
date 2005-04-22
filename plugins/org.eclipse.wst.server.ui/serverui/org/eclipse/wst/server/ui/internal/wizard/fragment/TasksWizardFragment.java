@@ -93,7 +93,8 @@ public class TasksWizardFragment extends WizardFragment {
 	public void enter() {
 		updateTasks();
 		
-		comp.createControl();
+		if (comp != null)
+			comp.createControl();
 	}
 	
 	public List getChildFragments() {

@@ -296,12 +296,11 @@ public class TomcatPlugin extends Plugin {
 	 * Return a <code>java.io.File</code> object that corresponds to the specified
 	 * <code>IPath</code> in the plugin directory.
 	 * 
-	 * @param path a path within the plugin
 	 * @return a file
 	 */
-	public static File getFileInPlugin(IPath path) {
+	protected static File getPlugin() {
 		try {
-			URL installURL = new URL(getInstance().getBundle().getEntry("/"), path.toString());
+			URL installURL = getInstance().getBundle().getEntry("/");
 			URL localURL = Platform.asLocalURL(installURL);
 			return new File(localURL.getFile());
 		} catch (IOException ioe) {

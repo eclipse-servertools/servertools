@@ -50,7 +50,7 @@ public class ConfigurationPortEditorSection extends ServerEditorSection {
 	/**
 	 * ConfigurationPortEditorSection constructor comment.
 	 */
-	protected ConfigurationPortEditorSection() {
+	public ConfigurationPortEditorSection() {
 		super();
 	}
 

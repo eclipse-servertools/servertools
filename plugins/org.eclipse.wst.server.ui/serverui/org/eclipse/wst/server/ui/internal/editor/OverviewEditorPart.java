@@ -35,6 +35,7 @@ import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.*;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.util.SocketUtil;
@@ -68,7 +69,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 	/**
 	 * OverviewEditorPart constructor comment.
 	 */
-	protected OverviewEditorPart() {
+	public OverviewEditorPart() {
 		super();
 	}
 
@@ -158,7 +159,8 @@ public class OverviewEditorPart extends ServerEditorPart {
 		layout.horizontalSpacing = 15;
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, ContextIds.EDITOR_OVERVIEW_PAGE);
+		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
+		whs.setHelp(composite, ContextIds.EDITOR_OVERVIEW_PAGE);
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 
@@ -178,6 +180,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 					updating = false;
 				}
 			});
+			whs.setHelp(serverName, ContextIds.EDITOR_SERVER);
 		}
 		
 		// hostname
@@ -196,6 +199,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 					updating = false;
 				}
 			});
+			whs.setHelp(hostname, ContextIds.EDITOR_HOSTNAME);
 		}
 		
 		// runtime
@@ -239,10 +243,11 @@ public class OverviewEditorPart extends ServerEditorPart {
 						widgetSelected(e);
 					}
 				});
+				whs.setHelp(runtimeCombo, ContextIds.EDITOR_RUNTIME);
 			}
 			
 			createLabel(toolkit, composite, "");
-			Hyperlink link = toolkit.createHyperlink(composite, "Edit runtime", SWT.NONE); // TODO: translate
+			Hyperlink link = toolkit.createHyperlink(composite, ServerUIPlugin.getResource("%serverEditorOverviewRuntimeEdit"), SWT.NONE); // TODO: translate
 			//GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 			//link.setLayoutData(data);
 			link.addHyperlinkListener(new IHyperlinkListener() {
@@ -257,7 +262,6 @@ public class OverviewEditorPart extends ServerEditorPart {
 				public void linkActivated(HyperlinkEvent e) {
 					editRuntime(runtime);
 				}
-				
 			});
 		}
 		
@@ -272,6 +276,8 @@ public class OverviewEditorPart extends ServerEditorPart {
 				serverConfigurationName = toolkit.createLabel(composite, "" + server.getServerConfiguration().getFullPath());
 			GridData data = new GridData(GridData.FILL_HORIZONTAL);
 			serverConfigurationName.setLayoutData(data);
+			
+			whs.setHelp(serverConfigurationName, ContextIds.EDITOR_CONFIGURATION);
 		}
 		
 		// auto-publish
@@ -285,9 +291,11 @@ public class OverviewEditorPart extends ServerEditorPart {
 			autoPublishDefault.setLayoutData(data);
 			Server svr = (Server) server;
 			autoPublishDefault.setSelection(svr.getAutoPublishDefault());
+			whs.setHelp(autoPublishDefault, ContextIds.EDITOR_AUTOPUBLISH_DEFAULT);
 			
 			autoPublishOverride = toolkit.createButton(composite, ServerUIPlugin.getResource("%serverEditorOverviewAutoPublishOverride"), SWT.RADIO);
 			autoPublishOverride.setSelection(!svr.getAutoPublishDefault());
+			whs.setHelp(autoPublishOverride, ContextIds.EDITOR_AUTOPUBLISH_OVERRIDE);
 			
 			autoPublishOverride.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
@@ -308,6 +316,8 @@ public class OverviewEditorPart extends ServerEditorPart {
 			data = new GridData(GridData.FILL_HORIZONTAL);
 			autoPublishTime.setLayoutData(data);
 			autoPublishTime.setEnabled(autoPublishOverride.getSelection());
+			whs.setHelp(autoPublishTime, ContextIds.EDITOR_AUTOPUBLISH_TIME);
+			
 			autoPublishTime.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					if (updating)

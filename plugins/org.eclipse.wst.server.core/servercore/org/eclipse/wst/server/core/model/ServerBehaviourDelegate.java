@@ -102,9 +102,17 @@ public abstract class ServerBehaviourDelegate {
 	 * Initializes this server delegate. This method gives delegates a chance
 	 * to do their own initialization.
 	 * <p>
+	 * If the server state is initially unknown, this method should attempt
+	 * to connect to the server and update the state. On servers where the
+	 * state may change, this is also an excellent place to create a background
+	 * thread that will constantly ping the server (or have a listener) to
+	 * update the server state as changes occur.
+	 * </p>
+	 * <p>
 	 * This method is called by the server core framework.
 	 * Clients should never call this method.
 	 * </p>
+	 * [issue: add progress monitor?]
 	 */
 	public void initialize() {
 		// do nothing

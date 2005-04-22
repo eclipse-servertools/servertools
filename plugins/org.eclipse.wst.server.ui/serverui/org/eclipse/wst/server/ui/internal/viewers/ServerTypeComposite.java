@@ -74,12 +74,6 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 					return super.compare(viewer, e1, e2);
 				IServerType r1 = (IServerType) e1;
 				IServerType r2 = (IServerType) e2;
-				/*if (r1.getOrder() > r2.getOrder())
-					return -1;
-				else if (r1.getOrder() < r2.getOrder())
-					return 1;
-				else
-					return super.compare(viewer, e1, e2);*/
 				return r1.getName().compareTo(r2.getName());
 			}
 		});

@@ -259,7 +259,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 					folder.create(IResource.FORCE, true, null);
 			}
 		}
-		getDelegate().saveConfiguration(monitor);
+		getDelegate(monitor).saveConfiguration(monitor);
 		wch.setDirty(false);
 		
 		return server;

@@ -103,12 +103,40 @@ public interface IRuntime extends IAdaptable {
 	public boolean isWorkingCopy();
 	
 	/**
-	 * Returns true if the delegate has been loaded.
-	 * 
-	 * @return <code>true</code> if the delegate is loaded, and <code>false</code>
-	 *    otherwise
+	 * Returns an object which is an instance of the given class
+	 * associated with this object. Returns <code>null</code> if
+	 * no such object can be found.
+	 * <p>
+	 * This method will not check the delegate class for adapting
+	 * unless it is already loaded. No plugin loading will occur
+	 * when calling this method.
+	 * </p>
+	 *
+	 * @param adapter the adapter class to look up
+	 * @return a object castable to the given class, 
+	 *    or <code>null</code> if this object does not
+	 *    have an adapter for the given class
+	 * @see IAdaptable#getAdapter(Class)
 	 */
-	public boolean isDelegateLoaded();
+	public Object getAdapter(Class adapter);
+	
+	/**
+	 * Returns an object which is an instance of the given class
+	 * associated with this object. Returns <code>null</code> if
+	 * no such object can be found.
+	 * <p>
+	 * This method will force a load of the delegate class and
+	 * check it for adapting.
+	 * </p>
+	 *
+	 * @param adapter the adapter class to look up
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return a object castable to the given class, 
+	 *    or <code>null</code> if this object does not
+	 *    have an adapter for the given class
+	 */
+	public Object loadAdapter(Class adapter, IProgressMonitor monitor);
 
 	/**
 	 * Returns the type of this runtime instance.

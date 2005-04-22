@@ -61,6 +61,9 @@
                <documentation>
                   a translatable name used to identify the runtime type
                </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="description" type="string" use="required">
@@ -68,6 +71,9 @@
                <documentation>
                   a translatable description of the runtime type
                </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="vendor" type="string">
@@ -96,13 +102,6 @@
                <documentation>
                   specifies the fully qualified name of the Java class that extends &lt;samp&gt;RuntimeDelegate&lt;/samp&gt;.
 Runtime instances of this type will delegate to instances of this class. Delegates must also have a public 0-arg constructor.
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="order" type="string">
-            <annotation>
-               <documentation>
-                  an integer order specifying the relative importance of this runtime
                </documentation>
             </annotation>
          </attribute>

@@ -459,10 +459,12 @@ public interface IServer extends IServerAttributes {
 	 * </p>
 	 * 
 	 * @param module the module
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 * @return a status object with code <code>IStatus.OK</code> if the module can
 	 *    be restarted, otherwise a status object indicating why it can't
 	 */
-	public IStatus canRestartModule(IModule[] module);
+	public IStatus canRestartModule(IModule[] module, IProgressMonitor monitor);
 
 	/**
 	 * Check if the given module is in sync on the server. It should

@@ -73,7 +73,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 	/**
 	 * ConfigurationWebModuleEditorPart constructor comment.
 	 */
-	protected ConfigurationWebModuleEditorPart() {
+	public ConfigurationWebModuleEditorPart() {
 		super();
 	}
 

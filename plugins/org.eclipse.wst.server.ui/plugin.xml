@@ -185,7 +185,7 @@
         name="%serverEditorOverviewPage"
         typeIds="*"
         insertionIds="org.eclipse.wst.server.editor.overview.left, org.eclipse.wst.server.editor.overview.right"
-        class="org.eclipse.wst.server.ui.internal.editor.OverviewEditorFactory"/>
+        class="org.eclipse.wst.server.ui.internal.editor.OverviewEditorPart"/>
   </extension>
 
   <extension point="org.eclipse.core.runtime.adapters">

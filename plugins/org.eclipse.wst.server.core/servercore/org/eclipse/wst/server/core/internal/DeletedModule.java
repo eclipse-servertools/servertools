@@ -62,6 +62,10 @@ public class DeletedModule implements IModule {
 		return null;
 	}
 	
+	public Object loadAdapter(Class adapter, IProgressMonitor monitor) {
+		return null;
+	}
+	
 	public boolean equals(Object obj) {
 		if (!(obj instanceof IModule))
 			return false;

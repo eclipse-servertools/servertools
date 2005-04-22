@@ -52,7 +52,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 	/**
 	 * ServerGeneralEditorPart constructor comment.
 	 */
-	protected ServerGeneralEditorSection() {
+	public ServerGeneralEditorSection() {
 		// do nothing
 	}
 

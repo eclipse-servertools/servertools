@@ -12,6 +12,7 @@ package org.eclipse.wst.server.core;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * A module is a unit of "content" that can be published to a
  * server.
@@ -78,7 +79,7 @@ public interface IModule extends IAdaptable {
 	 * @return the module type
 	 */
 	public IModuleType getModuleType();
-	
+
 	/**
 	 * Returns the workbench project that this module is contained in,
 	 * or null if the module is outside of the workspace.
@@ -86,4 +87,40 @@ public interface IModule extends IAdaptable {
 	 * @return a project
 	 */
 	public IProject getProject();
+
+	/**
+	 * Returns an object which is an instance of the given class
+	 * associated with this object. Returns <code>null</code> if
+	 * no such object can be found.
+	 * <p>
+	 * This method will not check the delegate class for adapting
+	 * unless it is already loaded. No plugin loading will occur
+	 * when calling this method.
+	 * </p>
+	 *
+	 * @param adapter the adapter class to look up
+	 * @return a object castable to the given class, 
+	 *    or <code>null</code> if this object does not
+	 *    have an adapter for the given class
+	 * @see IAdaptable#getAdapter(Class)
+	 */
+	public Object getAdapter(Class adapter);
+
+	/**
+	 * Returns an object which is an instance of the given class
+	 * associated with this object. Returns <code>null</code> if
+	 * no such object can be found.
+	 * <p>
+	 * This method will force a load of the delegate class and
+	 * check it for adapting.
+	 * </p>
+	 *
+	 * @param adapter the adapter class to look up
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return a object castable to the given class, 
+	 *    or <code>null</code> if this object does not
+	 *    have an adapter for the given class
+	 */
+	public Object loadAdapter(Class adapter, IProgressMonitor monitor);
 }

@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.eclipse.core.expressions.*;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
 import org.eclipse.wst.server.core.IServerWorkingCopy;
@@ -24,7 +26,7 @@ import org.eclipse.wst.server.ui.internal.Trace;
  */
 public class ServerEditorPageSectionFactory implements IServerEditorPageSectionFactory {
 	private IConfigurationElement element;
-	private ServerEditorPageSectionFactoryDelegate delegate;
+	private Expression fContextualLaunchExpr = null;
 
 	/**
 	 * ServerEditorPageSectionFactory constructor.
@@ -120,27 +122,13 @@ public class ServerEditorPageSectionFactory implements IServerEditorPageSectionF
 		}
 		return false;
 	}
-
-	/*
-	 * 
-	 */
-	public ServerEditorPageSectionFactoryDelegate getDelegate() {
-		if (delegate == null) {
-			try {
-				delegate = (ServerEditorPageSectionFactoryDelegate) element.createExecutableExtension("class");
-			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Could not create server editorpage delegate", t);
-			}
-		}
-		return delegate;
-	}
 	
 	/**
 	 * @see IServerEditorPageSectionFactory#shouldCreateSection(IServerWorkingCopy)
 	 */
 	public boolean shouldCreateSection(IServerWorkingCopy server) {
 		try {
-			return getDelegate().shouldCreateSection(server);
+			return isEnabled(server);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate", e);
 			return false;
@@ -152,13 +140,65 @@ public class ServerEditorPageSectionFactory implements IServerEditorPageSectionF
 	 */
 	public IServerEditorSection createSection() {
 		try {
-			return getDelegate().createSection();
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate", e);
+			return (IServerEditorSection) element.createExecutableExtension("class");
+		} catch (Throwable t) {
+			Trace.trace(Trace.SEVERE, "Could not create server editor section", t);
 			return null;
 		}
 	}
-	
+
+	/**
+	 * Returns an expression that represents the enablement logic for the
+	 * contextual launch element of this launch shortcut description or
+	 * <code>null</code> if none.
+	 * @return an evaluatable expression or <code>null</code>
+	 * @throws CoreException if the configuration element can't be
+	 *  converted. Reasons include: (a) no handler is available to
+	 *  cope with a certain configuration element or (b) the XML
+	 *  expression tree is malformed.
+	 */
+	public Expression getContextualLaunchEnablementExpression() throws CoreException {
+		if (fContextualLaunchExpr == null) {
+			IConfigurationElement[] elements = element.getChildren(ExpressionTagNames.ENABLEMENT);
+			IConfigurationElement enablement = elements.length > 0 ? elements[0] : null; 
+
+			if (enablement != null)
+				fContextualLaunchExpr = ExpressionConverter.getDefault().perform(enablement);
+		}
+		return fContextualLaunchExpr;
+	}
+
+	/**
+	 * Evaluate the given expression within the given context and return
+	 * the result. Returns <code>true</code> iff result is either TRUE or NOT_LOADED.
+	 * This allows optimistic inclusion of shortcuts before plugins are loaded.
+	 * Returns <code>false</code> if exp is <code>null</code>.
+	 * 
+	 * @param exp the enablement expression to evaluate or <code>null</code>
+	 * @param context the context of the evaluation. Usually, the
+	 *  user's selection.
+	 * @return the result of evaluating the expression
+	 * @throws CoreException
+	 */
+	protected boolean evalEnablementExpression(IEvaluationContext context, Expression exp) throws CoreException {
+		return (exp != null) ? ((exp.evaluate(context)) != EvaluationResult.FALSE) : false;
+	}
+
+	/**
+	 * Returns true if enabled for the given object.
+	 * 
+	 * @param obj an object
+	 * @return <code>true</code> if enabled
+	 * @throws CoreException if anything goes wrong
+	 */
+	public boolean isEnabled(Object obj) throws CoreException {
+		if (getContextualLaunchEnablementExpression() == null)
+			return true;
+		IEvaluationContext context = new EvaluationContext(null, obj);
+		context.addVariable("server", obj);
+		return evalEnablementExpression(context, getContextualLaunchEnablementExpression());
+	}
+
 	public String toString() {
 		return "ServerEditorSection [" + getId() + ", " + getInsertionId() + ", " + getOrder() + "]";
 	}

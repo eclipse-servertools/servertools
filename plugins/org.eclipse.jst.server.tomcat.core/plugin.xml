@@ -9,7 +9,6 @@
        description="%runtimeTypeTomcat32Description"
        vendor="%apache"
        version="3.2"
-       order="50"
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime">
        <moduleType
          types="j2ee.web"
@@ -22,7 +21,6 @@
        description="%runtimeTypeTomcat40Description"
        vendor="%apache"
        version="4.0"
-       order="52"
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime">
        <moduleType
          types="j2ee.web"
@@ -35,7 +33,6 @@
        description="%runtimeTypeTomcat41Description"
        vendor="%apache"
        version="4.1"
-       order="54"
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime">
        <moduleType
          types="j2ee.web"
@@ -48,7 +45,6 @@
        description="%runtimeTypeTomcat50Description"
        vendor="%apache"
        version="5.0"
-       order="56"
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime">
        <moduleType
          types="j2ee.web"
@@ -61,7 +57,6 @@
        description="%runtimeTypeTomcat55Description"
        vendor="%apache"
        version="5.5"
-       order="58"
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime">
        <moduleType
          types="j2ee.web"
@@ -91,7 +86,6 @@
        description="%tomcat32ServerDescription"
        supportsRemoteHosts="false"
        runtime="true"
-       order="50"
        startTimeout="45000"
        stopTimeout="15000"
        initialState="stopped"
@@ -107,7 +101,6 @@
        description="%tomcat40ServerDescription"
        supportsRemoteHosts="false"
        runtime="true"
-       order="52"
        startTimeout="45000"
        stopTimeout="15000"
        initialState="stopped"
@@ -123,7 +116,6 @@
        description="%tomcat41ServerDescription"
        supportsRemoteHosts="false"
        runtime="true"
-       order="54"
        startTimeout="45000"
        stopTimeout="15000"
        initialState="stopped"
@@ -139,7 +131,6 @@
        description="%tomcat50ServerDescription"
        supportsRemoteHosts="false"
        runtime="true"
-       order="56"
        startTimeout="45000"
        stopTimeout="15000"
        initialState="stopped"
@@ -155,7 +146,6 @@
        description="%tomcat55ServerDescription"
        supportsRemoteHosts="false"
        runtime="true"
-       order="58"
        startTimeout="45000"
        stopTimeout="15000"
        initialState="stopped"

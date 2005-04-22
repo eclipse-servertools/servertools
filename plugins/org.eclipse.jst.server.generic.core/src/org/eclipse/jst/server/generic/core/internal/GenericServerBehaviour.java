@@ -350,7 +350,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     //			throw new CoreException(status);
     
     	
-    		ServerPort[] ports = getServer().getServerPorts();
+    		ServerPort[] ports = getServer().getServerPorts(null);
     		ServerPort sp = null;
     		for(int i=0;i<ports.length;i++){
     			sp= ports[i];

@@ -25,7 +25,7 @@ import org.eclipse.wst.server.core.*;
 /**
  * 
  */
-public class ServerType implements IServerType, IOrdered {
+public class ServerType implements IServerType {
 	protected IConfigurationElement element;
 
 	/**
@@ -55,6 +55,10 @@ public class ServerType implements IServerType, IOrdered {
 		return element.getAttribute("name");
 	}
 
+	public boolean startBeforePublish() {
+		return "true".equals(element.getAttribute("startBeforePublish"));
+	}
+
 	public String getDescription() {
 		return element.getAttribute("description");
 	}
@@ -69,20 +73,6 @@ public class ServerType implements IServerType, IOrdered {
 	public boolean hasRuntime() {
 		String s = element.getAttribute("runtime");
 		return "true".equals(s);
-	}
-	
-	/**
-	 * Returns the order.
-	 *
-	 * @return int
-	 */
-	public int getOrder() {
-		try {
-			String o = element.getAttribute("order");
-			return Integer.parseInt(o);
-		} catch (NumberFormatException e) {
-			return -1;
-		}
 	}
 	
 	protected ILaunchConfigurationType getLaunchConfigurationType() {

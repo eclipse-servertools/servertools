@@ -10,6 +10,8 @@
       </documentation>
    </annotation>
 
+   <include schemaLocation="schema://org.eclipse.core.expressions/schema/expressionLanguage.exsd"/>
+
    <element name="extension">
       <complexType>
          <choice>
@@ -47,6 +49,7 @@
       </annotation>
       <complexType>
          <sequence>
+            <element ref="enablement"/>
          </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
@@ -58,10 +61,10 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;org.eclipse.wst.server.ui.editor.ServerEditorPageSectionFactoryDelegate&lt;/samp&gt;.
+                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;org.eclipse.wst.server.ui.editor.IServerEditorSection&lt;/samp&gt;.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.ui.editor.ServerEditorPageSectionFactoryDelegate"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.ui.editor.IServerEditorSection"/>
                </appInfo>
             </annotation>
          </attribute>

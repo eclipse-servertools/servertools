@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
@@ -117,8 +118,11 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 		
 		// on Mac, tools.jar is merged into classes.zip. if tools.jar wasn't found,
 		// try loading the javac class by running a check inside the VM
-		if (!found)
-			found = checkForCompiler();
+		if (!found) {
+			String os = Platform.getOS();
+			if (os != null && os.toLowerCase().indexOf("mac") >= 0)
+				found = checkForCompiler();
+		}
 		
 		if (!found)
 			return new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%warningJRE"), null);
@@ -173,7 +177,7 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 		}
 
 		// locate tomcatcore.jar - it contains the class detector main program
-		File file = TomcatPlugin.getFileInPlugin(new Path("tomcatcore.jar"));
+		File file = TomcatPlugin.getPlugin();
 		if (file != null && file.exists()) {
 			IVMRunner vmRunner = getVMInstall().getVMRunner(ILaunchManager.RUN_MODE);
 			VMRunnerConfiguration config = new VMRunnerConfiguration("org.eclipse.jst.server.tomcat.core.internal.ClassDetector", new String[] { file.getAbsolutePath() });

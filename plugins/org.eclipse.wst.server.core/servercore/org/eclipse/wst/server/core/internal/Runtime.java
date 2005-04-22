@@ -86,22 +86,12 @@ public class Runtime extends Base implements IRuntime {
 		}
 		return delegate;
 	}
-	
-	/**
-	 * Returns true if the delegate has been loaded.
-	 * 
-	 * @return <code>true</code> if the delegate has been loaded, and
-	 *    <code>false</code> otherwise
-	 */
-	public boolean isDelegateLoaded() {
-		return delegate != null;
-	}
-	
+
 	public void dispose() {
 		if (delegate != null)
 			delegate.dispose();
 	}
-	
+
 	/**
 	 * @see IRuntime#createWorkingCopy()
 	 */
@@ -183,15 +173,28 @@ public class Runtime extends Base implements IRuntime {
 		Runtime runtime = (Runtime) obj;
 		return runtime.getId().equals(getId());
 	}
-	
-	/** (non-Javadoc)
-	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+
+	/**
+	 * @see IRuntime#getAdapter(Class)
 	 */
 	public Object getAdapter(Class adapter) {
-		RuntimeDelegate delegate2 = getDelegate(null);
+		//if (isDelegateLoaded()) {
+			RuntimeDelegate delegate2 = getDelegate(null);
+			if (adapter.isInstance(delegate2))
+				return delegate;
+		//}
+		return Platform.getAdapterManager().getAdapter(this, adapter);
+	}
+
+	/**
+	 * @see IRuntime#loadAdapter(Class, IProgressMonitor)
+	 */
+	public Object loadAdapter(Class adapter, IProgressMonitor monitor) {
+		RuntimeDelegate delegate2 = getDelegate(monitor);
 		if (adapter.isInstance(delegate2))
 			return delegate;
-		return null;
+	
+		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
 	/**

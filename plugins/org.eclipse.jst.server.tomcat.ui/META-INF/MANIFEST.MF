@@ -9,6 +9,7 @@ Bundle-Localization: plugin
 Export-Package: org.eclipse.jst.server.tomcat.ui.internal,
  org.eclipse.jst.server.tomcat.ui.internal.editor
 Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.expressions,
  org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.ui.forms,

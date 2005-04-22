@@ -97,7 +97,7 @@ public class Module implements IModule {
 		return name;
 	}
 
-	protected ModuleDelegate getDelegate() {
+	protected ModuleDelegate getDelegate(IProgressMonitor monitor) {
 		if (delegate == null) {
 			try {
 				delegate = factory.getDelegate().getModuleDelegate(this);
@@ -117,7 +117,7 @@ public class Module implements IModule {
 	 */
 	public IModule[] getChildModules(IProgressMonitor monitor) {
 		try {
-			return getDelegate().getChildModules();
+			return getDelegate(monitor).getChildModules();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate getChildModules() " + toString(), e);
 			return null;
@@ -169,13 +169,13 @@ public class Module implements IModule {
 	 */
 	public IStatus validate(IProgressMonitor monitor) {
 		try {
-			return getDelegate().validate();
+			return getDelegate(monitor).validate();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate validate() " + toString(), e);
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Add a listener for child modules that are added/removed from this
 	 * module.
@@ -192,7 +192,7 @@ public class Module implements IModule {
 			return;
 		listeners.add(listener);
 	}
-	
+
 	/**
 	 * Remove a listener for child modules that are added/removed from this
 	 * module.
@@ -206,7 +206,7 @@ public class Module implements IModule {
 		if (listeners != null)
 			listeners.remove(listener);
 	}
-	
+
 	/**
 	 * Fire a module change event.
 	 */
@@ -232,17 +232,28 @@ public class Module implements IModule {
 		}
 		Trace.trace(Trace.FINEST, "-<- Done firing module change event -<-");
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+
+	/**
+	 * @see IModule#getAdapter(Class)
 	 */
 	public Object getAdapter(Class adapter) {
-		ModuleDelegate delegate2 = getDelegate();
-		if (adapter.isInstance(delegate2))
+		//if (delegate != null) {
+		if (adapter.isInstance(delegate))
+			return delegate;
+		//}
+		return null;
+	}
+
+	/**
+	 * @see IModule#loadAdapter(Class, IProgressMonitor)
+	 */
+	public Object loadAdapter(Class adapter, IProgressMonitor monitor) {
+		getDelegate(monitor);
+		if (adapter.isInstance(delegate))
 			return delegate;
 		return null;
 	}
-	
+
 	public boolean equals(Object obj) {
 		if (!(obj instanceof IModule))
 			return false;

@@ -3,7 +3,7 @@
 <schema targetNamespace="org.eclipse.wst.server.ui">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.wst.server.ui" id="WizardFragments" name="Wizard Fragments"/>
+         <meta.schema plugin="org.eclipse.wst.server.ui" id="wizardFragments" name="Wizard Fragments"/>
       </appInfo>
       <documentation>
          This extension point provides a way to add pages or logic into wizards for a specific runtime, server, or server configuration type.

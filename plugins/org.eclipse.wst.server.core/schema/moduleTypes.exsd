@@ -60,6 +60,9 @@
                <documentation>
                   a translatable name used to identify the module type
                </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>

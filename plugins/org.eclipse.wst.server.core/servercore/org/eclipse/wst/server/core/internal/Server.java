@@ -183,7 +183,7 @@ public class Server extends Base implements IServer {
 		return configuration;
 	}
 
-	protected ServerDelegate getDelegate() {
+	protected ServerDelegate getDelegate(IProgressMonitor monitor) {
 		if (delegate != null)
 			return delegate;
 		
@@ -191,7 +191,7 @@ public class Server extends Base implements IServer {
 			synchronized (this) {
 				if (delegate == null) {
 					Job job = new Job("Load delegate") {
-						protected IStatus run(IProgressMonitor monitor) {
+						protected IStatus run(IProgressMonitor monitor2) {
 							try {
 								long time = System.currentTimeMillis();
 								IConfigurationElement element = ((ServerType) serverType).getElement();
@@ -216,7 +216,7 @@ public class Server extends Base implements IServer {
 		return delegate;
 	}
 	
-	protected ServerBehaviourDelegate getBehaviourDelegate() {
+	protected ServerBehaviourDelegate getBehaviourDelegate(IProgressMonitor monitor) {
 		if (behaviourDelegate != null)
 			return behaviourDelegate;
 		
@@ -224,7 +224,7 @@ public class Server extends Base implements IServer {
 			synchronized (this) {
 				if (behaviourDelegate == null) {
 					Job job = new Job("Load delegate") {
-						protected IStatus run(IProgressMonitor monitor) {
+						protected IStatus run(IProgressMonitor monitor2) {
 							try {
 								long time = System.currentTimeMillis();
 								IConfigurationElement element = ((ServerType) serverType).getElement();
@@ -723,6 +723,15 @@ public class Server extends Base implements IServer {
 		if (getServerType().hasServerConfiguration() && configuration == null)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorNoConfiguration, null);
 		
+		if (((ServerType)getServerType()).startBeforePublish()) {
+			try {
+				synchronousStart(ILaunchManager.RUN_MODE, monitor);
+			} catch (CoreException ce) {
+				Trace.trace(Trace.SEVERE, "Error starting server", ce);
+				return ce.getStatus();
+			}
+		}
+		
 		return doPublish(kind, monitor);
 	}
 
@@ -774,7 +783,7 @@ public class Server extends Base implements IServer {
 		Trace.trace(Trace.FINEST, "Calling publishStart()");
 		firePublishStarted();
 		try {
-			getBehaviourDelegate().publishStart(ProgressUtil.getSubMonitorFor(monitor, 1000));
+			getBehaviourDelegate(null).publishStart(ProgressUtil.getSubMonitorFor(monitor, 1000));
 		} catch (CoreException ce) {
 			Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
 			firePublishFinished(ce.getStatus());
@@ -789,7 +798,7 @@ public class Server extends Base implements IServer {
 		// publish the server
 		try {
 			if (!monitor.isCanceled() && serverType.hasServerConfiguration()) {
-				getBehaviourDelegate().publishServer(kind, ProgressUtil.getSubMonitorFor(monitor, 1000));
+				getBehaviourDelegate(null).publishServer(kind, ProgressUtil.getSubMonitorFor(monitor, 1000));
 			}
 		} catch (CoreException ce) {
 			Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
@@ -812,7 +821,7 @@ public class Server extends Base implements IServer {
 		// end the publishing
 		Trace.trace(Trace.FINEST, "Calling publishFinish()");
 		try {
-			getBehaviourDelegate().publishFinish(ProgressUtil.getSubMonitorFor(monitor, 500));
+			getBehaviourDelegate(null).publishFinish(ProgressUtil.getSubMonitorFor(monitor, 500));
 		} catch (CoreException ce) {
 			Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
 			multi.add(ce.getStatus());
@@ -856,7 +865,7 @@ public class Server extends Base implements IServer {
 		
 		IStatus status = new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.publishedModule, m.getName()), null);
 		try {
-			getBehaviourDelegate().publishModule(kind, deltaKind, module, monitor);
+			getBehaviourDelegate(null).publishModule(kind, deltaKind, module, monitor);
 		} catch (CoreException ce) {
 			status = ce.getStatus();
 		}
@@ -945,7 +954,7 @@ public class Server extends Base implements IServer {
 			}
 		}
 
-		int size = tasks.size();
+		/*int size = tasks.size();
 		for (int i = 0; i < size - 1; i++) {
 			for (int j = i + 1; j < size; j++) {
 				IOrdered a = (IOrdered) tasks.get(i);
@@ -956,7 +965,7 @@ public class Server extends Base implements IServer {
 					tasks.set(j, temp);
 				}
 			}
-		}
+		}*/
 		
 		return tasks;
 	}
@@ -994,16 +1003,35 @@ public class Server extends Base implements IServer {
 		return multi;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+	/**
+	 * @see IServer#getAdapter(Class)
 	 */
 	public Object getAdapter(Class adapter) {
-		ServerDelegate delegate2 = getDelegate();
+		//if (delegate != null) {
+			ServerDelegate delegate2 = getDelegate(null);
+			if (adapter.isInstance(delegate2))
+				return delegate2;
+		//}
+		//if (behaviourDelegate != null) {
+			ServerBehaviourDelegate delegate3 = getBehaviourDelegate(null);
+			if (adapter.isInstance(delegate3))
+				return delegate3;
+		//}
+		return Platform.getAdapterManager().getAdapter(this, adapter);
+	}
+	
+	/**
+	 * @see IServer#loadAdapter(Class, IProgressMonitor)
+	 */
+	public Object loadAdapter(Class adapter, IProgressMonitor monitor) {
+		ServerDelegate delegate2 = getDelegate(monitor);
 		if (adapter.isInstance(delegate2))
 			return delegate2;
-		ServerBehaviourDelegate delegate3 = getBehaviourDelegate();
+
+		ServerBehaviourDelegate delegate3 = getBehaviourDelegate(monitor);
 		if (adapter.isInstance(delegate3))
 			return delegate3;
+		
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
@@ -1054,7 +1082,7 @@ public class Server extends Base implements IServer {
 
 	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException {
 		try {
-			getBehaviourDelegate().setupLaunchConfiguration(workingCopy, monitor);
+			getBehaviourDelegate(monitor).setupLaunchConfiguration(workingCopy, monitor);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate setLaunchDefaults() " + toString(), e);
 		}
@@ -1062,7 +1090,7 @@ public class Server extends Base implements IServer {
 
 	public void importConfiguration(IRuntime runtime2, IProgressMonitor monitor) {
 		try {
-			getDelegate().importConfiguration(runtime2, monitor);
+			getDelegate(monitor).importConfiguration(runtime2, monitor);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate setLaunchDefaults() " + toString(), e);
 		}
@@ -1224,7 +1252,7 @@ public class Server extends Base implements IServer {
 	
 		try {
 			try {
-				getBehaviourDelegate().restart(mode2);
+				getBehaviourDelegate(null).restart(mode2);
 				return;
 			} catch (CoreException ce) {
 				Trace.trace(Trace.SEVERE, "Error calling delegate restart() " + toString());
@@ -1295,12 +1323,12 @@ public class Server extends Base implements IServer {
 		Trace.trace(Trace.FINEST, "Stopping server: " + toString());
 
 		try {
-			getBehaviourDelegate().stop(force);
+			getBehaviourDelegate(null).stop(force);
 		} catch (Throwable t) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate stop() " + toString(), t);
 		}
 	}
-	
+
 	/**
 	 * @see IServer#synchronousStart(String, IProgressMonitor)
 	 */
@@ -1552,7 +1580,7 @@ public class Server extends Base implements IServer {
 	
 		// restart the module
 		try {
-			getBehaviourDelegate().restartModule(module, monitor);
+			getBehaviourDelegate(null).restartModule(module, monitor);
 		} catch (CoreException e) {
 			removeServerListener(listener);
 			throw e;
@@ -1662,7 +1690,7 @@ public class Server extends Base implements IServer {
 	 */
 	public IStatus canModifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) {
 		try {
-			return getDelegate().canModifyModules(add, remove);
+			return getDelegate(monitor).canModifyModules(add, remove);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate canModifyModules() " + toString(), e);
 			return null;
@@ -1741,7 +1769,7 @@ public class Server extends Base implements IServer {
 	 */
 	public IModule[] getChildModules(IModule[] module, IProgressMonitor monitor) {
 		try {
-			return getDelegate().getChildModules(module);
+			return getDelegate(monitor).getChildModules(module);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate getChildModules() " + toString(), e);
 			return null;
@@ -1753,7 +1781,7 @@ public class Server extends Base implements IServer {
 	 */
 	public IModule[] getRootModules(IModule module, IProgressMonitor monitor) throws CoreException {
 		try {
-			return getDelegate().getRootModules(module);
+			return getDelegate(monitor).getRootModules(module);
 		} catch (CoreException se) {
 			//Trace.trace(Trace.FINER, "CoreException calling delegate getParentModules() " + toString() + ": " + se.getMessage());
 			throw se;
@@ -1779,12 +1807,13 @@ public class Server extends Base implements IServer {
 	 * Returns whether the given module can be restarted.
 	 *
 	 * @param module the module
+	 * @param monitor
 	 * @return <code>true</code> if the given module can be
 	 *    restarted, and <code>false</code> otherwise
 	 */
-	public IStatus canRestartModule(IModule[] module) {
+	public IStatus canRestartModule(IModule[] module, IProgressMonitor monitor) {
 		try {
-			boolean b = getBehaviourDelegate().canRestartModule(module);
+			boolean b = getBehaviourDelegate(monitor).canRestartModule(module);
 			if (b)
 				return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, Messages.canRestartModuleOk, null);
 		} catch (Exception e) {
@@ -1817,7 +1846,7 @@ public class Server extends Base implements IServer {
 	 */
 	public void restartModule(IModule[] module, IProgressMonitor monitor) throws CoreException {
 		try {
-			getBehaviourDelegate().restartModule(module, monitor);
+			getBehaviourDelegate(monitor).restartModule(module, monitor);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate restartModule() " + toString(), e);
 		}
@@ -1826,11 +1855,12 @@ public class Server extends Base implements IServer {
 	/**
 	 * Returns an array of IServerPorts that this server has.
 	 *
+	 * @param monitor
 	 * @return a possibly empty array of servers ports
 	 */
-	public ServerPort[] getServerPorts() {
+	public ServerPort[] getServerPorts(IProgressMonitor monitor) {
 		try {
-			return getDelegate().getServerPorts();
+			return getDelegate(monitor).getServerPorts();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate getServerPorts() " + toString(), e);
 			return null;
