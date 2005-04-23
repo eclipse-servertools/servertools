@@ -84,10 +84,13 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
      */
     private void createServerDefinitionTypeComposite(Composite parent) {     
         Map properties= null;
+		ServerRuntime definition=null;
         if(getRuntimeDelegate()!=null)
-            properties = getRuntimeDelegate().getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map)null);
-        ServerRuntime definition = getServerTypeDefinition(getServerDefinitionId(),properties);
-        fServerPanel = new ServerTypeDefinitionGroup(this,definition,ServerTypeDefinitionGroup.CONTEXT_RUNTIME,properties,parent);
+		{
+			properties = getRuntimeDelegate().getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map)null);
+			definition = getServerTypeDefinition(getServerDefinitionId(),properties);
+		}
+		fServerPanel = new ServerTypeDefinitionGroup(this,definition,ServerTypeDefinitionGroup.CONTEXT_RUNTIME,properties,parent);
     }
 	
 	private String getServerDefinitionId()
@@ -117,7 +120,8 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	            properties = getRuntimeDelegate().getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map) null);
 	        }
 	        ServerRuntime definition = getServerTypeDefinition(serverDefinition,properties);
-//	        fServerPanel.reset(definition,ServerTypeDefinitionGroup.CONTEXT_RUNTIME, properties);
+	        if(fServerPanel!=null)
+				fServerPanel.reset(definition,ServerTypeDefinitionGroup.CONTEXT_RUNTIME, properties);
 		}
         else{
             populateRuntimeDelegateProperties();

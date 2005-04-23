@@ -46,6 +46,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
@@ -97,30 +98,29 @@ public class ServerTypeDefinitionGroup
         else
             fPropertyMap=new HashMap();
     }
-//    /**
-//     * Changes the values with the given ones. Renders the UI 
-//     * with the given new values.
-//     *  
-//     * @param definition
-//     * @param context
-//     * @param initialProperties
-//     */
-//    public void reset(ServerRuntime definition, String context, Map initialProperties)
-//    {
-//        initServerTypeDefinition(definition, context, initialProperties);
-//        fDefinitionGroup.setText(definition.getName());
-//        Control[] allControls = fDefinitionGroup.getChildren();
-//        for(int i= 0; i<allControls.length;i++)
-//        {
-//            Control c = allControls[i];
-//            c.dispose();
-//        }
-//        fPropertyControls.clear();
-//        createPropertyControls(fDefinitionGroup);
-//        
-//        fDefinitionGroup.layout(true);
-//        
-//    }
+    /**
+     * Changes the values with the given ones. Renders the UI 
+     * with the given new values.
+     *  
+     * @param definition
+     * @param context
+     * @param initialProperties
+     */
+    public void reset(ServerRuntime definition, String context, Map initialProperties)
+    {
+        initServerTypeDefinition(definition, context, initialProperties);
+        Control[] allControls = fDefinitionComposite.getChildren();
+        for(int i= 0; i<allControls.length;i++)
+        {
+            Control c = allControls[i];
+            c.dispose();
+        }
+        fPropertyControls.clear();
+        createPropertyControls(fDefinitionComposite);
+        
+		fDefinitionComposite.layout(true);
+        
+    }
     
     /**
      * @param definition
