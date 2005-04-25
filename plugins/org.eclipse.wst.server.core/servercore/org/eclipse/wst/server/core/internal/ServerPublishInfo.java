@@ -66,7 +66,10 @@ public class ServerPublishInfo {
 		while (st.hasMoreTokens()) {
 			String mid = st.nextToken();
 			if (mid != null && mid.length() > 0) {
-				list.add(ServerUtil.getModule(mid));
+				IModule m = ServerUtil.getModule(mid);
+				if (m == null)
+					return null;
+				list.add(m);
 			}
 		}
 		
