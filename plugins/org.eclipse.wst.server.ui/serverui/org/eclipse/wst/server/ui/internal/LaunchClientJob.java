@@ -45,8 +45,15 @@ public class LaunchClientJob extends Job {
 		setRule(new ServerSchedulingRule(server));
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
+	/**
+	 * @see Job#shouldRun()
+	 */
+	public boolean shouldRun() {
+		return server.getServerState() == IServer.STATE_STARTED;
+	}
+
+	/** (non-Javadoc)
+	 * @see Job#run(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	protected IStatus run(IProgressMonitor monitor) {
 		Trace.trace(Trace.FINER, "LaunchClient job");
