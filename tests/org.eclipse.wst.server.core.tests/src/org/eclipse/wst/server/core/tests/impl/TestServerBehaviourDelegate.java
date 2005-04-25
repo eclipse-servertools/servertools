@@ -10,21 +10,42 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.impl;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 
 public class TestServerBehaviourDelegate extends ServerBehaviourDelegate {
-	public void publishServer(int kind, IProgressMonitor monitor) throws CoreException {
-		// ignore
-	}
-
-	public void publishModule(int kind, int deltaKind, IModule[] module, IProgressMonitor monitor) throws CoreException {
-		// ignore
-	}
-
 	public void stop(boolean force) {
 		// ignore
+	}
+	
+	public void testProtected() {
+		try {
+			initialize();
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			publishStart(null);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			publishServer(0, null);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			publishModule(0, null, 0, null);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			publishFinish(null);
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 }

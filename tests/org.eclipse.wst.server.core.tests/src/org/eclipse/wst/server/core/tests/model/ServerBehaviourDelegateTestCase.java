@@ -30,10 +30,6 @@ public class ServerBehaviourDelegateTestCase extends TestCase {
 		delegate = new TestServerBehaviourDelegate();
 	}
 	
-	public void test01Initialize() throws Exception {
-		delegate.initialize();
-	}
-	
 	public void test02Initialize() throws Exception {
 		delegate.initialize(new ServerWorkingCopy(new Server(null)));
 	}
@@ -72,22 +68,6 @@ public class ServerBehaviourDelegateTestCase extends TestCase {
 	
 	public void test11SetModuleRestartState() {
 		delegate.setModuleRestartState(null, false);
-	}
-	
-	public void test13PublishStart() throws Exception {
-		delegate.publishStart(null);
-	}
-	
-	public void test14PublishServer() throws Exception {
-		delegate.publishServer(0, null);
-	}
-	
-	public void test15PublishModule() throws Exception {
-		delegate.publishModule(0, 0, null, null);
-	}
-	
-	public void test16PublishFinish() throws Exception {
-		delegate.publishFinish(null);
 	}
 	
 	public void test17SetupLaunchConfiguration() throws Exception {
@@ -132,5 +112,9 @@ public class ServerBehaviourDelegateTestCase extends TestCase {
 
 	public void test26SetModuleStatus() {
 		delegate.setModuleStatus(null, null);
+	}
+	
+	public void test27TestProtected() {
+		((TestServerBehaviourDelegate)delegate).testProtected();
 	}
 }

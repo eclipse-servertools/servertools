@@ -11,8 +11,8 @@
 package org.eclipse.wst.server.core.tests.impl;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.wst.server.core.internal.IModuleResourceDeltaVisitor;
 import org.eclipse.wst.server.core.model.IModuleResourceDelta;
-import org.eclipse.wst.server.core.model.IModuleResourceDeltaVisitor;
 
 public class TestModuleResourceDeltaVisitor implements IModuleResourceDeltaVisitor {
 	public boolean visit(IModuleResourceDelta delta) throws CoreException {

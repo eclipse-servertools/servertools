@@ -13,7 +13,7 @@ package org.eclipse.wst.server.core.tests.model;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.wst.server.core.model.IModuleResourceDeltaVisitor;
+import org.eclipse.wst.server.core.internal.IModuleResourceDeltaVisitor;
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 import org.eclipse.wst.server.core.tests.impl.TestModuleResourceDeltaVisitor;
 
