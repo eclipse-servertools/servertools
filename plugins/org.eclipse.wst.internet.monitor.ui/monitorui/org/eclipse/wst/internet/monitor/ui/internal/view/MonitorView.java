@@ -400,6 +400,7 @@ public class MonitorView extends ViewPart {
 		IAction clearAction = new Action() {
 			public void run() {
 				MonitorUIPlugin.getInstance().clearRequests();
+				clear();
 			}
 		};
 		clearAction.setToolTipText(MonitorUIPlugin.getResource("%actionClearToolTip"));
