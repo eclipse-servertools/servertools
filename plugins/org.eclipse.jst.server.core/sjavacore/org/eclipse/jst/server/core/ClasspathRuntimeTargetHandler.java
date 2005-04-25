@@ -37,6 +37,7 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 		IPath entry;
 		IPath sourceAttachmentPath;
 		IPath sourceAttachmentRootPath;
+		IClasspathAttribute[] attributes;
 	}
 
 	private List sourceAttachments;
@@ -354,13 +355,14 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 		
 		int size = entries.length;
 		for (int i = 0; i < size; i++) {
-			if (entries[i].getSourceAttachmentPath() != null) {
+			if (entries[i].getSourceAttachmentPath() != null || entries[i].getExtraAttributes() != null) {
 				SourceAttachmentUpdate sau = new SourceAttachmentUpdate();
 				sau.runtimeId = runtime.getId();
 				sau.id = id;
 				sau.entry = entries[i].getPath();
 				sau.sourceAttachmentPath = entries[i].getSourceAttachmentPath();
 				sau.sourceAttachmentRootPath = entries[i].getSourceAttachmentRootPath();
+				sau.attributes = entries[i].getExtraAttributes();
 				sourceAttachments.add(sau);
 			}
 		}
@@ -401,7 +403,7 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 				SourceAttachmentUpdate sau = (SourceAttachmentUpdate) sourceAttachments.get(j);
 				if ((id != null && sau.id.equals(id)) || (id == null && sau.id == null)) {
 					if (sau.runtimeId.equals(runtime.getId()) && sau.entry.equals(entries[i].getPath())) {
-						entries[i] = JavaCore.newLibraryEntry(entries[i].getPath(), sau.sourceAttachmentPath, sau.sourceAttachmentRootPath);
+						entries[i] = JavaCore.newLibraryEntry(entries[i].getPath(), sau.sourceAttachmentPath, sau.sourceAttachmentRootPath, new IAccessRule[0], sau.attributes, false);
 					}
 				}
 			}
@@ -431,6 +433,15 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 					child.putString("source-attachment-path", sau.sourceAttachmentPath.toPortableString());
 				if (sau.sourceAttachmentRootPath != null)
 					child.putString("source-attachment-root-path", sau.sourceAttachmentRootPath.toPortableString());
+				if (sau.attributes != null) {
+					int size = sau.attributes.length;
+					for (int i = 0; i < size; i++) {
+						IClasspathAttribute attr = sau.attributes[i];
+						IMemento attrChild = child.createChild("attribute");
+						attrChild.putString("name", attr.getName());
+						attrChild.putString("value", attr.getValue());
+					}
+				}
 			}
 			
 			memento.saveToFile(filename);
@@ -467,6 +478,16 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 					temp = children[i].getString("source-attachment-root-path");
 					if (temp != null)
 						sau.sourceAttachmentRootPath = new Path(temp);
+					IMemento[] attrChildren = children[i].getChildren("attribute");
+					if (attrChildren != null) {
+						int size2 = attrChildren.length;
+						sau.attributes = new IClasspathAttribute[size2];
+						for (int j = 0; j < size2; j++) {
+							String name = attrChildren[j].getString("name");
+							String value = attrChildren[j].getString("value");
+							sau.attributes[j] = JavaCore.newClasspathAttribute(name, value);
+						}
+					}
 					sourceAttachments.add(sau);
 				} catch (Exception e) {
 					Trace.trace(Trace.WARNING, "Could not load monitor: " + e);
