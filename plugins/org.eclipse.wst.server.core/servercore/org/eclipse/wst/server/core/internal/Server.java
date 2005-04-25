@@ -546,62 +546,7 @@ public class Server extends Base implements IServer {
 
 		Trace.trace(Trace.FINEST, "-<- Done firing publish started event -<-");
 	}
-	
-	/**
-	 * Fire a publish target event.
-	 *
-	 * @param module the firing module
-	 */
-	private void fireModulePublishStarted(IModule[] module) {
-		Trace.trace(Trace.FINEST, "->- Firing module publish started event: " + module + " ->-");
-	
-		if (publishListeners == null || publishListeners.isEmpty())
-			return;
 
-		int size = publishListeners.size();
-		IPublishListener[] srl = new IPublishListener[size];
-		publishListeners.toArray(srl);
-
-		for (int i = 0; i < size; i++) {
-			Trace.trace(Trace.FINEST, "  Firing module publish started event to " + srl[i]);
-			try {
-				srl[i].publishModuleStarted(this, module);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing module publish started event to " + srl[i], e);
-			}
-		}
-
-		Trace.trace(Trace.FINEST, "-<- Done firing module publish started event -<-");
-	}
-	
-	/**
-	 * Fire a publish target event.
-	 *
-	 * @param module the firing module
-	 * @param status publishing status
-	 */
-	private void fireModulePublishFinished(IModule[] module, IStatus status) {
-		Trace.trace(Trace.FINEST, "->- Firing module finished event: " + module + " " + status + " ->-");
-	
-		if (publishListeners == null || publishListeners.isEmpty())
-			return;
-
-		int size = publishListeners.size();
-		IPublishListener[] srl = new IPublishListener[size];
-		publishListeners.toArray(srl);
-
-		for (int i = 0; i < size; i++) {
-			Trace.trace(Trace.FINEST, "  Firing module finished event to " + srl[i]);
-			try {
-				srl[i].publishModuleFinished(this, module, status);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing module finished event to " + srl[i], e);
-			}
-		}
-
-		Trace.trace(Trace.FINEST, "-<- Done firing module finished event -<-");
-	}
-	
 	/**
 	 * Fire a publish stop event.
 	 *
@@ -704,7 +649,7 @@ public class Server extends Base implements IServer {
 		//return false;
 	}
 
-	protected ServerPublishInfo getServerPublishInfo() {
+	public ServerPublishInfo getServerPublishInfo() {
 		if (publishInfo == null) {
 			publishInfo = PublishInfo.getInstance().getServerPublishInfo(this);
 		}
@@ -732,184 +677,85 @@ public class Server extends Base implements IServer {
 			}
 		}
 		
-		return doPublish(kind, monitor);
+		IStatus status = null;
+		try {
+			firePublishStarted();
+			status = doPublish(kind, monitor);
+		} catch (Exception e) {
+			status = null; // TODO
+		} finally {
+			firePublishFinished(status);
+		}
+		return status;
 	}
 
 	protected IStatus doPublish(int kind, IProgressMonitor monitor) {
 		Trace.trace(Trace.FINEST, "-->-- Publishing to server: " + toString() + " -->--");
 
+		try {
+			return getBehaviourDelegate(monitor).publish(kind, monitor);
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error calling delegate publish() " + toString(), e);
+			return null;
+		}
+	}
+	
+	/**
+	 * Returns the publish tasks that have been targetted to this server.
+	 * These tasks should be run during publishing.
+	 * 
+	 * @return a possibly empty array of IOptionalTasks
+	 */
+	public IOptionalTask[] getTasks() {
 		final List moduleList = new ArrayList();
-		final List kindList = new ArrayList();
-		
-		final ServerPublishInfo spi = getServerPublishInfo();
 		
 		IModuleVisitor visitor = new IModuleVisitor() {
 			public boolean visit(IModule[] module) {
 				moduleList.add(module);
-				
-				if (spi.hasModulePublishInfo(module)) {
-					if (getPublishedResourceDelta(module).length == 0)
-						kindList.add(new Integer(ServerBehaviourDelegate.NO_CHANGE));
-					else
-						kindList.add(new Integer(ServerBehaviourDelegate.CHANGED));
-				} else
-					kindList.add(new Integer(ServerBehaviourDelegate.ADDED));
 				return true;
 			}
 		};
 
-		visit(visitor, monitor);
+		visit(visitor, null);
+	
+		List tasks = new ArrayList();
 		
-		List tasks = getTasks(moduleList);
+		String serverTypeId = getServerType().getId();
 		
-		spi.addRemovedModules(moduleList, kindList);
-		
-		while (moduleList.size() > kindList.size()) {
-			kindList.add(new Integer(ServerBehaviourDelegate.REMOVED));
-		}
-
-		int size = 2000 + 3500 * moduleList.size() + 500 * tasks.size();
-		
-		monitor = ProgressUtil.getMonitorFor(monitor);
-		monitor.beginTask(NLS.bind(Messages.publishing, toString()), size);
-
-		// TODO - group up status until the end and use better message based on success or failure
-		MultiStatus multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.publishingStatus, null);
-
-		if (monitor.isCanceled())
-			return new Status(IStatus.INFO, ServerPlugin.PLUGIN_ID, 0, Messages.publishingCancelled, null);
-		
-		// start publishing
-		Trace.trace(Trace.FINEST, "Calling publishStart()");
-		firePublishStarted();
-		try {
-			getBehaviourDelegate(null).publishStart(ProgressUtil.getSubMonitorFor(monitor, 1000));
-		} catch (CoreException ce) {
-			Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
-			firePublishFinished(ce.getStatus());
-			return ce.getStatus();
-		}
-		
-		// perform tasks
-		IStatus taskStatus = performTasks(tasks, monitor);
-		if (taskStatus != null)
-			multi.add(taskStatus);
-		
-		// publish the server
-		try {
-			if (!monitor.isCanceled() && serverType.hasServerConfiguration()) {
-				getBehaviourDelegate(null).publishServer(kind, ProgressUtil.getSubMonitorFor(monitor, 1000));
-			}
-		} catch (CoreException ce) {
-			Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
-			multi.add(ce.getStatus());
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error publishing configuration to " + toString(), e);
-			multi.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
-		}
-		
-		// publish modules
-		if (!monitor.isCanceled()) {
-			try {
-				publishModules(kind, moduleList, kindList, multi, monitor);
-			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Error while publishing modules", e);
-				multi.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
+		IPublishTask[] publishTasks = ServerPlugin.getPublishTasks();
+		if (publishTasks != null) {
+			int size = publishTasks.length;
+			for (int i = 0; i < size; i++) {
+				IPublishTask task = publishTasks[i];
+				if (task.supportsType(serverTypeId)) {
+					IOptionalTask[] tasks2 = task.getTasks(this, moduleList);
+					if (tasks2 != null) {
+						int size2 = tasks2.length;
+						for (int j = 0; j < size2; j++) {
+							if (tasks2[j].getStatus() == IOptionalTask.TASK_MANDATORY)
+								tasks.add(tasks2[j]);
+						}
+					}
+				}
 			}
 		}
 		
-		// end the publishing
-		Trace.trace(Trace.FINEST, "Calling publishFinish()");
-		try {
-			getBehaviourDelegate(null).publishFinish(ProgressUtil.getSubMonitorFor(monitor, 500));
-		} catch (CoreException ce) {
-			Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
-			multi.add(ce.getStatus());
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error stopping publish to " + toString(), e);
-			multi.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
-		}
-		
-		if (monitor.isCanceled()) {
-			IStatus status = new Status(IStatus.INFO, ServerPlugin.PLUGIN_ID, 0, Messages.publishingCancelled, null);
-			multi.add(status);
-		}
-
-		MultiStatus ps = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.publishingStop, null);
-		ps.add(multi);
-		firePublishFinished(multi);
-		
-		spi.save();
-
-		monitor.done();
-
-		Trace.trace(Trace.FINEST, "--<-- Done publishing --<--");
-		
-		if (multi.getChildren().length == 1)
-			return multi.getChildren()[0];
-		
-		return multi;
+		return (IOptionalTask[]) tasks.toArray(new IOptionalTask[tasks.size()]);
 	}
+	
+	public List getAllModules() {
+		final List moduleList = new ArrayList();
+		
+		IModuleVisitor visitor = new IModuleVisitor() {
+			public boolean visit(IModule[] module) {
+				moduleList.add(module);
+				return true;
+			}
+		};
 
-	/**
-	 * Publish a single module.
-	 */
-	protected IStatus publishModule(int kind, IModule[] module, int deltaKind, IProgressMonitor monitor) {
-		Trace.trace(Trace.FINEST, "Publishing module: " + module);
+		visit(visitor, null);
 		
-		int size = module.length;
-		IModule m = module[size - 1];
-		monitor.beginTask(NLS.bind(Messages.publishingModule, m.getName()), 1000);
-		
-		fireModulePublishStarted(module);
-		
-		IStatus status = new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.publishedModule, m.getName()), null);
-		try {
-			getBehaviourDelegate(null).publishModule(kind, deltaKind, module, monitor);
-		} catch (CoreException ce) {
-			status = ce.getStatus();
-		}
-		fireModulePublishFinished(module, status);
-		
-		/*Trace.trace(Trace.FINEST, "Delta:");
-		IModuleResourceDelta[] delta = getServerPublishInfo().getDelta(parents, module);
-		int size = delta.length;
-		for (int i = 0; i < size; i++) {
-			((ModuleResourceDelta)delta[i]).trace(">  ");
-		}*/
-		if (deltaKind == ServerBehaviourDelegate.REMOVED)
-			getServerPublishInfo().removeModulePublishInfo(module);
-		else
-			getServerPublishInfo().fill(module);
-		
-		monitor.done();
-		
-		Trace.trace(Trace.FINEST, "Done publishing: " + module);
-		return status;
-	}
-
-	/**
-	 * Publishes the given modules. Returns true if the publishing
-	 * should continue, or false if publishing has failed or is cancelled.
-	 * 
-	 * Uses 500 ticks plus 3500 ticks per module
-	 */
-	protected void publishModules(int kind, List modules2, List deltaKind, MultiStatus multi, IProgressMonitor monitor) {
-		if (modules2 == null)
-			return;
-
-		int size = modules2.size();
-		if (size == 0)
-			return;
-		
-		if (monitor.isCanceled())
-			return;
-
-		// publish modules
-		for (int i = 0; i < size; i++) {
-			IStatus status = publishModule(kind, (IModule[]) modules2.get(i), ((Integer)deltaKind.get(i)).intValue(), ProgressUtil.getSubMonitorFor(monitor, 3000));
-			multi.add(status);
-		}
+		return moduleList;
 	}
 
 	/*
@@ -929,78 +775,6 @@ public class Server extends Base implements IServer {
 	 */
 	public IModuleResourceDelta[] getPublishedResourceDelta(IModule[] module) {
 		return getServerPublishInfo().getDelta(module);
-	}
-
-	protected List getTasks(List modules2) {
-		List tasks = new ArrayList();
-		
-		String serverTypeId = getServerType().getId();
-		
-		IPublishTask[] publishTasks = ServerPlugin.getPublishTasks();
-		if (publishTasks != null) {
-			int size = publishTasks.length;
-			for (int i = 0; i < size; i++) {
-				IPublishTask task = publishTasks[i];
-				if (task.supportsType(serverTypeId)) {
-					IOptionalTask[] tasks2 = task.getTasks(this, modules2);
-					if (tasks2 != null) {
-						int size2 = tasks2.length;
-						for (int j = 0; j < size2; j++) {
-							if (tasks2[j].getStatus() == IOptionalTask.TASK_MANDATORY)
-								tasks.add(tasks2[j]);
-						}
-					}
-				}
-			}
-		}
-
-		/*int size = tasks.size();
-		for (int i = 0; i < size - 1; i++) {
-			for (int j = i + 1; j < size; j++) {
-				IOrdered a = (IOrdered) tasks.get(i);
-				IOrdered b = (IOrdered) tasks.get(j);
-				if (a.getOrder() > b.getOrder()) {
-					Object temp = a;
-					tasks.set(i, b);
-					tasks.set(j, temp);
-				}
-			}
-		}*/
-		
-		return tasks;
-	}
-
-	protected IStatus performTasks(List tasks, IProgressMonitor monitor) {
-		Trace.trace(Trace.FINEST, "Performing tasks: " + tasks.size());
-		
-		if (tasks.isEmpty())
-			return null;
-		
-		Status multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.taskPerforming, null);
-
-		Iterator iterator = tasks.iterator();
-		while (iterator.hasNext()) {
-			IOptionalTask task = (IOptionalTask) iterator.next();
-			monitor.subTask(NLS.bind(Messages.taskPerforming, task.toString()));
-			try {
-				task.execute(ProgressUtil.getSubMonitorFor(monitor, 500));
-			} catch (CoreException ce) {
-				Trace.trace(Trace.SEVERE, "Task failed", ce);
-			}
-			if (monitor.isCanceled())
-				return multi;
-		}
-		
-		// save server and configuration
-		/*try {
-			ServerUtil.save(server, ProgressUtil.getSubMonitorFor(monitor, 1000));
-			ServerUtil.save(configuration, ProgressUtil.getSubMonitorFor(monitor, 1000));
-		} catch (CoreException se) {
-			Trace.trace(Trace.SEVERE, "Error saving server and/or configuration", se);
-			multi.addChild(se.getStatus());
-		}*/
-
-		return multi;
 	}
 	
 	/**

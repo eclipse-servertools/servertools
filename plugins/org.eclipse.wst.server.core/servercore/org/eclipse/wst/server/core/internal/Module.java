@@ -238,6 +238,7 @@ public class Module implements IModule {
 	 */
 	public Object getAdapter(Class adapter) {
 		//if (delegate != null) {
+		getDelegate(null);
 		if (adapter.isInstance(delegate))
 			return delegate;
 		//}

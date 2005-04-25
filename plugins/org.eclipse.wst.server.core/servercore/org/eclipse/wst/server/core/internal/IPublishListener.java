@@ -11,7 +11,6 @@
 package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 /**
  * A publish listener is used to listen for publishing events from a server.
@@ -36,25 +35,6 @@ public interface IPublishListener {
 	 * @param server
 	 */
 	public void publishStarted(IServer server);
-
-	/**
-	 * Fired with the module to notify that publishing of this module
-	 * is starting.
-	 * 
-	 * @param server
-	 * @param module
-	 */
-	public void publishModuleStarted(IServer server, IModule[] module);
-
-	/**
-	 * The event is fired when the module has finished publishing,
-	 * and includes the status.
-	 * 
-	 * @param server
-	 * @param module
-	 * @param status
-	 */
-	public void publishModuleFinished(IServer server, IModule[] module, IStatus status);
 
 	/**
 	 * Publishing has finished. Returns the overall status.

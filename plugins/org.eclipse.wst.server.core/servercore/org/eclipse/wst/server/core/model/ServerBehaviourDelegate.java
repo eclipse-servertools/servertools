@@ -10,12 +10,20 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.model;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IOptionalTask;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.internal.Messages;
+import org.eclipse.wst.server.core.internal.ProgressUtil;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
+import org.eclipse.wst.server.core.internal.Trace;
 /**
  * A server delegate provides the implementation for various 
  * generic and server-type-specific operations for a specific type of server.
@@ -48,21 +56,21 @@ import org.eclipse.wst.server.core.internal.ServerPlugin;
  */
 public abstract class ServerBehaviourDelegate {
 	private Server server;
-	
+
 	/**
 	 * Publish kind constant (value 0) for no change.
 	 * 
 	 * @see #publishModule(int, int, IModule[], IProgressMonitor)
 	 */
 	public static final int NO_CHANGE = 0;
-	
+
 	/**
 	 * Publish kind constant (value 1) for added resources.
 	 * 
 	 * @see #publishModule(int, int, IModule[], IProgressMonitor)
 	 */
 	public static final int ADDED = 1;
-	
+
 	/**
 	 * Publish kind constant (value 2) for changed resources.
 	 * 
@@ -114,7 +122,7 @@ public abstract class ServerBehaviourDelegate {
 	 * </p>
 	 * [issue: add progress monitor?]
 	 */
-	public void initialize() {
+	protected void initialize() {
 		// do nothing
 	}
 
@@ -233,7 +241,7 @@ public abstract class ServerBehaviourDelegate {
 	 *    reporting and cancellation are not desired
 	 * @throws CoreException if there is a problem starting the publish
 	 */
-	public void publishStart(IProgressMonitor monitor) throws CoreException {
+	protected void publishStart(IProgressMonitor monitor) throws CoreException {
 		// do nothing
 	}
 
@@ -258,7 +266,9 @@ public abstract class ServerBehaviourDelegate {
 	 *    reporting and cancellation are not desired
 	 * @throws CoreException if there is a problem publishing the server
 	 */
-	public abstract void publishServer(int kind, IProgressMonitor monitor) throws CoreException;
+	protected void publishServer(int kind, IProgressMonitor monitor) throws CoreException {
+		// do nothing
+	}
 
 	/**
 	 * Publish a single module to the server.
@@ -273,7 +283,7 @@ public abstract class ServerBehaviourDelegate {
 	 * correct id) will be passed to this method.
 	 * </p>
 	 * 
-	 * @param kind one of the IServer.PUBLISH_XX constants. Valid values are
+	 * @param kind one of the IServer.PUBLISH_XX constants. Valid values are:
 	 *    <ul>
 	 *    <li><code>PUBLSIH_FULL</code>- indicates a full publish.</li>
 	 *    <li><code>PUBLISH_INCREMENTAL</code>- indicates a incremental publish.
@@ -283,7 +293,7 @@ public abstract class ServerBehaviourDelegate {
 	 *      full publish.
 	 *    </ul>
 	 * @param module the module to publish
-	 * @param deltaKind one of the IServer publish change constants. Valid values are
+	 * @param deltaKind one of the IServer publish change constants. Valid values are:
 	 *    <ul>
 	 *    <li><code>ADDED</code>- indicates the module has just been added to the server
 	 *      and this is the first publish.
@@ -299,7 +309,9 @@ public abstract class ServerBehaviourDelegate {
 	 *    reporting and cancellation are not desired
 	 * @throws CoreException if there is a problem publishing the module
 	 */
-	public abstract void publishModule(int kind, int deltaKind, IModule[] module, IProgressMonitor monitor) throws CoreException;
+	protected void publishModule(int kind, int deltaKind, IModule[] module, IProgressMonitor monitor) throws CoreException {
+		// do nothing
+	}
 
 	/**
 	 * Methods called to notify that publishing has finished.
@@ -315,7 +327,7 @@ public abstract class ServerBehaviourDelegate {
 	 *    reporting and cancellation are not desired
 	 * @throws CoreException if there is a problem stopping the publish
 	 */
-	public void publishFinish(IProgressMonitor monitor) throws CoreException {
+	protected void publishFinish(IProgressMonitor monitor) throws CoreException {
 		// do nothing
 	}
 
@@ -484,5 +496,231 @@ public abstract class ServerBehaviourDelegate {
 	 */
 	public final void setModuleStatus(IModule[] module, IStatus status) {
 		server.setModuleStatus(module, status);
+	}
+	
+	public IStatus publish(int kind, IProgressMonitor monitor) {
+		Trace.trace(Trace.FINEST, "-->-- Publishing to server: " + toString() + " -->--");
+
+		final List moduleList = getAllModules();
+		final List kindList = new ArrayList();
+		
+		Iterator iterator = moduleList.iterator();
+		while (iterator.hasNext()) {
+			IModule[] module = (IModule[]) iterator.next();
+			if (hasBeenPublished(module)) {
+				if (getPublishedResourceDelta(module).length == 0)
+					kindList.add(new Integer(ServerBehaviourDelegate.NO_CHANGE));
+				else
+					kindList.add(new Integer(ServerBehaviourDelegate.CHANGED));
+			} else
+				kindList.add(new Integer(ServerBehaviourDelegate.ADDED));
+		}
+		
+		IOptionalTask[] tasks = getTasks();
+		
+		addRemovedModules(moduleList, kindList);
+		
+		while (moduleList.size() > kindList.size()) {
+			kindList.add(new Integer(ServerBehaviourDelegate.REMOVED));
+		}
+
+		int size = 2000 + 3500 * moduleList.size() + 500 * tasks.length;
+		
+		monitor = ProgressUtil.getMonitorFor(monitor);
+		monitor.beginTask(NLS.bind(Messages.publishing, toString()), size);
+
+		// TODO - group up status until the end and use better message based on success or failure
+		MultiStatus multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.publishingStatus, null);
+
+		if (monitor.isCanceled())
+			return new Status(IStatus.INFO, ServerPlugin.PLUGIN_ID, 0, Messages.publishingCancelled, null);
+		
+		// start publishing
+		Trace.trace(Trace.FINEST, "Calling publishStart()");
+		try {
+			publishStart(ProgressUtil.getSubMonitorFor(monitor, 1000));
+		} catch (CoreException ce) {
+			Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
+			return ce.getStatus();
+		}
+		
+		// perform tasks
+		IStatus taskStatus = performTasks(tasks, monitor);
+		if (taskStatus != null)
+			multi.add(taskStatus);
+		
+		// publish the server
+		try {
+			if (!monitor.isCanceled() && getServer().getServerType().hasServerConfiguration()) {
+				publishServer(kind, ProgressUtil.getSubMonitorFor(monitor, 1000));
+			}
+		} catch (CoreException ce) {
+			Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
+			multi.add(ce.getStatus());
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error publishing configuration to " + toString(), e);
+			multi.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
+		}
+		
+		// publish modules
+		if (!monitor.isCanceled()) {
+			try {
+				publishModules(kind, moduleList, kindList, multi, monitor);
+			} catch (Exception e) {
+				Trace.trace(Trace.WARNING, "Error while publishing modules", e);
+				multi.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
+			}
+		}
+		
+		// end the publishing
+		Trace.trace(Trace.FINEST, "Calling publishFinish()");
+		try {
+			publishFinish(ProgressUtil.getSubMonitorFor(monitor, 500));
+		} catch (CoreException ce) {
+			Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
+			multi.add(ce.getStatus());
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error stopping publish to " + toString(), e);
+			multi.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
+		}
+		
+		if (monitor.isCanceled()) {
+			IStatus status = new Status(IStatus.INFO, ServerPlugin.PLUGIN_ID, 0, Messages.publishingCancelled, null);
+			multi.add(status);
+		}
+
+		MultiStatus ps = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.publishingStop, null);
+		ps.add(multi);
+
+		monitor.done();
+
+		Trace.trace(Trace.FINEST, "--<-- Done publishing --<--");
+		
+		if (multi.getChildren().length == 1)
+			return multi.getChildren()[0];
+		
+		return multi;
+	}
+
+	/**
+	 * Publish a single module.
+	 */
+	protected IStatus publishModule(int kind, IModule[] module, int deltaKind, IProgressMonitor monitor) {
+		Trace.trace(Trace.FINEST, "Publishing module: " + module);
+		
+		int size = module.length;
+		IModule m = module[size - 1];
+		monitor.beginTask(NLS.bind(Messages.publishingModule, m.getName()), 1000);
+		
+		IStatus status = new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.publishedModule, m.getName()), null);
+		try {
+			publishModule(kind, deltaKind, module, monitor);
+		} catch (CoreException ce) {
+			status = ce.getStatus();
+		}
+		
+		/*Trace.trace(Trace.FINEST, "Delta:");
+		IModuleResourceDelta[] delta = getServerPublishInfo().getDelta(parents, module);
+		int size = delta.length;
+		for (int i = 0; i < size; i++) {
+			((ModuleResourceDelta)delta[i]).trace(">  ");
+		}*/
+		updatePublishInfo(deltaKind, module);
+		
+		monitor.done();
+		
+		Trace.trace(Trace.FINEST, "Done publishing: " + module);
+		return status;
+	}
+	
+	protected boolean hasBeenPublished(IModule[] module) {
+		return server.getServerPublishInfo().hasModulePublishInfo(module);
+	}
+	
+	protected void addRemovedModules(List moduleList, List kindList) {
+		server.getServerPublishInfo().addRemovedModules(moduleList, kindList);
+	}
+	
+	protected void updatePublishInfo(int deltaKind, IModule[] module) {
+		if (deltaKind == ServerBehaviourDelegate.REMOVED)
+			server.getServerPublishInfo().removeModulePublishInfo(module);
+		else
+			server.getServerPublishInfo().fill(module);
+	}
+
+	/**
+	 * Publishes the given modules. Returns true if the publishing
+	 * should continue, or false if publishing has failed or is cancelled.
+	 * 
+	 * Uses 500 ticks plus 3500 ticks per module
+	 */
+	protected void publishModules(int kind, List modules2, List deltaKind, MultiStatus multi, IProgressMonitor monitor) {
+		if (modules2 == null)
+			return;
+
+		int size = modules2.size();
+		if (size == 0)
+			return;
+		
+		if (monitor.isCanceled())
+			return;
+
+		// publish modules
+		for (int i = 0; i < size; i++) {
+			IStatus status = publishModule(kind, (IModule[]) modules2.get(i), ((Integer)deltaKind.get(i)).intValue(), ProgressUtil.getSubMonitorFor(monitor, 3000));
+			multi.add(status);
+		}
+	}
+
+	/**
+	 * Returns the publish tasks that have been targetted to this server.
+	 * These tasks should be run during publishing.
+	 * 
+	 * @return a possibly empty array of IOptionalTasks
+	 */
+	protected final IOptionalTask[] getTasks() {
+		return server.getTasks();
+	}
+
+	/**
+	 * Returns all the modules that are on the server, including root
+	 * modules and all their children.
+	 * 
+	 * @return a list of IModule[]s
+	 */
+	protected final List getAllModules() {
+		return server.getAllModules();
+	}
+
+	/**
+	 * Perform (execute) all the given tasks.
+	 * 
+	 * @param tasks an array of tasks
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return the status
+	 */
+	protected IStatus performTasks(IOptionalTask[] tasks, IProgressMonitor monitor) {
+		int size = tasks.length;
+		Trace.trace(Trace.FINEST, "Performing tasks: " + size);
+		
+		if (size == 0)
+			return null;
+		
+		Status multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.taskPerforming, null);
+
+		for (int i = 0; i < size; i++) {
+			IOptionalTask task = tasks[i];
+			monitor.subTask(NLS.bind(Messages.taskPerforming, task.toString()));
+			try {
+				task.execute(ProgressUtil.getSubMonitorFor(monitor, 500));
+			} catch (CoreException ce) {
+				Trace.trace(Trace.SEVERE, "Task failed", ce);
+			}
+			if (monitor.isCanceled())
+				return multi;
+		}
+		
+		return multi;
 	}
 }

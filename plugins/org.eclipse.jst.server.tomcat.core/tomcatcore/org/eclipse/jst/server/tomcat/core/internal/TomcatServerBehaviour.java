@@ -159,7 +159,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		setServerState(IServer.STATE_STOPPED);
 	}
 
-	public void publishServer(int kind, IProgressMonitor monitor) throws CoreException {
+	protected void publishServer(int kind, IProgressMonitor monitor) throws CoreException {
 		IPath installDir = getServer().getRuntime().getLocation();
 		IPath confDir = null;
 		if (getTomcatServer().isTestEnvironment()) {
@@ -192,7 +192,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	/*
 	 * Publishes the given module to the server.
 	 */
-	public void publishModule(int kind, int deltaKind, IModule[] moduleTree, IProgressMonitor monitor) throws CoreException {
+	protected void publishModule(int kind, int deltaKind, IModule[] moduleTree, IProgressMonitor monitor) throws CoreException {
 		if (getTomcatServer().isTestEnvironment())
 			return;
 

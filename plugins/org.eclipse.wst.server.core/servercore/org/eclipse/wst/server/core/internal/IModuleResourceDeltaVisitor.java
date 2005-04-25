@@ -8,9 +8,10 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core.model;
+package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.wst.server.core.model.IModuleResourceDelta;
 /**
  * An objects that visits module resource deltas.
  * <p> 

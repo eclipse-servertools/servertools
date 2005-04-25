@@ -75,14 +75,16 @@ public class ServerPublishInfo {
 		return modules;
 	}
 
-	protected boolean hasModulePublishInfo(IModule[] module) {
+	public boolean hasModulePublishInfo(IModule[] module) {
 		String key = getKey(module);
 		return modulePublishInfo.containsKey(key);
 	}
 
-	protected void removeModulePublishInfo(IModule[] module) {
+	public void removeModulePublishInfo(IModule[] module) {
 		String key = getKey(module);
 		modulePublishInfo.remove(key);
+		
+		save();
 	}
 
 	/**
@@ -101,7 +103,7 @@ public class ServerPublishInfo {
 		return mpi;
 	}
 
-	protected void addRemovedModules(List moduleList, List kindList) {
+	public void addRemovedModules(List moduleList, List kindList) {
 		int size = moduleList.size();
 		List removed = new ArrayList();
 		Iterator iterator = modulePublishInfo.keySet().iterator();
@@ -186,15 +188,17 @@ public class ServerPublishInfo {
 		}
 	}
 	
-	protected void fill(IModule[] module) {
+	public void fill(IModule[] module) {
 		ModulePublishInfo mpi = getModulePublishInfo(module);
 		int size = module.length;
-		ModuleDelegate pm = (ModuleDelegate) module[size - 1].getAdapter(ModuleDelegate.class);
+		ModuleDelegate pm = (ModuleDelegate) module[size - 1].loadAdapter(ModuleDelegate.class, null);
 		try {
-			mpi.setResources(pm.members());
+			if (pm != null)
+				mpi.setResources(pm.members());
 		} catch (CoreException ce) {
 			// ignore
 		}
+		save();
 	}
 
 	protected IModuleResourceDelta[] getDelta(IModule[] module) {
@@ -203,10 +207,11 @@ public class ServerPublishInfo {
 		
 		ModulePublishInfo mpi = getModulePublishInfo(module);
 		int size = module.length;
-		ModuleDelegate pm = (ModuleDelegate) module[size - 1].getAdapter(ModuleDelegate.class);
+		ModuleDelegate pm = (ModuleDelegate) module[size - 1].loadAdapter(ModuleDelegate.class, null);
 		IModuleResource[] resources = null;
 		try {
-			resources = pm.members();
+			if (pm != null)
+				resources = pm.members();
 		} catch (CoreException ce) {
 			// ignore
 		}

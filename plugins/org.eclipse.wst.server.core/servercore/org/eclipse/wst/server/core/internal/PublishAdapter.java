@@ -11,7 +11,6 @@
 package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 /**
  * Helper class which implements the IPublishListener interface
@@ -22,14 +21,6 @@ import org.eclipse.wst.server.core.IServer;
  */
 public class PublishAdapter implements IPublishListener {
 	public void publishStarted(IServer server) {
-		// do nothing
-	}
-
-	public void publishModuleStarted(IServer server, IModule[] module) {
-		// do nothing
-	}
-
-	public void publishModuleFinished(IServer server, IModule[] module, IStatus status) {
 		// do nothing
 	}
 
