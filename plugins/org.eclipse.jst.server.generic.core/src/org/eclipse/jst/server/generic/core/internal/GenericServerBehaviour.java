@@ -359,7 +359,8 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     		}
     		
     		setServerState(IServer.STATE_STARTING);
-    	
+			setMode(launchMode);
+			
     		// ping server to check for startup
     		try {
     			String url = "http://localhost";
