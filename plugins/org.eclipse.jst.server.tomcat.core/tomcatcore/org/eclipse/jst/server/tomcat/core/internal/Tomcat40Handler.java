@@ -112,4 +112,13 @@ public class Tomcat40Handler implements ITomcatVersionHandler {
 		
 		return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorSpec40"), null);
 	}
+
+	/**
+	 * @see ITomcatVersionHandler#getRuntimeBaseDirectory(TomcatServerBehaviour)
+	 */
+	public IPath getRuntimeBaseDirectory(TomcatServerBehaviour serverBehaviour) {
+		if (serverBehaviour.getTomcatServer().isTestEnvironment())
+			return serverBehaviour.getTempDirectory();
+		return serverBehaviour.getServer().getRuntime().getLocation();
+	}
 }

@@ -45,4 +45,14 @@ public interface ITomcatVersionHandler {
 	 * @return the status
 	 */
 	public IStatus canAddModule(IWebModule module);
+	
+	/**
+	 * Returns the runtime base path for relative paths in the server
+	 * configuration.
+	 * 
+	 * @param serverBehaviour TomcatServerBehaviour instance from
+	 * which to determine the base path
+	 * @return the base path
+	 */
+	public IPath getRuntimeBaseDirectory(TomcatServerBehaviour serverBehaviour);
 }

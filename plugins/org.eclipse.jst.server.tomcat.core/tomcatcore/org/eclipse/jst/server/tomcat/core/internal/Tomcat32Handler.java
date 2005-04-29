@@ -102,4 +102,11 @@ public class Tomcat32Handler implements ITomcatVersionHandler {
 		
 		return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorSpec32"), null);
 	}
+
+	/**
+	 * @see ITomcatVersionHandler#getRuntimeBaseDirectory(TomcatServerBehaviour)
+	 */
+	public IPath getRuntimeBaseDirectory(TomcatServerBehaviour serverBehaviour) {
+		return serverBehaviour.getServer().getRuntime().getLocation();
+	}
 }

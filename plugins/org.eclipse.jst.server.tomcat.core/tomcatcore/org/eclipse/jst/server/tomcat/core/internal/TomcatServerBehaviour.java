@@ -84,6 +84,16 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	public String getRuntimeClass() {
 		return getTomcatVersionHandler().getRuntimeClass();
 	}
+	
+	/**
+	 * Returns the runtime base path for relative paths in the server
+	 * configuration.
+	 * 
+	 * @return the base path
+	 */
+	public IPath getRuntimeBaseDirectory() {
+		return getTomcatVersionHandler().getRuntimeBaseDirectory(this);
+	}
 
 	/**
 	 * Return the program's runtime arguments to start or stop.
