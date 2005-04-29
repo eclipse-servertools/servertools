@@ -11,8 +11,8 @@
 package org.eclipse.jst.server.tomcat.core.internal.command;
 
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfigurationWorkingCopy;
+import org.eclipse.jst.server.tomcat.core.internal.Messages;
 import org.eclipse.jst.server.tomcat.core.internal.MimeMapping;
-import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
 /**
  * Command to remove a mime mapping.
  */
@@ -46,7 +46,7 @@ public class RemoveMimeMappingCommand extends ConfigurationCommand {
 	 * @return java.lang.String
 	 */
 	public String getDescription() {
-		return TomcatPlugin.getResource("%configurationEditorActionRemoveMimeMappingDescription");
+		return Messages.configurationEditorActionRemoveMimeMappingDescription;
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class RemoveMimeMappingCommand extends ConfigurationCommand {
 	 * @return java.lang.String
 	 */
 	public String getName() {
-		return TomcatPlugin.getResource("%configurationEditorActionRemoveMimeMapping");
+		return Messages.configurationEditorActionRemoveMimeMapping;
 	}
 
 	/**

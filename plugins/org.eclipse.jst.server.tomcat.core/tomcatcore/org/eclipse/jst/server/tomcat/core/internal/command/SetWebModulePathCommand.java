@@ -11,8 +11,9 @@
 package org.eclipse.jst.server.tomcat.core.internal.command;
 
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfigurationWorkingCopy;
-import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
+import org.eclipse.jst.server.tomcat.core.internal.Messages;
 import org.eclipse.jst.server.tomcat.core.internal.WebModule;
+import org.eclipse.osgi.util.NLS;
 /**
  * Command to modify the path of a Web module.
  */
@@ -55,7 +56,7 @@ public class SetWebModulePathCommand extends ConfigurationCommand {
 		if (oldModule == null)
 			oldModule = (WebModule) configuration.getWebModules().get(index);
 		
-		return TomcatPlugin.getResource("%configurationEditorActionEditWebModuleDescription", oldModule.getPath(), path);
+		return NLS.bind(Messages.configurationEditorActionEditWebModuleDescription, oldModule.getPath(), path);
 	}
 
 	/**
@@ -63,7 +64,7 @@ public class SetWebModulePathCommand extends ConfigurationCommand {
 	 * @return java.lang.String
 	 */
 	public String getName() {
-		return TomcatPlugin.getResource("%configurationEditorActionEditWebModulePath");
+		return Messages.configurationEditorActionEditWebModulePath;
 	}
 
 	/**

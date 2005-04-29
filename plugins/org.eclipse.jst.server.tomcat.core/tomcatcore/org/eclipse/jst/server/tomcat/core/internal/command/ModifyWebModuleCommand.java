@@ -11,7 +11,7 @@
 package org.eclipse.jst.server.tomcat.core.internal.command;
 
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfigurationWorkingCopy;
-import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
+import org.eclipse.jst.server.tomcat.core.internal.Messages;
 import org.eclipse.jst.server.tomcat.core.internal.WebModule;
 /**
  * Command to change a web module.
@@ -42,7 +42,7 @@ public class ModifyWebModuleCommand extends ConfigurationCommand {
 	 * @return java.lang.String
 	 */
 	public String getDescription() {
-		return TomcatPlugin.getResource("%configurationEditorActionModifyWebModuleDescription");
+		return Messages.configurationEditorActionModifyWebModuleDescription;
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class ModifyWebModuleCommand extends ConfigurationCommand {
 	 * @return java.lang.String
 	 */
 	public String getName() {
-		return TomcatPlugin.getResource("%configurationEditorActionModifyWebModule");
+		return Messages.configurationEditorActionModifyWebModule;
 	}
 
 	/**

@@ -99,12 +99,12 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 			return status;
 	
 		if (!verifyLocation())
-			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorInstallDir"), null);
+			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorInstallDir, null);
 		// don't accept trailing space since that can cause startup problems
 		if (getRuntime().getLocation().hasTrailingSeparator())
-			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorInstallDirTrailingSlash"), null);
+			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorInstallDirTrailingSlash, null);
 		if (getVMInstall() == null)
-			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorJRE"), null);
+			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorJRE, null);
 
 		// check for tools.jar (contains the javac compiler on Windows & Linux) to see whether
 		// Tomcat will be able to compile JSPs.
@@ -125,7 +125,7 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 		}
 		
 		if (!found)
-			return new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%warningJRE"), null);
+			return new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, Messages.warningJRE, null);
 		
 		return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, "", null);
 	}

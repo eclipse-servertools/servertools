@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.tomcat.core.internal.xml.Factory;
 import org.eclipse.jst.server.tomcat.core.internal.xml.XMLUtil;
 import org.eclipse.jst.server.tomcat.core.internal.xml.server40.*;
+import org.eclipse.osgi.util.NLS;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -111,7 +112,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 		// first add server port
 		try {
 			int port = Integer.parseInt(server.getPort());
-			ports.add(new ServerPort("server", TomcatPlugin.getResource("%portServer"), port, "TCPIP"));
+			ports.add(new ServerPort("server", Messages.portServer, port, "TCPIP"));
 		} catch (Exception e) {
 			// ignore
 		}
@@ -195,7 +196,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	public void load(IPath path, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(TomcatPlugin.getResource("%loadingTask"), 5);
+			monitor.beginTask(Messages.loadingTask, 5);
 			
 			// check for catalina.policy to verify that this is a v5.5 config
 			InputStream in = new FileInputStream(path.append("catalina.policy").toFile());
@@ -237,7 +238,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 			monitor.done();
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Could not load Tomcat v5.5 configuration from " + path.toOSString() + ": " + e.getMessage());
-			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotLoadConfiguration", path.toOSString()), e));
+			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotLoadConfiguration, path.toOSString()), e));
 		}
 	}
 
@@ -267,12 +268,12 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	public void load(IFolder folder, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(TomcatPlugin.getResource("%loadingTask"), 800);
+			monitor.beginTask(Messages.loadingTask, 800);
 	
 			// check for catalina.policy to verify that this is a v4.0 config
 			IFile file = folder.getFile("catalina.policy");
 			if (!file.exists())
-				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotLoadConfiguration", folder.getFullPath().toOSString()), null));
+				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotLoadConfiguration, folder.getFullPath().toOSString()), null));
 	
 			// load server.xml
 			file = folder.getFile("server.xml");
@@ -319,7 +320,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 			monitor.done();
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Could not reload Tomcat v5.5 configuration from: " + folder.getFullPath() + ": " + e.getMessage());
-			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotLoadConfiguration", folder.getFullPath().toOSString()), e));
+			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotLoadConfiguration, folder.getFullPath().toOSString()), e));
 		}
 	}
 
@@ -333,7 +334,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	protected void save(IPath path, boolean forceDirty, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(TomcatPlugin.getResource("%savingTask"), 3);
+			monitor.beginTask(Messages.savingTask, 3);
 	
 			// make sure directory exists
 			if (!path.toFile().exists()) {
@@ -371,7 +372,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 			monitor.done();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not save Tomcat v5.5 configuration to " + path, e);
-			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotSaveConfiguration", new String[] {e.getLocalizedMessage()}), e));
+			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotSaveConfiguration, new String[] {e.getLocalizedMessage()}), e));
 		}
 	}
 	
@@ -389,7 +390,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	public void save(IFolder folder, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(TomcatPlugin.getResource("%savingTask"), 900);
+			monitor.beginTask(Messages.savingTask, 900);
 	
 			// save server.xml
 			byte[] data = serverFactory.getContents();
@@ -430,7 +431,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 			monitor.done();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not save Tomcat v5.5 configuration to " + folder.toString(), e);
-			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotSaveConfiguration", new String[] {e.getLocalizedMessage()}), e));
+			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotSaveConfiguration, new String[] {e.getLocalizedMessage()}), e));
 		}
 	}
 
@@ -496,7 +497,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	public void localizeConfiguration(IPath path, TomcatServer server2, TomcatRuntime runtime, IProgressMonitor monitor) {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(TomcatPlugin.getResource("%updatingConfigurationTask"), 100);
+			monitor.beginTask(Messages.updatingConfigurationTask, 100);
 			
 			Tomcat55Configuration config = new Tomcat55Configuration(null);
 			config.load(path, ProgressUtil.getSubMonitorFor(monitor, 40));
@@ -646,7 +647,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	}
 
 	protected IStatus backupAndPublish(IPath confDir, boolean doBackup, IProgressMonitor monitor) {
-		MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%publishConfigurationTask"), null);
+		MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, Messages.publishConfigurationTask, null);
 		Trace.trace(Trace.FINER, "Backup and publish");
 		monitor = ProgressUtil.getMonitorFor(monitor);
 
@@ -666,7 +667,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 		try {
 			confDir = confDir.append("conf");
 			
-			monitor.subTask(TomcatPlugin.getResource("%publishContextConfigTask"));
+			monitor.subTask(Messages.publishContextConfigTask);
 			Factory factory = new Factory();
 			factory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server40");
 			Server publishedServer = (Server) factory.loadDocument(new FileInputStream(confDir.append("server.xml").toFile()));
@@ -683,7 +684,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 					int size2 = host.getContextCount();
 					for (int j = 0; j < size2; j++) {
 						Context context = host.getContext(j);
-						monitor.subTask(TomcatPlugin.getResource("%checkingContextTask",
+						monitor.subTask(NLS.bind(Messages.checkingContextTask,
 								new String[] {context.getPath()}));
 						if (addContextConfig(context)) {
 							modified = true;
@@ -693,16 +694,16 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 			}
 			monitor.worked(100);
 			if (modified) {
-				monitor.subTask(TomcatPlugin.getResource("%savingContextConfigTask"));
+				monitor.subTask(Messages.savingContextConfigTask);
 				factory.save(confDir.append("server.xml").toOSString());
 			}
 			monitor.worked(100);
 			
 			Trace.trace(Trace.FINER, "Server.xml updated with context.xml configurations");
-			ms.add(new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%serverPostProcessingComplete"), null));
+			ms.add(new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, Messages.serverPostProcessingComplete, null));
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Could not apply context configurations published Tomcat v5.0 configuration from " + confDir.toOSString() + ": " + e.getMessage());
-			IStatus s = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPublishConfiguration", new String[] {e.getLocalizedMessage()}), e);
+			IStatus s = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPublishConfiguration, new String[] {e.getLocalizedMessage()}), e);
 			ms.add(s);
 		}
 	}
@@ -776,6 +777,6 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 		if (!temp.exists())
 			temp.mkdirs();
 
-		return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%runtimeDirPrepared"), null);		
+		return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, Messages.runtimeDirPrepared, null);		
 	}
 }

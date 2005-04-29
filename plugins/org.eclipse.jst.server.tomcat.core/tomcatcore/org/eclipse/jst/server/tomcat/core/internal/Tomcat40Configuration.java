@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.tomcat.core.internal.xml.Factory;
 import org.eclipse.jst.server.tomcat.core.internal.xml.XMLUtil;
 import org.eclipse.jst.server.tomcat.core.internal.xml.server40.*;
+import org.eclipse.osgi.util.NLS;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
@@ -117,7 +118,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 		// first add server port
 		try {
 			int port = Integer.parseInt(server.getPort());
-			ports.add(new ServerPort("server", TomcatPlugin.getResource("%portServer"), port, "TCPIP"));
+			ports.add(new ServerPort("server", Messages.portServer, port, "TCPIP"));
 		} catch (Exception e) {
 			// ignore
 		}
@@ -131,7 +132,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 				for (int j = 0; j < size2; j++) {
 					Connector connector = service.getConnector(j);
 					String className = connector.getClassName();
-					String name = TomcatPlugin.getResource("%portUnknown");
+					String name = Messages.portUnknown;
 					String protocol = "TCPIP";
 					boolean advanced = true;
 					String[] contentTypes = null;
@@ -228,7 +229,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	public void load(IPath path, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(TomcatPlugin.getResource("%loadingTask"), 5);
+			monitor.beginTask(Messages.loadingTask, 5);
 			
 			// check for catalina.policy to verify that this is a v4.0 config
 			InputStream in = new FileInputStream(path.append("catalina.policy").toFile());
@@ -270,7 +271,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 			monitor.done();
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Could not load Tomcat v4.0 configuration from " + path.toOSString() + ": " + e.getMessage());
-			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotLoadConfiguration", path.toOSString()), e));
+			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotLoadConfiguration, path.toOSString()), e));
 		}
 	}
 
@@ -280,12 +281,12 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	public void load(IFolder folder, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(TomcatPlugin.getResource("%loadingTask"), 800);
+			monitor.beginTask(Messages.loadingTask, 800);
 	
 			// check for catalina.policy to verify that this is a v4.0 config
 			IFile file = folder.getFile("catalina.policy");
 			if (!file.exists())
-				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotLoadConfiguration", folder.getFullPath().toOSString()), null));
+				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotLoadConfiguration, folder.getFullPath().toOSString()), null));
 	
 			// load server.xml
 			file = folder.getFile("server.xml");
@@ -332,7 +333,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 			monitor.done();
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Could not reload Tomcat v4.0 configuration from: " + folder.getFullPath() + ": " + e.getMessage());
-			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotLoadConfiguration", folder.getFullPath().toOSString()), e));
+			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotLoadConfiguration, folder.getFullPath().toOSString()), e));
 		}
 	}
 	
@@ -347,7 +348,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	protected void save(IPath path, boolean forceDirty, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(TomcatPlugin.getResource("%savingTask"), 3);
+			monitor.beginTask(Messages.savingTask, 3);
 	
 			// make sure directory exists
 			if (!path.toFile().exists()) {
@@ -385,7 +386,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 			monitor.done();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not save Tomcat v4.0 configuration to " + path, e);
-			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotSaveConfiguration", new String[] {e.getLocalizedMessage()}), e));
+			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotSaveConfiguration, new String[] {e.getLocalizedMessage()}), e));
 		}
 	}
 	
@@ -403,7 +404,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	public void save(IFolder folder, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(TomcatPlugin.getResource("%savingTask"), 900);
+			monitor.beginTask(Messages.savingTask, 900);
 	
 			// save server.xml
 			byte[] data = serverFactory.getContents();
@@ -444,7 +445,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 			monitor.done();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not save Tomcat v4.0 configuration to " + folder.toString(), e);
-			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotSaveConfiguration", new String[] {e.getLocalizedMessage()}), e));
+			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotSaveConfiguration, new String[] {e.getLocalizedMessage()}), e));
 		}
 	}
 	
@@ -493,7 +494,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	public void localizeConfiguration(IPath path, TomcatServer server2, IProgressMonitor monitor) {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(TomcatPlugin.getResource("%updatingConfigurationTask"), 100);
+			monitor.beginTask(Messages.updatingConfigurationTask, 100);
 			
 			Tomcat40Configuration config = new Tomcat40Configuration(null);
 			config.load(path, ProgressUtil.getSubMonitorFor(monitor, 40));
@@ -662,6 +663,6 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 		if (!temp.exists())
 			temp.mkdirs();
 
-		return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%runtimeDirPrepared"), null);		
+		return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, Messages.runtimeDirPrepared, null);		
 	}
 }

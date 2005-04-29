@@ -11,8 +11,9 @@
 package org.eclipse.jst.server.tomcat.core.internal.command;
 
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfigurationWorkingCopy;
-import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
+import org.eclipse.jst.server.tomcat.core.internal.Messages;
 import org.eclipse.jst.server.tomcat.core.internal.WebModule;
+import org.eclipse.osgi.util.NLS;
 /**
  * Command to remove a web module.
  */
@@ -48,7 +49,7 @@ public class RemoveWebModuleCommand extends ConfigurationCommand {
 	public String getDescription() {
 		if (module == null)
 			module = (WebModule) configuration.getWebModules().get(index);
-		return TomcatPlugin.getResource("%configurationEditorActionRemoveWebModuleDescription", module.getPath());
+		return NLS.bind(Messages.configurationEditorActionRemoveWebModuleDescription, module.getPath());
 	}
 
 	/**
@@ -56,7 +57,7 @@ public class RemoveWebModuleCommand extends ConfigurationCommand {
 	 * @return java.lang.String
 	 */
 	public String getName() {
-		return TomcatPlugin.getResource("%configurationEditorActionRemoveWebModule");
+		return Messages.configurationEditorActionRemoveWebModule;
 	}
 
 	/**

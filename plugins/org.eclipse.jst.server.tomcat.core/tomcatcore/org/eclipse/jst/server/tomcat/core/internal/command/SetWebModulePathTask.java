@@ -12,10 +12,11 @@ package org.eclipse.jst.server.tomcat.core.internal.command;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jst.server.tomcat.core.internal.Messages;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatConfiguration;
-import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.WebModule;
+import org.eclipse.osgi.util.NLS;
 
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.TaskModel;
@@ -75,9 +76,9 @@ public class SetWebModulePathTask extends Task {
 		}
 		
 		if (oldModule == null)
-			return TomcatPlugin.getResource("%configurationEditorActionEditWebModuleDescription", "<>", path);
+			return NLS.bind(Messages.configurationEditorActionEditWebModuleDescription, "<>", path);
 		
-		return TomcatPlugin.getResource("%configurationEditorActionEditWebModuleDescription", oldModule.getPath(), path);
+		return NLS.bind(Messages.configurationEditorActionEditWebModuleDescription, oldModule.getPath(), path);
 	}
 
 	/**
@@ -86,7 +87,7 @@ public class SetWebModulePathTask extends Task {
 	 * @return String
 	 */
 	public String getName() {
-		return TomcatPlugin.getResource("%configurationEditorActionEditWebModulePath");
+		return Messages.configurationEditorActionEditWebModulePath;
 	}
 
 	/**

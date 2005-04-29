@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.tomcat.core.internal.xml.Factory;
 import org.eclipse.jst.server.tomcat.core.internal.xml.XMLUtil;
 import org.eclipse.jst.server.tomcat.core.internal.xml.server32.*;
+import org.eclipse.osgi.util.NLS;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -130,7 +131,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 				Connector connector = server.getContextManager().getConnector(i);
 				int paramCount = connector.getParameterCount();
 				String handler = null;
-				String name = TomcatPlugin.getResource("%portUnknown");
+				String name = Messages.portUnknown;
 				String socketFactory = null;
 				String protocol = "TCPIP";
 				boolean advanced = true;
@@ -214,7 +215,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	public void load(IPath path, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(TomcatPlugin.getResource("%loadingTask"), 5);
+			monitor.beginTask(Messages.loadingTask, 5);
 	
 			// check for tomcat.policy to verify that this is a v3.2 config
 			InputStream in = new FileInputStream(path.append("tomcat.policy").toFile());
@@ -259,7 +260,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 			monitor.done();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not load Tomcat v3.2 configuration from " + path.toOSString() + ": " + e.getMessage());
-			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotLoadConfiguration", path.toOSString()), e));
+			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotLoadConfiguration, path.toOSString()), e));
 		}
 	}
 	
@@ -269,12 +270,12 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	public void load(IFolder folder, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(TomcatPlugin.getResource("%loadingTask"), 800);
+			monitor.beginTask(Messages.loadingTask, 800);
 	
 			// check for tomcat.policy to verify that this is a v3.2 config
 			IFile file = folder.getFile("tomcat.policy");
 			if (!file.exists())
-				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotLoadConfiguration", folder.getFullPath().toOSString()), null));
+				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotLoadConfiguration, folder.getFullPath().toOSString()), null));
 	
 			// load server.xml
 			file = folder.getFile("server.xml");
@@ -323,7 +324,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 			monitor.done();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not load Tomcat v3.2 configuration from: " + folder.getFullPath() + ": " + e.getMessage());
-			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotLoadConfiguration", folder.getFullPath().toOSString()), e));
+			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotLoadConfiguration, folder.getFullPath().toOSString()), e));
 		}
 	}
 	
@@ -339,7 +340,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	protected void save(IPath path, boolean forceDirty, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(TomcatPlugin.getResource("%savingTask"), 5);
+			monitor.beginTask(Messages.savingTask, 5);
 	
 			// make sure directory exists
 			if (!path.toFile().exists()) {
@@ -373,7 +374,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 			monitor.done();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not save Tomcat v3.2 configuration to " + path, e);
-			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotSaveConfiguration", new String[] {e.getLocalizedMessage()}), e));
+			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotSaveConfiguration, new String[] {e.getLocalizedMessage()}), e));
 		}
 	}
 	
@@ -391,7 +392,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	public void save(IFolder folder, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(TomcatPlugin.getResource("%savingTask"), 900);
+			monitor.beginTask(Messages.savingTask, 900);
 	
 			if (!folder.exists())
 				folder.create(true, true, ProgressUtil.getSubMonitorFor(monitor, 100));
@@ -438,7 +439,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 			monitor.done();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not save Tomcat v3.2 configuration to " + folder.getFullPath(), e);
-			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotSaveConfiguration", new String[] {e.getLocalizedMessage()}), e));
+			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotSaveConfiguration, new String[] {e.getLocalizedMessage()}), e));
 		}
 	}
 	
@@ -482,7 +483,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	public void localizeConfiguration(IPath path, TomcatServer serverType, IRuntime runtime, IProgressMonitor monitor) {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(TomcatPlugin.getResource("%updatingConfigurationTask"), 100);
+			monitor.beginTask(Messages.updatingConfigurationTask, 100);
 	
 			Tomcat32Configuration config = new Tomcat32Configuration(null);
 			config.load(path, ProgressUtil.getSubMonitorFor(monitor, 30));

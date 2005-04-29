@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.core.IWebModule;
+import org.eclipse.osgi.util.NLS;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerPort;
@@ -73,7 +74,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	 * @return org.eclipse.core.runtime.IStatus
 	 */
 	protected IStatus backupAndPublish(IPath confDir, boolean doBackup, IProgressMonitor monitor) {
-		MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%publishConfigurationTask"), null);
+		MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, Messages.publishConfigurationTask, null);
 		Trace.trace(Trace.FINER, "Backup and publish");
 		monitor = ProgressUtil.getMonitorFor(monitor);
 
@@ -106,7 +107,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 			//}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "backupAndPublish() error", e);
-			IStatus s = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPublishConfiguration", new String[] {e.getLocalizedMessage()}), e);
+			IStatus s = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPublishConfiguration, new String[] {e.getLocalizedMessage()}), e);
 			ms.add(s);
 		}
 	}
@@ -117,13 +118,13 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 			return;
 		
 		int size = children.length;
-		monitor.beginTask(TomcatPlugin.getResource("%publishConfigurationTask"), size * 100 + additionalWork);
+		monitor.beginTask(Messages.publishConfigurationTask, size * 100 + additionalWork);
 		for (int i = 0; i < size; i++) {
 			if (children[i] instanceof IFile) {
 				try {
 					IFile file = (IFile) children[i];
 					String name = file.getName();
-					monitor.subTask(TomcatPlugin.getResource("%publisherPublishTask", new String[] {name}));
+					monitor.subTask(NLS.bind(Messages.publisherPublishTask, new String[] {name}));
 					Trace.trace(Trace.FINEST, "Publishing " + name);
 
 					// backup and copy file
@@ -141,7 +142,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 					}
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "backupAndPublish() error", e);
-					ms.add(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPublishConfiguration", new String[] {e.getLocalizedMessage()}), e));
+					ms.add(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPublishConfiguration, new String[] {e.getLocalizedMessage()}), e));
 				}
 			}
 			monitor.worked(100);
@@ -154,12 +155,12 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 			return;
 			
 		int size = files.length;
-		monitor.beginTask(TomcatPlugin.getResource("%publishConfigurationTask"), size * 100);
+		monitor.beginTask(Messages.publishConfigurationTask, size * 100);
 		for (int i = 0; i < size; i++) {
 			try {
 				File file = files[i];
 				String name = file.getName();
-				monitor.subTask(TomcatPlugin.getResource("%publisherPublishTask", new String[] {name}));
+				monitor.subTask(NLS.bind(Messages.publisherPublishTask, new String[] {name}));
 				Trace.trace(Trace.FINEST, "Publishing " + name);
 
 				// backup and copy file
@@ -175,7 +176,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 					ms.add(FileUtil.copyFile(file.getAbsolutePath(), confDir.append(name).toOSString()));
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "backupAndPublish() error", e);
-				ms.add(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPublishConfiguration", new String[] {e.getLocalizedMessage()}), e));
+				ms.add(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPublishConfiguration, new String[] {e.getLocalizedMessage()}), e));
 			}
 			monitor.worked(100);
 		}

@@ -10,7 +10,9 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal.command;
 
-import org.eclipse.jst.server.tomcat.core.internal.*;
+import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfigurationWorkingCopy;
+import org.eclipse.jst.server.tomcat.core.internal.Messages;
+import org.eclipse.jst.server.tomcat.core.internal.MimeMapping;
 /**
  * Command to add a mime mapping.
  */
@@ -42,7 +44,7 @@ public class AddMimeMappingCommand extends ConfigurationCommand {
 	 * @return java.lang.String
 	 */
 	public String getDescription() {
-		return TomcatPlugin.getResource("%configurationEditorActionAddMimeMappingDescription");
+		return Messages.configurationEditorActionAddMimeMappingDescription;
 	}
 
 	/**
@@ -50,7 +52,7 @@ public class AddMimeMappingCommand extends ConfigurationCommand {
 	 * @return java.lang.String
 	 */
 	public String getName() {
-		return TomcatPlugin.getResource("%configurationEditorActionAddMimeMapping");
+		return Messages.configurationEditorActionAddMimeMapping;
 	}
 
 	/**

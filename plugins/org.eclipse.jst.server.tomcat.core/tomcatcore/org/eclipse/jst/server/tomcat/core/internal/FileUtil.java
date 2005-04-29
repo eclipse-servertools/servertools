@@ -13,6 +13,7 @@ package org.eclipse.jst.server.tomcat.core.internal;
 import java.io.*;
 import java.net.URL;
 import org.eclipse.core.runtime.*;
+import org.eclipse.osgi.util.NLS;
 /**
  * Utility class with an assortment of useful file methods.
  */
@@ -49,7 +50,7 @@ public class FileUtil {
 			// cycle through files
 			int size = files.length;
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(TomcatPlugin.getResource("%copyingTask", new String[] {from, to}), size * 50);
+			monitor.beginTask(NLS.bind(Messages.copyingTask, new String[] {from, to}), size * 50);
 	
 			for (int i = 0; i < size; i++) {
 				File current = files[i];
@@ -62,7 +63,7 @@ public class FileUtil {
 					copyFile(fromFile, toFile);
 					monitor.worked(50);
 				} else if (current.isDirectory()) {
-					monitor.subTask(TomcatPlugin.getResource("%copyingTask", new String[] {fromFile, toFile}));
+					monitor.subTask(NLS.bind(Messages.copyingTask, new String[] {fromFile, toFile}));
 					copyDirectory(fromFile, toFile, ProgressUtil.getSubMonitorFor(monitor, 50));
 				}
 				if (monitor.isCanceled())
@@ -92,10 +93,10 @@ public class FileUtil {
 				out.write(buf, 0, avail);
 				avail = in.read(buf);
 			}
-			return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%copyingTask", new String[] {to}), null);
+			return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.copyingTask, new String[] {to}), null);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error copying file", e);
-			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
+			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCopyingFile, new String[] {to, e.getLocalizedMessage()}), e);
 		} finally {
 			try {
 				if (in != null)
@@ -124,7 +125,7 @@ public class FileUtil {
 			return copyFile(new FileInputStream(from), to);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error copying file", e);
-			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
+			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCopyingFile, new String[] {to, e.getLocalizedMessage()}), e);
 		}
 	}
 
@@ -140,7 +141,7 @@ public class FileUtil {
 			return copyFile(from.openStream(), to);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error copying file", e);
-			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCopyingFile", new String[] {to, e.getLocalizedMessage()}), e);
+			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCopyingFile, new String[] {to, e.getLocalizedMessage()}), e);
 		}
 	}
 
@@ -158,7 +159,7 @@ public class FileUtil {
 			File[] files = dir.listFiles();
 			int size = files.length;
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(TomcatPlugin.getResource("%deletingTask", new String[] {dir.getAbsolutePath()}), size * 10);
+			monitor.beginTask(NLS.bind(Messages.deletingTask, new String[] {dir.getAbsolutePath()}), size * 10);
 	
 			// cycle through files
 			for (int i = 0; i < size; i++) {
@@ -167,7 +168,7 @@ public class FileUtil {
 					current.delete();
 					monitor.worked(10);
 				} else if (current.isDirectory()) {
-					monitor.subTask(TomcatPlugin.getResource("%deletingTask", new String[] {current.getAbsolutePath()}));
+					monitor.subTask(NLS.bind(Messages.deletingTask, new String[] {current.getAbsolutePath()}));
 					deleteDirectory(current, ProgressUtil.getSubMonitorFor(monitor, 10));
 				}
 			}
@@ -195,7 +196,7 @@ public class FileUtil {
 			int fromSize = fromFiles.length;
 	
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(TomcatPlugin.getResource("%copyingTask", new String[] {from, to}), 550);
+			monitor.beginTask(NLS.bind(Messages.copyingTask, new String[] {from, to}), 550);
 	
 			File[] toFiles = null;
 	
@@ -263,7 +264,7 @@ public class FileUtil {
 						copyFile(fromFile, toFile);
 						monitor.worked(dw);
 					} else if (current.isDirectory()) {
-						monitor.subTask(TomcatPlugin.getResource("%copyingTask", new String[] {fromFile, toFile}));
+						monitor.subTask(NLS.bind(Messages.copyingTask, new String[] {fromFile, toFile}));
 						smartCopyDirectory(fromFile, toFile, ProgressUtil.getSubMonitorFor(monitor, dw));
 					}
 				}

@@ -11,7 +11,7 @@
 package org.eclipse.jst.server.tomcat.core.internal.command;
 
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatServerWorkingCopy;
-import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
+import org.eclipse.jst.server.tomcat.core.internal.Messages;
 /**
  * Command to change the server debug mode.
  */
@@ -45,7 +45,7 @@ public class SetDebugModeCommand extends ServerCommand {
 	 * @return java.lang.String
 	 */
 	public String getDescription() {
-		return TomcatPlugin.getResource("%serverEditorActionSetDebugModeDescription");
+		return Messages.serverEditorActionSetDebugModeDescription;
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class SetDebugModeCommand extends ServerCommand {
 	 * @return java.lang.String
 	 */
 	public String getName() {
-		return TomcatPlugin.getResource("%serverEditorActionSetDebugMode");
+		return Messages.serverEditorActionSetDebugMode;
 	}
 
 	/**

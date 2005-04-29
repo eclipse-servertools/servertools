@@ -43,15 +43,15 @@ public class TomcatRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
 	public String getClasspathContainerLabel(IRuntime runtime, String id) {
 		String id2 = runtime.getRuntimeType().getId();
 		if (id2.indexOf("32") > 0)
-			return TomcatPlugin.getResource("%target32runtime");
+			return Messages.target32runtime;
 		else if (id2.indexOf("40") > 0)
-			return TomcatPlugin.getResource("%target40runtime");
+			return Messages.target40runtime;
 		else if (id2.indexOf("41") > 0)
-			return TomcatPlugin.getResource("%target41runtime");
+			return Messages.target41runtime;
 		else if (id2.indexOf("50") > 0)
-			return TomcatPlugin.getResource("%target50runtime");
+			return Messages.target50runtime;
 		
-		return TomcatPlugin.getResource("%target55runtime");
+		return Messages.target55runtime;
 	}
 
 	/**

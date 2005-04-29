@@ -11,7 +11,7 @@
 package org.eclipse.jst.server.tomcat.core.internal.command;
 
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatServerWorkingCopy;
-import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
+import org.eclipse.jst.server.tomcat.core.internal.Messages;
 /**
  * Command to change the server security option.
  */
@@ -45,7 +45,7 @@ public class SetSecureCommand extends ServerCommand {
 	 * @return java.lang.String
 	 */
 	public String getDescription() {
-		return TomcatPlugin.getResource("%serverEditorActionSetSecureDescription");
+		return Messages.serverEditorActionSetSecureDescription;
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class SetSecureCommand extends ServerCommand {
 	 * @return java.lang.String
 	 */
 	public String getName() {
-		return TomcatPlugin.getResource("%serverEditorActionSetSecure");
+		return Messages.serverEditorActionSetSecure;
 	}
 
 	/**

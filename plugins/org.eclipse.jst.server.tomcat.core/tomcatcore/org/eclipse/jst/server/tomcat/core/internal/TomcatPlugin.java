@@ -13,7 +13,6 @@ package org.eclipse.jst.server.tomcat.core.internal;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -92,61 +91,6 @@ public class TomcatPlugin extends Plugin {
 	}
 
 	/**
-	 * Returns the translated String found with the given key.
-	 * 
-	 * @param key a key
-	 * @return a translated string
-	 */
-	public static String getResource(String key) {
-		try {
-			return Platform.getResourceString(getInstance().getBundle(), key);
-		} catch (Exception e) {
-			return key;
-		}
-	}
-	
-	/**
-	 * Returns the translated String found with the given key,
-	 * and formatted with the given object.
-	 * 
-	 * @param key a key
-	 * @param obj substitution arguments
-	 * @return a translated string
-	 */
-	public static String getResource(String key, Object[] obj) {
-		try {
-			return MessageFormat.format(getResource(key), obj);
-		} catch (Exception e) {
-			return key;
-		}
-	}
-		
-	/**
-	 * Returns the translated String found with the given key,
-	 * and formatted with the given object.
-	 * 
-	 * @param key a key
-	 * @param arg an argument
-	 * @return a translated string
-	 */
-	public static String getResource(String key, String arg) {
-		return getResource(key, new String[] { arg });
-	}
-	
-	/**
-	 * Returns the translated String found with the given key,
-	 * and formatted with the given object.
-	 * 
-	 * @param key a key
-	 * @param arg1 an argument
-	 * @param arg2 another argument
-	 * @return a translated string
-	 */
-	public static String getResource(String key, String arg1, String arg2) {
-		return getResource(key, new String[] { arg1, arg2 });
-	}
-	
-	/**
 	 * Returns the Tomcat home directory.
 	 * @return java.lang.String
 	 */
@@ -157,7 +101,7 @@ public class TomcatPlugin extends Plugin {
 			return null;
 		}
 	}
-	
+
 	public static ITomcatVersionHandler getTomcatVersionHandler(String id) {
 		if (id.indexOf("runtime") > 0)
 			id = id.substring(0, 30) + id.substring(38);
@@ -175,7 +119,7 @@ public class TomcatPlugin extends Plugin {
 		else
 			return null;
 	}
-	
+
 	/**
 	 * Loads the files to verify the Tomcat installation.
 	 */

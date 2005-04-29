@@ -11,7 +11,7 @@
 package org.eclipse.jst.server.tomcat.core.internal.command;
 
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfigurationWorkingCopy;
-import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
+import org.eclipse.jst.server.tomcat.core.internal.Messages;
 import org.eclipse.jst.server.tomcat.core.internal.WebModule;
 /**
  * Command to add a web module.
@@ -46,7 +46,7 @@ public class AddWebModuleCommand extends ConfigurationCommand {
 	 * @return java.lang.String
 	 */
 	public String getDescription() {
-		return TomcatPlugin.getResource("%configurationEditorActionAddWebModuleDescription");
+		return Messages.configurationEditorActionAddWebModuleDescription;
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class AddWebModuleCommand extends ConfigurationCommand {
 	 * @return java.lang.String
 	 */
 	public String getName() {
-		return TomcatPlugin.getResource("%configurationEditorActionAddWebModule");
+		return Messages.configurationEditorActionAddWebModule;
 	}
 
 	/**

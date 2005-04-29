@@ -13,6 +13,7 @@ package org.eclipse.jst.server.tomcat.core.internal.command;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jst.server.tomcat.core.internal.*;
+import org.eclipse.osgi.util.NLS;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IOptionalTask;
@@ -67,7 +68,7 @@ public class FixModuleContextRootTask extends Task implements IOptionalTask {
 	 * @return String
 	 */
 	public String getDescription() {
-		return TomcatPlugin.getResource("%fixModuleContextRootDescription");
+		return Messages.fixModuleContextRootDescription;
 	}
 
 	/**
@@ -76,7 +77,7 @@ public class FixModuleContextRootTask extends Task implements IOptionalTask {
 	 * @return String
 	 */
 	public String getName() {
-		return TomcatPlugin.getResource("%fixModuleContextRoot", webModule.getName());
+		return NLS.bind(Messages.fixModuleContextRoot, webModule.getName());
 	}
 
 	public int getStatus() {

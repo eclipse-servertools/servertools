@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.core.IWebModule;
+import org.eclipse.osgi.util.NLS;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.ServerMonitorManager;
@@ -58,7 +59,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		if (configuration == null) {
 			IFolder folder = getServer().getServerConfiguration();
 			if (folder == null || !folder.exists())
-				throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorNoConfiguration", folder.getFullPath().toOSString()), null));
+				throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorNoConfiguration, folder.getFullPath().toOSString()), null));
 			
 			String id = getServer().getServerType().getId();
 			if (id.indexOf("32") > 0)
@@ -112,7 +113,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	public void saveConfiguration(IProgressMonitor monitor) throws CoreException {
 		TomcatConfiguration config = getTomcatConfiguration();
 		if (config == null)
-			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorCouldNotSaveConfiguration", "null"), null));
+			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotSaveConfiguration, "null"), null));
 		config.save(getServer().getServerConfiguration(), monitor);
 	}
 
@@ -265,7 +266,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 				IModule module = add[i];
 				IWebModule webModule = (IWebModule) module.getAdapter(IWebModule.class);
 				if (webModule == null)
-					return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorWebModulesOnly"), null);
+					return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorWebModulesOnly, null);
 				
 				IStatus status = getTomcatVersionHandler().canAddModule(webModule);
 				if (status != null && !status.isOK())

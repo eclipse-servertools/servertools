@@ -13,7 +13,7 @@ package org.eclipse.jst.server.tomcat.core.internal.command;
 import java.util.Iterator;
 
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfigurationWorkingCopy;
-import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
+import org.eclipse.jst.server.tomcat.core.internal.Messages;
 import org.eclipse.wst.server.core.ServerPort;
 /**
  * Command to change the configuration port.
@@ -59,7 +59,7 @@ public class ModifyPortCommand extends ConfigurationCommand {
 	 * @return java.lang.String
 	 */
 	public String getDescription() {
-		return TomcatPlugin.getResource("%configurationEditorActionModifyPortDescription");
+		return Messages.configurationEditorActionModifyPortDescription;
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class ModifyPortCommand extends ConfigurationCommand {
 	 * @return java.lang.String
 	 */
 	public String getName() {
-		return TomcatPlugin.getResource("%configurationEditorActionModifyPort");
+		return Messages.configurationEditorActionModifyPort;
 	}
 
 	/**

@@ -11,8 +11,8 @@
 package org.eclipse.jst.server.tomcat.core.internal.command;
 
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfigurationWorkingCopy;
+import org.eclipse.jst.server.tomcat.core.internal.Messages;
 import org.eclipse.jst.server.tomcat.core.internal.MimeMapping;
-import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
 /**
  * Command to change a mime type extension.
  */
@@ -49,7 +49,7 @@ public class ModifyMimeMappingCommand extends ConfigurationCommand {
 	 * @return java.lang.String
 	 */
 	public String getDescription() {
-		return TomcatPlugin.getResource("%configurationEditorActionModifyMimeMappingDescription");
+		return Messages.configurationEditorActionModifyMimeMappingDescription;
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class ModifyMimeMappingCommand extends ConfigurationCommand {
 	 * @return java.lang.String
 	 */
 	public String getName() {
-		return TomcatPlugin.getResource("%configurationEditorActionModifyMimeMapping");
+		return Messages.configurationEditorActionModifyMimeMapping;
 	}
 
 	/**
