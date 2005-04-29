@@ -34,7 +34,7 @@ public class TomcatUIPlugin extends AbstractUIPlugin {
 	private static final String URL_OBJ = "obj16/";
 	private static final String URL_WIZBAN = "wizban/";
 
-	public static final String PLUGIN_ID = "org.eclipse.tomcat";
+	public static final String PLUGIN_ID = "org.eclipse.jst.server.tomcat.ui";
 
 	public static final String IMG_WIZ_TOMCAT = "wizTomcat";
 
