@@ -141,12 +141,17 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			return;
 
 		process = newProcess;
+		if (processListener != null)
+			DebugPlugin.getDefault().removeDebugEventListener(processListener);
+		if (newProcess == null)
+			return;
+		
 		processListener = new IDebugEventSetListener() {
 			public void handleDebugEvents(DebugEvent[] events) {
 				if (events != null) {
 					int size = events.length;
 					for (int i = 0; i < size; i++) {
-						if (process.equals(events[i].getSource()) && events[i].getKind() == DebugEvent.TERMINATE) {
+						if (process != null && process.equals(events[i].getSource()) && events[i].getKind() == DebugEvent.TERMINATE) {
 							DebugPlugin.getDefault().removeDebugEventListener(this);
 							stopImpl();
 						}
