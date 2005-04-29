@@ -17,7 +17,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.ui.editor.ICommandManager;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 /**
  * A command manager for a single server resource.
  */
@@ -55,8 +55,8 @@ public class ServerResourceCommandManager implements ICommandManager {
 	}
 
 	protected void warnReadOnly() {
-		String title = ServerUIPlugin.getResource("%editorResourceWarnTitle");
-		String message = ServerUIPlugin.getResource("%editorResourceWarnMessage");
+		String title = Messages.editorResourceWarnTitle;
+		String message = Messages.editorResourceWarnMessage;
 		
 		MessageDialog.openWarning(editor.getEditorSite().getShell(), title, message);
 	}
@@ -76,8 +76,8 @@ public class ServerResourceCommandManager implements ICommandManager {
 		
 		if (status.getSeverity() == IStatus.ERROR) {
 			// inform user
-			String message = ServerUIPlugin.getResource("%editorValidateEditFailureMessage");
-			ErrorDialog.openError(editor.getEditorSite().getShell(), ServerUIPlugin.getResource("%errorDialogTitle"), message, status);
+			String message = Messages.editorValidateEditFailureMessage;
+			ErrorDialog.openError(editor.getEditorSite().getShell(), Messages.errorDialogTitle, message, status);
 			
 			// change to read-only
 			commandManager.setReadOnly(id, true);

@@ -12,7 +12,7 @@ package org.eclipse.wst.server.ui.internal.actions;
 
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.wst.server.ui.internal.ImageResource;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.wizard.NewServerWizard;
 /**
  * An action to invoke the new server and server configuration wizard.
@@ -30,7 +30,7 @@ public class NewServerWizardAction extends LaunchWizardAction {
 		super();
 	
 		setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CTOOL_NEW_SERVER));
-		setText(ServerUIPlugin.getResource("%actionSetNewServer"));
+		setText(Messages.actionSetNewServer);
 	}
 	
 	/**

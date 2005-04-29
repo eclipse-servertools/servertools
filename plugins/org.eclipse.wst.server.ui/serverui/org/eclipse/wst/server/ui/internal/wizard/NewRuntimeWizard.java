@@ -13,7 +13,7 @@ package org.eclipse.wst.server.ui.internal.wizard;
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
 import org.eclipse.wst.server.ui.internal.task.SaveRuntimeTask;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewRuntimeWizardFragment;
@@ -28,7 +28,7 @@ public class NewRuntimeWizard extends TaskWizard implements INewWizard {
 	 * NewRuntimeWizard constructor comment.
 	 */
 	public NewRuntimeWizard() {
-		super(ServerUIPlugin.getResource("%wizNewRuntimeWizardTitle"), new WizardFragment() {
+		super(Messages.wizNewRuntimeWizardTitle, new WizardFragment() {
 			protected void createChildFragments(List list) {
 				list.add(new NewRuntimeWizardFragment());
 				list.add(new FinishWizardFragment(new SaveRuntimeTask()));

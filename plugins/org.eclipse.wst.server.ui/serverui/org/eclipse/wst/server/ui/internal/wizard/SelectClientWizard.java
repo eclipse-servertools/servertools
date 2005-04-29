@@ -11,7 +11,7 @@
 package org.eclipse.wst.server.ui.internal.wizard;
 
 import org.eclipse.wst.server.core.internal.IClient;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.wizard.page.SelectClientComposite;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
@@ -28,7 +28,7 @@ public class SelectClientWizard extends TaskWizard {
 	 * @param clients an array of clients
 	 */
 	public SelectClientWizard(final IClient[] clients) {
-		super(ServerUIPlugin.getResource("%wizSelectClientWizardTitle"),
+		super(Messages.wizSelectClientWizardTitle,
 			new WizardFragment() {						
 				public boolean hasComposite() {
 					return true;

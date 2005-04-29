@@ -93,13 +93,13 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 2;
 		label.setLayoutData(data);
-		label.setText(ServerUIPlugin.getResource("%preferenceRuntimesDescription"));
+		label.setText(Messages.preferenceRuntimesDescription);
 		
 		label = new Label(composite, SWT.WRAP);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 2;
 		label.setLayoutData(data);
-		label.setText(ServerUIPlugin.getResource("%preferenceRuntimesTable"));
+		label.setText(Messages.preferenceRuntimesTable);
 		
 		final RuntimeComposite runtimeComp = new RuntimeComposite(composite, SWT.NONE, new RuntimeComposite.RuntimeSelectionListener() {
 			public void runtimeSelected(IRuntime runtime) {
@@ -131,7 +131,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL);
 		buttonComp.setLayoutData(data);
 		
-		Button add = SWTUtil.createButton(buttonComp, ServerUIPlugin.getResource("%add"));
+		Button add = SWTUtil.createButton(buttonComp, Messages.add);
 		add.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				if (showWizard(null) == Window.CANCEL)
@@ -140,7 +140,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 			}
 		});
 		
-		edit = SWTUtil.createButton(buttonComp, ServerUIPlugin.getResource("%edit"));
+		edit = SWTUtil.createButton(buttonComp, Messages.edit);
 		edit.setEnabled(false);
 		edit.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -159,7 +159,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 			}
 		});
 		
-		remove = SWTUtil.createButton(buttonComp, ServerUIPlugin.getResource("%remove"));
+		remove = SWTUtil.createButton(buttonComp, Messages.remove);
 		remove.setEnabled(false);
 		remove.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -174,7 +174,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 			}
 		});
 		
-		Button search = SWTUtil.createButton(buttonComp, ServerUIPlugin.getResource("%search"));
+		Button search = SWTUtil.createButton(buttonComp, Messages.search);
 		data = (GridData) search.getLayoutData();
 		data.verticalIndent = 9;
 		search.addSelectionListener(new SelectionAdapter() {
@@ -182,8 +182,8 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 				try {
 					// select a target directory for the search
 					DirectoryDialog directoryDialog = new DirectoryDialog(getShell());
-					directoryDialog.setMessage(ServerUIPlugin.getResource("%dialogRuntimeSearchMessage"));
-					directoryDialog.setText(ServerUIPlugin.getResource("%dialogRuntimeSearchTitle"));
+					directoryDialog.setMessage(Messages.dialogRuntimeSearchMessage);
+					directoryDialog.setText(Messages.dialogRuntimeSearchTitle);
 
 					String pathStr = directoryDialog.open();
 					if (pathStr == null)
@@ -197,7 +197,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					dialog.open();
 					final IProgressMonitor monitor = dialog.getProgressMonitor();
 					final IRuntimeLocator[] locators = ServerPlugin.getRuntimeLocators();
-					monitor.beginTask(ServerUIPlugin.getResource("%dialogRuntimeSearchProgress"), 100 * locators.length + 10);
+					monitor.beginTask(Messages.dialogRuntimeSearchProgress, 100 * locators.length + 10);
 					final List list = new ArrayList();
 					
 					final IRuntimeLocator.IRuntimeSearchListener listener = new IRuntimeLocator.IRuntimeSearchListener() {
@@ -233,7 +233,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					
 					if (!monitor.isCanceled()) {
 						if (list.isEmpty()) {
-							EclipseUtil.openError(getShell(), ServerUIPlugin.getResource("%infoNoRuntimesFound"));
+							EclipseUtil.openError(getShell(), Messages.infoNoRuntimesFound);
 							return;
 						}
 						monitor.worked(5);
@@ -310,7 +310,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		}
 		
 		if (inUse) {
-			if (!MessageDialog.openConfirm(getShell(), ServerUIPlugin.getResource("%defaultDialogTitle"), ServerUIPlugin.getResource("%dialogRuntimeInUse")))
+			if (!MessageDialog.openConfirm(getShell(), Messages.defaultDialogTitle, Messages.dialogRuntimeInUse))
 				return false;
 		}
 		
@@ -321,7 +321,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		String title = null;
 		WizardFragment fragment = null;
 		if (runtimeWorkingCopy == null) {
-			title = ServerUIPlugin.getResource("%wizNewRuntimeWizardTitle");
+			title = Messages.wizNewRuntimeWizardTitle;
 			fragment = new WizardFragment() {
 				protected void createChildFragments(List list) {
 					list.add(new NewRuntimeWizardFragment());
@@ -329,7 +329,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 				}
 			};
 		} else {
-			title = ServerUIPlugin.getResource("%wizEditRuntimeWizardTitle");
+			title = Messages.wizEditRuntimeWizardTitle;
 			final WizardFragment fragment2 = ServerUIPlugin.getWizardFragment(runtimeWorkingCopy.getRuntimeType().getId());
 			if (fragment2 == null) {
 				edit.setEnabled(false);
@@ -381,6 +381,6 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (visible)
-			setTitle(ServerUIPlugin.getResource("%preferenceRuntimesTitleLong"));
+			setTitle(Messages.preferenceRuntimesTitleLong);
 	}
 }

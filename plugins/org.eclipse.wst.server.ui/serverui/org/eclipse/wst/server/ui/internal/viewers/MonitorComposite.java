@@ -28,8 +28,8 @@ import org.eclipse.wst.server.core.internal.IMonitoredServerPort;
 import org.eclipse.wst.server.core.internal.IServerMonitorManager;
 import org.eclipse.wst.server.core.internal.ServerMonitorManager;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 /**
  * 
  */
@@ -78,23 +78,23 @@ public class MonitorComposite extends Composite {
 		
 		tableLayout.addColumnData(new ColumnWeightData(8, 80, true));
 		TableColumn col = new TableColumn(monitorTable, SWT.NONE);
-		col.setText(ServerUIPlugin.getResource("%dialogMonitorColumnStatus"));
+		col.setText(Messages.dialogMonitorColumnStatus);
 		
 		tableLayout.addColumnData(new ColumnWeightData(12, 120, true));
 		col = new TableColumn(monitorTable, SWT.NONE);
-		col.setText(ServerUIPlugin.getResource("%dialogMonitorColumnType"));
+		col.setText(Messages.dialogMonitorColumnType);
 		
 		tableLayout.addColumnData(new ColumnWeightData(8, 80, true));
 		col = new TableColumn(monitorTable, SWT.NONE);
-		col.setText(ServerUIPlugin.getResource("%dialogMonitorColumnPort"));
+		col.setText(Messages.dialogMonitorColumnPort);
 		
 		tableLayout.addColumnData(new ColumnWeightData(8, 80, true));
 		col = new TableColumn(monitorTable, SWT.NONE);
-		col.setText(ServerUIPlugin.getResource("%dialogMonitorColumnMonitorPort"));
+		col.setText(Messages.dialogMonitorColumnMonitorPort);
 		
 		tableLayout.addColumnData(new ColumnWeightData(8, 80, true));
 		col = new TableColumn(monitorTable, SWT.NONE);
-		col.setText(ServerUIPlugin.getResource("%dialogMonitorColumnContentType"));
+		col.setText(Messages.dialogMonitorColumnContentType);
 		
 		monitorTableViewer.setContentProvider(new MonitorContentProvider(server));
 		monitorTableViewer.setLabelProvider(new MonitorLabelProvider(server));
@@ -126,7 +126,7 @@ public class MonitorComposite extends Composite {
 		buttonComp.setLayout(layout);
 		
 		final IServer server2 = server;
-		Button add = SWTUtil.createButton(buttonComp, ServerUIPlugin.getResource("%add"));
+		Button add = SWTUtil.createButton(buttonComp, Messages.add);
 		add.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				MonitorDialog dialog = new MonitorDialog(getShell(), server2);
@@ -139,7 +139,7 @@ public class MonitorComposite extends Composite {
 			}
 		});
 		
-		final Button edit = SWTUtil.createButton(buttonComp, ServerUIPlugin.getResource("%edit"));
+		final Button edit = SWTUtil.createButton(buttonComp, Messages.edit);
 		edit.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection sel = (IStructuredSelection) monitorTableViewer.getSelection();
@@ -158,7 +158,7 @@ public class MonitorComposite extends Composite {
 		});
 		edit.setEnabled(false);
 		
-		final Button remove = SWTUtil.createButton(buttonComp, ServerUIPlugin.getResource("%remove"));
+		final Button remove = SWTUtil.createButton(buttonComp, Messages.remove);
 		remove.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				IMonitoredServerPort msp = (IMonitoredServerPort) getSelection(monitorTableViewer.getSelection());
@@ -170,7 +170,7 @@ public class MonitorComposite extends Composite {
 		});
 		remove.setEnabled(false);
 		
-		final Button start = SWTUtil.createButton(buttonComp, ServerUIPlugin.getResource("%start"));
+		final Button start = SWTUtil.createButton(buttonComp, Messages.start);
 		start.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection sel = (IStructuredSelection) monitorTableViewer.getSelection();
@@ -186,7 +186,7 @@ public class MonitorComposite extends Composite {
 		});
 		start.setEnabled(false);
 		
-		final Button stop = SWTUtil.createButton(buttonComp, ServerUIPlugin.getResource("%stop"));
+		final Button stop = SWTUtil.createButton(buttonComp, Messages.stop);
 		stop.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection sel = (IStructuredSelection) monitorTableViewer.getSelection();

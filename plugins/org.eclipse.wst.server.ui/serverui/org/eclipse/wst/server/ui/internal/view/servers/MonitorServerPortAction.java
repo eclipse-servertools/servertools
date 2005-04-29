@@ -16,8 +16,9 @@ import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.IMonitoredServerPort;
 import org.eclipse.wst.server.core.internal.IServerMonitorManager;
 import org.eclipse.wst.server.core.internal.ServerMonitorManager;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 /**
  * Monitor a server port.
@@ -30,7 +31,7 @@ public class MonitorServerPortAction extends Action {
 	protected boolean checked;
 	
 	public MonitorServerPortAction(Shell shell, IServer server, ServerPort port) {
-		super(ServerUIPlugin.getResource("%actionMonitorPort", new String[] { port.getPort() + "", port.getName() }));
+		super(NLS.bind(Messages.actionMonitorPort, new String[] { port.getPort() + "", port.getName() }));
 		
 		this.shell = shell;
 		this.server = server;

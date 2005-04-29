@@ -17,6 +17,7 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.JFaceResources;
 
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -89,8 +90,8 @@ public class NewServerComposite extends Composite {
 		this.module = module;
 		this.launchMode = launchMode;
 	
-		wizard.setTitle(ServerUIPlugin.getResource("%wizNewServerTitle"));
-		wizard.setDescription(ServerUIPlugin.getResource("%wizNewServerDescription"));
+		wizard.setTitle(Messages.wizNewServerTitle);
+		wizard.setDescription(Messages.wizNewServerDescription);
 		wizard.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_WIZBAN_NEW_SERVER));
 		
 		createControl();
@@ -152,11 +153,11 @@ public class NewServerComposite extends Composite {
 		//WorkbenchHelp.setHelp(this, ContextIds.SELECT_CLIENT_WIZARD);
 	
 		if (module != null)
-			createHeadingLabel(this, ServerUIPlugin.getResource("%wizNewServerSelect"), 1);
+			createHeadingLabel(this, Messages.wizNewServerSelect, 1);
 			
 		Button existing = null;
 		if (module != null) {
-			final Button predefined = createRadioButton(this, ServerUIPlugin.getResource("%wizNewServerExisting"), 1);
+			final Button predefined = createRadioButton(this, Messages.wizNewServerExisting, 1);
 			predefined.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					if (predefined.getSelection())
@@ -166,7 +167,7 @@ public class NewServerComposite extends Composite {
 			existing = predefined;
 		}
 		
-		/*final Button auto = createRadioButton(this, ServerUIPlugin.getResource("%wizNewServerDetect"), 1);
+		/*final Button auto = createRadioButton(this, Messages.wizNewServerDetect"), 1);
 		auto.setEnabled(false);
 		auto.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -177,7 +178,7 @@ public class NewServerComposite extends Composite {
 	
 		Button manual = null;
 		if (module != null) {
-			final Button manualButton = createRadioButton(this, ServerUIPlugin.getResource("%wizNewServerManual"), 1);
+			final Button manualButton = createRadioButton(this, Messages.wizNewServerManual, 1);
 			manualButton.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					if (manualButton.getSelection())
@@ -225,7 +226,7 @@ public class NewServerComposite extends Composite {
 		if (module != null) {
 			// preferred server button
 			pref = new Button(this, SWT.CHECK | SWT.WRAP);
-			pref.setText(ServerUIPlugin.getResource("%wizSelectServerPreferred"));
+			pref.setText(Messages.wizSelectServerPreferred);
 			data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_END);
 			//pref.setSelection(true);
 			//preferred = true;
@@ -328,7 +329,7 @@ public class NewServerComposite extends Composite {
 					IModuleType mt = module.getModuleType();
 					if (!ServerUtil.isSupportedModule(serverType.getRuntimeType().getModuleTypes(), mt)) {
 						String type = mt.getName();
-						wizard.setMessage(ServerUIPlugin.getResource("%errorVersionLevel", new Object[] { type, mt.getVersion() }), IMessageProvider.ERROR);
+						wizard.setMessage(NLS.bind(Messages.errorVersionLevel, new Object[] { type, mt.getVersion() }), IMessageProvider.ERROR);
 						server = null;
 					}
 				}

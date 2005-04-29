@@ -21,6 +21,7 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.SashForm;
@@ -54,7 +55,7 @@ public class MonitorView extends ViewPart {
 	protected List requestViewers;
 	protected List responseViewers;
 
-	protected static SimpleDateFormat format = new SimpleDateFormat(MonitorUIPlugin.getResource("%viewDateFormat"));
+	protected static SimpleDateFormat format = new SimpleDateFormat(Messages.viewDateFormat);
 	protected static final String VIEW_ID = "org.eclipse.wst.internet.monitor.view";
 	protected static final String DEFAULT_VIEWER = "org.eclipse.wst.internet.monitor.viewers.byteviewer";
 
@@ -163,15 +164,15 @@ public class MonitorView extends ViewPart {
 		detailsPanel.setLayoutData(data);
 
 		final Label label = new Label(detailsPanel, SWT.NONE);
-		label.setText(MonitorUIPlugin.getResource("%viewTime", ""));
+		label.setText(NLS.bind(Messages.viewTime, ""));
 		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
 
 		final Label label2 = new Label(detailsPanel, SWT.NONE);
-		label2.setText(MonitorUIPlugin.getResource("%viewResponseTime", ""));
+		label2.setText(NLS.bind(Messages.viewResponseTime, ""));
 		label2.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
 
 		final Label label3 = new Label(detailsPanel, SWT.NONE);
-		label3.setText(MonitorUIPlugin.getResource("%viewType", ""));
+		label3.setText(NLS.bind(Messages.viewType, ""));
 		label3.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
 
 		// create center and right panels
@@ -203,7 +204,7 @@ public class MonitorView extends ViewPart {
 		requestHeader.setLayoutData(data);
 
 		final Label requestLabel = new Label(requestHeader, SWT.NONE);
-		requestLabel.setText(MonitorUIPlugin.getResource("%viewRequest", ""));
+		requestLabel.setText(NLS.bind(Messages.viewRequest, ""));
 		requestLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		Combo requestViewerCombo = new Combo(requestHeader, SWT.DROP_DOWN | SWT.READ_ONLY);
@@ -212,7 +213,7 @@ public class MonitorView extends ViewPart {
 		requestViewerCombo.setLayoutData(data);
 
 		final Label requestSizeLabel = new Label(requestHeader, SWT.NONE);
-		requestSizeLabel.setText(MonitorUIPlugin.getResource("%viewSize", ""));
+		requestSizeLabel.setText(NLS.bind(Messages.viewSize, ""));
 		requestSizeLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		// response panel
@@ -235,7 +236,7 @@ public class MonitorView extends ViewPart {
 		responseHeader.setLayoutData(data);
 
 		final Label responseLabel = new Label(responseHeader, SWT.NONE);
-		responseLabel.setText(MonitorUIPlugin.getResource("%viewResponse", ""));
+		responseLabel.setText(NLS.bind(Messages.viewResponse, ""));
 		responseLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		Combo responseViewerCombo = new Combo(responseHeader, SWT.DROP_DOWN | SWT.READ_ONLY);
@@ -244,7 +245,7 @@ public class MonitorView extends ViewPart {
 		responseViewerCombo.setLayoutData(data);
 	
 		final Label responseSizeLabel = new Label(responseHeader, SWT.NONE);
-		responseSizeLabel.setText(MonitorUIPlugin.getResource("%viewSize", ""));
+		responseSizeLabel.setText(NLS.bind(Messages.viewSize, ""));
 		responseSizeLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	
 		// viewer manager
@@ -306,32 +307,32 @@ public class MonitorView extends ViewPart {
 				}
 	
 				if (req != null) {
-					label.setText(MonitorUIPlugin.getResource("%viewTime", format.format(req.getDate())));
+					label.setText(NLS.bind(Messages.viewTime, format.format(req.getDate())));
 	
 					if (req.getResponseTime() == -1)
-						label2.setText(MonitorUIPlugin.getResource("%viewResponseTime", ""));
+						label2.setText(NLS.bind(Messages.viewResponseTime, ""));
 					else {
-						String time = MonitorUIPlugin.getResource("%viewResponseTimeFormat", req.getResponseTime() + "");
-						label2.setText(MonitorUIPlugin.getResource("%viewResponseTime", time));
+						String time = NLS.bind(Messages.viewResponseTimeFormat, req.getResponseTime() + "");
+						label2.setText(NLS.bind(Messages.viewResponseTime, time));
 					}
-					label3.setText(MonitorUIPlugin.getResource("%viewType", req.getProtocol()));
+					label3.setText(NLS.bind(Messages.viewType, req.getProtocol()));
 	
 					// request information
-					requestLabel.setText(MonitorUIPlugin.getResource("%viewRequest", "localhost:" + req.getLocalPort()));
+					requestLabel.setText(NLS.bind(Messages.viewRequest, "localhost:" + req.getLocalPort()));
 					requestSizeLabel.setText(getSizeString(req.getRequest(Request.CONTENT), req.getRequest(Request.ALL)));
 	
 					// response information
-					responseLabel.setText(MonitorUIPlugin.getResource("%viewResponse", req.getRemoteHost() + ":" + req.getRemotePort()));
+					responseLabel.setText(NLS.bind(Messages.viewResponse, req.getRemoteHost() + ":" + req.getRemotePort()));
 					responseSizeLabel.setText(getSizeString(req.getResponse(Request.CONTENT), req.getResponse(Request.ALL)));
 
 					vm.setRequest(req);
 				} else {
-					label.setText(MonitorUIPlugin.getResource("%viewTime", ""));
-					label2.setText(MonitorUIPlugin.getResource("%viewResponseTime", ""));
-					requestLabel.setText(MonitorUIPlugin.getResource("%viewRequest", ""));
-					requestSizeLabel.setText(MonitorUIPlugin.getResource("%viewSize", ""));
-					responseLabel.setText(MonitorUIPlugin.getResource("%viewResponse", ""));
-					responseSizeLabel.setText(MonitorUIPlugin.getResource("%viewSize", ""));
+					label.setText(NLS.bind(Messages.viewTime, ""));
+					label2.setText(NLS.bind(Messages.viewResponseTime, ""));
+					requestLabel.setText(NLS.bind(Messages.viewRequest, ""));
+					requestSizeLabel.setText(NLS.bind(Messages.viewSize, ""));
+					responseLabel.setText(NLS.bind(Messages.viewResponse, ""));
+					responseSizeLabel.setText(NLS.bind(Messages.viewSize, ""));
 					vm.setRequest(req);
 				}
 				currentRequest = req;
@@ -365,8 +366,8 @@ public class MonitorView extends ViewPart {
 			aa = a.length + "";
 		if (b != null)
 			bb = b.length + "";
-		String size = MonitorUIPlugin.getResource("%viewSizeFormat", new Object[] { aa, bb});
-		return MonitorUIPlugin.getResource("%viewSize", size);
+		String size = NLS.bind(Messages.viewSizeFormat, new Object[] { aa, bb});
+		return NLS.bind(Messages.viewSize, size);
 	}
 
 	public void dispose() {
@@ -392,7 +393,7 @@ public class MonitorView extends ViewPart {
 			}
 		};
 		sortByResponseTimeAction.setChecked(false);
-		sortByResponseTimeAction.setToolTipText(MonitorUIPlugin.getResource("%actionSortByResponseTime"));
+		sortByResponseTimeAction.setToolTipText(Messages.actionSortByResponseTime);
 		sortByResponseTimeAction.setImageDescriptor(MonitorUIPlugin.getImageDescriptor(MonitorUIPlugin.IMG_ELCL_SORT_RESPONSE_TIME));
 		sortByResponseTimeAction.setHoverImageDescriptor(MonitorUIPlugin.getImageDescriptor(MonitorUIPlugin.IMG_CLCL_SORT_RESPONSE_TIME));
 		sortByResponseTimeAction.setDisabledImageDescriptor(MonitorUIPlugin.getImageDescriptor(MonitorUIPlugin.IMG_DLCL_SORT_RESPONSE_TIME));
@@ -403,7 +404,7 @@ public class MonitorView extends ViewPart {
 				clear();
 			}
 		};
-		clearAction.setToolTipText(MonitorUIPlugin.getResource("%actionClearToolTip"));
+		clearAction.setToolTipText(Messages.actionClearToolTip);
 		clearAction.setImageDescriptor(MonitorUIPlugin.getImageDescriptor(MonitorUIPlugin.IMG_ELCL_CLEAR));
 		clearAction.setHoverImageDescriptor(MonitorUIPlugin.getImageDescriptor(MonitorUIPlugin.IMG_CLCL_CLEAR));
 		clearAction.setDisabledImageDescriptor(MonitorUIPlugin.getImageDescriptor(MonitorUIPlugin.IMG_DLCL_CLEAR));
@@ -420,14 +421,14 @@ public class MonitorView extends ViewPart {
 			}
 		};
 		httpHeaderAction.setChecked(vm.getDisplayHeaderInfo());
-		httpHeaderAction.setText(MonitorUIPlugin.getResource("%actionShowHeader"));
+		httpHeaderAction.setText(Messages.actionShowHeader);
 
 		IAction preferenceAction = new Action() {
 			public void run() {
 				showPreferencePage();
 			}
 		};
-		preferenceAction.setText(MonitorUIPlugin.getResource("%actionProperties"));
+		preferenceAction.setText(Messages.actionProperties);
 		
 		
 		IToolBarManager tbm = getViewSite().getActionBars().getToolBarManager();

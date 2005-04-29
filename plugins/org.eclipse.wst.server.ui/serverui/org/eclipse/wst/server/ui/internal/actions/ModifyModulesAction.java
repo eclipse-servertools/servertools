@@ -22,7 +22,7 @@ import org.eclipse.ui.*;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.wst.server.ui.internal.wizard.ModifyModulesWizard;
 /**
@@ -98,7 +98,7 @@ public class ModifyModulesAction implements IObjectActionDelegate {
 		}
 		
 		if (deployed.isEmpty() && modules.isEmpty()) {
-			MessageDialog.openInformation(shell, ServerUIPlugin.getResource("%defaultDialogTitle"), ServerUIPlugin.getResource("%dialogAddRemoveModulesNone"));
+			MessageDialog.openInformation(shell, Messages.defaultDialogTitle, Messages.dialogAddRemoveModulesNone);
 			return;
 		}
 

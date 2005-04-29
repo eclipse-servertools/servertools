@@ -42,7 +42,7 @@ public class ServerTree {
 	}
 	
 	public static void fillContextMenu(Shell shell, ISelection selection, IMenuManager menu) {
-		MenuManager newMenu = new MenuManager(ServerUIPlugin.getResource("%actionNew"));
+		MenuManager newMenu = new MenuManager(Messages.actionNew);
 		fillNewContextMenu(shell, selection, newMenu);
 		menu.add(newMenu);
 		fillOtherContextMenu(shell, selection, menu);
@@ -50,7 +50,7 @@ public class ServerTree {
 	
 	public static void fillNewContextMenu(Shell shell, ISelection selection, IMenuManager menu) {
 		IAction newServerAction = new NewServerWizardAction();
-		newServerAction.setText(ServerUIPlugin.getResource("%actionNewServer"));
+		newServerAction.setText(Messages.actionNewServer);
 		menu.add(newServerAction);
 	}
 
@@ -107,8 +107,8 @@ public class ServerTree {
 			if (server != null) {
 				addServerActions(shell, menu, server);
 
-				MenuManager menuManager = new MenuManager(ServerUIPlugin.getResource("%actionSwitchConfiguration"));
-				menuManager.add(new SwitchConfigurationAction(shell, ServerUIPlugin.getResource("%viewNoConfiguration"), server, null));
+				MenuManager menuManager = new MenuManager(Messages.actionSwitchConfiguration"));
+				menuManager.add(new SwitchConfigurationAction(shell, Messages.viewNoConfiguration"), server, null));
 
 				List configs = ServerUtil.getSupportedServerConfigurations(server);
 				Iterator iterator = configs.iterator();
@@ -123,7 +123,7 @@ public class ServerTree {
 			if (server != null && server instanceof IModuleRestartable) {
 				menu.add(new Separator());
 
-				MenuManager restartProjectMenu = new MenuManager(ServerUIPlugin.getResource("%actionRestartProject"));
+				MenuManager restartProjectMenu = new MenuManager(Messages.actionRestartProject"));
 
 				IModuleRestartable restartable = (IModuleRestartable) server;
 
@@ -137,7 +137,7 @@ public class ServerTree {
 					}
 				}
 				if (restartProjectMenu.isEmpty())
-					menu.add(new DisabledMenuManager(ServerUIPlugin.getResource("%actionRestartProject")));
+					menu.add(new DisabledMenuManager(Messages.actionRestartProject")));
 				else
 					menu.add(restartProjectMenu);
 			}
@@ -197,8 +197,8 @@ public class ServerTree {
 	
 		// create the debug action
 		Action debugAction = new StartAction(shell, provider, "debug", ILaunchManager.DEBUG_MODE);
-		debugAction.setToolTipText(ServerUIPlugin.getResource("%actionDebugToolTip"));
-		debugAction.setText(ServerUIPlugin.getResource("%actionDebug"));
+		debugAction.setToolTipText(Messages.actionDebugToolTip);
+		debugAction.setText(Messages.actionDebug);
 		debugAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_START_DEBUG));
 		debugAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_START_DEBUG));
 		debugAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_START_DEBUG));
@@ -206,8 +206,8 @@ public class ServerTree {
 	
 		// create the start action
 		Action runAction = new StartAction(shell, provider, "start", ILaunchManager.RUN_MODE);
-		runAction.setToolTipText(ServerUIPlugin.getResource("%actionStartToolTip"));
-		runAction.setText(ServerUIPlugin.getResource("%actionStart"));
+		runAction.setToolTipText(Messages.actionStartToolTip);
+		runAction.setText(Messages.actionStart);
 		runAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_START));
 		runAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_START));
 		runAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_START));
@@ -215,19 +215,19 @@ public class ServerTree {
 		
 		// create the profile action
 		Action profileAction = new StartAction(shell, provider, "profile", ILaunchManager.PROFILE_MODE);
-		profileAction.setToolTipText(ServerUIPlugin.getResource("%actionProfileToolTip"));
-		profileAction.setText(ServerUIPlugin.getResource("%actionProfile"));
+		profileAction.setToolTipText(Messages.actionProfileToolTip);
+		profileAction.setText(Messages.actionProfile);
 		profileAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_START_PROFILE));
 		profileAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_START_PROFILE));
 		profileAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_START_PROFILE));
 		menu.add(profileAction);
 	
 		// create the restart action
-		MenuManager menuManager = new MenuManager(ServerUIPlugin.getResource("%actionRestart"));
+		MenuManager menuManager = new MenuManager(Messages.actionRestart);
 		
 		Action restartAction = new RestartAction(shell, provider, "restart", ILaunchManager.RUN_MODE);
-		restartAction.setToolTipText(ServerUIPlugin.getResource("%actionRestartToolTip"));
-		restartAction.setText(ServerUIPlugin.getResource("%actionRestart"));
+		restartAction.setToolTipText(Messages.actionRestartToolTip);
+		restartAction.setText(Messages.actionRestart);
 		restartAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_RESTART));
 		restartAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_RESTART));
 		restartAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_RESTART));
@@ -237,8 +237,8 @@ public class ServerTree {
 
 		// create the stop action
 		/*Action stopAction = new StopAction(shell, provider, "stop", IServerFactory.SERVER_STATE_SET_MANAGED);
-		stopAction.setToolTipText(ServerUIPlugin.getResource("%actionStopToolTip"));
-		stopAction.setText(ServerUIPlugin.getResource("%actionStop"));
+		stopAction.setToolTipText(Messages.actionStopToolTip"));
+		stopAction.setText(Messages.actionStop"));
 		stopAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_STOP));
 		stopAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_STOP));
 		stopAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_STOP));
@@ -246,8 +246,8 @@ public class ServerTree {
 
 		// create the disconnect action
 		Action disconnectAction = new StopAction(shell, provider, "disconnect", IServerFactory.SERVER_STATE_SET_ATTACHED);
-		disconnectAction.setToolTipText(ServerUIPlugin.getResource("%actionStopToolTip2"));
-		disconnectAction.setText(ServerUIPlugin.getResource("%actionStop2"));
+		disconnectAction.setToolTipText(Messages.actionStopToolTip2"));
+		disconnectAction.setText(Messages.actionStop2"));
 		disconnectAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_DISCONNECT));
 		disconnectAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_DISCONNECT));
 		disconnectAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_DISCONNECT));
@@ -255,8 +255,8 @@ public class ServerTree {
 
 		// create the publish action
 		Action publishAction = new PublishAction(shell, provider, "publish");
-		publishAction.setToolTipText(ServerUIPlugin.getResource("%actionPublishToolTip"));
-		publishAction.setText(ServerUIPlugin.getResource("%actionPublish"));
+		publishAction.setToolTipText(Messages.actionPublishToolTip);
+		publishAction.setText(Messages.actionPublish);
 		publishAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_PUBLISH));
 		publishAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_PUBLISH));
 		publishAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_PUBLISH));
@@ -364,7 +364,7 @@ public class ServerTree {
 	 */
 	public static IAction getAction(Shell shell, ISelectionProvider provider, byte action) {
 		if (action == ACTION_DELETE) {
-			return new ServerTreeAction(shell, provider, ServerUIPlugin.getResource("%actionDelete"), ServerTree.ACTION_DELETE);
+			return new ServerTreeAction(shell, provider, Messages.actionDelete, ServerTree.ACTION_DELETE);
 		}
 		return null;
 	}

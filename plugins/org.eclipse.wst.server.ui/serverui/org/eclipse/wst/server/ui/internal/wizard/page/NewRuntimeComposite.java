@@ -16,8 +16,8 @@ import java.util.Map;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.ui.internal.ImageResource;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.viewers.RuntimeTypeComposite;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.swt.SWT;
@@ -54,8 +54,8 @@ public class NewRuntimeComposite extends Composite {
 		
 		createControl();
 		
-		wizard.setTitle(ServerUIPlugin.getResource("%wizNewRuntimeTitle"));
-		wizard.setDescription(ServerUIPlugin.getResource("%wizNewRuntimeDescription"));
+		wizard.setTitle(Messages.wizNewRuntimeTitle);
+		wizard.setDescription(Messages.wizNewRuntimeDescription);
 		wizard.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_WIZBAN_NEW_RUNTIME));
 	}
 

@@ -83,8 +83,8 @@ public class ModifyModulesComposite extends Composite {
 		this.wizard = wizard;
 		origNewModule = module;
 			
-		wizard.setTitle(ServerUIPlugin.getResource("%wizModuleTitle"));
-		wizard.setDescription(ServerUIPlugin.getResource("%wizModuleDescription"));
+		wizard.setTitle(Messages.wizModuleTitle);
+		wizard.setDescription(Messages.wizModuleDescription);
 		wizard.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_WIZBAN_SELECT_SERVER));
 		
 		createControl();
@@ -221,16 +221,16 @@ public class ModifyModulesComposite extends Composite {
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
 		data.horizontalSpan = 3;
 		label.setLayoutData(data);
-		label.setText(ServerUIPlugin.getResource("%wizModuleMessage"));
+		label.setText(Messages.wizModuleMessage);
 
 		label = new Label(this, SWT.NONE);
-		label.setText(ServerUIPlugin.getResource("%wizModuleAvailableList"));
+		label.setText(Messages.wizModuleAvailableList);
 		
 		label = new Label(this, SWT.NONE);
 		label.setText("");
 		
 		label = new Label(this, SWT.NONE);
-		label.setText(ServerUIPlugin.getResource("%wizModuleDeployedList"));
+		label.setText(Messages.wizModuleDeployedList);
 
 		availableTree = new Tree(this, SWT.BORDER);
 		data = new GridData(GridData.FILL_BOTH);
@@ -256,7 +256,7 @@ public class ModifyModulesComposite extends Composite {
 		comp.setLayout(layout);
 
 		add = new Button(comp, SWT.PUSH);
-		add.setText(ServerUIPlugin.getResource("%wizModuleAdd"));
+		add.setText(Messages.wizModuleAdd);
 		add.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		add.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
@@ -265,7 +265,7 @@ public class ModifyModulesComposite extends Composite {
 		});
 		
 		remove = new Button(comp, SWT.PUSH);
-		remove.setText(ServerUIPlugin.getResource("%wizModuleRemove"));
+		remove.setText(Messages.wizModuleRemove);
 		remove.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		remove.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
@@ -277,7 +277,7 @@ public class ModifyModulesComposite extends Composite {
 		label.setText("");
 		
 		addAll = new Button(comp, SWT.PUSH);
-		addAll.setText(ServerUIPlugin.getResource("%wizModuleAddAll"));
+		addAll.setText(Messages.wizModuleAddAll);
 		addAll.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		addAll.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
@@ -286,7 +286,7 @@ public class ModifyModulesComposite extends Composite {
 		});
 		
 		removeAll = new Button(comp, SWT.PUSH);
-		removeAll.setText(ServerUIPlugin.getResource("%wizModuleRemoveAll"));
+		removeAll.setText(Messages.wizModuleRemoveAll);
 		removeAll.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		removeAll.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {

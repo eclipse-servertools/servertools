@@ -88,13 +88,13 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, ContextIds.PREF);
 		
 		Label label = new Label(composite, SWT.WRAP);
-		label.setText(MonitorUIPlugin.getResource("%preferenceDescription"));
+		label.setText(Messages.preferenceDescription);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		data.horizontalSpan = 2;
 		label.setLayoutData(data);
 	
 		displayButton = new Button(composite, SWT.CHECK);
-		displayButton.setText(MonitorUIPlugin.getResource("%prefShowView"));
+		displayButton.setText(Messages.prefShowView);
 		displayButton.setSelection(MonitorUIPlugin.getShowOnActivityPreference());
 		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		data.horizontalSpan = 2;
@@ -108,7 +108,7 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 		label.setLayoutData(data);
 		
 		label = new Label(composite, SWT.WRAP);
-		label.setText(MonitorUIPlugin.getResource("%monitorList"));
+		label.setText(Messages.monitorList);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 2;
 		label.setLayoutData(data);
@@ -124,22 +124,22 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 		TableLayout tableLayout = new TableLayout();
 		
 		TableColumn statusColumn = new TableColumn(table, SWT.NONE);
-		statusColumn.setText(MonitorUIPlugin.getResource("%columnStatus"));
+		statusColumn.setText(Messages.columnStatus);
 		ColumnWeightData colData = new ColumnWeightData(6, 60, true);
 		tableLayout.addColumnData(colData);
 		
 		TableColumn remoteColumn = new TableColumn(table, SWT.NONE);
-		remoteColumn.setText(MonitorUIPlugin.getResource("%columnRemote"));
+		remoteColumn.setText(Messages.columnRemote);
 		colData = new ColumnWeightData(12, 120, true);
 		tableLayout.addColumnData(colData);
 		
 		TableColumn httpColumn = new TableColumn(table, SWT.NONE);
-		httpColumn.setText(MonitorUIPlugin.getResource("%columnType"));
+		httpColumn.setText(Messages.columnType);
 		colData = new ColumnWeightData(5, 55, true);
 		tableLayout.addColumnData(colData);
 		
 		TableColumn localColumn = new TableColumn(table, SWT.NONE);
-		localColumn.setText(MonitorUIPlugin.getResource("%columnLocal"));
+		localColumn.setText(Messages.columnLocal);
 		colData = new ColumnWeightData(5, 50, true);
 		tableLayout.addColumnData(colData);
 		
@@ -167,7 +167,7 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 		data = new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.VERTICAL_ALIGN_FILL);
 		buttonComp.setLayoutData(data);
 		
-		Button add = SWTUtil.createButton(buttonComp, MonitorUIPlugin.getResource("%add"));
+		Button add = SWTUtil.createButton(buttonComp, Messages.add);
 		add.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				MonitorDialog dialog = new MonitorDialog(getShell());
@@ -181,7 +181,7 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 			}
 		});		
 		
-		edit = SWTUtil.createButton(buttonComp, MonitorUIPlugin.getResource("%edit"));
+		edit = SWTUtil.createButton(buttonComp, Messages.edit);
 		edit.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				IMonitor monitor = (IMonitor) getSelection().get(0);
@@ -199,7 +199,7 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 		});
 		edit.setEnabled(false);
 		
-		remove = SWTUtil.createButton(buttonComp, MonitorUIPlugin.getResource("%remove"));
+		remove = SWTUtil.createButton(buttonComp, Messages.remove);
 		remove.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				Iterator iterator = getSelection().iterator();
@@ -220,7 +220,7 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 		});
 		remove.setEnabled(false);
 		
-		start = SWTUtil.createButton(buttonComp, MonitorUIPlugin.getResource("%start"));
+		start = SWTUtil.createButton(buttonComp, Messages.start);
 		data = (GridData) start.getLayoutData();
 		data.verticalIndent = 9;
 		start.addSelectionListener(new SelectionAdapter() {
@@ -231,9 +231,9 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 					try {
 						monitor.start();
 					} catch (CoreException ce) {
-						MessageDialog.openError(getShell(), MonitorUIPlugin.getResource("%errorDialogTitle"), ce.getStatus().getMessage());
+					MessageDialog.openError(getShell(), Messages.errorDialogTitle, ce.getStatus().getMessage());
 					} catch (Exception ce) {
-						MessageDialog.openError(getShell(), MonitorUIPlugin.getResource("%errorDialogTitle"), ce.getMessage());
+						MessageDialog.openError(getShell(), Messages.errorDialogTitle, ce.getMessage());
 					}
 					tableViewer.refresh(monitor, true);
 				}
@@ -242,7 +242,7 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 		});
 		start.setEnabled(false);
 		
-		stop = SWTUtil.createButton(buttonComp, MonitorUIPlugin.getResource("%stop"));
+		stop = SWTUtil.createButton(buttonComp, Messages.stop);
 		stop.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				Iterator iterator = getSelection().iterator();

@@ -19,6 +19,7 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.core.util.Task;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.task.*;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
@@ -38,7 +39,7 @@ public class RunOnServerWizard extends TaskWizard {
 	 * @param launchMode a launch mode
 	 */
 	public RunOnServerWizard(final IModule module, final String launchMode) {
-		super(ServerUIPlugin.getResource("%wizRunOnServerTitle"), new WizardFragment() {
+		super(Messages.wizRunOnServerTitle, new WizardFragment() {
 			protected void createChildFragments(List list) {
 				task = new NewServerWizardFragment(module, launchMode);
 				list.add(task);
@@ -66,9 +67,9 @@ public class RunOnServerWizard extends TaskWizard {
 	
 		setNeedsProgressMonitor(true);
 		if (ILaunchManager.DEBUG_MODE.equals(launchMode))
-			setWindowTitle(ServerUIPlugin.getResource("%wizDebugOnServerTitle"));
+			setWindowTitle(Messages.wizDebugOnServerTitle);
 		else if (ILaunchManager.PROFILE_MODE.equals(launchMode))
-			setWindowTitle(ServerUIPlugin.getResource("%wizProfileOnServerTitle"));
+			setWindowTitle(Messages.wizProfileOnServerTitle);
 	}
 
 	/**

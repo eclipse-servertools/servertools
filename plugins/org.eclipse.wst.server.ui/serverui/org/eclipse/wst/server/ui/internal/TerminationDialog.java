@@ -12,6 +12,7 @@ package org.eclipse.wst.server.ui.internal;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -44,7 +45,7 @@ public class TerminationDialog extends Dialog {
 	 */
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(ServerUIPlugin.getResource("%terminateServerDialogTitle"));
+		newShell.setText(Messages.terminateServerDialogTitle);
 	}
 
 	/**
@@ -68,7 +69,7 @@ public class TerminationDialog extends Dialog {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, ContextIds.TERMINATE_SERVER_DIALOG);
 	
 		Label label = new Label(composite, SWT.WRAP);
-		label.setText(ServerUIPlugin.getResource("%terminateServerDialogMessage", new String[] {serverName}));
+		label.setText(NLS.bind(Messages.terminateServerDialogMessage, new String[] {serverName}));
 		GridData data = new GridData();
 		data.widthHint = 400;
 		label.setLayoutData(data);

@@ -14,8 +14,9 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.viewers.MonitorComposite;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -47,7 +48,7 @@ public class MonitorServerDialog extends Dialog {
 	 */
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(ServerUIPlugin.getResource("%dialogMonitorTitle"));
+		newShell.setText(Messages.dialogMonitorTitle);
 	}
 	
 	protected void createButtonsForButtonBar(Composite parent) {
@@ -73,7 +74,7 @@ public class MonitorServerDialog extends Dialog {
 		//WorkbenchHelp.setHelp(composite, ContextIds.TERMINATE_SERVER_DIALOG);
 	
 		Label label = new Label(composite, SWT.WRAP);
-		label.setText(ServerUIPlugin.getResource("%dialogMonitorDescription", new String[] { server.getName() } ));
+		label.setText(NLS.bind(Messages.dialogMonitorDescription, new String[] { server.getName() } ));
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		label.setLayoutData(data);
 

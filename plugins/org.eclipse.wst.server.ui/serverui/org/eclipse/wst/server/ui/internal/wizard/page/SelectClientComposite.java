@@ -57,8 +57,8 @@ public class SelectClientComposite extends Composite {
 		this.wizard = wizard;
 		this.clients = clients;
 	
-		wizard.setTitle(ServerUIPlugin.getResource("%wizSelectClientTitle"));
-		wizard.setDescription(ServerUIPlugin.getResource("%wizSelectClientDescription"));
+		wizard.setTitle(Messages.wizSelectClientTitle);
+		wizard.setDescription(Messages.wizSelectClientDescription);
 		wizard.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_WIZBAN_SELECT_SERVER_CLIENT));
 		
 		createControl();
@@ -86,7 +86,7 @@ public class SelectClientComposite extends Composite {
 		whs.setHelp(this, ContextIds.SELECT_CLIENT_WIZARD);
 	
 		Label label = new Label(this, SWT.WRAP);
-		label.setText(ServerUIPlugin.getResource("%wizSelectClientMessage"));
+		label.setText(Messages.wizSelectClientMessage);
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING);
 		label.setLayoutData(data);
 	

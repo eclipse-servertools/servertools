@@ -14,7 +14,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Shell;
 
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 /**
  * Action for monitoring a server.
  */
@@ -29,7 +29,7 @@ public class MonitorServerAction extends Action {
 	 * @param server a server
 	 */
 	public MonitorServerAction(Shell shell, IServer server) {
-		super(ServerUIPlugin.getResource("%actionMonitorProperties"));
+		super(Messages.actionMonitorProperties);
 		this.shell = shell;
 		this.server = server;
 	}

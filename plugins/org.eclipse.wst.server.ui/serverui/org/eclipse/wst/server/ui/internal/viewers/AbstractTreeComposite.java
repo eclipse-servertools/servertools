@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Tree;
 
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 /**
  * 
  */
@@ -93,7 +93,7 @@ public abstract class AbstractTreeComposite extends Composite {
 		comp.setLayoutData(data);
 		
 		label = new Label(comp, SWT.NONE);
-		label.setText(ServerUIPlugin.getResource("%viewBy"));
+		label.setText(Messages.viewBy);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(data);
 	
@@ -110,7 +110,7 @@ public abstract class AbstractTreeComposite extends Composite {
 		
 		if (hasDescription()) {
 			description = new Label(this, SWT.WRAP);
-			description.setText(ServerUIPlugin.getResource("%wizDescription"));
+			description.setText(Messages.wizDescription);
 			data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
 			data.horizontalSpan = 2;
 			data.heightHint = 35;
@@ -130,7 +130,7 @@ public abstract class AbstractTreeComposite extends Composite {
 	
 	protected void setDescription(String text) {
 		if (description != null && text != null)
-			description.setText(ServerUIPlugin.getResource("%wizDescription") + " " + text);
+			description.setText(Messages.wizDescription + " " + text);
 	}
 	
 	protected abstract void viewOptionSelected(byte option);

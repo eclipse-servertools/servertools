@@ -12,7 +12,7 @@ package org.eclipse.wst.server.ui.internal.command;
 
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 /**
  * Command to change the server's auto-publish setting.
  */
@@ -47,7 +47,7 @@ public class SetServerAutoPublishTimeCommand extends ServerCommand {
 	 * @return java.lang.String
 	 */
 	public String getDescription() {
-		return ServerUIPlugin.getResource("%serverEditorOverviewAutoPublishDescription");
+		return Messages.serverEditorOverviewAutoPublishDescription;
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class SetServerAutoPublishTimeCommand extends ServerCommand {
 	 * @return java.lang.String
 	 */
 	public String getName() {
-		return ServerUIPlugin.getResource("%serverEditorOverviewAutoPublishCommand");
+		return Messages.serverEditorOverviewAutoPublishCommand;
 	}
 
 	/**

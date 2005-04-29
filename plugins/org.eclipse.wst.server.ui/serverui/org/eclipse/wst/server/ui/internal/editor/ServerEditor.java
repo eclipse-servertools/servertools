@@ -23,6 +23,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
@@ -299,7 +300,7 @@ public class ServerEditor extends MultiPageEditorPart {
 		}
 		if (!errors.isEmpty()) {
 			StringBuffer sb = new StringBuffer();
-			sb.append(ServerUIPlugin.getResource("%errorEditorCantSave") + "\n");
+			sb.append(Messages.errorEditorCantSave + "\n");
 			iterator = errors.iterator();
 			while (iterator.hasNext())
 				sb.append("\t" + ((String) iterator.next()) + "\n");
@@ -317,7 +318,7 @@ public class ServerEditor extends MultiPageEditorPart {
 			String name = "";
 			if (server != null)
 				name = server.getName();
-			monitor.beginTask(ServerUIPlugin.getResource("%savingTask", name), ticks);
+			monitor.beginTask(NLS.bind(Messages.savingTask, name), ticks);
 			if (server != null)
 				ticks /= 2;
 
@@ -335,8 +336,8 @@ public class ServerEditor extends MultiPageEditorPart {
 	
 			monitor.setCanceled(true);
 	
-			String title = ServerUIPlugin.getResource("%editorSaveErrorDialog");
-			String message = ServerUIPlugin.getResource("%editorSaveErrorMessage", e.getLocalizedMessage());
+			String title = Messages.editorSaveErrorDialog;
+			String message = NLS.bind(Messages.editorSaveErrorMessage, e.getLocalizedMessage());
 			MessageDialog.openError(getEditorSite().getShell(), title,  message);
 		} finally {
 			monitor.done();
@@ -444,9 +445,9 @@ public class ServerEditor extends MultiPageEditorPart {
 				readOnly = true;
 			
 			if (readOnly)
-				statusItem.setText(ServerUIPlugin.getResource("%editorReadOnly"));
+				statusItem.setText(Messages.editorReadOnly);
 			else
-				statusItem.setText(ServerUIPlugin.getResource("%editorWritable"));
+				statusItem.setText(Messages.editorWritable);
 		}
 
 		if (status != null) {
@@ -471,7 +472,7 @@ public class ServerEditor extends MultiPageEditorPart {
 				}
 			}*/
 			if (sb.length() > 1)
-				status.setMessage(ServerUIPlugin.getResource("%editorReadOnlyFiles", sb.toString()));
+				status.setMessage(NLS.bind(Messages.editorReadOnlyFiles, sb.toString()));
 			else
 				status.setMessage("");
 		}
@@ -635,7 +636,7 @@ public class ServerEditor extends MultiPageEditorPart {
 					serverId = server2.getId();
 			}
 			if (serverId == null)
-				throw new PartInitException(ServerUIPlugin.getResource("%errorEditor", file.getName()));
+				throw new PartInitException(NLS.bind(Messages.errorEditor, file.getName()));
 		} else if (input instanceof IServerEditorInput) {
 			IServerEditorInput sei = (IServerEditorInput) input;
 			serverId = sei.getServerId();
@@ -740,12 +741,12 @@ public class ServerEditor extends MultiPageEditorPart {
 	protected void updateUndoAction() {
 		ITask command = commandManager.getUndoCommand(serverId);
 		if (command == null) {
-			undoAction.setText(ServerUIPlugin.getResource("%editorUndoDisabled"));
+			undoAction.setText(Messages.editorUndoDisabled);
 			undoAction.setToolTipText("");
 			undoAction.setDescription("");
 			undoAction.setEnabled(false);
 		} else {
-			String text = ServerUIPlugin.getResource("%editorUndoEnabled", new Object[] {command.getName()});
+			String text = NLS.bind(Messages.editorUndoEnabled, new Object[] {command.getName()});
 			undoAction.setText(text);
 			undoAction.setToolTipText(command.getDescription());
 			undoAction.setDescription(command.getDescription());
@@ -759,12 +760,12 @@ public class ServerEditor extends MultiPageEditorPart {
 	protected void updateRedoAction() {
 		ITask command = commandManager.getRedoCommand(serverId);
 		if (command == null) {
-			redoAction.setText(ServerUIPlugin.getResource("%editorRedoDisabled"));
+			redoAction.setText(Messages.editorRedoDisabled);
 			redoAction.setToolTipText("");
 			redoAction.setDescription("");
 			redoAction.setEnabled(false);
 		} else {
-			String text = ServerUIPlugin.getResource("%editorRedoEnabled", new Object[] {command.getName()});
+			String text = NLS.bind(Messages.editorRedoEnabled, new Object[] {command.getName()});
 			redoAction.setText(text);
 			redoAction.setToolTipText(command.getDescription());
 			redoAction.setDescription(command.getDescription());
@@ -834,8 +835,8 @@ public class ServerEditor extends MultiPageEditorPart {
 	 */
 	protected void promptReadOnlyServerFile(String id) {
 		commandManager.setReadOnly(id, true);
-		String title = ServerUIPlugin.getResource("%editorResourceModifiedTitle");
-		String message = ServerUIPlugin.getResource("%editorReadOnlyMessage");
+		String title = Messages.editorResourceModifiedTitle;
+		String message = Messages.editorReadOnlyMessage;
 		MessageDialog.openInformation(getEditorSite().getShell(), title, message);
 	}
 
@@ -843,8 +844,8 @@ public class ServerEditor extends MultiPageEditorPart {
 	 * 
 	 */
 	protected void promptReloadServerFile(String id, IServerWorkingCopy wc) {
-		String title = ServerUIPlugin.getResource("%editorResourceModifiedTitle");
-		String message = ServerUIPlugin.getResource("%editorServerModifiedMessage");
+		String title = Messages.editorResourceModifiedTitle;
+		String message = Messages.editorServerModifiedMessage;
 
 		if (MessageDialog.openQuestion(getEditorSite().getShell(), title, message)) {
 			try {
@@ -876,11 +877,11 @@ public class ServerEditor extends MultiPageEditorPart {
 		
 		// check for deleted files
 		if (resourceDeleted) {
-			String title = ServerUIPlugin.getResource("%editorResourceDeleteTitle");
+			String title = Messages.editorResourceDeleteTitle;
 			String message = null;
 			if (server != null)
-				message = ServerUIPlugin.getResource("%editorResourceDeleteServerMessage", server.getName());
-			String[] labels = new String[] {ServerUIPlugin.getResource("%editorResourceDeleteSave"), IDialogConstants.CLOSE_LABEL};
+				message = NLS.bind(Messages.editorResourceDeleteServerMessage, server.getName());
+			String[] labels = new String[] {Messages.editorResourceDeleteSave, IDialogConstants.CLOSE_LABEL};
 			MessageDialog dialog = new MessageDialog(getEditorSite().getShell(), title, null, message, MessageDialog.INFORMATION, labels, 0);
 
 			if (dialog.open() == 0)

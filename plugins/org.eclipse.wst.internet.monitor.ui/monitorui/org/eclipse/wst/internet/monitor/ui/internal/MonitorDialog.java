@@ -75,9 +75,9 @@ public class MonitorDialog extends Dialog {
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
 		if (isEdit)
-			shell.setText(MonitorUIPlugin.getResource("%editMonitor"));
+			shell.setText(Messages.editMonitor);
 		else
-			shell.setText(MonitorUIPlugin.getResource("%newMonitor"));
+			shell.setText(Messages.newMonitor);
 	}
 	
 	protected Label createLabel(Composite comp, String txt) {
@@ -140,7 +140,7 @@ public class MonitorDialog extends Dialog {
 		
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, ContextIds.PREF_DIALOG);
 		
-		createLabel(composite, MonitorUIPlugin.getResource("%localPort"));		
+		createLabel(composite, Messages.localPort);		
 		monitorPort = createText(composite, monitor.getLocalPort() + "", new StringModifyListener() {
 			public void valueChanged(String s) {
 				try {
@@ -158,9 +158,9 @@ public class MonitorDialog extends Dialog {
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 2;
 		group.setLayoutData(data);
-		group.setText(MonitorUIPlugin.getResource("%remoteGroup"));
+		group.setText(Messages.remoteGroup);
 		
-		createLabel(group, MonitorUIPlugin.getResource("%remoteHost"));		
+		createLabel(group, Messages.remoteHost);		
 		createText(group, monitor.getRemoteHost(), new StringModifyListener() {
 			public void valueChanged(String s) {
 				monitor.setRemoteHost(s);
@@ -168,7 +168,7 @@ public class MonitorDialog extends Dialog {
 			}
 		});
 		
-		createLabel(group, MonitorUIPlugin.getResource("%remotePort"));		
+		createLabel(group, Messages.remotePort);		
 		remotePort = createText(group, monitor.getRemotePort() + "", new StringModifyListener() {
 			public void valueChanged(String s) {
 				try {
@@ -180,7 +180,7 @@ public class MonitorDialog extends Dialog {
 			}
 		});
 		
-		createLabel(group, MonitorUIPlugin.getResource("%parseType"));		
+		createLabel(group, Messages.parseType);		
 		createTypeCombo(group, new String[] {"TCP/IP","HTTP"}, monitor.getProtocol(), new StringModifyListener() {
 			public void valueChanged(String protocolId) {
 				monitor.setProtocol(protocolId);
@@ -197,7 +197,7 @@ public class MonitorDialog extends Dialog {
 		try {
 			monitor.save();
 		} catch (CoreException ce) {
-			ErrorDialog.openError(getShell(), MonitorUIPlugin.getResource("%errorDialogTitle"), ce.getLocalizedMessage(), ce.getStatus());
+			ErrorDialog.openError(getShell(), Messages.errorDialogTitle, ce.getLocalizedMessage(), ce.getStatus());
 			return;
 		}
 		super.okPressed();

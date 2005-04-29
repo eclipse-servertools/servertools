@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.IServerType;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 /**
  * 
  */
@@ -109,17 +109,17 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 	}
 
 	protected String getDescriptionLabel() {
-		return null; //ServerUIPlugin.getResource("%serverTypeCompDescription");
+		return null; //Messages.serverTypeCompDescription");
 	}
 
 	protected String getTitleLabel() {
-		return ServerUIPlugin.getResource("%serverTypeCompDescription");
+		return Messages.serverTypeCompDescription;
 	}
 
 	protected String[] getComboOptions() {
-		return new String[] { ServerUIPlugin.getResource("%name"),
-			ServerUIPlugin.getResource("%vendor"), ServerUIPlugin.getResource("%version"),
-			ServerUIPlugin.getResource("%moduleSupport") };
+		return new String[] { Messages.name,
+			Messages.vendor, Messages.version,
+			Messages.moduleSupport };
 	}
 
 	protected void viewOptionSelected(byte option) {

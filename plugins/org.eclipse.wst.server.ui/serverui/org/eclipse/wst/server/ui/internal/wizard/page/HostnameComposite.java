@@ -15,6 +15,7 @@ import java.util.List;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
 
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 
@@ -98,9 +99,9 @@ public class HostnameComposite extends Composite {
 		setLayout(layout);
 		//WorkbenchHelp.setHelp(this, ContextIds.SELECT_CLIENT_WIZARD);
 	
-		createHeadingLabel(this, ServerUIPlugin.getResource("%hostnameTitle"), 3);
+		createHeadingLabel(this, Messages.hostnameTitle, 3);
 
-		createLabel(this, ServerUIPlugin.getResource("%hostname"), 1, false, true);
+		createLabel(this, Messages.hostname, 1, false, true);
 		
 		List hosts = ServerUIPlugin.getPreferences().getHostnames();
 		String[] s = new String[hosts.size()];

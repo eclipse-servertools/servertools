@@ -13,7 +13,7 @@ package org.eclipse.wst.server.ui.internal.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.wst.server.ui.internal.ImageResource;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 /**
  * "Profile on Server" menu action. Allows the user to select an
  * object, and have automatic server creation, launching, and
@@ -31,7 +31,7 @@ public class ProfileOnServerAction extends Action {
 	 * @param object the object to attempt to debug
 	 */
 	public ProfileOnServerAction(Object object) {
-		super(ServerUIPlugin.getResource("%actionProfileOnServer"));
+		super(Messages.actionProfileOnServer);
 	
 		setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DTOOL_PROFILE_ON_SERVER));
 		setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CTOOL_PROFILE_ON_SERVER));

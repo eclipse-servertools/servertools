@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.wizard;
 
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.wizard.page.ImportConfigurationWizardPage;
 import org.eclipse.wst.server.ui.internal.wizard.page.WizardUtil;
 import org.eclipse.ui.IImportWizard;
@@ -25,7 +25,7 @@ public class ImportServerConfigurationWizard extends AbstractWizard implements I
 	 */
 	public ImportServerConfigurationWizard() {
 		super();
-		setWindowTitle(ServerUIPlugin.getResource("%wizImportConfigurationWizardTitle"));
+		setWindowTitle(Messages.wizImportConfigurationWizardTitle);
 	}
 	
 	public void addPages() {

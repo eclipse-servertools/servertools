@@ -20,6 +20,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 /**
  * Runtime type content provider.
@@ -75,12 +76,12 @@ public class ServerTreeContentProvider extends AbstractTreeContentProvider {
 						if (style == STYLE_HOST) {
 							te = getOrCreate(list, servers[i].getHost());
 						} else if (style == STYLE_VERSION) {
-							String version = ServerUIPlugin.getResource("%elementUnknownName");
+							String version = Messages.elementUnknownName;
 							if (runtimeType != null)
 								version = runtimeType.getVersion();
 							te = getOrCreate(list, version);
 						} else if (style == STYLE_VENDOR) {
-							String vendor = ServerUIPlugin.getResource("%elementUnknownName");
+							String vendor = Messages.elementUnknownName;
 							if (runtimeType != null)
 								vendor = runtimeType.getVendor();
 							te = getOrCreate(list, vendor);

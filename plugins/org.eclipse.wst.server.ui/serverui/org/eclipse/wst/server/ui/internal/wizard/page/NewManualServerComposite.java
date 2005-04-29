@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -120,7 +121,7 @@ public class NewManualServerComposite extends Composite {
 		whs.setHelp(serverTypeComposite, ContextIds.NEW_SERVER_INSTANCE_FACTORY);
 		
 		runtimeLabel = new Label(this, SWT.NONE);
-		runtimeLabel.setText(ServerUIPlugin.getResource("%wizNewServerRuntime"));
+		runtimeLabel.setText(Messages.wizNewServerRuntime);
 		
 		runtimeCombo = new Combo(this, SWT.READ_ONLY);
 		data = new GridData(GridData.FILL_HORIZONTAL);
@@ -186,7 +187,7 @@ public class NewManualServerComposite extends Composite {
 				try {
 					monitor = ProgressUtil.getMonitorFor(monitor);
 					int ticks = 200;
-					monitor.beginTask(ServerUIPlugin.getResource("%loadingTask", serverType.getName()), ticks);
+					monitor.beginTask(NLS.bind(Messages.loadingTask, serverType.getName()), ticks);
 	
 					server = cache.getServer(serverType, host, ProgressUtil.getSubMonitorFor(monitor, 200));
 					if (server != null) {
@@ -219,7 +220,7 @@ public class NewManualServerComposite extends Composite {
 		if (ce[0] != null)
 			wizard.setMessage(ce[0].getLocalizedMessage(), IMessageProvider.ERROR);
 		else if (server == null)
-			wizard.setMessage(ServerUIPlugin.getResource("%wizErrorServerCreationError"), IMessageProvider.ERROR);
+			wizard.setMessage(Messages.wizErrorServerCreationError, IMessageProvider.ERROR);
 	}
 
 	/**
@@ -319,7 +320,7 @@ public class NewManualServerComposite extends Composite {
 		
 		updateRuntimeCombo(serverType);
 		if (wrong) {
-			wizard.setMessage(ServerUIPlugin.getResource("%errorVersionLevel", new Object[] { moduleType.getName(), moduleType.getVersion() }), IMessageProvider.ERROR);
+			wizard.setMessage(NLS.bind(Messages.errorVersionLevel, new Object[] { moduleType.getName(), moduleType.getVersion() }), IMessageProvider.ERROR);
 		} else if (serverType == null)
 			wizard.setMessage("", IMessageProvider.ERROR);
 		else {

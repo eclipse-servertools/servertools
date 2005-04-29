@@ -104,7 +104,7 @@ public class RuntimeTargetComposite {
 	 */
 	protected void createContents(final Composite parent) {
 		Label label = new Label(parent, SWT.NONE);
-		label.setText(ServerUIPlugin.getResource("%runtimeTargetCombo"));
+		label.setText(Messages.runtimeTargetCombo);
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		label.setLayoutData(data);
 		
@@ -136,7 +136,7 @@ public class RuntimeTargetComposite {
 
 		final IModule projectModule = ServerUtil.getModules(project)[0];
 		
-		Button newButton = SWTUtil.createButton(parent, ServerUIPlugin.getResource("%runtimeTargetNewRuntime"));
+		Button newButton = SWTUtil.createButton(parent, Messages.runtimeTargetNewRuntime);
 		newButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				String currentRuntime2 = combo.getText();
@@ -160,7 +160,7 @@ public class RuntimeTargetComposite {
 		// child module selection
 		if (!childProjects.isEmpty()) {
 			final Button includeChildren = new Button(parent, SWT.CHECK);
-			includeChildren.setText(ServerUIPlugin.getResource("%runtimeTargetChildren"));
+			includeChildren.setText(Messages.runtimeTargetChildren);
 			data = new GridData();
 			data.horizontalSpan = 2;
 			includeChildren.setLayoutData(data);
@@ -180,7 +180,7 @@ public class RuntimeTargetComposite {
 			new Label(parent, SWT.NONE);
 		}
 		
-		Button prefsButton = SWTUtil.createButton(parent, ServerUIPlugin.getResource("%runtimeTargetRuntimePreferences"));
+		Button prefsButton = SWTUtil.createButton(parent, Messages.runtimeTargetRuntimePreferences);
 		prefsButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				String currentRuntime2 = combo.getText();
@@ -225,7 +225,7 @@ public class RuntimeTargetComposite {
 			int size = targets.length;
 			items = new String[size + offset];
 			if (offset > 0) {
-				items[0] = ServerUIPlugin.getResource("%runtimeTargetNone");
+				items[0] = Messages.runtimeTargetNone;
 				sel = 0;
 			}
 			for (int i = 0; i < size; i++) {

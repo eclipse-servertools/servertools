@@ -94,7 +94,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		whs.setHelp(composite, ContextIds.PREF_GENERAL);
 		
 		publishBeforeStart = new Button(composite, SWT.CHECK);
-		publishBeforeStart.setText(ServerUIPlugin.getResource("%prefAutoPublish"));
+		publishBeforeStart.setText(Messages.prefAutoPublish);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 4;
 		publishBeforeStart.setLayoutData(data);
@@ -102,7 +102,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		whs.setHelp(publishBeforeStart, ContextIds.PREF_GENERAL_PUBLISH_BEFORE_START);
 		
 		autoPublishLocal = new Button(composite, SWT.CHECK);
-		autoPublishLocal.setText(ServerUIPlugin.getResource("%prefAutoPublishLocal"));
+		autoPublishLocal.setText(Messages.prefAutoPublishLocal);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 2;
 		autoPublishLocal.setLayoutData(data);
@@ -119,7 +119,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		autoPublishLocalTime.setLayoutData(data);
 		
 		Label label = new Label(composite, SWT.NONE);
-		label.setText(ServerUIPlugin.getResource("%prefAutoPublishSeconds"));
+		label.setText(Messages.prefAutoPublishSeconds);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
 		label.setLayoutData(data);
 		
@@ -130,7 +130,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		});
 		
 		autoPublishRemote = new Button(composite, SWT.CHECK);
-		autoPublishRemote.setText(ServerUIPlugin.getResource("%prefAutoPublishRemote"));
+		autoPublishRemote.setText(Messages.prefAutoPublishRemote);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 2;
 		autoPublishRemote.setLayoutData(data);
@@ -153,12 +153,12 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		});
 		
 		label = new Label(composite, SWT.NONE);
-		label.setText(ServerUIPlugin.getResource("%prefAutoPublishSeconds"));
+		label.setText(Messages.prefAutoPublishSeconds);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
 		label.setLayoutData(data);
 		
 		autoRestart = new Button(composite, SWT.CHECK);
-		autoRestart.setText(ServerUIPlugin.getResource("%prefAutoRestart"));
+		autoRestart.setText(Messages.prefAutoRestart);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 4;
 		autoRestart.setLayoutData(data);
@@ -166,7 +166,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		whs.setHelp(autoRestart, ContextIds.PREF_GENERAL_AUTO_RESTART);
 		
 		promptIrreversible = new Button(composite, SWT.CHECK);
-		promptIrreversible.setText(ServerUIPlugin.getResource("%prefPromptIrreversible"));
+		promptIrreversible.setText(Messages.prefPromptIrreversible);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 4;
 		promptIrreversible.setLayoutData(data);
@@ -174,7 +174,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		whs.setHelp(promptIrreversible, ContextIds.PREF_GENERAL_PROMPT_IRREVERSIBLE);
 		
 		showOnActivity = new Button(composite, SWT.CHECK);
-		showOnActivity.setText(ServerUIPlugin.getResource("%prefShowOnActivity"));
+		showOnActivity.setText(Messages.prefShowOnActivity);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 4;
 		showOnActivity.setLayoutData(data);
@@ -182,7 +182,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		whs.setHelp(showOnActivity, ContextIds.PREF_GENERAL_SHOW_ON_ACTIVITY);
 		
 		createInWorkspace = new Button(composite, SWT.CHECK);
-		createInWorkspace.setText(ServerUIPlugin.getResource("%prefCreateInWorkspace"));
+		createInWorkspace.setText(Messages.prefCreateInWorkspace);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 4;
 		createInWorkspace.setLayoutData(data);
@@ -191,7 +191,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		
 		// save editors group
 		Group saveEditorGroup = new Group(composite, SWT.NONE);
-		saveEditorGroup.setText(ServerUIPlugin.getResource("%prefSaveEditorsGroup"));
+		saveEditorGroup.setText(Messages.prefSaveEditorsGroup);
 		
 		layout = new GridLayout();
 		layout.numColumns = 3;
@@ -201,7 +201,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		saveEditorGroup.setLayoutData(data);
 		
 		saveNever = new Button(saveEditorGroup, SWT.RADIO);
-		saveNever.setText(ServerUIPlugin.getResource("%prefSaveEditorsNever"));
+		saveNever.setText(Messages.prefSaveEditorsNever);
 		saveNever.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				saveEditors = ServerUIPreferences.SAVE_EDITORS_NEVER;
@@ -210,7 +210,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		whs.setHelp(saveNever, ContextIds.PREF_GENERAL_SAVE_EDITORS);
 		
 		savePrompt = new Button(saveEditorGroup, SWT.RADIO);
-		savePrompt.setText(ServerUIPlugin.getResource("%prefSaveEditorsPrompt"));
+		savePrompt.setText(Messages.prefSaveEditorsPrompt);
 		savePrompt.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				saveEditors = ServerUIPreferences.SAVE_EDITORS_PROMPT;
@@ -219,7 +219,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		whs.setHelp(savePrompt, ContextIds.PREF_GENERAL_SAVE_EDITORS);
 		
 		saveAuto = new Button(saveEditorGroup, SWT.RADIO);
-		saveAuto.setText(ServerUIPlugin.getResource("%prefSaveEditorsAutosave"));
+		saveAuto.setText(Messages.prefSaveEditorsAutosave);
 		saveAuto.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				saveEditors = ServerUIPreferences.SAVE_EDITORS_AUTO;
@@ -228,15 +228,15 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		whs.setHelp(saveAuto, ContextIds.PREF_GENERAL_SAVE_EDITORS);
 		
 		label = new Label(composite, SWT.NONE);
-		label.setText(ServerUIPlugin.getResource("%prefMachineSpeed"));
+		label.setText(Messages.prefMachineSpeed);
 		
 		machineSpeedCombo = new Combo(composite, SWT.READ_ONLY);
 		String[] items = new String[] {
-			ServerUIPlugin.getResource("%prefMachineSpeedVerySlow"),
-			ServerUIPlugin.getResource("%prefMachineSpeedSlow"),
-			ServerUIPlugin.getResource("%prefMachineSpeedAverage"),
-			ServerUIPlugin.getResource("%prefMachineSpeedFast"),
-			ServerUIPlugin.getResource("%prefMachineSpeedVeryFast")
+			Messages.prefMachineSpeedVerySlow,
+			Messages.prefMachineSpeedSlow,
+			Messages.prefMachineSpeedAverage,
+			Messages.prefMachineSpeedFast,
+			Messages.prefMachineSpeedVeryFast
 		};
 		machineSpeedCombo.setItems(items);
 		machineSpeedCombo.select(preferences.getMachineSpeed() / 2);

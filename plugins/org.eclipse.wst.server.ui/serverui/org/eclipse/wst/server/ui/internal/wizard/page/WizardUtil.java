@@ -18,8 +18,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.internal.Messages;
 import org.eclipse.wst.server.core.internal.ProjectProperties;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.osgi.util.NLS;
@@ -176,7 +176,7 @@ public class WizardUtil {
 			return status.getMessage();
 		}
 		
-		String error = ServerUIPlugin.getResource("%wizErrorInvalidFolder");
+		String error = Messages.wizErrorInvalidFolder;
 		try {
 			// find project of this container
 			IProject project = null;
@@ -194,7 +194,7 @@ public class WizardUtil {
 	
 			// validate the project
 			if (project != null && !project.isOpen())
-				return ServerUIPlugin.getResource("%wizErrorClosedProject");
+				return Messages.wizErrorClosedProject;
 
 			if (project == null || !project.exists() || !project.isOpen())
 				return error;
@@ -224,8 +224,8 @@ public class WizardUtil {
 	 * @return <code>true</code> if the user wants to create a server project
 	 */
 	public static boolean promptForServerProjectCreation(Shell shell, String projectName) {
-		String msg = ServerUIPlugin.getResource("%createServerProjectDialogMessage", projectName);
-		return MessageDialog.openQuestion(shell, ServerUIPlugin.getResource("%createServerProjectDialogTitle"), msg);
+		String msg = NLS.bind(Messages.createServerProjectDialogMessage, projectName);
+		return MessageDialog.openQuestion(shell, Messages.createServerProjectDialogTitle, msg);
 	}
 	
 	/**

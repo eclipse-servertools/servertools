@@ -60,8 +60,8 @@ public class MonitorTableLabelProvider implements ITableLabelProvider {
 		IMonitor monitor = (IMonitor) element;
 		if (columnIndex == 0) {
 			if (monitor.isRunning())
-				return MonitorUIPlugin.getResource("%started");
-			return MonitorUIPlugin.getResource("%stopped");
+				return Messages.started;
+			return Messages.stopped;
 		} else if (columnIndex == 1)
 			return monitor.getRemoteHost() + ":" + monitor.getRemotePort();
 		else if (columnIndex == 2)

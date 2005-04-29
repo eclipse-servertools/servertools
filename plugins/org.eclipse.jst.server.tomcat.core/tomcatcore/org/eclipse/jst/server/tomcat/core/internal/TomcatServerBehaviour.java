@@ -26,6 +26,7 @@ import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.IWebModule;
+import org.eclipse.osgi.util.NLS;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
@@ -184,7 +185,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			confDir = installDir;
 
 		monitor = ProgressUtil.getMonitorFor(monitor);
-		monitor.beginTask(TomcatPlugin.getResource("%publishServerTask"), 500);
+		monitor.beginTask(Messages.publishServerTask, 500);
 		
 		IStatus status = getTomcatConfiguration().cleanupServer(confDir, installDir, ProgressUtil.getSubMonitorFor(monitor, 100));
 		if (status != null && !status.isOK())
@@ -263,14 +264,14 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		while (iterator.hasNext()) {
 			ServerPort sp = (ServerPort) iterator.next();
 			if (sp.getPort() < 0)
-				throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPortInvalid"), null));
+				throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorPortInvalid, null));
 			if (SocketUtil.isPortInUse(sp.getPort(), 5)) {
 				usedPorts.add(sp);
 			}
 		}
 		if (usedPorts.size() == 1) {
 			ServerPort port = (ServerPort) usedPorts.get(0);
-			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPortInUse", new String[] {port.getPort() + "", getServer().getName()}), null));
+			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPortInUse, new String[] {port.getPort() + "", getServer().getName()}), null));
 		} else if (usedPorts.size() > 1) {
 			String portStr = "";
 			iterator = usedPorts.iterator();
@@ -282,7 +283,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 				ServerPort sp = (ServerPort) iterator.next();
 				portStr += "" + sp.getPort();
 			}
-			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorPortsInUse", new String[] {portStr, getServer().getName()}), null));
+			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPortsInUse, new String[] {portStr, getServer().getName()}), null));
 		}
 		
 		setServerState(IServer.STATE_STARTING);

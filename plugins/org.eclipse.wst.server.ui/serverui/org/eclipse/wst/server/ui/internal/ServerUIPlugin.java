@@ -10,7 +10,6 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -41,6 +40,7 @@ import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewRuntimeWizardFragment;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewPart;
@@ -141,38 +141,9 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	 * @param key java.lang.String
 	 * @return java.lang.String
 	 */
-	public static String getResource(String key) {
+	public static String getResource2(String key) {
 		try {
 			return Platform.getResourceString(getInstance().getBundle(), key);
-		} catch (Exception e) {
-			return key;
-		}
-	}
-
-	/**
-	 * Returns the translated String found with the given key,
-	 * and formatted with the given arguments using java.text.MessageFormat.
-	 *
-	 * @param key java.lang.String
-	 * @param arg java.lang.String
-	 * @return java.lang.String
-	 */
-	public static String getResource(String key, String arg) {
-		return getResource(key, new String[] {arg});
-	}
-
-	/**
-	 * Returns the translated String found with the given key,
-	 * and formatted with the given arguments using java.text.MessageFormat.
-	 *
-	 * @param key java.lang.String
-	 * @param arguments java.lang.Object[]
-	 * @return java.lang.String
-	 */
-	public static String getResource(String key, Object[] arguments) {
-		try {
-			String text = getResource(key);
-			return MessageFormat.format(text, arguments);
 		} catch (Exception e) {
 			return key;
 		}
@@ -488,12 +459,12 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		if (!(server instanceof IServerWorkingCopy))
 			return true;
 
-		String title = ServerUIPlugin.getResource("%resourceDirtyDialogTitle");
+		String title = Messages.resourceDirtyDialogTitle;
 		
 		IServerWorkingCopy wc = (IServerWorkingCopy) server;
 		if (wc.isDirty()) {
-			String message = ServerUIPlugin.getResource("%resourceDirtyDialogMessage", server.getName());
-			String[] labels = new String[] {ServerUIPlugin.getResource("%resourceDirtyDialogContinue"), IDialogConstants.CANCEL_LABEL};
+			String message = NLS.bind(Messages.resourceDirtyDialogMessage, server.getName());
+			String[] labels = new String[] {Messages.resourceDirtyDialogContinue, IDialogConstants.CANCEL_LABEL};
 			MessageDialog dialog = new MessageDialog(shell, title, null, message, MessageDialog.INFORMATION, labels, 0);
 	
 			if (dialog.open() != 0)
@@ -565,7 +536,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 				list.add(new FinishWizardFragment(new SaveRuntimeTask()));
 			}
 		};
-		TaskWizard wizard = new TaskWizard(ServerUIPlugin.getResource("%wizNewRuntimeWizardTitle"), fragment);
+		TaskWizard wizard = new TaskWizard(Messages.wizNewRuntimeWizardTitle, fragment);
 		wizard.setForcePreviousAndNextButtons(true);
 		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
 		return (dialog.open() == IDialogConstants.OK_ID);
@@ -592,7 +563,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 						list.add(new FinishWizardFragment(new SaveRuntimeTask()));
 					}
 				};
-				TaskWizard wizard = new TaskWizard(ServerUIPlugin.getResource("%wizNewRuntimeWizardTitle"), fragment);
+				TaskWizard wizard = new TaskWizard(Messages.wizNewRuntimeWizardTitle, fragment);
 				wizard.setForcePreviousAndNextButtons(true);
 				ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
 				return (dialog.open() == IDialogConstants.OK_ID);

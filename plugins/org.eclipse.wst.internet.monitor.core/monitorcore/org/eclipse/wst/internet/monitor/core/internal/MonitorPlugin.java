@@ -10,7 +10,6 @@
  **********************************************************************/
 package org.eclipse.wst.internet.monitor.core.internal;
 
-import java.text.MessageFormat;
 import java.util.*;
 
 import org.eclipse.core.runtime.*;
@@ -48,49 +47,6 @@ public class MonitorPlugin extends Plugin {
 		return singleton;
 	}
 
-	/**
-	 * Returns the translated String found with the given key.
-	 *
-	 * @return java.lang.String
-	 * @param key java.lang.String
-	 */
-	public static String getResource(String key) {
-		try {
-			return Platform.getResourceString(getInstance().getBundle(), key);
-		} catch (Exception e) {
-			return key;
-		}
-	}
-	
-	/**
-	 * Returns the translated String found with the given key,
-	 * and formatted with the given arguments using java.text.MessageFormat.
-	 *
-	 * @param key java.lang.String
-	 * @param arguments java.lang.Object[]
-	 * @return java.lang.String
-	 */
-	public static String getResource(String key, Object[] arguments) {
-		try {
-			String text = getResource(key);
-			return MessageFormat.format(text, arguments);
-		} catch (Exception e) {
-			return key;
-		}
-	}
-	
-	/**
-	 * Returns the translated String found with the given key,
-	 * and formatted with the given arguments using java.text.MessageFormat.
-	 *
-	 * @param key the key
-	 * @param arg an argument
-	 * @return the translated string
-	 */
-	public static String getResource(String key, String arg) {
-		return getResource(key, new String[] { arg });
-	}
-	
 	/**
 	 * Returns the default protocol type.
 	 * 

@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 /**
  * 
  */
@@ -96,16 +96,16 @@ public class ServerComposite extends AbstractTreeComposite {
 	}
 
 	protected String getDescriptionLabel() {
-		return null; //ServerUIPlugin.getResource("%serverTypeCompDescription");
+		return null; //Messages.serverTypeCompDescription");
 	}
 	
 	protected String getTitleLabel() {
-		return ServerUIPlugin.getResource("%wizNewServerSelectExisting");
+		return Messages.wizNewServerSelectExisting;
 	}
 
 	protected String[] getComboOptions() {
-		return new String[] { ServerUIPlugin.getResource("%name"), ServerUIPlugin.getResource("%host"), 
-			ServerUIPlugin.getResource("%vendor"), ServerUIPlugin.getResource("%version") };
+		return new String[] { Messages.name, Messages.host, 
+			Messages.vendor, Messages.version };
 	}
 
 	protected void viewOptionSelected(byte option) {

@@ -11,7 +11,7 @@
 package org.eclipse.wst.server.ui.internal.command;
 
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 /**
  * Command to change the server hostname.
  */
@@ -45,7 +45,7 @@ public class SetServerHostnameCommand extends ServerCommand {
 	 * @return java.lang.String
 	 */
 	public String getDescription() {
-		return ServerUIPlugin.getResource("%serverEditorOverviewServerHostnameDescription");
+		return Messages.serverEditorOverviewServerHostnameDescription;
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class SetServerHostnameCommand extends ServerCommand {
 	 * @return java.lang.String
 	 */
 	public String getName() {
-		return ServerUIPlugin.getResource("%serverEditorOverviewServerHostnameCommand");
+		return Messages.serverEditorOverviewServerHostnameCommand;
 	}
 
 	/**

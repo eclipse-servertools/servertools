@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.internet.monitor.core.Request;
 import org.eclipse.wst.internet.monitor.ui.internal.ContextIds;
+import org.eclipse.wst.internet.monitor.ui.internal.Messages;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
 /**
  * An transport (header) viewer.
@@ -179,9 +180,9 @@ public class HeaderViewer {
 			String lineSeparator = System.getProperty("line.separator");
 			int index = out.indexOf(lineSeparator);
 			if(index > 0)
-				headerLabel.setText(MonitorUIPlugin.getResource("%headerLabel") + ": " + out.substring(0, index));
+				headerLabel.setText(Messages.headerLabel + ": " + out.substring(0, index));
 			else 
-				headerLabel.setText(MonitorUIPlugin.getResource("%headerLabel") + ":  " + out);
+				headerLabel.setText(Messages.headerLabel + ":  " + out);
 		}
 	}
 

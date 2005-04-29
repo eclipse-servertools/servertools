@@ -14,25 +14,25 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.ImageResource;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 
 public class ManagedUIDecorator extends UIDecorator {
 	private static final String[] serverStateUnmanaged = new String[] {
 		"",
-		ServerUIPlugin.getResource("%viewStatusStarting4"),
-		ServerUIPlugin.getResource("%viewStatusStarted2"),
-		ServerUIPlugin.getResource("%viewStatusStopping4"),
-		ServerUIPlugin.getResource("%viewStatusStopped2")};
+		Messages.viewStatusStarting4,
+		Messages.viewStatusStarted2,
+		Messages.viewStatusStopping4,
+		Messages.viewStatusStopped2};
 
 	private static final String[] startingText = new String[] {
-		ServerUIPlugin.getResource("%viewStatusStarting1"),
-		ServerUIPlugin.getResource("%viewStatusStarting2"),
-		ServerUIPlugin.getResource("%viewStatusStarting3")};
+		Messages.viewStatusStarting1,
+		Messages.viewStatusStarting2,
+		Messages.viewStatusStarting3};
 	
 	private static final String[] stoppingText = new String[] {
-		ServerUIPlugin.getResource("%viewStatusStopping1"),
-		ServerUIPlugin.getResource("%viewStatusStopping2"),
-		ServerUIPlugin.getResource("%viewStatusStopping3")};
+		Messages.viewStatusStopping1,
+		Messages.viewStatusStopping2,
+		Messages.viewStatusStopping3};
 	
 	private static final Image[] startingImages = new Image[] {
 		ImageResource.getImage(ImageResource.IMG_SERVER_STATE_STARTING_1),
@@ -58,13 +58,13 @@ public class ManagedUIDecorator extends UIDecorator {
 			return stoppingText[count];
 		else if (state == IServer.STATE_STARTED) {
 			if (ILaunchManager.DEBUG_MODE.equals(mode))
-				return ServerUIPlugin.getResource("%viewStatusStartedDebug");
+				return Messages.viewStatusStartedDebug;
 			else if (ILaunchManager.PROFILE_MODE.equals(mode))
-				return ServerUIPlugin.getResource("%viewStatusStartedProfile");
+				return Messages.viewStatusStartedProfile;
 			else
-				return ServerUIPlugin.getResource("%viewStatusStarted");
+				return Messages.viewStatusStarted;
 		} else if (state == IServer.STATE_STOPPED)
-			return ServerUIPlugin.getResource("%viewStatusStopped");
+			return Messages.viewStatusStopped;
 		
 		return serverStateUnmanaged[state];
 	}

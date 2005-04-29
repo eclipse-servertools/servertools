@@ -13,7 +13,7 @@ package org.eclipse.wst.server.ui.internal.provisional;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.server.ui.internal.ImageResource;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 
 public abstract class UIDecorator {
 	public static final int ACTION_STOP = 0;
@@ -47,8 +47,8 @@ public abstract class UIDecorator {
 	}
 	
 	public void setupAction(Action action, int action2) {
-		action.setToolTipText(ServerUIPlugin.getResource("%actionStopToolTip"));
-		action.setText(ServerUIPlugin.getResource("%actionStop"));
+		action.setToolTipText(Messages.actionStopToolTip);
+		action.setText(Messages.actionStop);
 		action.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_STOP));
 		action.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_STOP));
 		action.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_STOP));

@@ -101,8 +101,8 @@ public class ImportConfigurationWizardPage extends WizardPage {
 	public ImportConfigurationWizardPage() {
 		super("import configuration");
 	
-		setTitle(ServerUIPlugin.getResource("%wizImportConfigurationTitle"));
-		setDescription(ServerUIPlugin.getResource("%wizImportConfigurationDescription"));
+		setTitle(Messages.wizImportConfigurationTitle);
+		setDescription(Messages.wizImportConfigurationDescription);
 		setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_WIZBAN_IMPORT_SERVER_CONFIGURATION));
 	}
 	
@@ -129,7 +129,7 @@ public class ImportConfigurationWizardPage extends WizardPage {
 		data.heightHint = convertVerticalDLUsToPixels(470);
 		WorkbenchHelp.setHelp(composite, ContextIds.IMPORT_CONFIGURATION_WIZARD);
 	
-		new Label(composite, SWT.NONE).setText(ServerUIPlugin.getResource("%serverEditorOverviewServerConfigurationName"));
+		new Label(composite, SWT.NONE).setText(Messages.serverEditorOverviewServerConfigurationName"));
 	
 		name = new Text(composite, SWT.BORDER);
 		data = new GridData(GridData.FILL_HORIZONTAL);
@@ -149,7 +149,7 @@ public class ImportConfigurationWizardPage extends WizardPage {
 		WorkbenchHelp.setHelp(name, ContextIds.IMPORT_CONFIGURATION_NAME);
 	
 		// choose a server project
-		new Label(composite, SWT.NONE).setText(ServerUIPlugin.getResource("%wizFolder"));
+		new Label(composite, SWT.NONE).setText(Messages.wizFolder"));
 		serverProject = new Combo(composite, SWT.BORDER);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 2;
@@ -187,7 +187,7 @@ public class ImportConfigurationWizardPage extends WizardPage {
 		WorkbenchHelp.setHelp(configTypeComposite, ContextIds.IMPORT_CONFIGURATION_FACTORY);
 	
 		Label label = new Label(composite, SWT.NONE);
-		label.setText(ServerUIPlugin.getResource("%wizDescription"));
+		label.setText(Messages.wizDescription"));
 		data = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 		label.setLayoutData(data);
 	
@@ -199,7 +199,7 @@ public class ImportConfigurationWizardPage extends WizardPage {
 		description.setLayoutData(data);
 	
 		label = new Label(composite, SWT.NONE);
-		label.setText(ServerUIPlugin.getResource("%wizImportConfigurationLocation"));
+		label.setText(Messages.wizImportConfigurationLocation"));
 	
 		filename = new Text(composite, SWT.BORDER);
 		data = new GridData(GridData.FILL_HORIZONTAL);
@@ -213,7 +213,7 @@ public class ImportConfigurationWizardPage extends WizardPage {
 		});
 		WorkbenchHelp.setHelp(filename, ContextIds.IMPORT_CONFIGURATION_LOCATION);
 	
-		browse = SWTUtil.createButton(composite, ServerUIPlugin.getResource("%wizBrowse")); 
+		browse = SWTUtil.createButton(composite, Messages.wizBrowse")); 
 		browse.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent se) {
 				if (selectedConfigType == null)
@@ -229,7 +229,7 @@ public class ImportConfigurationWizardPage extends WizardPage {
 							s[i] = filter[i];
 					}
 					FileDialog dialog = new FileDialog(getShell());
-					dialog.setText(ServerUIPlugin.getResource("%wizImportConfigurationFile"));
+					dialog.setText(Messages.wizImportConfigurationFile"));
 					dialog.setFilterPath(filename.getText());
 					dialog.setFilterExtensions(s);
 					String selectedFile = dialog.open();
@@ -237,7 +237,7 @@ public class ImportConfigurationWizardPage extends WizardPage {
 						filename.setText(selectedFile);
 				} else {
 					DirectoryDialog dialog = new DirectoryDialog(getShell());
-					dialog.setMessage(ServerUIPlugin.getResource("%wizImportConfigurationDirectory"));
+					dialog.setMessage(Messages.wizImportConfigurationDirectory"));
 					dialog.setFilterPath(filename.getText());
 					String selectedDirectory = dialog.open();
 					if (selectedDirectory != null)
@@ -335,7 +335,7 @@ public class ImportConfigurationWizardPage extends WizardPage {
 			
 			loadConfiguration();
 		} catch (Exception e) {
-			validationErrors[INVALID_TYPE] = ServerUIPlugin.getResource("%wizErrorImport");
+			validationErrors[INVALID_TYPE] = Messages.wizErrorImport");
 			Trace.trace(Trace.SEVERE, "Could not import from " + filename.getText(), e);
 		}
 	}
@@ -356,7 +356,7 @@ public class ImportConfigurationWizardPage extends WizardPage {
 			try {
 				configuration = selectedConfigType.importFromPath(null, file, new Path(filename2), new NullProgressMonitor());
 				if (configuration == null)
-					validationErrors[INVALID_IMPORT] = ServerUIPlugin.getResource("%wizErrorImport");
+					validationErrors[INVALID_IMPORT] = Messages.wizErrorImport");
 				else
 					validationErrors[INVALID_IMPORT] = null;
 			} catch (CoreException ce) {
@@ -364,10 +364,10 @@ public class ImportConfigurationWizardPage extends WizardPage {
 				if (status != null && status.getMessage() != null && status.getMessage().length() > 1)
 					validationErrors[INVALID_IMPORT] = ce.getStatus().getMessage();
 				else
-					validationErrors[INVALID_IMPORT] = ServerUIPlugin.getResource("%wizErrorImport");
+					validationErrors[INVALID_IMPORT] = Messages.wizErrorImport");
 			}
 		} catch (Exception e) {
-			validationErrors[INVALID_IMPORT] = ServerUIPlugin.getResource("%wizErrorImport");
+			validationErrors[INVALID_IMPORT] = Messages.wizErrorImport");
 			Trace.trace(Trace.SEVERE, "Could not import from " + filename, e);
 		}
 	}*/
@@ -510,7 +510,7 @@ public class ImportConfigurationWizardPage extends WizardPage {
 		
 			IContainer container = WizardUtil.findContainer(serverProject.getText());
 			if (container != null && container.getLocation().append(fileName).toFile().exists()) {
-				validationErrors[INVALID_NAME] = ServerUIPlugin.getResource("%wizErrorResourceAlreadyExists");
+				validationErrors[INVALID_NAME] = Messages.wizErrorResourceAlreadyExists");
 			} else
 				validationErrors[INVALID_NAME] = null;
 		}

@@ -18,7 +18,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.ui.internal.DeleteServerDialog;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.swt.widgets.Shell;
 /**
  * Action for deleting server resources.
@@ -45,7 +45,7 @@ public class DeleteAction extends Action {
 	 * @param servers an array of servers
 	 */
 	public DeleteAction(Shell shell, IServer[] servers) {
-		super(ServerUIPlugin.getResource("%actionDelete"));
+		super(Messages.actionDelete);
 		this.shell = shell;
 		
 		this.servers = servers;

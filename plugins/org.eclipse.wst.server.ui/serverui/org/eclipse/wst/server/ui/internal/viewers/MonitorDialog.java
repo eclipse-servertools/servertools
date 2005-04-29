@@ -13,6 +13,7 @@ package org.eclipse.wst.server.ui.internal.viewers;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.GridData;
@@ -21,7 +22,7 @@ import org.eclipse.swt.widgets.*;
 
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerPort;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 /**
  * Dialog that prompts a user to add or edit a server monitor.
  */
@@ -65,7 +66,7 @@ public class MonitorDialog extends Dialog {
 	 */
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(ServerUIPlugin.getResource("%dialogMonitorTitle"));
+		newShell.setText(Messages.dialogMonitorTitle);
 	}
 	
 	protected void createButtonsForButtonBar(Composite parent) {
@@ -91,7 +92,7 @@ public class MonitorDialog extends Dialog {
 		//WorkbenchHelp.setHelp(composite, ContextIds.TERMINATE_SERVER_DIALOG);
 		
 		Label label = new Label(composite, SWT.WRAP);
-		label.setText(ServerUIPlugin.getResource("%dialogMonitorAddDescription", new String[] { server.getName() } ));
+		label.setText(NLS.bind(Messages.dialogMonitorAddDescription, new String[] { server.getName() } ));
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 2;
 		data.widthHint = 275;
@@ -111,11 +112,11 @@ public class MonitorDialog extends Dialog {
 		
 		tableLayout.addColumnData(new ColumnWeightData(12, 120, true));
 		TableColumn col = new TableColumn(table, SWT.NONE);
-		col.setText(ServerUIPlugin.getResource("%dialogMonitorColumnType"));
+		col.setText(Messages.dialogMonitorColumnType);
 		
 		tableLayout.addColumnData(new ColumnWeightData(4, 40, true));
 		col = new TableColumn(table, SWT.NONE);
-		col.setText(ServerUIPlugin.getResource("%dialogMonitorColumnPort"));
+		col.setText(Messages.dialogMonitorColumnPort);
 		
 		tableViewer.setContentProvider(new PortContentProvider(server));
 		tableViewer.setLabelProvider(new PortLabelProvider(server));
@@ -135,7 +136,7 @@ public class MonitorDialog extends Dialog {
 		});
 		
 		label = new Label(composite, SWT.NONE);
-		label.setText(ServerUIPlugin.getResource("%dialogMonitorMonitorPort"));
+		label.setText(Messages.dialogMonitorMonitorPort);
 		
 		final Text portText = new Text(composite, SWT.BORDER);
 		data = new GridData(GridData.FILL_HORIZONTAL);
@@ -160,7 +161,7 @@ public class MonitorDialog extends Dialog {
 		});
 		
 		label = new Label(composite, SWT.NONE);
-		label.setText(ServerUIPlugin.getResource("%dialogMonitorContentType"));
+		label.setText(Messages.dialogMonitorContentType);
 		
 		final Combo combo = new Combo(composite, SWT.READ_ONLY);
 		data = new GridData(GridData.FILL_HORIZONTAL);
@@ -188,7 +189,7 @@ public class MonitorDialog extends Dialog {
 				}
 				portContentTypes = port.getContentTypes();
 				String[] s = null;
-				String all = ServerUIPlugin.getResource("%dialogMonitorContentTypeAll");
+				String all = Messages.dialogMonitorContentTypeAll;
 				if (portContentTypes == null || portContentTypes.length == 1) {
 					s = new String[] { all };
 				} else {

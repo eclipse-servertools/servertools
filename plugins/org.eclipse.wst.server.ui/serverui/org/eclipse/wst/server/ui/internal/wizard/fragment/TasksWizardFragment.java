@@ -26,8 +26,8 @@ import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.*;
 import org.eclipse.wst.server.core.util.Task;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ProgressUtil;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.editor.IOrdered;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorCore;
@@ -243,7 +243,7 @@ public class TasksWizardFragment extends WizardFragment {
 		taskModel.putObject(TaskModel.TASK_SERVER, serverWC);
 		
 		// begin task
-		monitor.beginTask(ServerUIPlugin.getResource("%performingTasks"), performTasks.size() * 1000);
+		monitor.beginTask(Messages.performingTasks, performTasks.size() * 1000);
 		
 		ServerEditorCore.sortOrderedList(performTasks);
 

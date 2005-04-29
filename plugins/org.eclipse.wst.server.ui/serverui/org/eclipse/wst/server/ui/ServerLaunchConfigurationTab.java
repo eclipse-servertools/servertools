@@ -85,7 +85,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		composite.setLayoutData(data);
 
 		Label label = new Label(composite, SWT.WRAP);
-		label.setText(ServerUIPlugin.getResource("%serverLaunchServer"));
+		label.setText(Messages.serverLaunchServer);
 		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		serverCombo = new Combo(composite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
 		serverCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -159,19 +159,19 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		IRuntime runtime = null;
 		if (server != null) {
 			runtime = server.getRuntime();
-			runtimeLocation.setText(ServerUIPlugin.getResource("%serverLaunchHost") + " " + server.getHost());
+			runtimeLocation.setText(Messages.serverLaunchHost + " " + server.getHost());
 		} else
-			runtimeLocation.setText(ServerUIPlugin.getResource("%serverLaunchHost"));
+			runtimeLocation.setText(Messages.serverLaunchHost);
 			
 		if (runtime != null)
-			runtimeLabel.setText(ServerUIPlugin.getResource("%serverLaunchRuntime") + " " + runtime.getName());
+			runtimeLabel.setText(Messages.serverLaunchRuntime + " " + runtime.getName());
 		else
-			runtimeLabel.setText(ServerUIPlugin.getResource("%serverLaunchRuntime"));
+			runtimeLabel.setText(Messages.serverLaunchRuntime);
 
 		if (server == null)
-			setErrorMessage(ServerUIPlugin.getResource("%errorNoServerSelected"));
+			setErrorMessage(Messages.errorNoServerSelected);
 		else if (server.getServerState() != IServer.STATE_STOPPED)
-			setErrorMessage(ServerUIPlugin.getResource("%errorServerAlreadyRunning"));
+			setErrorMessage(Messages.errorServerAlreadyRunning);
 		else
 			setErrorMessage(null);
 		/*if (server != null) {
@@ -216,7 +216,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 				server = ServerCore.findServer(serverId);
 
 				if (server == null) { //server no longer exists				
-					setErrorMessage(ServerUIPlugin.getResource("%errorInvalidServer"));
+					setErrorMessage(Messages.errorInvalidServer);
 					//serverCombo.clearSelection();  //appears to be broken...doesn't work with read only?												
 					serverCombo.setEnabled(false);
 					return;
@@ -224,7 +224,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 
 				serverCombo.setText(server.getName());
 				if (server.getServerState() != IServer.STATE_STOPPED)
-					setErrorMessage(ServerUIPlugin.getResource("%errorServerAlreadyRunning"));
+					setErrorMessage(Messages.errorServerAlreadyRunning);
 			} else {
 				if (serverCombo.getItemCount() > 0)
 					serverCombo.select(0);
@@ -277,6 +277,6 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#getName()
 	 */
 	public String getName() {
-		return ServerUIPlugin.getResource("%serverLaunchConfigurationTab");
+		return Messages.serverLaunchConfigurationTab;
 	}
 }

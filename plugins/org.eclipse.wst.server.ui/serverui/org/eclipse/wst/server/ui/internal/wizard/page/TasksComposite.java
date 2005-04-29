@@ -16,8 +16,8 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.wst.server.core.IOptionalTask;
 import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.ImageResource;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.swt.SWT;
@@ -51,8 +51,8 @@ public class TasksComposite extends Composite {
 		super(parent, SWT.NONE);
 		this.wizard = wizard;
 	
-		wizard.setTitle(ServerUIPlugin.getResource("%wizTaskTitle"));
-		wizard.setDescription(ServerUIPlugin.getResource("%wizTaskDescription"));
+		wizard.setTitle(Messages.wizTaskTitle);
+		wizard.setDescription(Messages.wizTaskDescription);
 		wizard.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_WIZBAN_SELECT_SERVER));
 		
 		//createControl();
@@ -122,7 +122,7 @@ public class TasksComposite extends Composite {
 		
 		if (size == 0) {
 			Label label = new Label(this, SWT.NONE);
-			label.setText(ServerUIPlugin.getResource("%wizTaskNone"));
+			label.setText(Messages.wizTaskNone);
 		}
 		
 		Dialog.applyDialogFont(this);

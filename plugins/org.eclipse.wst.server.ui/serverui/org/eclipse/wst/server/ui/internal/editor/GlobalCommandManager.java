@@ -28,6 +28,7 @@ import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.editor.ICommandManager;
 import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.swt.widgets.Display;
@@ -288,7 +289,7 @@ public class GlobalCommandManager {
 					d = Display.getDefault();
 		
 				Shell shell = d.getActiveShell();
-				if (!MessageDialog.openConfirm(shell, ServerUIPlugin.getResource("%editorServerEditor"), ServerUIPlugin.getResource("%editorPromptIrreversible")))
+				if (!MessageDialog.openConfirm(shell, Messages.editorServerEditor, Messages.editorPromptIrreversible))
 					return;
 			} catch (Exception e) {
 				// ignore

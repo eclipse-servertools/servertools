@@ -13,7 +13,7 @@ package org.eclipse.wst.server.ui.internal.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.wst.server.ui.internal.ImageResource;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 /**
  * "Debug on Server" menu action. Allows the user to select an
  * object, and have automatic server creation, launching, and
@@ -31,7 +31,7 @@ public class DebugOnServerAction extends Action {
 	 * @param object the object to attempt to debug
 	 */
 	public DebugOnServerAction(Object object) {
-		super(ServerUIPlugin.getResource("%actionDebugOnServer"));
+		super(Messages.actionDebugOnServer);
 	
 		setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DTOOL_DEBUG_ON_SERVER));
 		setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CTOOL_DEBUG_ON_SERVER));

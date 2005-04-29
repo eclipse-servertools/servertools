@@ -16,7 +16,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.internal.IMonitoredServerPort;
 import org.eclipse.wst.server.ui.internal.ImageResource;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 /**
  * Monitor port label provider.
  */
@@ -42,8 +42,8 @@ public class MonitorLabelProvider extends BaseLabelProvider implements ITableLab
 		IMonitoredServerPort port = (IMonitoredServerPort) element;
 		if (columnIndex == 0) {
 			if (port.isStarted())
-				return ServerUIPlugin.getResource("%started");
-			return ServerUIPlugin.getResource("%stopped");
+				return Messages.started;
+			return Messages.stopped;
 		} else if (columnIndex == 1)
 			return notNull(port.getServerPort().getName());
 		else if (columnIndex == 2)
@@ -53,7 +53,7 @@ public class MonitorLabelProvider extends BaseLabelProvider implements ITableLab
 		else {
 			String[] content = port.getContentTypes();
 			if (content == null || content.length == 0)
-				return ServerUIPlugin.getResource("%dialogMonitorContentTypeAll");
+				return Messages.dialogMonitorContentTypeAll;
 			
 			StringBuffer sb = new StringBuffer();
 			int size = content.length;
@@ -68,9 +68,9 @@ public class MonitorLabelProvider extends BaseLabelProvider implements ITableLab
 	
 	protected static String getContentTypeString(String s) {
 		if ("web".equals(s))
-			return ServerUIPlugin.getResource("%dialogMonitorContentTypeWeb");
+			return Messages.dialogMonitorContentTypeWeb;
 		else if ("webservices".equals(s))
-			return ServerUIPlugin.getResource("%dialogMonitorContentTypeWebServices");
+			return Messages.dialogMonitorContentTypeWebServices;
 		else
 			return s;
 	}

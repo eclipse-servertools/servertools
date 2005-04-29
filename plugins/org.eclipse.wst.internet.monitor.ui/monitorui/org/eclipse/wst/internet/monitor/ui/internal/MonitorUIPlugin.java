@@ -14,13 +14,11 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
@@ -169,52 +167,6 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 	 */
 	public static MonitorUIPlugin getInstance() {
 		return singleton;
-	}
-
-	/**
-	 * Returns the translated String found with the given key.
-	 * 
-	 * @param key the key
-	 * @return the translated string
-	 */
-	public static String getResource(String key) {
-		try {
-			return Platform.getResourceString(getInstance().getBundle(), key);
-		} catch (Exception e) {
-			return key;
-		}
-	}
-
-	/**
-	 * Returns the translated String found with the given key, and formatted
-	 * with the given object.
-	 * 
-	 * @param key the key
-	 * @param obj substitution variables
-	 * @return the translated string
-	 */
-	public static String getResource(String key, Object[] obj) {
-		try {
-			return MessageFormat.format(getResource(key), obj);
-		} catch (Exception e) {
-			return key;
-		}
-	}
-
-	/**
-	 * Returns the translated String found with the given key, and formatted
-	 * with the given object.
-	 * 
-	 * @param key the key
-	 * @param s substitution variable
-	 * @return the translated string
-	 */
-	public static String getResource(String key, String s) {
-		try {
-			return MessageFormat.format(getResource(key), new String[] { s });
-		} catch (Exception e) {
-			return key;
-		}
 	}
 
 	/**

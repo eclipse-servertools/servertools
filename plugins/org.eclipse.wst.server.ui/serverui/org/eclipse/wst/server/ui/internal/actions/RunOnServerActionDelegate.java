@@ -127,8 +127,8 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				try {
 					ServerCore.getProjectProperties(project).setDefaultServer(server, monitor);
 				} catch (CoreException ce) {
-					String message = ServerUIPlugin.getResource("%errorCouldNotSavePreference");
-					ErrorDialog.openError(shell, ServerUIPlugin.getResource("%errorDialogTitle"), message, ce.getStatus());
+					String message = Messages.errorCouldNotSavePreference;
+					ErrorDialog.openError(shell, Messages.errorDialogTitle, message, ce.getStatus());
 				}
 			}
 		}
@@ -158,7 +158,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			shell = ServerUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
 
 		if (moduleArtifact == null || moduleArtifact.getModule() == null) {
-			EclipseUtil.openError(ServerUIPlugin.getResource("%errorNoModules"));
+			EclipseUtil.openError(Messages.errorNoModules);
 			Trace.trace(Trace.FINEST, "No modules");
 			return;
 		}
@@ -198,7 +198,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				}
 			}
 			if (!found2) {
-				EclipseUtil.openError(ServerUIPlugin.getResource("%errorNoServer"));
+				EclipseUtil.openError(Messages.errorNoServer);
 				Trace.trace(Trace.FINEST, "No server for start mode");
 				return;
 			}
@@ -215,7 +215,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		Trace.trace(Trace.FINEST, "Server: " + server);
 		
 		if (server == null) {
-			EclipseUtil.openError(ServerUIPlugin.getResource("%errorNoServer"));
+			EclipseUtil.openError(Messages.errorNoServer);
 			Trace.trace(Trace.SEVERE, "No server found");
 			return;
 		}
@@ -263,7 +263,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 
 		IClient client = null;
 		if (clients == null || clients.length == 0) {
-			EclipseUtil.openError(ServerUIPlugin.getResource("%errorNoClient"));
+			EclipseUtil.openError(Messages.errorNoClient);
 			Trace.trace(Trace.SEVERE, "No launchable clients!");
 			return;
 		} else if (clients.length == 1) {
@@ -289,7 +289,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			boolean restart = false;
 			String mode = server.getMode();
 			if (!ILaunchManager.DEBUG_MODE.equals(mode) && ILaunchManager.DEBUG_MODE.equals(launchMode)) {
-				int result = openWarningDialog(shell, ServerUIPlugin.getResource("%dialogModeWarningDebug"));
+				int result = openWarningDialog(shell, Messages.dialogModeWarningDebug);
 				if (result == 1)
 					launchMode = mode;
 				else if (result == 0)
@@ -297,7 +297,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				else
 					return;
 			} else if (!ILaunchManager.PROFILE_MODE.equals(mode) && ILaunchManager.PROFILE_MODE.equals(launchMode)) {
-				int result = openWarningDialog(shell, ServerUIPlugin.getResource("%dialogModeWarningProfile"));
+				int result = openWarningDialog(shell, Messages.dialogModeWarningProfile);
 				if (result == 1)
 					launchMode = mode;
 				else if (result == 0)
@@ -353,9 +353,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * @return a dialog return constant
 	 */
 	protected int openWarningDialog(Shell shell, String message) {
-		MessageDialog dialog = new MessageDialog(shell, ServerUIPlugin.getResource("%errorDialogTitle"), null,
-			message,	MessageDialog.WARNING, new String[] {ServerUIPlugin.getResource("%dialogModeWarningRestart"),
-			ServerUIPlugin.getResource("%dialogModeWarningContinue"), IDialogConstants.CANCEL_LABEL}, 0);
+		MessageDialog dialog = new MessageDialog(shell, Messages.errorDialogTitle, null,
+			message,	MessageDialog.WARNING, new String[] {Messages.dialogModeWarningRestart,
+			Messages.dialogModeWarningContinue, IDialogConstants.CANCEL_LABEL}, 0);
 		return dialog.open();
 	}
 

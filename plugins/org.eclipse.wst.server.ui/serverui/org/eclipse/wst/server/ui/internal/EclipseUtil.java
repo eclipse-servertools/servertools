@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.model.IWorkbenchAdapter;
@@ -68,13 +69,13 @@ public class EclipseUtil {
 			if (monitor.isCanceled())
 				return null;
 	
-			return new Status(IStatus.OK, ServerUIPlugin.PLUGIN_ID, 0, ServerUIPlugin.getResource("%serverProjectCreated"), null);
+			return new Status(IStatus.OK, ServerUIPlugin.PLUGIN_ID, 0, Messages.serverProjectCreated, null);
 		} catch (CoreException ce) {
 			Trace.trace(Trace.SEVERE, "Could not create server project named " + name, ce);
-			return new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, ServerUIPlugin.getResource("%errorCouldNotCreateServerProjectStatus", ce.getMessage()), ce);
+			return new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotCreateServerProjectStatus, ce.getMessage()), ce);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not create server project (2) named " + name, e);
-			return new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, ServerUIPlugin.getResource("%errorCouldNotCreateServerProject"), e);
+			return new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, Messages.errorCouldNotCreateServerProject, e);
 		} finally {
 			monitor.done();
 		}
@@ -98,7 +99,7 @@ public class EclipseUtil {
 					Shell shell2 = shell;
 					if (shell == null)
 						shell2 = getShell();
-					openError(shell2, ServerUIPlugin.getResource("%errorCouldNotCreateServerProject"), status);
+					openError(shell2, Messages.errorCouldNotCreateServerProject, status);
 				}
 			});
 		}
@@ -156,7 +157,7 @@ public class EclipseUtil {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				Shell shell = getShell();
-				MessageDialog.openError(shell, ServerUIPlugin.getResource("%errorDialogTitle"), message);
+				MessageDialog.openError(shell, Messages.errorDialogTitle, message);
 			}
 		});
 	}
@@ -171,7 +172,7 @@ public class EclipseUtil {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				Shell shell = getShell();
-				ErrorDialog.openError(shell, ServerUIPlugin.getResource("%errorDialogTitle"), message, status);
+				ErrorDialog.openError(shell, Messages.errorDialogTitle, message, status);
 			}
 		});
 	}
@@ -183,7 +184,7 @@ public class EclipseUtil {
 	 * @param message the message
 	 */
 	public static void openError(Shell shell, String message) {
-		MessageDialog.openError(shell, ServerUIPlugin.getResource("%errorDialogTitle"), message);
+		MessageDialog.openError(shell, Messages.errorDialogTitle, message);
 	}
 
 	/**
@@ -194,7 +195,7 @@ public class EclipseUtil {
 	 * @param status a status
 	 */
 	public static void openError(Shell shell, String message, IStatus status) {
-		ErrorDialog.openError(shell, ServerUIPlugin.getResource("%errorDialogTitle"), message, status);
+		ErrorDialog.openError(shell, Messages.errorDialogTitle, message, status);
 	}
 
 	/**
@@ -212,8 +213,8 @@ public class EclipseUtil {
 	protected static boolean validateEdit(Shell shell, IStatus status) {
 		if (status != null && status.getSeverity() == IStatus.ERROR) {
 			// inform user
-			String message = ServerUIPlugin.getResource("%editorValidateEditFailureMessage");
-			ErrorDialog.openError(shell, ServerUIPlugin.getResource("%errorDialogTitle"), message, status);
+			String message = Messages.editorValidateEditFailureMessage;
+			ErrorDialog.openError(shell, Messages.errorDialogTitle, message, status);
 
 			// do not execute command
 			return false;

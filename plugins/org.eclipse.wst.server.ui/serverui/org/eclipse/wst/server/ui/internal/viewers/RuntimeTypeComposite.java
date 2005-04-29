@@ -10,16 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.wst.server.core.IRuntimeType;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 /**
  * 
  */
@@ -90,17 +85,17 @@ public class RuntimeTypeComposite extends AbstractTreeComposite {
 	}
 	
 	protected String getTitleLabel() {
-		return ServerUIPlugin.getResource("%runtimeTypeCompTree");
+		return Messages.runtimeTypeCompTree;
 	}
 
 	protected String getDescriptionLabel() {
-		return ServerUIPlugin.getResource("%runtimeTypeCompDescription");
+		return Messages.runtimeTypeCompDescription;
 	}
 
 	protected String[] getComboOptions() {
-		return new String[] { ServerUIPlugin.getResource("%name"),
-			ServerUIPlugin.getResource("%vendor"), ServerUIPlugin.getResource("%version"),
-			ServerUIPlugin.getResource("%moduleSupport") };
+		return new String[] { Messages.name,
+			Messages.vendor, Messages.version,
+			Messages.moduleSupport };
 	}
 
 	protected void viewOptionSelected(byte option) {

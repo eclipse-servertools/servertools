@@ -20,7 +20,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wst.internet.monitor.ui.ContentViewer;
-import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
+import org.eclipse.wst.internet.monitor.ui.internal.Messages;
 /**
  * An image viewer.
  */
@@ -56,7 +56,7 @@ public class ImageViewer extends ContentViewer {
 	public void setContent(byte[] b) {
 		content = b;
 		if (b == null || b.length == 0) {
-			messageLabel.setText("<" + MonitorUIPlugin.getResource("%imageViewInvalid") + ">");
+			messageLabel.setText(Messages.imageViewInvalid);
 		} else {
 			byte cr = '\r';
 			byte lf = '\n';
@@ -80,7 +80,7 @@ public class ImageViewer extends ContentViewer {
 				Image img = new Image(null, imgD);
 				messageLabel.setImage(img);
 			} catch(Exception e) {
-				messageLabel.setText("<" + MonitorUIPlugin.getResource("%imageViewInvalid") + ">");
+				messageLabel.setText(Messages.imageViewInvalid);
 			}
 		}
 		

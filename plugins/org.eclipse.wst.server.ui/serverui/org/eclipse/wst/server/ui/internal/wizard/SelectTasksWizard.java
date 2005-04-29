@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.TaskModel;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
 import org.eclipse.wst.server.ui.internal.task.InputWizardFragment;
 import org.eclipse.wst.server.ui.internal.task.SaveServerTask;
@@ -32,7 +32,7 @@ public class SelectTasksWizard extends TaskWizard {
 	 * @param server a server
 	 */
 	public SelectTasksWizard(final IServer server) {
-		super(ServerUIPlugin.getResource("%wizTaskWizardTitle"));
+		super(Messages.wizTaskWizardTitle);
 		
 		setRootFragment(new WizardFragment() {
 			protected void createChildFragments(List list) {

@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -60,7 +61,7 @@ public class DeleteServerDialog extends Dialog {
 	 */
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(ServerUIPlugin.getResource("%deleteServerResourceDialogTitle"));
+		newShell.setText(Messages.deleteServerResourceDialogTitle);
 	}
 
 	/**
@@ -81,18 +82,18 @@ public class DeleteServerDialog extends Dialog {
 	
 		Label label = new Label(composite, SWT.NONE);
 		if (servers.length == 1) {
-			label.setText(ServerUIPlugin.getResource("%deleteServerResourceDialogMessage", servers[0].getName()));
+			label.setText(NLS.bind(Messages.deleteServerResourceDialogMessage, servers[0].getName()));
 		} else
-			label.setText(ServerUIPlugin.getResource("%deleteServerResourceDialogMessageMany", servers.length + ""));
+			label.setText(NLS.bind(Messages.deleteServerResourceDialogMessageMany, servers.length + ""));
 		label.setLayoutData(new GridData());
 		
 		if (configs.length > 0) {
 			check = new Button(composite, SWT.CHECK);
 		
 			if (configs.length == 1) {
-				check.setText(ServerUIPlugin.getResource("%deleteServerResourceDialogLooseConfigurations", configs[0].getName()));
+				check.setText(NLS.bind(Messages.deleteServerResourceDialogLooseConfigurations, configs[0].getName()));
 			} else
-				check.setText(ServerUIPlugin.getResource("%deleteServerResourceDialogLooseConfigurationsMany", configs.length + ""));
+				check.setText(NLS.bind(Messages.deleteServerResourceDialogLooseConfigurationsMany, configs.length + ""));
 			check.setSelection(true);
 			check.setLayoutData(new GridData());
 		}

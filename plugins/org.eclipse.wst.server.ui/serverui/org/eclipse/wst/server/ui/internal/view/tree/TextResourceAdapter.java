@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.ui.internal.ImageResource;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
@@ -113,15 +113,15 @@ public class TextResourceAdapter implements IAdaptable, IWorkbenchAdapter, IServ
 	 */
 	public String getLabel(Object o) {
 		if (thisStyle == STYLE_SERVERS)
-			return ServerUIPlugin.getResource("%viewServers");
+			return Messages.viewServers;
 		//else if (thisStyle == STYLE_SERVERS_AND_CONFIGURATIONS)
 		//	return "Server Info";
 		//else if (thisStyle == STYLE_NO_CONFIGURATION)
 		//	return "No configuration";
 		else if (thisStyle == STYLE_NO_MODULES)
-			return ServerUIPlugin.getResource("%viewNoModules");
+			return Messages.viewNoModules;
 		else if (thisStyle == STYLE_NO_SERVERS)
-			return ServerUIPlugin.getResource("%viewConfigurationUnused");
+			return Messages.viewConfigurationUnused;
 		else
 			return "n/a";
 	}

@@ -21,6 +21,7 @@ import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.DefaultServerLabelDecorator;
 import org.eclipse.wst.server.ui.internal.ImageResource;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.provisional.UIDecoratorManager;
 import org.eclipse.swt.graphics.Image;
@@ -29,18 +30,18 @@ import org.eclipse.swt.graphics.Image;
  */
 public class ServerTableLabelProvider implements ITableLabelProvider {
 	public static final String[] syncState = new String[] {
-		ServerUIPlugin.getResource("%viewSyncOkay"),
-		ServerUIPlugin.getResource("%viewSyncRestart"),
-		ServerUIPlugin.getResource("%viewSyncPublish"),
-		ServerUIPlugin.getResource("%viewSyncRestartPublish"),
-		ServerUIPlugin.getResource("%viewSyncPublishing")};
+		Messages.viewSyncOkay,
+		Messages.viewSyncRestart,
+		Messages.viewSyncPublish,
+		Messages.viewSyncRestartPublish,
+		Messages.viewSyncPublishing};
 	
 	public static final String[] syncStateUnmanaged = new String[] {
-		ServerUIPlugin.getResource("%viewSyncOkay2"),
-		ServerUIPlugin.getResource("%viewSyncRestart2"),
-		ServerUIPlugin.getResource("%viewSyncPublish2"),
-		ServerUIPlugin.getResource("%viewSyncRestartPublish2"),
-		ServerUIPlugin.getResource("%viewSyncPublishing2")};
+		Messages.viewSyncOkay2,
+		Messages.viewSyncRestart2,
+		Messages.viewSyncPublish2,
+		Messages.viewSyncRestartPublish2,
+		Messages.viewSyncPublishing2};
 
 	private int count = 0;
 	
@@ -149,7 +150,7 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 				return "";
 			
 			//if (server.getServerType().hasServerConfiguration() && server.getServerConfiguration() == null)
-			//	return ServerUIPlugin.getResource("%viewNoConfiguration");
+			//	return Messages.viewNoConfiguration");
 			
 			if (server.getServerState() == IServer.STATE_UNKNOWN)
 				return "";
@@ -254,13 +255,13 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 				return stoppingText[count];
 			else if (state == IServer.STATE_STARTED) {
 				if (ILaunchManager.DEBUG_MODE.equals(mode))
-					return ServerUIPlugin.getResource("%viewStatusStartedDebug");
+					return Messages.viewStatusStartedDebug");
 				else if (ILaunchManager.PROFILE_MODE.equals(mode))
-					return ServerUIPlugin.getResource("%viewStatusStartedProfile");
+					return Messages.viewStatusStartedProfile");
 				else
-					return ServerUIPlugin.getResource("%viewStatusStarted");
+					return Messages.viewStatusStarted");
 			} else if (state == IServer.STATE_STOPPED)
-				return ServerUIPlugin.getResource("%viewStatusStopped");
+				return Messages.viewStatusStopped");
 		}
 		
 		return serverStateUnmanaged[state];*/

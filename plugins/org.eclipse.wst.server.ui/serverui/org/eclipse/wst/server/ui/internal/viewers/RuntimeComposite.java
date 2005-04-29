@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.internal.ResourceManager;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.Trace;
 /**
  * 
@@ -50,7 +50,7 @@ public class RuntimeComposite extends AbstractTableComposite {
 
 		tableLayout.addColumnData(new ColumnWeightData(60, 160, true));
 		TableColumn col = new TableColumn(table, SWT.NONE);
-		col.setText(ServerUIPlugin.getResource("%columnName"));
+		col.setText(Messages.columnName);
 		
 		/*tableLayout.addColumnData(new ColumnWeightData(12, 120, true));
 		col = new TableColumn(table, SWT.NONE);
@@ -58,7 +58,7 @@ public class RuntimeComposite extends AbstractTableComposite {
 
 		tableLayout.addColumnData(new ColumnWeightData(45, 125, true));
 		col = new TableColumn(table, SWT.NONE);
-		col.setText(ServerUIPlugin.getResource("%columnType"));
+		col.setText(Messages.columnType);
 		
 		tableViewer.setContentProvider(new RuntimeContentProvider());
 		tableViewer.setLabelProvider(new RuntimeTableLabelProvider());

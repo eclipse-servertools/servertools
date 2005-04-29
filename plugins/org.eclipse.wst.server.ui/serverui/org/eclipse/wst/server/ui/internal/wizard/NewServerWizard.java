@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.core.util.Task;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.task.*;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
@@ -39,7 +40,7 @@ public class NewServerWizard extends TaskWizard implements INewWizard {
 	}
 
 	public NewServerWizard(final String[] ids, final String[] values) {
-		super(ServerUIPlugin.getResource("%wizNewServerWizardTitle"), new WizardFragment() {
+		super(Messages.wizNewServerWizardTitle, new WizardFragment() {
 			protected void createChildFragments(List list) {
 				if (ids != null)
 					list.add(new InputWizardFragment(ids, values));

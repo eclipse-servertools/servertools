@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.internet.monitor.core.*;
 import org.eclipse.wst.internet.monitor.core.internal.http.ResendHTTPRequest;
 /**
@@ -121,7 +122,7 @@ public class MonitorManager {
 			return;
 		
 		if (AcceptThread.isPortInUse(monitor.getLocalPort()))
-			throw new CoreException(new Status(IStatus.ERROR, MonitorPlugin.PLUGIN_ID, 0, MonitorPlugin.getResource("%errorPortInUse", monitor.getLocalPort() + ""), null));
+			throw new CoreException(new Status(IStatus.ERROR, MonitorPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPortInUse, monitor.getLocalPort() + ""), null));
 		
 		AcceptThread thread = new AcceptThread(monitor);
 		thread.startServer();

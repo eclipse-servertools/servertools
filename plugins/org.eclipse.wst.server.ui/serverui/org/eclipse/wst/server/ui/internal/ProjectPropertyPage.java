@@ -69,7 +69,7 @@ public class ProjectPropertyPage extends PropertyPage {
 			composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 			
 			Label label = new Label(composite, SWT.WRAP);
-			label.setText(ServerUIPlugin.getResource("%prefProjectDescription"));
+			label.setText(Messages.prefProjectDescription);
 			GridData data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalSpan = 3;
 			data.widthHint = 200;
@@ -81,7 +81,7 @@ public class ProjectPropertyPage extends PropertyPage {
 
 			if (module == null) {
 				label = new Label(composite, SWT.NONE);
-				label.setText(ServerUIPlugin.getResource("%prefProjectNotModule"));
+				label.setText(Messages.prefProjectNotModule);
 				data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 				data.horizontalSpan = 3;
 				label.setLayoutData(data);
@@ -89,7 +89,7 @@ public class ProjectPropertyPage extends PropertyPage {
 				IModuleType mt = module.getModuleType();
 				if (mt != null) {
 					label = new Label(composite, SWT.NONE);
-					label.setText(ServerUIPlugin.getResource("%prefProject"));
+					label.setText(Messages.prefProject);
 					data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 					label.setLayoutData(data);
 				
@@ -106,14 +106,14 @@ public class ProjectPropertyPage extends PropertyPage {
 				IServer prefServer = prefs.getDefaultServer();
 	
 				label = new Label(composite, SWT.NONE);
-				label.setText(ServerUIPlugin.getResource("%prefProjectDefaultServer"));
+				label.setText(Messages.prefProjectDefaultServer);
 				data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING);
 				label.setLayoutData(data);
 				
 				final IServer[] servers = getServersBySupportedModule(module);
 				if (servers == null || servers.length == 0) {
 					label = new Label(composite, SWT.WRAP);
-					label.setText(ServerUIPlugin.getResource("%prefProjectNotConfigured"));
+					label.setText(Messages.prefProjectNotConfigured);
 					data = new GridData();
 					data.horizontalSpan = 2;
 					label.setLayoutData(data);
@@ -126,7 +126,7 @@ public class ProjectPropertyPage extends PropertyPage {
 					
 					// add none option
 					TableItem item = new TableItem(table, SWT.NONE);
-					item.setText(ServerUIPlugin.getResource("%prefProjectNoServer"));
+					item.setText(Messages.prefProjectNoServer);
 					//item.setImage();
 					
 					int size2 = servers.length;
@@ -204,7 +204,7 @@ public class ProjectPropertyPage extends PropertyPage {
 				props.setDefaultServer(server, null);
 			} catch (CoreException e) {
 				Trace.trace(Trace.SEVERE, "Error setting preferred server", e);
-				EclipseUtil.openError(ServerUIPlugin.getResource("%errorCouldNotSavePreference"), e.getStatus());
+				EclipseUtil.openError(Messages.errorCouldNotSavePreference, e.getStatus());
 				return false;
 			}
 		}

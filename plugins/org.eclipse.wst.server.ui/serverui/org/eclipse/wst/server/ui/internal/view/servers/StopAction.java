@@ -14,7 +14,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 /**
@@ -50,8 +52,8 @@ public class StopAction extends AbstractServerAction {
 	
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				MessageDialog dialog = new MessageDialog(shell, ServerUIPlugin.getResource("%defaultDialogTitle"), null,
-					ServerUIPlugin.getResource("%dialogStoppingServer", server.getName()), MessageDialog.INFORMATION, new String[0], 0);
+				MessageDialog dialog = new MessageDialog(shell, Messages.defaultDialogTitle, null,
+						NLS.bind(Messages.dialogStoppingServer, server.getName()), MessageDialog.INFORMATION, new String[0], 0);
 				dialog.setBlockOnOpen(false);
 				dialog.open();
 	

@@ -12,6 +12,7 @@ package org.eclipse.wst.server.ui.internal.view.servers;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 /**
@@ -26,7 +27,7 @@ public class OpenAction extends Action {
 	 * @param server a server
 	 */
 	public OpenAction(IServer server) {
-		super(ServerUIPlugin.getResource("%actionOpen"));
+		super(Messages.actionOpen);
 	
 		this.server = server;
 		setEnabled(server.getServerType() != null);

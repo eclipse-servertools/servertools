@@ -13,7 +13,7 @@ package org.eclipse.wst.server.ui.internal.wizard;
 import java.util.List;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.task.SaveServerTask;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
@@ -51,7 +51,7 @@ public class ModifyModulesWizard extends TaskWizard {
 	 * @param server a server
 	 */
 	public ModifyModulesWizard(IServer server) {
-		super(ServerUIPlugin.getResource("%wizModuleWizardTitle"), new ModifyModulesWizard2(server.createWorkingCopy()));
+		super(Messages.wizModuleWizardTitle, new ModifyModulesWizard2(server.createWorkingCopy()));
 	
 		setNeedsProgressMonitor(true);
 	}

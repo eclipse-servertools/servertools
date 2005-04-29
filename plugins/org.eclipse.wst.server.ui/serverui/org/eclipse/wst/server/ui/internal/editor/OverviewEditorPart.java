@@ -41,6 +41,7 @@ import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.util.SocketUtil;
 import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.wst.server.ui.internal.ContextIds;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.command.*;
 import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
@@ -122,7 +123,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		FormToolkit toolkit = getFormToolkit(parent.getDisplay());
 		
 		ScrolledForm form = toolkit.createScrolledForm(parent);
-		form.setText(ServerUIPlugin.getResource("%serverEditorOverviewPageTitle"));
+		form.setText(Messages.serverEditorOverviewPageTitle);
 		form.getBody().setLayout(new GridLayout());
 		
 		Composite columnComp = toolkit.createComposite(form.getBody());
@@ -146,8 +147,8 @@ public class OverviewEditorPart extends ServerEditorPart {
 		leftColumnComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 		
 		Section section = toolkit.createSection(leftColumnComp, ExpandableComposite.TWISTIE|ExpandableComposite.EXPANDED | ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
-		section.setText(ServerUIPlugin.getResource("%serverEditorOverviewSection"));
-		section.setDescription(ServerUIPlugin.getResource("%serverEditorOverviewDescription"));
+		section.setText(Messages.serverEditorOverviewSection);
+		section.setDescription(Messages.serverEditorOverviewDescription);
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 
 		Composite composite = toolkit.createComposite(section);
@@ -166,7 +167,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 
 		// server name
 		if (server != null) {
-			createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewServerName"));
+			createLabel(toolkit, composite, Messages.serverEditorOverviewServerName);
 			
 			serverName = toolkit.createText(composite, server.getName());
 			GridData data = new GridData(GridData.FILL_HORIZONTAL);
@@ -185,7 +186,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		
 		// hostname
 		if (server != null) {
-			createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewServerHostname"));
+			createLabel(toolkit, composite, Messages.serverEditorOverviewServerHostname);
 			
 			hostname = toolkit.createText(composite, server.getHost());
 			GridData data = new GridData(GridData.FILL_HORIZONTAL);
@@ -205,7 +206,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		// runtime
 		if (server != null && server.getServerType() != null && server.getServerType().hasRuntime()) {
 			final IRuntime runtime = server.getRuntime();
-			createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewRuntime"));
+			createLabel(toolkit, composite, Messages.serverEditorOverviewRuntime);
 			
 			IRuntimeType runtimeType = server.getServerType().getRuntimeType();
 			runtimes = ServerUIPlugin.getRuntimes(runtimeType);
@@ -247,7 +248,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			}
 			
 			createLabel(toolkit, composite, "");
-			Hyperlink link = toolkit.createHyperlink(composite, ServerUIPlugin.getResource("%serverEditorOverviewRuntimeEdit"), SWT.NONE); // TODO: translate
+			Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewRuntimeEdit, SWT.NONE);
 			//GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 			//link.setLayoutData(data);
 			link.addHyperlinkListener(new IHyperlinkListener() {
@@ -267,11 +268,11 @@ public class OverviewEditorPart extends ServerEditorPart {
 		
 		// server configuration path
 		if (server != null && server.getServerType().hasServerConfiguration()) {
-			createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewServerConfigurationPath"));
+			createLabel(toolkit, composite, Messages.serverEditorOverviewServerConfigurationPath);
 			
 			IFolder folder = server.getServerConfiguration();
 			if (folder == null)
-				serverConfigurationName = toolkit.createLabel(composite, ServerUIPlugin.getResource("%elementUnknownName"));
+				serverConfigurationName = toolkit.createLabel(composite, Messages.elementUnknownName);
 			else
 				serverConfigurationName = toolkit.createLabel(composite, "" + server.getServerConfiguration().getFullPath());
 			GridData data = new GridData(GridData.FILL_HORIZONTAL);
@@ -282,10 +283,10 @@ public class OverviewEditorPart extends ServerEditorPart {
 		
 		// auto-publish
 		if (server != null) {
-			//Label label = createLabel(toolkit, composite, ServerUIPlugin.getResource("%serverEditorOverviewServerHostname"));
+			//Label label = createLabel(toolkit, composite, Messages.serverEditorOverviewServerHostname"));
 			//label.
 			
-			autoPublishDefault = toolkit.createButton(composite, ServerUIPlugin.getResource("%serverEditorOverviewAutoPublishDefault"), SWT.RADIO);
+			autoPublishDefault = toolkit.createButton(composite, Messages.serverEditorOverviewAutoPublishDefault, SWT.RADIO);
 			GridData data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalSpan = 2;
 			autoPublishDefault.setLayoutData(data);
@@ -293,7 +294,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			autoPublishDefault.setSelection(svr.getAutoPublishDefault());
 			whs.setHelp(autoPublishDefault, ContextIds.EDITOR_AUTOPUBLISH_DEFAULT);
 			
-			autoPublishOverride = toolkit.createButton(composite, ServerUIPlugin.getResource("%serverEditorOverviewAutoPublishOverride"), SWT.RADIO);
+			autoPublishOverride = toolkit.createButton(composite, Messages.serverEditorOverviewAutoPublishOverride, SWT.RADIO);
 			autoPublishOverride.setSelection(!svr.getAutoPublishDefault());
 			whs.setHelp(autoPublishOverride, ContextIds.EDITOR_AUTOPUBLISH_OVERRIDE);
 			
@@ -365,7 +366,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 	}
 	
 	protected int showWizard(final IRuntimeWorkingCopy runtimeWorkingCopy) {
-		String title = ServerUIPlugin.getResource("%wizEditRuntimeWizardTitle");
+		String title = Messages.wizEditRuntimeWizardTitle;
 		final WizardFragment fragment2 = ServerUIPlugin.getWizardFragment(runtimeWorkingCopy.getRuntimeType().getId());
 		if (fragment2 == null)
 			return Window.CANCEL;

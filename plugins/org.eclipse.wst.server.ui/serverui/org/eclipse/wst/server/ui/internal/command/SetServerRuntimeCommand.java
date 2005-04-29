@@ -12,7 +12,7 @@ package org.eclipse.wst.server.ui.internal.command;
 
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Messages;
 /**
  * Command to change the server runtime.
  */
@@ -46,7 +46,7 @@ public class SetServerRuntimeCommand extends ServerCommand {
 	 * @return java.lang.String
 	 */
 	public String getDescription() {
-		return ServerUIPlugin.getResource("%serverEditorOverviewRuntimeDescription");
+		return Messages.serverEditorOverviewRuntimeDescription;
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class SetServerRuntimeCommand extends ServerCommand {
 	 * @return java.lang.String
 	 */
 	public String getName() {
-		return ServerUIPlugin.getResource("%serverEditorOverviewRuntimeCommand");
+		return Messages.serverEditorOverviewRuntimeCommand;
 	}
 
 	/**

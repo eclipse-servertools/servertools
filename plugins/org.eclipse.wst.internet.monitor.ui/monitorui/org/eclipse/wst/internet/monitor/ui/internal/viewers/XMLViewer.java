@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.internet.monitor.ui.ContentViewer;
 import org.eclipse.wst.internet.monitor.ui.internal.ContextIds;
+import org.eclipse.wst.internet.monitor.ui.internal.Messages;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
 
 import org.w3c.dom.*;
@@ -94,7 +95,7 @@ public class XMLViewer extends ContentViewer {
 				messageText.setVisible(false);
 				layout.topControl = messageLabel;
 				messageLabel.setVisible(true);
-				messageLabel.setText("<" + MonitorUIPlugin.getResource("%xmlViewInvalid") + ">");
+				messageLabel.setText(Messages.xmlViewInvalid);
 			} else if (xmlTagMissing && finalMsg.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")) {
 				int x = finalMsg.indexOf("\n") + 1;
 				String Msg = finalMsg.substring(x);
