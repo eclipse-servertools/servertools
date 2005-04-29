@@ -169,10 +169,11 @@ public class ServerTableViewer extends TreeViewer {
 				while (!stopThread) {
 					try {
 						labelProvider.animate();
+						final Object[] rootElements = ((ITreeContentProvider)getContentProvider()).getElements(null); 
 						Display.getDefault().asyncExec(new Runnable() {
 							public void run() {
 								if (getTree() != null && !getTree().isDisposed())
-									refresh();
+									update(rootElements, null);
 							}
 						});
 						Thread.sleep(200);
