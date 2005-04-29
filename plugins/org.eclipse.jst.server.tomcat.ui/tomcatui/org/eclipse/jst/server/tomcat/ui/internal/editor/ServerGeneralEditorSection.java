@@ -19,7 +19,7 @@ import org.eclipse.jst.server.tomcat.core.internal.command.SetDebugModeCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.SetSecureCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.SetTestEnvironmentCommand;
 import org.eclipse.jst.server.tomcat.ui.internal.ContextIds;
-import org.eclipse.jst.server.tomcat.ui.internal.TomcatUIPlugin;
+import org.eclipse.jst.server.tomcat.ui.internal.Messages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -92,8 +92,8 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		
 		Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED
 			| ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
-		section.setText(TomcatUIPlugin.getResource("%serverEditorGeneralSection"));
-		section.setDescription(TomcatUIPlugin.getResource("%serverEditorGeneralDescription"));
+		section.setText(Messages.serverEditorGeneralSection);
+		section.setDescription(Messages.serverEditorGeneralDescription);
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 
 		Composite composite = toolkit.createComposite(section);
@@ -111,7 +111,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		section.setClient(composite);
 		
 		// test environment
-		testEnvironment = toolkit.createButton(composite, TomcatUIPlugin.getResource("%serverEditorTestEnvironment"), SWT.CHECK);
+		testEnvironment = toolkit.createButton(composite, Messages.serverEditorTestEnvironment, SWT.CHECK);
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 3;
 		testEnvironment.setLayoutData(data);
@@ -127,7 +127,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		whs.setHelp(testEnvironment, ContextIds.SERVER_EDITOR_TEST_ENVIRONMENT);
 
 		// security
-		secure = toolkit.createButton(composite, TomcatUIPlugin.getResource("%serverEditorSecure"), SWT.CHECK);
+		secure = toolkit.createButton(composite, Messages.serverEditorSecure, SWT.CHECK);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 3;
 		secure.setLayoutData(data);
@@ -143,7 +143,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		whs.setHelp(secure, ContextIds.SERVER_EDITOR_SECURE);
 	
 		// debug mode
-		debug = toolkit.createButton(composite, TomcatUIPlugin.getResource("%serverEditorDebugMode"), SWT.CHECK);
+		debug = toolkit.createButton(composite, Messages.serverEditorDebugMode, SWT.CHECK);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 3;
 		debug.setLayoutData(data);

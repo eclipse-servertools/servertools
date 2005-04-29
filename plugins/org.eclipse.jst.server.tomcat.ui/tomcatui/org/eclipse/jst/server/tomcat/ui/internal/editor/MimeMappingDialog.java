@@ -14,6 +14,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jst.server.tomcat.core.internal.MimeMapping;
 import org.eclipse.jst.server.tomcat.ui.internal.ContextIds;
+import org.eclipse.jst.server.tomcat.ui.internal.Messages;
 import org.eclipse.jst.server.tomcat.ui.internal.TomcatUIPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -62,9 +63,9 @@ public class MimeMappingDialog extends Dialog {
 		super.configureShell(newShell);
 		newShell.setImage(TomcatUIPlugin.getImage(TomcatUIPlugin.IMG_MIME_MAPPING));
 		if (isEdit)
-			newShell.setText(TomcatUIPlugin.getResource("%configurationEditorMimeMapppingDialogTitleEdit"));
+			newShell.setText(Messages.configurationEditorMimeMapppingDialogTitleEdit);
 		else
-			newShell.setText(TomcatUIPlugin.getResource("%configurationEditorMimeMapppingDialogTitleAdd"));
+			newShell.setText(Messages.configurationEditorMimeMapppingDialogTitleAdd);
 	}
 
 	/**
@@ -94,7 +95,7 @@ public class MimeMappingDialog extends Dialog {
 		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
 		whs.setHelp(composite, ContextIds.CONFIGURATION_EDITOR_MAPPING_DIALOG);
 	
-		new Label(composite, SWT.NONE).setText(TomcatUIPlugin.getResource("%configurationEditorMimeMapppingDialogMimeType"));
+		new Label(composite, SWT.NONE).setText(Messages.configurationEditorMimeMapppingDialogMimeType);
 		final Text type = new Text(composite, SWT.BORDER);
 		GridData data = new GridData();
 		data.widthHint = 150;
@@ -108,7 +109,7 @@ public class MimeMappingDialog extends Dialog {
 		});
 		whs.setHelp(type, ContextIds.CONFIGURATION_EDITOR_MAPPING_DIALOG_TYPE);
 	
-		new Label(composite, SWT.NONE).setText(TomcatUIPlugin.getResource("%configurationEditorMimeMapppingDialogMimeExtension"));
+		new Label(composite, SWT.NONE).setText(Messages.configurationEditorMimeMapppingDialogMimeExtension);
 		final Text extension = new Text(composite, SWT.BORDER);
 		data = new GridData();
 		data.widthHint = 150;

@@ -28,6 +28,7 @@ import org.eclipse.jst.server.tomcat.core.internal.TomcatConfiguration;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.command.*;
 import org.eclipse.jst.server.tomcat.ui.internal.ContextIds;
+import org.eclipse.jst.server.tomcat.ui.internal.Messages;
 import org.eclipse.jst.server.tomcat.ui.internal.TomcatUIPlugin;
 import org.eclipse.ui.*;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -102,8 +103,8 @@ public class ConfigurationPortEditorSection extends ServerEditorSection {
 		
 		Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED
 			| ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
-		section.setText(TomcatUIPlugin.getResource("%configurationEditorPortsSection"));
-		section.setDescription(TomcatUIPlugin.getResource("%configurationEditorPortsDescription"));
+		section.setText(Messages.configurationEditorPortsSection);
+		section.setDescription(Messages.configurationEditorPortsDescription);
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 		
 		// ports
@@ -126,12 +127,12 @@ public class ConfigurationPortEditorSection extends ServerEditorSection {
 		TableLayout tableLayout = new TableLayout();
 	
 		TableColumn col = new TableColumn(ports, SWT.NONE);
-		col.setText(TomcatUIPlugin.getResource("%configurationEditorPortNameColumn"));
+		col.setText(Messages.configurationEditorPortNameColumn);
 		ColumnWeightData colData = new ColumnWeightData(15, 150, true);
 		tableLayout.addColumnData(colData);
 
 		col = new TableColumn(ports, SWT.NONE);
-		col.setText(TomcatUIPlugin.getResource("%configurationEditorPortValueColumn"));
+		col.setText(Messages.configurationEditorPortValueColumn);
 		colData = new ColumnWeightData(8, 80, true);
 		tableLayout.addColumnData(colData);
 

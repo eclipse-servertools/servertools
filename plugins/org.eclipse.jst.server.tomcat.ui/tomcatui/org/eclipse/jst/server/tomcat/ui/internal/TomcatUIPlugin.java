@@ -11,12 +11,10 @@
 package org.eclipse.jst.server.tomcat.ui.internal;
 
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
@@ -114,61 +112,6 @@ public class TomcatUIPlugin extends AbstractUIPlugin {
 		getInstance().getLog().log(status);
 	}
 
-	/**
-	 * Returns the translated String found with the given key.
-	 * 
-	 * @param key a key
-	 * @return a translated string
-	 */
-	public static String getResource(String key) {
-		try {
-			return Platform.getResourceString(getInstance().getBundle(), key);
-		} catch (Exception e) {
-			return key;
-		}
-	}
-	
-	/**
-	 * Returns the translated String found with the given key,
-	 * and formatted with the given object.
-	 * 
-	 * @param key a key
-	 * @param obj substitution arguments
-	 * @return a translated string
-	 */
-	public static String getResource(String key, Object[] obj) {
-		try {
-			return MessageFormat.format(getResource(key), obj);
-		} catch (Exception e) {
-			return key;
-		}
-	}
-		
-	/**
-	 * Returns the translated String found with the given key,
-	 * and formatted with the given object.
-	 * 
-	 * @param key a key
-	 * @param arg an argument
-	 * @return a translated string
-	 */
-	public static String getResource(String key, String arg) {
-		return getResource(key, new String[] { arg });
-	}
-	
-	/**
-	 * Returns the translated String found with the given key,
-	 * and formatted with the given object.
-	 * 
-	 * @param key a key
-	 * @param arg1 an argument
-	 * @param arg2 another argument
-	 * @return a translated string
-	 */
-	public static String getResource(String key, String arg1, String arg2) {
-		return getResource(key, new String[] { arg1, arg2 });
-	}
-	
 	/**
 	 * Register an image with the registry.
 	 * @param key java.lang.String

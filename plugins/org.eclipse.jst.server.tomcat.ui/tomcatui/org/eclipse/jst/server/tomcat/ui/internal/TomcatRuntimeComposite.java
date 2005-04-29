@@ -69,8 +69,8 @@ public class TomcatRuntimeComposite extends Composite {
 		super(parent, SWT.NONE);
 		this.wizard = wizard;
 		
-		wizard.setTitle(TomcatUIPlugin.getResource("%wizardTitle"));
-		wizard.setDescription(TomcatUIPlugin.getResource("%wizardDescription"));
+		wizard.setTitle(Messages.wizardTitle);
+		wizard.setDescription(Messages.wizardDescription);
 		wizard.setImageDescriptor(TomcatUIPlugin.getImageDescriptor(TomcatUIPlugin.IMG_WIZ_TOMCAT));
 		
 		createControl();
@@ -100,7 +100,7 @@ public class TomcatRuntimeComposite extends Composite {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, ContextIds.RUNTIME);
 		
 		Label label = new Label(this, SWT.NONE);
-		label.setText(TomcatUIPlugin.getResource("%runtimeName"));
+		label.setText(Messages.runtimeName);
 		GridData data = new GridData();
 		data.horizontalSpan = 2;
 		label.setLayoutData(data);
@@ -116,7 +116,7 @@ public class TomcatRuntimeComposite extends Composite {
 		});
 	
 		label = new Label(this, SWT.NONE);
-		label.setText(TomcatUIPlugin.getResource("%installDir"));
+		label.setText(Messages.installDir);
 		data = new GridData();
 		data.horizontalSpan = 2;
 		label.setLayoutData(data);
@@ -131,11 +131,11 @@ public class TomcatRuntimeComposite extends Composite {
 			}
 		});
 	
-		Button browse = SWTUtil.createButton(this, TomcatUIPlugin.getResource("%browse"));
+		Button browse = SWTUtil.createButton(this, Messages.browse);
 		browse.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent se) {
 				DirectoryDialog dialog = new DirectoryDialog(TomcatRuntimeComposite.this.getShell());
-				dialog.setMessage(TomcatUIPlugin.getResource("%selectInstallDir"));
+				dialog.setMessage(Messages.selectInstallDir);
 				dialog.setFilterPath(installDir.getText());
 				String selectedDirectory = dialog.open();
 				if (selectedDirectory != null)
@@ -147,7 +147,7 @@ public class TomcatRuntimeComposite extends Composite {
 		
 		// JDK location
 		label = new Label(this, SWT.NONE);
-		label.setText(TomcatUIPlugin.getResource("%installedJRE"));
+		label.setText(Messages.installedJRE);
 		data = new GridData();
 		data.horizontalSpan = 2;
 		label.setLayoutData(data);
@@ -173,7 +173,7 @@ public class TomcatRuntimeComposite extends Composite {
 			}
 		});
 		
-		Button button = SWTUtil.createButton(this, TomcatUIPlugin.getResource("%installedJREs"));
+		Button button = SWTUtil.createButton(this, Messages.installedJREs);
 		button.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				String currentVM = combo.getText();
@@ -211,7 +211,7 @@ public class TomcatRuntimeComposite extends Composite {
 		// get names
 		size = installedJREs.size();
 		jreNames = new String[size+1];
-		jreNames[0] = TomcatUIPlugin.getResource("%runtimeDefaultJRE");
+		jreNames[0] = Messages.runtimeDefaultJRE;
 		for (int i = 0; i < size; i++) {
 			IVMInstall vmInstall = (IVMInstall) installedJREs.get(i);
 			jreNames[i+1] = vmInstall.getName();

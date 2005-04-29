@@ -18,7 +18,7 @@ import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfiguration;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.WebModule;
 import org.eclipse.jst.server.tomcat.ui.internal.ContextIds;
-import org.eclipse.jst.server.tomcat.ui.internal.TomcatUIPlugin;
+import org.eclipse.jst.server.tomcat.ui.internal.Messages;
 import org.eclipse.jst.server.tomcat.ui.internal.Trace;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -96,9 +96,9 @@ public class WebModuleDialog extends Dialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		if (isEdit)
-			newShell.setText(TomcatUIPlugin.getResource("%configurationEditorWebModuleDialogTitleEdit"));
+			newShell.setText(Messages.configurationEditorWebModuleDialogTitleEdit);
 		else
-			newShell.setText(TomcatUIPlugin.getResource("%configurationEditorWebModuleDialogTitleAdd"));
+			newShell.setText(Messages.configurationEditorWebModuleDialogTitleAdd);
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class WebModuleDialog extends Dialog {
 		// add project field if we are adding a project
 		if (!isEdit && isProject) {
 			Label l = new Label(composite, SWT.NONE);
-			l.setText(TomcatUIPlugin.getResource("%configurationEditorWebModuleDialogProjects"));
+			l.setText(Messages.configurationEditorWebModuleDialogProjects);
 			GridData data = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 			l.setLayoutData(data);
 			
@@ -162,7 +162,7 @@ public class WebModuleDialog extends Dialog {
 			new Label(composite, SWT.NONE).setText(" ");
 		}
 	
-		new Label(composite, SWT.NONE).setText(TomcatUIPlugin.getResource("%configurationEditorWebModuleDialogDocumentBase"));
+		new Label(composite, SWT.NONE).setText(Messages.configurationEditorWebModuleDialogDocumentBase);
 		docBase = new Text(composite, SWT.BORDER);
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		docBase.setLayoutData(data);
@@ -185,12 +185,12 @@ public class WebModuleDialog extends Dialog {
 			new Label(composite, SWT.NONE).setText(" ");
 		else {
 			Button browse = new Button(composite, SWT.NONE);
-			browse.setText(TomcatUIPlugin.getResource("%browse"));
+			browse.setText(Messages.browse);
 			browse.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent se) {
 					try {
 						DirectoryDialog dialog = new DirectoryDialog(getShell());
-						dialog.setMessage(TomcatUIPlugin.getResource("%configurationEditorWebModuleDialogSelectDirectory"));
+						dialog.setMessage(Messages.configurationEditorWebModuleDialogSelectDirectory);
 						String selectedDirectory = dialog.open();
 						if (selectedDirectory != null)
 							docBase.setText(selectedDirectory);
@@ -202,7 +202,7 @@ public class WebModuleDialog extends Dialog {
 		}
 	
 		// path (context-root)
-		new Label(composite, SWT.NONE).setText(TomcatUIPlugin.getResource("%configurationEditorWebModuleDialogPath"));
+		new Label(composite, SWT.NONE).setText(Messages.configurationEditorWebModuleDialogPath);
 		final Text path = new Text(composite, SWT.BORDER);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.widthHint = 150;
@@ -218,9 +218,9 @@ public class WebModuleDialog extends Dialog {
 		new Label(composite, SWT.NONE).setText("");
 		
 		// auto reload
-		new Label(composite, SWT.NONE).setText(TomcatUIPlugin.getResource("%configurationEditorWebModuleDialogAutoReload"));
+		new Label(composite, SWT.NONE).setText(Messages.configurationEditorWebModuleDialogAutoReload);
 		final Button reloadable = new Button(composite, SWT.CHECK);
-		reloadable.setText(TomcatUIPlugin.getResource("%configurationEditorWebModuleDialogReloadEnabled"));
+		reloadable.setText(Messages.configurationEditorWebModuleDialogReloadEnabled);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		reloadable.setLayoutData(data);
 		reloadable.setSelection(module.isReloadable());

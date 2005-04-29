@@ -28,7 +28,9 @@ import org.eclipse.jst.server.tomcat.core.internal.command.AddWebModuleCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.ModifyWebModuleCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.RemoveWebModuleCommand;
 import org.eclipse.jst.server.tomcat.ui.internal.ContextIds;
+import org.eclipse.jst.server.tomcat.ui.internal.Messages;
 import org.eclipse.jst.server.tomcat.ui.internal.TomcatUIPlugin;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -106,13 +108,13 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 		FormToolkit toolkit = getFormToolkit(parent.getDisplay());
 
 		ScrolledForm form = toolkit.createScrolledForm(parent);
-		form.setText(TomcatUIPlugin.getResource("%configurationEditorWebModulesPageTitle"));
+		form.setText(Messages.configurationEditorWebModulesPageTitle);
 		form.getBody().setLayout(new GridLayout());
 	
 		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED
 			| ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
-		section.setText(TomcatUIPlugin.getResource("%configurationEditorWebModulesSection"));
-		section.setDescription(TomcatUIPlugin.getResource("%configurationEditorWebModulesDescription"));
+		section.setText(Messages.configurationEditorWebModulesSection);
+		section.setDescription(Messages.configurationEditorWebModulesDescription);
 		section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		Composite composite = toolkit.createComposite(section);
@@ -138,22 +140,22 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 		TableLayout tableLayout = new TableLayout();
 	
 		TableColumn col = new TableColumn(webAppTable, SWT.NONE);
-		col.setText(TomcatUIPlugin.getResource("%configurationEditorPathColumn"));
+		col.setText(Messages.configurationEditorPathColumn);
 		ColumnWeightData colData = new ColumnWeightData(8, 85, true);
 		tableLayout.addColumnData(colData);
 	
 		TableColumn col2 = new TableColumn(webAppTable, SWT.NONE);
-		col2.setText(TomcatUIPlugin.getResource("%configurationEditorDocBaseColumn"));
+		col2.setText(Messages.configurationEditorDocBaseColumn);
 		colData = new ColumnWeightData(13, 135, true);
 		tableLayout.addColumnData(colData);
 	
 		TableColumn col3 = new TableColumn(webAppTable, SWT.NONE);
-		col3.setText(TomcatUIPlugin.getResource("%configurationEditorProjectColumn"));
+		col3.setText(Messages.configurationEditorProjectColumn);
 		colData = new ColumnWeightData(8, 85, true);
 		tableLayout.addColumnData(colData);
 	
 		TableColumn col4 = new TableColumn(webAppTable, SWT.NONE);
-		col4.setText(TomcatUIPlugin.getResource("%configurationEditorReloadColumn"));
+		col4.setText(Messages.configurationEditorReloadColumn);
 		colData = new ColumnWeightData(7, 75, true);
 		tableLayout.addColumnData(colData);
 		
@@ -180,7 +182,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 	
 		// buttons still to add:
 		// add project, add external module, remove module
-		addProject = toolkit.createButton(rightPanel, TomcatUIPlugin.getResource("%configurationEditorAddProjectModule"), SWT.PUSH);
+		addProject = toolkit.createButton(rightPanel, Messages.configurationEditorAddProjectModule, SWT.PUSH);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		addProject.setLayoutData(data);
 		whs.setHelp(addProject, ContextIds.CONFIGURATION_EDITOR_WEBMODULES_ADD_PROJECT);
@@ -201,7 +203,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 			});
 		}
 	
-		addExtProject = toolkit.createButton(rightPanel, TomcatUIPlugin.getResource("%configurationEditorAddExternalModule"), SWT.PUSH);
+		addExtProject = toolkit.createButton(rightPanel, Messages.configurationEditorAddExternalModule, SWT.PUSH);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		addExtProject.setLayoutData(data);
 		addExtProject.addSelectionListener(new SelectionAdapter() {
@@ -215,7 +217,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 		});
 		whs.setHelp(addExtProject, ContextIds.CONFIGURATION_EDITOR_WEBMODULES_ADD_EXTERNAL);
 		
-		edit = toolkit.createButton(rightPanel, TomcatUIPlugin.getResource("%editorEdit"), SWT.PUSH);
+		edit = toolkit.createButton(rightPanel, Messages.editorEdit, SWT.PUSH);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		edit.setLayoutData(data);
 		edit.setEnabled(false);
@@ -233,7 +235,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 		});
 		whs.setHelp(edit, ContextIds.CONFIGURATION_EDITOR_WEBMODULES_EDIT);
 	
-		remove = toolkit.createButton(rightPanel, TomcatUIPlugin.getResource("%editorRemove"), SWT.PUSH);
+		remove = toolkit.createButton(rightPanel, Messages.editorRemove, SWT.PUSH);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		remove.setLayoutData(data);
 		remove.setEnabled(false);
@@ -317,7 +319,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 			String projectName = "";
 			Image projectImage = null;
 			if (memento != null && memento.length() > 0) {
-				projectName = TomcatUIPlugin.getResource("%configurationEditorProjectMissing", new String[] {memento});
+				projectName = NLS.bind(Messages.configurationEditorProjectMissing, new String[] {memento});
 				projectImage = TomcatUIPlugin.getImage(TomcatUIPlugin.IMG_PROJECT_MISSING);
 				IModule module2 = ServerUtil.getModule(memento);
 				if (module != null) {
@@ -326,7 +328,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 				}
 			}
 	
-			String reload = module.isReloadable() ? TomcatUIPlugin.getResource("%configurationEditorReloadEnabled") : TomcatUIPlugin.getResource("%configurationEditorReloadDisabled");
+			String reload = module.isReloadable() ? Messages.configurationEditorReloadEnabled : Messages.configurationEditorReloadDisabled;
 			String[] s = new String[] {module.getPath(), module.getDocumentBase(), projectName, reload};
 			item.setText(s);
 			item.setImage(0, TomcatUIPlugin.getImage(TomcatUIPlugin.IMG_WEB_MODULE));

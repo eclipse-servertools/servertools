@@ -29,6 +29,7 @@ import org.eclipse.jst.server.tomcat.core.internal.TomcatConfiguration;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.command.*;
 import org.eclipse.jst.server.tomcat.ui.internal.ContextIds;
+import org.eclipse.jst.server.tomcat.ui.internal.Messages;
 import org.eclipse.jst.server.tomcat.ui.internal.TomcatUIPlugin;
 import org.eclipse.ui.*;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -89,8 +90,8 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 		
 		Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR
 			| Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
-		section.setText(TomcatUIPlugin.getResource("%configurationEditorMimeMappingsSection"));
-		section.setDescription(TomcatUIPlugin.getResource("%configurationEditorMimeMappingsDescription"));
+		section.setText(Messages.configurationEditorMimeMappingsSection);
+		section.setDescription(Messages.configurationEditorMimeMappingsDescription);
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 		
 		Composite composite = toolkit.createComposite(section);
@@ -129,7 +130,7 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 		buttonComp.setLayout(layout);
 		buttonComp.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING | GridData.HORIZONTAL_ALIGN_BEGINNING));
 		
-		add = toolkit.createButton(buttonComp, TomcatUIPlugin.getResource("%editorAdd"), SWT.PUSH);
+		add = toolkit.createButton(buttonComp, Messages.editorAdd, SWT.PUSH);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.widthHint = 75;
 		add.setLayoutData(data);
@@ -145,7 +146,7 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 		});
 		whs.setHelp(add, ContextIds.CONFIGURATION_EDITOR_MAPPINGS_ADD);
 		
-		edit = toolkit.createButton(buttonComp, TomcatUIPlugin.getResource("%editorEdit"), SWT.PUSH);
+		edit = toolkit.createButton(buttonComp, Messages.editorEdit, SWT.PUSH);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.widthHint = 75;
 		edit.setLayoutData(data);
@@ -164,7 +165,7 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 		});
 		whs.setHelp(edit, ContextIds.CONFIGURATION_EDITOR_MAPPINGS_EDIT);
 		
-		remove = toolkit.createButton(buttonComp, TomcatUIPlugin.getResource("%editorRemove"), SWT.PUSH);
+		remove = toolkit.createButton(buttonComp, Messages.editorRemove, SWT.PUSH);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.widthHint = 75;
 		remove.setLayoutData(data);
