@@ -98,8 +98,15 @@ public class Tomcat32Handler implements ITomcatVersionHandler {
 	 */
 	public IStatus canAddModule(IWebModule module) {
 		if ("1.2".equals(module.getJ2EESpecificationVersion()))
-			return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, Messages.canAddModule, null);
+			return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%canAddModule"), null);
 		
-		return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorSpec32, null);
+		return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, TomcatPlugin.getResource("%errorSpec32"), null);
+	}
+
+	/**
+	 * @see ITomcatVersionHandler#getRuntimeBaseDirectory(TomcatServerBehaviour)
+	 */
+	public IPath getRuntimeBaseDirectory(TomcatServerBehaviour serverBehaviour) {
+		return serverBehaviour.getServer().getRuntime().getLocation();
 	}
 }
