@@ -10,11 +10,22 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
@@ -32,7 +43,8 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	protected List removed;
 
 	// map from IProject to IModule[]
-	protected Map projects;
+	protected final Map projects = new HashMap();
+	protected boolean initialized = false;
 
 	/**
 	 * Construct a new ProjectModuleFactoryDelegate.
@@ -45,26 +57,44 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		addListener();
 	}
 
+
 	/**
 	 * Cache any preexisting module.
 	 * TODO: When/where is this called?
 	 */
 	protected void cacheModules() {
-		projects = new HashMap();
+		cacheModules(true);
+	}
+
+
+	/**
+	 * Cache any preexisting module.
+	 * TODO: When/where is this called?
+	 */
+	protected void cacheModules(boolean forceUpdate) { 
 		try {
 			IProject[] projects2 = getWorkspaceRoot().getProjects();
 			int size = projects2.length;
 			for (int i = 0; i < size; i++) {
 				//Trace.trace("caching: " + this + " " + projects[i] + " " + isValidModule(projects[i]));
-				if (isValidModule(projects2[i])) {
+				if(!projects2[i].isAccessible())
+					removeModules(projects2[i]);
+				else if (isValidModule(projects2[i]) && (forceUpdate || needsUpdating(projects2[i])) ) {
 					addModules(projects2[i]);
-				}
+				} 
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error caching modules", e);
+		} finally {
+			initialized = true;
 		}
 		fireEvents();
 	}
+
+	protected boolean needsUpdating(IProject project) {
+		return true;
+	}
+
 
 	/**
 	 * Return the workspace root.
@@ -197,6 +227,8 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * @param delta a resource delta
 	 */
 	private void handleProjectChange(final IProject project, IResourceDelta delta) {
+		if(!initialized)
+			cacheModules(false);
 		if (projects.containsKey(project)) {
 			// already a module
 			if (((delta.getKind() &  IResourceDelta.REMOVED) != 0) || !isValidModule(project)) {
@@ -271,9 +303,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * 
 	 * @param project a project
 	 */
-	private void addModules(IProject project) {
-		if (projects == null)
-			cacheModules();
+	protected void addModules(IProject project) {
 		
 		IModule[] modules = createModules(project);
 		if (modules == null || modules.length == 0)
@@ -288,15 +318,16 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * 
 	 * @param project a project
 	 */
-	private void removeModules(IProject project) {
-		if (projects == null)
-			cacheModules();
+	protected void removeModules(IProject project) {
 		
 		try {
 			IModule[] modules = (IModule[]) projects.get(project);
+			
 			projects.remove(project);
 			if (removed == null)
 				removed = new ArrayList(2);
+			if(modules == null)
+				return;
 			removed.addAll(Arrays.asList(modules));
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error removing module project", e);
