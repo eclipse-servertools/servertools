@@ -20,6 +20,9 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.wst.server.core.*;
 /**
  * Helper class that stores preference information for the server tools.
+ * 
+ * TODO: Currently this class always reads from disk. It should cache the file
+ * and have a resource listener.
  */
 public class ProjectProperties implements IProjectProperties {
 	private static final String PROJECT_PREFERENCE_FILE = ".runtime";
