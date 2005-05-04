@@ -18,12 +18,19 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatRuntimeWorkingCopy;
+import org.eclipse.test.performance.Dimension;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.tests.performance.common.AbstractGetDelegateTestCase;
 public class GetDelegateTestCase extends AbstractGetDelegateTestCase {
 	public static Test suite() {
 		return new TestSuite(GetDelegateTestCase.class, "GetDelegateTestCase");
+	}
+
+	public void testGetDelegate() throws Exception {
+		Dimension[] dims = new Dimension[] {Dimension.ELAPSED_PROCESS, Dimension.USED_JAVA_HEAP};
+		tagAsSummary("Create Tomcat runtime", dims);
+		super.testGetDelegate();
 	}
 
 	protected IRuntimeWorkingCopy createRuntime(String runtimeTypeId, String runtimeTypeLocation) throws CoreException {
@@ -41,7 +48,7 @@ public class GetDelegateTestCase extends AbstractGetDelegateTestCase {
 	}
 
 	protected String getRuntimeTypeId() {
-		return "org.eclipse.jst.server.tomcat.50.runtime";
+		return "org.eclipse.jst.server.tomcat.runtime.50";
 	}
 
 	protected String getRuntimeTypeLocation() {

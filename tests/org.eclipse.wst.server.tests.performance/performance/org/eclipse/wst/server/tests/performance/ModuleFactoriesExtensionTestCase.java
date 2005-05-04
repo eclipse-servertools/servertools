@@ -12,9 +12,11 @@ package org.eclipse.wst.server.tests.performance;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import org.eclipse.core.resources.IProject;
+import org.eclipse.test.performance.Dimension;
 import org.eclipse.test.performance.PerformanceTestCase;
-import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.internal.ModuleFactory;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 
 public class ModuleFactoriesExtensionTestCase extends PerformanceTestCase {
 	public static Test suite() {
@@ -22,8 +24,16 @@ public class ModuleFactoriesExtensionTestCase extends PerformanceTestCase {
 	}
   
 	public void testModuleFactoriesExtension() throws Exception {
+		Dimension[] dims = new Dimension[] {Dimension.ELAPSED_PROCESS, Dimension.USED_JAVA_HEAP};
+		tagAsGlobalSummary("Module Factories", dims);
 		startMeasuring();
-		ServerUtil.getModules((IProject) null);
+		ModuleFactory[] factories = ServerPlugin.getModuleFactories();
+		if (factories != null) {
+			int size = factories.length;
+			for (int i = 0; i < size; i++) {
+				IModule[] modules = factories[i].getModules();
+			}
+		}
 		stopMeasuring();
 		commitMeasurements();
 		assertPerformance();

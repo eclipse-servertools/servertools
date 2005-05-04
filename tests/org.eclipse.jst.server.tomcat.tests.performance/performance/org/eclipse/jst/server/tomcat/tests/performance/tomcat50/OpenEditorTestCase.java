@@ -12,11 +12,19 @@ package org.eclipse.jst.server.tomcat.tests.performance.tomcat50;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
+import org.eclipse.test.performance.Dimension;
 import org.eclipse.wst.server.tests.performance.common.AbstractOpenEditorTestCase;
 
 public class OpenEditorTestCase extends AbstractOpenEditorTestCase {
   public static Test suite() {
     return new TestSuite(OpenEditorTestCase.class, "OpenEditorTestCase");
+  }
+
+  public void testOpenEditor() throws Exception {
+    Dimension[] dims = new Dimension[] {Dimension.ELAPSED_PROCESS, Dimension.USED_JAVA_HEAP};
+    tagAsGlobalSummary("Open Tomcat editor", dims);
+    super.testOpenEditor();
   }
 
   protected String getServerTypeId() {
