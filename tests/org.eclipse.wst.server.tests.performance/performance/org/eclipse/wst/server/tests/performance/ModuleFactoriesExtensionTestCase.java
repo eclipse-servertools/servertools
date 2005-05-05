@@ -14,7 +14,6 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.eclipse.test.performance.Dimension;
 import org.eclipse.test.performance.PerformanceTestCase;
-import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.internal.ModuleFactory;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 
@@ -31,7 +30,7 @@ public class ModuleFactoriesExtensionTestCase extends PerformanceTestCase {
 		if (factories != null) {
 			int size = factories.length;
 			for (int i = 0; i < size; i++) {
-				IModule[] modules = factories[i].getModules();
+				factories[i].getModules();
 			}
 		}
 		stopMeasuring();
