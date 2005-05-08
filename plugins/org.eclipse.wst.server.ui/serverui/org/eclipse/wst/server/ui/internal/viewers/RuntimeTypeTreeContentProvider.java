@@ -73,6 +73,7 @@ public class RuntimeTypeTreeContentProvider extends AbstractTreeContentProvider 
 							ele.contents.add(runtimeType);
 							elementToParentMap.put(runtimeType, ele);
 						} else if (style == STYLE_MODULE_TYPE) {
+							// TODO: does not handle "j2ee.*" format
 							IModuleType[] moduleTypes = runtimeType.getModuleTypes();
 							if (moduleTypes != null) {
 								int size2 = moduleTypes.length;

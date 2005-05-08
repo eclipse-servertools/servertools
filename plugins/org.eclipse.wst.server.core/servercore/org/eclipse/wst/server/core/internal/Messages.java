@@ -57,6 +57,7 @@ public class Messages extends NLS {
 	public static String errorRestartNotStarted;
 	public static String errorStopAlreadyStopped;
 	public static String canStopOk;
+	public static String moduleTypeUnknown;
 	
 	static {
 		NLS.initializeMessages(ServerPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);

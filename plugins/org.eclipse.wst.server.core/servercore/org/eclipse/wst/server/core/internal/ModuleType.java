@@ -42,7 +42,7 @@ public class ModuleType implements IModuleType {
 		ModuleKind mt = findModuleType(id);
 		if (mt != null)
 			return mt.getName();
-		return null;
+		return Messages.moduleTypeUnknown;
 	}
 
 	public String getVersion() {

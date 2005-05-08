@@ -233,7 +233,9 @@ public class ServerUtil {
 	}
 
 	private static boolean matches(String a, String b) {
-		if (a == null || b == null || "*".equals(a) || "*".equals(b) || a.startsWith(b) || b.startsWith(a))
+		if (a == null || b == null || "*".equals(a) || "*".equals(b) || a.startsWith(b) || b.startsWith(a)
+			|| (a.endsWith(".*") && b.startsWith(a.substring(0, a.length() - 1)))
+			|| (b.endsWith(".*") && a.startsWith(b.substring(0, b.length() - 1))))
 			return true;
 		return false;
 	}
