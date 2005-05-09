@@ -213,8 +213,10 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 					tableViewer.remove(monitor);
 					
 					IMonitor[] monitors = MonitorCore.getMonitors();
-					Object monitor2 = monitors[monitors.length - 1];
-					tableViewer.setSelection(new StructuredSelection(monitor2));
+					if (monitors.length > 0) {
+						Object monitor2 = monitors[monitors.length - 1];
+						tableViewer.setSelection(new StructuredSelection(monitor2));
+					}
 				}
 			}
 		});
