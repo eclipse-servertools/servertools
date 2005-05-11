@@ -9,6 +9,8 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.jst.server.core;
+
+import org.eclipse.wst.server.core.IModule;
 /**
  * 
  * @since 1.0
@@ -16,11 +18,11 @@ package org.eclipse.jst.server.core;
 public interface ILooseArchiveSupport {
 	/**
 	 * Return the loose archives that are contained within this enterprise
-	 * application.
+	 * application. The returned modules will all be adaptable to ILooseArchive.
 	 *
 	 * @return a possibly empty array of modules contained within this application
 	 */
-	public ILooseArchive[] getLooseArchives();
+	public IModule[] getLooseArchives();
 
 	/**
 	 * Returns the URI of the given loose archive within this

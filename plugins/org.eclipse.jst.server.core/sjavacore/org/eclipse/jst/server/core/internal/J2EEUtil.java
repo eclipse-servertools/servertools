@@ -18,6 +18,7 @@ import org.eclipse.jst.server.core.IJ2EEModule;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
 /**
+ * Utility class for dealing with J2EE modules.
  * 
  * @since 1.0
  */
@@ -28,7 +29,7 @@ public class J2EEUtil {
 	 * @param module
 	 * @return a possibly empty array of enterprise applications
 	 */
-	public static IEnterpriseApplication[] getEnterpriseApplications(IJ2EEModule module) {
+	public static IModule[] getEnterpriseApplications(IJ2EEModule module) {
 		List list = new ArrayList();
 		IModule[] modules = ServerUtil.getModules("j2ee.ear");
 		if (modules != null) {
@@ -37,18 +38,18 @@ public class J2EEUtil {
 				IModule module2 = modules[i];
 				IEnterpriseApplication ear = (IEnterpriseApplication) module2.getAdapter(IEnterpriseApplication.class);
 				if (ear != null) {
-					IJ2EEModule[] modules2 = ear.getModules();
+					IModule[] modules2 = ear.getModules();
 					if (modules2 != null) {
 						int size2 = modules2.length;
 						for (int j = 0; j < size2; j++) {
-							if (modules2[j].equals(module))
-								list.add(ear);
+							if (module.equals(modules2[j].getAdapter(IJ2EEModule.class)))
+								list.add(module2);
 						}
 					}
 				}
 			}
 		}
-		IEnterpriseApplication[] ears = new IEnterpriseApplication[list.size()];
+		IModule[] ears = new IModule[list.size()];
 		list.toArray(ears);
 		return ears;
 	}

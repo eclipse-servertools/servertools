@@ -11,6 +11,7 @@
 package org.eclipse.jst.server.core;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.wst.server.core.IModule;
 /**
  * 
  * @since 1.0
@@ -24,11 +25,12 @@ public interface IEnterpriseApplication {
 	public String getJ2EESpecificationVersion();
 
 	/**
-	 * Returns the modules contained within this EAR.
+	 * Returns the modules contained within this EAR. The returned modules will
+	 * all be adaptable to IJ2EEModule.
 	 *
 	 * @return a possibly empty array of modules contained within this application
 	 */
-	public IJ2EEModule[] getModules();
+	public IModule[] getModules();
 
 	/**
 	 * Returns the URI of the given J2EE module within this
