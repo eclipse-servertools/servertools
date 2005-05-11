@@ -13,7 +13,6 @@ package org.eclipse.jst.server.tomcat.core.internal.command;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfigurationWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.internal.Messages;
 import org.eclipse.jst.server.tomcat.core.internal.WebModule;
-import org.eclipse.osgi.util.NLS;
 /**
  * Command to remove a web module.
  */
@@ -28,36 +27,16 @@ public class RemoveWebModuleCommand extends ConfigurationCommand {
 	 * @param index an index
 	 */
 	public RemoveWebModuleCommand(ITomcatConfigurationWorkingCopy configuration, int index) {
-		super(configuration);
+		super(configuration, Messages.configurationEditorActionRemoveWebModule);
 		this.index = index;
 	}
 
 	/**
 	 * Execute the command.
-	 * @return boolean
 	 */
-	public boolean execute() {
+	public void execute() {
 		module = (WebModule) configuration.getWebModules().get(index);
 		configuration.removeWebModule(index);
-		return true;
-	}
-
-	/**
-	 * Returns this command's description.
-	 * @return java.lang.String
-	 */
-	public String getDescription() {
-		if (module == null)
-			module = (WebModule) configuration.getWebModules().get(index);
-		return NLS.bind(Messages.configurationEditorActionRemoveWebModuleDescription, module.getPath());
-	}
-
-	/**
-	 * Returns this command's label.
-	 * @return java.lang.String
-	 */
-	public String getName() {
-		return Messages.configurationEditorActionRemoveWebModule;
 	}
 
 	/**

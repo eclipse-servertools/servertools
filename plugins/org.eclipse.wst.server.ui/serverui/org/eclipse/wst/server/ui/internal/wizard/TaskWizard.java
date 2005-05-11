@@ -29,7 +29,6 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wst.server.core.ITask;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -68,22 +67,6 @@ public class TaskWizard implements IWizard {
 	
 	private WizardFragment rootFragment;
 	private WizardFragment currentFragment;
-
-	class FragmentData {
-		public TaskWizardPage page;
-		public ITask finishTask;
-		public ITask cancelTask;
-		
-		public FragmentData(WizardFragment fragment) {
-			finishTask = fragment.createFinishTask();
-			if (finishTask != null)
-				finishTask.setTaskModel(taskModel);
-			
-			cancelTask = fragment.createCancelTask();
-			if (cancelTask != null)
-				cancelTask.setTaskModel(taskModel);
-		}
-	}
 	
 	/**
 	 * TaskWizard constructor comment.
@@ -254,11 +237,10 @@ public class TaskWizard implements IWizard {
 		if (fragment == null)
 			return;
 		
-		FragmentData data = getFragmentData(fragment);
-		if (type == FINISH && data.finishTask != null)
-			data.finishTask.execute(monitor);
-		else if (type == CANCEL && data.cancelTask != null)
-			data.cancelTask.execute(monitor);
+		if (type == FINISH)
+			fragment.performFinish(monitor);
+		else if (type == CANCEL)
+			fragment.performCancel(monitor);
 	}
 	
 	protected WizardFragment getCurrentWizardFragment() {
@@ -334,14 +316,14 @@ public class TaskWizard implements IWizard {
 			Iterator iterator = getAllWizardFragments().iterator();
 			while (iterator.hasNext()) {
 				WizardFragment fragment = (WizardFragment) iterator.next();
-				FragmentData data = getFragmentData(fragment);
+				TaskWizardPage page = getFragmentData(fragment);
 				if (fragment.hasComposite()) {
-					if (data.page != null)
-						addPage(data.page);
-					else {
-						TaskWizardPage page = new TaskWizardPage(fragment);
-						data.page = page;
+					if (page != null)
 						addPage(page);
+					else {
+						TaskWizardPage page2 = new TaskWizardPage(fragment);
+						fragmentData.put(fragment, page2);
+						addPage(page2);
 					}
 				}	
 			}
@@ -361,18 +343,16 @@ public class TaskWizard implements IWizard {
 		}
 	}*/
 	
-	private FragmentData getFragmentData(WizardFragment fragment) {
+	private TaskWizardPage getFragmentData(WizardFragment fragment) {
 		try {
-			FragmentData data = (FragmentData) fragmentData.get(fragment);
-			if (data != null)
-				return data;
+			TaskWizardPage page = (TaskWizardPage) fragmentData.get(fragment);
+			if (page != null)
+				return page;
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error getting fragment data", e);
 		}
 		
-		FragmentData data = new FragmentData(fragment);
-		fragmentData.put(fragment, data);
-		return data;
+		return null;
 	}
 	
 	protected void updatePages() {

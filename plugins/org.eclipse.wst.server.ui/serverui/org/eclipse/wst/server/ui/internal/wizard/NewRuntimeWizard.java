@@ -12,10 +12,10 @@ package org.eclipse.wst.server.ui.internal.wizard;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
-import org.eclipse.wst.server.ui.internal.task.SaveRuntimeTask;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewRuntimeWizardFragment;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 import org.eclipse.ui.INewWizard;
@@ -31,7 +31,11 @@ public class NewRuntimeWizard extends TaskWizard implements INewWizard {
 		super(Messages.wizNewRuntimeWizardTitle, new WizardFragment() {
 			protected void createChildFragments(List list) {
 				list.add(new NewRuntimeWizardFragment());
-				list.add(new FinishWizardFragment(new SaveRuntimeTask()));
+				list.add(new WizardFragment() {
+					public void performFinish(IProgressMonitor monitor) throws CoreException {
+						WizardTaskUtil.saveRuntime(getTaskModel(), monitor);
+					}
+				});
 			}
 		});
 

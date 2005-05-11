@@ -11,8 +11,8 @@
 package org.eclipse.wst.server.core.internal;
 
 import java.util.List;
-import org.eclipse.wst.server.core.IOptionalTask;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.model.PublishOperation;
 /**
  * A task for a server.
  * 
@@ -46,5 +46,5 @@ public interface IPublishTask {
 	 * @param modules a list containing IModule arrays
 	 * @return a possibly empty array of optional tasks 
 	 */
-	public IOptionalTask[] getTasks(IServer server, List modules);
+	public PublishOperation[] getTasks(IServer server, List modules);
 }

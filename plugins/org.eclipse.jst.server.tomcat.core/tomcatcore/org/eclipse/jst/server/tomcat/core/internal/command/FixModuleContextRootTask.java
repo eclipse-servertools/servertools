@@ -11,19 +11,19 @@
 package org.eclipse.jst.server.tomcat.core.internal.command;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jst.server.tomcat.core.internal.*;
 import org.eclipse.osgi.util.NLS;
 
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IOptionalTask;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.TaskModel;
-import org.eclipse.wst.server.core.util.Task;
+import org.eclipse.wst.server.core.model.PublishOperation;
 /**
  * Task to fix a context root on a web module.
  */
-public class FixModuleContextRootTask extends Task implements IOptionalTask {
+public class FixModuleContextRootTask extends PublishOperation {
 	protected int index;
 	protected WebModule module;
 	protected IModule webModule;
@@ -37,7 +37,7 @@ public class FixModuleContextRootTask extends Task implements IOptionalTask {
 	 * @param contextRoot
 	 */
 	public FixModuleContextRootTask(IModule webModule, int index, String contextRoot) {
-		super();
+		super(NLS.bind(Messages.fixModuleContextRoot, webModule.getName()), Messages.fixModuleContextRootDescription);
 		this.webModule = webModule;
 		this.index = index;
 		this.contextRoot = contextRoot;
@@ -47,9 +47,10 @@ public class FixModuleContextRootTask extends Task implements IOptionalTask {
 	 * Execute the command.
 	 * 
 	 * @param monitor a progress monitor
+	 * @param info
 	 * @throws CoreException
 	 */
-	public void execute(IProgressMonitor monitor) throws CoreException {
+	public void execute(IProgressMonitor monitor, IAdaptable info) throws CoreException {
 		IServerWorkingCopy wc = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
 		TomcatServer server = (TomcatServer) wc.getAdapter(TomcatServer.class);
 		TomcatConfiguration configuration = server.getTomcatConfiguration();
@@ -62,26 +63,8 @@ public class FixModuleContextRootTask extends Task implements IOptionalTask {
 		wc.save(true, monitor);
 	}
 
-	/**
-	 * Returns this command's description.
-	 * 
-	 * @return String
-	 */
-	public String getDescription() {
-		return Messages.fixModuleContextRootDescription;
-	}
-
-	/**
-	 * Returns this command's name.
-	 * 
-	 * @return String
-	 */
-	public String getName() {
-		return NLS.bind(Messages.fixModuleContextRoot, webModule.getName());
-	}
-
-	public int getStatus() {
-		return IOptionalTask.TASK_PREFERRED;
+	public int getKind() {
+		return PREFERRED;
 	}
 
 	public int getOrder() {

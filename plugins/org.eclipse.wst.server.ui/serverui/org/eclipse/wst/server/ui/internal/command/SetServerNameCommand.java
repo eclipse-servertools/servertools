@@ -26,34 +26,16 @@ public class SetServerNameCommand extends ServerCommand {
 	 * @param name a name for the server
 	 */
 	public SetServerNameCommand(IServerWorkingCopy server, String name) {
-		super(server);
+		super(server, Messages.serverEditorOverviewServerNameCommand);
 		this.name = name;
 	}
 
 	/**
 	 * Execute the command.
-	 * @return boolean
 	 */
-	public boolean execute() {
+	public void execute() {
 		oldName = server.getName();
 		server.setName(name);
-		return true;
-	}
-
-	/**
-	 * Returns this command's description.
-	 * @return java.lang.String
-	 */
-	public String getDescription() {
-		return Messages.serverEditorOverviewServerNameDescription;
-	}
-
-	/**
-	 * Returns this command's label.
-	 * @return java.lang.String
-	 */
-	public String getName() {
-		return Messages.serverEditorOverviewServerNameCommand;
 	}
 
 	/**

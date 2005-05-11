@@ -706,7 +706,7 @@ public class Server extends Base implements IServer {
 	 * 
 	 * @return a possibly empty array of IOptionalTasks
 	 */
-	public IOptionalTask[] getTasks() {
+	public PublishOperation[] getTasks() {
 		final List moduleList = new ArrayList();
 		
 		IModuleVisitor visitor = new IModuleVisitor() {
@@ -728,11 +728,11 @@ public class Server extends Base implements IServer {
 			for (int i = 0; i < size; i++) {
 				IPublishTask task = publishTasks[i];
 				if (task.supportsType(serverTypeId)) {
-					IOptionalTask[] tasks2 = task.getTasks(this, moduleList);
+					PublishOperation[] tasks2 = task.getTasks(this, moduleList);
 					if (tasks2 != null) {
 						int size2 = tasks2.length;
 						for (int j = 0; j < size2; j++) {
-							if (tasks2[j].getStatus() == IOptionalTask.TASK_MANDATORY)
+							if (tasks2[j].getKind() == PublishOperation.REQUIRED)
 								tasks.add(tasks2[j]);
 						}
 					}
@@ -740,7 +740,7 @@ public class Server extends Base implements IServer {
 			}
 		}
 		
-		return (IOptionalTask[]) tasks.toArray(new IOptionalTask[tasks.size()]);
+		return (PublishOperation[]) tasks.toArray(new PublishOperation[tasks.size()]);
 	}
 	
 	public List getAllModules() {

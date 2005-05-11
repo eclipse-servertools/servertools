@@ -15,12 +15,12 @@ import java.util.List;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.tomcat.core.internal.command.FixModuleContextRootTask;
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IOptionalTask;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.model.PublishOperation;
 import org.eclipse.wst.server.core.model.PublishTaskDelegate;
 
 public class ContextPublishTaskDelegate extends PublishTaskDelegate{
-	public IOptionalTask[] getTasks(IServer server, List modules) {
+	public PublishOperation[] getTasks(IServer server, List modules) {
 		if (modules == null)
 			return null;
 	
@@ -51,6 +51,6 @@ public class ContextPublishTaskDelegate extends PublishTaskDelegate{
 			}
 		}
 		
-		return (IOptionalTask[]) tasks.toArray(new IOptionalTask[tasks.size()]);
+		return (PublishOperation[]) tasks.toArray(new PublishOperation[tasks.size()]);
 	}
 }

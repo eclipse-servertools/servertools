@@ -13,9 +13,10 @@ package org.eclipse.wst.server.ui.wizard;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
 
-import org.eclipse.wst.server.core.ITask;
 import org.eclipse.wst.server.core.TaskModel;
 /**
  * A wizard fragment is a
@@ -69,35 +70,41 @@ public abstract class WizardFragment {
 	}
 
 	/**
-	 * The fragment has been entered.
+	 * Called when the wizard that this fragment belongs to has traversed
+	 * into this wizard fragment.
 	 */
 	public void enter() {
 		// do nothing
 	}
 
 	/**
-	 * The fragment has been left.
+	 * Called when the wizard that this fragment belongs to has traversed
+	 * out of this wizard fragment.
 	 */
 	public void exit() {
 		// do nothing
 	}
 
 	/**
-	 * Create a task to run when the wizard finishes.
+	 * Called when the wizard that this fragment belongs to is finished.
 	 * 
-	 * @return the task
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException if something goes wrong
 	 */
-	public ITask createFinishTask() {
-		return null;
+	public void performFinish(IProgressMonitor monitor) throws CoreException {
+		// do nothing
 	}
 
 	/**
-	 * Create a task to run when the wizard is cancelled.
+	 * Called when the wizard that this fragment belongs to is canceled.
 	 * 
-	 * @return the task
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException if something goes wrong
 	 */
-	public ITask createCancelTask() {
-		return null;
+	public void performCancel(IProgressMonitor monitor) throws CoreException {
+		// do nothing
 	}
 
 	/**
@@ -133,7 +140,8 @@ public abstract class WizardFragment {
 	/**
 	 * Returns true if this fragment is complete (can finish).
 	 * 
-	 * @return true if the fragment is complete
+	 * @return <code>true</code> if the fragment is complete, and
+	 *    <code>false</code> otherwise
 	 */
 	public boolean isComplete() {
 		return isComplete;
@@ -142,7 +150,8 @@ public abstract class WizardFragment {
 	/**
 	 * Set the isComplete state.
 	 * 
-	 * @param complete
+	 * @param complete <code>true</code> if the fragment is complete, and
+	 *    <code>false</code> otherwise
 	 */
 	protected void setComplete(boolean complete) {
 		this.isComplete = complete;

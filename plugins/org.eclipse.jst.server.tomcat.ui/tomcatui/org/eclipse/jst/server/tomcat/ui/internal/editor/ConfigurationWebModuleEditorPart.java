@@ -54,7 +54,6 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.ui.ServerUICore;
-import org.eclipse.wst.server.ui.editor.ICommandManager;
 import org.eclipse.wst.server.ui.editor.ServerEditorPart;
 /**
  * Tomcat configuration web module editor page.
@@ -96,11 +95,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 		};
 		configuration.addPropertyChangeListener(listener);
 	}
-	
-	protected ICommandManager getCommandManager() {
-		return commandManager;
-	}
-	
+
 	/**
 	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
@@ -197,7 +192,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 					WebModuleDialog dialog = new WebModuleDialog(getEditorSite().getShell(), getServer(), server2, configuration, true);
 					dialog.open();
 					if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
-						getCommandManager().executeCommand(new AddWebModuleCommand(configuration, dialog.getWebModule()));
+						execute(new AddWebModuleCommand(configuration, dialog.getWebModule()));
 					}
 				}
 			});
@@ -211,7 +206,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 				WebModuleDialog dialog = new WebModuleDialog(getEditorSite().getShell(), getServer(), server2, configuration, false);
 				dialog.open();
 				if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
-					getCommandManager().executeCommand(new AddWebModuleCommand(configuration, dialog.getWebModule()));
+					execute(new AddWebModuleCommand(configuration, dialog.getWebModule()));
 				}
 			}
 		});
@@ -229,7 +224,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 				WebModuleDialog dialog = new WebModuleDialog(getEditorSite().getShell(), getServer(), server2, configuration, module);
 				dialog.open();
 				if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
-					getCommandManager().executeCommand(new ModifyWebModuleCommand(configuration, selection, dialog.getWebModule()));
+					execute(new ModifyWebModuleCommand(configuration, selection, dialog.getWebModule()));
 				}
 			}
 		});
@@ -243,7 +238,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 			public void widgetSelected(SelectionEvent e) {
 				if (selection < 0)
 					return;
-				getCommandManager().executeCommand(new RemoveWebModuleCommand(configuration, selection));
+				execute(new RemoveWebModuleCommand(configuration, selection));
 				remove.setEnabled(false);
 				edit.setEnabled(false);
 				selection = -1;

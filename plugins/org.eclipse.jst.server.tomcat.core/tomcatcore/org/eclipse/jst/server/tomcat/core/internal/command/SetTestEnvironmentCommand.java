@@ -26,34 +26,16 @@ public class SetTestEnvironmentCommand extends ServerCommand {
 	 * @param te <code>true</code> for a test environment.
 	 */
 	public SetTestEnvironmentCommand(ITomcatServerWorkingCopy server, boolean te) {
-		super(server);
+		super(server, Messages.serverEditorActionSetTestEnvironment);
 		this.te = te;
 	}
 
 	/**
 	 * Execute the command.
-	 * @return boolean
 	 */
-	public boolean execute() {
+	public void execute() {
 		oldTe = server.isTestEnvironment();
 		server.setTestEnvironment(te);
-		return true;
-	}
-
-	/**
-	 * Returns this command's description.
-	 * @return java.lang.String
-	 */
-	public String getDescription() {
-		return Messages.serverEditorActionSetTestEnvironmentDescription;
-	}
-
-	/**
-	 * Returns this command's label.
-	 * @return java.lang.String
-	 */
-	public String getName() {
-		return Messages.serverEditorActionSetTestEnvironment;
 	}
 
 	/**

@@ -31,16 +31,15 @@ public class ModifyPortCommand extends ConfigurationCommand {
 	 * @param port new port number
 	 */
 	public ModifyPortCommand(ITomcatConfigurationWorkingCopy configuration, String id, int port) {
-		super(configuration);
+		super(configuration, Messages.configurationEditorActionModifyPort);
 		this.id = id;
 		this.port = port;
 	}
 
 	/**
 	 * Execute the command.
-	 * @return boolean
 	 */
-	public boolean execute() {
+	public void execute() {
 		// find old port number
 		Iterator iterator = configuration.getServerPorts().iterator();
 		while (iterator.hasNext()) {
@@ -51,23 +50,6 @@ public class ModifyPortCommand extends ConfigurationCommand {
 	
 		// make the change
 		configuration.modifyServerPort(id, port);
-		return true;
-	}
-
-	/**
-	 * Returns this command's description.
-	 * @return java.lang.String
-	 */
-	public String getDescription() {
-		return Messages.configurationEditorActionModifyPortDescription;
-	}
-
-	/**
-	 * Returns this command's label.
-	 * @return java.lang.String
-	 */
-	public String getName() {
-		return Messages.configurationEditorActionModifyPort;
 	}
 
 	/**

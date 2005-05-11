@@ -27,35 +27,17 @@ public class SetServerAutoPublishTimeCommand extends ServerCommand {
 	 * @param time a publish time
 	 */
 	public SetServerAutoPublishTimeCommand(IServerWorkingCopy server, int time) {
-		super(server);
+		super(server, Messages.serverEditorOverviewAutoPublishCommand);
 		this.time = time;
 	}
 
 	/**
 	 * Execute the command.
-	 * @return boolean
 	 */
-	public boolean execute() {
+	public void execute() {
 		ServerWorkingCopy swc = (ServerWorkingCopy) server;
 		oldTime = swc.getAutoPublishTime();
 		swc.setAutoPublishTime(time);
-		return true;
-	}
-
-	/**
-	 * Returns this command's description.
-	 * @return java.lang.String
-	 */
-	public String getDescription() {
-		return Messages.serverEditorOverviewAutoPublishDescription;
-	}
-
-	/**
-	 * Returns this command's label.
-	 * @return java.lang.String
-	 */
-	public String getName() {
-		return Messages.serverEditorOverviewAutoPublishCommand;
 	}
 
 	/**

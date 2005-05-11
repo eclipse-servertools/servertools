@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.internal.ModuleFile;
 import org.eclipse.wst.server.core.internal.ModuleFolder;
-import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.model.*;
 /**
  * A simple IModuleProject that maps a folder within a project
@@ -265,33 +264,6 @@ public abstract class ProjectModule extends ModuleDelegate {
 			return false;
 
 		return true;
-	}
-	
-	/**
-	 * Fire a module change event.
-	 */
-	protected void fireModuleChangeEvent(boolean isChange, IModule[] added, IModule[] changed, IModule[] removed) {
-		Trace.trace(Trace.FINEST, "->- Firing module change event: " + getModule().getName() + " (" + isChange + ") ->-");
-	
-		// TODO: should module event still be here?
-		/*if (listeners == null || listeners.isEmpty())
-			return;
-	
-		int size = listeners.size();
-		IModuleListener[] dcl = new IModuleListener[size];
-		listeners.toArray(dcl);
-		
-		ModuleEvent event = new ModuleEvent(getModule(), isChange, added, changed, removed);
-	
-		for (int i = 0; i < size; i++) {
-			try {
-				Trace.trace(Trace.FINEST, "  Firing module change event to: " + dcl[i]);
-				dcl[i].moduleChanged(event);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing module change event", e);
-			}
-		}*/
-		Trace.trace(Trace.FINEST, "-<- Done firing module change event -<-");
 	}
 	
 	/**

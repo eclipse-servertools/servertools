@@ -88,7 +88,6 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		} finally {
 			initialized = true;
 		}
-		fireEvents();
 	}
 
 	protected boolean needsUpdating(IProject project) {
@@ -198,12 +197,6 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 			ProjectModuleFactoryDelegate factory = (ProjectModuleFactoryDelegate) iterator.next();
 			factory.updateProjects();
 		}
-		
-		iterator = factories.iterator();
-		while (iterator.hasNext()) {
-			ProjectModuleFactoryDelegate factory = (ProjectModuleFactoryDelegate) iterator.next();
-			factory.fireEvents();
-		}
 	}
 
 	/**
@@ -255,12 +248,6 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 			for (int i = 0; i < modules.length; i++) {
 				final IModule module = modules[i];
 				if (module != null && module instanceof ProjectModule) {
-					// check for any changes to the module
-					final IPath root = ((ProjectModule) module).getRootFolder();
-					IResourceDelta rootDelta = delta.findMember(root);
-					if (rootDelta != null)
-						((ProjectModule) module).fireModuleChangeEvent(true, null, null, null);
-					
 					// check for listener paths
 					final int size = paths.length;
 					class Temp {
@@ -332,29 +319,6 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error removing module project", e);
 		}
-	}
-
-	/**
-	 * Fire the accumulated module factory events.
-	 */
-	protected void fireEvents() {
-		if ((added == null || added.isEmpty()) && (removed == null || removed.isEmpty()))
-			return;
-
-		IModule[] add = null;
-		if (added != null) {
-			add = new IModule[added.size()];
-			added.toArray(add);
-		}
-		IModule[] remove = null;
-		if (removed != null) {
-			remove = new IModule[removed.size()];
-			removed.toArray(remove);
-		}
-		
-		fireModuleFactoryEvent(add, remove);
-		added = new ArrayList(2);
-		removed = new ArrayList(2);
 	}
 
 	/**

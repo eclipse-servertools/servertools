@@ -26,33 +26,15 @@ public class AddMimeMappingCommand extends ConfigurationCommand {
 	 * @param map a mime mapping
 	 */
 	public AddMimeMappingCommand(ITomcatConfigurationWorkingCopy configuration, MimeMapping map) {
-		super(configuration);
+		super(configuration, Messages.configurationEditorActionAddMimeMapping);
 		this.map = map;
 	}
 
 	/**
 	 * Execute the command.
-	 * @return boolean
 	 */
-	public boolean execute() {
+	public void execute() {
 		configuration.addMimeMapping(0, map);
-		return true;
-	}
-
-	/**
-	 * Returns this command's description.
-	 * @return java.lang.String
-	 */
-	public String getDescription() {
-		return Messages.configurationEditorActionAddMimeMappingDescription;
-	}
-
-	/**
-	 * Returns this command's label.
-	 * @return java.lang.String
-	 */
-	public String getName() {
-		return Messages.configurationEditorActionAddMimeMapping;
 	}
 
 	/**

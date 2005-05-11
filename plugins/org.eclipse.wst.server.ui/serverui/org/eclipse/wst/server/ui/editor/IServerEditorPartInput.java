@@ -14,7 +14,7 @@ import org.eclipse.ui.IEditorInput;
 
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 /**
- *
+ * An input into a server part or section editor.
  *
  * @since 1.0
  */
@@ -33,13 +33,4 @@ public interface IServerEditorPartInput extends IEditorInput {
 	 *    and <code>false</code> otherwise
 	 */
 	public boolean isServerReadOnly();
-	
-	/**
-	 * Gets the command manager. The editor is only responsible for creating an
-	 * ICommand and passing it to the command manager, which actually performs
-	 * the action and updates the server.
-	 *
-	 * @return commandManager the command manager
-	 */
-	public ICommandManager getServerCommandManager();
 }

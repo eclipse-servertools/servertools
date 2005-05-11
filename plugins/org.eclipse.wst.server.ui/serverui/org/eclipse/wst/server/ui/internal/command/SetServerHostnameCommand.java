@@ -26,34 +26,16 @@ public class SetServerHostnameCommand extends ServerCommand {
 	 * @param name a hostname or IP address
 	 */
 	public SetServerHostnameCommand(IServerWorkingCopy server, String name) {
-		super(server);
+		super(server, Messages.serverEditorOverviewServerHostnameCommand);
 		this.name = name;
 	}
 
 	/**
 	 * Execute the command.
-	 * @return boolean
 	 */
-	public boolean execute() {
+	public void execute() {
 		oldName = server.getHost();
 		server.setHost(name);
-		return true;
-	}
-
-	/**
-	 * Returns this command's description.
-	 * @return java.lang.String
-	 */
-	public String getDescription() {
-		return Messages.serverEditorOverviewServerHostnameDescription;
-	}
-
-	/**
-	 * Returns this command's label.
-	 * @return java.lang.String
-	 */
-	public String getName() {
-		return Messages.serverEditorOverviewServerHostnameCommand;
 	}
 
 	/**

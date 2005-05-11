@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -44,10 +46,9 @@ import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.command.*;
-import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
-import org.eclipse.wst.server.ui.internal.task.SaveRuntimeTask;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
+import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * Server general editor page.
@@ -72,10 +73,6 @@ public class OverviewEditorPart extends ServerEditorPart {
 	 */
 	public OverviewEditorPart() {
 		super();
-	}
-
-	protected ICommandManager getCommandManager() {
-		return commandManager;
 	}
 
 	/**
@@ -177,7 +174,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 					if (updating)
 						return;
 					updating = true;
-					getCommandManager().executeCommand(new SetServerNameCommand(getServer(), serverName.getText()));
+					execute(new SetServerNameCommand(getServer(), serverName.getText()));
 					updating = false;
 				}
 			});
@@ -196,7 +193,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 					if (updating)
 						return;
 					updating = true;
-					getCommandManager().executeCommand(new SetServerHostnameCommand(getServer(), hostname.getText()));
+					execute(new SetServerHostnameCommand(getServer(), hostname.getText()));
 					updating = false;
 				}
 			});
@@ -234,7 +231,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 								return;
 							updating = true;
 							IRuntime newRuntime = runtimes[runtimeCombo.getSelectionIndex()];
-							getCommandManager().executeCommand(new SetServerRuntimeCommand(getServer(), newRuntime));
+							execute(new SetServerRuntimeCommand(getServer(), newRuntime));
 							updating = false;
 						} catch (Exception ex) {
 							// ignore
@@ -303,7 +300,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 					if (updating)
 						return;
 					updating = true;
-					getCommandManager().executeCommand(new SetServerAutoPublishDefaultCommand(getServer(), autoPublishDefault.getSelection()));
+					execute(new SetServerAutoPublishDefaultCommand(getServer(), autoPublishDefault.getSelection()));
 					updating = false;
 					autoPublishTime.setEnabled(autoPublishOverride.getSelection());
 				}
@@ -325,7 +322,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 						return;
 					updating = true;
 					try {
-						getCommandManager().executeCommand(new SetServerAutoPublishTimeCommand(getServer(), autoPublishTime.getSelection()));
+						execute(new SetServerAutoPublishTimeCommand(getServer(), autoPublishTime.getSelection()));
 					} catch (Exception ex) {
 						// ignore
 					}
@@ -379,7 +376,11 @@ public class OverviewEditorPart extends ServerEditorPart {
 					}
 				});
 				list.add(fragment2);
-				list.add(new FinishWizardFragment(new SaveRuntimeTask()));
+				list.add(new WizardFragment() {
+					public void performFinish(IProgressMonitor monitor) throws CoreException {
+						WizardTaskUtil.saveRuntime(getTaskModel(), monitor);
+					}
+				});
 			}
 		};
 		

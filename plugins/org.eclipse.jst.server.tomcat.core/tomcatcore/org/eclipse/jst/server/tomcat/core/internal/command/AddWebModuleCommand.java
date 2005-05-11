@@ -27,34 +27,16 @@ public class AddWebModuleCommand extends ConfigurationCommand {
 	 * @param module a web module
 	 */
 	public AddWebModuleCommand(ITomcatConfigurationWorkingCopy configuration, WebModule module) {
-		super(configuration);
+		super(configuration, Messages.configurationEditorActionAddWebModule);
 		this.module = module;
 	}
 
 	/**
 	 * Execute the command.
-	 * @return boolean
 	 */
-	public boolean execute() {
+	public void execute() {
 		modules = configuration.getWebModules().size();
 		configuration.addWebModule(-1, module);
-		return true;
-	}
-
-	/**
-	 * Returns this command's description.
-	 * @return java.lang.String
-	 */
-	public String getDescription() {
-		return Messages.configurationEditorActionAddWebModuleDescription;
-	}
-
-	/**
-	 * Returns this command's label.
-	 * @return java.lang.String
-	 */
-	public String getName() {
-		return Messages.configurationEditorActionAddWebModule;
 	}
 
 	/**

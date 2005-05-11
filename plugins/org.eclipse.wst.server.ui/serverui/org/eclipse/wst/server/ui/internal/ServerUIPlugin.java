@@ -24,19 +24,15 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.internal.IPublishListener;
-import org.eclipse.wst.server.core.internal.PublishAdapter;
-import org.eclipse.wst.server.core.internal.Server;
-import org.eclipse.wst.server.core.internal.ServerType;
+import org.eclipse.wst.server.core.internal.*;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 import org.eclipse.wst.server.ui.internal.editor.IServerEditorInput;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorInput;
-import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
-import org.eclipse.wst.server.ui.internal.task.InputWizardFragment;
-import org.eclipse.wst.server.ui.internal.task.SaveRuntimeTask;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
+import org.eclipse.wst.server.ui.internal.wizard.InputWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
+import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewRuntimeWizardFragment;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 
@@ -533,7 +529,11 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		WizardFragment fragment = new WizardFragment() {
 			protected void createChildFragments(List list) {
 				list.add(new NewRuntimeWizardFragment(type, version, runtimeTypeId));
-				list.add(new FinishWizardFragment(new SaveRuntimeTask()));
+				list.add(new WizardFragment() {
+					public void performFinish(IProgressMonitor monitor) throws CoreException {
+						WizardTaskUtil.saveRuntime(getTaskModel(), monitor);
+					}
+				});
 			}
 		};
 		TaskWizard wizard = new TaskWizard(Messages.wizNewRuntimeWizardTitle, fragment);
@@ -560,7 +560,11 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 					protected void createChildFragments(List list) {
 						list.add(new InputWizardFragment(TaskModel.TASK_RUNTIME, runtime));
 						list.add(getWizardFragment(runtimeTypeId));
-						list.add(new FinishWizardFragment(new SaveRuntimeTask()));
+						list.add(new WizardFragment() {
+							public void performFinish(IProgressMonitor monitor) throws CoreException {
+								WizardTaskUtil.saveRuntime(getTaskModel(), monitor);
+							}
+						});
 					}
 				};
 				TaskWizard wizard = new TaskWizard(Messages.wizNewRuntimeWizardTitle, fragment);

@@ -22,35 +22,17 @@ public class ModifyWebModuleCommand extends ConfigurationCommand {
 	protected WebModule newModule;
 
 	public ModifyWebModuleCommand(ITomcatConfigurationWorkingCopy configuration, int index, WebModule module) {
-		super(configuration);
+		super(configuration, Messages.configurationEditorActionModifyWebModule);
 		this.index = index;
 		newModule = module;
 	}
 
 	/**
 	 * Execute the command.
-	 * @return boolean
 	 */
-	public boolean execute() {
+	public void execute() {
 		oldModule = (WebModule) configuration.getWebModules().get(index);
 		configuration.modifyWebModule(index, newModule.getDocumentBase(), newModule.getPath(), newModule.isReloadable());
-		return true;
-	}
-
-	/**
-	 * Returns this command's description.
-	 * @return java.lang.String
-	 */
-	public String getDescription() {
-		return Messages.configurationEditorActionModifyWebModuleDescription;
-	}
-
-	/**
-	 * Returns this command's label.
-	 * @return java.lang.String
-	 */
-	public String getName() {
-		return Messages.configurationEditorActionModifyWebModule;
 	}
 
 	/**

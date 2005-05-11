@@ -18,10 +18,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.TaskModel;
-import org.eclipse.wst.server.core.util.Task;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.task.*;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
@@ -45,14 +43,18 @@ public class NewServerWizard extends TaskWizard implements INewWizard {
 				if (ids != null)
 					list.add(new InputWizardFragment(ids, values));
 				list.add(new NewServerWizardFragment());
-				list.add(new FinishWizardFragment(new TempSaveRuntimeTask()));
-				list.add(new FinishWizardFragment(new TempSaveServerTask()));
+				list.add(new WizardFragment() {
+					public void performFinish(IProgressMonitor monitor) throws CoreException {
+						WizardTaskUtil.tempSaveRuntime(getTaskModel(), monitor);
+						WizardTaskUtil.tempSaveServer(getTaskModel(), monitor);
+					}
+				});
 				list.add(new ModifyModulesWizardFragment());
 				list.add(new TasksWizardFragment());
-				list.add(new FinishWizardFragment(new SaveRuntimeTask()));
-				list.add(new FinishWizardFragment(new SaveServerTask()));
-				list.add(new FinishWizardFragment(new Task() {
-					public void execute(IProgressMonitor monitor) throws CoreException {
+				list.add(new WizardFragment() {
+					public void performFinish(IProgressMonitor monitor) throws CoreException {
+						WizardTaskUtil.saveRuntime(getTaskModel(), monitor);
+						WizardTaskUtil.saveServer(getTaskModel(), monitor);
 						try {
 							IServer server = (IServer) getTaskModel().getObject(TaskModel.TASK_SERVER);
 							ServerUIPlugin.getPreferences().addHostname(server.getHost());
@@ -60,7 +62,7 @@ public class NewServerWizard extends TaskWizard implements INewWizard {
 							// ignore
 						}
 					}
-				}));
+				});
 			}
 		});
 		

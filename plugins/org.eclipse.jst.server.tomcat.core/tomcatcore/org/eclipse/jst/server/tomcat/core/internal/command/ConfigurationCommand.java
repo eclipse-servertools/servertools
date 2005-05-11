@@ -10,36 +10,44 @@
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal.command;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.AbstractOperation;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfigurationWorkingCopy;
-import org.eclipse.wst.server.core.util.Task;
 /**
  * Configuration command.
  */
-public abstract class ConfigurationCommand extends Task {
+public abstract class ConfigurationCommand extends AbstractOperation {
 	protected ITomcatConfigurationWorkingCopy configuration;
 
 	/**
 	 * ConfigurationCommand constructor comment.
 	 * 
 	 * @param configuration a Tomcat configuration
+	 * @param label a label
 	 */
-	public ConfigurationCommand(ITomcatConfigurationWorkingCopy configuration) {
-		super();
+	public ConfigurationCommand(ITomcatConfigurationWorkingCopy configuration, String label) {
+		super(label);
 		this.configuration = configuration;
 	}
 
-	/**
-	 * Returns true if this command can be undone.
-	 * @return boolean
-	 */
-	public boolean canUndo() {
-		return true;
+	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+		return execute(monitor, info);
 	}
-	
-	public abstract boolean execute();
-	
-	public void execute(IProgressMonitor monitor) {
+
+	public abstract void execute();
+
+	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 		execute();
+		return null;
+	}
+
+	public abstract void undo();
+
+	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+		undo();
+		return null;
 	}
 }

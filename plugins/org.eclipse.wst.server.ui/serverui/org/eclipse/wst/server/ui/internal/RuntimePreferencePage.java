@@ -45,11 +45,10 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.IRuntimeLocator;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
-import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
-import org.eclipse.wst.server.ui.internal.task.SaveRuntimeTask;
 import org.eclipse.wst.server.ui.internal.viewers.RuntimeComposite;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
+import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewRuntimeWizardFragment;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
@@ -325,7 +324,11 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 			fragment = new WizardFragment() {
 				protected void createChildFragments(List list) {
 					list.add(new NewRuntimeWizardFragment());
-					list.add(new FinishWizardFragment(new SaveRuntimeTask()));
+					list.add(new WizardFragment() {
+						public void performFinish(IProgressMonitor monitor) throws CoreException {
+							WizardTaskUtil.saveRuntime(getTaskModel(), monitor);
+						}
+					});
 				}
 			};
 		} else {
@@ -343,7 +346,11 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 						}
 					});
 					list.add(fragment2);
-					list.add(new FinishWizardFragment(new SaveRuntimeTask()));
+					list.add(new WizardFragment() {
+						public void performFinish(IProgressMonitor monitor) throws CoreException {
+							WizardTaskUtil.saveRuntime(getTaskModel(), monitor);
+						}
+					});
 				}
 			};
 		}

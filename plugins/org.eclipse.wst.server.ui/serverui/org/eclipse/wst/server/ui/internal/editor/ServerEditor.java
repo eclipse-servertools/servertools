@@ -15,6 +15,7 @@ import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.List;
 
+import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.*;
@@ -132,6 +133,8 @@ public class ServerEditor extends MultiPageEditorPart {
 	
 	// Used for disabling resource change check when saving through editor.
 	protected boolean isSaving = false;
+	
+	protected static Map pageToFactory = new HashMap();
 
 	/**
 	 * ServerEditor constructor comment.
@@ -190,6 +193,15 @@ public class ServerEditor extends MultiPageEditorPart {
 		editorActions = new IAction[actionList.size()];
 		actionList.toArray(editorActions);
 	}
+	
+	public static IServerEditorPartFactory getPageFactory(ServerEditorPart part) {
+		try {
+			return (IServerEditorPartFactory) pageToFactory.get(part);
+		} catch (Exception e) {
+			// ignore
+		}
+		return null;
+	}
 
 	/**
 	 * Creates the pages of this multi-page editor.
@@ -217,10 +229,7 @@ public class ServerEditor extends MultiPageEditorPart {
 					try {
 						IEditorPart page = factory.createPage();
 						if (page != null) {
-							if (page instanceof ServerEditorPart) {
-								ServerEditorPart srep = (ServerEditorPart) page;
-								srep.setPageFactory(factory);
-							}
+							pageToFactory.put(page, factory);
 							index = addPage(page, editorPartInput);
 							serverPages.add(page);
 		
@@ -688,7 +697,7 @@ public class ServerEditor extends MultiPageEditorPart {
 		commandManager.addPropertyChangeListener(listener);
 		
 		// create editor input
-		ICommandManager serverCommandManager = null;
+		ServerResourceCommandManager serverCommandManager = null;
 		if (server != null)
 			serverCommandManager = new ServerResourceCommandManager(this, serverId, commandManager);
 		editorPartInput = commandManager.getPartInput(serverId, serverCommandManager);
@@ -739,17 +748,17 @@ public class ServerEditor extends MultiPageEditorPart {
 	 * Update the undo action.
 	 */
 	protected void updateUndoAction() {
-		ITask command = commandManager.getUndoCommand(serverId);
+		IUndoableOperation command = commandManager.getUndoCommand(serverId);
 		if (command == null) {
 			undoAction.setText(Messages.editorUndoDisabled);
 			undoAction.setToolTipText("");
 			undoAction.setDescription("");
 			undoAction.setEnabled(false);
 		} else {
-			String text = NLS.bind(Messages.editorUndoEnabled, new Object[] {command.getName()});
+			String text = NLS.bind(Messages.editorUndoEnabled, new Object[] {command.getLabel()});
 			undoAction.setText(text);
-			undoAction.setToolTipText(command.getDescription());
-			undoAction.setDescription(command.getDescription());
+			undoAction.setToolTipText(command.getLabel());
+			undoAction.setDescription(command.getLabel());
 			undoAction.setEnabled(true);
 		}
 	}
@@ -758,17 +767,17 @@ public class ServerEditor extends MultiPageEditorPart {
 	 * Update the redo action.
 	 */
 	protected void updateRedoAction() {
-		ITask command = commandManager.getRedoCommand(serverId);
+		IUndoableOperation command = commandManager.getRedoCommand(serverId);
 		if (command == null) {
 			redoAction.setText(Messages.editorRedoDisabled);
 			redoAction.setToolTipText("");
 			redoAction.setDescription("");
 			redoAction.setEnabled(false);
 		} else {
-			String text = NLS.bind(Messages.editorRedoEnabled, new Object[] {command.getName()});
+			String text = NLS.bind(Messages.editorRedoEnabled, new Object[] {command.getLabel()});
 			redoAction.setText(text);
-			redoAction.setToolTipText(command.getDescription());
-			redoAction.setDescription(command.getDescription());
+			redoAction.setToolTipText(command.getLabel());
+			redoAction.setDescription(command.getLabel());
 			redoAction.setEnabled(true);
 		}
 	}
@@ -814,7 +823,7 @@ public class ServerEditor extends MultiPageEditorPart {
 	 */
 	protected void refresh() {
 		// create editor input
-		ICommandManager serverCommandManager = null;
+		ServerResourceCommandManager serverCommandManager = null;
 		if (server != null)
 			serverCommandManager = new ServerResourceCommandManager(this, serverId, commandManager);
 		editorPartInput = commandManager.getPartInput(serverId, serverCommandManager);

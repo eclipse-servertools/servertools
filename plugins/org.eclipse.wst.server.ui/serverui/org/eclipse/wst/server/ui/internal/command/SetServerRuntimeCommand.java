@@ -27,34 +27,16 @@ public class SetServerRuntimeCommand extends ServerCommand {
 	 * @param runtime a server runtime
 	 */
 	public SetServerRuntimeCommand(IServerWorkingCopy server, IRuntime runtime) {
-		super(server);
+		super(server, Messages.serverEditorOverviewRuntimeCommand);
 		this.runtime = runtime;
 	}
 
 	/**
 	 * Execute the command.
-	 * @return boolean
 	 */
-	public boolean execute() {
+	public void execute() {
 		oldRuntime = server.getRuntime();
 		server.setRuntime(runtime);
-		return true;
-	}
-
-	/**
-	 * Returns this command's description.
-	 * @return java.lang.String
-	 */
-	public String getDescription() {
-		return Messages.serverEditorOverviewRuntimeDescription;
-	}
-
-	/**
-	 * Returns this command's label.
-	 * @return java.lang.String
-	 */
-	public String getName() {
-		return Messages.serverEditorOverviewRuntimeCommand;
 	}
 
 	/**

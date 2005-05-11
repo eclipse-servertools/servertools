@@ -26,34 +26,16 @@ public class SetDebugModeCommand extends ServerCommand {
 	 * @param debug <code>true</code> for debug mode
 	 */
 	public SetDebugModeCommand(ITomcatServerWorkingCopy server, boolean debug) {
-		super(server);
+		super(server, Messages.serverEditorActionSetDebugMode);
 		this.debug = debug;
 	}
 
 	/**
 	 * Execute the command.
-	 * @return boolean
 	 */
-	public boolean execute() {
+	public void execute() {
 		oldDebug = server.isDebug();
 		server.setDebug(debug);
-		return true;
-	}
-
-	/**
-	 * Returns this command's description.
-	 * @return java.lang.String
-	 */
-	public String getDescription() {
-		return Messages.serverEditorActionSetDebugModeDescription;
-	}
-
-	/**
-	 * Returns this command's label.
-	 * @return java.lang.String
-	 */
-	public String getName() {
-		return Messages.serverEditorActionSetDebugMode;
 	}
 
 	/**

@@ -27,34 +27,16 @@ public class RemoveMimeMappingCommand extends ConfigurationCommand {
 	 * @param index an index
 	 */
 	public RemoveMimeMappingCommand(ITomcatConfigurationWorkingCopy configuration, int index) {
-		super(configuration);
+		super(configuration, Messages.configurationEditorActionRemoveMimeMapping);
 		this.index = index;
 	}
 
 	/**
 	 * Execute the command.
-	 * @return boolean
 	 */
-	public boolean execute() {
+	public void execute() {
 		mapping = (MimeMapping) configuration.getMimeMappings().get(index);
 		configuration.removeMimeMapping(index);
-		return true;
-	}
-
-	/**
-	 * Returns this command's description.
-	 * @return java.lang.String
-	 */
-	public String getDescription() {
-		return Messages.configurationEditorActionRemoveMimeMappingDescription;
-	}
-
-	/**
-	 * Returns this command's label.
-	 * @return java.lang.String
-	 */
-	public String getName() {
-		return Messages.configurationEditorActionRemoveMimeMapping;
 	}
 
 	/**

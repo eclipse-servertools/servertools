@@ -13,12 +13,14 @@ package org.eclipse.wst.server.ui.internal.wizard.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.IModuleVisitor;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.internal.Trace;
-import org.eclipse.wst.server.ui.internal.task.ModifyModulesTask;
+import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.internal.wizard.page.ModifyModulesComposite;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
@@ -27,7 +29,6 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
  */
 public class ModifyModulesWizardFragment extends WizardFragment {
 	protected ModifyModulesComposite comp;
-	protected ModifyModulesTask task;
 	
 	protected IModule module;
 
@@ -112,18 +113,9 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 			taskModel.putObject(TaskModel.TASK_MODULES, moduleList);
 		}
 	}
-
-	public void exit() {
-		if (comp != null) {
-			createFinishTask();
-			task.setAddModules(comp.getModulesToAdd());
-			task.setRemoveModules(comp.getModulesToRemove());
-		}
-	}
-
-	public ITask createFinishTask() {
-		if (task == null)
-			task = new ModifyModulesTask(); 
-		return task;
+	
+	public void performFinish(IProgressMonitor monitor) throws CoreException {
+		if (comp != null)
+			WizardTaskUtil.modifyModules(comp.getModulesToAdd(), comp.getModulesToRemove(), getTaskModel(), monitor);
 	}
 }

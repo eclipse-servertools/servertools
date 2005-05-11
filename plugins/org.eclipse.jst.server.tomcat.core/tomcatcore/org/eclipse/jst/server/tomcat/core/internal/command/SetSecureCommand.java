@@ -26,34 +26,16 @@ public class SetSecureCommand extends ServerCommand {
 	 * @param secure <code>true</code> for security on
 	 */
 	public SetSecureCommand(ITomcatServerWorkingCopy server, boolean secure) {
-		super(server);
+		super(server, Messages.serverEditorActionSetSecure);
 		this.secure = secure;
 	}
 
 	/**
 	 * Execute the command.
-	 * @return boolean
 	 */
-	public boolean execute() {
+	public void execute() {
 		oldSecure = server.isSecure();
 		server.setSecure(secure);
-		return true;
-	}
-
-	/**
-	 * Returns this command's description.
-	 * @return java.lang.String
-	 */
-	public String getDescription() {
-		return Messages.serverEditorActionSetSecureDescription;
-	}
-
-	/**
-	 * Returns this command's label.
-	 * @return java.lang.String
-	 */
-	public String getName() {
-		return Messages.serverEditorActionSetSecure;
 	}
 
 	/**

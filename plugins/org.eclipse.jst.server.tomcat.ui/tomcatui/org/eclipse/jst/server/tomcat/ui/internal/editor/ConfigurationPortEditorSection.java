@@ -171,7 +171,7 @@ public class ConfigurationPortEditorSection extends ServerEditorSection {
 					Item item = (Item) element;
 					ServerPort sp = (ServerPort) item.getData();
 					int port = Integer.parseInt((String) value);
-					commandManager.executeCommand(new ModifyPortCommand(tomcatConfiguration, sp.getId(), port));
+					execute(new ModifyPortCommand(tomcatConfiguration, sp.getId(), port));
 				} catch (Exception ex) {
 					// ignore
 				}

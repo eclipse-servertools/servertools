@@ -27,6 +27,7 @@ public abstract class LaunchableAdapterDelegate {
 	 * 
 	 * @param server the server
 	 * @param moduleArtifact a module artifact
+	 * [issue: if the launchable object cannot be found, should it throw a CoreExcpetion or return null?]
 	 * @return the launchable object
 	 * @throws CoreException if there was an error doing the conversion
 	 */

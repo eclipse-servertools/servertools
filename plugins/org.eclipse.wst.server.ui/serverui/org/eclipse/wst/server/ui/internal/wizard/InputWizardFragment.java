@@ -8,30 +8,39 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.ui.internal.task;
+package org.eclipse.wst.server.ui.internal.wizard;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.util.Task;
+import org.eclipse.wst.server.core.TaskModel;
+import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * 
  */
-public class InputTask extends Task {
+public class InputWizardFragment extends WizardFragment {
 	protected String[] ids;
 	protected Object[] values;
 	
-	public InputTask(String id, Object value) {
+	public InputWizardFragment(String id, Object value) {
 		this(new String[] { id }, new Object[] { value });
 	}
 
-	public InputTask(String[] ids, Object[] values) {
+	public InputWizardFragment(String[] ids, Object[] values) {
 		this.ids = ids;
 		this.values = values;
 	}
 	
-	public void execute(IProgressMonitor monitor) {
+	/*public void enter() {
 		int size = ids.length;
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < size; i++)
 			getTaskModel().putObject(ids[i], values[i]);
-		}
+	}*/
+	
+	public void setTaskModel(TaskModel taskModel) {
+		super.setTaskModel(taskModel);
+		if (taskModel == null)
+			return;
+		
+		int size = ids.length;
+		for (int i = 0; i < size; i++)
+			taskModel.putObject(ids[i], values[i]);
 	}
 }

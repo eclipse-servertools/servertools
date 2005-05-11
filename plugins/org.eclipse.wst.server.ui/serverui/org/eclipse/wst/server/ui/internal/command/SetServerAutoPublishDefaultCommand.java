@@ -27,35 +27,17 @@ public class SetServerAutoPublishDefaultCommand extends ServerCommand {
 	 * @param time <code>true</code> to use the default time
 	 */
 	public SetServerAutoPublishDefaultCommand(IServerWorkingCopy server, boolean time) {
-		super(server);
+		super(server, Messages.serverEditorOverviewAutoPublishCommand);
 		this.time = time;
 	}
 
 	/**
 	 * Execute the command.
-	 * @return boolean
 	 */
-	public boolean execute() {
+	public void execute() {
 		ServerWorkingCopy swc = (ServerWorkingCopy) server;
 		oldTime = swc.getAutoPublishDefault();
 		swc.setAutoPublishDefault(time);
-		return true;
-	}
-
-	/**
-	 * Returns this command's description.
-	 * @return java.lang.String
-	 */
-	public String getDescription() {
-		return Messages.serverEditorOverviewAutoPublishDescription;
-	}
-
-	/**
-	 * Returns this command's label.
-	 * @return java.lang.String
-	 */
-	public String getName() {
-		return Messages.serverEditorOverviewAutoPublishCommand;
 	}
 
 	/**

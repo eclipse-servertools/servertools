@@ -140,7 +140,7 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 				MimeMappingDialog dialog = new MimeMappingDialog(getShell());
 				dialog.open();
 				if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
-					commandManager.executeCommand(new AddMimeMappingCommand(tomcatConfiguration, dialog.getMimeMapping()));
+					execute(new AddMimeMappingCommand(tomcatConfiguration, dialog.getMimeMapping()));
 				}
 			}
 		});
@@ -159,7 +159,7 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 				MimeMappingDialog dialog = new MimeMappingDialog(getShell(), (MimeMapping) tomcatConfiguration.getMimeMappings().get(index));
 				dialog.open();
 				if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
-					commandManager.executeCommand(new ModifyMimeMappingCommand(tomcatConfiguration, index, dialog.getMimeMapping()));
+					execute(new ModifyMimeMappingCommand(tomcatConfiguration, index, dialog.getMimeMapping()));
 				}
 			}
 		});
@@ -175,7 +175,7 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 			public void widgetSelected(SelectionEvent e) {
 				if (index < 0)
 					return;
-				commandManager.executeCommand(new RemoveMimeMappingCommand(tomcatConfiguration, index));
+				execute(new RemoveMimeMappingCommand(tomcatConfiguration, index));
 				index = -1;
 				edit.setEnabled(false);
 				remove.setEnabled(false);

@@ -12,12 +12,11 @@ package org.eclipse.wst.server.ui.internal.wizard;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.task.FinishWizardFragment;
-import org.eclipse.wst.server.ui.internal.task.InputWizardFragment;
-import org.eclipse.wst.server.ui.internal.task.SaveServerTask;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
@@ -39,7 +38,11 @@ public class SelectTasksWizard extends TaskWizard {
 				list.add(new InputWizardFragment(new String[] { TaskModel.TASK_SERVER }, new Object[] { server }));
 				fragment = new TasksWizardFragment();
 				list.add(fragment);
-				list.add(new FinishWizardFragment(new SaveServerTask()));
+				list.add(new WizardFragment() {
+					public void performFinish(IProgressMonitor monitor) throws CoreException {
+						WizardTaskUtil.saveServer(getTaskModel(), monitor);
+					}
+				});
 			}
 		});
 		addPages();

@@ -12,6 +12,7 @@ package org.eclipse.wst.server.ui.editor;
 
 import java.util.*;
 
+import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Composite;
@@ -21,9 +22,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.ui.internal.editor.IServerEditorPageSectionFactory;
-import org.eclipse.wst.server.ui.internal.editor.IServerEditorPartFactory;
-import org.eclipse.wst.server.ui.internal.editor.ServerEditorCore;
+import org.eclipse.wst.server.ui.internal.editor.*;
 /**
  * An abstract server editor which implements the most common methods
  * from IEditorPart.
@@ -38,33 +37,29 @@ public abstract class ServerEditorPart extends EditorPart {
 	 * Property change id for the error message.
 	 */
 	public static final int PROP_ERROR = 5;
-	
+
 	private String errorMessage = null;
-	
 	private Map sectionToInsertionId = null;
 	private List sections = null;
-	
-	protected IServerEditorPartFactory pageFactory;
-	protected IServerWorkingCopy server;
-	protected ICommandManager commandManager;
-	protected boolean readOnly;
-	
+	private ServerResourceCommandManager commandManager;
 	private FormToolkit toolkit;
+	
+	/**
+	 * The server currently being edited.
+	 */
+	protected IServerWorkingCopy server;
+	
+	/**
+	 * <code>true</code> if the server is read-only, and <code>false</code>
+	 * otherwise.
+	 */
+	protected boolean readOnly;
 
 	/**
 	 * Create a new server editor part.
 	 */
 	public ServerEditorPart() {
 		super();
-	}
-
-	/**
-	 * Sets the editor part factory for this page.
-	 * 
-	 * @param pageFactory the part factory
-	 */
-	public void setPageFactory(IServerEditorPartFactory pageFactory) {
-		this.pageFactory = pageFactory;
 	}
 
 	/**
@@ -127,7 +122,7 @@ public abstract class ServerEditorPart extends EditorPart {
 		if (errorMessage == null) {
 			Iterator iterator = getSections().iterator();
 			while (iterator.hasNext()) {
-				IServerEditorSection section = (IServerEditorSection) iterator.next();
+				ServerEditorSection section = (ServerEditorSection) iterator.next();
 				String error = section.getErrorMessage();
 				if (error != null)
 					return error;
@@ -147,7 +142,7 @@ public abstract class ServerEditorPart extends EditorPart {
 		Iterator iterator = getSections().iterator();
 		List list = new ArrayList();
 		while (iterator.hasNext()) {
-			IServerEditorSection section = (IServerEditorSection) iterator.next();
+			ServerEditorSection section = (ServerEditorSection) iterator.next();
 			IStatus[] status = section.getSaveStatus();
 			if (status != null) {
 				int size = status.length;
@@ -171,16 +166,16 @@ public abstract class ServerEditorPart extends EditorPart {
 				IServerEditorPageSectionFactory factory = (IServerEditorPageSectionFactory) iterator.next();
 				String insertionId = factory.getInsertionId();
 				
+				IServerEditorPartFactory pageFactory = ServerEditor.getPageFactory(this);
 				if (pageFactory.supportsInsertionId(insertionId)) {
 					String serverTypeId = null;
 					if (server != null) 
 						serverTypeId = server.getServerType().getId();
 					if (serverTypeId != null && factory.supportsType(serverTypeId)
 							&& factory.shouldCreateSection(server)) {
-						IServerEditorSection section = factory.createSection();
+						ServerEditorSection section = factory.createSection();
 						if (section != null) {
-							if (section instanceof ServerEditorSection)
-								((ServerEditorSection) section).setServerEditorPart(this);
+							section.setServerEditorPart(this);
 							sections.add(section);
 							List list = null;
 							try {
@@ -227,15 +222,25 @@ public abstract class ServerEditorPart extends EditorPart {
 		if (input instanceof IServerEditorPartInput) {
 			IServerEditorPartInput sepi = (IServerEditorPartInput) input;
 			server = sepi.getServer();
-			commandManager = sepi.getServerCommandManager();
+			commandManager = ((ServerEditorPartInput) sepi).getServerCommandManager();
 			readOnly = sepi.isServerReadOnly();
 		}
 		
 		Iterator iterator = getSections().iterator();
 		while (iterator.hasNext()) {
-			IServerEditorSection section = (IServerEditorSection) iterator.next();
+			ServerEditorSection section = (ServerEditorSection) iterator.next();
 			section.init(site, input);
 		}
+	}
+	
+	/**
+	 * Executes the given operation and adds it to the operation history
+	 * with the correct context.
+	 * 
+	 * @param operation an operation ready to be executed
+	 */
+	public void execute(IUndoableOperation operation) {
+		commandManager.execute(operation);
 	}
 
 	/**
@@ -259,7 +264,7 @@ public abstract class ServerEditorPart extends EditorPart {
 		
 		Iterator iterator = getSections(id).iterator();
 		while (iterator.hasNext()) {
-			IServerEditorSection section = (IServerEditorSection) iterator.next();
+			ServerEditorSection section = (ServerEditorSection) iterator.next();
 			section.createSection(parent);
 		}
 	}
@@ -272,7 +277,7 @@ public abstract class ServerEditorPart extends EditorPart {
 
 		Iterator iterator = getSections().iterator();
 		while (iterator.hasNext()) {
-			IServerEditorSection section = (IServerEditorSection) iterator.next();
+			ServerEditorSection section = (ServerEditorSection) iterator.next();
 			section.dispose();
 		}
 		

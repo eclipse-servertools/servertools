@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.editor;
 
+import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -18,38 +19,55 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.ui.internal.editor.ServerEditorPartInput;
+import org.eclipse.wst.server.ui.internal.editor.ServerResourceCommandManager;
 /**
- * 
+ * An abstract server editor section.
  * 
  * @since 1.0
  */
-public abstract class ServerEditorSection implements IServerEditorSection {
+public abstract class ServerEditorSection {
 	private String errorMessage = null;
 
-	/**
-	 * The server working copy.
-	 */
-	public IServerWorkingCopy server;
+	private ServerResourceCommandManager commandManager;
+
+	private Composite parentComp;
+	private ServerEditorPart editor;
 
 	/**
-	 * The command manager.
+	 * The server currently being edited.
 	 */
-	public ICommandManager commandManager;
+	protected IServerWorkingCopy server;
 
+	/**
+	 * <code>true</code> if the server is read-only, and <code>false</code>
+	 * otherwise.
+	 */
 	protected boolean readOnly;
-	protected Composite parentComp;
-	protected ServerEditorPart editor;
 
 	/**
-	 * @see org.eclipse.wst.server.ui.editor.IServerEditorSection#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
+	 * Initialize the section.
+	 * 
+	 * @param site the editor site
+	 * @param input the editor input
 	 */
 	public void init(IEditorSite site, IEditorInput input) {
 		if (input instanceof IServerEditorPartInput) {
 			IServerEditorPartInput sepi = (IServerEditorPartInput) input;
 			server = sepi.getServer();
-			commandManager = sepi.getServerCommandManager();
+			commandManager = ((ServerEditorPartInput) sepi).getServerCommandManager();
 			readOnly = sepi.isServerReadOnly();
 		}
+	}
+
+	/**
+	 * Executes the given operation and adds it to the operation history
+	 * with the correct context.
+	 * 
+	 * @param operation an operation ready to be executed
+	 */
+	public void execute(IUndoableOperation operation) {
+		commandManager.execute(operation);
 	}
 
 	/**
@@ -84,7 +102,9 @@ public abstract class ServerEditorSection implements IServerEditorSection {
 	 * server resource is saved. If there are any error messages, the
 	 * user will be unable to save the editor.
 	 * 
-	 * @return org.eclipse.core.runtime.IStatus
+	 * @return a status object with code <code>IStatus.OK</code> if this
+	 *   server can be saved, otherwise a status object indicating why
+	 *   it can't be
 	 */
 	public IStatus[] getSaveStatus() {
 		return null;
@@ -123,12 +143,12 @@ public abstract class ServerEditorSection implements IServerEditorSection {
 	 * @param display
 	 * @return FormToolkit
 	 */
-	public FormToolkit getFormToolkit(Display display) {
+	protected FormToolkit getFormToolkit(Display display) {
 		return editor.getFormToolkit(display);
 	}
 
 	/**
-	 * @see IServerEditorSection#dispose()
+	 * Disposes of the section.
 	 */
 	public void dispose() {
 		// ignore

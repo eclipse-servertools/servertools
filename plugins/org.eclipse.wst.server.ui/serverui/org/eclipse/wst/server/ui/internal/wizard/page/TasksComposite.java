@@ -13,7 +13,7 @@ package org.eclipse.wst.server.ui.internal.wizard.page;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.wst.server.core.IOptionalTask;
+import org.eclipse.wst.server.core.model.PublishOperation;
 import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
@@ -92,7 +92,7 @@ public class TasksComposite extends Composite {
 			Object obj = tasks.get(i);
 			final TasksWizardFragment.TaskInfo sti = (TasksWizardFragment.TaskInfo) obj;
 			final Button checkbox = new Button(this, SWT.CHECK | SWT.WRAP);
-			checkbox.setText(sti.task2.getName());
+			checkbox.setText(sti.task2.getLabel());
 			checkbox.setFocus();
 		
 			checkbox.addSelectionListener(new SelectionListener() {
@@ -107,13 +107,14 @@ public class TasksComposite extends Composite {
 			Label description = new Label(this, SWT.WRAP);
 			description.setText(sti.task2.getDescription());
 			
-			int status = sti.status;
-			if (status == IOptionalTask.TASK_COMPLETED) {
+			int kind = sti.kind;
+			/*if (kind == PublishOperation.TASK_COMPLETED) {
 				checkbox.setEnabled(false);
 				description.setEnabled(false);
-			} else if (status == IOptionalTask.TASK_PREFERRED) {
+			} else*/ 
+			if (kind == PublishOperation.PREFERRED) {
 				checkbox.setSelection(true);
-			} else if (status == IOptionalTask.TASK_MANDATORY) {
+			} else if (kind == PublishOperation.REQUIRED) {
 				checkbox.setSelection(true);
 				checkbox.setEnabled(false);
 				description.setEnabled(false);

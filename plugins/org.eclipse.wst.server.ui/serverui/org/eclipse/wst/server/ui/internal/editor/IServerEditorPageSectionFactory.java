@@ -11,7 +11,7 @@
 package org.eclipse.wst.server.ui.internal.editor;
 
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.ui.editor.IServerEditorSection;
+import org.eclipse.wst.server.ui.editor.ServerEditorSection;
 /**
  *
  */
@@ -50,5 +50,5 @@ public interface IServerEditorPageSectionFactory extends IOrdered {
 	 * 
 	 * @return the section
 	 */
-	public IServerEditorSection createSection();
+	public ServerEditorSection createSection();
 }

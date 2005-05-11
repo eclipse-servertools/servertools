@@ -120,7 +120,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 				if (updating)
 					return;
 				updating = true;
-				commandManager.executeCommand(new SetTestEnvironmentCommand(tomcatServer, testEnvironment.getSelection()));
+				execute(new SetTestEnvironmentCommand(tomcatServer, testEnvironment.getSelection()));
 				updating = false;
 			}
 		});
@@ -136,7 +136,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 				if (updating)
 					return;
 				updating = true;
-				commandManager.executeCommand(new SetSecureCommand(tomcatServer, secure.getSelection()));
+				execute(new SetSecureCommand(tomcatServer, secure.getSelection()));
 				updating = false;
 			}
 		});
@@ -152,7 +152,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 				if (updating)
 					return;
 				updating = true;
-				commandManager.executeCommand(new SetDebugModeCommand(tomcatServer, debug.getSelection()));
+				execute(new SetDebugModeCommand(tomcatServer, debug.getSelection()));
 				updating = false;
 			}
 		});

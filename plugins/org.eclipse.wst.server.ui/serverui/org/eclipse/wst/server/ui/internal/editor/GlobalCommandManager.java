@@ -19,14 +19,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
-import org.eclipse.wst.server.ui.editor.ICommandManager;
 import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -41,7 +41,7 @@ public class GlobalCommandManager {
 	private static final int MAX_HISTORY = 200;
 
 	class ServerResourceCommand {
-		ITask command;
+		IUndoableOperation command;
 		String id;
 	}
 	
@@ -246,7 +246,7 @@ public class GlobalCommandManager {
 		return (info != null && info.count == 1);
 	}
 	
-	protected IServerEditorPartInput getPartInput(String serverId, ICommandManager serverCommandManager) {
+	protected IServerEditorPartInput getPartInput(String serverId, ServerResourceCommandManager serverCommandManager) {
 		CommandManagerInfo serverInfo = null;
 		IServerWorkingCopy server = null;
 		boolean serverReadOnly = false;
@@ -281,7 +281,7 @@ public class GlobalCommandManager {
 	 * @param id an id
 	 * @param command a task
 	 */
-	public void executeCommand(String id, ITask command) {
+	public void executeCommand(String id, IUndoableOperation command) {
 		if (!command.canUndo() && !undoList.isEmpty() && ServerUIPlugin.getPreferences().getPromptBeforeIrreversibleChange()) {
 			try {
 				Display d = Display.getCurrent();
@@ -301,8 +301,8 @@ public class GlobalCommandManager {
 		src.command = command;
 
 		try {
-			command.execute(new NullProgressMonitor());
-		} catch (CoreException ce) {
+			command.execute(new NullProgressMonitor(), null);
+		} catch (ExecutionException ce) {
 			return;
 		}
 
@@ -406,7 +406,7 @@ public class GlobalCommandManager {
 	 * @param a an id
 	 * @return a task
 	 */
-	public ITask getUndoCommand(String a) {
+	public IUndoableOperation getUndoCommand(String a) {
 		int size = undoList.size();
 		for (int i = size - 1; i >= 0; i--) {
 			ServerResourceCommand src = (ServerResourceCommand) undoList.get(i);
@@ -422,7 +422,7 @@ public class GlobalCommandManager {
 	 * @param a an id
 	 * @return a task
 	 */
-	public ITask getRedoCommand(String a) {
+	public IUndoableOperation getRedoCommand(String a) {
 		int size = redoList.size();
 		for (int i = size - 1; i >= 0; i--) {
 			ServerResourceCommand src = (ServerResourceCommand) redoList.get(i);
@@ -516,7 +516,11 @@ public class GlobalCommandManager {
 		if (src == null)
 			return;
 
-		src.command.undo();
+		try {
+			src.command.undo(null, null);
+		} catch (ExecutionException ee) {
+			// do something
+		}
 		undoList.remove(src);
 		firePropertyChangeEvent(PROP_UNDO, src.id, null);
 		redoList.add(src);
@@ -542,8 +546,8 @@ public class GlobalCommandManager {
 			return;
 
 		try {
-			src.command.execute(new NullProgressMonitor());
-		} catch (CoreException ce) {
+			src.command.execute(new NullProgressMonitor(), null);
+		} catch (ExecutionException ce) {
 			return;
 		}
 		redoList.remove(src);

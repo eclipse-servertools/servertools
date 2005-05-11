@@ -10,18 +10,18 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.editor;
 
+import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.ui.editor.ICommandManager;
 import org.eclipse.wst.server.ui.internal.Messages;
 /**
  * A command manager for a single server resource.
  */
-public class ServerResourceCommandManager implements ICommandManager {
+public class ServerResourceCommandManager {
 	protected ServerEditor editor;
 	protected GlobalCommandManager commandManager;
 	protected String id;
@@ -41,9 +41,9 @@ public class ServerResourceCommandManager implements ICommandManager {
 	 * If the command cannot be undone, the user will be notifed
 	 * before it is executed.
 	 *
-	 * @param command ICommand
+	 * @param operation an undoable operation
 	 */
-	public void executeCommand(ITask command) {
+	public void execute(IUndoableOperation operation) {
 		if (!validateEdit())
 			return;
 
@@ -51,7 +51,7 @@ public class ServerResourceCommandManager implements ICommandManager {
 			warnReadOnly();
 			return;
 		}
-		commandManager.executeCommand(id, command);
+		commandManager.executeCommand(id, operation);
 	}
 
 	protected void warnReadOnly() {

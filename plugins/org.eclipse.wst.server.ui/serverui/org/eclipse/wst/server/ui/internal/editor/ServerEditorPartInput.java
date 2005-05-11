@@ -14,7 +14,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IPersistableElement;
 
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.ui.editor.ICommandManager;
 import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
 /**
  * 
@@ -22,10 +21,10 @@ import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
 public class ServerEditorPartInput implements IServerEditorPartInput {
 	protected IServerWorkingCopy server;
 	protected boolean serverReadOnly;
-	protected ICommandManager serverCommandManager;
+	protected ServerResourceCommandManager serverCommandManager;
 	
-	public ServerEditorPartInput(
-			ICommandManager serverCommandManager, IServerWorkingCopy server,  boolean serverReadOnly) {
+	public ServerEditorPartInput(ServerResourceCommandManager serverCommandManager,
+			IServerWorkingCopy server,  boolean serverReadOnly) {
 		
 		this.server = server;
 		this.serverReadOnly = serverReadOnly;
@@ -74,7 +73,7 @@ public class ServerEditorPartInput implements IServerEditorPartInput {
 		return serverReadOnly;
 	}
 	
-	public ICommandManager getServerCommandManager() {
+	public ServerResourceCommandManager getServerCommandManager() {
 		return serverCommandManager;
 	}
 	

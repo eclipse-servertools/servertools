@@ -112,15 +112,4 @@ public abstract class ModuleFactoryDelegate {
 	 * @return a possibly-empty array of modules {@link IModule}
 	 */
 	public abstract IModule[] getModules();
-
-	/**
-	 * Fire a module factory event. This method is used by the factory delegate to
-	 * fire events about module changes.
-	 * 
-	 * @param added a non-null array of modules that have been added
-	 * @param removed a non-null array of modules that have been removed
-	 */
-	protected void fireModuleFactoryEvent(IModule[] added, IModule[] removed) {
-		factory.fireModuleFactoryEvent(added, removed);
-	}
 }

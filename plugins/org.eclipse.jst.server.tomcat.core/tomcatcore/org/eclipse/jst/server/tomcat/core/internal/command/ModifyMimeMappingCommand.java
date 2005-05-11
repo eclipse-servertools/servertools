@@ -29,35 +29,17 @@ public class ModifyMimeMappingCommand extends ConfigurationCommand {
 	 * @param map a mime mapping
 	 */
 	public ModifyMimeMappingCommand(ITomcatConfigurationWorkingCopy configuration, int index, MimeMapping map) {
-		super(configuration);
+		super(configuration, Messages.configurationEditorActionModifyMimeMapping);
 		this.index = index;
 		newMap = map;
 	}
 
 	/**
 	 * Execute the command.
-	 * @return boolean
 	 */
-	public boolean execute() {
+	public void execute() {
 		oldMap = (MimeMapping) configuration.getMimeMappings().get(index);
 		configuration.modifyMimeMapping(index, newMap);
-		return true;
-	}
-
-	/**
-	 * Returns this command's description.
-	 * @return java.lang.String
-	 */
-	public String getDescription() {
-		return Messages.configurationEditorActionModifyMimeMappingDescription;
-	}
-
-	/**
-	 * Returns this command's label.
-	 * @return java.lang.String
-	 */
-	public String getName() {
-		return Messages.configurationEditorActionModifyMimeMapping;
 	}
 
 	/**

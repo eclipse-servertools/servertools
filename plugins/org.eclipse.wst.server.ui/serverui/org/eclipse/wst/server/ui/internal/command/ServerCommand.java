@@ -10,36 +10,43 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.command;
 
+import org.eclipse.core.commands.operations.AbstractOperation;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.core.util.Task;
 /**
  * A command on a server.
  */
-public abstract class ServerCommand extends Task {
+public abstract class ServerCommand extends AbstractOperation {
 	protected IServerWorkingCopy server;
 
 	/**
 	 * ServerCommand constructor.
 	 * 
 	 * @param server a server
+	 * @param name a label
 	 */
-	public ServerCommand(IServerWorkingCopy server) {
-		super();
+	public ServerCommand(IServerWorkingCopy server, String name) {
+		super(name);
 		this.server = server;
 	}
 
-	/**
-	 * Returns true if this command can be undone.
-	 * @return boolean
-	 */
-	public boolean canUndo() {
-		return true;
+	public abstract void execute();
+
+	public IStatus execute(IProgressMonitor monitor, IAdaptable adapt) {
+		execute();
+		return null;
+	}
+
+	public abstract void undo();
+
+	public IStatus undo(IProgressMonitor monitor, IAdaptable adapt) {
+		undo();
+		return null;
 	}
 	
-	public abstract boolean execute();
-	
-	public void execute(IProgressMonitor monitor) {
-		execute();
+	public IStatus redo(IProgressMonitor monitor, IAdaptable adapt) {
+		return execute(monitor, adapt);
 	}
 }

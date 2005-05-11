@@ -12,7 +12,6 @@ package org.eclipse.wst.server.core.model;
 
 import java.util.List;
 
-import org.eclipse.wst.server.core.IOptionalTask;
 import org.eclipse.wst.server.core.IServer;
 /**
  * A publish task delegate.
@@ -29,5 +28,5 @@ public abstract class PublishTaskDelegate {
 	 * @param modules a list containing IModule arrays
 	 * @return the tasks that should be performed on the server.
 	 */
-	public abstract IOptionalTask[] getTasks(IServer server, List modules);
+	public abstract PublishOperation[] getTasks(IServer server, List modules);
 }

@@ -138,9 +138,9 @@ public class ServerEditorPageSectionFactory implements IServerEditorPageSectionF
 	/**
 	 * @see IServerEditorPageSectionFactory#createSection()
 	 */
-	public IServerEditorSection createSection() {
+	public ServerEditorSection createSection() {
 		try {
-			return (IServerEditorSection) element.createExecutableExtension("class");
+			return (ServerEditorSection) element.createExecutableExtension("class");
 		} catch (Throwable t) {
 			Trace.trace(Trace.SEVERE, "Could not create server editor section", t);
 			return null;

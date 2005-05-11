@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IOptionalTask;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.internal.Messages;
 import org.eclipse.wst.server.core.internal.ProgressUtil;
@@ -516,7 +515,7 @@ public abstract class ServerBehaviourDelegate {
 				kindList.add(new Integer(ServerBehaviourDelegate.ADDED));
 		}
 		
-		IOptionalTask[] tasks = getTasks();
+		PublishOperation[] tasks = getTasks();
 		
 		addRemovedModules(moduleList, kindList);
 		
@@ -678,7 +677,7 @@ public abstract class ServerBehaviourDelegate {
 	 * 
 	 * @return a possibly empty array of IOptionalTasks
 	 */
-	protected final IOptionalTask[] getTasks() {
+	protected final PublishOperation[] getTasks() {
 		return server.getTasks();
 	}
 
@@ -700,7 +699,7 @@ public abstract class ServerBehaviourDelegate {
 	 *    reporting and cancellation are not desired
 	 * @return the status
 	 */
-	protected IStatus performTasks(IOptionalTask[] tasks, IProgressMonitor monitor) {
+	protected IStatus performTasks(PublishOperation[] tasks, IProgressMonitor monitor) {
 		int size = tasks.length;
 		Trace.trace(Trace.FINEST, "Performing tasks: " + size);
 		
@@ -710,10 +709,10 @@ public abstract class ServerBehaviourDelegate {
 		Status multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.taskPerforming, null);
 
 		for (int i = 0; i < size; i++) {
-			IOptionalTask task = tasks[i];
+			PublishOperation task = tasks[i];
 			monitor.subTask(NLS.bind(Messages.taskPerforming, task.toString()));
 			try {
-				task.execute(ProgressUtil.getSubMonitorFor(monitor, 500));
+				task.execute(ProgressUtil.getSubMonitorFor(monitor, 500), null);
 			} catch (CoreException ce) {
 				Trace.trace(Trace.SEVERE, "Task failed", ce);
 			}

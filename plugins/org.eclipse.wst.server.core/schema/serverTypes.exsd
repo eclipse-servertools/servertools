@@ -46,7 +46,7 @@
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  unique identifier for the server type
                </documentation>
             </annotation>
          </attribute>
@@ -144,14 +144,14 @@ Server instances of this type will delegate to instances of this class. Delegate
          <attribute name="startTimeout" type="string">
             <annotation>
                <documentation>
-                  
+                  the time out value that the tool will wait for the server to be started.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="stopTimeout" type="string">
             <annotation>
                <documentation>
-                  
+                  the time out value that the tool will wait for the server to be stopped.
                </documentation>
             </annotation>
          </attribute>
@@ -179,15 +179,14 @@ Server instances of this type will delegate to instances of this class. Delegate
        id=&quot;com.example.serverType&quot;
        name=&quot;%serverTypeName&quot;
        description=&quot;%serverTypeDescription&quot;
-       hosts=&quot;localhost, remote&quot;
+       supportsRemoteHosts=&quot;true&quot;
        runtime=&quot;true&quot;
-       monitorable=&quot;true&quot;
        initialState=&quot;stopped&quot;
-       configurationTypeId=&quot;com.example.serverConfiguration&quot;
+       hasConfiguration=&quot;true&quot;
        launchConfigId=&quot;com.example.launchConfigurationType&quot;
        runtimeTypeId=&quot;com.example.runtime&quot;
        class=&quot;com.example.ExampleServerDelegate&quot;
-       workingCopyClass=&quot;com.example.ExampleServerWorkingCopyDelegate&quot;&gt;
+       behaviourClass=&quot;com.example.ExampleServerBehaviourDelegate&quot;&gt;
      &lt;/serverType&gt;
    &lt;/extension&gt;
 &lt;/pre&gt;

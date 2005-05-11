@@ -12,9 +12,10 @@ package org.eclipse.wst.server.ui.internal.wizard;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.task.SaveServerTask;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
@@ -38,8 +39,8 @@ public class ModifyModulesWizard extends TaskWizard {
 			list.add(new ModifyModulesWizardFragment());
 			list.add(new TasksWizardFragment());
 			list.add(new WizardFragment() {
-				public ITask createFinishTask() {
-					return new SaveServerTask();
+				public void performFinish(IProgressMonitor monitor) throws CoreException {
+					WizardTaskUtil.saveServer(getTaskModel(), monitor);
 				}
 			});
 		}

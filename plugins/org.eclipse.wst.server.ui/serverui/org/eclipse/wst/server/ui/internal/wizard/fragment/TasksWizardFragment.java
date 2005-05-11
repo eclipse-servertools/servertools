@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.*;
-import org.eclipse.wst.server.core.util.Task;
+import org.eclipse.wst.server.core.model.PublishOperation;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ProgressUtil;
@@ -39,9 +39,9 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
  */
 public class TasksWizardFragment extends WizardFragment {
 	public class TaskInfo implements IOrdered {
-		public int status;
+		public int kind;
 		public String id;
-		public IOptionalTask task2;
+		public PublishOperation task2;
 		
 		private static final String DEFAULT = "default:";
 		
@@ -152,17 +152,15 @@ public class TasksWizardFragment extends WizardFragment {
 			for (int i = 0; i < size; i++) {
 				IPublishTask task = publishTasks[i];
 				if (serverTypeId != null && task.supportsType(serverTypeId)) {
-					IOptionalTask[] tasks2 = task.getTasks(server, modules);
+					PublishOperation[] tasks2 = task.getTasks(server, modules);
 					if (tasks2 != null) {
 						int size2 = tasks2.length;
 						for (int j = 0; j < size2; j++) {
-							int status = tasks2[j].getStatus(); 
-							if (status != IOptionalTask.TASK_UNNECESSARY) {
-								if (status == IOptionalTask.TASK_READY || status == IOptionalTask.TASK_PREFERRED)
-									hasOptionalTasks = true;
-								tasks2[i].setTaskModel(getTaskModel());
-								addServerTask(server, tasks2[j]);
-							}
+							int kind = tasks2[j].getKind(); 
+							if (kind == PublishOperation.OPTIONAL || kind == PublishOperation.PREFERRED)
+								hasOptionalTasks = true;
+							tasks2[i].setTaskModel(getTaskModel());
+							addServerTask(server, tasks2[j]);
 						}
 					}
 				}
@@ -170,13 +168,13 @@ public class TasksWizardFragment extends WizardFragment {
 		}
 	}
 
-	public void addServerTask(IServer server, IOptionalTask task2) {
+	public void addServerTask(IServer server, PublishOperation task2) {
 		TaskInfo sti = new TaskInfo();
 		sti.task2 = task2;
-		sti.status = task2.getStatus();
+		sti.kind = task2.getKind();
 		String id = server.getId();
-		sti.id = id + "|" + task2.getName();
-		if (sti.status == IOptionalTask.TASK_PREFERRED || sti.status == IOptionalTask.TASK_MANDATORY)
+		sti.id = id + "|" + task2.getLabel();
+		if (sti.kind == PublishOperation.PREFERRED || sti.kind == PublishOperation.REQUIRED)
 			sti.setDefaultSelected(true);
 		
 		tasks.add(sti);
@@ -194,20 +192,10 @@ public class TasksWizardFragment extends WizardFragment {
 		return comp;
 	}
 
-	public ITask createFinishTask() {
-		return new Task() {
-			public void execute(IProgressMonitor monitor) throws CoreException {
-				performFinish(monitor);
-			}
-		};
-	}
-	
 	/**
-	 * Returns the number of tasks run, or -1 if there was an error.
-	 *
-	 * @param monitor
+	 * @see WizardFragment#performFinish(IProgressMonitor)
 	 */
-	protected void performFinish(IProgressMonitor monitor) throws CoreException {
+	public void performFinish(IProgressMonitor monitor) throws CoreException {
 		List performTasks = new ArrayList();
 
 		if (tasks == null)
@@ -254,11 +242,11 @@ public class TasksWizardFragment extends WizardFragment {
 			if (obj instanceof TasksWizardFragment.TaskInfo) {
 				TasksWizardFragment.TaskInfo sti = (TasksWizardFragment.TaskInfo) obj;
 				try {
-					Trace.trace(Trace.FINER, "Executing task: " + sti.task2.getName());
+					Trace.trace(Trace.FINER, "Executing task: " + sti.task2.getLabel());
 					sti.task2.setTaskModel(taskModel);
-					sti.task2.execute(subMonitor);
+					sti.task2.execute(subMonitor, null);
 				} catch (final CoreException ce) {
-					Trace.trace(Trace.SEVERE, "Error executing task " + sti.task2.getName(), ce);
+					Trace.trace(Trace.SEVERE, "Error executing task " + sti.task2.getLabel(), ce);
 					throw ce;
 				}
 			}
