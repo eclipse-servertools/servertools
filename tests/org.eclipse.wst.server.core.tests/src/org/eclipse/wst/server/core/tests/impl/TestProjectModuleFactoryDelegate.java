@@ -22,7 +22,6 @@ public class TestProjectModuleFactoryDelegate extends ProjectModuleFactoryDelega
 
 	public void testProtected() throws Exception {
 		addListener();
-		fireEvents();
 		fireGlobalEvents();
 		cacheModules();
 		createModules(null);

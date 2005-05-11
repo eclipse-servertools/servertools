@@ -31,9 +31,7 @@ public class AllTests {
 		suite.addTestSuite(ServerUIUtilTestCase.class);
 		suite.addTest(new OrderedTestSuite(ServerLaunchConfigurationTabTestCase.class));
 		
-		suite.addTest(new OrderedTestSuite(ICommandManagerTestCase.class));
 		suite.addTest(new OrderedTestSuite(IServerEditorPartInputTestCase.class));
-		suite.addTest(new OrderedTestSuite(IServerEditorSectionTestCase.class));
 		suite.addTest(new OrderedTestSuite(ServerEditorSectionTestCase.class));
 		suite.addTest(new OrderedTestSuite(ServerEditorPartTestCase.class));
 		

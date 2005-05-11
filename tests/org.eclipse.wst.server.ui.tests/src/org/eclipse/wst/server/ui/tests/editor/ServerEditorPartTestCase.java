@@ -35,10 +35,6 @@ public class ServerEditorPartTestCase extends TestCase {
 			}
 		};
 	}
-	
-	public void test01SetPageFactory() {
-		editor.setPageFactory(null);
-	}
 
 	public void test02DoSave() {
 		editor.doSave(null);

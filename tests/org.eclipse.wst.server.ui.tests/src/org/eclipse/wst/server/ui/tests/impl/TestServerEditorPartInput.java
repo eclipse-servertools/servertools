@@ -13,7 +13,6 @@ package org.eclipse.wst.server.ui.tests.impl;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.ui.editor.ICommandManager;
 import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
 
 public class TestServerEditorPartInput implements IServerEditorPartInput{
@@ -23,10 +22,6 @@ public class TestServerEditorPartInput implements IServerEditorPartInput{
 
 	public boolean isServerReadOnly() {
 		return false;
-	}
-
-	public ICommandManager getServerCommandManager() {
-		return null;
 	}
 
 	public boolean exists() {

@@ -34,11 +34,7 @@ public class IServerEditorPartInputTestCase extends TestCase {
 	public void test02IsServerReadOnly() {
 		input.isServerReadOnly();
 	}
-	
-	public void test03GetCommandManager() {
-		input.getServerCommandManager();
-	}
-	
+
 	public void test04Exists() {
 		input.exists();
 	}

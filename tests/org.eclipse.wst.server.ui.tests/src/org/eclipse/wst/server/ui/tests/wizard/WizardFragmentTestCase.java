@@ -53,14 +53,6 @@ public class WizardFragmentTestCase extends TestCase {
 		fragment.exit();
 	}
 	
-	public void test07CreateFinishTask()  {
-		fragment.createFinishTask();
-	}
-	
-	public void test08CreateCancelTask()  {
-		fragment.createCancelTask();
-	}
-	
 	public void test09GetChildFragments()  {
 		fragment.getChildFragments();
 	}

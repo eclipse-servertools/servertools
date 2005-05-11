@@ -28,11 +28,6 @@ public class TestProjectModule extends ProjectModule {
 		} catch (Exception e) {
 			// ignore
 		}
-		try {
-			fireModuleChangeEvent(false, null, null, null);
-		} catch (Exception e) {
-			// ignore
-		}
 		update();
 	}
 }

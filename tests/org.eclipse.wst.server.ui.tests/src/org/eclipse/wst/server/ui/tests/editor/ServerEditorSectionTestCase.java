@@ -63,12 +63,4 @@ public class ServerEditorSectionTestCase extends TestCase {
 	public void test08SetErrorMessage() {
 		section.setErrorMessage(null);
 	}
-	
-	public void test09GetFormToolkit() {
-		try {
-			section.getFormToolkit(null);
-		} catch (Exception e) {
-			// ignore
-		}
-	}
 }

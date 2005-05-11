@@ -8,54 +8,34 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core.tests;
+package org.eclipse.wst.server.core.tests.model;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.ITask;
-import org.eclipse.wst.server.core.TaskModel;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.wst.server.core.model.PublishOperation;
 
 import junit.framework.TestCase;
 
-public class ITaskTestCase extends TestCase {
-	protected static ITask task;
+public class PublishOperationTestCase extends TestCase {
+	protected static PublishOperation task;
 
 	public void testCreate() throws Exception {
-		task = new ITask() {
-			public String getName() {
-				return null;
-			}
-
-			public String getDescription() {
-				return null;
-			}
-
-			public TaskModel getTaskModel() {
-				return null;
-			}
-
-			public void setTaskModel(TaskModel taskModel) {
+		task = new PublishOperation() {
+			public void execute(IProgressMonitor monitor, IAdaptable info) throws CoreException {
 				// ignore
 			}
 
-			public void execute(IProgressMonitor monitor) throws CoreException {
-				// ignore
-			}
-
-			public boolean canUndo() {
-				return false;
-			}
-
-			public void undo() {
-				// ignore
+			public int getOrder() {
+				return 0;
 			}
 		};
-		task.getName();
+		task.getLabel();
 		task.getDescription();
 		task.getTaskModel();
 		task.setTaskModel(null);
-		task.execute(null);
-		task.canUndo();
-		task.undo();
+		task.execute(null, null);
+		task.getKind();
+		task.getOrder();
 	}
 }

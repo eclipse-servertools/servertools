@@ -38,7 +38,6 @@ import org.eclipse.wst.server.core.tests.util.ProjectModuleFactoryDelegateTestCa
 import org.eclipse.wst.server.core.tests.util.ProjectModuleTestCase;
 import org.eclipse.wst.server.core.tests.util.SocketUtilTestCase;
 import org.eclipse.wst.server.core.tests.util.StaticWebTestCase;
-import org.eclipse.wst.server.core.tests.util.TaskTestCase;
 import org.eclipse.wst.server.core.tests.util.WebResourceTestCase;
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -68,8 +67,7 @@ public class AllTests {
 		suite.addTestSuite(IModuleTestCase.class);
 		suite.addTestSuite(IModuleArtifactTestCase.class);
 		suite.addTestSuite(IModuleTypeTestCase.class);
-		suite.addTestSuite(ITaskTestCase.class);
-		suite.addTestSuite(IOptionalTaskTestCase.class);
+		suite.addTestSuite(PublishOperationTestCase.class);
 		suite.addTestSuite(TaskModelTestCase.class);
 		
 		suite.addTestSuite(RuntimeLifecycleListenerTestCase.class);
@@ -95,7 +93,6 @@ public class AllTests {
 		suite.addTest(new OrderedTestSuite(ModuleResourceDeltaVisitorTestCase.class));
 		suite.addTest(new OrderedTestSuite(ModuleArtifactAdapterDelegateTestCase.class));
 		suite.addTest(new OrderedTestSuite(LaunchableAdapterDelegateTestCase.class));
-		suite.addTest(new OrderedTestSuite(ModuleFactoryListenerTestCase.class));
 		suite.addTest(new OrderedTestSuite(ModuleListenerTestCase.class));
 		suite.addTest(new OrderedTestSuite(ModuleEventTestCase.class));
 		suite.addTest(new OrderedTestSuite(ModuleFactoryEventTestCase.class));
@@ -110,7 +107,6 @@ public class AllTests {
 		suite.addTest(new OrderedTestSuite(WebResourceTestCase.class));
 		suite.addTest(new OrderedTestSuite(NullModuleArtifactTestCase.class));
 		suite.addTestSuite(SocketUtilTestCase.class);
-		suite.addTest(new OrderedTestSuite(TaskTestCase.class));
 		//$JUnit-END$
 		return suite;
 	}
