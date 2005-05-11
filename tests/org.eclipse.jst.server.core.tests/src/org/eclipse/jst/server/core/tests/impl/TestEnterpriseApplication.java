@@ -13,6 +13,7 @@ package org.eclipse.jst.server.core.tests.impl;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jst.server.core.IEnterpriseApplication;
 import org.eclipse.jst.server.core.IJ2EEModule;
+import org.eclipse.wst.server.core.IModule;
 
 public class TestEnterpriseApplication implements IEnterpriseApplication {
 	public String getJ2EESpecificationVersion() {
@@ -23,7 +24,7 @@ public class TestEnterpriseApplication implements IEnterpriseApplication {
 		return null;
 	}
 
-	public IJ2EEModule[] getModules() {
+	public IModule[] getModules() {
 		return null;
 	}
 

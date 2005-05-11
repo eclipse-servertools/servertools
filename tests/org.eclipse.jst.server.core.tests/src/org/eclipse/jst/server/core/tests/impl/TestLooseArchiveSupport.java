@@ -12,9 +12,10 @@ package org.eclipse.jst.server.core.tests.impl;
 
 import org.eclipse.jst.server.core.ILooseArchive;
 import org.eclipse.jst.server.core.ILooseArchiveSupport;
+import org.eclipse.wst.server.core.IModule;
 
 public class TestLooseArchiveSupport implements ILooseArchiveSupport {
-	public ILooseArchive[] getLooseArchives() {
+	public IModule[] getLooseArchives() {
 		return null;
 	}
 
