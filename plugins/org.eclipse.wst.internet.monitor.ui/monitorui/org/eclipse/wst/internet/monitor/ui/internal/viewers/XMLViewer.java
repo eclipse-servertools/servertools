@@ -34,10 +34,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.internet.monitor.ui.ContentViewer;
 import org.eclipse.wst.internet.monitor.ui.internal.ContextIds;
 import org.eclipse.wst.internet.monitor.ui.internal.Messages;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
+import org.eclipse.wst.internet.monitor.ui.internal.provisional.ContentViewer;
 
 import org.w3c.dom.*;
 import org.xml.sax.*;

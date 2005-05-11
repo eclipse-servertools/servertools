@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.internet.monitor.core;
+package org.eclipse.wst.internet.monitor.core.internal.provisional;
 /**
  * Listener for global changes affecting monitors.
  * <p>

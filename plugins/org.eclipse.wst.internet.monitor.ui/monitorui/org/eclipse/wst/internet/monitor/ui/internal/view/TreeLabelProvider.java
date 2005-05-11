@@ -13,8 +13,8 @@ package org.eclipse.wst.internet.monitor.ui.internal.view;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.internet.monitor.core.Request;
 import org.eclipse.wst.internet.monitor.core.internal.http.ResendHTTPRequest;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.Request;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
 /**
  * A label provider for the monitor server view.

@@ -8,7 +8,7 @@
  * Contributors:
  *    IBM Corporation - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.internet.monitor.core;
+package org.eclipse.wst.internet.monitor.core.internal.provisional;
 /**
  * Listener for new or modified requests created from a single monitor.
  * Each request represents message traffic between a monitored client

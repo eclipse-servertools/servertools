@@ -50,14 +50,14 @@
 <extension point="org.eclipse.core.runtime.adapters">
   <factory
     class="org.eclipse.wst.internet.monitor.ui.internal.RequestAdapterFactory"
-    adaptableType="org.eclipse.wst.internet.monitor.core.Request">
+    adaptableType="org.eclipse.wst.internet.monitor.core.internal.provisional.Request">
     <adapter type="org.eclipse.ui.IActionFilter"/>
   </factory>
 </extension>
 
 <extension point="org.eclipse.ui.popupMenus">
     <objectContribution
-          objectClass="org.eclipse.wst.internet.monitor.core.Request"
+          objectClass="org.eclipse.wst.internet.monitor.core.internal.provisional.Request"
           id="org.eclipse.wst.internet.monitor.ui.modifyaction">
        <filter name="requestsent" value="true"/>
        <action
@@ -78,7 +78,7 @@
        </action>
     </objectContribution>
     <objectContribution
-          objectClass="org.eclipse.wst.internet.monitor.core.Request"
+          objectClass="org.eclipse.wst.internet.monitor.core.internal.provisional.Request"
           id="org.eclipse.wst.internet.monitor.ui.sendmodifyaction">
        <filter name="requestsent" value="false"/>    
        <action

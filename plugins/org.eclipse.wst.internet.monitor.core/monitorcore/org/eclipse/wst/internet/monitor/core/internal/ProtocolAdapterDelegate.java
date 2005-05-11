@@ -12,7 +12,7 @@ package org.eclipse.wst.internet.monitor.core.internal;
 
 import java.io.IOException;
 import java.net.Socket;
-import org.eclipse.wst.internet.monitor.core.IMonitor;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitor;
 /**
  * Abstract base class for protocol adapter delegates, which provide the
  * implementation behind a particular protocol adapter.

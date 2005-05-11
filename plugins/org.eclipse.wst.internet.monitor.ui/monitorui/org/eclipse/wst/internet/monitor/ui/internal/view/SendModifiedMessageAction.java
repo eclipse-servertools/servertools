@@ -15,9 +15,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.wst.internet.monitor.core.Request;
 import org.eclipse.wst.internet.monitor.core.internal.http.ResendHTTPRequest;
-import org.eclipse.wst.internet.monitor.ui.ContentViewer;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.Request;
+import org.eclipse.wst.internet.monitor.ui.internal.provisional.ContentViewer;
 import org.eclipse.wst.internet.monitor.ui.internal.viewers.HeaderViewer;
 /**
  * Send a modified message.

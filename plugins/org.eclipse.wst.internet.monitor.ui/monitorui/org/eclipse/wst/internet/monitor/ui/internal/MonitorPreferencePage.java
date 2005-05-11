@@ -39,9 +39,9 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.internet.monitor.core.IMonitor;
-import org.eclipse.wst.internet.monitor.core.IMonitorWorkingCopy;
-import org.eclipse.wst.internet.monitor.core.MonitorCore;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitor;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitorWorkingCopy;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.MonitorCore;
 /**
  * The preference page that holds monitor properties.
  */

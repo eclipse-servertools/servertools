@@ -11,9 +11,9 @@
 package org.eclipse.wst.internet.monitor.core.internal.http;
 
 import java.io.*;
-import org.eclipse.wst.internet.monitor.core.Request;
 import org.eclipse.wst.internet.monitor.core.internal.Connection;
 import org.eclipse.wst.internet.monitor.core.internal.Trace;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.Request;
 /**
  * Monitor server I/O thread.
  */

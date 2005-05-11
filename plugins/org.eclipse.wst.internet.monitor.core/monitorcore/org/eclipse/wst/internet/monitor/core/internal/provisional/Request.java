@@ -8,7 +8,7 @@
  * Contributors:
  *    IBM Corporation - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.internet.monitor.core;
+package org.eclipse.wst.internet.monitor.core.internal.provisional;
 
 import java.util.Date;
 import java.util.Properties;

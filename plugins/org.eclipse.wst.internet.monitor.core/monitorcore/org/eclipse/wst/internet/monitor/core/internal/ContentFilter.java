@@ -12,8 +12,8 @@ package org.eclipse.wst.internet.monitor.core.internal;
 
 import java.io.IOException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.wst.internet.monitor.core.Request;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.ContentFilterDelegate;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.Request;
 /**
  * 
  */

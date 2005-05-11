@@ -13,7 +13,7 @@ package org.eclipse.wst.internet.monitor.ui.internal;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.internet.monitor.core.IMonitor;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitor;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 /**
  * Monitor table label provider.

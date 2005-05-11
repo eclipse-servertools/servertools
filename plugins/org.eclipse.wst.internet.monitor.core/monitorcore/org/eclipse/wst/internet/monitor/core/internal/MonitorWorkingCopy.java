@@ -10,7 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.core.internal;
 
-import org.eclipse.wst.internet.monitor.core.*;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitor;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitorWorkingCopy;
 /**
  * 
  */

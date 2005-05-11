@@ -37,10 +37,11 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.*;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.wst.internet.monitor.core.*;
 import org.eclipse.wst.internet.monitor.core.internal.IContentFilter;
 import org.eclipse.wst.internet.monitor.core.internal.MonitorPlugin;
 import org.eclipse.wst.internet.monitor.core.internal.http.ResendHTTPRequest;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.IRequestListener;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.Request;
 import org.eclipse.wst.internet.monitor.ui.internal.*;
 /**
  * View of TCP/IP activity.

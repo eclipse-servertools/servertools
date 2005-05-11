@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.wst.internet.monitor.core.Request;
 import org.eclipse.wst.internet.monitor.core.internal.MonitorManager;
 import org.eclipse.wst.internet.monitor.core.internal.http.ResendHTTPRequest;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.Request;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
 /**
  * Content provider for the monitor server view.

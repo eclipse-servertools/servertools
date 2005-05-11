@@ -14,17 +14,14 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.internet.monitor.core.*;
 import org.eclipse.wst.internet.monitor.core.internal.Trace;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.*;
 import org.eclipse.wst.internet.monitor.ui.internal.view.MonitorView;
 import org.osgi.framework.BundleContext;
 /**

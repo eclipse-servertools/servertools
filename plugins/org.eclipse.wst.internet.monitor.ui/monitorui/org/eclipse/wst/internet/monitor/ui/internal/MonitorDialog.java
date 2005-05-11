@@ -28,9 +28,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.internet.monitor.core.IMonitorWorkingCopy;
-import org.eclipse.wst.internet.monitor.core.MonitorCore;
 import org.eclipse.wst.internet.monitor.core.internal.IProtocolAdapter;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitorWorkingCopy;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.MonitorCore;
 /**
  * 
  */

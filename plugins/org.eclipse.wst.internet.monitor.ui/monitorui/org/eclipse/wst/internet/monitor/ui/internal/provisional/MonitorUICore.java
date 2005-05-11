@@ -10,7 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.internet.monitor.ui.internal.provisional;
 
-import org.eclipse.wst.internet.monitor.core.Request;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.Request;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
 /**
  * Main class for access to the monitor UI.

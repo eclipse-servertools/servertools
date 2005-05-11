@@ -11,7 +11,7 @@
 package org.eclipse.wst.internet.monitor.ui.internal;
 
 import org.eclipse.ui.IActionFilter;
-import org.eclipse.wst.internet.monitor.core.Request;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.Request;
 /**
  * An action filter for requests.
  */

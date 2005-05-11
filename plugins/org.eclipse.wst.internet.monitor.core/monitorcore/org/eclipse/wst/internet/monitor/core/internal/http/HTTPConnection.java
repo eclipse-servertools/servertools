@@ -10,10 +10,10 @@
  **********************************************************************/
 package org.eclipse.wst.internet.monitor.core.internal.http;
 
-import org.eclipse.wst.internet.monitor.core.IMonitor;
-import org.eclipse.wst.internet.monitor.core.Request;
 import org.eclipse.wst.internet.monitor.core.internal.Monitor;
 import org.eclipse.wst.internet.monitor.core.internal.Trace;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitor;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.Request;
 
 import java.util.List;
 import java.util.ArrayList;

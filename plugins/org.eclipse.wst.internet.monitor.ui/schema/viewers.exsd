@@ -58,10 +58,10 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of the Java class that extends &lt;samp&gt;org.eclipse.wst.internet.monitor.ui.ContentViewer&lt;/samp&gt;. Viewers instances of this type will delegate to instances of this class.
+                  specifies the fully qualified name of the Java class that extends &lt;samp&gt;org.eclipse.wst.internet.monitor.ui.internal.provisional.ContentViewer&lt;/samp&gt;. Viewers instances of this type will delegate to instances of this class.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.wst.internet.monitor.ui.ContentViewer"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.internet.monitor.ui.internal.provisional.ContentViewer"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -108,7 +108,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends the abstract class &lt;b&gt;org.eclipse.wst.internet.monitor.ui.ContentViewer&lt;/b&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends the abstract class &lt;b&gt;org.eclipse.wst.internet.monitor.ui.internal.provisional.ContentViewer&lt;/b&gt;.
       </documentation>
    </annotation>
 

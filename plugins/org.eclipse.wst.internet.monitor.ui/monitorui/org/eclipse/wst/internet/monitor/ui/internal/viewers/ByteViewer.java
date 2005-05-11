@@ -18,9 +18,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.internet.monitor.ui.ContentViewer;
 import org.eclipse.wst.internet.monitor.ui.internal.ContextIds;
 import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
+import org.eclipse.wst.internet.monitor.ui.internal.provisional.ContentViewer;
 /**
  * A basic byte viewer.
  */

@@ -14,10 +14,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-import org.eclipse.wst.internet.monitor.core.Request;
 import org.eclipse.wst.internet.monitor.core.internal.Connection;
 import org.eclipse.wst.internet.monitor.core.internal.Monitor;
 import org.eclipse.wst.internet.monitor.core.internal.SocketWrapper;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.Request;
 /**
  * Wraps an existing request to create an HTTP request that can be sent. The
  * response is ignored. Only the request is important in this case.

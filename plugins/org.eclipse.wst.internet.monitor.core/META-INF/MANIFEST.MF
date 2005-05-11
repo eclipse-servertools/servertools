@@ -6,8 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.eclipse.wst.internet.monitor.core.internal.MonitorPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.wst.internet.monitor.core,
- org.eclipse.wst.internet.monitor.core.internal.provisional,
+Export-Package: org.eclipse.wst.internet.monitor.core.internal.provisional,
  org.eclipse.wst.internet.monitor.core.internal,
  org.eclipse.wst.internet.monitor.core.internal.http
 Require-Bundle: org.eclipse.core.runtime

@@ -13,7 +13,7 @@ package org.eclipse.wst.internet.monitor.core.internal;
 import java.io.InterruptedIOException;
 import java.net.*;
 
-import org.eclipse.wst.internet.monitor.core.IMonitor;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitor;
 /**
  * The actual TCP/IP monitoring server. This is a thread that
  * listens on a port and relays a call to another server.

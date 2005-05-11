@@ -15,9 +15,9 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.wst.internet.monitor.core.IMonitor;
 import org.eclipse.wst.internet.monitor.core.internal.Connection;
 import org.eclipse.wst.internet.monitor.core.internal.ProtocolAdapterDelegate;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitor;
 /**
  * 
  */

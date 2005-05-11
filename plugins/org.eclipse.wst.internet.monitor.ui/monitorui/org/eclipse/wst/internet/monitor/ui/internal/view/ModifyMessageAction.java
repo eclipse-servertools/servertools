@@ -16,9 +16,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.wst.internet.monitor.core.Request;
 import org.eclipse.wst.internet.monitor.core.internal.MonitorManager;
 import org.eclipse.wst.internet.monitor.core.internal.http.ResendHTTPRequest;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.Request;
 /**
  * Modify the selected message. Creates a new resendrequest and adds it
  * to the tree.

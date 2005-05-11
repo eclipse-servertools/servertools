@@ -19,8 +19,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.wst.internet.monitor.ui.ContentViewer;
 import org.eclipse.wst.internet.monitor.ui.internal.Messages;
+import org.eclipse.wst.internet.monitor.ui.internal.provisional.ContentViewer;
 /**
  * An image viewer.
  */

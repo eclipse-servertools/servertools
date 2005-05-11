@@ -12,7 +12,7 @@ package org.eclipse.wst.internet.monitor.ui.internal;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.wst.internet.monitor.core.MonitorCore;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.MonitorCore;
 /**
  * Monitor content provider.
  */

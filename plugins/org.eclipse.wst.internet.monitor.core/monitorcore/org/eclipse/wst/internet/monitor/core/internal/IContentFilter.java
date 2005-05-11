@@ -11,7 +11,7 @@
 package org.eclipse.wst.internet.monitor.core.internal;
 
 import java.io.IOException;
-import org.eclipse.wst.internet.monitor.core.Request;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.Request;
 /**
  * A content filter that filters specific contents from the monitor traffic
  * of a request. 
