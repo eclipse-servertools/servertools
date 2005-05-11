@@ -17,6 +17,8 @@
     <type name="EJBBean"/>
     <type name="JndiLaunchable"/>
   </package>
+  
+  <plugin id="org.eclipse.jst.server.ui" fragment="false"/>
 
   <plugin id="org.eclipse.jst.server.generic.core" fragment="false"/>
   <package name="org.eclipse.jst.server.generic.servertype.definition">
@@ -30,5 +32,5 @@
 
   <plugin id="org.eclipse.jst.server.tomcat.ui" fragment="false"/>
 
-  <plugin id="org.eclipse.jst.server.ui" fragment="false"/>
+  <plugin id="org.eclipse.jst.server.geronimo.core" fragment="false"/>
 </component>
