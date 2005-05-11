@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.ui.tests.extension;
 
-import org.eclipse.wst.internet.monitor.ui.ContentViewer;
+import org.eclipse.wst.internet.monitor.ui.internal.provisional.ContentViewer;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;

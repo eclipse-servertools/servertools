@@ -13,7 +13,7 @@ package org.eclipse.wst.internet.monitor.core.tests;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import org.eclipse.wst.internet.monitor.core.*;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.*;
 import junit.framework.Test;
 import junit.framework.TestCase;
 /**

@@ -11,7 +11,7 @@
 package org.eclipse.wst.internet.monitor.ui.tests.extension;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wst.internet.monitor.ui.ContentViewer;
+import org.eclipse.wst.internet.monitor.ui.internal.provisional.ContentViewer;
 
 public class TestContentViewer extends ContentViewer {
 	public void init(Composite parent) {

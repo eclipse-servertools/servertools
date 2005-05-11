@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.core.tests;
 
-import org.eclipse.wst.internet.monitor.core.MonitorCore;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.MonitorCore;
 
 import junit.framework.TestCase;
 
