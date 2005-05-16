@@ -31,7 +31,8 @@
 
 package org.eclipse.jst.server.generic.internal.xml;
 
-import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -46,7 +47,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.internal.core.util.ExtensionPointUtil;
-import org.eclipse.jst.server.generic.internal.core.util.FileUtil;
 import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.internal.servertype.definition.util.ServerTypeResourceFactoryImpl;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
@@ -66,14 +66,13 @@ public class XMLUtils {
 		definitions= new ArrayList();
          IExtension[] extensions = ExtensionPointUtil.getGenericServerDefinitionExtensions();
         for (int i = 0; extensions!=null && i < extensions.length; i++) {
-            File definitionFile=null;
+            java.net.URI definitionFile=null;
             IExtension extension = extensions[i];
             IConfigurationElement[] elements = ExtensionPointUtil.getConfigurationElements(extension);
             for (int j = 0; j < elements.length; j++) {
                 IConfigurationElement element = elements[j];
                 definitionFile = getDefinitionFile(element);
-                if(definitionFile!=null && definitionFile.exists() && definitionFile.isFile()){
-                    ServerRuntime runtime =readFile(definitionFile);
+                ServerRuntime runtime =readFile(definitionFile);
                     if(runtime!=null){
                         runtime.setId(element.getAttribute("id"));
                         runtime.setConfigurationElementNamespace(element.getNamespace());
@@ -82,19 +81,26 @@ public class XMLUtils {
                 }
             }
 
-        }
-	}
+       }
+
 
     /**
      * @param extension
      */
-    private File getDefinitionFile(IConfigurationElement element) {
+    private java.net.URI getDefinitionFile(IConfigurationElement element) {
         Bundle bundle = Platform.getBundle(element.getNamespace());
         String definitionFile = element.getAttribute("definitionfile");
-        return FileUtil.resolveFileFrom(bundle,definitionFile);
+		URL url = bundle.getEntry(definitionFile);
+		try {
+			java.net.URI uri = new java.net.URI(url.getProtocol(), url.getHost(),url.getPath(), url.getQuery());
+		    return uri;
+		} catch (URISyntaxException e) {
+			//ignore
+		}
+        return null;
     }
 
-    public ServerRuntime readFile(File file) {
+    public ServerRuntime readFile(java.net.URI file) {
         // Create a resource set.
         ResourceSet resourceSet = new ResourceSetImpl();
 
@@ -107,7 +113,7 @@ public class XMLUtils {
          ServerTypePackage gstPack = ServerTypePackage.eINSTANCE;
 
         // Get the URI of the model file.
-        URI fileURI = URI.createFileURI(file.getAbsolutePath());
+        URI fileURI = URI.createURI(file.toString());
 
         // Demand load the resource for this file.
         Resource resource = null;
@@ -123,7 +129,7 @@ public class XMLUtils {
         if (resource != null) {
             ServerRuntime def = (ServerRuntime) resource.getContents().get(0);
             if (def != null) {
-                def.setFilename(file.getAbsolutePath());
+                def.setFilename(file.toString());
                 return def;
             }
         }
@@ -139,19 +145,6 @@ public class XMLUtils {
 		return definitions;
 	}
 
-	/**
-//	 * @return ArrayList
-//	 */
-//	public ServerRuntime getServerTypeDefinitionNamed(String name) {
-//		refresh();
-//		Iterator defs = getServerTypeDefinitions().iterator();
-//		while (defs.hasNext()) {
-//			ServerRuntime elem = (ServerRuntime) defs.next();
-//			if (name.equals(elem.getName()))
-//				return elem;
-//		}
-//		return null;
-//	}
     public ServerRuntime getServerTypeDefinition(String id) {
         refresh();
         Iterator defs = getServerTypeDefinitions().iterator();
@@ -162,8 +155,7 @@ public class XMLUtils {
         }
         return null;
     }
-    
-    
+   
 	/**
 	 * Sets the definitions.
 	 * 
