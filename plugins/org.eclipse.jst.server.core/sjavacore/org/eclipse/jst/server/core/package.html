@@ -1,0 +1,66 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" href="../../../../..//apistyles.css" type="text/css">
+<title>WTP API overview</title>
+</head>
+<body>
+<table width="500">
+<tr>
+<td>
+<p>Support for Java and J2EE server types.</p>
+</td>
+</tr>
+</table>
+<table width="500">
+<tr>
+<td>
+<p>The ClasspathRuntimeTargetHandler class provides a common subclass
+for runtime target handlers that need to modify a project's classpath
+when a project is targetted to a particular runtime.</p>
+</td>
+</tr>
+</table>
+<table width="500">
+<tr>
+<td>
+<p>IGenericRuntime and its working copy provide type-specific access
+to the generic runtime type. When using a generic runtime, clients can
+access the type specific information by adapting to these types using
+<pre>IGenericRuntime gr = (IGenericRuntime) runtime.getAdapter(IGenericRuntime.class)</pre>.
+GenericRuntimeUtil contains some utility methods for handling the
+generic runtime type.</p>
+</td>
+</tr>
+</table>
+<table width="500">
+<tr>
+<td>
+<p>IEnterpriseApplication, IEJBModule, IWebModule, IApplicationClientModule,
+and IConnectorModule are J2EE module interfaces meant to be implemented
+by module delegates that provide J2EE module support.</p>
+</td>
+</tr>
+</table>
+<table width="500">
+<tr>
+<td>
+<p>ILooseArchive and ILooseArchiveSupport are module interfaces for modules
+that take advantage of loose archive support - allowing JARs contained within
+the module to be available in a separate Java project instead of directly
+within the module.</p>
+</td>
+</tr>
+</table>
+<table width="500">
+<tr>
+<td>
+<p>The remainder of the classes in this package are module artifact and
+launchable types to provide access to J2EE resource types for the server tool
+framework.</p>
+</td>
+</tr>
+</table>
+</body>
+</html>

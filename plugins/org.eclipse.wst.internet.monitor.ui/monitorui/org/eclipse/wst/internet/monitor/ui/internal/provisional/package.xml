@@ -9,7 +9,7 @@
 </head>
 
 <body>
-<p>TCP/IP monitor UI</p>
+<abstract>TCP/IP monitor UI</abstract>
 
 <p>The ContentViewer class is provided to
 implement the viewers extension point that allows external plugins to provide
