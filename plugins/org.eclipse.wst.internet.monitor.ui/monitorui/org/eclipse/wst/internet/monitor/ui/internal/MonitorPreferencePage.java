@@ -337,4 +337,12 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 			stop.setEnabled(false);
 		}
 	}
+	
+	/**
+	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+	 */
+	public void createControl(Composite parent) {
+		super.createControl(parent);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), ContextIds.PREF);
+	}
 }
