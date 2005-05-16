@@ -32,7 +32,6 @@ package org.eclipse.jst.server.generic.core.internal;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -42,7 +41,6 @@ import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.core.sourcelookup.ISourcePathComputerDelegate;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.internal.launching.JavaSourceLookupUtil;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
 /**
@@ -78,6 +76,6 @@ public class GenericServerSourcePathComputerDelegate implements ISourcePathCompu
 		System.arraycopy(projectEntries,0,entries,unresolvedEntries.length,projectEntries.length);
 		
 		IRuntimeClasspathEntry[] resolved = JavaRuntime.resolveSourceLookupPath(entries, configuration);
-		return JavaSourceLookupUtil.translate(resolved);
+		return JavaRuntime.getSourceContainers(resolved);
 	}
 }
