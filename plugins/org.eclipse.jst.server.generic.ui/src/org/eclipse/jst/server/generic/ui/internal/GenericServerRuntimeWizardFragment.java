@@ -53,7 +53,7 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwareWizardFragment {
 	
 	private ServerTypeDefinitionGroup fServerPanel;
-	private RuntimeDelegate fRuntimeDelegate;
+	private GenericServerRuntime fRuntimeDelegate;
     private Map fServerRuntimeProperties;
 	
 	/**
@@ -87,7 +87,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 		ServerRuntime definition=null;
         if(getRuntimeDelegate()!=null)
 		{
-			properties = getRuntimeDelegate().getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map)null);
+			properties = getRuntimeDelegate().getServerInstanceProperties();
 			definition = getServerTypeDefinition(getServerDefinitionId(),properties);
 		}
 		fServerPanel = new ServerTypeDefinitionGroup(this,definition,ServerTypeDefinitionGroup.CONTEXT_RUNTIME,properties,parent);
@@ -117,7 +117,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 		{
 		    Map properties = null;
 	        if (getRuntimeDelegate() != null) {
-	            properties = getRuntimeDelegate().getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,(Map) null);
+	            properties = getRuntimeDelegate().getServerInstanceProperties();
 	        }
 	        ServerRuntime definition = getServerTypeDefinition(serverDefinition,properties);
 	        if(fServerPanel!=null)
@@ -166,14 +166,14 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	    return name;
 	}
 	
-	private RuntimeDelegate getRuntimeDelegate()
+	private GenericServerRuntime getRuntimeDelegate()
 	{
 		if(fRuntimeDelegate == null)
 		{	
 		    IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy)getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 		    if(wc==null)
 		        return null;
-		    fRuntimeDelegate = (RuntimeDelegate)wc.getAdapter(RuntimeDelegate.class);
+		    fRuntimeDelegate = (GenericServerRuntime)wc.getAdapter(GenericServerRuntime.class);
 		}
 		return fRuntimeDelegate;
 	}
@@ -217,9 +217,10 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
        
         fServerRuntimeProperties = fServerPanel.getProperties();
         Map properties = getServerRuntimeProperties();
-        RuntimeDelegate dl = getRuntimeDelegate();
-        dl.setAttribute(GenericServerRuntime.SERVER_DEFINITION_ID, getRuntimeDelegate().getRuntime().getRuntimeType().getId());
-        dl.setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,properties);
+        GenericServerRuntime dl = getRuntimeDelegate();
+        dl.setServerDefinitionId(getRuntimeDelegate().getRuntime().getRuntimeType().getId());
+        dl.setServerInstanceProperties(properties);
+        
         dl.getRuntimeWorkingCopy().setName(createName());
     }
     

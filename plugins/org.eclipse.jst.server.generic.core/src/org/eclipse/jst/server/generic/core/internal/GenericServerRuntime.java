@@ -31,6 +31,7 @@
 package org.eclipse.jst.server.generic.core.internal;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
@@ -124,6 +125,22 @@ public class GenericServerRuntime extends RuntimeDelegate implements IGenericRun
 	   if(id==null)
 	       return null;
 	   return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(id,properties);
+	}
+	
+	public Map getServerInstanceProperties() {
+		return getAttribute(SERVER_INSTANCE_PROPERTIES, new HashMap());
+	}
+	
+	public String getServerDefinitionId() {
+		return getAttribute(SERVER_DEFINITION_ID, (String) null);
+	}
+	
+	public void setServerInstanceProperties(Map map) {
+		setAttribute(SERVER_INSTANCE_PROPERTIES, map);
+	}
+	
+	public void setServerDefinitionId(String s) {
+		setAttribute(SERVER_DEFINITION_ID, s);
 	}
 	
 }

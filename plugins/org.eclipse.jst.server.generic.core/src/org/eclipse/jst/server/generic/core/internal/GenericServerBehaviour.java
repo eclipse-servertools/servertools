@@ -1,3 +1,33 @@
+/*******************************************************************************
+ * Copyright (c) 2005 Eteration Bilisim A.S.
+ * All rights reserved.   This program and the accompanying materials
+ * are made available under the terms of the Common Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/cpl-v10.html
+ * 
+ * Contributors:
+ *     Gorkem Ercan - initial API and implementation
+ *     Naci M. Dai
+ * 
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL ETERATION A.S. OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Eteration Bilisim A.S.  For more
+ * information on eteration, please see
+ * <http://www.eteration.com/>.
+ ***************************************************************************/
 package org.eclipse.jst.server.generic.core.internal;
 
 import java.util.ArrayList;
@@ -34,7 +64,6 @@ import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.core.model.ServerDelegate;
-import org.eclipse.wst.server.core.util.PingThread;
 import org.eclipse.wst.server.core.util.SocketUtil;
 
 /**
@@ -55,7 +84,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
      * @see org.eclipse.wst.server.core.model.ServerBehaviourDelegate#publishServer(org.eclipse.core.runtime.IProgressMonitor)
      */
     public void publishServer(int kind, IProgressMonitor monitor) throws CoreException {
-        
+        // do nothing
     }
 
     /* (non-Javadoc)
@@ -367,7 +396,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     			int port = sp.getPort();
     			if (port != 80)
     				url += ":" + port;
-    			ping = new PingThread(getServer(),this, url, 50);
+    			ping = new PingThread(getServer(), url, 50, this);
     		} catch (Exception e) {
     			Trace.trace(Trace.SEVERE, "Can't ping for server startup.");
     		}
@@ -396,7 +425,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 
     protected void stopImpl() {
     	if (ping != null) {
-    		ping.stopPinging();
+    		ping.stop();
     		ping = null;
     	}
     	if (process != null) {
@@ -443,4 +472,8 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
         if(allpublished)
             setServerPublishState(IServer.PUBLISH_STATE_NONE);
     }
+    
+ 	protected void setServerStarted() {
+ 		setServerState(IServer.STATE_STARTED);
+ 	}
 }

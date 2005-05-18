@@ -52,7 +52,6 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.internal.ServerMonitorManager;
 import org.eclipse.wst.server.core.model.IURLProvider;
-import org.eclipse.wst.server.core.model.RuntimeDelegate;
 import org.eclipse.wst.server.core.model.ServerDelegate;
 import org.eclipse.wst.server.core.ServerPort;
 
@@ -168,9 +167,8 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	 * @return
 	 */
 	private Map getServerInstanceProperties() {
-		Map runtimeProperties =getRuntimeDelegate().getAttribute(
-				GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, new HashMap());
-		Map serverProperties = getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES,new HashMap(1));
+		Map runtimeProperties =getRuntimeDelegate().getServerInstanceProperties();
+		Map serverProperties = getServerInstancePropertiesImpl();
 		Map instanceProperties = new HashMap(runtimeProperties.size()+serverProperties.size());
 		instanceProperties.putAll(runtimeProperties);
 		instanceProperties.putAll(serverProperties);
@@ -248,15 +246,14 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
     	if (fServerDefinition == null)
     		fServerDefinition = CorePlugin.getDefault()
     				.getServerTypeDefinitionManager()
-    				.getServerRuntimeDefinition(getRuntimeDelegate().getAttribute(
-    								GenericServerRuntime.SERVER_DEFINITION_ID,
-    								""), getServerInstanceProperties());
+    				.getServerRuntimeDefinition(getRuntimeDelegate().getServerDefinitionId(),
+    								getServerInstanceProperties());
     	return fServerDefinition;
     }
 
-    private RuntimeDelegate getRuntimeDelegate()
+    private GenericServerRuntime getRuntimeDelegate()
     {
-       return (RuntimeDelegate)getServer().getRuntime().getAdapter(RuntimeDelegate.class);
+       return (GenericServerRuntime)getServer().getRuntime().getAdapter(GenericServerRuntime.class);
     }
 
 
@@ -307,4 +304,11 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
         return null;
     }
 
+    public Map getServerInstancePropertiesImpl() {
+ 		return getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, new HashMap());
+ 	}
+ 	
+ 	public void setServerInstanceProperties(Map map) {
+ 		setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, map);
+ 	}
 }

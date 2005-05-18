@@ -22,6 +22,7 @@
       <import plugin="org.eclipse.jdt.debug.ui"/>
       <import plugin="org.eclipse.jst.server.generic.core"/>
       <import plugin="org.eclipse.wst.server.core" />
+      <import plugin="org.eclipse.jst.server.core" />
    </requires>
 
   <!--<extension point="org.eclipse.wst.server.ui.editorPages">
