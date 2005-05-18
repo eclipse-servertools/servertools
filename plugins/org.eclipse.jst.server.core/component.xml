@@ -33,4 +33,6 @@
   <plugin id="org.eclipse.jst.server.tomcat.ui" fragment="false"/>
 
   <plugin id="org.eclipse.jst.server.geronimo.core" fragment="false"/>
+
+  <plugin id="org.eclipse.jst.server.geronimo.ui" fragment="false"/>
 </component>
