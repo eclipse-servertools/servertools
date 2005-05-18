@@ -43,7 +43,6 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.internal.RuntimeType;
-import org.eclipse.wst.server.core.model.RuntimeDelegate;
 
 public class ServerCreationTest extends TestCase {
 
@@ -130,7 +129,7 @@ public class ServerCreationTest extends TestCase {
 		assertNotNull("Runtime working copy has no name",runtimeWorkingCopy.getName());
 		
 		// Set properties for the JONAS runtime
-		RuntimeDelegate runtimeDelegate = (RuntimeDelegate)runtimeWorkingCopy.getAdapter(RuntimeDelegate.class);
+		GenericServerRuntime runtimeDelegate = (GenericServerRuntime)runtimeWorkingCopy.getAdapter(GenericServerRuntime.class);
 		assertNotNull("Could not obtain runtime delegate",runtimeDelegate);
 		
 		HashMap props = new HashMap();
@@ -142,8 +141,7 @@ public class ServerCreationTest extends TestCase {
 		props.put("classPath", "C:\\nmd\\dev\\java\\appservers\\JOnAS-4.1.4");
 		props.put("protocols", "C:\\nmd\\dev\\java\\appservers\\JOnAS-4.1.4");
 		props.put("port", "9000");		
-	    runtimeDelegate.setAttribute(
-				GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, props);
+	    runtimeDelegate.setServerInstanceProperties(props);
 	    
 	    //Save the runtime working copy 
 		runtimeWorkingCopy.save(false,null);

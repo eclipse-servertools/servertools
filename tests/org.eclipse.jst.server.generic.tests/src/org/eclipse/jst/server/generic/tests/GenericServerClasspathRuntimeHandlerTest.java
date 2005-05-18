@@ -15,7 +15,6 @@ import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.model.RuntimeDelegate;
 
 import junit.framework.TestCase;
 
@@ -36,7 +35,7 @@ public class GenericServerClasspathRuntimeHandlerTest extends TestCase {
         super.setUp();
         IRuntimeType type =ServerCore.findRuntimeType("org.eclipse.jst.server.generic.runtime.jonas414");
         IRuntimeWorkingCopy wc = type.createRuntime("testRuntime",null);
-        RuntimeDelegate delegate = (RuntimeDelegate)wc.getAdapter(RuntimeDelegate.class);
+        GenericServerRuntime delegate = (GenericServerRuntime)wc.getAdapter(GenericServerRuntime.class);
 		HashMap props = new HashMap();
 		props.put("mappernames", "");
 		props.put("classPathVariableName", "JONAS");
@@ -46,9 +45,8 @@ public class GenericServerClasspathRuntimeHandlerTest extends TestCase {
 		props.put("classPath", CLASSPATH_PREFIX);
 		props.put("protocols", "jrmp");
 		props.put("port", "9000");		
-	    delegate.setAttribute(
-				GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, props);
-	    delegate.setAttribute(GenericServerRuntime.SERVER_DEFINITION_ID,SERVER_DEF_NAME);
+	    delegate.setServerInstanceProperties(props);
+	    delegate.setServerDefinitionId(SERVER_DEF_NAME);
 		wc.save(false,null);
 		
 		fRuntime = wc.getOriginal();
