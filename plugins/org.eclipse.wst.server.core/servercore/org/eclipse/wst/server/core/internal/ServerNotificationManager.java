@@ -48,21 +48,27 @@ public class ServerNotificationManager {
 	}
 
 	/**
-	 * LaunchableClient constructor comment.
+	 * Create a new notification manager.
 	 */
 	public ServerNotificationManager() {
 		super();
 	}
 
-
 	/**
 	 * Add listener for all events.
+	 * 
 	 * @param curListener
 	 */
 	public void addListener(IServerListener curListener) {
 		addListener(curListener, ALL_EVENTS);
 	}
 	
+	/**
+	 * Add listener for the events specified by the mask.
+	 * 
+	 * @param curListener
+	 * @param eventMask
+	 */
 	public void addListener(IServerListener curListener, int eventMask) {
 		Trace.trace(Trace.FINEST, "->- Adding server listener to notification manager: " + curListener + " " + eventMask + " ->-");
 		if (curListener == null) {
@@ -73,8 +79,8 @@ public class ServerNotificationManager {
 			listenerList.add(new ListenerEntry(curListener, eventMask));
 		}
 	}
-	
-	public void broadcastChange(ServerEvent event) {
+
+	protected void broadcastChange(ServerEvent event) {
 		Trace.trace(Trace.FINEST, "->- Broadcasting server event: " + event + " ->-");
 		if (event == null) {
 			return;
@@ -82,16 +88,23 @@ public class ServerNotificationManager {
 		int eventKind = event.getKind();
 		Trace.trace(Trace.FINEST, "  Server event kind: " + eventKind + " ->-");
 		
-		// Only notify listeners that listen to module event.
-		Iterator listenerIter = listenerList.iterator();
-		while (listenerIter.hasNext()) {
-			ListenerEntry curEntry = (ListenerEntry)listenerIter.next();
+		// only notify listeners that listen to module event
+		int size;
+		ListenerEntry[] listeners;
+		synchronized (listenerList) {
+			size = listenerList.size();
+			listeners = (ListenerEntry[]) listenerList.toArray(new ListenerEntry[size]);
+		}
+		for (int i = 0; i < size; i++) {
+			ListenerEntry curEntry = listeners[i];
 			int mask = curEntry.getEventMask();
-			// Check if the type of the event matches the mask, e.g. server or module change.
+
+			// check if the type of the event matches the mask, e.g. server or module change
 			boolean isTypeMatch = ((mask & eventKind & ServerEvent.SERVER_CHANGE) != 0) 
-														|| ((mask & eventKind & ServerEvent.MODULE_CHANGE) != 0);
-			// Check the kind of change.
+					|| ((mask & eventKind & ServerEvent.MODULE_CHANGE) != 0);
+			// check the kind of change
 			boolean isKindMatch = (mask & eventKind ^ ServerEvent.SERVER_CHANGE ^ ServerEvent.MODULE_CHANGE) != 0;
+			
 			if (isTypeMatch && isKindMatch) {
 				Trace.trace(Trace.FINEST, "->- Firing server event to listener: " + curEntry.getListener() + " ->-");
 				try {
@@ -107,13 +120,19 @@ public class ServerNotificationManager {
 	}
 	
 	/**
+	 * Returns true if the listener list is not empty; otherwise, returns false.
 	 * 
-	 * @return true if the listener list is not empty; otherwise, returns false.
+	 * @return true if the listener list is not empty; otherwise, returns false
 	 */
-	public boolean hasListenerEntries() {
+	protected boolean hasListenerEntries() {
 		return listenerList.size() == 0;
 	}
 	
+	/**
+	 * Remove a listener from notification.
+	 * 
+	 * @param curListener
+	 */
 	public void removeListener(IServerListener curListener) {
 		Trace.trace(Trace.FINEST, "->- Removing server listener from notification manager: " + curListener + " ->-");
 		if (curListener == null) {
