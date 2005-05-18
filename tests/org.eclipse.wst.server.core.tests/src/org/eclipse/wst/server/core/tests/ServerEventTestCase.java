@@ -15,7 +15,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.wst.server.core.*;
 
@@ -77,11 +76,14 @@ public class ServerEventTestCase extends TestCase {
 			public ILaunchConfiguration getLaunchConfiguration(boolean create, IProgressMonitor monitor) throws CoreException {
 				return null;
 			}
-			public ILaunch start(String launchMode, IProgressMonitor monitor) throws CoreException {
-				return null;
+			public void start(String launchMode, IProgressMonitor monitor) throws CoreException {
+				// do nothing
 			}
-			public ILaunch synchronousStart(String launchMode, IProgressMonitor monitor) throws CoreException {
-				return null;
+			public void start(String launchMode, IServer.IOperationListener listener) {
+				// do nothing
+			}
+			public void synchronousStart(String launchMode, IProgressMonitor monitor) throws CoreException {
+				// do nothing
 			}
 			public IStatus canRestart(String mode) {
 				return null;
@@ -89,32 +91,35 @@ public class ServerEventTestCase extends TestCase {
 			public boolean getServerRestartState() {
 				return false;
 			}
-			public void restart(String mode) {
-				// do nothing.
+			public void restart(String mode, IProgressMonitor monitor) {
+				// do nothing
+			}
+			public void restart(String mode, IServer.IOperationListener listener) {
+				// do nothing
 			}
 			public void synchronousRestart(String launchMode, IProgressMonitor monitor) throws CoreException {
-				// do nothing.
+				// do nothing
 			}
 			public IStatus canStop() {
-			return null;
+				return null;
 			}
 			public void stop(boolean force) {
-				// do nothing.
+				// do nothing
+			}
+			public void stop(boolean force, IServer.IOperationListener listener) {
+				// do nothing
 			}
 			public void synchronousStop(boolean force) {
-				// do nothing.
+				// do nothing
 			}
-			public IStatus canRestartModule(IModule[] module, IProgressMonitor monitor) {
+			public IStatus canControlModule(IModule[] module, IProgressMonitor monitor) {
 				return null;
 			}
 			public boolean getModuleRestartState(IModule[] module) {
 				return false;
 			}
-			public void restartModule(IModule[] module, IProgressMonitor monitor) throws CoreException {
-				// do nothing.
-			}
 			public void synchronousRestartModule(IModule[] module, IProgressMonitor monitor) throws CoreException {
-				// do nothing.
+				// do nothing
 			}
 			public int getModuleState(IModule[] module) {
 				return 0;
@@ -129,7 +134,7 @@ public class ServerEventTestCase extends TestCase {
 				return null;
 			}
 			public void delete() throws CoreException {
-				// do nothing.
+				// do nothing
 			}
 			public boolean isReadOnly() {
 				return false;
@@ -187,6 +192,15 @@ public class ServerEventTestCase extends TestCase {
 			}
 			public Object getAdapter(Class adapter) {
 				return null;
+			}
+			public void startModule(IModule[] module, IServer.IOperationListener listener) {
+				// do nothing
+			}
+			public void stopModule(IModule[] module, IServer.IOperationListener listener) {
+				// do nothing
+			}
+			public void restartModule(IModule[] module, IServer.IOperationListener listener) {
+				// do nothing
 			}
 		};
 	}

@@ -26,14 +26,6 @@ public class ProjectModuleFactoryDelegateTestCase extends TestCase {
 	public void test00Create() {
 		delegate = new TestProjectModuleFactoryDelegate();
 	}
-	
-	public void test01Initialize() {
-		delegate.initialize(null);
-	}
-
-	public void test02CreateModule() {
-		delegate.createModule(null, null, null, null, null);
-	}
 
 	public void test03GetModuleDelegate() {
 		delegate.getModuleDelegate(null);

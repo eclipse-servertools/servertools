@@ -88,6 +88,18 @@ public abstract class AbstractServerTestCase extends TestCase {
 		getServer().getAdapter(ServerDelegate.class);
 	}
 
+	public void test0005bDelegate() throws Exception {
+		getServer().loadAdapter(ServerDelegate.class, null);
+	}
+
+	public void test0005cDelegate() throws Exception {
+		serverAttr.getAdapter(ServerDelegate.class);
+	}
+
+	public void test0005dDelegate() throws Exception {
+		serverAttr.loadAdapter(ServerDelegate.class, null);
+	}
+
 	public void test0006Delegate() throws Exception {
 		getServer().getAdapter(ServerBehaviourDelegate.class);
 	}
@@ -183,7 +195,7 @@ public abstract class AbstractServerTestCase extends TestCase {
 	}
 	
 	public void test0026CanRestartModule() {
-		server.canRestartModule(null, null);
+		server.canControlModule(null, null);
 	}
 	
 	public void test0027AddServerListener() {

@@ -33,7 +33,6 @@ import org.eclipse.wst.server.core.tests.extension.*;
 import org.eclipse.wst.server.core.tests.model.*;
 import org.eclipse.wst.server.core.tests.util.HTTPLaunchableTestCase;
 import org.eclipse.wst.server.core.tests.util.NullModuleArtifactTestCase;
-import org.eclipse.wst.server.core.tests.util.PingThreadTestCase;
 import org.eclipse.wst.server.core.tests.util.ProjectModuleFactoryDelegateTestCase;
 import org.eclipse.wst.server.core.tests.util.ProjectModuleTestCase;
 import org.eclipse.wst.server.core.tests.util.SocketUtilTestCase;
@@ -98,7 +97,6 @@ public class AllTests {
 		suite.addTest(new OrderedTestSuite(ModuleFactoryEventTestCase.class));
 		suite.addTest(new OrderedTestSuite(ModuleFactoryDelegateTestCase.class));
 		
-		suite.addTest(new OrderedTestSuite(PingThreadTestCase.class));
 		suite.addTest(new OrderedTestSuite(ProjectModuleTestCase.class));
 		suite.addTest(new OrderedTestSuite(ProjectModuleFactoryDelegateTestCase.class));
 		

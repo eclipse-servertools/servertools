@@ -61,5 +61,6 @@ public class IModuleTestCase extends TestCase {
 		module.getModuleType();
 		module.getProject();
 		module.getAdapter(null);
+		module.loadAdapter(null, null);
 	}
 }

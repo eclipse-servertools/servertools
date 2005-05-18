@@ -25,6 +25,7 @@ public class TestModuleFactoryDelegate extends ModuleFactoryDelegate {
 	
 	public void testProtectedMethods() {
 		try {
+			createModule(null, null, null, null, null);
 			getId();
 		} catch (Exception e) {
 			// ignore

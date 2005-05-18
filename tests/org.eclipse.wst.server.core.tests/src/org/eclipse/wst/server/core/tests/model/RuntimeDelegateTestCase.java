@@ -10,13 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.wst.server.core.internal.Runtime;
-import org.eclipse.wst.server.core.internal.RuntimeWorkingCopy;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 import org.eclipse.wst.server.core.tests.impl.TestRuntimeDelegate;
@@ -31,14 +27,6 @@ public class RuntimeDelegateTestCase extends TestCase {
 	public void test00CreateDelegate() throws Exception {
 		delegate = new TestRuntimeDelegate();
 	}
-	
-	public void test01Initialize() throws Exception {
-		delegate.initialize();
-	}
-	
-	public void test02Initialize() throws Exception {
-		delegate.initialize(new RuntimeWorkingCopy(new Runtime(null)));
-	}
 
 	public void test03GetRuntime() throws Exception {
 		delegate.getRuntime();
@@ -48,28 +36,12 @@ public class RuntimeDelegateTestCase extends TestCase {
 		delegate.getRuntimeWorkingCopy();
 	}
 	
-	public void test05Validate() throws Exception {
-		delegate.validate();
-	}
-
-	public void test06GetAttribute() throws Exception {
-		delegate.getAttribute("test", false);
-	}
-	
-	public void test07GetAttribute() throws Exception {
-		delegate.getAttribute("test", 0);
-	}
-	
-	public void test08GetAttribute() throws Exception {
-		delegate.getAttribute("test", new ArrayList());
-	}
-	
-	public void test09GetAttribute() throws Exception {
-		delegate.getAttribute("test", new HashMap());
-	}
-	
-	public void test10GetAttribute() throws Exception {
-		delegate.getAttribute("test", "test");
+	public void test05Validate() {
+		try {
+			delegate.validate();
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 	
 	public void test11Dispose() throws Exception {
@@ -80,23 +52,7 @@ public class RuntimeDelegateTestCase extends TestCase {
 		delegate.setDefaults();
 	}
 	
-	public void test13SetAttribute() throws Exception {
-		delegate.setAttribute("test", false);
-	}
-	
-	public void test14SetAttribute() throws Exception {
-		delegate.setAttribute("test", 0);
-	}
-	
-	public void test15SetAttribute() throws Exception {
-		delegate.setAttribute("test", new ArrayList());
-	}
-	
-	public void test16SetAttribute() throws Exception {
-		delegate.setAttribute("test", new HashMap());
-	}
-	
-	public void test17SetAttribute() throws Exception {
-		delegate.setAttribute("test", "test");
+	public void test13Protected() throws Exception {
+		((TestRuntimeDelegate)delegate).testProtected();
 	}
 }

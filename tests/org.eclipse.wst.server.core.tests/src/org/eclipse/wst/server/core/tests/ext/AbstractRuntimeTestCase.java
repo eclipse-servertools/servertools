@@ -81,6 +81,10 @@ public abstract class AbstractRuntimeTestCase extends TestCase {
 	public void test0005Delegate() throws Exception {
 		getRuntime().getAdapter(RuntimeDelegate.class);
 	}
+	
+	public void test0005bDelegate() throws Exception {
+		getRuntime().loadAdapter(RuntimeDelegate.class, null);
+	}
 
 	public void test0006Validate() throws Exception {
 		IStatus status = getRuntime().validate(null);

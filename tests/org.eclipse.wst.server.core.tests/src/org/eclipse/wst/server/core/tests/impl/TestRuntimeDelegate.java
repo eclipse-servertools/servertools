@@ -10,8 +10,72 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 
 public class TestRuntimeDelegate extends RuntimeDelegate {
-	// do nothing
+	public void testProtected() {
+		initialize();
+		
+		try {
+			getAttribute("test", false);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			getAttribute("test", 0);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+		getAttribute("test", new ArrayList());
+		} catch (Exception e) {
+			// ignore
+		}
+
+		try {
+			getAttribute("test", new HashMap());
+		} catch (Exception e) {
+			// ignore
+		}
+	
+		try {
+			getAttribute("test", "test");
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			setAttribute("test", false);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			setAttribute("test", 0);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			setAttribute("test", new ArrayList());
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			setAttribute("test", new HashMap());
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			setAttribute("test", "test");
+		} catch (Exception e) {
+			// ignore
+		}
+	}
 }

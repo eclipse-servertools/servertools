@@ -19,6 +19,12 @@ public class TestServerBehaviourDelegate extends ServerBehaviourDelegate {
 	
 	public void testProtected() {
 		try {
+			setMode(null);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
 			initialize();
 		} catch (Exception e) {
 			// ignore
@@ -44,6 +50,90 @@ public class TestServerBehaviourDelegate extends ServerBehaviourDelegate {
 		
 		try {
 			publishFinish(null);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			setServerState(0);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			setServerPublishState(0);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			setServerRestartState(false);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			setModuleState(null, 0);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			setModulePublishState(null, 0);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			setModuleRestartState(null, false);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			canControlModule(null);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			getPublishedResourceDelta(null);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			getPublishedResources(null);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			getTempDirectory();
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			setServerStatus(null);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			setModuleStatus(null, null);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			startModule(null, null);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		try {
+			stopModule(null, null);
 		} catch (Exception e) {
 			// ignore
 		}
