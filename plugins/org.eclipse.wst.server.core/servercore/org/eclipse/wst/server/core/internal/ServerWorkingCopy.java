@@ -24,6 +24,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.model.InternalInitializer;
 import org.eclipse.wst.server.core.model.ServerDelegate;
 /**
  * 
@@ -203,7 +204,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 						long time = System.currentTimeMillis();
 						IConfigurationElement element = ((ServerType) serverType).getElement();
 						workingCopyDelegate = (ServerDelegate) element.createExecutableExtension("class");
-						workingCopyDelegate.initialize(this);
+						InternalInitializer.initializeServerDelegate(workingCopyDelegate, this);
 						Trace.trace(Trace.PERFORMANCE, "ServerWorkingCopy.getWorkingCopyDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
 					} catch (Exception e) {
 						Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);

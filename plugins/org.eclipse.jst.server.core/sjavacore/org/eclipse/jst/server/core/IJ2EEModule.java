@@ -25,8 +25,7 @@ public interface IJ2EEModule {
 	public String getJ2EESpecificationVersion();
 
 	/**
-	 * Returns the location of the root of the module. May
-	 * return null if isUnitTest() returns false. This should
+	 * Returns the location of the root of the module. This should
 	 * be an absolute path that is not workbench relative.
 	 * 
 	 * @return the absolute path to the root of this application

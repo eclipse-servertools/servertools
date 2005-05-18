@@ -17,6 +17,10 @@ import org.eclipse.wst.server.core.IServer;
  * A publish task delegate.
  * 
  * <p>This is the implementation of a publishTask extension point.</p>
+ * <p>
+ * This abstract class is intended to be extended only by clients
+ * to extend the <code>publishTask</code> extension point.
+ * </p>
  * 
  * @since 1.0
  */

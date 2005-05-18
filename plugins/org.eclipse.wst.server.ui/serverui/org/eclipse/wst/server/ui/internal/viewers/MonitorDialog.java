@@ -211,7 +211,7 @@ public class MonitorDialog extends Dialog {
 			portChanged = true;
 			String[] ct = contentTypes;
 			tableViewer.setSelection(new StructuredSelection(port));
-			if (ct != null)
+			if (ct != null && ct.length > 0)
 				combo.setText(MonitorLabelProvider.getContentTypeString(ct[0]));
 		} else if (tableViewer != null) {
 			try {

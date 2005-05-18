@@ -30,10 +30,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * <p>
  * Two server types are identical if and only if they have the same id.
  * </p>
- * <p>
- * <it>Caveat: The server core API is still in an early form, and is
- * likely to change significantly before the initial release.</it>
- * </p>
  * 
  * @since 1.0
  */

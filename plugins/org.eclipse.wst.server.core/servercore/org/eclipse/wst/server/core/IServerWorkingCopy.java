@@ -19,10 +19,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * to a server instance ({@link IServer}).
  *
  * <p>This interface is not intended to be implemented by clients.</p>
- * <p>
- * <it>Caveat: The server core API is still in an early form, and is
- * likely to change significantly before the initial release.</it>
- * </p>
  * 
  * @since 1.0
  */

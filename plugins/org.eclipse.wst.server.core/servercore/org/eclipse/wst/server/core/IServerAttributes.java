@@ -71,10 +71,6 @@ import org.eclipse.core.runtime.*;
  * </p>
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
- * <p>
- * <it>Caveat: The server core API is still in an early form, and is
- * likely to change significantly before the initial release.</it>
- * </p>
  * 
  * @since 1.0
  */
@@ -256,8 +252,11 @@ public interface IServerAttributes extends IAdaptable {
 	public IServerWorkingCopy createWorkingCopy();
 
 	/**
-	 * Returns an array of user modules that are currently being published to
-	 * this server.
+	 * Returns an array of user modules that are currently configured on
+	 * the server. When the server is published, these are the projects
+	 * that will be configured on the server. This method may not return
+	 * the list of projects that are currently on the server if a module
+	 * has been added since the last publish.
 	 * <p>
 	 * This method returns the root modules, which are not parented within
 	 * another modules. Each of these may contain child modules, which are

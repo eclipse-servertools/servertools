@@ -159,7 +159,7 @@ public class TasksWizardFragment extends WizardFragment {
 							int kind = tasks2[j].getKind(); 
 							if (kind == PublishOperation.OPTIONAL || kind == PublishOperation.PREFERRED)
 								hasOptionalTasks = true;
-							tasks2[i].setTaskModel(getTaskModel());
+							tasks2[j].setTaskModel(getTaskModel());
 							addServerTask(server, tasks2[j]);
 						}
 					}

@@ -11,7 +11,6 @@
 package org.eclipse.wst.server.core;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.debug.core.ILaunch;
 /**
  * Represents a server instance. Every server is an instance of a
  * particular, fixed server type.
@@ -64,14 +63,14 @@ import org.eclipse.debug.core.ILaunch;
  * </p>
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
- * <p>
- * <it>Caveat: The server core API is still in an early form, and is
- * likely to change significantly before the initial release.</it>
- * </p>
  * 
  * @since 1.0
  */
 public interface IServer extends IServerAttributes {
+	public interface IOperationListener {
+		public void done(IStatus result);
+	}
+
 	/**
 	 * Server state constant (value 0) indicating that the
 	 * server is in an unknown state.
@@ -212,14 +211,6 @@ public interface IServer extends IServerAttributes {
 	public int getServerPublishState();
 
 	/**
-	 * Returns the module's sync state.
-	 * 
-	 * @param module the module
-	 * @return one of the PUBLISH_XXX state flags
-	 */
-	public int getModulePublishState(IModule[] module);
-
-	/**
 	 * Adds the given server state listener to this server.
 	 * Once registered, a listener starts receiving notification of 
 	 * state changes to this server. The listener continues to receive
@@ -295,17 +286,15 @@ public interface IServer extends IServerAttributes {
 
 	/**
 	 * Asynchronously starts this server in the given launch mode.
-	 * Returns the debug launch object that can be used in a debug
-	 * session.
 	 * <p>
 	 * If canStart(launchMode) is false, this method will throw an
 	 * exception.
 	 * </p>
 	 * <p>
-	 * [issue: There is no way to communicate failure to the
-	 * client for the async portion of this operation. Given that
-	 * this operation can go awry, there probably should be a mechanism
-	 * that allows failing asynch operations to be diagnosed.]
+	 * If the caller wants to listen for failure or success of the
+	 * server starting, it can add a server listener or use the
+	 * version of this method that takes a status listener as a
+	 * parameter.
 	 * </p>
 	 *
 	 * @param launchMode a mode in which a server can be launched,
@@ -313,11 +302,33 @@ public interface IServer extends IServerAttributes {
 	 *    {@link org.eclipse.debug.core.ILaunchManager}
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
-	 * @return a debug launch object
 	 * @exception CoreException if an error occurs while trying to start the server
 	 */
-	public ILaunch start(String launchMode, IProgressMonitor monitor) throws CoreException;
+	public void start(String launchMode, IProgressMonitor monitor) throws CoreException;
 	
+	/**
+	 * Asynchronously starts this server in the given launch mode.
+	 * <p>
+	 * If canStart(launchMode) is false, this method will throw an
+	 * exception.
+	 * </p>
+	 * <p>
+	 * The operation listener can be used to add a listener for notification
+	 * of this specific server launch. The listener will be called with a
+	 * single successful status (severity OK) when the server has
+	 * finished starting, or a single failure (severity ERROR) if
+	 * there was an error starting the server.
+	 * </p>
+	 * 
+	 * @param launchMode a mode in which a server can be launched,
+	 *    one of the mode constants defined by
+	 *    {@link org.eclipse.debug.core.ILaunchManager}
+	 * @param listener an operation listener to receive notification when this
+	 *    operation is done, or <code>null</code> if notification is not
+	 *    required
+	 */
+	public void start(String launchMode, IOperationListener listener);
+
 	/**
 	 * Starts this server in the given launch mode and waits until the server
 	 * has finished starting.
@@ -332,11 +343,12 @@ public interface IServer extends IServerAttributes {
 	 *    {@link org.eclipse.debug.core.ILaunchManager}
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
-	 * @return the launch
+	 * @deprecated this method is deprecated. use start(String,
+	 *    IProgressMonitor, IOperationListener) instead
 	 * @exception CoreException if an error occurs while trying to start the server
 	 */
-	public ILaunch synchronousStart(String launchMode, IProgressMonitor monitor) throws CoreException;
-	
+	public void synchronousStart(String launchMode, IProgressMonitor monitor) throws CoreException;
+
 	/**
 	 * Returns whether this server is in a state that it can
 	 * be restarted in the given mode. Note that only servers
@@ -349,7 +361,7 @@ public interface IServer extends IServerAttributes {
 	 *    be restarted, otherwise a status object indicating why it can't
 	 */
 	public IStatus canRestart(String mode);
-	
+
 	/**
 	 * Returns whether this server is out of sync and needs to be
 	 * restarted. This method will return false when the
@@ -372,18 +384,42 @@ public interface IServer extends IServerAttributes {
 	 * returns <code>false</code>.
 	 * This method cannot be used to start the server from a stopped state.
 	 * <p>
-	 * [issue: There is no way to communicate failure to the
-	 * client. Given that this operation can go awry, there probably
-	 * should be a mechanism that allows failing asynch operations
-	 * to be diagnosed.]
+	 * If the caller wants to listen for failure or success of the
+	 * server restarting, it can add a server listener or use the
+	 * version of this method that takes a status listener as a
+	 * parameter.
 	 * </p>
 	 *
 	 * @param launchMode a mode in which a server can be launched,
 	 *    one of the mode constants defined by
 	 *    {@link org.eclipse.debug.core.ILaunchManager}
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 */
-	public void restart(String launchMode);
-	
+	public void restart(String launchMode, IProgressMonitor monitor);
+
+	/**
+	 * Asynchronously restarts this server. This operation does
+	 * nothing if this server cannot be stopped ({@link #canRestart(String)}
+	 * returns <code>false</code>.
+	 * This method cannot be used to start the server from a stopped state.
+	 * <p>
+	 * The operation listener can be used to add a listener for notification
+	 * of this specific server restart. The listener will be called with a
+	 * single successful status (severity OK) when the server has
+	 * finished restarting, or a single failure (severity ERROR) if
+	 * there was an error restarting the server.
+	 * </p>
+	 *
+	 * @param launchMode a mode in which a server can be launched,
+	 *    one of the mode constants defined by
+	 *    {@link org.eclipse.debug.core.ILaunchManager}
+	 * @param listener an operation listener to receive notification when this
+	 *    operation is done, or <code>null</code> if notification is not
+	 *    required
+	 */
+	public void restart(String launchMode, IOperationListener listener);
+
 	/**
 	 * Synchronously restarts this server. This operation does
 	 * nothing if this server cannot be stopped ({@link #canRestart(String)}
@@ -401,6 +437,8 @@ public interface IServer extends IServerAttributes {
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @throws CoreException if there was an error
+	 * @deprecated this method is deprecated. use restart(String,
+	 *    IProgressMonitor, IOperationListener) instead
 	 */
 	public void synchronousRestart(String launchMode, IProgressMonitor monitor) throws CoreException;
 
@@ -425,16 +463,41 @@ public interface IServer extends IServerAttributes {
 	 * process will be terminated any way that it can.
 	 * </p>
 	 * <p>
-	 * [issue: There is no way to communicate failure to the
-	 * client. Given that this operation can go awry, there probably
-	 * should be a mechanism that allows failing asynch operations
-	 * to be diagnosed.]
+	 * If the caller wants to listen for success or failure of the
+	 * server stopping, it can add a server listener or use the
+	 * version of this method that takes a status listener as a
+	 * parameter.
 	 * </p>
 	 * 
 	 * @param force <code>true</code> to kill the server, or <code>false</code>
 	 *    to stop normally
 	 */
 	public void stop(boolean force);
+
+	/**
+	 * Asynchronously stops this server. This operation does
+	 * nothing if this server cannot be stopped ({@link #canStop()}
+	 * returns <code>false</code>.
+	 * <p>
+	 * If force is <code>false</code>, it will attempt to stop the server
+	 * normally/gracefully. If force is <code>true</code>, then the server
+	 * process will be terminated any way that it can.
+	 * </p>
+	 * <p>
+	 * The operation listener can be used to add a listener for notification
+	 * of this specific server stop. The listener will be called with a
+	 * single successful status (severity OK) when the server has
+	 * finished stopping, or a single failure (severity ERROR) if
+	 * there was an error stopping the server.
+	 * </p>
+	 * 
+	 * @param force <code>true</code> to kill the server, or <code>false</code>
+	 *    to stop normally
+	 * @param listener an operation listener to receive notification when this
+	 *    operation is done, or <code>null</code> if notification is not
+	 *    required
+	 */
+	public void stop(boolean force, IOperationListener listener);
 
 	/**
 	 * Stops this server and waits until the server has completely stopped.
@@ -446,25 +509,29 @@ public interface IServer extends IServerAttributes {
 	 * 
 	 * @param force <code>true</code> to kill the server, or <code>false</code>
 	 *    to stop normally
+	 * @deprecated this method is deprecated. use stop(boolean,
+	 *    IOperationListener) instead
 	 */
 	public void synchronousStop(boolean force);
 
 	/**
-	 * Returns whether the given module can be restarted.
-	 * <p>
-	 * [issue: It's unclear whether this operations is guaranteed to be fast
-	 * or whether it could involve communication with any actual
-	 * server. If it is not fast, the method should take a progress
-	 * monitor.]
-	 * </p>
+	 * Returns the current state of the given module on this server.
+	 * Returns <code>STATE_UNKNOWN</code> if the module
+	 * is not among the ones associated with this server.
 	 * 
 	 * @param module the module
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @return a status object with code <code>IStatus.OK</code> if the module can
-	 *    be restarted, otherwise a status object indicating why it can't
+	 * @return one of the state (<code>STATE_XXX</code>) constants declared
+	 *    on {@link IServer}
 	 */
-	public IStatus canRestartModule(IModule[] module, IProgressMonitor monitor);
+	public int getModuleState(IModule[] module);
+
+	/**
+	 * Returns the module's sync state.
+	 * 
+	 * @param module the module
+	 * @return one of the PUBLISH_XXX state flags
+	 */
+	public int getModulePublishState(IModule[] module);
 
 	/**
 	 * Check if the given module is in sync on the server. It should
@@ -477,10 +544,61 @@ public interface IServer extends IServerAttributes {
 	public boolean getModuleRestartState(IModule[] module);
 
 	/**
+	 * Returns whether the given module can be restarted.
+	 * <p>
+	 * This method has a progress monitor because it may involve plugin
+	 * and class loading. No communication to the server will occur.
+	 * </p>
+	 * 
+	 * @param module the module
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return a status object with code <code>IStatus.OK</code> if the module can
+	 *    be restarted, otherwise a status object indicating why it can't
+	 */
+	public IStatus canControlModule(IModule[] module, IProgressMonitor monitor);
+
+	/**
+	 * Asynchronously starts this server in the given launch mode.
+	 * <p>
+	 * If canStart(launchMode) is false, this method will throw an
+	 * exception.
+	 * </p>
+	 * <p>
+	 * The operation listener can be used to add a listener for notification
+	 * of this specific module start. The listener will be called with a
+	 * single successful status (severity OK) when the module has
+	 * finished starting, or a single failure (severity ERROR) if
+	 * there was an error starting the module.
+	 * </p>
+	 *
+	 *@param module the module to be started
+	 * @param listener an operation listener to receive notification when this
+	 *    operation is done, or <code>null</code> if notification is not
+	 *    required
+	 */
+	public void startModule(IModule[] module, IOperationListener listener);
+
+	/**
+	 * Asynchronously stops the given module. This operation does
+	 * nothing if this module cannot be stopped.
+	 * <p>
+	 * The operation listener can be used to add a listener for notification
+	 * of this specific module stop. The listener will be called with a
+	 * single successful status (severity OK) when the module has
+	 * finished stopping, or a single failure (severity ERROR) if
+	 * there was an error stopping the module.
+	 * </p>
+	 * 
+	 * @param module the module to be stopped
+	 * @param listener an operation listener to receive notification when this
+	 *    operation is done, or <code>null</code> if notification is not
+	 *    required
+	 */
+	public void stopModule(IModule[] module, IOperationListener listener);
+
+	/**
 	 * Asynchronously restarts the given module on the server.
-	 * See the specification of 
-	 * {@link IServer#synchronousRestartModule(IModule[], IProgressMonitor)}
-	 * for further details. 
 	 * <p>
 	 * The implementation should update the module sync state and fire
 	 * an event for the module. If the module does not exist on the server,
@@ -491,9 +609,7 @@ public interface IServer extends IServerAttributes {
 	 * any need for the progress monitor?]
 	 * </p>
 	 * <p>
-	 * [issue: Since this method is ascynchronous, how can
-	 * it return a meaningful IStatus? 
-	 * And IServer.synchronousModuleRestart throws CoreException
+	 * [issue: IServer.synchronousModuleRestart throws CoreException
 	 * if anything goes wrong.]
 	 * </p>
 	 * <p>
@@ -503,34 +619,9 @@ public interface IServer extends IServerAttributes {
 	 * </p>
 	 * 
 	 * @param module the module to be started
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @exception CoreException if an error occurs while trying to restart the module
+	 * @param listener an operation listener to receive notification when this
+	 *    operation is done, or <code>null</code> if notification is not
+	 *    required
 	 */
-	public void restartModule(IModule[] module, IProgressMonitor monitor) throws CoreException;
-
-	/**
-	 * Restarts the given module and waits until it has finished restarting.
-	 * If the module does not exist on the server, an exception will be thrown.
-	 * <p>
-	 * This method may not be used to initially start a module.
-	 * </p>
-	 * 
-	 * @param module the module to be restarted
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @exception CoreException if an error occurs while trying to restart the module
-	 */
-	public void synchronousRestartModule(IModule[] module, IProgressMonitor monitor) throws CoreException;
-
-	/**
-	 * Returns the current state of the given module on this server.
-	 * Returns <code>STATE_UNKNOWN</code> if the module
-	 * is not among the ones associated with this server.
-	 * 
-	 * @param module the module
-	 * @return one of the state (<code>STATE_XXX</code>) constants declared
-	 *    on {@link IServer}
-	 */
-	public int getModuleState(IModule[] module);
+	public void restartModule(IModule[] module, IOperationListener listener);
 }

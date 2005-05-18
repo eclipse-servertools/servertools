@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core.util;
+package org.eclipse.jst.server.tomcat.core.internal;
 
 import java.io.FileNotFoundException;
 import java.net.HttpURLConnection;
@@ -17,7 +17,6 @@ import java.net.URLConnection;
 
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.internal.Trace;
-import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 /**
  * Thread used to ping server to test when it is started.
  * 
@@ -35,23 +34,23 @@ public class PingThread {
 
 	private boolean stop = false;
 	private String url;
-	private ServerBehaviourDelegate server;
-	private IServer server2;
+	private IServer server;
+	private TomcatServerBehaviour behaviour;
 
 	/**
 	 * Create a new PingThread.
 	 * 
-	 * @param server2
 	 * @param server
 	 * @param url
 	 * @param maxPings
+	 * @param behaviour
 	 */
-	public PingThread(IServer server2, ServerBehaviourDelegate server, String url, int maxPings) {
+	public PingThread(IServer server, String url, int maxPings, TomcatServerBehaviour behaviour) {
 		super();
 		this.server = server;
-		this.server2 = server2;
 		this.url = url;
 		this.maxPings = maxPings;
+		this.behaviour = behaviour;
 		Thread t = new Thread() {
 			public void run() {
 				ping();
@@ -76,7 +75,7 @@ public class PingThread {
 			try {
 				if (count == maxPings) {
 					try {
-						server2.stop(false);
+						server.stop(false);
 					} catch (Exception e) {
 						Trace.trace(Trace.FINEST, "Ping: could not stop server");
 					}
@@ -94,7 +93,7 @@ public class PingThread {
 				if (!stop) {
 					Trace.trace(Trace.FINEST, "Ping: success");
 					Thread.sleep(200);
-					server.setServerState(IServer.STATE_STARTED);
+					behaviour.setServerStarted();
 				}
 				stop = true;
 			} catch (FileNotFoundException fe) {
@@ -103,7 +102,7 @@ public class PingThread {
 				} catch (Exception e) {
 					// ignore
 				}
-				server.setServerState(IServer.STATE_STARTED);
+				behaviour.setServerStarted();
 				stop = true;
 			} catch (Exception e) {
 				Trace.trace(Trace.FINEST, "Ping: failed");
@@ -118,11 +117,11 @@ public class PingThread {
 			}
 		}
 	}
-	
+
 	/**
 	 * Tell the pinging to stop.
 	 */
-	public void stopPinging() {
+	public void stop() {
 		Trace.trace(Trace.FINEST, "Ping: stopping");
 		stop = true;
 	}

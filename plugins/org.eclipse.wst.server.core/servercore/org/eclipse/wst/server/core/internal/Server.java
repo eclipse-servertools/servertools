@@ -196,7 +196,7 @@ public class Server extends Base implements IServer {
 								long time = System.currentTimeMillis();
 								IConfigurationElement element = ((ServerType) serverType).getElement();
 								delegate = (ServerDelegate) element.createExecutableExtension("class");
-								delegate.initialize(Server.this);
+								InternalInitializer.initializeServerDelegate(delegate, Server.this);
 								Trace.trace(Trace.PERFORMANCE, "Server.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
 							} catch (Throwable t) {
 								Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
@@ -229,7 +229,8 @@ public class Server extends Base implements IServer {
 								long time = System.currentTimeMillis();
 								IConfigurationElement element = ((ServerType) serverType).getElement();
 								behaviourDelegate = (ServerBehaviourDelegate) element.createExecutableExtension("behaviourClass");
-								behaviourDelegate.initialize(Server.this);
+								//behaviourDelegate.initialize(Server.this);
+								InternalInitializer.initializeServerBehaviourDelegate(behaviourDelegate, Server.this);
 								Trace.trace(Trace.PERFORMANCE, "Server.getBehaviourDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
 							} catch (Throwable t) {
 								Trace.trace(Trace.SEVERE, "Could not create behaviour delegate " + toString(), t);
@@ -936,14 +937,13 @@ public class Server extends Base implements IServer {
 	/**
 	 * @see IServer#start(String, IProgressMonitor)
 	 */
-	public ILaunch start(String mode2, IProgressMonitor monitor) throws CoreException {
+	public void start(String mode2, IProgressMonitor monitor) throws CoreException {
 		Trace.trace(Trace.FINEST, "Starting server: " + toString() + ", launchMode: " + mode2);
 	
 		try {
 			ILaunchConfiguration launchConfig = getLaunchConfiguration(true, monitor);
 			ILaunch launch = launchConfig.launch(mode2, monitor);
 			Trace.trace(Trace.FINEST, "Launch: " + launch);
-			return launch;
 		} catch (CoreException e) {
 			Trace.trace(Trace.SEVERE, "Error starting server " + toString(), e);
 			throw e;
@@ -1016,9 +1016,9 @@ public class Server extends Base implements IServer {
 	}
 
 	/**
-	 * @see IServer#restart(String)
+	 * @see IServer#restart(String, IProgressMonitor)
 	 */
-	public void restart(final String mode2) {
+	public void restart(final String mode2, final IProgressMonitor monitor) {
 		if (getServerState() == STATE_STOPPED)
 			return;
 	
@@ -1051,7 +1051,7 @@ public class Server extends Base implements IServer {
 										// ignore
 									}
 									try {
-										Server.this.start(mode2, new NullProgressMonitor());
+										Server.this.start(mode2, monitor);
 									} catch (Exception e) {
 										Trace.trace(Trace.SEVERE, "Error while restarting server", e);
 									}
@@ -1072,7 +1072,6 @@ public class Server extends Base implements IServer {
 			Trace.trace(Trace.SEVERE, "Error restarting server", e);
 		}
 	}
-
 
 	/**
 	 * Returns true if the server is in a state that it can
@@ -1102,11 +1101,11 @@ public class Server extends Base implements IServer {
 			Trace.trace(Trace.SEVERE, "Error calling delegate stop() " + toString(), t);
 		}
 	}
-
+	
 	/**
-	 * @see IServer#synchronousStart(String, IProgressMonitor)
+	 * @see IServer#start(String, IOperationListener)
 	 */
-	public ILaunch synchronousStart(String mode2, IProgressMonitor monitor) throws CoreException {
+	public void start(String mode2, IOperationListener listener2) {
 		Trace.trace(Trace.FINEST, "synchronousStart 1");
 		final Object mutex = new Object();
 	
@@ -1163,9 +1162,103 @@ public class Server extends Base implements IServer {
 		Trace.trace(Trace.FINEST, "synchronousStart 2");
 	
 		// start the server
-		ILaunch launch;
 		try {
-			launch = start(mode2, monitor);
+			start(mode2, (IProgressMonitor)null);
+		} catch (CoreException e) {
+			removeServerListener(listener);
+			timer.alreadyDone = true;
+			listener2.done(e.getStatus());
+			return;
+		}
+	
+		Trace.trace(Trace.FINEST, "synchronousStart 3");
+	
+		// wait for it! wait for it! ...
+		synchronized (mutex) {
+			try {
+				while (!timer.timeout && !(getServerState() == IServer.STATE_STARTED || getServerState() == IServer.STATE_STOPPED))
+					mutex.wait();
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Error waiting for server start", e);
+			}
+		}
+		removeServerListener(listener);
+		timer.alreadyDone = true;
+		
+		if (timer.timeout) {
+			listener2.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartTimeout, new String[] { getName(), serverTimeout + "" }), null));
+			return;
+		}
+		timer.alreadyDone = true;
+		
+		if (getServerState() == IServer.STATE_STOPPED) {
+			listener2.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), null));
+			return;
+		}
+	
+		Trace.trace(Trace.FINEST, "synchronousStart 4");
+		listener2.done(null);
+	}
+
+	public void synchronousStart(String mode2, IProgressMonitor monitor) throws CoreException {
+		Trace.trace(Trace.FINEST, "synchronousStart 1");
+		final Object mutex = new Object();
+	
+		// add listener to the server
+		IServerListener listener = new IServerListener() {
+			public void serverChanged(ServerEvent event) {
+				int eventKind = event.getKind();
+				IServer server = event.getServer();
+				if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
+					int state = server.getServerState();
+					if (state == IServer.STATE_STARTED || state == IServer.STATE_STOPPED) {
+						// notify waiter
+						synchronized (mutex) {
+							try {
+								Trace.trace(Trace.FINEST, "synchronousStart notify");
+								mutex.notifyAll();
+							} catch (Exception e) {
+								Trace.trace(Trace.SEVERE, "Error notifying server start", e);
+							}
+						}
+					}
+				}
+			}
+		};
+		addServerListener(listener);
+		
+		final int serverTimeout = ((ServerType) getServerType()).getStartTimeout();
+		class Timer {
+			boolean timeout;
+			boolean alreadyDone;
+		}
+		final Timer timer = new Timer();
+		
+		Thread thread = new Thread() {
+			public void run() {
+				try {
+					Thread.sleep(serverTimeout * 1000);
+					if (!timer.alreadyDone) {
+						timer.timeout = true;
+						// notify waiter
+						synchronized (mutex) {
+							Trace.trace(Trace.FINEST, "synchronousStart notify timeout");
+							mutex.notifyAll();
+						}
+					}
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Error notifying server start timeout", e);
+				}
+			}
+		};
+		thread.setDaemon(true);
+		thread.start();
+	
+		Trace.trace(Trace.FINEST, "synchronousStart 2");
+	
+		// start the server
+		try {
+			start(mode2, monitor);
 		} catch (CoreException e) {
 			removeServerListener(listener);
 			timer.alreadyDone = true;
@@ -1194,8 +1287,6 @@ public class Server extends Base implements IServer {
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), null));
 	
 		Trace.trace(Trace.FINEST, "synchronousStart 4");
-		
-		return launch;
 	}
 
 	/*
@@ -1204,6 +1295,102 @@ public class Server extends Base implements IServer {
 	public void synchronousRestart(String mode2, IProgressMonitor monitor) throws CoreException {
 		synchronousStop(true);
 		synchronousStart(mode2, monitor);
+	}
+	
+	/*
+	 * @see IServer#restart(String, IOperationListener)
+	 */
+	public void restart(String mode2, IOperationListener listener) {
+		stop(true, null);
+		try {
+			start(mode2, (IProgressMonitor)null);
+		} catch (CoreException ce) {
+			// TODO
+		}
+		listener.done(null);
+	}
+	
+	/*
+	 * @see IServer#stop(boolean, IOperationListener)
+	 */
+	public void stop(boolean force, IOperationListener listener2) {
+		if (getServerState() == IServer.STATE_STOPPED)
+			return;
+		
+		final Object mutex = new Object();
+	
+		// add listener to the server
+		IServerListener listener = new IServerListener() {
+			public void serverChanged(ServerEvent event) {
+				int eventKind = event.getKind();
+				IServer server = event.getServer();
+				if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
+					int state = server.getServerState();
+					if (Server.this == server && state == IServer.STATE_STOPPED) {
+						// notify waiter
+						synchronized (mutex) {
+							try {
+								mutex.notifyAll();
+							} catch (Exception e) {
+								Trace.trace(Trace.SEVERE, "Error notifying server stop", e);
+							}
+						}
+					}
+				}
+			}
+		};
+		addServerListener(listener);
+		
+		class Timer {
+			boolean timeout;
+			boolean alreadyDone;
+		}
+		final Timer timer = new Timer();
+		
+		Thread thread = new Thread() {
+			public void run() {
+				try {
+					Thread.sleep(120000);
+					if (!timer.alreadyDone) {
+						timer.timeout = true;
+						// notify waiter
+						synchronized (mutex) {
+							Trace.trace(Trace.FINEST, "stop notify timeout");
+							mutex.notifyAll();
+						}
+					}
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Error notifying server stop timeout", e);
+				}
+			}
+		};
+		thread.setDaemon(true);
+		thread.start();
+	
+		// stop the server
+		stop(force);
+	
+		// wait for it! wait for it!
+		synchronized (mutex) {
+			try {
+				while (!timer.timeout && getServerState() != IServer.STATE_STOPPED)
+					mutex.wait();
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Error waiting for server stop", e);
+			}
+		}
+		removeServerListener(listener);
+		
+		/*
+		//can't throw exceptions
+		if (timer.timeout)
+			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStartFailed", getName()), null));
+		else
+			timer.alreadyDone = true;
+		
+		if (getServerState() == IServer.STATE_STOPPED)
+			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStartFailed", getName()), null));*/
+		listener2.done(null);
 	}
 
 	/*
@@ -1288,13 +1475,13 @@ public class Server extends Base implements IServer {
 			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStartFailed", getName()), null));*/
 	}
 	
-	/**
+	/*
 	 * Trigger a restart of the given module and wait until it has finished restarting.
 	 *
 	 * @param module org.eclipse.wst.server.core.IModule
 	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
 	 * @exception org.eclipse.core.runtime.CoreException - thrown if an error occurs while trying to restart the module
-	 */
+	 *
 	public void synchronousRestartModule(final IModule[] module, IProgressMonitor monitor) throws CoreException {
 		Trace.trace(Trace.FINEST, "synchronousModuleRestart 1");
 
@@ -1380,7 +1567,7 @@ public class Server extends Base implements IServer {
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorModuleRestartFailed, getName()), null));
 	
 		Trace.trace(Trace.FINEST, "synchronousModuleRestart 4");
-	}
+	}*/
 
 	public IPath getTempDirectory() {
 		return ServerPlugin.getInstance().getTempDirectory(getId());
@@ -1585,9 +1772,9 @@ public class Server extends Base implements IServer {
 	 * @return <code>true</code> if the given module can be
 	 *    restarted, and <code>false</code> otherwise
 	 */
-	public IStatus canRestartModule(IModule[] module, IProgressMonitor monitor) {
+	public IStatus canControlModule(IModule[] module, IProgressMonitor monitor) {
 		try {
-			boolean b = getBehaviourDelegate(monitor).canRestartModule(module);
+			boolean b = getBehaviourDelegate(monitor).canControlModule(module);
 			if (b)
 				return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, Messages.canRestartModuleOk, null);
 		} catch (Exception e) {
@@ -1616,11 +1803,34 @@ public class Server extends Base implements IServer {
 	}
 
 	/*
-	 * @see IServer#restartModule(IModule[], IProgressMonitor)
+	 * @see IServer#startModule(IModule[], IOperationListener)
 	 */
-	public void restartModule(IModule[] module, IProgressMonitor monitor) throws CoreException {
+	public void startModule(IModule[] module, IOperationListener listener) {
 		try {
-			getBehaviourDelegate(monitor).restartModule(module, monitor);
+			getBehaviourDelegate(null).startModule(module, null);
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error calling delegate restartModule() " + toString(), e);
+		}
+	}
+	
+	/*
+	 * @see IServer#stopModule(IModule[], IOperationListener)
+	 */
+	public void stopModule(IModule[] module, IOperationListener listener) {
+		try {
+			getBehaviourDelegate(null).stopModule(module, null);
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error calling delegate restartModule() " + toString(), e);
+		}
+	}
+	
+	/*
+	 * @see IServer#restartModule(IModule[], IOperationListener, IProgressMonitor)
+	 */
+	public void restartModule(IModule[] module, IOperationListener listener) {
+		try {
+			getBehaviourDelegate(null).stopModule(module, null);
+			getBehaviourDelegate(null).startModule(module, null);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate restartModule() " + toString(), e);
 		}

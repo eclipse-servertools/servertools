@@ -39,14 +39,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * <p>
  * [issue: Equality/identify for modules?]
  * </p>
+ * <p>This interface is not intended to be implemented by clients.</p>
  * <p>
- * Concrete module types are represented by concrete classes
- * implementing this interface. The only legitimate reason
- * to declare a subclass is to implement a module factory.
- * </p>
- * <p>
- * <it>Caveat: The server core API is still in an early form, and is
- * likely to change significantly before the initial release.</it>
+ * <b>Provisional API:</b> This class/interface is part of an interim API that is still under development and expected to 
+ * change significantly before reaching stability. It is being made available at this early stage to solicit feedback 
+ * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
+ * (repeatedly) as the API evolves.
  * </p>
  * 
  * @since 1.0

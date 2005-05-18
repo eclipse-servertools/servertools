@@ -18,6 +18,10 @@ import org.eclipse.wst.server.core.IServer;
  * an IModuleArtifact to an object launchable on the server.
  * 
  * <p>This is the implementation of a launchableAdapter extension point.</p>
+ * <p>
+ * This abstract class is intended to be extended only by clients
+ * to extend the <code>launchableAdapters</code> extension point.
+ * </p>
  * 
  * @since 1.0
  */

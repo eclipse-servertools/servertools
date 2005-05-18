@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.wst.server.core.IServer;
@@ -331,7 +332,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 					if (server.canRestart(mode).isOK())
 						try {
 							Trace.trace(Trace.FINEST, "Attempting to auto restart " + server.getName());
-							server.restart(mode);
+							server.restart(mode, (IProgressMonitor)null);
 						} catch (Exception e) {
 							Trace.trace(Trace.SEVERE, "Error restarting: " + server, e);
 						}

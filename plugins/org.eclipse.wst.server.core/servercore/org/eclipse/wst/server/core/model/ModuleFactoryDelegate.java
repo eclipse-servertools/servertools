@@ -28,11 +28,8 @@ import org.eclipse.wst.server.core.internal.ModuleFactory;
  * transient and will not be persisted across workbench sessions.
  * </p>
  * <p>
- * This interface is intended to be implemented by clients.
- * </p>
- * <p>
- * <it>Caveat: The server core API is still in an early form, and is
- * likely to change significantly before the initial release.</it>
+ * This abstract class is intended to be extended only by clients
+ * to extend the <code>moduleFactories</code> extension point.
  * </p>
  * 
  * @see org.eclipse.wst.server.core.IModule
@@ -59,7 +56,7 @@ public abstract class ModuleFactoryDelegate {
 	 * 
 	 * @param newFactory the module factory instance
 	 */
-	public final void initialize(ModuleFactory newFactory) {
+	final void initialize(ModuleFactory newFactory) {
 		factory = newFactory;
 	}
 
@@ -70,7 +67,7 @@ public abstract class ModuleFactoryDelegate {
 	 * 
 	 * @return the factory id
 	 */
-	protected String getId() {
+	protected final String getId() {
 		return factory.getId();
 	}
 
@@ -85,7 +82,7 @@ public abstract class ModuleFactoryDelegate {
 	 * @param project the project that the module is contained in
 	 * @return a module instance
 	 */
-	public IModule createModule(String id, String name, String type, String version, IProject project) {
+	protected final IModule createModule(String id, String name, String type, String version, IProject project) {
 		return new Module(factory, id, name, type, version, project);
 	}
 

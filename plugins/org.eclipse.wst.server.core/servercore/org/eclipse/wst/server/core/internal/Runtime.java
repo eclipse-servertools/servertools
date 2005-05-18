@@ -13,6 +13,7 @@ package org.eclipse.wst.server.core.internal;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.*;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.model.InternalInitializer;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 /**
  * 
@@ -77,7 +78,8 @@ public class Runtime extends Base implements IRuntime {
 					long time = System.currentTimeMillis();
 					RuntimeType runtimeType2 = (RuntimeType) runtimeType;
 					delegate = (RuntimeDelegate) runtimeType2.getElement().createExecutableExtension("class");
-					delegate.initialize(this);
+					InternalInitializer.initializeRuntimeDelegate(delegate, this);
+					//delegate.initialize(this);
 					Trace.trace(Trace.PERFORMANCE, "Runtime.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getRuntimeType().getId());
 				} catch (Throwable t) {
 					Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);

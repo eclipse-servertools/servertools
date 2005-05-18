@@ -28,11 +28,8 @@ import org.eclipse.wst.server.core.IModule;
  * transient and will not be persisted across workbench sessions.
  * </p>
  * <p>
- * This interface is intended to be implemented by clients.
- * </p>
- * <p>
- * <it>Caveat: The server core API is still in an early form, and is
- * likely to change significantly before the initial release.</it>
+ * This abstract class is intended to be extended only by clients
+ * to extend the <code>moduleFactories</code> extension point.
  * </p>
  * 
  * @see org.eclipse.wst.server.core.IModule

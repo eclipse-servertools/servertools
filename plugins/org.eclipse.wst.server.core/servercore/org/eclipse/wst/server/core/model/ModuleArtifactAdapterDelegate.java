@@ -18,6 +18,10 @@ import org.eclipse.wst.server.core.IModuleArtifact;
  * 
  * <p>This is the implementation of a moduleArtifactAdapter
  * extension point.</p>
+ * <p>
+ * This abstract class is intended to be extended only by clients
+ * to extend the <code>moduleArtifactAdapters</code> extension point.
+ * </p>
  * 
  * @since 1.0
  */

@@ -44,10 +44,6 @@ import org.eclipse.wst.server.core.internal.Trace;
  * This abstract class is intended to be extended only by clients
  * to extend the <code>serverTypes</code> extension point.
  * </p>
- * <p>
- * <it>Caveat: The server core API is still in an early form, and is
- * likely to change significantly before the initial release.</it>
- * </p>
  * 
  * @see org.eclipse.wst.server.core.IServer
  * @see org.eclipse.wst.server.core.IServerWorkingCopy
@@ -100,7 +96,7 @@ public abstract class ServerBehaviourDelegate {
 	 * 
 	 * @param newServer the server instance
 	 */
-	public final void initialize(Server newServer) {
+	final void initialize(Server newServer) {
 		server = newServer;
 		initialize();
 	}
@@ -141,7 +137,7 @@ public abstract class ServerBehaviourDelegate {
 	 *    constants defined by {@link IServer}
 	 * @see IServer#getServerState()
 	 */
-	public final void setServerState(int state) {
+	protected final void setServerState(int state) {
 		server.setServerState(state);
 	}
 
@@ -154,7 +150,7 @@ public abstract class ServerBehaviourDelegate {
 	 * @param mode the mode in which a server is running, one of the mode constants
 	 *    defined by {@link org.eclipse.debug.core.ILaunchManager}
 	 */
-	public final void setMode(String mode) {
+	protected final void setMode(String mode) {
 		server.setMode(mode);
 	}
 
@@ -164,7 +160,7 @@ public abstract class ServerBehaviourDelegate {
 	 * @param state <code>true</code> if the server needs to be restarted,
 	 *    and <code>false</code> otherwise
 	 */
-	public final void setServerRestartState(boolean state) {
+	protected final void setServerRestartState(boolean state) {
 		server.setServerRestartState(state);
 	}
 
@@ -174,7 +170,7 @@ public abstract class ServerBehaviourDelegate {
 	 * @param state the current publish state of the server, one of the
 	 *    publish constants defined by {@link IServer}
 	 */
-	public final void setServerPublishState(int state) {
+	protected final void setServerPublishState(int state) {
 		server.setServerPublishState(state);
 	}
 
@@ -185,7 +181,7 @@ public abstract class ServerBehaviourDelegate {
 	 * @param state the current state of the module, one of the state
 	 *    constants defined by {@link IServer}
 	 */
-	public final void setModuleState(IModule[] module, int state) {
+	protected final void setModuleState(IModule[] module, int state) {
 		server.setModuleState(module, state);
 	}
 
@@ -196,7 +192,7 @@ public abstract class ServerBehaviourDelegate {
 	 * @param state the current publish state of the module, one of the
 	 *    publish constants defined by {@link IServer}
 	 */
-	public final void setModulePublishState(IModule[] module, int state) {
+	protected final void setModulePublishState(IModule[] module, int state) {
 		server.setModulePublishState(module, state);
 	}
 
@@ -207,7 +203,7 @@ public abstract class ServerBehaviourDelegate {
 	 * @param state <code>true</code> if the module needs to be restarted,
 	 *    and <code>false</code> otherwise
 	 */
-	public final void setModuleRestartState(IModule[] module, boolean state) {
+	protected final void setModuleRestartState(IModule[] module, boolean state) {
 		server.setModuleRestartState(module, state);
 	}
 
@@ -375,14 +371,13 @@ public abstract class ServerBehaviourDelegate {
 	 * @return <code>true</code> if the given module can be
 	 * restarted, and <code>false</code> otherwise 
 	 */
-	public boolean canRestartModule(IModule[] module) {
+	public boolean canControlModule(IModule[] module) {
 		return false;
 	}
-
+	
 	/**
-	 * Asynchronously restarts the given module on the server.
-	 * See the specification of 
-	 * {@link IServer#synchronousRestartModule(IModule[], IProgressMonitor)}
+	 * Starts the given module on the server. See the specification of 
+	 * {@link IServer#startModule(IModule[], IServer.IOperationListener, IProgressMonitor)}
 	 * for further details. 
 	 * <p>
 	 * The implementation should update the module sync state and fire
@@ -396,18 +391,39 @@ public abstract class ServerBehaviourDelegate {
 	 * [issue: Since this method is ascynchronous, is there
 	 * any need for the progress monitor?]
 	 * </p>
-	 * <p>
-	 * [issue: If the module was just published to the server
-	 * and had never been started, would is be ok to "start"
-	 * the module using this method?]
-	 * </p>
 	 * 
 	 * @param module the module to be started
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @exception CoreException if an error occurs while trying to restart the module
 	 */
-	public void restartModule(IModule[] module, IProgressMonitor monitor) throws CoreException {
+	public void startModule(IModule[] module, IProgressMonitor monitor) throws CoreException {
+		// do nothing
+	}
+
+	/**
+	 * Stops the given module on the server. See the specification of 
+	 * {@link IServer#stopModule(IModule[], IServer.IOperationListener, IProgressMonitor)}
+	 * for further details. 
+	 * <p>
+	 * The implementation should update the module sync state and fire
+	 * an event for the module.
+	 * </p>
+	 * <p>
+	 * This method will throw an exception if the module does not exist on
+	 * the server.
+	 * </p>
+	 * <p>
+	 * [issue: Since this method is ascynchronous, is there
+	 * any need for the progress monitor?]
+	 * </p>
+	 * 
+	 * @param module the module to be stopped
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @exception CoreException if an error occurs while trying to restart the module
+	 */
+	public void stopModule(IModule[] module, IProgressMonitor monitor) throws CoreException {
 		// do nothing
 	}
 
@@ -442,7 +458,7 @@ public abstract class ServerBehaviourDelegate {
 	 * @param module the module
 	 * @return an array containing the published module resource
 	 */
-	public IModuleResource[] getPublishedResources(IModule[] module) {
+	protected IModuleResource[] getPublishedResources(IModule[] module) {
 		return server.getPublishedResources(module);
 	}
 
@@ -453,7 +469,7 @@ public abstract class ServerBehaviourDelegate {
 	 * @param module the module
 	 * @return an array containing the publish resource delta
 	 */
-	public IModuleResourceDelta[] getPublishedResourceDelta(IModule[] module) {
+	protected IModuleResourceDelta[] getPublishedResourceDelta(IModule[] module) {
 		return server.getPublishedResourceDelta(module);
 	}
 
@@ -474,7 +490,7 @@ public abstract class ServerBehaviourDelegate {
 	 *
 	 * @return a temporary directory
 	 */
-	public final IPath getTempDirectory() {
+	protected IPath getTempDirectory() {
 		return server.getTempDirectory();
 	}
 
@@ -483,7 +499,7 @@ public abstract class ServerBehaviourDelegate {
 	 *  
 	 * @param status the status
 	 */
-	public final void setServerStatus(IStatus status) {
+	protected final void setServerStatus(IStatus status) {
 		server.setServerStatus(status);
 	}
 
@@ -493,7 +509,7 @@ public abstract class ServerBehaviourDelegate {
 	 * @param module the module
 	 * @param status the status
 	 */
-	public final void setModuleStatus(IModule[] module, IStatus status) {
+	protected final void setModuleStatus(IModule[] module, IStatus status) {
 		server.setModuleStatus(module, status);
 	}
 	

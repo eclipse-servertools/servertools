@@ -31,7 +31,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.model.*;
-import org.eclipse.wst.server.core.util.PingThread;
 import org.eclipse.wst.server.core.util.SocketUtil;
 /**
  * Generic Tomcat server.
@@ -161,10 +160,14 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		};
 		DebugPlugin.getDefault().addDebugEventListener(processListener);
 	}
+	
+	protected void setServerStarted() {
+		setServerState(IServer.STATE_STARTED);
+	}
 
 	protected void stopImpl() {
 		if (ping != null) {
-			ping.stopPinging();
+			ping.stop();
 			ping = null;
 		}
 		if (process != null) {
@@ -300,7 +303,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			int port = configuration.getMainPort().getPort();
 			if (port != 80)
 				url += ":" + port;
-			ping = new PingThread(getServer(), this, url, 50);
+			ping = new PingThread(getServer(), url, 50, this);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Can't ping for Tomcat startup.");
 		}
@@ -358,6 +361,10 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error killing the process", e);
 		}
+	}
+
+	public IPath getTempDirectory() {
+		return super.getTempDirectory();
 	}
 
 	/**

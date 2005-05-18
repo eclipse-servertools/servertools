@@ -45,10 +45,6 @@ import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
  * This abstract class is intended to be extended only by clients
  * to extend the <code>serverTypes</code> extension point.
  * </p>
- * <p>
- * <it>Caveat: The server core API is still in an early form, and is
- * likely to change significantly before the initial release.</it>
- * </p>
  * 
  * @see IServer
  * @see IServerWorkingCopy
@@ -74,7 +70,7 @@ public abstract class ServerDelegate {
 	 * 
 	 * @param newServer the server instance
 	 */
-	public final void initialize(Server newServer) {
+	final void initialize(Server newServer) {
 		server = newServer;
 		if (newServer instanceof ServerWorkingCopy)
 			serverWC = (ServerWorkingCopy) newServer;
@@ -89,7 +85,7 @@ public abstract class ServerDelegate {
 	 * Clients should never call this method.
 	 * </p>
 	 */
-	public void initialize() {
+	protected void initialize() {
 		// do nothing
 	}
 
@@ -98,7 +94,7 @@ public abstract class ServerDelegate {
 	 * 
 	 * @return the server
 	 */
-	public IServer getServer() {
+	public final IServer getServer() {
 		return server;
 	}
 
@@ -107,7 +103,7 @@ public abstract class ServerDelegate {
 	 * 
 	 * @return the server
 	 */
-	public IServerWorkingCopy getServerWorkingCopy() {
+	public final IServerWorkingCopy getServerWorkingCopy() {
 		return serverWC;
 	}
 
@@ -119,7 +115,7 @@ public abstract class ServerDelegate {
 	 * @return the attribute value
 	 * @see #setAttribute(String, int)
 	 */
-	public int getAttribute(String id, int defaultValue) {
+	protected final int getAttribute(String id, int defaultValue) {
 		return server.getAttribute(id, defaultValue);
 	}
 
@@ -131,7 +127,7 @@ public abstract class ServerDelegate {
 	 * @return the attribute value
 	 * @see #setAttribute(String, boolean)
 	 */
-	public boolean getAttribute(String id, boolean defaultValue) {
+	protected final boolean getAttribute(String id, boolean defaultValue) {
 		return server.getAttribute(id, defaultValue);
 	}
 
@@ -143,7 +139,7 @@ public abstract class ServerDelegate {
 	 * @return the attribute value
 	 * @see #setAttribute(String, String)
 	 */
-	public String getAttribute(String id, String defaultValue) {
+	protected final String getAttribute(String id, String defaultValue) {
 		return server.getAttribute(id, defaultValue);
 	}
 
@@ -155,7 +151,7 @@ public abstract class ServerDelegate {
 	 * @return the attribute value
 	 * @see #setAttribute(String, List)
 	 */
-	public List getAttribute(String id, List defaultValue) {
+	protected final List getAttribute(String id, List defaultValue) {
 		return server.getAttribute(id, defaultValue);
 	}
 
@@ -167,7 +163,7 @@ public abstract class ServerDelegate {
 	 * @return the attribute value
 	 * @see #setAttribute(String, Map)
 	 */
-	public Map getAttribute(String id, Map defaultValue) {
+	protected final Map getAttribute(String id, Map defaultValue) {
 		return server.getAttribute(id, defaultValue);
 	}
 
@@ -275,7 +271,7 @@ public abstract class ServerDelegate {
 	 * @param value the value of the specified attribute
 	 * @see #getAttribute(String, int)
 	 */
-	public void setAttribute(String id, int value) {
+	protected final void setAttribute(String id, int value) {
 		serverWC.setAttribute(id, value);
 	}
 
@@ -287,7 +283,7 @@ public abstract class ServerDelegate {
 	 * @param value the value of the specified attribute
 	 * @see #getAttribute(String, boolean)
 	 */
-	public void setAttribute(String id, boolean value) {
+	protected final void setAttribute(String id, boolean value) {
 		serverWC.setAttribute(id, value);
 	}
 
@@ -299,7 +295,7 @@ public abstract class ServerDelegate {
 	 * @param value the value of the specified attribute
 	 * @see #getAttribute(String, String)
 	 */
-	public void setAttribute(String id, String value) {
+	protected final void setAttribute(String id, String value) {
 		serverWC.setAttribute(id, value);
 	}
 
@@ -311,7 +307,7 @@ public abstract class ServerDelegate {
 	 * @param value the value of the specified attribute
 	 * @see #getAttribute(String, List)
 	 */
-	public void setAttribute(String id, List value) {
+	protected final void setAttribute(String id, List value) {
 		serverWC.setAttribute(id, value);
 	}
 
@@ -323,7 +319,7 @@ public abstract class ServerDelegate {
 	 * @param value the value of the specified attribute
 	 * @see #getAttribute(String, Map)
 	 */
-	public void setAttribute(String id, Map value) {
+	protected final void setAttribute(String id, Map value) {
 		serverWC.setAttribute(id, value);
 	}
 

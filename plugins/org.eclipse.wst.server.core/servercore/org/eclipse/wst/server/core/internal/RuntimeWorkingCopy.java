@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.model.InternalInitializer;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 /**
  * 
@@ -299,7 +300,8 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 					long time = System.currentTimeMillis();
 					RuntimeType runtimeType2 = (RuntimeType) runtimeType;
 					workingCopyDelegate = (RuntimeDelegate) runtimeType2.getElement().createExecutableExtension("class");
-					workingCopyDelegate.initialize(this);
+					//workingCopyDelegate.initialize(this);
+					InternalInitializer.initializeRuntimeDelegate(workingCopyDelegate, this);
 					Trace.trace(Trace.PERFORMANCE, "RuntimeWorkingCopy.getWorkingCopyDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getRuntimeType().getId());
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);

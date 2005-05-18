@@ -26,10 +26,6 @@ import org.eclipse.wst.server.core.internal.*;
  * This class provides all its functionality through static members.
  * It is not intended to be subclassed or instantiated.
  * </p>
- * <p>
- * <it>Caveat: The server core API is still in an early form, and is
- * likely to change significantly before the initial release.</it>
- * </p>
  * 
  * @since 1.0
  */

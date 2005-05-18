@@ -48,10 +48,6 @@ import org.eclipse.wst.server.core.internal.ServerPlugin;
  * This abstract class is intended to be extended only by clients
  * to extend the <code>runtimeTypes</code> extension point.
  * </p>
- * <p>
- * <it>Caveat: The server core API is still in an early form, and is
- * likely to change significantly before the initial release.</it>
- * </p>
  * 
  * @see IRuntime
  * @see IRuntimeWorkingCopy
@@ -77,7 +73,7 @@ public abstract class RuntimeDelegate {
 	 * 
 	 * @param newRuntime the runtime instance
 	 */
-	public final void initialize(Runtime newRuntime) {
+	final void initialize(Runtime newRuntime) {
 		runtime = newRuntime;
 		if (runtime instanceof RuntimeWorkingCopy)
 			runtimeWC = (RuntimeWorkingCopy) runtime;
@@ -92,7 +88,7 @@ public abstract class RuntimeDelegate {
 	 * Clients should never call this method.
 	 * </p>
 	 */
-	public void initialize() {
+	protected void initialize() {
 		// do nothing
 	}
 
@@ -101,7 +97,7 @@ public abstract class RuntimeDelegate {
 	 * 
 	 * @return the runtime
 	 */
-	public IRuntime getRuntime() {
+	public final IRuntime getRuntime() {
 		return runtime;
 	}
 
@@ -110,7 +106,7 @@ public abstract class RuntimeDelegate {
 	 * 
 	 * @return the runtime
 	 */
-	public IRuntimeWorkingCopy getRuntimeWorkingCopy() {
+	public final IRuntimeWorkingCopy getRuntimeWorkingCopy() {
 		return runtimeWC;
 	}
 
@@ -171,7 +167,7 @@ public abstract class RuntimeDelegate {
 	 * @return the attribute value
 	 * @see #setAttribute(String, int)
 	 */
-	public int getAttribute(String id, int defaultValue) {
+	protected final int getAttribute(String id, int defaultValue) {
 		return runtime.getAttribute(id, defaultValue);
 	}
 
@@ -183,7 +179,7 @@ public abstract class RuntimeDelegate {
 	 * @return the attribute value
 	 * @see #setAttribute(String, boolean)
 	 */
-	public boolean getAttribute(String id, boolean defaultValue) {
+	protected final boolean getAttribute(String id, boolean defaultValue) {
 		return runtime.getAttribute(id, defaultValue);
 	}
 
@@ -195,7 +191,7 @@ public abstract class RuntimeDelegate {
 	 * @return the attribute value
 	 * @see #setAttribute(String, String)
 	 */
-	public String getAttribute(String id, String defaultValue) {
+	protected final String getAttribute(String id, String defaultValue) {
 		return runtime.getAttribute(id, defaultValue);
 	}
 
@@ -207,7 +203,7 @@ public abstract class RuntimeDelegate {
 	 * @return the attribute value
 	 * @see #setAttribute(String, List)
 	 */
-	public List getAttribute(String id, List defaultValue) {
+	protected final List getAttribute(String id, List defaultValue) {
 		return runtime.getAttribute(id, defaultValue);
 	}
 
@@ -219,7 +215,7 @@ public abstract class RuntimeDelegate {
 	 * @return the attribute value
 	 * @see #setAttribute(String, Map)
 	 */
-	public Map getAttribute(String id, Map defaultValue) {
+	protected final Map getAttribute(String id, Map defaultValue) {
 		return runtime.getAttribute(id, defaultValue);
 	}
 	
@@ -255,7 +251,7 @@ public abstract class RuntimeDelegate {
 	 * @param value the value of the specified attribute
 	 * @see #getAttribute(String, int)
 	 */
-	public void setAttribute(String id, int value) {
+	protected final void setAttribute(String id, int value) {
 		runtimeWC.setAttribute(id, value);
 	}
 
@@ -267,7 +263,7 @@ public abstract class RuntimeDelegate {
 	 * @param value the value of the specified attribute
 	 * @see #getAttribute(String, boolean)
 	 */
-	public void setAttribute(String id, boolean value) {
+	protected final void setAttribute(String id, boolean value) {
 		runtimeWC.setAttribute(id, value);
 	}
 
@@ -279,7 +275,7 @@ public abstract class RuntimeDelegate {
 	 * @param value the value of the specified attribute
 	 * @see #getAttribute(String, String)
 	 */
-	public void setAttribute(String id, String value) {
+	protected final void setAttribute(String id, String value) {
 		runtimeWC.setAttribute(id, value);
 	}
 
@@ -291,7 +287,7 @@ public abstract class RuntimeDelegate {
 	 * @param value the value of the specified attribute
 	 * @see #getAttribute(String, List)
 	 */
-	public void setAttribute(String id, List value) {
+	protected final void setAttribute(String id, List value) {
 		runtimeWC.setAttribute(id, value);
 	}
 
@@ -303,7 +299,7 @@ public abstract class RuntimeDelegate {
 	 * @param value the value of the specified attribute
 	 * @see #getAttribute(String, Map)
 	 */
-	public void setAttribute(String id, Map value) {
+	protected final void setAttribute(String id, Map value) {
 		runtimeWC.setAttribute(id, value);
 	}
 }

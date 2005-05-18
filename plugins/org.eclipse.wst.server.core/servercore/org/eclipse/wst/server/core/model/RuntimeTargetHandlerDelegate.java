@@ -16,6 +16,19 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeTargetHandler;
 /**
+ * A runtime target handler is used when associating a runtime with
+ * a particular project. It has the ability to make any changes it requires
+ * on the projects - adding or removing files, setting up the classpath, etc.
+ * <p>
+ * This abstract class is intended to be extended only by clients
+ * to extend the <code>runtimeTargetHandlers</code> extension point.
+ * </p>
+ * <p>
+ * <b>Provisional API:</b> This class/interface is part of an interim API that is still under development and expected to 
+ * change significantly before reaching stability. It is being made available at this early stage to solicit feedback 
+ * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
+ * (repeatedly) as the API evolves.
+ * </p>
  * 
  * @since 1.0
  */

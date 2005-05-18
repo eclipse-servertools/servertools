@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
@@ -35,17 +33,13 @@ public class RestartModuleAction extends Action {
 		ServerLabelProvider slp = (ServerLabelProvider) ServerUICore.getLabelProvider();
 		setImageDescriptor(slp.getImageDescriptor(module[size - 1]));
 	
-		setEnabled(server.canRestartModule(module, null).isOK());
+		setEnabled(server.canControlModule(module, null).isOK() && server.getModuleState(module) != IServer.STATE_STOPPED);
 	}
 
 	/**
 	 * Implementation of method defined on <code>IAction</code>.
 	 */
 	public void run() {
-		try {
-			server.restartModule(module, new NullProgressMonitor());
-		} catch (CoreException e) {
-			// ignore
-		}
+		server.restartModule(module, null);
 	}
 }

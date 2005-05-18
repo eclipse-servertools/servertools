@@ -52,8 +52,7 @@ public interface IEnterpriseApplication {
 	public boolean containsLooseModules();
 	
 	/**
-	 * Returns the location of the root of the application. May
-	 * return null if isUnitTest() returns false. This should
+	 * Returns the location of the root of the application. This should
 	 * be an absolute path that is not workbench relative.
 	 * 
 	 * @return the absolute path to the root of this application

@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
+import org.eclipse.wst.server.core.model.InternalInitializer;
 import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
 /**
  * 
@@ -90,7 +91,8 @@ public class ModuleFactory implements IOrdered {
 		if (delegate == null) {
 			try {
 				delegate = (ModuleFactoryDelegate) element.createExecutableExtension("class");
-				delegate.initialize(this);
+				//delegate.initialize(this);
+				InternalInitializer.initializeModuleFactoryDelegate(delegate, this);
 				//ResourceManager.getInstance().addModuleFactoryListener(delegate);
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + t.getMessage());
