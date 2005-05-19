@@ -93,6 +93,7 @@ public abstract class AbstractServerTestCase extends TestCase {
 	}
 
 	public void test0005cDelegate() throws Exception {
+		serverAttr = server;
 		serverAttr.getAdapter(ServerDelegate.class);
 	}
 
