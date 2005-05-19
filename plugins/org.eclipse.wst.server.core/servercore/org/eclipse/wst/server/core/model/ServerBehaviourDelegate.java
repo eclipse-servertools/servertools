@@ -377,7 +377,7 @@ public abstract class ServerBehaviourDelegate {
 	
 	/**
 	 * Starts the given module on the server. See the specification of 
-	 * {@link IServer#startModule(IModule[], IServer.IOperationListener, IProgressMonitor)}
+	 * {@link IServer#startModule(IModule[], IServer.IOperationListener)}
 	 * for further details. 
 	 * <p>
 	 * The implementation should update the module sync state and fire
@@ -403,7 +403,7 @@ public abstract class ServerBehaviourDelegate {
 
 	/**
 	 * Stops the given module on the server. See the specification of 
-	 * {@link IServer#stopModule(IModule[], IServer.IOperationListener, IProgressMonitor)}
+	 * {@link IServer#stopModule(IModule[], IServer.IOperationListener)}
 	 * for further details. 
 	 * <p>
 	 * The implementation should update the module sync state and fire

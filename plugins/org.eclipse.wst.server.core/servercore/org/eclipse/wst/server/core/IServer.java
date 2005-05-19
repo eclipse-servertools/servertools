@@ -67,7 +67,25 @@ import org.eclipse.core.runtime.*;
  * @since 1.0
  */
 public interface IServer extends IServerAttributes {
+	/**
+	 * An operation listener is used to receive notification back about a
+	 * specific server operation, such as starting or stopping a server.
+	 *
+	 * <b>Provisional API:</b> This class/interface is part of an interim API
+	 * that is still under development and expected to change significantly
+	 * before reaching stability. It is being made available at this early
+	 * stage to solicit feedback from pioneering adopters on the understanding
+	 * that any code that uses this API will almost certainly be broken
+	 * (repeatedly) as the API evolves.
+	 */
 	public interface IOperationListener {
+		/**
+		 * Called once when the operation is complete.
+		 * 
+		 * @param result a status object with code <code>IStatus.OK</code> if
+		 *    the operation completed successfully, otherwise a status object
+		 *    indicating why it didn't
+		 */
 		public void done(IStatus result);
 	}
 
