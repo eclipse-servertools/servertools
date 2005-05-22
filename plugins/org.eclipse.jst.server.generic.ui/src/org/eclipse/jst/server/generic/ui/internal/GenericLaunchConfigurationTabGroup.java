@@ -3,11 +3,10 @@
  * All rights reserved.   This program and the accompanying materials
  * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/cpl-v10.html
+ * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
  *     Gorkem Ercan - initial API and implementation
- *     Naci M. Dai
  * 
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -48,6 +47,7 @@ public class GenericLaunchConfigurationTabGroup extends AbstractLaunchConfigurat
 	 */
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
 		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[7];
+		//FIXME: get the server type ids from the servertypedefinition extension point.
 		tabs[0] = new ServerLaunchConfigurationTab(new String[] { "org.eclipse.jst.server.generic" });
 		tabs[0].setLaunchConfigurationDialog(dialog);
 		tabs[1] = new JavaArgumentsTab();

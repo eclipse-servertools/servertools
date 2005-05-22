@@ -47,14 +47,16 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
  */
 public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizardFragment 
 {
+	private GenericServerCompositeDecorator[] fDecorators;
 
-    private ServerTypeDefinitionGroup fComposite;
-    private Map fProperties; 
-	/* (non-Javadoc)
-	 * @see com.ibm.wtp.server.ui.wizard.IWizardFragment#isComplete()
+	/**
+	 * 
 	 */
 	public boolean isComplete() {
-	    
+		for (int i = 0; fDecorators!=null && i < fDecorators.length; i++) {
+			if(fDecorators[i].validate())
+				return false;
+		}
 		ServerRuntime serverRuntime = getServerTypeDefinitionFor(getServer());
 		if(serverRuntime==null)
 		    return false;
@@ -62,25 +64,19 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
 	}
 
 	public void createContent(Composite parent, IWizardHandle handle){
-		createBody(parent,handle);
-	}
-	/**
-	 * 
-	 */
-	private void createBody(Composite parent, IWizardHandle handle) 
-	{
 		IServerWorkingCopy server = getServer();
+		GenericServer dl= (GenericServer)server.getAdapter(GenericServer.class);
 		ServerRuntime definition = getServerTypeDefinitionFor(server);
-		fComposite = new ServerTypeDefinitionGroup(this, definition,ServerTypeDefinitionGroup.CONTEXT_SERVER, null,parent);
-
+		fDecorators = new GenericServerCompositeDecorator[1];
+		fDecorators[0]=new ServerTypeDefinitionServerDecorator(definition,null,getWizard(),dl);
+		new GenericServerComposite(parent,fDecorators);
+		
 	}
-
 	/**
      * @param server
      * @return
      */
-    private ServerRuntime getServerTypeDefinitionFor(IServerWorkingCopy server) {
-        
+    private ServerRuntime getServerTypeDefinitionFor(IServerWorkingCopy server) {        
         GenericServerRuntime runtime = (GenericServerRuntime)server.getRuntime().getAdapter(GenericServerRuntime.class);
         if(runtime==null){
             IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy)getTaskModel().getObject(TaskModel.TASK_RUNTIME);
@@ -104,19 +100,13 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
     }
 
     public void enter() {
-        IServerWorkingCopy server = getServer();
-        ServerRuntime definition = getServerTypeDefinitionFor(server);
-//        if(definition != null && fComposite!=null)
-//            fComposite.reset(definition,ServerTypeDefinitionGroup.CONTEXT_SERVER,null);
-	}
+    	getServer().setName(GenericServerUIMessages.getFormattedString("serverName",new String[] {getServerTypeDefinitionFor(getServer()).getName()}));
+    }
+    
 	public void exit(){
-	        fProperties = fComposite.getProperties();
-	        serverDefinitionTypePropertiesChanged();
+
 	}
 	
-	protected Map getServerProperties(){
-	    return fProperties;
-	}
 	
     /* (non-Javadoc)
      * @see org.eclipse.jst.server.generic.internal.ui.ServerDefinitionTypeAwareWizardFragment#description()
@@ -142,18 +132,5 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
         if(sName==null || sName.length()<1)
             sName="Generic";
         return  GenericServerUIMessages.getFormattedString("serverWizardTitle",new String[]{sName});
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jst.server.generic.internal.ui.ServerDefinitionTypeAwareWizardFragment#serverDefinitionTypePropertiesChanged()
-     */
-    public void serverDefinitionTypePropertiesChanged() {
-        fProperties = fComposite.getProperties();
-        IServerWorkingCopy serverWorkingCopy = getServer();
-        ServerRuntime definition = getServerTypeDefinitionFor(serverWorkingCopy);
-        
-        serverWorkingCopy.setName(GenericServerUIMessages.getFormattedString("serverName",new String[] {definition.getName()}));
-        GenericServer dl= (GenericServer)serverWorkingCopy.getAdapter(GenericServer.class);
-        dl.setServerInstanceProperties(getServerProperties());
     }
 }

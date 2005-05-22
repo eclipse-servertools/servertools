@@ -1,8 +1,5 @@
 /*
  * Created on Oct 19, 2004
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 package org.eclipse.jst.server.generic.ui.internal;
 
@@ -18,14 +15,15 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 
 /**
- * 
+ * A wizard fragment that provides support for serverdef files.
  *
  * @author Gorkem Ercan
  */
 public abstract class ServerDefinitionTypeAwareWizardFragment extends WizardFragment {
 
     private IWizardHandle fWizard;
-	public boolean hasComposite() {
+	
+    public boolean hasComposite() {
 		return true;
 	}
 
@@ -55,19 +53,21 @@ public abstract class ServerDefinitionTypeAwareWizardFragment extends WizardFrag
 	 * @return
 	 */
 	public abstract String title();
-	
+	/**
+	 * Create the real content
+	 * @param parent
+	 * @param handle
+	 */
 	public abstract void createContent(Composite parent, IWizardHandle handle);
 
-	public abstract void serverDefinitionTypePropertiesChanged();
-	
+	/**
+	 * Retuns the ServerRuntime.
+	 * @param definitionID
+	 * @param properties
+	 * @return
+	 */	
 	protected ServerRuntime getServerTypeDefinition(String definitionID, Map properties)
 	{
 	    return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(definitionID,properties);
 	}
-	
-	protected ServerRuntime[] getAllServerDefinitionTypes()
-	{
-	    return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerTypeDefinitions();
-	}
-
 }
