@@ -48,11 +48,11 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
 			if(!pathExist(path)){
 				fLastMessage = path+" is not valid";
 				fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
-			}
-			else 
-			if(fLastMessage!=null && fLastMessage.equals(fWizard.getMessage())){
-				fLastMessage=null;
-				fWizard.setMessage(null,IMessageProvider.NONE);
+			}else{
+				if(fLastMessage!=null && fLastMessage.equals(fWizard.getMessage())){
+					fLastMessage=null;
+					fWizard.setMessage(null,IMessageProvider.NONE);
+				}
 				validate();
 			}
 		}
