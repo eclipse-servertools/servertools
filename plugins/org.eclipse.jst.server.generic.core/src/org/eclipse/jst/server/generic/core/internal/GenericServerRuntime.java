@@ -37,6 +37,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.launching.IVMInstall;
+import org.eclipse.jdt.launching.IVMInstallType;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.internal.IGenericRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
@@ -50,37 +51,49 @@ import org.eclipse.wst.server.core.model.RuntimeDelegate;
  */
 public class GenericServerRuntime extends RuntimeDelegate implements IGenericRuntime
 {
-
+	private static final String PROP_VM_INSTALL_TYPE_ID = "vm-install-type-id";
+	private static final String PROP_VM_INSTALL_ID = "vm-install-id";
 	public static final String SERVER_DEFINITION_ID = "server_definition_id";
 	public static final String SERVER_INSTANCE_PROPERTIES = "generic_server_instance_properties";
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.jst.server.core.IGenericRuntime#getVMInstallTypeId()
 	 */
 	public String getVMInstallTypeId() {
-		return JavaRuntime.getDefaultVMInstall().getVMInstallType().getId();
-		// TODO configurable.
+		return getAttribute(PROP_VM_INSTALL_TYPE_ID, (String)null);
 	}
 	
 	public boolean isUsingDefaultJRE() {
-		// TODO Auto-generated method stub
-		return true;
+		return getVMInstallTypeId() == null;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jst.server.core.IGenericRuntime#getVMInstallId()
 	 */
 	public String getVMInstallId() {
-		return JavaRuntime.getDefaultVMInstall().getId();
-		// TODO configurable.
-		
+		return getAttribute(PROP_VM_INSTALL_ID, (String)null);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jst.server.core.IGenericRuntime#getVMInstall()
 	 */
 	public IVMInstall getVMInstall() {
-		return JavaRuntime.getDefaultVMInstall();
-		// TODO configurable
+		if (getVMInstallTypeId() == null)
+			return JavaRuntime.getDefaultVMInstall();
+		try {
+			IVMInstallType vmInstallType = JavaRuntime.getVMInstallType(getVMInstallTypeId());
+			IVMInstall[] vmInstalls = vmInstallType.getVMInstalls();
+			int size = vmInstalls.length;
+			String id = getVMInstallId();
+			for (int i = 0; i < size; i++) {
+				if (id.equals(vmInstalls[i].getId()))
+					return vmInstalls[i];
+			}
+		} catch (Exception e) {
+			// ignore
+		}
+		return null;
+	
 	}
 
 	/* (non-Javadoc)
@@ -108,7 +121,6 @@ public class GenericServerRuntime extends RuntimeDelegate implements IGenericRun
 		            if(f.exists()==false)
 		                return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,GenericServerCoreMessages.getFormattedString("errorMissingClasspathEntry",new String[]{f.getPath()} ),null);	
 			}
- 			
 		}
         return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "", null);
 	}
@@ -126,6 +138,26 @@ public class GenericServerRuntime extends RuntimeDelegate implements IGenericRun
 	       return null;
 	   return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(id,properties);
 	}
+	
+	public void setVMInstall(IVMInstall vmInstall) {
+		if (vmInstall == null) {
+			setVMInstall(null, null);
+		} else
+			setVMInstall(vmInstall.getVMInstallType().getId(), vmInstall.getId());
+	}
+	
+	private void setVMInstall(String typeId, String id) {
+		if (typeId == null)
+			setAttribute(PROP_VM_INSTALL_TYPE_ID, (String)null);
+		else
+			setAttribute(PROP_VM_INSTALL_TYPE_ID, typeId);
+		
+		if (id == null)
+			setAttribute(PROP_VM_INSTALL_ID, (String)null);
+		else
+			setAttribute(PROP_VM_INSTALL_ID, id);
+	}
+	
 	
 	public Map getServerInstanceProperties() {
 		return getAttribute(SERVER_INSTANCE_PROPERTIES, new HashMap());
