@@ -159,7 +159,6 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	 * @see org.eclipse.wst.server.core.model.IServerDelegate#getChildModules(org.eclipse.wst.server.core.model.IModule[])
 	 */
 	public IModule[] getChildModules(IModule[] module) {
-		// TODO Auto-generated method stub
 		return new IModule[0];
 	}
 
