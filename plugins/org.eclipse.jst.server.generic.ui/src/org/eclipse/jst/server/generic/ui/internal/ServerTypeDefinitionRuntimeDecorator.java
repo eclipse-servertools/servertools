@@ -3,6 +3,7 @@ package org.eclipse.jst.server.generic.ui.internal;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
@@ -22,11 +23,16 @@ public class ServerTypeDefinitionRuntimeDecorator extends ServerTypeDefinitionDe
 			return false;
 		fRuntime.setServerDefinitionId(fRuntime.getRuntime().getRuntimeType().getId());
         fRuntime.setServerInstanceProperties(getValues());
+       
 		IStatus status = fRuntime.validate();
 		
 		if (status == null || status.isOK()){
+
 			fWizard.setMessage(null, IMessageProvider.NONE);
 			fWizard.update();
+	        String wDir = fRuntime.getServerTypeDefinition().getResolver().resolveProperties(fRuntime.getServerTypeDefinition().getStart().getWorkingDirectory()); 
+	        fRuntime.getRuntimeWorkingCopy().setLocation(new Path(wDir));
+
 			return false;
 		}else
 		{
