@@ -41,6 +41,7 @@
     <type name="PublishTaskDelegate"/>
     <type name="PublishOperation"/>
     <type name="ServerBehaviourDelegate"/>
+    <type name="InternalInitializer" implement="false" subclass="false" instantiate="false" reference="false"/>
   </package>
   <package name="org.eclipse.wst.server.core.util">
   </package>
