@@ -384,7 +384,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     		for(int i=0;i<ports.length;i++){
     			sp= ports[i];
     			if (SocketUtil.isPortInUse(ports[i].getPort(), 5))
-    				throw new CoreException(new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.getFormattedString("errorPortInUse",new String[] {Integer.toString(sp.getPort()),sp.getName()}),null));
+    				throw new CoreException(new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.bind(GenericServerCoreMessages.errorPortInUse,Integer.toString(sp.getPort()),sp.getName()),null));
     		}
     		
     		setServerState(IServer.STATE_STARTING);

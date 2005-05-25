@@ -101,25 +101,25 @@ public class GenericServerRuntime extends RuntimeDelegate implements IGenericRun
 	 */
 	public IStatus validate() {
 		if (getVMInstall() == null)
-			return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.getString("errorJRE"), null);
+			return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.errorJRE, null);
 		
 		ServerRuntime serverTypeDefinition = getServerTypeDefinition();
         if(serverTypeDefinition == null)
-		    return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.getString("errorNoServerType"), null);
+		    return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.errorNoServerType, null);
         if(serverTypeDefinition.getClasspath()== null || serverTypeDefinition.getClasspath().size()<1)
-            return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,GenericServerCoreMessages.getString("errorNoClasspath"),null);
+            return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,GenericServerCoreMessages.errorNoClasspath,null);
 		Iterator cpList  = serverTypeDefinition.getClasspath().iterator();
         while (cpList.hasNext()) {
 			Classpath cpth = (Classpath) cpList.next();
 	        if(cpth.getArchive()== null || cpth.getArchive().size()<1)
-	            return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,GenericServerCoreMessages.getString("errorNoClasspath"),null);
+	            return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,GenericServerCoreMessages.errorNoClasspath,null);
 			Iterator archIter = cpth.getArchive().iterator();
 			while (archIter.hasNext()) {
 				ArchiveType arch = (ArchiveType) archIter.next();
 				String arcPath = serverTypeDefinition.getResolver().resolveProperties(arch.getPath());
 		           File f = new File(arcPath);
 		            if(f.exists()==false)
-		                return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,GenericServerCoreMessages.getFormattedString("errorMissingClasspathEntry",new String[]{f.getPath()} ),null);	
+		                return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,GenericServerCoreMessages.bind(GenericServerCoreMessages.errorMissingClasspathEntry,f.getPath()),null);	
 			}
 		}
         return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "", null);

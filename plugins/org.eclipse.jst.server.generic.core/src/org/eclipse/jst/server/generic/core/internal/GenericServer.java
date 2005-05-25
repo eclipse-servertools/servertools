@@ -72,7 +72,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	 */
 	public IStatus publishStart(IProgressMonitor monitor) {
 	    if(getModules().length<1)
-	        return new Status(IStatus.CANCEL,CorePlugin.PLUGIN_ID,0,GenericServerCoreMessages.getString("cancelNoPublish"),null);
+	        return new Status(IStatus.CANCEL,CorePlugin.PLUGIN_ID,0,GenericServerCoreMessages.cancelNoPublish,null);
 		return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "PublishingStarted", null);
 	}
 
@@ -87,7 +87,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
                     return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "CanModifyModules", null);
             }
 	    }
-		return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.getString("moduleNotCompatible"), null);
+		return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.moduleNotCompatible, null);
 	}
 	
 	private String createModuleId(IModule module)
