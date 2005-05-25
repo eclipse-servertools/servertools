@@ -245,6 +245,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		final IPath[] paths = getListenerPaths();
 		if (paths != null) {
 			final IModule[] modules = getModules(project);
+			if (modules == null) return;
 			for (int i = 0; i < modules.length; i++) {
 				final IModule module = modules[i];
 				if (module != null && module instanceof ProjectModule) {
