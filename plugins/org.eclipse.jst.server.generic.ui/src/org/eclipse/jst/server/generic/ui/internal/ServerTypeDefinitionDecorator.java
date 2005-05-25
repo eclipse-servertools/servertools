@@ -46,7 +46,7 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
 		public void modifyText(ModifyEvent e) {
 			String path = ((Text) e.widget).getText();
 			if(!pathExist(path)){
-				fLastMessage = path+" is not valid";
+				fLastMessage = GenericServerUIMessages.bind(GenericServerUIMessages.invalidPath,path);
 				fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
 			}else{
 				if(fLastMessage!=null && fLastMessage.equals(fWizard.getMessage())){
@@ -155,7 +155,7 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
     	fText.setLayoutData(gridData);
     	fText.setText(value);
     	fText.addModifyListener(new PathModifyListener());
-    	Button fButton = SWTUtil.createButton(defPanel,GenericServerUIMessages.getString("serverTypeGroup.label.browse") );
+    	Button fButton = SWTUtil.createButton(defPanel,GenericServerUIMessages.serverTypeGroup_label_browse);
     	
     	fButton.addSelectionListener(new SelectionListener() {
     		public void widgetSelected(SelectionEvent e) {
@@ -191,7 +191,7 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
     	fText.setLayoutData(gridData);
     	fText.setText(value);
     	fText.addModifyListener(new PathModifyListener());
-    	Button fButton = SWTUtil.createButton(parent,GenericServerUIMessages.getString("serverTypeGroup.label.browse"));
+    	Button fButton = SWTUtil.createButton(parent,GenericServerUIMessages.serverTypeGroup_label_browse);
     	fButton.addSelectionListener(new SelectionListener() {
     		public void widgetSelected(SelectionEvent e) {
     			DirectoryDialog dlg = new DirectoryDialog(parent.getShell());

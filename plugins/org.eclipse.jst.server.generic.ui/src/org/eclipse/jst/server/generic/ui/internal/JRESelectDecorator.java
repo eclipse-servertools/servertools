@@ -35,10 +35,10 @@ public class JRESelectDecorator implements GenericServerCompositeDecorator {
 		updateJREs();
 		Link link = new Link(composite,SWT.NONE);
 		link.setLayoutData(new GridData(SWT.FILL,SWT.NONE,true,false,3,1));
-		link.setText("You can use <a>Installed JRE preferences</a> to create a new JRE");
+		link.setText(GenericServerUIMessages.installed_jre_link);
 		
 		Label label = new Label(composite, SWT.NONE);
-		label.setText("JRE:");
+		label.setText(GenericServerUIMessages.jre_select_label);
 		
 		final Combo combo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		combo.setItems(jreNames);
@@ -111,7 +111,7 @@ public class JRESelectDecorator implements GenericServerCompositeDecorator {
 		
 		size = installedJREs.size();
 		jreNames = new String[size+1];
-		jreNames[0] = "Default JRE";
+		jreNames[0] = GenericServerUIMessages.defaultJRE;
 		for (int i = 0; i < size; i++) {
 			IVMInstall vmInstall = (IVMInstall) installedJREs.get(i);
 			jreNames[i+1] = vmInstall.getName();

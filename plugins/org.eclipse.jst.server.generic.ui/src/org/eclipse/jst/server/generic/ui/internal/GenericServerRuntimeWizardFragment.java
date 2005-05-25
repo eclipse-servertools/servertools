@@ -127,7 +127,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	{
 	    RuntimeDelegate dl = getRuntimeDelegate();
 	    IRuntimeType runtimeType = dl.getRuntime().getRuntimeType();
-	    String name = GenericServerUIMessages.getFormattedString("runtimeName", new String[] {runtimeType.getName()});
+	    String name = GenericServerUIMessages.bind(GenericServerUIMessages.runtimeName,runtimeType.getName());
 		IRuntime[] list = ServerCore.getRuntimes();
 		int suffix = 1;
 		String suffixName=name;
@@ -161,7 +161,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
         String rName = getRuntimeName();
         if(rName == null || rName.length()<1)
             rName="Generic";      
-        return  GenericServerUIMessages.getFormattedString("runtimeWizardDescription",new String[] {rName});
+        return  GenericServerUIMessages.bind(GenericServerUIMessages.runtimeWizardDescription,rName);
     }
     /* (non-Javadoc)
      * @see org.eclipse.jst.server.generic.internal.ui.ServerDefinitionTypeAwareWizardFragment#title()
@@ -170,7 +170,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
         String rName = getRuntimeName();
         if(rName == null || rName.length()<1)
             rName="Generic";
-       return GenericServerUIMessages.getFormattedString("runtimeWizardTitle",new String[]{rName});
+       return GenericServerUIMessages.bind(GenericServerUIMessages.runtimeWizardTitle,rName);
     }
     
     private String getRuntimeName()

@@ -100,7 +100,8 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
     }
 
     public void enter() {
-    	getServer().setName(GenericServerUIMessages.getFormattedString("serverName",new String[] {getServerTypeDefinitionFor(getServer()).getName()}));
+    	getServer().setName(GenericServerUIMessages.bind(GenericServerUIMessages.serverName,getServerTypeDefinitionFor(getServer()).getName()));
+    			
     }
     
 	public void exit(){
@@ -115,7 +116,7 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
         String sName = getServerName();
         if(sName==null || sName.length()<1)
             sName="Generic";
-        return  GenericServerUIMessages.getFormattedString("serverWizardDescription",new String[] {sName});
+        return  GenericServerUIMessages.bind(GenericServerUIMessages.serverWizardDescription,sName);
     }
 
     private String getServerName()
@@ -131,6 +132,6 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
         String sName= getServerName();
         if(sName==null || sName.length()<1)
             sName="Generic";
-        return  GenericServerUIMessages.getFormattedString("serverWizardTitle",new String[]{sName});
+        return  GenericServerUIMessages.bind(GenericServerUIMessages.serverWizardTitle,sName);
     }
 }
