@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -61,7 +60,6 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerPort;
-import org.eclipse.wst.server.core.model.RuntimeDelegate;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.core.model.ServerDelegate;
 import org.eclipse.wst.server.core.util.SocketUtil;
@@ -217,9 +215,9 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
         return server.getServerDefinition();
     }
     
-    private RuntimeDelegate getRuntimeDelegate()
+    protected GenericServerRuntime getRuntimeDelegate()
     {
-       return (RuntimeDelegate)getServer().getRuntime().getAdapter(RuntimeDelegate.class);
+       return (GenericServerRuntime)getServer().getRuntime().getAdapter(GenericServerRuntime.class);
     }
 
 
@@ -233,7 +231,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
      * @param cpRef
      * @return
      */
-    private List serverClasspath(String cpRef) {
+    protected List serverClasspath(String cpRef) {
     	Classpath classpath = getServerDefinition().getClasspath(cpRef);
     	
         List cpEntryList = new ArrayList(classpath.getArchive().size());
@@ -253,10 +251,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
      * @param wc
      * @param vmInstall
      */
-    private void setupLaunchClasspath(ILaunchConfigurationWorkingCopy wc, IVMInstall vmInstall, List cp) {
-		// TODO: Remove adding tools.jar after the configurable JREs
-    	addToolsJar(vmInstall, cp);
-	
+    protected void setupLaunchClasspath(ILaunchConfigurationWorkingCopy wc, IVMInstall vmInstall, List cp) {
 		//merge existing classpath with server classpath
 		try {
 			IRuntimeClasspathEntry[] existingCps = JavaRuntime.computeUnresolvedRuntimeClasspath(wc);
@@ -287,32 +282,6 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 			}
 		}
 		return list;
-	}
-	private void addToolsJar(IVMInstall vmInstall, List cp) {
-		if (vmInstall != null) {
-    		try {
-    			cp.add(JavaRuntime
-    							.newRuntimeContainerClasspathEntry(
-    									new Path(JavaRuntime.JRE_CONTAINER)
-    											.append(
-    													"org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType")
-    											.append(vmInstall.getName()),
-    									IRuntimeClasspathEntry.BOOTSTRAP_CLASSES)
-    							);
-    		} catch (Exception e) {
-				// ignore
-    		}
-    
-    		IPath jrePath = new Path(vmInstall.getInstallLocation()
-    				.getAbsolutePath());
-    		if (jrePath != null) {
-    			IPath toolsPath = jrePath.append("lib").append("tools.jar");
-    			if (toolsPath.toFile().exists()) {
-     					cp.add(JavaRuntime.newArchiveRuntimeClasspathEntry(
-    							toolsPath));
-     			}
-    		}
-    	}
 	}
 
     private String getWorkingDirectory() {
@@ -371,7 +340,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     	 * @param launchMode String
     	 * @param monitor IProgressMonitor
     	 */
-    	public void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException {
+    	protected void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException {
     		if ("true".equals(launch.getLaunchConfiguration().getAttribute(ATTR_STOP, "false")))
     			return;
     //		IStatus status = getRuntime().validate();
@@ -402,7 +371,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     		}
     	}
 
-    public void setProcess(final IProcess newProcess) {
+    protected void setProcess(final IProcess newProcess) {
     	if (process != null)
     		return;
     
@@ -439,7 +408,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     /**
      * Terminates the server.
      */
-    public void terminate() {
+    private void terminate() {
     	if (getServer().getServerState() == IServer.STATE_STOPPED)
     		return;
     

@@ -226,7 +226,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	/**
 	 * @return
 	 */
-	private int getHttpPort() {
+	protected int getHttpPort() {
 		int port=-1;
 		Iterator pIter = this.getServerDefinition().getPort().iterator();
 		while (pIter.hasNext()) {
