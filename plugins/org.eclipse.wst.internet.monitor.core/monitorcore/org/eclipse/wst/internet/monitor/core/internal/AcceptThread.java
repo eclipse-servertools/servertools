@@ -26,7 +26,7 @@ public class AcceptThread {
 	
 	protected Thread thread;
 	
-	class ServerThread extends Thread{
+	class ServerThread extends Thread {
 		/**
 		 * ServerThread accepts incoming connections and delegates to the protocol
 		 * adapter to deal with the connection.
@@ -83,7 +83,21 @@ public class AcceptThread {
 			return;
 		thread = new ServerThread();
 		thread.setDaemon(true);
+		thread.setPriority(Thread.NORM_PRIORITY + 1);
 		thread.start();
+		
+		Thread.yield();
+		
+		// wait up to 2 seconds for initialization
+		int i = 0;
+		while (serverSocket == null && i < 10) {
+			try {
+				Thread.sleep(200);
+			} catch (Exception e) {
+				// ignore
+			}
+			i++;
+		}
 	}
 
 	/**
@@ -107,7 +121,8 @@ public class AcceptThread {
 			String protocolId = monitor.getProtocol();
 		   ProtocolAdapter adapter = MonitorPlugin.getInstance().getProtocolAdapter(protocolId);
 			adapter.disconnect(monitor);
-			serverSocket.close();
+			if (serverSocket != null)
+				serverSocket.close();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error stopping server", e);
 		}

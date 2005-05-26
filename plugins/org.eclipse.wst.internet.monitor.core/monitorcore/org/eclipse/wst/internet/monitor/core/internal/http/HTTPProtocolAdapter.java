@@ -23,7 +23,7 @@ import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitor;
  */
 public class HTTPProtocolAdapter extends ProtocolAdapterDelegate {
 	protected Map map = new HashMap();
-	
+
 	/**
 	 * @see ProtocolAdapterDelegate#connect(IMonitor, Socket, Socket)
 	 */
@@ -36,14 +36,15 @@ public class HTTPProtocolAdapter extends ProtocolAdapterDelegate {
 		request.start();
 		response.start();
 	}
-	
+
 	/**
 	 * @see ProtocolAdapterDelegate#disconnect(IMonitor)
 	 */
 	public void disconnect(IMonitor monitor) throws IOException {
 		try {
 			Connection conn = (Connection) map.get(monitor);
-			conn.close();
+			if (conn != null)
+				conn.close();
 		} catch (Exception e) {
 			// ignore
 		}

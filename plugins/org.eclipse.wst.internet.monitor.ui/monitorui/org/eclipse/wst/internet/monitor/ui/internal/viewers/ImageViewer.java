@@ -48,6 +48,7 @@ public class ImageViewer extends ContentViewer {
 
 		messageLabel = new Label(viewerComp, SWT.NONE);
 		messageLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
+		messageLabel.setText(Messages.imageViewInvalid);
 	}
 	
 	/** (non-Javadoc)
@@ -56,7 +57,7 @@ public class ImageViewer extends ContentViewer {
 	public void setContent(byte[] b) {
 		content = b;
 		if (b == null || b.length == 0) {
-			messageLabel.setText(Messages.imageViewInvalid);
+			messageLabel.setImage(null);
 		} else {
 			byte cr = '\r';
 			byte lf = '\n';
@@ -80,20 +81,21 @@ public class ImageViewer extends ContentViewer {
 				Image img = new Image(null, imgD);
 				messageLabel.setImage(img);
 			} catch(Exception e) {
-				messageLabel.setText(Messages.imageViewInvalid);
+				messageLabel.setImage(null);
 			}
 		}
 		
 		viewerComp.layout(true);
+		messageLabel.setFont(viewerComp.getParent().getFont());
 	}
-	
+
 	/**
 	 * @see ContentViewer#getContent()
 	 */
 	public byte[] getContent() {
 		return content;
 	}
-	
+
 	/** (non-Javadoc)
 	 * @see ContentViewer#dispose()
 	 */

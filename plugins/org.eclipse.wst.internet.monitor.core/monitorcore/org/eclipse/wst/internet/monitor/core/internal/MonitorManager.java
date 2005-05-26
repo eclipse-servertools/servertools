@@ -290,13 +290,10 @@ public class MonitorManager {
 	 * @return the array of resend requests based on this request
 	 */
 	public ResendHTTPRequest[] getResendRequests(Request request) {
-		try {
-			List list = (List) resendMap.get(request);
-			ResendHTTPRequest[] rr = new ResendHTTPRequest[list.size()];
-			list.toArray(rr);
-			return rr;
-		} catch (Exception e) {
-			return new ResendHTTPRequest[0];
-		}
+		List list = (List) resendMap.get(request);
+		if (list != null)
+			return (ResendHTTPRequest[]) list.toArray(new ResendHTTPRequest[list.size()]);
+
+		return new ResendHTTPRequest[0];
 	}
 }
