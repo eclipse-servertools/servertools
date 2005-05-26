@@ -29,6 +29,8 @@
       <import plugin="org.eclipse.emf.common" export="true"/>
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="org.eclipse.emf.ecore.xmi"/>
+      <import plugin="org.eclipse.ui.externaltools"/>
+      <import plugin="org.eclipse.jdt.debug.ui"/>
    </requires>
    
  <extension-point id="serverdefinition" name="Server definition" schema="schema/serverdefinition.exsd"/>

@@ -30,21 +30,29 @@
 package org.eclipse.jst.server.generic.core.internal;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import org.eclipse.ant.core.AntRunner;
+import org.eclipse.ant.internal.ui.IAntUIConstants;
+import org.eclipse.ant.internal.ui.launchConfigurations.IAntLaunchConfigurationConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationType;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.ui.IDebugUIConstants;
+import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jst.server.generic.internal.core.util.FileUtil;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.PublisherData;
 import org.eclipse.jst.server.core.IEJBModule;
 import org.eclipse.jst.server.core.IWebModule;
+import org.eclipse.ui.externaltools.internal.model.IExternalToolConstants;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.osgi.framework.Bundle;
 /**
@@ -93,7 +101,7 @@ public class AntPublisher extends GenericPublisher{
      * @return
      */
     private File computeBuildFile() {
-        Bundle bundle = Platform.getBundle(getServerRuntime().getConfigurationElementNamespace());
+        Bundle bundle = Platform.getBundle(getServerRuntime().getServerTypeDefinition().getConfigurationElementNamespace());
         File file = FileUtil.resolveFileFrom(bundle,getBuildFile());
         return file;
     }
@@ -102,50 +110,47 @@ public class AntPublisher extends GenericPublisher{
     /**
      * @return
      */
-    private String[] getPublishTargetsForModule() {
-        String dataname = MODULE_PUBLISH_TARGET_PREFIX+getModuleTypeId();
-        return doGetTargets(dataname);
+    private String getPublishTargetsForModule() {
+    	return doGetTargets(MODULE_PUBLISH_TARGET_PREFIX+getModuleTypeId());
     }
 
-
+    /**
+     * @return
+     */
+    private String getUnpublishTargetsForModule() {
+        return doGetTargets(MODULE_UNPUBLISH_TARGET_PREFIX+getModuleTypeId());
+    }
+    
     /**
      * @param dataname
      * @return
      */
-    private String[] doGetTargets(String dataname) {
-        ArrayList list = new ArrayList();
-        Iterator iterator = getServerRuntime().getPublisher(PUBLISHER_ID).getPublisherdata().iterator();
+    private String doGetTargets(String dataname) {
+    	StringBuffer buffer = new StringBuffer();
+    	Iterator iterator = getServerRuntime().getServerTypeDefinition().getPublisher(PUBLISHER_ID).getPublisherdata().iterator();
         while(iterator.hasNext()){
             PublisherData data = (PublisherData)iterator.next();
             if(dataname.equals(data.getDataname())) {
-                list.add(data.getDatavalue());
+                if(buffer.length()>0)
+                	buffer.append(",");
+            	buffer.append(data.getDatavalue());
             }   
         }
-        return (String[])list.toArray(new String[list.size()]);
+        return buffer.toString();
     }
 
-    /**
-     * @return
-     */
-    private String[] getUnpublishTargetsForModule() {
-        
-        return doGetTargets(MODULE_UNPUBLISH_TARGET_PREFIX+getModuleTypeId());
-    }
-    
-    
-    private String getModuleTypeId()
-    {
+    private String getModuleTypeId(){
         return getModule()[0].getModuleType().getId();
     }
     
 	private String getBuildFile()
     {
-        Iterator iterator = getServerRuntime().getPublisher(PUBLISHER_ID).getPublisherdata().iterator();
+        Iterator iterator = getServerRuntime().getServerTypeDefinition().getPublisher(PUBLISHER_ID).getPublisherdata().iterator();
         while(iterator.hasNext())
         {
             PublisherData data = (PublisherData)iterator.next();
             if(DATA_NAME_BUILD_FILE.equals(data.getDataname()))
-                return getServerRuntime().getResolver().resolveProperties(data.getDatavalue());
+                return getServerRuntime().getServerTypeDefinition().getResolver().resolveProperties(data.getDatavalue());
         }
         return null;
     }
@@ -154,7 +159,7 @@ public class AntPublisher extends GenericPublisher{
         Map props = new HashMap();
         
         // pass all properties to build file.
-        Map properties = getServerRuntime().getResolver().getPropertyValues();
+        Map properties = getServerRuntime().getServerTypeDefinition().getResolver().getPropertyValues();
         Iterator propertyIterator = properties.keySet().iterator();
         while(propertyIterator.hasNext())
         {
@@ -162,9 +167,9 @@ public class AntPublisher extends GenericPublisher{
             props.put(property,properties.get(property));
         }
         
-        Module module =  getServerRuntime().getModule(getModuleTypeId());
+        Module module =  getServerRuntime().getServerTypeDefinition().getModule(getModuleTypeId());
 		String modDir = module.getPublishDir();
-		modDir = getServerRuntime().getResolver().resolveProperties(modDir);
+		modDir = getServerRuntime().getServerTypeDefinition().getResolver().resolveProperties(modDir);
 
 		IWebModule webModule = (IWebModule)getModule()[0].getAdapter(IWebModule.class);
         IEJBModule ejbModule = (IEJBModule)getModule()[0].getAdapter(IEJBModule.class);
@@ -201,13 +206,28 @@ public class AntPublisher extends GenericPublisher{
 			moduleName = contextRoot.substring(1);
 		return moduleName;
 	}
-	private void runAnt(String buildFile,String[] targets,Map properties ,IProgressMonitor monitor)throws CoreException
-	{
-		AntRunner runner = new AntRunner();
-		runner.setBuildFileLocation(buildFile);
-		runner.setExecutionTargets(targets);
-		runner.addUserProperties(properties);
-		runner.run(monitor);
+	private void runAnt(String buildFile,String targets,Map properties ,IProgressMonitor monitor)throws CoreException{
+		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
+		ILaunchConfigurationType type = launchManager.getLaunchConfigurationType(IAntLaunchConfigurationConstants.ID_ANT_LAUNCH_CONFIGURATION_TYPE);
+
+		ILaunchConfigurationWorkingCopy wc= type.newInstance(null,properties.get("module.name")+" module publisher");
+		wc.setContainer(null);
+		wc.setAttribute(IExternalToolConstants.ATTR_LOCATION, buildFile);
+		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH_PROVIDER,"org.eclipse.ant.ui.AntClasspathProvider");
+		wc.setAttribute(IAntLaunchConfigurationConstants.ATTR_ANT_TARGETS,targets);
+		wc.setAttribute(IAntLaunchConfigurationConstants.ATTR_ANT_PROPERTIES,properties);
+		wc.setAttribute(IDebugUIConstants.ATTR_LAUNCH_IN_BACKGROUND,false);
+		wc.setAttribute(IDebugUIConstants.ATTR_CAPTURE_IN_CONSOLE,true);
+		wc.setAttribute(IDebugUIConstants.ATTR_PRIVATE,true);
+		
+		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_SOURCE_PATH_PROVIDER, "org.eclipse.ant.ui.AntClasspathProvider"); 
+		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_NAME,getServerRuntime().getVMInstall().getName());
+		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_TYPE,getServerRuntime().getVMInstall().getVMInstallType().getId());
+		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, "org.eclipse.ant.internal.ui.antsupport.InternalAntRunner");
+		wc.setAttribute(DebugPlugin.ATTR_PROCESS_FACTORY_ID, IAntUIConstants.REMOTE_ANT_PROCESS_FACTORY_ID);
+		
+		ILaunchConfiguration launchConfig = wc.doSave();
+        launchConfig.launch("run",monitor);
 	}
 
     /* (non-Javadoc)

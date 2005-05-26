@@ -2,7 +2,6 @@ package org.eclipse.jst.server.generic.core.internal;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 
@@ -16,12 +15,12 @@ public abstract class GenericPublisher
 {
     
     private IModule[] fModule;
-    private ServerRuntime fServerRuntime;
+    private GenericServerRuntime fServerRuntime;
     
-    protected void initialize(IModule[] module, ServerRuntime serverDefinition)
+    protected void initialize(IModule[] module, GenericServerRuntime runtime)
     {
         fModule = module;
-        fServerRuntime = serverDefinition;
+        fServerRuntime = runtime;
     }
    /**
     * Called by the generic server implementation when a module is 
@@ -50,7 +49,7 @@ public abstract class GenericPublisher
         return fModule;
     }
 
-    public ServerRuntime getServerRuntime() {
+    public GenericServerRuntime getServerRuntime() {
         return fServerRuntime;
     }
 }
