@@ -62,6 +62,7 @@ public class AllTests {
 		suite.addTest(new OrderedTestSuite(ProjectPropertiesTestCase.class));
 		suite.addTest(new OrderedTestSuite(ServerPreferencesTestCase.class));
 		suite.addTest(new OrderedTestSuite(ServerPortTestCase.class));
+		suite.addTestSuite(ServerOperationTestCase.class);
 		
 		suite.addTestSuite(IModuleTestCase.class);
 		suite.addTestSuite(IModuleArtifactTestCase.class);

@@ -17,7 +17,6 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.IAdaptable;
 
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
@@ -34,7 +33,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.dialogs.PropertyDialog;
 import org.eclipse.ui.internal.dialogs.PropertyPageContributorManager;
@@ -106,7 +104,7 @@ public class UITestHelper extends TestCase {
 			return null;
 		
 		
-		title = NLS.bind(WorkbenchMessages.PropertyDialog_propertyMessage, new Object[] {name});
+		title = title = "Title: " + name;
 		dialog = new PropertyDialogWrapper(getShell(), manager, new StructuredSelection(element)); 
 		dialog.create();
 		dialog.getShell().setText(title);
