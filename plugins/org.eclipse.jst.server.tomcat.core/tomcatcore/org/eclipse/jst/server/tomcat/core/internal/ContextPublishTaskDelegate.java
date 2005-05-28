@@ -19,12 +19,12 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.PublishOperation;
 import org.eclipse.wst.server.core.model.PublishTaskDelegate;
 
-public class ContextPublishTaskDelegate extends PublishTaskDelegate{
+public class ContextPublishTaskDelegate extends PublishTaskDelegate {
 	public PublishOperation[] getTasks(IServer server, List modules) {
 		if (modules == null)
 			return null;
 	
-		TomcatServer tomcatServer = (TomcatServer) server.getAdapter(TomcatServer.class);
+		TomcatServer tomcatServer = (TomcatServer) server.loadAdapter(TomcatServer.class, null);
 		TomcatConfiguration configuration = null;
 		try {
 			configuration = tomcatServer.getTomcatConfiguration();
@@ -37,7 +37,7 @@ public class ContextPublishTaskDelegate extends PublishTaskDelegate{
 		for (int i = 0; i < size; i++) {
 			IModule[] module = (IModule[]) modules.get(i);
 			IModule m = module[module.length - 1];
-			IWebModule webModule = (IWebModule) m.getAdapter(IWebModule.class);
+			IWebModule webModule = (IWebModule) m.loadAdapter(IWebModule.class, null);
 			WebModule webModule2 = configuration.getWebModule(m);
 			if (webModule != null && webModule2 != null) {
 				String contextRoot = webModule.getContextRoot();

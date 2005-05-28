@@ -6,8 +6,8 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.eclipse.jst.server.tomcat.ui.internal.TomcatUIPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.jst.server.tomcat.ui.internal,
- org.eclipse.jst.server.tomcat.ui.internal.editor
+Export-Package: org.eclipse.jst.server.tomcat.ui.internal;x-internal:=true,
+ org.eclipse.jst.server.tomcat.ui.internal.editor;x-internal:=true
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.expressions,
  org.eclipse.ui,

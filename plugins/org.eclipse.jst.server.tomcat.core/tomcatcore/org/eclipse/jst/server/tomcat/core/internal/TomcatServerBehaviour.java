@@ -233,7 +233,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, "Could not remove module", e));
 			}
 		} else {
-			IWebModule webModule = (IWebModule) module.getAdapter(IWebModule.class);
+			IWebModule webModule = (IWebModule) module.loadAdapter(IWebModule.class, null);
 			IPath from = webModule.getLocation();
 			IPath to = getServer().getRuntime().getLocation().append("webapps").append(webModule.getContextRoot());
 			FileUtil.smartCopyDirectory(from.toOSString(), to.toOSString(), monitor);

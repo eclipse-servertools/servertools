@@ -147,7 +147,7 @@ public class WebModuleDialog extends Dialog {
 				int size = modules.length;
 				for (int i = 0; i < size; i++) {
 					IModule module3 = modules[i];
-					IWebModule module2 = (IWebModule) module3.getAdapter(IWebModule.class);
+					IWebModule module2 = (IWebModule) module3.loadAdapter(IWebModule.class, null);
 					if (module2 != null) {
 						IStatus status = server2.canModifyModules(new IModule[] { module3 }, null, null);
 						if (status != null && status.isOK()) {

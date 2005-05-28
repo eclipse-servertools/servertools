@@ -257,7 +257,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 		if (modules != null) {
 			int size = modules.length;
 			for (int i = 0; i < size; i++) {
-				IWebModule webModule = (IWebModule) modules[i].getAdapter(IWebModule.class);
+				IWebModule webModule = (IWebModule) modules[i].loadAdapter(IWebModule.class, null);
 				if (webModule != null) {
 					IStatus status = server.canModifyModules(new IModule[] { modules[i] }, null, null);
 					if (status != null && status.isOK())
@@ -279,7 +279,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 		
-		TomcatServer ts = (TomcatServer) server.getAdapter(TomcatServer.class);
+		TomcatServer ts = (TomcatServer) server.loadAdapter(TomcatServer.class, null);
 		try {
 			configuration = ts.getTomcatConfiguration();
 		} catch (Exception e) {
@@ -289,7 +289,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 			addChangeListener();
 		
 		if (server != null)
-			server2 = (ITomcatServerWorkingCopy) server.getAdapter(ITomcatServerWorkingCopy.class);
+			server2 = (ITomcatServerWorkingCopy) server.loadAdapter(ITomcatServerWorkingCopy.class, null);
 		
 		initialize();
 	}

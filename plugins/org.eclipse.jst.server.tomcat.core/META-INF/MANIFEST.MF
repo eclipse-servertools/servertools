@@ -6,11 +6,11 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.jst.server.tomcat.core.internal,
- org.eclipse.jst.server.tomcat.core.internal.command,
- org.eclipse.jst.server.tomcat.core.internal.xml,
- org.eclipse.jst.server.tomcat.core.internal.xml.server32,
- org.eclipse.jst.server.tomcat.core.internal.xml.server40
+Export-Package: org.eclipse.jst.server.tomcat.core.internal;x-friends:="org.eclipse.jst.server.tomcat.ui",
+ org.eclipse.jst.server.tomcat.core.internal.command;x-friends:="org.eclipse.jst.server.tomcat.ui",
+ org.eclipse.jst.server.tomcat.core.internal.xml;x-friends:="org.eclipse.jst.server.tomcat.ui",
+ org.eclipse.jst.server.tomcat.core.internal.xml.server32;x-friends:="org.eclipse.jst.server.tomcat.ui",
+ org.eclipse.jst.server.tomcat.core.internal.xml.server40;x-friends:="org.eclipse.jst.server.tomcat.ui"
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.core.commands,

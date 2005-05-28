@@ -170,7 +170,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		super.init(site, input);
 		
 		if (server != null) {
-			tomcatServer = (TomcatServer) server.getAdapter(TomcatServer.class);
+			tomcatServer = (TomcatServer) server.loadAdapter(TomcatServer.class, null);
 			addChangeListener();
 		}
 		initialize();
