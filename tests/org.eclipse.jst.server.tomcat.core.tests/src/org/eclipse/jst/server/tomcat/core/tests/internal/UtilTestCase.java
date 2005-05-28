@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.tomcat.core.tests.internal;
+package org.eclipse.jst.server.tomcat.core.tests.internal;
 
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServerBehaviour;
 import junit.framework.Test;

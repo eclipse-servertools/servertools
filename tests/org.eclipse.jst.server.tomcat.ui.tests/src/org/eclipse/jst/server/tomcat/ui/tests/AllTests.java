@@ -11,6 +11,7 @@
 package org.eclipse.jst.server.tomcat.ui.tests;
 
 import org.eclipse.jst.server.tomcat.core.tests.RuntimeLocation;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
