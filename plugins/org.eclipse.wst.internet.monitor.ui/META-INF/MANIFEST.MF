@@ -6,10 +6,10 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.wst.internet.monitor.ui.internal,
+Export-Package: org.eclipse.wst.internet.monitor.ui.internal;x-internal:=true,
  org.eclipse.wst.internet.monitor.ui.internal.provisional,
- org.eclipse.wst.internet.monitor.ui.internal.view,
- org.eclipse.wst.internet.monitor.ui.internal.viewers
+ org.eclipse.wst.internet.monitor.ui.internal.view;x-internal:=true,
+ org.eclipse.wst.internet.monitor.ui.internal.viewers;x-internal:=true
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide,
  org.eclipse.ui,
