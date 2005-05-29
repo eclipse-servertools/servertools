@@ -34,11 +34,14 @@ import java.util.Map;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
-
+/**
+ * Server properties decorator.
+ * @author Gorkem Ercan
+ */
 public class ServerTypeDefinitionServerDecorator extends
 		ServerTypeDefinitionDecorator {
 	
-	GenericServer fServer;
+	private GenericServer fServer;
 	public ServerTypeDefinitionServerDecorator(ServerRuntime definition, Map initialProperties,IWizardHandle wizard,GenericServer server) {
 		super(definition, initialProperties,CONTEXT_SERVER, wizard);
 		fServer=server;
