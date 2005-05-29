@@ -74,9 +74,14 @@ public class JRESelectDecorator implements GenericServerCompositeDecorator {
 				}
 			}
 		});
-		if (fRuntime!=null && fRuntime.isUsingDefaultJRE())
-			combo.select(0);
-		
+
+		if (fRuntime!=null){
+			if(fRuntime.isUsingDefaultJRE()){
+				combo.select(0);
+			}else{
+				combo.setText(fRuntime.getVMInstall().getName());
+			}
+		}
 	}
 
 	
