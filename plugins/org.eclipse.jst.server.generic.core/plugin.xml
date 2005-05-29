@@ -1,39 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-   id="org.eclipse.jst.server.generic.core"
-   name="%pluginName"
-   version="1.0.0"
-   provider-name="%providerName"
-   class="org.eclipse.jst.server.generic.core.internal.CorePlugin"
-   description="%pluginDescription">
+<plugin>
 
-   <runtime>
-      <library name="genericserver.jar">
-         <export name="*"/>
-      </library>
-   </runtime>
-
-   <requires>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.debug.core"/>
-      <import plugin="org.eclipse.jdt.core"/>
-      <import plugin="org.eclipse.jdt.launching" export="true"/>
-      <import plugin="org.eclipse.wst.server.core"/>
-      <import plugin="org.eclipse.jst.server.core"/>
-      <import plugin="org.eclipse.debug.ui"/>
-      <import plugin="org.eclipse.ant.core"/>
-      <import plugin="org.eclipse.ant.ui"/>
-      <import plugin="org.eclipse.emf.common" export="true"/>
-      <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.eclipse.emf.ecore.xmi"/>
-      <import plugin="org.eclipse.ui.externaltools"/>
-      <import plugin="org.eclipse.jdt.debug.ui"/>
-   </requires>
-   
- <extension-point id="serverdefinition" name="Server definition" schema="schema/serverdefinition.exsd"/>
+     <extension-point id="serverdefinition" name="Server definition" schema="schema/serverdefinition.exsd"/>
  <extension-point id="genericpublisher" name="Generic Publisher" schema="schema/genericpublisher.exsd"/>
 	
  <extension point="org.eclipse.wst.server.core.runtimeTargetHandlers">
