@@ -73,10 +73,13 @@ import org.osgi.framework.Bundle;
 
 public class AntPublisher extends GenericPublisher{
 
-    private static final String MODULE_PUBLISH_TARGET_PREFIX = "target.publish.";
-    private static final String MODULE_UNPUBLISH_TARGET_PREFIX = "target.unpublish.";
-    public static final String PUBLISHER_ID="org.eclipse.jst.server.generic.antpublisher"; 
-    private static final String DATA_NAME_BUILD_FILE="build.file";
+    private static final String PROP_SERVER_PUBLISH_DIR = "server.publish.dir";//$NON-NLS-1$
+	private static final String PROP_MODULE_DIR = "module.dir";//$NON-NLS-1$
+	private static final String PROP_MODULE_NAME = "module.name";//$NON-NLS-1$
+	private static final String MODULE_PUBLISH_TARGET_PREFIX = "target.publish."; //$NON-NLS-1$
+    private static final String MODULE_UNPUBLISH_TARGET_PREFIX = "target.unpublish.";//$NON-NLS-1$
+    public static final String PUBLISHER_ID="org.eclipse.jst.server.generic.antpublisher"; //$NON-NLS-1$
+    private static final String DATA_NAME_BUILD_FILE="build.file";//$NON-NLS-1$
 
     /* (non-Javadoc)
 	 * @see org.eclipse.wtp.server.core.model.IPublisher#publish(org.eclipse.wtp.server.core.resources.IModuleResource[], org.eclipse.core.runtime.IProgressMonitor)
@@ -89,7 +92,7 @@ public class AntPublisher extends GenericPublisher{
             runAnt(file.toString(),getPublishTargetsForModule(),getPublishProperties(),monitor);
         }
         catch(CoreException e){
-            IStatus s = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,"Publish failed using Ant publisher",e);
+            IStatus s = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,GenericServerCoreMessages.errorPublishAntpublisher,e);
             CorePlugin.getDefault().getLog().log(s);
             return new IStatus[] {s};
         }
@@ -132,7 +135,7 @@ public class AntPublisher extends GenericPublisher{
             PublisherData data = (PublisherData)iterator.next();
             if(dataname.equals(data.getDataname())) {
                 if(buffer.length()>0)
-                	buffer.append(",");
+                	buffer.append(",");//$NON-NLS-1$
             	buffer.append(data.getDatavalue());
             }   
         }
@@ -173,8 +176,8 @@ public class AntPublisher extends GenericPublisher{
 
 		IWebModule webModule = (IWebModule)getModule()[0].getAdapter(IWebModule.class);
         IEJBModule ejbModule = (IEJBModule)getModule()[0].getAdapter(IEJBModule.class);
-		String moduleName="unknownmodule";
-        String moduleDir="";
+		String moduleName="unknownmodule";//$NON-NLS-1$
+        String moduleDir="";//$NON-NLS-1$
         if(webModule!=null){    
             moduleName = this.guessModuleName(webModule);
             moduleDir = webModule.getLocation().toString();
@@ -183,9 +186,9 @@ public class AntPublisher extends GenericPublisher{
             moduleName = getModule()[0].getName();
             moduleDir= ejbModule.getLocation().toString();
         }
-		props.put("module.name",moduleName);
-		props.put("module.dir",moduleDir);
-		props.put("server.publish.dir",modDir);
+		props.put(PROP_MODULE_NAME,moduleName);
+		props.put(PROP_MODULE_DIR,moduleDir);
+		props.put(PROP_SERVER_PUBLISH_DIR,modDir);
 		return props;
 	}
 	/**
@@ -210,7 +213,7 @@ public class AntPublisher extends GenericPublisher{
 		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
 		ILaunchConfigurationType type = launchManager.getLaunchConfigurationType(IAntLaunchConfigurationConstants.ID_ANT_LAUNCH_CONFIGURATION_TYPE);
 
-		ILaunchConfigurationWorkingCopy wc= type.newInstance(null,properties.get("module.name")+" module publisher");
+		ILaunchConfigurationWorkingCopy wc= type.newInstance(null,properties.get(PROP_MODULE_NAME)+" module publisher");
 		wc.setContainer(null);
 		wc.setAttribute(IExternalToolConstants.ATTR_LOCATION, buildFile);
 		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH_PROVIDER,"org.eclipse.ant.ui.AntClasspathProvider");
@@ -238,7 +241,7 @@ public class AntPublisher extends GenericPublisher{
         try {
             runAnt(file.toString(),getUnpublishTargetsForModule(),getPublishProperties(),monitor);
         } catch (CoreException e) {
-            IStatus s = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,"Remove module failed using Ant publisher",e);
+            IStatus s = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,GenericServerCoreMessages.errorRemoveModuleAntpublisher,e);
             return new IStatus[] {s};
  
         }

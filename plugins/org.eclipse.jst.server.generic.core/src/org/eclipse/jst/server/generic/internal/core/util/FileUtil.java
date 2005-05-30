@@ -10,8 +10,8 @@ import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
 
 /**
+ * Utilities for file operations.
  * 
- *
  * @author Gorkem Ercan
  */
 public class FileUtil {
@@ -27,8 +27,10 @@ public class FileUtil {
             return new File(uri);
         } 
         catch (URISyntaxException e) {
+        	//ignore
         }
         catch (IOException e1) {
+        	//ignore
         }
         return null;
     }
