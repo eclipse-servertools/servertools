@@ -14,13 +14,7 @@ import java.io.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -45,12 +39,9 @@ import org.xml.sax.*;
  * XML Viewer.
  */
 public class XMLViewer extends ContentViewer {
-	protected GridData data;
+	protected Composite viewerComp;
 	protected StackLayout layout;
 	protected Text messageText;
-
-	protected Composite rootComp;
-	protected Composite viewerComp;
 	protected Label messageLabel;
 	
 	protected boolean xmlTagMissing = false;
@@ -59,13 +50,6 @@ public class XMLViewer extends ContentViewer {
 	protected String originalEncoding;
 	
 	protected byte[] content;
-
-	/** (non-Javadoc)
-	 * @see ContentViewer#dispose()
-	 */
-	public void dispose() {
-		viewerComp.dispose();
-	}
 	
 	/** (non-Javadoc)
 	 * @see ContentViewer#setContent(byte[])
@@ -136,15 +120,12 @@ public class XMLViewer extends ContentViewer {
 	 * @see ContentViewer#init(Composite)
 	 */
 	public void init(Composite parent) {
-		rootComp = parent;
-		
 		viewerComp = new Composite(parent, SWT.NONE);
 		layout = new StackLayout();
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		viewerComp.setLayout(layout);
-		data = new GridData(GridData.FILL_BOTH);
-		viewerComp.setLayoutData(data);
+		viewerComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 	
 		messageText = new Text(viewerComp, SWT.BORDER | SWT.MULTI | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
 		Display display = viewerComp.getDisplay();
@@ -226,5 +207,14 @@ public class XMLViewer extends ContentViewer {
 			throw (IOException) (new IOException().initCause(e));
 		}
 		return out.toByteArray();
+	}
+
+	/** (non-Javadoc)
+	 * @see ContentViewer#dispose()
+	 */
+	public void dispose() {
+		viewerComp.dispose();
+		viewerComp = null;
+		content = null;
 	}
 }

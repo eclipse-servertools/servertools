@@ -26,11 +26,13 @@ import org.eclipse.wst.internet.monitor.ui.internal.viewers.HeaderViewer;
 /**
  * 
  */
-public class ViewerManager implements IViewerManager{
+public class ViewerManager {
 	private boolean displayHeaderInf;
 
 	protected ContentViewer reqViewer;
 	protected ContentViewer respViewer;
+	protected Viewer requestViewer;
+	protected Viewer responseViewer;
 
 	protected HeaderViewer reqHeader;
 	protected HeaderViewer respHeader;
@@ -59,16 +61,45 @@ public class ViewerManager implements IViewerManager{
 		respViewer = new ByteViewer();
 		respViewer.init(respVComp);
 		setDisplayHeaderInfo(MonitorUIPlugin.getShowHeaderPreference());
-		setAvailableViewers();
+		loadAvailableViewers();
+	}
+	
+	protected Viewer getDefaultViewer(String name) {
+		if (name == null)
+			return null;
+		
+		String name2 = name.toLowerCase(); 
+		if (name2.endsWith(".xml"))
+			return findViewer("org.eclipse.wst.internet.monitor.viewers.xml");
+		else if (name2.endsWith(".html"))
+			return findViewer("org.eclipse.wst.internet.monitor.viewers.browser");
+		else if (name2.endsWith(".gif") || name2.endsWith(".jpg") ||
+				name2.endsWith(".jpeg") || name2.endsWith(".png"))
+			return findViewer("org.eclipse.wst.internet.monitor.viewers.image");
+		else
+			return findViewer("org.eclipse.wst.internet.monitor.viewers.byte");
 	}
 
-	private void setAvailableViewers() {
+	protected Viewer findViewer(String id) {
+		if (id == null)
+			return null;
+		
+		Iterator iterator = viewers.iterator();
+		while (iterator.hasNext()) {
+			Viewer viewer = (Viewer) iterator.next();
+			if (id.equals(viewer.getId()))
+				return viewer;
+		}
+		return null;
+	}
+
+	private void loadAvailableViewers() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(MonitorUIPlugin.PLUGIN_ID, "viewers");
 		int size = cf.length;
 		viewers = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
-			viewers.add(cf[i]);
+			viewers.add(new Viewer(cf[i]));
 		}
 	}
 
@@ -122,8 +153,9 @@ public class ViewerManager implements IViewerManager{
 			b = filter(rr.getResponse(Request.CONTENT));
 		respViewer.setContent(b);
 		request = rr;
-		// Set the editor to editable if the request hasn't  been sent and the
-		// editor can be set as editable.
+		
+		// set the editor to editable if the request hasn't been sent and the
+		// editor can be set as editable
 		if (request instanceof ResendHTTPRequest && request.getResponse(Request.ALL) == null) {
 			if (displayHeaderInf) {
 				reqHeader.setEditable(true);
@@ -166,13 +198,12 @@ public class ViewerManager implements IViewerManager{
 	 * @see org.eclipse.tcpip.monitor.internal.view.IViewerManager#getRequestViewers()
 	 */
 	public List getRequestViewers() {
-		IConfigurationElement element;
 		Iterator iterator = viewers.iterator();
 		List temp = new ArrayList();
 		while (iterator.hasNext()) {
-			element = (IConfigurationElement) iterator.next();
-			if (element.getAttribute("type").toLowerCase().indexOf("request") >= 0)
-				temp.add(element);
+			Viewer viewer = (Viewer) iterator.next();
+			if (viewer.isRequestViewer())
+				temp.add(viewer);
 		}
 		return temp;
 	}
@@ -181,13 +212,12 @@ public class ViewerManager implements IViewerManager{
 	 * @see org.eclipse.tcpip.monitor.internal.view.IViewerManager#getResponseViewers()
 	 */
 	public List getResponseViewers() {
-		IConfigurationElement element;
 		Iterator iterator = viewers.iterator();
 		List temp = new ArrayList();
 		while (iterator.hasNext()) {
-			element = (IConfigurationElement) iterator.next();
-			if (element.getAttribute("type").toLowerCase().indexOf("response") >= 0)
-				temp.add(element);
+			Viewer viewer = (Viewer) iterator.next();
+			if (viewer.isResponseViewer())
+				temp.add(viewer);
 		}
 		return temp;
 	}
@@ -195,15 +225,19 @@ public class ViewerManager implements IViewerManager{
 	/* (non-Javadoc)
 	 * @see org.eclipse.tcpip.monitor.internal.view.IViewerManager#setRequestViewer(java.lang.String)
 	 */
-	public void setRequestViewer(IConfigurationElement element) {
-		// Call set request to save and reset the request.
+	public void setRequestViewer(Viewer viewer) {
+		if (viewer != null && viewer.equals(requestViewer))
+			return;
+
+		// call set request to save and reset the request
 		setRequest(request);
 		reqViewer.dispose();
-		try {
-			reqViewer = (ContentViewer) element.createExecutableExtension("class");
-		} catch (CoreException e) {
-			Trace.trace(Trace.SEVERE, "Error", e);
-		}
+		
+		requestViewer = viewer;
+		reqViewer = viewer.createViewer();
+		if (reqViewer == null)
+			return;
+		
 		reqViewer.init(reqVComp);
 		//reqViewer.setRequestResponse(rr);
 		byte[] b = null;
@@ -224,13 +258,15 @@ public class ViewerManager implements IViewerManager{
 	/* (non-Javadoc)
 	 * @see org.eclipse.tcpip.monitor.internal.view.IViewerManager#setResponseViewer(java.lang.String)
 	 */
-	public void setResponseViewer(IConfigurationElement element) {
+	public void setResponseViewer(Viewer viewer) {
+		if (viewer != null && viewer.equals(responseViewer))
+			return;
 		respViewer.dispose();
-		try {
-			respViewer = (ContentViewer) element.createExecutableExtension("class");
-		} catch (CoreException e) {
-			Trace.trace(Trace.SEVERE, "Error", e);
-		}
+		
+		responseViewer = viewer;
+		respViewer = viewer.createViewer();
+		if (respViewer == null)
+			return;
 		respViewer.init(respVComp);
 		//respViewer.setRequestResponse(rr);
 		byte[] b = null;

@@ -153,7 +153,7 @@ public class Request implements IAdaptable {
 	 * </p>
 	 *
 	 * @param type the content type: one of {@link #TRANSPORT},
-	 * {@link #CONTENT}, or {@link #ALL}
+	 *    {@link #CONTENT}, or {@link #ALL}
 	 * @return the content bytes
 	 */
 	public byte[] getRequest(int type) {
@@ -171,7 +171,7 @@ public class Request implements IAdaptable {
 	 * </p>
 	 *
 	 * @param type the content type: one of {@link #TRANSPORT},
-	 * {@link #CONTENT}, or {@link #ALL}
+	 *    {@link #CONTENT}, or {@link #ALL}
 	 * @return the content bytes
 	 */
 	public byte[] getResponse(int type) {

@@ -17,11 +17,11 @@ import org.eclipse.wst.internet.monitor.core.internal.IContentFilter;
  * 
  */
 public class FilterAction extends Action {
-	protected IViewerManager vm;
+	protected ViewerManager vm;
 	protected IContentFilter filter;
 	protected boolean enabled;
 
-	public FilterAction(IViewerManager vm, IContentFilter filter) {
+	public FilterAction(ViewerManager vm, IContentFilter filter) {
 		super(filter.getName(), IAction.AS_CHECK_BOX);
 		this.vm = vm;
 		this.filter = filter;

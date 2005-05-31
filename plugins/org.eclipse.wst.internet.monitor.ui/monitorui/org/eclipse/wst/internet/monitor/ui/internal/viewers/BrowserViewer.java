@@ -10,40 +10,35 @@
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.ui.internal.viewers;
 
-import java.io.ByteArrayInputStream;
-
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.wst.internet.monitor.ui.internal.Messages;
 import org.eclipse.wst.internet.monitor.ui.internal.provisional.ContentViewer;
 /**
- * An image viewer.
+ * A browser viewer.
  */
-public class ImageViewer extends ContentViewer {
-	protected Label messageLabel;
-	
+public class BrowserViewer extends ContentViewer {
+	protected Browser browser;
+
 	protected byte[] content;
 
 	/** (non-Javadoc)
 	 * @see ContentViewer#init(Composite)
 	 */
 	public void init(Composite parent) {
-		messageLabel = new Label(parent, SWT.NONE);
-		messageLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
-		messageLabel.setText(Messages.imageViewInvalid);
+		browser = new Browser(parent, SWT.BORDER);
+		browser.setLayoutData(new GridData(GridData.FILL_BOTH));
 	}
-	
+
 	/** (non-Javadoc)
 	 * @see ContentViewer#setContent(byte[])
 	 */
 	public void setContent(byte[] b) {
 		content = b;
 		if (b == null || b.length == 0) {
-			messageLabel.setImage(null);
+			browser.setText(Messages.htmlViewInvalid);
 		} else {
 			byte cr = '\r';
 			byte lf = '\n';
@@ -62,18 +57,8 @@ public class ImageViewer extends ContentViewer {
 					b[i - trimFront] = temp[i];
 				}
 			}
-			try {
-				ImageData imgD = new ImageData(new ByteArrayInputStream(b));
-				Image img = new Image(null, imgD);
-				messageLabel.setImage(img);
-			} catch(Exception e) {
-				messageLabel.setImage(null);
-			}
+			browser.setText(new String(b));
 		}
-		
-		Composite parent = messageLabel.getParent();
-		messageLabel.setFont(parent.getFont());
-		parent.layout(true);
 	}
 
 	/**
@@ -87,8 +72,8 @@ public class ImageViewer extends ContentViewer {
 	 * @see ContentViewer#dispose()
 	 */
 	public void dispose() {
-		messageLabel.dispose();
-		messageLabel = null;
+		browser.dispose();
+		browser = null;
 		content = null;
 	}
 }

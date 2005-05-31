@@ -100,7 +100,9 @@ public class ResendHTTPRequest extends HTTPRequest {
 	 * @param type
 	 */
 	public void setRequest(byte[] request, int type) {
-		if (type == TRANSPORT && request != null)
+		if (request == null)
+			request = new byte[0];
+		if (type == TRANSPORT)
 			header = request;
 		else if (type == CONTENT)
 			content = request;

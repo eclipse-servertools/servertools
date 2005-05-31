@@ -40,6 +40,7 @@ public class Messages extends NLS {
 	public static String headerLabel;
 	public static String imageViewInvalid;
 	public static String xmlViewInvalid;
+	public static String htmlViewInvalid;
 	public static String viewDateFormat;
 	public static String viewTime;
 	public static String viewResponseTime;

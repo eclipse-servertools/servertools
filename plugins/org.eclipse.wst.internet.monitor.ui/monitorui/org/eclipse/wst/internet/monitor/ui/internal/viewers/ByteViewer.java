@@ -13,7 +13,6 @@ package org.eclipse.wst.internet.monitor.ui.internal.viewers;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
@@ -26,13 +25,46 @@ import org.eclipse.wst.internet.monitor.ui.internal.provisional.ContentViewer;
  */
 public class ByteViewer extends ContentViewer {
 	protected Text text;
-	protected Composite comp;
 
 	/** (non-Javadoc)
-	 * @see ContentViewer#dispose()
+	 * @see ContentViewer#init(Composite)
 	 */
-	public void dispose() {
-		comp.dispose();
+	public void init(Composite parent) {
+		text = new Text(parent, SWT.BORDER | SWT.MULTI | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
+		Display display = parent.getDisplay();
+		text.setBackground(display.getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+		text.setForeground(display.getSystemColor(SWT.COLOR_LIST_FOREGROUND));
+		text.setLayoutData(new GridData(GridData.FILL_BOTH));
+		text.setFont(JFaceResources.getTextFont());
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(text, ContextIds.VIEW_RESPONSE);
+	}
+	
+	/** (non-Javadoc)
+	 * @see ContentViewer#setEditable(boolean)
+	 */
+	public void setEditable(boolean editable) {
+		text.setEditable(editable);
+	}
+
+	/** (non-Javadoc)
+	 * @see ContentViewer#getContent()
+	 */
+	public byte[] getContent() {
+		if (text == null) {
+			return new byte[0];
+		}
+		String content = text.getText().trim();
+		if (content.equals("")) {
+			return new byte[0];
+		}
+		// Need to ensure that there is a newline at the end of the content.
+		// getBytes() removes the newline.
+		byte[] twoNewlines = new byte[] { '\015', '\012' };
+		byte[] contentBytes = content.getBytes();
+		byte[] retBytes = new byte[contentBytes.length + 2];
+		System.arraycopy(contentBytes, 0, retBytes, 0, contentBytes.length);
+		System.arraycopy(twoNewlines, 0, retBytes, contentBytes.length, 2);
+		return retBytes;
 	}
 
 	/** (non-Javadoc)
@@ -54,52 +86,10 @@ public class ByteViewer extends ContentViewer {
 	}
 
 	/** (non-Javadoc)
-	 * @see ContentViewer#init(Composite)
+	 * @see ContentViewer#dispose()
 	 */
-	public void init(Composite parent) {
-		comp = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
-		comp.setLayout(layout);
-		GridData data = new GridData(GridData.FILL_BOTH);
-		comp.setLayoutData(data);
-
-		text = new Text(comp, SWT.BORDER | SWT.MULTI | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL);
-		Display display = comp.getDisplay();
-		text.setBackground(display.getSystemColor(SWT.COLOR_LIST_BACKGROUND));
-		text.setForeground(display.getSystemColor(SWT.COLOR_LIST_FOREGROUND));
-		text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL));
-		text.setFont(JFaceResources.getTextFont());
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(text, ContextIds.VIEW_RESPONSE);
-	}
-	
-	/** (non-Javadoc)
-	 * @see ContentViewer#setEditable(boolean)
-	 */
-	public void setEditable(boolean editable) {
-		text.setEditable(editable);
-	}
-	
-	/** (non-Javadoc)
-	 * @see ContentViewer#getContent()
-	 */
-	public byte[] getContent() {
-		if (text == null) {
-			return new byte[0];
-		}
-		String content = text.getText().trim();
-		if (content.equals("")) {
-			return new byte[0];
-		}
-		// Need to ensure that there is a newline at the end of the content.
-		// getBytes() removes the newline.
-		byte[] twoNewlines = new byte[] { '\015', '\012' };
-		byte[] contentBytes = content.getBytes();
-		byte[] retBytes = new byte[contentBytes.length + 2];
-		System.arraycopy(contentBytes, 0, retBytes, 0, contentBytes.length);
-		System.arraycopy(twoNewlines, 0, retBytes, contentBytes.length, 2);
-		return retBytes;
+	public void dispose() {
+		text.dispose();
+		text = null;
 	}
 }

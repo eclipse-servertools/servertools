@@ -27,11 +27,12 @@ import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
  * An transport (header) viewer.
  */
 public class HeaderViewer {
+	private static final int HEADER_TEXT_SIZE = 110;
+
 	protected boolean displayHeader;
 
 	protected Composite headerComp;
 	protected Composite innerComp;
-	protected Composite rootComp;
 
 	protected Label headerLabel;
 	protected Text headerText;
@@ -41,9 +42,6 @@ public class HeaderViewer {
 	protected GridData data;
 
 	protected boolean hidden;
-
-	protected static int HEADER_LABEL_SIZE = 15;
-	protected static int HEADER_TEXT_SIZE = 110;
 	
 	/**
 	 * Request header constant.
@@ -62,7 +60,6 @@ public class HeaderViewer {
 	 * @param message
 	 */
 	public HeaderViewer(Composite parent, byte message) {
-		rootComp = parent;
 		displayHeader = true;
 		hidden = false;
 		
@@ -82,7 +79,6 @@ public class HeaderViewer {
 		layout.marginWidth = 2;
 		innerComp.setLayout(layout);
 		data = new GridData(GridData.FILL_BOTH);
-		data.heightHint = HEADER_LABEL_SIZE;
 		innerComp.setLayoutData(data);
 
 		rr = null;
@@ -133,12 +129,11 @@ public class HeaderViewer {
 				headerText.setFont(JFaceResources.getTextFont());
 				PlatformUI.getWorkbench().getHelpSystem().setHelp(headerText, ContextIds.VIEW_RESPONSE);
 
-				rootComp.layout(true);
+				headerComp.getParent().layout(true);
 			} else {
 				innerComp.dispose();
 
 				data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
-				data.heightHint = HEADER_LABEL_SIZE;
 				headerComp.setLayoutData(data);
 				
 				innerComp = new Composite(headerComp, SWT.NONE);
@@ -148,13 +143,12 @@ public class HeaderViewer {
 				layout.marginWidth = 2;
 				innerComp.setLayout(layout);
 				data = new GridData(GridData.FILL_BOTH);
-				data.heightHint = HEADER_LABEL_SIZE;
 				innerComp.setLayoutData(data);
 
 				headerLabel = new Label(innerComp, SWT.NONE);
 				headerLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
 				
-				rootComp.layout(true);
+				headerComp.getParent().layout(true);
 			}
 		}
 		getView();

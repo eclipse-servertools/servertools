@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.PreferenceDialog;
@@ -25,8 +24,8 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -52,13 +51,13 @@ public class MonitorView extends ViewPart {
 	protected MonitorTreeContentProvider contentProvider;
 
 	protected IRequestListener listener;
-	protected IViewerManager vm;
+	protected ViewerManager vm;
 	protected List requestViewers;
 	protected List responseViewers;
 
 	protected static SimpleDateFormat format = new SimpleDateFormat(Messages.viewDateFormat);
 	protected static final String VIEW_ID = "org.eclipse.wst.internet.monitor.view";
-	protected static final String DEFAULT_VIEWER = "org.eclipse.wst.internet.monitor.viewers.byteviewer";
+	protected static final String DEFAULT_VIEWER = "org.eclipse.wst.internet.monitor.viewers.byte";
 
 	protected IAction httpHeaderAction;
 	
@@ -91,6 +90,8 @@ public class MonitorView extends ViewPart {
 	public void doRequestChanged(final Request rr) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
+				if (treeViewer == null)
+					return;
 				IStructuredSelection sel = (IStructuredSelection) treeViewer.getSelection();
 				
 				treeViewer.refresh(rr);
@@ -208,7 +209,7 @@ public class MonitorView extends ViewPart {
 		requestLabel.setText(NLS.bind(Messages.viewRequest, ""));
 		requestLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
-		Combo requestViewerCombo = new Combo(requestHeader, SWT.DROP_DOWN | SWT.READ_ONLY);
+		final Combo requestViewerCombo = new Combo(requestHeader, SWT.DROP_DOWN | SWT.READ_ONLY);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
 		data.verticalSpan = 2;
 		requestViewerCombo.setLayoutData(data);
@@ -240,7 +241,7 @@ public class MonitorView extends ViewPart {
 		responseLabel.setText(NLS.bind(Messages.viewResponse, ""));
 		responseLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
-		Combo responseViewerCombo = new Combo(responseHeader, SWT.DROP_DOWN | SWT.READ_ONLY);
+		final Combo responseViewerCombo = new Combo(responseHeader, SWT.DROP_DOWN | SWT.READ_ONLY);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
 		data.verticalSpan = 2;
 		responseViewerCombo.setLayoutData(data);
@@ -258,37 +259,49 @@ public class MonitorView extends ViewPart {
 		Iterator iterator = requestViewers.iterator();
 		int ctr = 0;
 		while (iterator.hasNext()) {
-			IConfigurationElement element = (IConfigurationElement) iterator.next();
-			requestViewerCombo.add(element.getAttribute("label"), ctr);
-			if (element.getAttribute("id").equals(DEFAULT_VIEWER)) {
+			Viewer viewer = (Viewer) iterator.next();
+			requestViewerCombo.add(viewer.getLabel(), ctr);
+			if (viewer.getId().equals(DEFAULT_VIEWER)) {
 				requestViewerCombo.select(ctr); 
-				vm.setRequestViewer(element);
-			}  
-			ctr++;	
+				vm.setRequestViewer(viewer);
+			}
+			ctr++;
 		}
-		requestViewerCombo.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent arg0) {
-				Combo rvCombo = (Combo) arg0.getSource();
-				vm.setRequestViewer((IConfigurationElement) requestViewers.get(rvCombo.getSelectionIndex()));
+		requestViewerCombo.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				Viewer viewer = (Viewer) requestViewers.get(requestViewerCombo.getSelectionIndex());
+				if (currentRequest != null && viewer != null)
+					currentRequest.setProperty("request-viewer", viewer.getId());
+				vm.setRequestViewer(viewer);
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// ignore
 			}
 		});
 		requestHeader.layout(true);
 		
 		iterator = responseViewers.iterator();
 		ctr = 0;
-		while(iterator.hasNext()) {
-			IConfigurationElement element = (IConfigurationElement) iterator.next();
-			responseViewerCombo.add(element.getAttribute("label"), ctr);
-			if(element.getAttribute("id").equals(DEFAULT_VIEWER)) {
+		while (iterator.hasNext()) {
+			Viewer viewer = (Viewer) iterator.next();
+			responseViewerCombo.add(viewer.getLabel(), ctr);
+			if (viewer.getId().equals(DEFAULT_VIEWER)) {
 				responseViewerCombo.select(ctr); 
-				vm.setResponseViewer(element);
-			} 
+				vm.setResponseViewer(viewer);
+			}
 			ctr++;
 		}
-		responseViewerCombo.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent arg0) {
-				Combo rvCombo = (Combo) arg0.getSource();
-				vm.setResponseViewer((IConfigurationElement) requestViewers.get(rvCombo.getSelectionIndex()));
+		responseViewerCombo.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				Viewer viewer = (Viewer) responseViewers.get(responseViewerCombo.getSelectionIndex());
+				if (currentRequest != null && viewer != null)
+					currentRequest.setProperty("response-viewer", viewer.getId());
+				vm.setResponseViewer(viewer);
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// ignore
 			}
 		});
 		responseHeader.layout(true);
@@ -298,35 +311,51 @@ public class MonitorView extends ViewPart {
 			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection selection = event.getSelection();
 
-				Request req = null;
+				currentRequest = null;
 				if (selection != null && !selection.isEmpty()) {
 					StructuredSelection sel = (StructuredSelection) selection;
 					currentSelection = sel;
 					Object obj = sel.iterator().next();
 					if (obj instanceof Request)
-						req = (Request) obj;
+						currentRequest = (Request) obj;
 				}
 	
-				if (req != null) {
-					label.setText(NLS.bind(Messages.viewTime, format.format(req.getDate())));
+				if (currentRequest != null) {
+					label.setText(NLS.bind(Messages.viewTime, format.format(currentRequest.getDate())));
 	
-					if (req.getResponseTime() == -1)
+					if (currentRequest.getResponseTime() == -1)
 						label2.setText(NLS.bind(Messages.viewResponseTime, ""));
 					else {
-						String time = NLS.bind(Messages.viewResponseTimeFormat, req.getResponseTime() + "");
+						String time = NLS.bind(Messages.viewResponseTimeFormat, currentRequest.getResponseTime() + "");
 						label2.setText(NLS.bind(Messages.viewResponseTime, time));
 					}
-					label3.setText(NLS.bind(Messages.viewType, req.getProtocol()));
+					label3.setText(NLS.bind(Messages.viewType, currentRequest.getProtocol()));
 	
 					// request information
-					requestLabel.setText(NLS.bind(Messages.viewRequest, "localhost:" + req.getLocalPort()));
-					requestSizeLabel.setText(getSizeString(req.getRequest(Request.CONTENT), req.getRequest(Request.ALL)));
+					requestLabel.setText(NLS.bind(Messages.viewRequest, "localhost:" + currentRequest.getLocalPort()));
+					requestSizeLabel.setText(getSizeString(currentRequest.getRequest(Request.CONTENT), currentRequest.getRequest(Request.ALL)));
 	
 					// response information
-					responseLabel.setText(NLS.bind(Messages.viewResponse, req.getRemoteHost() + ":" + req.getRemotePort()));
-					responseSizeLabel.setText(getSizeString(req.getResponse(Request.CONTENT), req.getResponse(Request.ALL)));
-
-					vm.setRequest(req);
+					responseLabel.setText(NLS.bind(Messages.viewResponse, currentRequest.getRemoteHost() + ":" + currentRequest.getRemotePort()));
+					responseSizeLabel.setText(getSizeString(currentRequest.getResponse(Request.CONTENT), currentRequest.getResponse(Request.ALL)));
+					
+					vm.setRequest(currentRequest);
+					
+					Viewer viewer = vm.findViewer((String) currentRequest.getProperty("request-viewer"));
+					if (viewer == null)
+						viewer = vm.findViewer(DEFAULT_VIEWER);
+					if (viewer != null) {
+						vm.setRequestViewer(viewer);
+						requestViewerCombo.select(requestViewers.indexOf(viewer));
+					}
+					
+					viewer = vm.findViewer((String) currentRequest.getProperty("response-viewer"));
+					if (viewer == null && currentRequest.getName() != null)
+						viewer = vm.getDefaultViewer(currentRequest.getName());
+					if (viewer != null) {
+						vm.setResponseViewer(viewer);
+						responseViewerCombo.select(responseViewers.indexOf(viewer));
+					}
 				} else {
 					label.setText(NLS.bind(Messages.viewTime, ""));
 					label2.setText(NLS.bind(Messages.viewResponseTime, ""));
@@ -334,9 +363,8 @@ public class MonitorView extends ViewPart {
 					requestSizeLabel.setText(NLS.bind(Messages.viewSize, ""));
 					responseLabel.setText(NLS.bind(Messages.viewResponse, ""));
 					responseSizeLabel.setText(NLS.bind(Messages.viewSize, ""));
-					vm.setRequest(req);
+					vm.setRequest(currentRequest);
 				}
-				currentRequest = req;
 			}
 		});
 		treeViewer.expandToLevel(2);

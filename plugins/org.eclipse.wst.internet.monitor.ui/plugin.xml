@@ -31,20 +31,25 @@
 
 <extension point="org.eclipse.wst.internet.monitor.ui.viewers">
   <viewer
-    id="org.eclipse.wst.internet.monitor.viewers.byteviewer"
+    id="org.eclipse.wst.internet.monitor.viewers.byte"
     class="org.eclipse.wst.internet.monitor.ui.internal.viewers.ByteViewer"
     type="requestresponse"
     label="%byteView"/>
   <viewer
-    id="org.eclipse.wst.internet.monitor.viewers.imageviewer"
+    id="org.eclipse.wst.internet.monitor.viewers.image"
     class="org.eclipse.wst.internet.monitor.ui.internal.viewers.ImageViewer"
     type="requestresponse"
     label="%imageView"/>
   <viewer
-    id="org.eclipse.wst.internet.monitor.viewers.XMLViewer"
+    id="org.eclipse.wst.internet.monitor.viewers.xml"
     class="org.eclipse.wst.internet.monitor.ui.internal.viewers.XMLViewer"
     type="requestresponse"
     label="%xmlView"/>
+  <viewer
+    id="org.eclipse.wst.internet.monitor.viewers.browser"
+    class="org.eclipse.wst.internet.monitor.ui.internal.viewers.BrowserViewer"
+    type="requestresponse"
+    label="%browserView"/>
 </extension>
 
 <extension point="org.eclipse.core.runtime.adapters">
