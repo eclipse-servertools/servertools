@@ -25,9 +25,11 @@ public class ConfigurationPropertyTester extends PropertyTester {
 		try {
 			IServerAttributes server = (IServerAttributes) receiver;
 			TomcatServer tomcatServer = (TomcatServer) server.loadAdapter(ITomcatServer.class, null);
-			return tomcatServer.getServerConfiguration() != null;
+			if (tomcatServer != null)
+				return tomcatServer.getServerConfiguration() != null;
 		} catch (Exception e) {
-			return false;
+			// ignore
 		}
+		return false;
 	}
 }

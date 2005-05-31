@@ -28,7 +28,7 @@ import org.eclipse.wst.server.core.IRuntime;
  */
 public class TomcatRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
 	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
-		ITomcatRuntime tomcatRuntime = (ITomcatRuntime) runtime.getAdapter(ITomcatRuntime.class);
+		ITomcatRuntime tomcatRuntime = (ITomcatRuntime) runtime.loadAdapter(ITomcatRuntime.class, null);
 		IVMInstall vmInstall = tomcatRuntime.getVMInstall();
 		if (vmInstall != null) {
 			String name = vmInstall.getName();
