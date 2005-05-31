@@ -90,8 +90,10 @@ public class Runtime extends Base implements IRuntime {
 	}
 
 	public void dispose() {
-		if (delegate != null)
+		if (delegate != null) {
 			delegate.dispose();
+			delegate = null;
+		}
 	}
 
 	/**
@@ -180,11 +182,10 @@ public class Runtime extends Base implements IRuntime {
 	 * @see IRuntime#getAdapter(Class)
 	 */
 	public Object getAdapter(Class adapter) {
-		//if (isDelegateLoaded()) {
-			RuntimeDelegate delegate2 = getDelegate(null);
-			if (adapter.isInstance(delegate2))
+		if (delegate != null) {
+			if (adapter.isInstance(delegate))
 				return delegate;
-		//}
+		}
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
@@ -192,11 +193,11 @@ public class Runtime extends Base implements IRuntime {
 	 * @see IRuntime#loadAdapter(Class, IProgressMonitor)
 	 */
 	public Object loadAdapter(Class adapter, IProgressMonitor monitor) {
-		RuntimeDelegate delegate2 = getDelegate(monitor);
-		if (adapter.isInstance(delegate2))
+		getDelegate(monitor);
+		if (adapter.isInstance(delegate))
 			return delegate;
 	
-		return Platform.getAdapterManager().getAdapter(this, adapter);
+		return Platform.getAdapterManager().loadAdapter(this, adapter.getName());
 	}
 
 	/**

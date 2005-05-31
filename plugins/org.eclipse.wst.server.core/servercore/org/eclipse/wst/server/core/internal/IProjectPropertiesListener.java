@@ -12,10 +12,8 @@ package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.IServer;
 /**
- * A project properties listener. Fires events when the default server or
- * runtime target changes.
+ * A project properties listener. Fires events when the runtime target changes.
  * <p>
  * This interface should be used for informational purposes only. If (e.g.)
  * you have code that needs to respond to a specific runtime target, you should
@@ -29,15 +27,6 @@ import org.eclipse.wst.server.core.IServer;
  * @since 1.0
  */
 public interface IProjectPropertiesListener {
-	/**
-	 * Fired when the default server for the project changes.
-	 *
-	 * @param project the project that has changed
-	 * @param server the new default server, or <code>null</code> if the default
-	 *    server has been removed
-	 */
-	public void defaultServerChanged(IProject project, IServer server);
-
 	/**
 	 * Fired when the runtime target for the project changes.
 	 *

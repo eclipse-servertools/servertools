@@ -238,7 +238,7 @@ public class ServerTableViewer extends TreeViewer {
 					IResource res = (IResource) obj;
 					proj = res.getProject();
 				}
-				if (proj == null) {
+				if (proj == null && obj != null) {
 					try {
 						IResource res = (IResource) Platform.getAdapterManager().getAdapter(obj, IResource.class);
 						if (res != null)

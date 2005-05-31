@@ -203,9 +203,11 @@ public abstract class ServerEditorPart extends EditorPart {
 		List list = new ArrayList();
 		try {
 			List sections2 = (List) sectionToInsertionId.get(insertionId);
-			Iterator iterator = sections2.iterator();
-			while (iterator.hasNext()) {
-				list.add(iterator.next());
+			if (sections2 != null) {
+				Iterator iterator = sections2.iterator();
+				while (iterator.hasNext()) {
+					list.add(iterator.next());
+				}
 			}
 		} catch (Exception e) {
 			// ignore

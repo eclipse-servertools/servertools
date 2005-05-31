@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.action.IAction;
@@ -78,10 +77,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	}
 	
 	public IServer getServer(IModule module, String launchMode, IProgressMonitor monitor) {
-		IServer server = null;
-		IProject project = module.getProject();
-		if (project != null)
-			server = ServerCore.getProjectProperties(project).getDefaultServer();
+		IServer server = ServerCore.getDefaultServer(module);
 		
 		// ignore preference if the server doesn't support this mode.
 		if (server != null && !ServerUIPlugin.isCompatibleWithLaunchMode(server, launchMode))
@@ -114,7 +110,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			}
 
 			try {
-				Platform.getJobManager().join("org.eclipse.wst.server.ui.family", new NullProgressMonitor());
+				Platform.getJobManager().join("org.eclipse.wst.server.ui.family", null);
 			} catch (Exception e) {
 				Trace.trace(Trace.WARNING, "Error waiting for job", e);
 			}
@@ -123,9 +119,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			tasksRun = true;
 
 			// set preferred server if requested
-			if (server != null && preferred && project != null) {
+			if (server != null && preferred) {
 				try {
-					ServerCore.getProjectProperties(project).setDefaultServer(server, monitor);
+					ServerCore.setDefaultServer(module, server, monitor);
 				} catch (CoreException ce) {
 					String message = Messages.errorCouldNotSavePreference;
 					ErrorDialog.openError(shell, Messages.errorDialogTitle, message, ce.getStatus());

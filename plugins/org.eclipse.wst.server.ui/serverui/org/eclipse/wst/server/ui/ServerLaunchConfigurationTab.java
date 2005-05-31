@@ -194,11 +194,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		if (servers != null) {
 			server = (IServer) servers.get(serverCombo.getSelectionIndex());
 			if (server != null)
-				try {
-					((Server) server).setupLaunchConfiguration(configuration, null);
-				} catch (CoreException ce) {
-					Trace.trace(Trace.SEVERE, "Error setting up launch configuration", ce);
-				}
+				((Server) server).setupLaunchConfiguration(configuration, null);
 		}
 	}
 

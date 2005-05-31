@@ -305,14 +305,16 @@ public class ImageResource {
 				String pluginId = cf[i].getDeclaringExtension().getNamespace();
 				String iconPath = cf[i].getAttribute("icon");
 				ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId, iconPath);
-				if (imageDescriptor == null)
-					ImageDescriptor.getMissingImageDescriptor();
+				if (imageDescriptor == null && iconPath != null && iconPath.length() > 0)
+					imageDescriptor = ImageDescriptor.getMissingImageDescriptor();
 				
-				String typeId = cf[i].getAttribute("typeIds");
-				if (typeId == null)
-					typeId = cf[i].getAttribute("moduleId");
-				imageRegistry.put(typeId, imageDescriptor);		
-				imageDescriptors.put(typeId, imageDescriptor);
+				if (imageDescriptor != null) {
+					String typeId = cf[i].getAttribute("typeIds");
+					if (typeId == null)
+						typeId = cf[i].getAttribute("moduleId");
+					imageRegistry.put(typeId, imageDescriptor);		
+					imageDescriptors.put(typeId, imageDescriptor);
+				}
 				Trace.trace(Trace.CONFIG, "  Loaded serverImage: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load serverImage: " + cf[i].getAttribute("id"), t);

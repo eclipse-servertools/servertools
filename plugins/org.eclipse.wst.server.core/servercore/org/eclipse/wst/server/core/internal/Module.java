@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.ModuleDelegate;
 /**
@@ -237,12 +238,11 @@ public class Module implements IModule {
 	 * @see IModule#getAdapter(Class)
 	 */
 	public Object getAdapter(Class adapter) {
-		//if (delegate != null) {
-		getDelegate(null);
-		if (adapter.isInstance(delegate))
-			return delegate;
-		//}
-		return null;
+		if (delegate != null) {
+			if (adapter.isInstance(delegate))
+				return delegate;
+		}
+		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
 	/**
@@ -252,7 +252,7 @@ public class Module implements IModule {
 		getDelegate(monitor);
 		if (adapter.isInstance(delegate))
 			return delegate;
-		return null;
+		return Platform.getAdapterManager().loadAdapter(this, adapter.getName());
 	}
 
 	public boolean equals(Object obj) {

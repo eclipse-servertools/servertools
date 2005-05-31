@@ -102,8 +102,7 @@ public class ProjectPropertyPage extends PropertyPage {
 				
 				rtComp = new RuntimeTargetComposite(composite, project);
 				
-				IProjectProperties prefs = ServerCore.getProjectProperties(project);
-				IServer prefServer = prefs.getDefaultServer();
+				IServer prefServer = ServerCore.getDefaultServer(module);
 	
 				label = new Label(composite, SWT.NONE);
 				label.setText(Messages.prefProjectDefaultServer);
@@ -200,8 +199,7 @@ public class ProjectPropertyPage extends PropertyPage {
 				if (rtComp.hasChanged())
 					rtComp.apply(new NullProgressMonitor());
 				
-				IProjectProperties props = ServerCore.getProjectProperties(project);
-				props.setDefaultServer(server, null);
+				ServerCore.setDefaultServer(module, server, null);
 			} catch (CoreException e) {
 				Trace.trace(Trace.SEVERE, "Error setting preferred server", e);
 				EclipseUtil.openError(Messages.errorCouldNotSavePreference, e.getStatus());

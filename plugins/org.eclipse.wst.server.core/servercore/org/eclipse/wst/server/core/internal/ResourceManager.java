@@ -38,16 +38,17 @@ public class ResourceManager {
 
 	private static ResourceManager instance;
 
-	// currently active runtimes, servers, and server configurations
+	// currently active runtimes and servers
 	protected List runtimes;
 	protected List servers;
-	protected List configurations;
 	protected IRuntime defaultRuntime;
 
 	// lifecycle listeners
 	protected transient List runtimeListeners;
 	protected transient List serverListeners;
-	protected transient List serverConfigurationListeners;
+	
+	// cache for disposing servers & runtimes
+	protected List activeBundles;
 
 	// resource change listeners
 	private IResourceChangeListener modelResourceChangeListener;
@@ -190,7 +191,7 @@ public class ResourceManager {
 
 	protected void init() {
 		servers = new ArrayList();
-		configurations = new ArrayList();
+		activeBundles = new ArrayList();
 		loadRuntimesList();
 		loadServersList();
 		
@@ -250,11 +251,11 @@ public class ResourceManager {
 					try {
 						if (resource instanceof IFile) {
 							IFile file = (IFile) resource;
-							rm.handleNewFile(file, new NullProgressMonitor());
+							rm.handleNewFile(file, null);
 							return false;
 						}
 						return true;
-						//return !rm.handleNewServerResource(resource, new NullProgressMonitor());
+						//return !rm.handleNewServerResource(resource, null);
 					} catch (Exception e) {
 						Trace.trace(Trace.SEVERE, "Error during initial server resource load", e);
 					}
@@ -265,14 +266,14 @@ public class ResourceManager {
 			Trace.trace(Trace.SEVERE, "Could not load server project " + project.getName(), e);
 		}
 	}
-	
+
 	public static ResourceManager getInstance() {
 		if (instance == null)
 			new ResourceManager();
 
 		return instance;
 	}
-	
+
 	public static void shutdown() {
 		if (instance == null)
 			return;
@@ -283,24 +284,48 @@ public class ResourceManager {
 			Trace.trace(Trace.SEVERE, "Error during shutdown", e);
 		}
 	}
+
+	protected boolean isActiveBundle(String bundleId) {
+		return activeBundles.contains(bundleId);
+	}
+
+	protected void shutdownBundle(String id) {
+		// dispose servers
+		Iterator iterator = servers.iterator();
+		while (iterator.hasNext()) {
+			Server server = (Server) iterator.next();
+			try {
+				ServerType serverType = (ServerType) server.getServerType();
+				if (id.equals(serverType.getElement().getDeclaringExtension().getNamespace())) {
+					//server.stop(true);
+					server.dispose();
+				}
+			} catch (Exception e) {
+				Trace.trace(Trace.WARNING, "Error disposing server", e);
+			}
+		}
+		
+		// dispose runtimes
+		iterator = runtimes.iterator();
+		while (iterator.hasNext()) {
+			Runtime runtime = (Runtime) iterator.next();
+			try {
+				RuntimeType runtimeType = (RuntimeType) runtime.getRuntimeType();
+				if (id.equals(runtimeType.getElement().getDeclaringExtension().getNamespace())) {
+					runtime.dispose();
+				}
+			} catch (Exception e) {
+				Trace.trace(Trace.WARNING, "Error disposing server", e);
+			}
+		}
+		try {
+			Thread.sleep(1000);
+		} catch (Exception e) {
+			// ignore
+		}
+	}
 	
 	protected void shutdownImpl() {
-		// stop all running servers
-		// REMOVING FEATURE - can't be supported since we can't reload downstream plugins
-		// during shutdown. Individual downstream plugins should contain their own similar
-		// code to stop the servers.
-		/*Iterator iterator = getServers().iterator();
-		while (iterator.hasNext()) {
-			IServer server = (IServer) iterator.next();
-			try {
-				if (server.getServerState() != IServer.STATE_STOPPED) {
-					ServerDelegate delegate = server.getDelegate();
-					if (delegate instanceof IStartableServer && ((IStartableServer)delegate).isTerminateOnShutdown())
-						((IStartableServer) delegate).terminate();
-				}
-			} catch (Exception e) { }
-		}*/
-
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		if (workspace != null) {
 			workspace.removeResourceChangeListener(modelResourceChangeListener);
@@ -512,7 +537,7 @@ public class ResourceManager {
 				
 				for (int i = 0; i < size; i++) {
 					Runtime runtime = new Runtime(null);
-					runtime.loadFromMemento(children[i], new NullProgressMonitor());
+					runtime.loadFromMemento(children[i], null);
 					runtimes.add(runtime);
 				}
 				
@@ -541,7 +566,7 @@ public class ResourceManager {
 			
 			for (int i = 0; i < size; i++) {
 				Server server = new Server(null);
-				server.loadFromMemento(children[i], new NullProgressMonitor());
+				server.loadFromMemento(children[i], null);
 				servers.add(server);
 			}
 		} catch (Exception e) {
@@ -722,14 +747,15 @@ public class ResourceManager {
 		
 		if (resource2 instanceof IFile) {
 			IFile file = (IFile) resource2;
-			IProgressMonitor monitor = new NullProgressMonitor();
+			IProgressMonitor monitor = null;
 			if (kind == IResourceDelta.ADDED) {
 				handleNewFile(file, monitor);
 			} else if (kind == IResourceDelta.REMOVED) {
 				handleRemovedFile(file);
 			} else
 				handleChangedFile(file, monitor);
-			monitor.done();
+			if (monitor != null)
+				monitor.done();
 			return false;
 		}
 		IFolder folder = (IFolder) resource2;
@@ -957,7 +983,7 @@ public class ResourceManager {
 		}
 		return t.b;
 	}
-	
+
 	/**
 	 * Registers a new runtime.
 	 *
@@ -971,8 +997,13 @@ public class ResourceManager {
 	
 		runtimes.add(runtime);
 		fireRuntimeEvent(runtime, EVENT_ADDED);
+		
+		RuntimeType runtimeType = (RuntimeType) runtime.getRuntimeType();
+		String bundleId = runtimeType.getElement().getDeclaringExtension().getNamespace();
+		if (!activeBundles.contains(bundleId))
+			activeBundles.add(bundleId);
 	}
-	
+
 	/**
 	 * Registers a new server.
 	 *
@@ -986,6 +1017,11 @@ public class ResourceManager {
 	
 		servers.add(server);
 		fireServerEvent(server, EVENT_ADDED);
+		
+		ServerType serverType = (ServerType) server.getServerType();
+		String bundleId = serverType.getElement().getDeclaringExtension().getNamespace();
+		if (!activeBundles.contains(bundleId))
+			activeBundles.add(bundleId);
 	}
 
 	protected void fireModuleServerEvent(ModuleFactoryEvent[] factoryEvents, ModuleEvent[] events) {

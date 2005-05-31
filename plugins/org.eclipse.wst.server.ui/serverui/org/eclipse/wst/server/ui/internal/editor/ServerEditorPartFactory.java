@@ -64,12 +64,15 @@ public class ServerEditorPartFactory implements IServerEditorPartFactory {
 
 	protected String[] getInsertionIds() {
 		try {
+			String insertionIds = element.getAttribute("insertionIds");
 			List list = new ArrayList();
-			StringTokenizer st = new StringTokenizer(element.getAttribute("insertionIds"), ",");
-			while (st.hasMoreTokens()) {
-				String str = st.nextToken();
-				if (str != null && str.length() > 0)
-					list.add(str.trim());
+			if (insertionIds != null && insertionIds.length() > 0) {
+				StringTokenizer st = new StringTokenizer(insertionIds, ",");
+				while (st.hasMoreTokens()) {
+					String str = st.nextToken();
+					if (str != null && str.length() > 0)
+						list.add(str.trim());
+				}
 			}
 			String[] s = new String[list.size()];
 			list.toArray(s);

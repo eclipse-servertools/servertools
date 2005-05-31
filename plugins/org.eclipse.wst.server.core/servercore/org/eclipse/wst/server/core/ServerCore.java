@@ -427,4 +427,34 @@ public class ServerCore {
 		}
 		return list;
 	}
+	
+	/**
+	 * Returns the preferred runtime server for the given module. This method
+	 * returns null if the server was never chosen or does not currently exist. (if the
+	 * server is recreated or was in a closed project, etc. this method will return
+	 * the original value if it becomes available again)
+	 *
+	 * @param module a module
+	 * @return the current default server, or <code>null</code> if there is no
+	 *    default server
+	 */
+	public static IServer getDefaultServer(IModule module) {
+		return ModuleProperties.getInstance().getDefaultServer(module);
+	}
+
+	/**
+	 * Sets the preferred runtime server for the given module. Set the server to
+	 * null to clear the setting. If there is a problem saving the file, a CoreException
+	 * will be thrown.
+	 * 
+	 * @param module the module to set the default for
+	 * @param server the server to set the default server, or <code>null</code>
+	 *    to unset the default
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException if there is a problem setting the default server
+	 */
+	public static void setDefaultServer(IModule module, IServer server, IProgressMonitor monitor) throws CoreException {
+		ModuleProperties.getInstance().setDefaultServer(module, server, monitor);
+	}
 }

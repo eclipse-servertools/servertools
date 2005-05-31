@@ -248,7 +248,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 							if (runtimes != null) {
 								int size = runtimes.length;
 								for (int i = 0; i < size; i++) {
-									if (runtimes[i].getLocation().equals(wc.getLocation()))
+									if (runtimes[i].getLocation() != null && runtimes[i].getLocation().equals(wc.getLocation()))
 										dup = true;
 								}
 							}

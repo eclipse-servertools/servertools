@@ -245,41 +245,42 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		final IPath[] paths = getListenerPaths();
 		if (paths != null) {
 			final IModule[] modules = getModules(project);
-			if (modules == null) return;
-			for (int i = 0; i < modules.length; i++) {
-				final IModule module = modules[i];
-				if (module != null && module instanceof ProjectModule) {
-					// check for listener paths
-					final int size = paths.length;
-					class Temp {
-						boolean found = false;
-					}
-					final Temp temp = new Temp();
-					try {
-						delta.accept(new IResourceDeltaVisitor() {
-							public boolean visit(IResourceDelta visitorDelta) {
-								if (temp.found)
-									return false;
-								IPath path = visitorDelta.getProjectRelativePath();
-								
-								boolean prefix = false;
-								for (int j = 0; j < size && !temp.found; j++) {
-									if (paths[j].equals(path))
-										temp.found = true;
-									else if (path.isPrefixOf(paths[j]))
-										prefix = true;
+			if (modules != null) {
+				for (int i = 0; i < modules.length; i++) {
+					final IModule module = modules[i];
+					if (module != null && module instanceof ProjectModule) {
+						// check for listener paths
+						final int size = paths.length;
+						class Temp {
+							boolean found = false;
+						}
+						final Temp temp = new Temp();
+						try {
+							delta.accept(new IResourceDeltaVisitor() {
+								public boolean visit(IResourceDelta visitorDelta) {
+									if (temp.found)
+										return false;
+									IPath path = visitorDelta.getProjectRelativePath();
+									
+									boolean prefix = false;
+									for (int j = 0; j < size && !temp.found; j++) {
+										if (paths[j].equals(path))
+											temp.found = true;
+										else if (path.isPrefixOf(paths[j]))
+											prefix = true;
+									}
+									if (temp.found) {
+										((ProjectModule) module).update();
+										return false;
+									} else if (prefix)
+										return true;
+									else
+										return false;
 								}
-								if (temp.found) {
-									((ProjectModule) module).update();
-									return false;
-								} else if (prefix)
-									return true;
-								else
-									return false;
-							}
-						});
-					} catch (Exception e) {
-						Trace.trace(Trace.SEVERE, "Error searching for listening paths", e);
+							});
+						} catch (Exception e) {
+							Trace.trace(Trace.SEVERE, "Error searching for listening paths", e);
+						}
 					}
 				}
 			}

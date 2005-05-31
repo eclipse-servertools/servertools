@@ -15,12 +15,15 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
- * 
+ * A task wizard page.
  * 
  * @since 1.0
  */
@@ -35,7 +38,15 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 	}
 	
 	public void createControl(Composite parentComp) {
-		Composite comp = fragment.createComposite(parentComp, this);
+		Composite comp = null;
+		try {
+			comp = fragment.createComposite(parentComp, this);
+		} catch (Exception e) {
+			comp = new Composite(parentComp, SWT.NONE);
+			comp.setLayout(new FillLayout(SWT.VERTICAL));
+			Label label = new Label(comp, SWT.NONE);
+			label.setText("Internal error");
+		}
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.widthHint = convertHorizontalDLUsToPixels(150);
 		//data.heightHint = convertVerticalDLUsToPixels(350);
@@ -44,8 +55,12 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 	}
 
 	public boolean isPageComplete() {
-		if (!fragment.isComplete())
+		try {
+			if (!fragment.isComplete())
+				return false;
+		} catch (Exception e) {
 			return false;
+		}
 		if (isEmptyError)
 			return false;
 		return (getMessage() == null || getMessageType() != ERROR);

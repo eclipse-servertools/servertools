@@ -8,7 +8,7 @@ Bundle-Activator: org.eclipse.wst.server.core.internal.ServerPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.server.core,
- org.eclipse.wst.server.core.internal,
+ org.eclipse.wst.server.core.internal;x-friends:="org.eclipse.wst.server.ui,org.eclipse.wst.server.util",
  org.eclipse.wst.server.core.internal.provisional,
  org.eclipse.wst.server.core.model,
  org.eclipse.wst.server.core.util

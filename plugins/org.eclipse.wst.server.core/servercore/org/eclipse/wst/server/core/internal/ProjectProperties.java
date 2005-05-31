@@ -77,7 +77,8 @@ public class ProjectProperties implements IProjectProperties {
 			Trace.trace(Trace.SEVERE, "Could not load preferences: " + e.getMessage());
 		} finally {
 			try {
-				in.close();
+				if (in != null)
+					in.close();
 			} catch (Exception e) {
 				// ignore
 			}
@@ -168,7 +169,6 @@ public class ProjectProperties implements IProjectProperties {
 		
 		serverId = newServerId;
 		savePreferences(monitor);
-		fireDefaultServerChanged(server);
 	}
 	
 	protected String getRuntimeTargetId() {
@@ -289,34 +289,7 @@ public class ProjectProperties implements IProjectProperties {
 		if (listeners != null)
 			listeners.remove(listener);
 	}
-	
-	/**
-	 * Fire a event because the default server changed.
-	 *
-	 * @param server org.eclipse.wst.server.core.IServer
-	 */
-	private void fireDefaultServerChanged(IServer server) {
-		Trace.trace(Trace.LISTENERS, "->- Firing defaultServerChanged event: " + server + " ->-");
-	
-		if (listeners == null || listeners.isEmpty())
-			return;
-	
-		int size = listeners.size();
-		IProjectPropertiesListener[] ppl = new IProjectPropertiesListener[size];
-		listeners.toArray(ppl);
-	
-		for (int i = 0; i < size; i++) {
-			Trace.trace(Trace.LISTENERS, "  Firing defaultServerChanged event to " + ppl[i]);
-			try {
-				ppl[i].defaultServerChanged(project, server);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing defaultServerChanged event to " + ppl[i], e);
-			}
-		}
-	
-		Trace.trace(Trace.LISTENERS, "-<- Done firing defaultServerChanged event -<-");
-	}
-	
+
 	/**
 	 * Fire a event because the runtime target changed.
 	 *

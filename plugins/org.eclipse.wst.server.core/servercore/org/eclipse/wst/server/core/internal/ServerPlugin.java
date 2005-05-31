@@ -15,14 +15,19 @@ import java.util.*;
 import java.text.DateFormat;
 
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleEvent;
+import org.osgi.framework.BundleListener;
 /**
  * The main server plugin class.
  */
 public class ServerPlugin extends Plugin {
 	public static final String PROJECT_PREF_FILE = ".serverPreference";
+	
+	private static final String SHUTDOWN_JOB_FAMILY = "org.eclipse.wst.server.core.family";
 	
 	protected static final DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 	protected static int num = 0;
@@ -50,6 +55,9 @@ public class ServerPlugin extends Plugin {
 	
 	// cached copy of all module artifact adapters
 	private static List moduleArtifactAdapters;
+	
+	// bundle listener
+	private BundleListener bundleListener;
 
 	private static final String TEMP_DATA_FILE = "tmp-data.xml";
 
@@ -228,7 +236,7 @@ public class ServerPlugin extends Plugin {
 			Trace.trace(Trace.SEVERE, "Could not save temporary directory information", e);
 		}
 	}
-	
+
 	protected void initializeDefaultPluginPreferences() {
 		ServerPreferences.getInstance().setDefaults();
 	}
@@ -244,6 +252,37 @@ public class ServerPlugin extends Plugin {
 
 		// load temp directory information
 		loadTempDirInfo();
+		
+		bundleListener = new BundleListener() {
+			public void bundleChanged(BundleEvent event) {
+				String bundleId = event.getBundle().getSymbolicName();
+				//System.out.println(event.getType() + " " + bundleId);
+				if (BundleEvent.STOPPED == event.getType() && ResourceManager.getInstance().isActiveBundle(bundleId))
+					stopBundle(bundleId);
+			}
+		};
+		context.addBundleListener(bundleListener);
+	}
+
+	protected void stopBundle(final String bundleId) {
+		class StopJob extends Job {
+			public StopJob() {
+				super("Disposing servers");
+			}
+			
+			public boolean belongsTo(Object family) {
+				return SHUTDOWN_JOB_FAMILY.equals(family);
+			}
+
+			public IStatus run(IProgressMonitor monitor2) {
+				ResourceManager.getInstance().shutdownBundle(bundleId);
+				return new Status(IStatus.OK, PLUGIN_ID, 0, "", null);
+			}
+		}
+		
+		StopJob job = new StopJob();
+		job.setUser(false);
+		job.schedule();
 	}
 
 	/**
@@ -255,6 +294,13 @@ public class ServerPlugin extends Plugin {
 		
 		ResourceManager.shutdown();
 		ServerMonitorManager.shutdown();
+		
+		try {
+			Platform.getJobManager().join(SHUTDOWN_JOB_FAMILY, null);
+		} catch (Exception e) {
+			Trace.trace(Trace.WARNING, "Error waiting for shutdown job", e);
+		}
+		context.removeBundleListener(bundleListener);
 	}
 
 	public static String[] tokenize(String param, String delim) {

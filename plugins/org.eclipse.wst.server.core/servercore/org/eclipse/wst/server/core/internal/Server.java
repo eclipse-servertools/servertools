@@ -215,7 +215,7 @@ public class Server extends Base implements IServer {
 		}
 		return delegate;
 	}
-	
+
 	protected ServerBehaviourDelegate getBehaviourDelegate(IProgressMonitor monitor) {
 		if (behaviourDelegate != null)
 			return behaviourDelegate;
@@ -250,25 +250,21 @@ public class Server extends Base implements IServer {
 		return behaviourDelegate;
 	}
 
-	/**
-	 * Returns true if the delegate has been loaded.
-	 * 
-	 * @return <code>true</code> if the delegate has been loaded, and
-	 *    <code>false</code> otherwise
-	 */
-	public boolean isDelegateLoaded() {
-		return delegate != null;
-	}
-	
 	public void dispose() {
-		if (delegate != null)
+		if (delegate != null) {
 			delegate.dispose();
+			delegate = null;
+		}
+		if (behaviourDelegate != null) {
+			behaviourDelegate.dispose();
+			behaviourDelegate = null;
+		}
 	}
 
 	public String getHost() {
 		return getAttribute(PROP_HOSTNAME, "localhost");
 	}
-	
+
 	public int getAutoPublishTime() {
 		return getAttribute(PROP_AUTO_PUBLISH_TIME, -1);
 	}
@@ -777,37 +773,35 @@ public class Server extends Base implements IServer {
 	public IModuleResourceDelta[] getPublishedResourceDelta(IModule[] module) {
 		return getServerPublishInfo().getDelta(module);
 	}
-	
+
 	/**
 	 * @see IServer#getAdapter(Class)
 	 */
 	public Object getAdapter(Class adapter) {
-		//if (delegate != null) {
-			ServerDelegate delegate2 = getDelegate(null);
-			if (adapter.isInstance(delegate2))
-				return delegate2;
-		//}
-		//if (behaviourDelegate != null) {
-			ServerBehaviourDelegate delegate3 = getBehaviourDelegate(null);
-			if (adapter.isInstance(delegate3))
-				return delegate3;
-		//}
+		if (delegate != null) {
+			if (adapter.isInstance(delegate))
+				return delegate;
+		}
+		if (behaviourDelegate != null) {
+			if (adapter.isInstance(behaviourDelegate))
+				return behaviourDelegate;
+		}
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
-	
+
 	/**
 	 * @see IServer#loadAdapter(Class, IProgressMonitor)
 	 */
 	public Object loadAdapter(Class adapter, IProgressMonitor monitor) {
-		ServerDelegate delegate2 = getDelegate(monitor);
-		if (adapter.isInstance(delegate2))
-			return delegate2;
+		getDelegate(monitor);
+		if (adapter.isInstance(delegate))
+			return delegate;
 
-		ServerBehaviourDelegate delegate3 = getBehaviourDelegate(monitor);
-		if (adapter.isInstance(delegate3))
-			return delegate3;
+		getBehaviourDelegate(monitor);
+		if (adapter.isInstance(behaviourDelegate))
+			return behaviourDelegate;
 		
-		return Platform.getAdapterManager().getAdapter(this, adapter);
+		return Platform.getAdapterManager().loadAdapter(this, adapter.getName());
 	}
 
 	public String toString() {
@@ -855,7 +849,7 @@ public class Server extends Base implements IServer {
 		return null;
 	}
 
-	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException {
+	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) {
 		try {
 			getBehaviourDelegate(monitor).setupLaunchConfiguration(workingCopy, monitor);
 		} catch (Exception e) {

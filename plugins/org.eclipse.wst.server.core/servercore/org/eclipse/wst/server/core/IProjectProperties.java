@@ -28,6 +28,8 @@ public interface IProjectProperties {
 	 *
 	 * @return the current default server, or <code>null</code> if there is no
 	 *    default server
+	 * @deprecated preferred server should not be serialized into the project.
+	 *    use the equivalent method on ServerCore instead
 	 */
 	public IServer getDefaultServer();
 
@@ -41,6 +43,8 @@ public interface IProjectProperties {
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @throws CoreException if there is a problem setting the default server
+	 * @deprecated preferred server should not be serialized into the project.
+	 *    use the equivalent method on ServerCore instead
 	 */
 	public void setDefaultServer(IServer server, IProgressMonitor monitor) throws CoreException;
 
