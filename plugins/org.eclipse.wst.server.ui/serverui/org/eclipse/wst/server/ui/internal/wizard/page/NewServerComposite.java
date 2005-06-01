@@ -12,6 +12,8 @@ package org.eclipse.wst.server.ui.internal.wizard.page;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -331,6 +333,23 @@ public class NewServerComposite extends Composite {
 						String type = mt.getName();
 						wizard.setMessage(NLS.bind(Messages.errorVersionLevel, new Object[] { type, mt.getVersion() }), IMessageProvider.ERROR);
 						server = null;
+					}
+					if (wizard.getMessage() == null) {
+						try {
+							server.getRootModules(module, null);
+						} catch (CoreException ce) {
+							IStatus status = ce.getStatus();
+							if (status != null) {
+								if (status.getSeverity() == IStatus.ERROR)
+									wizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
+								else if (status.getSeverity() == IStatus.WARNING)
+									wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
+								else if (status.getSeverity() == IStatus.INFO)
+											wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
+							}
+						} catch (Exception e) {
+							Trace.trace(Trace.WARNING, "Could not find root module", e);
+						}
 					}
 				}
 				

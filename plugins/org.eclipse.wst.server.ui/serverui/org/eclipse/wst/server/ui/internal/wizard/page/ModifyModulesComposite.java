@@ -70,6 +70,55 @@ public class ModifyModulesComposite extends Composite {
 	protected IModule origNewModule;
 	
 	protected Map errorMap;
+	
+	/**
+	 * The key element for the child module map
+	 * ChildMapModuleKey
+	 */
+	protected class ChildModuleMapKey {
+		private IModule[] moduleTree;
+		
+		protected ChildModuleMapKey(IModule curModule) {
+			if (curModule != null) {
+				moduleTree = new IModule[] { curModule };
+			}
+		}
+		
+		protected ChildModuleMapKey(IModule[] curModuleTree) {
+			moduleTree = curModuleTree;
+		}
+		
+		public boolean equals(Object obj) {
+			if (obj == this) {
+				// Same object.
+				return true;
+			}
+			
+			boolean result = false;
+			if (obj instanceof ChildModuleMapKey) {
+				IModule[] curCompareModule = ((ChildModuleMapKey)obj).moduleTree;
+				if (curCompareModule == moduleTree) {
+					// The module tree is the same.
+					result = true;
+				} else if (moduleTree == null || curCompareModule == null || moduleTree.length != curCompareModule.length){
+					result = false;
+				} else {
+					// Compare each module.
+					result = true;
+					for (int i=0; result && i<curCompareModule.length; i++) {
+						result &= curCompareModule[i].equals(moduleTree[i]);
+					}
+				}
+			}
+			return result;
+		}
+		
+    public int hashCode() {
+			// Force the same hash code on all the instances to makes sure the equals(Object) method
+			// is being used for comparing the objects.
+			return 12345;
+    }
+	}
 
 	/**
 	 * Create a new ModifyModulesComposite.
@@ -116,6 +165,7 @@ public class ModifyModulesComposite extends Composite {
 		
 		// add new module
 		newModule = null;
+		errorMap = new HashMap();
 		if (origNewModule != null) {
 			try {
 				IModule[] parents = server.getRootModules(origNewModule, null);
@@ -123,8 +173,11 @@ public class ModifyModulesComposite extends Composite {
 					newModule = parents[0];
 				else
 					newModule = origNewModule;
+			} catch (CoreException ce) {
+				errorMap.put(newModule, ce.getStatus());
+				newModule = null;
 			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Could not find parent module", e);
+				Trace.trace(Trace.WARNING, "Could not find root module", e);
 				newModule = null;
 			}
 		}
@@ -132,7 +185,6 @@ public class ModifyModulesComposite extends Composite {
 			deployed.add(newModule);
 
 		// get remaining modules
-		errorMap = new HashMap();
 		IModule[] modules2 = ServerUtil.getModules(server.getServerType().getRuntimeType().getModuleTypes());
 		if (modules2 != null) {
 			int size = modules2.length;
@@ -166,7 +218,7 @@ public class ModifyModulesComposite extends Composite {
 			IModule module = (IModule) iterator.next();
 			try {
 				IModule[] children = server.getChildModules(new IModule[] { module }, null);
-				childModuleMap.put(module, children);
+				childModuleMap.put(new ChildModuleMapKey(module), children);
 			} catch (Exception e) {
 				// ignore
 			}
@@ -177,7 +229,7 @@ public class ModifyModulesComposite extends Composite {
 			IModule module = (IModule) iterator.next();
 			try {
 				IModule[] children = server.getChildModules(new IModule[] { module }, null);
-				childModuleMap.put(module, children);
+				childModuleMap.put(new ChildModuleMapKey(module), children);
 			} catch (Exception e) {
 				// ignore
 			}
@@ -363,7 +415,7 @@ public class ModifyModulesComposite extends Composite {
 
 	protected void addChildren(TreeItem item, IModule[] module) {
 		try {
-			IModule[] children = (IModule[]) childModuleMap.get(module);
+			IModule[] children = (IModule[]) childModuleMap.get(new ChildModuleMapKey(module));
 			if (children != null) {
 				int size = children.length;
 				for (int i = 0; i < size; i++) {
@@ -500,7 +552,7 @@ public class ModifyModulesComposite extends Composite {
 			modules2[size2] = module;
 			map.add(modules2);
 			
-			IModule[] children2 = (IModule[]) childModuleMap.get(module);
+			IModule[] children2 = (IModule[]) childModuleMap.get(new ChildModuleMapKey(module));
 			if (children2 != null)
 				addChildMap(map, modules2, children2);
 		}
@@ -514,7 +566,7 @@ public class ModifyModulesComposite extends Composite {
 			IModule module = (IModule) iterator.next();
 			IModule[] moduleTree = new IModule[] { module };
 			map.add(moduleTree);
-			IModule[] children = (IModule[]) childModuleMap.get(module);
+			IModule[] children = (IModule[]) childModuleMap.get(new ChildModuleMapKey(module));
 			if (children != null)
 				addChildMap(map, moduleTree, children);
 		}
