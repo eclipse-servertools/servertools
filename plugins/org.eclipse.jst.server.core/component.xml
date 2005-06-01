@@ -3,7 +3,7 @@
 <component-depends unrestricted="true"/>
   <plugin id="org.eclipse.jst.server.core" fragment="false"/>
   <package name="org.eclipse.jst.server.core">
-    <type name="IConnectorModule"/>
+<!--    <type name="IConnectorModule"/>
     <type name="IEJBModule"/>
     <type name="IJ2EEModule"/>
     <type name="Servlet"/>
@@ -15,14 +15,12 @@
     <type name="ClasspathRuntimeTargetHandler"/>
     <type name="IApplicationClientModule"/>
     <type name="EJBBean"/>
-    <type name="JndiLaunchable"/>
+    <type name="JndiLaunchable"/> -->
   </package>
-  
+
   <plugin id="org.eclipse.jst.server.ui" fragment="false"/>
 
   <plugin id="org.eclipse.jst.server.generic.core" fragment="false"/>
-  <package name="org.eclipse.jst.server.generic.servertype.definition">
-  </package>
 
   <plugin id="org.eclipse.jst.server.generic.serverdefinitions" fragment="false"/>
 
