@@ -30,9 +30,16 @@
 package org.eclipse.jst.server.generic.core.internal;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import org.eclipse.ant.internal.ui.IAntUIConstants;
 import org.eclipse.ant.internal.ui.launchConfigurations.IAntLaunchConfigurationConstants;
 import org.eclipse.core.runtime.CoreException;
@@ -72,26 +79,28 @@ import org.osgi.framework.Bundle;
  */
 
 public class AntPublisher extends GenericPublisher{
+	private static final String JAR_PROTOCOL_PREFIX = "jar";
 
-    private static final String PROP_SERVER_PUBLISH_DIR = "server.publish.dir";//$NON-NLS-1$
+	/**
+	 * publisher id for ANT publisher.
+	 */
+	public static final String PUBLISHER_ID="org.eclipse.jst.server.generic.antpublisher"; //$NON-NLS-1$
+    
+	private static final String PROP_SERVER_PUBLISH_DIR = "server.publish.dir";//$NON-NLS-1$
 	private static final String PROP_MODULE_DIR = "module.dir";//$NON-NLS-1$
 	private static final String PROP_MODULE_NAME = "module.name";//$NON-NLS-1$
 	private static final String MODULE_PUBLISH_TARGET_PREFIX = "target.publish."; //$NON-NLS-1$
     private static final String MODULE_UNPUBLISH_TARGET_PREFIX = "target.unpublish.";//$NON-NLS-1$
-    public static final String PUBLISHER_ID="org.eclipse.jst.server.generic.antpublisher"; //$NON-NLS-1$
     private static final String DATA_NAME_BUILD_FILE="build.file";//$NON-NLS-1$
 
     /* (non-Javadoc)
 	 * @see org.eclipse.wtp.server.core.model.IPublisher#publish(org.eclipse.wtp.server.core.resources.IModuleResource[], org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public IStatus[] publish(IModuleArtifact[] resource,
-			IProgressMonitor monitor){
-        
-        File file = computeBuildFile();
+	public IStatus[] publish(IModuleArtifact[] resource, IProgressMonitor monitor){
         try{
-            runAnt(file.toString(),getPublishTargetsForModule(),getPublishProperties(),monitor);
-        }
-        catch(CoreException e){
+        	File file = computeBuildFile();
+        	runAnt(file.toString(),getPublishTargetsForModule(),getPublishProperties(),monitor);
+        }catch(CoreException e){
             IStatus s = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,GenericServerCoreMessages.errorPublishAntpublisher,e);
             CorePlugin.getDefault().getLog().log(s);
             return new IStatus[] {s};
@@ -99,16 +108,54 @@ public class AntPublisher extends GenericPublisher{
 		return null;
 	}
 
-
     /**
+     * 
      * @return
+     * @throws CoreException
      */
-    private File computeBuildFile() {
+    private File computeBuildFile() throws CoreException {
         Bundle bundle = Platform.getBundle(getServerRuntime().getServerTypeDefinition().getConfigurationElementNamespace());
-        File file = FileUtil.resolveFileFrom(bundle,getBuildFile());
-        return file;
+        URL bundleUrl =bundle.getEntry(getBuildFile());
+        URL fileURL = FileUtil.resolveURL(bundleUrl);
+        if(fileURL.getProtocol().equals(JAR_PROTOCOL_PREFIX)){
+        	OutputStream os=null;
+        	InputStream is=null; 
+        	try{
+        		String filename =fileURL.getPath();
+        		String jarname= fileURL.getFile().substring(0,filename.indexOf('!'));
+        		
+        		File jarFile = new File(new URL(jarname).getFile());
+        		JarFile jar = new JarFile(jarFile);
+        		File tmpFile = FileUtil.createTempFile(getBuildFile(),CorePlugin.getDefault().getStateLocation().toOSString());
+        		os = new FileOutputStream(tmpFile);
+        		String entryname= getBuildFile();
+        		if (entryname.startsWith("/"))//$NON-NLS-1$
+        			entryname= entryname.substring(1);
+        		JarEntry entry = jar.getJarEntry(entryname);
+        		is =jar.getInputStream(entry);
+        		FileUtil.copy(is,os);
+        		return tmpFile;
+         	}
+        	catch (IOException e) {
+        		IStatus s = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,"error creating temporary build file",e);//$NON-NLS-1$
+                CorePlugin.getDefault().getLog().log(s);
+				throw new CoreException(s);
+			}
+        	finally{
+        		try {
+        			if(is!=null)
+        				is.close();
+					if(os!=null)
+						os.close();
+				} catch (IOException e) {
+					//ignore
+				}
+        	}
+        }
+        else{
+        	return FileUtil.resolveFile(fileURL);
+        } 	
     }
-    
    
     /**
      * @return
@@ -157,10 +204,10 @@ public class AntPublisher extends GenericPublisher{
         }
         return null;
     }
+	
 	private Map getPublishProperties()
 	{
         Map props = new HashMap();
-        
         // pass all properties to build file.
         Map properties = getServerRuntime().getServerTypeDefinition().getResolver().getPropertyValues();
         Iterator propertyIterator = properties.keySet().iterator();
@@ -169,7 +216,6 @@ public class AntPublisher extends GenericPublisher{
             String property = (String)propertyIterator.next();
             props.put(property,properties.get(property));
         }
-        
         Module module =  getServerRuntime().getServerTypeDefinition().getModule(getModuleTypeId());
 		String modDir = module.getPublishDir();
 		modDir = getServerRuntime().getServerTypeDefinition().getResolver().resolveProperties(modDir);
@@ -191,24 +237,15 @@ public class AntPublisher extends GenericPublisher{
 		props.put(PROP_SERVER_PUBLISH_DIR,modDir);
 		return props;
 	}
-	/**
-	 * @param module2
-	 * @param webModule
-	 * @return
-	 */
+
 	private String guessModuleName(IWebModule webModule) {
 		String moduleName = getModule()[0].getName(); 
-		//Default to project name but not a good guess
-		//may have blanks etc.
-		
-		// A better choice is to use the context root
-		// For wars most appservers use the module name
-		// as the context root
 		String contextRoot = webModule.getContextRoot();
 		if(contextRoot.charAt(0) == '/')
 			moduleName = contextRoot.substring(1);
 		return moduleName;
 	}
+
 	private void runAnt(String buildFile,String targets,Map properties ,IProgressMonitor monitor)throws CoreException{
 		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
 		ILaunchConfigurationType type = launchManager.getLaunchConfigurationType(IAntLaunchConfigurationConstants.ID_ANT_LAUNCH_CONFIGURATION_TYPE);
@@ -237,17 +274,13 @@ public class AntPublisher extends GenericPublisher{
      * @see org.eclipse.jst.server.generic.internal.core.GenericPublisher#unpublish(org.eclipse.wst.server.core.IModule, org.eclipse.core.runtime.IProgressMonitor)
      */
     public IStatus[] unpublish(IProgressMonitor monitor) {
-        File file = computeBuildFile();
         try {
+        	 File file = computeBuildFile();
             runAnt(file.toString(),getUnpublishTargetsForModule(),getPublishProperties(),monitor);
         } catch (CoreException e) {
             IStatus s = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,GenericServerCoreMessages.errorRemoveModuleAntpublisher,e);
             return new IStatus[] {s};
- 
         }
         return null;
     }
-
-
-
 }
