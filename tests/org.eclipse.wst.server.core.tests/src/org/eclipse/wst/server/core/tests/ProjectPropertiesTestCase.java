@@ -29,12 +29,6 @@ public class ProjectPropertiesTestCase extends TestCase {
 	protected static int count;
 
 	protected IProjectPropertiesListener listener = new IProjectPropertiesListener() {
-		public void defaultServerChanged(IProject project2, IServer server) {
-			projectEvent = project2;
-			serverEvent = server;
-			count++;
-		}
-
 		public void runtimeTargetChanged(IProject project2, IRuntime runtime) {
 			projectEvent = project2;
 			runtimeEvent = runtime;
@@ -123,16 +117,11 @@ public class ProjectPropertiesTestCase extends TestCase {
 	
 	public void test15CheckListener() throws Exception {
 		IProjectPropertiesListener listener2 = new IProjectPropertiesListener() {
-			public void defaultServerChanged(IProject project2, IServer server) {
-				// ignore
-			}
-
 			public void runtimeTargetChanged(IProject project2, IRuntime runtime) {
 				// ignore
 			}
 		};
 		
-		listener2.defaultServerChanged(null, null);
 		listener2.runtimeTargetChanged(null, null);
 	}
 }
