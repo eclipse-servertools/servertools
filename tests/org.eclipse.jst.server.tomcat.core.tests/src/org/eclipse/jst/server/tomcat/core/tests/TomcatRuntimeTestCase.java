@@ -51,7 +51,7 @@ public class TomcatRuntimeTestCase extends TestCase {
 	}
 	
 	protected void adaptRuntime() throws Exception {
-		tomcatRuntime = (ITomcatRuntime) runtime.getAdapter(ITomcatRuntime.class);
+		tomcatRuntime = (ITomcatRuntime) runtime.loadAdapter(ITomcatRuntime.class, null);
 		assertNotNull(tomcatRuntime);
 		assertNotNull(tomcatRuntime.getVMInstall());
 		assertNotNull(tomcatRuntime.getRuntimeClasspath());
@@ -59,10 +59,10 @@ public class TomcatRuntimeTestCase extends TestCase {
 	
 	protected void modifyRuntime() throws Exception {
 		IRuntimeWorkingCopy wc = runtime.createWorkingCopy();
-		ITomcatRuntimeWorkingCopy trwc = (ITomcatRuntimeWorkingCopy) wc.getAdapter(ITomcatRuntimeWorkingCopy.class);
+		ITomcatRuntimeWorkingCopy trwc = (ITomcatRuntimeWorkingCopy) wc.loadAdapter(ITomcatRuntimeWorkingCopy.class, null);
 		trwc.setVMInstall(null);
 		wc.save(true, null);
-		tomcatRuntime = (ITomcatRuntime) runtime.getAdapter(ITomcatRuntime.class);
+		tomcatRuntime = (ITomcatRuntime) runtime.loadAdapter(ITomcatRuntime.class, null);
 		assertNotNull(tomcatRuntime.getVMInstall());
 	}
 	
