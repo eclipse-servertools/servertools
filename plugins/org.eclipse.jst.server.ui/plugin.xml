@@ -40,4 +40,12 @@
         class="org.eclipse.jst.server.ui.internal.GenericRuntimeWizardFragment"/>
   </extension>
 
+  <extension point="org.eclipse.wst.server.core.clients">
+     <client
+        id="org.eclipse.jst.server.cactus.client"
+        class="org.eclipse.jst.server.ui.internal.cactus.JUnitClientDelegate"
+        launchable="org.eclipse.jst.server.cactus.launchable"
+        name="%cactusJUnitClient"/>
+  </extension>
+
 </plugin>

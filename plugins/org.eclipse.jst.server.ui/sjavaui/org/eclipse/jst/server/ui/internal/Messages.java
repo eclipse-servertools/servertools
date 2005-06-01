@@ -24,7 +24,12 @@ public class Messages extends NLS {
 	public static String browse;
 	public static String runtimeTypeInstalledJREs;
 	public static String runtimeTypeDefaultJRE;
-	
+	public static String errorInternalCactus;
+
+	public static String LaunchTestAction_message_selectConfiguration;
+	public static String LaunchTestAction_message_selectDebugConfiguration;
+	public static String LaunchTestAction_message_selectRunConfiguration;
+
 	static {
 		NLS.initializeMessages(JavaServerUIPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);
 	}

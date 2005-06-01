@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.eclipse.jst.server.ui.internal;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 /**
  * The main server tooling plugin class.
@@ -38,5 +43,38 @@ public class JavaServerUIPlugin extends AbstractUIPlugin {
 	 */
 	public static JavaServerUIPlugin getInstance() {
 		return singleton;
+	}
+	
+	/**
+	 * Convenience method for logging.
+	 *
+	 * @param t a throwable
+	 */
+	public static void log(Throwable t) {
+		getInstance().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.ERROR, "Internal error", t)); //$NON-NLS-1$
+	}
+
+	/**
+	 * Returns the active workbench shell
+	 * 
+	 * @return the active workbench shell
+	 */
+	public static Shell getActiveWorkbenchShell() {
+		IWorkbenchWindow workBenchWindow = getActiveWorkbenchWindow();
+		if (workBenchWindow == null)
+			return null;
+		return workBenchWindow.getShell();
+	}
+	
+	/**
+	 * Returns the active workbench window
+	 * 
+	 * @return the active workbench window
+	 */
+	protected static IWorkbenchWindow getActiveWorkbenchWindow() {
+		IWorkbench workBench= getInstance().getWorkbench();
+		if (workBench == null)
+			return null;
+		return workBench.getActiveWorkbenchWindow();
 	}
 }

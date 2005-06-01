@@ -34,7 +34,7 @@ public class JavaServerPlugin extends Plugin {
 	/**
 	 * Returns the singleton instance of this plugin.
 	 *
-	 * @return org.eclipse.jst.server.JavaServerPlugin
+	 * @return a singleton instance
 	 */
 	public static JavaServerPlugin getInstance() {
 		return singleton;
@@ -43,9 +43,18 @@ public class JavaServerPlugin extends Plugin {
 	/**
 	 * Convenience method for logging.
 	 *
-	 * @param status org.eclipse.core.runtime.IStatus
+	 * @param status a status
 	 */
 	public static void log(IStatus status) {
 		getInstance().getLog().log(status);
+	}
+	
+	/**
+	 * Convenience method for logging.
+	 *
+	 * @param t a throwable
+	 */
+	public static void log(Throwable t) {
+		log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.ERROR, "Internal error", t)); //$NON-NLS-1$
 	}
 }

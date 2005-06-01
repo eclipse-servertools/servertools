@@ -13,6 +13,7 @@ package org.eclipse.jst.server.core.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jst.server.core.IEnterpriseApplication;
 import org.eclipse.jst.server.core.IJ2EEModule;
 import org.eclipse.wst.server.core.IModule;
@@ -27,22 +28,24 @@ public class J2EEUtil {
 	 * Returns the enterprise applications that the module is contained within.
 	 * 
 	 * @param module
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 * @return a possibly empty array of enterprise applications
 	 */
-	public static IModule[] getEnterpriseApplications(IJ2EEModule module) {
+	public static IModule[] getEnterpriseApplications(IJ2EEModule module, IProgressMonitor monitor) {
 		List list = new ArrayList();
 		IModule[] modules = ServerUtil.getModules("j2ee.ear");
 		if (modules != null) {
 			int size = modules.length;
 			for (int i = 0; i < size; i++) {
 				IModule module2 = modules[i];
-				IEnterpriseApplication ear = (IEnterpriseApplication) module2.getAdapter(IEnterpriseApplication.class);
+				IEnterpriseApplication ear = (IEnterpriseApplication) module2.loadAdapter(IEnterpriseApplication.class, monitor);
 				if (ear != null) {
 					IModule[] modules2 = ear.getModules();
 					if (modules2 != null) {
 						int size2 = modules2.length;
 						for (int j = 0; j < size2; j++) {
-							if (module.equals(modules2[j].getAdapter(IJ2EEModule.class)))
+							if (module.equals(modules2[j].loadAdapter(IJ2EEModule.class, monitor)))
 								list.add(module2);
 						}
 					}
