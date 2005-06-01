@@ -8,6 +8,7 @@ package org.eclipse.jst.server.generic.tests;
 
 import java.util.HashMap;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntimeTargetHandler;
@@ -35,7 +36,7 @@ public class GenericServerClasspathRuntimeHandlerTest extends TestCase {
         super.setUp();
         IRuntimeType type =ServerCore.findRuntimeType("org.eclipse.jst.server.generic.runtime.jonas414");
         IRuntimeWorkingCopy wc = type.createRuntime("testRuntime",null);
-        GenericServerRuntime delegate = (GenericServerRuntime)wc.getAdapter(GenericServerRuntime.class);
+        GenericServerRuntime delegate = (GenericServerRuntime)wc.loadAdapter(GenericServerRuntime.class, new NullProgressMonitor());
 		HashMap props = new HashMap();
 		props.put("mappernames", "");
 		props.put("classPathVariableName", "JONAS");

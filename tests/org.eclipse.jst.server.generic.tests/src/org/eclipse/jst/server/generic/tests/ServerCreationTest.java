@@ -34,6 +34,7 @@ import java.util.HashMap;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
@@ -129,7 +130,7 @@ public class ServerCreationTest extends TestCase {
 		assertNotNull("Runtime working copy has no name",runtimeWorkingCopy.getName());
 		
 		// Set properties for the JONAS runtime
-		GenericServerRuntime runtimeDelegate = (GenericServerRuntime)runtimeWorkingCopy.getAdapter(GenericServerRuntime.class);
+		GenericServerRuntime runtimeDelegate = (GenericServerRuntime)runtimeWorkingCopy.loadAdapter(GenericServerRuntime.class,new NullProgressMonitor());
 		assertNotNull("Could not obtain runtime delegate",runtimeDelegate);
 		
 		HashMap props = new HashMap();
