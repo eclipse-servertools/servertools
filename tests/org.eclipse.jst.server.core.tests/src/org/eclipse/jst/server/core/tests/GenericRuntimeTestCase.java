@@ -65,12 +65,12 @@ public class GenericRuntimeTestCase extends TestCase {
 	
 	public void test06Adapt() throws Exception {
 		runtimeWC = runtime.createWorkingCopy();
-		genericRuntimeWC = (IGenericRuntimeWorkingCopy) runtimeWC.getAdapter(IGenericRuntimeWorkingCopy.class);
+		genericRuntimeWC = (IGenericRuntimeWorkingCopy) runtimeWC.loadAdapter(IGenericRuntimeWorkingCopy.class, null);
 		assertNotNull(genericRuntimeWC);
 	}
 	
 	public void test07Adapt() throws Exception {
-		assertNotNull(runtimeWC.getAdapter(IGenericRuntime.class));
+		assertNotNull(runtimeWC.loadAdapter(IGenericRuntime.class, null));
 	}
 	
 	public void test08SetJVM() throws Exception {
