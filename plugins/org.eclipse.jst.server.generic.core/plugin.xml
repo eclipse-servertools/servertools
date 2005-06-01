@@ -2,8 +2,8 @@
 <?eclipse version="3.0"?>
 <plugin>
 
-     <extension-point id="serverdefinition" name="Server definition" schema="schema/serverdefinition.exsd"/>
- <extension-point id="genericpublisher" name="Generic Publisher" schema="schema/genericpublisher.exsd"/>
+ <extension-point id="serverdefinition" name="%extensionPointServerdefinition" schema="schema/serverdefinition.exsd"/>
+ <extension-point id="genericpublisher" name="%extensionPointGenericpublisher" schema="schema/genericpublisher.exsd"/>
 	
  <extension point="org.eclipse.wst.server.core.runtimeTargetHandlers">
      <runtimeTargetHandler
