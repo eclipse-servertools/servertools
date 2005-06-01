@@ -86,7 +86,7 @@ public class ServerTableViewer extends TreeViewer {
 					for (int i = 0; i < size; i++) {
 						int size2 = ms.module.length;
 						IModule[] module = new IModule[size2 + 1];
-						System.arraycopy(ms.module, 0, ms2[i].module, 0, size2);
+						System.arraycopy(ms.module, 0, module, 0, size2);
 						module[size2] = children[i];
 						ms2[i] = new ModuleServer(ms.server, module);
 					}
@@ -115,8 +115,22 @@ public class ServerTableViewer extends TreeViewer {
 		}
 
 		public boolean hasChildren(Object element) {
-			if (element instanceof ModuleServer)
-				return false;
+			if (element instanceof ModuleServer) {
+				// Check if the module server has child modules.
+				ModuleServer curModuleServer = (ModuleServer)element;
+				IServer curServer = curModuleServer.server;
+				IModule[] curModule = curModuleServer.module;
+				if (curServer != null &&  curModule != null) {
+					IModule[] curChildModule = curServer.getChildModules(curModule, null);
+					if (curChildModule != null && curChildModule.length > 0) {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			}
 			
 			IServer server = (IServer) element;
 			return server.getModules().length > 0;
