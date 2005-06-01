@@ -41,11 +41,11 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		if (getServer().getRuntime() == null)
 			return null;
 		
-		return (TomcatRuntime) getServer().getRuntime().getAdapter(TomcatRuntime.class);
+		return (TomcatRuntime) getServer().getRuntime().loadAdapter(TomcatRuntime.class, null);
 	}
 
 	public ITomcatVersionHandler getTomcatVersionHandler() {
-		if (getServer().getRuntime() == null)
+		if (getServer().getRuntime() == null || getTomcatRuntime() == null)
 			return null;
 
 		return getTomcatRuntime().getVersionHandler();
@@ -219,37 +219,6 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		}
 		return null;
 	}
-
-	/**
-	 * Returns the project references for projects that are in
-	 * this configuration.
-	 *
-	 * @return java.lang.String[]
-	 */
-	/*public IModule[] getModules() {
-		List list = new ArrayList();
-		
-		ITomcatConfiguration config = getTomcatConfiguration();
-		if (config != null) {
-			List modules = config.getWebModules();
-			int size = modules.size();
-			for (int i = 0; i < size; i++) {
-				WebModule module = (WebModule) modules.get(i);
-				
-				String memento = module.getMemento();
-				if (memento != null) {
-					IModule module2 = ServerUtil.getModule(memento);
-					if (module2 != null)
-						list.add(module2);
-				}
-			}
-		}
-		
-		IModule[] s = new IModule[list.size()];
-		list.toArray(s);
-		
-		return s;
-	}*/
 
 	/**
 	 * Returns true if the given project is supported by this

@@ -58,11 +58,11 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		if (getServer().getRuntime() == null)
 			return null;
 		
-		return (TomcatRuntime) getServer().getRuntime().getAdapter(TomcatRuntime.class);
+		return (TomcatRuntime) getServer().getRuntime().loadAdapter(TomcatRuntime.class, null);
 	}
 	
 	public ITomcatVersionHandler getTomcatVersionHandler() {
-		if (getServer().getRuntime() == null)
+		if (getServer().getRuntime() == null || getTomcatRuntime() == null)
 			return null;
 
 		return getTomcatRuntime().getVersionHandler();
@@ -259,6 +259,9 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	public void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException {
 		if ("true".equals(launch.getLaunchConfiguration().getAttribute(ATTR_STOP, "false")))
 			return;
+		//if (getTomcatRuntime() == null)
+		//	throw new CoreException();
+		
 		IStatus status = getTomcatRuntime().validate();
 		if (status != null && status.getSeverity() == IStatus.ERROR)
 			throw new CoreException(status);

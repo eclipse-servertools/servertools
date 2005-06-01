@@ -34,7 +34,7 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 			return;
 		}
 
-		TomcatServerBehaviour tomcatServer = (TomcatServerBehaviour) server.getAdapter(TomcatServerBehaviour.class);
+		TomcatServerBehaviour tomcatServer = (TomcatServerBehaviour) server.loadAdapter(TomcatServerBehaviour.class, null);
 		tomcatServer.setupLaunch(launch, mode, monitor);
 		
 		String mainTypeName = tomcatServer.getRuntimeClass();
