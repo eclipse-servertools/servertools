@@ -211,7 +211,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	 * Returns the root module(s) of this module.
 	 */
 	public IModule[] getRootModules(IModule module) throws CoreException {
-		if (module.getAdapter(IWebModule.class) != null) {
+		if (module.loadAdapter(IWebModule.class, null) != null) {
 			IStatus status = canModifyModules(new IModule[] { module }, null);
 			if (status == null || !status.isOK())
 				throw new CoreException(status);
@@ -233,7 +233,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			int size = add.length;
 			for (int i = 0; i < size; i++) {
 				IModule module = add[i];
-				IWebModule webModule = (IWebModule) module.getAdapter(IWebModule.class);
+				IWebModule webModule = (IWebModule) module.loadAdapter(IWebModule.class, null);
 				if (webModule == null)
 					return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorWebModulesOnly, null);
 				

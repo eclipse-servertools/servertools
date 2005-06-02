@@ -33,7 +33,7 @@ public class TomcatLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
 		if (!(moduleObject instanceof Servlet) &&
 			!(moduleObject instanceof WebResource))
 			return null;
-		if (moduleObject.getModule().getAdapter(IWebModule.class) == null)
+		if (moduleObject.getModule().loadAdapter(IWebModule.class, null) == null)
 			return null;
 
 		try {

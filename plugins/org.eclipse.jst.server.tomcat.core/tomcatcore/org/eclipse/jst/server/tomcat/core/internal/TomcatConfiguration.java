@@ -229,7 +229,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 		if (module != null)
 			return module.getPath();
 		
-		IWebModule webModule2 = (IWebModule) webModule.getAdapter(IWebModule.class);
+		IWebModule webModule2 = (IWebModule) webModule.loadAdapter(IWebModule.class, null);
 		return "/" + webModule2.getContextRoot();
 	}
 
