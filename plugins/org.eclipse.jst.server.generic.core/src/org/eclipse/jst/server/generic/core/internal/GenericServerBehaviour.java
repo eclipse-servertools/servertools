@@ -374,14 +374,17 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     protected void setProcess(final IProcess newProcess) {
     	if (process != null)
     		return;
-    
+    	if(processListener!=null)
+    		DebugPlugin.getDefault().removeDebugEventListener(processListener);
+    	if (newProcess==null)
+    		return;
     	process = newProcess;
     	processListener = new IDebugEventSetListener() {
     		public void handleDebugEvents(DebugEvent[] events) {
     			if (events != null) {
     				int size = events.length;
     				for (int i = 0; i < size; i++) {
-    					if (process.equals(events[i].getSource()) && events[i].getKind() == DebugEvent.TERMINATE) {
+    					if (process!= null &&  process.equals(events[i].getSource()) && events[i].getKind() == DebugEvent.TERMINATE) {
     						DebugPlugin.getDefault().removeDebugEventListener(this);
     						stopImpl();
     					}
