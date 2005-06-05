@@ -18,7 +18,7 @@
 <extension point="org.eclipse.ui.newWizards">
   <category
     id="org.eclipse.wst.server.ui"
-    name="%wizardCategoryTitle"/>
+    name="%category"/>
 
   <wizard
       id="org.eclipse.wst.server.ui.new.server"
@@ -30,26 +30,14 @@
   </wizard>
 </extension>
 
-<!--
-<extension point="org.eclipse.ui.importWizards">
-  <wizard
-      id="org.eclipse.wst.server.ui.import.configuration"
-      name="%importServerConfiguration"
-      class="org.eclipse.wst.server.ui.internal.wizard.ImportServerConfigurationWizard"
-      icon="icons/ctool16/wiz_import_configuration.gif">
-    <description>%importServerConfigurationDescription</description>
-  </wizard>
-</extension>
--->
-
 <extension point="org.eclipse.ui.views"> 
   <category
     id="org.eclipse.wst.server.ui"
-    name="%viewCategoryTitle"/>
+    name="%category"/>
 
   <view
     id="org.eclipse.wst.server.ui.ServersView"
-    name="%viewServersTitle"
+    name="%viewServers"
     category="org.eclipse.wst.server.ui"
     class="org.eclipse.wst.server.ui.internal.view.servers.ServersView"
     icon="icons/cview16/servers_view.gif"/>

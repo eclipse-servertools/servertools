@@ -38,11 +38,11 @@ public class ServerNotificationManager {
 			eventMask = curEventMask;
 		}
 		
-		IServerListener getListener() {
+		protected IServerListener getListener() {
 			return listener;
 		}
 		
-		int getEventMask() {
+		protected int getEventMask() {
 			return eventMask;
 		}
 	}
