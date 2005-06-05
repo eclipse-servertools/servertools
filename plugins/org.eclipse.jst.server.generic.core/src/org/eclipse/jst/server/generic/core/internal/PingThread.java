@@ -14,9 +14,8 @@ import java.io.FileNotFoundException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.internal.Trace;
+
 /**
  * Thread used to ping server to test when it is started.
  * 
