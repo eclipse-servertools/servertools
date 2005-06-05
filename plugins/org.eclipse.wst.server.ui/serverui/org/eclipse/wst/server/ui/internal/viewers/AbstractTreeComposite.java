@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -70,9 +72,17 @@ public abstract class AbstractTreeComposite extends Composite {
 		data = new GridData(GridData.FILL_BOTH);
 		data.horizontalSpan = 2;
 		tree.setLayoutData(data);
-		treeViewer = new TreeViewer(tree);
 		
+		treeViewer = new TreeViewer(tree);
 		treeViewer.setSorter(new ViewerSorter());
+		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection s = (IStructuredSelection) event.getSelection();
+				Object element = s.getFirstElement();
+				if (treeViewer.isExpandable(element))
+					treeViewer.setExpandedState(element, !treeViewer.getExpandedState(element));
+		    }
+		});
 		
 		label = new Label(this, SWT.NONE);
 		label.setText("");
