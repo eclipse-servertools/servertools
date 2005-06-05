@@ -148,22 +148,22 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
     	label.setLayoutData(gridData);
     	label.setText(title);
     
-    	final Text fText = new Text(defPanel, SWT.SHADOW_IN | SWT.BORDER);
+    	final Text text = new Text(defPanel, SWT.SHADOW_IN | SWT.BORDER);
     	gridData = new GridData(GridData.FILL_HORIZONTAL
     			| GridData.GRAB_HORIZONTAL);
     	gridData.horizontalSpan = 1;
-    	fText.setLayoutData(gridData);
-    	fText.setText(value);
-    	fText.addModifyListener(new PathModifyListener());
+    	text.setLayoutData(gridData);
+    	text.setText(value);
+    	text.addModifyListener(new PathModifyListener());
     	Button fButton = SWTUtil.createButton(defPanel,GenericServerUIMessages.serverTypeGroup_label_browse);
     	
     	fButton.addSelectionListener(new SelectionListener() {
     		public void widgetSelected(SelectionEvent e) {
     			FileDialog dlg = new FileDialog(defPanel.getShell());
-    			dlg.setFileName(fText.getText());
+    			dlg.setFileName(text.getText());
     			String res = dlg.open();
     			if (res != null) {
-    				fText.setText(res);
+    				text.setText(res);
 
     			}
     		}
@@ -174,7 +174,7 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
     
     	});
     
-    	return fText;
+    	return text;
     }
 	
     private Text createLabeledPath(String title, String value,
@@ -185,20 +185,20 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
     	label.setLayoutData(gridData);
     	label.setText(title);
     
-    	final Text fText = new Text(parent, SWT.SHADOW_IN | SWT.BORDER);
+    	final Text text = new Text(parent, SWT.SHADOW_IN | SWT.BORDER);
     	gridData = new GridData(GridData.FILL_HORIZONTAL);
     	gridData.horizontalSpan = 1;
-    	fText.setLayoutData(gridData);
-    	fText.setText(value);
-    	fText.addModifyListener(new PathModifyListener());
+    	text.setLayoutData(gridData);
+    	text.setText(value);
+    	text.addModifyListener(new PathModifyListener());
     	Button fButton = SWTUtil.createButton(parent,GenericServerUIMessages.serverTypeGroup_label_browse);
     	fButton.addSelectionListener(new SelectionListener() {
     		public void widgetSelected(SelectionEvent e) {
     			DirectoryDialog dlg = new DirectoryDialog(parent.getShell());
-    			dlg.setFilterPath(fText.getText());
+    			dlg.setFilterPath(text.getText());
     			String res = dlg.open();
     			if (res != null) {
-    				fText.setText(res);
+    				text.setText(res);
 
     			}
     		}
@@ -209,7 +209,7 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
     
     	});
     
-    	return fText;
+    	return text;
     }
     private Text createLabeledText(String title, String value,
     		Composite defPanel) {
@@ -219,14 +219,14 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
     	label.setLayoutData(gridData);
     	label.setText(title);
     
-    	Text fText = new Text(defPanel, SWT.SHADOW_IN | SWT.BORDER);
+    	Text text = new Text(defPanel, SWT.SHADOW_IN | SWT.BORDER);
     	gridData = new GridData(GridData.FILL_HORIZONTAL
     			| GridData.GRAB_HORIZONTAL);
     	gridData.horizontalSpan = 2;
-    	fText.setLayoutData(gridData);
-    	fText.setText(value);
-//    	fText.addModifyListener(new PropertyModifyListener());
-    	return fText;
+    	text.setLayoutData(gridData);
+    	text.setText(value);
+
+    	return text;
     }
 	private String getPropertyValue(Property property)
 	{
