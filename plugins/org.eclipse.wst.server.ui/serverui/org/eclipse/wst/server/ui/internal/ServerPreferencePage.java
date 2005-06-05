@@ -80,6 +80,8 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	 */
 	protected Control createContents(Composite parent) {
 		initializeDialogUnits(parent);
+		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
+		whs.setHelp(parent, ContextIds.PREF_GENERAL);
 		
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -91,8 +93,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		composite.setLayout(layout);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
 		composite.setLayoutData(data);
-		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
-		whs.setHelp(composite, ContextIds.PREF_GENERAL);
 		
 		publishBeforeStart = new Button(composite, SWT.CHECK);
 		publishBeforeStart.setText(Messages.prefAutoPublish);

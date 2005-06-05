@@ -75,6 +75,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 	 */
 	protected Control createContents(Composite parent) {
 		initializeDialogUnits(parent);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, ContextIds.PREF_GENERAL);
 		
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -86,7 +87,6 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		composite.setLayout(layout);
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL);
 		composite.setLayoutData(data);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, ContextIds.PREF_GENERAL);
 		
 		Label label = new Label(composite, SWT.WRAP);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
