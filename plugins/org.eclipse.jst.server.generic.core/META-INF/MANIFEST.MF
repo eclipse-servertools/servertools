@@ -23,11 +23,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.server.core,
  org.eclipse.jst.server.core,
  org.eclipse.debug.ui,
- org.eclipse.ant.core,
  org.eclipse.ant.ui,
  org.eclipse.emf.common;visibility:=reexport,
  org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
- org.eclipse.ui.externaltools,
- org.eclipse.jdt.debug.ui
+ org.eclipse.ui.externaltools
 Eclipse-AutoStart: true
