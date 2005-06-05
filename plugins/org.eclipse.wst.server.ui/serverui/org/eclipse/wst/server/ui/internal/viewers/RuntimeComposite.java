@@ -17,9 +17,13 @@ import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableLayout;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -40,6 +44,32 @@ public class RuntimeComposite extends AbstractTableComposite {
 		public void runtimeSelected(IRuntime runtime);
 	}
 	
+	class RuntimeViewerSorter extends ViewerSorter {
+		boolean sortByName;
+		public RuntimeViewerSorter(boolean sortByName) {
+			this.sortByName = sortByName;
+		}
+		
+		public int compare(Viewer viewer, Object e1, Object e2) {
+			IRuntime r1 = (IRuntime) e1;
+			IRuntime r2 = (IRuntime) e2;
+			if (sortByName)
+				return collator.compare(notNull(r1.getName()), notNull(r2.getName()));
+			
+			if (r1.getRuntimeType() == null)
+				return -1;
+			if (r2.getRuntimeType() == null)
+				return 1;
+			return collator.compare(notNull(r1.getRuntimeType().getName()), notNull(r2.getRuntimeType().getName()));
+		}
+		
+		protected String notNull(String s) {
+			if (s == null)
+				return "";
+			return s;
+		}
+	}
+	
 	public RuntimeComposite(Composite parent, int style, RuntimeSelectionListener listener2) {
 		super(parent, style);
 		this.listener = listener2;
@@ -51,19 +81,34 @@ public class RuntimeComposite extends AbstractTableComposite {
 		tableLayout.addColumnData(new ColumnWeightData(60, 160, true));
 		TableColumn col = new TableColumn(table, SWT.NONE);
 		col.setText(Messages.columnName);
-		
-		/*tableLayout.addColumnData(new ColumnWeightData(12, 120, true));
-		col = new TableColumn(table, SWT.NONE);
-		col.setText("Location");*/
+		col.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				tableViewer.setSorter(new RuntimeViewerSorter(true));
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+		});
 
 		tableLayout.addColumnData(new ColumnWeightData(45, 125, true));
 		col = new TableColumn(table, SWT.NONE);
 		col.setText(Messages.columnType);
+		col.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				tableViewer.setSorter(new RuntimeViewerSorter(false));
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+		});
 		
 		tableViewer.setContentProvider(new RuntimeContentProvider());
 		tableViewer.setLabelProvider(new RuntimeTableLabelProvider());
 		tableViewer.setInput(AbstractTreeContentProvider.ROOT);
-		tableViewer.setColumnProperties(new String[] {"name", "location", "type"});
+		tableViewer.setColumnProperties(new String[] {"name", "type"});
+		tableViewer.setSorter(new RuntimeViewerSorter(true));
 
 		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
