@@ -32,11 +32,12 @@ package org.eclipse.jst.server.generic.ui.internal;
 
 import java.util.Map;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
+import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
@@ -79,8 +80,10 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
     private ServerRuntime getServerTypeDefinitionFor(IServerWorkingCopy server) {        
         GenericServerRuntime runtime = (GenericServerRuntime)server.getRuntime().getAdapter(GenericServerRuntime.class);
         if(runtime==null){
-            IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy)getTaskModel().getObject(TaskModel.TASK_RUNTIME);
+            IRuntime wc = (IRuntime)getTaskModel().getObject(TaskModel.TASK_RUNTIME);
             runtime= (GenericServerRuntime)wc.getAdapter(GenericServerRuntime.class);
+            if(runtime==null)
+            	runtime= (GenericServerRuntime)wc.loadAdapter(GenericServerRuntime.class,new NullProgressMonitor());
         }        
         String id = runtime.getRuntime().getRuntimeType().getId();
         if(id==null){   

@@ -52,7 +52,6 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwareWizardFragment {
 	
 	private GenericServerRuntime fRuntimeDelegate;
-    
 	private GenericServerCompositeDecorator[] fDecorators;
 	
 	/**
@@ -75,15 +74,15 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	public void createContent(Composite parent, IWizardHandle handle) {
         Map properties= null;
 		ServerRuntime definition=null;
-        if(getRuntimeDelegate()!=null)
-		{
-			properties = getRuntimeDelegate().getServerInstanceProperties();
+        if(getRuntimeDelegate()!=null){
+ 			properties = getRuntimeDelegate().getServerInstanceProperties();
 			definition = getServerTypeDefinition(getServerDefinitionId(),properties);
 		}
-		fDecorators =new GenericServerCompositeDecorator[2]; 
+		fDecorators= new GenericServerCompositeDecorator[2]; 
 		fDecorators[0]= new JRESelectDecorator(getRuntimeDelegate());
 		fDecorators[1]= new ServerTypeDefinitionRuntimeDecorator(definition,properties,getWizard(),getRuntimeDelegate());
 		GenericServerComposite composite = new GenericServerComposite(parent,fDecorators);
+		
 	}
 
 	
@@ -104,7 +103,8 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	 * @see org.eclipse.wst.server.ui.wizard.IWizardFragment#enter()
 	 */
 	public void enter() {
-		getRuntimeDelegate().getRuntimeWorkingCopy().setName(createName());
+	    if(getRuntimeDelegate()!=null)
+			getRuntimeDelegate().getRuntimeWorkingCopy().setName(createName());
 		for (int i = 0; i < fDecorators.length; i++) {
 			if(fDecorators[i].validate())
 				return;
@@ -150,7 +150,9 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 		    IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy)getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 		    if(wc==null)
 		        return null;
-		    fRuntimeDelegate = (GenericServerRuntime)wc.getAdapter(RuntimeDelegate.class);
+		    fRuntimeDelegate = (GenericServerRuntime)wc.getAdapter(GenericServerRuntime.class);
+		    if(fRuntimeDelegate==null)
+		    	fRuntimeDelegate= (GenericServerRuntime)wc.loadAdapter(GenericServerRuntime.class,new NullProgressMonitor());
 		}
 		return fRuntimeDelegate;
 	}
