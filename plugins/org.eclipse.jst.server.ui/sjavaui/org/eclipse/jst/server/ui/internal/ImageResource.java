@@ -45,7 +45,8 @@ public class ImageResource {
 
 	private static final String URL_WIZBAN = "wizban/";
 
-	protected static final String IMG_RUNTIME_TYPE = "runtimeType";
+	protected static final String IMG_WIZ_RUNTIME_TYPE = "wiz_runtimeType";
+	public static final String IMG_WIZ_CACTUS_TEST = "wiz_cactus_test";
 
 	/**
 	 * Cannot construct an ImageResource. Use static methods only.
@@ -101,7 +102,8 @@ public class ImageResource {
 		imageRegistry = new ImageRegistry();
 		imageDescriptors = new HashMap();
 	
-		registerImage(IMG_RUNTIME_TYPE, URL_WIZBAN + "new_runtime_wiz.gif");
+		registerImage(IMG_WIZ_RUNTIME_TYPE, URL_WIZBAN + "new_runtime_wiz.gif");
+		registerImage(IMG_WIZ_CACTUS_TEST, URL_WIZBAN + "new_test_wiz.gif");
 	}
 
 	/**

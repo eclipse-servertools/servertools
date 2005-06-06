@@ -48,4 +48,15 @@
         name="%cactusJUnitClient"/>
   </extension>
 
+  <extension point="org.eclipse.ui.newWizards">
+     <wizard
+        id="org.eclipse.jst.server.ui.internal.cactus.NewServletTestCaseWizard"
+        canFinishEarly="false"
+        category="org.eclipse.jdt.ui.java/org.eclipse.jdt.junit"
+        class="org.eclipse.jst.server.ui.internal.cactus.NewServletTestCaseWizard"
+        hasPages="true"
+        icon="icons/obj16/new_testcase.gif"
+        name="%cactusServletTestCase"/>
+  </extension>
+
 </plugin>

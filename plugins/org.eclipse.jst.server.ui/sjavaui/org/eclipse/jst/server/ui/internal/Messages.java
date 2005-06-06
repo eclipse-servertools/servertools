@@ -30,6 +30,14 @@ public class Messages extends NLS {
 	public static String LaunchTestAction_message_selectDebugConfiguration;
 	public static String LaunchTestAction_message_selectRunConfiguration;
 
+	public static String NewServletTestCaseWizard_WindowTitle;
+	public static String NewServletTestCaseWizard_ErrorMessageTitleMissingLibrary;
+	public static String NewServletTestCaseWizard_ErrorMessageMissingType;
+	public static String NewServletTestCaseWizard_ErrorMessageMissingLibrary;
+	public static String NewServletTestCaseWizard_ErrorTitleNew;
+	public static String NewServletTestCaseWizard_ErrorTitleCreateOfElementFailed;
+	public static String NewServletTestCaseWizard_ErrorMessageSeeErrorLog;
+
 	static {
 		NLS.initializeMessages(JavaServerUIPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);
 	}

@@ -59,7 +59,7 @@ public class GenericRuntimeComposite extends Composite {
 		
 		wizard.setTitle(Messages.runtimeTypeTitle);
 		wizard.setDescription(Messages.runtimeTypeDescription);
-		wizard.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_RUNTIME_TYPE));
+		wizard.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_WIZ_RUNTIME_TYPE));
 		
 		createControl();
 	}
