@@ -56,6 +56,8 @@ public class ServerTypeDefinitionUtil
 	 */
 	public static ServerRuntime getServerTypeDefinition(IRuntime runtime)
 	{
+		if(runtime==null)
+			return null;
 	    GenericServerRuntime delegate = (GenericServerRuntime)runtime.getAdapter(GenericServerRuntime.class);
 		String serverType = delegate.getRuntime().getRuntimeType().getId();
 		Map properties = delegate.getServerInstanceProperties();

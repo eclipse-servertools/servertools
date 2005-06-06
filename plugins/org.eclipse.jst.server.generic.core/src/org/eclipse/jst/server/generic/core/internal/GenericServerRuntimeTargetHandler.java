@@ -39,7 +39,6 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.ClasspathRuntimeTargetHandler;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.model.RuntimeDelegate;
 /**
  * Provides the Classpath containers to be added into project classpaths.
  *
@@ -67,7 +66,9 @@ public class GenericServerRuntimeTargetHandler extends
      * @see ClasspathRuntimeTargetHandler#getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor)
 	 */
 	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
-		GenericServerRuntime genericRuntime = (GenericServerRuntime)runtime.getAdapter(RuntimeDelegate.class);
+		GenericServerRuntime genericRuntime = (GenericServerRuntime)runtime.getAdapter(GenericServerRuntime.class);
+		if(genericRuntime==null)
+			genericRuntime = (GenericServerRuntime)runtime.loadAdapter(GenericServerRuntime.class,monitor);
 		IVMInstall vmInstall = genericRuntime.getVMInstall();
 		if (vmInstall != null) {
 			String name = vmInstall.getName();
