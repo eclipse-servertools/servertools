@@ -28,10 +28,11 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: PropertyImpl.java,v 1.2 2005/04/19 17:49:01 gercan Exp $
+ * $Id: PropertyImpl.java,v 1.3 2005/06/06 20:15:48 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
@@ -42,6 +43,8 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.servertype.definition.Property;
+import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
+import org.osgi.framework.Bundle;
 
 /**
  * <!-- begin-user-doc -->
@@ -244,11 +247,18 @@ public class PropertyImpl extends EObjectImpl implements Property {
 
     /**
      * <!-- begin-user-doc -->
+     * labels support "%" nls support from the plugin.xml
 	 * <!-- end-user-doc -->
-     * @generated
+     * @generated NOT
      */
 	public String getLabel() {
-        return label;
+		if(label.startsWith("%",0))
+		{
+			ServerRuntime rt = (ServerRuntime)eResource().getContents().get(0);
+			Bundle bundle =Platform.getBundle(rt.getConfigurationElementNamespace());
+			return Platform.getResourceString(bundle,label);
+		}
+		return label;
     }
 
     /**
