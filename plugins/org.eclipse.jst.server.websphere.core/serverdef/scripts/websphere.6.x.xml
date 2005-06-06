@@ -1,0 +1,57 @@
+<project name="deployextension"  default="deploy.j2ee.web"  basedir=".">
+
+	<property name="was.home" value="${wasRoot}"/>
+	
+	<path id="toolpath">
+		<pathelement path="${was.home}/lib/wsanttasks.jar" />
+	</path>
+	
+	<taskdef classpathref="toolpath" name="wsadmin" classname="com.ibm.websphere.ant.tasks.WsAdmin"/> 
+	
+
+	<target name="deploy.j2ee.web">
+		<jar destfile="${module.name}.war"> 
+			<zipfileset dir="${module.dir}">
+				<include name="**/*.*"/>
+				<exclude name="**/*.war"/>
+			</zipfileset>
+		</jar>
+		<wsadmin 
+			washome="${was.home}"
+		    command="$AdminApp install ${module.name}.war" 
+			failonerror="true" >  
+		</wsadmin>
+	</target>
+	
+	<target name="deploy.j2ee.ejb">
+		<jar destfile="${module.name}.jar"> 
+			<zipfileset dir="${module.dir}">
+	        	<include name="**/*.*"/>
+	       		<exclude name="**/*.java"/>
+			</zipfileset>
+		</jar>
+		<wsadmin 
+		    command="$AdminApp install ${module.name}.jar" 
+			failonerror="true" >  
+		</wsadmin>
+	</target>
+	
+	
+	
+	<target name="undeploy.j2ee.web">
+		<wsadmin 
+			washome="${was.home}"
+		    command="$AdminApp uninstall ${module.name}.war" 
+			failonerror="true" >  
+		</wsadmin>
+	</target>
+	<target name="undeploy.j2ee.ejb">
+		<wsadmin 
+			washome="${was.home}"
+		    command="$AdminApp uninstall ${module.name}.jar" 
+			failonerror="true" >  
+		</wsadmin>
+	</target>	
+
+
+</project>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:ServerRuntime
+	xmlns:tns="http://eclipse.org/jst/server/generic/ServerTypeDefinition"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://eclipse.org/jst/server/generic/ServerTypeDefinition ServerTypeDefinitionSchema.xsd "
+	name="IBM WebSphere 6" version="v6.0">
+	<property id="wasRoot"
+		label="IBM WebSphere Installation Directory:"
+		type="directory"
+		context="runtime"
+		default="/your_server_root/WAS6.0" />
+
+	<property id="port"
+		label="Port:"
+		type="string"
+		context="server"
+		default="9080" />
+
+	<property id="wasProfile"
+		label="Server Profile Directory:"
+		type="directory"
+		context="server"
+		default="/your_server_root/WAS6.0/profiles/default" />
+
+	<property id="wasCell"
+		label="Cell:"
+		type="string"
+		context="server"
+		default="PEPENode01Cell" />
+
+	<property id="wasNode"
+		label="Node:"
+		type="string"
+		context="server"
+		default="PEPE1" />
+	<property id="wasServer"
+		label="Server:"
+		type="string"
+		context="server"
+		default="server1" />
+
+	<port>
+		<no>${port}</no>
+		<name>Http</name>
+		<protocol>http</protocol>
+	</port>
+
+	<module>
+		<type>j2ee.web</type>
+		<publishDir>${wasRoot}</publishDir>
+		<publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+	</module>
+
+	<module>
+		<type>j2ee.ejb</type>
+		<publishDir>${wasRoot}</publishDir>
+		<publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+	</module>
+
+
+	<project>
+		<classpathReference>was.project</classpathReference>
+	</project>
+	
+	<start>
+		<mainClass>com.ibm.ws.bootstrap.WSLauncher</mainClass>
+		<workingDirectory>${wasProfile}</workingDirectory>
+		<programArguments>com.ibm.ws.runtime.WsServer ${wasProfile}/config ${wasCell} ${wasNode} ${wasServer}</programArguments>
+		<vmParameters>-Dws.output.encoding=console -Dcom.ibm.CORBA.ConfigURL=file:/${wasProfile}/properties/sas.client.props  -Xbootclasspath/p:${wasRoot}/java/jre/lib/ext/ibmorb.jar;${wasRoot}/java/jre/lib/ext/ibmext.jar -Xms50m -Xmx256m -Dws.ext.dirs=${wasRoot}/java/lib;${wasProfile}/classes;${wasRoot}/classes;${wasRoot}/lib;${wasRoot}/installedChannels;${wasRoot}/lib/ext;${wasRoot}/web/help;${wasRoot}/deploytool/itp/plugins/com.ibm.etools.ejbdeploy/runtime -Dcom.ibm.itp.location=${wasRoot}/bin -Djava.util.logging.configureByServer=true -Dibm.websphere.preload.classes=true -Duser.install.root=${wasProfile} -Dwas.install.root=${wasRoot} -Djava.util.logging.manager=com.ibm.ws.bootstrap.WsLogManager -Ddb2j.system.home=${wasRoot}/cloudscape -Dserver.root=${wasProfile} -Djava.security.auth.login.config=${wasProfile}/properties/wsjaas.conf -Djava.security.policy=${wasProfile}/properties/server.policy -Djava.library.path=${wasRoot}/java/jre/bin;${wasRoot}/bin </vmParameters>
+		<classpathReference>was</classpathReference>
+	</start>
+
+	<stop>
+		<mainClass>com.ibm.ws.bootstrap.WSLauncher</mainClass>
+		<workingDirectory>${wasRoot}</workingDirectory>
+		<programArguments>com.ibm.ws.management.tools.WsServerStop ${wasProfile}/config ${wasCell} ${wasNode} ${wasServer}</programArguments>
+		<vmParameters>-Duser.install.root=${wasProfile} -Dserver.root=${wasProfile} -Dws.ext.dirs=${wasRoot}/java/lib;${wasRoot}/classes;${wasRoot}/lib;${wasRoot}/installedChannels;${wasRoot}/lib/ext;${wasRoot}/web/help;${wasRoot}/deploytool/itp/plugins/com.ibm.etools.ejbdeploy/runtime -Djava.util.logging.manager=com.ibm.ws.bootstrap.WsLogManager -Djava.util.logging.configureByServer=true -Dwas.install.root=${wasRoot}  -Dibm.websphere.preload.classes=true</vmParameters>
+		<classpathReference>was</classpathReference>
+	</stop>
+	
+	<publisher id="org.eclipse.jst.server.generic.antpublisher">
+		<publisherdata>
+			<dataname>build.file</dataname>
+			<datavalue>/serverdef/scripts/websphere.6.x.xml</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.publish.j2ee.web</dataname>
+			<datavalue>deploy.j2ee.web</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.publish.j2ee.ejb</dataname>
+			<datavalue>deploy.j2ee.ejb</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.unpublish.j2ee.web</dataname>
+			<datavalue>undeploy.j2ee.web</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.unpublish.j2ee.ejb</dataname>
+			<datavalue>undeploy.j2ee.ejb</datavalue>
+		</publisherdata>			
+	</publisher>
+
+	<classpath id="was" isLibrary="true">
+	    <archive path="${wasRoot}/properties" />
+	    <archive path="${wasRoot}/lib/bootstrap.jar" />
+        <archive path="${wasRoot}/lib/j2ee.jar" />
+        <archive path="${wasRoot}/lib/lmproxy.jar" />
+        <archive path="${wasRoot}/lib/urlprotocols.jar" />
+	</classpath>
+
+	<classpath id="was.project" isLibrary="false">
+		<archive path="${wasRoot}/lib/j2ee.jar" />
+	</classpath>
+	<jndiConnection>
+		<providerUrl>iiop://${serverAddress}:2001</providerUrl>
+		<initialContextFactory>org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory</initialContextFactory>
+		<jndiProperty>
+			<name></name>
+			<value></value>
+		</jndiProperty>
+	</jndiConnection>
+</tns:ServerRuntime>
