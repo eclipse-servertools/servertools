@@ -389,6 +389,8 @@ public class ResourceManager {
 			return;
 
 		Trace.trace(Trace.RESOURCES, "Deregistering runtime: " + runtime.getName());
+		if (runtime.equals(getDefaultRuntime()))
+			setDefaultRuntime(null);
 
 		((Runtime)runtime).dispose();
 		fireRuntimeEvent(runtime, EVENT_REMOVED);
@@ -620,21 +622,7 @@ public class ResourceManager {
 	public IRuntime[] getRuntimes() {
 		List list = new ArrayList(runtimes);
 		
-		/*int size = list.size();
-		for (int i = 0; i < size - 1; i++) {
-			for (int j = i + 1; j < size; j++) {
-				IRuntime a = (IRuntime) list.get(i);
-				IRuntime b = (IRuntime) list.get(j);
-				if (a.getRuntimeType() != null && b.getRuntimeType() != null &&
-						((RuntimeType)a.getRuntimeType()).getOrder() < ((RuntimeType)b.getRuntimeType()).getOrder()) {
-					Object temp = a;
-					list.set(i, b);
-					list.set(j, temp);
-				}
-			}
-		}*/
-		
-		if (defaultRuntime != null) {
+		if (defaultRuntime != null && list.contains(defaultRuntime)) {
 			list.remove(defaultRuntime);
 			list.add(0, defaultRuntime);
 		}
