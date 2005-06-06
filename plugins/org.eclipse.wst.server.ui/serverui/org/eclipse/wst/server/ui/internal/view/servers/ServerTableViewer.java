@@ -122,14 +122,13 @@ public class ServerTableViewer extends TreeViewer {
 				IModule[] curModule = curModuleServer.module;
 				if (curServer != null &&  curModule != null) {
 					IModule[] curChildModule = curServer.getChildModules(curModule, null);
-					if (curChildModule != null && curChildModule.length > 0) {
+					if (curChildModule != null && curChildModule.length > 0)
 						return true;
-					} else {
-						return false;
-					}
-				} else {
+					
 					return false;
 				}
+				
+				return false;
 			}
 			
 			IServer server = (IServer) element;
