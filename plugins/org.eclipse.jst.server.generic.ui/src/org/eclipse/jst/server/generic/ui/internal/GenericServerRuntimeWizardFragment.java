@@ -111,17 +111,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.ui.wizard.IWizardFragment#exit()
-	 */
-	public void exit() {
-	    try {
-	    	getRuntimeDelegate().getRuntimeWorkingCopy().save(true,new NullProgressMonitor());
-	    }
-	    catch(Exception e){//unhandled
-	    }
-        fRuntimeDelegate=null;
-   }
+
 
 	private String createName()
 	{

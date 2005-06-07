@@ -106,11 +106,6 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
     	getServer().setName(GenericServerUIMessages.bind(GenericServerUIMessages.serverName,getServerTypeDefinitionFor(getServer()).getName()));
     			
     }
-    
-	public void exit(){
-
-	}
-	
 	
     /* (non-Javadoc)
      * @see org.eclipse.jst.server.generic.internal.ui.ServerDefinitionTypeAwareWizardFragment#description()
