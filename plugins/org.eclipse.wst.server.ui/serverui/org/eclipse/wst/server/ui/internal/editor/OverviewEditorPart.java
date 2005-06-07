@@ -27,6 +27,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
@@ -55,7 +56,7 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
  */
 public class OverviewEditorPart extends ServerEditorPart {
 	protected Text serverName;
-	protected Label serverConfigurationName;
+	protected Text serverConfigurationName;
 	protected Text hostname;
 	protected Combo runtimeCombo;
 	protected Button autoPublishDefault;
@@ -214,8 +215,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 				toolkit.createLabel(composite, runtime.getName());
 			else {
 				runtimeCombo = new Combo(composite, SWT.READ_ONLY);
-				GridData data = new GridData(GridData.FILL_HORIZONTAL);
-				runtimeCombo.setLayoutData(data);
+				runtimeCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 				updateRuntimeCombo();
 				
 				int size = runtimes.length;
@@ -269,29 +269,40 @@ public class OverviewEditorPart extends ServerEditorPart {
 			
 			IFolder folder = server.getServerConfiguration();
 			if (folder == null)
-				serverConfigurationName = toolkit.createLabel(composite, Messages.elementUnknownName);
+				serverConfigurationName = toolkit.createText(composite, Messages.elementUnknownName);
 			else
-				serverConfigurationName = toolkit.createLabel(composite, "" + server.getServerConfiguration().getFullPath());
-			GridData data = new GridData(GridData.FILL_HORIZONTAL);
-			serverConfigurationName.setLayoutData(data);
+				serverConfigurationName = toolkit.createText(composite, "" + server.getServerConfiguration().getFullPath());
+			serverConfigurationName.setEditable(false);
+			serverConfigurationName.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			
 			whs.setHelp(serverConfigurationName, ContextIds.EDITOR_CONFIGURATION);
 		}
 		
 		// auto-publish
 		if (server != null) {
-			//Label label = createLabel(toolkit, composite, Messages.serverEditorOverviewServerHostname"));
-			//label.
-			
-			autoPublishDefault = toolkit.createButton(composite, Messages.serverEditorOverviewAutoPublishDefault, SWT.RADIO);
+			Group group = new Group(composite, SWT.NONE);
+			group.setBackground(composite.getBackground());
+			group.setText(Messages.serverEditorOverviewPublishing);
+			layout = new GridLayout();
+			layout.numColumns = 2;
+			layout.marginHeight = 5;
+			layout.marginWidth = 10;
+			layout.verticalSpacing = 5;
+			layout.horizontalSpacing = 15;
+			group.setLayout(layout);
 			GridData data = new GridData(GridData.FILL_HORIZONTAL);
+			data.horizontalSpan = 2;
+			group.setLayoutData(data);
+			
+			autoPublishDefault = toolkit.createButton(group, Messages.serverEditorOverviewAutoPublishDefault, SWT.RADIO);
+			data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalSpan = 2;
 			autoPublishDefault.setLayoutData(data);
 			Server svr = (Server) server;
 			autoPublishDefault.setSelection(svr.getAutoPublishDefault());
 			whs.setHelp(autoPublishDefault, ContextIds.EDITOR_AUTOPUBLISH_DEFAULT);
 			
-			autoPublishOverride = toolkit.createButton(composite, Messages.serverEditorOverviewAutoPublishOverride, SWT.RADIO);
+			autoPublishOverride = toolkit.createButton(group, Messages.serverEditorOverviewAutoPublishOverride, SWT.RADIO);
 			autoPublishOverride.setSelection(!svr.getAutoPublishDefault());
 			whs.setHelp(autoPublishOverride, ContextIds.EDITOR_AUTOPUBLISH_OVERRIDE);
 			
@@ -307,7 +318,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			});
 			
 			//autoPublishTime = toolkit.createText(composite, svr.getAutoPublishTime() + "");
-			autoPublishTime = new Spinner(composite, SWT.BORDER);
+			autoPublishTime = new Spinner(group, SWT.BORDER);
 			autoPublishTime.setMinimum(0);
 			autoPublishTime.setMaximum(120);
 			autoPublishTime.setSelection(svr.getAutoPublishTime());

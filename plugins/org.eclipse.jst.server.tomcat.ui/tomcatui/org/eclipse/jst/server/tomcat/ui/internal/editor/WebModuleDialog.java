@@ -171,7 +171,7 @@ public class WebModuleDialog extends Dialog {
 	
 		// disable document base for project modules
 		if (isProject || (module.getMemento() != null && module.getMemento().length() > 0))
-			docBase.setEnabled(false);
+			docBase.setEditable(false);
 		else {
 			docBase.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
@@ -218,7 +218,7 @@ public class WebModuleDialog extends Dialog {
 		new Label(composite, SWT.NONE).setText("");
 		
 		// auto reload
-		new Label(composite, SWT.NONE).setText(Messages.configurationEditorWebModuleDialogAutoReload);
+		new Label(composite, SWT.NONE).setText("");
 		final Button reloadable = new Button(composite, SWT.CHECK);
 		reloadable.setText(Messages.configurationEditorWebModuleDialogReloadEnabled);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);

@@ -407,6 +407,12 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 		try {
 			TreeItem item = mimeTypes.getSelection()[0];
 			Integer in = (Integer) item.getData();
+			if (in == null) {
+				index = -1;
+				remove.setEnabled(false);
+				edit.setEnabled(false);
+				return;
+			}
 			index = in.intValue();
 			
 			remove.setEnabled(true);
