@@ -48,7 +48,8 @@ public class ServerTypeDefinitionServerDecorator extends
 	}
 
 	public boolean validate() {
-		fServer.setServerInstanceProperties(getValues());
+		if(fServer!=null)
+			fServer.setServerInstanceProperties(getValues());
 		return false;
 	}
 
