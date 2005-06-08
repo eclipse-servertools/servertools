@@ -23,3 +23,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.runtime,
  org.eclipse.core.resources
 Eclipse-AutoStart: true
+Export-Package: org.eclipse.jst.server.websphere.core

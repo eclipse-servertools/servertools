@@ -4,11 +4,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://eclipse.org/jst/server/generic/ServerTypeDefinition ServerTypeDefinitionSchema.xsd "
 	name="IBM WebSphere 6" version="v6.0">
-	<property id="wasRoot"
+	<property id="wasHome"
 		label="IBM WebSphere Installation Directory:"
 		type="directory"
 		context="runtime"
-		default="/your_server_root/WAS6.0" />
+		default="/your_server_root/was-6.0" />
 
 	<property id="port"
 		label="Port:"
@@ -20,7 +20,7 @@
 		label="Server Profile Directory:"
 		type="directory"
 		context="server"
-		default="/your_server_root/WAS6.0/profiles/default" />
+		default="/your_server_root/was-6.0/profiles/default" />
 
 	<property id="wasCell"
 		label="Cell:"
@@ -32,7 +32,7 @@
 		label="Node:"
 		type="string"
 		context="server"
-		default="PEPE1" />
+		default="PEPENode01" />
 	<property id="wasServer"
 		label="Server:"
 		type="string"
@@ -47,13 +47,13 @@
 
 	<module>
 		<type>j2ee.web</type>
-		<publishDir>${wasRoot}</publishDir>
+		<publishDir>${wasHome}</publishDir>
 		<publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
 	</module>
 
 	<module>
 		<type>j2ee.ejb</type>
-		<publishDir>${wasRoot}</publishDir>
+		<publishDir>${wasHome}</publishDir>
 		<publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
 	</module>
 
@@ -66,15 +66,15 @@
 		<mainClass>com.ibm.ws.bootstrap.WSLauncher</mainClass>
 		<workingDirectory>${wasProfile}</workingDirectory>
 		<programArguments>com.ibm.ws.runtime.WsServer ${wasProfile}/config ${wasCell} ${wasNode} ${wasServer}</programArguments>
-		<vmParameters>-Dws.output.encoding=console -Dcom.ibm.CORBA.ConfigURL=file:/${wasProfile}/properties/sas.client.props  -Xbootclasspath/p:${wasRoot}/java/jre/lib/ext/ibmorb.jar;${wasRoot}/java/jre/lib/ext/ibmext.jar -Xms50m -Xmx256m -Dws.ext.dirs=${wasRoot}/java/lib;${wasProfile}/classes;${wasRoot}/classes;${wasRoot}/lib;${wasRoot}/installedChannels;${wasRoot}/lib/ext;${wasRoot}/web/help;${wasRoot}/deploytool/itp/plugins/com.ibm.etools.ejbdeploy/runtime -Dcom.ibm.itp.location=${wasRoot}/bin -Djava.util.logging.configureByServer=true -Dibm.websphere.preload.classes=true -Duser.install.root=${wasProfile} -Dwas.install.root=${wasRoot} -Djava.util.logging.manager=com.ibm.ws.bootstrap.WsLogManager -Ddb2j.system.home=${wasRoot}/cloudscape -Dserver.root=${wasProfile} -Djava.security.auth.login.config=${wasProfile}/properties/wsjaas.conf -Djava.security.policy=${wasProfile}/properties/server.policy -Djava.library.path=${wasRoot}/java/jre/bin;${wasRoot}/bin </vmParameters>
+		<vmParameters>-Duser.install.root=${wasProfile}  -Dserver.root=${wasProfile}  -Dwas.install.root=${wasHome} -Dws.ext.dirs=${wasHome}/java/lib;${wasHome}/classes;${wasHome}/lib;${wasHome}/installedChannels;${wasHome}/lib/ext;${wasHome}/web/help;${wasHome}/deploytool/itp/plugins/com.ibm.etools.ejbdeploy/runtime  -Djava.library.path=${wasHome}/java/bin;.;C:/WINDOWS/System32;C:/WINDOWS;${wasHome}/bin;${wasHome}/java/bin;${wasHome}/java/jre/bin -Xbootclasspath/p:${wasHome}/java/jre/lib/ext/ibmorb.jar;${wasHome}/java/jre/lib/ext/ibmext.jar -Xms50m -Xmx256m -Dcom.ibm.CORBA.ConfigURL=file:${wasProfile}/properties/sas.client.props -Dcom.ibm.SOAP.ConfigURL=file:${wasProfile}/properties/soap.client.props   -Djava.util.logging.manager=com.ibm.ws.bootstrap.WsLogManager -Djava.util.logging.configureByServer=true -Dibm.websphere.preload.classes=true  -Djava.library.path=${wasHome}/java/bin;${wasHome}/bin;${wasHome}/java/bin;${wasHome}/java/jre/bin</vmParameters>
 		<classpathReference>was</classpathReference>
 	</start>
 
 	<stop>
 		<mainClass>com.ibm.ws.bootstrap.WSLauncher</mainClass>
-		<workingDirectory>${wasRoot}</workingDirectory>
+		<workingDirectory>${wasHome}</workingDirectory>
 		<programArguments>com.ibm.ws.management.tools.WsServerStop ${wasProfile}/config ${wasCell} ${wasNode} ${wasServer}</programArguments>
-		<vmParameters>-Duser.install.root=${wasProfile} -Dserver.root=${wasProfile} -Dws.ext.dirs=${wasRoot}/java/lib;${wasRoot}/classes;${wasRoot}/lib;${wasRoot}/installedChannels;${wasRoot}/lib/ext;${wasRoot}/web/help;${wasRoot}/deploytool/itp/plugins/com.ibm.etools.ejbdeploy/runtime -Djava.util.logging.manager=com.ibm.ws.bootstrap.WsLogManager -Djava.util.logging.configureByServer=true -Dwas.install.root=${wasRoot}  -Dibm.websphere.preload.classes=true</vmParameters>
+		<vmParameters>-Duser.install.root=${wasProfile}  -Dserver.root=${wasProfile}  -Dwas.install.root=${wasHome} -Dws.ext.dirs=${wasHome}/java/lib;${wasHome}/classes;${wasHome}/lib;${wasHome}/installedChannels;${wasHome}/lib/ext;${wasHome}/web/help;${wasHome}/deploytool/itp/plugins/com.ibm.etools.ejbdeploy/runtime  -Djava.library.path=${wasHome}/java/bin;.;C:/WINDOWS/System32;C:/WINDOWS;${wasHome}/bin;${wasHome}/java/bin;${wasHome}/java/jre/bin -Xbootclasspath/p:${wasHome}/java/jre/lib/ext/ibmorb.jar;${wasHome}/java/jre/lib/ext/ibmext.jar -Xms50m -Xmx256m -Dcom.ibm.CORBA.ConfigURL=file:${wasProfile}/properties/sas.client.props -Dcom.ibm.SOAP.ConfigURL=file:${wasProfile}/properties/soap.client.props   -Djava.util.logging.manager=com.ibm.ws.bootstrap.WsLogManager -Djava.util.logging.configureByServer=true -Dibm.websphere.preload.classes=true  -Djava.library.path=${wasHome}/java/bin;${wasHome}/bin;${wasHome}/java/bin;${wasHome}/java/jre/bin</vmParameters>
 		<classpathReference>was</classpathReference>
 	</stop>
 	
@@ -102,15 +102,15 @@
 	</publisher>
 
 	<classpath id="was" isLibrary="true">
-	    <archive path="${wasRoot}/properties" />
-	    <archive path="${wasRoot}/lib/bootstrap.jar" />
-        <archive path="${wasRoot}/lib/j2ee.jar" />
-        <archive path="${wasRoot}/lib/lmproxy.jar" />
-        <archive path="${wasRoot}/lib/urlprotocols.jar" />
+	    <archive path="${wasHome}/properties" />
+	    <archive path="${wasHome}/lib/bootstrap.jar" />
+        <archive path="${wasHome}/lib/j2ee.jar" />
+        <archive path="${wasHome}/lib/lmproxy.jar" />
+        <archive path="${wasHome}/lib/urlprotocols.jar" />
 	</classpath>
 
 	<classpath id="was.project" isLibrary="false">
-		<archive path="${wasRoot}/lib/j2ee.jar" />
+		<archive path="${wasHome}/lib/j2ee.jar" />
 	</classpath>
 	<jndiConnection>
 		<providerUrl>iiop://${serverAddress}:2001</providerUrl>
