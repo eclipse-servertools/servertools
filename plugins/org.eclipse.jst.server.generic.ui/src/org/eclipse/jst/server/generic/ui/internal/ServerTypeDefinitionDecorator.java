@@ -160,10 +160,10 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
     	fButton.addSelectionListener(new SelectionListener() {
     		public void widgetSelected(SelectionEvent e) {
     			FileDialog dlg = new FileDialog(defPanel.getShell());
-    			dlg.setFileName(text.getText());
+    			dlg.setFileName(text.getText().replace('\\','/'));
     			String res = dlg.open();
     			if (res != null) {
-    				text.setText(res);
+    				text.setText(res.replace('\\','/'));
 
     			}
     		}
@@ -195,10 +195,10 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
     	fButton.addSelectionListener(new SelectionListener() {
     		public void widgetSelected(SelectionEvent e) {
     			DirectoryDialog dlg = new DirectoryDialog(parent.getShell());
-    			dlg.setFilterPath(text.getText());
+    			dlg.setFilterPath(text.getText().replace('\\','/'));
     			String res = dlg.open();
     			if (res != null) {
-    				text.setText(res);
+    				text.setText(res.replace('\\','/'));
 
     			}
     		}
@@ -208,7 +208,6 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
     		}
     
     	});
-    
     	return text;
     }
     private Text createLabeledText(String title, String value,

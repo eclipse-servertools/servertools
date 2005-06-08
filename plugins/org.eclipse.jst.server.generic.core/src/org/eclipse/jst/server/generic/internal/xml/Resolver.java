@@ -74,6 +74,8 @@ public class Resolver {
 			String value = element.getDefault();
 			if(fPropertyValues != null && fPropertyValues.containsKey(element.getId()))
 			    value=(String)fPropertyValues.get(element.getId());
+			if("directory".equals(element.getType()) || "file".equals(element.getType()))
+				value = value.replace('\\','/');
 			 cache.put(element.getId(), value);
 		}
 		//String vmPath = install.getInstallLocation().getCanonicalPath();
