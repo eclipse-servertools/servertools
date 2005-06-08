@@ -14,6 +14,7 @@ import java.io.File;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
@@ -40,8 +41,7 @@ public class GetDelegateTestCase extends AbstractGetDelegateTestCase {
 		runtimeCopy.setLocation(new Path(runtimeTypeLocation));
 		runtimeCopy.setReadOnly(false);
 		IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
-		ITomcatRuntimeWorkingCopy rwc = (ITomcatRuntimeWorkingCopy) runtimeCopy
-				.getAdapter(ITomcatRuntimeWorkingCopy.class);
+		ITomcatRuntimeWorkingCopy rwc = (ITomcatRuntimeWorkingCopy) runtimeCopy.loadAdapter(ITomcatRuntimeWorkingCopy.class, new NullProgressMonitor());
 		rwc.setVMInstall(vmInstall);
 		runtimeCopy.save(false, null);
 		return runtimeCopy;
