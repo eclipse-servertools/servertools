@@ -46,19 +46,15 @@ public class TasksWizardFragment extends WizardFragment {
 		private static final String DEFAULT = "default:";
 		
 		public boolean isSelected() {
-			try {
-				Boolean b = (Boolean) selectedTaskMap.get(getId());
-				return b.booleanValue();
-			} catch (Exception e) {
-				// ignore
-			}
+			if (id == null)
+				return false;
 			
-			try {
-				Boolean b = (Boolean) selectedTaskMap.get(DEFAULT + getId());
-				return b.booleanValue();
-			} catch (Exception e) {
-				// ignore
-			}
+			if (selectedTaskMap.containsKey(id))
+				return ((Boolean) selectedTaskMap.get(id)).booleanValue();
+			
+			if (selectedTaskMap.containsKey(DEFAULT + id))
+				return ((Boolean) selectedTaskMap.get(DEFAULT + id)).booleanValue();
+
 			return false;
 		}
 		
