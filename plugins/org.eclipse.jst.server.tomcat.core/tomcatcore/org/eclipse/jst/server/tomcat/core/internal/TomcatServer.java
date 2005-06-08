@@ -58,8 +58,12 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	public TomcatConfiguration getTomcatConfiguration() throws CoreException {
 		if (configuration == null) {
 			IFolder folder = getServer().getServerConfiguration();
-			if (folder == null || !folder.exists())
-				throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorNoConfiguration, folder.getFullPath().toOSString()), null));
+			if (folder == null || !folder.exists()) {
+				String path = null;
+				if (folder != null)
+					path = folder.getFullPath().toOSString();
+				throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorNoConfiguration, path), null));
+			}
 			
 			String id = getServer().getServerType().getId();
 			if (id.indexOf("32") > 0)
