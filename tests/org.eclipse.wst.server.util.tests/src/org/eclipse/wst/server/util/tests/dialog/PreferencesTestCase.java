@@ -25,6 +25,11 @@ public class PreferencesTestCase extends TestCase {
 		super(name);
 	}
 	
+	public void testInternetPreferencePage() {
+		Dialog dialog = UITestHelper.getPreferenceDialog("org.eclipse.internet");
+		UITestHelper.assertDialog(dialog);
+	}
+	
 	public void testAudioPreferencePage() {
 		Dialog dialog = UITestHelper.getPreferenceDialog("org.eclipse.wst.audio.preferencePage");
 		UITestHelper.assertDialog(dialog);
