@@ -42,6 +42,9 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 		try {
 			comp = fragment.createComposite(parentComp, this);
 		} catch (Exception e) {
+			// ignore 
+		}
+		if (comp == null) {
 			comp = new Composite(parentComp, SWT.NONE);
 			comp.setLayout(new FillLayout(SWT.VERTICAL));
 			Label label = new Label(comp, SWT.NONE);

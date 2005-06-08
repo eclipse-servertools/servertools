@@ -281,6 +281,8 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	 * @param listener java.beans.PropertyChangeListener
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		if (listener == null)
+			throw new IllegalArgumentException("Listener cannot be null");
 		wch.addPropertyChangeListener(listener);
 	}
 	
@@ -290,6 +292,8 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	 * @param listener java.beans.PropertyChangeListener
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		if (listener == null)
+			throw new IllegalArgumentException("Listener cannot be null");
 		wch.removePropertyChangeListener(listener);
 	}
 	
@@ -349,6 +353,8 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	 * @see org.eclipse.wst.server.core.IServer#modifyModule(org.eclipse.wst.server.core.model.IModule)
 	 */
 	public void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
+		if (add == null && remove == null)
+			throw new IllegalArgumentException("Add and remove cannot both be null");
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
 			monitor.subTask(Messages.taskModifyModules);

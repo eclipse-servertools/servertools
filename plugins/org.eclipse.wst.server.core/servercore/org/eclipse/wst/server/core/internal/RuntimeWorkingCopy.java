@@ -323,6 +323,8 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 	 * @param listener java.beans.PropertyChangeListener
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		if (listener == null)
+			throw new IllegalArgumentException("Listener cannot be null");
 		wch.addPropertyChangeListener(listener);
 	}
 	
@@ -332,6 +334,8 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 	 * @param listener java.beans.PropertyChangeListener
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		if (listener == null)
+			throw new IllegalArgumentException("Listener cannot be null");
 		wch.removePropertyChangeListener(listener);
 	}
 	

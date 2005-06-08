@@ -300,6 +300,8 @@ public class Server extends Base implements IServer {
 	 * @param listener org.eclipse.wst.server.model.IServerListener
 	 */
 	public void addServerListener(IServerListener listener) {
+		if (listener == null)
+			throw new IllegalArgumentException("Module cannot be null");
 		Trace.trace(Trace.LISTENERS, "Adding server listener " + listener + " to " + this);
 		getServerNotificationManager().addListener(listener);
 	}
@@ -311,6 +313,8 @@ public class Server extends Base implements IServer {
 	 * @param eventMask to limit listening to certain types of events
 	 */
 	public void addServerListener(IServerListener listener, int eventMask) {
+		if (listener == null)
+			throw new IllegalArgumentException("Module cannot be null");
 		Trace.trace(Trace.LISTENERS, "Adding server listener " + listener + " to " + this + " with eventMask " + eventMask);
 		getServerNotificationManager().addListener(listener, eventMask);
 	}
@@ -321,6 +325,8 @@ public class Server extends Base implements IServer {
 	 * @param listener org.eclipse.wst.server.model.IServerListener
 	 */
 	public void removeServerListener(IServerListener listener) {
+		if (listener == null)
+			throw new IllegalArgumentException("Module cannot be null");
 		Trace.trace(Trace.LISTENERS, "Removing server listener " + listener + " from " + this);
 		getServerNotificationManager().removeListener(listener);
 	}
@@ -372,18 +378,24 @@ public class Server extends Base implements IServer {
 	}
 
 	public void setModuleState(IModule[] module, int state) {
+		if (module == null)
+			throw new IllegalArgumentException("Module cannot be null");
 		Integer in = new Integer(state);
 		moduleState.put(getKey(module), in);
 		fireServerModuleStateChangeEvent(module);
 	}
 	
 	public void setModulePublishState(IModule[] module, int state) {
+		if (module == null)
+			throw new IllegalArgumentException("Module cannot be null");
 		Integer in = new Integer(state);
 		modulePublishState.put(getKey(module), in);
 		//fireServerModuleStateChangeEvent(module);
 	}
 
 	public void setModuleRestartState(IModule[] module, boolean r) {
+		if (module == null)
+			throw new IllegalArgumentException("Module cannot be null");
 		Boolean b = new Boolean(r);
 		moduleState.put(getKey(module), b);
 		//fireServerModuleStateChangeEvent(module);
@@ -498,6 +510,8 @@ public class Server extends Base implements IServer {
 	 * @see #removePublishListener(IPublishListener)
 	 */
 	public void addPublishListener(IPublishListener listener) {
+		if (listener == null)
+			throw new IllegalArgumentException("Listener cannot be null");
 		Trace.trace(Trace.LISTENERS, "Adding publish listener " + listener + " to " + this);
 
 		if (publishListeners == null)
@@ -513,6 +527,8 @@ public class Server extends Base implements IServer {
 	 * @see #addPublishListener(IPublishListener)
 	 */
 	public void removePublishListener(IPublishListener listener) {
+		if (listener == null)
+			throw new IllegalArgumentException("Listener cannot be null");
 		Trace.trace(Trace.LISTENERS, "Removing publish listener " + listener + " from " + this);
 
 		if (publishListeners != null)
@@ -761,6 +777,8 @@ public class Server extends Base implements IServer {
 	 * @see ServerBehaviourDelegate.getPublishedResources(IModule[], IModule)
 	 */
 	public IModuleResource[] getPublishedResources(IModule[] module) {
+		if (module == null)
+			throw new IllegalArgumentException("Module cannot be null");
 		return getServerPublishInfo().getModulePublishInfo(module).getResources();
 	}
 
@@ -771,6 +789,8 @@ public class Server extends Base implements IServer {
 	 * @see ServerBehaviourDelegate.getPublishedResourceDelta(IModule[], IModule)
 	 */
 	public IModuleResourceDelta[] getPublishedResourceDelta(IModule[] module) {
+		if (module == null)
+			throw new IllegalArgumentException("Module cannot be null");
 		return getServerPublishInfo().getDelta(module);
 	}
 
@@ -1644,6 +1664,8 @@ public class Server extends Base implements IServer {
 	 * @see org.eclipse.wst.server.core.IServerConfiguration#canModifyModule(org.eclipse.wst.server.core.model.IModule)
 	 */
 	public IStatus canModifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) {
+		if (add == null && remove == null)
+			throw new IllegalArgumentException("Add and remove cannot both be null");
 		try {
 			return getDelegate(monitor).canModifyModules(add, remove);
 		} catch (Exception e) {
@@ -1695,6 +1717,8 @@ public class Server extends Base implements IServer {
 	 * @see org.eclipse.wst.server.core.IServer#getModuleState()
 	 */
 	public int getModuleState(IModule[] module) {
+		if (module == null)
+			throw new IllegalArgumentException("Module cannot be null");
 		try {
 			Integer in = (Integer) moduleState.get(getKey(module));
 			if (in != null)
@@ -1709,6 +1733,8 @@ public class Server extends Base implements IServer {
 	 * @see org.eclipse.wst.server.core.IServer#getModuleState()
 	 */
 	public int getModulePublishState(IModule[] module) {
+		if (module == null)
+			throw new IllegalArgumentException("Module cannot be null");
 		try {
 			Integer in = (Integer) modulePublishState.get(getKey(module));
 			if (in != null)
@@ -1723,6 +1749,8 @@ public class Server extends Base implements IServer {
 	 * @see IServer#getChildModule(IModule[])
 	 */
 	public IModule[] getChildModules(IModule[] module, IProgressMonitor monitor) {
+		if (module == null)
+			throw new IllegalArgumentException("Module cannot be null");
 		try {
 			return getDelegate(monitor).getChildModules(module);
 		} catch (Exception e) {
@@ -1735,6 +1763,8 @@ public class Server extends Base implements IServer {
 	 * @see IServer#getRootModules(IModule)
 	 */
 	public IModule[] getRootModules(IModule module, IProgressMonitor monitor) throws CoreException {
+		if (module == null)
+			throw new IllegalArgumentException("Module cannot be null");
 		try {
 			return getDelegate(monitor).getRootModules(module);
 		} catch (CoreException se) {
@@ -1746,18 +1776,6 @@ public class Server extends Base implements IServer {
 		}
 	}
 	
-	/*
-	 * 
-	 */
-	/*public boolean hasRuntime() {
-		try {
-			return getDelegate().requiresRuntime();
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate requiresRuntime() " + toString(), e);
-			return false;
-		}
-	}*/
-	
 	/**
 	 * Returns whether the given module can be restarted.
 	 *
@@ -1767,6 +1785,8 @@ public class Server extends Base implements IServer {
 	 *    restarted, and <code>false</code> otherwise
 	 */
 	public IStatus canControlModule(IModule[] module, IProgressMonitor monitor) {
+		if (module == null)
+			throw new IllegalArgumentException("Module cannot be null");
 		try {
 			boolean b = getBehaviourDelegate(monitor).canControlModule(module);
 			if (b)
@@ -1786,6 +1806,8 @@ public class Server extends Base implements IServer {
 	 * @return boolean
 	 */
 	public boolean getModuleRestartState(IModule[] module) {
+		if (module == null)
+			throw new IllegalArgumentException("Module cannot be null");
 		try {
 			Boolean b = (Boolean) moduleRestartState.get(getKey(module));
 			if (b != null)
@@ -1800,6 +1822,8 @@ public class Server extends Base implements IServer {
 	 * @see IServer#startModule(IModule[], IOperationListener)
 	 */
 	public void startModule(IModule[] module, IOperationListener listener) {
+		if (module == null)
+			throw new IllegalArgumentException("Module cannot be null");
 		try {
 			getBehaviourDelegate(null).startModule(module, null);
 		} catch (Exception e) {
@@ -1811,6 +1835,8 @@ public class Server extends Base implements IServer {
 	 * @see IServer#stopModule(IModule[], IOperationListener)
 	 */
 	public void stopModule(IModule[] module, IOperationListener listener) {
+		if (module == null)
+			throw new IllegalArgumentException("Module cannot be null");
 		try {
 			getBehaviourDelegate(null).stopModule(module, null);
 		} catch (Exception e) {
@@ -1822,6 +1848,8 @@ public class Server extends Base implements IServer {
 	 * @see IServer#restartModule(IModule[], IOperationListener, IProgressMonitor)
 	 */
 	public void restartModule(IModule[] module, IOperationListener listener) {
+		if (module == null)
+			throw new IllegalArgumentException("Module cannot be null");
 		try {
 			getBehaviourDelegate(null).stopModule(module, null);
 			getBehaviourDelegate(null).startModule(module, null);
@@ -1853,6 +1881,8 @@ public class Server extends Base implements IServer {
 	 *    reporting and cancellation are not desired
 	 */
 	public void visit(IModuleVisitor visitor, IProgressMonitor monitor) {
+		if (visitor == null)
+			throw new IllegalArgumentException("Visitor cannot be null");
 		IModule[] modules2 = getModules();
 		if (modules2 != null) { 
 			int size = modules2.length;
@@ -1908,11 +1938,15 @@ public class Server extends Base implements IServer {
 	}
 	
 	public void setModuleStatus(IModule[] module, IStatus status) {
+		if (module == null)
+			throw new IllegalArgumentException("Module cannot be null");
 		moduleStatus.put(getKey(module), status);
 		//fireServerModuleStateChangeEvent(module);
 	}
 	
 	public IStatus getModuleStatus(IModule[] module) {
+		if (module == null)
+			throw new IllegalArgumentException("Module cannot be null");
 		try {
 			return (IStatus) moduleStatus.get(getKey(module));
 		} catch (Exception e) {

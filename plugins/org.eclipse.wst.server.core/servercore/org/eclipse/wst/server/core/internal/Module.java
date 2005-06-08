@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.internal;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -30,9 +27,6 @@ public class Module implements IModule {
 	protected String version;
 	protected IProject project;
 	protected ModuleDelegate delegate;
-
-	// change listeners
-	private transient List listeners;
 
 	/**
 	 * Module constructor.
@@ -175,63 +169,6 @@ public class Module implements IModule {
 			Trace.trace(Trace.SEVERE, "Error calling delegate validate() " + toString(), e);
 			return null;
 		}
-	}
-
-	/**
-	 * Add a listener for child modules that are added/removed from this
-	 * module.
-	 * Has no effect if an identical listener is already registered.
-	 * 
-	 * @param listener a module listener
-	 */
-	public void addModuleListener(IModuleListener listener) {
-		Trace.trace(Trace.FINEST, "Adding module listener " + listener + " to " + this);
-	
-		if (listeners == null)
-			listeners = new ArrayList();
-		else if (listeners.contains(listener))
-			return;
-		listeners.add(listener);
-	}
-
-	/**
-	 * Remove a listener for child modules that are added/removed from this
-	 * module.
-	 * Has no effect if the listener is not registered.
-	 * 
-	 * @param listener a module listener
-	 */
-	public void removeModuleListener(IModuleListener listener) {
-		Trace.trace(Trace.FINEST, "Removing module listener " + listener + " from " + this);
-	
-		if (listeners != null)
-			listeners.remove(listener);
-	}
-
-	/**
-	 * Fire a module change event.
-	 */
-	protected void fireModuleChangeEvent(boolean isChange, IModule[] added, IModule[] changed, IModule[] removed) {
-		Trace.trace(Trace.FINEST, "->- Firing module change event: " + getName() + " (" + isChange + ") ->-");
-	
-		if (listeners == null || listeners.isEmpty())
-			return;
-	
-		int size = listeners.size();
-		IModuleListener[] dcl = new IModuleListener[size];
-		listeners.toArray(dcl);
-		
-		ModuleEvent event = new ModuleEvent(this, isChange, added, changed, removed);
-	
-		for (int i = 0; i < size; i++) {
-			try {
-				Trace.trace(Trace.FINEST, "  Firing module change event to: " + dcl[i]);
-				dcl[i].moduleChanged(event);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing module change event", e);
-			}
-		}
-		Trace.trace(Trace.FINEST, "-<- Done firing module change event -<-");
 	}
 
 	/**
