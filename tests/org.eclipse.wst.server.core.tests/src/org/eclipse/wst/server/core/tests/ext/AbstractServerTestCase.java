@@ -10,6 +10,9 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.tests.ext;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 
@@ -37,6 +40,18 @@ public abstract class AbstractServerTestCase extends TestCase {
 	protected static IServerAttributes serverAttr;
 	protected static IServerWorkingCopy serverWC;
 	
+	private static final PropertyChangeListener pcl = new PropertyChangeListener() {
+		public void propertyChange(PropertyChangeEvent arg0) {
+			// ignore
+		}
+	};
+
+	private static final IServerListener sl = new IServerListener() {
+		public void serverChanged(ServerEvent event) {
+			// ignore
+		}
+	};
+
 	public static Test suite() {
 		return new OrderedTestSuite(AbstractServerTestCase.class, "AbstractServerTestCase");
 	}
@@ -170,19 +185,31 @@ public abstract class AbstractServerTestCase extends TestCase {
 	public void test0019GetServerRestartState() {
 		server.getServerRestartState();
 	}
-	
+
 	public void test0020GetModuleState() {
-		server.getModuleState(null);
+		try {
+			server.getModuleState(null);
+		} catch (Exception e) {
+			// ignore
+		}
 	}
-	
+
 	public void test0021GetModulePublishState() {
-		server.getModulePublishState(null);
+		try {
+			server.getModulePublishState(null);
+		} catch (Exception e) {
+			// ignore
+		}
 	}
-	
+
 	public void test0022GetModuleRestartState() {
-		server.getModuleRestartState(null);
+		try {
+			server.getModuleRestartState(null);
+		} catch (Exception e) {
+			// ignore
+		}
 	}
-	
+
 	public void test0023GetMode() {
 		server.getMode();
 	}
@@ -195,22 +222,26 @@ public abstract class AbstractServerTestCase extends TestCase {
 		server.canRestart("run");
 	}
 	
-	public void test0026CanRestartModule() {
-		server.canControlModule(null, null);
+	public void test0026CanControlModule() {
+		try {
+			server.canControlModule(null, null);
+		} catch (Exception e) {
+			// ignore
+		}
 	}
-	
+
 	public void test0027AddServerListener() {
-		server.addServerListener(null);
+		server.addServerListener(sl);
 	}
-	
+
 	public void test0028AddServerListener() {
-		server.addServerListener(null, 0);
+		server.addServerListener(sl, 0);
 	}
-	
+
 	public void test0029RemoveServerListener() {
-		server.removeServerListener(null);
+		server.removeServerListener(sl);
 	}
-	
+
 	public void test0030GetServerAttributes() {
 		serverAttr = server;
 	}
@@ -242,27 +273,35 @@ public abstract class AbstractServerTestCase extends TestCase {
 	public void test0037GetServerType() {
 		serverAttr.getServerType();
 	}
-	
+
 	public void test0038GetServerConfiguration() {
 		serverAttr.getServerConfiguration();
 	}
-	
+
 	public void test0039CreateWorkingCopy() {
 		serverAttr.createWorkingCopy();
 	}
-	
+
 	public void test0040GetModules() {
 		serverAttr.getModules();
 	}
-	
+
 	public void test0041CanModifyModules() {
-		serverAttr.canModifyModules(null, null, null);
+		try {
+			serverAttr.canModifyModules(null, null, null);
+		} catch (Exception e) {
+			// ignore
+		}
 	}
-	
+
 	public void test0042GetChildModules() {
-		serverAttr.getChildModules(null, null);
+		try {
+			serverAttr.getChildModules(null, null);
+		} catch (Exception e) {
+			// ignore
+		}
 	}
-	
+
 	public void test0043GetRootModules() {
 		try {
 			serverAttr.getRootModules(null, null);
@@ -309,11 +348,11 @@ public abstract class AbstractServerTestCase extends TestCase {
 	}
 	
 	public void test0052AddPropertyChangeListener() {
-		serverWC.addPropertyChangeListener(null);
+		serverWC.addPropertyChangeListener(pcl);
 	}
 	
 	public void test0053RemovePropertyChangeListener() {
-		serverWC.removePropertyChangeListener(null);
+		serverWC.removePropertyChangeListener(pcl);
 	}
 	
 	public void test0054GetOriginal() {

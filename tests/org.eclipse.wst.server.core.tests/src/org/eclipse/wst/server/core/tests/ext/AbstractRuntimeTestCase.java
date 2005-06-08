@@ -10,6 +10,9 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.tests.ext;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 
@@ -35,6 +38,12 @@ public abstract class AbstractRuntimeTestCase extends TestCase {
 
 	protected static IRuntime runtime;
 	protected static IRuntimeWorkingCopy runtimeWC;
+	
+	private static final PropertyChangeListener pcl = new PropertyChangeListener() {
+		public void propertyChange(PropertyChangeEvent arg0) {
+			// ignore
+		}
+	};
 
 	public static Test suite() {
 		return new OrderedTestSuite(AbstractRuntimeTestCase.class, "AbstractRuntimeTestCase");
@@ -129,37 +138,37 @@ public abstract class AbstractRuntimeTestCase extends TestCase {
 	public void test0015IsStub() {
 		runtime.isStub();
 	}
-	
+
 	public void test0016CreateWorkingCopy() {
 		runtimeWC = runtime.createWorkingCopy();
 	}
-	
+
 	public void test0017IsDirty() {
 		assertFalse(runtimeWC.isDirty());
 	}
-	
+
 	public void test0018SetReadOnly() {
 		runtimeWC.setReadOnly(true);
 		runtimeWC.setReadOnly(false);
 	}
-	
+
 	public void test0019SetStub() {
 		runtimeWC.setStub(true);
 		runtimeWC.setStub(false);
 	}
-	
+
 	public void test0019IsDirty() {
 		assertTrue(runtimeWC.isDirty());
 	}
-	
+
 	public void test0020AddPropertyChangeListener() {
-		runtimeWC.addPropertyChangeListener(null);
+		runtimeWC.addPropertyChangeListener(pcl);
 	}
-	
+
 	public void test0020RemovePropertyChangeListener() {
-		runtimeWC.removePropertyChangeListener(null);
+		runtimeWC.removePropertyChangeListener(pcl);
 	}
-	
+
 	public void test0021Clear() {
 		runtimeWC = null;
 	}
