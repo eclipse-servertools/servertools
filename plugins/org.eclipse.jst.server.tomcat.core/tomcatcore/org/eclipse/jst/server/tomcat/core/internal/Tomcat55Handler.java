@@ -25,8 +25,7 @@ public class Tomcat55Handler extends Tomcat50Handler {
 		if (installPath == null)
 			return false;
 
-		String s = installPath.lastSegment();
-		if (s != null && s.startsWith("jakarta-tomcat-") && !s.startsWith("jakarta-tomcat-5.5"))
+		if (!TomcatPlugin.verifyTomcatVersionFromPath(installPath, TomcatPlugin.TOMCAT_55))
 			return false;
 		return TomcatPlugin.verifyInstallPath(installPath, TomcatPlugin.TOMCAT_55);
 	}

@@ -9,6 +9,9 @@
  *    IBM Corporation - Initial API and implementation
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 /**
  * Helper class to route trace output.
  */
@@ -18,6 +21,14 @@ public class Trace {
 	public static byte SEVERE = 2;
 	public static byte FINEST = 3;
 	public static byte FINER = 4;
+	
+	private static final String[] levelNames = new String[] {
+		"CONFIG   ", "WARNING  ", "SEVERE   ", "FINER    ", "FINEST   "};
+	private static final String spacer = "                                   ";
+	
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm.ss.SSS");
+	
+	protected static int pluginLength = -1;
 
 	/**
 	 * Trace constructor comment.
@@ -47,7 +58,40 @@ public class Trace {
 		if (!TomcatPlugin.getInstance().isDebugging())
 			return;
 
-		System.out.println(TomcatPlugin.PLUGIN_ID + " " + s);
+		/*System.out.println(TomcatPlugin.PLUGIN_ID + " " + s);
+		if (t != null)
+			t.printStackTrace();*/
+		trace(TomcatPlugin.PLUGIN_ID, level, s, t);
+	}
+
+	/**
+	 * Trace the given message and exception.
+	 *
+	 * @param level a trace level
+	 * @param s a message
+	 * @param t a throwable
+	 */
+	private static void trace(String pluginId, int level, String s, Throwable t) {
+		if (pluginId == null || s == null)
+			return;
+
+		if (!TomcatPlugin.getInstance().isDebugging())
+			return;
+		
+		StringBuffer sb = new StringBuffer(pluginId);
+		if (pluginId.length() > pluginLength)
+			pluginLength = pluginId.length();
+		else if (pluginId.length() < pluginLength)
+			sb.append(spacer.substring(0, pluginLength - pluginId.length()));
+		sb.append(" ");
+		sb.append(levelNames[level]);
+		sb.append(" ");
+		sb.append(sdf.format(new Date()));
+		sb.append(" ");
+		sb.append(s);
+		//Platform.getDebugOption(ServerCore.PLUGIN_ID + "/" + "resources");
+
+		System.out.println(sb.toString());
 		if (t != null)
 			t.printStackTrace();
 	}

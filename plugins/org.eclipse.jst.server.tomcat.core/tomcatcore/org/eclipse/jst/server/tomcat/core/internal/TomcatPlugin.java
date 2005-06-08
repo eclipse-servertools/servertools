@@ -30,20 +30,20 @@ public class TomcatPlugin extends Plugin {
 	protected static TomcatPlugin singleton;
 
 	public static final String PLUGIN_ID = "org.eclipse.jst.server.tomcat.core";
-	
+
 	public static final String TOMCAT_32 = "org.eclipse.jst.server.tomcat.32";
 	public static final String TOMCAT_40 = "org.eclipse.jst.server.tomcat.40";
 	public static final String TOMCAT_41 = "org.eclipse.jst.server.tomcat.41";
 	public static final String TOMCAT_50 = "org.eclipse.jst.server.tomcat.50";
 	public static final String TOMCAT_55 = "org.eclipse.jst.server.tomcat.55";
-	
+
 	protected static final String VERIFY_INSTALL_FILE = "verifyInstall.properties";
 	protected static String[] verify32;
 	protected static String[] verify40;
 	protected static String[] verify41;
 	protected static String[] verify50;
 	protected static String[] verify55;
-	
+
 	/**
 	 * TomcatPlugin constructor comment.
 	 */
@@ -102,6 +102,12 @@ public class TomcatPlugin extends Plugin {
 		}
 	}
 
+	/**
+	 * Return the Tomcat version handler.
+	 * 
+	 * @param id
+	 * @return a version handler
+	 */
 	public static ITomcatVersionHandler getTomcatVersionHandler(String id) {
 		if (id.indexOf("runtime") > 0)
 			id = id.substring(0, 30) + id.substring(38);
@@ -203,6 +209,14 @@ public class TomcatPlugin extends Plugin {
 		}
 	}
 
+	/**
+	 * Verify the Tomcat installation directory.
+	 * 
+	 * @param installPath
+	 * @param id
+	 * @return <code>true</code> if the directory may be a Tomcat installation,
+	 *    and <code>false</code> otherwise
+	 */
 	public static boolean verifyInstallPath(IPath installPath, String id) {
 		if (installPath == null)
 			return false;
@@ -233,6 +247,23 @@ public class TomcatPlugin extends Plugin {
 			if (!temp.exists())
 				return false;
 		}
+		return true;
+	}
+
+	public static boolean verifyTomcatVersionFromPath(IPath installPath, String version) {
+		if (installPath == null || version == null)
+			return false;
+		String s = installPath.lastSegment();
+		if (s.indexOf("-3.2") > 0 || s.indexOf(" 3.2") > 0)
+			return TOMCAT_32.equals(version);
+		if (s.indexOf("-4.0") > 0 || s.indexOf(" 4.0") > 0)
+			return TOMCAT_40.equals(version);
+		if (s.indexOf("-4.1") > 0 || s.indexOf(" 4.1") > 0)
+			return TOMCAT_41.equals(version);
+		if (s.indexOf("-5.0") > 0 || s.indexOf(" 5.0") > 0)
+			return TOMCAT_50.equals(version);
+		if (s.indexOf("-5.5") > 0 || s.indexOf(" 5.5") > 0)
+			return TOMCAT_55.equals(version);
 		return true;
 	}
 

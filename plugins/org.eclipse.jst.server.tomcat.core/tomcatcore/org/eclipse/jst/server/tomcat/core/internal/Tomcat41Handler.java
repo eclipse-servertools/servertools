@@ -29,8 +29,7 @@ public class Tomcat41Handler implements ITomcatVersionHandler {
 		if (installPath == null)
 			return false;
 
-		String s = installPath.lastSegment();
-		if (s != null && s.startsWith("jakarta-tomcat-") && !s.startsWith("jakarta-tomcat-4.1"))
+		if (!TomcatPlugin.verifyTomcatVersionFromPath(installPath, TomcatPlugin.TOMCAT_41))
 			return false;
 		return TomcatPlugin.verifyInstallPath(installPath, TomcatPlugin.TOMCAT_41);
 	}
