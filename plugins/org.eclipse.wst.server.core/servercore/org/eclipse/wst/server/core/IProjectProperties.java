@@ -16,38 +16,16 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * This interface holds information on the properties of a given project.
  *
  * <p>This interface is not intended to be implemented by clients.</p>
+ * <p>
+ * <b>Provisional API:</b> This class/interface is part of an interim API that is still under development and expected to 
+ * change significantly before reaching stability. It is being made available at this early stage to solicit feedback 
+ * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
+ * (repeatedly) as the API evolves.
+ * </p>
  * 
  * @since 1.0
  */
 public interface IProjectProperties {
-	/**
-	 * Returns the preferred runtime server for the project. This method
-	 * returns null if the server was never chosen or does not currently exist. (if the
-	 * server is recreated or was in a closed project, etc. this method will return
-	 * the original value if it becomes available again)
-	 *
-	 * @return the current default server, or <code>null</code> if there is no
-	 *    default server
-	 * @deprecated preferred server should not be serialized into the project.
-	 *    use the equivalent method on ServerCore instead
-	 */
-	public IServer getDefaultServer();
-
-	/**
-	 * Sets the preferred runtime server for the project. Set the server to
-	 * null to clear the setting. If there is a problem saving the file, a CoreException
-	 * will be thrown.
-	 *
-	 * @param server the server to set the default server, or <code>null</code>
-	 *    to unset the default
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @throws CoreException if there is a problem setting the default server
-	 * @deprecated preferred server should not be serialized into the project.
-	 *    use the equivalent method on ServerCore instead
-	 */
-	public void setDefaultServer(IServer server, IProgressMonitor monitor) throws CoreException;
-
 	/**
 	 * Returns the current runtime target for this project.
 	 * 

@@ -13,9 +13,6 @@ package org.eclipse.wst.server.ui.internal.view.servers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.*;
 
@@ -31,7 +28,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionFactory;
 /**
  * Tree view showing servers and their associations.
@@ -240,7 +236,8 @@ public class ServerTableViewer extends TreeViewer {
 		IActionBars actionBars = view.getViewSite().getActionBars();
 		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), new ServerTreeAction(getControl().getShell(), this, "Delete it!", ServerTree.ACTION_DELETE));
 		
-		dsListener = new ISelectionListener() {
+		// TODO: add default server listener
+		/*dsListener = new ISelectionListener() {
 			public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 				if (!(selection instanceof IStructuredSelection))
 					return;
@@ -287,7 +284,7 @@ public class ServerTableViewer extends TreeViewer {
 				}
 			}
 		};
-		view.getViewSite().getPage().addSelectionListener(dsListener);
+		view.getViewSite().getPage().addSelectionListener(dsListener);*/
 	}
 
 	protected void addListeners() {
@@ -383,7 +380,7 @@ public class ServerTableViewer extends TreeViewer {
 
 	protected void handleDispose(DisposeEvent event) {
 		stopThread();
-		view.getViewSite().getPage().removeSelectionListener(dsListener);
+		//view.getViewSite().getPage().removeSelectionListener(dsListener);
 
 		ServerCore.removeServerLifecycleListener(serverResourceListener);
 		

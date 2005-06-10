@@ -26,10 +26,9 @@ import org.eclipse.wst.server.core.*;
  */
 public class ProjectProperties implements IProjectProperties {
 	private static final String PROJECT_PREFERENCE_FILE = ".runtime";
-	
+
 	protected IProject project;
-	
-	protected String serverId;
+
 	protected String runtimeId;
 	protected boolean serverProject = false;
 	
@@ -66,7 +65,6 @@ public class ProjectProperties implements IProjectProperties {
 			if (memento == null)
 				return;
 			
-			serverId = memento.getString("server-id");
 			runtimeId = memento.getString("runtime-id");
 			String s = memento.getString("servers");
 			if (s != null && "true".equals(s))
@@ -102,8 +100,6 @@ public class ProjectProperties implements IProjectProperties {
 
 				if (runtimeId != null)
 					memento.putString("runtime-id", runtimeId);
-				if (serverId != null)
-					memento.putString("server-id", serverId);
 				if (serverProject)
 					memento.putString("servers", "true");
 				else
@@ -127,55 +123,11 @@ public class ProjectProperties implements IProjectProperties {
 		}
 	}
 
-	/**
-	 * Returns the preferred runtime server for the project. This method
-	 * returns null if the server was never chosen or does not currently exist. (if the
-	 * server is recreated or was in a closed project, etc. this method will return
-	 * the original value if it becomes available again)
-	 *
-	 * @return server org.eclipse.wst.server.core.IServer
-	 */
-	public IServer getDefaultServer() {
-		loadPreferences();
-
-		if (serverId == null || serverId.length() == 0)
-			return null;
-		
-		IServer server = ServerCore.findServer(serverId);
-		/*if (server != null && ServerUtil.containsModule(server, module))
-			return server;
-		else
-			return null;*/
-		return server;
-	}
-
-	/**
-	 * Sets the default server.
-	 * 
-	 * @param server a server
-	 * @param monitor a progress monitor
-	 * @throws CoreException if anything goes wrong
-	 */
-	public void setDefaultServer(IServer server, IProgressMonitor monitor) throws CoreException {
-		loadPreferences();
-		
-		String newServerId = null;
-		if (server != null)
-			newServerId = server.getId();
-		if (serverId == null && newServerId == null)
-			return;
-		if (serverId != null && serverId.equals(newServerId))
-			return;
-		
-		serverId = newServerId;
-		savePreferences(monitor);
-	}
-	
 	protected String getRuntimeTargetId() {
 		loadPreferences();
 		return runtimeId;
 	}
-	
+
 	protected void setRuntimeTargetId(String newRuntimeId, IProgressMonitor monitor) throws CoreException {
 		loadPreferences();
 		runtimeId = newRuntimeId;
@@ -346,6 +298,6 @@ public class ProjectProperties implements IProjectProperties {
 	}
 	
 	public String toString() {
-		return "ProjectProperties[" + project + ", " + serverId + ", " + runtimeId + "]";
+		return "ProjectProperties[" + project + ", " + runtimeId + "]";
 	}
 }
