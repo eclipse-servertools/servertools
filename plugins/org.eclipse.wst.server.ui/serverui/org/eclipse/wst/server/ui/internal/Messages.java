@@ -56,7 +56,6 @@ public class Messages extends NLS {
 	public static String serverLaunchConfigurationTab;
 	public static String wizSelectClientMessage;
 	public static String deleteServerResourceDialogTitle;
-	public static String serverProjectCreated;
 	public static String errorCouldNotCreateServerProject;
 	public static String errorDialogTitle;
 	public static String editorValidateEditFailureMessage;
@@ -199,7 +198,6 @@ public class Messages extends NLS {
 	public static String serverTypeCompDescription;
 	public static String viewServers;
 	public static String viewNoModules;
-	public static String viewConfigurationUnused;
 	public static String actionMonitorProperties;
 	public static String actionOpen;
 	public static String viewServer;

@@ -120,8 +120,8 @@ public class TextResourceAdapter implements IAdaptable, IWorkbenchAdapter, IServ
 		//	return "No configuration";
 		else if (thisStyle == STYLE_NO_MODULES)
 			return Messages.viewNoModules;
-		else if (thisStyle == STYLE_NO_SERVERS)
-			return Messages.viewConfigurationUnused;
+		//else if (thisStyle == STYLE_NO_SERVERS)
+		//	return Messages.viewConfigurationUnused;
 		else
 			return "n/a";
 	}

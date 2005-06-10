@@ -69,7 +69,7 @@ public class EclipseUtil {
 			if (monitor.isCanceled())
 				return null;
 	
-			return new Status(IStatus.OK, ServerUIPlugin.PLUGIN_ID, 0, Messages.serverProjectCreated, null);
+			return new Status(IStatus.OK, ServerUIPlugin.PLUGIN_ID, 0, "", null);
 		} catch (CoreException ce) {
 			Trace.trace(Trace.SEVERE, "Could not create server project named " + name, ce);
 			return new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotCreateServerProjectStatus, ce.getMessage()), ce);
@@ -89,9 +89,8 @@ public class EclipseUtil {
 	 * @param name a name
 	 * @param path a path
 	 * @param monitor a progress monitor, or null
-	 * @return a status object
 	 */
-	public static IStatus createNewServerProject(final Shell shell, String name, IPath path, IProgressMonitor monitor) {
+	public static void createNewServerProject(final Shell shell, String name, IPath path, IProgressMonitor monitor) {
 		final IStatus status = createServerProject(name, path, monitor);
 		if (!status.isOK()) {
 			Display.getDefault().asyncExec(new Runnable() {
@@ -103,7 +102,6 @@ public class EclipseUtil {
 				}
 			});
 		}
-		return status;
 	}
 
 	/**
