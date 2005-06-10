@@ -526,8 +526,6 @@ public class ServerPlugin extends Plugin {
 			}
 		}
 		
-		sortOrderedList(publishTasks);
-		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .publishTasks extension point -<-");
 	}
 	
