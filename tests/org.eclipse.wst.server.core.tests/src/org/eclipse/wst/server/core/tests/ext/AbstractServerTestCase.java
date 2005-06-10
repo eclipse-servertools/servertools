@@ -81,20 +81,6 @@ public abstract class AbstractServerTestCase extends TestCase {
 		props = ServerCore.getProjectProperties(project);
 	}
 
-	public void test0001GetServer() throws Exception {
-		assertNull(props.getDefaultServer());
-	}
-
-	public void test0002SetServer() throws Exception {
-		props.setDefaultServer(getServer(), null);
-		assertEquals(props.getDefaultServer(), getServer());
-	}
-
-	public void test0003UnSetServer() throws Exception {
-		props.setDefaultServer(null, null);
-		assertNull(props.getDefaultServer());
-	}
-
 	public void test0004End() throws Exception {
 		project.delete(true, true, null);
 	}

@@ -53,10 +53,6 @@ public class ProjectPropertiesTestCase extends TestCase {
 		((ProjectProperties)props).addProjectPropertiesListener(listener);
 	}
 
-	public void test02GetServer() throws Exception {
-		assertNull(props.getDefaultServer());
-	}
-
 	public void test03GetRuntime() throws Exception {
 		assertNull(props.getRuntimeTarget());
 	}
@@ -67,10 +63,6 @@ public class ProjectPropertiesTestCase extends TestCase {
 	
 	public void test05TestListener() throws Exception {
 		assertTrue(count == 0);
-	}
-
-	public void test06SetServer() throws Exception {
-		props.setDefaultServer(null, null);
 	}
 	
 	public void test07TestListener() throws Exception {
