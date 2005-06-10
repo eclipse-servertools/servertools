@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -289,9 +290,15 @@ public class ModifyModulesComposite extends Composite {
 		data.heightHint = 200;
 		data.widthHint = 150;
 		availableTree.setLayoutData(data);
-		availableTree.addSelectionListener(new SelectionAdapter() {
+		availableTree.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent event) {
 				setEnablement();
+			}
+			
+			public void widgetDefaultSelected(SelectionEvent e) {
+				setEnablement();
+				if (add.isEnabled())
+					add(false);
 			}
 		});
 
@@ -350,9 +357,14 @@ public class ModifyModulesComposite extends Composite {
 		data = new GridData(GridData.FILL_BOTH);
 		data.widthHint = 150;
 		deployedTree.setLayoutData(data);
-		deployedTree.addSelectionListener(new SelectionAdapter() {
+		deployedTree.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent event) {
 				setEnablement();
+			}
+			public void widgetDefaultSelected(SelectionEvent e) {
+				setEnablement();
+				if (remove.isEnabled())
+					remove(false);
 			}
 		});
 		
