@@ -914,10 +914,36 @@ public class Server extends Base implements IServer {
 				try {
 					String serverId = launchConfigs[i].getAttribute(SERVER_ID, (String) null);
 					if (getId().equals(serverId)) {
-						ILaunchConfigurationWorkingCopy wc = launchConfigs[i].getWorkingCopy();
+						final ILaunchConfigurationWorkingCopy wc = launchConfigs[i].getWorkingCopy();
 						setupLaunchConfiguration(wc, monitor);
-						if (wc.isDirty())
-							return wc.doSave();
+						if (wc.isDirty()) {
+							class Temp {
+								ILaunchConfiguration lc = null;
+							}
+							final Temp temp = new Temp();
+							class SaveLaunchJob extends Job {
+								public SaveLaunchJob() {
+									super(NLS.bind(Messages.savingTask, wc.getName()));
+								}
+
+								public IStatus run(IProgressMonitor monitor2) {
+									try {
+										temp.lc = wc.doSave();
+									} catch (Exception e) {
+										// ignore
+									}
+									return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null);
+								}
+							}
+							SaveLaunchJob job = new SaveLaunchJob();
+							job.schedule();
+							try {
+								job.join();
+							} catch (Exception e) {
+								// ignore
+							}
+							return temp.lc;
+						}
 						return launchConfigs[i];
 					}
 				} catch (CoreException e) {
