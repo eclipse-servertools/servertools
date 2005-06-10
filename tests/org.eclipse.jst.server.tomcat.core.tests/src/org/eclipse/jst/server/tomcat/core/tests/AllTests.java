@@ -11,6 +11,8 @@
 package org.eclipse.jst.server.tomcat.core.tests;
 
 import org.eclipse.jst.server.tomcat.core.tests.internal.UtilTestCase;
+import org.eclipse.jst.server.tomcat.core.tests.module.DeleteModuleTestCase;
+import org.eclipse.jst.server.tomcat.core.tests.module.ModuleTestCase;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -21,6 +23,7 @@ public class AllTests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(ExistenceTest.class);
 		suite.addTest(new OrderedTestSuite(TomcatRuntimeTestCase.class));
+		suite.addTest(new OrderedTestSuite(ModuleTestCase.class));
 		
 		String s = System.getProperty("org.eclipse.jst.server.tomcat.32"); 
 		//s = "D:\\Tools\\tomcat\\jakarta-tomcat-3.2.4";
@@ -60,6 +63,8 @@ public class AllTests {
 		}
 		
 		suite.addTestSuite(UtilTestCase.class);
+		
+		suite.addTest(new OrderedTestSuite(DeleteModuleTestCase.class));
 		//$JUnit-END$
 		return suite;
 	}

@@ -17,7 +17,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-class OrderedTestSuite extends TestSuite{
+public class OrderedTestSuite extends TestSuite {
 	public OrderedTestSuite(Class theClass, String name) {
 		this(theClass);
 		setName(name);
@@ -39,22 +39,20 @@ class OrderedTestSuite extends TestSuite{
 		}
 		Class superClass = theClass;
 		Vector names = new Vector();
-		while (Test.class.isAssignableFrom(superClass)) {
-			Method[] methods = superClass.getDeclaredMethods();
-			int size = methods.length;
-			for (int i = 0; i < size - 1; i++) {
-				for (int j = i + 1; j < size; j++) {
-					if (methods[i].getName().compareTo(methods[j].getName()) > 0) {
-						Method m = methods[i];
-						methods[i] = methods[j];
-						methods[j] = m;
-					}
+		
+		Method[] methods = superClass.getMethods();
+		int size = methods.length;
+		for (int i = 0; i < size - 1; i++) {
+			for (int j = i + 1; j < size; j++) {
+				if (methods[i].getName().compareTo(methods[j].getName()) > 0) {
+					Method m = methods[i];
+					methods[i] = methods[j];
+					methods[j] = m;
 				}
 			}
-			for (int i = 0; i < size; i++) {
-				addTestMethod(methods[i], names, theClass);
-			}
-			superClass = superClass.getSuperclass();
+		}
+		for (int i = 0; i < size; i++) {
+			addTestMethod(methods[i], names, theClass);
 		}
 		if (!tests().hasMoreElements())
 			addTest(warning("No tests found in " + theClass.getName()));
