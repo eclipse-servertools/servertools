@@ -29,6 +29,10 @@
  ***************************************************************************/
 package org.eclipse.jst.server.generic.ui.internal;
 
+import java.util.ArrayList;
+
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTabGroup;
 import org.eclipse.debug.ui.CommonTab;
 import org.eclipse.debug.ui.EnvironmentTab;
@@ -38,6 +42,9 @@ import org.eclipse.debug.ui.sourcelookup.SourceLookupTab;
 import org.eclipse.jdt.debug.ui.launchConfigurations.JavaArgumentsTab;
 import org.eclipse.jdt.debug.ui.launchConfigurations.JavaClasspathTab;
 import org.eclipse.jdt.debug.ui.launchConfigurations.JavaJRETab;
+import org.eclipse.jst.server.generic.internal.core.util.ExtensionPointUtil;
+import org.eclipse.wst.server.core.IServerType;
+import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.ui.ServerLaunchConfigurationTab;
 
 
@@ -47,8 +54,7 @@ public class GenericLaunchConfigurationTabGroup extends AbstractLaunchConfigurat
 	 */
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
 		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[7];
-		//FIXME: get the server type ids from the servertypedefinition extension point.
-		tabs[0] = new ServerLaunchConfigurationTab(new String[] { "org.eclipse.jst.server.generic" });
+		tabs[0] = new ServerLaunchConfigurationTab(getTypeIds());
 		tabs[0].setLaunchConfigurationDialog(dialog);
 		tabs[1] = new JavaArgumentsTab();
 		tabs[1].setLaunchConfigurationDialog(dialog);
@@ -63,4 +69,26 @@ public class GenericLaunchConfigurationTabGroup extends AbstractLaunchConfigurat
 		tabs[6] = new CommonTab();
 		tabs[6].setLaunchConfigurationDialog(dialog);
 		setTabs(tabs);
-	}}
+	}
+
+	private String[] getTypeIds() {
+		ArrayList list = new ArrayList();
+		IExtension[] extensions= ExtensionPointUtil.getGenericServerDefinitionExtensions();
+		 for (int i = 0; extensions!=null && i < extensions.length; i++) {
+			 IExtension extension = extensions[i];
+	         IConfigurationElement[] elements = ExtensionPointUtil.getConfigurationElements(extension);
+	         for (int j = 0; j < elements.length; j++) {
+	        	 IConfigurationElement element = elements[j];
+	        	 String genericRuntimeID = element.getAttribute("id");
+	        	 IServerType[] serverTypes = ServerCore.getServerTypes();
+	        	 for (int k = 0; k < serverTypes.length; k++) {
+					if(serverTypes[k].hasRuntime() && serverTypes[k].getRuntimeType().getId().equals(genericRuntimeID))
+						list.add(serverTypes[k].getId());
+				}
+	         }
+		 }
+		 return (String[])list.toArray(new String[list.size()]);
+	}
+	
+
+}

@@ -8,7 +8,7 @@
  <extension point="org.eclipse.wst.server.core.runtimeTargetHandlers">
      <runtimeTargetHandler
         id="org.eclipse.jst.server.generic.runtimeTarget"
-        runtimeTypeIds="org.eclipse.jst.server.generic.runtime.*"
+        runtimeTypeIds="*"
         class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntimeTargetHandler"/>
 	</extension>
 
