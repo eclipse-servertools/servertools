@@ -252,7 +252,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 
     private GenericServerRuntime getRuntimeDelegate()
     {
-       return (GenericServerRuntime)getServer().getRuntime().getAdapter(GenericServerRuntime.class);
+       return (GenericServerRuntime)getServer().getRuntime().loadAdapter(GenericServerRuntime.class,null);
     }
 
 

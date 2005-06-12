@@ -217,7 +217,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     
     protected GenericServerRuntime getRuntimeDelegate()
     {
-       return (GenericServerRuntime)getServer().getRuntime().getAdapter(GenericServerRuntime.class);
+       return (GenericServerRuntime)getServer().getRuntime().loadAdapter(GenericServerRuntime.class,null);
     }
 
 
@@ -299,8 +299,6 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     public void setupLaunchConfiguration(
             ILaunchConfigurationWorkingCopy workingCopy,
             IProgressMonitor monitor) throws CoreException {
-
-
         workingCopy.setAttribute(
                 IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
                 getStartClassName());
