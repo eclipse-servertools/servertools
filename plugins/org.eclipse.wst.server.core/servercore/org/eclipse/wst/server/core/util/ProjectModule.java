@@ -182,30 +182,41 @@ public abstract class ProjectModule extends ModuleDelegate {
 		}
 	}
 
-	protected IModuleResource[] getModuleResources(IPath path, IContainer container) throws CoreException {
-		List list = new ArrayList();
+    protected IModuleResource[] getModuleResources(IPath path, IContainer container) throws CoreException {
+        List list = new ArrayList();
 
- 		IResource[] resources = container.members();
-	 	if (resources != null) {
-	 		int size = resources.length;
-	 		for (int i = 0; i < size; i++) {
-				IResource resource = resources[i];
-				if (resource instanceof IContainer) {
-					IContainer container2 = (IContainer) resource;
-					ModuleFolder mf = new ModuleFolder(container2.getName(), path);
-					mf.setMembers(getModuleResources(path.append(container2.getName()), container2));
-					list.add(mf);
-				} else if (resource instanceof IFile) {
-					IFile file = (IFile) resource;
-					list.add(new ModuleFile(file.getName(), path, file.getModificationStamp()));
-				}
-			}
-	 	}
-	 	
-	 	IModuleResource[] moduleResources = new IModuleResource[list.size()];
-	 	list.toArray(moduleResources);
-	 	return moduleResources;
-	}
+        IResource[] resources = container.members();
+        if (resources != null) {
+            int size = resources.length;
+            for (int i = 0; i < size; i++) {
+                IResource resource = resources[i];
+                if (resource instanceof IContainer) {
+                    IContainer container2 = getContainerResource(resource);
+                    if(container2 != null && container2.exists()) {
+                        ModuleFolder mf = new ModuleFolder(container2.getName(), path);
+                        mf.setMembers(getModuleResources(path.append(container2.getName()), container2));
+                        list.add(mf);
+                    }
+                } else if (resource instanceof IFile) {
+                    IFile file = getFileResource(resource);
+                    if(file != null && file.exists())
+                        list.add(new ModuleFile(file.getName(), path, file.getModificationStamp()));
+                }
+            }
+        }
+        
+        IModuleResource[] moduleResources = new IModuleResource[list.size()];
+        list.toArray(moduleResources);
+        return moduleResources;
+    }
+    
+    protected IContainer getContainerResource(IResource resource){
+        return (IContainer)resource;
+    }
+    
+    protected IFile getFileResource(IResource resource){
+        return (IFile)resource;
+    }
 
 	/**
 	 * Helper method - returns the module's name.
