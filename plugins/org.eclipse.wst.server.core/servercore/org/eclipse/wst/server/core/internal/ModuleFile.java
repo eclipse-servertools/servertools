@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.internal;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.wst.server.core.model.IModuleFile;
 /**
@@ -17,11 +18,13 @@ import org.eclipse.wst.server.core.model.IModuleFile;
  * @since 1.0
  */
 public class ModuleFile implements IModuleFile {
+	protected IFile file;
 	protected String name;
 	protected IPath path;
 	protected long stamp;
 	
-	public ModuleFile(String name, IPath path, long stamp) {
+	public ModuleFile(IFile file, String name, IPath path, long stamp) {
+		this.file = file;
 		this.name = name;
 		this.path = path;
 		this.stamp = stamp;
@@ -60,6 +63,12 @@ public class ModuleFile implements IModuleFile {
 		return true;
 	}
 	
+	public Object getAdapter(Class cl) {
+		if (IFile.class.equals(cl))
+			return file;
+		return null;
+	}
+
 	public String toString() {
 		return "ModuleFile [" + name + ", " + path + ", " + stamp + "]";
 	}

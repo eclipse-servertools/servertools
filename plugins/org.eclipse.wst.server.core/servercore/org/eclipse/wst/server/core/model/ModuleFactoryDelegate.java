@@ -11,6 +11,7 @@
 package org.eclipse.wst.server.core.model;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.internal.Module;
 import org.eclipse.wst.server.core.internal.ModuleFactory;
@@ -55,8 +56,10 @@ public abstract class ModuleFactoryDelegate {
 	 * </p>
 	 * 
 	 * @param newFactory the module factory instance
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 */
-	final void initialize(ModuleFactory newFactory) {
+	final void initialize(ModuleFactory newFactory, IProgressMonitor monitor) {
 		factory = newFactory;
 	}
 

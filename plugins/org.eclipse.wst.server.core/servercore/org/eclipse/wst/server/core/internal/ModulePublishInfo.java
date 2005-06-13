@@ -90,7 +90,7 @@ public class ModulePublishInfo {
 				String name = children[i].getString(NAME);
 				IPath path = new Path(children[i].getString(PATH));
 				long stamp = Long.parseLong(children[i].getString(STAMP));
-				ModuleFile file = new ModuleFile(name, path, stamp);
+				ModuleFile file = new ModuleFile(null, name, path, stamp);
 				list.add(file);
 			}
 		}
@@ -100,7 +100,7 @@ public class ModulePublishInfo {
 			for (int i = 0; i < size; i++) {
 				String name = children[i].getString(NAME);
 				IPath path = new Path(children[i].getString(PATH));
-				ModuleFolder folder = new ModuleFolder(name, path);
+				ModuleFolder folder = new ModuleFolder(null, name, path);
 				folder.setMembers(loadResource(children[i]));
 				list.add(folder);
 			}

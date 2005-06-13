@@ -95,10 +95,12 @@ public abstract class ServerBehaviourDelegate {
 	 * </p>
 	 * 
 	 * @param newServer the server instance
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 */
-	final void initialize(Server newServer) {
+	final void initialize(Server newServer, IProgressMonitor monitor) {
 		server = newServer;
-		initialize();
+		initialize(monitor);
 	}
 
 	/**
@@ -115,9 +117,8 @@ public abstract class ServerBehaviourDelegate {
 	 * This method is called by the server core framework.
 	 * Clients should never call this method.
 	 * </p>
-	 * [issue: add progress monitor?]
 	 */
-	protected void initialize() {
+	protected void initialize(IProgressMonitor monitor) {
 		// do nothing
 	}
 

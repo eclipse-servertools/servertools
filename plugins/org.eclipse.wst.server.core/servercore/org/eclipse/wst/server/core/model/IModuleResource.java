@@ -10,20 +10,21 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.model;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 /**
  * A resource (file or folder) within a module.
  * 
  * @since 1.0
  */
-public interface IModuleResource {
+public interface IModuleResource extends IAdaptable {
 	/**
 	 * Returns the module relative path to this resource.
 	 * 
 	 * @return the module relative path to this resource
 	 */
 	public IPath getModuleRelativePath();
-	
+
 	/**
 	 * Returns the name of this resource.
 	 * 

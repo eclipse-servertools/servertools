@@ -10,6 +10,8 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.internal;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.wst.server.core.model.IModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleResource;
@@ -18,11 +20,13 @@ import org.eclipse.wst.server.core.model.IModuleResource;
  * @since 1.0
  */
 public class ModuleFolder implements IModuleFolder {
+	protected IContainer container;
 	protected String name;
 	protected IPath path;
 	protected IModuleResource[] members;
 	
-	public ModuleFolder(String name, IPath path) {
+	public ModuleFolder(IContainer container, String name, IPath path) {
+		this.container = container;
 		this.name = name;
 		this.path = path;
 	}
@@ -62,6 +66,12 @@ public class ModuleFolder implements IModuleFolder {
 		if (!path.equals(mf.path))
 			return false;
 		return true;
+	}
+
+	public Object getAdapter(Class cl) {
+		if (IContainer.class.equals(cl) || IFolder.class.equals(cl))
+			return container;
+		return null;
 	}
 
 	public String toString() {

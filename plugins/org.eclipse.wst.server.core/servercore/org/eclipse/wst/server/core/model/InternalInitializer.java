@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.model;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.internal.ModuleFactory;
 import org.eclipse.wst.server.core.internal.Runtime;
 import org.eclipse.wst.server.core.internal.Server;
@@ -18,19 +19,47 @@ import org.eclipse.wst.server.core.internal.Server;
  * It is not API and should never be used by clients.
  */
 public class InternalInitializer {
-	public static void initializeServerDelegate(ServerDelegate delegate, Server newServer) {
-		delegate.initialize(newServer);
-	}
-	
-	public static void initializeServerBehaviourDelegate(ServerBehaviourDelegate delegate, Server newServer) {
-		delegate.initialize(newServer);
-	}
-	
-	public static void initializeRuntimeDelegate(RuntimeDelegate delegate, Runtime newRuntime) {
-		delegate.initialize(newRuntime);
+	/**
+	 * Internal method - do not call.
+	 * 
+	 * @param delegate
+	 * @param newServer
+	 * @param monitor
+	 */
+	public static void initializeServerDelegate(ServerDelegate delegate, Server newServer, IProgressMonitor monitor) {
+		delegate.initialize(newServer, monitor);
 	}
 
-	public static void initializeModuleFactoryDelegate(ModuleFactoryDelegate delegate, ModuleFactory newModuleFactory) {
-		delegate.initialize(newModuleFactory);
+	/**
+	 * Internal method - do not call.
+	 * 
+	 * @param delegate
+	 * @param newServer
+	 * @param monitor
+	 */
+	public static void initializeServerBehaviourDelegate(ServerBehaviourDelegate delegate, Server newServer, IProgressMonitor monitor) {
+		delegate.initialize(newServer, monitor);
+	}
+
+	/**
+	 * Internal method - do not call.
+	 * 
+	 * @param delegate
+	 * @param newRuntime
+	 * @param monitor
+	 */
+	public static void initializeRuntimeDelegate(RuntimeDelegate delegate, Runtime newRuntime, IProgressMonitor monitor) {
+		delegate.initialize(newRuntime, monitor);
+	}
+
+	/**
+	 * Internal method - do not call.
+	 * 
+	 * @param delegate
+	 * @param newModuleFactory
+	 * @param monitor
+	 */
+	public static void initializeModuleFactoryDelegate(ModuleFactoryDelegate delegate, ModuleFactory newModuleFactory, IProgressMonitor monitor) {
+		delegate.initialize(newModuleFactory, monitor);
 	}
 }

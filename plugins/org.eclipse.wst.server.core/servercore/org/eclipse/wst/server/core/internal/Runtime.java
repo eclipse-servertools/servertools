@@ -78,7 +78,7 @@ public class Runtime extends Base implements IRuntime {
 					long time = System.currentTimeMillis();
 					RuntimeType runtimeType2 = (RuntimeType) runtimeType;
 					delegate = (RuntimeDelegate) runtimeType2.getElement().createExecutableExtension("class");
-					InternalInitializer.initializeRuntimeDelegate(delegate, this);
+					InternalInitializer.initializeRuntimeDelegate(delegate, this, monitor);
 					//delegate.initialize(this);
 					Trace.trace(Trace.PERFORMANCE, "Runtime.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getRuntimeType().getId());
 				} catch (Throwable t) {

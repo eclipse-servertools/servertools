@@ -194,21 +194,19 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		// make sure that the regular delegate is loaded 
 		//getDelegate();
 		
-		if (workingCopyDelegate != null)
+		if (workingCopyDelegate != null || serverType == null)
 			return workingCopyDelegate;
 		
-		if (serverType != null) {
-			synchronized (this) {
-				if (workingCopyDelegate == null) {
-					try {
-						long time = System.currentTimeMillis();
-						IConfigurationElement element = ((ServerType) serverType).getElement();
-						workingCopyDelegate = (ServerDelegate) element.createExecutableExtension("class");
-						InternalInitializer.initializeServerDelegate(workingCopyDelegate, this);
-						Trace.trace(Trace.PERFORMANCE, "ServerWorkingCopy.getWorkingCopyDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
-					} catch (Exception e) {
-						Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);
-					}
+		synchronized (this) {
+			if (workingCopyDelegate == null) {
+				try {
+					long time = System.currentTimeMillis();
+					IConfigurationElement element = ((ServerType) serverType).getElement();
+					workingCopyDelegate = (ServerDelegate) element.createExecutableExtension("class");
+					InternalInitializer.initializeServerDelegate(workingCopyDelegate, this, monitor);
+					Trace.trace(Trace.PERFORMANCE, "ServerWorkingCopy.getWorkingCopyDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), e);
 				}
 			}
 		}
@@ -398,7 +396,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 
 	public void setDefaults(IProgressMonitor monitor) {
 		try {
-			getWorkingCopyDelegate(monitor).setDefaults();
+			getWorkingCopyDelegate(monitor).setDefaults(monitor);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate setDefaults() " + toString(), e);
 		}

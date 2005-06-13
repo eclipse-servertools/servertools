@@ -193,14 +193,14 @@ public abstract class ProjectModule extends ModuleDelegate {
                 if (resource instanceof IContainer) {
                     IContainer container2 = getContainerResource(resource);
                     if(container2 != null && container2.exists()) {
-                        ModuleFolder mf = new ModuleFolder(container2.getName(), path);
+                        ModuleFolder mf = new ModuleFolder(container, container2.getName(), path);
                         mf.setMembers(getModuleResources(path.append(container2.getName()), container2));
                         list.add(mf);
                     }
                 } else if (resource instanceof IFile) {
                     IFile file = getFileResource(resource);
                     if(file != null && file.exists())
-                        list.add(new ModuleFile(file.getName(), path, file.getModificationStamp()));
+                        list.add(new ModuleFile(file, file.getName(), path, file.getModificationStamp()));
                 }
             }
         }

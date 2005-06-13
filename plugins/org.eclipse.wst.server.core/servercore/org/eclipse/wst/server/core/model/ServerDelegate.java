@@ -69,8 +69,10 @@ public abstract class ServerDelegate {
 	 * </p>
 	 * 
 	 * @param newServer the server instance
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 */
-	final void initialize(Server newServer) {
+	final void initialize(Server newServer, IProgressMonitor monitor) {
 		server = newServer;
 		if (newServer instanceof ServerWorkingCopy)
 			serverWC = (ServerWorkingCopy) newServer;
@@ -258,8 +260,11 @@ public abstract class ServerDelegate {
 	 * Initializes this server with default values. This method is called when
 	 * a new server is created so that the server can be initialized with
 	 * meaningful values.
+	 * 
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 */
-	public void setDefaults() {
+	public void setDefaults(IProgressMonitor monitor) {
 		// do nothing
 	}
 	

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IRuntime;
@@ -72,8 +73,10 @@ public abstract class RuntimeDelegate {
 	 * </p>
 	 * 
 	 * @param newRuntime the runtime instance
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 */
-	final void initialize(Runtime newRuntime) {
+	final void initialize(Runtime newRuntime, IProgressMonitor monitor) {
 		runtime = newRuntime;
 		if (runtime instanceof RuntimeWorkingCopy)
 			runtimeWC = (RuntimeWorkingCopy) runtime;
@@ -238,8 +241,11 @@ public abstract class RuntimeDelegate {
 	 * Initializes this runtime with default values. This method is called when
 	 * a new runtime is created so that the runtime can be initialized with
 	 * meaningful values.
+	 * 
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 */
-	public void setDefaults() {
+	public void setDefaults(IProgressMonitor monitor) {
 		// do nothing
 	}
 

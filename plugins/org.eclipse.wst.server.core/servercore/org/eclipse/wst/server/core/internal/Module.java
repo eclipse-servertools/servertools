@@ -93,12 +93,19 @@ public class Module implements IModule {
 	}
 
 	protected ModuleDelegate getDelegate(IProgressMonitor monitor) {
-		if (delegate == null) {
-			try {
-				delegate = factory.getDelegate().getModuleDelegate(this);
-				delegate.initialize(this);
-			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString() + ": " + t.getMessage());
+		if (delegate != null)
+			return delegate;
+		
+		synchronized (this) {
+			if (delegate == null) {
+				try {
+					long time = System.currentTimeMillis();
+					delegate = factory.getDelegate(monitor).getModuleDelegate(this);
+					delegate.initialize(this, monitor);
+					Trace.trace(Trace.PERFORMANCE, "Module.getDelegate(): <" + (System.currentTimeMillis() - time) + " " + factory.getId());
+				} catch (Throwable t) {
+					Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
+				}
 			}
 		}
 		return delegate;

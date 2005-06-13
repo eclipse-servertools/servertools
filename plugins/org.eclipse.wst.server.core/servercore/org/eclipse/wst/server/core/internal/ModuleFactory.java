@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
@@ -87,12 +88,12 @@ public class ModuleFactory implements IOrdered {
 	/*
 	 * @see IModuleFactoryDelegate#getDelegate()
 	 */
-	public ModuleFactoryDelegate getDelegate() {
+	public ModuleFactoryDelegate getDelegate(IProgressMonitor monitor) {
 		if (delegate == null) {
 			try {
 				delegate = (ModuleFactoryDelegate) element.createExecutableExtension("class");
 				//delegate.initialize(this);
-				InternalInitializer.initializeModuleFactoryDelegate(delegate, this);
+				InternalInitializer.initializeModuleFactoryDelegate(delegate, this, monitor);
 				//ResourceManager.getInstance().addModuleFactoryListener(delegate);
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + t.getMessage());
@@ -125,7 +126,7 @@ public class ModuleFactory implements IOrdered {
 		if (modules == null) {
 			try {
 				modules = new ArrayList();
-				IModule[] modules2 = getDelegate().getModules();
+				IModule[] modules2 = getDelegate(null).getModules();
 				if (modules2 != null) {
 					int size = modules2.length;
 					for (int i = 0; i < size; i++)
