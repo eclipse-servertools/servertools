@@ -87,7 +87,6 @@ public class ServerTypeDefinitionModelTest extends TestCase {
         Classpath cp =(Classpath)subject.getClasspath().get(0);
         assertTrue(cp.getId()!=null && cp.getId().length()>0);
         assertTrue(cp.getArchive()!=null && cp.getArchive().size()>0);
-		assertTrue((cp.isIsLibrary()==true || cp.isIsLibrary()==false));
 		ArchiveType archiveType = (ArchiveType)cp.getArchive().get(0);
         assertTrue(archiveType.getPath()!=null && archiveType.getPath().length()>0);
 		
@@ -98,6 +97,8 @@ public class ServerTypeDefinitionModelTest extends TestCase {
        LaunchConfiguration lcfg = subject.getStart();
        assertNotNull(lcfg);
        assertTrue(lcfg.getMainClass()!=null && lcfg.getMainClass().length()>0);
+       assertTrue(lcfg.getMainClass()!=null && lcfg.getExternal()==null);
+       assertTrue(lcfg.getMainClass()!=null && lcfg.getDebugPort()==null);
        assertTrue(lcfg.getClasspathReference()!=null && lcfg.getClasspathReference().length()>0);
        assertTrue(lcfg.getProgramArguments()!=null && lcfg.getProgramArguments().length()>0);
        assertTrue(lcfg.getVmParameters()!=null && lcfg.getVmParameters().length()>0);
