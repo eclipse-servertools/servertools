@@ -299,7 +299,18 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     public void setupLaunchConfiguration(
             ILaunchConfigurationWorkingCopy workingCopy,
             IProgressMonitor monitor) throws CoreException {
-        workingCopy.setAttribute(
+        if(getRuntimeDelegate().getServerTypeDefinition().getStart().getExternal()!=null)
+        	setupExternalLaunchConfiguration(workingCopy, monitor);
+        else
+        	setupJavaLaunchConfiguration(workingCopy, monitor);
+    }
+
+    private void setupExternalLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy,IProgressMonitor monitor) throws CoreException {
+    
+    }
+    
+	private void setupJavaLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy,IProgressMonitor monitor) throws CoreException {
+		workingCopy.setAttribute(
                 IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
                 getStartClassName());
 
@@ -330,7 +341,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
         if(existingVMArgs==null || existingVMArgs.indexOf(serverVMArgs)<0) {
             workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,serverVMArgs);
         }
-    }
+	}
     /**
     	 * Setup for starting the server.
     	 * 
