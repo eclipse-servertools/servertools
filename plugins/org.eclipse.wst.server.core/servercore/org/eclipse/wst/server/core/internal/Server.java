@@ -184,32 +184,19 @@ public class Server extends Base implements IServer {
 	}
 
 	protected ServerDelegate getDelegate(IProgressMonitor monitor) {
-		if (delegate != null)
+		if (delegate != null || serverType == null)
 			return delegate;
 		
-		if (serverType != null) {
-			synchronized (this) {
-				if (delegate == null) {
-					Job job = new Job("Load delegate") {
-						protected IStatus run(IProgressMonitor monitor2) {
-							try {
-								long time = System.currentTimeMillis();
-								IConfigurationElement element = ((ServerType) serverType).getElement();
-								delegate = (ServerDelegate) element.createExecutableExtension("class");
-								InternalInitializer.initializeServerDelegate(delegate, Server.this);
-								Trace.trace(Trace.PERFORMANCE, "Server.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
-							} catch (Throwable t) {
-								Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
-							}
-							return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null);
-						}
-					};
-					job.schedule();
-					try {
-						job.join();
-					} catch (Exception e) {
-						// ignore
-					}
+		synchronized (this) {
+			if (delegate == null) {
+				try {
+					long time = System.currentTimeMillis();
+					IConfigurationElement element = ((ServerType) serverType).getElement();
+					delegate = (ServerDelegate) element.createExecutableExtension("class");
+					InternalInitializer.initializeServerDelegate(delegate, Server.this, monitor);
+					Trace.trace(Trace.PERFORMANCE, "Server.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
+				} catch (Throwable t) {
+					Trace.trace(Trace.SEVERE, "Could not create delegate " + toString(), t);
 				}
 			}
 		}
@@ -217,33 +204,20 @@ public class Server extends Base implements IServer {
 	}
 
 	protected ServerBehaviourDelegate getBehaviourDelegate(IProgressMonitor monitor) {
-		if (behaviourDelegate != null)
+		if (behaviourDelegate != null || serverType == null)
 			return behaviourDelegate;
 		
-		if (serverType != null) {
-			synchronized (this) {
-				if (behaviourDelegate == null) {
-					Job job = new Job("Load delegate") {
-						protected IStatus run(IProgressMonitor monitor2) {
-							try {
-								long time = System.currentTimeMillis();
-								IConfigurationElement element = ((ServerType) serverType).getElement();
-								behaviourDelegate = (ServerBehaviourDelegate) element.createExecutableExtension("behaviourClass");
-								//behaviourDelegate.initialize(Server.this);
-								InternalInitializer.initializeServerBehaviourDelegate(behaviourDelegate, Server.this);
-								Trace.trace(Trace.PERFORMANCE, "Server.getBehaviourDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
-							} catch (Throwable t) {
-								Trace.trace(Trace.SEVERE, "Could not create behaviour delegate " + toString(), t);
-							}
-							return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null);
-						}
-					};
-					job.schedule();
-					try {
-						job.join();
-					} catch (Exception e) {
-						// ignore
-					}
+		synchronized (this) {
+			if (behaviourDelegate == null) {
+				try {
+					long time = System.currentTimeMillis();
+					IConfigurationElement element = ((ServerType) serverType).getElement();
+					behaviourDelegate = (ServerBehaviourDelegate) element.createExecutableExtension("behaviourClass");
+					//behaviourDelegate.initialize(Server.this);
+					InternalInitializer.initializeServerBehaviourDelegate(behaviourDelegate, Server.this, monitor);
+					Trace.trace(Trace.PERFORMANCE, "Server.getBehaviourDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
+				} catch (Throwable t) {
+					Trace.trace(Trace.SEVERE, "Could not create behaviour delegate " + toString(), t);
 				}
 			}
 		}
@@ -622,9 +596,9 @@ public class Server extends Base implements IServer {
 			return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, Messages.canPublishOk, null);
 
 		// return true if any modules can be published
-		class Temp {
+		/*class Temp {
 			boolean found = false;
-		}
+		}*/
 		//final Temp temp = new Temp();
 		
 		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, Messages.canPublishOk, null);
