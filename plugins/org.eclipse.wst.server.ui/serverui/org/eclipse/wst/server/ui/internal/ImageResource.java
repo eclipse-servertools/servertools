@@ -139,6 +139,13 @@ public class ImageResource {
 	public static final String IMG_MONITOR_OFF = "monitorOff";
 	
 	public static final String IMG_DEFAULT_SERVER_OVERLAY = "defaultServerOverlay";
+	
+	// Audio images
+	public static final String IMG_AUDIO_SOUND = "sound";
+	public static final String IMG_AUDIO_CATEGORY = "category";
+	public static final String IMG_AUDIO_ENABLED = "enabled";
+	public static final String IMG_AUDIO_DISABLED = "disabled";
+	public static final String IMG_AUDIO_UNAVAILABLE = "unavailable";
 
 	/**
 	 * Cannot construct an ImageResource. Use static methods only.
@@ -271,6 +278,13 @@ public class ImageResource {
 		registerImage(IMG_MONITOR_OFF, URL_OBJ + "monitorOff.gif");
 		
 		registerImage(IMG_DEFAULT_SERVER_OVERLAY, URL_OVR + "default_server_ovr.gif");
+		
+		// audio images
+		registerImage(IMG_AUDIO_SOUND, URL_OBJ + "audio_sound.gif");
+		registerImage(IMG_AUDIO_CATEGORY, URL_OBJ + "audio_category.gif");
+		registerImage(IMG_AUDIO_ENABLED, URL_OBJ + "audio_enabled.gif");
+		registerImage(IMG_AUDIO_DISABLED, URL_OBJ + "audio_disabled.gif");
+		registerImage(IMG_AUDIO_UNAVAILABLE, URL_OBJ + "audio_unavailable.gif");
 		
 		loadServerImages();
 	}

@@ -91,4 +91,12 @@ public interface ContextIds {
 	public static final String EDITOR_AUTOPUBLISH_DEFAULT = ServerUIPlugin.PLUGIN_ID + ".seop0010";
 	public static final String EDITOR_AUTOPUBLISH_OVERRIDE = ServerUIPlugin.PLUGIN_ID + ".seop0012";
 	public static final String EDITOR_AUTOPUBLISH_TIME = ServerUIPlugin.PLUGIN_ID + ".seop0014";
+	
+	public static final String AUDIO_PREFERENCES = ServerUIPlugin.PLUGIN_ID + ".aupr0000";
+	public static final String AUDIO_PREFERENCES_ENABLE = ServerUIPlugin.PLUGIN_ID + ".aupr0002";
+	public static final String AUDIO_PREFERENCES_VOLUME = ServerUIPlugin.PLUGIN_ID + ".aupr0004";
+	public static final String AUDIO_PREFERENCES_SOUNDS_TABLE = ServerUIPlugin.PLUGIN_ID + ".aupr0006";
+	public static final String AUDIO_PREFERENCES_PLAY = ServerUIPlugin.PLUGIN_ID + ".aupr0008";
+	public static final String AUDIO_PREFERENCES_BROWSE = ServerUIPlugin.PLUGIN_ID + ".aupr0010";
+	public static final String AUDIO_PREFERENCES_RESET = ServerUIPlugin.PLUGIN_ID + ".aupr0012";
 }

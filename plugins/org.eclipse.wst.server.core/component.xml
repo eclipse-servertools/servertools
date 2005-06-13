@@ -61,6 +61,4 @@
     <type name="IWizardHandle"/>
     <type name="WizardFragment"/>
   </package>
-  
-  <plugin id="org.eclipse.wst.server.util" fragment="false"/>
 </component>

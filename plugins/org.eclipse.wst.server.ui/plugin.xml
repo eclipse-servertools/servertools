@@ -7,6 +7,7 @@
   <extension-point id="editorActions" name="%extensionPointEditorActions" schema="schema/editorActions.exsd"/>
   <extension-point id="serverImages" name="%extensionPointServerImages" schema="schema/serverImages.exsd"/>
   <extension-point id="wizardFragments" name="%extensionPointWizardFragments" schema="schema/wizardFragments.exsd"/>
+  <extension-point id="audio" name="%extensionPointAudio"/>
 
 <extension point="org.eclipse.ui.ide.projectNatureImages">
   <image
@@ -183,5 +184,89 @@
       <adapter type="org.eclipse.ui.IActionFilter"/>
     </factory>
   </extension>
+
+
+<extension point="org.eclipse.wst.server.core.clients">
+  <client
+    id="org.eclipse.wst.server.ui.web"
+    name="%launchableWebBrowser"
+    description="%launchableWebBrowserDescription"
+    launchable="org.eclipse.wst.server.core.util.HttpLaunchable"
+    class="org.eclipse.wst.server.ui.internal.WebLaunchableClient"/>
+</extension>
+
+<extension point="org.eclipse.ui.perspectiveExtensions">
+  <perspectiveExtension
+    targetID="org.eclipse.wst.server.ui.perspective">
+    <actionSet id="org.eclipse.wst.webbrowser.actionSet"/>
+  </perspectiveExtension>
+</extension>
+
+<extension point="org.eclipse.wst.server.core.internalStartup">
+  <startup
+    id="org.eclipse.wst.server.ui.startup"
+    class="org.eclipse.wst.server.ui.internal.Startup"/>
+</extension>
+
+<extension point="org.eclipse.ui.preferencePages">
+  <page
+    id="org.eclipse.wst.audio.preferencePage"
+    category="org.eclipse.wst.server.ui.preferencePage"
+    name="%audioPreferenceTitle"
+    class="org.eclipse.wst.server.ui.internal.audio.AudioPreferencePage"/>
+</extension>
+
+<extension point="org.eclipse.wst.server.ui.audio">
+  <category id="org.eclipse.wst.server.sound.server"
+    name="%audioCategoryServer"/>
+  <sound id="org.eclipse.wst.server.sound.serverStart"
+    category="org.eclipse.wst.server.sound.server"
+    name="%audioServerStarted"/>
+  <sound id="org.eclipse.wst.server.sound.serverStop"
+    category="org.eclipse.wst.server.sound.server"
+    name="%audioServerStopped"/>
+  <category id="org.eclipse.wst.server.sound.publish"
+    name="%audioCategoryPublish"/>
+  <sound id="org.eclipse.wst.server.sound.publishFinished"
+    category="org.eclipse.wst.server.sound.publish"
+    name="%audioPublishFinished"/>
+</extension>
+
+<extension point="org.eclipse.wst.server.core.internalServerMonitors">
+  <monitor
+    id="org.eclipse.wst.server.ui.monitor"
+    name="%monitorLabel"
+    description="%monitorDescription"
+    class="org.eclipse.wst.server.ui.internal.DefaultMonitorDelegate"/>
+</extension>
+
+<extension point="org.eclipse.ui.actionSets">
+  <actionSet
+    id="org.eclipse.wst.server.ui.internal.webbrowser.actionSet"
+    label="%actionSetWebBrowserTitle"
+    visible="false">
+    <action
+      id="org.eclipse.wst.server.ui.internal.webbrowser.action.open"
+      toolbarPath="browser"
+      label="%actionSetOpenWebBrowser"
+      tooltip="%actionSetOpenWebBrowser"
+      icon="icons/obj16/internal_browser.gif"
+      class="org.eclipse.wst.server.ui.internal.webbrowser.OpenBrowserWorkbenchAction"/>
+    <action
+      id="org.eclipse.wst.server.ui.internal.webbrowser.action.switch"
+      menubarPath="window/browser"
+      label="%actionSetSwitchBrowser"
+      tooltip="%actionSetSwitchBrowser"
+      style="pulldown"
+      class="org.eclipse.wst.server.ui.internal.webbrowser.SwitchBrowserWorkbenchAction"/>
+  </actionSet>
+</extension>
+
+<extension point="org.eclipse.ui.preferencePages">
+  <page
+    id="org.eclipse.wst.internet"
+    name="%preferenceInternetTitle"
+    class="org.eclipse.wst.server.ui.internal.webbrowser.InternetPreferencePage"/>
+</extension>
 
 </plugin>

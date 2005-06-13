@@ -263,6 +263,23 @@ public class Messages extends NLS {
 	public static String viewStatusStopped;
 	public static String actionStopToolTip2;
 	public static String actionStop2;
+	
+	public static String errorStartingMonitor;
+	public static String audioPrefSelectFile;
+	public static String audioPrefEnable;
+	public static String audioPrefVolume;
+	public static String audioPrefSounds;
+	public static String audioPrefSound;
+	public static String audioPrefFile;
+	public static String audioPrefPlay;
+	public static String audioPrefBrowse;
+	public static String audioPrefReset;
+	public static String audioUnknown;
+	public static String audioNone;
+	public static String audioDefault;
+	
+	public static String preferenceInternetDescription;
+	public static String internalWebBrowserName;
 
 	static {
 		NLS.initializeMessages(ServerUIPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);
