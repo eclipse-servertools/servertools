@@ -27,12 +27,12 @@ public class PreferencesTestCase extends TestCase {
 	public PreferencesTestCase(String name) {
 		super(name);
 	}
-	
+
 	public void testServerPreferencePage() {
 		Dialog dialog = UITestHelper.getPreferenceDialog("org.eclipse.wst.server.ui.preferencePage");
 		UITestHelper.assertDialog(dialog);
 	}
-	
+
 	public void testRuntimePreferencePage() {
 		Dialog dialog = UITestHelper.getPreferenceDialog("org.eclipse.wst.server.ui.runtime.preferencePage");
 		UITestHelper.assertDialog(dialog);
@@ -47,5 +47,15 @@ public class PreferencesTestCase extends TestCase {
 		UITestHelper.assertDialog(dialog);
 		
 		project.delete(true, true, null);
+	}
+
+	public void testInternetPreferencePage() {
+		Dialog dialog = UITestHelper.getPreferenceDialog("org.eclipse.internet");
+		UITestHelper.assertDialog(dialog);
+	}
+
+	public void testAudioPreferencePage() {
+		Dialog dialog = UITestHelper.getPreferenceDialog("org.eclipse.wst.audio.preferencePage");
+		UITestHelper.assertDialog(dialog);
 	}
 }
