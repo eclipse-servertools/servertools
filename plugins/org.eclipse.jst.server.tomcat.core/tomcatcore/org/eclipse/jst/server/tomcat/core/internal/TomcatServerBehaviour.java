@@ -562,4 +562,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, list);
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, false);
 	}
+	
+	protected IModuleResourceDelta[] getPublishedResourceDelta(IModule[] module) {
+		return super.getPublishedResourceDelta(module);
+	}
 }
