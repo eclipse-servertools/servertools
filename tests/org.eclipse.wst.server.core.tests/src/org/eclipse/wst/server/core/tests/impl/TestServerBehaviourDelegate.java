@@ -25,7 +25,7 @@ public class TestServerBehaviourDelegate extends ServerBehaviourDelegate {
 		}
 		
 		try {
-			initialize();
+			initialize(null);
 		} catch (Exception e) {
 			// ignore
 		}

@@ -21,4 +21,8 @@ public class TestModuleResource implements IModuleResource {
 	public String getName() {
 		return null;
 	}
+	
+	public Object getAdapter(Class cl) {
+		return null;
+	}
 }

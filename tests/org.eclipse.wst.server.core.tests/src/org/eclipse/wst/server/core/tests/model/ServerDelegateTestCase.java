@@ -41,7 +41,7 @@ public class ServerDelegateTestCase extends TestCase {
 	}
 	
 	public void test12SetDefaults() throws Exception {
-		delegate.setDefaults();
+		delegate.setDefaults(null);
 	}
 	
 	public void test18CanModifyModules() throws Exception {

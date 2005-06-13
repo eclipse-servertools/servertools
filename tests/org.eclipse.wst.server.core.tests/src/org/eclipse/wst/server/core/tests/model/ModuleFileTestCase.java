@@ -25,7 +25,7 @@ public class ModuleFileTestCase extends TestCase {
 	}
 
 	public void test00CreateDelegate() throws Exception {
-		delegate = new ModuleFile("name", null, 14);
+		delegate = new ModuleFile(null, "name", null, 14);
 	}
 	
 	public void test01Name() throws Exception {
