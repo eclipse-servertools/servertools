@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: PortImpl.java,v 1.2 2005/04/19 17:49:01 gercan Exp $
+ * $Id: PortImpl.java,v 1.3 2005/06/13 21:01:36 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
@@ -42,6 +42,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.servertype.definition.Port;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -59,238 +60,238 @@ import org.eclipse.jst.server.generic.servertype.definition.Port;
  * @generated
  */
 public class PortImpl extends EObjectImpl implements Port {
-    /**
-     * The default value of the '{@link #getNo() <em>No</em>}' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * The default value of the '{@link #getNo() <em>No</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getNo()
-     * @generated
-     * @ordered
-     */
+	 * @see #getNo()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String NO_EDEFAULT = null;
 
-    /**
-     * The cached value of the '{@link #getNo() <em>No</em>}' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * The cached value of the '{@link #getNo() <em>No</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getNo()
-     * @generated
-     * @ordered
-     */
+	 * @see #getNo()
+	 * @generated
+	 * @ordered
+	 */
 	protected String no = NO_EDEFAULT;
 
-    /**
-     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getName()
-     * @generated
-     * @ordered
-     */
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String NAME_EDEFAULT = null;
 
-    /**
-     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getName()
-     * @generated
-     * @ordered
-     */
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
 	protected String name = NAME_EDEFAULT;
 
-    /**
-     * The default value of the '{@link #getProtocol() <em>Protocol</em>}' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * The default value of the '{@link #getProtocol() <em>Protocol</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getProtocol()
-     * @generated
-     * @ordered
-     */
+	 * @see #getProtocol()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String PROTOCOL_EDEFAULT = null;
 
-    /**
-     * The cached value of the '{@link #getProtocol() <em>Protocol</em>}' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * The cached value of the '{@link #getProtocol() <em>Protocol</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getProtocol()
-     * @generated
-     * @ordered
-     */
+	 * @see #getProtocol()
+	 * @generated
+	 * @ordered
+	 */
 	protected String protocol = PROTOCOL_EDEFAULT;
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	protected PortImpl() {
-        super();
-    }
+		super();
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	protected EClass eStaticClass() {
-        return ServerTypePackage.eINSTANCE.getPort();
-    }
+		return ServerTypePackage.eINSTANCE.getPort();
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getNo() {
-        return no;
-    }
+		return no;
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setNo(String newNo) {
-        String oldNo = no;
-        no = newNo;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.PORT__NO, oldNo, no));
-    }
+		String oldNo = no;
+		no = newNo;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.PORT__NO, oldNo, no));
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getName() {
-        return name;
-    }
+		return name;
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setName(String newName) {
-        String oldName = name;
-        name = newName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.PORT__NAME, oldName, name));
-    }
+		String oldName = name;
+		name = newName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.PORT__NAME, oldName, name));
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getProtocol() {
-        return protocol;
-    }
+		return protocol;
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setProtocol(String newProtocol) {
-        String oldProtocol = protocol;
-        protocol = newProtocol;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.PORT__PROTOCOL, oldProtocol, protocol));
-    }
+		String oldProtocol = protocol;
+		protocol = newProtocol;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.PORT__PROTOCOL, oldProtocol, protocol));
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-        switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.PORT__NO:
-                return getNo();
-            case ServerTypePackage.PORT__NAME:
-                return getName();
-            case ServerTypePackage.PORT__PROTOCOL:
-                return getProtocol();
-        }
-        return eDynamicGet(eFeature, resolve);
-    }
+		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case ServerTypePackage.PORT__NO:
+				return getNo();
+			case ServerTypePackage.PORT__NAME:
+				return getName();
+			case ServerTypePackage.PORT__PROTOCOL:
+				return getProtocol();
+		}
+		return eDynamicGet(eFeature, resolve);
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void eSet(EStructuralFeature eFeature, Object newValue) {
-        switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.PORT__NO:
-                setNo((String)newValue);
-                return;
-            case ServerTypePackage.PORT__NAME:
-                setName((String)newValue);
-                return;
-            case ServerTypePackage.PORT__PROTOCOL:
-                setProtocol((String)newValue);
-                return;
-        }
-        eDynamicSet(eFeature, newValue);
-    }
+		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case ServerTypePackage.PORT__NO:
+				setNo((String)newValue);
+				return;
+			case ServerTypePackage.PORT__NAME:
+				setName((String)newValue);
+				return;
+			case ServerTypePackage.PORT__PROTOCOL:
+				setProtocol((String)newValue);
+				return;
+		}
+		eDynamicSet(eFeature, newValue);
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void eUnset(EStructuralFeature eFeature) {
-        switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.PORT__NO:
-                setNo(NO_EDEFAULT);
-                return;
-            case ServerTypePackage.PORT__NAME:
-                setName(NAME_EDEFAULT);
-                return;
-            case ServerTypePackage.PORT__PROTOCOL:
-                setProtocol(PROTOCOL_EDEFAULT);
-                return;
-        }
-        eDynamicUnset(eFeature);
-    }
+		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case ServerTypePackage.PORT__NO:
+				setNo(NO_EDEFAULT);
+				return;
+			case ServerTypePackage.PORT__NAME:
+				setName(NAME_EDEFAULT);
+				return;
+			case ServerTypePackage.PORT__PROTOCOL:
+				setProtocol(PROTOCOL_EDEFAULT);
+				return;
+		}
+		eDynamicUnset(eFeature);
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public boolean eIsSet(EStructuralFeature eFeature) {
-        switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.PORT__NO:
-                return NO_EDEFAULT == null ? no != null : !NO_EDEFAULT.equals(no);
-            case ServerTypePackage.PORT__NAME:
-                return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-            case ServerTypePackage.PORT__PROTOCOL:
-                return PROTOCOL_EDEFAULT == null ? protocol != null : !PROTOCOL_EDEFAULT.equals(protocol);
-        }
-        return eDynamicIsSet(eFeature);
-    }
+		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case ServerTypePackage.PORT__NO:
+				return NO_EDEFAULT == null ? no != null : !NO_EDEFAULT.equals(no);
+			case ServerTypePackage.PORT__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case ServerTypePackage.PORT__PROTOCOL:
+				return PROTOCOL_EDEFAULT == null ? protocol != null : !PROTOCOL_EDEFAULT.equals(protocol);
+		}
+		return eDynamicIsSet(eFeature);
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (no: ");
-        result.append(no);
-        result.append(", name: ");
-        result.append(name);
-        result.append(", protocol: ");
-        result.append(protocol);
-        result.append(')');
-        return result.toString();
-    }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (no: ");
+		result.append(no);
+		result.append(", name: ");
+		result.append(name);
+		result.append(", protocol: ");
+		result.append(protocol);
+		result.append(')');
+		return result.toString();
+	}
 
 } //PortImpl

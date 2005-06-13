@@ -59,11 +59,17 @@
 
 	<complexType name="LaunchConfiguration">
 		<sequence>
-			<element name="mainClass" type="string"/>
 			<element name="workingDirectory" type="string"/>
 			<element name="programArguments" type="string"/>
-			<element name="vmParameters" type="string"/>
-			<element name="classpathReference" type="string"/>
+			<choice>
+			<sequence>
+			<element name="mainClass" type="string" />
+			<element name="vmParameters" type="string" />
+			<element name="classpathReference" type="string" /></sequence>
+			<sequence>
+				<element name="external" type="string"></element>
+			<element name="debugPort" type="string"></element></sequence>
+			</choice>
 		</sequence>
 	</complexType>
 
@@ -83,8 +89,7 @@
 				</complexType>
 			</element>
 		</sequence>
-		<attribute name="id" type="string"/>
-		<attribute name="isLibrary" type="boolean" use="optional"/>
+		<attribute name="id" type="string" />
 	</complexType>
 
 	<complexType name="Publisher">

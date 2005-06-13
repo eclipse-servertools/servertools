@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeResourceImpl.java,v 1.1 2005/03/14 20:54:20 gercan Exp $
+ * $Id: ServerTypeResourceImpl.java,v 1.2 2005/06/13 21:01:36 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.util;
 
@@ -44,15 +44,15 @@ import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
  * @generated
  */
 public class ServerTypeResourceImpl extends XMLResourceImpl {
-    /**
-     * Creates an instance of the resource.
-     * <!-- begin-user-doc -->
+	/**
+	 * Creates an instance of the resource.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @param uri the URI of the new resource.
-     * @generated
-     */
+	 * @param uri the URI of the new resource.
+	 * @generated
+	 */
 	public ServerTypeResourceImpl(URI uri) {
-        super(uri);
-    }
+		super(uri);
+	}
 
 } //ServerTypeResourceFactoryImpl

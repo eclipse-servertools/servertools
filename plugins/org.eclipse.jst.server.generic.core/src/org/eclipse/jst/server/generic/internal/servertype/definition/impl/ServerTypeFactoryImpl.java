@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeFactoryImpl.java,v 1.3 2005/04/19 17:49:01 gercan Exp $
+ * $Id: ServerTypeFactoryImpl.java,v 1.4 2005/06/13 21:01:36 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
@@ -47,177 +47,177 @@ import org.eclipse.jst.server.generic.servertype.definition.*;
  * @generated
  */
 public class ServerTypeFactoryImpl extends EFactoryImpl implements ServerTypeFactory {
-    /**
-     * Creates and instance of the factory.
-     * <!-- begin-user-doc -->
+	/**
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public ServerTypeFactoryImpl() {
-        super();
-    }
+		super();
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public EObject create(EClass eClass) {
-        switch (eClass.getClassifierID()) {
-            case ServerTypePackage.ARCHIVE_TYPE: return createArchiveType();
-            case ServerTypePackage.CLASSPATH: return createClasspath();
-            case ServerTypePackage.JNDI_CONNECTION: return createJndiConnection();
-            case ServerTypePackage.JNDI_PROPERTY: return createJndiProperty();
-            case ServerTypePackage.LAUNCH_CONFIGURATION: return createLaunchConfiguration();
-            case ServerTypePackage.MODULE: return createModule();
-            case ServerTypePackage.PORT: return createPort();
-            case ServerTypePackage.PROJECT: return createProject();
-            case ServerTypePackage.PROPERTY: return createProperty();
-            case ServerTypePackage.PUBLISHER: return createPublisher();
-            case ServerTypePackage.PUBLISHER_DATA: return createPublisherData();
-            case ServerTypePackage.SERVER_RUNTIME: return createServerRuntime();
-            default:
-                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
-        }
-    }
+		switch (eClass.getClassifierID()) {
+			case ServerTypePackage.ARCHIVE_TYPE: return createArchiveType();
+			case ServerTypePackage.CLASSPATH: return createClasspath();
+			case ServerTypePackage.JNDI_CONNECTION: return createJndiConnection();
+			case ServerTypePackage.JNDI_PROPERTY: return createJndiProperty();
+			case ServerTypePackage.LAUNCH_CONFIGURATION: return createLaunchConfiguration();
+			case ServerTypePackage.MODULE: return createModule();
+			case ServerTypePackage.PORT: return createPort();
+			case ServerTypePackage.PROJECT: return createProject();
+			case ServerTypePackage.PROPERTY: return createProperty();
+			case ServerTypePackage.PUBLISHER: return createPublisher();
+			case ServerTypePackage.PUBLISHER_DATA: return createPublisherData();
+			case ServerTypePackage.SERVER_RUNTIME: return createServerRuntime();
+			default:
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		}
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public ArchiveType createArchiveType() {
-        ArchiveTypeImpl archiveType = new ArchiveTypeImpl();
-        return archiveType;
-    }
+		ArchiveTypeImpl archiveType = new ArchiveTypeImpl();
+		return archiveType;
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public Classpath createClasspath() {
-        ClasspathImpl classpath = new ClasspathImpl();
-        return classpath;
-    }
+		ClasspathImpl classpath = new ClasspathImpl();
+		return classpath;
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public JndiConnection createJndiConnection() {
-        JndiConnectionImpl jndiConnection = new JndiConnectionImpl();
-        return jndiConnection;
-    }
+		JndiConnectionImpl jndiConnection = new JndiConnectionImpl();
+		return jndiConnection;
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public JndiProperty createJndiProperty() {
-        JndiPropertyImpl jndiProperty = new JndiPropertyImpl();
-        return jndiProperty;
-    }
+		JndiPropertyImpl jndiProperty = new JndiPropertyImpl();
+		return jndiProperty;
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public LaunchConfiguration createLaunchConfiguration() {
-        LaunchConfigurationImpl launchConfiguration = new LaunchConfigurationImpl();
-        return launchConfiguration;
-    }
+		LaunchConfigurationImpl launchConfiguration = new LaunchConfigurationImpl();
+		return launchConfiguration;
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public Module createModule() {
-        ModuleImpl module = new ModuleImpl();
-        return module;
-    }
+		ModuleImpl module = new ModuleImpl();
+		return module;
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public Port createPort() {
-        PortImpl port = new PortImpl();
-        return port;
-    }
+		PortImpl port = new PortImpl();
+		return port;
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public Project createProject() {
-        ProjectImpl project = new ProjectImpl();
-        return project;
-    }
+		ProjectImpl project = new ProjectImpl();
+		return project;
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public Property createProperty() {
-        PropertyImpl property = new PropertyImpl();
-        return property;
-    }
+		PropertyImpl property = new PropertyImpl();
+		return property;
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public Publisher createPublisher() {
-        PublisherImpl publisher = new PublisherImpl();
-        return publisher;
-    }
+		PublisherImpl publisher = new PublisherImpl();
+		return publisher;
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public PublisherData createPublisherData() {
-        PublisherDataImpl publisherData = new PublisherDataImpl();
-        return publisherData;
-    }
+		PublisherDataImpl publisherData = new PublisherDataImpl();
+		return publisherData;
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public ServerRuntime createServerRuntime() {
-        ServerRuntimeImpl serverRuntime = new ServerRuntimeImpl();
-        return serverRuntime;
-    }
+		ServerRuntimeImpl serverRuntime = new ServerRuntimeImpl();
+		return serverRuntime;
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public ServerTypePackage getServerTypePackage() {
-        return (ServerTypePackage)getEPackage();
-    }
+		return (ServerTypePackage)getEPackage();
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @deprecated
-     * @generated
-     */
+	 * @deprecated
+	 * @generated
+	 */
 	public static ServerTypePackage getPackage() {
-        return ServerTypePackage.eINSTANCE;
-    }
+		return ServerTypePackage.eINSTANCE;
+	}
 
 } //ServerTypeFactoryImpl

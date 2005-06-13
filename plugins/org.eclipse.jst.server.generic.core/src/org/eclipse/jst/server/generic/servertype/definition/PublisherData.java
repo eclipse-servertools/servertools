@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: PublisherData.java,v 1.4 2005/04/19 17:49:01 gercan Exp $
+ * $Id: PublisherData.java,v 1.5 2005/06/13 21:01:36 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -26,22 +26,32 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface PublisherData extends EObject{
-    /**
-     * Returns the value of the '<em><b>Dataname</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the value of the '<em><b>Dataname</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Dataname</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Dataname</em>' attribute.
-     * @see #setDataname(String)
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPublisherData_Dataname()
-     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-     *        extendedMetaData="kind='element' name='dataname'"
-     * @generated
-     */
+	 * @return the value of the '<em>Dataname</em>' attribute.
+	 * @see #setDataname(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPublisherData_Dataname()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+	 *        extendedMetaData="kind='element' name='dataname'"
+	 * @generated
+	 */
     String getDataname();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.PublisherData#getDataname <em>Dataname</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Dataname</em>' attribute.
+	 * @see #getDataname()
+	 * @generated
+	 */
+	void setDataname(String value);
 
     /**
      * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.PublisherData#getDataname <em>Dataname</em>}' attribute.
@@ -79,5 +89,15 @@ public interface PublisherData extends EObject{
      * @generated
      */
 //    void setDatavalue(String value);
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.PublisherData#getDatavalue <em>Datavalue</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Datavalue</em>' attribute.
+	 * @see #getDatavalue()
+	 * @generated
+	 */
+	void setDatavalue(String value);
 
 } // PublisherData

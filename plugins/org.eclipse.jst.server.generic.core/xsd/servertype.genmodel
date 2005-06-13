@@ -6,7 +6,7 @@
     modelPluginID="org.eclipse.jst.server.generic.model" runtimeJar="true" modelName="Servertype"
     editPluginClass="org.eclipse.jst.server.generic.server.type.definition.provider.ServertypeEditPlugin"
     editorPluginClass="org.eclipse.jst.server.generic.server.type.definition.presentation.ServertypeEditorPlugin"
-    suppressEMFTypes="true" runtimeCompatibility="false">
+    suppressEMFTypes="true" importerID="org.eclipse.xsd.ecore.importer">
   <foreignModel>ServerTypeDefinitionSchema.xsd</foreignModel>
   <genPackages prefix="ServerType" basePackage="org.eclipse.jst.server.generic.servertype"
       resource="XML" ecorePackage="org.eclipse.jst.server.generic.servertype.ecore#/">
@@ -17,7 +17,6 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//Classpath/group"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference org.eclipse.jst.server.generic.servertype.ecore#//Classpath/archive"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//Classpath/id"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//Classpath/isLibrary"/>
     </genClasses>
     <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//JndiConnection">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//JndiConnection/providerUrl"/>
@@ -30,11 +29,13 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//JndiProperty/value"/>
     </genClasses>
     <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/mainClass"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/workingDirectory"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/programArguments"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/mainClass"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/vmParameters"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/classpathReference"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/external"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/debugPort"/>
     </genClasses>
     <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//Module">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//Module/type"/>

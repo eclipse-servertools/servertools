@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: LaunchConfiguration.java,v 1.6 2005/04/19 17:49:01 gercan Exp $
+ * $Id: LaunchConfiguration.java,v 1.7 2005/06/13 21:01:36 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -42,11 +42,13 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getMainClass <em>Main Class</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getWorkingDirectory <em>Working Directory</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getProgramArguments <em>Program Arguments</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getMainClass <em>Main Class</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getVmParameters <em>Vm Parameters</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getClasspathReference <em>Classpath Reference</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getExternal <em>External</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getDebugPort <em>Debug Port</em>}</li>
  * </ul>
  * </p>
  *
@@ -55,103 +57,101 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface LaunchConfiguration extends EObject{
-    /**
-     * Returns the value of the '<em><b>Main Class</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the value of the '<em><b>Main Class</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Main Class</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Main Class</em>' attribute.
-     * @see #setMainClass(String)
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_MainClass()
-     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-     *        extendedMetaData="kind='element' name='mainClass'"
-     * @generated
-     */
+	 * @return the value of the '<em>Main Class</em>' attribute.
+	 * @see #setMainClass(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_MainClass()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
+	 *        extendedMetaData="kind='element' name='mainClass'"
+	 * @generated
+	 */
     String getMainClass();
 
-    /**
-     * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getMainClass <em>Main Class</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Main Class</em>' attribute.
-     * @see #getMainClass()
-     * @generated
-     */
-//    void setMainClass(String value);
-
-    /**
-     * Returns the value of the '<em><b>Working Directory</b></em>' attribute.
-     * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Working Directory</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
+	/**
+	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getMainClass <em>Main Class</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Working Directory</em>' attribute.
-     * @see #setWorkingDirectory(String)
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_WorkingDirectory()
-     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-     *        extendedMetaData="kind='element' name='workingDirectory'"
-     * @generated
-     */
+	 * @param value the new value of the '<em>Main Class</em>' attribute.
+	 * @see #getMainClass()
+	 * @generated
+	 */
+	void setMainClass(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Working Directory</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+	 * @return the value of the '<em>Working Directory</em>' attribute.
+	 * @see #setWorkingDirectory(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_WorkingDirectory()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+	 *        extendedMetaData="kind='element' name='workingDirectory'"
+	 * @generated
+	 */
 	String getWorkingDirectory();
 
-    /**
-     * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getWorkingDirectory <em>Working Directory</em>}' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getWorkingDirectory <em>Working Directory</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Working Directory</em>' attribute.
-     * @see #getWorkingDirectory()
-     * @generated
-     */
-//	void setWorkingDirectory(String value);
+	 * @param value the new value of the '<em>Working Directory</em>' attribute.
+	 * @see #getWorkingDirectory()
+	 * @generated
+	 */
+	void setWorkingDirectory(String value);
 
-    /**
-     * Returns the value of the '<em><b>Program Arguments</b></em>' attribute.
-     * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Program Arguments</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
+	/**
+	 * Returns the value of the '<em><b>Program Arguments</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Program Arguments</em>' attribute.
-     * @see #setProgramArguments(String)
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_ProgramArguments()
-     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-     *        extendedMetaData="kind='element' name='programArguments'"
-     * @generated
-     */
+	 * @return the value of the '<em>Program Arguments</em>' attribute.
+	 * @see #setProgramArguments(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_ProgramArguments()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+	 *        extendedMetaData="kind='element' name='programArguments'"
+	 * @generated
+	 */
 	String getProgramArguments();
 
-    /**
-     * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getProgramArguments <em>Program Arguments</em>}' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getProgramArguments <em>Program Arguments</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Program Arguments</em>' attribute.
-     * @see #getProgramArguments()
-     * @generated
-     */
-//	void setProgramArguments(String value);
+	 * @param value the new value of the '<em>Program Arguments</em>' attribute.
+	 * @see #getProgramArguments()
+	 * @generated
+	 */
+	void setProgramArguments(String value);
 
-    /**
-     * Returns the value of the '<em><b>Vm Parameters</b></em>' attribute.
-     * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Vm Parameters</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
+	/**
+	 * Returns the value of the '<em><b>Vm Parameters</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Vm Parameters</em>' attribute.
-     * @see #setVmParameters(String)
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_VmParameters()
-     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-     *        extendedMetaData="kind='element' name='vmParameters'"
-     * @generated
-     */
+	 * @return the value of the '<em>Vm Parameters</em>' attribute.
+	 * @see #setVmParameters(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_VmParameters()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
+	 *        extendedMetaData="kind='element' name='vmParameters'"
+	 * @generated
+	 */
 	String getVmParameters();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getVmParameters <em>Vm Parameters</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Vm Parameters</em>' attribute.
+	 * @see #getVmParameters()
+	 * @generated
+	 */
+	void setVmParameters(String value);
 
     /**
      * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getVmParameters <em>Vm Parameters</em>}' attribute.
@@ -189,5 +189,69 @@ public interface LaunchConfiguration extends EObject{
      * @generated
      */
 //	void setClasspathReference(String value);
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getClasspathReference <em>Classpath Reference</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Classpath Reference</em>' attribute.
+	 * @see #getClasspathReference()
+	 * @generated
+	 */
+	void setClasspathReference(String value);
+
+	/**
+	 * Returns the value of the '<em><b>External</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>External</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>External</em>' attribute.
+	 * @see #setExternal(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_External()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
+	 *        extendedMetaData="kind='element' name='external'"
+	 * @generated
+	 */
+	String getExternal();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getExternal <em>External</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>External</em>' attribute.
+	 * @see #getExternal()
+	 * @generated
+	 */
+	void setExternal(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Debug Port</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Debug Port</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Debug Port</em>' attribute.
+	 * @see #setDebugPort(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_DebugPort()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
+	 *        extendedMetaData="kind='element' name='debugPort'"
+	 * @generated
+	 */
+	String getDebugPort();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getDebugPort <em>Debug Port</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Debug Port</em>' attribute.
+	 * @see #getDebugPort()
+	 * @generated
+	 */
+	void setDebugPort(String value);
 
 } // LaunchConfiguration

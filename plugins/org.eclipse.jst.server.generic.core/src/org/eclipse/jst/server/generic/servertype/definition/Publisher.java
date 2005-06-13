@@ -28,13 +28,13 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Publisher.java,v 1.7 2005/04/19 17:49:01 gercan Exp $
+ * $Id: Publisher.java,v 1.8 2005/06/13 21:01:36 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
 import java.util.List;
-import org.eclipse.emf.ecore.EObject;
 
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -55,24 +55,7 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface Publisher extends EObject{
-    /**
-     * Returns the value of the '<em><b>Group</b></em>' attribute list.
-     * The list contents are of type {@link org.eclipse.emf.ecore.util.FeatureMap.Entry}.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Group</em>' attribute list isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Group</em>' attribute list.
-     * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypePackage#getPublisher_Group()
-     * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
-     *        extendedMetaData="kind='group' name='group:0'"
-     * @generated NOT
-     */
-//    FeatureMap getGroup();
-
-    /**
+	/**
      * Returns the value of the '<em><b>Publisherdata</b></em>' containment reference list.
      * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.PublisherData}.
      * <!-- begin-user-doc -->
@@ -115,5 +98,15 @@ public interface Publisher extends EObject{
      * @generated
      */
 //	void setId(String value);
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.Publisher#getId <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Id</em>' attribute.
+	 * @see #getId()
+	 * @generated
+	 */
+	void setId(String value);
 
 } // Publisher

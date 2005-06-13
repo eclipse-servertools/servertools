@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ArchiveType.java,v 1.7 2005/04/19 17:49:01 gercan Exp $
+ * $Id: ArchiveType.java,v 1.8 2005/06/13 21:01:36 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -80,5 +80,15 @@ public interface ArchiveType extends EObject{
      * @generated
      */
 //	void setPath(String value);
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.ArchiveType#getPath <em>Path</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Path</em>' attribute.
+	 * @see #getPath()
+	 * @generated
+	 */
+	void setPath(String value);
 
 } // ArchiveType

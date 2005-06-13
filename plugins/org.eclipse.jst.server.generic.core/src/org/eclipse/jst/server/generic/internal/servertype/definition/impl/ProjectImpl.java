@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ProjectImpl.java,v 1.2 2005/04/19 17:49:01 gercan Exp $
+ * $Id: ProjectImpl.java,v 1.3 2005/06/13 21:01:36 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
@@ -42,6 +42,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.servertype.definition.Project;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -57,132 +58,132 @@ import org.eclipse.jst.server.generic.servertype.definition.Project;
  * @generated
  */
 public class ProjectImpl extends EObjectImpl implements Project {
-    /**
-     * The default value of the '{@link #getClasspathReference() <em>Classpath Reference</em>}' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * The default value of the '{@link #getClasspathReference() <em>Classpath Reference</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getClasspathReference()
-     * @generated
-     * @ordered
-     */
+	 * @see #getClasspathReference()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String CLASSPATH_REFERENCE_EDEFAULT = null;
 
-    /**
-     * The cached value of the '{@link #getClasspathReference() <em>Classpath Reference</em>}' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * The cached value of the '{@link #getClasspathReference() <em>Classpath Reference</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getClasspathReference()
-     * @generated
-     * @ordered
-     */
+	 * @see #getClasspathReference()
+	 * @generated
+	 * @ordered
+	 */
 	protected String classpathReference = CLASSPATH_REFERENCE_EDEFAULT;
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	protected ProjectImpl() {
-        super();
-    }
+		super();
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	protected EClass eStaticClass() {
-        return ServerTypePackage.eINSTANCE.getProject();
-    }
+		return ServerTypePackage.eINSTANCE.getProject();
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getClasspathReference() {
-        return classpathReference;
-    }
+		return classpathReference;
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setClasspathReference(String newClasspathReference) {
-        String oldClasspathReference = classpathReference;
-        classpathReference = newClasspathReference;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.PROJECT__CLASSPATH_REFERENCE, oldClasspathReference, classpathReference));
-    }
+		String oldClasspathReference = classpathReference;
+		classpathReference = newClasspathReference;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.PROJECT__CLASSPATH_REFERENCE, oldClasspathReference, classpathReference));
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
-        switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.PROJECT__CLASSPATH_REFERENCE:
-                return getClasspathReference();
-        }
-        return eDynamicGet(eFeature, resolve);
-    }
+		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case ServerTypePackage.PROJECT__CLASSPATH_REFERENCE:
+				return getClasspathReference();
+		}
+		return eDynamicGet(eFeature, resolve);
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void eSet(EStructuralFeature eFeature, Object newValue) {
-        switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.PROJECT__CLASSPATH_REFERENCE:
-                setClasspathReference((String)newValue);
-                return;
-        }
-        eDynamicSet(eFeature, newValue);
-    }
+		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case ServerTypePackage.PROJECT__CLASSPATH_REFERENCE:
+				setClasspathReference((String)newValue);
+				return;
+		}
+		eDynamicSet(eFeature, newValue);
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void eUnset(EStructuralFeature eFeature) {
-        switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.PROJECT__CLASSPATH_REFERENCE:
-                setClasspathReference(CLASSPATH_REFERENCE_EDEFAULT);
-                return;
-        }
-        eDynamicUnset(eFeature);
-    }
+		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case ServerTypePackage.PROJECT__CLASSPATH_REFERENCE:
+				setClasspathReference(CLASSPATH_REFERENCE_EDEFAULT);
+				return;
+		}
+		eDynamicUnset(eFeature);
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public boolean eIsSet(EStructuralFeature eFeature) {
-        switch (eDerivedStructuralFeatureID(eFeature)) {
-            case ServerTypePackage.PROJECT__CLASSPATH_REFERENCE:
-                return CLASSPATH_REFERENCE_EDEFAULT == null ? classpathReference != null : !CLASSPATH_REFERENCE_EDEFAULT.equals(classpathReference);
-        }
-        return eDynamicIsSet(eFeature);
-    }
+		switch (eDerivedStructuralFeatureID(eFeature)) {
+			case ServerTypePackage.PROJECT__CLASSPATH_REFERENCE:
+				return CLASSPATH_REFERENCE_EDEFAULT == null ? classpathReference != null : !CLASSPATH_REFERENCE_EDEFAULT.equals(classpathReference);
+		}
+		return eDynamicIsSet(eFeature);
+	}
 
-    /**
-     * <!-- begin-user-doc -->
+	/**
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (classpathReference: ");
-        result.append(classpathReference);
-        result.append(')');
-        return result.toString();
-    }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (classpathReference: ");
+		result.append(classpathReference);
+		result.append(')');
+		return result.toString();
+	}
 
 } //ProjectImpl

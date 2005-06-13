@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeSwitch.java,v 1.3 2005/04/19 17:49:01 gercan Exp $
+ * $Id: ServerTypeSwitch.java,v 1.4 2005/06/13 21:01:36 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.util;
 
@@ -54,335 +54,335 @@ import org.eclipse.jst.server.generic.servertype.definition.*;
  * @generated
  */
 public class ServerTypeSwitch {
-    /**
-     * The cached model package
-     * <!-- begin-user-doc -->
+	/**
+	 * The cached model package
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	protected static ServerTypePackage modelPackage;
 
-    /**
-     * Creates an instance of the switch.
-     * <!-- begin-user-doc -->
+	/**
+	 * Creates an instance of the switch.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public ServerTypeSwitch() {
-        if (modelPackage == null) {
-            modelPackage = ServerTypePackage.eINSTANCE;
-        }
-    }
+		if (modelPackage == null) {
+			modelPackage = ServerTypePackage.eINSTANCE;
+		}
+	}
 
-    /**
-     * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
-     * <!-- begin-user-doc -->
+	/**
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @return the first non-null result returned by a <code>caseXXX</code> call.
-     * @generated
-     */
+	 * @return the first non-null result returned by a <code>caseXXX</code> call.
+	 * @generated
+	 */
 	public Object doSwitch(EObject theEObject) {
-        return doSwitch(theEObject.eClass(), theEObject);
-    }
+		return doSwitch(theEObject.eClass(), theEObject);
+	}
 
-    /**
-     * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
-     * <!-- begin-user-doc -->
+	/**
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @return the first non-null result returned by a <code>caseXXX</code> call.
-     * @generated
-     */
+	 * @return the first non-null result returned by a <code>caseXXX</code> call.
+	 * @generated
+	 */
 	protected Object doSwitch(EClass theEClass, EObject theEObject) {
-        if (theEClass.eContainer() == modelPackage) {
-            return doSwitch(theEClass.getClassifierID(), theEObject);
-        }
-        else {
-            List eSuperTypes = theEClass.getESuperTypes();
-            return
-                eSuperTypes.isEmpty() ?
-                    defaultCase(theEObject) :
-                    doSwitch((EClass)eSuperTypes.get(0), theEObject);
-        }
-    }
+		if (theEClass.eContainer() == modelPackage) {
+			return doSwitch(theEClass.getClassifierID(), theEObject);
+		}
+		else {
+			List eSuperTypes = theEClass.getESuperTypes();
+			return
+				eSuperTypes.isEmpty() ?
+					defaultCase(theEObject) :
+					doSwitch((EClass)eSuperTypes.get(0), theEObject);
+		}
+	}
 
-    /**
-     * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
-     * <!-- begin-user-doc -->
+	/**
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @return the first non-null result returned by a <code>caseXXX</code> call.
-     * @generated
-     */
+	 * @return the first non-null result returned by a <code>caseXXX</code> call.
+	 * @generated
+	 */
 	protected Object doSwitch(int classifierID, EObject theEObject) {
-        switch (classifierID) {
-            case ServerTypePackage.ARCHIVE_TYPE: {
-                ArchiveType archiveType = (ArchiveType)theEObject;
-                Object result = caseArchiveType(archiveType);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
-            case ServerTypePackage.CLASSPATH: {
-                Classpath classpath = (Classpath)theEObject;
-                Object result = caseClasspath(classpath);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
-            case ServerTypePackage.JNDI_CONNECTION: {
-                JndiConnection jndiConnection = (JndiConnection)theEObject;
-                Object result = caseJndiConnection(jndiConnection);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
-            case ServerTypePackage.JNDI_PROPERTY: {
-                JndiProperty jndiProperty = (JndiProperty)theEObject;
-                Object result = caseJndiProperty(jndiProperty);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
-            case ServerTypePackage.LAUNCH_CONFIGURATION: {
-                LaunchConfiguration launchConfiguration = (LaunchConfiguration)theEObject;
-                Object result = caseLaunchConfiguration(launchConfiguration);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
-            case ServerTypePackage.MODULE: {
-                Module module = (Module)theEObject;
-                Object result = caseModule(module);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
-            case ServerTypePackage.PORT: {
-                Port port = (Port)theEObject;
-                Object result = casePort(port);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
-            case ServerTypePackage.PROJECT: {
-                Project project = (Project)theEObject;
-                Object result = caseProject(project);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
-            case ServerTypePackage.PROPERTY: {
-                Property property = (Property)theEObject;
-                Object result = caseProperty(property);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
-            case ServerTypePackage.PUBLISHER: {
-                Publisher publisher = (Publisher)theEObject;
-                Object result = casePublisher(publisher);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
-            case ServerTypePackage.PUBLISHER_DATA: {
-                PublisherData publisherData = (PublisherData)theEObject;
-                Object result = casePublisherData(publisherData);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
-            case ServerTypePackage.SERVER_RUNTIME: {
-                ServerRuntime serverRuntime = (ServerRuntime)theEObject;
-                Object result = caseServerRuntime(serverRuntime);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
-            default: return defaultCase(theEObject);
-        }
-    }
+		switch (classifierID) {
+			case ServerTypePackage.ARCHIVE_TYPE: {
+				ArchiveType archiveType = (ArchiveType)theEObject;
+				Object result = caseArchiveType(archiveType);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ServerTypePackage.CLASSPATH: {
+				Classpath classpath = (Classpath)theEObject;
+				Object result = caseClasspath(classpath);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ServerTypePackage.JNDI_CONNECTION: {
+				JndiConnection jndiConnection = (JndiConnection)theEObject;
+				Object result = caseJndiConnection(jndiConnection);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ServerTypePackage.JNDI_PROPERTY: {
+				JndiProperty jndiProperty = (JndiProperty)theEObject;
+				Object result = caseJndiProperty(jndiProperty);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ServerTypePackage.LAUNCH_CONFIGURATION: {
+				LaunchConfiguration launchConfiguration = (LaunchConfiguration)theEObject;
+				Object result = caseLaunchConfiguration(launchConfiguration);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ServerTypePackage.MODULE: {
+				Module module = (Module)theEObject;
+				Object result = caseModule(module);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ServerTypePackage.PORT: {
+				Port port = (Port)theEObject;
+				Object result = casePort(port);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ServerTypePackage.PROJECT: {
+				Project project = (Project)theEObject;
+				Object result = caseProject(project);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ServerTypePackage.PROPERTY: {
+				Property property = (Property)theEObject;
+				Object result = caseProperty(property);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ServerTypePackage.PUBLISHER: {
+				Publisher publisher = (Publisher)theEObject;
+				Object result = casePublisher(publisher);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ServerTypePackage.PUBLISHER_DATA: {
+				PublisherData publisherData = (PublisherData)theEObject;
+				Object result = casePublisherData(publisherData);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ServerTypePackage.SERVER_RUNTIME: {
+				ServerRuntime serverRuntime = (ServerRuntime)theEObject;
+				Object result = caseServerRuntime(serverRuntime);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			default: return defaultCase(theEObject);
+		}
+	}
 
-    /**
-     * Returns the result of interpretting the object as an instance of '<em>Archive Type</em>'.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Archive Type</em>'.
+	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpretting the object as an instance of '<em>Archive Type</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Archive Type</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
 	public Object caseArchiveType(ArchiveType object) {
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Returns the result of interpretting the object as an instance of '<em>Classpath</em>'.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Classpath</em>'.
+	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpretting the object as an instance of '<em>Classpath</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Classpath</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
 	public Object caseClasspath(Classpath object) {
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Returns the result of interpretting the object as an instance of '<em>Jndi Connection</em>'.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Jndi Connection</em>'.
+	 * <!-- begin-user-doc -->
      * This implementation returns null;
      * returning a non-null result will terminate the switch.
      * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpretting the object as an instance of '<em>Jndi Connection</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Jndi Connection</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
     public Object caseJndiConnection(JndiConnection object) {
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Returns the result of interpretting the object as an instance of '<em>Jndi Property</em>'.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Jndi Property</em>'.
+	 * <!-- begin-user-doc -->
      * This implementation returns null;
      * returning a non-null result will terminate the switch.
      * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpretting the object as an instance of '<em>Jndi Property</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Jndi Property</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
     public Object caseJndiProperty(JndiProperty object) {
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Returns the result of interpretting the object as an instance of '<em>Launch Configuration</em>'.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Launch Configuration</em>'.
+	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpretting the object as an instance of '<em>Launch Configuration</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Launch Configuration</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
 	public Object caseLaunchConfiguration(LaunchConfiguration object) {
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Returns the result of interpretting the object as an instance of '<em>Module</em>'.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Module</em>'.
+	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpretting the object as an instance of '<em>Module</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Module</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
 	public Object caseModule(Module object) {
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Returns the result of interpretting the object as an instance of '<em>Port</em>'.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Port</em>'.
+	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpretting the object as an instance of '<em>Port</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Port</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
 	public Object casePort(Port object) {
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Returns the result of interpretting the object as an instance of '<em>Project</em>'.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Project</em>'.
+	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpretting the object as an instance of '<em>Project</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Project</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
 	public Object caseProject(Project object) {
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Returns the result of interpretting the object as an instance of '<em>Property</em>'.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Property</em>'.
+	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpretting the object as an instance of '<em>Property</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Property</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
 	public Object caseProperty(Property object) {
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Returns the result of interpretting the object as an instance of '<em>Publisher</em>'.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Publisher</em>'.
+	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpretting the object as an instance of '<em>Publisher</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Publisher</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
 	public Object casePublisher(Publisher object) {
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Returns the result of interpretting the object as an instance of '<em>Publisher Data</em>'.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Publisher Data</em>'.
+	 * <!-- begin-user-doc -->
      * This implementation returns null;
      * returning a non-null result will terminate the switch.
      * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpretting the object as an instance of '<em>Publisher Data</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Publisher Data</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
     public Object casePublisherData(PublisherData object) {
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Returns the result of interpretting the object as an instance of '<em>Server Runtime</em>'.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Server Runtime</em>'.
+	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpretting the object as an instance of '<em>Server Runtime</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Server Runtime</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
 	public Object caseServerRuntime(ServerRuntime object) {
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Returns the result of interpretting the object as an instance of '<em>EObject</em>'.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>EObject</em>'.
+	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch, but this is the last case anyway.
 	 * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpretting the object as an instance of '<em>EObject</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject)
-     * @generated
-     */
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>EObject</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject)
+	 * @generated
+	 */
 	public Object defaultCase(EObject object) {
-        return null;
-    }
+		return null;
+	}
 
 } //ServerTypeSwitch

@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Port.java,v 1.5 2005/04/19 17:49:01 gercan Exp $
+ * $Id: Port.java,v 1.6 2005/06/13 21:01:36 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -53,49 +53,55 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface Port extends EObject{
-    /**
-     * Returns the value of the '<em><b>No</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the value of the '<em><b>No</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>No</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-     * @return the value of the '<em>No</em>' attribute.
-     * @see #setNo(String)
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPort_No()
-     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-     *        extendedMetaData="kind='element' name='no'"
-     * @generated
-     */
+	 * @return the value of the '<em>No</em>' attribute.
+	 * @see #setNo(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPort_No()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+	 *        extendedMetaData="kind='element' name='no'"
+	 * @generated
+	 */
 	String getNo();
 
-    /**
-     * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.Port#getNo <em>No</em>}' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.Port#getNo <em>No</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @param value the new value of the '<em>No</em>' attribute.
-     * @see #getNo()
-     * @generated
-     */
-//	void setNo(String value);
+	 * @param value the new value of the '<em>No</em>' attribute.
+	 * @see #getNo()
+	 * @generated
+	 */
+	void setNo(String value);
 
-    /**
-     * Returns the value of the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Name</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
+	/**
+	 * Returns the value of the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Name</em>' attribute.
-     * @see #setName(String)
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPort_Name()
-     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-     *        extendedMetaData="kind='element' name='name'"
-     * @generated
-     */
+	 * @return the value of the '<em>Name</em>' attribute.
+	 * @see #setName(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPort_Name()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+	 *        extendedMetaData="kind='element' name='name'"
+	 * @generated
+	 */
 	String getName();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.Port#getName <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Name</em>' attribute.
+	 * @see #getName()
+	 * @generated
+	 */
+	void setName(String value);
 
     /**
      * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.Port#getName <em>Name</em>}' attribute.
@@ -133,5 +139,15 @@ public interface Port extends EObject{
      * @generated
      */
 //	void setProtocol(String value);
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.Port#getProtocol <em>Protocol</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Protocol</em>' attribute.
+	 * @see #getProtocol()
+	 * @generated
+	 */
+	void setProtocol(String value);
 
 } // Port
