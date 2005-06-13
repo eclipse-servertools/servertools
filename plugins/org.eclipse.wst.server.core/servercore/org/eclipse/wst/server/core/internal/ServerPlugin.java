@@ -817,7 +817,7 @@ public class ServerPlugin extends Plugin {
 	 * @return <code>true</code> if there is a module artifact adapter
 	 */
 	public static boolean hasModuleArtifact(Object obj) {
-		Trace.trace(Trace.FINEST, "ServerUIPlugin.hasModuleArtifact() " + obj);
+		Trace.trace(Trace.FINEST, "ServerPlugin.hasModuleArtifact() " + obj);
 		ModuleArtifactAdapter[] adapters = getModuleArtifactAdapters();
 		if (adapters != null) {
 			int size = adapters.length;
@@ -843,7 +843,7 @@ public class ServerPlugin extends Plugin {
 	 * @return a module artifact, or null
 	 */
 	public static IModuleArtifact getModuleArtifact(Object obj) {
-		Trace.trace(Trace.FINEST, "ServerUIPlugin.getModuleArtifact() " + obj);
+		Trace.trace(Trace.FINEST, "ServerPlugin.getModuleArtifact() " + obj);
 		ModuleArtifactAdapter[] adapters = getModuleArtifactAdapters();
 		if (adapters != null) {
 			int size = adapters.length;
@@ -873,7 +873,7 @@ public class ServerPlugin extends Plugin {
 	 * @return a module artifact, or null
 	 */
 	public static IModuleArtifact loadModuleArtifact(Object obj) {
-		Trace.trace(Trace.FINEST, "ServerUIPlugin.loadModuleArtifact() " + obj);
+		Trace.trace(Trace.FINEST, "ServerPlugin.loadModuleArtifact() " + obj);
 		ModuleArtifactAdapter[] adapters = getModuleArtifactAdapters();
 		if (adapters != null) {
 			int size = adapters.length;

@@ -291,55 +291,6 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		t.start();
 	}
 	
-	//protected static final String MODULE_ARTIFACT_CLASS = "org.eclipse.wst.server.core.IModuleArtifact";
-	
-	/**
-	 * Returns the module artifact for the given object, or null if a module artifact
-	 * can't be found.
-	 *
-	 * @return the module artifact
-	 */
-	/*public static boolean hasModuleArtifact(Object adaptable) {
-		if (adaptable instanceof IModuleArtifact)
-			return true;
-		
-		return Platform.getAdapterManager().hasAdapter(adaptable, MODULE_ARTIFACT_CLASS);
-	}*/
-	
-	/**
-	 * Returns the module artifact for the given object, or null if a module artifact
-	 * can't be found.
-	 *
-	 * @return the module artifact
-	 */
-	/*public static IModuleArtifact getModuleArtifact(Object adaptable) {
-		if (adaptable instanceof IModuleArtifact)
-			return (IModuleArtifact) adaptable;
-		
-		if (Platform.getAdapterManager().hasAdapter(adaptable, MODULE_ARTIFACT_CLASS)) {
-			return (IModuleArtifact) Platform.getAdapterManager().getAdapter(adaptable, MODULE_ARTIFACT_CLASS);
-		}
-		
-		return null;
-	}*/
-
-	/**
-	 * Returns the module artifact for the given object, or null if a module artifact
-	 * can't be found.
-	 *
-	 * @return the module artifact
-	 */
-	/*public static IModuleArtifact loadModuleArtifact(Object obj) {
-		if (obj instanceof IModuleArtifact)
-			return (IModuleArtifact) obj;
-		
-		if (Platform.getAdapterManager().hasAdapter(obj, MODULE_ARTIFACT_CLASS)) {
-			return (IModuleArtifact) Platform.getAdapterManager().loadAdapter(obj, MODULE_ARTIFACT_CLASS);
-		}
-		
-		return null;
-	}*/
-	
 	/**
 	 * Returns the server that came from the given file, or <code>null</code>
 	 * if none. This convenience method searches the list of known
