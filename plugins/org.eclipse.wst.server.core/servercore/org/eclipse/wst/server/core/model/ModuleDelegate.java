@@ -11,7 +11,6 @@
 package org.eclipse.wst.server.core.model;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IModule;
 /**
@@ -55,10 +54,8 @@ public abstract class ModuleDelegate {
 	 * </p>
 	 * 
 	 * @param newModule the module instance
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
 	 */
-	public final void initialize(IModule newModule, IProgressMonitor monitor) {
+	public final void initialize(IModule newModule) {
 		this.module = newModule;
 		initialize();
 	}
