@@ -33,7 +33,7 @@ public class ModuleDelegateTestCase extends TestCase {
 	}
 	
 	public void test02Initialize() throws Exception {
-		delegate.initialize(null, null);
+		delegate.initialize(null);
 	}
 	
 	public void test03GetChildModules() throws Exception {
