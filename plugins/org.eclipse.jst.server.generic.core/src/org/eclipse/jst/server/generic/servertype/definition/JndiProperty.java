@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: JndiProperty.java,v 1.4 2005/06/13 21:01:36 gercan Exp $
+ * $Id: JndiProperty.java,v 1.5 2005/06/14 20:45:45 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -53,31 +53,17 @@ public interface JndiProperty extends EObject{
 	 */
 	void setName(String value);
 
-    /**
-     * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.JndiProperty#getName <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the value of the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Name</em>' attribute.
-     * @see #getName()
-     * @generated
-     */
-//    void setName(String value);
-
-    /**
-     * Returns the value of the '<em><b>Value</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Value</em>' attribute isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Value</em>' attribute.
-     * @see #setValue(String)
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getJndiProperty_Value()
-     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-     *        extendedMetaData="kind='element' name='value'"
-     * @generated
-     */
+	 * @return the value of the '<em>Value</em>' attribute.
+	 * @see #setValue(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getJndiProperty_Value()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+	 *        extendedMetaData="kind='element' name='value'"
+	 * @generated
+	 */
     String getValue();
 
     /**

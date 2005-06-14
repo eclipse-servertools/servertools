@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Module.java,v 1.6 2005/06/13 21:01:36 gercan Exp $
+ * $Id: Module.java,v 1.7 2005/06/14 20:45:45 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -103,31 +103,17 @@ public interface Module extends EObject{
 	 */
 	void setPublishDir(String value);
 
-    /**
-     * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.Module#getPublishDir <em>Publish Dir</em>}' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the value of the '<em><b>Publisher Reference</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Publish Dir</em>' attribute.
-     * @see #getPublishDir()
-     * @generated
-     */
-//	void setPublishDir(String value);
-
-    /**
-     * Returns the value of the '<em><b>Publisher Reference</b></em>' attribute.
-     * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Publisher Reference</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Publisher Reference</em>' attribute.
-     * @see #setPublisherReference(String)
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getModule_PublisherReference()
-     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-     *        extendedMetaData="kind='element' name='publisherReference'"
-     * @generated
-     */
+	 * @return the value of the '<em>Publisher Reference</em>' attribute.
+	 * @see #setPublisherReference(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getModule_PublisherReference()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+	 *        extendedMetaData="kind='element' name='publisherReference'"
+	 * @generated
+	 */
 	String getPublisherReference();
 
     /**

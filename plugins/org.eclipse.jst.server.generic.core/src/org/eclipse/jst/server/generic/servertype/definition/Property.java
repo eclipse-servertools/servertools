@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Property.java,v 1.6 2005/06/13 21:01:36 gercan Exp $
+ * $Id: Property.java,v 1.7 2005/06/14 20:45:45 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -154,31 +154,17 @@ public interface Property extends EObject{
 	 */
 	void setLabel(String value);
 
-    /**
-     * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.Property#getLabel <em>Label</em>}' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the value of the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Label</em>' attribute.
-     * @see #getLabel()
-     * @generated
-     */
-//	void setLabel(String value);
-
-    /**
-     * Returns the value of the '<em><b>Type</b></em>' attribute.
-     * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Type</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Type</em>' attribute.
-     * @see #setType(String)
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getProperty_Type()
-     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
-     *        extendedMetaData="kind='attribute' name='type'"
-     * @generated
-     */
+	 * @return the value of the '<em>Type</em>' attribute.
+	 * @see #setType(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getProperty_Type()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
+	 *        extendedMetaData="kind='attribute' name='type'"
+	 * @generated
+	 */
 	String getType();
 
     /**

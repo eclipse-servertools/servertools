@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeSwitch.java,v 1.4 2005/06/13 21:01:36 gercan Exp $
+ * $Id: ServerTypeSwitch.java,v 1.5 2005/06/14 20:45:45 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.util;
 
@@ -126,6 +126,12 @@ public class ServerTypeSwitch {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ServerTypePackage.EXTERNAL_TYPE: {
+				ExternalType externalType = (ExternalType)theEObject;
+				Object result = caseExternalType(externalType);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ServerTypePackage.JNDI_CONNECTION: {
 				JndiConnection jndiConnection = (JndiConnection)theEObject;
 				Object result = caseJndiConnection(jndiConnection);
@@ -217,6 +223,21 @@ public class ServerTypeSwitch {
 	 * @generated
 	 */
 	public Object caseClasspath(Classpath object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>External Type</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>External Type</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseExternalType(ExternalType object) {
 		return null;
 	}
 

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ServerTypePackage.java,v 1.2 2005/06/13 21:01:36 gercan Exp $
+ * $Id: ServerTypePackage.java,v 1.3 2005/06/14 20:45:45 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition;
 
@@ -26,7 +26,7 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerTypeFactory;
  * @see org.eclipse.jst.server.generic.servertype.definition.ServerTypeFactory
  * @generated
  */
-public interface ServerTypePackage extends EPackage {
+public interface ServerTypePackage extends EPackage{
 	/**
 	 * The package name.
 	 * <!-- begin-user-doc -->
@@ -134,6 +134,34 @@ public interface ServerTypePackage extends EPackage {
 	int CLASSPATH_FEATURE_COUNT = 3;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ExternalTypeImpl <em>External Type</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ExternalTypeImpl
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getExternalType()
+	 * @generated
+	 */
+	int EXTERNAL_TYPE = 2;
+
+	/**
+	 * The feature id for the '<em><b>Os</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTERNAL_TYPE__OS = 0;
+
+	/**
+	 * The number of structural features of the the '<em>External Type</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTERNAL_TYPE_FEATURE_COUNT = 1;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.JndiConnectionImpl <em>Jndi Connection</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -141,7 +169,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getJndiConnection()
 	 * @generated
 	 */
-	int JNDI_CONNECTION = 2;
+	int JNDI_CONNECTION = 3;
 
 	/**
 	 * The feature id for the '<em><b>Provider Url</b></em>' attribute.
@@ -196,7 +224,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getJndiProperty()
 	 * @generated
 	 */
-	int JNDI_PROPERTY = 3;
+	int JNDI_PROPERTY = 4;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -233,7 +261,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getLaunchConfiguration()
 	 * @generated
 	 */
-	int LAUNCH_CONFIGURATION = 4;
+	int LAUNCH_CONFIGURATION = 5;
 
 	/**
 	 * The feature id for the '<em><b>Working Directory</b></em>' attribute.
@@ -281,22 +309,40 @@ public interface ServerTypePackage extends EPackage {
 	int LAUNCH_CONFIGURATION__CLASSPATH_REFERENCE = 4;
 
 	/**
-	 * The feature id for the '<em><b>External</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LAUNCH_CONFIGURATION__EXTERNAL = 5;
-
-	/**
 	 * The feature id for the '<em><b>Debug Port</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int LAUNCH_CONFIGURATION__DEBUG_PORT = 6;
+	int LAUNCH_CONFIGURATION__DEBUG_PORT = 5;
+
+	/**
+	 * The feature id for the '<em><b>Group</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LAUNCH_CONFIGURATION__GROUP = 6;
+
+	/**
+	 * The feature id for the '<em><b>External</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LAUNCH_CONFIGURATION__EXTERNAL = 7;
+
+	/**
+	 * The feature id for the '<em><b>Launch Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LAUNCH_CONFIGURATION__LAUNCH_TYPE = 8;
 
 	/**
 	 * The number of structural features of the the '<em>Launch Configuration</em>' class.
@@ -305,7 +351,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LAUNCH_CONFIGURATION_FEATURE_COUNT = 7;
+	int LAUNCH_CONFIGURATION_FEATURE_COUNT = 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ModuleImpl <em>Module</em>}' class.
@@ -315,7 +361,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getModule()
 	 * @generated
 	 */
-	int MODULE = 5;
+	int MODULE = 6;
 
 	/**
 	 * The feature id for the '<em><b>Type</b></em>' attribute.
@@ -361,7 +407,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getPort()
 	 * @generated
 	 */
-	int PORT = 6;
+	int PORT = 7;
 
 	/**
 	 * The feature id for the '<em><b>No</b></em>' attribute.
@@ -407,7 +453,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getProject()
 	 * @generated
 	 */
-	int PROJECT = 7;
+	int PROJECT = 8;
 
 	/**
 	 * The feature id for the '<em><b>Classpath Reference</b></em>' attribute.
@@ -435,7 +481,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getProperty()
 	 * @generated
 	 */
-	int PROPERTY = 8;
+	int PROPERTY = 9;
 
 	/**
 	 * The feature id for the '<em><b>Context</b></em>' attribute.
@@ -499,7 +545,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getPublisher()
 	 * @generated
 	 */
-	int PUBLISHER = 9;
+	int PUBLISHER = 10;
 
 	/**
 	 * The feature id for the '<em><b>Group</b></em>' attribute list.
@@ -545,7 +591,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getPublisherData()
 	 * @generated
 	 */
-	int PUBLISHER_DATA = 10;
+	int PUBLISHER_DATA = 11;
 
 	/**
 	 * The feature id for the '<em><b>Dataname</b></em>' attribute.
@@ -582,7 +628,7 @@ public interface ServerTypePackage extends EPackage {
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getServerRuntime()
 	 * @generated
 	 */
-	int SERVER_RUNTIME = 11;
+	int SERVER_RUNTIME = 12;
 
 	/**
 	 * The feature id for the '<em><b>Group</b></em>' attribute list.
@@ -803,6 +849,27 @@ public interface ServerTypePackage extends EPackage {
 	EAttribute getClasspath_Id();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.jst.server.generic.servertype.definition.ExternalType <em>External Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>External Type</em>'.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.ExternalType
+	 * @generated
+	 */
+	EClass getExternalType();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.jst.server.generic.servertype.definition.ExternalType#getOs <em>Os</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Os</em>'.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.ExternalType#getOs()
+	 * @see #getExternalType()
+	 * @generated
+	 */
+	EAttribute getExternalType_Os();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.jst.server.generic.servertype.definition.JndiConnection <em>Jndi Connection</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -954,15 +1021,26 @@ public interface ServerTypePackage extends EPackage {
 	EAttribute getLaunchConfiguration_ClasspathReference();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getExternal <em>External</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getExternal <em>External</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>External</em>'.
+	 * @return the meta object for the containment reference list '<em>External</em>'.
 	 * @see org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getExternal()
 	 * @see #getLaunchConfiguration()
 	 * @generated
 	 */
-	EAttribute getLaunchConfiguration_External();
+	EReference getLaunchConfiguration_External();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getLaunchType <em>Launch Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Launch Type</em>'.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getLaunchType()
+	 * @see #getLaunchConfiguration()
+	 * @generated
+	 */
+	EAttribute getLaunchConfiguration_LaunchType();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getDebugPort <em>Debug Port</em>}'.
@@ -974,6 +1052,17 @@ public interface ServerTypePackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getLaunchConfiguration_DebugPort();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getGroup <em>Group</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Group</em>'.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getGroup()
+	 * @see #getLaunchConfiguration()
+	 * @generated
+	 */
+	EAttribute getLaunchConfiguration_Group();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.jst.server.generic.servertype.definition.Module <em>Module</em>}'.

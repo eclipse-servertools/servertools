@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeAdapterFactory.java,v 1.4 2005/06/13 21:01:36 gercan Exp $
+ * $Id: ServerTypeAdapterFactory.java,v 1.5 2005/06/14 20:45:45 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.util;
 
@@ -103,6 +103,9 @@ public class ServerTypeAdapterFactory extends AdapterFactoryImpl {
 			public Object caseClasspath(Classpath object) {
 				return createClasspathAdapter();
 			}
+			public Object caseExternalType(ExternalType object) {
+				return createExternalTypeAdapter();
+			}
 			public Object caseJndiConnection(JndiConnection object) {
 				return createJndiConnectionAdapter();
 			}
@@ -176,6 +179,20 @@ public class ServerTypeAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createClasspathAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.ExternalType <em>External Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.ExternalType
+	 * @generated
+	 */
+	public Adapter createExternalTypeAdapter() {
 		return null;
 	}
 

@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypePackageImpl.java,v 1.4 2005/06/13 21:01:36 gercan Exp $
+ * $Id: ServerTypePackageImpl.java,v 1.5 2005/06/14 20:45:45 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
@@ -46,6 +46,7 @@ import org.eclipse.emf.ecore.xml.type.impl.XMLTypePackageImpl;
 import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
+import org.eclipse.jst.server.generic.servertype.definition.ExternalType;
 import org.eclipse.jst.server.generic.servertype.definition.JndiConnection;
 import org.eclipse.jst.server.generic.servertype.definition.JndiProperty;
 import org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration;
@@ -79,6 +80,13 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 	 * @generated
 	 */
 	private EClass classpathEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass externalTypeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -277,6 +285,24 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 
 	/**
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getExternalType() {
+		return externalTypeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getExternalType_Os() {
+		return (EAttribute)externalTypeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -406,8 +432,17 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getLaunchConfiguration_External() {
-		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(5);
+	public EReference getLaunchConfiguration_External() {
+		return (EReference)launchConfigurationEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLaunchConfiguration_LaunchType() {
+		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
@@ -416,6 +451,15 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 	 * @generated
 	 */
 	public EAttribute getLaunchConfiguration_DebugPort() {
+		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLaunchConfiguration_Group() {
 		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -815,6 +859,9 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 		createEReference(classpathEClass, CLASSPATH__ARCHIVE);
 		createEAttribute(classpathEClass, CLASSPATH__ID);
 
+		externalTypeEClass = createEClass(EXTERNAL_TYPE);
+		createEAttribute(externalTypeEClass, EXTERNAL_TYPE__OS);
+
 		jndiConnectionEClass = createEClass(JNDI_CONNECTION);
 		createEAttribute(jndiConnectionEClass, JNDI_CONNECTION__PROVIDER_URL);
 		createEAttribute(jndiConnectionEClass, JNDI_CONNECTION__GROUP);
@@ -831,8 +878,10 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 		createEAttribute(launchConfigurationEClass, LAUNCH_CONFIGURATION__MAIN_CLASS);
 		createEAttribute(launchConfigurationEClass, LAUNCH_CONFIGURATION__VM_PARAMETERS);
 		createEAttribute(launchConfigurationEClass, LAUNCH_CONFIGURATION__CLASSPATH_REFERENCE);
-		createEAttribute(launchConfigurationEClass, LAUNCH_CONFIGURATION__EXTERNAL);
 		createEAttribute(launchConfigurationEClass, LAUNCH_CONFIGURATION__DEBUG_PORT);
+		createEAttribute(launchConfigurationEClass, LAUNCH_CONFIGURATION__GROUP);
+		createEReference(launchConfigurationEClass, LAUNCH_CONFIGURATION__EXTERNAL);
+		createEAttribute(launchConfigurationEClass, LAUNCH_CONFIGURATION__LAUNCH_TYPE);
 
 		moduleEClass = createEClass(MODULE);
 		createEAttribute(moduleEClass, MODULE__TYPE);
@@ -919,6 +968,9 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 		initEReference(getClasspath_Archive(), this.getArchiveType(), null, "archive", null, 1, -1, Classpath.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getClasspath_Id(), theXMLTypePackage.getString(), "id", null, 0, 1, Classpath.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(externalTypeEClass, ExternalType.class, "ExternalType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getExternalType_Os(), theXMLTypePackage.getString(), "os", null, 1, 1, ExternalType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(jndiConnectionEClass, JndiConnection.class, "JndiConnection", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getJndiConnection_ProviderUrl(), theXMLTypePackage.getString(), "providerUrl", null, 1, 1, JndiConnection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getJndiConnection_Group(), ecorePackage.getEFeatureMapEntry(), "group", null, 0, -1, JndiConnection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -935,8 +987,10 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 		initEAttribute(getLaunchConfiguration_MainClass(), theXMLTypePackage.getString(), "mainClass", null, 0, 1, LaunchConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getLaunchConfiguration_VmParameters(), theXMLTypePackage.getString(), "vmParameters", null, 0, 1, LaunchConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getLaunchConfiguration_ClasspathReference(), theXMLTypePackage.getString(), "classpathReference", null, 0, 1, LaunchConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getLaunchConfiguration_External(), theXMLTypePackage.getString(), "external", null, 0, 1, LaunchConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getLaunchConfiguration_DebugPort(), theXMLTypePackage.getString(), "debugPort", null, 0, 1, LaunchConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLaunchConfiguration_Group(), ecorePackage.getEFeatureMapEntry(), "group", null, 0, -1, LaunchConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getLaunchConfiguration_External(), this.getExternalType(), null, "external", null, 0, -1, LaunchConfiguration.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLaunchConfiguration_LaunchType(), theXMLTypePackage.getString(), "launchType", null, 1, 1, LaunchConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(moduleEClass, Module.class, "Module", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getModule_Type(), theXMLTypePackage.getString(), "type", null, 1, 1, Module.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1045,6 +1099,20 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 			 "name", "id"
 		   });		
 		addAnnotation
+		  (externalTypeEClass, 
+		   source, 
+		   new String[] {
+			 "name", "external_._type",
+			 "kind", "empty"
+		   });		
+		addAnnotation
+		  (getExternalType_Os(), 
+		   source, 
+		   new String[] {
+			 "kind", "attribute",
+			 "name", "os"
+		   });		
+		addAnnotation
 		  (jndiConnectionEClass, 
 		   source, 
 		   new String[] {
@@ -1144,18 +1212,33 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 			 "name", "classpathReference"
 		   });		
 		addAnnotation
-		  (getLaunchConfiguration_External(), 
-		   source, 
-		   new String[] {
-			 "kind", "element",
-			 "name", "external"
-		   });		
-		addAnnotation
 		  (getLaunchConfiguration_DebugPort(), 
 		   source, 
 		   new String[] {
 			 "kind", "element",
 			 "name", "debugPort"
+		   });		
+		addAnnotation
+		  (getLaunchConfiguration_Group(), 
+		   source, 
+		   new String[] {
+			 "kind", "group",
+			 "name", "group:6"
+		   });		
+		addAnnotation
+		  (getLaunchConfiguration_External(), 
+		   source, 
+		   new String[] {
+			 "kind", "element",
+			 "name", "external",
+			 "group", "#group:6"
+		   });		
+		addAnnotation
+		  (getLaunchConfiguration_LaunchType(), 
+		   source, 
+		   new String[] {
+			 "kind", "attribute",
+			 "name", "launchType"
 		   });		
 		addAnnotation
 		  (moduleEClass, 

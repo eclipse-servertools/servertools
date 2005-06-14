@@ -28,17 +28,28 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: LaunchConfigurationImpl.java,v 1.5 2005/06/13 21:01:36 gercan Exp $
+ * $Id: LaunchConfigurationImpl.java,v 1.6 2005/06/14 20:45:45 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.eclipse.emf.common.notify.Notification;
+
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
+import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
+
+import org.eclipse.emf.ecore.util.BasicFeatureMap;
+import org.eclipse.emf.ecore.util.FeatureMap;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration;
@@ -56,8 +67,10 @@ import org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration;
  *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl#getMainClass <em>Main Class</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl#getVmParameters <em>Vm Parameters</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl#getClasspathReference <em>Classpath Reference</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl#getExternal <em>External</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl#getDebugPort <em>Debug Port</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl#getGroup <em>Group</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl#getExternal <em>External</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.LaunchConfigurationImpl#getLaunchType <em>Launch Type</em>}</li>
  * </ul>
  * </p>
  *
@@ -165,26 +178,6 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	protected String classpathReference = CLASSPATH_REFERENCE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getExternal() <em>External</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getExternal()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String EXTERNAL_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getExternal() <em>External</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getExternal()
-	 * @generated
-	 * @ordered
-	 */
-	protected String external = EXTERNAL_EDEFAULT;
-
-	/**
 	 * The default value of the '{@link #getDebugPort() <em>Debug Port</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -203,6 +196,36 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	 * @ordered
 	 */
 	protected String debugPort = DEBUG_PORT_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getGroup() <em>Group</em>}' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getGroup()
+	 * @generated
+	 * @ordered
+	 */
+	protected FeatureMap group = null;
+
+	/**
+	 * The default value of the '{@link #getLaunchType() <em>Launch Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getLaunchType()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String LAUNCH_TYPE_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getLaunchType() <em>Launch Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getLaunchType()
+	 * @generated
+	 * @ordered
+	 */
+	protected String launchType = LAUNCH_TYPE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -348,8 +371,8 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getExternal() {
-		return external;
+	public List getExternal() {
+		return ((FeatureMap)getGroup()).list(ServerTypePackage.eINSTANCE.getLaunchConfiguration_External());
 	}
 
 	/**
@@ -357,11 +380,39 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setExternal(String newExternal) {
-		String oldExternal = external;
-		external = newExternal;
+	public String getLaunchType() {
+		return launchType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setLaunchType(String newLaunchType) {
+		String oldLaunchType = launchType;
+		launchType = newLaunchType;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.LAUNCH_CONFIGURATION__EXTERNAL, oldExternal, external));
+			eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.LAUNCH_CONFIGURATION__LAUNCH_TYPE, oldLaunchType, launchType));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, Class baseClass, NotificationChain msgs) {
+		if (featureID >= 0) {
+			switch (eDerivedStructuralFeatureID(featureID, baseClass)) {
+				case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP:
+					return ((InternalEList)getGroup()).basicRemove(otherEnd, msgs);
+				case ServerTypePackage.LAUNCH_CONFIGURATION__EXTERNAL:
+					return ((InternalEList)getExternal()).basicRemove(otherEnd, msgs);
+				default:
+					return eDynamicInverseRemove(otherEnd, featureID, baseClass, msgs);
+			}
+		}
+		return eBasicSetContainer(null, featureID, msgs);
 	}
 
 	/**
@@ -390,6 +441,18 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public FeatureMap getGroup() {
+		if (group == null) {
+			group = new BasicFeatureMap(this, ServerTypePackage.LAUNCH_CONFIGURATION__GROUP);
+		}
+		return group;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
 			case ServerTypePackage.LAUNCH_CONFIGURATION__WORKING_DIRECTORY:
@@ -402,10 +465,14 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 				return getVmParameters();
 			case ServerTypePackage.LAUNCH_CONFIGURATION__CLASSPATH_REFERENCE:
 				return getClasspathReference();
-			case ServerTypePackage.LAUNCH_CONFIGURATION__EXTERNAL:
-				return getExternal();
 			case ServerTypePackage.LAUNCH_CONFIGURATION__DEBUG_PORT:
 				return getDebugPort();
+			case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP:
+				return getGroup();
+			case ServerTypePackage.LAUNCH_CONFIGURATION__EXTERNAL:
+				return getExternal();
+			case ServerTypePackage.LAUNCH_CONFIGURATION__LAUNCH_TYPE:
+				return getLaunchType();
 		}
 		return eDynamicGet(eFeature, resolve);
 	}
@@ -432,11 +499,19 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 			case ServerTypePackage.LAUNCH_CONFIGURATION__CLASSPATH_REFERENCE:
 				setClasspathReference((String)newValue);
 				return;
-			case ServerTypePackage.LAUNCH_CONFIGURATION__EXTERNAL:
-				setExternal((String)newValue);
-				return;
 			case ServerTypePackage.LAUNCH_CONFIGURATION__DEBUG_PORT:
 				setDebugPort((String)newValue);
+				return;
+			case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP:
+				getGroup().clear();
+				getGroup().addAll((Collection)newValue);
+				return;
+			case ServerTypePackage.LAUNCH_CONFIGURATION__EXTERNAL:
+				getExternal().clear();
+				getExternal().addAll((Collection)newValue);
+				return;
+			case ServerTypePackage.LAUNCH_CONFIGURATION__LAUNCH_TYPE:
+				setLaunchType((String)newValue);
 				return;
 		}
 		eDynamicSet(eFeature, newValue);
@@ -464,11 +539,17 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 			case ServerTypePackage.LAUNCH_CONFIGURATION__CLASSPATH_REFERENCE:
 				setClasspathReference(CLASSPATH_REFERENCE_EDEFAULT);
 				return;
-			case ServerTypePackage.LAUNCH_CONFIGURATION__EXTERNAL:
-				setExternal(EXTERNAL_EDEFAULT);
-				return;
 			case ServerTypePackage.LAUNCH_CONFIGURATION__DEBUG_PORT:
 				setDebugPort(DEBUG_PORT_EDEFAULT);
+				return;
+			case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP:
+				getGroup().clear();
+				return;
+			case ServerTypePackage.LAUNCH_CONFIGURATION__EXTERNAL:
+				getExternal().clear();
+				return;
+			case ServerTypePackage.LAUNCH_CONFIGURATION__LAUNCH_TYPE:
+				setLaunchType(LAUNCH_TYPE_EDEFAULT);
 				return;
 		}
 		eDynamicUnset(eFeature);
@@ -491,10 +572,14 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 				return VM_PARAMETERS_EDEFAULT == null ? vmParameters != null : !VM_PARAMETERS_EDEFAULT.equals(vmParameters);
 			case ServerTypePackage.LAUNCH_CONFIGURATION__CLASSPATH_REFERENCE:
 				return CLASSPATH_REFERENCE_EDEFAULT == null ? classpathReference != null : !CLASSPATH_REFERENCE_EDEFAULT.equals(classpathReference);
-			case ServerTypePackage.LAUNCH_CONFIGURATION__EXTERNAL:
-				return EXTERNAL_EDEFAULT == null ? external != null : !EXTERNAL_EDEFAULT.equals(external);
 			case ServerTypePackage.LAUNCH_CONFIGURATION__DEBUG_PORT:
 				return DEBUG_PORT_EDEFAULT == null ? debugPort != null : !DEBUG_PORT_EDEFAULT.equals(debugPort);
+			case ServerTypePackage.LAUNCH_CONFIGURATION__GROUP:
+				return group != null && !group.isEmpty();
+			case ServerTypePackage.LAUNCH_CONFIGURATION__EXTERNAL:
+				return !getExternal().isEmpty();
+			case ServerTypePackage.LAUNCH_CONFIGURATION__LAUNCH_TYPE:
+				return LAUNCH_TYPE_EDEFAULT == null ? launchType != null : !LAUNCH_TYPE_EDEFAULT.equals(launchType);
 		}
 		return eDynamicIsSet(eFeature);
 	}
@@ -518,10 +603,12 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 		result.append(vmParameters);
 		result.append(", classpathReference: ");
 		result.append(classpathReference);
-		result.append(", external: ");
-		result.append(external);
 		result.append(", debugPort: ");
 		result.append(debugPort);
+		result.append(", group: ");
+		result.append(group);
+		result.append(", launchType: ");
+		result.append(launchType);
 		result.append(')');
 		return result.toString();
 	}

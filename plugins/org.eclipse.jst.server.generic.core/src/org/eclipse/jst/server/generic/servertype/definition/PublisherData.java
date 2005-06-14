@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: PublisherData.java,v 1.5 2005/06/13 21:01:36 gercan Exp $
+ * $Id: PublisherData.java,v 1.6 2005/06/14 20:45:45 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -53,31 +53,17 @@ public interface PublisherData extends EObject{
 	 */
 	void setDataname(String value);
 
-    /**
-     * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.PublisherData#getDataname <em>Dataname</em>}' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the value of the '<em><b>Datavalue</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Dataname</em>' attribute.
-     * @see #getDataname()
-     * @generated
-     */
-//    void setDataname(String value);
-
-    /**
-     * Returns the value of the '<em><b>Datavalue</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Datavalue</em>' attribute isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Datavalue</em>' attribute.
-     * @see #setDatavalue(String)
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPublisherData_Datavalue()
-     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-     *        extendedMetaData="kind='element' name='datavalue'"
-     * @generated
-     */
+	 * @return the value of the '<em>Datavalue</em>' attribute.
+	 * @see #setDatavalue(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPublisherData_Datavalue()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+	 *        extendedMetaData="kind='element' name='datavalue'"
+	 * @generated
+	 */
     String getDatavalue();
 
     /**

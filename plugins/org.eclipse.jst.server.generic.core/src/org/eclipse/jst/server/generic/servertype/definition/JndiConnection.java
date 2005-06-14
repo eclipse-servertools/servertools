@@ -2,13 +2,15 @@
  * <copyright>
  * </copyright>
  *
- * $Id: JndiConnection.java,v 1.4 2005/06/13 21:01:36 gercan Exp $
+ * $Id: JndiConnection.java,v 1.5 2005/06/14 20:45:45 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+
+import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**
  * <!-- begin-user-doc -->
@@ -58,37 +60,54 @@ public interface JndiConnection extends EObject{
 	void setProviderUrl(String value);
 
 	/**
-     * Returns the value of the '<em><b>Jndi Property</b></em>' containment reference list.
-     * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.JndiProperty}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Group</b></em>' attribute list.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.util.FeatureMap.Entry}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Group</em>' attribute list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Group</em>' attribute list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getJndiConnection_Group()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
+	 *        extendedMetaData="kind='group' name='group:1'"
+	 * @generated
+	 */
+	FeatureMap getGroup();
+
+	/**
+	 * Returns the value of the '<em><b>Jndi Property</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.JndiProperty}.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Jndi Property</em>' containment reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Jndi Property</em>' containment reference list.
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getJndiConnection_JndiProperty()
-     * @model type="org.eclipse.jst.server.generic.servertype.definition.JndiProperty" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
-     *        extendedMetaData="kind='element' name='jndiProperty' group='#group:1'"
-     * @generated
-     */
+	 * @return the value of the '<em>Jndi Property</em>' containment reference list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getJndiConnection_JndiProperty()
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.JndiProperty" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
+	 *        extendedMetaData="kind='element' name='jndiProperty' group='#group:1'"
+	 * @generated
+	 */
     List getJndiProperty();
 
-    /**
-     * Returns the value of the '<em><b>Initial Context Factory</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the value of the '<em><b>Initial Context Factory</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Initial Context Factory</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Initial Context Factory</em>' attribute.
-     * @see #setInitialContextFactory(String)
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getJndiConnection_InitialContextFactory()
-     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-     *        extendedMetaData="kind='element' name='initialContextFactory'"
-     * @generated
-     */
+	 * @return the value of the '<em>Initial Context Factory</em>' attribute.
+	 * @see #setInitialContextFactory(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getJndiConnection_InitialContextFactory()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+	 *        extendedMetaData="kind='element' name='initialContextFactory'"
+	 * @generated
+	 */
     String getInitialContextFactory();
 
     /**

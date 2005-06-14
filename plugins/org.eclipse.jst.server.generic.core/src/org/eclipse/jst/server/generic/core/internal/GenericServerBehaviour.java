@@ -299,10 +299,11 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     public void setupLaunchConfiguration(
             ILaunchConfigurationWorkingCopy workingCopy,
             IProgressMonitor monitor) throws CoreException {
-        if(getRuntimeDelegate().getServerTypeDefinition().getStart().getExternal()!=null)
-        	setupExternalLaunchConfiguration(workingCopy, monitor);
-        else
+        if(getRuntimeDelegate().getServerTypeDefinition().getStart().getLaunchType()==null || getRuntimeDelegate().getServerTypeDefinition().getStart().getLaunchType().equals("java"))
         	setupJavaLaunchConfiguration(workingCopy, monitor);
+        else
+        	setupExternalLaunchConfiguration(workingCopy, monitor);
+        	
     }
 
     private void setupExternalLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy,IProgressMonitor monitor) throws CoreException {

@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ArchiveType.java,v 1.8 2005/06/13 21:01:36 gercan Exp $
+ * $Id: ArchiveType.java,v 1.9 2005/06/14 20:45:45 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -51,9 +51,9 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface ArchiveType extends EObject{
-    /**
-     * Returns the value of the '<em><b>Path</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the value of the '<em><b>Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Path</em>' attribute isn't clear,
 	 * there really should be more of a description here...
@@ -61,13 +61,13 @@ public interface ArchiveType extends EObject{
 	 * </p>
 	 * @since 1.0
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Path</em>' attribute.
-     * @see #setPath(String)
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getArchiveType_Path()
-     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
-     *        extendedMetaData="kind='attribute' name='path'"
-     * @generated
-     */
+	 * @return the value of the '<em>Path</em>' attribute.
+	 * @see #setPath(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getArchiveType_Path()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
+	 *        extendedMetaData="kind='attribute' name='path'"
+	 * @generated
+	 */
 	String getPath();
 
     /**

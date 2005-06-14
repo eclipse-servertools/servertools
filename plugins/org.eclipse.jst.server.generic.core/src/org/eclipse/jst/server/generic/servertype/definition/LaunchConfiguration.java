@@ -28,11 +28,15 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: LaunchConfiguration.java,v 1.7 2005/06/13 21:01:36 gercan Exp $
+ * $Id: LaunchConfiguration.java,v 1.8 2005/06/14 20:45:45 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
+import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
+
+import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**
  * <!-- begin-user-doc -->
@@ -47,8 +51,10 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getMainClass <em>Main Class</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getVmParameters <em>Vm Parameters</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getClasspathReference <em>Classpath Reference</em>}</li>
- *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getExternal <em>External</em>}</li>
  *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getDebugPort <em>Debug Port</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getGroup <em>Group</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getExternal <em>External</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getLaunchType <em>Launch Type</em>}</li>
  * </ul>
  * </p>
  *
@@ -153,31 +159,17 @@ public interface LaunchConfiguration extends EObject{
 	 */
 	void setVmParameters(String value);
 
-    /**
-     * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getVmParameters <em>Vm Parameters</em>}' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the value of the '<em><b>Classpath Reference</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Vm Parameters</em>' attribute.
-     * @see #getVmParameters()
-     * @generated
-     */
-//	void setVmParameters(String value);
-
-    /**
-     * Returns the value of the '<em><b>Classpath Reference</b></em>' attribute.
-     * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Classpath Reference</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Classpath Reference</em>' attribute.
-     * @see #setClasspathReference(String)
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_ClasspathReference()
-     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-     *        extendedMetaData="kind='element' name='classpathReference'"
-     * @generated
-     */
+	 * @return the value of the '<em>Classpath Reference</em>' attribute.
+	 * @see #setClasspathReference(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_ClasspathReference()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
+	 *        extendedMetaData="kind='element' name='classpathReference'"
+	 * @generated
+	 */
 	String getClasspathReference();
 
     /**
@@ -201,31 +193,48 @@ public interface LaunchConfiguration extends EObject{
 	void setClasspathReference(String value);
 
 	/**
-	 * Returns the value of the '<em><b>External</b></em>' attribute.
+	 * Returns the value of the '<em><b>External</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.ExternalType}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>External</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>External</em>' attribute.
-	 * @see #setExternal(String)
+	 * @return the value of the '<em>External</em>' containment reference list.
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_External()
-	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
-	 *        extendedMetaData="kind='element' name='external'"
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.ExternalType" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
+	 *        extendedMetaData="kind='element' name='external' group='#group:6'"
 	 * @generated
 	 */
-	String getExternal();
+	List getExternal();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getExternal <em>External</em>}' attribute.
+	 * Returns the value of the '<em><b>Launch Type</b></em>' attribute.
 	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Launch Type</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>External</em>' attribute.
-	 * @see #getExternal()
+	 * @return the value of the '<em>Launch Type</em>' attribute.
+	 * @see #setLaunchType(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_LaunchType()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+	 *        extendedMetaData="kind='attribute' name='launchType'"
 	 * @generated
 	 */
-	void setExternal(String value);
+	String getLaunchType();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration#getLaunchType <em>Launch Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Launch Type</em>' attribute.
+	 * @see #getLaunchType()
+	 * @generated
+	 */
+	void setLaunchType(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Debug Port</b></em>' attribute.
@@ -253,5 +262,22 @@ public interface LaunchConfiguration extends EObject{
 	 * @generated
 	 */
 	void setDebugPort(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Group</b></em>' attribute list.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.util.FeatureMap.Entry}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Group</em>' attribute list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Group</em>' attribute list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_Group()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
+	 *        extendedMetaData="kind='group' name='group:6'"
+	 * @generated
+	 */
+	FeatureMap getGroup();
 
 } // LaunchConfiguration

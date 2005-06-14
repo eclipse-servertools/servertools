@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerRuntime.java,v 1.8 2005/06/13 21:01:36 gercan Exp $
+ * $Id: ServerRuntime.java,v 1.9 2005/06/14 20:45:45 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.FeatureMap;
+
 import org.eclipse.jst.server.generic.internal.xml.Resolver;
 
 /**
@@ -78,54 +80,105 @@ import org.eclipse.jst.server.generic.internal.xml.Resolver;
  */
 public interface ServerRuntime extends EObject{
 	/**
-     * Returns the value of the '<em><b>Property</b></em>' containment reference list.
-     * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.Property}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Group</b></em>' attribute list.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.util.FeatureMap.Entry}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Group</em>' attribute list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Group</em>' attribute list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Group()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
+	 *        extendedMetaData="kind='group' name='group:0'"
+	 * @generated
+	 */
+	FeatureMap getGroup();
+
+	/**
+	 * Returns the value of the '<em><b>Property</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.Property}.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Property</em>' containment reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Property</em>' containment reference list.
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Property()
-     * @model type="org.eclipse.jst.server.generic.servertype.definition.Property" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
-     *        extendedMetaData="kind='element' name='property' group='#group:0'"
-     * @generated
-     */
+	 * @return the value of the '<em>Property</em>' containment reference list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Property()
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.Property" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
+	 *        extendedMetaData="kind='element' name='property' group='#group:0'"
+	 * @generated
+	 */
     List getProperty();
 
 	/**
-     * Returns the value of the '<em><b>Port</b></em>' containment reference list.
-     * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.Port}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Group1</b></em>' attribute list.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.util.FeatureMap.Entry}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Group1</em>' attribute list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Group1</em>' attribute list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Group1()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
+	 *        extendedMetaData="kind='group' name='group:2'"
+	 * @generated
+	 */
+	FeatureMap getGroup1();
+
+	/**
+	 * Returns the value of the '<em><b>Port</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.Port}.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Port</em>' containment reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Port</em>' containment reference list.
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Port()
-     * @model type="org.eclipse.jst.server.generic.servertype.definition.Port" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
-     *        extendedMetaData="kind='element' name='port' group='#group:2'"
-     * @generated
-     */
+	 * @return the value of the '<em>Port</em>' containment reference list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Port()
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.Port" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
+	 *        extendedMetaData="kind='element' name='port' group='#group:2'"
+	 * @generated
+	 */
     List getPort();
 
 	/**
-     * Returns the value of the '<em><b>Module</b></em>' containment reference list.
-     * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.Module}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Group2</b></em>' attribute list.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.util.FeatureMap.Entry}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Group2</em>' attribute list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Group2</em>' attribute list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Group2()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
+	 *        extendedMetaData="kind='group' name='group:4'"
+	 * @generated
+	 */
+	FeatureMap getGroup2();
+
+	/**
+	 * Returns the value of the '<em><b>Module</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.Module}.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Module</em>' containment reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Module</em>' containment reference list.
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Module()
-     * @model type="org.eclipse.jst.server.generic.servertype.definition.Module" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
-     *        extendedMetaData="kind='element' name='module' group='#group:4'"
-     * @generated
-     */
+	 * @return the value of the '<em>Module</em>' containment reference list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Module()
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.Module" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
+	 *        extendedMetaData="kind='element' name='module' group='#group:4'"
+	 * @generated
+	 */
     List getModule();
 
 	/**
@@ -202,37 +255,71 @@ public interface ServerRuntime extends EObject{
 	void setStop(LaunchConfiguration value);
 
 	/**
-     * Returns the value of the '<em><b>Publisher</b></em>' containment reference list.
-     * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.Publisher}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Group3</b></em>' attribute list.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.util.FeatureMap.Entry}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Group3</em>' attribute list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Group3</em>' attribute list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Group3()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
+	 *        extendedMetaData="kind='group' name='group:9'"
+	 * @generated
+	 */
+	FeatureMap getGroup3();
+
+	/**
+	 * Returns the value of the '<em><b>Publisher</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.Publisher}.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Publisher</em>' containment reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Publisher</em>' containment reference list.
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Publisher()
-     * @model type="org.eclipse.jst.server.generic.servertype.definition.Publisher" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
-     *        extendedMetaData="kind='element' name='publisher' group='#group:9'"
-     * @generated
-     */
+	 * @return the value of the '<em>Publisher</em>' containment reference list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Publisher()
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.Publisher" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
+	 *        extendedMetaData="kind='element' name='publisher' group='#group:9'"
+	 * @generated
+	 */
     List getPublisher();
 
 	/**
-     * Returns the value of the '<em><b>Classpath</b></em>' containment reference list.
-     * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.Classpath}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Group4</b></em>' attribute list.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.util.FeatureMap.Entry}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Group4</em>' attribute list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Group4</em>' attribute list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Group4()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
+	 *        extendedMetaData="kind='group' name='group:11'"
+	 * @generated
+	 */
+	FeatureMap getGroup4();
+
+	/**
+	 * Returns the value of the '<em><b>Classpath</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.Classpath}.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Classpath</em>' containment reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Classpath</em>' containment reference list.
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Classpath()
-     * @model type="org.eclipse.jst.server.generic.servertype.definition.Classpath" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
-     *        extendedMetaData="kind='element' name='classpath' group='#group:11'"
-     * @generated
-     */
+	 * @return the value of the '<em>Classpath</em>' containment reference list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getServerRuntime_Classpath()
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.Classpath" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
+	 *        extendedMetaData="kind='element' name='classpath' group='#group:11'"
+	 * @generated
+	 */
     List getClasspath();
 
 	/**

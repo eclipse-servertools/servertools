@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Project.java,v 1.7 2005/06/13 21:01:36 gercan Exp $
+ * $Id: Project.java,v 1.8 2005/06/14 20:45:45 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -51,21 +51,21 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface Project extends EObject{
-    /**
-     * Returns the value of the '<em><b>Classpath Reference</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the value of the '<em><b>Classpath Reference</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Classpath Reference</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Classpath Reference</em>' attribute.
-     * @see #setClasspathReference(String)
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getProject_ClasspathReference()
-     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-     *        extendedMetaData="kind='element' name='classpathReference'"
-     * @generated
-     */
+	 * @return the value of the '<em>Classpath Reference</em>' attribute.
+	 * @see #setClasspathReference(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getProject_ClasspathReference()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+	 *        extendedMetaData="kind='element' name='classpathReference'"
+	 * @generated
+	 */
 	String getClasspathReference();
 
     /**

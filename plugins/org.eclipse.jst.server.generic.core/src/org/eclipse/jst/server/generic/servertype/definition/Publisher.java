@@ -28,13 +28,15 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Publisher.java,v 1.8 2005/06/13 21:01:36 gercan Exp $
+ * $Id: Publisher.java,v 1.9 2005/06/14 20:45:45 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+
+import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**
  * <!-- begin-user-doc -->
@@ -56,37 +58,54 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Publisher extends EObject{
 	/**
-     * Returns the value of the '<em><b>Publisherdata</b></em>' containment reference list.
-     * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.PublisherData}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Group</b></em>' attribute list.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.util.FeatureMap.Entry}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Group</em>' attribute list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Group</em>' attribute list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPublisher_Group()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.EFeatureMapEntry" many="true"
+	 *        extendedMetaData="kind='group' name='group:0'"
+	 * @generated
+	 */
+	FeatureMap getGroup();
+
+	/**
+	 * Returns the value of the '<em><b>Publisherdata</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.PublisherData}.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Publisherdata</em>' containment reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Publisherdata</em>' containment reference list.
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPublisher_Publisherdata()
-     * @model type="org.eclipse.jst.server.generic.servertype.definition.PublisherData" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
-     *        extendedMetaData="kind='element' name='publisherdata' group='#group:0'"
-     * @generated
-     */
+	 * @return the value of the '<em>Publisherdata</em>' containment reference list.
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPublisher_Publisherdata()
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.PublisherData" containment="true" resolveProxies="false" required="true" transient="true" volatile="true" derived="true"
+	 *        extendedMetaData="kind='element' name='publisherdata' group='#group:0'"
+	 * @generated
+	 */
     List getPublisherdata();
 
-    /**
-     * Returns the value of the '<em><b>Id</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	/**
+	 * Returns the value of the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Id</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Id</em>' attribute.
-     * @see #setId(String)
-     * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPublisher_Id()
-     * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
-     *        extendedMetaData="kind='attribute' name='id'"
-     * @generated
-     */
+	 * @return the value of the '<em>Id</em>' attribute.
+	 * @see #setId(String)
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getPublisher_Id()
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
+	 *        extendedMetaData="kind='attribute' name='id'"
+	 * @generated
+	 */
 	String getId();
 
     /**
