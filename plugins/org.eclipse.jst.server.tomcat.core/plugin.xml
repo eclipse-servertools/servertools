@@ -170,13 +170,13 @@
         class="org.eclipse.jst.server.tomcat.core.internal.TomcatLaunchableAdapterDelegate"
         id="org.eclipse.jst.server.tomcat.web"/>
   </extension>
-   
+
   <extension point="org.eclipse.debug.core.sourcePathComputers">
      <sourcePathComputer
         id="org.eclipse.jst.server.tomcat.core.sourcePathComputer"
         class="org.eclipse.jst.server.tomcat.core.internal.TomcatSourcePathComputerDelegate"/>
   </extension>
-   
+
   <extension point="org.eclipse.debug.core.launchConfigurationTypes">
      <launchConfigurationType
         id="org.eclipse.jst.server.tomcat.core.launchConfigurationType"
@@ -192,10 +192,10 @@
         id="org.eclipse.jst.server.tomcat.core.contextTask"
         typeIds="org.eclipse.jst.server.tomcat.*"
         class="org.eclipse.jst.server.tomcat.core.internal.ContextPublishTaskDelegate"/>
-<!--     <publishTask
+     <publishTask
         id="org.eclipse.jst.server.tomcat.core.publishTask"
         typeIds="org.eclipse.jst.server.tomcat.*"
-        class="org.eclipse.jst.server.tomcat.core.internal.PublishTask"/>-->
+        class="org.eclipse.jst.server.tomcat.core.internal.PublishTask"/>
   </extension>
 
 </plugin>

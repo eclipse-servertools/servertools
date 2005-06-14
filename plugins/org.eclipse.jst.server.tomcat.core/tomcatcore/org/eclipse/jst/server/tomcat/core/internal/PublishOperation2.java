@@ -67,7 +67,7 @@ public class PublishOperation2 extends PublishOperation {
 		} else {
 			IModuleFile mf = (IModuleFile) resource;
 			IFile file = (IFile) mf.getAdapter(IFile.class);
-			IPath path3 = path.append(mf.getModuleRelativePath());
+			IPath path3 = path.append(mf.getModuleRelativePath()).append(mf.getName());
 			File f = path3.toFile().getParentFile();
 			if (!f.exists())
 				f.mkdirs();
