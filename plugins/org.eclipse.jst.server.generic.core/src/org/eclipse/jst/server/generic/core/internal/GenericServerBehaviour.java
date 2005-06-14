@@ -440,9 +440,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     	String cpRef = getServerDefinition().getStop().getClasspathReference();
     	return serverClasspath(cpRef);
     }
-    public void initialize() {
-      super.initialize();
-    }
+
     public void publishFinish(IProgressMonitor monitor) throws CoreException {
         IModule[] modules = this.getServer().getModules();
         boolean allpublished= true;
