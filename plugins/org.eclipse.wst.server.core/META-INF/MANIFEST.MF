@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.server.core; singleton:=true
 Bundle-Version: 0.7.0
-Bundle-ClassPath: servercore.jar
 Bundle-Activator: org.eclipse.wst.server.core.internal.ServerPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
