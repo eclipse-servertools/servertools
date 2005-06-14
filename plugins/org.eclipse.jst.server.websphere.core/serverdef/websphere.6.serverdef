@@ -101,7 +101,7 @@
 		</publisherdata>			
 	</publisher>
 
-	<classpath id="was" isLibrary="true">
+	<classpath id="was" >
 	    <archive path="${wasHome}/properties" />
 	    <archive path="${wasHome}/lib/bootstrap.jar" />
         <archive path="${wasHome}/lib/j2ee.jar" />
@@ -109,7 +109,7 @@
         <archive path="${wasHome}/lib/urlprotocols.jar" />
 	</classpath>
 
-	<classpath id="was.project" isLibrary="false">
+	<classpath id="was.project">
 		<archive path="${wasHome}/lib/j2ee.jar" />
 	</classpath>
 	<jndiConnection>
