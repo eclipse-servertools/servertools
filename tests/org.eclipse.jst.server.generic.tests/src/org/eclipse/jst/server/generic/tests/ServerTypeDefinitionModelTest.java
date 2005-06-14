@@ -97,7 +97,7 @@ public class ServerTypeDefinitionModelTest extends TestCase {
        LaunchConfiguration lcfg = subject.getStart();
        assertNotNull(lcfg);
        assertTrue(lcfg.getMainClass()!=null && lcfg.getMainClass().length()>0);
-       assertTrue(lcfg.getMainClass()!=null && lcfg.getExternal()==null);
+       assertTrue(lcfg.getMainClass()!=null && lcfg.getExternal().isEmpty());
        assertTrue(lcfg.getMainClass()!=null && lcfg.getDebugPort()==null);
        assertTrue(lcfg.getClasspathReference()!=null && lcfg.getClasspathReference().length()>0);
        assertTrue(lcfg.getProgramArguments()!=null && lcfg.getProgramArguments().length()>0);
