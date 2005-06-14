@@ -53,7 +53,7 @@ public class GenericServerLaunchableAdapterDelegate extends LaunchableAdapterDel
 	 * @see ILaunchableAdapterDelegate#getLaunchable(IServer, IModuleObject)
 	 */
 	public Object getLaunchable(IServer server, IModuleArtifact moduleObject) {
-		ServerDelegate delegate = (ServerDelegate)server.getAdapter(ServerDelegate.class);
+		ServerDelegate delegate = (ServerDelegate)server.loadAdapter(ServerDelegate.class,null);
 		if (!(delegate instanceof GenericServer))
 			return null;
 		if ((moduleObject instanceof Servlet) ||(moduleObject instanceof WebResource))

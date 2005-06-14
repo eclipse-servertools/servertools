@@ -66,7 +66,7 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
 
 	public void createContent(Composite parent, IWizardHandle handle){
 		IServerWorkingCopy server = getServer();
-		GenericServer dl= (GenericServer)server.getAdapter(GenericServer.class);
+		GenericServer dl= (GenericServer)server.loadAdapter(GenericServer.class,null);
 		ServerRuntime definition = getServerTypeDefinitionFor(server);
 		fDecorators = new GenericServerCompositeDecorator[1];
 		fDecorators[0]=new ServerTypeDefinitionServerDecorator(definition,null,getWizard(),dl);

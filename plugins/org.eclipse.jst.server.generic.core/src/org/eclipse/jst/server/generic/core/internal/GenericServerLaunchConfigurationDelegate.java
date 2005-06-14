@@ -67,7 +67,7 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
             abort("Server does not exist", null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
 		}	
 		
-		GenericServerBehaviour genericServer = (GenericServerBehaviour)server.getAdapter(ServerBehaviourDelegate.class);
+		GenericServerBehaviour genericServer = (GenericServerBehaviour)server.loadAdapter(ServerBehaviourDelegate.class,null);
 		genericServer.setupLaunch(launch, mode, monitor);
 	
 		String mainTypeName = genericServer.getStartClassName(); 
