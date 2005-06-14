@@ -211,7 +211,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     }
 
     public ServerRuntime getServerDefinition() {
-        GenericServer server = (GenericServer)getServer().getAdapter(ServerDelegate.class);
+        GenericServer server = (GenericServer)getServer().loadAdapter(ServerDelegate.class, null);
         return server.getServerDefinition();
     }
     
