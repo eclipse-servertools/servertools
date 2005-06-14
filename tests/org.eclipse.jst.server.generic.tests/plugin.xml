@@ -3,8 +3,8 @@
 <plugin
    id="org.eclipse.jst.server.generic.tests"
    name="Generic Server Tests Plug-in"
-   version="1.0.0"
-   provider-name="Eteration.com"
+   version="0.7.0"
+   provider-name="eclipse.org"
    class="org.eclipse.jst.server.generic.tests.TestsPlugin">
 
    <runtime>
