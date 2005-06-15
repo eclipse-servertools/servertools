@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeFactoryImpl.java,v 1.5 2005/06/14 20:45:45 gercan Exp $
+ * $Id: ServerTypeFactoryImpl.java,v 1.6 2005/06/15 05:40:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
@@ -66,7 +66,7 @@ public class ServerTypeFactoryImpl extends EFactoryImpl implements ServerTypeFac
 		switch (eClass.getClassifierID()) {
 			case ServerTypePackage.ARCHIVE_TYPE: return createArchiveType();
 			case ServerTypePackage.CLASSPATH: return createClasspath();
-			case ServerTypePackage.EXTERNAL_TYPE: return createExternalType();
+			case ServerTypePackage.EXTERNAL: return createExternal();
 			case ServerTypePackage.JNDI_CONNECTION: return createJndiConnection();
 			case ServerTypePackage.JNDI_PROPERTY: return createJndiProperty();
 			case ServerTypePackage.LAUNCH_CONFIGURATION: return createLaunchConfiguration();
@@ -107,9 +107,9 @@ public class ServerTypeFactoryImpl extends EFactoryImpl implements ServerTypeFac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ExternalType createExternalType() {
-		ExternalTypeImpl externalType = new ExternalTypeImpl();
-		return externalType;
+	public External createExternal() {
+		ExternalImpl external = new ExternalImpl();
+		return external;
 	}
 
 	/**

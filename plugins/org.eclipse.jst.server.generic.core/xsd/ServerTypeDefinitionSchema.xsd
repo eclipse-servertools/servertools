@@ -70,12 +70,8 @@
 			<sequence>
 			<element name="debugPort" type="string"/>
 			<sequence maxOccurs="unbounded" minOccurs="1">
-				<element name="external">
-					<complexType>
-						<attribute name="os" type="string" use="required"/>
-					</complexType>
-				</element>
-          </sequence>
+				<element name="external" type="jst:External"></element>
+			</sequence>
 			</sequence>
 			</choice>
 		</sequence>
@@ -136,6 +132,14 @@
     		<element name="name" type="string"/>
     		<element name="value" type="string"/>
     	</all>
+    </complexType>
+
+    <complexType name="External">
+    	<simpleContent>
+    		<extension base="string">
+    			<attribute name="os" type="string"></attribute>
+    		</extension>
+    	</simpleContent>
     </complexType>
 
 </schema>

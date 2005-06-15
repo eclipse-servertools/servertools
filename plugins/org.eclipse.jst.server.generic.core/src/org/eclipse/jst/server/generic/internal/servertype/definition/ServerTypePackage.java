@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ServerTypePackage.java,v 1.3 2005/06/14 20:45:45 gercan Exp $
+ * $Id: ServerTypePackage.java,v 1.4 2005/06/15 05:40:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition;
 
@@ -10,6 +10,19 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
+import org.eclipse.jst.server.generic.servertype.definition.Classpath;
+import org.eclipse.jst.server.generic.servertype.definition.External;
+import org.eclipse.jst.server.generic.servertype.definition.JndiConnection;
+import org.eclipse.jst.server.generic.servertype.definition.JndiProperty;
+import org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration;
+import org.eclipse.jst.server.generic.servertype.definition.Module;
+import org.eclipse.jst.server.generic.servertype.definition.Port;
+import org.eclipse.jst.server.generic.servertype.definition.Project;
+import org.eclipse.jst.server.generic.servertype.definition.Property;
+import org.eclipse.jst.server.generic.servertype.definition.Publisher;
+import org.eclipse.jst.server.generic.servertype.definition.PublisherData;
+import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ServerTypeFactory;
 
 /**
@@ -134,14 +147,23 @@ public interface ServerTypePackage extends EPackage{
 	int CLASSPATH_FEATURE_COUNT = 3;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ExternalTypeImpl <em>External Type</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ExternalImpl <em>External</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ExternalTypeImpl
-	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getExternalType()
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ExternalImpl
+	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.impl.ServerTypePackageImpl#getExternal()
 	 * @generated
 	 */
-	int EXTERNAL_TYPE = 2;
+	int EXTERNAL = 2;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTERNAL__VALUE = 0;
 
 	/**
 	 * The feature id for the '<em><b>Os</b></em>' attribute.
@@ -150,16 +172,16 @@ public interface ServerTypePackage extends EPackage{
 	 * @generated
 	 * @ordered
 	 */
-	int EXTERNAL_TYPE__OS = 0;
+	int EXTERNAL__OS = 1;
 
 	/**
-	 * The number of structural features of the the '<em>External Type</em>' class.
+	 * The number of structural features of the the '<em>External</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXTERNAL_TYPE_FEATURE_COUNT = 1;
+	int EXTERNAL_FEATURE_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.JndiConnectionImpl <em>Jndi Connection</em>}' class.
@@ -849,25 +871,36 @@ public interface ServerTypePackage extends EPackage{
 	EAttribute getClasspath_Id();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.jst.server.generic.servertype.definition.ExternalType <em>External Type</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.jst.server.generic.servertype.definition.External <em>External</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>External Type</em>'.
-	 * @see org.eclipse.jst.server.generic.servertype.definition.ExternalType
+	 * @return the meta object for class '<em>External</em>'.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.External
 	 * @generated
 	 */
-	EClass getExternalType();
+	EClass getExternal();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.jst.server.generic.servertype.definition.ExternalType#getOs <em>Os</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.jst.server.generic.servertype.definition.External#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.External#getValue()
+	 * @see #getExternal()
+	 * @generated
+	 */
+	EAttribute getExternal_Value();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.jst.server.generic.servertype.definition.External#getOs <em>Os</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Os</em>'.
-	 * @see org.eclipse.jst.server.generic.servertype.definition.ExternalType#getOs()
-	 * @see #getExternalType()
+	 * @see org.eclipse.jst.server.generic.servertype.definition.External#getOs()
+	 * @see #getExternal()
 	 * @generated
 	 */
-	EAttribute getExternalType_Os();
+	EAttribute getExternal_Os();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.jst.server.generic.servertype.definition.JndiConnection <em>Jndi Connection</em>}'.

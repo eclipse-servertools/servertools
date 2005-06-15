@@ -18,8 +18,9 @@
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference org.eclipse.jst.server.generic.servertype.ecore#//Classpath/archive"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//Classpath/id"/>
     </genClasses>
-    <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//ExternalType">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//ExternalType/os"/>
+    <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//External">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//External/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//External/os"/>
     </genClasses>
     <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//JndiConnection">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//JndiConnection/providerUrl"/>

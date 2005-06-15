@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: LaunchConfiguration.java,v 1.8 2005/06/14 20:45:45 gercan Exp $
+ * $Id: LaunchConfiguration.java,v 1.9 2005/06/15 05:40:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -194,7 +194,7 @@ public interface LaunchConfiguration extends EObject{
 
 	/**
 	 * Returns the value of the '<em><b>External</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.ExternalType}.
+	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.External}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>External</em>' attribute isn't clear,
@@ -203,7 +203,7 @@ public interface LaunchConfiguration extends EObject{
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>External</em>' containment reference list.
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_External()
-	 * @model type="org.eclipse.jst.server.generic.servertype.definition.ExternalType" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.External" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
 	 *        extendedMetaData="kind='element' name='external' group='#group:6'"
 	 * @generated
 	 */
@@ -220,7 +220,7 @@ public interface LaunchConfiguration extends EObject{
 	 * @return the value of the '<em>Launch Type</em>' attribute.
 	 * @see #setLaunchType(String)
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getLaunchConfiguration_LaunchType()
-	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+	 * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
 	 *        extendedMetaData="kind='attribute' name='launchType'"
 	 * @generated
 	 */

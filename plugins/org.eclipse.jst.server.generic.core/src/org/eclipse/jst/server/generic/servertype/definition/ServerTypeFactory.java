@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeFactory.java,v 1.7 2005/06/14 20:45:45 gercan Exp $
+ * $Id: ServerTypeFactory.java,v 1.8 2005/06/15 05:40:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -71,13 +71,13 @@ public interface ServerTypeFactory extends EFactory{
 	Classpath createClasspath();
 
 	/**
-	 * Returns a new object of class '<em>External Type</em>'.
+	 * Returns a new object of class '<em>External</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>External Type</em>'.
+	 * @return a new object of class '<em>External</em>'.
 	 * @generated
 	 */
-	ExternalType createExternalType();
+	External createExternal();
 
 	/**
 	 * Returns a new object of class '<em>Jndi Connection</em>'.

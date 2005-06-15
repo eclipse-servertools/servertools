@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ExternalTypeImpl.java,v 1.1 2005/06/14 20:45:45 gercan Exp $
+ * $Id: ExternalImpl.java,v 1.1 2005/06/15 05:40:01 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
@@ -15,22 +15,43 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
-import org.eclipse.jst.server.generic.servertype.definition.ExternalType;
+import org.eclipse.jst.server.generic.servertype.definition.External;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>External Type</b></em>'.
+ * An implementation of the model object '<em><b>External</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ExternalTypeImpl#getOs <em>Os</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ExternalImpl#getValue <em>Value</em>}</li>
+ *   <li>{@link org.eclipse.jst.server.generic.internal.servertype.definition.impl.ExternalImpl#getOs <em>Os</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class ExternalTypeImpl extends EObjectImpl implements ExternalType {
+public class ExternalImpl extends EObjectImpl implements External {
+	/**
+	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getValue()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String VALUE_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getValue()
+	 * @generated
+	 * @ordered
+	 */
+	protected String value = VALUE_EDEFAULT;
+
 	/**
 	 * The default value of the '{@link #getOs() <em>Os</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -56,7 +77,7 @@ public class ExternalTypeImpl extends EObjectImpl implements ExternalType {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ExternalTypeImpl() {
+	protected ExternalImpl() {
 		super();
 	}
 
@@ -66,7 +87,28 @@ public class ExternalTypeImpl extends EObjectImpl implements ExternalType {
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
-		return ServerTypePackage.eINSTANCE.getExternalType();
+		return ServerTypePackage.eINSTANCE.getExternal();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getValue() {
+		return value;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setValue(String newValue) {
+		String oldValue = value;
+		value = newValue;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.EXTERNAL__VALUE, oldValue, value));
 	}
 
 	/**
@@ -87,7 +129,7 @@ public class ExternalTypeImpl extends EObjectImpl implements ExternalType {
 		String oldOs = os;
 		os = newOs;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.EXTERNAL_TYPE__OS, oldOs, os));
+			eNotify(new ENotificationImpl(this, Notification.SET, ServerTypePackage.EXTERNAL__OS, oldOs, os));
 	}
 
 	/**
@@ -97,7 +139,9 @@ public class ExternalTypeImpl extends EObjectImpl implements ExternalType {
 	 */
 	public Object eGet(EStructuralFeature eFeature, boolean resolve) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case ServerTypePackage.EXTERNAL_TYPE__OS:
+			case ServerTypePackage.EXTERNAL__VALUE:
+				return getValue();
+			case ServerTypePackage.EXTERNAL__OS:
 				return getOs();
 		}
 		return eDynamicGet(eFeature, resolve);
@@ -110,7 +154,10 @@ public class ExternalTypeImpl extends EObjectImpl implements ExternalType {
 	 */
 	public void eSet(EStructuralFeature eFeature, Object newValue) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case ServerTypePackage.EXTERNAL_TYPE__OS:
+			case ServerTypePackage.EXTERNAL__VALUE:
+				setValue((String)newValue);
+				return;
+			case ServerTypePackage.EXTERNAL__OS:
 				setOs((String)newValue);
 				return;
 		}
@@ -124,7 +171,10 @@ public class ExternalTypeImpl extends EObjectImpl implements ExternalType {
 	 */
 	public void eUnset(EStructuralFeature eFeature) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case ServerTypePackage.EXTERNAL_TYPE__OS:
+			case ServerTypePackage.EXTERNAL__VALUE:
+				setValue(VALUE_EDEFAULT);
+				return;
+			case ServerTypePackage.EXTERNAL__OS:
 				setOs(OS_EDEFAULT);
 				return;
 		}
@@ -138,7 +188,9 @@ public class ExternalTypeImpl extends EObjectImpl implements ExternalType {
 	 */
 	public boolean eIsSet(EStructuralFeature eFeature) {
 		switch (eDerivedStructuralFeatureID(eFeature)) {
-			case ServerTypePackage.EXTERNAL_TYPE__OS:
+			case ServerTypePackage.EXTERNAL__VALUE:
+				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
+			case ServerTypePackage.EXTERNAL__OS:
 				return OS_EDEFAULT == null ? os != null : !OS_EDEFAULT.equals(os);
 		}
 		return eDynamicIsSet(eFeature);
@@ -153,10 +205,12 @@ public class ExternalTypeImpl extends EObjectImpl implements ExternalType {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (os: ");
+		result.append(" (value: ");
+		result.append(value);
+		result.append(", os: ");
 		result.append(os);
 		result.append(')');
 		return result.toString();
 	}
 
-} //ExternalTypeImpl
+} //ExternalImpl
