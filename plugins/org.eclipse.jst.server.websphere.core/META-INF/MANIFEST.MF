@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: WebSphere Generic Server Definition Core Plug-in
 Bundle-SymbolicName: org.eclipse.jst.server.websphere.core; singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 0.7.0
 Bundle-ClassPath: webspherecore.jar
 Bundle-Activator: org.eclipse.jst.server.websphere.core.CorePlugin
 Bundle-Vendor: Eclipse.org
