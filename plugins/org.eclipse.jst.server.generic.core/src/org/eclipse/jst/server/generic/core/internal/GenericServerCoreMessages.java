@@ -19,6 +19,12 @@ public class GenericServerCoreMessages extends NLS{
 	public static String errorMissingClasspathEntry;
 	public static String errorRemoveModuleAntpublisher;
 	public static String errorPublishAntpublisher;
+	public static String commandlineUnspecified;
+	public static String workingdirUnspecified;
+	public static String errorLaunchingExecutable;
+	public static String missingServer;
+	public static String externalStopLauncher;
+	public static String debugPortUnspecified;
 	static{
 		  NLS.initializeMessages(RESOURCE_BUNDLE, GenericServerCoreMessages.class);
 	}

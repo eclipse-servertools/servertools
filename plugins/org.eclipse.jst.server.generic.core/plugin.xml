@@ -12,7 +12,7 @@
         class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntimeTargetHandler"/>
 	</extension>
 
-   <extension point="org.eclipse.debug.core.launchConfigurationTypes">
+ <extension point="org.eclipse.debug.core.launchConfigurationTypes">
      <launchConfigurationType
         id="org.eclipse.jst.server.generic.core.launchConfigurationType"
         name="%launchConfigurationTypeName"
@@ -20,22 +20,31 @@
         modes="run, debug"
         sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
         sourcePathComputerId="org.eclipse.jst.server.generic.core.sourcePathComputer"/>
-  </extension>
+     <launchConfigurationType
+        id="org.eclipse.jst.server.generic.core.ExternalLaunchConfigurationType"
+        name="%externalLaunchConfigurationTypeName"
+        delegate="org.eclipse.jst.server.generic.core.internal.ExternalLaunchConfigurationDelegate"
+        modes="run, debug"
+        sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
+        sourcePathComputerId="org.eclipse.jst.server.generic.core.sourcePathComputer"/>
+ </extension>
 
-   <extension point="org.eclipse.debug.core.sourcePathComputers">
+ <extension point="org.eclipse.debug.core.sourcePathComputers">
      <sourcePathComputer
         id="org.eclipse.jst.server.generic.core.sourcePathComputer"
         class="org.eclipse.jst.server.generic.core.internal.GenericServerSourcePathComputerDelegate"/>
-   </extension>
+ </extension>
  
-   <extension point="org.eclipse.wst.server.core.launchableAdapters">
+ <extension point="org.eclipse.wst.server.core.launchableAdapters">
       <launchableAdapter
          class="org.eclipse.jst.server.generic.core.internal.GenericServerLaunchableAdapterDelegate"
          id="org.eclipse.jst.server.generic.web"/>
-   </extension>
-   <extension point="org.eclipse.jst.server.generic.core.genericpublisher">
+ </extension>
+ 
+ <extension point="org.eclipse.jst.server.generic.core.genericpublisher">
       <genericpublisher
             class="org.eclipse.jst.server.generic.core.internal.AntPublisher"
             id="org.eclipse.jst.server.generic.antpublisher"/>
-   </extension>
+ </extension>
+
 </plugin>

@@ -139,22 +139,25 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 			terminate();
 			return;
 		}
-
+		
+		shutdown(state);
+    }
+    
+    /**
+     * Shuts down the server via the launch configuration.
+     */
+    protected void shutdown(int state) {
+		GenericServerRuntime runtime = (GenericServerRuntime) getRuntimeDelegate();
 		try {
 			Trace.trace(Trace.FINEST, "Stopping Server");
 			if (state != IServer.STATE_STOPPED)
 				setServerState(IServer.STATE_STOPPING);
+			String configTypeID = getConfigTypeID(); 
 			ILaunchManager mgr = DebugPlugin.getDefault().getLaunchManager();
-
-			ILaunchConfigurationType type =
-				mgr.getLaunchConfigurationType(
-					IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
-
-			String launchName = "GenericServerStopper";
-			String uniqueLaunchName =
-				mgr.generateUniqueLaunchConfigurationNameFrom(launchName);
+			ILaunchConfigurationType type = mgr.getLaunchConfigurationType(configTypeID);
+			String launchName = getStopLaunchName();
+			String uniqueLaunchName = mgr.generateUniqueLaunchConfigurationNameFrom(launchName);
 			ILaunchConfiguration conf = null;
-
 			ILaunchConfiguration[] lch = mgr.getLaunchConfigurations(type);
 			for (int i = 0; i < lch.length; i++) {
 				if (launchName.equals(lch[i].getName())) {
@@ -169,42 +172,68 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 			} else {
 				wc = type.newInstance(null, uniqueLaunchName);
 			}
-			//To stop from appearing in history lists
-			wc.setAttribute(IDebugUIConstants.ATTR_PRIVATE, true);			
-	
-			wc.setAttribute(
-					IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
-					getServerDefinition().getResolver().resolveProperties(this.getServerDefinition().getStop().getMainClass()));
-
-			GenericServerRuntime runtime = (GenericServerRuntime) getRuntimeDelegate();
-
-			IVMInstall vmInstall = runtime.getVMInstall();
-			wc.setAttribute(
-					IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_TYPE, runtime
-							.getVMInstallTypeId());
-			wc.setAttribute(
-					IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_NAME,
-					vmInstall.getName());
-
-			setupLaunchClasspath(wc, vmInstall, getStopClasspath());
-
-			wc.setAttribute(
-					IJavaLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY,
-					getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getWorkingDirectory()));
-			wc.setAttribute(
-					IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
-					getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getProgramArguments()));
-			wc.setAttribute(
-					IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
-					getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getVmParameters()));				
+			
+			// To stop from appearing in history lists
+			wc.setAttribute(IDebugUIConstants.ATTR_PRIVATE, true);		
+			// Set the stop attribute so that we know we are stopping
 			wc.setAttribute(ATTR_STOP, "true");
+			
+			// Setup the launch config for stopping the server
+			setupStopLaunchConfiguration(runtime, wc);
+			
+			// Launch the stop launch config
 			wc.launch(ILaunchManager.RUN_MODE, new NullProgressMonitor());
+
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error stopping Server", e);
 		}
-	
-
     }
+
+    /**
+     * Returns the String ID of the launch configuration type.
+     * @return
+     */
+	protected String getConfigTypeID() {
+		return IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION;
+	}
+
+	/**
+	 * Returns the String name of the stop launch configuration.
+	 * @return
+	 */
+	protected String getStopLaunchName() {
+		return "GenericServerStopper";
+	}
+	
+	/**
+	 * Sets up the launch configuration for stopping the server.
+	 * @param workingCopy
+	 */
+	protected void setupStopLaunchConfiguration(GenericServerRuntime runtime, ILaunchConfigurationWorkingCopy wc) {
+		wc.setAttribute(
+				IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
+				getServerDefinition().getResolver().resolveProperties(this.getServerDefinition().getStop().getMainClass()));
+
+		IVMInstall vmInstall = runtime.getVMInstall();
+		wc.setAttribute(
+				IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_TYPE, runtime
+						.getVMInstallTypeId());
+		wc.setAttribute(
+				IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_NAME,
+				vmInstall.getName());
+
+		setupLaunchClasspath(wc, vmInstall, getStopClasspath());
+
+		wc.setAttribute(
+				IJavaLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY,
+				getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getWorkingDirectory()));
+		wc.setAttribute(
+				IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
+				getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getProgramArguments()));
+		wc.setAttribute(
+				IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
+				getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getVmParameters()));				
+	}
 
     public String getStartClassName() {
     	return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getMainClass());
@@ -215,12 +244,9 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
         return server.getServerDefinition();
     }
     
-    protected GenericServerRuntime getRuntimeDelegate()
-    {
+    protected GenericServerRuntime getRuntimeDelegate() {
        return (GenericServerRuntime)getServer().getRuntime().loadAdapter(GenericServerRuntime.class,null);
     }
-
-
 
     private List getStartClasspath() {
     	String cpRef = getServerDefinition().getStart().getClasspathReference();
@@ -296,21 +322,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     	return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getVmParameters());
     }
 
-    public void setupLaunchConfiguration(
-            ILaunchConfigurationWorkingCopy workingCopy,
-            IProgressMonitor monitor) throws CoreException {
-        if(getRuntimeDelegate().getServerTypeDefinition().getStart().getLaunchType()==null || getRuntimeDelegate().getServerTypeDefinition().getStart().getLaunchType().equals("java"))
-        	setupJavaLaunchConfiguration(workingCopy, monitor);
-        else
-        	setupExternalLaunchConfiguration(workingCopy, monitor);
-        	
-    }
-
-    private void setupExternalLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy,IProgressMonitor monitor) throws CoreException {
-    
-    }
-    
-	private void setupJavaLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy,IProgressMonitor monitor) throws CoreException {
+    public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException {
 		workingCopy.setAttribute(
                 IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
                 getStartClassName());
@@ -343,43 +355,44 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
             workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,serverVMArgs);
         }
 	}
-    /**
-    	 * Setup for starting the server.
-    	 * 
-    	 * @param launch ILaunch
-    	 * @param launchMode String
-    	 * @param monitor IProgressMonitor
-    	 */
-    	protected void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException {
-    		if ("true".equals(launch.getLaunchConfiguration().getAttribute(ATTR_STOP, "false")))
-    			return;
-    //		IStatus status = getRuntime().validate();
-    //		if (status != null && !status.isOK())
-    //			throw new CoreException(status);
     
+    /**
+     * Setup for starting the server.
+     * 
+     * @param launch ILaunch
+     * @param launchMode String
+     * @param monitor IProgressMonitor
+     */
+    protected void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException {
+    	if ("true".equals(launch.getLaunchConfiguration().getAttribute(ATTR_STOP, "false"))) 
+    		return;
+    	//		IStatus status = getRuntime().validate();
+    	//		if (status != null && !status.isOK())
+    	//			throw new CoreException(status);
     	
-    		ServerPort[] ports = getServer().getServerPorts(null);
-    		ServerPort sp = null;
-    		for(int i=0;i<ports.length;i++){
-    			sp= ports[i];
-    			if (SocketUtil.isPortInUse(ports[i].getPort(), 5))
-    				throw new CoreException(new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.bind(GenericServerCoreMessages.errorPortInUse,Integer.toString(sp.getPort()),sp.getName()),null));
-    		}
-    		
-    		setServerState(IServer.STATE_STARTING);
-			setMode(launchMode);
-			
-    		// ping server to check for startup
-    		try {
-    			String url = "http://localhost";
-    			int port = sp.getPort();
-    			if (port != 80)
-    				url += ":" + port;
-    			ping = new PingThread(getServer(), url, 50, this);
-    		} catch (Exception e) {
-    			Trace.trace(Trace.SEVERE, "Can't ping for server startup.");
-    		}
+    	
+    	ServerPort[] ports = getServer().getServerPorts(null);
+    	ServerPort sp = null;
+    	for(int i=0;i<ports.length;i++){
+    		sp= ports[i];
+    		if (SocketUtil.isPortInUse(ports[i].getPort(), 5))
+    			throw new CoreException(new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.bind(GenericServerCoreMessages.errorPortInUse,Integer.toString(sp.getPort()),sp.getName()),null));
     	}
+    	
+    	setServerState(IServer.STATE_STARTING);
+    	setMode(launchMode);
+    	
+    	// ping server to check for startup
+    	try {
+    		String url = "http://localhost";
+    		int port = sp.getPort();
+    		if (port != 80)
+    			url += ":" + port;
+    		ping = new PingThread(getServer(), url, 50, this);
+    	} catch (Exception e) {
+    		Trace.trace(Trace.SEVERE, "Can't ping for server startup.");
+    	}
+    }
 
     protected void setProcess(final IProcess newProcess) {
     	if (process != null)
@@ -421,7 +434,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     /**
      * Terminates the server.
      */
-    private void terminate() {
+    protected void terminate() {
     	if (getServer().getServerState() == IServer.STATE_STOPPED)
     		return;
     

@@ -99,14 +99,23 @@ public class GenericServerRuntime extends RuntimeDelegate
 	 * @see org.eclipse.jst.server.core.IGenericRuntime#validate()
 	 */
 	public IStatus validate() {
-		if (getVMInstall() == null)
+		if (getVMInstall() == null) {
 			return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.errorJRE, null);
-		
+		}
 		ServerRuntime serverTypeDefinition = getServerTypeDefinition();
-        if(serverTypeDefinition == null)
+        if(serverTypeDefinition == null) {
 		    return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.errorNoServerType, null);
-        if(serverTypeDefinition.getClasspath()== null || serverTypeDefinition.getClasspath().size()<1)
+        }
+		if(serverTypeDefinition.getClasspath()== null || serverTypeDefinition.getClasspath().size()<1) {
             return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,GenericServerCoreMessages.errorNoClasspath,null);
+		}
+        return validateClasspaths(serverTypeDefinition);
+	}
+
+	/**
+	 * Checks all defined classpaths.
+	 */
+	protected IStatus validateClasspaths(ServerRuntime serverTypeDefinition) {
 		Iterator cpList  = serverTypeDefinition.getClasspath().iterator();
         while (cpList.hasNext()) {
 			Classpath cpth = (Classpath) cpList.next();
@@ -123,6 +132,7 @@ public class GenericServerRuntime extends RuntimeDelegate
 		}
         return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "", null);
 	}
+	
 	/**
 	 * Returns the ServerTypeDefinition for this runtime. 
 	 * Populated with the user properties if exists. 
