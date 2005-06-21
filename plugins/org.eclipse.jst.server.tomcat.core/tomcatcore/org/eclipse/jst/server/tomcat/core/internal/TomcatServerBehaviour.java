@@ -535,7 +535,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		
 		if (vmInstall != null) {
 			try {
-				replaceJREContainer(oldCp, JavaRuntime.newRuntimeContainerClasspathEntry(new Path(JavaRuntime.JRE_CONTAINER).append("org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType").append(vmInstall.getName()), IRuntimeClasspathEntry.BOOTSTRAP_CLASSES));
+				String typeId = vmInstall.getVMInstallType().getId();
+				replaceJREContainer(oldCp, JavaRuntime.newRuntimeContainerClasspathEntry(new Path(JavaRuntime.JRE_CONTAINER).append(typeId).append(vmInstall.getName()), IRuntimeClasspathEntry.BOOTSTRAP_CLASSES));
 			} catch (Exception e) {
 				// ignore
 			}

@@ -32,7 +32,8 @@ public class TomcatRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
 		IVMInstall vmInstall = tomcatRuntime.getVMInstall();
 		if (vmInstall != null) {
 			String name = vmInstall.getName();
-			return new IClasspathEntry[] { JavaCore.newContainerEntry(new Path(JavaRuntime.JRE_CONTAINER).append("org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType").append(name)) };
+			String typeId = vmInstall.getVMInstallType().getId();
+			return new IClasspathEntry[] { JavaCore.newContainerEntry(new Path(JavaRuntime.JRE_CONTAINER).append(typeId).append(name)) };
 		}
 		return null;
 	}
