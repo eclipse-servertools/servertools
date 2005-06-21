@@ -79,7 +79,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 				//Trace.trace("caching: " + this + " " + projects[i] + " " + isValidModule(projects[i]));
 				if(!projects2[i].isAccessible())
 					removeModules(projects2[i]);
-				else if (isValidModule(projects2[i]) && (forceUpdate || needsUpdating(projects2[i])) ) {
+				else if (forceUpdate || needsUpdating(projects2[i]) && (isValidModule(projects2[i]))) {
 					addModules(projects2[i]);
 				} 
 			}
