@@ -66,13 +66,14 @@ public class GenericServerRuntimeTargetHandler extends
      * @see ClasspathRuntimeTargetHandler#getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor)
 	 */
 	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
-		GenericServerRuntime genericRuntime = (GenericServerRuntime)runtime.getAdapter(GenericServerRuntime.class);
-		if(genericRuntime==null)
-			genericRuntime = (GenericServerRuntime)runtime.loadAdapter(GenericServerRuntime.class,monitor);
+		GenericServerRuntime genericRuntime = (GenericServerRuntime)runtime.loadAdapter(GenericServerRuntime.class, monitor);
+		if (genericRuntime == null)
+			return new IClasspathEntry[0];
 		IVMInstall vmInstall = genericRuntime.getVMInstall();
 		if (vmInstall != null) {
 			String name = vmInstall.getName();
-			return new IClasspathEntry[] { JavaCore.newContainerEntry(new Path(JavaRuntime.JRE_CONTAINER).append("org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType").append(name)) };
+			String typeId = vmInstall.getVMInstallType().getId();
+			return new IClasspathEntry[] { JavaCore.newContainerEntry(new Path(JavaRuntime.JRE_CONTAINER).append(typeId).append(name)) };
 		}
 		return null;
 	}
