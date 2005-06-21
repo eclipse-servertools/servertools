@@ -264,7 +264,7 @@
 
 <extension point="org.eclipse.ui.preferencePages">
   <page
-    id="org.eclipse.wst.internet"
+    id="org.eclipse.internet"
     name="%preferenceInternetTitle"
     class="org.eclipse.wst.server.ui.internal.webbrowser.InternetPreferencePage"/>
 </extension>
