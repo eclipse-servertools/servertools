@@ -92,7 +92,11 @@ public class TasksComposite extends Composite {
 			Object obj = tasks.get(i);
 			final TasksWizardFragment.TaskInfo sti = (TasksWizardFragment.TaskInfo) obj;
 			final Button checkbox = new Button(this, SWT.CHECK | SWT.WRAP);
-			checkbox.setText(sti.task2.getLabel());
+			String label = sti.task2.getLabel();
+			if (label != null)
+				checkbox.setText(label);
+			else
+				checkbox.setText(Messages.elementUnknownName);
 			checkbox.setFocus();
 		
 			checkbox.addSelectionListener(new SelectionListener() {
@@ -105,7 +109,11 @@ public class TasksComposite extends Composite {
 			});
 			
 			Label description = new Label(this, SWT.WRAP);
-			description.setText(sti.task2.getDescription());
+			String desc = sti.task2.getDescription();
+			if (desc != null)
+				description.setText(desc);
+			else
+				description.setText(Messages.elementUnknownName);
 			
 			int kind = sti.kind;
 			/*if (kind == PublishOperation.TASK_COMPLETED) {

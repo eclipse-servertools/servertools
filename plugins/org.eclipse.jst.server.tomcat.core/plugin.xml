@@ -192,10 +192,10 @@
         id="org.eclipse.jst.server.tomcat.core.contextTask"
         typeIds="org.eclipse.jst.server.tomcat.*"
         class="org.eclipse.jst.server.tomcat.core.internal.ContextPublishTaskDelegate"/>
-     <publishTask
+<!--     <publishTask
         id="org.eclipse.jst.server.tomcat.core.publishTask"
         typeIds="org.eclipse.jst.server.tomcat.*"
-        class="org.eclipse.jst.server.tomcat.core.internal.PublishTask"/>
+        class="org.eclipse.jst.server.tomcat.core.internal.PublishTask"/>-->
   </extension>
 
 </plugin>

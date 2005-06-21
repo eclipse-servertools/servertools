@@ -29,6 +29,7 @@ public class PublishOperation2 extends PublishOperation {
 	protected IModule module;
 
 	public PublishOperation2(TomcatServerBehaviour server, IModule module) {
+		super("Publish to server", "Publish Web modules to Tomcat server");
 		this.server = server;
 		this.module = module;
 	}
