@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.wst.server.ui.internal.SWTUtil;
+import org.eclipse.jst.server.generic.ui.internal.SWTUtil;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 /**
  * Provides the UI objects for gathering user information
