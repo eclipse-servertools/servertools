@@ -32,7 +32,6 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.RuntimeProcess;
 import org.eclipse.jdt.internal.launching.JavaRemoteApplicationLaunchConfigurationDelegate;
-import org.eclipse.jdt.internal.launching.LaunchingPlugin;
 import org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.wst.server.core.IServer;
@@ -57,17 +56,17 @@ public class ExternalLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 	/**
 	 * Name of the launch configuration attribute that holds the external executable commandline.
 	 */
-	public static final String COMMANDLINE = LaunchingPlugin.getUniqueIdentifier() + ".COMMANDLINE"; //$NON-NLS-1$
+	public static final String COMMANDLINE = CorePlugin.PLUGIN_ID  + ".COMMANDLINE"; //$NON-NLS-1$
 
 	/**
 	 * Name of the launch configuration attribute that holds a descriptive name for the external executable.
 	 */
-	public static final String EXECUTABLE_NAME = LaunchingPlugin.getUniqueIdentifier() + ".EXECUTABLE_NAME"; //$NON-NLS-1$
+	public static final String EXECUTABLE_NAME = CorePlugin.PLUGIN_ID + ".EXECUTABLE_NAME"; //$NON-NLS-1$
 
 	/**
 	 * Name of the launch configuration attribute that holds the debug port.
 	 */
-	public static final String DEBUG_PORT = LaunchingPlugin.getUniqueIdentifier() + ".DEBUG_PORT"; //$NON-NLS-1$
+	public static final String DEBUG_PORT = CorePlugin.PLUGIN_ID + ".DEBUG_PORT"; //$NON-NLS-1$
 	
 	/**
 	 * Default value for the descriptive name for the external executable.
