@@ -111,6 +111,9 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 		}
 	}
 	
+	public void exit() {
+		fRuntimeDelegate=null;
+	}
 
 
 	private String createName()
