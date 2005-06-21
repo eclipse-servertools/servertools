@@ -10,12 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.wst.server.core.*;
 
 import junit.framework.Test;
@@ -61,19 +59,10 @@ public class ServerEventTestCase extends TestCase {
 			public IStatus canPublish() {
 				return null;
 			}
-			public boolean shouldPublish() {
-				return false;
-			}
-			public IStatus publish(IProgressMonitor monitor) {
-				return null;
-			}
 			public IStatus publish(int kind, IProgressMonitor monitor) {
 				return null;
 			}
 			public IStatus canStart(String launchMode) {
-				return null;
-			}
-			public ILaunchConfiguration getLaunchConfiguration(boolean create, IProgressMonitor monitor) throws CoreException {
 				return null;
 			}
 			public void start(String launchMode, IProgressMonitor monitor) throws CoreException {
@@ -118,14 +107,8 @@ public class ServerEventTestCase extends TestCase {
 			public boolean getModuleRestartState(IModule[] module) {
 				return false;
 			}
-			public void synchronousRestartModule(IModule[] module, IProgressMonitor monitor) throws CoreException {
-				// do nothing
-			}
 			public int getModuleState(IModule[] module) {
 				return 0;
-			}
-			public IModule[] getServerModules(IProgressMonitor monitor) {
-				return null;
 			}
 			public String getName() {
 				return null;
@@ -139,28 +122,13 @@ public class ServerEventTestCase extends TestCase {
 			public boolean isReadOnly() {
 				return false;
 			}
-			public boolean isPrivate() {
-				return false;
-			}
 			public boolean isWorkingCopy() {
-				return false;
-			}
-			public boolean isDelegateLoaded() {
 				return false;
 			}
 			public Object loadAdapter(Class c, IProgressMonitor monitor) {
 				return null;
 			}
-			public IStatus validateEdit(Object context) {
-				return null;
-			}
-			public int getTimestamp() {
-				return 0;
-			}
 			public String getHost() {
-				return null;
-			}
-			public IFile getFile() {
 				return null;
 			}
 			public IRuntime getRuntime() {

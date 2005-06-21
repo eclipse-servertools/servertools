@@ -14,7 +14,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
-import org.eclipse.wst.server.core.internal.IModuleListener;
 
 import junit.framework.TestCase;
 
@@ -37,14 +36,6 @@ public class IModuleTestCase extends TestCase {
 
 			public IProject getProject() {
 				return null;
-			}
-
-			public void addModuleListener(IModuleListener listener) {
-				// ignore
-			}
-
-			public void removeModuleListener(IModuleListener listener) {
-				// ignore
 			}
 
 			public Object getAdapter(Class adapter) {
