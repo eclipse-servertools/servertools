@@ -60,7 +60,6 @@ public class Messages extends NLS {
 	public static String configurationEditorWebModuleDialogDocumentBase;
 	public static String configurationEditorWebModuleDialogSelectDirectory;
 	public static String configurationEditorWebModuleDialogPath;
-	public static String configurationEditorWebModuleDialogAutoReload;
 	public static String configurationEditorWebModuleDialogReloadEnabled;
 
 	static {
