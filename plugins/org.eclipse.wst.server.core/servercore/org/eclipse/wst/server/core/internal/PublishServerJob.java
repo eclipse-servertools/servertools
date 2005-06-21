@@ -10,10 +10,20 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.internal;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceRuleFactory;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 /**
  * Job to publish to a particular server.
@@ -35,7 +45,45 @@ public class PublishServerJob extends Job {
 		this.server = server;
 		this.kind = kind;
 		this.check = check;
-		setRule(new ServerSchedulingRule(server));
+		
+		IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
+		
+		List list = new ArrayList();
+		IModule[] modules = server.getModules();
+		int size = modules.length;
+		for (int i = 0; i < size; i++) {
+			IProject project = modules[i].getProject();
+			if (project != null) {
+				ISchedulingRule rule = ruleFactory.createRule(project);
+				if (rule != null && !list.contains(rule))
+					list.add(rule);
+				
+				rule = ruleFactory.modifyRule(project);
+				if (rule != null && !list.contains(rule))
+					list.add(rule);
+				
+				rule = ruleFactory.validateEditRule(new IResource[] { project });
+				if (rule != null && !list.contains(rule))
+					list.add(rule);
+				
+				rule = ruleFactory.markerRule(project);
+				if (rule != null && !list.contains(rule))
+					list.add(rule);
+				
+				rule = ruleFactory.refreshRule(project);
+				if (rule != null && !list.contains(rule))
+					list.add(rule);
+			}
+		}
+		
+		size = list.size();
+		ISchedulingRule[] rules = new ISchedulingRule[size + 1];
+		for (int i = 0; i < size; i++)
+			rules[i] = (ISchedulingRule) list.get(i);
+		
+		rules[size] = new ServerSchedulingRule(server);
+		setRule(MultiRule.combine(rules));
+		
 		if (kind != IServer.PUBLISH_AUTO)
 			setUser(true);
 	}
