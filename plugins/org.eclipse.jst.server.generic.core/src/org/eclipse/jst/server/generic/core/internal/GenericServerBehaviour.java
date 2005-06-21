@@ -388,12 +388,12 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     		int port = sp.getPort();
     		if (port != 80)
     			url += ":" + port;
-    		ping = new PingThread(getServer(), url, 50, this);
+    		ping = new PingThread(getServer(), url, this);
     	} catch (Exception e) {
     		Trace.trace(Trace.SEVERE, "Can't ping for server startup.");
     	}
     }
-
+    
     protected void setProcess(final IProcess newProcess) {
     	if (process != null)
     		return;

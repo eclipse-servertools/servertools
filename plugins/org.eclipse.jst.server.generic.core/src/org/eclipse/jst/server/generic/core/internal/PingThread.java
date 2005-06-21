@@ -15,6 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.internal.ServerType;
 
 /**
  * Thread used to ping server to test when it is started.
@@ -44,11 +45,11 @@ public class PingThread {
 	 * @param maxPings
 	 * @param genericServer
 	 */
-	public PingThread(IServer server, String url, int maxPings, GenericServerBehaviour genericServer) {
+	public PingThread(IServer server, String url, GenericServerBehaviour genericServer) {
 		super();
 		this.server = server;
 		this.url = url;
-		this.maxPings = maxPings;
+		this.maxPings = guessMaxPings(genericServer);
 		this.genericServer = genericServer;
 		Thread t = new Thread() {
 			public void run() {
@@ -58,7 +59,15 @@ public class PingThread {
 		t.setDaemon(true);
 		t.start();
 	}
-
+    
+	private int guessMaxPings(GenericServerBehaviour server)
+    {
+    	int maxpings=60;
+    	int startTimeout = ((ServerType)server.getServer().getServerType()).getStartTimeout();
+    	if(startTimeout>0)
+    		maxpings=startTimeout/PING_INTERVAL;
+    	return maxpings;
+    }
 	/**
 	 * Ping the server until it is started. Then set the server
 	 * state to STATE_STARTED.
