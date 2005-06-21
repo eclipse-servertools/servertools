@@ -62,9 +62,6 @@ public class RunOnServerWizard extends TaskWizard {
 					}
 				});
 			}
-			protected boolean useJob() {
-				return true;
-			}
 		});
 	
 		setNeedsProgressMonitor(true);
