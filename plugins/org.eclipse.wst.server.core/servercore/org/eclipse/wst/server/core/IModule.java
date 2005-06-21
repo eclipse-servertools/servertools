@@ -89,11 +89,13 @@ public interface IModule extends IAdaptable {
 	/**
 	 * Returns an object which is an instance of the given class
 	 * associated with this object. Returns <code>null</code> if
-	 * no such object can be found.
+	 * no such object can be found, or if the delegate is not
+	 * loaded.
 	 * <p>
-	 * This method will not check the delegate class for adapting
-	 * unless it is already loaded. No plugin loading will occur
-	 * when calling this method.
+	 * This method will not check the delegate classes for adapting
+	 * unless they are already loaded. No plugin loading will occur
+	 * when calling this method. It is suitable for popup menus and
+	 * other UI artifacts where performance is a concern.
 	 * </p>
 	 *
 	 * @param adapter the adapter class to look up
@@ -101,16 +103,18 @@ public interface IModule extends IAdaptable {
 	 *    or <code>null</code> if this object does not
 	 *    have an adapter for the given class
 	 * @see IAdaptable#getAdapter(Class)
+	 * @see #loadAdapter(Class, IProgressMonitor)
 	 */
 	public Object getAdapter(Class adapter);
 
 	/**
 	 * Returns an object which is an instance of the given class
-	 * associated with this object. Returns <code>null</code> if
-	 * no such object can be found.
+	 * associated with this object. Returns <code>null</code> only if
+	 * no such object can be found after loading and initializing
+	 * delegates.
 	 * <p>
-	 * This method will force a load of the delegate class and
-	 * check it for adapting.
+	 * This method will force a load and initialization of all delegate
+	 * classes and check them for adapting.
 	 * </p>
 	 *
 	 * @param adapter the adapter class to look up
@@ -119,6 +123,7 @@ public interface IModule extends IAdaptable {
 	 * @return a object castable to the given class, 
 	 *    or <code>null</code> if this object does not
 	 *    have an adapter for the given class
+	 * @see #getAdapter(Class)
 	 */
 	public Object loadAdapter(Class adapter, IProgressMonitor monitor);
 }
