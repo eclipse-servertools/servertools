@@ -102,7 +102,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
                 IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,"Unable to create publisher",null);
                 throw new CoreException(status);
             }
-            publisher.initialize(module,(GenericServerRuntime)getRuntimeDelegate());
+            publisher.initialize(module,getServer());
             IStatus[] status= publisher.publish(null,monitor);
             if(status==null)
                 setModulePublishState(module, IServer.PUBLISH_STATE_NONE);
@@ -118,7 +118,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
             IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,"Unable to create publisher to remove module",null);
             throw new CoreException(status);
         }
-        publisher.initialize(module,(GenericServerRuntime)getRuntimeDelegate());
+        publisher.initialize(module,getServer());
         publisher.unpublish(monitor);
     }
     

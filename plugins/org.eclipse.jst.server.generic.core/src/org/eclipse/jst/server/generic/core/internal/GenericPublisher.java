@@ -4,6 +4,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
+import org.eclipse.wst.server.core.IServer;
 
 /**
  * The abstract publisher. This is intended to be subclassed by
@@ -16,11 +17,13 @@ public abstract class GenericPublisher
     
     private IModule[] fModule;
     private GenericServerRuntime fServerRuntime;
+    private GenericServer fServer;
     
-    protected void initialize(IModule[] module, GenericServerRuntime runtime)
+    protected void initialize(IModule[] module, IServer server)
     {
         fModule = module;
-        fServerRuntime = runtime;
+        fServer = (GenericServer)server.loadAdapter(GenericServer.class,null);
+        fServerRuntime = (GenericServerRuntime)server.getRuntime().loadAdapter(GenericServerRuntime.class,null);
     }
    /**
     * Called by the generic server implementation when a module is 
@@ -49,6 +52,9 @@ public abstract class GenericPublisher
         return fModule;
     }
 
+    public GenericServer getServer(){
+    	return fServer;
+    }
     public GenericServerRuntime getServerRuntime() {
         return fServerRuntime;
     }
