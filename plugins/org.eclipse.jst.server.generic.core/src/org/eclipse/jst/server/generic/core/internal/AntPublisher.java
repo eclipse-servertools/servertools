@@ -58,6 +58,7 @@ import org.eclipse.jst.server.generic.internal.core.util.FileUtil;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.PublisherData;
 import org.eclipse.jst.server.core.IEJBModule;
+import org.eclipse.jst.server.core.IEnterpriseApplication;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.ui.externaltools.internal.model.IExternalToolConstants;
 import org.eclipse.wst.server.core.IModuleArtifact;
@@ -224,7 +225,9 @@ public class AntPublisher extends GenericPublisher{
 
 		IWebModule webModule = (IWebModule)getModule()[0].getAdapter(IWebModule.class);
         IEJBModule ejbModule = (IEJBModule)getModule()[0].getAdapter(IEJBModule.class);
-		String moduleName="unknownmodule";//$NON-NLS-1$
+		IEnterpriseApplication earModule = (IEnterpriseApplication)getModule()[0].getAdapter(IEnterpriseApplication.class);
+        
+        String moduleName="unknownmodule";//$NON-NLS-1$
         String moduleDir="";//$NON-NLS-1$
         if(webModule!=null){    
             moduleName = this.guessModuleName(webModule);
@@ -233,6 +236,11 @@ public class AntPublisher extends GenericPublisher{
         if(ejbModule!=null){  
             moduleName = getModule()[0].getName();
             moduleDir= ejbModule.getLocation().toString();
+        }
+        if(earModule!=null)
+        {
+        	moduleName = getModule()[0].getName();
+        	moduleDir = earModule.getLocation().toString();
         }
 		props.put(PROP_MODULE_NAME,moduleName);
 		props.put(PROP_MODULE_DIR,moduleDir);
