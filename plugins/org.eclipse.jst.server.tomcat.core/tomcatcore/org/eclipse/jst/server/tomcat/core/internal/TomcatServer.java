@@ -263,11 +263,11 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			return new ServerPort[0]; 
 		}
 	}
-	
-	public void setDefaults() {
+
+	public void setDefaults(IProgressMonitor monitor) {
 		setTestEnvironment(true);
 	}
-	
+
 	/**
 	 * Sets this process to debug mode. This feature only works
 	 * with Tomcat v4.0.
