@@ -61,6 +61,7 @@ public class Messages extends NLS {
 	public static String errorPortInvalid;
 	public static String errorPortInUse;
 	public static String errorPortsInUse;
+	public static String errorDuplicateContextRoot;
 	public static String configurationEditorActionModifyPortDescription;
 	public static String configurationEditorActionModifyPort;
 	public static String configurationEditorActionModifyMimeMappingDescription;

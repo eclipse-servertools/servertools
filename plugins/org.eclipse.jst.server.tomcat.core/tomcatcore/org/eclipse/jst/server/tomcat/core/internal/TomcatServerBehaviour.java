@@ -297,6 +297,18 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPortsInUse, new String[] {portStr, getServer().getName()}), null));
 		}
 		
+		// check that there is only one app for each context root
+		iterator = configuration.getWebModules().iterator();
+		List contextRoots = new ArrayList();
+		while (iterator.hasNext()) {
+			WebModule module = (WebModule) iterator.next();
+			String contextRoot = module.getPath();
+			if (contextRoots.contains(contextRoot))
+				throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDuplicateContextRoot, new String[] { contextRoot }), null));
+			
+			contextRoots.add(contextRoot);
+		}
+		
 		setServerState(IServer.STATE_STARTING);
 		setMode(launchMode);
 	
