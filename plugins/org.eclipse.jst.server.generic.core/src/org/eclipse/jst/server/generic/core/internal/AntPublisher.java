@@ -223,9 +223,9 @@ public class AntPublisher extends GenericPublisher{
 		String modDir = module.getPublishDir();
 		modDir = getServerRuntime().getServerTypeDefinition().getResolver().resolveProperties(modDir);
 
-		IWebModule webModule = (IWebModule)getModule()[0].getAdapter(IWebModule.class);
-        IEJBModule ejbModule = (IEJBModule)getModule()[0].getAdapter(IEJBModule.class);
-		IEnterpriseApplication earModule = (IEnterpriseApplication)getModule()[0].getAdapter(IEnterpriseApplication.class);
+		IWebModule webModule = (IWebModule)getModule()[0].loadAdapter(IWebModule.class,null);
+        IEJBModule ejbModule = (IEJBModule)getModule()[0].loadAdapter(IEJBModule.class,null);
+		IEnterpriseApplication earModule = (IEnterpriseApplication)getModule()[0].loadAdapter(IEnterpriseApplication.class,null);
         
         String moduleName="unknownmodule";//$NON-NLS-1$
         String moduleDir="";//$NON-NLS-1$

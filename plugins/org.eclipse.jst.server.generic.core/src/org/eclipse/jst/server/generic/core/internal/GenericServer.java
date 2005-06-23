@@ -199,7 +199,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	public URL getModuleRootURL(IModule module) {
 
 		try {			
-            if (module == null || module.getAdapter(IWebModule.class)==null )
+            if (module == null || module.loadAdapter(IWebModule.class,null)==null )
 				return null;
 
 			String url = "http://localhost";
@@ -266,7 +266,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
         String type = module.getModuleType().getId();
 
         if (type.equals("j2ee.ejb")) {
-            IEJBModule ejbModule = (IEJBModule) module.getAdapter(IEJBModule.class);
+            IEJBModule ejbModule = (IEJBModule) module.loadAdapter(IEJBModule.class,null);
             if (ejbModule != null) {
                 IStatus status = canModifyModules(new IModule[] { module },
                         null);
@@ -278,7 +278,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 
         if (type.equals("j2ee.ear")) {
 
-            IEnterpriseApplication enterpriseApplication = (IEnterpriseApplication) module.getAdapter(IEnterpriseApplication.class);
+            IEnterpriseApplication enterpriseApplication = (IEnterpriseApplication) module.loadAdapter(IEnterpriseApplication.class,null);
             if (enterpriseApplication != null) {
                 IStatus status = canModifyModules(new IModule[] { module },
                         null);
@@ -290,7 +290,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
         
         if (type.equals("j2ee.web")) {
 
-            IWebModule webModule = (IWebModule) module.getAdapter(IWebModule.class);
+            IWebModule webModule = (IWebModule) module.loadAdapter(IWebModule.class,null);
             if (webModule != null) {
                 IStatus status = canModifyModules(new IModule[] { module },
                         null);
