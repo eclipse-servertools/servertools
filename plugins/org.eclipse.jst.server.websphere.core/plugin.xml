@@ -30,6 +30,8 @@
            class="org.eclipse.jst.server.generic.core.internal.GenericServer"
            id="org.eclipse.jst.servers.websphere.6"
            initialState="stopped"
+		   startTimeout="300000"
+           stopTimeout="15000"
            supportsRemoteHosts="false"
            runtimeTypeId="org.eclipse.jst.server.generic.runtime.websphere.6"
            description="%websphere.6.server.description"
