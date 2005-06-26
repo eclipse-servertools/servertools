@@ -62,7 +62,7 @@ public class XMLUtils {
 		refresh();
 	}
 
-	public void refresh() {
+	private void refresh() {
 		definitions= new ArrayList();
          IExtension[] extensions = ExtensionPointUtil.getGenericServerDefinitionExtensions();
         for (int i = 0; extensions!=null && i < extensions.length; i++) {
@@ -100,7 +100,7 @@ public class XMLUtils {
         return null;
     }
 
-    public ServerRuntime readFile(java.net.URI file) {
+    private ServerRuntime readFile(java.net.URI file) {
         // Create a resource set.
         ResourceSet resourceSet = new ResourceSetImpl();
 
@@ -146,8 +146,7 @@ public class XMLUtils {
 	}
 
     public ServerRuntime getServerTypeDefinition(String id) {
-        refresh();
-        Iterator defs = getServerTypeDefinitions().iterator();
+    	Iterator defs = getServerTypeDefinitions().iterator();
         while (defs.hasNext()) {
             ServerRuntime elem = (ServerRuntime) defs.next();
             if (id.equals(elem.getId()))
@@ -162,7 +161,7 @@ public class XMLUtils {
 	 * @param definitions
 	 *            The definitions to set
 	 */
-	public void setDefinitions(ArrayList definitions) {
+	private void setDefinitions(ArrayList definitions) {
 		this.definitions = definitions;
 	}
 
