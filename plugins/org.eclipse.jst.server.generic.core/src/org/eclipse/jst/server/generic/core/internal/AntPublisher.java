@@ -91,8 +91,8 @@ public class AntPublisher extends GenericPublisher{
 	private static final String PROP_MODULE_DIR = "module.dir";//$NON-NLS-1$
 	private static final String PROP_MODULE_NAME = "module.name";//$NON-NLS-1$
 	private static final String MODULE_PUBLISH_TARGET_PREFIX = "target.publish."; //$NON-NLS-1$
-    private static final String MODULE_UNPUBLISH_TARGET_PREFIX = "target.unpublish.";//$NON-NLS-1$
-    private static final String DATA_NAME_BUILD_FILE="build.file";//$NON-NLS-1$
+	private static final String MODULE_UNPUBLISH_TARGET_PREFIX = "target.unpublish.";//$NON-NLS-1$
+	private static final String DATA_NAME_BUILD_FILE="build.file";//$NON-NLS-1$
 
     /* (non-Javadoc)
 	 * @see org.eclipse.wtp.server.core.model.IPublisher#publish(org.eclipse.wtp.server.core.resources.IModuleResource[], org.eclipse.core.runtime.IProgressMonitor)
@@ -276,11 +276,21 @@ public class AntPublisher extends GenericPublisher{
 		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, "org.eclipse.ant.internal.ui.antsupport.InternalAntRunner");
 		wc.setAttribute(DebugPlugin.ATTR_PROCESS_FACTORY_ID, IAntUIConstants.REMOTE_ANT_PROCESS_FACTORY_ID);
 		
+		setupAntLaunchConfiguration(wc);
+		
+		
 		ILaunchConfiguration launchConfig = wc.doSave();
         launchConfig.launch("run",monitor);
 	}
 
+
+
     /* (non-Javadoc)
+     */
+    protected void setupAntLaunchConfiguration(ILaunchConfigurationWorkingCopy wc) {		
+	}
+
+	/* (non-Javadoc)
      * @see org.eclipse.jst.server.generic.internal.core.GenericPublisher#unpublish(org.eclipse.wst.server.core.IModule, org.eclipse.core.runtime.IProgressMonitor)
      */
     public IStatus[] unpublish(IProgressMonitor monitor) {
