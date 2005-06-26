@@ -51,7 +51,6 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
  */
 public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwareWizardFragment {
 	
-	private GenericServerRuntime fRuntimeDelegate;
 	private GenericServerCompositeDecorator[] fDecorators;
 	
 	/**
@@ -112,7 +111,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	}
 	
 	public void exit() {
-		fRuntimeDelegate=null;
+//		fRuntimeDelegate=null;
 	}
 
 
@@ -126,7 +125,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 		String suffixName=name;
 		for(int i=0;i<list.length;i++)
 	    {
-	        if(list[i].getName().equals(name)|| list[i].getName().equals(suffixName))
+	        if((list[i].getName().equals(name)|| list[i].getName().equals(suffixName))&& !list[i].equals(dl.getRuntime()))
 	            suffix++;
 	        suffixName= name+" "+suffix;
 	    }
@@ -136,18 +135,11 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	    return name;
 	}
 	
-	private GenericServerRuntime getRuntimeDelegate()
-	{
-		if(fRuntimeDelegate == null)
-		{	
-		    IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy)getTaskModel().getObject(TaskModel.TASK_RUNTIME);
-		    if(wc==null)
-		        return null;
-		    fRuntimeDelegate = (GenericServerRuntime)wc.getAdapter(GenericServerRuntime.class);
-		    if(fRuntimeDelegate==null)
-		    	fRuntimeDelegate= (GenericServerRuntime)wc.loadAdapter(GenericServerRuntime.class,new NullProgressMonitor());
-		}
-		return fRuntimeDelegate;
+	private GenericServerRuntime getRuntimeDelegate(){
+		IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
+		if (wc == null)
+			return null;
+		return (GenericServerRuntime) wc.loadAdapter(GenericServerRuntime.class, new NullProgressMonitor());
 	}
     /* (non-Javadoc)
      * @see org.eclipse.jst.server.generic.internal.ui.ServerDefinitionTypeAwareWizardFragment#description()
