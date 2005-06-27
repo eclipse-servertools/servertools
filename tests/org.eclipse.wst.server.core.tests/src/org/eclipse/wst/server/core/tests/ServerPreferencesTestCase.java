@@ -33,10 +33,6 @@ public class ServerPreferencesTestCase extends TestCase {
 	public void test02GetPref() throws Exception {
 		prefs.isAutoRestarting();
 	}
-
-	public void test03GetPref() throws Exception {
-		prefs.isCreateResourcesInWorkspace();
-	}
 	
 	public void test04SetPref() throws Exception {
 		prefs.setAutoPublishing(false);
@@ -58,16 +54,6 @@ public class ServerPreferencesTestCase extends TestCase {
 		assertTrue(prefs.isAutoRestarting());
 	}
 	
-	public void test08SetPref() throws Exception {
-		prefs.setCreateResourcesInWorkspace(false);
-		assertFalse(prefs.isCreateResourcesInWorkspace());
-	}
-	
-	public void test09SetPref() throws Exception {
-		prefs.setCreateResourcesInWorkspace(true);
-		assertTrue(prefs.isCreateResourcesInWorkspace());
-	}
-	
 	public void test10DefaultPref() throws Exception {
 		prefs.setAutoPublishing(prefs.isDefaultAutoPublishing());
 		assertEquals(prefs.isAutoPublishing(), prefs.isDefaultAutoPublishing());
@@ -76,10 +62,5 @@ public class ServerPreferencesTestCase extends TestCase {
 	public void test11DefaultPref() throws Exception {
 		prefs.setAutoRestarting(prefs.isDefaultAutoRestarting());
 		assertEquals(prefs.isAutoRestarting(), prefs.isDefaultAutoRestarting());
-	}
-	
-	public void test12DefaultPref() throws Exception {
-		prefs.setCreateResourcesInWorkspace(prefs.isDefaultCreateResourcesInWorkspace());
-		assertEquals(prefs.isCreateResourcesInWorkspace(), prefs.isDefaultCreateResourcesInWorkspace());
 	}
 }
