@@ -49,8 +49,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	public TomcatServerBehaviour() {
 		super();
 	}
-	
-	public void initialize() {
+
+	public void initialize(IProgressMonitor monitor) {
 		// do nothing
 	}
 

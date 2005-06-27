@@ -48,8 +48,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	protected Button saveNever;
 	protected Button savePrompt;
 	protected Button saveAuto;
-	
-	protected Button createInWorkspace;
 
 	protected ServerPreferences preferences;
 	protected ServerUIPreferences uiPreferences;
@@ -182,14 +180,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		showOnActivity.setSelection(uiPreferences.getShowOnActivity());
 		whs.setHelp(showOnActivity, ContextIds.PREF_GENERAL_SHOW_ON_ACTIVITY);
 		
-		createInWorkspace = new Button(composite, SWT.CHECK);
-		createInWorkspace.setText(Messages.prefCreateInWorkspace);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 4;
-		createInWorkspace.setLayoutData(data);
-		createInWorkspace.setSelection(preferences.isCreateResourcesInWorkspace());
-		whs.setHelp(createInWorkspace, ContextIds.PREF_GENERAL_CREATE_IN_WORKSPACE);
-		
 		// save editors group
 		Group saveEditorGroup = new Group(composite, SWT.NONE);
 		saveEditorGroup.setText(Messages.prefSaveEditorsGroup);
@@ -277,7 +267,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		publishBeforeStart.setSelection(preferences.isDefaultAutoPublishing());
 		promptIrreversible.setSelection(uiPreferences.getDefaultPromptBeforeIrreversibleChange());
 		showOnActivity.setSelection(uiPreferences.getDefaultShowOnActivity());
-		createInWorkspace.setSelection(preferences.isDefaultCreateResourcesInWorkspace());
 		
 		autoPublishLocal.setSelection(preferences.getDefaultAutoPublishLocal());
 		autoPublishLocalTime.setSelection(preferences.getDefaultAutoPublishLocalTime());
@@ -300,7 +289,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		uiPreferences.setSaveEditors(saveEditors);
 		uiPreferences.setPromptBeforeIrreversibleChange(promptIrreversible.getSelection());
 		uiPreferences.setShowOnActivity(showOnActivity.getSelection());
-		preferences.setCreateResourcesInWorkspace(createInWorkspace.getSelection());
 		
 		preferences.setAutoPublishLocal(autoPublishLocal.getSelection());
 		preferences.setAutoPublishLocalTime(autoPublishLocalTime.getSelection());

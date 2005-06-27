@@ -153,20 +153,6 @@
    </propertyTester>
 </extension>
 
-  <extension point="org.eclipse.ui.popupMenus">
-    <objectContribution
-      id="org.eclipse.wst.server.ui.popupMenu"
-      objectClass="org.eclipse.wst.server.core.IServer"
-      adaptable="true">
-      <action
-        id="org.eclipse.wst.server.ui.action.modifyModules"
-        label="%actionModifyModules"
-        icon="icons/ctool16/wiz_modify_modules.gif"
-        class="org.eclipse.wst.server.ui.internal.actions.ModifyModulesAction">
-      </action>
-    </objectContribution>
-  </extension>
-
   <extension point="org.eclipse.wst.server.ui.editorPages">
      <page
         id="org.eclipse.wst.server.editor.overview"

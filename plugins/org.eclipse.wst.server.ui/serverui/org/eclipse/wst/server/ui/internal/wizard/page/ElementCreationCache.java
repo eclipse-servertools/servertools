@@ -20,8 +20,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
-import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.internal.ServerPreferences;
 /**
  * A helper class used to cache the creation of server elements.
  */
@@ -69,8 +67,8 @@ public class ElementCreationCache {
 	
 		try {
 			IFile file = null;
-			if (ServerPreferences.getInstance().isCreateResourcesInWorkspace())
-				file = ServerUtil.getUnusedServerFile(WizardUtil.getServerProject(), type);
+			//if (ServerPreferences.getInstance().isCreateResourcesInWorkspace())
+			//	file = ServerUtil.getUnusedServerFile(WizardUtil.getServerProject(), type);
 			
 			IServerWorkingCopy server = type.createServer(null, file, (IRuntime)null, monitor);
 			elementCache.put(getKey(type, host), server);

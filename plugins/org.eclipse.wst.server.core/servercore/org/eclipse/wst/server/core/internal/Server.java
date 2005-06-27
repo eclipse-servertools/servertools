@@ -14,6 +14,7 @@ import java.util.*;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
@@ -1953,13 +1954,36 @@ public class Server extends Base implements IServer {
 			return null;
 		}
 	}
-	
+
 	public void setServerStatus(IStatus status) {
 		serverStatus = status;
 		//fireServerStateChangeEvent();
 	}
-	
+
 	public IStatus getServerStatus() {
 		return serverStatus;
+	}
+
+	/**
+	 * Switch the server's location between the workspace and .metadata.
+	 * 
+	 * @param server a server
+	 * @param monitor a progress monitor
+	 * @throws CoreException if something goes wrong
+	 */
+	public static void switchLocation(Server server, IProgressMonitor monitor) throws CoreException {
+		IFile file = server.getFile();
+		ServerWorkingCopy wc = (ServerWorkingCopy) server.createWorkingCopy();
+		server.delete();
+		if (file == null) {
+			IProject project = ServerType.getServerProject();
+			file = ServerUtil.getUnusedServerFile(project, wc.getServerType());
+			wc.setFile(file);
+			server.file = file;
+		} else {
+			wc.setFile(null);
+			server.file = null;
+		}
+		wc.save(true, monitor);
 	}
 }

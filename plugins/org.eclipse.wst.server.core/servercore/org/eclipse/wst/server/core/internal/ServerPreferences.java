@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.*;
 public class ServerPreferences {
 	private static final String PREF_AUTO_RESTART = "auto-restart";
 	private static final String PREF_AUTO_PUBLISH = "auto-publish";
-	private static final String PREF_CREATE_IN_WORKSPACE = "create-workspace";
 	private static final String PREF_MODULE_START_TIMEOUT = "module-start-timeout";
 	
 	private static final String PREF_AUTO_PUBLISH_LOCAL = "auto-publish-local";
@@ -88,37 +87,6 @@ public class ServerPreferences {
 	 */
 	public boolean isDefaultAutoPublishing() {
 		return true;
-	}
-	
-	/**
-	 * Returns whether servers and configurations should be created in the
-	 * workspace (as opposed to in metadata).
-	 *
-	 * @return boolean
-	 */
-	public boolean isCreateResourcesInWorkspace() {
-		return preferences.getBoolean(PREF_CREATE_IN_WORKSPACE);
-	}
-
-	/**
-	 * Returns whether servers and configurations should be created in the
-	 * workspace (as opposed to in metadata) by default.
-	 *
-	 * @return boolean
-	 */
-	public boolean isDefaultCreateResourcesInWorkspace() {
-		return false;
-	}
-
-	/**
-	 * Set whether servers and configurations should be created in the
-	 * workspace (as opposed to in metadata).
-	 *
-	 * @param b
-	 */
-	public void setCreateResourcesInWorkspace(boolean b) {
-		preferences.setValue(PREF_CREATE_IN_WORKSPACE, b);
-		ServerPlugin.getInstance().savePluginPreferences();
 	}
 
 	/**

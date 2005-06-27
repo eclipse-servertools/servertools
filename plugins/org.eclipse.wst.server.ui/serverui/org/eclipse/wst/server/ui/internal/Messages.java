@@ -92,7 +92,6 @@ public class Messages extends NLS {
 	public static String prefAutoRestart;
 	public static String prefPromptIrreversible;
 	public static String prefShowOnActivity;
-	public static String prefCreateInWorkspace;
 	public static String prefSaveEditorsGroup;
 	public static String prefSaveEditorsNever;
 	public static String prefSaveEditorsPrompt;
@@ -120,6 +119,10 @@ public class Messages extends NLS {
 	public static String actionDebugOnServer;
 	public static String actionProfileOnServer;
 	public static String actionRunOnServer;
+	public static String actionUpdateStatus;
+	public static String actionMoveServerToMetadata;
+	public static String actionMoveServerToWorkspace;
+	public static String jobUpdateStatus;
 	public static String dialogAddRemoveModulesNone;
 	public static String actionSetNewServer;
 	public static String errorNoModules;

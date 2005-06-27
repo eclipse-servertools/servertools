@@ -324,6 +324,8 @@ public class ServersView extends ViewPart {
 		// open action
 		if (server != null) {
 			menu.add(new OpenAction(server));
+			if (server.getServerState() == IServer.STATE_UNKNOWN)
+				menu.add(new UpdateStatusAction(server));
 			menu.add(new Separator());
 			
 			menu.add(new DeleteAction(shell, server));
@@ -336,22 +338,6 @@ public class ServersView extends ViewPart {
 				else
 					menu.add(actions[i]);
 			}
-		
-			// switch config
-			/*if (server.getServerType() != null && server.getServerType().hasServerConfiguration()) {
-				MenuManager menuManager = new MenuManager(Messages.actionSwitchConfiguration"));
-				menuManager.add(new SwitchConfigurationAction(shell, Messages.viewNoConfiguration"), server, null));
-	
-				IServerConfiguration[] configs = getSupportedServerConfigurations(server);
-				if (configs != null) {
-					int size = configs.length;
-					for (int i = 0; i < size; i++) {
-						menuManager.add(new SwitchConfigurationAction(shell, configs[i].getName(), server, configs[i]));
-					}
-				}
-	
-				menu.add(menuManager);
-			}*/
 			
 			// monitor
 			if (server.getServerType() != null) {
@@ -381,6 +367,7 @@ public class ServersView extends ViewPart {
 				menuManager.add(new MonitorServerAction(shell, server));
 				menu.add(menuManager);
 			}
+			menu.add(new SwitchServerLocationAction(server));
 		}
 	
 		if (server != null && module != null) {
@@ -406,38 +393,13 @@ public class ServersView extends ViewPart {
 			menu.add(action);
 		}
 		
+		menu.add(new Separator());
+		menu.add(actions[6]);
+		
 		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS+"-end"));
 	}
-	
-	/**
-	 * Returns a list of configurations that are supported by this
-	 * server.
-	 *
-	 * @param server org.eclipse.wst.server.core.IServer
-	 * @return java.util.List
-	 */
-	/*protected static IServerConfiguration[] getSupportedServerConfigurations(IServer server) {
-		if (server == null)
-			return new IServerConfiguration[0];
-	
-		List list = new ArrayList();
-	
-		IServerConfiguration[] configs = ServerCore.getServerConfigurations();
-		if (configs != null) {
-			int size = configs.length;
-			for (int i = 0; i < size; i++) {
-				//Trace.trace("Is supported configuration: " + getName(server) + " " + getName(configuration) + " " + server.isSupportedConfiguration(configuration));
-				if (server.isSupportedConfiguration(configs[i]))
-					list.add(configs[i]);
-			}
-		}
-		
-		IServerConfiguration[] sc = new IServerConfiguration[list.size()];
-		list.toArray(sc);
-		return sc;
-	}*/
-	
+
 	/**
 	 * 
 	 */

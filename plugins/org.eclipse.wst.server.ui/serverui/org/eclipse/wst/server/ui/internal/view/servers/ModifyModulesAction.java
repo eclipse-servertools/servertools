@@ -8,13 +8,14 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.ui.internal.actions;
+package org.eclipse.wst.server.ui.internal.view.servers;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -28,15 +29,16 @@ import org.eclipse.wst.server.ui.internal.wizard.ModifyModulesWizard;
 /**
  * Action to modify the modules of a server.
  */
-public class ModifyModulesAction implements IObjectActionDelegate {
+public class ModifyModulesAction extends Action {
 	protected IWorkbenchPart part;
 	protected IServer server;
 
 	/**
 	 * ModifyModulesAction constructor comment.
 	 */
-	public ModifyModulesAction() {
-		super();
+	public ModifyModulesAction(IServer server) {
+		super(Messages.actionModifyModules);
+		this.server = server;
 	}
 
 	/*

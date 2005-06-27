@@ -246,25 +246,33 @@ public class ResourceManager {
 		final ResourceManager rm = ResourceManager.getInstance();
 	
 		try {
-			project.accept(new IResourceVisitor() {
-				public boolean visit(IResource resource) {
-					try {
-						if (resource instanceof IFile) {
-							IFile file = (IFile) resource;
-							rm.handleNewFile(file, null);
+			project.accept(new IResourceProxyVisitor() {
+				public boolean visit(IResourceProxy proxy) {
+					if (proxy.getType() == IResource.FILE &&
+						Server.FILE_EXTENSION.equals(getFileExtension(proxy.getName()))) {
+							IFile file = (IFile) proxy.requestResource();
+							try {
+								rm.handleNewFile(file, null);
+							} catch (Exception e) {
+								Trace.trace(Trace.SEVERE, "Error during initial server resource load", e);
+							}
 							return false;
 						}
-						return true;
-						//return !rm.handleNewServerResource(resource, null);
-					} catch (Exception e) {
-						Trace.trace(Trace.SEVERE, "Error during initial server resource load", e);
-					}
 					return true;
 				}
-			});
+			}, 0);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not load server project " + project.getName(), e);
 		}
+	}
+		
+	protected static String getFileExtension(String name) {
+		int index = name.lastIndexOf('.');
+		if (index == -1)
+			return null;
+		if (index == (name.length() - 1))
+			return ""; //$NON-NLS-1$
+		return name.substring(index + 1);
 	}
 
 	public static ResourceManager getInstance() {
