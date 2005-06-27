@@ -48,13 +48,13 @@
 	<module>
 		<type>j2ee.web</type>
 		<publishDir>${wasHome}</publishDir>
-		<publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+		<publisherReference>org.eclipse.jst.server.generic.websphere.antpublisher</publisherReference>
 	</module>
 
 	<module>
 		<type>j2ee.ejb</type>
 		<publishDir>${wasHome}</publishDir>
-		<publisherReference>org.eclipse.jst.server.generic.antpublisher</publisherReference>
+		<publisherReference>org.eclipse.jst.server.generic.websphere.antpublisher</publisherReference>
 	</module>
 
 

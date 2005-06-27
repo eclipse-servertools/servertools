@@ -79,4 +79,10 @@
 		</serverdefinition>
    </extension>
 
+   <extension point="org.eclipse.jst.server.generic.core.genericpublisher">
+      <genericpublisher
+            class="org.eclipse.jst.server.websphere.core.AntPublisher"
+            id="org.eclipse.jst.server.generic.websphere.antpublisher"/>
+   </extension>
+
 </plugin>
