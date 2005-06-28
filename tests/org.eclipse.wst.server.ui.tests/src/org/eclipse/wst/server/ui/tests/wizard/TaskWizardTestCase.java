@@ -12,7 +12,6 @@ package org.eclipse.wst.server.ui.tests.wizard;
 
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.tests.OrderedTestSuite;
-import org.eclipse.wst.server.ui.wizard.WizardFragment;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -25,19 +24,11 @@ public class TaskWizardTestCase extends TestCase {
 	}
 
 	public void test00Create() {
-		wizard = new TaskWizard();
+		wizard = new TaskWizard("title", null, null);
 	}
-	
-	public void test01Create() {
-		wizard = new TaskWizard("title");
-	}
-	
+
 	public void test02Create() {
 		wizard = new TaskWizard("title", null);
-	}
-	
-	public void test03Create() {
-		wizard = new TaskWizard((WizardFragment)null);
 	}
 
 	public void test04GetContainer() {
@@ -166,6 +157,10 @@ public class TaskWizardTestCase extends TestCase {
 	
 	public void test32TestProtected() {
 		class MyTaskWizard extends TaskWizard {
+			public MyTaskWizard() {
+				super(null, null, null);
+			}
+			
 			public void testProtected() {
 				try {
 					executeTask(null, (byte)0, null);
