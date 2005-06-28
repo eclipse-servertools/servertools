@@ -10,7 +10,9 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
@@ -20,6 +22,7 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 /**
@@ -48,13 +51,17 @@ public class ServersViewDropAdapter extends ViewerDropAdapter {
 		
 		final IServer finalServer = server;
 		RunOnServerActionDelegate ros = new RunOnServerActionDelegate() {
-			protected IServer getServer() {
+			public IServer getServer(IModule module, String launchMode, IProgressMonitor monitor) {
 				return finalServer;
 			}
 		};
 		Action action = new Action() {
 			//
 		};
+		if (data instanceof IStructuredSelection) {
+			IStructuredSelection sel = (IStructuredSelection) data;
+			data = sel.getFirstElement();
+		}
 		ros.selectionChanged(action, new StructuredSelection(data));
 		
 		//if (!action.isEnabled())
