@@ -5,13 +5,6 @@
  <extension-point id="serverdefinition" name="%extensionPointServerdefinition" schema="schema/serverdefinition.exsd"/>
  <extension-point id="genericpublisher" name="%extensionPointGenericpublisher" schema="schema/genericpublisher.exsd"/>
 	
- <extension point="org.eclipse.wst.server.core.runtimeTargetHandlers">
-     <runtimeTargetHandler
-        id="org.eclipse.jst.server.generic.runtimeTarget"
-        runtimeTypeIds="*"
-        class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntimeTargetHandler"/>
-	</extension>
-
  <extension point="org.eclipse.debug.core.launchConfigurationTypes">
      <launchConfigurationType
         id="org.eclipse.jst.server.generic.core.launchConfigurationType"

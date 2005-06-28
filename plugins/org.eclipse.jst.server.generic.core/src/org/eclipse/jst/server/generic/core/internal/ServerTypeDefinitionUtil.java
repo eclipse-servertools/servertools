@@ -58,9 +58,9 @@ public class ServerTypeDefinitionUtil
 	{
 		if(runtime==null)
 			return null;
-	    GenericServerRuntime delegate = (GenericServerRuntime)runtime.getAdapter(GenericServerRuntime.class);
+	    GenericServerRuntime delegate = (GenericServerRuntime)runtime.loadAdapter(GenericServerRuntime.class,null);
 	    if(delegate==null)
-	    	delegate= (GenericServerRuntime)runtime.loadAdapter(GenericServerRuntime.class,null);
+	    	return null;
 		String serverType = delegate.getRuntime().getRuntimeType().getId();
 		Map properties = delegate.getServerInstanceProperties();
 		ServerRuntime definition = 
@@ -70,7 +70,9 @@ public class ServerTypeDefinitionUtil
 	
 	public static IClasspathEntry[] getServerClassPathEntry(IRuntime runtime)
 	{
-		ServerRuntime definition = getServerTypeDefinition(runtime);		
+		ServerRuntime definition = getServerTypeDefinition(runtime);
+		if(definition==null)
+			return null;
 		String ref = definition.getProject().getClasspathReference();
 		Classpath cp = definition.getClasspath(ref);
 		Iterator archives = cp.getArchive().iterator();
@@ -81,7 +83,6 @@ public class ServerTypeDefinitionUtil
 			IClasspathEntry entry = JavaCore.newLibraryEntry(new Path(item),null,null );
 			entryList.add(entry);
 		}
-
 		return (IClasspathEntry[])entryList.toArray(new IClasspathEntry[entryList.size()]);
 	}
 	
