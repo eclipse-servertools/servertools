@@ -255,4 +255,26 @@
     class="org.eclipse.wst.server.ui.internal.webbrowser.InternetPreferencePage"/>
 </extension>
 
+<!--
+<extension point="org.eclipse.debug.ui.launchGroups">
+  <launchGroup
+     label="%ExternalToolsLaunchGroup.label"
+     bannerImage="icons/full/wizban/ext_tools_wiz.gif"
+     category="org.eclipse.ui.externaltools"
+     image="icons/full/obj16/external_tools.gif"
+     mode="run"
+     id="org.eclipse.ui.externaltools.launchGroup"
+     title="%ExternalToolsLaunchGroup.title">
+  </launchGroup>
+  <launchGroup
+     label="%ExternalToolsLaunchGroup.label"
+     bannerImage="icons/full/wizban/ext_tools_wiz.gif"
+     category="org.eclipse.ui.externaltools.builder"
+     image="icons/full/obj16/external_tools.gif"
+     public="false"
+     mode="run"
+     id="org.eclipse.ui.externaltools.launchGroup.builder">
+   </launchGroup>
+</extension>
+-->
 </plugin>

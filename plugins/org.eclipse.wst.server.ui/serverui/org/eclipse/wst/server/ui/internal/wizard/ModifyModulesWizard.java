@@ -31,11 +31,6 @@ public class ModifyModulesWizard extends TaskWizard {
 		}
 
 		protected void createChildFragments(List list) {
-			list.add(new WizardFragment() {
-				public void enter() {
-					getTaskModel().putObject(TaskModel.TASK_SERVER, server);
-				}
-			});
 			list.add(new ModifyModulesWizardFragment());
 			list.add(new TasksWizardFragment());
 			list.add(new WizardFragment() {
@@ -53,7 +48,7 @@ public class ModifyModulesWizard extends TaskWizard {
 	 */
 	public ModifyModulesWizard(IServer server) {
 		super(Messages.wizModuleWizardTitle, new ModifyModulesWizard2(server.createWorkingCopy()));
-	
-		setNeedsProgressMonitor(true);
+		
+		getTaskModel().putObject(TaskModel.TASK_SERVER, server);
 	}
 }

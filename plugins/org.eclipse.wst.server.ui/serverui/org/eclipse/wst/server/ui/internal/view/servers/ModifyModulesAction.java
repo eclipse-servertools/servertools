@@ -35,6 +35,8 @@ public class ModifyModulesAction extends Action {
 
 	/**
 	 * ModifyModulesAction constructor comment.
+	 * 
+	 * @param server a server
 	 */
 	public ModifyModulesAction(IServer server) {
 		super(Messages.actionModifyModules);

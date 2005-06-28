@@ -30,7 +30,6 @@ import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 import org.eclipse.wst.server.ui.internal.editor.IServerEditorInput;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorInput;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
-import org.eclipse.wst.server.ui.internal.wizard.InputWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewRuntimeWizardFragment;
@@ -507,9 +506,11 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		if (runtimeType != null) {
 			try {
 				final IRuntimeWorkingCopy runtime = runtimeType.createRuntime(null, null);
+				TaskModel taskModel = new TaskModel();
+				taskModel.putObject(TaskModel.TASK_RUNTIME, runtime);
+				
 				WizardFragment fragment = new WizardFragment() {
 					protected void createChildFragments(List list) {
-						list.add(new InputWizardFragment(TaskModel.TASK_RUNTIME, runtime));
 						list.add(getWizardFragment(runtimeTypeId));
 						list.add(new WizardFragment() {
 							public void performFinish(IProgressMonitor monitor) throws CoreException {
@@ -518,7 +519,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 						});
 					}
 				};
-				TaskWizard wizard = new TaskWizard(Messages.wizNewRuntimeWizardTitle, fragment);
+				TaskWizard wizard = new TaskWizard(Messages.wizNewRuntimeWizardTitle, fragment, taskModel);
 				wizard.setForcePreviousAndNextButtons(true);
 				ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
 				return (dialog.open() == IDialogConstants.OK_ID);

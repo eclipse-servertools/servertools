@@ -40,8 +40,6 @@ public class NewServerWizard extends TaskWizard implements INewWizard {
 	public NewServerWizard(final String[] ids, final String[] values) {
 		super(Messages.wizNewServerWizardTitle, new WizardFragment() {
 			protected void createChildFragments(List list) {
-				if (ids != null)
-					list.add(new InputWizardFragment(ids, values));
 				list.add(new NewServerWizardFragment());
 				list.add(new WizardFragment() {
 					public void performFinish(IProgressMonitor monitor) throws CoreException {
@@ -66,7 +64,13 @@ public class NewServerWizard extends TaskWizard implements INewWizard {
 			}
 		});
 		
-		setForcePreviousAndNextButtons(true);
+		if (ids != null) {
+			TaskModel taskModel2 = getTaskModel();
+			int size = ids.length;
+			for (int i = 0; i < size; i++) {
+				taskModel2.putObject(ids[i], values[i]);
+			}
+		}
 	}
 	
 	public void init(IWorkbench newWorkbench, IStructuredSelection newSelection) {

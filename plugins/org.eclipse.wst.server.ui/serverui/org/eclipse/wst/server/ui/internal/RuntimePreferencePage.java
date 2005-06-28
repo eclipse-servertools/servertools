@@ -319,6 +319,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 	protected int showWizard(final IRuntimeWorkingCopy runtimeWorkingCopy) {
 		String title = null;
 		WizardFragment fragment = null;
+		TaskModel taskModel = new TaskModel();
 		if (runtimeWorkingCopy == null) {
 			title = Messages.wizNewRuntimeWizardTitle;
 			fragment = new WizardFragment() {
@@ -338,13 +339,9 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 				edit.setEnabled(false);
 				return Window.CANCEL;
 			}
+			taskModel.putObject(TaskModel.TASK_RUNTIME, runtimeWorkingCopy);
 			fragment = new WizardFragment() {
 				protected void createChildFragments(List list) {
-					list.add(new WizardFragment() {
-						public void enter() {
-							getTaskModel().putObject(TaskModel.TASK_RUNTIME, runtimeWorkingCopy);
-						}
-					});
 					list.add(fragment2);
 					list.add(new WizardFragment() {
 						public void performFinish(IProgressMonitor monitor) throws CoreException {
@@ -354,7 +351,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 				}
 			};
 		}
-		TaskWizard wizard = new TaskWizard(title, fragment);
+		TaskWizard wizard = new TaskWizard(title, fragment, taskModel);
 		wizard.setForcePreviousAndNextButtons(true);
 		ClosableWizardDialog dialog = new ClosableWizardDialog(getShell(), wizard);
 		return dialog.open();

@@ -19,6 +19,9 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
@@ -35,8 +38,8 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.FormColors;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.*;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.*;
@@ -46,6 +49,7 @@ import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.command.*;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
@@ -117,7 +121,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 	 *
 	 * @param parent the parent control
 	 */
-	public final void createPartControl(Composite parent) {
+	public final void createPartControl(final Composite parent) {
 		FormToolkit toolkit = getFormToolkit(parent.getDisplay());
 		
 		ScrolledForm form = toolkit.createScrolledForm(parent);
@@ -246,17 +250,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			
 			createLabel(toolkit, composite, "");
 			Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewRuntimeEdit, SWT.NONE);
-			//GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-			//link.setLayoutData(data);
-			link.addHyperlinkListener(new IHyperlinkListener() {
-				public void linkEntered(HyperlinkEvent e) {
-					// ignore
-				}
-
-				public void linkExited(HyperlinkEvent e) {
-					// ignore
-				}
-
+			link.addHyperlinkListener(new HyperlinkAdapter() {
 				public void linkActivated(HyperlinkEvent e) {
 					editRuntime(runtime);
 				}
@@ -298,7 +292,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalSpan = 2;
 			autoPublishDefault.setLayoutData(data);
-			Server svr = (Server) server;
+			final Server svr = (Server) server;
 			autoPublishDefault.setSelection(svr.getAutoPublishDefault());
 			whs.setHelp(autoPublishDefault, ContextIds.EDITOR_AUTOPUBLISH_DEFAULT);
 			
@@ -340,6 +334,23 @@ public class OverviewEditorPart extends ServerEditorPart {
 					updating = false;
 				}
 			});
+			
+			IServerType serverType = server.getServerType();
+			if (serverType.supportsLaunchMode(ILaunchManager.RUN_MODE) || serverType.supportsLaunchMode(ILaunchManager.DEBUG_MODE)
+					|| serverType.supportsLaunchMode(ILaunchManager.PROFILE_MODE)) {
+				Hyperlink link = toolkit.createHyperlink(composite, "Open launch configuration dialog", SWT.NONE);
+				link.addHyperlinkListener(new HyperlinkAdapter() {
+					public void linkActivated(HyperlinkEvent e) {
+						try {
+							ILaunchConfiguration launchConfig = svr.getLaunchConfiguration(true, null);
+							// TODO: use correct launch group
+							DebugUITools.openLaunchConfigurationPropertiesDialog(parent.getShell(), launchConfig, "org.eclipse.debug.ui.launchGroup.run");
+						} catch (CoreException ce) {
+							Trace.trace(Trace.SEVERE, "Could not create launch configuration", ce);
+						}
+					}
+				});
+			}
 		}
 		
 		insertSections(leftColumnComp, "org.eclipse.wst.server.editor.overview.left");
@@ -379,13 +390,11 @@ public class OverviewEditorPart extends ServerEditorPart {
 		if (fragment2 == null)
 			return Window.CANCEL;
 		
+		TaskModel taskModel = new TaskModel();
+		taskModel.putObject(TaskModel.TASK_RUNTIME, runtimeWorkingCopy);
+
 		WizardFragment fragment = new WizardFragment() {
 			protected void createChildFragments(List list) {
-				list.add(new WizardFragment() {
-					public void enter() {
-						getTaskModel().putObject(TaskModel.TASK_RUNTIME, runtimeWorkingCopy);
-					}
-				});
 				list.add(fragment2);
 				list.add(new WizardFragment() {
 					public void performFinish(IProgressMonitor monitor) throws CoreException {
@@ -395,7 +404,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			}
 		};
 		
-		TaskWizard wizard = new TaskWizard(title, fragment);
+		TaskWizard wizard = new TaskWizard(title, fragment, taskModel);
 		wizard.setForcePreviousAndNextButtons(true);
 		ClosableWizardDialog dialog = new ClosableWizardDialog(getEditorSite().getShell(), wizard);
 		return dialog.open();

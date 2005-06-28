@@ -23,19 +23,16 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
  * A wizard used to select server and module tasks.
  */
 public class SelectTasksWizard extends TaskWizard {
-	protected TasksWizardFragment fragment;
-	
+	protected static TasksWizardFragment fragment;
+
 	/**
 	 * SelectTasksWizard constructor.
 	 * 
 	 * @param server a server
 	 */
 	public SelectTasksWizard(final IServer server) {
-		super(Messages.wizTaskWizardTitle);
-		
-		setRootFragment(new WizardFragment() {
+		super(Messages.wizTaskWizardTitle, new WizardFragment() {
 			protected void createChildFragments(List list) {
-				list.add(new InputWizardFragment(new String[] { TaskModel.TASK_SERVER }, new Object[] { server }));
 				fragment = new TasksWizardFragment();
 				list.add(fragment);
 				list.add(new WizardFragment() {
@@ -45,6 +42,7 @@ public class SelectTasksWizard extends TaskWizard {
 				});
 			}
 		});
+		getTaskModel().putObject(TaskModel.TASK_SERVER, server);
 		addPages();
 	}
 

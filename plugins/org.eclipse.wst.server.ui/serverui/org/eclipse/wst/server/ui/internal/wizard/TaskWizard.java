@@ -47,7 +47,7 @@ public class TaskWizard implements IWizard {
 	private List pages;
 	private boolean addingPages;
 	private Map fragmentData = new HashMap();
-	protected TaskModel taskModel = new TaskModel();
+	protected TaskModel taskModel;
 	
 	private IWizardContainer container = null;
 	
@@ -67,37 +67,46 @@ public class TaskWizard implements IWizard {
 	
 	private WizardFragment rootFragment;
 	private WizardFragment currentFragment;
-	
+
 	/**
-	 * TaskWizard constructor comment.
+	 * Create a new TaskWizard with the given title and root fragment.
+	 * 
+	 * @param title a title
+	 * @param rootFragment a root fragment
 	 */
-	public TaskWizard() {
+	public TaskWizard(String title, WizardFragment rootFragment) {
+		this(title, rootFragment, null);
+		setWindowTitle(title);
+	}
+
+	/**
+	 * Create a new TaskWizard with the given title, root fragment, and task model.
+	 * 
+	 * @param title a title
+	 * @param rootFragment a root fragment
+	 * @param taskModel a task model
+	 */
+	public TaskWizard(String title, WizardFragment rootFragment, TaskModel taskModel) {
 		super();
+		if (title != null)
+			setWindowTitle(title);
+		this.rootFragment = rootFragment;
+		this.taskModel = taskModel;
+		if (taskModel == null)
+			this.taskModel = new TaskModel();
 		
 		setNeedsProgressMonitor(true);
 		setForcePreviousAndNextButtons(true);
 	}
 
-	/**
-	 * TaskWizard constructor comment.
-	 * 
-	 * @param rootFragment a root fragment
-	 */
-	public TaskWizard(WizardFragment rootFragment) {
-		this();
-		this.rootFragment = rootFragment;
+	public void setTaskModel(TaskModel taskModel) {
+		this.taskModel = taskModel;
 	}
 	
-	public TaskWizard(String title) {
-		this();
-		setWindowTitle(title);
+	public TaskModel getTaskModel() {
+		return taskModel;
 	}
-	
-	public TaskWizard(String title, WizardFragment rootFragment) {
-		this(rootFragment);
-		setWindowTitle(title);
-	}
-	
+
 	public void setRootFragment(WizardFragment rootFragment) {
 		this.rootFragment = rootFragment;
 	}
