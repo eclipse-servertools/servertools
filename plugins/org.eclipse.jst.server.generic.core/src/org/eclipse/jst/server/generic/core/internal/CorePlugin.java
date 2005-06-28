@@ -36,7 +36,6 @@ import org.eclipse.ui.plugin.*;
 import org.osgi.framework.BundleContext;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -49,8 +48,6 @@ public class CorePlugin extends AbstractUIPlugin {
 
 	//The shared instance.
 	private static CorePlugin plugin;
-	//Resource bundle.
-	private ResourceBundle resourceBundle;
 	private ServerTypeDefinitionManager fServerTypeDefinitionManager;
 	/**
 	 * The constructor.
@@ -58,11 +55,6 @@ public class CorePlugin extends AbstractUIPlugin {
 	public CorePlugin() {
 		super();
 		plugin = this;
-		try {
-			resourceBundle = ResourceBundle.getBundle("org.eclipse.jst.server.generic.core.CorePluginResources");
-		} catch (MissingResourceException x) {
-			resourceBundle = null;
-		}
 	}
 
 	/**
@@ -86,25 +78,6 @@ public class CorePlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	/**
-	 * Returns the string from the plugin's resource bundle,
-	 * or 'key' if not found.
-	 */
-	public static String getResourceString(String key) {
-		ResourceBundle bundle = CorePlugin.getDefault().getResourceBundle();
-		try {
-			return (bundle != null) ? bundle.getString(key) : key;
-		} catch (MissingResourceException e) {
-			return key;
-		}
-	}
-
-	/**
-	 * Returns the plugin's resource bundle,
-	 */
-	public ResourceBundle getResourceBundle() {
-		return resourceBundle;
-	}
 	/**
 	 * 
 	 * @return
