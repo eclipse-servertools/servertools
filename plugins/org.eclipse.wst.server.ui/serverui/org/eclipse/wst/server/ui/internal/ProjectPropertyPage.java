@@ -63,7 +63,7 @@ public class ProjectPropertyPage extends PropertyPage {
 			GridLayout layout = new GridLayout();
 			layout.marginHeight = 0;
 			layout.marginWidth = 0;
-			layout.numColumns = 3;
+			layout.numColumns = 4;
 			layout.verticalSpacing = 10;
 			composite.setLayout(layout);
 			composite.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -71,7 +71,7 @@ public class ProjectPropertyPage extends PropertyPage {
 			Label label = new Label(composite, SWT.WRAP);
 			label.setText(Messages.prefProjectDescription);
 			GridData data = new GridData(GridData.FILL_HORIZONTAL);
-			data.horizontalSpan = 3;
+			data.horizontalSpan = 4;
 			data.widthHint = 200;
 			label.setLayoutData(data);
 
@@ -83,7 +83,7 @@ public class ProjectPropertyPage extends PropertyPage {
 				label = new Label(composite, SWT.NONE);
 				label.setText(Messages.prefProjectNotModule);
 				data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-				data.horizontalSpan = 3;
+				data.horizontalSpan = 4;
 				label.setLayoutData(data);
 			} else {
 				IModuleType mt = module.getModuleType();
@@ -95,7 +95,7 @@ public class ProjectPropertyPage extends PropertyPage {
 				
 					Label moduleKind = new Label(composite, SWT.NONE);
 					data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-					data.horizontalSpan = 2;
+					data.horizontalSpan = 3;
 					moduleKind.setLayoutData(data);
 					moduleKind.setText(module.getName() + " (" + mt.getName() + ")");
 				}
@@ -114,12 +114,12 @@ public class ProjectPropertyPage extends PropertyPage {
 					label = new Label(composite, SWT.WRAP);
 					label.setText(Messages.prefProjectNotConfigured);
 					data = new GridData();
-					data.horizontalSpan = 2;
+					data.horizontalSpan = 3;
 					label.setLayoutData(data);
 				} else {
 					final Table table = new Table(composite, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
 					data = new GridData(GridData.FILL_HORIZONTAL);
-					data.horizontalSpan = 2;
+					data.horizontalSpan = 3;
 					data.heightHint = 70;
 					table.setLayoutData(data);
 					

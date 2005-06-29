@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 /**
  * Dialog that prompts a user to change the target runtime.
@@ -110,6 +111,7 @@ public class RuntimeTargetComposite {
 		
 		final Combo combo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
 		data = new GridData(GridData.FILL_HORIZONTAL);
+		data.horizontalSpan = 2;
 		combo.setLayoutData(data);
 		
 		int sel = updateRuntimes();
@@ -180,8 +182,12 @@ public class RuntimeTargetComposite {
 			new Label(parent, SWT.NONE);
 		}
 		
-		Button prefsButton = SWTUtil.createButton(parent, Messages.runtimeTargetRuntimePreferences);
-		prefsButton.addSelectionListener(new SelectionAdapter() {
+		Link prefLink = new Link(parent, SWT.NONE);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
+		data.horizontalSpan = 2;
+		prefLink.setLayoutData(data);
+		prefLink.setText(Messages.runtimeTargetRuntimePreferences);
+		prefLink.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				String currentRuntime2 = combo.getText();
 				if (showRuntimePreferencePage(parent.getShell())) {
