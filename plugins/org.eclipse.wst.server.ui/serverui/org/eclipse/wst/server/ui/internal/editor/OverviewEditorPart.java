@@ -255,6 +255,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 					editRuntime(runtime);
 				}
 			});
+			link.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		}
 		
 		// server configuration path
@@ -338,7 +339,10 @@ public class OverviewEditorPart extends ServerEditorPart {
 			IServerType serverType = server.getServerType();
 			if (serverType.supportsLaunchMode(ILaunchManager.RUN_MODE) || serverType.supportsLaunchMode(ILaunchManager.DEBUG_MODE)
 					|| serverType.supportsLaunchMode(ILaunchManager.PROFILE_MODE)) {
-				Hyperlink link = toolkit.createHyperlink(composite, "Open launch configuration dialog", SWT.NONE);
+				Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewOpenLaunchConfiguration, SWT.NONE);
+				data = new GridData();
+				data.horizontalSpan = 2;
+				link.setLayoutData(data);
 				link.addHyperlinkListener(new HyperlinkAdapter() {
 					public void linkActivated(HyperlinkEvent e) {
 						try {

@@ -43,7 +43,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	protected Combo serverCombo;
 	
 	protected Label runtimeLabel;
-	protected Label runtimeLocation;
+	protected Label hostname;
 	
 	protected IServer server;
 	
@@ -76,17 +76,25 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
-		layout.marginWidth = 10;
-		layout.marginHeight = 10;
-		layout.numColumns = 1;
+		layout.marginWidth = 5;
+		layout.marginHeight = 5;
+		layout.numColumns = 2;
 		composite.setLayout(layout);
 
-		GridData data = new GridData(GridData.FILL_HORIZONTAL);
-		composite.setLayoutData(data);
+		//GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		//data.widthHint = 200;
+		//composite.setLayoutData(data);
 
 		Label label = new Label(composite, SWT.WRAP);
+		label.setText(Messages.serverLaunchDescription);
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		data.horizontalSpan = 2;
+		data.grabExcessHorizontalSpace = false;
+		data.widthHint = 300;
+		label.setLayoutData(data);
+		
+		label = new Label(composite, SWT.NONE);
 		label.setText(Messages.serverLaunchServer);
-		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		serverCombo = new Combo(composite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
 		serverCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		serverCombo.addSelectionListener(new SelectionListener() {
@@ -99,10 +107,15 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		});
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(serverCombo, ContextIds.LAUNCH_CONFIGURATION_SERVER_COMBO);
 
+		label = new Label(composite, SWT.NONE);
+		label.setText(Messages.serverLaunchRuntime);
 		runtimeLabel = new Label(composite, SWT.NONE);
 		runtimeLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		runtimeLocation = new Label(composite, SWT.NONE);
-		runtimeLocation.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		label = new Label(composite, SWT.NONE);
+		label.setText(Messages.serverLaunchHost);
+		hostname = new Label(composite, SWT.NONE);
+		hostname.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		// initialize
 		IServer[] servers2 = ServerCore.getServers();
@@ -159,14 +172,14 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		IRuntime runtime = null;
 		if (server != null) {
 			runtime = server.getRuntime();
-			runtimeLocation.setText(Messages.serverLaunchHost + " " + server.getHost());
+			hostname.setText(server.getHost());
 		} else
-			runtimeLocation.setText(Messages.serverLaunchHost);
-			
+			hostname.setText("");
+		
 		if (runtime != null)
-			runtimeLabel.setText(Messages.serverLaunchRuntime + " " + runtime.getName());
+			runtimeLabel.setText(runtime.getName());
 		else
-			runtimeLabel.setText(Messages.serverLaunchRuntime);
+			runtimeLabel.setText("");
 
 		if (server == null)
 			setErrorMessage(Messages.errorNoServerSelected);

@@ -47,6 +47,7 @@ public class Messages extends NLS {
 	public static String resourceDirtyDialogTitle;
 	public static String resourceDirtyDialogContinue;
 	public static String wizNewRuntimeWizardTitle;
+	public static String serverLaunchDescription;
 	public static String serverLaunchServer;
 	public static String serverLaunchHost;
 	public static String serverLaunchRuntime;
@@ -250,6 +251,7 @@ public class Messages extends NLS {
 	public static String serverEditorOverviewServerNameCommand;
 	public static String serverEditorOverviewRuntimeDescription;
 	public static String serverEditorOverviewRuntimeCommand;
+	public static String serverEditorOverviewOpenLaunchConfiguration;
 	public static String viewStatusStarting4;
 	public static String viewStatusStarted2;
 	public static String viewStatusStopping4;
