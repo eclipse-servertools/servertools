@@ -24,12 +24,6 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
  */
 public class ModifyModulesWizard extends TaskWizard {
 	static class ModifyModulesWizard2 extends WizardFragment {
-		protected IServerWorkingCopy server;
-		
-		public ModifyModulesWizard2(IServerWorkingCopy server) {
-			this.server = server;
-		}
-
 		protected void createChildFragments(List list) {
 			list.add(new ModifyModulesWizardFragment());
 			list.add(new TasksWizardFragment());
@@ -47,8 +41,8 @@ public class ModifyModulesWizard extends TaskWizard {
 	 * @param server a server
 	 */
 	public ModifyModulesWizard(IServer server) {
-		super(Messages.wizModuleWizardTitle, new ModifyModulesWizard2(server.createWorkingCopy()));
+		super(Messages.wizModuleWizardTitle, new ModifyModulesWizard2());
 		
-		getTaskModel().putObject(TaskModel.TASK_SERVER, server);
+		getTaskModel().putObject(TaskModel.TASK_SERVER, server.createWorkingCopy());
 	}
 }
