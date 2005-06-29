@@ -217,7 +217,9 @@ public class AntPublisher extends GenericPublisher{
         while(propertyIterator.hasNext())
         {
             String property = (String)propertyIterator.next();
-            props.put(property,properties.get(property));
+            String value = (String)properties.get(property);
+            if(value!=null && value.trim().length()>0)
+            	props.put(property,properties.get(property));
         }
         Module module =  getServerRuntime().getServerTypeDefinition().getModule(getModuleTypeId());
 		String modDir = module.getPublishDir();
