@@ -27,6 +27,7 @@ public class Messages extends NLS {
 	public static String editorAdd;
 	public static String editorEdit;
 	public static String editorRemove;
+	public static String errorMissingWebModule;
 	public static String configurationEditorMimeMappingsSection;
 	public static String configurationEditorMimeMappingsDescription;
 	public static String configurationEditorPortsSection;

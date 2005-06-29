@@ -12,6 +12,7 @@ package org.eclipse.jst.server.tomcat.ui.internal.editor;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
@@ -302,6 +303,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 			return;
 
 		webAppTable.removeAll();
+		setErrorMessage(null);
 	
 		List list = configuration.getWebModules();
 		Iterator iterator = list.iterator();
@@ -329,6 +331,11 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 			item.setImage(0, TomcatUIPlugin.getImage(TomcatUIPlugin.IMG_WEB_MODULE));
 			if (projectImage != null)
 				item.setImage(2, projectImage);
+			
+			if (!isDocumentBaseValid(module.getDocumentBase())) {
+				item.setImage(1, TomcatUIPlugin.getImage(TomcatUIPlugin.IMG_PROJECT_MISSING));
+				setErrorMessage(NLS.bind(Messages.errorMissingWebModule, module.getDocumentBase()));
+			}
 		}
 		
 		if (readOnly) {
@@ -358,6 +365,25 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 			remove.setEnabled(false);
 			edit.setEnabled(false);
 		}
+	}
+	
+	protected boolean isDocumentBaseValid(String s) {
+		if (s == null || s.length() < 2)
+			return true;
+		
+		File f = new File(s);
+		if (f.exists())
+			return true;
+		
+		try {
+			f = server.getRuntime().getLocation().append(s).toFile();
+			if (f.exists())
+				return true;
+		} catch (Exception e) {
+			// bad path
+		}
+		
+		return false;
 	}
 	
 	/*
