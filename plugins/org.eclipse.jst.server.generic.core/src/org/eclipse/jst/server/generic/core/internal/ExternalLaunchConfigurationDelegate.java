@@ -16,8 +16,11 @@ package org.eclipse.jst.server.generic.core.internal;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.apache.tools.ant.taskdefs.Execute;
 import org.eclipse.core.runtime.CoreException;
@@ -99,8 +102,14 @@ public class ExternalLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 		
 		// get the executable commandline
 		String commandline = configuration.getAttribute(COMMANDLINE, (String) null);
-		if (commandline == null) {
+		if (commandline == null || commandline.length() == 0) {
 			abort(GenericServerCoreMessages.commandlineUnspecified, null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);			
+		}
+		// specified commandline might be multiple args, need to parse
+		List cmds = new ArrayList();
+		StringTokenizer st = new StringTokenizer(commandline);
+		while (st.hasMoreTokens()) {
+			cmds.add(st.nextToken());
 		}
 		
 		// get a descriptive name for the executable
@@ -118,7 +127,7 @@ public class ExternalLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 		
 		// Launch the executable for the configuration using the Ant Execute class
 		try {
-			Process process = Execute.launch(null, new String[]{commandline}, env, workingDir, true);
+			Process process = Execute.launch(null, (String[])cmds.toArray(new String[cmds.size()]), env, workingDir, true);
 			IProcess runtimeProcess = new RuntimeProcess(launch, process, executableName, null);
 			launch.addProcess(runtimeProcess);
 			serverBehavior.setProcess(runtimeProcess);
