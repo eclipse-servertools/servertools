@@ -25,8 +25,16 @@
   <page
     id="org.eclipse.wst.internet.monitor.preferencePage"
     name="%preferenceTitle"
-    category="org.eclipse.internet"
-    class="org.eclipse.wst.internet.monitor.ui.internal.MonitorPreferencePage"/>
+    category="org.eclipse.debug.ui.DebugPreferencePage"
+    class="org.eclipse.wst.internet.monitor.ui.internal.MonitorPreferencePage">
+      <keywordReference id="org.eclipse.wst.internet.monitor.preferenceKeywords"/>
+  </page>
+</extension>
+
+<extension point="org.eclipse.ui.keywords">
+  <keyword
+    label="%preferenceKeywords"
+    id="org.eclipse.wst.internet.monitor.preferenceKeywords"/>
 </extension>
 
 <extension point="org.eclipse.wst.internet.monitor.ui.viewers">

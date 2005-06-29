@@ -59,12 +59,36 @@
   <page
     id="org.eclipse.wst.server.ui.preferencePage"
     name="%preferenceServersTitle"
-    class="org.eclipse.wst.server.ui.internal.ServerPreferencePage"/>
+    class="org.eclipse.wst.server.ui.internal.ServerPreferencePage">
+      <keywordReference id="org.eclipse.wst.server.preferenceKeywords"/>
+  </page>
   <page
     id="org.eclipse.wst.server.ui.runtime.preferencePage"
     name="%preferenceRuntimesTitle"
     category="org.eclipse.wst.server.ui.preferencePage"
-    class="org.eclipse.wst.server.ui.internal.RuntimePreferencePage"/>
+    class="org.eclipse.wst.server.ui.internal.RuntimePreferencePage">
+      <keywordReference id="org.eclipse.wst.server.preferenceKeywords"/>
+  </page>
+  <page
+    id="org.eclipse.wst.audio.preferencePage"
+    category="org.eclipse.wst.server.ui.preferencePage"
+    name="%audioPreferenceTitle"
+    class="org.eclipse.wst.server.ui.internal.audio.AudioPreferencePage">
+      <keywordReference id="org.eclipse.wst.server.audio.preferenceKeywords"/>
+  </page>
+  <page
+    id="org.eclipse.internet"
+    name="%preferenceInternetTitle"
+    class="org.eclipse.wst.server.ui.internal.webbrowser.InternetPreferencePage"/>
+</extension>
+
+<extension point="org.eclipse.ui.keywords">
+  <keyword
+    label="%preferenceServerKeywords"
+    id="org.eclipse.wst.server.preferenceKeywords"/>
+  <keyword
+    label="%preferenceAudioKeywords"
+    id="org.eclipse.wst.server.audio.preferenceKeywords"/>
 </extension>
 
 <extension point="org.eclipse.ui.editors">
@@ -194,14 +218,6 @@
     class="org.eclipse.wst.server.ui.internal.Startup"/>
 </extension>
 
-<extension point="org.eclipse.ui.preferencePages">
-  <page
-    id="org.eclipse.wst.audio.preferencePage"
-    category="org.eclipse.wst.server.ui.preferencePage"
-    name="%audioPreferenceTitle"
-    class="org.eclipse.wst.server.ui.internal.audio.AudioPreferencePage"/>
-</extension>
-
 <extension point="org.eclipse.wst.server.ui.audio">
   <category id="org.eclipse.wst.server.sound.server"
     name="%audioCategoryServer"/>
@@ -246,13 +262,6 @@
       style="pulldown"
       class="org.eclipse.wst.server.ui.internal.webbrowser.SwitchBrowserWorkbenchAction"/>
   </actionSet>
-</extension>
-
-<extension point="org.eclipse.ui.preferencePages">
-  <page
-    id="org.eclipse.internet"
-    name="%preferenceInternetTitle"
-    class="org.eclipse.wst.server.ui.internal.webbrowser.InternetPreferencePage"/>
 </extension>
 
 <!--
