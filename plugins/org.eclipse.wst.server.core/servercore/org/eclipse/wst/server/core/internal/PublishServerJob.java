@@ -11,12 +11,14 @@
 package org.eclipse.wst.server.core.internal;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceRuleFactory;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -48,35 +50,60 @@ public class PublishServerJob extends Job {
 		
 		IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
 		
-		List list = new ArrayList();
-		IModule[] modules = server.getModules();
-		int size = modules.length;
-		for (int i = 0; i < size; i++) {
-			IProject project = modules[i].getProject();
-			if (project != null) {
-				ISchedulingRule rule = ruleFactory.createRule(project);
-				if (rule != null && !list.contains(rule))
-					list.add(rule);
-				
-				rule = ruleFactory.modifyRule(project);
-				if (rule != null && !list.contains(rule))
-					list.add(rule);
-				
-				rule = ruleFactory.validateEditRule(new IResource[] { project });
-				if (rule != null && !list.contains(rule))
-					list.add(rule);
-				
-				rule = ruleFactory.markerRule(project);
-				if (rule != null && !list.contains(rule))
-					list.add(rule);
-				
-				rule = ruleFactory.refreshRule(project);
-				if (rule != null && !list.contains(rule))
-					list.add(rule);
+		// find all projects that modules are in
+		List projectList = new ArrayList();
+		Iterator iterator = ((Server)server).getAllModules().iterator();
+		while (iterator.hasNext()) {
+			IModule[] modules = (IModule[]) iterator.next();
+			IProject project = modules[modules.length - 1].getProject();
+			if (project != null && !projectList.contains(project))
+				projectList.add(project);
+		}
+		
+		// add dependant projects
+		iterator = projectList.iterator();
+		while (iterator.hasNext()) {
+			IProject project = (IProject) iterator.next();
+			try {
+				IProject[] refs = project.getDescription().getReferencedProjects();
+				if (refs != null) {
+					int size = refs.length;
+					for (int i = 0; i < size; i++)
+						if (refs[i] != null && !projectList.contains(refs[i]))
+							projectList.add(refs[i]);
+				}
+			} catch (CoreException ce) {
+				Trace.trace(Trace.WARNING, "Could not compute referenced projects", ce);
 			}
 		}
 		
-		size = list.size();
+		// combine and build all the rules
+		List list = new ArrayList();
+		iterator = projectList.iterator();
+		while (iterator.hasNext()) {
+			IProject project = (IProject) iterator.next();
+			ISchedulingRule rule = ruleFactory.createRule(project);
+			if (rule != null && !list.contains(rule))
+				list.add(rule);
+			
+			rule = ruleFactory.modifyRule(project);
+			if (rule != null && !list.contains(rule))
+				list.add(rule);
+			
+			rule = ruleFactory.validateEditRule(new IResource[] { project });
+			if (rule != null && !list.contains(rule))
+				list.add(rule);
+			
+			rule = ruleFactory.markerRule(project);
+			if (rule != null && !list.contains(rule))
+				list.add(rule);
+			
+			rule = ruleFactory.refreshRule(project);
+			if (rule != null && !list.contains(rule))
+				list.add(rule);
+		}
+		
+		int size = list.size();
 		ISchedulingRule[] rules = new ISchedulingRule[size + 1];
 		for (int i = 0; i < size; i++)
 			rules[i] = (ISchedulingRule) list.get(i);

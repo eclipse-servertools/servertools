@@ -736,7 +736,8 @@ public class Server extends Base implements IServer {
 		
 		IModuleVisitor visitor = new IModuleVisitor() {
 			public boolean visit(IModule[] module) {
-				moduleList.add(module);
+				if (!moduleList.contains(module))
+					moduleList.add(module);
 				return true;
 			}
 		};
