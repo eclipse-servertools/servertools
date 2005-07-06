@@ -85,7 +85,7 @@ public class GenericRuntimeComposite extends Composite {
 		layout.numColumns = 2;
 		setLayout(layout);
 		setLayoutData(new GridData(GridData.FILL_BOTH));
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, ContextIds.RUNTIME_TARGET_COMPOSITE);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, ContextIds.RUNTIME_COMPOSITE);
 		
 		Label label = new Label(this, SWT.NONE);
 		label.setText(Messages.runtimeTypeName);

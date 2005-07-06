@@ -44,5 +44,5 @@ public interface ContextIds {
 	public static final String CONFIGURATION_EDITOR_PORTS = TomcatUIPlugin.PLUGIN_ID + ".tecp0000";
 	public static final String CONFIGURATION_EDITOR_PORTS_LIST = TomcatUIPlugin.PLUGIN_ID + ".tecp0002";
 		
-	public static final String RUNTIME = TomcatUIPlugin.PLUGIN_ID + ".twnr0000";
+	public static final String RUNTIME_COMPOSITE = TomcatUIPlugin.PLUGIN_ID + ".twnr0000";
 }
