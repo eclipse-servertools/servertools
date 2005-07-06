@@ -12,8 +12,7 @@ package org.eclipse.jst.server.tomcat.core.internal;
 
 import org.eclipse.jdt.launching.IVMInstall;
 /**
- *
- * @since 1.0
+ * 
  */
 public interface ITomcatRuntimeWorkingCopy extends ITomcatRuntime {
 	/**

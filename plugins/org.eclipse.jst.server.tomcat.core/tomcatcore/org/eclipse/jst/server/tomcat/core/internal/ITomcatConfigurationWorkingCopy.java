@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal;
 
-
 public interface ITomcatConfigurationWorkingCopy extends ITomcatConfiguration {
 	/**
 	 * Add a web module.

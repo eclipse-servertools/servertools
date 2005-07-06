@@ -22,7 +22,7 @@ import org.eclipse.wst.server.core.IServer;
  * to extend the <code>publishTask</code> extension point.
  * </p>
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public abstract class PublishTaskDelegate {
 	/**

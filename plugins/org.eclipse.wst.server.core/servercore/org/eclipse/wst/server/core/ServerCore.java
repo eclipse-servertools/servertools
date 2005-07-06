@@ -27,7 +27,7 @@ import org.eclipse.wst.server.core.internal.*;
  * It is not intended to be subclassed or instantiated.
  * </p>
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class ServerCore {
 	//	cached copy of all runtime types

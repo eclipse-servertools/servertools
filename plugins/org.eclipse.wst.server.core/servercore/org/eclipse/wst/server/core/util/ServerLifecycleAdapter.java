@@ -17,7 +17,7 @@ import org.eclipse.wst.server.core.IServerLifecycleListener;
  * with empty methods.
  * 
  * @see org.eclipse.wst.server.core.IServerLifecycleListener
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class ServerLifecycleAdapter implements IServerLifecycleListener {
 	/**

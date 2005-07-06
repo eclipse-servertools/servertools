@@ -33,7 +33,7 @@ import org.eclipse.core.runtime.IStatus;
  * This interface is not intended to be implemented by clients.
  * </p>
  * @see IMonitorWorkingCopy
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IMonitor {
 	/**

@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.CoreException;
  * This interface is not intended to be implemented by clients.
  * </p>
  * @see IMonitor
- * @since 1.0
+ * @plannedfor 1.0
  * 
  * [issue : CS - it sounds like this is something useful for creating monitors. 
  * Shouldn't this be called a IMonitorConfiguration?  Is there an advantage to making

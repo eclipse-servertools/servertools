@@ -32,7 +32,7 @@ import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
 /**
  * 
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate {
 	protected static IResourceChangeListener listener;

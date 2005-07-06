@@ -47,7 +47,7 @@ import org.eclipse.wst.server.core.internal.Trace;
  * 
  * @see org.eclipse.wst.server.core.IServer
  * @see org.eclipse.wst.server.core.IServerWorkingCopy
- * @since 1.0
+ * @plannedfor 1.0
  */
 public abstract class ServerBehaviourDelegate {
 	private Server server;

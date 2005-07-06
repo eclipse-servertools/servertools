@@ -40,7 +40,7 @@ import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitor;
  * being shut down.]
  * </p>
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public abstract class ProtocolAdapterDelegate {
 	/**

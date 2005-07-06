@@ -14,7 +14,7 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 /**
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class NullModuleArtifact implements IModuleArtifact {
 	private IModule module;

@@ -15,7 +15,7 @@ import java.net.URL;
 import org.eclipse.wst.server.core.IModule;
 /**
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IURLProvider {
 	/**

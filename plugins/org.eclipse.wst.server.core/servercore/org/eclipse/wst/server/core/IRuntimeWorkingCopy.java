@@ -30,7 +30,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * </p>
  * 
  * @see IRuntime
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IRuntimeWorkingCopy extends IRuntime {
 	/**

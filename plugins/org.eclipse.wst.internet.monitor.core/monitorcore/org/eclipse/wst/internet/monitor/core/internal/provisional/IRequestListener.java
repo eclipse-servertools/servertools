@@ -22,7 +22,7 @@ package org.eclipse.wst.internet.monitor.core.internal.provisional;
  * </p>
  * 
  * @see IMonitor#addRequestListener(IRequestListener)
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IRequestListener {
 	/**

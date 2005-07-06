@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IPath;
 /**
  * A resource (file or folder) within a module.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IModuleResource extends IAdaptable {
 	/**

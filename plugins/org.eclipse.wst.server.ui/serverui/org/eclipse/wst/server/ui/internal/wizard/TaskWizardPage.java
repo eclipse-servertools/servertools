@@ -24,8 +24,6 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * A task wizard page.
- * 
- * @since 1.0
  */
 class TaskWizardPage extends WizardPage implements IWizardHandle {
 	protected WizardFragment fragment;

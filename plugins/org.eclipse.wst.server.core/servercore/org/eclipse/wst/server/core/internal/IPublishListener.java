@@ -26,7 +26,6 @@ import org.eclipse.wst.server.core.IServer;
  * Publish listeners are added to a server via IServer.addPublishListener().
  * </p>
  * @see IServer
- * @since 1.0
  */
 public interface IPublishListener {
 	/**

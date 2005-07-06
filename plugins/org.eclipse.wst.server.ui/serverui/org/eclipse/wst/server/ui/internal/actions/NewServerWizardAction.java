@@ -16,8 +16,6 @@ import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.wizard.NewServerWizard;
 /**
  * An action to invoke the new server and server configuration wizard.
- * 
- * @since 1.0
  */
 public class NewServerWizardAction extends LaunchWizardAction {
 	protected String[] ids;

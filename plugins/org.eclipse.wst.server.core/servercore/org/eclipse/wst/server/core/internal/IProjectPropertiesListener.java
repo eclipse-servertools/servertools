@@ -24,7 +24,6 @@ import org.eclipse.wst.server.core.IRuntime;
  * </p>
  * 
  * @see org.eclipse.wst.server.core.IProjectProperties
- * @since 1.0
  */
 public interface IProjectPropertiesListener {
 	/**

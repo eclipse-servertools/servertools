@@ -20,7 +20,7 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
  * to extend the <code>serverLocators</code> extension point.
  * </p>
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public abstract class ServerLocatorDelegate {
 	/**

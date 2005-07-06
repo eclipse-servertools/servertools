@@ -12,7 +12,7 @@ package org.eclipse.wst.server.core.model;
 /**
  * A folder within a module.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IModuleFolder extends IModuleResource {
 	/**

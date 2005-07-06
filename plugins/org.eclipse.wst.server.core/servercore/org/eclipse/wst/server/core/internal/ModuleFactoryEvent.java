@@ -13,8 +13,6 @@ package org.eclipse.wst.server.core.internal;
 import org.eclipse.wst.server.core.IModule;
 /**
  * An event fired when a module factory changes.
- * 
- * @since 1.0
  */
 public class ModuleFactoryEvent {
 	protected IModule[] added;

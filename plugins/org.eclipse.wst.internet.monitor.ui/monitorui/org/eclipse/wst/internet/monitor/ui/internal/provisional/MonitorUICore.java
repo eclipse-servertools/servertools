@@ -19,7 +19,7 @@ import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
  * to be instantiated or subclassed.
  * </p>
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public final class MonitorUICore {
 	/**

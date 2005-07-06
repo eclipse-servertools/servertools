@@ -316,7 +316,6 @@ public final class XMLMemento implements IMemento {
 	 * 
 	 * @return the data of the Text node of the memento, or <code>null</code>
 	 * if the memento has no Text node.
-	 * @since 2.0
 	 */
 	public String getTextData() {
 		return null;
@@ -328,7 +327,6 @@ public final class XMLMemento implements IMemento {
 	 * Each memento is allowed only one text node.
 	 *
 	 * @param data the data to be placed on the Text node
-	 * @since 2.0
 	 */
 	public void putTextData(String data) {
 		// do nothing

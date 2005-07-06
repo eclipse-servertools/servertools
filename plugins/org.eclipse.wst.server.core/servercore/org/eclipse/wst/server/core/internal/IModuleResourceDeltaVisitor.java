@@ -42,8 +42,6 @@ import org.eclipse.wst.server.core.model.IModuleResourceDelta;
  * </p>
  *
  * [issue: @see IModuleResourceDelta#accept(IModuleResourceVisitor)]
- * 
- * @since 1.0
  */
 public interface IModuleResourceDeltaVisitor {
 	/** 

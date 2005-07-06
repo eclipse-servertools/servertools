@@ -21,8 +21,6 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
  * </p>
  * 
  * <p>This interface is not intended to be implemented by clients.</p>
- * 
- * @since 1.0
  */
 public interface IServerLocator {
 	/**

@@ -21,8 +21,6 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PlatformUI;
 /**
  * An abstract action that opens up a workbench wizard when run.
- * 
- * @since 1.0
  */
 abstract class LaunchWizardAction extends Action {
 	/**

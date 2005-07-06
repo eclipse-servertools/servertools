@@ -18,8 +18,6 @@ import org.eclipse.wst.server.core.IServerListener;
 import org.eclipse.wst.server.core.ServerEvent;
 /**
  * Notification manager for server.
- * 
- * @since 1.0
  */
 public class ServerNotificationManager {
 	private List listenerList = new ArrayList();

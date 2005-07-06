@@ -19,7 +19,7 @@ package org.eclipse.wst.server.core;
  * </p>
  * 
  * @see org.eclipse.wst.server.core.model.ModuleArtifactAdapterDelegate
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IModuleArtifact {
 	/**

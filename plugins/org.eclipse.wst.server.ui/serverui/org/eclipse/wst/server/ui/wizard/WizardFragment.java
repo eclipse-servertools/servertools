@@ -21,7 +21,7 @@ import org.eclipse.wst.server.core.TaskModel;
 /**
  * A wizard fragment is a
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public abstract class WizardFragment {
 	private TaskModel taskModel;

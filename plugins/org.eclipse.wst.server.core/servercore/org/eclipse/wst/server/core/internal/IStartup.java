@@ -14,8 +14,6 @@ package org.eclipse.wst.server.core.internal;
  * Plug-ins that register a startup extension will be activated when the server
  * core plug-in initializes and have an opportunity to run code that can't be
  * implemented using the normal contribution mechanisms.
- * 
- * @since 1.0
  */
 public interface IStartup {
 	/**

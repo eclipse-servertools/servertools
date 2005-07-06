@@ -14,8 +14,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.wst.server.core.IModule;
 /**
  * An event fired when a module changes.
- * 
- * @since 1.0
  */
 public class ModuleEvent {
 	private IModule module;

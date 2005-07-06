@@ -16,7 +16,6 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IProcess;
 /**
  * 
- * @since 1.0
  */
 public interface ITomcatServerBehaviour {
 	/**

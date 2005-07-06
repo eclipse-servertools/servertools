@@ -17,7 +17,6 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
 /**
  * 
- * @since 1.0
  */
 public class DeletedModule implements IModule {
 	protected String id;

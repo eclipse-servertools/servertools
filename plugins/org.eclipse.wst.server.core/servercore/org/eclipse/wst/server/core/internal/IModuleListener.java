@@ -9,11 +9,8 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.server.core.internal;
-
-
 /**
  * 
- * @since 1.0
  */
 public interface IModuleListener {
 	/**

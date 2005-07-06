@@ -17,7 +17,6 @@ import org.eclipse.wst.server.core.model.IModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleResource;
 /**
  * 
- * @since 1.0
  */
 public class ModuleFolder implements IModuleFolder {
 	protected IContainer container;

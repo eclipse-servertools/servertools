@@ -18,7 +18,6 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.ClientDelegate;
 /**
  * 
- * @since 1.0
  */
 public class Client implements IClient {
 	private IConfigurationElement element;

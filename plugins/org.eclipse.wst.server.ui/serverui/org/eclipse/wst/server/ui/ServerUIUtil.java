@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * Server UI utility methods.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class ServerUIUtil {
 	/**

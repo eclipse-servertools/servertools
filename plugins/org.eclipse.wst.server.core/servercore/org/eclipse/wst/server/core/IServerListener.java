@@ -22,7 +22,7 @@ package org.eclipse.wst.server.core;
  * a server stopped event cannot directly trigger a start(). Doing this may 
  * cause the thread to hang.</p>
  *   
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IServerListener {
 	/**

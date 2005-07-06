@@ -30,7 +30,7 @@ import org.eclipse.wst.server.ui.internal.editor.*;
  * This class also provides each editor page with an error message which
  * will be displayed on the status bar of the editor.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public abstract class ServerEditorPart extends EditorPart {
 	/**

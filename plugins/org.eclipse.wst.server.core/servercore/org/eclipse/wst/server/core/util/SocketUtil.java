@@ -24,7 +24,7 @@ import sun.net.spi.nameservice.dns.DNSNameService;
  * unused ports, check whether a port is in use, and check whether a given
  * address is a local(host) address.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class SocketUtil {
 	private static final Random rand = new Random(System.currentTimeMillis());

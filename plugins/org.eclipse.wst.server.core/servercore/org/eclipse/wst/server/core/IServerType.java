@@ -31,7 +31,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * Two server types are identical if and only if they have the same id.
  * </p>
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IServerType {
 	/**

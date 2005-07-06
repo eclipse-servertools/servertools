@@ -16,7 +16,7 @@ package org.eclipse.wst.internet.monitor.core.internal.provisional;
  * their listener via {@link MonitorCore#addMonitorListener(IMonitorListener)}.
  * </p>
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IMonitorListener {
 	

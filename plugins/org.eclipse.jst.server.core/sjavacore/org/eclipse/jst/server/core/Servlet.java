@@ -20,7 +20,7 @@ import org.eclipse.wst.server.core.IModuleArtifact;
  * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
  * (repeatedly) as the API evolves.
  * </p>
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class Servlet implements IModuleArtifact {
 	private IModule module;

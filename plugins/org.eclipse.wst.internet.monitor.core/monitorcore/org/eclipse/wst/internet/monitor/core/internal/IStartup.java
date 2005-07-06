@@ -15,7 +15,7 @@ package org.eclipse.wst.internet.monitor.core.internal;
  * core plug-in initializes and have an opportunity to run code that can't be
  * implemented using the normal contribution mechanisms.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IStartup {
 	/**

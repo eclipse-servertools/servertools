@@ -13,7 +13,7 @@ package org.eclipse.wst.server.core.util;
 import java.net.URL;
 /**
  *
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class HttpLaunchable {
 	private URL url;

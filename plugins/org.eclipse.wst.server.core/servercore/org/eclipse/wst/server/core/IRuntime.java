@@ -51,7 +51,7 @@ import org.eclipse.core.runtime.*;
  * </p>
  * 
  * @see IRuntimeWorkingCopy
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IRuntime extends IAdaptable {
 	/**

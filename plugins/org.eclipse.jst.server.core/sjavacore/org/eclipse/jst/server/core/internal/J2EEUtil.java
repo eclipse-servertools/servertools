@@ -20,8 +20,6 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
 /**
  * Utility class for dealing with J2EE modules.
- * 
- * @since 1.0
  */
 public class J2EEUtil {
 	/**

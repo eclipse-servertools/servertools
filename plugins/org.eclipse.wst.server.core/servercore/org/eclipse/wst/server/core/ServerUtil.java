@@ -29,7 +29,7 @@ import org.eclipse.wst.server.core.internal.Trace;
  * Server utility methods. These static methods can be used to perform
  * common operations on server artifacts.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class ServerUtil {
 	/**

@@ -24,7 +24,7 @@ package org.eclipse.wst.internet.monitor.core.internal;
  * This interface is not intended to be implemented by clients.
  * </p>
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IProtocolAdapter {
 	/**

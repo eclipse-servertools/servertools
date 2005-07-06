@@ -48,7 +48,7 @@ import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
  * 
  * @see IServer
  * @see IServerWorkingCopy
- * @since 1.0
+ * @plannedfor 1.0
  */
 public abstract class ServerDelegate {
 	private Server server;

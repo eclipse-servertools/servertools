@@ -13,8 +13,6 @@ package org.eclipse.wst.server.core.internal;
 import org.eclipse.wst.server.core.IModule;
 /**
  * A visitor on a server's modules.
- * 
- * @since 1.0
  */
 public interface IModuleVisitor {
 	/**

@@ -37,8 +37,6 @@ import org.eclipse.wst.server.ui.internal.wizard.page.WorkspaceRunnableAdapter;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * A wizard used to execute tasks.
- * 
- * @since 1.0
  */
 public class TaskWizard implements IWizard {
 	private static final byte FINISH = 2;

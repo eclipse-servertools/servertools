@@ -30,7 +30,7 @@ import org.eclipse.wst.server.core.IRuntimeTargetHandler;
  * (repeatedly) as the API evolves.
  * </p>
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public abstract class RuntimeTargetHandlerDelegate {
 	private IRuntimeTargetHandler handler;

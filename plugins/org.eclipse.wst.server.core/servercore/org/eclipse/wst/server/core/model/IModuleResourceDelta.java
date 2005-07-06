@@ -13,7 +13,7 @@ package org.eclipse.wst.server.core.model;
 import org.eclipse.core.runtime.IPath;
 /**
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IModuleResourceDelta {
 	/**
@@ -110,7 +110,7 @@ public interface IModuleResourceDelta {
 	 * @param path the path of the desired descendent delta
 	 * @return the descendent delta, or <code>null</code> if no such
 	 * 		descendent exists in the delta
-	 * @since 2.0
+	 * @plannedfor 2.0
 	 */
 	//public IModuleResourceDelta findMember(IPath path);
 	

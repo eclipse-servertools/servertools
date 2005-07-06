@@ -12,8 +12,7 @@ package org.eclipse.jst.server.tomcat.core.internal;
 
 import org.eclipse.wst.server.core.model.IURLProvider;
 /**
- * 
- * @since 1.0
+ *
  */
 public interface ITomcatServer extends IURLProvider {
 	public static final String PROPERTY_TEST_ENVIRONMENT = "testEnvironment";

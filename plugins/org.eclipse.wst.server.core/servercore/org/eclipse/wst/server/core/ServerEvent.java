@@ -13,7 +13,7 @@ package org.eclipse.wst.server.core;
 /**
  * An event fired when a server change or module changes.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class ServerEvent {
 	private IServer server;

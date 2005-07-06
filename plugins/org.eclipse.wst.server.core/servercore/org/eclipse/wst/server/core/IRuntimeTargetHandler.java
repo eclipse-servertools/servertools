@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.IAdaptable;
  * (repeatedly) as the API evolves.
  * </p>
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IRuntimeTargetHandler extends IAdaptable {
 	/**

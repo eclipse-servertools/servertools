@@ -15,8 +15,6 @@ import java.util.List;
 import org.eclipse.jdt.launching.IVMInstall;
 /**
  * 
- * 
- * @since 1.0
  */
 public interface ITomcatRuntime {
 	/**

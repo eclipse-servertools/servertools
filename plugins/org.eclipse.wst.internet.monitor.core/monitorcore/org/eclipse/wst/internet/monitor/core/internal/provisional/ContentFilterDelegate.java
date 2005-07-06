@@ -31,7 +31,7 @@ import java.io.IOException;
  * but usually UI's and filters are tightly coupled.
  * </p>
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public abstract class ContentFilterDelegate {
 	/**

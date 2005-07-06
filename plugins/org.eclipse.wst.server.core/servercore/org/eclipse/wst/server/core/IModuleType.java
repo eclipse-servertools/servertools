@@ -21,7 +21,7 @@ package org.eclipse.wst.server.core;
  * (repeatedly) as the API evolves.
  * </p>
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IModuleType {
 	/**

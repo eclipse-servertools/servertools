@@ -16,7 +16,7 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
 /**
  * An input into a server part or section editor.
  *
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IServerEditorPartInput extends IEditorInput {
 	/**

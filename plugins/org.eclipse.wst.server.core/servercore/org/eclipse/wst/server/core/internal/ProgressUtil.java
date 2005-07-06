@@ -13,8 +13,6 @@ package org.eclipse.wst.server.core.internal;
 import org.eclipse.core.runtime.*;
 /**
  * Progress Monitor utility.
- * 
- * @since 1.0
  */
 public class ProgressUtil {
 	/**

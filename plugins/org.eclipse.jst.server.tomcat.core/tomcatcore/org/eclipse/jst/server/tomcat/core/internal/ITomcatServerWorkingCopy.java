@@ -11,7 +11,6 @@
 package org.eclipse.jst.server.tomcat.core.internal;
 /**
  * 
- * @since 1.0
  */
 public interface ITomcatServerWorkingCopy extends ITomcatServer {
 	/**

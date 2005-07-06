@@ -35,7 +35,7 @@ import org.eclipse.wst.server.ui.internal.*;
 /**
  * Server launch configuration tab.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab {
 	protected String[] serverTypeIds;

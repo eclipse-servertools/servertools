@@ -17,7 +17,6 @@ import org.eclipse.wst.server.core.IServer;
  * with empty methods.
  * 
  * @see org.eclipse.wst.server.core.internal.IPublishListener
- * @since 1.0
  */
 public class PublishAdapter implements IPublishListener {
 	public void publishStarted(IServer server) {

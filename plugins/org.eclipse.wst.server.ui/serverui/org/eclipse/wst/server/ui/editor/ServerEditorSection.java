@@ -24,7 +24,7 @@ import org.eclipse.wst.server.ui.internal.editor.ServerResourceCommandManager;
 /**
  * An abstract server editor section.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public abstract class ServerEditorSection {
 	private String errorMessage = null;
