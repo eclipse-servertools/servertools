@@ -62,6 +62,7 @@ public class PublishServerJob extends Job {
 		
 		// add dependant projects
 		iterator = projectList.iterator();
+		List depProjectList = new ArrayList(); // use to avoid concurrent modification
 		while (iterator.hasNext()) {
 			IProject project = (IProject) iterator.next();
 			try {
@@ -69,12 +70,17 @@ public class PublishServerJob extends Job {
 				if (refs != null) {
 					int size = refs.length;
 					for (int i = 0; i < size; i++)
-						if (refs[i] != null && !projectList.contains(refs[i]))
-							projectList.add(refs[i]);
+						if (refs[i] != null && !projectList.contains(refs[i]) && !depProjectList.contains(refs[i]))
+							depProjectList.add(refs[i]);
 				}
 			} catch (CoreException ce) {
 				Trace.trace(Trace.WARNING, "Could not compute referenced projects", ce);
 			}
+		}
+		
+		iterator = depProjectList.iterator();
+		while (iterator.hasNext()) {
+			projectList.add(iterator.next());
 		}
 		
 		// combine and build all the rules
