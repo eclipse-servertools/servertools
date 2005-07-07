@@ -38,7 +38,9 @@ import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 /**
@@ -102,10 +104,28 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
         return server;
     }
 
-    public void enter() {
-    	getServer().setName(GenericServerUIMessages.bind(GenericServerUIMessages.serverName,getServerTypeDefinitionFor(getServer()).getName()));
-    			
+    private boolean isNameInUse(String name){
+       	IServer[] servers =ServerCore.getServers();   	
+    	for (int i = 0; i < servers.length; i++) {
+			if(!servers[i].equals(getServer().getOriginal()) && (servers[i].getName().equals(name) ))
+				return true;
+		}
+    	return false;
     }
+    
+    private String createName(){
+    	String name = GenericServerUIMessages.bind(GenericServerUIMessages.serverName,getServerTypeDefinitionFor(getServer()).getName());
+    	int suffix=1;
+    	String suffixName =name;
+    	while(isNameInUse(suffixName)){
+    		suffixName = name+" "+suffix;
+    		suffix++;
+    	}
+    	return suffixName;
+    }
+    public void enter() {
+    	getServer().setName(createName());
+     }
 	
     /* (non-Javadoc)
      * @see org.eclipse.jst.server.generic.internal.ui.ServerDefinitionTypeAwareWizardFragment#description()
