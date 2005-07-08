@@ -459,7 +459,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
         IModule[] modules = this.getServer().getModules();
         boolean allpublished= true;
         for (int i = 0; i < modules.length; i++) {
-            if(this.getServer().getModulePublishState(modules)!=IServer.PUBLISH_STATE_NONE)
+        	if(this.getServer().getModulePublishState(new IModule[]{modules[i]})!=IServer.PUBLISH_STATE_NONE)
                 allpublished=false;
         }
         if(allpublished)
