@@ -17,14 +17,19 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jst.server.generic.internal.xml.Resolver;
 import org.eclipse.jst.server.generic.servertype.definition.External;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.util.SocketUtil;
 
 /**
  * Subclass of <code>GenericServerBehavior</code> that supports 
@@ -38,21 +43,73 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
     private ILaunch launch; 
     private IProgressMonitor monitor;
 	
+    /**
+	 * Since the server may already be running, need to check if any of the server
+	 * ports are in use; if they are, need to set the server state to "unknown" so 
+	 * that the user can stop the server from the UI.
+	 */
+    protected void initialize(IProgressMonitor monitor) {
+		ServerPort[] ports = getServer().getServerPorts(null);
+		ServerPort sp;
+    	for(int i=0;i<ports.length;i++){
+    		sp = ports[i];
+    		if (SocketUtil.isPortInUse(sp.getPort(), 5)) {
+    			Trace.trace(Trace.WARNING, "Port " + sp.getPort() + " is currently in use");
+    			Status status = new Status(Status.WARNING, CorePlugin.PLUGIN_ID, Status.OK, 
+    						GenericServerCoreMessages.bind(GenericServerCoreMessages.errorPortInUse,Integer.toString(sp.getPort()),sp.getName()), null);
+    			setServerStatus(status);
+    			setServerState(IServer.STATE_UNKNOWN);
+    			return;
+    		}
+    	}
+	}
+    
+    /**
+     * Override to reset the status if the state was unknown
+     */
+    public void stop(boolean force) {
+    	resetStatus(getServer().getServerState());
+    	super.stop(force);
+    }
+
+    /**
+     * Override to reset the status if the state was unknown and an exception was not thrown
+     */
+    protected void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException {
+    	int state = getServer().getServerState();
+    	super.setupLaunch(launch, launchMode, monitor);
+    	resetStatus(state);
+    }
+    
 	/**
 	 * Override to trigger the launch of the debugging session (if appropriate).
 	 */
 	protected synchronized void setServerStarted() {
-		super.setServerStarted();
 		if (wc != null) {
 			try {
 				ExternalLaunchConfigurationDelegate.startDebugging(wc, mode, launch, monitor);
 			} catch (CoreException ce) {
-				// swallow
+				// failed to start debugging, so set mode to run
+				setMode(ILaunchManager.RUN_MODE);
+				CorePlugin.getDefault().getLog().log(
+	                    new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 1,
+	                    			GenericServerCoreMessages.errorStartingExternalDebugging, ce));
+				Trace.trace(Trace.SEVERE, GenericServerCoreMessages.errorStartingExternalDebugging, ce);
 			} finally {
 				clearDebuggingConfig();
 			}
 		}
+		setServerState(IServer.STATE_STARTED);
  	}
+	
+	/*
+	 * If the server state is unknown, reset the status to OK
+	 */
+	private void resetStatus(int state) {
+		if (state == IServer.STATE_UNKNOWN) {
+			setServerStatus(null);
+		}
+	}
 	
 	/**
 	 * Since terminate() is called during restart, need to override to
@@ -167,5 +224,6 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 		this.launch = null;
 		this.monitor = null;
 	}
+	
 	
 }
