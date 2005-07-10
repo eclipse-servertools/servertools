@@ -827,7 +827,8 @@ public class ResourceManager {
 			try {
 				IServer server = loadServer(file, ProgressUtil.getSubMonitorFor(monitor, 1000));
 				if (server != null) {
-					registerServer(server);
+					if (getServer(server.getId()) == null)
+						registerServer(server);
 					monitor.done();
 					return true;
 				}
