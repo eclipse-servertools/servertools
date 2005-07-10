@@ -67,9 +67,6 @@ public class NewRuntimeComposite extends Composite {
 		GridLayout layout = new GridLayout();
 		layout.horizontalSpacing = SWTUtil.convertHorizontalDLUsToPixels(this, 4);
 		layout.verticalSpacing = SWTUtil.convertVerticalDLUsToPixels(this, 4);
-		layout.marginWidth = 0;
-		layout.marginHeight = 0;
-		layout.numColumns = 1;
 		setLayout(layout);
 		
 		RuntimeTypeComposite comp = new RuntimeTypeComposite(this, SWT.NONE, true, new RuntimeTypeComposite.RuntimeTypeSelectionListener() {

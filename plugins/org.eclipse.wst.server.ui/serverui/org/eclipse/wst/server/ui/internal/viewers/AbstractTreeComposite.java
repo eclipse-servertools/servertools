@@ -49,9 +49,6 @@ public abstract class AbstractTreeComposite extends Composite {
 		layout.marginHeight = 0;
 		layout.numColumns = 2;
 		setLayout(layout);
-
-		//GridData data = new GridData(GridData.FILL_BOTH);
-		//setLayoutData(data);
 		
 		String descriptionText = getDescriptionLabel();
 		if (descriptionText != null) {
@@ -65,6 +62,8 @@ public abstract class AbstractTreeComposite extends Composite {
 		Label label = new Label(this, SWT.WRAP);
 		label.setText(getTitleLabel());
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
+		if (descriptionText != null)
+			data.verticalIndent = 7;
 		data.horizontalSpan = 2;
 		label.setLayoutData(data);
 

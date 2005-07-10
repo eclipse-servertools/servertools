@@ -263,8 +263,6 @@ public class ModifyModulesComposite extends Composite {
 		GridLayout layout = new GridLayout();
 		layout.horizontalSpacing = SWTUtil.convertHorizontalDLUsToPixels(this, 4);
 		layout.verticalSpacing = SWTUtil.convertVerticalDLUsToPixels(this, 4);
-		layout.marginWidth = 0;
-		layout.marginHeight = 0;
 		layout.numColumns = 3;
 		setLayout(layout);
 		setFont(getParent().getFont());

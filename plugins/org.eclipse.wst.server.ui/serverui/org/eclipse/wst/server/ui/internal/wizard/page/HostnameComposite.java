@@ -13,7 +13,6 @@ package org.eclipse.wst.server.ui.internal.wizard.page;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.resource.JFaceResources;
 
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
@@ -57,35 +56,6 @@ public class HostnameComposite extends Composite {
 		createControl();
 	}
 
-	protected Label createHeadingLabel(Composite parent, String text, int span) {
-		Label label = createLabel(parent, text, span, true, false);
-		label.setFont(JFaceResources.getBannerFont());
-		return label;
-	}
-
-	protected Label createLabel(Composite parent, String text, int span, boolean alignTop, boolean indent) {
-		Label label = new Label(parent, SWT.WRAP);
-		label.setText(text);
-		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
-		if (alignTop)
-			data.verticalAlignment = GridData.BEGINNING;
-		data.horizontalSpan = span;
-		if (indent)
-			data.horizontalIndent = 10;
-		label.setLayoutData(data);
-		return label;
-	}
-	
-	protected Combo createCombo(Composite parent, String[] items, String text2, int span) {
-		Combo combo2 = new Combo(parent, SWT.DROP_DOWN);
-		combo2.setItems(items);
-		combo2.setText(text2);
-		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
-		data.horizontalSpan = span;
-		combo2.setLayoutData(data);
-		return combo2;
-	}
-
 	/**
 	 * Creates the UI of the page.
 	 */
@@ -98,15 +68,22 @@ public class HostnameComposite extends Composite {
 		layout.numColumns = 3;
 		setLayout(layout);
 		//WorkbenchHelp.setHelp(this, ContextIds.SELECT_CLIENT_WIZARD);
-	
-		createHeadingLabel(this, Messages.hostnameTitle, 3);
-
-		createLabel(this, Messages.hostname, 1, false, true);
+		
+		Label label = new Label(this, SWT.WRAP);
+		label.setText(Messages.hostname);
+		label.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		
 		List hosts = ServerUIPlugin.getPreferences().getHostnames();
 		String[] s = new String[hosts.size()];
 		hosts.toArray(s);
-		combo = createCombo(this, s, LOCALHOST, 2);
+		
+		combo = new Combo(this, SWT.DROP_DOWN);
+		combo.setItems(s);
+		combo.setText(LOCALHOST);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
+		data.horizontalSpan = 2;
+		combo.setLayoutData(data);
+		
 		combo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				hostnameChanged(combo.getText());

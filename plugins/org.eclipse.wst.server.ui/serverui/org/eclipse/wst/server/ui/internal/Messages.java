@@ -133,7 +133,6 @@ public class Messages extends NLS {
 	public static String errorNoClient;
 	public static String dialogModeWarningRestart;
 	public static String dialogModeWarningContinue;
-	public static String hostnameTitle;
 	public static String hostname;
 	public static String wizModuleTitle;
 	public static String wizModuleDescription;

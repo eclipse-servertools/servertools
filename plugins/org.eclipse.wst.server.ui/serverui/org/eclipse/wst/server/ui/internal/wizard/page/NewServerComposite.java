@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.resource.JFaceResources;
 
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -102,13 +101,7 @@ public class NewServerComposite extends Composite {
 	public NewServerComposite(Composite parent, IWizardHandle wizard) {
 		this(parent, wizard, null, null);
 	}
-	
-	protected Label createHeadingLabel(Composite parent, String text, int span) {
-		Label label = createLabel(parent, text, span);
-		label.setFont(JFaceResources.getBannerFont());
-		return label;
-	}
-	
+
 	protected Label createLabel(Composite parent, String text, int span) {
 		Label label = new Label(parent, SWT.WRAP);
 		label.setText(text);
@@ -117,11 +110,11 @@ public class NewServerComposite extends Composite {
 		label.setLayoutData(data);
 		return label;
 	}
-	
+
 	protected Label createLabel(Composite parent, String text) {
 		return createLabel(parent, text, 1);
 	}
-	
+
 	protected Button createRadioButton(Composite parent, String text, int span) {
 		Button button = new Button(parent, SWT.RADIO);
 		button.setText(text);
@@ -148,14 +141,11 @@ public class NewServerComposite extends Composite {
 		GridLayout layout = new GridLayout();
 		layout.horizontalSpacing = SWTUtil.convertHorizontalDLUsToPixels(this, 4);
 		layout.verticalSpacing = SWTUtil.convertVerticalDLUsToPixels(this, 4);
-		layout.marginWidth = 0;
-		layout.marginHeight = 0;
-		layout.numColumns = 1;
 		setLayout(layout);
 		//WorkbenchHelp.setHelp(this, ContextIds.SELECT_CLIENT_WIZARD);
 	
 		if (module != null)
-			createHeadingLabel(this, Messages.wizNewServerSelect, 1);
+			createLabel(this, Messages.wizNewServerSelect, 1);
 			
 		Button existing = null;
 		if (module != null) {
