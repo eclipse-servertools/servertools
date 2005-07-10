@@ -152,8 +152,8 @@ public class WebModuleDialog extends Dialog {
 						IStatus status = server2.canModifyModules(new IModule[] { module3 }, null, null);
 						if (status != null && status.isOK()) {
 							TableItem item = new TableItem(projTable, SWT.NONE);
-							item.setText(0, ServerUICore.getLabelProvider().getText(module2));
-							item.setImage(0, ServerUICore.getLabelProvider().getImage(module2));
+							item.setText(0, ServerUICore.getLabelProvider().getText(module3));
+							item.setImage(0, ServerUICore.getLabelProvider().getImage(module3));
 							item.setData(module2);
 						}
 					}
