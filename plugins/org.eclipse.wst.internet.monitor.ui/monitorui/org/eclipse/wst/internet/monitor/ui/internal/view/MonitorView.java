@@ -477,7 +477,7 @@ public class MonitorView extends ViewPart {
 
 	protected boolean showPreferencePage() {
 		PreferenceManager manager = PlatformUI.getWorkbench().getPreferenceManager();
-		IPreferenceNode node = manager.find("org.eclipse.internet").findSubNode("org.eclipse.wst.internet.monitor.preferencePage");
+		IPreferenceNode node = manager.find("org.eclipse.debug.ui.DebugPreferencePage").findSubNode("org.eclipse.wst.internet.monitor.preferencePage");
 		PreferenceManager manager2 = new PreferenceManager();
 		manager2.addToRoot(node);
 		
