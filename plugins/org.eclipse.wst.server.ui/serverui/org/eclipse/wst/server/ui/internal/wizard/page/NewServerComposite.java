@@ -191,7 +191,7 @@ public class NewServerComposite extends Composite {
 		}
 		
 		stack = new Composite(this, SWT.NONE);
-		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
+		GridData data = new GridData(GridData.FILL_BOTH);
 		stack.setLayoutData(data);
 		stackLayout = new StackLayout();
 		stackLayout.marginHeight = 0;
@@ -396,6 +396,7 @@ public class NewServerComposite extends Composite {
 		layout.marginHeight = 0;
 		layout.numColumns = 1;
 		manualComp2.setLayout(layout);
+		manualComp2.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		manualHostComp = createHostComposite(manualComp2);
 		IModuleType mt = null;
@@ -426,7 +427,7 @@ public class NewServerComposite extends Composite {
 		else
 			manualComp.setHost("localhost");
 
-		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
+		GridData data = new GridData(GridData.FILL_BOTH);
 		data.horizontalSpan = 3;
 		data.heightHint = 300;
 		manualComp.setLayoutData(data);
