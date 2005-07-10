@@ -311,7 +311,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 				IModule module3 = add[i];
 				IWebModule module = (IWebModule) module3.loadAdapter(IWebModule.class, monitor);
 				String contextRoot = module.getContextRoot();
-				if (contextRoot != null && !contextRoot.startsWith("/"))
+				if (contextRoot != null && !contextRoot.startsWith("/") && contextRoot.length() > 0)
 					contextRoot = "/" + contextRoot;
 				WebModule module2 = new WebModule(contextRoot,
 						module.getLocation().toOSString(), module3.getId(), true);

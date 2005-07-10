@@ -237,7 +237,7 @@ public class WebModuleDialog extends Dialog {
 					try {
 						IWebModule module2 = (IWebModule) projTable.getSelection()[0].getData();
 						String contextRoot = module2.getContextRoot();
-						if (contextRoot != null && !contextRoot.startsWith("/"))
+						if (contextRoot != null && !contextRoot.startsWith("/") && contextRoot.length() > 0)
 							contextRoot = "/" + contextRoot;
 						module = new WebModule(contextRoot, module2.getLocation().toOSString(), module.getMemento(), module.isReloadable());
 						docBase.setText(module2.getLocation().toOSString());
