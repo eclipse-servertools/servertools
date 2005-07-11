@@ -1471,7 +1471,7 @@ public class Server extends Base implements IServer {
 		
 		if (getServerState() == IServer.STATE_STOPPED)
 			throw new CoreException(new Status(IStatus.ERROR, ServerCore.PLUGIN_ID, 0, ServerPlugin.getResource("%errorStartFailed", getName()), null));*/
-		listener2.done(null);
+		listener2.done(new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null));
 	}
 
 	/*
