@@ -15,11 +15,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.ProjectProperties;
 import org.eclipse.wst.server.core.internal.Server;
-import org.eclipse.wst.server.core.internal.ServerType;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.Trace;
 /**
@@ -143,19 +141,6 @@ public class WizardTaskUtil {
 			return;
 
 		IServerWorkingCopy workingCopy = (IServerWorkingCopy) taskModel.getObject(TaskModel.TASK_SERVER);
-		
-		boolean sbp = ((ServerType) workingCopy.getServerType()).startBeforePublish();
-		if (sbp) {
-			IServer server = workingCopy.getOriginal();
-			int state = server.getServerState();
-			if (state == IServer.STATE_STOPPED || state == IServer.STATE_UNKNOWN) {
-				String mode = (String) taskModel.getObject(TaskModel.TASK_LAUNCH_MODE);
-				if (mode == null || mode.length() == 0)
-					mode = ILaunchManager.DEBUG_MODE;
-				
-				server.synchronousStart(mode, monitor);
-			}
-		}
 
 		// modify modules
 		IModule[] remove2 = new IModule[0];

@@ -28,12 +28,6 @@ public class LaunchClientJob extends Job {
 	protected String launchMode;
 	protected IModuleArtifact moduleArtifact;
 
-	public static void launchClient(IServer server, IModule[] module, String launchMode, IModuleArtifact moduleArtifact, ILaunchableAdapter launchableAdapter, IClient client) {
-		LaunchClientJob job = new LaunchClientJob(server, module, launchMode, moduleArtifact, launchableAdapter, client);
-		//job.setUser(true);
-		job.schedule();
-	}
-
 	public LaunchClientJob(IServer server, IModule[] module, String launchMode, IModuleArtifact moduleArtifact, ILaunchableAdapter launchableAdapter, IClient client) {
 		super("Launch client");
 		this.server = server;

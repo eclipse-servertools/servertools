@@ -656,7 +656,10 @@ public class Server extends Base implements IServer {
 		if (getServerType().hasServerConfiguration() && configuration == null)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorNoConfiguration, null);
 		
-		if (((ServerType)getServerType()).startBeforePublish()) {
+		// make sure that the delegate is loaded and the server state is correct
+		loadAdapter(ServerBehaviourDelegate.class, monitor);
+		
+		if (((ServerType)getServerType()).startBeforePublish() && (getServerState() == IServer.STATE_STOPPED)) {
 			try {
 				synchronousStart(ILaunchManager.RUN_MODE, monitor);
 			} catch (CoreException ce) {

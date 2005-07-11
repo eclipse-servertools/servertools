@@ -30,6 +30,7 @@ import org.eclipse.wst.server.core.internal.IClient;
 import org.eclipse.wst.server.core.internal.ILaunchableAdapter;
 import org.eclipse.wst.server.core.internal.PublishServerJob;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
+import org.eclipse.wst.server.core.internal.ServerType;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.wizard.*;
 import org.eclipse.swt.widgets.Shell;
@@ -280,7 +281,8 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		IModule[] modules = new IModule[] { module }; // TODO: get parent heirarchy correct
 		int state = server.getServerState();
 		if (state == IServer.STATE_STARTING) {
-			LaunchClientJob.launchClient(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
+			LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
+			clientJob.schedule();
 		} else if (state == IServer.STATE_STARTED) {
 			boolean restart = false;
 			String mode = server.getMode();
@@ -306,12 +308,22 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			
 			PublishServerJob publishJob = new PublishServerJob(server);
 			publishJob.schedule();
-			LaunchClientJob.launchClient(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
+			LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
+			clientJob.schedule();
 		} else if (state != IServer.STATE_STOPPING) {
 			PublishServerJob publishJob = new PublishServerJob(server);
-			publishJob.schedule();
-			StartServerJob.startServer(server, launchMode);
-			LaunchClientJob.launchClient(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
+			StartServerJob startServerJob = new StartServerJob(server, launchMode);
+			LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
+			
+			if (((ServerType)server.getServerType()).startBeforePublish() && (server.getServerState() != IServer.STATE_STARTED)) {
+				startServerJob.schedule();                
+				publishJob.schedule();
+			} else {
+				publishJob.schedule();
+				startServerJob.schedule();                
+			}
+			
+			clientJob.schedule();
 		}
 	}
 
