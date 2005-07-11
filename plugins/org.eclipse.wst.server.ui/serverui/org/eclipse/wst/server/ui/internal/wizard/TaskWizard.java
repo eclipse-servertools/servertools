@@ -29,6 +29,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -167,10 +168,14 @@ public class TaskWizard implements IWizard {
 				// enter & exit the remaining pages
 				int index = list.indexOf(cFragment);
 				while (index > 0 && index < list.size() - 1) {
-					WizardFragment fragment = (WizardFragment) list.get(++index);
+					final WizardFragment fragment = (WizardFragment) list.get(++index);
 					try {
-						fragment.enter();
-						fragment.exit();
+						Display.getDefault().syncExec(new Runnable() {
+							public void run() {
+								fragment.enter();
+								fragment.exit();
+							}
+						});
 					} catch (Exception e) {
 						Trace.trace(Trace.WARNING, "Could not enter/exit page", e);
 					}
