@@ -1317,13 +1317,75 @@ public class Server extends Base implements IServer {
 	 * @see IServer#restart(String, IOperationListener)
 	 */
 	public void restart(String mode2, IOperationListener listener) {
-		stop(true, null);
+		if (getServerState() == STATE_STOPPED)
+			return;
+	
+		Trace.trace(Trace.FINEST, "Restarting server: " + getName());
+	
 		try {
-			start(mode2, (IProgressMonitor)null);
-		} catch (CoreException ce) {
-			// TODO
+			final IOperationListener listener2 = listener;
+			IServerListener curListener = new IServerListener() {
+				public void serverChanged(ServerEvent event) {
+					int eventKind = event.getKind();
+					IServer server = event.getServer();
+					if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
+						if (server.getServerState() == STATE_STARTED) {
+							server.removeServerListener(this);
+							listener2.done(new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null));
+						}
+					}
+				}
+			};
+			try {
+				addServerListener(curListener);
+				getBehaviourDelegate(null).restart(mode2);
+				return;
+			} catch (CoreException ce) {
+				Trace.trace(Trace.SEVERE, "Error calling delegate restart() " + toString());
+				removeServerListener(curListener);
+			}
+		
+			final String mode3 = mode2;
+			// add listener to start it as soon as it is stopped
+			addServerListener(new IServerListener() {
+				public void serverChanged(ServerEvent event) {
+					int eventKind = event.getKind();
+					IServer server = event.getServer();
+					if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
+						if (server.getServerState() == STATE_STOPPED) {
+							server.removeServerListener(this);
+
+							// restart in a quarter second (give other listeners a chance
+							// to hear the stopped message)
+							Thread t = new Thread() {
+								public void run() {
+									try {
+										Thread.sleep(250);
+									} catch (Exception e) {
+										// ignore
+									}
+									try {
+										Server.this.start(mode3, listener2);
+									} catch (Exception e) {
+										Trace.trace(Trace.SEVERE, "Error while restarting server", e);
+									}
+								}
+							};
+							t.setDaemon(true);
+							t.setPriority(Thread.NORM_PRIORITY - 2);
+							t.start();
+						}
+					}
+					
+				}
+			});
+	
+			// stop the server
+			stop(false);
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error restarting server", e);
+			listener.done(null);
 		}
-		listener.done(null);
 	}
 	
 	/*

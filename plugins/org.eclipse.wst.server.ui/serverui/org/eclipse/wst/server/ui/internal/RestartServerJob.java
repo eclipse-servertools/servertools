@@ -13,6 +13,7 @@ package org.eclipse.wst.server.ui.internal;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServer.IOperationListener;
 import org.eclipse.wst.server.core.internal.ServerSchedulingRule;
 /**
  * 
@@ -20,6 +21,8 @@ import org.eclipse.wst.server.core.internal.ServerSchedulingRule;
 public class RestartServerJob extends Job {
 	protected IServer server;
 	protected String launchMode;
+	protected boolean isRestartCompleted = false;
+	protected IStatus resultStatus;
 	
 	public static void restartServer(IServer server, String launchMode) {
 		RestartServerJob job = new RestartServerJob(server, launchMode);
@@ -38,12 +41,23 @@ public class RestartServerJob extends Job {
 	 * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	protected IStatus run(IProgressMonitor monitor) {
-		IStatus status = new Status(IStatus.OK, ServerUIPlugin.PLUGIN_ID, 0, "", null);
-		try {
-			server.synchronousRestart(launchMode, monitor);
-		} catch (CoreException ce) {
-			return ce.getStatus();
+		IOperationListener listener = new IOperationListener() {
+			public void done(IStatus result) {
+				isRestartCompleted = true;
+				resultStatus = result;
+			}
+		};
+		server.restart(launchMode, listener);
+		
+		// block util the restart is completed
+		while (!isRestartCompleted) {
+			try {
+				Thread.sleep(250);
+			} catch (InterruptedException e) {
+				// Do nothing.
+			}
 		}
-		return status;
+		
+		return resultStatus == null ? new Status(IStatus.OK, ServerUIPlugin.PLUGIN_ID, 0, "", null) : resultStatus;
 	}
 }
