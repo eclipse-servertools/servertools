@@ -1216,7 +1216,7 @@ public class Server extends Base implements IServer {
 		}
 	
 		Trace.trace(Trace.FINEST, "synchronousStart 4");
-		listener2.done(null);
+		listener2.done(new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null));
 	}
 
 	public void synchronousStart(String mode2, IProgressMonitor monitor) throws CoreException {
