@@ -131,8 +131,8 @@ public class ServerType implements IServerType {
 		if (id == null || id.length() == 0)
 			id = ServerPlugin.generateId();
 		ServerWorkingCopy swc = new ServerWorkingCopy(id, file, runtime, this);
-		swc.setDefaults(monitor);
 		swc.setRuntime(runtime);
+		swc.setDefaults(monitor);
 		
 		// TODO
 		if (swc.getServerType().hasServerConfiguration())
