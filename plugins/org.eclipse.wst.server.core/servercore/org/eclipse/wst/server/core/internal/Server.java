@@ -1754,24 +1754,19 @@ public class Server extends Base implements IServer {
 			modules = new ArrayList(list.size() + 1);
 			Iterator iterator = list.iterator();
 			while (iterator.hasNext()) {
-				String moduleStr = (String) iterator.next();
-				IModule module = ServerUtil.getModule(moduleStr);
+				String moduleId = (String) iterator.next();
+				String name = "<unknown>";
+				int index = moduleId.indexOf("::");
+				if (index > 0) {
+					name = moduleId.substring(0, index);
+					moduleId = moduleId.substring(index+2);
+				}
+				
+				IModule module = ServerUtil.getModule(moduleId);
+				if (module == null)
+					module = new DeletedModule(moduleId, name);
 				if (module != null)
 					modules.add(module);
-			}
-		} else {
-			// verify modules are still available
-			List remove = new ArrayList();
-			Iterator iterator = modules.iterator();
-			while (iterator.hasNext()) {
-				IModule module = (IModule) iterator.next();
-				if (ServerUtil.getModule(module.getId()) == null)
-					remove.add(module);
-			}
-			
-			iterator = remove.iterator();
-			while (iterator.hasNext()) {
-				modules.remove(iterator.next());
 			}
 		}
 		

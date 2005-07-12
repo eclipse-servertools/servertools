@@ -220,6 +220,6 @@ public class Module implements IModule {
 	 * @return java.lang.String
 	 */
 	public String toString() {
-		return "Module[" + getId() + "]";
+		return "Module[" + name + "," + getId() + "]";
 	}
 }

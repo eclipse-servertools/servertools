@@ -20,11 +20,13 @@ import org.eclipse.wst.server.core.IModuleType;
  */
 public class DeletedModule implements IModule {
 	protected String id;
-	
-	public DeletedModule(String id) {
+	protected String name;
+
+	public DeletedModule(String id, String name) {
 		this.id = id;
+		this.name = name;
 	}
-	
+
 	public String getId() {
 		return id;
 	}
@@ -34,7 +36,7 @@ public class DeletedModule implements IModule {
 	}
 
 	public String getName() {
-		return null;
+		return name;
 	}
 
 	public IModuleType getModuleType() {
@@ -60,11 +62,11 @@ public class DeletedModule implements IModule {
 	public Object getAdapter(Class adapter) {
 		return null;
 	}
-	
+
 	public Object loadAdapter(Class adapter, IProgressMonitor monitor) {
 		return null;
 	}
-	
+
 	public boolean equals(Object obj) {
 		if (!(obj instanceof IModule))
 			return false;
@@ -75,8 +77,8 @@ public class DeletedModule implements IModule {
 			
 		return true;
 	}
-	
+
 	public String toString() {
-		return "Deleted module (" + getId() + ")";
+		return "DeletedModule[" + name + "," + id + "]";
 	}
 }

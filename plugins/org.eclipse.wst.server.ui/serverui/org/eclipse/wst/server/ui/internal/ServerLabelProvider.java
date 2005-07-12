@@ -105,6 +105,9 @@ public class ServerLabelProvider implements ILabelProvider {
 			} else if (element instanceof IModule) {
 				IModule module = (IModule) element;
 				IModuleType mt = module.getModuleType();
+				if (mt == null)
+					return null;
+				
 				return getModuleImage(mt.getId());
 			}
 		} catch (Exception e) {

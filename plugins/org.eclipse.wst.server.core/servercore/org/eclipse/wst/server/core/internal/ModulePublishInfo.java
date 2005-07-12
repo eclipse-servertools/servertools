@@ -27,19 +27,22 @@ public class ModulePublishInfo {
 	private static final String FOLDER = "folder";
 
 	private String moduleId;
+	private String name;
 	private IModuleResource[] resources = new IModuleResource[0];
 
 	/**
 	 * ModulePublishInfo constructor.
 	 * 
 	 * @param moduleId a module id
+	 * @param name the module's name
 	 */
-	public ModulePublishInfo(String moduleId) {
+	public ModulePublishInfo(String moduleId, String name) {
 		super();
 
 		this.moduleId = moduleId;
+		this.name = name;
 	}
-	
+
 	/**
 	 * ModulePublishInfo constructor.
 	 * 
@@ -50,19 +53,23 @@ public class ModulePublishInfo {
 		
 		load(memento);
 	}
-	
+
 	public String getModuleId() {
 		return moduleId;
 	}
-	
+
+	public String getName() {
+		return name;
+	}
+
 	public IModuleResource[] getResources() {
 		return resources;
 	}
-	
+
 	public void setResources(IModuleResource[] res) {
 		resources = res;
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -71,13 +78,14 @@ public class ModulePublishInfo {
 	
 		try {
 			moduleId = memento.getString(MODULE_ID);
+			name = memento.getString(NAME);
 	
 			resources = loadResource(memento);
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Could not load module publish info information: " + e.getMessage());
 		}
 	}
-	
+
 	protected IModuleResource[] loadResource(IMemento memento) {
 		if (memento == null)
 			return new IModuleResource[0];
@@ -87,10 +95,10 @@ public class ModulePublishInfo {
 		if (children != null) {
 			int size = children.length;
 			for (int i = 0; i < size; i++) {
-				String name = children[i].getString(NAME);
+				String name2 = children[i].getString(NAME);
 				IPath path = new Path(children[i].getString(PATH));
 				long stamp = Long.parseLong(children[i].getString(STAMP));
-				ModuleFile file = new ModuleFile(null, name, path, stamp);
+				ModuleFile file = new ModuleFile(null, name2, path, stamp);
 				list.add(file);
 			}
 		}
@@ -98,9 +106,9 @@ public class ModulePublishInfo {
 		if (children != null) {
 			int size = children.length;
 			for (int i = 0; i < size; i++) {
-				String name = children[i].getString(NAME);
+				String name2 = children[i].getString(NAME);
 				IPath path = new Path(children[i].getString(PATH));
-				ModuleFolder folder = new ModuleFolder(null, name, path);
+				ModuleFolder folder = new ModuleFolder(null, name2, path);
 				folder.setMembers(loadResource(children[i]));
 				list.add(folder);
 			}
@@ -110,20 +118,22 @@ public class ModulePublishInfo {
 		list.toArray(resources2);
 		return resources;
 	}
-	
+
 	/**
 	 * 
 	 */
 	protected void save(IMemento memento) {
 		try {
 			memento.putString(MODULE_ID, moduleId);
+			if (name != null)
+				memento.putString(NAME, name);
 			
 			saveResource(memento, resources);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not save module publish info", e);
 		}
 	}
-	
+
 	protected void saveResource(IMemento memento, IModuleResource[] resources2) {
 		if (resources2 == null)
 			return;
@@ -145,7 +155,7 @@ public class ModulePublishInfo {
 			}
 		}
 	}
-	
+
 	public String toString() {
 		return "ModulePublishInfo [" + moduleId + "]";
 	}

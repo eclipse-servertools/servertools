@@ -383,7 +383,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			Iterator iterator = modules.iterator();
 			while (iterator.hasNext()) {
 				IModule module = (IModule) iterator.next();
-				list.add(module.getId());
+				list.add(module.getName() + "::" + module.getId());
 			}
 			setAttribute(MODULE_LIST, list);
 		} catch (CoreException ce) {

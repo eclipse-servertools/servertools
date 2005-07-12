@@ -101,7 +101,7 @@ public class ServerPublishInfo {
 			return (ModulePublishInfo) modulePublishInfo.get(key);
 	
 		// have to create a new one
-		ModulePublishInfo mpi = new ModulePublishInfo(getKey(module));
+		ModulePublishInfo mpi = new ModulePublishInfo(getKey(module), module[module.length - 1].getName());
 		modulePublishInfo.put(key, mpi);
 		return mpi;
 	}
@@ -134,7 +134,7 @@ public class ServerPublishInfo {
 				String moduleId = mpi.getModuleId();
 				if (moduleId != null) {
 					int index = moduleId.lastIndexOf("#");
-					module2 = new IModule[] { new DeletedModule(moduleId.substring(index + 1)) };
+					module2 = new IModule[] { new DeletedModule(moduleId.substring(index + 1), mpi.getName()) };
 				}
 			}
 			if (module2 != null && module2.length > 0) {
