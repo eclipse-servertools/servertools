@@ -52,7 +52,7 @@ public class FixModuleContextRootTask extends PublishOperation {
 	 */
 	public void execute(IProgressMonitor monitor, IAdaptable info) throws CoreException {
 		IServerWorkingCopy wc = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
-		TomcatServer server = (TomcatServer) wc.getAdapter(TomcatServer.class);
+		TomcatServer server = (TomcatServer) wc.loadAdapter(TomcatServer.class, monitor);
 		TomcatConfiguration configuration = server.getTomcatConfiguration();
 		if (configuration.getWebModules().size() <= index)
 			return;
