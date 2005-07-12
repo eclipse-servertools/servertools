@@ -15,9 +15,9 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.PublishServerJob;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
-import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * A wizard used to add and remove modules.
@@ -26,10 +26,13 @@ public class ModifyModulesWizard extends TaskWizard {
 	static class ModifyModulesWizard2 extends WizardFragment {
 		protected void createChildFragments(List list) {
 			list.add(new ModifyModulesWizardFragment());
-			list.add(new TasksWizardFragment());
 			list.add(new WizardFragment() {
 				public void performFinish(IProgressMonitor monitor) throws CoreException {
 					WizardTaskUtil.saveServer(getTaskModel(), monitor);
+					
+					IServer server = (IServer) getTaskModel().getObject(TaskModel.TASK_SERVER);				
+					PublishServerJob publishJob = new PublishServerJob(server);
+					publishJob.schedule();
 				}
 			});
 		}
