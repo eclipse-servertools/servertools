@@ -20,11 +20,18 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -32,7 +39,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.ui.ServerUICore;
@@ -42,36 +48,101 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
  * A wizard page used to add and remove modules.
  */
 public class ModifyModulesComposite extends Composite {
-	protected static final ILabelProvider slp = ServerUICore.getLabelProvider();
-	
 	protected IWizardHandle wizard;
-	
+
 	protected IServerAttributes server;
 
 	protected Map childModuleMap = new HashMap();
-	protected Map parentTreeItemMap = new HashMap();
+	protected Map parentModuleMap = new HashMap();
 
 	// original modules on the server
 	protected List originalModules = new ArrayList();
-	
+
 	// modules available to be added to the server
 	protected List modules = new ArrayList();
-	
+
 	// current modules on the server
 	protected List deployed = new ArrayList();
 
-	protected Tree availableTree;
-	protected Tree deployedTree;
-	
+	protected TreeViewer availableTreeViewer;
+	protected TreeViewer deployedTreeViewer;
+
 	protected Button add, addAll;
 	protected Button remove, removeAll;
-	
+
 	protected TaskModel taskModel;
 	protected IModule newModule;
 	protected IModule origNewModule;
-	
+
 	protected Map errorMap;
-	
+
+	abstract class TreeContentProvider implements ITreeContentProvider {
+		public void dispose() {
+			// do nothing
+		}
+
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+			// do nothing
+		}
+		
+		public Object[] getChildren(Object parentElement) {
+			IModule[] parent = (IModule[]) parentElement;
+			IModule[] children = (IModule[]) childModuleMap.get(new ChildModuleMapKey(parent));
+			
+			List list = new ArrayList();
+			if (children != null) {
+				int size = children.length;
+				for (int i = 0; i < size; i++) {
+					IModule child = children[i];
+					
+					parentModuleMap.put(child, parent);
+					
+					int size2 = parent.length;
+					IModule[] module2 = new IModule[size2 + 1];
+					System.arraycopy(parent, 0, module2, 0, size2);
+					module2[size2] = child;
+					list.add(module2);
+				}
+			}
+			return list.toArray();
+		}
+
+		public Object getParent(Object element) {
+			IModule[] child = (IModule[]) element;
+			return (IModule[]) parentModuleMap.get(child);
+		}
+
+		public boolean hasChildren(Object element) {
+			IModule[] parent = (IModule[]) element;
+			IModule[] children = (IModule[]) childModuleMap.get(new ChildModuleMapKey(parent));
+			return (children != null && children.length > 0);
+		}
+	}
+
+	class AvailableContentProvider extends TreeContentProvider {
+		public Object[] getElements(Object inputElement) {
+			List list = new ArrayList();
+			Iterator iterator = modules.iterator();
+			while (iterator.hasNext()) {
+				IModule module = (IModule) iterator.next();
+				list.add(new IModule[] { module });
+			}
+			return list.toArray();
+		}
+	}
+
+	class DeployedContentProvider extends TreeContentProvider {
+		public Object[] getElements(Object inputElement) {
+			List list = new ArrayList();
+			Iterator iterator = deployed.iterator();
+			while (iterator.hasNext()) {
+				IModule module = (IModule) iterator.next();
+				list.add(new IModule[] { module });
+			}
+			return list.toArray();
+		}
+	}
+
 	/**
 	 * The key element for the child module map
 	 * ChildMapModuleKey
@@ -90,35 +161,33 @@ public class ModifyModulesComposite extends Composite {
 		}
 		
 		public boolean equals(Object obj) {
-			if (obj == this) {
-				// Same object.
+			if (obj == this) // same object
+				return true;
+			
+			if (!(obj instanceof ChildModuleMapKey))
+				return false;
+				
+			IModule[] curCompareModule = ((ChildModuleMapKey) obj).moduleTree;
+			if (curCompareModule == moduleTree) {
+				// the module tree is the same
+				return true;
+			} else if (moduleTree == null || curCompareModule == null || moduleTree.length != curCompareModule.length){
+				return false;
+			} else {
+				// compare each module
+				for (int i = 0; i < curCompareModule.length; i++) {
+					if (!curCompareModule[i].equals(moduleTree[i]))
+						return false;
+				}
 				return true;
 			}
-			
-			boolean result = false;
-			if (obj instanceof ChildModuleMapKey) {
-				IModule[] curCompareModule = ((ChildModuleMapKey)obj).moduleTree;
-				if (curCompareModule == moduleTree) {
-					// The module tree is the same.
-					result = true;
-				} else if (moduleTree == null || curCompareModule == null || moduleTree.length != curCompareModule.length){
-					result = false;
-				} else {
-					// Compare each module.
-					result = true;
-					for (int i=0; result && i<curCompareModule.length; i++) {
-						result &= curCompareModule[i].equals(moduleTree[i]);
-					}
-				}
-			}
-			return result;
 		}
-		
-    public int hashCode() {
-			// Force the same hash code on all the instances to makes sure the equals(Object) method
-			// is being used for comparing the objects.
+
+		public int hashCode() {
+			// force the same hash code on all the instances to makes sure the
+			// equals(Object) method is being used for comparing the objects
 			return 12345;
-    }
+		}
 	}
 
 	/**
@@ -236,13 +305,12 @@ public class ModifyModulesComposite extends Composite {
 			}
 		}
 		
-		if (availableTree != null)
+		if (availableTreeViewer != null)
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
 					try { // update trees if we can
-						parentTreeItemMap = new HashMap();
-						fillTree(availableTree, modules);
-						fillTree(deployedTree, deployed);
+						availableTreeViewer.refresh();
+						deployedTreeViewer.refresh();
 						setEnablement();
 					} catch (Exception e) {
 						// ignore
@@ -283,17 +351,25 @@ public class ModifyModulesComposite extends Composite {
 		label = new Label(this, SWT.NONE);
 		label.setText(Messages.wizModuleDeployedList);
 
-		availableTree = new Tree(this, SWT.BORDER);
+		Tree availableTree = new Tree(this, SWT.BORDER);
 		data = new GridData(GridData.FILL_BOTH);
 		data.heightHint = 200;
 		data.widthHint = 150;
 		availableTree.setLayoutData(data);
-		availableTree.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent event) {
+		
+		availableTreeViewer = new TreeViewer(availableTree);
+		availableTreeViewer.setLabelProvider(ServerUICore.getLabelProvider());
+		availableTreeViewer.setContentProvider(new AvailableContentProvider());
+		availableTreeViewer.setSorter(new ViewerSorter());
+		availableTreeViewer.setInput("root");
+		
+		availableTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
 				setEnablement();
 			}
-			
-			public void widgetDefaultSelected(SelectionEvent e) {
+		});
+		availableTreeViewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
 				setEnablement();
 				if (add.isEnabled())
 					add(false);
@@ -351,41 +427,59 @@ public class ModifyModulesComposite extends Composite {
 			}
 		});
 		
-		deployedTree = new Tree(this, SWT.BORDER);
+		Tree deployedTree = new Tree(this, SWT.BORDER);
 		data = new GridData(GridData.FILL_BOTH);
 		data.widthHint = 150;
 		deployedTree.setLayoutData(data);
-		deployedTree.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent event) {
+		
+		deployedTreeViewer = new TreeViewer(deployedTree);
+		deployedTreeViewer.setLabelProvider(ServerUICore.getLabelProvider());
+		deployedTreeViewer.setContentProvider(new DeployedContentProvider());
+		deployedTreeViewer.setSorter(new ViewerSorter());
+		deployedTreeViewer.setInput("root");
+		
+		deployedTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
 				setEnablement();
 			}
-			public void widgetDefaultSelected(SelectionEvent e) {
+		});
+		deployedTreeViewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
 				setEnablement();
 				if (remove.isEnabled())
 					remove(false);
 			}
 		});
 		
-		parentTreeItemMap = new HashMap();
-		fillTree(availableTree, modules);
-		fillTree(deployedTree, deployed);
-		
 		setEnablement();
-		
 		availableTree.setFocus();
 		
 		Dialog.applyDialogFont(this);
 	}
-	
+
+	protected IModule getAvailableSelection() {
+		IStructuredSelection sel = (IStructuredSelection) availableTreeViewer.getSelection();
+		return getModule((IModule[]) sel.getFirstElement());
+	}
+
+	protected IModule getDeployedSelection() {
+		IStructuredSelection sel = (IStructuredSelection) deployedTreeViewer.getSelection();
+		return getModule((IModule[]) sel.getFirstElement());
+	}
+
+	protected static IModule getModule(IModule[] modules2) {
+		if (modules2 == null)
+			return null;
+		return modules2[modules2.length - 1];
+	}
+
 	protected void setEnablement() {
 		boolean enabled = false;
 		wizard.setMessage(null, IMessageProvider.NONE);
-		if (availableTree.getItemCount() > 0) {
+		
+		IModule module = getAvailableSelection();		
+		if (module != null) {
 			try {
-				TreeItem item = availableTree.getSelection()[0];
-				item = (TreeItem) parentTreeItemMap.get(item);
-				IModule module = (IModule) item.getData();
-				
 				IStatus status = (IStatus) errorMap.get(module);
 				if (modules.contains(module)) {
 					if (status == null)
@@ -402,14 +496,12 @@ public class ModifyModulesComposite extends Composite {
 			}
 		}
 		add.setEnabled(enabled);
-		addAll.setEnabled(availableTree.getItemCount() > 0);
+		addAll.setEnabled(modules.size() > 0);
 		
 		enabled = false;
-		if (deployedTree.getItemCount() > 0) {
+		module = getDeployedSelection();
+		if (module != null) {
 			try {
-				TreeItem item = deployedTree.getSelection()[0];
-				item = (TreeItem) parentTreeItemMap.get(item);
-				IModule module = (IModule) item.getData();
 				if (deployed.contains(module) && !module.equals(newModule))
 					enabled = true;
 			} catch (Exception e) {
@@ -418,12 +510,12 @@ public class ModifyModulesComposite extends Composite {
 		}
 		remove.setEnabled(enabled);
 		if (newModule == null)
-			removeAll.setEnabled(deployedTree.getItemCount() > 0);
+			removeAll.setEnabled(deployed.size() > 0);
 		else
-			removeAll.setEnabled(deployedTree.getItemCount() > 1);
+			removeAll.setEnabled(deployed.size() > 1);
 	}
 
-	protected void addChildren(TreeItem item, IModule[] module) {
+	/*protected void addChildren(TreeItem item, IModule[] module) {
 		try {
 			IModule[] children = (IModule[]) childModuleMap.get(new ChildModuleMapKey(module));
 			if (children != null) {
@@ -446,9 +538,9 @@ public class ModifyModulesComposite extends Composite {
 		} catch (Exception e) {
 			// ignore
 		}
-	}
+	}*/
 
-	protected void fillTree(Tree tree, List modules2) {
+	/*protected void fillTree(Tree tree, List modules2) {
 		tree.removeAll();
 
 		Iterator iterator = modules2.iterator();
@@ -461,34 +553,36 @@ public class ModifyModulesComposite extends Composite {
 			parentTreeItemMap.put(item, item);
 			addChildren(item, new IModule[] { module });
 		}
-	}
+	}*/
 
 	protected void add(boolean all) {
-		if (all)
-			moveAll(availableTree.getItems(), true);
-		else
-			moveAll(availableTree.getSelection(), true);
+		if (all) {
+			IModule[] modules2 = new IModule[modules.size()];
+			modules.toArray(modules2);
+			moveAll(modules2, true);
+		} else
+			moveAll(new IModule[] { getAvailableSelection() }, true);
 		updateTaskModel();
 	}
 
 	protected void remove(boolean all) {
-		if (all)
-			moveAll(deployedTree.getItems(), false);
-		else
-			moveAll(deployedTree.getSelection(), false);
+		if (all) {
+			IModule[] modules2 = new IModule[deployed.size()];
+			deployed.toArray(modules2);
+			moveAll(modules2, false);
+		} else
+			moveAll(new IModule[] { getDeployedSelection() }, false);
 		updateTaskModel();
 	}
 
-	protected void moveAll(TreeItem[] items, boolean add2) {
-		int size = items.length;
+	protected void moveAll(IModule[] mods, boolean add2) {
+		int size = mods.length;
 		List list = new ArrayList();
 		for (int i = 0; i < size; i++) {
-			TreeItem item = (TreeItem) parentTreeItemMap.get(items[i]);
-			IModule module = (IModule) item.getData();
-			IStatus status = (IStatus) errorMap.get(module);
+			IStatus status = (IStatus) errorMap.get(mods[i]);
 			
-			if (status == null && !list.contains(module))
-				list.add(module);
+			if (status == null && !list.contains(mods[i]))
+				list.add(mods[i]);
 		}
 
 		Iterator iterator = list.iterator();
@@ -502,10 +596,9 @@ public class ModifyModulesComposite extends Composite {
 				deployed.remove(module);
 			}
 		}
-
-		parentTreeItemMap = new HashMap();
-		fillTree(availableTree, modules);
-		fillTree(deployedTree, deployed);
+		
+		availableTreeViewer.refresh();
+		deployedTreeViewer.refresh();
 
 		setEnablement();
 	}

@@ -73,6 +73,11 @@ public class ServerLabelProvider implements ILabelProvider {
 				IModule module = (IModule) element;
 				IModuleType mt = module.getModuleType();
 				return getModuleImageDescriptor(mt.getId());
+			} else if (element instanceof IModule[]) {
+				IModule[] modules = (IModule[]) element;
+				IModule module = modules[modules.length - 1];
+				IModuleType mt = module.getModuleType();
+				return getModuleImageDescriptor(mt.getId());
 			} else if (element instanceof IWorkbenchAdapter) {
 				return ((IWorkbenchAdapter) element).getImageDescriptor(null);
 			}
@@ -104,6 +109,14 @@ public class ServerLabelProvider implements ILabelProvider {
 				return ImageResource.getImage(server.getServerType().getId());
 			} else if (element instanceof IModule) {
 				IModule module = (IModule) element;
+				IModuleType mt = module.getModuleType();
+				if (mt == null)
+					return null;
+				
+				return getModuleImage(mt.getId());
+			} else if (element instanceof IModule[]) {
+				IModule[] modules = (IModule[]) element;
+				IModule module = modules[modules.length - 1];
 				IModuleType mt = module.getModuleType();
 				if (mt == null)
 					return null;
@@ -142,6 +155,9 @@ public class ServerLabelProvider implements ILabelProvider {
 			return ((IClient) element).getName();
 		} else if (element instanceof IModule) {
 			return ((IModule) element).getName();
+		} else if (element instanceof IModule[]) {
+			IModule[] modules = (IModule[]) element;
+			return modules[modules.length - 1].getName();
 		} else if (element instanceof IWorkbenchAdapter) {
 			return ((IWorkbenchAdapter) element).getLabel(null);
 		}

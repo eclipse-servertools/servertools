@@ -20,6 +20,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
@@ -40,7 +41,7 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 		try {
 			comp = fragment.createComposite(parentComp, this);
 		} catch (Exception e) {
-			// ignore 
+			Trace.trace(Trace.WARNING, "Could not create wizard page composite", e);
 		}
 		if (comp == null) {
 			comp = new Composite(parentComp, SWT.NONE);
