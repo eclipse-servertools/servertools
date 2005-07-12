@@ -18,8 +18,6 @@ import java.net.URLConnection;
 import org.eclipse.wst.server.core.IServer;
 /**
  * Thread used to ping server to test when it is started.
- * 
- * @since 1.0
  */
 public class PingThread {
 	// delay before pinging starts
