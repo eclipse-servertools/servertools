@@ -64,10 +64,11 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	 * @see org.eclipse.jdt.core.IClasspathContainer#getDescription()
 	 */
 	public String getDescription() {
-		String s = delegate.getClasspathContainerLabel(runtime, id);
-		
-		if (s != null)
-			return s;
+		if (runtime != null) {
+			String s = delegate.getClasspathContainerLabel(runtime, id);
+			if (s != null)
+				return s;
+		}
 		
 		return Messages.classpathContainerDescription;
 	}
