@@ -522,6 +522,24 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, mergeArguments(existingProgArgs, getRuntimeProgramArguments(true)));
 
 		String existingVMArgs = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, (String)null);
+		if (!getTomcatServer().isSecure()) {
+			// remove -Djava.security.manager and -Djava.security.policy="x x"
+			int index = existingVMArgs.indexOf("-Djava.security.manager");
+			if (index >= 0) {
+				if (index > 0 && existingVMArgs.charAt(index - 1) == ' ')
+					index --;
+				int index2 = existingVMArgs.indexOf(" ", index + 2);
+				existingVMArgs = existingVMArgs.substring(0, index) + existingVMArgs.substring(index2);
+			}
+			index = existingVMArgs.indexOf("-Djava.security.policy=");
+			if (index >= 0) {
+				if (index > 0 && existingVMArgs.charAt(index - 1) == ' ')
+					index --;
+				int index2 = existingVMArgs.indexOf("\"", index);
+				index2 = existingVMArgs.indexOf("\"", index2 + 1);
+				existingVMArgs = existingVMArgs.substring(0, index) + existingVMArgs.substring(index2+1);
+			}
+		}
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, mergeArguments(existingVMArgs, getRuntimeVMArguments()));
 		
 		ITomcatRuntime runtime = getTomcatRuntime();
