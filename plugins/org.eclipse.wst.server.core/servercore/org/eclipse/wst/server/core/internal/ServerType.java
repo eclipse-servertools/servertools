@@ -75,7 +75,7 @@ public class ServerType implements IServerType {
 		return "true".equals(s);
 	}
 	
-	protected ILaunchConfigurationType getLaunchConfigurationType() {
+	public ILaunchConfigurationType getLaunchConfigurationType() {
 		String launchConfigId = element.getAttribute("launchConfigId");
 		if (launchConfigId == null)
 			return null;

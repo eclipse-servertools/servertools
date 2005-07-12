@@ -16,10 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.window.Window;
@@ -37,6 +41,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -44,6 +49,7 @@ import org.eclipse.ui.forms.widgets.*;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.internal.ServerType;
 import org.eclipse.wst.server.core.util.SocketUtil;
 import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.wst.server.ui.internal.ContextIds;
@@ -103,6 +109,9 @@ public class OverviewEditorPart extends ServerEditorPart {
 						if (runtimes[i].equals(runtime))
 							runtimeCombo.select(i);
 					}
+				} else if (event.getPropertyName().equals("configuration-id") && serverConfigurationName != null) {
+					String path = (String) event.getNewValue();
+					serverConfigurationName.setText(path);
 				}
 				updating = false;
 			}
@@ -267,10 +276,44 @@ public class OverviewEditorPart extends ServerEditorPart {
 				serverConfigurationName = toolkit.createText(composite, Messages.elementUnknownName);
 			else
 				serverConfigurationName = toolkit.createText(composite, "" + server.getServerConfiguration().getFullPath());
+			//if (!server.getServerConfiguration().getFullPath().toFile().exists())
+			
 			serverConfigurationName.setEditable(false);
 			serverConfigurationName.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			
 			whs.setHelp(serverConfigurationName, ContextIds.EDITOR_CONFIGURATION);
+			
+			createLabel(toolkit, composite, "");
+			final IFolder currentFolder = server.getServerConfiguration();
+			Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewServerConfigurationEdit, SWT.NONE);
+			link.addHyperlinkListener(new HyperlinkAdapter() {
+				public void linkActivated(HyperlinkEvent e) {
+					ContainerSelectionDialog dialog = new ContainerSelectionDialog(serverConfigurationName.getShell(),
+						currentFolder, true, Messages.serverEditorOverviewServerConfigurationEditMessage);
+					dialog.showClosedProjects(false);
+					
+					if (dialog.open() != Window.CANCEL) {
+						Object[] result = dialog.getResult();
+						if (result != null && result.length == 1) {
+							IPath path = (IPath) result[0];
+							
+							IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+							IResource resource = root.findMember(path);
+							if (resource != null && resource instanceof IFolder) {
+								IFolder folder2 = (IFolder) resource;
+							
+								if (updating)
+									return;
+								updating = true;
+								execute(new SetServerConfigurationFolderCommand(getServer(), folder2));
+								serverConfigurationName.setText(folder2.getFullPath().toString());
+								updating = false;
+							}
+						}
+					}
+				}
+			});
+			link.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		}
 		
 		// auto-publish
@@ -339,21 +382,24 @@ public class OverviewEditorPart extends ServerEditorPart {
 			IServerType serverType = server.getServerType();
 			if (serverType.supportsLaunchMode(ILaunchManager.RUN_MODE) || serverType.supportsLaunchMode(ILaunchManager.DEBUG_MODE)
 					|| serverType.supportsLaunchMode(ILaunchManager.PROFILE_MODE)) {
-				Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewOpenLaunchConfiguration, SWT.NONE);
-				data = new GridData();
-				data.horizontalSpan = 2;
-				link.setLayoutData(data);
-				link.addHyperlinkListener(new HyperlinkAdapter() {
-					public void linkActivated(HyperlinkEvent e) {
-						try {
-							ILaunchConfiguration launchConfig = svr.getLaunchConfiguration(true, null);
-							// TODO: use correct launch group
-							DebugUITools.openLaunchConfigurationPropertiesDialog(parent.getShell(), launchConfig, "org.eclipse.debug.ui.launchGroup.run");
-						} catch (CoreException ce) {
-							Trace.trace(Trace.SEVERE, "Could not create launch configuration", ce);
+				ILaunchConfigurationType launchType = ((ServerType) serverType).getLaunchConfigurationType();
+				if (launchType.isPublic()) {
+					Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewOpenLaunchConfiguration, SWT.NONE);
+					data = new GridData();
+					data.horizontalSpan = 2;
+					link.setLayoutData(data);
+					link.addHyperlinkListener(new HyperlinkAdapter() {
+						public void linkActivated(HyperlinkEvent e) {
+							try {
+								ILaunchConfiguration launchConfig = svr.getLaunchConfiguration(true, null);
+								// TODO: use correct launch group
+								DebugUITools.openLaunchConfigurationPropertiesDialog(parent.getShell(), launchConfig, "org.eclipse.debug.ui.launchGroup.run");
+							} catch (CoreException ce) {
+								Trace.trace(Trace.SEVERE, "Could not create launch configuration", ce);
+							}
 						}
-					}
-				});
+					});
+				}
 			}
 		}
 		
@@ -381,7 +427,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		IRuntimeWorkingCopy runtimeWorkingCopy = runtime.createWorkingCopy();
 		if (showWizard(runtimeWorkingCopy) != Window.CANCEL) {
 			try {
-				runtimeWorkingCopy.save(false, new NullProgressMonitor());
+				runtimeWorkingCopy.save(false, null);
 			} catch (Exception ex) {
 				// ignore
 			}
@@ -450,7 +496,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		if (server != null)
 			server.removePropertyChangeListener(listener);
 	}
-	
+
 	/* (non-Javadoc)
 	 * Initializes the editor part with a site and input.
 	 */

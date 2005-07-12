@@ -239,6 +239,8 @@ public class Messages extends NLS {
 	public static String serverEditorOverviewRuntime;
 	public static String serverEditorOverviewRuntimeEdit;
 	public static String serverEditorOverviewServerConfigurationPath;
+	public static String serverEditorOverviewServerConfigurationEdit;
+	public static String serverEditorOverviewServerConfigurationEditMessage;
 	public static String serverEditorOverviewPublishing;
 	public static String serverEditorOverviewAutoPublishDefault;
 	public static String serverEditorOverviewAutoPublishOverride;
