@@ -870,7 +870,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 		temp = confDir.append("temp").toFile();
 		if (!temp.exists())
 			temp.mkdirs();
-		temp = confDir.append("webapps").toFile();
+		temp = confDir.append("webapps/ROOT/WEB-INF").toFile();
 		if (!temp.exists())
 			temp.mkdirs();
 		temp = confDir.append("work").toFile();
