@@ -41,7 +41,7 @@ public class ContextPublishTaskDelegate extends PublishTaskDelegate {
 			WebModule webModule2 = configuration.getWebModule(m);
 			if (webModule != null && webModule2 != null) {
 				String contextRoot = webModule.getContextRoot();
-				if (contextRoot != null && !contextRoot.startsWith("/"))
+				if (contextRoot != null && !contextRoot.startsWith("/") && contextRoot.length() > 0)
 					contextRoot = "/" + contextRoot;
 				if (!contextRoot.equals(webModule2.getPath())) {
 					int index = configuration.getWebModules().indexOf(webModule2);

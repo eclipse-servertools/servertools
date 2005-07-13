@@ -57,7 +57,7 @@ public class FixModuleContextRootTask extends PublishOperation {
 		if (configuration.getWebModules().size() <= index)
 			return;
 		module = (WebModule) configuration.getWebModules().get(index);
-		if (contextRoot != null && !contextRoot.startsWith("/"))
+		if (contextRoot != null && !contextRoot.startsWith("/") && contextRoot.length() > 0)
 			contextRoot = "/" + contextRoot;
 		configuration.modifyWebModule(index, module.getDocumentBase(), contextRoot, module.isReloadable());
 		wc.save(true, monitor);
