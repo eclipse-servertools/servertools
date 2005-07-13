@@ -816,7 +816,11 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 					Iterator iter = oldPaths.iterator();
 					while (iter.hasNext()) {
 						// Derive the context file name from the path + ".xml", minus the leading '/'
-						String fileName = ((String)iter.next()).substring(1) + ".xml";
+						String fileName = (String)iter.next();
+						if (fileName.length() > 0)
+							fileName = fileName.substring(1) + ".xml";
+						else
+							fileName = "ROOT.xml";
 						IPath contextPath = contextDir.append(fileName);
 						File contextFile = contextPath.toFile();
 						if (contextFile.exists()) {
