@@ -17,8 +17,10 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.internal.PublishServerJob;
+import org.eclipse.wst.server.core.internal.ServerType;
+import org.eclipse.wst.server.core.internal.StartServerJob;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.StartServerJob;
+import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.swt.widgets.Shell;
 /**
  * Start a server.
@@ -61,12 +63,17 @@ public class StartAction extends AbstractServerAction {
 			pm.beginTask("Starting", 10);
 			PublishServerJob publishJob = new PublishServerJob(server); 
 			publishJob.setProgressGroup(pm, 5);
-			publishJob.schedule();
 			StartServerJob startJob = new StartServerJob(server, launchMode);
 			startJob.setProgressGroup(pm, 5);
-			startJob.schedule();
+			if (((ServerType)server.getServerType()).startBeforePublish()) {
+				startJob.schedule();
+				publishJob.schedule();
+			} else {
+				publishJob.schedule();
+				startJob.schedule();                
+			}
 		} catch (Exception e) {
-			// ignore
+			Trace.trace(Trace.SEVERE, "Error starting server", e);
 		} finally {
 			pm.done();
 		}
