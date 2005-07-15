@@ -18,6 +18,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.internal.PublishServerJob;
 import org.eclipse.wst.server.core.internal.RestartServerJob;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.provisional.UIDecoratorManager;
 import org.eclipse.swt.widgets.Shell;
 /**
@@ -72,9 +73,10 @@ public class RestartAction extends AbstractServerAction {
 				launchMode = server.getMode();
 			RestartServerJob restartJob = new RestartServerJob(server, launchMode);
 			restartJob.setProgressGroup(pm, 50);
+			restartJob.setDependantJob(publishJob);
 			restartJob.schedule();
 		} catch (Exception e) {
-			// ignore
+			Trace.trace(Trace.SEVERE, "Error restarting server", e);
 		} finally {
 			pm.done();
 		}	

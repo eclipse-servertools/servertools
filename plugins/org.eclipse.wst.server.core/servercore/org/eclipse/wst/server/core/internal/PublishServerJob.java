@@ -30,10 +30,9 @@ import org.eclipse.wst.server.core.IServer;
 /**
  * Job to publish to a particular server.
  */
-public class PublishServerJob extends Job {
-	protected IServer server;
+public class PublishServerJob extends DependantJob {
 	protected int kind;
-	protected boolean check; 
+	protected boolean check;
 
 	/**
 	 * Create a new publishing job.
@@ -43,8 +42,7 @@ public class PublishServerJob extends Job {
 	 * @param check
 	 */
 	public PublishServerJob(IServer server, int kind, boolean check) {
-		super(NLS.bind(Messages.publishing, server.getName()));
-		this.server = server;
+		super(NLS.bind(Messages.publishing, server.getName()), server);
 		this.kind = kind;
 		this.check = check;
 		
@@ -134,6 +132,9 @@ public class PublishServerJob extends Job {
 	 * @see Job#shouldRun()
 	 */
 	public boolean shouldRun() {
+		if (!super.shouldRun())
+			return false;
+		
 		if (!check)
 			return true;
 		return ServerPreferences.getInstance().isAutoPublishing() && ((Server)server).shouldPublish();

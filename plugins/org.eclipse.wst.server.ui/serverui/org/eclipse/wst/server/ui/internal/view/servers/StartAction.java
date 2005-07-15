@@ -67,10 +67,12 @@ public class StartAction extends AbstractServerAction {
 			startJob.setProgressGroup(pm, 5);
 			if (((ServerType)server.getServerType()).startBeforePublish()) {
 				startJob.schedule();
+				publishJob.setDependantJob(startJob);
 				publishJob.schedule();
 			} else {
 				publishJob.schedule();
-				startJob.schedule();                
+				startJob.setDependantJob(publishJob);
+				startJob.schedule();
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error starting server", e);

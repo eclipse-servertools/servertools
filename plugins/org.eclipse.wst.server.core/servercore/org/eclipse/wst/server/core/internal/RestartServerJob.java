@@ -11,21 +11,19 @@
 package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServer.IOperationListener;
 import org.eclipse.wst.server.core.internal.ServerSchedulingRule;
 /**
- * 
+ * A job for restarting a server.
  */
-public class RestartServerJob extends Job {
-	protected IServer server;
+public class RestartServerJob extends DependantJob {
 	protected String launchMode;
 	protected boolean isRestartCompleted = false;
 	protected IStatus resultStatus;
 
 	public RestartServerJob(IServer server, String launchMode) {
-		super("Restart server");
+		super("Restart server", server);
 		this.server = server;
 		this.launchMode = launchMode;
 		setRule(new ServerSchedulingRule(server));

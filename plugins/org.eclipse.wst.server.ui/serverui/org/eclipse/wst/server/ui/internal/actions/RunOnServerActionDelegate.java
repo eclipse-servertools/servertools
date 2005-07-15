@@ -305,14 +305,17 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				else
 					return;
 			}
-			if (restart) {
-				RestartServerJob job = new RestartServerJob(server, launchMode);
-				job.schedule();
-			}
 			
 			PublishServerJob publishJob = new PublishServerJob(server);
+			if (restart) {
+				RestartServerJob restartJob = new RestartServerJob(server, launchMode);
+				restartJob.schedule();
+				publishJob.setDependantJob(restartJob);
+			}
+			
 			publishJob.schedule();
 			LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
+			clientJob.setDependantJob(publishJob);
 			clientJob.schedule();
 		} else if (state != IServer.STATE_STOPPING) {
 			PublishServerJob publishJob = new PublishServerJob(server);
@@ -322,11 +325,17 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			if (((ServerType)server.getServerType()).startBeforePublish()) {
 				if (server.getServerState() != IServer.STATE_STARTED)
 					startServerJob.schedule();
+				publishJob.setDependantJob(startServerJob);
 				publishJob.schedule();
+				clientJob.setDependantJob(publishJob);
 			} else {
 				publishJob.schedule();
-				if (server.getServerState() != IServer.STATE_STARTED)
+				clientJob.setDependantJob(publishJob);
+				if (server.getServerState() != IServer.STATE_STARTED) {
+					startServerJob.setDependantJob(publishJob);
 					startServerJob.schedule();
+					clientJob.setDependantJob(startServerJob);
+				}
 			}
 			
 			clientJob.schedule();

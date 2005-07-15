@@ -11,19 +11,16 @@
 package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.internal.ServerSchedulingRule;
 /**
- * 
+ * A job for starting the server.
  */
-public class StartServerJob extends Job {
-	protected IServer server;
+public class StartServerJob extends DependantJob {
 	protected String launchMode;
 
 	public StartServerJob(IServer server, String launchMode) {
-		super("Starting server");
-		this.server = server;
+		super("Starting server", server);
 		this.launchMode = launchMode;
 		setRule(new ServerSchedulingRule(server));
 	}

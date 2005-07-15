@@ -20,8 +20,7 @@ import org.eclipse.wst.server.core.internal.*;
 /**
  * 
  */
-public class LaunchClientJob extends Job {
-	protected IServer server;
+public class LaunchClientJob extends DependantJob {
 	protected IModule[] module;
 	protected IClient client;
 	protected ILaunchableAdapter launchableAdapter;
@@ -29,7 +28,7 @@ public class LaunchClientJob extends Job {
 	protected IModuleArtifact moduleArtifact;
 
 	public LaunchClientJob(IServer server, IModule[] module, String launchMode, IModuleArtifact moduleArtifact, ILaunchableAdapter launchableAdapter, IClient client) {
-		super("Launch client");
+		super("Launch client", server);
 		this.server = server;
 		this.module = module;
 		this.launchMode = launchMode;
@@ -37,13 +36,6 @@ public class LaunchClientJob extends Job {
 		this.launchableAdapter = launchableAdapter;
 		this.client = client;
 		setRule(new ServerSchedulingRule(server));
-	}
-
-	/**
-	 * @see Job#shouldRun()
-	 */
-	public boolean shouldRun() {
-		return server.getServerState() == IServer.STATE_STARTED;
 	}
 
 	/** (non-Javadoc)
@@ -79,12 +71,13 @@ public class LaunchClientJob extends Job {
 		Trace.trace(Trace.FINER, "LaunchClient job 3");
 		
 		// display client on UI thread
+		final Server server2 = (Server) server;
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				Trace.trace(Trace.FINEST, "Attempting to load client: " + client);
 				try {
-					Object launchable = launchableAdapter.getLaunchable(server, moduleArtifact);
-					client.launch(server, launchable, launchMode, ((Server) server).getExistingLaunch());
+					Object launchable = launchableAdapter.getLaunchable(server2, moduleArtifact);
+					client.launch(server2, launchable, launchMode, server2.getExistingLaunch());
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Server client failed", e);
 				}
