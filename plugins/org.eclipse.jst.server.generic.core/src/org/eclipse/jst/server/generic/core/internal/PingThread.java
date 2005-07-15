@@ -20,7 +20,6 @@ import org.eclipse.wst.server.core.internal.ServerType;
 /**
  * Thread used to ping server to test when it is started.
  * 
- * @since 1.0
  */
 public class PingThread {
 	// delay before pinging starts
