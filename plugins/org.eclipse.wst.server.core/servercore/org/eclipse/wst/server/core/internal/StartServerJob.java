@@ -20,12 +20,6 @@ import org.eclipse.wst.server.core.internal.ServerSchedulingRule;
 public class StartServerJob extends Job {
 	protected IServer server;
 	protected String launchMode;
-	
-	public static void startServer(IServer server, String launchMode) {
-		StartServerJob job = new StartServerJob(server, launchMode);
-		//job.setUser(true);
-		job.schedule();
-	}
 
 	public StartServerJob(IServer server, String launchMode) {
 		super("Starting server");

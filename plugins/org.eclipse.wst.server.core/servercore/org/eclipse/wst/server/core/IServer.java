@@ -275,6 +275,12 @@ public interface IServer extends IServerAttributes {
 	/**
 	 * Publish to the server using the progress monitor. The result of the
 	 * publish operation is returned as an IStatus.
+	 * <p>
+	 * This method should not be called from the UI thread. Publishing is long-
+	 * running and may trigger resource change events or builds. Although this
+	 * framework is safe, there is no guarantee that other bundles are UI-safe
+	 * and the risk of UI deadlock is high. 
+	 * </p>
 	 * 
 	 * @param kind the kind of publish being requested. Valid values are
 	 *    <ul>

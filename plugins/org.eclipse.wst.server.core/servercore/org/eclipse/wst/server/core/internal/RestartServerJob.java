@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.server.ui.internal;
+package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
@@ -23,12 +23,6 @@ public class RestartServerJob extends Job {
 	protected String launchMode;
 	protected boolean isRestartCompleted = false;
 	protected IStatus resultStatus;
-	
-	public static void restartServer(IServer server, String launchMode) {
-		RestartServerJob job = new RestartServerJob(server, launchMode);
-		job.setUser(true);
-		job.schedule();
-	}
 
 	public RestartServerJob(IServer server, String launchMode) {
 		super("Restart server");
@@ -58,6 +52,6 @@ public class RestartServerJob extends Job {
 			}
 		}
 		
-		return resultStatus == null ? new Status(IStatus.OK, ServerUIPlugin.PLUGIN_ID, 0, "", null) : resultStatus;
+		return resultStatus == null ? new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null) : resultStatus;
 	}
 }

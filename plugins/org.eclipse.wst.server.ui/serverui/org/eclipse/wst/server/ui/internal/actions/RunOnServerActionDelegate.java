@@ -29,8 +29,10 @@ import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.IClient;
 import org.eclipse.wst.server.core.internal.ILaunchableAdapter;
 import org.eclipse.wst.server.core.internal.PublishServerJob;
+import org.eclipse.wst.server.core.internal.RestartServerJob;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.ServerType;
+import org.eclipse.wst.server.core.internal.StartServerJob;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.wizard.*;
 import org.eclipse.swt.widgets.Shell;
@@ -303,8 +305,10 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				else
 					return;
 			}
-			if (restart)
-				RestartServerJob.restartServer(server, launchMode);
+			if (restart) {
+				RestartServerJob job = new RestartServerJob(server, launchMode);
+				job.schedule();
+			}
 			
 			PublishServerJob publishJob = new PublishServerJob(server);
 			publishJob.schedule();
@@ -315,12 +319,14 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			StartServerJob startServerJob = new StartServerJob(server, launchMode);
 			LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
 			
-			if (((ServerType)server.getServerType()).startBeforePublish() && (server.getServerState() != IServer.STATE_STARTED)) {
-				startServerJob.schedule();                
+			if (((ServerType)server.getServerType()).startBeforePublish()) {
+				if (server.getServerState() != IServer.STATE_STARTED)
+					startServerJob.schedule();
 				publishJob.schedule();
 			} else {
 				publishJob.schedule();
-				startServerJob.schedule();                
+				if (server.getServerState() != IServer.STATE_STARTED)
+					startServerJob.schedule();
 			}
 			
 			clientJob.schedule();
