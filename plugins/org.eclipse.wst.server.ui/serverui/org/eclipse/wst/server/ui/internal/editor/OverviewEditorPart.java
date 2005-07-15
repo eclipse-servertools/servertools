@@ -112,6 +112,13 @@ public class OverviewEditorPart extends ServerEditorPart {
 				} else if (event.getPropertyName().equals("configuration-id") && serverConfigurationName != null) {
 					String path = (String) event.getNewValue();
 					serverConfigurationName.setText(path);
+				} else if (event.getPropertyName().equals("auto-publish-time")) {
+					Integer curAutoPublishTime = (Integer)event.getNewValue();
+					autoPublishTime.setSelection(curAutoPublishTime.intValue());
+				} else if (event.getPropertyName().equals("auto-publish-default")) {
+					Boolean curAutoPublishTime = (Boolean)event.getNewValue();
+					autoPublishDefault.setSelection(curAutoPublishTime.booleanValue());
+					autoPublishOverride.setSelection(!curAutoPublishTime.booleanValue());
 				}
 				updating = false;
 			}
