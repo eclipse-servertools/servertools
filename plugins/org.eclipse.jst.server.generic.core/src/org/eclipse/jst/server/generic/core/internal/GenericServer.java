@@ -63,8 +63,6 @@ import org.eclipse.wst.server.core.ServerPort;
 public class GenericServer extends ServerDelegate implements IURLProvider {
 
     private static final String ATTR_GENERIC_SERVER_MODULES = "Generic_Server_Modules_List";
-    private ServerRuntime fServerDefinition;
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -242,16 +240,14 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	}
 
     public ServerRuntime getServerDefinition() {
-    	if (fServerDefinition == null)
-    		fServerDefinition = CorePlugin.getDefault()
-    				.getServerTypeDefinitionManager()
-    				.getServerRuntimeDefinition(getRuntimeDelegate().getServerDefinitionId(),
-    								getServerInstanceProperties());
-    	return fServerDefinition;
+    	GenericServerRuntime rt = getRuntimeDelegate();
+    	if(rt==null)
+    		return null;
+    	String defId = rt.getServerDefinitionId();
+   		return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(defId,getServerInstanceProperties());
     }
 
-    private GenericServerRuntime getRuntimeDelegate()
-    {
+    private GenericServerRuntime getRuntimeDelegate(){
        return (GenericServerRuntime)getServer().getRuntime().loadAdapter(GenericServerRuntime.class,null);
     }
 
