@@ -104,8 +104,16 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
             }
             publisher.initialize(module,getServer());
             IStatus[] status= publisher.publish(null,monitor);
-            if(status==null)
+            if(status==null){
                 setModulePublishState(module, IServer.PUBLISH_STATE_NONE);
+            }else {
+                for (int i=0; i < status.length; i++) {
+                    if (IStatus.ERROR == status[i].getSeverity()){
+                    	setModulePublishState(module, IServer.PUBLISH_STATE_UNKNOWN);
+                        throw new CoreException(status[i]);
+                    }
+                }
+            }
         }
     }
 
