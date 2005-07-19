@@ -47,6 +47,7 @@ import org.eclipse.jst.server.generic.servertype.definition.Port;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.core.IEJBModule;
 import org.eclipse.jst.server.core.IEnterpriseApplication;
+import org.eclipse.jst.server.core.IJ2EEModule;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
@@ -157,6 +158,13 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	 * @see org.eclipse.wst.server.core.model.IServerDelegate#getChildModules(org.eclipse.wst.server.core.model.IModule[])
 	 */
 	public IModule[] getChildModules(IModule[] module) {
+		String type = module[0].getModuleType().getId();
+		if (module.length==1 && "j2ee.ear".equals(type)) {
+            IEnterpriseApplication enterpriseApplication = (IEnterpriseApplication) module[0].loadAdapter(IEnterpriseApplication.class,null);
+            if (enterpriseApplication.getModules() != null) {
+            	return enterpriseApplication.getModules();
+            }
+        }
 		return new IModule[0];
 	}
 
@@ -259,45 +267,57 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
      */
     public IModule[] getRootModules(IModule module) throws CoreException {
 
-        String type = module.getModuleType().getId();
-
-        if (type.equals("j2ee.ejb")) {
+       String type = module.getModuleType().getId();
+       if (type.equals("j2ee.ejb")) {
             IEJBModule ejbModule = (IEJBModule) module.loadAdapter(IEJBModule.class,null);
             if (ejbModule != null) {
-                IStatus status = canModifyModules(new IModule[] { module },
-                        null);
+            	IStatus status = canModifyModules(new IModule[] { module }, null);
                 if (status == null || !status.isOK())
                     throw new CoreException(status);
+                IModule[] childs = doGetChildModules(module);
+                if(childs.length>0)
+                	return childs;
                 return new IModule[] { module };
             }
         }
-
         if (type.equals("j2ee.ear")) {
-
             IEnterpriseApplication enterpriseApplication = (IEnterpriseApplication) module.loadAdapter(IEnterpriseApplication.class,null);
-            if (enterpriseApplication != null) {
-                IStatus status = canModifyModules(new IModule[] { module },
-                        null);
+            if (enterpriseApplication.getModules() != null) {
+                IStatus status = canModifyModules(new IModule[] { module },null);
                 if (status == null || !status.isOK())
                     throw new CoreException(status);
                 return new IModule[] { module };
             }
-        }
-        
+        }        
         if (type.equals("j2ee.web")) {
-
             IWebModule webModule = (IWebModule) module.loadAdapter(IWebModule.class,null);
             if (webModule != null) {
-                IStatus status = canModifyModules(new IModule[] { module },
-                        null);
+                IStatus status = canModifyModules(new IModule[] { module },null);
                 if (status == null || !status.isOK())
                     throw new CoreException(status);
+                IModule[] childs = doGetChildModules(module);
+                if(childs.length>0)
+                	return childs;
                 return new IModule[] { module };
             }
         }
-
         return null;
     }
+
+
+	private IModule[] doGetChildModules(IModule module) {
+		IModule[] ears = ServerUtil.getModules("j2ee.ear");
+		ArrayList list = new ArrayList();
+		for (int i = 0; i < ears.length; i++) {
+			IEnterpriseApplication ear = (IEnterpriseApplication)ears[i].loadAdapter(IEnterpriseApplication.class,null);
+			IModule[] childs = ear.getModules();
+			for (int j = 0; j < childs.length; j++) {
+				if(childs[j].equals(module))
+					list.add(ears[i]);
+			}
+		}
+		return (IModule[])list.toArray(new IModule[list.size()]);
+	}
 
     public Map getServerInstancePropertiesImpl() {
  		return getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, new HashMap());

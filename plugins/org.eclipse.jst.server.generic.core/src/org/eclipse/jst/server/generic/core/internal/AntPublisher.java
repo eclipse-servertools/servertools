@@ -98,7 +98,9 @@ public class AntPublisher extends GenericPublisher{
 	 * @see org.eclipse.wtp.server.core.model.IPublisher#publish(org.eclipse.wtp.server.core.resources.IModuleResource[], org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public IStatus[] publish(IModuleArtifact[] resource, IProgressMonitor monitor){
-        try{
+		if(getModule().length>1)// only respond to root module calls. 
+			return null;
+		try{
         	File file = computeBuildFile();
         	runAnt(file.toString(),getPublishTargetsForModule(),getPublishProperties(),monitor);
         }catch(CoreException e){
@@ -296,7 +298,10 @@ public class AntPublisher extends GenericPublisher{
      * @see org.eclipse.jst.server.generic.internal.core.GenericPublisher#unpublish(org.eclipse.wst.server.core.IModule, org.eclipse.core.runtime.IProgressMonitor)
      */
     public IStatus[] unpublish(IProgressMonitor monitor) {
-        try {
+
+    	if(getModule().length>1)// only respond to root module calls. 
+			return null;
+    	try {
         	 File file = computeBuildFile();
             runAnt(file.toString(),getUnpublishTargetsForModule(),getPublishProperties(),monitor);
         } catch (CoreException e) {
