@@ -739,4 +739,13 @@ public abstract class ServerBehaviourDelegate {
 		
 		return multi;
 	}
+
+	/**
+	 * Called when resources change within the workspace.
+	 * This gives the server an opportunity to update the server or module
+	 * restart state.
+	 */
+	public void handleResourceChange() {
+		// do nothing
+	}
 }

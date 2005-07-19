@@ -212,6 +212,10 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 * Publishes the given module to the server.
 	 */
 	protected void publishModule(int kind, int deltaKind, IModule[] moduleTree, IProgressMonitor monitor) throws CoreException {
+		if (getServer().getServerState() != IServer.STATE_STOPPED) {
+			if (deltaKind == ServerBehaviourDelegate.ADDED || deltaKind == ServerBehaviourDelegate.REMOVED)
+				setServerRestartState(true);
+		}
 		if (getTomcatServer().isTestEnvironment())
 			return;
 
@@ -309,6 +313,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			contextRoots.add(contextRoot);
 		}
 		
+		setServerRestartState(false);
 		setServerState(IServer.STATE_STARTING);
 		setMode(launchMode);
 	
@@ -593,8 +598,39 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, list);
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, false);
 	}
-	
+
 	protected IModuleResourceDelta[] getPublishedResourceDelta(IModule[] module) {
 		return super.getPublishedResourceDelta(module);
+	}
+
+	/**
+	 * @see ServerBehaviourDelegate#handleResourceChange()
+	 */
+	public void handleResourceChange() {
+		if (getServer().getServerRestartState())
+			return;
+		
+		Iterator iterator = getAllModules().iterator();
+		while (iterator.hasNext()) {
+			IModule[] module = (IModule[]) iterator.next();
+			IModuleResourceDelta[] delta = getPublishedResourceDelta(module);
+			if (delta == null || delta.length == 0)
+				continue;
+			
+			if (containsNonResourceChange(delta)) {
+				setServerRestartState(true);
+				return;
+			}
+		}
+	}
+
+	protected boolean containsNonResourceChange(IModuleResourceDelta[] delta) {
+		int size = delta.length;
+		for (int i = 0; i < size; i++) {
+			IModuleResourceDelta d = delta[i];
+			if ("WEB-INF".equals(d.getModuleResource().getName()))
+				return true;
+		}
+		return false;
 	}
 }
