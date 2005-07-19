@@ -131,8 +131,8 @@
 </extension>
 
 <extension point="org.eclipse.debug.ui.launchShortcuts">
-   <shortcut id="org.eclipse.wst.server.core.launchShortcut"
-      label="%serverLaunchShortcut"
+   <shortcut id="org.eclipse.wst.server.launchShortcut"
+      label="%actionRunOnServer"
       class="org.eclipse.wst.server.ui.internal.ServerLaunchShortcut"
       modes="run, debug, profile"
       path="aa"
@@ -286,4 +286,51 @@
    </launchGroup>
 </extension>
 -->
+
+<!-- commands and their bindings
+NOTE:
+M1 = CTRL/COMMAND
+M2 = SHIFT
+M3 = ALT
+M4 = Platform-specific fourth key
+-->
+<extension point="org.eclipse.ui.commands">
+  <command
+    name="%actionDebugOnServer"
+    description="%actionDebugOnServer"
+    categoryId="org.eclipse.debug.ui.category.run"
+    id="org.eclipse.wst.server.launchShortcut.debug">
+  </command>
+  <command
+    name="%actionRunOnServer"
+    description="%actionRunOnServer"
+    categoryId="org.eclipse.debug.ui.category.run"
+    id="org.eclipse.wst.server.launchShortcut.run">
+  </command>
+  <command
+    name="%actionProfileOnServer"
+    description="%actionProfileOnServer"
+    categoryId="org.eclipse.debug.ui.category.run"
+    id="org.eclipse.wst.server.core.launchShortcut.profile">
+  </command>
+</extension>
+
+<extension point="org.eclipse.ui.bindings">
+  <key
+    sequence="M3+M2+D R"
+    contextId="org.eclipse.ui.globalScope"
+    commandId="org.eclipse.wst.server.launchShortcut.debug"
+    schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+  <key
+    sequence="M3+M2+X R"
+    contextId="org.eclipse.ui.globalScope"
+    commandId="org.eclipse.wst.server.launchShortcut.run"
+    schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+  <key
+    sequence="M3+M2+P R"
+    contextId="org.eclipse.ui.globalScope"
+    commandId="org.eclipse.wst.server.launchShortcut.profile"
+    schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+</extension>
+
 </plugin>
