@@ -158,9 +158,9 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	public void setAutoPublishTime(int p) {
 		setAttribute(PROP_AUTO_PUBLISH_TIME, p);
 	}
-	
-	public void setAutoPublishDefault(boolean p) {
-		setAttribute(PROP_AUTO_PUBLISH_DEFAULT, p);
+
+	public void setAutoPublishSetting(int s) {
+		setAttribute(PROP_AUTO_PUBLISH_SETTING, s);
 	}
 
 	public void setServerConfiguration(IFolder config) {

@@ -70,6 +70,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 	protected Text hostname;
 	protected Combo runtimeCombo;
 	protected Button autoPublishDefault;
+	protected Button autoPublishDisable;
 	protected Button autoPublishOverride;
 	protected Spinner autoPublishTime;
 
@@ -112,13 +113,18 @@ public class OverviewEditorPart extends ServerEditorPart {
 				} else if (event.getPropertyName().equals("configuration-id") && serverConfigurationName != null) {
 					String path = (String) event.getNewValue();
 					serverConfigurationName.setText(path);
-				} else if (event.getPropertyName().equals("auto-publish-time")) {
+				} else if (event.getPropertyName().equals(Server.PROP_AUTO_PUBLISH_TIME)) {
 					Integer curAutoPublishTime = (Integer)event.getNewValue();
 					autoPublishTime.setSelection(curAutoPublishTime.intValue());
-				} else if (event.getPropertyName().equals("auto-publish-default")) {
-					Boolean curAutoPublishTime = (Boolean)event.getNewValue();
-					autoPublishDefault.setSelection(curAutoPublishTime.booleanValue());
-					autoPublishOverride.setSelection(!curAutoPublishTime.booleanValue());
+					validate();
+				} else if (event.getPropertyName().equals(Server.PROP_AUTO_PUBLISH_SETTING)) {
+					Integer autoPublishSetting = (Integer)event.getNewValue();
+					int setting = autoPublishSetting.intValue();
+					autoPublishDefault.setSelection(setting == Server.AUTO_PUBLISH_DEFAULT);
+					autoPublishOverride.setSelection(setting == Server.AUTO_PUBLISH_OVERRIDE);
+					autoPublishDisable.setSelection(setting == Server.AUTO_PUBLISH_DISABLE);
+					autoPublishTime.setEnabled(setting == Server.AUTO_PUBLISH_OVERRIDE);
+					validate();
 				}
 				updating = false;
 			}
@@ -329,36 +335,71 @@ public class OverviewEditorPart extends ServerEditorPart {
 			group.setBackground(composite.getBackground());
 			group.setText(Messages.serverEditorOverviewPublishing);
 			layout = new GridLayout();
-			layout.numColumns = 2;
+			layout.numColumns = 3;
 			layout.marginHeight = 5;
 			layout.marginWidth = 10;
 			layout.verticalSpacing = 5;
-			layout.horizontalSpacing = 15;
+			layout.horizontalSpacing = 5;
 			group.setLayout(layout);
 			GridData data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalSpan = 2;
 			group.setLayoutData(data);
 			
+			final Server svr = (Server) server;
+			int publishSetting = svr.getAutoPublishSetting();
 			autoPublishDefault = toolkit.createButton(group, Messages.serverEditorOverviewAutoPublishDefault, SWT.RADIO);
 			data = new GridData(GridData.FILL_HORIZONTAL);
-			data.horizontalSpan = 2;
+			data.horizontalSpan = 3;
 			autoPublishDefault.setLayoutData(data);
-			final Server svr = (Server) server;
-			autoPublishDefault.setSelection(svr.getAutoPublishDefault());
+			autoPublishDefault.setSelection(publishSetting == Server.AUTO_PUBLISH_DEFAULT);
 			whs.setHelp(autoPublishDefault, ContextIds.EDITOR_AUTOPUBLISH_DEFAULT);
 			
+			autoPublishDisable = toolkit.createButton(group, Messages.serverEditorOverviewAutoPublishDisable, SWT.RADIO);
+			data = new GridData(GridData.FILL_HORIZONTAL);
+			data.horizontalSpan = 3;
+			autoPublishDisable.setLayoutData(data);
+			autoPublishDisable.setSelection(publishSetting == Server.AUTO_PUBLISH_DISABLE);
+			whs.setHelp(autoPublishDisable, ContextIds.EDITOR_AUTOPUBLISH_DISABLE);
+			
 			autoPublishOverride = toolkit.createButton(group, Messages.serverEditorOverviewAutoPublishOverride, SWT.RADIO);
-			autoPublishOverride.setSelection(!svr.getAutoPublishDefault());
+			autoPublishOverride.setSelection(publishSetting == Server.AUTO_PUBLISH_OVERRIDE);
+			data = new GridData(GridData.FILL_HORIZONTAL);
+			autoPublishOverride.setLayoutData(data);
 			whs.setHelp(autoPublishOverride, ContextIds.EDITOR_AUTOPUBLISH_OVERRIDE);
 			
 			autoPublishOverride.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
-					if (updating)
+					if (updating || !autoPublishOverride.getSelection())
 						return;
 					updating = true;
-					execute(new SetServerAutoPublishDefaultCommand(getServer(), autoPublishDefault.getSelection()));
+					execute(new SetServerAutoPublishDefaultCommand(getServer(), Server.AUTO_PUBLISH_OVERRIDE));
 					updating = false;
 					autoPublishTime.setEnabled(autoPublishOverride.getSelection());
+					validate();
+				}
+			});
+			
+			autoPublishDefault.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+					if (updating || !autoPublishDefault.getSelection())
+						return;
+					updating = true;
+					execute(new SetServerAutoPublishDefaultCommand(getServer(), Server.AUTO_PUBLISH_DEFAULT));
+					updating = false;
+					autoPublishTime.setEnabled(autoPublishOverride.getSelection());
+					validate();
+				}
+			});
+			
+			autoPublishDisable.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+					if (updating || !autoPublishDisable.getSelection())
+						return;
+					updating = true;
+					execute(new SetServerAutoPublishDefaultCommand(getServer(), Server.AUTO_PUBLISH_DISABLE));
+					updating = false;
+					autoPublishTime.setEnabled(autoPublishOverride.getSelection());
+					validate();
 				}
 			});
 			
@@ -367,10 +408,14 @@ public class OverviewEditorPart extends ServerEditorPart {
 			autoPublishTime.setMinimum(0);
 			autoPublishTime.setMaximum(120);
 			autoPublishTime.setSelection(svr.getAutoPublishTime());
-			data = new GridData(GridData.FILL_HORIZONTAL);
+			data = new GridData(GridData.HORIZONTAL_ALIGN_END);
+			data.widthHint = 60;
 			autoPublishTime.setLayoutData(data);
 			autoPublishTime.setEnabled(autoPublishOverride.getSelection());
 			whs.setHelp(autoPublishTime, ContextIds.EDITOR_AUTOPUBLISH_TIME);
+			
+			Label label = toolkit.createLabel(group, Messages.prefAutoPublishSeconds);
+			label.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 			
 			autoPublishTime.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
@@ -383,6 +428,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 						// ignore
 					}
 					updating = false;
+					validate();
 				}
 			});
 			
@@ -531,9 +577,20 @@ public class OverviewEditorPart extends ServerEditorPart {
 		}
 		
 		updating = false;
+		validate();
 	}
 	
-	//protected void validate() { }
+	protected void validate() {
+		if (autoPublishTime.isEnabled() && autoPublishOverride.getSelection()) {
+			int i = autoPublishTime.getSelection();
+			if (i < 10) {
+				setErrorMessage(Messages.serverEditorOverviewAutoPublishInvalid);
+				return;
+			}
+		}
+		
+		setErrorMessage(null);
+	}
 
 	/*
 	 * @see IWorkbenchPart#setFocus()

@@ -17,18 +17,18 @@ import org.eclipse.wst.server.ui.internal.Messages;
  * Command to change the server's auto-publish setting.
  */
 public class SetServerAutoPublishDefaultCommand extends ServerCommand {
-	protected boolean time;
-	protected boolean oldTime;
+	protected int setting;
+	protected int oldSetting;
 
 	/**
 	 * SetServerAutoPublishDefaultCommand constructor.
 	 * 
 	 * @param server a server
-	 * @param time <code>true</code> to use the default time
+	 * @param setting the auto-publish setting
 	 */
-	public SetServerAutoPublishDefaultCommand(IServerWorkingCopy server, boolean time) {
+	public SetServerAutoPublishDefaultCommand(IServerWorkingCopy server, int setting) {
 		super(server, Messages.serverEditorOverviewAutoPublishCommand);
-		this.time = time;
+		this.setting = setting;
 	}
 
 	/**
@@ -36,8 +36,8 @@ public class SetServerAutoPublishDefaultCommand extends ServerCommand {
 	 */
 	public void execute() {
 		ServerWorkingCopy swc = (ServerWorkingCopy) server;
-		oldTime = swc.getAutoPublishDefault();
-		swc.setAutoPublishDefault(time);
+		oldSetting = swc.getAutoPublishSetting();
+		swc.setAutoPublishSetting(setting);
 	}
 
 	/**
@@ -45,6 +45,6 @@ public class SetServerAutoPublishDefaultCommand extends ServerCommand {
 	 */
 	public void undo() {
 		ServerWorkingCopy swc = (ServerWorkingCopy) server;
-		swc.setAutoPublishDefault(oldTime);
+		swc.setAutoPublishSetting(oldSetting);
 	}
 }

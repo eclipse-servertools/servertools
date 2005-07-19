@@ -38,7 +38,7 @@ public class Server extends Base implements IServer {
 	public static final String ATTR_SERVER_ID = "server-id";
 
 	protected static final List EMPTY_LIST = new ArrayList(0);
-	
+
 	/**
 	 * File extension (value "server") for serialized representation of
 	 * server instances.
@@ -52,14 +52,18 @@ public class Server extends Base implements IServer {
 	 * </p>
 	 */
 	public static final String FILE_EXTENSION = "server";
-	
+
+	public static final int AUTO_PUBLISH_DEFAULT = 0;
+	public static final int AUTO_PUBLISH_DISABLE = 1;
+	public static final int AUTO_PUBLISH_OVERRIDE = 2;
+
 	protected static final String PROP_HOSTNAME = "hostname";
 	protected static final String SERVER_ID = "server-id";
 	protected static final String RUNTIME_ID = "runtime-id";
 	protected static final String CONFIGURATION_ID = "configuration-id";
 	protected static final String MODULE_LIST = "modules";
-	protected static final String PROP_AUTO_PUBLISH_TIME = "auto-publish-time";
-	protected static final String PROP_AUTO_PUBLISH_DEFAULT = "auto-publish-default";
+	public static final String PROP_AUTO_PUBLISH_TIME = "auto-publish-time";
+	public static final String PROP_AUTO_PUBLISH_SETTING = "auto-publish-setting";
 
 	protected static final char[] INVALID_CHARS = new char[] {'\\', '/', ':', '*', '?', '"', '<', '>', '|', '\0', '@', '&'};
 
@@ -244,8 +248,8 @@ public class Server extends Base implements IServer {
 		return getAttribute(PROP_AUTO_PUBLISH_TIME, -1);
 	}
 	
-	public boolean getAutoPublishDefault() {
-		return getAttribute(PROP_AUTO_PUBLISH_DEFAULT, true);
+	public int getAutoPublishSetting() {
+		return getAttribute(PROP_AUTO_PUBLISH_SETTING, AUTO_PUBLISH_DEFAULT);
 	}
 
 	/**
@@ -421,6 +425,19 @@ public class Server extends Base implements IServer {
 		if (!helper.changed)
 			return;
 		
+		if (getServerState() != IServer.STATE_STOPPED && behaviourDelegate != null)
+			behaviourDelegate.handleResourceChange();
+		
+		autoPublish();
+		
+		//Trace.trace(Trace.FINEST, "< handleDeployableProjectChange()");
+	}
+
+	/**
+	 * Reset automatic publish thread if it is running and start a new
+	 * thread if automatic publishing is currently enabled.
+	 */
+	public void autoPublish() {
 		// check for auto-publish
 		if (autoPublishThread != null) {
 			autoPublishThread.stop = true;
@@ -429,7 +446,7 @@ public class Server extends Base implements IServer {
 		}
 		
 		int time = 0;
-		if (getAutoPublishDefault()) {
+		if (getAutoPublishSetting() == AUTO_PUBLISH_DEFAULT) {
 			boolean local = SocketUtil.isLocalhost(getHost());
 			if (local && ServerPreferences.getInstance().getAutoPublishLocal())
 				time = ServerPreferences.getInstance().getAutoPublishLocalTime();
@@ -439,16 +456,14 @@ public class Server extends Base implements IServer {
 			time = getAutoPublishTime();
 		}
 		
-		if (time > 5) {
+		if (time > 9) {
 			autoPublishThread = new AutoPublishThread();
 			autoPublishThread.time = time;
 			autoPublishThread.setPriority(Thread.MIN_PRIORITY + 1);
 			autoPublishThread.start();
 		}
-		
-		//Trace.trace(Trace.FINEST, "< handleDeployableProjectChange()");
 	}
-	
+
 	private ServerNotificationManager getServerNotificationManager() {
 		if (notificationManager == null) {
 			notificationManager = new ServerNotificationManager();
@@ -1702,6 +1717,8 @@ public class Server extends Base implements IServer {
 		// can never modify the following properties via the working copy
 		//serverState = wc.serverState;
 		delegate = wc.delegate;
+		
+		autoPublish();
 	}
 
 	protected void saveState(IMemento memento) {

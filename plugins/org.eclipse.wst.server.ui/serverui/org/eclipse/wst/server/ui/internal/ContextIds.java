@@ -90,6 +90,7 @@ public interface ContextIds {
 	public static final String EDITOR_RUNTIME = ServerUIPlugin.PLUGIN_ID + ".seop0008";
 	public static final String EDITOR_AUTOPUBLISH_DEFAULT = ServerUIPlugin.PLUGIN_ID + ".seop0010";
 	public static final String EDITOR_AUTOPUBLISH_OVERRIDE = ServerUIPlugin.PLUGIN_ID + ".seop0012";
+	public static final String EDITOR_AUTOPUBLISH_DISABLE = ServerUIPlugin.PLUGIN_ID + ".seop0013";
 	public static final String EDITOR_AUTOPUBLISH_TIME = ServerUIPlugin.PLUGIN_ID + ".seop0014";
 	
 	public static final String AUDIO_PREFERENCES = ServerUIPlugin.PLUGIN_ID + ".aupr0000";

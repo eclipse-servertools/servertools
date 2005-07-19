@@ -243,9 +243,11 @@ public class Messages extends NLS {
 	public static String serverEditorOverviewServerConfigurationEditMessage;
 	public static String serverEditorOverviewPublishing;
 	public static String serverEditorOverviewAutoPublishDefault;
+	public static String serverEditorOverviewAutoPublishDisable;
 	public static String serverEditorOverviewAutoPublishOverride;
 	public static String serverEditorOverviewAutoPublishDescription;
 	public static String serverEditorOverviewAutoPublishCommand;
+	public static String serverEditorOverviewAutoPublishInvalid;
 	public static String serverEditorOverviewServerHostnameDescription;
 	public static String serverEditorOverviewServerHostnameCommand;
 	public static String serverEditorOverviewServerNameDescription;
