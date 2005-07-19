@@ -23,9 +23,11 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jst.server.generic.internal.xml.Resolver;
 import org.eclipse.jst.server.generic.servertype.definition.External;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.internal.Server;
@@ -91,10 +93,16 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 			} catch (CoreException ce) {
 				// failed to start debugging, so set mode to run
 				setMode(ILaunchManager.RUN_MODE);
-				CorePlugin.getDefault().getLog().log(
-	                    new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 1,
-	                    			GenericServerCoreMessages.errorStartingExternalDebugging, ce));
+				final Status status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 1,
+							GenericServerCoreMessages.errorStartingExternalDebugging, ce); 
+				CorePlugin.getDefault().getLog().log(status);
 				Trace.trace(Trace.SEVERE, GenericServerCoreMessages.errorStartingExternalDebugging, ce);
+				// inform user via an error dialog
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						ErrorDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), null, null, status);						
+					}
+				});
 			} finally {
 				clearDebuggingConfig();
 			}
