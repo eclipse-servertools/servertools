@@ -353,7 +353,11 @@ public class Server extends Base implements IServer {
 	}
 
 	public void setMode(String m) {
+		if (m == mode)
+			return;
+
 		this.mode = m;
+		fireServerStateChangeEvent();
 	}
 
 	public void setModuleState(IModule[] module, int state) {
