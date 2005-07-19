@@ -486,6 +486,20 @@ public class ServerPlugin extends Plugin {
 				Trace.trace(Trace.SEVERE, "  Could not load clients: " + cf[i].getAttribute("id"), t);
 			}
 		}
+		
+		// sort by index to put lower numbers first in order
+		size = clients.size();
+		for (int i = 0; i < size-1; i++) {
+			for (int j = i+1; j < size; j++) {
+				Client a = (Client) clients.get(i);
+				Client b = (Client) clients.get(j);
+				if (a.getPriority() < b.getPriority()) {
+					clients.set(i, b);
+					clients.set(j, a);
+				}
+			}
+		}
+		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .clients extension point -<-");
 	}
 	

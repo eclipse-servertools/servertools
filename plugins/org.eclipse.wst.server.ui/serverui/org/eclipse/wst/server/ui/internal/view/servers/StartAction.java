@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.internal.PublishServerJob;
+import org.eclipse.wst.server.core.internal.ServerPreferences;
 import org.eclipse.wst.server.core.internal.ServerType;
 import org.eclipse.wst.server.core.internal.StartServerJob;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -54,9 +55,15 @@ public class StartAction extends AbstractServerAction {
 	public void perform(final IServer server) {
 		//if (!ServerUIUtil.promptIfDirty(shell, server))
 		//	return;				
-	
+		
 		if (!ServerUIPlugin.saveEditors())
 			return;
+		
+		if (!ServerPreferences.getInstance().isAutoPublishing()) {
+			StartServerJob startJob = new StartServerJob(server, launchMode);
+			startJob.schedule();
+			return;
+		}
 		
 		IProgressMonitor pm = Platform.getJobManager().createProgressGroup();
 		try {

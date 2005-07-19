@@ -16,6 +16,12 @@
        id="j2ee.ejb"
        name="%moduleTypeJ2EEEJBName"/>
     <moduleType
+       id="j2ee.appClient"
+       name="%moduleTypeJ2EEClientName"/>
+    <moduleType
+       id="j2ee.connector"
+       name="%moduleTypeJ2EERARName"/>
+    <moduleType
        id="j2ee.ear"
        name="%moduleTypeJ2EEEARName"/>
   </extension>
@@ -70,6 +76,16 @@
     <launchableAdapter
        id="org.eclipse.jst.server.cactus.launchableAdapter"
        class="org.eclipse.jst.server.core.internal.cactus.CactusLaunchableAdapterDelegate"/>
+  </extension>
+
+  <extension point="org.eclipse.wst.server.core.clients">
+    <client
+      id="org.eclipse.jst.server.jndi"
+      name="%launchableJndi"
+      description="%launchableJndiDescription"
+      priority="-100"
+      launchable="org.eclipse.jst.server.core.JndiLaunchable"
+      class="org.eclipse.jst.server.core.internal.J2EELaunchableClient"/>
   </extension>
 
 </plugin>

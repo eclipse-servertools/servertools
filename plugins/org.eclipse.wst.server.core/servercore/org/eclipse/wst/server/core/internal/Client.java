@@ -41,6 +41,19 @@ public class Client implements IClient {
 	}
 
 	/**
+	 * Returns the relative priority of this adapter.
+	 *
+	 * @return a priority
+	 */
+	public int getPriority() {
+		try {
+			return Integer.parseInt(element.getAttribute("priority"));
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+
+	/**
 	 * @see IClient#getDescription()
 	 */
 	public String getDescription() {

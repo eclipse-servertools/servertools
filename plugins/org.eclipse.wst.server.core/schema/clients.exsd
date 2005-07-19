@@ -90,6 +90,13 @@ Clieint instances of this type will delegate to instances of this class to launc
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="priority" type="string">
+            <annotation>
+               <documentation>
+                  an optional priority atrribute which specifies a relative ordering of artifact adapters. Adapters with a higher number are always used first. To override another adapter, simply provide a higher priority value that the other adapter. The priority is 0 if no priority is specified
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
