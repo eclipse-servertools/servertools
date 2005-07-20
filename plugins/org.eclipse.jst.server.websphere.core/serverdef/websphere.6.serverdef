@@ -5,36 +5,36 @@
 	xsi:schemaLocation="http://eclipse.org/jst/server/generic/ServerTypeDefinition ServerTypeDefinitionSchema.xsd "
 	name="IBM WebSphere 6" version="v6.0">
 	<property id="wasHome"
-		label="IBM WebSphere Installation Directory:"
+		label="%wasHome"
 		type="directory"
 		context="runtime"
 		default="/your_server_root/was-6.0" />
 
 	<property id="port"
-		label="Port:"
+		label="%port"
 		type="string"
 		context="server"
 		default="9080" />
 
 	<property id="wasProfile"
-		label="Server Profile Directory:"
+		label="%wasProfile"
 		type="directory"
 		context="server"
 		default="/your_server_root/was-6.0/profiles/default" />
 
 	<property id="wasCell"
-		label="Cell:"
+		label="%wasCell"
 		type="string"
 		context="server"
 		default="PEPENode01Cell" />
 
 	<property id="wasNode"
-		label="Node:"
+		label="%wasNode"
 		type="string"
 		context="server"
 		default="PEPENode01" />
 	<property id="wasServer"
-		label="Server:"
+		label="%wasServer"
 		type="string"
 		context="server"
 		default="server1" />
