@@ -74,6 +74,7 @@ import org.osgi.framework.Bundle;
  * <li>module.dir: includes the root of the module project file</li>
  * <li>module.name: the name of the module</li>
  * <li>server.publish.dir: the directory to put the deployment units</li>
+ * <li>project.working.dir: the working dir of the project that deployed module is in</li>
  * </ul>
  *
  * @author Gorkem Ercan
@@ -88,11 +89,13 @@ public class AntPublisher extends GenericPublisher{
 	public static final String PUBLISHER_ID="org.eclipse.jst.server.generic.antpublisher"; //$NON-NLS-1$
     
 	private static final String PROP_SERVER_PUBLISH_DIR = "server.publish.dir";//$NON-NLS-1$
+	private static final String PROP_PROJECT_WORKING_DIR= "project.working.dir";//$NON-NLS-1$
 	private static final String PROP_MODULE_DIR = "module.dir";//$NON-NLS-1$
 	private static final String PROP_MODULE_NAME = "module.name";//$NON-NLS-1$
 	private static final String MODULE_PUBLISH_TARGET_PREFIX = "target.publish."; //$NON-NLS-1$
 	private static final String MODULE_UNPUBLISH_TARGET_PREFIX = "target.unpublish.";//$NON-NLS-1$
 	private static final String DATA_NAME_BUILD_FILE="build.file";//$NON-NLS-1$
+	
 
     /* (non-Javadoc)
 	 * @see org.eclipse.wtp.server.core.model.IPublisher#publish(org.eclipse.wtp.server.core.resources.IModuleResource[], org.eclipse.core.runtime.IProgressMonitor)
@@ -246,6 +249,8 @@ public class AntPublisher extends GenericPublisher{
         	moduleName = getModule()[0].getName();
         	moduleDir = earModule.getLocation().toString();
         }
+        String pluginId = getServerRuntime().getServerTypeDefinition().getConfigurationElementNamespace();
+        props.put(PROP_PROJECT_WORKING_DIR,getModule()[0].getProject().getWorkingLocation(pluginId).toString());
 		props.put(PROP_MODULE_NAME,moduleName);
 		props.put(PROP_MODULE_DIR,moduleDir);
 		props.put(PROP_SERVER_PUBLISH_DIR,modDir);
