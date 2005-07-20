@@ -27,6 +27,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jst.server.generic.internal.xml.Resolver;
 import org.eclipse.jst.server.generic.servertype.definition.External;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerPort;
@@ -100,7 +101,7 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 				// inform user via an error dialog
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						ErrorDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), null, null, status);						
+						ErrorDialog.openError(new Shell(PlatformUI.getWorkbench().getDisplay()), null, null, status);						
 					}
 				});
 			} finally {
