@@ -12,6 +12,7 @@ package org.eclipse.jst.server.core.internal;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunch;
+import org.eclipse.jst.server.core.JndiLaunchable;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.ClientDelegate;
 /**
@@ -21,9 +22,9 @@ public class J2EELaunchableClient extends ClientDelegate {
 	/*
 	 * @see ClientDelegate#supports(ILaunchable)
 	 */
-	/*public boolean supports(IServer server, Object launchable, String launchMode) {
+	public boolean supports(IServer server, Object launchable, String launchMode) {
 		return (launchable instanceof JndiLaunchable);
-	}*/
+	}
 
 	/*
 	 * @see ClientDelegate#launch(ILaunchable)
