@@ -27,14 +27,14 @@ import junit.framework.TestCase;
 public class GenericServerClasspathRuntimeHandlerTest extends TestCase {
 
     private static final String CLASSPATH_PREFIX = "/dev/java/appservers/JOnAS-4.1.4";
-    private static final String SERVER_DEF_NAME = "JonAS 4.1.4";
+    private static final String SERVER_DEF_NAME = "JOnAS 4.x";
     private IRuntime fRuntime;
     /*
      * @see TestCase#setUp()
      */
     protected void setUp() throws Exception {
         super.setUp();
-        IRuntimeType type =ServerCore.findRuntimeType("org.eclipse.jst.server.generic.runtime.jonas414");
+        IRuntimeType type =ServerCore.findRuntimeType("org.eclipse.jst.server.generic.runtime.jonas4");
         IRuntimeWorkingCopy wc = type.createRuntime("testRuntime",null);
         GenericServerRuntime delegate = (GenericServerRuntime)wc.loadAdapter(GenericServerRuntime.class, new NullProgressMonitor());
 		HashMap props = new HashMap();

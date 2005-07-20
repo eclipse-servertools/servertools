@@ -22,7 +22,7 @@ import junit.framework.TestCase;
 
 public class ServerTypeDefinitionModelTest extends TestCase {
 
-   private static final String TESTED_SERVER_ID = "org.eclipse.jst.server.generic.runtime.jonas414";
+   private static final String TESTED_SERVER_ID = "org.eclipse.jst.server.generic.runtime.jonas4";
    private ServerRuntime subject = null;
     protected void setUp() throws Exception {
        ServerRuntime[] serverdefs = CorePlugin.getDefault().getServerTypeDefinitionManager().getServerTypeDefinitions();
