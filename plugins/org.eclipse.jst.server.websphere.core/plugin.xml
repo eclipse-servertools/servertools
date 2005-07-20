@@ -7,7 +7,7 @@
        id="org.eclipse.jst.server.generic.runtime.websphere.6"
        name="%websphere.6.runtime.name"
        description="%websphere.6.runtime.description"
-       vendor="Generic"
+       vendor="%genericCategory"
        version="6"
        class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime"
        >
