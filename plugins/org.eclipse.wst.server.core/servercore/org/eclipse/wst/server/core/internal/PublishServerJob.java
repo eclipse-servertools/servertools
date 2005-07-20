@@ -10,22 +10,14 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.internal;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceRuleFactory;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 /**
  * Job to publish to a particular server.
@@ -48,8 +40,13 @@ public class PublishServerJob extends DependantJob {
 		
 		IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
 		
+		// 102227 - lock entire workspace during publish
+		// TODO will have to revisit post 0.7 to determine if there is a better way to
+		// do this, since it would be preferrable not to lock the entire workspace, and
+		// therefore allow multiple servers to publish at once
+		
 		// find all projects that modules are in
-		List projectList = new ArrayList();
+		/*List projectList = new ArrayList();
 		Iterator iterator = ((Server)server).getAllModules().iterator();
 		while (iterator.hasNext()) {
 			IModule[] modules = (IModule[]) iterator.next();
@@ -112,7 +109,12 @@ public class PublishServerJob extends DependantJob {
 		for (int i = 0; i < size; i++)
 			rules[i] = (ISchedulingRule) list.get(i);
 		
-		rules[size] = new ServerSchedulingRule(server);
+		rules[size] = new ServerSchedulingRule(server);*/
+		
+		ISchedulingRule[] rules = new ISchedulingRule[2];
+		rules[0] = ruleFactory.createRule(ResourcesPlugin.getWorkspace().getRoot());
+		rules[1] = new ServerSchedulingRule(server);
+		
 		setRule(MultiRule.combine(rules));
 		
 		if (kind != IServer.PUBLISH_AUTO)
