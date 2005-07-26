@@ -52,17 +52,19 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 	 * that the user can stop the server from the UI.
 	 */
     protected void initialize(IProgressMonitor monitor) {
-		ServerPort[] ports = getServer().getServerPorts(null);
-		ServerPort sp;
-    	for(int i=0;i<ports.length;i++){
-    		sp = ports[i];
-    		if (SocketUtil.isPortInUse(sp.getPort(), 5)) {
-    			Trace.trace(Trace.WARNING, "Port " + sp.getPort() + " is currently in use");
-    			Status status = new Status(Status.WARNING, CorePlugin.PLUGIN_ID, Status.OK, 
-    						GenericServerCoreMessages.bind(GenericServerCoreMessages.errorPortInUse,Integer.toString(sp.getPort()),sp.getName()), null);
-    			setServerStatus(status);
-    			setServerState(IServer.STATE_UNKNOWN);
-    			return;
+    	if (getServer().getServerState() == IServer.STATE_STOPPED) {
+    		ServerPort[] ports = getServer().getServerPorts(null);
+    		ServerPort sp;
+    		for(int i=0;i<ports.length;i++){
+    			sp = ports[i];
+    			if (SocketUtil.isPortInUse(sp.getPort(), 5)) {
+    				Trace.trace(Trace.WARNING, "Port " + sp.getPort() + " is currently in use");
+    				Status status = new Status(Status.WARNING, CorePlugin.PLUGIN_ID, Status.OK, 
+    							GenericServerCoreMessages.bind(GenericServerCoreMessages.errorPortInUse,Integer.toString(sp.getPort()),sp.getName()), null);
+    				setServerStatus(status);
+    				setServerState(IServer.STATE_UNKNOWN);
+    				return;
+    			}
     		}
     	}
 	}
