@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../../com.ibm.help.doc/swg_info_common.css" />
+<title>Stopping a server</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=,top=' );
+      popup.focus();
+    }
+</script><script language="JavaScript" src="help/liveHelp.js"></script></head>
+<body id="twstpins"><a name="twstpins"><!-- --></a>
+
+<h1 class="topictitle1">Stopping a server</h1>
+<div><p>To stop a server:</p>
+<ol><li class="skipspace"><span>In the Servers view ( <b>Window &gt; Show View &gt; Other &gt; Server &gt;
+Servers</b>), select the server that you want to stop.</span></li>
+<li class="skipspace"><span>Click the  <span class="uicontrol">Stop the server</span>  <img src="../images/launch_stop.gif" alt="Picture of Stop icon" /> icon in the toolbar.</span> In the <span class="uicontrol">Status</span> column
+of the Servers view, the status of the server changes to  <i>Stopped</i>.</li>
+<li class="skipspace"><span>If for some reason the server fails to stop, you can terminate
+the process as follows:</span><ol type="a"><li><span>Switch to the Debug perspective.</span></li>
+<li><span>In the Process view, select the server process that you want
+to stop.</span></li>
+<li><span>Click the  <span class="uicontrol">Terminate</span>  <img src="../images/launch_stop.gif" alt="Picture of Terminate icon" /> icon in the toolbar.</span></li>
+</ol>
+</li>
+</ol>
+<div class="skipspace"><div class="note"><span class="notetitle">Note: </span>When terminating a server, the server process will be killed
+and the server will not go through the normal routine of stopping, for example
+calling the destroy() method on a servlet.</div>
+</div>
+</div>
+<p>
+		(C) Copyright IBM Corporation 2000, 2005. All Rights Reserved.
+</p>
+</body>
+</html>

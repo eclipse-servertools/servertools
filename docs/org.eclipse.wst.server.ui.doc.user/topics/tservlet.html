@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../../com.ibm.help.doc/swg_info_common.css" />
+<title>Debugging a servlet on a server</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=,top=' );
+      popup.focus();
+    }
+</script><script language="JavaScript" src="help/liveHelp.js"></script></head>
+<body id="tservlet"><a name="tservlet"><!-- --></a>
+
+<h1 class="topictitle1">Debugging a servlet on a server</h1>
+<div><p>The debugger enables you to detect and diagnose errors in your
+
+application. It allows you to control the execution of your program by setting
+
+breakpoints, suspending threads, stepping through the code, and examining
+
+the contents of the variables. You can debug a servlet on a server without losing the state of your application. </p><div class="skipspace">To debug a servlet on a server:</div>
+<ol><li class="skipspace"><span>In the Project Explorer view, open your servlet.</span> In
+
+a Web project, servlets are located in the JavaSource folder. The servlet opens in
+
+the Java editor.</li>
+<li class="skipspace"><span>To set one or more breakpoints in the editor, double-click in the
+
+margin beside the line of code that you want to set as a breakpoint.</span></li>
+<li class="skipspace"><span>Ensure the project is associated to run on a server.</span></li>
+<li class="skipspace"><span>Select the servlet and from the servlet's context menu in the Project
+
+Explorer view, click  <span class="uicontrol">Debug As &gt; Debug on Server</span>.</span> Open the Servers view to see that the server is launched.</li>
+<li class="skipspace"><span>When the breakpoint is hit, the Debug view opens.</span> Step
+
+through the code, inspect and display variables, and make any necessary changes
+
+to the servlet. For detailed information on debugging, refer to the online
+
+help.</li>
+<li class="skipspace"><span>When you are finished debugging, remove the breakpoint and save
+
+the servlet.</span></li>
+<li class="skipspace"><span>Click the  <span class="uicontrol">Resume</span> icon on the Debug toolbar
+
+to execute the servlet.</span></li>
+<li class="skipspace"><span>If you have hot method replace enabled, your changes are already
+
+in the running application.</span></li>
+<li class="skipspace"><span>If you have automatic class reloading enabled, which is the default
+
+setting, click the  <span class="uicontrol">Refresh</span> icon in the Web Browser
+
+to update the changes.</span> You do not lose the state of your application.</li>
+<li class="skipspace"><span>You lose the state of the application.</span> To update the
+
+changes restart the server.
+</li>
+</ol>
+<div class="skipspace">The server recognizes your changes.
+</div>
+</div>
+<p>
+		(C) Copyright IBM Corporation 2000, 2005. All Rights Reserved.
+	</p>
+</body>
+</html>

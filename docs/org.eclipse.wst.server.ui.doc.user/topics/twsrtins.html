@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../../com.ibm.help.doc/swg_info_common.css" />
+<title>Starting a server</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=,top=' );
+      popup.focus();
+    }
+</script><script language="JavaScript" src="help/liveHelp.js"></script></head>
+<body id="twsrtins"><a name="twsrtins"><!-- --></a>
+
+<h1 class="topictitle1">Starting a server</h1>
+<div><p>When you are ready to test your projects, you must start a server.
+In some situations, listed below, the server tools start a server for you
+automatically. For more information on which test server will start, refer
+to the list of related topics at the end of this topic.</p>
+<div class="p"><b>Prerequisites</b>
+<ul>
+<li><a href="twcrtins.html#twcrtins">Create a server.</a></li>
+<li>Add a project to the server.</li>
+</ul>
+</div>
+<div class="skipspace"><p>Once you have started the server you can test the projects that
+are associated with the server. You can stop and restart the server at any
+time. The status of the server is displayed in the  <span class="uicontrol">Status</span> column
+of the Servers view.</p>
+<p>To manually start a server:</p>
+</div>
+<ol><li class="skipspace"><span>Switch to the Servers view.</span></li>
+<li class="skipspace"><span>In the Servers view, right-click the server you want to start.</span></li>
+<li class="skipspace"><span>Select  <span class="uicontrol">Start</span>. </span> The following
+things happen:<ul><li>If you have selected the  <span class="uicontrol">Automatically publish before starting
+servers</span> check box on the Server preferences page (Window &gt; Preferences
+&gt; Server), the server tools check to see if your project and files on the
+server are synchronized prior to starting the server. If they are not, the
+project and the files are automatically updated on the remote server when
+it is started.</li>
+<li>A Console view opens in the workbench. It will take a minute to start
+the server. If the server fails to start, check for the reason that it failed
+in the Console.</li>
+<li>In the  <span class="uicontrol">Status</span> column of the Servers view, the
+status of the server changes to  <tt class="sysout">Started</tt>.</li>
+</ul>
+</li>
+</ol>
+<div class="skipspace"><div class="tip"><span class="tiptitle">Tip: </span>The server is automatically started when you right-click
+on a file and then select  <span class="uicontrol">Run &gt; Run on Server</span>.</div>
+</div>
+</div>
+<p>
+		(C) Copyright IBM Corporation 2000, 2005. All Rights Reserved.
+</p>
+</body>
+</html>
