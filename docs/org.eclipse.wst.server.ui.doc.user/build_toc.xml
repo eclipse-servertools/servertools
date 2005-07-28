@@ -11,10 +11,9 @@
  *******************************************************************************/ -->
 <toc label="Using the server" topic="topics/tdbgjsp.html">
    <topic label="Debugging a JSP file on a server" href="topics/tdbgjsp.html"/>
-   <topic label="Debugging applications on a server" href="topics/tdebug.html"/>
+   <!-- <topic label="Debugging applications on a server" href="topics/tdebug.html"/>-->
    <topic label="Debugging a servlet on a server" href="topics/tservlet.html"/>
    <topic label="Creating a server" href="topics/twcrtins.html"/>
-   <topic label="Creating a server project" href="topics/twcrtprj.html"/>
    <topic label="Deleting a server" href="topics/twdelins.html"/>
    <topic label="Editing a server" href="topics/twedtins.html"/>
    <topic label="Setting a default server" href="topics/twprefin.html"/>
