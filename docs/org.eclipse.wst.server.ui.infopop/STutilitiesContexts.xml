@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS type="org.eclipse.help.contexts"?>
+<!-- /*******************************************************************************
+ * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/ -->
+<contexts>
+<context id="aupr0000">
+<description>Use to set the preferences that servers will use for audio purposes.
+
+</description>
+</context>
+<context id="aupr0002">
+<description>Plays sound when an error occurs on the server, or whenever the server changes state (such as, changing from "Starting" to "Started").
+
+</description>
+</context>
+<context id="aupr0004">
+<description>Adjusts the volume of the sound played on your computer.
+
+</description>
+</context>
+<context id="aupr0006">
+<description>Lists the sounds events to which you can enable the sound. To enable sound for an event, select the check box beside the event.
+
+</description>
+</context>
+<context id="aupr0008">
+<description>To test a particular sound, select a sound and then click <b>Play</b>.
+
+</description>
+</context>
+<context id="aupr0010">
+<description>To choose a sound from a list of available sounds that are on your machine, select <b>Browse</b>.
+
+</description>
+</context>
+<context id="aupr0012">
+<description>To reset a particular sound to the workbench default one, select a sound and then click <b>Reset</b>.
+
+</description>
+</context>
+</contexts>

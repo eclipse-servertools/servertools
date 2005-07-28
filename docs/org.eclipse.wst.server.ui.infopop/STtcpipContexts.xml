@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS type="org.eclipse.help.contexts"?>
+<!-- /*******************************************************************************
+ * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/ -->
+<contexts>
+<context id="tmce0000">
+<description>This editor allows you to edit TCP/IP Monitor server configuration files.
+
+</description>
+</context>
+<context id="tmce0002">
+<description>The name of the server configuration.
+
+</description>
+</context>
+<context id="tmce0004">
+<description>A unique port number on your local machine.
+
+</description>
+</context>
+<context id="tmce0006">
+<description>The host name or IP address of the machine where the server is running.
+
+</description>
+</context>
+<context id="tmce0008">
+<description>The port number of the remote server.
+
+</description>
+</context>
+<context id="tmce0010">
+<description>Specifies whether the requests from the Web browser are: - Modified so that the HTTP header points to the remote machine - Separated if multiple HTTP requests are received in the same connection. If this check box is not enabled, all the requests are sent byte for byte.
+
+</description>
+</context>
+<context id="tmie0000">
+<description>This editor allows you to edit TCP/IP Monitor server files.
+
+</description>
+</context>
+<context id="tmie0002">
+<description>The name of the server.
+
+</description>
+</context>
+<context id="tmpr0000">
+<description>Use to set the preferences for the TCP/IP monitoring server.  The TCP/IP Monitor is a simple server that monitors all the requests and the responses between a Web browser and an application server.
+
+</description>
+</context>
+<context id="tmpr0002">
+<description>Specify whether to display the TCP/IP Monitor view when there is activity though a TCP/IP monitoring server.
+
+</description>
+</context>
+<context id="tmpr0004">
+<description>The <b>TCP/IP Monitor</b> table lists the available TCP/IP monitoring servers.  You can add, edit, remove, start or stop the available TCP/IP monitoring servers from the <b>TCP/IP Monitor</b> table.  
+The <b>Status</b> column shows if the TCP/IP monitor is started or stopped.  
+The <b>Host name</b> column shows the host name or IP address of the machine where the server is running.
+The <b>Type</b> column shows whether the request type from the Web browser are sent by HTTP or TCP/IP.
+</description>
+</context>
+<context id="tmpr0006">
+<description>This wizard allows you to add or edit TCP/IP monitoring servers.
+In the <b>Local monitoring port</b> field, specify a unique port number on your local machine.
+Use the <b>Host name</b> field under <b>Monitor</b> to specify the host name or IP address of the machine where the server is running.
+Use the <b>Port</b> field under <b>Monitor</b> to specify the port number of the remote server.
+Use the <b>Type</b> combination box under <b>Monitor</b> to specify whether the request type from the Web browser are sent by HTTP or TCP/IP.  If the HTTP option is selected the requests from the Web browser are:
+-Modified so that the HTTP header points to the remote machine
+-Separated if multiple HTTP requests are received in the same connection.
+If the TCP/IP option is selected, all the requests are sent byte for byte.
+</description>
+</context>
+<context id="tmvw0000">
+<description>The TCP/IP Monitor is a simple server that monitors all the requests and the responses between a Web browser and an application server. You can also use this view to monitor the TCP/IP activity.
+
+</description>
+</context>
+<context id="tmvw0002">
+<description>A list of requests sent to the application server.
+
+</description>
+</context>
+<context id="tmvw0004">
+<description>When a request is selected from the list of requests, the Request pane contains information about the request when it is forwarded to the application server.
+
+</description>
+</context>
+<context id="tmvw0006">
+<description>When a response is selected from the list of responses, the Response pane contains information about the response when it is received from the application server.
+
+</description>
+</context>
+<context id="tmcw0000">
+<description>The host name or IP address of the machine where the server is running.
+
+</description>
+</context>
+<context id="tmcw0002">
+<description>The port number of the remote server.
+
+</description>
+</context>
+</contexts>
