@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ServerTypePackage.java,v 1.4 2005/06/15 05:40:01 gercan Exp $
+ * $Id: ServerTypePackage.java,v 1.5 2005/07/31 06:47:35 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition;
 
@@ -10,19 +10,6 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
-import org.eclipse.jst.server.generic.servertype.definition.Classpath;
-import org.eclipse.jst.server.generic.servertype.definition.External;
-import org.eclipse.jst.server.generic.servertype.definition.JndiConnection;
-import org.eclipse.jst.server.generic.servertype.definition.JndiProperty;
-import org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration;
-import org.eclipse.jst.server.generic.servertype.definition.Module;
-import org.eclipse.jst.server.generic.servertype.definition.Port;
-import org.eclipse.jst.server.generic.servertype.definition.Project;
-import org.eclipse.jst.server.generic.servertype.definition.Property;
-import org.eclipse.jst.server.generic.servertype.definition.Publisher;
-import org.eclipse.jst.server.generic.servertype.definition.PublisherData;
-import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ServerTypeFactory;
 
 /**
