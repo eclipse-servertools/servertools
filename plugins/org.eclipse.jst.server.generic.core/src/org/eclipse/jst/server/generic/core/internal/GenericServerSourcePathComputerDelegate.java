@@ -32,17 +32,21 @@ package org.eclipse.jst.server.generic.core.internal;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.core.sourcelookup.ISourcePathComputerDelegate;
+import org.eclipse.debug.core.sourcelookup.containers.FolderSourceContainer;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerUtil;
 /**
  * SourcePathComputer for the GenericLaunchConfiguration.
  * 
@@ -56,17 +60,31 @@ public class GenericServerSourcePathComputerDelegate implements ISourcePathCompu
 	public ISourceContainer[] computeSourceContainers(ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException {
 		
 		IRuntimeClasspathEntry[] unresolvedEntries = JavaRuntime.computeUnresolvedSourceLookupPath(configuration);
-		// FIXME have only the projects of registered modules. 
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		List sourcefolderList = new ArrayList();
+		
+		IServer server =  ServerUtil.getServer(configuration);
+		IModule[] modules = server.getModules();
 		List javaProjectList = new ArrayList();
-		for(int i = 0; i<projects.length;i++)
-		{
-			if(projects[i].hasNature(JavaCore.NATURE_ID))
-			{
-				IJavaProject javaProject = (IJavaProject) projects[i].getNature(JavaCore.NATURE_ID);
-				javaProjectList.add(javaProject);
+		
+		for (int i = 0; i < modules.length; i++) {
+			IProject project = modules[i].getProject();
+			if (project != null) {
+				IFolder moduleFolder = project.getFolder(modules[i].getName());
+				if (moduleFolder.exists()) {
+					sourcefolderList.add(new FolderSourceContainer(moduleFolder, true));
+				} else {
+					try {
+						if (project.hasNature(JavaCore.NATURE_ID)) {
+							IJavaProject javaProject = (IJavaProject) project.getNature(JavaCore.NATURE_ID);
+							javaProjectList.add(javaProject);
+						}
+					} catch (Exception e) {
+						// ignore
+					}
+				}
 			}
 		}
+
 		IRuntimeClasspathEntry[] projectEntries = new IRuntimeClasspathEntry[javaProjectList.size()];
 		for (int i = 0; i < javaProjectList.size(); i++) {
 			projectEntries[i] = JavaRuntime.newProjectRuntimeClasspathEntry((IJavaProject)javaProjectList.get(i)); 
@@ -76,6 +94,16 @@ public class GenericServerSourcePathComputerDelegate implements ISourcePathCompu
 		System.arraycopy(projectEntries,0,entries,unresolvedEntries.length,projectEntries.length);
 		
 		IRuntimeClasspathEntry[] resolved = JavaRuntime.resolveSourceLookupPath(entries, configuration);
-		return JavaRuntime.getSourceContainers(resolved);
+		ISourceContainer[] javaSourceContainers = JavaRuntime.getSourceContainers(resolved);
+		
+		if (!sourcefolderList.isEmpty()) {
+			ISourceContainer[] combinedSourceContainers = new ISourceContainer[javaSourceContainers.length + sourcefolderList.size()];
+			sourcefolderList.toArray(combinedSourceContainers);
+			System.arraycopy(javaSourceContainers, 0, combinedSourceContainers, sourcefolderList.size(), javaSourceContainers.length);
+			javaSourceContainers = combinedSourceContainers;
+		}
+		
+		return javaSourceContainers;
+		
 	}
 }
