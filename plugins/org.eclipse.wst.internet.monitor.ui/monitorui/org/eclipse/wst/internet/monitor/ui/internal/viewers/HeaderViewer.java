@@ -11,6 +11,7 @@
 package org.eclipse.wst.internet.monitor.ui.internal.viewers;
 
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -168,21 +169,20 @@ public class HeaderViewer {
 			}
 		}
 		
-		if (displayHeader) {
+		if (displayHeader)
 			headerText.setText(out);
-		} else {
+		else {
 			String lineSeparator = System.getProperty("line.separator");
 			int index = out.indexOf(lineSeparator);
-			if(index > 0)
-				headerLabel.setText(Messages.headerLabel + ": " + out.substring(0, index));
+			if (index > 0)
+				headerLabel.setText(NLS.bind(Messages.headerLabel, out.substring(0, index)));
 			else 
-				headerLabel.setText(Messages.headerLabel + ":  " + out);
+				headerLabel.setText(NLS.bind(Messages.headerLabel, out));
 		}
 	}
 
 	/**
-	 * Dispose the 
-	 *
+	 * Dispose the header.
 	 */
 	public void dispose() {
 		headerComp.dispose();
