@@ -50,6 +50,7 @@ public class PublishAction extends AbstractServerAction {
 			return;
 
 		PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, false);
+		publishJob.setUser(true);
 		publishJob.schedule();
 	}
 }

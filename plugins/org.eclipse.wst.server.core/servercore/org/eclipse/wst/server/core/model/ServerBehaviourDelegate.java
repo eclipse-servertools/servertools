@@ -543,7 +543,7 @@ public abstract class ServerBehaviourDelegate {
 		int size = 2000 + 3500 * moduleList.size() + 500 * tasks.length;
 		
 		monitor = ProgressUtil.getMonitorFor(monitor);
-		monitor.beginTask(NLS.bind(Messages.publishing, toString()), size);
+		monitor.beginTask(NLS.bind(Messages.publishing, getServer().getName()), size);
 
 		// TODO - group up status until the end and use better message based on success or failure
 		MultiStatus multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.publishingStatus, null);

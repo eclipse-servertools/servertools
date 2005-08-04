@@ -15,7 +15,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IServer;
@@ -116,9 +115,6 @@ public class PublishServerJob extends DependantJob {
 		rules[1] = new ServerSchedulingRule(server);
 		
 		setRule(MultiRule.combine(rules));
-		
-		if (kind != IServer.PUBLISH_AUTO)
-			setUser(true);
 	}
 
 	/**
@@ -131,7 +127,7 @@ public class PublishServerJob extends DependantJob {
 	}
 
 	/**
-	 * @see Job#shouldRun()
+	 * @see org.eclipse.core.runtime.jobs.Job#shouldRun()
 	 */
 	public boolean shouldRun() {
 		if (!super.shouldRun())
@@ -143,7 +139,7 @@ public class PublishServerJob extends DependantJob {
 	}
 
 	/**
-	 * @see Job#run(IProgressMonitor)
+	 * @see org.eclipse.core.runtime.jobs.Job#run(IProgressMonitor)
 	 */
 	protected IStatus run(IProgressMonitor monitor) {
 		return server.publish(kind, monitor);

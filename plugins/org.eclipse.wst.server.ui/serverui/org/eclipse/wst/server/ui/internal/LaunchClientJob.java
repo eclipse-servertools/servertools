@@ -13,7 +13,6 @@ package org.eclipse.wst.server.ui.internal;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.*;
@@ -39,7 +38,7 @@ public class LaunchClientJob extends DependantJob {
 	}
 
 	/** (non-Javadoc)
-	 * @see Job#run(org.eclipse.core.runtime.IProgressMonitor)
+	 * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	protected IStatus run(IProgressMonitor monitor) {
 		Trace.trace(Trace.FINER, "LaunchClient job");
