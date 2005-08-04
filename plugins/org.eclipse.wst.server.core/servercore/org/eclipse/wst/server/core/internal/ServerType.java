@@ -232,10 +232,10 @@ public class ServerType implements IServerType {
 	 */
 	protected static String findUnusedServerProjectName() {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		String name = NLS.bind(Messages.defaultServerProjectName, "");
+		String name = NLS.bind(Messages.defaultServerProjectName, "").trim();
 		int count = 1;
 		while (root.getProject(name).exists()) {
-			name = NLS.bind(Messages.defaultServerProjectName, ++count + "");
+			name = NLS.bind(Messages.defaultServerProjectName, ++count + "").trim();
 		}
 		return name;
 	}
