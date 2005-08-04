@@ -1242,6 +1242,8 @@ public class Server extends Base implements IServer {
 		Trace.trace(Trace.FINEST, "synchronousStart 1");
 		final Object mutex = new Object();
 	
+		monitor = ProgressUtil.getMonitorFor(monitor);
+		
 		// add listener to the server
 		IServerListener listener = new IServerListener() {
 			public void serverChanged(ServerEvent event) {
@@ -1272,11 +1274,31 @@ public class Server extends Base implements IServer {
 		}
 		final Timer timer = new Timer();
 		
+		final IProgressMonitor monitor2 = monitor;
 		Thread thread = new Thread() {
 			public void run() {
 				try {
-					Thread.sleep(serverTimeout * 1000);
-					if (!timer.alreadyDone) {
+					int totalTimeout = serverTimeout * 1000;
+					boolean userCancelled = false;
+					if (totalTimeout > 0) {
+						int retryPeriod = 5000;
+						while (!userCancelled && totalTimeout > 0) {
+							Thread.sleep(totalTimeout >  retryPeriod ? retryPeriod : totalTimeout);
+							totalTimeout -= retryPeriod;
+							if (monitor2.isCanceled()) {
+								// User cancelled.
+								userCancelled = true;
+								// Set the server state to stopped since the user has cancelled the server started.
+								setServerState(IServer.STATE_STOPPED);
+								// notify waiter
+								synchronized (mutex) {
+									Trace.trace(Trace.FINEST, "synchronousStart user cancelled.");
+									mutex.notifyAll();
+								}
+							}
+						}
+					}
+					if (!userCancelled && !timer.alreadyDone) {
 						timer.timeout = true;
 						// notify waiter
 						synchronized (mutex) {
@@ -1308,7 +1330,7 @@ public class Server extends Base implements IServer {
 		// wait for it! wait for it! ...
 		synchronized (mutex) {
 			try {
-				while (!timer.timeout && !(getServerState() == IServer.STATE_STARTED || getServerState() == IServer.STATE_STOPPED))
+				while (!monitor.isCanceled() && !timer.timeout && !(getServerState() == IServer.STATE_STARTED || getServerState() == IServer.STATE_STOPPED))
 					mutex.wait();
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Error waiting for server start", e);

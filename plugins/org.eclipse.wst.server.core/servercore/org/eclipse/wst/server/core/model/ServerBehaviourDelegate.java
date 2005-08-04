@@ -567,7 +567,7 @@ public abstract class ServerBehaviourDelegate {
 		
 		// publish the server
 		try {
-			if (!monitor.isCanceled() && getServer().getServerType().hasServerConfiguration()) {
+			if (!monitor.isCanceled()) {
 				publishServer(kind, ProgressUtil.getSubMonitorFor(monitor, 1000));
 			}
 		} catch (CoreException ce) {
