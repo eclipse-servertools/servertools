@@ -186,7 +186,7 @@ public class RuntimeTargetComposite {
 		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
 		data.horizontalSpan = 2;
 		prefLink.setLayoutData(data);
-		prefLink.setText(Messages.runtimeTargetRuntimePreferences);
+		prefLink.setText("<a>" + Messages.runtimeTargetRuntimePreferences + "</a>");
 		prefLink.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				String currentRuntime2 = combo.getText();
