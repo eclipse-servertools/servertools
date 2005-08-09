@@ -13,14 +13,10 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/ -->
 
-<plugin
-   id="org.eclipse.wst.server.ui.infopop"
-   name="%plugin.name"
-   version="7.0"
-   provider-name="Eclipse.org">
+<plugin>
 	<extension point="org.eclipse.help.contexts">
-		<contexts name="STtcpipContexts.xml" plugin="org.eclipse.wst.internet.monitor.ui" />
-		<contexts name="STutilitiesContexts.xml" plugin="org.eclipse.wst.server.ui" />
-		<contexts name="STuiContexts.xml" plugin="org.eclipse.wst.server.ui" />  
+		<contexts file="STtcpipContexts.xml" plugin="org.eclipse.wst.internet.monitor.ui" />
+		<contexts file="STutilitiesContexts.xml" plugin="org.eclipse.wst.server.ui" />
+		<contexts file="STuiContexts.xml" plugin="org.eclipse.wst.server.ui" />  
 	</extension>
 </plugin>

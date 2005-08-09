@@ -11,21 +11,17 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/ -->
 <?NLS TYPE="org.eclipse.help.contexts"?>
-<plugin
-   id="org.eclipse.jst.server.ui.infopop"
-   name="%plugin.name"
-   version="7.0"
-   provider-name="Eclipse.org">
+<plugin>
 
    
    <extension
          point="org.eclipse.help.contexts">
       <contexts
-            name="STtomcatContexts.xml"
+            file="STtomcatContexts.xml"
             plugin="org.eclipse.jst.server.tomcat.ui">
       </contexts>
 	<contexts
-            name="STjavaContexts.xml"
+            file="STjavaContexts.xml"
             plugin="org.eclipse.jst.server.ui">
       </contexts>
    </extension>

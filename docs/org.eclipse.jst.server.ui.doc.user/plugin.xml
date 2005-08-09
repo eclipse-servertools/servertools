@@ -16,11 +16,7 @@
 <!-- contributions for the Server Tools component    -->
 <!-- ================================================= -->
 
-<plugin
-   id="org.eclipse.jst.server.ui.doc.user"
-   name="%Plugin.name"
-   version="0.7.0"
-   provider-name="Eclipse.org">
+<plugin>
 
 <extension point="org.eclipse.help.toc">
 	<toc file="build_toc.xml" />
