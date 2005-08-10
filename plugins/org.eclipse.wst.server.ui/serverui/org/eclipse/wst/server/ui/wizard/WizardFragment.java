@@ -71,7 +71,14 @@ public abstract class WizardFragment {
 
 	/**
 	 * Called when the wizard that this fragment belongs to has traversed
-	 * into this wizard fragment.
+	 * into this wizard fragment. It is called to give the fragment the
+	 * opportunity to initialize any values shown in the composite or
+	 * update the task model.
+	 * <p>
+	 * When finish is pressed, the current fragment is exit()ed, and then
+	 * performFinish() is called on all of the fragments in the tree.
+	 * enter() and exit() are not called on the remaining fragments.
+	 * </p>
 	 */
 	public void enter() {
 		// do nothing
@@ -79,7 +86,14 @@ public abstract class WizardFragment {
 
 	/**
 	 * Called when the wizard that this fragment belongs to has traversed
-	 * out of this wizard fragment.
+	 * out of this wizard fragment. It is called to give the fragment the
+	 * opportunity to save any values entered into the composite or
+	 * update the task model.
+	 * <p>
+	 * When finish is pressed, the current fragment is exit()ed, and then
+	 * performFinish() is called on all of the fragments in the tree.
+	 * enter() and exit() are not called on the remaining fragments. 
+	 * </p>
 	 */
 	public void exit() {
 		// do nothing
@@ -87,6 +101,8 @@ public abstract class WizardFragment {
 
 	/**
 	 * Called when the wizard that this fragment belongs to is finished.
+	 * After exit()ing the current page, all fragment's performFinish()
+	 * methods are called in order.
 	 * 
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
@@ -98,6 +114,8 @@ public abstract class WizardFragment {
 
 	/**
 	 * Called when the wizard that this fragment belongs to is canceled.
+	 * After exit()ing the current page, all fragment's performCancel()
+	 * methods are called in order.
 	 * 
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
