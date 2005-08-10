@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.InternalInitializer;
+import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.core.model.ServerDelegate;
 /**
  * 
@@ -189,7 +190,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	public boolean isDirty() {
 		return wch.isDirty();
 	}
-	
+
 	public ServerDelegate getWorkingCopyDelegate(IProgressMonitor monitor) {
 		// make sure that the regular delegate is loaded 
 		//getDelegate();
@@ -212,7 +213,14 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		}
 		return workingCopyDelegate;
 	}
-	
+
+	protected ServerBehaviourDelegate getBehaviourDelegate(IProgressMonitor monitor) {
+		if (server == null)
+			return null;
+		
+		return server.getBehaviourDelegate(monitor);
+	}
+
 	public void dispose() {
 		super.dispose();
 		if (workingCopyDelegate != null)

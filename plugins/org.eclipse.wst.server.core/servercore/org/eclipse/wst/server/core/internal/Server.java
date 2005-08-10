@@ -218,7 +218,6 @@ public class Server extends Base implements IServer {
 					long time = System.currentTimeMillis();
 					IConfigurationElement element = ((ServerType) serverType).getElement();
 					behaviourDelegate = (ServerBehaviourDelegate) element.createExecutableExtension("behaviourClass");
-					//behaviourDelegate.initialize(Server.this);
 					InternalInitializer.initializeServerBehaviourDelegate(behaviourDelegate, Server.this, monitor);
 					Trace.trace(Trace.PERFORMANCE, "Server.getBehaviourDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
 				} catch (Throwable t) {
