@@ -124,7 +124,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 			int size = servers2.length;
 			for (int i = 0; i < size; i++) {
 				IServer server2 = servers2[i];
-				if (isSupportedServer(server2.getServerType().getId())) {
+				if (server2.getServerType() != null && isSupportedServer(server2.getServerType().getId())) {
 					serverCombo.add(server2.getName());
 					servers.add(server2);
 				}
