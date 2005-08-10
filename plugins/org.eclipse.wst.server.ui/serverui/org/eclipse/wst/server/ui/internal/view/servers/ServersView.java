@@ -42,6 +42,10 @@ import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
  * View of server, their configurations and status.
  */
 public class ServersView extends ViewPart {
+	private static final String TAG_COLUMN_WIDTH = "columnWidth";
+
+	protected int[] cols;
+
 	protected Tree treeTable;
 	protected ServerTableViewer tableViewer;
 
@@ -55,7 +59,7 @@ public class ServersView extends ViewPart {
 	public ServersView() {
 		super();
 	}
-	
+
 	/**
 	 * createPartControl method comment.
 	 * 
@@ -69,38 +73,22 @@ public class ServersView extends ViewPart {
 		treeTable.setFont(parent.getFont());
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(treeTable, ContextIds.VIEW_CONTROL);
 		
-		//TableLayout tableLayout = new TableLayout();
-	
 		// add columns
-		TreeColumn column = new TreeColumn(treeTable, SWT.SINGLE);
+		final TreeColumn column = new TreeColumn(treeTable, SWT.SINGLE);
 		column.setText(Messages.viewServer);
-		column.setWidth(200);
-		//ColumnWeightData colData = new ColumnWeightData(200, 200, true);
-		//tableLayout.addColumnData(colData);
+		column.setWidth(cols[0]);
 		
-		/*column = new TreeColumn(treeTable, SWT.SINGLE);
-		column.setText(Messages.viewHost"));
-		column.setWidth(200);
-		colData = new ColumnWeightData(100, 150, true);
-		//tableLayout.addColumnData(colData);*/
-	
-		column = new TreeColumn(treeTable, SWT.SINGLE);
-		column.setText(Messages.viewStatus);
-		column.setWidth(200);
-		//colData = new ColumnWeightData(100, 150, true);
-		//tableLayout.addColumnData(colData);
-	
-		column = new TreeColumn(treeTable, SWT.SINGLE);
-		column.setText(Messages.viewSync);
-		column.setWidth(200);
-		//colData = new ColumnWeightData(100, 150, true);
-		//tableLayout.addColumnData(colData);
+		final TreeColumn column2 = new TreeColumn(treeTable, SWT.SINGLE);
+		column2.setText(Messages.viewStatus);
+		column2.setWidth(cols[1]);
 		
-		//treeTable.setLayout(tableLayout);
-	
+		final TreeColumn column3 = new TreeColumn(treeTable, SWT.SINGLE);
+		column3.setText(Messages.viewSync);
+		column3.setWidth(cols[2]);
+		
 		tableViewer = new ServerTableViewer(this, treeTable);
 		initializeActions(tableViewer);
-	
+		
 		treeTable.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				try {
@@ -161,6 +149,23 @@ public class ServersView extends ViewPart {
 		initDragAndDrop();
 	}
 
+	public void init(IViewSite site, IMemento memento) throws PartInitException {
+		super.init(site, memento);
+		cols = new int[3];
+		for (int i = 0; i < 3; i++) {
+			cols[i] = 200;
+			Integer in = memento.getInteger(TAG_COLUMN_WIDTH + i);
+			if (in != null)
+				cols[i] = in.intValue();
+		}
+	}
+
+	public void saveState(IMemento memento) {
+		TreeColumn[] tc = treeTable.getColumns();
+		for (int i = 0; i < 3; i++)
+			memento.putInteger(TAG_COLUMN_WIDTH + i, tc[i].getWidth());
+	}
+
 	protected void selectServerProcess(Object process) {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow() ;
 		if (window != null) {
@@ -179,7 +184,7 @@ public class ServersView extends ViewPart {
 			}
 		}
 	}
-	
+
 	/**
 	 * Initialize actions
 	 * 
@@ -294,7 +299,7 @@ public class ServersView extends ViewPart {
 			cm.add(actions[i]);
 		}
 	}
-	
+
 	protected void fillContextMenu(Shell shell, IMenuManager menu) {
 		// get selection but avoid no selection or multiple selection
 		IServer server = null;
