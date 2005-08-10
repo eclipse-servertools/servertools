@@ -30,9 +30,11 @@ public class ModifyModulesWizard extends TaskWizard {
 				public void performFinish(IProgressMonitor monitor) throws CoreException {
 					WizardTaskUtil.saveServer(getTaskModel(), monitor);
 					
-					IServer server = (IServer) getTaskModel().getObject(TaskModel.TASK_SERVER);				
-					PublishServerJob publishJob = new PublishServerJob(server);
-					publishJob.schedule();
+					IServer server = (IServer) getTaskModel().getObject(TaskModel.TASK_SERVER);
+					if (server.getServerState() != IServer.STATE_STOPPED) {
+						PublishServerJob publishJob = new PublishServerJob(server);
+						publishJob.schedule();
+					}
 				}
 			});
 		}
@@ -46,6 +48,7 @@ public class ModifyModulesWizard extends TaskWizard {
 	public ModifyModulesWizard(IServer server) {
 		super(Messages.wizModuleWizardTitle, new ModifyModulesWizard2());
 		
-		getTaskModel().putObject(TaskModel.TASK_SERVER, server.createWorkingCopy());
+		if (server != null)
+			getTaskModel().putObject(TaskModel.TASK_SERVER, server.createWorkingCopy());
 	}
 }
