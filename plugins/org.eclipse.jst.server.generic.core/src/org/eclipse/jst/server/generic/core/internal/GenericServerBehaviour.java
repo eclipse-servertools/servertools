@@ -374,11 +374,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     protected void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException {
     	if ("true".equals(launch.getLaunchConfiguration().getAttribute(ATTR_STOP, "false"))) 
     		return;
-    	//		IStatus status = getRuntime().validate();
-    	//		if (status != null && !status.isOK())
-    	//			throw new CoreException(status);
-    	
-    	
+
     	ServerPort[] ports = getServer().getServerPorts(null);
     	ServerPort sp = null;
     	for(int i=0;i<ports.length;i++){
@@ -441,6 +437,8 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 
     /**
      * Terminates the server.
+     * This method may be called before a process created while setting up the 
+     * launch config. 
      */
     protected void terminate() {
     	if (getServer().getServerState() == IServer.STATE_STOPPED)
@@ -451,8 +449,9 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     		Trace.trace(Trace.FINEST, "Killing the Server process");
     		if (process != null && !process.isTerminated()) {
     			process.terminate();
-    			stopImpl();
+    			
     		}
+    		stopImpl();
     	} catch (Exception e) {
     		Trace.trace(Trace.SEVERE, "Error killing the process", e);
     	}

@@ -59,58 +59,60 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 	 */
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException {
-		
-		
 
 		IServer server = ServerUtil.getServer(configuration);
-		if (server == null){
-            abort("Server does not exist", null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
-		}	
-		
-		GenericServerBehaviour genericServer = (GenericServerBehaviour)server.loadAdapter(ServerBehaviourDelegate.class,null);
-		genericServer.setupLaunch(launch, mode, monitor);
-	
-		String mainTypeName = genericServer.getStartClassName(); 
+		if (server == null) {
+			abort("Server does not exist", null,
+					IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
+		}
+		GenericServerBehaviour genericServer = (GenericServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
 
-		IVMInstall vm = verifyVMInstall(configuration);
-		
-		IVMRunner runner = vm.getVMRunner(mode);
+		try {
+			genericServer.setupLaunch(launch, mode, monitor);
+			String mainTypeName = genericServer.getStartClassName();
+			IVMInstall vm = verifyVMInstall(configuration);
+			IVMRunner runner = vm.getVMRunner(mode);
 
-		File workingDir = verifyWorkingDirectory(configuration);
-		String workingDirName = null;
-		if (workingDir != null)
-			workingDirName = workingDir.getAbsolutePath();
-		
-		// Program & VM args
-		String pgmArgs = getProgramArguments(configuration);
-		String vmArgs = getVMArguments(configuration);
+			File workingDir = verifyWorkingDirectory(configuration);
+			String workingDirName = null;
+			if (workingDir != null)
+				workingDirName = workingDir.getAbsolutePath();
 
-		ExecutionArguments execArgs = new ExecutionArguments(vmArgs, pgmArgs);
-		
-		// VM-specific attributes
-		Map vmAttributesMap = getVMSpecificAttributesMap(configuration);
-		
-		// Classpath
-		String[] classpath = getClasspath(configuration);
-		
-		// Create VM config
-		VMRunnerConfiguration runConfig = new VMRunnerConfiguration(mainTypeName, classpath);
-		runConfig.setProgramArguments(execArgs.getProgramArgumentsArray());
-		runConfig.setVMArguments(execArgs.getVMArgumentsArray());
-		runConfig.setWorkingDirectory(workingDirName);
-		runConfig.setVMSpecificAttributesMap(vmAttributesMap);
+			// Program & VM args
+			String pgmArgs = getProgramArguments(configuration);
+			String vmArgs = getVMArguments(configuration);
 
-		// Bootpath
-		String[] bootpath = getBootpath(configuration);
-		if (bootpath != null && bootpath.length > 0)
-			runConfig.setBootClassPath(bootpath);
-		
-		setDefaultSourceLocator(launch, configuration);
-		
-		// Launch the configuration
-		runner.run(runConfig, launch, monitor);
-		genericServer.setProcess(launch.getProcesses()[0]);
-		
+			ExecutionArguments execArgs = new ExecutionArguments(vmArgs,
+					pgmArgs);
+
+			// VM-specific attributes
+			Map vmAttributesMap = getVMSpecificAttributesMap(configuration);
+
+			// Classpath
+			String[] classpath = getClasspath(configuration);
+
+			// Create VM config
+			VMRunnerConfiguration runConfig = new VMRunnerConfiguration(
+					mainTypeName, classpath);
+			runConfig.setProgramArguments(execArgs.getProgramArgumentsArray());
+			runConfig.setVMArguments(execArgs.getVMArgumentsArray());
+			runConfig.setWorkingDirectory(workingDirName);
+			runConfig.setVMSpecificAttributesMap(vmAttributesMap);
+
+			// Bootpath
+			String[] bootpath = getBootpath(configuration);
+			if (bootpath != null && bootpath.length > 0)
+				runConfig.setBootClassPath(bootpath);
+
+			setDefaultSourceLocator(launch, configuration);
+			// Launch the configuration
+			runner.run(runConfig, launch, monitor);
+			genericServer.setProcess(launch.getProcesses()[0]);
+		} catch (CoreException e) {
+			Trace.trace(Trace.SEVERE,"error lauching generic server",e);
+			genericServer.terminate();
+			throw e;
+		}
 	}
 
 	/**
