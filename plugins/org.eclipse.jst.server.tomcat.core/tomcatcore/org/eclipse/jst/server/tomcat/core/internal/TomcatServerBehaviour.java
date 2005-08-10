@@ -160,7 +160,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		};
 		DebugPlugin.getDefault().addDebugEventListener(processListener);
 	}
-	
+
 	protected void setServerStarted() {
 		setServerState(IServer.STATE_STARTED);
 	}
@@ -179,6 +179,9 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	}
 
 	protected void publishServer(int kind, IProgressMonitor monitor) throws CoreException {
+		if (getServer().getRuntime() == null)
+			return;
+
 		IPath installDir = getServer().getRuntime().getLocation();
 		IPath confDir = null;
 		if (getTomcatServer().isTestEnvironment()) {

@@ -194,7 +194,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 		if (!temp.exists())
 			temp.mkdirs();
 
-		return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, "Runtime configuration directory prepared" /* TomcatPlugin.getResource("%canAddModule") */, null);		
+		return Status.OK_STATUS;		
 	}
 
 	/**

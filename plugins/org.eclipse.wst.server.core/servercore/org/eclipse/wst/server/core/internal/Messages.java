@@ -36,6 +36,7 @@ public class Messages extends NLS {
 	public static String errorWorkingCopyTimestamp;
 	
 	public static String errorPublishStarting;
+	public static String errorPublishNoRuntime;
 	public static String errorPublishNoConfiguration;
 	public static String errorNoConfiguration;
 	public static String canPublishOk;
