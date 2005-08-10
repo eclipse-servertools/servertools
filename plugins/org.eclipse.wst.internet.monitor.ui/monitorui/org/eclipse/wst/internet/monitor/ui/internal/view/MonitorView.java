@@ -55,7 +55,7 @@ public class MonitorView extends ViewPart {
 	protected List requestViewers;
 	protected List responseViewers;
 
-	protected static SimpleDateFormat format = new SimpleDateFormat(Messages.viewDateFormat);
+	protected static SimpleDateFormat format;
 	protected static final String VIEW_ID = "org.eclipse.wst.internet.monitor.view";
 	protected static final String DEFAULT_VIEWER = "org.eclipse.wst.internet.monitor.viewers.byte";
 
@@ -72,6 +72,13 @@ public class MonitorView extends ViewPart {
 	public MonitorView() {
 		super();
 		view = this;
+		
+		// try specified format, and fall back to standard format
+		try {
+			format = new SimpleDateFormat(Messages.viewDateFormat);
+		} catch (Exception e) {
+			format = new SimpleDateFormat("h:mm.s.S a");
+		}
 	}
 
 	public void doRequestAdded(final Request rr) {
