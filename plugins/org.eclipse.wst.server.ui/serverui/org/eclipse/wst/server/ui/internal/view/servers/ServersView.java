@@ -74,15 +74,15 @@ public class ServersView extends ViewPart {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(treeTable, ContextIds.VIEW_CONTROL);
 		
 		// add columns
-		final TreeColumn column = new TreeColumn(treeTable, SWT.SINGLE);
+		TreeColumn column = new TreeColumn(treeTable, SWT.SINGLE);
 		column.setText(Messages.viewServer);
 		column.setWidth(cols[0]);
 		
-		final TreeColumn column2 = new TreeColumn(treeTable, SWT.SINGLE);
+		TreeColumn column2 = new TreeColumn(treeTable, SWT.SINGLE);
 		column2.setText(Messages.viewStatus);
 		column2.setWidth(cols[1]);
 		
-		final TreeColumn column3 = new TreeColumn(treeTable, SWT.SINGLE);
+		TreeColumn column3 = new TreeColumn(treeTable, SWT.SINGLE);
 		column3.setText(Messages.viewSync);
 		column3.setWidth(cols[2]);
 		
@@ -154,9 +154,11 @@ public class ServersView extends ViewPart {
 		cols = new int[3];
 		for (int i = 0; i < 3; i++) {
 			cols[i] = 200;
-			Integer in = memento.getInteger(TAG_COLUMN_WIDTH + i);
-			if (in != null)
-				cols[i] = in.intValue();
+			if (memento != null) {
+				Integer in = memento.getInteger(TAG_COLUMN_WIDTH + i);
+				if (in != null)
+					cols[i] = in.intValue();
+			}
 		}
 	}
 
