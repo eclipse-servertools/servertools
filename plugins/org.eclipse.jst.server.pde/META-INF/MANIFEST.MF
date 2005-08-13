@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Generic server PDE Template
+Bundle-SymbolicName: org.eclipse.jst.server.generic.pde; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: org.eclipse.jst.server.generic.pde.ServerPdePlugin
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.pde.ui,
+ org.eclipse.pde.core
+Eclipse-AutoStart: true
