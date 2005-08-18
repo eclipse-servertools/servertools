@@ -607,12 +607,9 @@ public abstract class ServerBehaviourDelegate {
 			IStatus status = new Status(IStatus.INFO, ServerPlugin.PLUGIN_ID, 0, Messages.publishingCancelled, null);
 			multi.add(status);
 		}
-
-		MultiStatus ps = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.publishingStop, null);
-		ps.add(multi);
-
+		
 		monitor.done();
-
+		
 		Trace.trace(Trace.FINEST, "--<-- Done publishing --<--");
 		
 		if (multi.getChildren().length == 1)
