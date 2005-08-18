@@ -564,9 +564,9 @@ public abstract class ServerBehaviourDelegate {
 		}
 		
 		// perform tasks
-		IStatus taskStatus = performTasks(tasks, monitor);
+		MultiStatus taskStatus = performTasks(tasks, monitor);
 		if (taskStatus != null)
-			multi.add(taskStatus);
+			multi.addAll(taskStatus);
 		
 		// publish the server
 		try {
@@ -719,15 +719,15 @@ public abstract class ServerBehaviourDelegate {
 	 *    reporting and cancellation are not desired
 	 * @return the status
 	 */
-	protected IStatus performTasks(PublishOperation[] tasks, IProgressMonitor monitor) {
+	protected MultiStatus performTasks(PublishOperation[] tasks, IProgressMonitor monitor) {
 		int size = tasks.length;
 		Trace.trace(Trace.FINEST, "Performing tasks: " + size);
 		
 		if (size == 0)
 			return null;
 		
-		Status multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.taskPerforming, null);
-
+		MultiStatus multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.taskPerforming, null);
+		
 		for (int i = 0; i < size; i++) {
 			PublishOperation task = tasks[i];
 			monitor.subTask(NLS.bind(Messages.taskPerforming, task.toString()));
@@ -735,7 +735,10 @@ public abstract class ServerBehaviourDelegate {
 				task.execute(ProgressUtil.getSubMonitorFor(monitor, 500), null);
 			} catch (CoreException ce) {
 				Trace.trace(Trace.SEVERE, "Task failed", ce);
+				multi.add(ce.getStatus());
 			}
+			
+			// return early if the monitor has been cancelled
 			if (monitor.isCanceled())
 				return multi;
 		}

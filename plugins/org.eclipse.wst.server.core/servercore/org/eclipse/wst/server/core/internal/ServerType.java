@@ -82,7 +82,7 @@ public class ServerType implements IServerType {
 		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
 		return launchManager.getLaunchConfigurationType(launchConfigId);
 	}
-	
+
 	/**
 	 * Returns true if this server can start or may already be started
 	 * in the given mode, and false if not. Uses the launchMode attribute,
@@ -93,13 +93,13 @@ public class ServerType implements IServerType {
 	 */
 	public boolean supportsLaunchMode(String launchMode) {
 		ILaunchConfigurationType configType = getLaunchConfigurationType();
-		if (configType == null) {
-			String mode = element.getAttribute("launchModes");
-			if (mode == null)
-				return false;
-			return mode.indexOf(launchMode) >= 0;
-		}
-		return configType.supportsMode(launchMode);
+		if (configType != null)
+			return configType.supportsMode(launchMode);
+		
+		String mode = element.getAttribute("launchModes");
+		if (mode == null)
+			return false;
+		return mode.indexOf(launchMode) >= 0;
 	}
 
 	/*public IServerConfigurationType getServerConfigurationType() {

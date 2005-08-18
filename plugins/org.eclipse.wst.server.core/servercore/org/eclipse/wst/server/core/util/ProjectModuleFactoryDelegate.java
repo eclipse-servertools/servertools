@@ -10,21 +10,9 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IResourceDeltaVisitor;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.internal.Trace;
@@ -57,7 +45,6 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		addListener();
 	}
 
-
 	/**
 	 * Cache any preexisting module.
 	 * TODO: When/where is this called?
@@ -65,7 +52,6 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	protected void cacheModules() {
 		cacheModules(true);
 	}
-
 
 	/**
 	 * Cache any preexisting module.
@@ -93,7 +79,6 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	protected boolean needsUpdating(IProject project) {
 		return true;
 	}
-
 
 	/**
 	 * Return the workspace root.
@@ -293,7 +278,6 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * @param project a project
 	 */
 	protected void addModules(IProject project) {
-		
 		IModule[] modules = createModules(project);
 		if (modules == null || modules.length == 0)
 			return;
@@ -308,7 +292,6 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * @param project a project
 	 */
 	protected void removeModules(IProject project) {
-		
 		try {
 			IModule[] modules = (IModule[]) projects.get(project);
 			
