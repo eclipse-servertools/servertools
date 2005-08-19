@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.ui.internal;
+package org.eclipse.wst.server.ui.internal.view.servers;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,15 +21,14 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.ui.internal.ImageResource;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.actions.NewServerWizardAction;
-import org.eclipse.wst.server.ui.internal.view.servers.*;
-import org.eclipse.wst.server.ui.internal.view.tree.ServerElementAdapter;
-import org.eclipse.wst.server.ui.internal.view.tree.ServerTreeAction;
 import org.eclipse.swt.widgets.Shell;
 /**
  * 
  */
-public class ServerTree {
+public class ServerActionHelper {
 	/**
 	 * Constants for actions
 	 */
@@ -37,7 +36,7 @@ public class ServerTree {
 	public static final byte ACTION_DELETE = 1;
 	public static final byte ACTION_BOOKMARK = 2;
 
-	private ServerTree() {
+	private ServerActionHelper() {
 		// do nothing
 	}
 	
@@ -60,122 +59,6 @@ public class ServerTree {
 
 		if (selection.isEmpty() || !(selection instanceof IStructuredSelection))
 			return;
-
-		//IStructuredSelection sel = (IStructuredSelection) selection;
-		
-		//boolean singleSelect = (sel.size() == 1);
-		//Object first = sel.getFirstElement();
-
-		// open menu
-		/*if (singleSelect && first instanceof ServerLifecycleAdapter) {
-			ServerLifecycleAdapter adapter = (ServerLifecycleAdapter) first;
-			IServerResource resource = adapter.getServerResource();
-			menu.add(new OpenAction(resource));
-			menu.add(new Separator());
-		}
-		
-		// delete menu
-		List list = new ArrayList();
-		boolean canDelete = true;
-		Iterator iterator2 = sel.iterator();
-		while (iterator2.hasNext()) {
-			Object obj = iterator2.next();
-			
-			if (obj instanceof ServerLifecycleAdapter)
-				list.add(((ServerLifecycleAdapter) obj).getServerResource());
-			else
-				canDelete = false;
-		}
-		if (canDelete) {
-			IServerResource[] res = new IServerResource[list.size()];
-			list.toArray(res);
-			menu.add(new DeleteAction(shell, res));
-		}
-
-		if (singleSelect && first instanceof IServerElementTag)
-			menu.add(new Separator());
-
-		if (singleSelect && first instanceof ServerLifecycleAdapter) {
-			ServerLifecycleAdapter adapter = (ServerLifecycleAdapter) first;
-			IServerResource resource = adapter.getServerResource();
-
-			IServer server = null;
-			if (resource instanceof IServer)
-				server = (IServer) resource;
-
-			// switch configuration menu
-			if (server != null) {
-				addServerActions(shell, menu, server);
-
-				MenuManager menuManager = new MenuManager(Messages.actionSwitchConfiguration"));
-				menuManager.add(new SwitchConfigurationAction(shell, Messages.viewNoConfiguration"), server, null));
-
-				List configs = ServerUtil.getSupportedServerConfigurations(server);
-				Iterator iterator = configs.iterator();
-				while (iterator.hasNext()) {
-					IServerConfiguration config = (IServerConfiguration) iterator.next();
-					menuManager.add(new SwitchConfigurationAction(shell, ServerUtil.getName(config), server, config));
-				}
-
-				menu.add(menuManager);
-			}
-			
-			if (server != null && server instanceof IModuleRestartable) {
-				menu.add(new Separator());
-
-				MenuManager restartProjectMenu = new MenuManager(Messages.actionRestartProject"));
-
-				IModuleRestartable restartable = (IModuleRestartable) server;
-
-				IServerConfiguration configuration = ServerUtil.getServerConfiguration(server);
-				if (configuration != null) {
-					Iterator iterator = ServerUtil.getAllContainedModules(configuration).iterator();
-					while (iterator.hasNext()) {
-						IModule module = (IModule) iterator.next();
-						Action action = new RestartModuleAction(restartable, module);
-						restartProjectMenu.add(action);
-					}
-				}
-				if (restartProjectMenu.isEmpty())
-					menu.add(new DisabledMenuManager(Messages.actionRestartProject")));
-				else
-					menu.add(restartProjectMenu);
-			}
-		}
-		if (singleSelect && first instanceof ModuleResourceAdapter) {
-			ModuleResourceAdapter adapter = (ModuleResourceAdapter) first;
-			IServerConfiguration configuration = adapter.getServerConfiguration();
-			IModule module = adapter.getModule();
-			
-			IModule[] modules = configuration.getModules();
-			boolean found = false;
-			if (modules != null && module != null) {
-				int size = modules.length;
-				for (int i = 0; i < size; i++) {
-					if (module.equals(modules[i]) && configuration.canRemoveModule(module))
-						found = true;
-				}
-			}
-	
-			if (found)
-				menu.add(new ModifyConfigurationModulesAction(shell, configuration, module, false));
-		}
-		
-		if (singleSelect && first instanceof ServerLifecycleAdapter) {
-			ServerLifecycleAdapter adapter = (ServerLifecycleAdapter) first;
-			IServerResource resource = adapter.getServerResource();
-
-			IServer server = null;
-			IServerConfiguration configuration = null;
-			if (resource instanceof IServerConfiguration)
-				configuration = (IServerConfiguration) resource;
-			else if (resource instanceof IServer) {
-				server = (IServer) resource;
-				configuration = ServerUtil.getServerConfiguration(server);
-			}
-			
-			ServerAction.addServerMenuItems(shell, menu, server, configuration);
-		}*/
 	}
 
 	protected static void addServerActions(Shell shell, IMenuManager menu, IServer server) {
@@ -273,12 +156,7 @@ public class ServerTree {
 		IStructuredSelection sel = (IStructuredSelection) selection;
 		
 		if (action == ACTION_OPEN) {
-			if (sel.size() != 1)
-				return false;
-
-			Object obj = sel.getFirstElement();
-
-			return (obj instanceof ServerElementAdapter);
+			return false;
 		} else if (action == ACTION_DELETE) {
 			if (sel.size() == 0)
 				return false;
@@ -287,7 +165,7 @@ public class ServerTree {
 			while (iterator.hasNext()) {
 				Object obj = iterator.next();
 				
-				if (!(obj instanceof ServerElementAdapter) && !(obj instanceof IServer))
+				if (!(obj instanceof IServer))
 					return false;
 			}
 			return true;
@@ -317,15 +195,6 @@ public class ServerTree {
 				Action open = new OpenAction((IServer) obj);
 				open.run();
 				return true;
-			} else if (obj instanceof ServerElementAdapter) {
-				ServerElementAdapter adapter = (ServerElementAdapter) obj;
-				Object element = adapter.getObject();
-				if (element instanceof IServer) {
-					Action open = new OpenAction((IServer) element);
-					open.run();
-					return true;
-				}
-				return false;
 			}
 			return false;
 		} else if (action == ACTION_DELETE) {
@@ -337,9 +206,7 @@ public class ServerTree {
 			while (iterator.hasNext()) {
 				Object obj = iterator.next();
 				
-				if (obj instanceof ServerElementAdapter)
-					list.add(((ServerElementAdapter) obj).getObject());
-				else if (obj instanceof IServer)
+				if (obj instanceof IServer)
 					list.add(obj);
 			}
 			
@@ -364,7 +231,7 @@ public class ServerTree {
 	 */
 	public static IAction getAction(Shell shell, ISelectionProvider provider, byte action) {
 		if (action == ACTION_DELETE) {
-			return new ServerTreeAction(shell, provider, Messages.actionDelete, ServerTree.ACTION_DELETE);
+			return new ServerAction(shell, provider, Messages.actionDelete, ServerActionHelper.ACTION_DELETE);
 		}
 		return null;
 	}

@@ -57,23 +57,31 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 	}
 
 	public boolean isPageComplete() {
+		//if (isEmptyError)
+		//	return false;
 		try {
 			if (!fragment.isComplete())
 				return false;
 		} catch (Exception e) {
 			return false;
 		}
-		if (isEmptyError)
-			return false;
-		return (getMessage() == null || getMessageType() != ERROR);
+		//return (getMessage() == null || getMessageType() != ERROR);
+		return true;
 	}
 
 	public boolean canFlipToNextPage() {
 		if (getNextPage() == null)
 			return false;
-		if (isEmptyError)
+		//if (isEmptyError)
+		//	return false;
+		try {
+			if (!fragment.isComplete())
+				return false;
+		} catch (Exception e) {
 			return false;
-		return (getMessage() == null || getMessageType() != ERROR);
+		}
+		return true;
+		//return (getMessage() == null || getMessageType() != ERROR);
 	}
 
 	public void setVisible(boolean visible) {

@@ -20,9 +20,7 @@ import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.IPublishListener;
 import org.eclipse.wst.server.core.internal.PublishAdapter;
 import org.eclipse.wst.server.core.internal.Server;
-import org.eclipse.wst.server.ui.internal.ServerTree;
 import org.eclipse.wst.server.ui.internal.Trace;
-import org.eclipse.wst.server.ui.internal.view.tree.ServerTreeAction;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
@@ -234,7 +232,7 @@ public class ServerTableViewer extends TreeViewer {
 		addListeners();
 		
 		IActionBars actionBars = view.getViewSite().getActionBars();
-		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), new ServerTreeAction(getControl().getShell(), this, "Delete it!", ServerTree.ACTION_DELETE));
+		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), new ServerAction(getControl().getShell(), this, "Delete it!", ServerActionHelper.ACTION_DELETE));
 		
 		// TODO: add default server listener
 		/*dsListener = new ISelectionListener() {

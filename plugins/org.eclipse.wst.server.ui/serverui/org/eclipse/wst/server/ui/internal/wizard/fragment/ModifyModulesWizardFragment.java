@@ -113,7 +113,7 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 			taskModel.putObject(TaskModel.TASK_MODULES, moduleList);
 		}
 	}
-	
+
 	public void performFinish(IProgressMonitor monitor) throws CoreException {
 		if (comp != null)
 			WizardTaskUtil.modifyModules(comp.getModulesToAdd(), comp.getModulesToRemove(), getTaskModel(), monitor);

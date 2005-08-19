@@ -8,26 +8,25 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.ui.internal.view.tree;
+package org.eclipse.wst.server.ui.internal.view.servers;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.wst.server.ui.internal.ServerTree;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.SelectionProviderAction;
 /**
  * 
  */
-public class ServerTreeAction extends SelectionProviderAction {
+public class ServerAction extends SelectionProviderAction {
 	protected Shell shell;
 	protected byte action;
 
-	public ServerTreeAction(Shell shell, ISelectionProvider provider, String label, byte action) {
+	public ServerAction(Shell shell, ISelectionProvider provider, String label, byte action) {
 		super(provider, label);
 		this.shell = shell;
 		this.action = action;
-		setEnabled(ServerTree.isActionEnabled(getSelection(), action));
+		setEnabled(ServerActionHelper.isActionEnabled(getSelection(), action));
 	}
 	
 	/**
@@ -41,11 +40,11 @@ public class ServerTreeAction extends SelectionProviderAction {
 	 * @param selection the new selection
 	 */
 	public void selectionChanged(ISelection selection) {
-		setEnabled(ServerTree.isActionEnabled(selection, action));
+		setEnabled(ServerActionHelper.isActionEnabled(selection, action));
 	}
 	
 	public void selectionChanged(IStructuredSelection selection) {
-		setEnabled(ServerTree.isActionEnabled(selection, action));
+		setEnabled(ServerActionHelper.isActionEnabled(selection, action));
 	}
 	
 	/**
@@ -55,6 +54,6 @@ public class ServerTreeAction extends SelectionProviderAction {
 	 * or override <code>run(Event)</code> if they do.
 	 */
 	public void run() {
-		ServerTree.performAction(shell, getSelection(), action);
+		ServerActionHelper.performAction(shell, getSelection(), action);
 	}
 }

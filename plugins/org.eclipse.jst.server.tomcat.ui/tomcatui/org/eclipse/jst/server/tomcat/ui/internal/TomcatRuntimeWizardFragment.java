@@ -24,7 +24,7 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
  */
 public class TomcatRuntimeWizardFragment extends WizardFragment {
 	protected TomcatRuntimeComposite comp;
-	
+
 	public TomcatRuntimeWizardFragment() {
 		// do nothing
 	}
@@ -32,14 +32,14 @@ public class TomcatRuntimeWizardFragment extends WizardFragment {
 	public boolean hasComposite() {
 		return true;
 	}
-	
+
 	public boolean isComplete() {
 		IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 		
 		if (runtime == null)
 			return false;
 		IStatus status = runtime.validate(null);
-		return (status != null && status.getSeverity() != IStatus.ERROR);
+		return (status == null || status.getSeverity() != IStatus.ERROR);
 	}
 
 	/* (non-Javadoc)

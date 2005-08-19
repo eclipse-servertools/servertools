@@ -611,14 +611,6 @@ public class ModifyModulesComposite extends Composite {
 		wizard.update();
 	}
 
-	/**
-	 * Return true if this page is complete.
-	 * @return boolean
-	 */
-	public boolean isPageComplete() {
-		return true;
-	}
-
 	public List getModulesToRemove() {
 		List list = new ArrayList();
 		Iterator iterator = originalModules.iterator();

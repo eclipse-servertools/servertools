@@ -325,7 +325,7 @@ public class ServersView extends ViewPart {
 		
 		// new action
 		MenuManager newMenu = new MenuManager(Messages.actionNew);
-		ServerTree.fillNewContextMenu(null, selection, newMenu);
+		ServerActionHelper.fillNewContextMenu(null, selection, newMenu);
 		menu.add(newMenu);
 		
 		// open action
@@ -376,28 +376,10 @@ public class ServersView extends ViewPart {
 			}
 			menu.add(new SwitchServerLocationAction(server));
 		}
-	
+		
 		if (server != null && module != null) {
 			menu.add(new Separator());
-	
-			/*MenuManager restartProjectMenu = new MenuManager(Messages.actionRestartProject"));
-	
-			if (server != null) {
-				IModule[] modules = getAllContainedModules(server, null);
-				if (modules != null) {
-					int size = modules.length;
-					for (int i = 0; i < size; i++) {
-						Action action = new RestartModuleAction(server, modules[i]);
-						restartProjectMenu.add(action);
-					}
-				}
-			}
-			if (restartProjectMenu.isEmpty())
-				menu.add(new DisabledMenuManager(Messages.actionRestartProject")));
-			else
-				menu.add(restartProjectMenu);*/
-			Action action = new RestartModuleAction(server, module);
-			menu.add(action);
+			menu.add(new RestartModuleAction(server, module));
 		}
 		
 		menu.add(new Separator());
