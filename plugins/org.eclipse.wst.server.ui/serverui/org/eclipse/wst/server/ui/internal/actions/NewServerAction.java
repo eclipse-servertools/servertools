@@ -18,11 +18,27 @@ import org.eclipse.wst.server.ui.internal.wizard.NewServerWizard;
  * Action to create a new server.
  */
 public class NewServerAction extends NewWizardAction {
+	protected String[] ids;
+	protected String[] values;
+
 	/**
-	 * NewServerWizardAction constructor comment.
+	 * Create a new NewServerAction.
 	 */
 	public NewServerAction() {
 		super();
+	}
+
+	/**
+	 * Create a new NewServerAction with some initial task model
+	 * properties.
+	 * 
+	 * @param ids
+	 * @param values
+	 */
+	public NewServerAction(String[] ids, String[] values) {
+		super();
+		this.ids = ids;
+		this.values = values;
 	}
 
 	/**
@@ -36,7 +52,11 @@ public class NewServerAction extends NewWizardAction {
 	 *   action
 	 */
 	public void run(IAction action) {
-		NewServerWizard wizard = new NewServerWizard();
+		NewServerWizard wizard = null;
+		if (ids == null)
+			wizard = new NewServerWizard();
+		else
+			wizard = new NewServerWizard(ids, values);
 		wizard.init(workbench, selection);
 		ClosableWizardDialog dialog = new ClosableWizardDialog(workbench.getActiveWorkbenchWindow().getShell(), wizard);
 		dialog.open();
