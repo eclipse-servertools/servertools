@@ -19,7 +19,23 @@ import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.wst.server.core.TaskModel;
 /**
- * A wizard fragment is a
+ * A wizard fragment is a node within a wizard that provides a completely
+ * extendable wizard flow by supporting a flexible tree structure for the
+ * pages. As the user walks pages through the wizard, they are actually
+ * traversing the nodes of a tree, and each node can add or remove children
+ * at any time.
+ * 
+ * Each node may be non-UI (useful for injecting behaviour into the tree)
+ * or contain a single wizard page (@see hasComposite() and
+ * createComposite(Composite, IWizardHandle)). The node may also have
+ * children (@see getChildFragments(), which should be updated or refreshed
+ * whenever the updateChildFragments() method is called by another node to
+ * let this node know that it's state may have changed.
+ * 
+ * This implementation uses a createChildFragments() method to allow the
+ * fragment to add it's children into the tree. Note that this method may
+ * be called multiple times as the tree is updated and it must return the
+ * same instance of any children that have previously been returned.
  * 
  * @plannedfor 1.0
  */
@@ -39,7 +55,7 @@ public abstract class WizardFragment {
 	}
 
 	/**
-	 * Creates the composite associated with this fragment. 
+	 * Creates the composite associated with this fragment.
 	 * This method is only called when hasComposite() returns true.
 	 * 
 	 * @param parent
@@ -140,16 +156,21 @@ public abstract class WizardFragment {
 	}
 
 	/**
-	 * Gives the fragment a chance to update it's child fragments.
+	 * Called to give the fragment a chance to update it's child fragments in
+	 * response to other changes within the wizard or task model.
 	 */
 	public void updateChildFragments() {
 		listImpl = null;
 	}
 
 	/**
-	 * Called to allow the fragment to update it's children.
+	 * This method is called by the implementation of getChildFragments() to
+	 * allow this fragment to add it's children. This method must cache and
+	 * return the same instance of any child fragment created. If new
+	 * instances are created each time the wizard is updated, the enablement
+	 * state and the flow of the wizard will be incorrect. 
 	 * 
-	 * @param list
+	 * @param list a list to add the child fragments to
 	 */	
 	protected void createChildFragments(List list) {
 		// do nothing
