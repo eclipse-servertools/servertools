@@ -120,6 +120,7 @@ public class Messages extends NLS {
 	public static String actionDebugOnServer;
 	public static String actionProfileOnServer;
 	public static String actionRunOnServer;
+	public static String actionRestartModule;
 	public static String actionUpdateStatus;
 	public static String actionMoveServerToMetadata;
 	public static String actionMoveServerToWorkspace;
@@ -155,8 +156,6 @@ public class Messages extends NLS {
 	public static String wizNewServerManual;
 	public static String wizSelectServerPreferred;
 	public static String wizNewServerExisting;
-	public static String wizImportConfigurationTitle;
-	public static String wizImportConfigurationDescription;
 	public static String wizNewServerRuntime;
 	public static String wizErrorServerCreationError;
 	public static String wizRunOnServerTitle;
@@ -165,7 +164,6 @@ public class Messages extends NLS {
 	public static String wizNewRuntimeTitle;
 	public static String wizNewRuntimeDescription;
 	public static String performingTasks;
-	public static String wizImportConfigurationWizardTitle;
 	public static String wizModuleWizardTitle;
 	public static String wizNewServerWizardTitle;
 	public static String wizSelectClientWizardTitle;
@@ -255,6 +253,7 @@ public class Messages extends NLS {
 	public static String serverEditorOverviewRuntimeDescription;
 	public static String serverEditorOverviewRuntimeCommand;
 	public static String serverEditorOverviewOpenLaunchConfiguration;
+	public static String errorMissingConfiguration;
 	public static String viewStatusStarting4;
 	public static String viewStatusStarted2;
 	public static String viewStatusStopping4;

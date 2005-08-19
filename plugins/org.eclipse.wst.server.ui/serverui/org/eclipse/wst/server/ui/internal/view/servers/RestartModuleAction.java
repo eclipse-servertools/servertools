@@ -11,10 +11,10 @@
 package org.eclipse.wst.server.ui.internal.view.servers;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.ui.ServerUICore;
-import org.eclipse.wst.server.ui.internal.ServerLabelProvider;
+import org.eclipse.wst.server.ui.internal.Messages;
 /**
  * Restart a module on a server.
  */
@@ -26,13 +26,10 @@ public class RestartModuleAction extends Action {
 		super();
 		this.server = server;
 		this.module = module;
-	
-		int size = module.length;
-		setText(module[size - 1].getName());
 		
-		ServerLabelProvider slp = (ServerLabelProvider) ServerUICore.getLabelProvider();
-		setImageDescriptor(slp.getImageDescriptor(module[size - 1]));
-	
+		int size = module.length;
+		setText(NLS.bind(Messages.actionRestartModule, module[size - 1].getName()));
+		
 		setEnabled(server.canControlModule(module, null).isOK() && server.getModuleState(module) != IServer.STATE_STOPPED);
 	}
 
