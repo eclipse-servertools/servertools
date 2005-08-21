@@ -29,6 +29,7 @@ import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -73,6 +74,9 @@ public class OverviewEditorPart extends ServerEditorPart {
 	protected Button autoPublishDisable;
 	protected Button autoPublishOverride;
 	protected Spinner autoPublishTime;
+	
+	protected Color colorDefault;
+	protected Color colorRed;
 
 	protected boolean updating;
 
@@ -93,6 +97,14 @@ public class OverviewEditorPart extends ServerEditorPart {
 	protected void addChangeListener() {
 		listener = new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
+				if (event.getPropertyName().equals("configuration-id") && serverConfigurationName != null) {
+					IFolder folder = getServer().getServerConfiguration();
+					if (folder == null || !folder.exists())
+						serverConfigurationName.setForeground(colorRed);
+					else
+						serverConfigurationName.setForeground(colorDefault);
+				}
+				validate();
 				if (updating)
 					return;
 				updating = true;
@@ -116,7 +128,6 @@ public class OverviewEditorPart extends ServerEditorPart {
 				} else if (event.getPropertyName().equals(Server.PROP_AUTO_PUBLISH_TIME)) {
 					Integer curAutoPublishTime = (Integer)event.getNewValue();
 					autoPublishTime.setSelection(curAutoPublishTime.intValue());
-					validate();
 				} else if (event.getPropertyName().equals(Server.PROP_AUTO_PUBLISH_SETTING)) {
 					Integer autoPublishSetting = (Integer)event.getNewValue();
 					int setting = autoPublishSetting.intValue();
@@ -124,7 +135,6 @@ public class OverviewEditorPart extends ServerEditorPart {
 					autoPublishOverride.setSelection(setting == Server.AUTO_PUBLISH_OVERRIDE);
 					autoPublishDisable.setSelection(setting == Server.AUTO_PUBLISH_DISABLE);
 					autoPublishTime.setEnabled(setting == Server.AUTO_PUBLISH_OVERRIDE);
-					validate();
 				}
 				updating = false;
 			}
@@ -188,7 +198,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		whs.setHelp(composite, ContextIds.EDITOR_OVERVIEW_PAGE);
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
-
+		
 		// server name
 		if (server != null) {
 			createLabel(toolkit, composite, Messages.serverEditorOverviewServerName);
@@ -289,6 +299,10 @@ public class OverviewEditorPart extends ServerEditorPart {
 				serverConfigurationName = toolkit.createText(composite, Messages.elementUnknownName);
 			else
 				serverConfigurationName = toolkit.createText(composite, "" + server.getServerConfiguration().getFullPath());
+			colorDefault = serverConfigurationName.getForeground();
+			colorRed = serverConfigurationName.getDisplay().getSystemColor(SWT.COLOR_RED); 
+			if (folder == null || !folder.exists())
+				serverConfigurationName.setForeground(colorRed);
 			//if (!server.getServerConfiguration().getFullPath().toFile().exists())
 			
 			serverConfigurationName.setEditable(false);
@@ -375,7 +389,6 @@ public class OverviewEditorPart extends ServerEditorPart {
 					execute(new SetServerAutoPublishDefaultCommand(getServer(), Server.AUTO_PUBLISH_OVERRIDE));
 					updating = false;
 					autoPublishTime.setEnabled(autoPublishOverride.getSelection());
-					validate();
 				}
 			});
 			
@@ -387,7 +400,6 @@ public class OverviewEditorPart extends ServerEditorPart {
 					execute(new SetServerAutoPublishDefaultCommand(getServer(), Server.AUTO_PUBLISH_DEFAULT));
 					updating = false;
 					autoPublishTime.setEnabled(autoPublishOverride.getSelection());
-					validate();
 				}
 			});
 			
@@ -399,7 +411,6 @@ public class OverviewEditorPart extends ServerEditorPart {
 					execute(new SetServerAutoPublishDefaultCommand(getServer(), Server.AUTO_PUBLISH_DISABLE));
 					updating = false;
 					autoPublishTime.setEnabled(autoPublishOverride.getSelection());
-					validate();
 				}
 			});
 			
@@ -428,7 +439,6 @@ public class OverviewEditorPart extends ServerEditorPart {
 						// ignore
 					}
 					updating = false;
-					validate();
 				}
 			});
 			
@@ -470,12 +480,9 @@ public class OverviewEditorPart extends ServerEditorPart {
 		
 		insertSections(rightColumnComp, "org.eclipse.wst.server.editor.overview.right");
 		
-		form.setContent(columnComp);
-		form.reflow(true);
-
 		initialize();
 	}
-	
+
 	protected void editRuntime(IRuntime runtime) {
 		IRuntimeWorkingCopy runtimeWorkingCopy = runtime.createWorkingCopy();
 		if (showWizard(runtimeWorkingCopy) != Window.CANCEL) {
@@ -486,7 +493,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			}
 		}
 	}
-	
+
 	protected int showWizard(final IRuntimeWorkingCopy runtimeWorkingCopy) {
 		String title = Messages.wizEditRuntimeWizardTitle;
 		final WizardFragment fragment2 = ServerUIPlugin.getWizardFragment(runtimeWorkingCopy.getRuntimeType().getId());
@@ -579,8 +586,16 @@ public class OverviewEditorPart extends ServerEditorPart {
 		updating = false;
 		validate();
 	}
-	
+
 	protected void validate() {
+		if (server != null && server.getServerType().hasServerConfiguration()) {
+			IFolder folder = getServer().getServerConfiguration();
+			if (folder == null || !folder.exists()) {
+				setErrorMessage(Messages.errorMissingConfiguration);
+				return;
+			}
+		}
+		
 		if (autoPublishTime.isEnabled() && autoPublishOverride.getSelection()) {
 			int i = autoPublishTime.getSelection();
 			if (i < 10) {

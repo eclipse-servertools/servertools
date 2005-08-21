@@ -48,7 +48,7 @@ public class ServerEditorCore {
 			loadEditorPageSectionFactories();
 		return editorPageSectionFactories;
 	}
-	
+
 	/**
 	 * Load the editor page factory extension point.
 	 */
@@ -72,7 +72,7 @@ public class ServerEditorCore {
 		sortOrderedList(editorPageFactories);
 		Trace.trace(Trace.CONFIG, "-<- Done loading .editorPages extension point -<-");
 	}
-	
+
 	/**
 	 * Load the editor page section factory extension point.
 	 */

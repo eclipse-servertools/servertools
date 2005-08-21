@@ -175,7 +175,7 @@ public class ServerEditor extends MultiPageEditorPart {
 			}
 		});
 	}
-	
+
 	protected void createActions() {
 		List actionList = new ArrayList();
 		
@@ -193,7 +193,7 @@ public class ServerEditor extends MultiPageEditorPart {
 		editorActions = new IAction[actionList.size()];
 		actionList.toArray(editorActions);
 	}
-	
+
 	public static IServerEditorPartFactory getPageFactory(ServerEditorPart part) {
 		try {
 			return (IServerEditorPartFactory) pageToFactory.get(part);
@@ -209,7 +209,7 @@ public class ServerEditor extends MultiPageEditorPart {
 	 * Subclasses of <code>MultiPageEditor</code> must implement this method.
 	 * </p>
 	 */
-	protected void createPages() {	
+	protected void createPages() {
 		try {
 			int index = 0;
 			serverPages = new ArrayList();
@@ -231,9 +231,9 @@ public class ServerEditor extends MultiPageEditorPart {
 						if (page != null) {
 							pageToFactory.put(page, factory);
 							index = addPage(page, editorPartInput);
-							serverPages.add(page);
-		
 							setPageText(index, factory.getName());
+							
+							serverPages.add(page);
 					
 							pageCount ++;
 						}
@@ -633,7 +633,6 @@ public class ServerEditor extends MultiPageEditorPart {
 	 */
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		commandManager = GlobalCommandManager.getInstance();
-		
 		super.init(site, input);
 
 		if (input instanceof IFileEditorInput) {
