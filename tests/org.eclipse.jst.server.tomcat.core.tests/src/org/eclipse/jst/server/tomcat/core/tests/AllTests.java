@@ -21,6 +21,8 @@ public class AllTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.jst.server.tomcat.core.tests");
 		//$JUnit-BEGIN$
+		System.setProperty("wtp.autotest.noninteractive", "true");
+		
 		suite.addTestSuite(ExistenceTest.class);
 		suite.addTest(new OrderedTestSuite(TomcatRuntimeTestCase.class));
 		suite.addTest(new OrderedTestSuite(ModuleTestCase.class));
@@ -31,6 +33,8 @@ public class AllTests {
 			RuntimeLocation.runtimeLocation = s;
 			suite.addTest(new OrderedTestSuite(Tomcat32RuntimeTestCase.class));
 			suite.addTest(new OrderedTestSuite(Tomcat32ServerTestCase.class));
+		} else {
+			System.err.println("Warning: Tomcat 3.2 not found - tests skipped");
 		}
 		
 		s = System.getProperty("org.eclipse.jst.server.tomcat.40");
@@ -38,6 +42,8 @@ public class AllTests {
 			RuntimeLocation.runtimeLocation = s;
 			suite.addTest(new OrderedTestSuite(Tomcat40RuntimeTestCase.class));
 			suite.addTest(new OrderedTestSuite(Tomcat40ServerTestCase.class));
+		} else {
+			System.err.println("Warning: Tomcat 4.0 not found - tests skipped");
 		}
 		
 		s = System.getProperty("org.eclipse.jst.server.tomcat.41");
@@ -45,6 +51,8 @@ public class AllTests {
 			RuntimeLocation.runtimeLocation = s;
 			suite.addTest(new OrderedTestSuite(Tomcat41RuntimeTestCase.class));
 			suite.addTest(new OrderedTestSuite(Tomcat41ServerTestCase.class));
+		} else {
+			System.err.println("Warning: Tomcat 4.1 not found - tests skipped");
 		}
 		
 		s = System.getProperty("org.eclipse.jst.server.tomcat.50");
@@ -53,6 +61,8 @@ public class AllTests {
 			RuntimeLocation.runtimeLocation = s;
 			suite.addTest(new OrderedTestSuite(Tomcat50RuntimeTestCase.class));
 			suite.addTest(new OrderedTestSuite(Tomcat50ServerTestCase.class));
+		} else {
+			System.err.println("Warning: Tomcat 5.0 not found - tests skipped");
 		}
 		
 		s = System.getProperty("org.eclipse.jst.server.tomcat.55");
@@ -60,6 +70,8 @@ public class AllTests {
 			RuntimeLocation.runtimeLocation = s;
 			suite.addTest(new OrderedTestSuite(Tomcat55RuntimeTestCase.class));
 			suite.addTest(new OrderedTestSuite(Tomcat55ServerTestCase.class));
+		} else {
+			System.err.println("Warning: Tomcat 5.5 not found - tests skipped");
 		}
 		
 		suite.addTestSuite(UtilTestCase.class);

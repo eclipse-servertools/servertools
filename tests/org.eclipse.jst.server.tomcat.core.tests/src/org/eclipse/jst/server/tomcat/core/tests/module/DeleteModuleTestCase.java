@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.core.tests.module;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jst.server.tomcat.core.tests.OrderedTestSuite;
 import org.eclipse.jst.server.tomcat.core.tests.TomcatRuntimeTestCase;
 
@@ -24,7 +22,6 @@ public class DeleteModuleTestCase extends TestCase {
 	}
 
 	public void test0DeleteWebModule() throws Exception {
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(ModuleTestCase.WEB_MODULE_NAME);
-		project.delete(true, null);
+		ModuleHelper.deleteModule(ModuleTestCase.WEB_MODULE_NAME);
 	}
 }

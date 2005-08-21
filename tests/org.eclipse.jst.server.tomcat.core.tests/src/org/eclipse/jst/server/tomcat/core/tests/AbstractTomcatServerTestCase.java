@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *    IBM Corporation - Initial API and implementation
  **********************************************************************/
@@ -28,40 +28,20 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 
 	protected abstract String getServerTypeId();
 
-	public IServer createServer() throws Exception {
-		try {
-			IServerWorkingCopy wc = createServer(getServerTypeId());
-			return wc.save(true, null);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
 	public void deleteServer(IServer server2) throws Exception {
 		server2.getRuntime().delete();
 		server2.delete();
 	}
 
-	protected IRuntime createRuntime() {
-		try {
-			IServerType st = ServerCore.findServerType(getServerTypeId());
-			IRuntimeWorkingCopy wc = createRuntime(st.getRuntimeType());
-			return wc.save(true, null);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+	protected IRuntime createRuntime() throws Exception {
+		IServerType st = ServerCore.findServerType(getServerTypeId());
+		IRuntimeWorkingCopy wc = st.getRuntimeType().createRuntime(null, null);
+		wc.setLocation(new Path(RuntimeLocation.runtimeLocation));
+		return wc.save(true, null);
 	}
 
-	protected IRuntimeWorkingCopy createRuntime(IRuntimeType rt) throws Exception {
-		IRuntimeWorkingCopy wc = rt.createRuntime(null, null);
-		wc.setLocation(new Path(RuntimeLocation.runtimeLocation));
-		return wc;
-	}
-	
-	protected IServerWorkingCopy createServer(String serverTypeId) throws Exception {
-		IServerType st = ServerCore.findServerType(serverTypeId);
+	public IServer createServer() throws Exception {
+		IServerType st = ServerCore.findServerType(getServerTypeId());
 		IRuntime runtime = createRuntime();
 		IServerWorkingCopy wc = st.createServer(null, null, runtime, null);
 		
@@ -82,7 +62,7 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 			}
 		}
 		
-		return wc;
+		return wc.save(true, null);
 	}
 
 	public void test0100CanAddModule() {
@@ -124,7 +104,7 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 			assertTrue(false);
 	}
 
-	public void test0104DeleteModule() throws Exception {
+	public void test0104RemoveModule() throws Exception {
 		IModule webModule = ModuleTestCase.webModule;
 		IServerWorkingCopy wc = server.createWorkingCopy();
 		wc.modifyModules(null, new IModule[] { webModule }, null);

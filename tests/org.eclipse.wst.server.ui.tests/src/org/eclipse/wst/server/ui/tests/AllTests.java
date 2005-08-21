@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.tests;
 
-import org.eclipse.wst.server.ui.tests.dialog.DialogsTestCase;
-import org.eclipse.wst.server.ui.tests.dialog.PreferencesTestCase;
-import org.eclipse.wst.server.ui.tests.dialog.ViewTestCase;
+import org.eclipse.wst.server.ui.tests.dialog.*;
 import org.eclipse.wst.server.ui.tests.editor.*;
 import org.eclipse.wst.server.ui.tests.wizard.IWizardHandleTestCase;
 import org.eclipse.wst.server.ui.tests.wizard.TaskWizardTestCase;
@@ -38,6 +36,7 @@ public class AllTests {
 		suite.addTestSuite(DialogsTestCase.class);
 		suite.addTestSuite(PreferencesTestCase.class);
 		suite.addTestSuite(ViewTestCase.class);
+		suite.addTestSuite(WizardTestCase.class);
 		
 		suite.addTest(new OrderedTestSuite(IOrderedTestCase.class));
 		suite.addTest(new OrderedTestSuite(ServerEditorActionFactoryDelegateTestCase.class));
