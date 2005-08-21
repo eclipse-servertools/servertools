@@ -17,13 +17,14 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorInput;
 
 public abstract class AbstractOpenEditorTestCase extends ServerPerformanceTestCase {
-	private final String SERVER_EDITOR_ID = "org.eclipse.wst.server.ui.editor";
+	public final String SERVER_EDITOR_ID = "org.eclipse.wst.server.ui.editor";
 
 	public void testOpenEditor() throws Exception {
 		startMeasuring();
 		IServer server = getFirstServer(getServerTypeId());
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		IEditorPart editor = page.openEditor(new ServerEditorInput(server.getId()), SERVER_EDITOR_ID, true);
+		
 		stopMeasuring();
 		commitMeasurements();
 		assertPerformance();

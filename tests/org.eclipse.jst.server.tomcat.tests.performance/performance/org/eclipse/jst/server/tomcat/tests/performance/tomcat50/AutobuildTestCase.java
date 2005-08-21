@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,19 +8,20 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.tests.performance;
+package org.eclipse.jst.server.tomcat.tests.performance.tomcat50;
+
+import org.eclipse.core.resources.ResourcesPlugin;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-public class AllTests {
+public class AutobuildTestCase extends TestCase {
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.wst.server.tests.performance");
-		//$JUnit-BEGIN$
-		suite.addTestSuite(StartupExtensionTestCase.class);
-		suite.addTestSuite(ModuleFactoriesExtensionTestCase.class);
-		suite.addTestSuite(AddRemoveModulesWizardTestCase.class);
-		//$JUnit-END$
-		return suite;
+		return new TestSuite(AutobuildTestCase.class, "AutobuildTestCase");
+	}
+
+	public void testBuild() throws Exception {
+		ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(true);
 	}
 }

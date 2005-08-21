@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatRuntimeWorkingCopy;
+import org.eclipse.jst.server.tomcat.core.tests.RuntimeLocation;
 import org.eclipse.test.performance.Dimension;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
@@ -52,10 +53,9 @@ public class GetDelegateTestCase extends AbstractGetDelegateTestCase {
 	}
 
 	protected String getRuntimeTypeLocation() {
-		String location = System.getProperty("org.eclipse.jst.server.tomcat.50");
-		assertNotNull(location);
-		assertTrue((new File(location)).exists());
-		return location;
+		assertNotNull(RuntimeLocation.runtimeLocation);
+		assertTrue((new File(RuntimeLocation.runtimeLocation)).exists());
+		return RuntimeLocation.runtimeLocation;
 	}
 
 	protected String getServerTypeId() {
