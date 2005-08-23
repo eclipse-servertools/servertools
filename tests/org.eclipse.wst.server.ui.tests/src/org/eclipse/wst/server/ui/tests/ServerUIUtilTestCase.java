@@ -17,7 +17,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 
 public class ServerUIUtilTestCase extends TestCase {
+	private static final String MAXIMUM_UI_WAIT_EXCEEDED = "maximum UI wait exceeded in testShowNewRuntimeWizard";
+
 	public void testShowNewRuntimeWizard() {
+		final int MAX_SPINS = 10000;
+		int count = 0;
 		final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		final Display display = shell.getDisplay();
 		shell.getDisplay().asyncExec(new Runnable()
@@ -27,11 +31,14 @@ public class ServerUIUtilTestCase extends TestCase {
 				ServerUIUtil.showNewRuntimeWizard(shell, null, null);
 			}
 		});
-		while (!display.readAndDispatch())
+		while (!display.readAndDispatch() && count++ < MAX_SPINS)
 		{
 			// wait until the UI thread settles (ie. the wizard opens)
 			// then close the active window, which should be the wizard
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().close();
+		}
+		if (count >= MAX_SPINS) {
+			throw new RuntimeException(MAXIMUM_UI_WAIT_EXCEEDED);
 		}
 	}
 }
