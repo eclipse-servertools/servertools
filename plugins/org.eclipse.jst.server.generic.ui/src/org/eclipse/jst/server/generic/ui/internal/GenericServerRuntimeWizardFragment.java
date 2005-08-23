@@ -36,7 +36,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
@@ -53,7 +52,7 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwareWizardFragment {
 	
 	private GenericServerCompositeDecorator[] fDecorators;
-	Composite fParent;
+	
 	
 	/**
 	 * Constructor
@@ -72,9 +71,17 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 		return (status != null && status.isOK());
 	}
 	
-	public void createContent(Composite parent, IWizardHandle handle) {
-		this.fParent = parent;
-		
+	public void createContent(Composite parent, IWizardHandle handle) {		
+		Map properties= null;
+		ServerRuntime definition=null;
+        if(getRuntimeDelegate()!=null){
+ 			properties = getRuntimeDelegate().getServerInstanceProperties();
+			definition = getServerTypeDefinition(getServerDefinitionId(),properties);
+		}
+		fDecorators= new GenericServerCompositeDecorator[2]; 
+		fDecorators[0]= new JRESelectDecorator(getRuntimeDelegate());
+		fDecorators[1]= new ServerTypeDefinitionRuntimeDecorator(definition,properties,getWizard(),getRuntimeDelegate());
+		GenericServerComposite composite = new GenericServerComposite(parent,fDecorators);
 	}
 
 	
@@ -98,26 +105,6 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	    if(getRuntimeDelegate()!=null)
 			getRuntimeDelegate().getRuntimeWorkingCopy().setName(createName());
 	    
-	    
-	    Control[] controls = fParent.getChildren();
-	    for (int i = 0; i < controls.length; i++) {
-			controls[i].dispose();
-		}
-	    // This block should really be in createContent 
-	    // moved here as a workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=98098
-		Map properties= null;
-		ServerRuntime definition=null;
-        if(getRuntimeDelegate()!=null){
- 			properties = getRuntimeDelegate().getServerInstanceProperties();
-			definition = getServerTypeDefinition(getServerDefinitionId(),properties);
-		}
-		fDecorators= new GenericServerCompositeDecorator[2]; 
-		fDecorators[0]= new JRESelectDecorator(getRuntimeDelegate());
-		fDecorators[1]= new ServerTypeDefinitionRuntimeDecorator(definition,properties,getWizard(),getRuntimeDelegate());
-		GenericServerComposite composite = new GenericServerComposite(fParent,fDecorators);
-		fParent.layout();
-	   //end 
-		
 	    for (int i = 0; i < fDecorators.length; i++) {
 			if(fDecorators[i].validate())
 				return;

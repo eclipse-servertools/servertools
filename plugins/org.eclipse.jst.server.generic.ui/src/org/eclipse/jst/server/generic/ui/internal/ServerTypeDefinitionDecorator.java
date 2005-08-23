@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jst.server.generic.servertype.definition.Property;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
@@ -85,6 +87,7 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
 			if (this.fContext.equals(property.getContext()))
 				createPropertyControl(composite, property);
 		}
+		Dialog.applyDialogFont(composite);
 	}
 
 	

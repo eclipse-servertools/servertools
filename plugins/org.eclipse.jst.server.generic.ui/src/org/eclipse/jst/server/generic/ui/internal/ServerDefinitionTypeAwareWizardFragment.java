@@ -31,9 +31,10 @@ public abstract class ServerDefinitionTypeAwareWizardFragment extends WizardFrag
 	    
 	    this.fWizard = handle;
 	    Composite container = new Composite(parent, SWT.NONE);
-		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		GridLayout grid = new GridLayout(1,false);
+		grid.marginWidth=0;
 		container.setLayout(grid);
+	    container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		handle.setImageDescriptor(GenericUiPlugin.getDefault().imageDescriptor(GenericUiPlugin.WIZBAN_IMAGE));
 		handle.setTitle(title());
 		handle.setDescription(description());

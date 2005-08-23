@@ -11,8 +11,9 @@ public class GenericServerComposite extends Composite {
 	public GenericServerComposite(Composite parent, GenericServerCompositeDecorator[] decorators) {
 		super(parent, SWT.NONE);
 		fDecorators = decorators;
+		GridLayout layout =new GridLayout(3,false); 
+		setLayout(layout);
         setLayoutData(new GridData(GridData.FILL_BOTH));
-        setLayout(new GridLayout(3,false));
 		createControl();
 	}
 
