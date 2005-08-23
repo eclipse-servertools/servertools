@@ -36,7 +36,9 @@ public class AllTests {
 		suite.addTestSuite(DialogsTestCase.class);
 		suite.addTestSuite(PreferencesTestCase.class);
 		suite.addTestSuite(ViewTestCase.class);
-		suite.addTestSuite(WizardTestCase.class);
+		// seems to hang on build machine, 
+		// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=107697
+		//suite.addTestSuite(WizardTestCase.class);
 		
 		suite.addTest(new OrderedTestSuite(IOrderedTestCase.class));
 		suite.addTest(new OrderedTestSuite(ServerEditorActionFactoryDelegateTestCase.class));
