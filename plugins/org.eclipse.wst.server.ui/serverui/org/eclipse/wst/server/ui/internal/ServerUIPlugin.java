@@ -131,20 +131,6 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the translated String found with the given key.
-	 *
-	 * @param key java.lang.String
-	 * @return java.lang.String
-	 */
-	public static String getResource2(String key) {
-		try {
-			return Platform.getResourceString(getInstance().getBundle(), key);
-		} catch (Exception e) {
-			return key;
-		}
-	}
-
-	/**
 	 * Convenience method for logging.
 	 *
 	 * @param status org.eclipse.core.runtime.IStatus

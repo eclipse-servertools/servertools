@@ -19,7 +19,6 @@ import org.eclipse.wst.server.ui.internal.wizard.page.NewRuntimeComposite;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Composite;
 /**
  * 
@@ -54,16 +53,6 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 	public Composite createComposite(Composite parent, IWizardHandle wizard) {
 		page = new NewRuntimeComposite(parent, wizard, getTaskModel(), type, version, runtimeTypeId);
 		return page;
-	}
-
-	public boolean isComplete() {
-		if (page != null) {
-			if (page.getRuntime() == null)
-				return false;
-			IStatus status = page.getRuntime().validate(null);
-			return status == null || status.getSeverity() != IStatus.ERROR;
-		}
-		return true;
 	}
 
 	protected void createChildFragments(List list) {

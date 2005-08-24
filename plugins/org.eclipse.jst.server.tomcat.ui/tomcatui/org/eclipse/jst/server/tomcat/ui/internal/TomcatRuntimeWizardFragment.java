@@ -60,7 +60,7 @@ public class TomcatRuntimeWizardFragment extends WizardFragment {
 	public void exit() {
 		IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 		IPath path = runtime.getLocation();
-		if (runtime.validate(null).isOK())
+		if (runtime.validate(null).getSeverity() != IStatus.ERROR)
 			TomcatPlugin.setPreference("location" + runtime.getRuntimeType().getId(), path.toString());
 	}
 }
