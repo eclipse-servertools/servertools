@@ -582,8 +582,23 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			IPath jrePath = new Path(vmInstall.getInstallLocation().getAbsolutePath());
 			if (jrePath != null) {
 				IPath toolsPath = jrePath.append("lib").append("tools.jar");
-				if (toolsPath.toFile().exists())
-					mergeClasspath(oldCp, JavaRuntime.newArchiveRuntimeClasspathEntry(toolsPath));
+				if (toolsPath.toFile().exists()) {
+					IRuntimeClasspathEntry toolsJar = JavaRuntime.newArchiveRuntimeClasspathEntry(toolsPath);
+					// Search for index to any existing tools.jar entry
+					int toolsIndex;
+					for (toolsIndex = 0; toolsIndex < oldCp.size(); toolsIndex++ ) {
+						IRuntimeClasspathEntry entry = (IRuntimeClasspathEntry) oldCp.get(toolsIndex);
+						if (entry.getType() == IRuntimeClasspathEntry.ARCHIVE
+								&& entry.getPath().lastSegment().equals("tools.jar")) {
+							break;
+						}
+					}
+					// If existing tools.jar found, replace in case it's different.  Otherwise add.
+					if (toolsIndex < oldCp.size())
+						oldCp.set(toolsIndex, toolsJar); 
+					else
+						mergeClasspath(oldCp, toolsJar);
+				}
 			}
 		}
 		
