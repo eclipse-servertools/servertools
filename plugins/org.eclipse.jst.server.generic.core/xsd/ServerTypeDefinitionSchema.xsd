@@ -59,23 +59,31 @@
 
 	<complexType name="LaunchConfiguration">
 		<sequence>
-			<element name="workingDirectory" type="string"/>
-			<element name="programArguments" type="string"/>
+			<sequence minOccurs="0" maxOccurs="unbounded">
+				<element name="environmentVariable"
+					type="jst:ArgumentPair">
+				</element>
+			</sequence>
+			<sequence minOccurs="0" maxOccurs="unbounded">
+				<element name="programArguments" type="string" />
+			</sequence>
+			<element name="workingDirectory" type="string" />
 			<choice>
-			<sequence>
-			<element name="mainClass" type="string"/>
-			<element name="vmParameters" type="string"/>
-			<element name="classpathReference" type="string"/>
-        </sequence>
-			<sequence>
-			<element name="debugPort" type="string"/>
-			<sequence maxOccurs="unbounded" minOccurs="1">
-				<element name="external" type="jst:External"></element>
-			</sequence>
-			</sequence>
+				<sequence>
+					<element name="mainClass" type="string" />
+					<sequence minOccurs="0" maxOccurs="unbounded">
+						<element name="vmParameters" type="string" />
+					</sequence>
+					<element name="classpathReference" type="string" />
+				</sequence>
+				<sequence>
+					<element name="debugPort" type="string" />
+					<sequence maxOccurs="unbounded" minOccurs="1">
+						<element name="external" type="jst:External"></element>
+					</sequence>
+				</sequence>
 			</choice>
 		</sequence>
-		<attribute name="launchType" type="string" use="optional"/>
 	</complexType>
 
 	<complexType name="Port">
@@ -121,13 +129,13 @@
     	<sequence>
     		<element name="providerUrl" type="string"/>
     		<sequence maxOccurs="unbounded" minOccurs="0">
-    			<element name="jndiProperty" type="jst:jndiProperty"/>
+    			<element name="jndiProperty" type="jst:ArgumentPair"/>
     		</sequence>
     		<element name="initialContextFactory" type="string"/>
     	</sequence>
     </complexType>
 
-    <complexType name="jndiProperty">
+    <complexType name="ArgumentPair">
     	<all maxOccurs="1" minOccurs="1">
     		<element name="name" type="string"/>
     		<element name="value" type="string"/>

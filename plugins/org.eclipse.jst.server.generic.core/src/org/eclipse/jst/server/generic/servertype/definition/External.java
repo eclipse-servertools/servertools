@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: External.java,v 1.1 2005/06/15 05:40:01 gercan Exp $
+ * $Id: External.java,v 1.2 2005/08/30 21:43:24 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model extendedMetaData="name='External' kind='simple'"
  * @generated
  */
-public interface External extends EObject {
+public interface External extends EObject{
 	/**
 	 * Returns the value of the '<em><b>Value</b></em>' attribute.
 	 * <!-- begin-user-doc -->

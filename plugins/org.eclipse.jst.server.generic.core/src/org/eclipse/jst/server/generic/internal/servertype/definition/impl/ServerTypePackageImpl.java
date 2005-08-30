@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypePackageImpl.java,v 1.6 2005/06/15 05:40:01 gercan Exp $
+ * $Id: ServerTypePackageImpl.java,v 1.7 2005/08/30 21:45:18 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
@@ -45,10 +45,10 @@ import org.eclipse.emf.ecore.xml.type.impl.XMLTypePackageImpl;
 
 import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
+import org.eclipse.jst.server.generic.servertype.definition.ArgumentPair;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
 import org.eclipse.jst.server.generic.servertype.definition.External;
 import org.eclipse.jst.server.generic.servertype.definition.JndiConnection;
-import org.eclipse.jst.server.generic.servertype.definition.JndiProperty;
 import org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.Port;
@@ -58,6 +58,8 @@ import org.eclipse.jst.server.generic.servertype.definition.Publisher;
 import org.eclipse.jst.server.generic.servertype.definition.PublisherData;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ServerTypeFactory;
+
+
 
 
 /**
@@ -79,6 +81,13 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass argumentPairEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass classpathEClass = null;
 
 	/**
@@ -94,13 +103,6 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 	 * @generated
 	 */
     private EClass jndiConnectionEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    private EClass jndiPropertyEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -252,6 +254,33 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getArgumentPair() {
+		return argumentPairEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getArgumentPair_Name() {
+		return (EAttribute)argumentPairEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getArgumentPair_Value() {
+		return (EAttribute)argumentPairEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getClasspath() {
 		return classpathEClass;
 	}
@@ -357,33 +386,6 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 
 	/**
 	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    public EClass getJndiProperty() {
-		return jndiPropertyEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    public EAttribute getJndiProperty_Name() {
-		return (EAttribute)jndiPropertyEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    public EAttribute getJndiProperty_Value() {
-		return (EAttribute)jndiPropertyEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -397,69 +399,6 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 	 * @generated
 	 */
     public EAttribute getLaunchConfiguration_MainClass() {
-		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getLaunchConfiguration_WorkingDirectory() {
-		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getLaunchConfiguration_ProgramArguments() {
-		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getLaunchConfiguration_VmParameters() {
-		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getLaunchConfiguration_ClasspathReference() {
-		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getLaunchConfiguration_External() {
-		return (EReference)launchConfigurationEClass.getEStructuralFeatures().get(7);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getLaunchConfiguration_LaunchType() {
-		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(8);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getLaunchConfiguration_DebugPort() {
 		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -468,8 +407,98 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getLaunchConfiguration_Group() {
+	public EAttribute getLaunchConfiguration_Group2() {
 		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLaunchConfiguration_WorkingDirectory() {
+		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLaunchConfiguration_ProgramArguments() {
+		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLaunchConfiguration_VmParameters() {
+		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLaunchConfiguration_ClasspathReference() {
+		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getLaunchConfiguration_External() {
+		return (EReference)launchConfigurationEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLaunchConfiguration_DebugPort() {
+		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLaunchConfiguration_Group3() {
+		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLaunchConfiguration_Group() {
+		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getLaunchConfiguration_EnvironmentVariable() {
+		return (EReference)launchConfigurationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLaunchConfiguration_Group1() {
+		return (EAttribute)launchConfigurationEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -863,6 +892,10 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 		archiveTypeEClass = createEClass(ARCHIVE_TYPE);
 		createEAttribute(archiveTypeEClass, ARCHIVE_TYPE__PATH);
 
+		argumentPairEClass = createEClass(ARGUMENT_PAIR);
+		createEAttribute(argumentPairEClass, ARGUMENT_PAIR__NAME);
+		createEAttribute(argumentPairEClass, ARGUMENT_PAIR__VALUE);
+
 		classpathEClass = createEClass(CLASSPATH);
 		createEAttribute(classpathEClass, CLASSPATH__GROUP);
 		createEReference(classpathEClass, CLASSPATH__ARCHIVE);
@@ -878,20 +911,19 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 		createEReference(jndiConnectionEClass, JNDI_CONNECTION__JNDI_PROPERTY);
 		createEAttribute(jndiConnectionEClass, JNDI_CONNECTION__INITIAL_CONTEXT_FACTORY);
 
-		jndiPropertyEClass = createEClass(JNDI_PROPERTY);
-		createEAttribute(jndiPropertyEClass, JNDI_PROPERTY__NAME);
-		createEAttribute(jndiPropertyEClass, JNDI_PROPERTY__VALUE);
-
 		launchConfigurationEClass = createEClass(LAUNCH_CONFIGURATION);
-		createEAttribute(launchConfigurationEClass, LAUNCH_CONFIGURATION__WORKING_DIRECTORY);
+		createEAttribute(launchConfigurationEClass, LAUNCH_CONFIGURATION__GROUP);
+		createEReference(launchConfigurationEClass, LAUNCH_CONFIGURATION__ENVIRONMENT_VARIABLE);
+		createEAttribute(launchConfigurationEClass, LAUNCH_CONFIGURATION__GROUP1);
 		createEAttribute(launchConfigurationEClass, LAUNCH_CONFIGURATION__PROGRAM_ARGUMENTS);
+		createEAttribute(launchConfigurationEClass, LAUNCH_CONFIGURATION__WORKING_DIRECTORY);
 		createEAttribute(launchConfigurationEClass, LAUNCH_CONFIGURATION__MAIN_CLASS);
+		createEAttribute(launchConfigurationEClass, LAUNCH_CONFIGURATION__GROUP2);
 		createEAttribute(launchConfigurationEClass, LAUNCH_CONFIGURATION__VM_PARAMETERS);
 		createEAttribute(launchConfigurationEClass, LAUNCH_CONFIGURATION__CLASSPATH_REFERENCE);
 		createEAttribute(launchConfigurationEClass, LAUNCH_CONFIGURATION__DEBUG_PORT);
-		createEAttribute(launchConfigurationEClass, LAUNCH_CONFIGURATION__GROUP);
+		createEAttribute(launchConfigurationEClass, LAUNCH_CONFIGURATION__GROUP3);
 		createEReference(launchConfigurationEClass, LAUNCH_CONFIGURATION__EXTERNAL);
-		createEAttribute(launchConfigurationEClass, LAUNCH_CONFIGURATION__LAUNCH_TYPE);
 
 		moduleEClass = createEClass(MODULE);
 		createEAttribute(moduleEClass, MODULE__TYPE);
@@ -973,6 +1005,10 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 		initEClass(archiveTypeEClass, ArchiveType.class, "ArchiveType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getArchiveType_Path(), theXMLTypePackage.getString(), "path", null, 0, 1, ArchiveType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(argumentPairEClass, ArgumentPair.class, "ArgumentPair", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getArgumentPair_Name(), theXMLTypePackage.getString(), "name", null, 1, 1, ArgumentPair.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getArgumentPair_Value(), theXMLTypePackage.getString(), "value", null, 1, 1, ArgumentPair.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(classpathEClass, Classpath.class, "Classpath", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getClasspath_Group(), ecorePackage.getEFeatureMapEntry(), "group", null, 0, -1, Classpath.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getClasspath_Archive(), this.getArchiveType(), null, "archive", null, 1, -1, Classpath.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
@@ -985,23 +1021,22 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 		initEClass(jndiConnectionEClass, JndiConnection.class, "JndiConnection", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getJndiConnection_ProviderUrl(), theXMLTypePackage.getString(), "providerUrl", null, 1, 1, JndiConnection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getJndiConnection_Group(), ecorePackage.getEFeatureMapEntry(), "group", null, 0, -1, JndiConnection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getJndiConnection_JndiProperty(), this.getJndiProperty(), null, "jndiProperty", null, 0, -1, JndiConnection.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getJndiConnection_JndiProperty(), this.getArgumentPair(), null, "jndiProperty", null, 0, -1, JndiConnection.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getJndiConnection_InitialContextFactory(), theXMLTypePackage.getString(), "initialContextFactory", null, 1, 1, JndiConnection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(jndiPropertyEClass, JndiProperty.class, "JndiProperty", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getJndiProperty_Name(), theXMLTypePackage.getString(), "name", null, 1, 1, JndiProperty.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getJndiProperty_Value(), theXMLTypePackage.getString(), "value", null, 1, 1, JndiProperty.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
 		initEClass(launchConfigurationEClass, LaunchConfiguration.class, "LaunchConfiguration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getLaunchConfiguration_Group(), ecorePackage.getEFeatureMapEntry(), "group", null, 0, -1, LaunchConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getLaunchConfiguration_EnvironmentVariable(), this.getArgumentPair(), null, "environmentVariable", null, 0, -1, LaunchConfiguration.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLaunchConfiguration_Group1(), ecorePackage.getEFeatureMapEntry(), "group1", null, 0, -1, LaunchConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLaunchConfiguration_ProgramArguments(), theXMLTypePackage.getString(), "programArguments", null, 0, -1, LaunchConfiguration.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getLaunchConfiguration_WorkingDirectory(), theXMLTypePackage.getString(), "workingDirectory", null, 1, 1, LaunchConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getLaunchConfiguration_ProgramArguments(), theXMLTypePackage.getString(), "programArguments", null, 1, 1, LaunchConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getLaunchConfiguration_MainClass(), theXMLTypePackage.getString(), "mainClass", null, 0, 1, LaunchConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getLaunchConfiguration_VmParameters(), theXMLTypePackage.getString(), "vmParameters", null, 0, 1, LaunchConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLaunchConfiguration_Group2(), ecorePackage.getEFeatureMapEntry(), "group2", null, 0, -1, LaunchConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLaunchConfiguration_VmParameters(), theXMLTypePackage.getString(), "vmParameters", null, 0, -1, LaunchConfiguration.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEAttribute(getLaunchConfiguration_ClasspathReference(), theXMLTypePackage.getString(), "classpathReference", null, 0, 1, LaunchConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getLaunchConfiguration_DebugPort(), theXMLTypePackage.getString(), "debugPort", null, 0, 1, LaunchConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getLaunchConfiguration_Group(), ecorePackage.getEFeatureMapEntry(), "group", null, 0, -1, LaunchConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLaunchConfiguration_Group3(), ecorePackage.getEFeatureMapEntry(), "group3", null, 0, -1, LaunchConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getLaunchConfiguration_External(), this.getExternal(), null, "external", null, 0, -1, LaunchConfiguration.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
-		initEAttribute(getLaunchConfiguration_LaunchType(), theXMLTypePackage.getString(), "launchType", null, 0, 1, LaunchConfiguration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(moduleEClass, Module.class, "Module", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getModule_Type(), theXMLTypePackage.getString(), "type", null, 1, 1, Module.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1079,6 +1114,27 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 		   new String[] {
 			 "kind", "attribute",
 			 "name", "path"
+		   });		
+		addAnnotation
+		  (argumentPairEClass, 
+		   source, 
+		   new String[] {
+			 "name", "ArgumentPair",
+			 "kind", "elementOnly"
+		   });		
+		addAnnotation
+		  (getArgumentPair_Name(), 
+		   source, 
+		   new String[] {
+			 "kind", "element",
+			 "name", "name"
+		   });		
+		addAnnotation
+		  (getArgumentPair_Value(), 
+		   source, 
+		   new String[] {
+			 "kind", "element",
+			 "name", "value"
 		   });		
 		addAnnotation
 		  (classpathEClass, 
@@ -1167,32 +1223,41 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 			 "name", "initialContextFactory"
 		   });		
 		addAnnotation
-		  (jndiPropertyEClass, 
-		   source, 
-		   new String[] {
-			 "name", "jndiProperty",
-			 "kind", "elementOnly"
-		   });		
-		addAnnotation
-		  (getJndiProperty_Name(), 
-		   source, 
-		   new String[] {
-			 "kind", "element",
-			 "name", "name"
-		   });		
-		addAnnotation
-		  (getJndiProperty_Value(), 
-		   source, 
-		   new String[] {
-			 "kind", "element",
-			 "name", "value"
-		   });		
-		addAnnotation
 		  (launchConfigurationEClass, 
 		   source, 
 		   new String[] {
 			 "name", "LaunchConfiguration",
 			 "kind", "elementOnly"
+		   });		
+		addAnnotation
+		  (getLaunchConfiguration_Group(), 
+		   source, 
+		   new String[] {
+			 "kind", "group",
+			 "name", "group:0"
+		   });		
+		addAnnotation
+		  (getLaunchConfiguration_EnvironmentVariable(), 
+		   source, 
+		   new String[] {
+			 "kind", "element",
+			 "name", "environmentVariable",
+			 "group", "#group:0"
+		   });		
+		addAnnotation
+		  (getLaunchConfiguration_Group1(), 
+		   source, 
+		   new String[] {
+			 "kind", "group",
+			 "name", "group:2"
+		   });		
+		addAnnotation
+		  (getLaunchConfiguration_ProgramArguments(), 
+		   source, 
+		   new String[] {
+			 "kind", "element",
+			 "name", "programArguments",
+			 "group", "#group:2"
 		   });		
 		addAnnotation
 		  (getLaunchConfiguration_WorkingDirectory(), 
@@ -1202,13 +1267,6 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 			 "name", "workingDirectory"
 		   });		
 		addAnnotation
-		  (getLaunchConfiguration_ProgramArguments(), 
-		   source, 
-		   new String[] {
-			 "kind", "element",
-			 "name", "programArguments"
-		   });		
-		addAnnotation
 		  (getLaunchConfiguration_MainClass(), 
 		   source, 
 		   new String[] {
@@ -1216,11 +1274,19 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 			 "name", "mainClass"
 		   });		
 		addAnnotation
+		  (getLaunchConfiguration_Group2(), 
+		   source, 
+		   new String[] {
+			 "kind", "group",
+			 "name", "group:6"
+		   });		
+		addAnnotation
 		  (getLaunchConfiguration_VmParameters(), 
 		   source, 
 		   new String[] {
 			 "kind", "element",
-			 "name", "vmParameters"
+			 "name", "vmParameters",
+			 "group", "#group:6"
 		   });		
 		addAnnotation
 		  (getLaunchConfiguration_ClasspathReference(), 
@@ -1237,11 +1303,11 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 			 "name", "debugPort"
 		   });		
 		addAnnotation
-		  (getLaunchConfiguration_Group(), 
+		  (getLaunchConfiguration_Group3(), 
 		   source, 
 		   new String[] {
 			 "kind", "group",
-			 "name", "group:6"
+			 "name", "group:10"
 		   });		
 		addAnnotation
 		  (getLaunchConfiguration_External(), 
@@ -1249,14 +1315,7 @@ public class ServerTypePackageImpl extends EPackageImpl implements ServerTypePac
 		   new String[] {
 			 "kind", "element",
 			 "name", "external",
-			 "group", "#group:6"
-		   });		
-		addAnnotation
-		  (getLaunchConfiguration_LaunchType(), 
-		   source, 
-		   new String[] {
-			 "kind", "attribute",
-			 "name", "launchType"
+			 "group", "#group:10"
 		   });		
 		addAnnotation
 		  (moduleEClass, 

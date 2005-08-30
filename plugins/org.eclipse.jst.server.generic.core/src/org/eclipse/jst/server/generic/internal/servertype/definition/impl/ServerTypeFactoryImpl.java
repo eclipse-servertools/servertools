@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeFactoryImpl.java,v 1.6 2005/06/15 05:40:01 gercan Exp $
+ * $Id: ServerTypeFactoryImpl.java,v 1.7 2005/08/30 21:45:19 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
@@ -65,10 +65,10 @@ public class ServerTypeFactoryImpl extends EFactoryImpl implements ServerTypeFac
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case ServerTypePackage.ARCHIVE_TYPE: return createArchiveType();
+			case ServerTypePackage.ARGUMENT_PAIR: return createArgumentPair();
 			case ServerTypePackage.CLASSPATH: return createClasspath();
 			case ServerTypePackage.EXTERNAL: return createExternal();
 			case ServerTypePackage.JNDI_CONNECTION: return createJndiConnection();
-			case ServerTypePackage.JNDI_PROPERTY: return createJndiProperty();
 			case ServerTypePackage.LAUNCH_CONFIGURATION: return createLaunchConfiguration();
 			case ServerTypePackage.MODULE: return createModule();
 			case ServerTypePackage.PORT: return createPort();
@@ -90,6 +90,16 @@ public class ServerTypeFactoryImpl extends EFactoryImpl implements ServerTypeFac
 	public ArchiveType createArchiveType() {
 		ArchiveTypeImpl archiveType = new ArchiveTypeImpl();
 		return archiveType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ArgumentPair createArgumentPair() {
+		ArgumentPairImpl argumentPair = new ArgumentPairImpl();
+		return argumentPair;
 	}
 
 	/**
@@ -120,16 +130,6 @@ public class ServerTypeFactoryImpl extends EFactoryImpl implements ServerTypeFac
     public JndiConnection createJndiConnection() {
 		JndiConnectionImpl jndiConnection = new JndiConnectionImpl();
 		return jndiConnection;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    public JndiProperty createJndiProperty() {
-		JndiPropertyImpl jndiProperty = new JndiPropertyImpl();
-		return jndiProperty;
 	}
 
 	/**

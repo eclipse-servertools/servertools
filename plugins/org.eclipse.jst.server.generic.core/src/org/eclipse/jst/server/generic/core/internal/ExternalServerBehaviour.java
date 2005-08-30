@@ -14,6 +14,7 @@ package org.eclipse.jst.server.generic.core.internal;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -154,7 +155,11 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 		workingCopy.setAttribute(ExternalLaunchConfigurationDelegate.DEBUG_PORT, 
 					resolver.resolveProperties(serverDef.getStart().getDebugPort()));
 		// just use the commandline for now
-		workingCopy.setAttribute(ExternalLaunchConfigurationDelegate.EXECUTABLE_NAME, external); 
+		workingCopy.setAttribute(ExternalLaunchConfigurationDelegate.EXECUTABLE_NAME, external);
+        Map environVars = getEnvironmentVariables(getServerDefinition().getStart());
+        if(!environVars.isEmpty()){
+        	workingCopy.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES,environVars);
+        }
 	}
 
 	/*
@@ -212,6 +217,10 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 		String external = resolver.resolveProperties(getExternalForOS(serverDef.getStop().getExternal()));
 		wc.setAttribute(ExternalLaunchConfigurationDelegate.COMMANDLINE, external);
 		// just use commandline for now
+        Map environVars = getEnvironmentVariables(getServerDefinition().getStop());
+        if(!environVars.isEmpty()){
+        	wc.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES,environVars);
+        }
 		wc.setAttribute(ExternalLaunchConfigurationDelegate.EXECUTABLE_NAME, external); 	
 		wc.setAttribute(Server.ATTR_SERVER_ID, getServer().getId());
 	}

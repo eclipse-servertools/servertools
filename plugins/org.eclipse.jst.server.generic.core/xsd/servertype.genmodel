@@ -13,6 +13,10 @@
     <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//ArchiveType">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//ArchiveType/path"/>
     </genClasses>
+    <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//ArgumentPair">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//ArgumentPair/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//ArgumentPair/value"/>
+    </genClasses>
     <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//Classpath">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//Classpath/group"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference org.eclipse.jst.server.generic.servertype.ecore#//Classpath/archive"/>
@@ -28,20 +32,19 @@
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference org.eclipse.jst.server.generic.servertype.ecore#//JndiConnection/jndiProperty"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//JndiConnection/initialContextFactory"/>
     </genClasses>
-    <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//JndiProperty">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//JndiProperty/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//JndiProperty/value"/>
-    </genClasses>
     <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/workingDirectory"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/group"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/environmentVariable"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/group1"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/programArguments"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/workingDirectory"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/mainClass"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/group2"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/vmParameters"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/classpathReference"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/debugPort"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/group"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/group3"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/external"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//LaunchConfiguration/launchType"/>
     </genClasses>
     <genClasses ecoreClass="org.eclipse.jst.server.generic.servertype.ecore#//Module">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.eclipse.jst.server.generic.servertype.ecore#//Module/type"/>

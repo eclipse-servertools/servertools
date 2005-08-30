@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeFactory.java,v 1.8 2005/06/15 05:40:01 gercan Exp $
+ * $Id: ServerTypeFactory.java,v 1.9 2005/08/30 21:43:24 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -62,6 +62,15 @@ public interface ServerTypeFactory extends EFactory{
 	ArchiveType createArchiveType();
 
 	/**
+	 * Returns a new object of class '<em>Argument Pair</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Argument Pair</em>'.
+	 * @generated
+	 */
+	ArgumentPair createArgumentPair();
+
+	/**
 	 * Returns a new object of class '<em>Classpath</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -87,15 +96,6 @@ public interface ServerTypeFactory extends EFactory{
 	 * @generated
 	 */
     JndiConnection createJndiConnection();
-
-	/**
-	 * Returns a new object of class '<em>Jndi Property</em>'.
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Jndi Property</em>'.
-	 * @generated
-	 */
-    JndiProperty createJndiProperty();
 
 	/**
 	 * Returns a new object of class '<em>Launch Configuration</em>'.

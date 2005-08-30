@@ -42,7 +42,7 @@ import org.eclipse.jst.server.core.EJBBean;
 import org.eclipse.jst.server.core.JndiLaunchable;
 import org.eclipse.jst.server.core.JndiObject;
 import org.eclipse.jst.server.core.Servlet;
-import org.eclipse.jst.server.generic.servertype.definition.JndiProperty;
+import org.eclipse.jst.server.generic.servertype.definition.ArgumentPair;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 /**
  * Launchable adapter delegate for generic servers.
@@ -73,9 +73,8 @@ public class GenericServerLaunchableAdapterDelegate extends LaunchableAdapterDel
         props.put("java.naming.provider.url",definition.getJndiConnection().getProviderUrl());
         List jps = definition.getJndiConnection().getJndiProperty();
         Iterator propsIt =jps.iterator();
-        while(propsIt.hasNext())
-        {
-            JndiProperty prop = (JndiProperty)propsIt.next();
+        while(propsIt.hasNext()){
+            ArgumentPair prop = (ArgumentPair)propsIt.next();
             props.put(prop.getName(),prop.getValue());
         }
         

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ExternalImpl.java,v 1.1 2005/06/15 05:40:01 gercan Exp $
+ * $Id: ExternalImpl.java,v 1.2 2005/08/30 21:45:19 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
@@ -16,6 +16,8 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.servertype.definition.External;
+
+
 
 /**
  * <!-- begin-user-doc -->

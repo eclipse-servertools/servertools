@@ -31,8 +31,11 @@
 package org.eclipse.jst.server.generic.core.internal;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -54,7 +57,9 @@ import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
+import org.eclipse.jst.server.generic.servertype.definition.ArgumentPair;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
+import org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.IModule;
@@ -232,15 +237,20 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 
 		setupLaunchClasspath(wc, vmInstall, getStopClasspath());
 
+        Map environVars = getEnvironmentVariables(getServerDefinition().getStop());
+        if(!environVars.isEmpty()){
+        	wc.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES,environVars);
+        }
+        
 		wc.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY,
 				getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getWorkingDirectory()));
 		wc.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
-				getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getProgramArguments()));
+				getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getProgramArgumentsAsString()));
 		wc.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
-				getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getVmParameters()));				
+				getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getVmParametersAsString()));				
 	}
 
     public String getStartClassName() {
@@ -323,11 +333,22 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     }
 
     private String getProgramArguments() {
-    	return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getProgramArguments());
+    	return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getProgramArgumentsAsString());
     }
 
+    protected Map getEnvironmentVariables(LaunchConfiguration config){
+        List variables = config.getEnvironmentVariable();
+        Map varsMap = new HashMap(variables.size());
+        Iterator iterator= variables.iterator();
+        while(iterator.hasNext()){
+        	ArgumentPair pair = (ArgumentPair)iterator.next();
+        	varsMap.put(pair.getName(),getServerDefinition().getResolver().resolveProperties(pair.getValue()));
+        }
+        return varsMap;
+    }
+    
     private String getVmArguments() {
-    	return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getVmParameters());
+    	return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getVmParametersAsString());
     }
 
     public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException {
@@ -351,6 +372,12 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
         workingCopy.setAttribute(
                 IJavaLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY,
                 getWorkingDirectory());
+        
+
+        Map environVars = getEnvironmentVariables(getServerDefinition().getStart());
+        if(!environVars.isEmpty()){
+        	workingCopy.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES,environVars);
+        }
         
         String existingProgArgs  = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, (String)null);
         String serverProgArgs =  getProgramArguments();

@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ServerTypeAdapterFactory.java,v 1.6 2005/06/15 05:40:01 gercan Exp $
+ * $Id: ServerTypeAdapterFactory.java,v 1.7 2005/08/30 21:45:51 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.util;
 
@@ -100,6 +100,9 @@ public class ServerTypeAdapterFactory extends AdapterFactoryImpl {
 			public Object caseArchiveType(ArchiveType object) {
 				return createArchiveTypeAdapter();
 			}
+			public Object caseArgumentPair(ArgumentPair object) {
+				return createArgumentPairAdapter();
+			}
 			public Object caseClasspath(Classpath object) {
 				return createClasspathAdapter();
 			}
@@ -108,9 +111,6 @@ public class ServerTypeAdapterFactory extends AdapterFactoryImpl {
 			}
 			public Object caseJndiConnection(JndiConnection object) {
 				return createJndiConnectionAdapter();
-			}
-			public Object caseJndiProperty(JndiProperty object) {
-				return createJndiPropertyAdapter();
 			}
 			public Object caseLaunchConfiguration(LaunchConfiguration object) {
 				return createLaunchConfigurationAdapter();
@@ -169,6 +169,20 @@ public class ServerTypeAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.ArgumentPair <em>Argument Pair</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.jst.server.generic.servertype.definition.ArgumentPair
+	 * @generated
+	 */
+	public Adapter createArgumentPairAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.Classpath <em>Classpath</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -207,20 +221,6 @@ public class ServerTypeAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
     public Adapter createJndiConnectionAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.jst.server.generic.servertype.definition.JndiProperty <em>Jndi Property</em>}'.
-	 * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.jst.server.generic.servertype.definition.JndiProperty
-	 * @generated
-	 */
-    public Adapter createJndiPropertyAdapter() {
 		return null;
 	}
 

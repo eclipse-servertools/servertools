@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: ClasspathImpl.java,v 1.5 2005/06/13 21:01:36 gercan Exp $
+ * $Id: ClasspathImpl.java,v 1.6 2005/08/30 21:45:19 gercan Exp $
  */
 package org.eclipse.jst.server.generic.internal.servertype.definition.impl;
 
@@ -48,6 +48,8 @@ import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
+
+
 
 
 /**

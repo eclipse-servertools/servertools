@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: JndiConnection.java,v 1.5 2005/06/14 20:45:45 gercan Exp $
+ * $Id: JndiConnection.java,v 1.6 2005/08/30 21:43:24 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -78,7 +78,7 @@ public interface JndiConnection extends EObject{
 
 	/**
 	 * Returns the value of the '<em><b>Jndi Property</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.JndiProperty}.
+	 * The list contents are of type {@link org.eclipse.jst.server.generic.servertype.definition.ArgumentPair}.
 	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Jndi Property</em>' containment reference list isn't clear,
@@ -87,7 +87,7 @@ public interface JndiConnection extends EObject{
      * <!-- end-user-doc -->
 	 * @return the value of the '<em>Jndi Property</em>' containment reference list.
 	 * @see org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage#getJndiConnection_JndiProperty()
-	 * @model type="org.eclipse.jst.server.generic.servertype.definition.JndiProperty" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
+	 * @model type="org.eclipse.jst.server.generic.servertype.definition.ArgumentPair" containment="true" resolveProxies="false" transient="true" volatile="true" derived="true"
 	 *        extendedMetaData="kind='element' name='jndiProperty' group='#group:1'"
 	 * @generated
 	 */
