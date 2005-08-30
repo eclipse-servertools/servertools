@@ -2,12 +2,11 @@ package org.eclipse.jst.server.generic.tests;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
+import org.eclipse.jst.server.generic.servertype.definition.ArgumentPair;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
 import org.eclipse.jst.server.generic.servertype.definition.JndiConnection;
-import org.eclipse.jst.server.generic.servertype.definition.JndiProperty;
 import org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.Port;
@@ -38,7 +37,6 @@ public class ServerTypeDefinitionModelTest extends TestCase {
 		assertNotNull(factory.createArchiveType());
 		assertNotNull(factory.createClasspath());
 		assertNotNull(factory.createJndiConnection());
-		assertNotNull(factory.createJndiProperty());
 		assertNotNull(factory.createLaunchConfiguration());
 		assertNotNull(factory.createModule());
 		assertNotNull(factory.createPort());
@@ -100,8 +98,8 @@ public class ServerTypeDefinitionModelTest extends TestCase {
        assertTrue(lcfg.getMainClass()!=null && lcfg.getExternal().isEmpty());
        assertTrue(lcfg.getMainClass()!=null && lcfg.getDebugPort()==null);
        assertTrue(lcfg.getClasspathReference()!=null && lcfg.getClasspathReference().length()>0);
-       assertTrue(lcfg.getProgramArguments()!=null && lcfg.getProgramArguments().length()>0);
-       assertTrue(lcfg.getVmParameters()!=null && lcfg.getVmParameters().length()>0);
+       assertTrue(lcfg.getProgramArguments()!=null && !lcfg.getProgramArguments().isEmpty());
+       assertTrue(lcfg.getVmParameters()!=null && !lcfg.getVmParameters().isEmpty());
        assertTrue(lcfg.getWorkingDirectory()!=null && lcfg.getWorkingDirectory().length()>0);
     }
     public void testModule()
@@ -157,7 +155,7 @@ public class ServerTypeDefinitionModelTest extends TestCase {
         assertNotNull(jndi.getJndiProperty());
         if(jndi.getJndiProperty().size()>0)
         {
-            JndiProperty property = (JndiProperty)jndi.getJndiProperty().get(0);
+            ArgumentPair property = (ArgumentPair)jndi.getJndiProperty().get(0);
             assertNotNull(property.getName());
             assertNotNull(property.getValue());
         }
