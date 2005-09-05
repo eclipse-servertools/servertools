@@ -28,7 +28,7 @@
  ***************************************************************************
  * </copyright>
  *
- * $Id: Property.java,v 1.7 2005/06/14 20:45:45 gercan Exp $
+ * $Id: Property.java,v 1.8 2005/09/05 20:57:54 gercan Exp $
  */
 package org.eclipse.jst.server.generic.servertype.definition;
 
@@ -55,8 +55,13 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface Property extends EObject{
-	String CONTEXT_RUNTIME = "runtime";
-	String CONTEXT_SERVER = "server";
+	public static final String CONTEXT_RUNTIME = "runtime";
+	public static final String CONTEXT_SERVER = "server";
+	public static final String TYPE_FILE="file";
+	public static final String TYPE_DIRECTORY="directory";
+	public static final String TYPE_BOOLEAN="boolean";
+	public static final String TYPE_TEXT="string";
+	public static final String TYPE_SELECT="select";
 
 	/**
 	 * Returns the value of the '<em><b>Context</b></em>' attribute.

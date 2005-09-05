@@ -1,25 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-
-     <!--<extension point="org.eclipse.wst.server.ui.editorPages">
-      <page
-         id="org.eclipse.jst.server.generic.configuration.editor.webmodule"
-         order="20"
-         name="Lomboz server Edit"
-         typeIds="org.eclipse.jst.server.generic.*"
-         class="org.eclipse.jst.server.generic.ui.internal.GenericServerEditorPartFactory"/>
-   </extension>
-   
-    <extension point="org.eclipse.wst.server.ui.editorPageSections">
-      <section
-         id="org.eclipse.jst.server.generic.editor.general"
-         order="0"
-         insertionId="org.eclipse.wst.server.editor.overview.left"
-         typeIds="org.eclipse.jst.server.generic.*"
-         class="org.eclipse.jst.server.generic.ui.internal.GenericServerEditorSectionFactory"/>       
-   </extension>-->
- 	
   <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
     <launchConfigurationTypeImage
       id="org.eclipse.jst.server.generic.image.ui.launchConfigurationTypeImage"
