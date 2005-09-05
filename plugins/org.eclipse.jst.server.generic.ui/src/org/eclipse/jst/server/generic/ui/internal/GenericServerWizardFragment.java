@@ -32,6 +32,7 @@ package org.eclipse.jst.server.generic.ui.internal;
 
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.jst.server.generic.core.internal.GenericServerRuntime;
@@ -56,14 +57,17 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
 	 * 
 	 */
 	public boolean isComplete() {
-		for (int i = 0; fDecorators!=null && i < fDecorators.length; i++) {
-			if(fDecorators[i].validate())
-				return false;
-		}
+
 		ServerRuntime serverRuntime = getServerTypeDefinitionFor(getServer());
 		if(serverRuntime==null)
 		    return false;
-		return true;
+
+		IServerWorkingCopy server = getServer();
+		GenericServer dl= (GenericServer)server.loadAdapter(GenericServer.class,null);
+
+		IStatus status = dl.validate();
+		return (status != null && status.isOK());
+		
 	}
 
 	public void createContent(Composite parent, IWizardHandle handle){
@@ -125,6 +129,10 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
     }
     public void enter() {
     	getServer().setName(createName());
+	    for (int i = 0; i < fDecorators.length; i++) {
+			if(fDecorators[i].validate())
+				return;
+		}
      }
 	
     /* (non-Javadoc)

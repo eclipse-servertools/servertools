@@ -30,6 +30,7 @@
  ***************************************************************************/
 package org.eclipse.jst.server.generic.core.internal;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +45,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.Port;
+import org.eclipse.jst.server.generic.servertype.definition.Property;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.jst.server.core.IEJBModule;
 import org.eclipse.jst.server.core.IEnterpriseApplication;
@@ -325,4 +327,28 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
  	public void setServerInstanceProperties(Map map) {
  		setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, map);
  	}
+ 	/**
+ 	 * Checks if the properties set for this server is valid. 
+ 	 * @return
+ 	 */
+ 	public IStatus validate() {
+ 		List props = this.getServerDefinition().getProperty();
+ 		for(int i=0;i<props.size();i++)
+ 		{
+ 			Property property =(Property)props.get(i);
+ 			if(property.getType().equals(Property.TYPE_DIRECTORY) || property.getType().equals(Property.TYPE_FILE))
+ 			{
+ 				String path= (String)getServerInstanceProperties().get(property.getId());
+ 				if(path!=null && !pathExist(path))
+ 					return  new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.bind(GenericServerCoreMessages.invalidPath,path), null);
+ 			}
+ 		}
+ 		return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "", null);
+ 	}
+	private boolean pathExist(String path){
+		File f = new File(path);
+		return f.exists();
+	}
+ 	
+ 	
 }

@@ -26,6 +26,8 @@ public class GenericServerCoreMessages extends NLS{
 	public static String externalStopLauncher;
 	public static String debugPortUnspecified;
 	public static String errorStartingExternalDebugging;
+	public static String invalidPath;
+	
 	static{
 		  NLS.initializeMessages(RESOURCE_BUNDLE, GenericServerCoreMessages.class);
 	}

@@ -31,6 +31,8 @@ package org.eclipse.jst.server.generic.ui.internal;
 
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
@@ -50,6 +52,18 @@ public class ServerTypeDefinitionServerDecorator extends
 	public boolean validate() {
 		if(fServer!=null)
 			fServer.setServerInstanceProperties(getValues());
+		IStatus status = fServer.validate();
+		if(status==null || status.isOK())
+		{
+			fWizard.setMessage(null, IMessageProvider.NONE);
+			fWizard.update();
+		}
+		else
+		{
+			fWizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
+			fWizard.update();
+			return true;
+		}
 		return false;
 	}
 
