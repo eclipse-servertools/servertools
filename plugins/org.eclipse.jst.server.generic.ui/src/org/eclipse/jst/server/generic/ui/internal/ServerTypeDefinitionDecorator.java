@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -17,6 +18,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -92,28 +94,56 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
 
 	
     private void createPropertyControl(Composite parent, Property property){
-    	if( "directory".equals(property.getType())) {
+    	if( Property.TYPE_DIRECTORY.equals(property.getType())) {
     		Text path = createLabeledPath(property.getLabel(),getPropertyValue(property),parent);
     		path.setData(property);
     		registerControl(path);
-     	} else if( "file".equals(property.getType())) {
+     	} else if( Property.TYPE_FILE.equals(property.getType())) {
     	    Text file = createLabeledFile(property.getLabel(),getPropertyValue(property),parent);
     		file.setData(property);
     		registerControl(file);
-       	} else if( "string".equals(property.getType())) {
+       	} else if( Property.TYPE_TEXT.equals(property.getType())) {
     	    Text str = createLabeledText(property.getLabel(),getPropertyValue(property),parent);
     		str.setData(property);
     		registerControl(str);
-       	} else if( "boolean".equals(property.getType())) {
+       	} else if( Property.TYPE_BOOLEAN.equals(property.getType())) {
     	    Button bool =createLabeledCheck(property.getLabel(),("true".equals( getPropertyValue(property))),	parent);
     		bool.setData(property);
     		registerControl(bool);
-       	} else  {
+       	}else if(Property.TYPE_SELECT.equals(property.getType())) {
+       		Combo combo = createLabeledCombo(parent, property);
+       		combo.setData(property);
+       		registerControl(combo);
+       	}
+       	else  {
     	    Text defaultText= createLabeledText(property.getLabel(),getPropertyValue(property),parent);
     		defaultText.setData(property);
     		registerControl(defaultText);
     	}
     }
+
+	private Combo createLabeledCombo(Composite defPanel, Property property) {
+		
+	   	GridData gridData;
+    	Label label = new Label(defPanel, SWT.WRAP);
+    	gridData = new GridData();
+    	label.setLayoutData(gridData);
+    	label.setText(property.getLabel());
+
+		Combo combo = new Combo(defPanel,SWT.READ_ONLY);
+    	gridData = new GridData(GridData.FILL_HORIZONTAL
+    			| GridData.GRAB_HORIZONTAL);
+    	gridData.horizontalSpan = 2;
+    	combo.setLayoutData(gridData);
+    	
+		StringTokenizer tokenizer = new StringTokenizer(property.getDefault(),",");
+		while(tokenizer.hasMoreTokens()){
+			combo.add(tokenizer.nextToken());
+		}
+		if(combo.getItemCount()>0)
+			combo.select(0);
+		return combo;
+	}
     private void registerControl(Control control)
     {
     	fPropertyControls.add(control);
@@ -244,21 +274,20 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
     * Returns the property name/value pairs.
     * @return
     */
-	public Map getValues()
-    {
+	public Map getValues(){
 		Map propertyMap = new HashMap();
-    	for(int i=0; i<fPropertyControls.size();i++)
-    	{
-    		if(fPropertyControls.get(i)instanceof Button)
-    		{
+    	for(int i=0; i<fPropertyControls.size();i++){
+    		Property prop = (Property)((Control)fPropertyControls.get(i)).getData();
+    		if(fPropertyControls.get(i)instanceof Button){
     			Button button = (Button)fPropertyControls.get(i);
-    			Property prop = (Property)button.getData();
     			propertyMap.put(prop.getId(),Boolean.toString(button.getSelection()));
     		}
-    		else
-    		{
+    		else if(fPropertyControls.get(i) instanceof Combo){
+    			Combo combo = (Combo)fPropertyControls.get(i);
+     			int index = combo.getSelectionIndex();
+    			propertyMap.put(prop.getId(),combo.getItem(index));
+    		}else{
     			Text text = (Text)fPropertyControls.get(i);
-    			Property prop = (Property)text.getData();
     			propertyMap.put(prop.getId(),text.getText());
     		}
     	}
