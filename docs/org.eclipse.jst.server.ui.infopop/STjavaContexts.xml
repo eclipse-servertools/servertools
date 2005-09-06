@@ -11,11 +11,12 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/ -->
 <contexts>
-<context id="jvcp0000">
-<description>List of class path entries defined for a specific server.
-
+<context id="jvrt0000">
+<description>This wizard allows you to provide information for configuring generic J2EE runtime.  In the <b>Name</b> field, specify the name that you want to assign to your generic J2EE runtime server.  In the <b>Location</b> field, specify the directory where your J2EE libraries are located.  You can either type the path of the directory or click <b>Browse</b> button to select it.  Under <b>JRE</b> list, select a JRE to compile against.  For example, Workbench default JRE.  You can either select the appropriate value from the 
+JRE list or click <b>Installed JRE</b> to define a new JRE configuration.
 </description>
 </context>
+
 <context id="jvcp0002">
 <description>List of class path entries defined for a specific server. This is used as the system class path when launching the server.
 
