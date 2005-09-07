@@ -119,6 +119,12 @@ public abstract class WizardFragment {
 	 * Called when the wizard that this fragment belongs to is finished.
 	 * After exit()ing the current page, all fragment's performFinish()
 	 * methods are called in order.
+	 * <p>
+	 * This method is not called on the UI thread and must not access the
+	 * composite. Not only might the user never have accessed the fragment's
+	 * composite, but this method may be called asynchronously on a job
+	 * once the wizard has closed.
+	 * </p>
 	 * 
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
@@ -132,6 +138,12 @@ public abstract class WizardFragment {
 	 * Called when the wizard that this fragment belongs to is canceled.
 	 * After exit()ing the current page, all fragment's performCancel()
 	 * methods are called in order.
+	 * <p>
+	 * This method is not called on the UI thread and must not access the
+	 * composite. Not only might the user never have accessed the fragment's
+	 * composite, but this method may be called asynchronously on a job
+	 * once the wizard has closed.
+	 * </p>
 	 * 
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
@@ -177,7 +189,11 @@ public abstract class WizardFragment {
 	}
 
 	/**
-	 * Returns true if this fragment is complete (can finish).
+	 * Returns true if this fragment is complete (can finish). If it is
+	 * complete the user will be allowed to go to the next fragment or
+	 * finish the wizard. If the fragment is not complete, the Next button
+	 * will be disabled. If the fragment is complete but another fragment
+	 * is not complete, the Finish button will not be enabled.
 	 * 
 	 * @return <code>true</code> if the fragment is complete, and
 	 *    <code>false</code> otherwise
