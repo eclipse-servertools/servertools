@@ -366,6 +366,9 @@ public class ServersView extends ViewPart {
 							}
 						}
 						
+						if (!menuManager.isEmpty())
+							menuManager.add(new Separator());
+						
 						menuManager.add(new MonitorServerAction(shell2, server2));
 					}
 				});

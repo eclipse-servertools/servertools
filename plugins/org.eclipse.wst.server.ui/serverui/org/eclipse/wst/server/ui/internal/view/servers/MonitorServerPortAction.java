@@ -41,13 +41,14 @@ public class MonitorServerPortAction extends Action {
 		if (msps != null) {
 			int size = msps.length;
 			for (int i = 0; i < size; i++) {
-				if (port.equals(msps[i].getServerPort()) && msps[i].isStarted() &&
-						(msps[i].getContentTypes() == null || (port.getContentTypes() != null && msps[i].getContentTypes().length == port.getContentTypes().length)))
+				if (port.equals(msps[i].getServerPort()) && // msps[i].isStarted() &&
+						(msps[i].getContentTypes() == null || msps[i].getContentTypes().length == 0 ||
+						(port.getContentTypes() != null && msps[i].getContentTypes().length == port.getContentTypes().length)))
 					monitoredPort = msps[i];
 			}
 		}
 
-		checked = monitoredPort != null && monitoredPort.isStarted();
+		checked = monitoredPort != null; // && monitoredPort.isStarted();
 		setChecked(checked);
 	}
 
