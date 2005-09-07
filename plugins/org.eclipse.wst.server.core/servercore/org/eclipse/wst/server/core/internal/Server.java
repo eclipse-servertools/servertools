@@ -103,7 +103,7 @@ public class Server extends Base implements IServer {
 	
 	// Server listeners
 	protected transient ServerNotificationManager notificationManager;
-	
+
 	public class AutoPublishThread extends Thread {
 		public boolean stop;
 		public int time = 0; 
@@ -123,7 +123,7 @@ public class Server extends Base implements IServer {
 				return;
 			
 			Trace.trace(Trace.FINEST, "Auto-publish thread publishing " + Server.this);
-
+			
 			PublishServerJob publishJob = new PublishServerJob(Server.this, IServer.PUBLISH_AUTO, false);
 			publishJob.schedule();
 		}
@@ -435,18 +435,22 @@ public class Server extends Base implements IServer {
 		
 		//Trace.trace(Trace.FINEST, "< handleDeployableProjectChange()");
 	}
+	
+	protected void stopAutoPublish() {
+		if (autoPublishThread == null)
+			return;
+		
+		autoPublishThread.stop = true;
+		autoPublishThread.interrupt();
+		autoPublishThread = null;
+	}
 
 	/**
 	 * Reset automatic publish thread if it is running and start a new
 	 * thread if automatic publishing is currently enabled.
 	 */
-	public void autoPublish() {
-		// check for auto-publish
-		if (autoPublishThread != null) {
-			autoPublishThread.stop = true;
-			autoPublishThread.interrupt();
-			autoPublishThread = null;
-		}
+	protected void autoPublish() {
+		stopAutoPublish();
 		
 		int time = 0;
 		if (getAutoPublishSetting() == AUTO_PUBLISH_DEFAULT) {
@@ -686,47 +690,35 @@ public class Server extends Base implements IServer {
 			}
 		}
 		
-		IStatus status = null;
-		try {
-			firePublishStarted();
-			status = doPublish(kind, monitor);
-		} catch (Exception e) {
-			status = null; // TODO
-		} finally {
-			firePublishFinished(status);
-		}
+		firePublishStarted();
+		IStatus status = doPublish(kind, monitor);
+		firePublishFinished(status);
 		return status;
 	}
 
 	protected IStatus doPublish(int kind, IProgressMonitor monitor) {
 		Trace.trace(Trace.FINEST, "-->-- Publishing to server: " + toString() + " -->--");
+		
+		stopAutoPublish();
 
 		try {
 			return getBehaviourDelegate(monitor).publish(kind, monitor);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate publish() " + toString(), e);
-			return null;
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e);
 		}
 	}
-	
+
 	/**
 	 * Returns the publish tasks that have been targetted to this server.
 	 * These tasks should be run during publishing.
 	 * 
+	 * @param kind one of the IServer.PUBLISH_XX constants
+	 * @param moduleList a list of modules
+	 * @param kindList one of the IServer publish change constants
 	 * @return a possibly empty array of IOptionalTasks
 	 */
-	public PublishOperation[] getTasks() {
-		final List moduleList = new ArrayList();
-		
-		IModuleVisitor visitor = new IModuleVisitor() {
-			public boolean visit(IModule[] module) {
-				moduleList.add(module);
-				return true;
-			}
-		};
-
-		visit(visitor, null);
-	
+	public PublishOperation[] getTasks(int kind, List moduleList, List kindList) {
 		List tasks = new ArrayList();
 		
 		String serverTypeId = getServerType().getId();
@@ -737,7 +729,7 @@ public class Server extends Base implements IServer {
 			for (int i = 0; i < size; i++) {
 				IPublishTask task = publishTasks[i];
 				if (task.supportsType(serverTypeId)) {
-					PublishOperation[] tasks2 = task.getTasks(this, moduleList);
+					PublishOperation[] tasks2 = task.getTasks(this, kind, moduleList, kindList);
 					if (tasks2 != null) {
 						int size2 = tasks2.length;
 						for (int j = 0; j < size2; j++) {
@@ -1138,7 +1130,7 @@ public class Server extends Base implements IServer {
 			Trace.trace(Trace.SEVERE, "Error calling delegate stop() " + toString(), t);
 		}
 	}
-	
+
 	/**
 	 * @see IServer#start(String, IOperationListener)
 	 */
@@ -1175,7 +1167,7 @@ public class Server extends Base implements IServer {
 			boolean alreadyDone;
 		}
 		final Timer timer = new Timer();
-		
+			
 		Thread thread = new Thread() {
 			public void run() {
 				try {
@@ -1195,7 +1187,7 @@ public class Server extends Base implements IServer {
 		};
 		thread.setDaemon(true);
 		thread.start();
-	
+		
 		Trace.trace(Trace.FINEST, "synchronousStart 2");
 	
 		// start the server

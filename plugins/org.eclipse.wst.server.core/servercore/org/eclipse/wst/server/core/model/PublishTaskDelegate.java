@@ -32,5 +32,20 @@ public abstract class PublishTaskDelegate {
 	 * @param modules a list containing IModule arrays
 	 * @return the tasks that should be performed on the server.
 	 */
-	public abstract PublishOperation[] getTasks(IServer server, List modules);
+	public PublishOperation[] getTasks(IServer server, List modules) {
+		return null;
+	}
+
+	/**
+	 * Returns the tasks that should be performed during publishing.
+	 * 
+	 * @param server the server
+	 * @param modules a list containing IModule arrays
+	 * @param kind one of the IServer.PUBLISH_XX constants.
+	 * @param kindList one of the IServer publish change constants.
+	 * @return the tasks that should be performed on the server.
+	 */
+	public PublishOperation[] getTasks(IServer server, int kind, List modules, List kindList) {
+		return getTasks(server, modules);
+	}
 }

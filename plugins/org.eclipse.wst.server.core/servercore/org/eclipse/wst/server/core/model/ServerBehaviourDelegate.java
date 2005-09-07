@@ -535,14 +535,13 @@ public abstract class ServerBehaviourDelegate {
 				kindList.add(new Integer(ServerBehaviourDelegate.ADDED));
 		}
 		
-		PublishOperation[] tasks = getTasks();
-		
 		addRemovedModules(moduleList, kindList);
 		
 		while (moduleList.size() > kindList.size()) {
 			kindList.add(new Integer(ServerBehaviourDelegate.REMOVED));
 		}
-
+		
+		PublishOperation[] tasks = getTasks(kind, moduleList, kindList);
 		int size = 2000 + 3500 * moduleList.size() + 500 * tasks.length;
 		
 		monitor = ProgressUtil.getMonitorFor(monitor);
@@ -670,20 +669,20 @@ public abstract class ServerBehaviourDelegate {
 	 * 
 	 * Uses 500 ticks plus 3500 ticks per module
 	 */
-	protected void publishModules(int kind, List modules2, List deltaKind, MultiStatus multi, IProgressMonitor monitor) {
-		if (modules2 == null)
+	protected void publishModules(int kind, List modules, List deltaKind, MultiStatus multi, IProgressMonitor monitor) {
+		if (modules == null)
 			return;
-
-		int size = modules2.size();
+		
+		int size = modules.size();
 		if (size == 0)
 			return;
 		
 		if (monitor.isCanceled())
 			return;
-
+		
 		// publish modules
 		for (int i = 0; i < size; i++) {
-			IStatus status = publishModule(kind, (IModule[]) modules2.get(i), ((Integer)deltaKind.get(i)).intValue(), ProgressUtil.getSubMonitorFor(monitor, 3000));
+			IStatus status = publishModule(kind, (IModule[]) modules.get(i), ((Integer)deltaKind.get(i)).intValue(), ProgressUtil.getSubMonitorFor(monitor, 3000));
 			multi.add(status);
 		}
 	}
@@ -692,10 +691,13 @@ public abstract class ServerBehaviourDelegate {
 	 * Returns the publish tasks that have been targetted to this server.
 	 * These tasks should be run during publishing.
 	 * 
+	 * @param kind one of the IServer.PUBLISH_XX constants
+	 * @param moduleList a list of modules
+	 * @param kindList list of one of the IServer publish change constants
 	 * @return a possibly empty array of IOptionalTasks
 	 */
-	protected final PublishOperation[] getTasks() {
-		return server.getTasks();
+	protected final PublishOperation[] getTasks(int kind, List moduleList, List kindList) {
+		return server.getTasks(kind, moduleList, kindList);
 	}
 
 	/**

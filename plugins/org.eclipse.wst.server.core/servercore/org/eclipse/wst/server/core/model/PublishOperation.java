@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.TaskModel;
 /**
- * An publish operation that will be executed during publishing. 
+ * An operation that will be executed during publishing. 
  * 
  * [issue: EY It is not clear to me that when this task will be run. Will the place where the
  * task is being run depend on the server, e.g. the TDC tasks for the v6 server should be run

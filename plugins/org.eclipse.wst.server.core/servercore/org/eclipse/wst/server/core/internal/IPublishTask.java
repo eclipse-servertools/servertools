@@ -45,4 +45,15 @@ public interface IPublishTask {
 	 * @return a possibly empty array of optional tasks 
 	 */
 	public PublishOperation[] getTasks(IServer server, List modules);
+
+	/**
+	 * Returns the tasks that should be performed during publishing.
+	 * 
+	 * @param server the server
+	 * @param modules a list containing IModule arrays
+	 * @param kind one of the IServer.PUBLISH_XX constants
+	 * @param kindList one of the IServer publish change constants
+	 * @return the tasks that should be performed on the server
+	 */
+	public PublishOperation[] getTasks(IServer server, int kind, List modules, List kindList);
 }

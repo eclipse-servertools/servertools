@@ -78,7 +78,24 @@ public class PublishTask implements IPublishTask {
 	public PublishOperation[] getTasks(IServer server, List modules) {
 		try {
 			Trace.trace(Trace.FINEST, "Task.init " + this);
-			return getDelegate().getTasks(server, modules);
+			PublishOperation[] po = getDelegate().getTasks(server, modules);
+			if (po != null)
+				return po;
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
+		}
+		return new PublishOperation[0];
+	}
+
+	/*
+	 * @see
+	 */
+	public PublishOperation[] getTasks(IServer server, int kind, List modules, List kindList) {
+		try {
+			Trace.trace(Trace.FINEST, "Task.init " + this);
+			PublishOperation[] po = getDelegate().getTasks(server, kind, modules, kindList);
+			if (po != null)
+				return po;
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
 		}

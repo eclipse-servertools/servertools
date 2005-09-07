@@ -27,11 +27,15 @@ import org.eclipse.wst.server.core.util.ProjectModule;
 public class PublishOperation2 extends PublishOperation {
 	protected TomcatServerBehaviour server;
 	protected IModule module;
+	protected int kind;
+	protected int deltaKind;
 
-	public PublishOperation2(TomcatServerBehaviour server, IModule module) {
-		super("Publish to server", "Publish Web modules to Tomcat server");
+	public PublishOperation2(TomcatServerBehaviour server, int kind, IModule module, int deltaKind) {
+		super("Publish to server", "Publish Web module to Tomcat server");
 		this.server = server;
 		this.module = module;
+		this.kind = kind;
+		this.deltaKind = deltaKind;
 	}
 
 	public int getOrder() {

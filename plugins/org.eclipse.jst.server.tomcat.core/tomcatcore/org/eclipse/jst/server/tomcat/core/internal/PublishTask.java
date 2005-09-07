@@ -18,10 +18,10 @@ import org.eclipse.wst.server.core.model.PublishOperation;
 import org.eclipse.wst.server.core.model.PublishTaskDelegate;
 
 public class PublishTask extends PublishTaskDelegate {
-	public PublishOperation[] getTasks(IServer server, List modules) {
+	public PublishOperation[] getTasks(IServer server, int kind, List modules, List kindList) {
 		if (modules == null)
 			return null;
-	
+		
 		TomcatServerBehaviour tomcatServer = (TomcatServerBehaviour) server.loadAdapter(TomcatServerBehaviour.class, null);
 		
 		List tasks = new ArrayList();
@@ -29,7 +29,8 @@ public class PublishTask extends PublishTaskDelegate {
 		for (int i = 0; i < size; i++) {
 			IModule[] module = (IModule[]) modules.get(i);
 			IModule m = module[module.length - 1];
-			tasks.add(new PublishOperation2(tomcatServer, m));
+			Integer in = (Integer) kindList.get(i);
+			tasks.add(new PublishOperation2(tomcatServer, kind, m, in.intValue()));
 		}
 		
 		return (PublishOperation[]) tasks.toArray(new PublishOperation[tasks.size()]);
