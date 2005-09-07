@@ -27,7 +27,7 @@ public class LaunchClientJob extends DependantJob {
 	protected IModuleArtifact moduleArtifact;
 
 	public LaunchClientJob(IServer server, IModule[] module, String launchMode, IModuleArtifact moduleArtifact, ILaunchableAdapter launchableAdapter, IClient client) {
-		super("Launch client", server);
+		super(Messages.launchingClientTask, server);
 		this.server = server;
 		this.module = module;
 		this.launchMode = launchMode;

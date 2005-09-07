@@ -34,7 +34,6 @@ public class Messages extends NLS {
 	public static String defaultServerName4;
 	public static String taskModifyModules;
 	public static String errorWorkingCopyTimestamp;
-	
 	public static String errorPublishStarting;
 	public static String errorPublishNoRuntime;
 	public static String errorPublishNoConfiguration;
@@ -59,6 +58,8 @@ public class Messages extends NLS {
 	public static String errorStopAlreadyStopped;
 	public static String canStopOk;
 	public static String moduleTypeUnknown;
+	public static String jobStartingServer;
+	public static String jobRestartingServer;
 	
 	static {
 		NLS.initializeMessages(ServerPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);

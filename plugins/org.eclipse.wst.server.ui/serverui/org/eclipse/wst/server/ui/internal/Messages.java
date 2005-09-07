@@ -270,6 +270,7 @@ public class Messages extends NLS {
 	public static String viewStatusStopped;
 	public static String actionStopToolTip2;
 	public static String actionStop2;
+	public static String launchingClientTask;
 	
 	public static String errorStartingMonitor;
 	public static String audioPrefSelectFile;

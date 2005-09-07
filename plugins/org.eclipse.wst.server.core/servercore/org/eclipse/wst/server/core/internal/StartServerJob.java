@@ -11,6 +11,7 @@
 package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.*;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.internal.ServerSchedulingRule;
 /**
@@ -20,7 +21,7 @@ public class StartServerJob extends DependantJob {
 	protected String launchMode;
 
 	public StartServerJob(IServer server, String launchMode) {
-		super("Starting server", server);
+		super(NLS.bind(Messages.jobStartingServer, server.getName()), server);
 		this.launchMode = launchMode;
 		setRule(new ServerSchedulingRule(server));
 	}
@@ -29,12 +30,11 @@ public class StartServerJob extends DependantJob {
 	 * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	protected IStatus run(IProgressMonitor monitor) {
-		IStatus status = new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null);
 		try {
 			server.synchronousStart(launchMode, monitor);
 		} catch (CoreException ce) {
 			return ce.getStatus();
 		}
-		return status;
+		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null);
 	}
 }

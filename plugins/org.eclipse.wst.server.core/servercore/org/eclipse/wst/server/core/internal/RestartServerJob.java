@@ -11,6 +11,7 @@
 package org.eclipse.wst.server.core.internal;
 
 import org.eclipse.core.runtime.*;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServer.IOperationListener;
 import org.eclipse.wst.server.core.internal.ServerSchedulingRule;
@@ -23,7 +24,7 @@ public class RestartServerJob extends DependantJob {
 	protected IStatus resultStatus;
 
 	public RestartServerJob(IServer server, String launchMode) {
-		super("Restart server", server);
+		super(NLS.bind(Messages.jobRestartingServer, server.getName()), server);
 		this.server = server;
 		this.launchMode = launchMode;
 		setRule(new ServerSchedulingRule(server));
