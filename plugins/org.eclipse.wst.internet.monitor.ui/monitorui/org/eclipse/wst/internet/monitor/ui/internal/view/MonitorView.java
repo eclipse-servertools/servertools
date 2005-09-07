@@ -60,6 +60,7 @@ public class MonitorView extends ViewPart {
 	protected static final String DEFAULT_VIEWER = "org.eclipse.wst.internet.monitor.viewers.byte";
 
 	protected IAction httpHeaderAction;
+	protected IAction preferenceAction;
 	
 	public static MonitorView view;
 	
@@ -380,8 +381,9 @@ public class MonitorView extends ViewPart {
 		MenuManager menuManager = new MenuManager();
 		menuManager.setRemoveAllWhenShown(true);
 		menuManager.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager mgr) {
-				mgr.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+			public void menuAboutToShow(IMenuManager menu) {
+				menu.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+				menu.add(preferenceAction);
 			}
 		});
 
@@ -459,7 +461,7 @@ public class MonitorView extends ViewPart {
 		httpHeaderAction.setChecked(vm.getDisplayHeaderInfo());
 		httpHeaderAction.setText(Messages.actionShowHeader);
 
-		IAction preferenceAction = new Action() {
+		preferenceAction = new Action() {
 			public void run() {
 				showPreferencePage();
 			}
@@ -479,6 +481,7 @@ public class MonitorView extends ViewPart {
 			FilterAction action = new FilterAction(vm, filters[i]);
 			menuManager.add(action);
 		}
+		menuManager.add(new Separator());
 		menuManager.add(preferenceAction);
 	}
 
