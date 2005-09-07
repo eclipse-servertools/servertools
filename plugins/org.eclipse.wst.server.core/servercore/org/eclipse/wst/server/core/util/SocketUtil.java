@@ -11,14 +11,13 @@
 package org.eclipse.wst.server.core.util;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.SocketException;
 import java.util.Random;
 
 import org.eclipse.wst.server.core.internal.Trace;
-
-import sun.net.spi.nameservice.dns.DNSNameService;
 /**
  * A utility class for socket-related function. It's main purposes are to find
  * unused ports, check whether a port is in use, and check whether a given
@@ -30,6 +29,8 @@ public class SocketUtil {
 	private static final Random rand = new Random(System.currentTimeMillis());
 
 	private static String dnsHostname;
+	
+	private static final String DNSNAMESERVICE_CLASS = "sun.net.spi.nameservice.dns.DNSNameService";
 
 	/**
 	 * Static utility class - cannot create an instance.
@@ -157,8 +158,13 @@ public class SocketUtil {
 			
 			if (dnsHostname == null)
 				try {
-					DNSNameService dns = new DNSNameService();
-					dnsHostname = dns.getHostByAddr(localHostaddr.getAddress());
+					//	workaround to break dependency with Sun's classes
+					Class cl = Class.forName(DNSNAMESERVICE_CLASS);
+					Method getHostByAddrMeth = cl.getMethod("getHostByAddr", new Class[] {byte[].class});
+					Object dns = cl.newInstance();
+					
+					dnsHostname = (String)getHostByAddrMeth.invoke(dns,
+						new Object[] { localHostaddr.getAddress() });
 				} catch (Throwable t) {
 					dnsHostname = "*****************";
 				}
