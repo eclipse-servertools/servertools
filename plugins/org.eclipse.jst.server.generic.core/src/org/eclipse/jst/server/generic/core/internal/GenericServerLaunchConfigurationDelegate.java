@@ -72,7 +72,9 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 			String mainTypeName = genericServer.getStartClassName();
 			IVMInstall vm = verifyVMInstall(configuration);
 			IVMRunner runner = vm.getVMRunner(mode);
-
+			if(runner== null){
+				throw new CoreException(new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,GenericServerCoreMessages.runModeNotSupported,null));
+			}
 			File workingDir = verifyWorkingDirectory(configuration);
 			String workingDirName = null;
 			if (workingDir != null)
