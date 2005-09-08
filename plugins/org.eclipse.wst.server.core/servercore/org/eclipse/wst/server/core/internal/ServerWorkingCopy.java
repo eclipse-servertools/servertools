@@ -218,15 +218,25 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		if (server == null)
 			return null;
 		
-		return server.getBehaviourDelegate(monitor);
+		if (behaviourDelegate != null)
+			return behaviourDelegate;
+		
+		synchronized (this) {
+			if (behaviourDelegate == null)
+				behaviourDelegate = server.getBehaviourDelegate(monitor);
+		}
+		return behaviourDelegate;
 	}
 
 	public void dispose() {
+		// behaviour delegate is cached from the original server
+		behaviourDelegate = null;
+		
 		super.dispose();
 		if (workingCopyDelegate != null)
 			workingCopyDelegate.dispose();
 	}
-	
+
 	public IServer save(boolean force, IProgressMonitor monitor) throws CoreException {
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.subTask(NLS.bind(Messages.savingTask, getName()));

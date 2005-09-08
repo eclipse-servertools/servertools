@@ -805,7 +805,7 @@ public class Server extends Base implements IServer {
 		getDelegate(monitor);
 		if (adapter.isInstance(delegate))
 			return delegate;
-
+		
 		getBehaviourDelegate(monitor);
 		if (adapter.isInstance(behaviourDelegate))
 			return behaviourDelegate;
