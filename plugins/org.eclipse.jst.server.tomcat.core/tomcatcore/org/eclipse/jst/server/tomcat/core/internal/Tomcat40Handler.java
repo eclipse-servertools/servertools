@@ -79,7 +79,7 @@ public class Tomcat40Handler implements ITomcatVersionHandler {
 	/**
 	 * @see ITomcatVersionHandler#getRuntimeVMArguments(IPath, IPath, boolean, boolean)
 	 */
-	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isTestEnv, boolean isSecure) {
+	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isTestEnv) {
 		List list = new ArrayList();
 		if (isTestEnv)
 			list.add("-Dcatalina.base=\"" + configPath.toOSString() + "\"");
@@ -90,18 +90,15 @@ public class Tomcat40Handler implements ITomcatVersionHandler {
 			installPath.append("common").append("lib").toOSString();
 		list.add("-Djava.endorsed.dirs=\"" + endorsed + "\"");
 		
-		// run in secure mode
-		if (isSecure) {
-			list.add("-Djava.security.manager");
-			IPath dir = configPath.append("conf").append("catalina.policy");
-			list.add("-Djava.security.policy=\"" + dir.toOSString() + "\"");
-		}
-		
 		String[] s = new String[list.size()];
 		list.toArray(s);
 		return s;
 	}
-	
+
+	public String getRuntimePolicyFile(IPath configPath) {
+		return configPath.append("conf").append("catalina.policy").toOSString();
+	}
+
 	/**
 	 * @see ITomcatVersionHandler#canAddModule(IWebModule)
 	 */

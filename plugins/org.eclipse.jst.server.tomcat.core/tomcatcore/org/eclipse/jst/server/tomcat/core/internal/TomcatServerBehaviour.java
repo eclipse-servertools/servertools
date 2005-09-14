@@ -121,7 +121,16 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		else
 			configPath = installPath;
 		return getTomcatVersionHandler().getRuntimeVMArguments(installPath, configPath,
-				getTomcatServer().isTestEnvironment(), getTomcatServer().isSecure());
+				getTomcatServer().isTestEnvironment());
+	}
+	
+	protected String getRuntimePolicyFile() {
+		IPath configPath;
+		if (getTomcatServer().isTestEnvironment())
+			configPath = getTempDirectory();
+		else
+			configPath = getServer().getRuntime().getLocation();
+		return getTomcatVersionHandler().getRuntimePolicyFile(configPath);
 	}
 	
 	protected static String renderCommandLine(String[] commandLine, String separator) {
@@ -530,25 +539,56 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, mergeArguments(existingProgArgs, getRuntimeProgramArguments(true)));
 
 		String existingVMArgs = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, (String)null);
-		if (existingVMArgs != null && !getTomcatServer().isSecure()) {
-			// remove -Djava.security.manager and -Djava.security.policy="x x"
-			int index = existingVMArgs.indexOf("-Djava.security.manager");
-			if (index >= 0) {
-				if (index > 0 && existingVMArgs.charAt(index - 1) == ' ')
-					index --;
-				int index2 = existingVMArgs.indexOf(" ", index + 2);
-				existingVMArgs = existingVMArgs.substring(0, index) + existingVMArgs.substring(index2);
+		String[] parsedVMArgs = null;
+		if (null != existingVMArgs) {
+			parsedVMArgs = DebugPlugin.parseArguments(existingVMArgs);
+		}
+		String [] configVMArgs = getRuntimeVMArguments();
+		if (getTomcatServer().isSecure()) {
+			boolean addSecurityArgs = true;
+			if (null != parsedVMArgs) {
+				for (int i = 0; i < parsedVMArgs.length; i++) {
+					if (parsedVMArgs[i].startsWith("wtp.configured.security")) {
+						addSecurityArgs = false;
+						break;
+					}
+				}
 			}
-			index = existingVMArgs.indexOf("-Djava.security.policy=");
-			if (index >= 0) {
-				if (index > 0 && existingVMArgs.charAt(index - 1) == ' ')
-					index --;
-				int index2 = existingVMArgs.indexOf("\"", index);
-				index2 = existingVMArgs.indexOf("\"", index2 + 1);
-				existingVMArgs = existingVMArgs.substring(0, index) + existingVMArgs.substring(index2+1);
+			if (addSecurityArgs) {
+				String [] newVMArgs = new String [configVMArgs.length + 3];
+				System.arraycopy(configVMArgs, 0, newVMArgs, 0, configVMArgs.length);
+				newVMArgs[configVMArgs.length] = "-Djava.security.manager";
+				newVMArgs[configVMArgs.length + 1] = "-Djava.security.policy=\""
+						+ getRuntimePolicyFile() +"\"";
+				newVMArgs[configVMArgs.length + 2] = "-Dwtp.configured.security=true";
+				configVMArgs = newVMArgs;
 			}
 		}
-		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, mergeArguments(existingVMArgs, getRuntimeVMArguments()));
+		else if (null != parsedVMArgs){
+			boolean removeSecurityArgs = false;
+			for (int i = 0; i < parsedVMArgs.length; i++) {
+				if (parsedVMArgs[i].startsWith("-Dwtp.configured.security")) {
+					removeSecurityArgs = true;
+					break;
+				}
+			}
+			if (removeSecurityArgs) {
+				StringBuffer filteredVMArgs = new StringBuffer();
+				for (int i = 0; i < parsedVMArgs.length; i++) {
+					String arg = parsedVMArgs[i];
+					if (!arg.startsWith("-Djava.security.manager")
+							&& !arg.startsWith("-Djava.security.policy=")
+							&& !arg.startsWith("-Dwtp.configured.security=")) {
+						if (filteredVMArgs.length() > 0) {
+							filteredVMArgs.append(' ');
+						}
+						filteredVMArgs.append(arg);
+					}
+				}
+				existingVMArgs = filteredVMArgs.toString();
+			}
+		}
+		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, mergeArguments(existingVMArgs, configVMArgs));
 		
 		ITomcatRuntime runtime = getTomcatRuntime();
 		IVMInstall vmInstall = runtime.getVMInstall();

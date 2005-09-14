@@ -77,22 +77,19 @@ public class Tomcat32Handler implements ITomcatVersionHandler {
 	/**
 	 * @see ITomcatVersionHandler#getRuntimeVMArguments(IPath, IPath, boolean, boolean)
 	 */
-	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isTestEnv, boolean isSecure) {
+	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isTestEnv) {
 		List list = new ArrayList();
 		list.add("-Dtomcat.home=\"" + installPath.toOSString() + "\"");
-		
-		// run in secure mode
-		if (isSecure) {
-			list.add("-Djava.security.manager");
-			IPath dir = configPath.append("conf").append("tomcat.policy");
-			list.add("-Djava.security.policy=\"" + dir.toOSString() + "\"");
-		}
 		
 		String[] s = new String[list.size()];
 		list.toArray(s);
 		return s;
 	}
-	
+
+	public String getRuntimePolicyFile(IPath configPath) {
+		return configPath.append("conf").append("tomcat.policy").toOSString();
+	}
+
 	/**
 	 * @see ITomcatVersionHandler#canAddModule(IWebModule)
 	 */
