@@ -45,7 +45,8 @@ public class HTTPThread extends Thread {
 	protected int contentLength = -1;
 	protected byte transferEncoding = -1;
 	protected String responseType = null;
-	protected boolean keepAlive = false;
+	protected boolean connectionKeepAlive = false;
+	protected boolean connectionClose = false;
 
 	protected static final String[] ENCODING_STRING = new String[] {
 		"chunked", "identity", "gzip", "compressed", "deflate"};
@@ -189,6 +190,11 @@ Host: localhost:8081
 	public void parseBody() throws IOException {
 		Trace.trace(Trace.PARSING, "Parsing body for: " + this);
 		
+		if (responseType != null && ("204".equals(responseType) || "304".equals(responseType))) {
+			setHTTPBody(new byte[0]);
+			return;
+		}
+	
 		if (isRequest) {
 			if (contentLength != -1) {
 				byte[] b = readBytes(contentLength);
@@ -204,7 +210,7 @@ Host: localhost:8081
 		}
 	
 		// just return body for HTTP 1.0 responses
-		if (!isRequest && !keepAlive && contentLength == -1 && transferEncoding == -1) {
+		if (!isRequest && !connectionKeepAlive && contentLength == -1 && transferEncoding == -1) {
 			Trace.trace(Trace.PARSING, "Assuming HTTP 1.0 for: " + this);
 			int n = buffer.length - bufferIndex;
 			byte[] b = readBytes(n);
@@ -238,7 +244,7 @@ Host: localhost:8081
 		}
 	
 		// spec 4.4.1
-		if (responseType != null &&	(responseType.startsWith("1") || "204".equals(responseType) || "304".equals(responseType))) {
+		if (responseType != null && responseType.startsWith("1")) {
 			setHTTPBody(new byte[0]);
 			return;
 		}
@@ -459,20 +465,24 @@ Host: localhost:8081
 				while (true) {
 					contentLength = -1;
 					transferEncoding = -1;
-					keepAlive = false;
+					connectionKeepAlive = false;
+					connectionClose = false;
 
 					parseHeader();
 					parseBody();
 					
-					if (isRequest && keepAlive)
+					if (isRequest && connectionKeepAlive)
 						waitForResponse();
 					
 					//Request r = conn.getRequestResponse(true);
 					//r.fireChangedEvent();
 
-					Trace.trace(Trace.PARSING, "Done HTTP request for " + this + " " + keepAlive);
-					if (!isRequest && !request.keepAlive) {
+					Trace.trace(Trace.PARSING, "Done HTTP request for " + this + " " + connectionKeepAlive);
+					if (!isRequest && (!request.connectionKeepAlive || connectionClose)) {
 						conn2.close();
+						if (request.connectionKeepAlive && connectionClose)
+							request.connectionKeepAlive = false;
+							notifyRequest();
 						break;
 					}
 					
@@ -543,8 +553,16 @@ Host: localhost:8081
 			try {
 				String t = s.substring(11).trim();
 				if (t.equalsIgnoreCase("Keep-Alive"))
-					keepAlive = true;
-				Trace.trace(Trace.PARSING, "Keep alive: " + keepAlive);
+					connectionKeepAlive = true;
+				// response contains "Connection: close" header
+				// close connection to the client even if "keepalive" had been requested
+				// we can't just reset request.keepAlive - it's used as indicator whether
+				// the request thread is (going to) wait for the response thread
+				// (and must be notified (only then)),
+				// so we have to let it alone
+				if (t.equalsIgnoreCase("close"))
+					connectionClose = true;
+				Trace.trace(Trace.PARSING, "Keep alive: " + connectionKeepAlive);
 			} catch (Exception e) {
 				Trace.trace(Trace.PARSING, "Error getting Connection: from header", e);
 			}
@@ -587,7 +605,7 @@ Host: localhost:8081
 
 	protected void notifyRequest() {
 		Trace.trace(Trace.PARSING, "Notifying request " + this);
-		while (request.keepAlive && !request.isWaiting) {
+		while (request.connectionKeepAlive && !request.isWaiting) {
 			Trace.trace(Trace.PARSING, "Waiting for request " + this);
 			try {
 				Thread.sleep(100);
