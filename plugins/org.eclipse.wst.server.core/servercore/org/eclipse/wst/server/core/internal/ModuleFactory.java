@@ -122,6 +122,7 @@ public class ModuleFactory implements IOrdered {
 	 * @see
 	 */
 	public IModule[] getModules() {
+		//Trace.trace(Trace.FINER, "getModules() > " + this);
 		modules = null;
 		if (modules == null) {
 			try {
@@ -137,6 +138,8 @@ public class ModuleFactory implements IOrdered {
 				return null;
 			}
 		}
+		
+		//Trace.trace(Trace.FINER, "getModules() < " + this);
 		
 		IModule[] m = new IModule[modules.size()];
 		modules.toArray(m);

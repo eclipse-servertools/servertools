@@ -15,6 +15,7 @@ import java.util.*;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.internal.ResourceManager;
 import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
 /**
@@ -118,19 +119,19 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 				try {
 					IResourceDelta delta = event.getDelta();
 					
-					//if (delta.getFlags() == IResourceDelta.MARKERS || delta.getFlags() == IResourceDelta.NO_CHANGE)
-					//	return;
-				
+					if (!ResourceManager.deltaContainsChangedFiles(delta))
+						return;
+					
 					delta.accept(new IResourceDeltaVisitor() {
 						public boolean visit(IResourceDelta visitorDelta) {
 							IResource resource = visitorDelta.getResource();
-							//Trace.trace(Trace.FINEST, "resource: " + resource);
-	
-							// only respond changes within projects
+							// Trace.trace(Trace.FINEST, "resource: " + resource);
+							
+							// only respond to changes within projects
 							if (resource != null && resource instanceof IProject) {
 								IProject project = (IProject) resource;
 								handleGlobalProjectChange(project, visitorDelta);
-								return true;
+								return false;
 							} else if (resource != null && resource.getProject() != null) {
 								return false;
 							} else
@@ -147,7 +148,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(listener, IResourceChangeEvent.POST_CHANGE);
 	}
-	
+
 	/**
 	 * Handle changes to a project.
 	 * 
@@ -155,23 +156,25 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * @param delta a resource delta
 	 */
 	protected static void handleGlobalProjectChange(final IProject project, IResourceDelta delta) {
+		Trace.trace(Trace.FINEST, "Firing global project change");
 		// handle project level changes
 		Iterator iterator = factories.iterator();
 		while (iterator.hasNext()) {
 			ProjectModuleFactoryDelegate factory = (ProjectModuleFactoryDelegate) iterator.next();
-			//Trace.trace("Firing to: " + factory);
+			//Trace.trace(Trace.FINEST, "Firing to: " + factory);
 			factory.handleProjectChange(project, delta);
 		}
 		
 		// handle internal updates
-		iterator = factories.iterator();
+		// TODO uncomment - this is already being called by the temporary updateProjects() method
+		/*iterator = factories.iterator();
 		while (iterator.hasNext()) {
 			ProjectModuleFactoryDelegate factory = (ProjectModuleFactoryDelegate) iterator.next();
-			//Trace.trace("Firing to: " + factory);
+			Trace.trace(Trace.FINER, "Firing to: " + factory);
 			factory.handleProjectInternalChange(project, delta);
-		}
+		}*/
 	}
-	
+
 	/**
 	 * Fire the accumulated module factory events.
 	 */
@@ -180,6 +183,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		Iterator iterator = factories.iterator();
 		while (iterator.hasNext()) {
 			ProjectModuleFactoryDelegate factory = (ProjectModuleFactoryDelegate) iterator.next();
+			//Trace.trace(Trace.FINEST, "Firing to: " + factory);
 			factory.updateProjects();
 		}
 	}

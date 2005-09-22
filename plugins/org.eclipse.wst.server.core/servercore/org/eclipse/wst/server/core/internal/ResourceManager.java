@@ -932,7 +932,7 @@ public class ResourceManager {
 		if (project == null)
 			return;
 		
-		if (isDeltaOnlyMarkers(delta))
+		if (!deltaContainsChangedFiles(delta))
 			return;
 
 		final IModule[] modules = ServerUtil.getModules(project);
@@ -956,21 +956,38 @@ public class ResourceManager {
 		}
 		Trace.trace(Trace.FINEST, "< publishHandleProjectChange");
 	}
-	
-	protected boolean isDeltaOnlyMarkers(IResourceDelta delta) {
+
+	/**
+	 * Returns <code>true</code> if at least one file in the delta is changed,
+	 * and <code>false</code> otherwise.
+	 * 
+	 * @param delta a resource delta
+	 * @return <code>true</code> if at least one file in the delta is changed,
+	 *    and <code>false</code> otherwise
+	 */
+	public static boolean deltaContainsChangedFiles(IResourceDelta delta) {
 		class Temp {
-			boolean b = true;
+			boolean b = false;
 		}
 		final Temp t = new Temp();
 		try {
 			delta.accept(new IResourceDeltaVisitor() {
 				public boolean visit(IResourceDelta delta2) throws CoreException {
-					if (!t.b)
+					if (t.b)
 						return false;
-					int flags = delta2.getFlags();
-					if (flags != 0 && flags != IResourceDelta.MARKERS) {
-						t.b = false;
+					//Trace.trace(Trace.FINEST, delta2.getResource() + "  " + delta2.getKind() + " " + delta2.getFlags());
+					if (delta2.getKind() == IResourceDelta.NO_CHANGE)
 						return false;
+					if (delta2.getResource() instanceof IFile) {
+						if ((delta2.getFlags() & IResourceDelta.CONTENT) == 0
+							&& (delta2.getFlags() & IResourceDelta.REPLACED) == 0
+							&& (delta2.getFlags() & IResourceDelta.SYNC) == 0)
+							return true;
+						if (delta2.getKind() == IResourceDelta.CHANGED) { // && delta2.getAffectedChildren().length == 0) {
+							t.b = true;
+							return false;
+							//return true;
+						}
 					}
 					return true;
 				}
@@ -978,6 +995,7 @@ public class ResourceManager {
 		} catch (Exception e) {
 			// ignore
 		}
+		//Trace.trace(Trace.FINEST, "Delta contains change: " + t.b);
 		return t.b;
 	}
 
