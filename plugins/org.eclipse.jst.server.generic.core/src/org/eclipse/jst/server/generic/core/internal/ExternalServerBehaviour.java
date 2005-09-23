@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jst.server.generic.internal.xml.Resolver;
@@ -46,29 +47,6 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
     private String mode;
     private ILaunch launch; 
     private IProgressMonitor monitor;
-	
-    /**
-	 * Since the server may already be running, need to check if any of the server
-	 * ports are in use; if they are, need to set the server state to "unknown" so 
-	 * that the user can stop the server from the UI.
-	 */
-    protected void initialize(IProgressMonitor monitor) {
-    	if (getServer().getServerState() == IServer.STATE_STOPPED) {
-    		ServerPort[] ports = getServer().getServerPorts(null);
-    		ServerPort sp;
-    		for(int i=0;i<ports.length;i++){
-    			sp = ports[i];
-    			if (SocketUtil.isPortInUse(sp.getPort(), 5)) {
-    				Trace.trace(Trace.WARNING, "Port " + sp.getPort() + " is currently in use");
-    				Status status = new Status(Status.WARNING, CorePlugin.PLUGIN_ID, Status.OK, 
-    							GenericServerCoreMessages.bind(GenericServerCoreMessages.errorPortInUse,Integer.toString(sp.getPort()),sp.getName()), null);
-    				setServerStatus(status);
-    				setServerState(IServer.STATE_UNKNOWN);
-    				return;
-    			}
-    		}
-    	}
-	}
     
     /**
      * Override to reset the status if the state was unknown
@@ -79,13 +57,39 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
     }
 
     /**
-     * Override to reset the status if the state was unknown and an exception was not thrown
+     * Override to set status to unknown if the port was in use and to reset the status if the state was 
+     * unknown and an exception was not thrown. Will want to change logic once external generic server pings
+     * server process to determine state instead of maintaining handle to process. 
      */
     protected void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException {
     	int state = getServer().getServerState();
-    	super.setupLaunch(launch, launchMode, monitor);
+    	try {
+    		super.setupLaunch(launch, launchMode, monitor);
+    	} catch (CoreException ce) {
+    		ServerPort portInUse = portInUse();
+    		if (portInUse != null) {
+    			Trace.trace(Trace.WARNING, "Port " + portInUse.getPort() + " is currently in use");
+				Status status = new Status(Status.WARNING, CorePlugin.PLUGIN_ID, Status.OK, 
+							GenericServerCoreMessages.bind(GenericServerCoreMessages.errorPortInUse,Integer.toString(portInUse.getPort()),portInUse.getName()), null);
+				setServerStatus(status);
+				setServerState(IServer.STATE_UNKNOWN);
+    		}
+    		throw ce;
+    	}
     	resetStatus(state);
     }
+    
+    private ServerPort portInUse() {
+    	ServerPort[] ports = getServer().getServerPorts(null);
+    	ServerPort sp;
+    	for(int i=0;i<ports.length;i++){
+    		sp = ports[i];
+    		if (SocketUtil.isPortInUse(sp.getPort(), 5)) {
+    			return sp;
+    		}
+    	}
+    	return null;
+	}
     
 	/**
 	 * Override to trigger the launch of the debugging session (if appropriate).
@@ -132,11 +136,25 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 		if (state == IServer.STATE_STOPPED) 
     		return;
     
-		// need to execute a standard shutdown rather than
-		// just killing the original process
-		// the originally launched process may have only been
-		// a proxy and thus no longer executing
+		// cache a ref to the current process
+		IProcess currentProcess = process;
+		// set the process var to null so that GenericServerBehavior.setProcess()
+		// will grab the stop executable (and declare the server stopped when it exits)
+		process = null;
+
+		// execute the standard shutdown
 		shutdown(state);
+		
+		// if the shutdown did not terminate the process, forcibly terminate it
+		try {
+    		if (currentProcess != null && !currentProcess.isTerminated()) {
+    			Trace.trace(Trace.FINER, "About to kill process: " + currentProcess);
+    			currentProcess.terminate();
+    			currentProcess = null;
+    		}
+    	} catch (Exception e) {
+    		Trace.trace(Trace.SEVERE, "Error killing the process", e);
+    	}
 	}
 	
 	/**
