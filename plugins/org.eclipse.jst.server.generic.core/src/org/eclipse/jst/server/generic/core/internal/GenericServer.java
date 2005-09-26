@@ -42,6 +42,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.Port;
@@ -52,6 +53,7 @@ import org.eclipse.jst.server.core.IEnterpriseApplication;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.core.internal.RuntimeWorkingCopy;
 import org.eclipse.wst.server.core.internal.ServerMonitorManager;
 import org.eclipse.wst.server.core.model.IURLProvider;
 import org.eclipse.wst.server.core.model.ServerDelegate;
@@ -79,21 +81,17 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 
 	public IStatus canModifyModules(IModule[] add, IModule[] remove) {
 		Iterator iterator = getServerDefinition().getModule().iterator();
-       
-        while(iterator.hasNext())   {
+	
+	    while(iterator.hasNext())   {
 	        Module module = (Module)iterator.next();
 	        for (int i = 0; i < add.length; i++) {
-                if(add[i].getModuleType().getId().equals(module.getType()))
-                    return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "CanModifyModules", null);
-            }
+	            if(add[i].getModuleType().getId().equals(module.getType()))
+	                return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "CanModifyModules", null);
+	        }
 	    }
 		return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.moduleNotCompatible, null);
 	}
 	
-	private String createModuleId(IModule module)
-	{
-	    return module.getProject().getName()+":"+module.getId();
-	}
     /* (non-Javadoc)
      * @see org.eclipse.wst.server.core.model.ServerDelegate#modifyModules(org.eclipse.wst.server.core.IModule[], org.eclipse.wst.server.core.IModule[], org.eclipse.core.runtime.IProgressMonitor)
      */
@@ -107,15 +105,15 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
                modules=new ArrayList(add.length);
             }
             for (int i = 0; i < add.length; i++) {
-               String modlId = createModuleId(add[i]);
-               if(modules.contains(modlId)==false)
-                    modules.add(modlId);
+               
+               if(modules.contains(add[i].getId())==false)
+                    modules.add(add[i].getId());
             }
         }
         if(remove!=null && remove.length>0 && modules!=null)
         {
             for (int i = 0; i < remove.length; i++) {
-                modules.remove(createModuleId(remove[i]));
+                modules.remove(remove[i].getId());
              }
         }
         if(modules!=null)    
@@ -159,13 +157,16 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	 * @see org.eclipse.wst.server.core.model.IServerDelegate#getChildModules(org.eclipse.wst.server.core.model.IModule[])
 	 */
 	public IModule[] getChildModules(IModule[] module) {
-		String type = module[0].getModuleType().getId();
-		if (module.length==1 && "j2ee.ear".equals(type)) {
-            IEnterpriseApplication enterpriseApplication = (IEnterpriseApplication) module[0].loadAdapter(IEnterpriseApplication.class,null);
-            if (enterpriseApplication.getModules() != null) {
-            	return enterpriseApplication.getModules();
-            }
-        }
+		if (module[0] != null && module[0].getModuleType() != null) {
+			String type = module[0].getModuleType().getId();
+			if (module.length == 1 && "j2ee.ear".equals(type)) {
+				IEnterpriseApplication enterpriseApplication = (IEnterpriseApplication) module[0]
+						.loadAdapter(IEnterpriseApplication.class, null);
+				if (enterpriseApplication.getModules() != null) {
+					return enterpriseApplication.getModules();
+				}
+			}
+		}
 		return new IModule[0];
 	}
 
@@ -249,12 +250,12 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	}
 
     public ServerRuntime getServerDefinition() {
-    	GenericServerRuntime rt = getRuntimeDelegate();
-    	if(rt==null)
-    		return null;
-    	String defId = rt.getServerDefinitionId();
-   		return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(defId,getServerInstanceProperties());
-    }
+		GenericServerRuntime rt = getRuntimeDelegate();
+		if(rt==null)
+			return null;
+		String defId = rt.getServerDefinitionId();
+		return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(defId,getServerInstanceProperties());
+	}
 
     private GenericServerRuntime getRuntimeDelegate(){
        return (GenericServerRuntime)getServer().getRuntime().loadAdapter(GenericServerRuntime.class,null);
