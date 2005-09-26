@@ -9,8 +9,12 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/ -->
-<toc label="Working with Tomcat" topic="topics/tomcat.html">
-   <topic label="Installing a Tomcat server" href="topics/InstallTomcat.html"/>
+<toc label="Working with Servers">
+<topic label="Working with Tomcat">
    <topic label="Creating a Tomcat server" href="topics/tomcat.html"/>
    <topic label="Adding the Apache Tomcat runtimes" href="topics/twtomprf.html"/>
+</topic>
+<topic label="Working with Geronimo" href="topics/geronimo.html">
+<topic label="Installing Geronimo" href="topics/InstallGeronimo.html"/>
+</topic>
 </toc>
