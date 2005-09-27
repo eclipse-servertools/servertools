@@ -10,11 +10,29 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/ -->
-<toc label="Using the server" topic="topics/tdbgjsp.html">
-   <topic label="Debugging a JSP file on a server" href="topics/tdbgjsp.html"/>
-   <!-- <topic label="Debugging applications on a server" href="topics/tdebug.html"/>-->
-   <topic label="Debugging a servlet on a server" href="topics/tservlet.html"/>
+<toc label="Testing and publishing applications">
+   <topic label="Application testing and publishing" href="topics/tdbgjsp.html"/>
+   <anchor id="st1"/>
+   <topic label="Servers view" href="topics/tservlet.html"/>
+   <topic label="Resources used by the Server Tools" href="topics/twcrtins.html"/>
+   <topic label="Which test server will start" href="topics/twcrtins.html"/>
+   <anchor id="st2"/>
+   <topic label="Testing applications on a server" href="topics/twcrtins.html">
+   <topic label="Testing artifacts on a server" href="topics/twcrtins.html"/>
+   <anchor id="st3"/>
+   <anchor id="st4"/>
+   <anchor id="st5"/>
+   </topic>
+   <topic label="Publishing applications to a server" href="topics/twpub.html">
+   <topic label="Publishing your application" href="topics/twpub.html"/>
+   <anchor id="st6"/>
+   <anchor id="st7"/>
+   <topic label="Creating, editing, and deleting servers" href="topics/twpub.html">
    <topic label="Creating a server" href="topics/twcrtins.html"/>
+   <anchor id="st8"/>
+   <anchor id="st9"/>
+   <topic label="Tomcat server" href="../org.eclipse.jst.server.ui.doc.user/tomcat_toc.xml"/>
+   <topic label="Geronimo server" href="../org.eclipse.jst.server.ui.doc.user/geronimo_toc.xml"/>
    <topic label="Deleting a server" href="topics/twdelins.html"/>
    <topic label="Editing a server" href="topics/twedtins.html"/>
    <topic label="Setting a default server" href="topics/twprefin.html"/>
