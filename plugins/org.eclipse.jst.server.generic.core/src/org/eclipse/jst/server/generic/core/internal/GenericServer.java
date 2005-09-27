@@ -42,22 +42,20 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jst.server.core.IEJBModule;
+import org.eclipse.jst.server.core.IEnterpriseApplication;
+import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.Port;
 import org.eclipse.jst.server.generic.servertype.definition.Property;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
-import org.eclipse.jst.server.core.IEJBModule;
-import org.eclipse.jst.server.core.IEnterpriseApplication;
-import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.internal.RuntimeWorkingCopy;
 import org.eclipse.wst.server.core.internal.ServerMonitorManager;
 import org.eclipse.wst.server.core.model.IURLProvider;
 import org.eclipse.wst.server.core.model.ServerDelegate;
-import org.eclipse.wst.server.core.ServerPort;
 
 /**
  * Generic XML based server implementation.
@@ -249,17 +247,19 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 		return port;
 	}
 
-    public ServerRuntime getServerDefinition() {
-		GenericServerRuntime rt = getRuntimeDelegate();
-		if(rt==null)
-			return null;
-		String defId = rt.getServerDefinitionId();
-		return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(defId,getServerInstanceProperties());
+	/**
+	 * Returns the ServerRuntime that represents the .serverdef
+	 * file for this server. 
+	 * @return server runtime
+	 */
+    public ServerRuntime getServerDefinition(){
+		String rtTypeId = getServer().getRuntime().getRuntimeType().getId();
+		return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(rtTypeId,getServerInstanceProperties());
 	}
 
     private GenericServerRuntime getRuntimeDelegate(){
-       return (GenericServerRuntime)getServer().getRuntime().loadAdapter(GenericServerRuntime.class,null);
-    }
+    	return (GenericServerRuntime)getServer().getRuntime().loadAdapter(GenericServerRuntime.class,null);
+     }
 
 
     /*
