@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.0"?> 
+<?xml version="1.0" encoding="utf-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 <!-- /*******************************************************************************
  * Copyright (c) 2000, 2005 IBM Corporation and others.
@@ -11,16 +10,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/ -->
-<!-- ================================================= -->
-<!-- This is the plugin for declaring the help         -->
-<!-- contributions for the Server Tools component    -->
-<!-- ================================================= -->
-
-<plugin>
-
-<extension point="org.eclipse.help.toc">
-	<toc file="geronimo_toc.xml" />
-   </extension>
-
-</plugin>
-
+<toc label="Working with Servers">
+<topic label="Working with Geronimo" href="topics/geronimo.html">
+<topic label="Installing Geronimo" href="topics/InstallGeronimo.html"/>
+</topic>
+</toc>
