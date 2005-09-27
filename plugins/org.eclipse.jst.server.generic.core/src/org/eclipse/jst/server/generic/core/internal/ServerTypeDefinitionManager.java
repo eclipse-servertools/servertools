@@ -52,7 +52,13 @@ public class ServerTypeDefinitionManager
 		fXmlUtils = new XMLUtils(); 
 	}
 
-
+	/**
+	 * Returns the ServerRuntime that represents the .serverdef file
+	 * for a given runtime type.
+	 * @param id runtime type id
+	 * @param properties user provided properties
+	 * @return server runtime that is initialized with user properties 
+	 */
 	public ServerRuntime getServerRuntimeDefinition(String id, Map properties)
 	{
 		ServerRuntime definition =  fXmlUtils.getServerTypeDefinition(id);
@@ -60,7 +66,10 @@ public class ServerTypeDefinitionManager
             definition.setPropertyValues(properties);
 		return definition;
 	}
-	
+	/**
+	 * Returns all the ServerRuntimes registered a .serverdef.
+	 * @return
+	 */
 	public ServerRuntime[] getServerTypeDefinitions()
 	{
 		 List definitionList = fXmlUtils.getServerTypeDefinitions();
