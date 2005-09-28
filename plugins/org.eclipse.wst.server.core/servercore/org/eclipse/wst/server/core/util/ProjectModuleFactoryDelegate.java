@@ -110,9 +110,12 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 
 	/**
 	 * Add a resource listener to the workspace.
+	 * 
+	 * @deprecated
 	 */
-	/*protected static void addListener() {
-		if (listener != null)
+	protected static void addListener() {
+		// do nothing
+		/*if (listener != null)
 			return;
 
 		listener = new IResourceChangeListener() {
@@ -148,8 +151,8 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 			}
 		};
 		
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(listener, IResourceChangeEvent.POST_CHANGE);
-	}*/
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(listener, IResourceChangeEvent.POST_CHANGE);*/
+	}
 
 	/**
 	 * Handle changes to a project.
