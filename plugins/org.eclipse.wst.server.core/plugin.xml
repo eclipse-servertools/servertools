@@ -21,12 +21,4 @@
        id="*"
        name="%moduleTypeUnknown"/>
   </extension>
-  
-  <extension point="org.eclipse.core.resources.builders"
-     id="builder"
-     name="%builderName">
-    <builder>
-      <run class="org.eclipse.wst.server.core.internal.AssemblyBuilder"/>
-    </builder>
-  </extension>
 </plugin>

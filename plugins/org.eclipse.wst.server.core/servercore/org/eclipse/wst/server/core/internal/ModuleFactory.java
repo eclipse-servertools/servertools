@@ -117,13 +117,17 @@ public class ModuleFactory implements IOrdered {
 		}
 		return null;
 	}
-	
+
+	public void clearModuleCache() {
+		modules = null;
+	}
+
 	/*
 	 * @see
 	 */
 	public IModule[] getModules() {
 		//Trace.trace(Trace.FINER, "getModules() > " + this);
-		modules = null;
+		//modules = null;
 		if (modules == null) {
 			try {
 				modules = new ArrayList();

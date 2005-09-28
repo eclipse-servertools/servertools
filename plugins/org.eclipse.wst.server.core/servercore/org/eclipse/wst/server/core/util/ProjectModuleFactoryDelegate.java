@@ -13,9 +13,11 @@ package org.eclipse.wst.server.core.util;
 import java.util.*;
 
 import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.internal.ResourceManager;
+import org.eclipse.wst.server.core.internal.ModuleFactory;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
 /**
@@ -43,7 +45,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		
 		factories.add(this);
 		
-		addListener();
+		//addListener();
 	}
 
 	/**
@@ -109,7 +111,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	/**
 	 * Add a resource listener to the workspace.
 	 */
-	protected static void addListener() {
+	/*protected static void addListener() {
 		if (listener != null)
 			return;
 
@@ -147,7 +149,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		};
 		
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(listener, IResourceChangeEvent.POST_CHANGE);
-	}
+	}*/
 
 	/**
 	 * Handle changes to a project.
@@ -155,13 +157,23 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * @param project a project
 	 * @param delta a resource delta
 	 */
-	protected static void handleGlobalProjectChange(final IProject project, IResourceDelta delta) {
+	public static void handleGlobalProjectChange(final IProject project, IResourceDelta delta) {
+		if (!deltaContainsChangedModules(delta))
+			return;
+		
+		//	 clear cache
+		ModuleFactory[] factories2 = ServerPlugin.getModuleFactories();
+		int size = factories2.length;
+		for (int i = 0; i < size; i++)
+			factories2[i].clearModuleCache();
+		
+		
 		Trace.trace(Trace.FINEST, "Firing global project change");
 		// handle project level changes
 		Iterator iterator = factories.iterator();
 		while (iterator.hasNext()) {
 			ProjectModuleFactoryDelegate factory = (ProjectModuleFactoryDelegate) iterator.next();
-			//Trace.trace(Trace.FINEST, "Firing to: " + factory);
+			Trace.trace(Trace.FINEST, "Firing to: " + factory);
 			factory.handleProjectChange(project, delta);
 		}
 		
@@ -173,6 +185,8 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 			Trace.trace(Trace.FINER, "Firing to: " + factory);
 			factory.handleProjectInternalChange(project, delta);
 		}*/
+		
+		fireGlobalEvents();
 	}
 
 	/**
@@ -183,7 +197,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		Iterator iterator = factories.iterator();
 		while (iterator.hasNext()) {
 			ProjectModuleFactoryDelegate factory = (ProjectModuleFactoryDelegate) iterator.next();
-			//Trace.trace(Trace.FINEST, "Firing to: " + factory);
+			Trace.trace(Trace.FINEST, "Firing to: " + factory);
 			factory.updateProjects();
 		}
 	}
@@ -223,14 +237,14 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 			}
 		}
 	}
-	
+
 	/**
 	 * Handle changes to a project.
 	 * 
 	 * @param project a project
 	 * @param delta a resource delta
 	 */
-	private void handleProjectInternalChange(final IProject project, IResourceDelta delta) {
+	/*private void handleProjectInternalChange(final IProject project, IResourceDelta delta) {
 		final IPath[] paths = getListenerPaths();
 		if (paths != null) {
 			final IModule[] modules = getModules(project);
@@ -274,7 +288,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 				}
 			}
 		}
-	}
+	}*/
 
 	/**
 	 * Add a module for the given project.
@@ -327,6 +341,39 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * @return a possibly empty array of modules
 	 */
 	protected abstract IModule[] createModules(IProject project);
+	
+	/**
+	 * Returns <code>true</code> if at least one file in the delta is changed,
+	 * and <code>false</code> otherwise.
+	 * 
+	 * @param delta a resource delta
+	 * @return <code>true</code> if at least one file in the delta is changed,
+	 *    and <code>false</code> otherwise
+	 */
+	private static boolean deltaContainsChangedModules(IResourceDelta delta) {
+		class Temp {
+			boolean b = false;
+		}
+		final Temp t = new Temp();
+		try {
+			delta.accept(new IResourceDeltaVisitor() {
+				public boolean visit(IResourceDelta delta2) throws CoreException {
+					if (t.b)
+						return false;
+					//Trace.trace(Trace.FINEST, delta2.getResource() + "  " + delta2.getKind() + " " + delta2.getFlags());
+					if (".wtpmodules".equals(delta2.getResource().getName())) {
+						t.b = true;
+						return false;
+					}
+					return true;
+				}
+			});
+		} catch (Exception e) {
+			// ignore
+		}
+		//Trace.trace(Trace.FINEST, "Delta contains change: " + t.b);
+		return t.b;
+	}
 
 	/**
 	 * Returns the list of resources that the module should listen to

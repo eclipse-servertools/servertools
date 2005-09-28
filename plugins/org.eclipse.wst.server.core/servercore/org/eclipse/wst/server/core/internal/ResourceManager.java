@@ -18,6 +18,7 @@ import org.eclipse.core.resources.*;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.ServerDelegate;
+import org.eclipse.wst.server.core.util.ProjectModuleFactoryDelegate;
 /**
  * ResourceManager handles the mappings between resources
  * and servers or server configurations, and creates
@@ -934,13 +935,16 @@ public class ResourceManager {
 		
 		if (!deltaContainsChangedFiles(delta))
 			return;
-
+		
+		// process module changes
+		ProjectModuleFactoryDelegate.handleGlobalProjectChange(project, delta);
+		
 		final IModule[] modules = ServerUtil.getModules(project);
 		if (modules == null)
 			return;
 		
 		Trace.trace(Trace.FINEST, "- publishHandleProjectChange");
-
+		
 		if (modules != null) {
 			int size2 = modules.length;
 			for (int j = 0; j < size2; j++) {
@@ -979,15 +983,16 @@ public class ResourceManager {
 					if (delta2.getKind() == IResourceDelta.NO_CHANGE)
 						return false;
 					if (delta2.getResource() instanceof IFile) {
-						if ((delta2.getFlags() & IResourceDelta.CONTENT) == 0
+						if (delta2.getKind() == IResourceDelta.CHANGED
+							&& (delta2.getFlags() & IResourceDelta.CONTENT) == 0
 							&& (delta2.getFlags() & IResourceDelta.REPLACED) == 0
 							&& (delta2.getFlags() & IResourceDelta.SYNC) == 0)
 							return true;
-						if (delta2.getKind() == IResourceDelta.CHANGED) { // && delta2.getAffectedChildren().length == 0) {
-							t.b = true;
-							return false;
+						//if (delta2.getKind() == IResourceDelta.CHANGED) { // && delta2.getAffectedChildren().length == 0) {
+						t.b = true;
+						return false;
 							//return true;
-						}
+						//}
 					}
 					return true;
 				}
