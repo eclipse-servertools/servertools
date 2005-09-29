@@ -26,7 +26,7 @@ import junit.framework.TestCase;
  */
 public class GenericServerClasspathRuntimeHandlerTest extends TestCase {
 
-    private static final String CLASSPATH_PREFIX = "/dev/java/appservers/JOnAS-4.1.4";
+    private static final String SERVER_ROOT = "/dev/java/appservers/JOnAS-4.1.4";
     private static final String SERVER_DEF_NAME = "JOnAS 4.x";
     private IRuntime fRuntime;
     /*
@@ -41,9 +41,8 @@ public class GenericServerClasspathRuntimeHandlerTest extends TestCase {
 		props.put("mappernames", "");
 		props.put("classPathVariableName", "JONAS");
 		props.put("serverAddress", "127.0.0.1");
-		props.put("jonasBase", "D:\\dev\\java\\appservers\\JOnAS-4.1.4");
-		props.put("jonasRoot", "D:\\dev\\java\\appservers\\JOnAS-4.1.4");
-		props.put("classPath", CLASSPATH_PREFIX);
+		props.put("jonasBase", SERVER_ROOT);
+		props.put("jonasRoot", SERVER_ROOT);
 		props.put("protocols", "jrmp");
 		props.put("port", "9000");		
 	    delegate.setServerInstanceProperties(props);
@@ -72,7 +71,7 @@ public class GenericServerClasspathRuntimeHandlerTest extends TestCase {
         IClasspathEntry[] entries = handler.resolveClasspathContainer(fRuntime,null);
         assertNotNull("Failed to resolve classpath entries",entries);
         for (int i = 0; i < entries.length; i++) {
-            assertTrue("the resolved classpath entry does not start with classpath prefix",(new org.eclipse.core.runtime.Path(CLASSPATH_PREFIX)).isPrefixOf(entries[i].getPath()));
+            assertTrue("the resolved classpath entry does not start with classpath prefix",(new org.eclipse.core.runtime.Path(SERVER_ROOT)).isPrefixOf(entries[i].getPath()));
         }
     }
 
