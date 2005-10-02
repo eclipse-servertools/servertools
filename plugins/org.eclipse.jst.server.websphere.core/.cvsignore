@@ -1,2 +1,4 @@
 bin
 *.xml
+temp.folder
+webspherecore.jar

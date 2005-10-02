@@ -3,3 +3,4 @@ build.xml
 org.eclipse.jst.server.tomcat.ui_3.0.0.jar
 tomcatui.jar
 temp.folder
+@dot
