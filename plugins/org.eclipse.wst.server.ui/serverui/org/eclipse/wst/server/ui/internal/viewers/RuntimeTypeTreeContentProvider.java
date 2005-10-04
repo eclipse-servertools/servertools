@@ -58,11 +58,6 @@ public class RuntimeTypeTreeContentProvider extends AbstractTreeContentProvider 
 				for (int i = 0; i < size; i++) {
 					IRuntimeType runtimeType = runtimeTypes[i];
 					if (!creation || runtimeType.canCreate()) {
-						int order = getRuntimeOrder(runtimeType);
-						if (order > initialSelectionOrder) {
-							initialSelection = runtimeType;
-							initialSelectionOrder = order;
-						}
 						TreeElement ele = null;
 						if (style == STYLE_VENDOR) {
 							ele = getOrCreate(list, runtimeType.getVendor());
@@ -98,21 +93,11 @@ public class RuntimeTypeTreeContentProvider extends AbstractTreeContentProvider 
 				int size = runtimeTypes.length;
 				for (int i = 0; i < size; i++) {
 					IRuntimeType runtimeType = runtimeTypes[i];
-					if (!creation || runtimeType.canCreate()) {
-						int order = getRuntimeOrder(runtimeType);
-						if (order > initialSelectionOrder) {
-							initialSelection = runtimeType;
-							initialSelectionOrder = order;
-						}
+					if (!creation || runtimeType.canCreate())
 						list.add(runtimeType);
-					}
 				}
 			}
 		}
 		elements = list.toArray();
-	}
-	
-	private int getRuntimeOrder(IRuntimeType runtimeType) {
-		return 0;
 	}
 }

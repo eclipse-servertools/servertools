@@ -67,11 +67,6 @@ public class ServerTreeContentProvider extends AbstractTreeContentProvider {
 					if (acceptServer(servers[i])) {
 						IServerType serverType = servers[i].getServerType();
 						IRuntimeType runtimeType = serverType.getRuntimeType();
-						int order = getServerOrder(serverType);
-						if (order > initialSelectionOrder) {
-							initialSelection = servers[i];
-							initialSelectionOrder = order;
-						}
 						TreeElement te = null;
 						if (style == STYLE_HOST) {
 							te = getOrCreate(list, servers[i].getHost());
@@ -96,15 +91,8 @@ public class ServerTreeContentProvider extends AbstractTreeContentProvider {
 			if (servers != null) {
 				int size = servers.length;
 				for (int i = 0; i < size; i++) {
-					if (acceptServer(servers[i])) {
-						IServerType serverType = servers[i].getServerType();
+					if (acceptServer(servers[i]))
 						list.add(servers[i]);
-						int order = getServerOrder(serverType);
-						if (order > initialSelectionOrder) {
-							initialSelection = servers[i];
-							initialSelectionOrder = order;
-						}
-					}
 				}
 			}
 		}
@@ -126,9 +114,5 @@ public class ServerTreeContentProvider extends AbstractTreeContentProvider {
 				return false;
 		}
 		return true;
-	}
-	
-	private int getServerOrder(IServerType serverType) {
-		return 0;
 	}
 }

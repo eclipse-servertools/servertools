@@ -7,7 +7,8 @@
   <extension-point id="editorActions" name="%extensionPointEditorActions" schema="schema/editorActions.exsd"/>
   <extension-point id="serverImages" name="%extensionPointServerImages" schema="schema/serverImages.exsd"/>
   <extension-point id="wizardFragments" name="%extensionPointWizardFragments" schema="schema/wizardFragments.exsd"/>
-  <extension-point id="audio" name="%extensionPointAudio"/>
+  <extension-point id="initialSelectionProvider" name="%extensionPointInitialSelectionProvider" schema="schema/initialSelectionProvider.exsd"/>
+  <extension-point id="audio" name="%extensionPointAudio" schema="schema/audio.exsd"/>
 
 <extension point="org.eclipse.ui.ide.projectNatureImages">
   <image

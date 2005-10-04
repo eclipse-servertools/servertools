@@ -60,21 +60,9 @@ public class RuntimeTypeComposite extends AbstractTreeComposite {
 			}
 		});
 		
-		treeViewer.setSorter(new ViewerSorter() {
-			public int compare(Viewer viewer, Object e1, Object e2) {
-				if (e1 instanceof IRuntimeType && !(e2 instanceof IRuntimeType))
-					return 1;
-				if (!(e1 instanceof IRuntimeType) && e2 instanceof IRuntimeType)
-					return -1;
-				if (!(e1 instanceof IRuntimeType && e2 instanceof IRuntimeType))
-					return super.compare(viewer, e1, e2);
-				IRuntimeType r1 = (IRuntimeType) e1;
-				IRuntimeType r2 = (IRuntimeType) e2;
-				return r1.getName().compareToIgnoreCase(r2.getName());
-			}
-		});
+		treeViewer.setSorter(new DefaultViewerSorter());
 	}
-	
+
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (visible && initialSelection) {
@@ -83,7 +71,7 @@ public class RuntimeTypeComposite extends AbstractTreeComposite {
 				treeViewer.setSelection(new StructuredSelection(contentProvider.getInitialSelection()), true);
 		}
 	}
-	
+
 	protected String getTitleLabel() {
 		return Messages.runtimeTypeCompTree;
 	}
@@ -101,6 +89,13 @@ public class RuntimeTypeComposite extends AbstractTreeComposite {
 	protected void viewOptionSelected(byte option) {
 		ISelection sel = treeViewer.getSelection();
 		treeViewer.setContentProvider(new RuntimeTypeTreeContentProvider(option, creation, type, version, runtimeTypeId));
+		treeViewer.setSelection(sel);
+	}
+
+	public void refresh() {
+		ISelection sel = treeViewer.getSelection();
+		RuntimeTypeTreeContentProvider cp = (RuntimeTypeTreeContentProvider) treeViewer.getContentProvider();
+		treeViewer.setContentProvider(new RuntimeTypeTreeContentProvider(cp.style, creation, type, version, runtimeTypeId));
 		treeViewer.setSelection(sel);
 	}
 

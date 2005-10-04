@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 /**
  * Runtime type content provider.
  */
@@ -24,12 +25,11 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 	public static final byte STYLE_FLAT = 0;
 
 	public static final String ROOT = "root";
-	
+
 	protected byte style;
-	
+
 	protected Object initialSelection;
-	protected int initialSelectionOrder;
-	
+
 	public class TreeElement {
 		String text;
 		List contents;
@@ -50,12 +50,12 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 		
 		fillTree();
 	}
-	
+
 	public AbstractTreeContentProvider(byte style, boolean init) {
 		super();
 		this.style = style;
 	}
-	
+
 	protected abstract void fillTree();
 
 	protected void clean() {
@@ -64,7 +64,6 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 		textMap = new HashMap(2);
 		
 		initialSelection = null;
-		initialSelectionOrder = -1000;
 	}
 
 	protected TreeElement getOrCreate(List list, String text) {
@@ -187,8 +186,38 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		// do nothing
 	}
-	
+
+	private Object[] getAllObjects() {
+		List list = new ArrayList();
+		Object[] obj = getElements(null);
+		if (obj != null) {
+			int size = obj.length;
+			for (int i = 0; i < size; i++) {
+				if (!(obj[i] instanceof AbstractTreeContentProvider.TreeElement))
+					list.add(obj[i]);
+				getAllChildren(list, obj[i]);
+			}
+		}
+		return list.toArray();
+	}
+
+	private void getAllChildren(List list, Object element) {
+		Object[] obj = getChildren(element);
+		if (obj != null) {
+			int size = obj.length;
+			for (int i = 0; i < size; i++) {
+				if (!(obj[i] instanceof AbstractTreeContentProvider.TreeElement))
+					list.add(obj[i]);
+				getAllChildren(list, obj[i]);
+			}
+		}
+	}
+
 	public Object getInitialSelection() {
+		if (initialSelection == null) {
+			InitialSelectionProvider isp = ServerUIPlugin.getInitialSelectionProvider();
+			initialSelection = isp.getInitialSelection(getAllObjects());
+		}
 		return initialSelection;
 	}
 }

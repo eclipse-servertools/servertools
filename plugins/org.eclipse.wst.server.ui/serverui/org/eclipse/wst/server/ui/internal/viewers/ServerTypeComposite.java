@@ -14,8 +14,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.wst.server.core.IModuleType;
@@ -64,21 +62,9 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 			}
 		});
 		
-		treeViewer.setSorter(new ViewerSorter() {
-			public int compare(Viewer viewer, Object e1, Object e2) {
-				if (e1 instanceof IServerType && !(e2 instanceof IServerType))
-					return 1;
-				if (!(e1 instanceof IServerType) && e2 instanceof IServerType)
-					return -1;
-				if (!(e1 instanceof IServerType && e2 instanceof IServerType))
-					return super.compare(viewer, e1, e2);
-				IServerType r1 = (IServerType) e1;
-				IServerType r2 = (IServerType) e2;
-				return r1.getName().compareTo(r2.getName());
-			}
-		});
+		treeViewer.setSorter(new DefaultViewerSorter());
 	}
-	
+
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (visible && initialSelection) {
@@ -87,7 +73,7 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 				treeViewer.setSelection(new StructuredSelection(contentProvider.getInitialSelection()), true);
 		}
 	}
-	
+
 	public void setHost(boolean newHost) {
 		if (isLocalhost == newHost)
 			return;
@@ -99,7 +85,7 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 		//treeViewer.expandToLevel(2);
 		treeViewer.setSelection(sel, true);
 	}
-	
+
 	public void setIncludeIncompatibleVersions(boolean b) {
 		includeIncompatibleVersions = b;
 		ISelection sel = treeViewer.getSelection();
@@ -133,5 +119,12 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 
 	public IServerType getSelectedServerType() {
 		return selection;
+	}
+
+	public void refresh() {
+		ISelection sel = treeViewer.getSelection();
+		ServerTypeTreeContentProvider cp = (ServerTypeTreeContentProvider) treeViewer.getContentProvider();
+		treeViewer.setContentProvider(new ServerTypeTreeContentProvider(cp.style, moduleType));
+		treeViewer.setSelection(sel);
 	}
 }

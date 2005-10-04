@@ -55,11 +55,6 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 			for (int i = 0; i < size; i++) {
 				IServerType serverType = serverTypes[i];
 				if (include(serverType)) {
-					int order = getServerOrder(serverType);
-					if (order > initialSelectionOrder) {
-						initialSelection = serverType;
-						initialSelectionOrder = order;
-					}
 					if (style == STYLE_FLAT) {
 						list.add(serverType);
 					} else if (style != STYLE_MODULE_TYPE) {
@@ -147,9 +142,5 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 	public void setIncludeIncompatibleVersions(boolean b) {
 		includeIncompatibleVersions = b;
 		fillTree();
-	}
-	
-	private int getServerOrder(IServerType serverType) {
-		return 0;
 	}
 }

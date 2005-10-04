@@ -29,6 +29,7 @@ import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 import org.eclipse.wst.server.ui.internal.editor.IServerEditorInput;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorInput;
+import org.eclipse.wst.server.ui.internal.viewers.InitialSelectionProvider;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
@@ -49,22 +50,25 @@ import org.osgi.framework.BundleContext;
  */
 public class ServerUIPlugin extends AbstractUIPlugin {
 	protected static final String VIEW_ID = "org.eclipse.wst.server.ui.ServersView";
-	
+
 	// server UI plugin id
 	public static final String PLUGIN_ID = "org.eclipse.wst.server.ui";
 
 	//public static final byte START = 0;
 	public static final byte STOP = 1;
 	//public static final byte RESTART = 2;
-	
+
 	// singleton instance of this class
 	private static ServerUIPlugin singleton;
 
 	protected Map imageDescriptors = new HashMap();
-	
+
 	// cached copy of all runtime wizards
 	private static Map wizardFragments;
-	
+
+	// cached initial selection provider
+	private static InitialSelectionProvider selectionProvider; 
+
 	static class WizardFragmentData {
 		String id;
 		IConfigurationElement ce;
@@ -572,6 +576,47 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		}
 		
 		Trace.trace(Trace.CONFIG, "-<- Done loading .wizardFragments extension point -<-");
+	}
+
+	/**
+	 * Returns the initial selection provider.
+	 *
+	 * @return an initial selection provider, or <code>null</code> if none could be found
+	 */
+	public static InitialSelectionProvider getInitialSelectionProvider() {
+		if (selectionProvider == null)
+			loadInitialSelectionProvider();
+		
+		return selectionProvider;
+	}
+
+	/**
+	 * Load the initial selection provider.
+	 */
+	private static synchronized void loadInitialSelectionProvider() {
+		if (selectionProvider != null)
+			return;
+		
+		Trace.trace(Trace.CONFIG, "->- Loading .initialSelectionProvider extension point ->-");
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "initialSelectionProvider");
+		
+		if (cf.length == 1) {
+			try {
+				selectionProvider = (InitialSelectionProvider) cf[0].createExecutableExtension("class");
+				Trace.trace(Trace.CONFIG, "  Loaded initialSelectionProvider: " + cf[0].getAttribute("id"));
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "  Could not load initialSelectionProvider: " + cf[0].getAttribute("id"), t);
+			}
+		} else if (cf.length > 1)
+			Trace.trace(Trace.WARNING, "More that one initial selection provider found - ignoring");
+		else
+			Trace.trace(Trace.CONFIG, "No initial selection provider found");
+		
+		if (selectionProvider == null)
+			selectionProvider = new InitialSelectionProvider();
+		
+		Trace.trace(Trace.CONFIG, "-<- Done loading .initialSelectionProvider extension point -<-");
 	}
 
 	protected static WizardFragment getWizardFragment(WizardFragmentData fragment) {
