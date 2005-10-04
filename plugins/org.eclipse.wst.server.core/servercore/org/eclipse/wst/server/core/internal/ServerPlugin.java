@@ -18,6 +18,8 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModuleArtifact;
+import org.eclipse.wst.server.core.IRuntimeType;
+import org.eclipse.wst.server.core.ServerCore;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
@@ -26,18 +28,18 @@ import org.osgi.framework.BundleListener;
  */
 public class ServerPlugin extends Plugin {
 	public static final String PROJECT_PREF_FILE = ".serverPreference";
-	
+
 	private static final String SHUTDOWN_JOB_FAMILY = "org.eclipse.wst.server.core.family";
-	
+
 	protected static final DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 	protected static int num = 0;
-	
+
 	// cached copy of all launchable adapters
 	private static List launchableAdapters;
 
 	// cached copy of all launchable clients
 	private static List clients;
-	
+
 	// cached copy of all module factories
 	private static List moduleFactories;
 
@@ -46,16 +48,24 @@ public class ServerPlugin extends Plugin {
 
 	// cached copy of all publish tasks
 	private static List publishTasks;
-	
+
 	//	cached copy of all server monitors
 	private static List monitors;
-	
+
 	//	cached copy of all runtime locators
 	private static List runtimeLocators;
-	
+
 	// cached copy of all module artifact adapters
 	private static List moduleArtifactAdapters;
+
+	//	cached copy of all installable servers
+	private static List installableServers;
 	
+	// registry listener
+	private static IRegistryChangeListener registryListener;
+	
+	public static BundleContext bundleContext;
+
 	// bundle listener
 	private BundleListener bundleListener;
 
@@ -247,6 +257,8 @@ public class ServerPlugin extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		Trace.trace(Trace.CONFIG, "----->----- Server Core plugin startup ----->-----");
 		super.start(context);
+		bundleContext = context;
+		System.out.println("bundle location: " + getBundle().getLocation());
 		
 		initializeDefaultPluginPreferences();
 
@@ -257,6 +269,7 @@ public class ServerPlugin extends Plugin {
 			public void bundleChanged(BundleEvent event) {
 				String bundleId = event.getBundle().getSymbolicName();
 				//System.out.println(event.getType() + " " + bundleId);
+				// TODO should also look for UNINSTALLED and UNRESOLVED
 				if (BundleEvent.STOPPED == event.getType() && ResourceManager.getInstance().isActiveBundle(bundleId))
 					stopBundle(bundleId);
 			}
@@ -291,6 +304,9 @@ public class ServerPlugin extends Plugin {
 	public void stop(BundleContext context) throws Exception {
 		Trace.trace(Trace.CONFIG, "-----<----- Server Core plugin shutdown -----<-----");
 		super.stop(context);
+		
+		if (registryListener != null)
+			Platform.getExtensionRegistry().removeRegistryChangeListener(registryListener);
 		
 		ResourceManager.shutdown();
 		ServerMonitorManager.shutdown();
@@ -908,5 +924,67 @@ public class ServerPlugin extends Plugin {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Returns an array of all known installable servers.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return the array of installable servers {@link IInstallableServer}
+	 */
+	public static IInstallableServer[] getInstallableServers() {
+		if (installableServers == null)
+			loadInstallableServers();
+		
+		List availableServers = new ArrayList();
+		Iterator iterator = installableServers.iterator();
+		IRuntimeType[] runtimeTypes = ServerCore.getRuntimeTypes();
+		int size = runtimeTypes.length;
+		while (iterator.hasNext()) {
+			IInstallableServer server = (IInstallableServer) iterator.next();
+			boolean found = false;
+			for (int i = 0; i < size; i++) {
+				if (server.getId().equals(runtimeTypes[i].getId()))
+					found = true;
+			}
+			if (!found)
+				availableServers.add(server);
+		}
+		
+		IInstallableServer[] is = new IInstallableServer[availableServers.size()];
+		availableServers.toArray(is);
+		return is;
+	}
+
+	/**
+	 * Load the installable servers.
+	 */
+	private static synchronized void loadInstallableServers() {
+		if (installableServers != null)
+			return;
+		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .installableServers extension point ->-");
+		
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "installableServers");
+		
+		int size = cf.length;
+		installableServers = new ArrayList(size);
+		for (int i = 0; i < size; i++) {
+			try {
+				InstallableServer is = new InstallableServer(cf[i]);
+				installableServers.add(is);
+				Trace.trace(Trace.EXTENSION_POINT, "  Loaded installableServer: " + cf[i].getAttribute("id"));
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "  Could not load installableServer: " + cf[i].getAttribute("id"), t);
+			}
+		}
+		
+		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .installableServers extension point -<-");
+	}
+
+	public static void setRegistryListener(IRegistryChangeListener listener) {
+		registryListener = listener; 
 	}
 }

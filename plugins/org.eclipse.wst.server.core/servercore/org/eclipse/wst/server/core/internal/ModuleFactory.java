@@ -137,8 +137,8 @@ public class ModuleFactory implements IOrdered {
 					for (int i = 0; i < size; i++)
 						modules.add(modules2[i]);
 				}
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + t.getMessage());
 				return null;
 			}
 		}

@@ -27,6 +27,8 @@ public class Messages extends NLS {
 	public static String deleteServerResourceDialogMessageMany;
 	public static String deleteServerResourceDialogLooseConfigurations;
 	public static String deleteServerResourceDialogLooseConfigurationsMany;
+	public static String deleteServerResourceDialogRunningServer;
+	public static String deleteServerResourceDialogRunningServerMany;
 	public static String errorCouldNotCreateServerProjectStatus;
 	public static String dialogStoppingServer;
 	public static String savingTask;
@@ -271,7 +273,12 @@ public class Messages extends NLS {
 	public static String actionStopToolTip2;
 	public static String actionStop2;
 	public static String launchingClientTask;
-	
+	public static String wizNewInstallableServerTitle;
+	public static String wizNewInstallableServerDescription;
+	public static String installableServerCompTree;
+	public static String installableServerCompDescription;
+	public static String installableServerLink;
+
 	public static String errorStartingMonitor;
 	public static String audioPrefSelectFile;
 	public static String audioPrefEnable;
@@ -285,7 +292,7 @@ public class Messages extends NLS {
 	public static String audioUnknown;
 	public static String audioNone;
 	public static String audioDefault;
-	
+
 	public static String preferenceInternetDescription;
 	public static String internalWebBrowserName;
 

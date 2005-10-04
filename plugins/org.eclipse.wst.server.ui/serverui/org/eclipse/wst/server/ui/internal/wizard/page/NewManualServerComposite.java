@@ -353,11 +353,15 @@ public class NewManualServerComposite extends Composite {
 		if (visible)
 			handleTypeSelection(serverTypeComposite.getSelectedServerType());
 	}
-	
+
+	public void refresh() {
+		serverTypeComposite.refresh();
+	}
+
 	public IRuntime getRuntime() {
 		return runtime;
 	}
-	
+
 	public IServerWorkingCopy getServer() {
 		return server;
 	}

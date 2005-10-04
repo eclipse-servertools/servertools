@@ -305,7 +305,7 @@ public class ResourceManager {
 			Server server = (Server) iterator.next();
 			try {
 				ServerType serverType = (ServerType) server.getServerType();
-				if (id.equals(serverType.getElement().getDeclaringExtension().getNamespace())) {
+				if (id.equals(serverType.getNamespace())) {
 					//server.stop(true);
 					server.dispose();
 				}
@@ -320,7 +320,7 @@ public class ResourceManager {
 			Runtime runtime = (Runtime) iterator.next();
 			try {
 				RuntimeType runtimeType = (RuntimeType) runtime.getRuntimeType();
-				if (id.equals(runtimeType.getElement().getDeclaringExtension().getNamespace())) {
+				if (id.equals(runtimeType.getNamespace())) {
 					runtime.dispose();
 				}
 			} catch (Exception e) {
@@ -679,7 +679,15 @@ public class ResourceManager {
 		saveRuntimesList();
 	}
 
-	protected void resolveServers() {
+	public void resolveRuntimes() {
+		Iterator iterator = runtimes.iterator();
+		while (iterator.hasNext()) {
+			Runtime runtime = (Runtime) iterator.next();
+			runtime.resolve();
+		}
+	}
+
+	public void resolveServers() {
 		Iterator iterator = servers.iterator();
 		while (iterator.hasNext()) {
 			Server server = (Server) iterator.next();
@@ -1019,7 +1027,7 @@ public class ResourceManager {
 		fireRuntimeEvent(runtime, EVENT_ADDED);
 		
 		RuntimeType runtimeType = (RuntimeType) runtime.getRuntimeType();
-		String bundleId = runtimeType.getElement().getDeclaringExtension().getNamespace();
+		String bundleId = runtimeType.getNamespace();
 		if (!activeBundles.contains(bundleId))
 			activeBundles.add(bundleId);
 	}
@@ -1039,7 +1047,7 @@ public class ResourceManager {
 		fireServerEvent(server, EVENT_ADDED);
 		
 		ServerType serverType = (ServerType) server.getServerType();
-		String bundleId = serverType.getElement().getDeclaringExtension().getNamespace();
+		String bundleId = serverType.getNamespace();
 		if (!activeBundles.contains(bundleId))
 			activeBundles.add(bundleId);
 	}

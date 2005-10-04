@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,21 +10,19 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.internal;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.model.RuntimeDelegate;
+import org.eclipse.core.runtime.Platform;
+//import org.eclipse.update.standalone.InstallCommand;
+import org.osgi.framework.Bundle;
 /**
  * 
  */
-public class RuntimeType implements IRuntimeType {
+public class InstallableServer implements IInstallableServer {
 	private IConfigurationElement element;
-	private List moduleTypes;
 
-	public RuntimeType(IConfigurationElement element) {
+	public InstallableServer(IConfigurationElement element) {
 		super();
 		this.element = element;
 	}
@@ -64,7 +62,7 @@ public class RuntimeType implements IRuntimeType {
 			return null;
 		}
 	}
-	
+
 	public String getVendor() {
 		try {
 			String vendor = element.getAttribute("vendor");
@@ -75,7 +73,7 @@ public class RuntimeType implements IRuntimeType {
 		}
 		return Messages.defaultVendor;
 	}
-	
+
 	public String getVersion() {
 		try {
 			String version = element.getAttribute("version");
@@ -86,62 +84,66 @@ public class RuntimeType implements IRuntimeType {
 		}
 		return Messages.defaultVersion;
 	}
-	
-	protected RuntimeDelegate createRuntimeDelegate() throws CoreException {
+
+	public String getFeatureVersion() {
 		try {
-			return (RuntimeDelegate) element.createExecutableExtension("class");
+			return element.getAttribute("featureVersion");
 		} catch (Exception e) {
-			return null;
+			// ignore
 		}
+		return null;
 	}
-	
-	/**
-	 * Return the supported module types.
-	 * 
-	 * @return an array of module types
+
+	public String getFeatureId() {
+		try {
+			return element.getAttribute("featureId");
+		} catch (Exception e) {
+			// ignore
+		}
+		return null;
+	}
+
+	public String getFromSite() {
+		try {
+			return element.getAttribute("featureSite");
+		} catch (Exception e) {
+			// ignore
+		}
+		return null;
+	}
+
+	/*
+	 * @see IInstallableServer#install(IProgressMonitor)
 	 */
-	public IModuleType[] getModuleTypes() {
-		try {
-			if (moduleTypes == null)
-				moduleTypes = ServerPlugin.getModuleTypes(element.getChildren("moduleType"));
-	
-			IModuleType[] mt = new IModuleType[moduleTypes.size()];
-			moduleTypes.toArray(mt);
-			return mt;
-		} catch (Exception e) {
-			return new IModuleType[0];
-		}
-	}
-
-	public boolean canCreate() {
-		try {
-			String a = element.getAttribute("class");
-			return a != null && a.length() > 0;
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
-	public IRuntimeWorkingCopy createRuntime(String id, IProgressMonitor monitor) {
-		if (element == null)
-			return null;
+	public void install(IProgressMonitor monitor) throws CoreException {
+		String featureId = getFeatureId();
+		String featureVersion = getFeatureVersion();
+		String fromSite = getFromSite();
 		
-		RuntimeWorkingCopy rwc = new RuntimeWorkingCopy(null, id, this);
-		rwc.setDefaults(monitor);
-		return rwc;
-	}
-
-	public void dispose() {
-		element = null;
-	}
-
-	public String getNamespace() {
-		if (element == null)
-			return null;
-		return element.getDeclaringExtension().getNamespace();
+		if (featureId == null || featureVersion == null || fromSite == null)
+			return;
+		
+		try {
+			/*InstallCommand command = new InstallCommand(featureId, featureVersion, fromSite, null, "false");
+			command.run(monitor);
+			EnableCommand command2 = new EnableCommand(featureId, featureVersion, null, "false");
+			command2.run(monitor);*/
+			String id = "org.eclipse.jst.server.timcat.core";
+			Bundle b = Platform.getBundle(id);
+			/*if (b == null) {
+				//id = "initial@reference:file:plugins/org.eclipse.jst.server.timcat.core_1.0.0/";
+				id = "file:/D:/dev/wtp/eclipse/plugins/org.eclipse.jst.server.timcat.core_1.0.0/";
+				b = ServerPlugin.bundleContext.installBundle(id);
+			}*/
+			System.out.println("state: " + b.getState());
+			b.start();
+			System.out.println("state2: " + b.getState());
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error installing feature", e);
+		}
 	}
 
 	public String toString() {
-		return "RuntimeType[" + getId() + ", " + getName() + "]";
+		return "InstallableServer[" + getId() + ", " + getName() + "]";
 	}
 }

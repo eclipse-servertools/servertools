@@ -196,8 +196,7 @@ public class Server extends Base implements IServer {
 			if (delegate == null) {
 				try {
 					long time = System.currentTimeMillis();
-					IConfigurationElement element = ((ServerType) serverType).getElement();
-					delegate = (ServerDelegate) element.createExecutableExtension("class");
+					delegate = ((ServerType) serverType).createServerDelegate();
 					InternalInitializer.initializeServerDelegate(delegate, Server.this, monitor);
 					Trace.trace(Trace.PERFORMANCE, "Server.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
 				} catch (Throwable t) {
@@ -216,8 +215,7 @@ public class Server extends Base implements IServer {
 			if (behaviourDelegate == null) {
 				try {
 					long time = System.currentTimeMillis();
-					IConfigurationElement element = ((ServerType) serverType).getElement();
-					behaviourDelegate = (ServerBehaviourDelegate) element.createExecutableExtension("behaviourClass");
+					behaviourDelegate = ((ServerType) serverType).createServerBehaviourDelegate();
 					InternalInitializer.initializeServerBehaviourDelegate(behaviourDelegate, Server.this, monitor);
 					Trace.trace(Trace.PERFORMANCE, "Server.getBehaviourDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
 				} catch (Throwable t) {
@@ -1689,19 +1687,11 @@ public class Server extends Base implements IServer {
 	protected String getXMLRoot() {
 		return "server";
 	}
-	
+
 	protected void loadState(IMemento memento) {
-		/*String serverTypeId = memento.getString("server-type-id");
-		serverType = ServerCore.getServerType(serverTypeId);
-		
-		String runtimeId = memento.getString("runtime-id");
-		runtime = ServerCore.getResourceManager().getRuntime(runtimeId);
-		
-		String configurationId = memento.getString("configuration-id");
-		configuration = ServerCore.getResourceManager().getServerConfiguration(configurationId);*/
 		resolve();
 	}
-	
+
 	protected void resolve() {
 		IServerType oldServerType = serverType;
 		String serverTypeId = getAttribute("server-type-id", (String)null);

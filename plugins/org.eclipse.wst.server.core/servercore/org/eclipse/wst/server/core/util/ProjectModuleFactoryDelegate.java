@@ -299,7 +299,12 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * @param project a project
 	 */
 	protected void addModules(IProject project) {
-		IModule[] modules = createModules(project);
+		IModule[] modules = null;
+		try {
+			modules = createModules(project);
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error creating modules", e);
+		}
 		if (modules == null || modules.length == 0)
 			return;
 		projects.put(project, modules);

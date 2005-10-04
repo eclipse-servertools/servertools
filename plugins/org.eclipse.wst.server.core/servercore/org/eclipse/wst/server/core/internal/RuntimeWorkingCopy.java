@@ -298,9 +298,7 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 			if (workingCopyDelegate == null) {
 				try {
 					long time = System.currentTimeMillis();
-					RuntimeType runtimeType2 = (RuntimeType) runtimeType;
-					workingCopyDelegate = (RuntimeDelegate) runtimeType2.getElement().createExecutableExtension("class");
-					//workingCopyDelegate.initialize(this);
+					workingCopyDelegate = ((RuntimeType) runtimeType).createRuntimeDelegate();
 					InternalInitializer.initializeRuntimeDelegate(workingCopyDelegate, this, monitor);
 					Trace.trace(Trace.PERFORMANCE, "RuntimeWorkingCopy.getWorkingCopyDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getRuntimeType().getId());
 				} catch (Exception e) {

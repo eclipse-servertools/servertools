@@ -103,6 +103,9 @@
                   specifies the fully qualified name of the Java class that extends &lt;samp&gt;RuntimeDelegate&lt;/samp&gt;.
 Runtime instances of this type will delegate to instances of this class. Delegates must also have a public 0-arg constructor.
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="java"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>

@@ -22,12 +22,14 @@ import org.eclipse.debug.core.ILaunchManager;
 
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
+import org.eclipse.wst.server.core.model.ServerDelegate;
 /**
  * 
  */
 public class ServerType implements IServerType {
 	private static final int DEFAULT_TIMEOUT = 1000 * 60 * 5;
-	protected IConfigurationElement element;
+	private IConfigurationElement element;
 
 	/**
 	 * ServerType constructor comment.
@@ -38,10 +40,6 @@ public class ServerType implements IServerType {
 		super();
 		this.element = element;
 	}
-	
-	protected IConfigurationElement getElement() {
-		return element;
-	}
 
 	/**
 	 * Returns the id of this factory.
@@ -49,39 +47,83 @@ public class ServerType implements IServerType {
 	 * @return java.lang.String
 	 */
 	public String getId() {
-		return element.getAttribute("id");
+		try {
+			return element.getAttribute("id");
+		} catch (Exception e) {
+			return null;
+		}
 	}
-	
+
 	public String getName() {
-		return element.getAttribute("name");
+		try {
+			return element.getAttribute("name");
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	public boolean startBeforePublish() {
-		return "true".equals(element.getAttribute("startBeforePublish"));
+		try {
+			return "true".equals(element.getAttribute("startBeforePublish"));
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	public String getDescription() {
-		return element.getAttribute("description");
+		try {
+			return element.getAttribute("description");
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	protected ServerDelegate createServerDelegate() throws CoreException {
+		try {
+			return (ServerDelegate) element.createExecutableExtension("class");
+		} catch (Exception e) {
+			return null;
+		}
 	}
 	
-	public IRuntimeType getRuntimeType() {
-		String typeId = element.getAttribute("runtimeTypeId");
-		if (typeId == null)
+	protected ServerBehaviourDelegate createServerBehaviourDelegate() throws CoreException {
+		try {
+			return (ServerBehaviourDelegate) element.createExecutableExtension("behaviourClass");
+		} catch (Exception e) {
 			return null;
-		return ServerCore.findRuntimeType(typeId);
+		}
+	}
+
+	public IRuntimeType getRuntimeType() {
+		try {
+			String typeId = element.getAttribute("runtimeTypeId");
+			if (typeId == null)
+				return null;
+			return ServerCore.findRuntimeType(typeId);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	public boolean hasRuntime() {
-		String s = element.getAttribute("runtime");
-		return "true".equals(s);
+		try {
+			String s = element.getAttribute("runtime");
+			return "true".equals(s);
+		} catch (Exception e) {
+			return false;
+		}
 	}
-	
+
 	public ILaunchConfigurationType getLaunchConfigurationType() {
-		String launchConfigId = element.getAttribute("launchConfigId");
-		if (launchConfigId == null)
+		try {
+			String launchConfigId = element.getAttribute("launchConfigId");
+			if (launchConfigId == null)
+				return null;
+			ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
+			return launchManager.getLaunchConfigurationType(launchConfigId);
+		} catch (Exception e) {
 			return null;
-		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
-		return launchManager.getLaunchConfigurationType(launchConfigId);
+		}
 	}
 
 	/**
@@ -93,42 +135,56 @@ public class ServerType implements IServerType {
 	 * @return boolean
 	 */
 	public boolean supportsLaunchMode(String launchMode) {
-		ILaunchConfigurationType configType = getLaunchConfigurationType();
-		if (configType != null)
-			return configType.supportsMode(launchMode);
-		
-		String mode = element.getAttribute("launchModes");
-		if (mode == null)
+		try {
+			ILaunchConfigurationType configType = getLaunchConfigurationType();
+			if (configType != null)
+				return configType.supportsMode(launchMode);
+			
+			String mode = element.getAttribute("launchModes");
+			if (mode == null)
+				return false;
+			return mode.indexOf(launchMode) >= 0;
+		} catch (Exception e) {
 			return false;
-		return mode.indexOf(launchMode) >= 0;
+		}
 	}
 
-	/*public IServerConfigurationType getServerConfigurationType() {
-		String configurationTypeId = element.getAttribute("configurationTypeId");
-		return ServerCore.findServerConfigurationType(configurationTypeId);
-	}*/
-	
 	public boolean supportsRemoteHosts() {
-		String hosts = element.getAttribute("supportsRemoteHosts");
-		return (hosts != null && hosts.toLowerCase().equals("true"));
+		try {
+			String hosts = element.getAttribute("supportsRemoteHosts");
+			return (hosts != null && hosts.toLowerCase().equals("true"));
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	public byte getInitialState() {
-		String stateString = element.getAttribute("initialState");
-		if (stateString != null)
-			stateString = stateString.toLowerCase();
-		if ("stopped".equals(stateString))
-			return IServer.STATE_STOPPED;
-		else if ("started".equals(stateString))
-			return IServer.STATE_STARTED;
+		try {
+			String stateString = element.getAttribute("initialState");
+			if (stateString != null)
+				stateString = stateString.toLowerCase();
+			if ("stopped".equals(stateString))
+				return IServer.STATE_STOPPED;
+			else if ("started".equals(stateString))
+				return IServer.STATE_STARTED;
+		} catch (Exception e) {
+			// ignore
+		}
 		return IServer.STATE_UNKNOWN;
 	}
 
 	public boolean hasServerConfiguration() {
-		return ("true".equalsIgnoreCase(element.getAttribute("hasConfiguration")));
+		try {
+			return ("true".equalsIgnoreCase(element.getAttribute("hasConfiguration")));
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	public IServerWorkingCopy createServer(String id, IFile file, IRuntime runtime, IProgressMonitor monitor) throws CoreException {
+		if (element == null)
+			return null;
+		
 		if (id == null || id.length() == 0)
 			id = ServerPlugin.generateId();
 		ServerWorkingCopy swc = new ServerWorkingCopy(id, file, runtime, this);
@@ -173,6 +229,9 @@ public class ServerType implements IServerType {
 	}
 
 	public IServerWorkingCopy createServer(String id, IFile file, IProgressMonitor monitor) throws CoreException {
+		if (element == null)
+			return null;
+		
 		if (id == null || id.length() == 0)
 			id = ServerPlugin.generateId();
 		
@@ -277,6 +336,16 @@ public class ServerType implements IServerType {
 		if (timeout <= 0)
 			timeout = DEFAULT_TIMEOUT;
 		return timeout;
+	}
+
+	public void dispose() {
+		element = null;
+	}
+
+	public String getNamespace() {
+		if (element == null)
+			return null;
+		return element.getDeclaringExtension().getNamespace();
 	}
 
 	/**

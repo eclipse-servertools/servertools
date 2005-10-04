@@ -76,8 +76,7 @@ public class Runtime extends Base implements IRuntime {
 			if (delegate == null) {
 				try {
 					long time = System.currentTimeMillis();
-					RuntimeType runtimeType2 = (RuntimeType) runtimeType;
-					delegate = (RuntimeDelegate) runtimeType2.getElement().createExecutableExtension("class");
+					delegate = ((RuntimeType) runtimeType).createRuntimeDelegate();
 					InternalInitializer.initializeRuntimeDelegate(delegate, this, monitor);
 					//delegate.initialize(this);
 					Trace.trace(Trace.PERFORMANCE, "Runtime.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getRuntimeType().getId());
@@ -155,7 +154,11 @@ public class Runtime extends Base implements IRuntime {
 	}
 
 	protected void loadState(IMemento memento) {
-		String runtimeTypeId = memento.getString(PROP_RUNTIME_TYPE_ID);
+		resolve();
+	}
+
+	protected void resolve() {
+		String runtimeTypeId = getAttribute(PROP_RUNTIME_TYPE_ID, (String) null);
 		if (runtimeTypeId != null)
 			runtimeType = ServerCore.findRuntimeType(runtimeTypeId);
 		else

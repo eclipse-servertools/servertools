@@ -202,8 +202,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			if (workingCopyDelegate == null) {
 				try {
 					long time = System.currentTimeMillis();
-					IConfigurationElement element = ((ServerType) serverType).getElement();
-					workingCopyDelegate = (ServerDelegate) element.createExecutableExtension("class");
+					workingCopyDelegate = ((ServerType) serverType).createServerDelegate();
 					InternalInitializer.initializeServerDelegate(workingCopyDelegate, this, monitor);
 					Trace.trace(Trace.PERFORMANCE, "ServerWorkingCopy.getWorkingCopyDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
 				} catch (Exception e) {
