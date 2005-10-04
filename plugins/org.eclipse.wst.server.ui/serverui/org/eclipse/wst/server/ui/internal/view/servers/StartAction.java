@@ -10,8 +10,6 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -65,26 +63,19 @@ public class StartAction extends AbstractServerAction {
 			return;
 		}
 		
-		IProgressMonitor pm = Platform.getJobManager().createProgressGroup();
 		try {
-			pm.beginTask("Starting", 10);
 			PublishServerJob publishJob = new PublishServerJob(server); 
-			publishJob.setProgressGroup(pm, 5);
 			StartServerJob startJob = new StartServerJob(server, launchMode);
-			startJob.setProgressGroup(pm, 5);
+
 			if (((ServerType)server.getServerType()).startBeforePublish()) {
+				startJob.setNextJob(publishJob);
 				startJob.schedule();
-				publishJob.setDependantJob(startJob);
-				publishJob.schedule();
 			} else {
+				publishJob.setNextJob(startJob);
 				publishJob.schedule();
-				startJob.setDependantJob(publishJob);
-				startJob.schedule();
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error starting server", e);
-		} finally {
-			pm.done();
 		}
 	}
 }

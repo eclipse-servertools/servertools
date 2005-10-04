@@ -10,8 +10,6 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
@@ -62,23 +60,16 @@ public class RestartAction extends AbstractServerAction {
 		if (!ServerUIPlugin.promptIfDirty(shell, server))
 			return;
 		
-		IProgressMonitor pm = Platform.getJobManager().createProgressGroup();
 		try {
-			pm.beginTask("Restarting", 100);
 			PublishServerJob publishJob = new PublishServerJob(server); 
-			publishJob.setProgressGroup(pm, 50);
-			publishJob.schedule();
 			String launchMode = mode;
 			if (launchMode == null)
 				launchMode = server.getMode();
 			RestartServerJob restartJob = new RestartServerJob(server, launchMode);
-			restartJob.setProgressGroup(pm, 50);
-			restartJob.setDependantJob(publishJob);
-			restartJob.schedule();
+			publishJob.setNextJob(restartJob);
+			publishJob.schedule();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error restarting server", e);
-		} finally {
-			pm.done();
 		}	
 	}
 }

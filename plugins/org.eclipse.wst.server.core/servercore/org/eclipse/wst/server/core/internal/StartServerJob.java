@@ -17,7 +17,7 @@ import org.eclipse.wst.server.core.internal.ServerSchedulingRule;
 /**
  * A job for starting the server.
  */
-public class StartServerJob extends DependantJob {
+public class StartServerJob extends ChainedJob {
 	protected String launchMode;
 
 	public StartServerJob(IServer server, String launchMode) {

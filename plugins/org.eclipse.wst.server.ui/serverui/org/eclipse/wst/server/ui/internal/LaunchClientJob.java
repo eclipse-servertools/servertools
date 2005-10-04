@@ -19,7 +19,7 @@ import org.eclipse.wst.server.core.internal.*;
 /**
  * 
  */
-public class LaunchClientJob extends DependantJob {
+public class LaunchClientJob extends ChainedJob {
 	protected IModule[] module;
 	protected IClient client;
 	protected ILaunchableAdapter launchableAdapter;

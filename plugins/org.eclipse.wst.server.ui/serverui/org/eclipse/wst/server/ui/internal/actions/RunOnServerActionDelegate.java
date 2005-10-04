@@ -307,38 +307,29 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			}
 			
 			PublishServerJob publishJob = new PublishServerJob(server);
+			LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
+			publishJob.setNextJob(clientJob);
+			
 			if (restart) {
 				RestartServerJob restartJob = new RestartServerJob(server, launchMode);
+				restartJob.setNextJob(publishJob);
 				restartJob.schedule();
-				publishJob.setDependantJob(restartJob);
-			}
-			
-			publishJob.schedule();
-			LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
-			clientJob.setDependantJob(publishJob);
-			clientJob.schedule();
+			} else
+				publishJob.schedule();
 		} else if (state != IServer.STATE_STOPPING) {
 			PublishServerJob publishJob = new PublishServerJob(server);
 			StartServerJob startServerJob = new StartServerJob(server, launchMode);
 			LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
 			
 			if (((ServerType)server.getServerType()).startBeforePublish()) {
-				if (server.getServerState() != IServer.STATE_STARTED)
-					startServerJob.schedule();
-				publishJob.setDependantJob(startServerJob);
-				publishJob.schedule();
-				clientJob.setDependantJob(publishJob);
+				startServerJob.setNextJob(publishJob);
+				publishJob.setNextJob(clientJob);
+				startServerJob.schedule();
 			} else {
+				publishJob.setNextJob(startServerJob);
+				startServerJob.setNextJob(clientJob);
 				publishJob.schedule();
-				clientJob.setDependantJob(publishJob);
-				if (server.getServerState() != IServer.STATE_STARTED) {
-					startServerJob.setDependantJob(publishJob);
-					startServerJob.schedule();
-					clientJob.setDependantJob(startServerJob);
-				}
 			}
-			
-			clientJob.schedule();
 		}
 	}
 

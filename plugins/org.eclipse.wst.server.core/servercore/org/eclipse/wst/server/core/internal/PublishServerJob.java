@@ -21,7 +21,7 @@ import org.eclipse.wst.server.core.IServer;
 /**
  * Job to publish to a particular server.
  */
-public class PublishServerJob extends DependantJob {
+public class PublishServerJob extends ChainedJob {
 	protected int kind;
 	protected boolean check;
 

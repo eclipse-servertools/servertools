@@ -18,7 +18,7 @@ import org.eclipse.wst.server.core.internal.ServerSchedulingRule;
 /**
  * A job for restarting a server.
  */
-public class RestartServerJob extends DependantJob {
+public class RestartServerJob extends ChainedJob {
 	protected String launchMode;
 	protected boolean isRestartCompleted = false;
 	protected IStatus resultStatus;
@@ -34,13 +34,13 @@ public class RestartServerJob extends DependantJob {
 	 * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	protected IStatus run(IProgressMonitor monitor) {
-		IOperationListener listener = new IOperationListener() {
+		IOperationListener listener2 = new IOperationListener() {
 			public void done(IStatus result) {
 				isRestartCompleted = true;
 				resultStatus = result;
 			}
 		};
-		server.restart(launchMode, listener);
+		server.restart(launchMode, listener2);
 		
 		// block util the restart is completed
 		while (!isRestartCompleted) {
@@ -51,6 +51,9 @@ public class RestartServerJob extends DependantJob {
 			}
 		}
 		
-		return resultStatus == null ? new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null) : resultStatus;
+		if (resultStatus != null)
+			return resultStatus;
+		
+		return Status.OK_STATUS;
 	}
 }
