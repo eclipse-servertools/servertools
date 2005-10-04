@@ -7,7 +7,8 @@ Bundle-Activator: org.eclipse.jst.server.tomcat.ui.internal.TomcatUIPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.jst.server.tomcat.ui.internal;x-internal:=true,
- org.eclipse.jst.server.tomcat.ui.internal.editor;x-internal:=true
+ org.eclipse.jst.server.tomcat.ui.internal.editor;x-internal:=true,
+ org.eclipse.jst.server.tomcat.ui.internal.project.facet
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.expressions,
  org.eclipse.ui,
@@ -19,5 +20,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.server.core,
  org.eclipse.wst.server.ui,
  org.eclipse.jst.server.core,
- org.eclipse.jst.server.tomcat.core
+ org.eclipse.jst.server.tomcat.core,
+ org.eclipse.wst.common.project.facet.core,
+ org.eclipse.wst.common.project.facet.ui
 Eclipse-AutoStart: true
