@@ -517,9 +517,9 @@ public abstract class ServerBehaviourDelegate {
 	public IStatus publish(int kind, IProgressMonitor monitor) {
 		Trace.trace(Trace.FINEST, "-->-- Publishing to server: " + toString() + " -->--");
 		
-		if (getServer().getRuntime() == null)
+		if (getServer().getServerType().hasRuntime() && getServer().getRuntime() == null)
 			return new Status(IStatus.INFO, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishNoRuntime, null);
-
+		
 		final List moduleList = getAllModules();
 		final List kindList = new ArrayList();
 		
