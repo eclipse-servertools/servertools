@@ -22,6 +22,7 @@ import org.eclipse.jdt.launching.IVMInstall2;
 import org.eclipse.jdt.launching.IVMInstallType;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.ClasspathRuntimeTargetHandler;
+import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeBridge;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponentVersion;
 import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
 import org.eclipse.wst.server.core.IRuntime;
@@ -30,18 +31,18 @@ import org.eclipse.wst.server.core.ServerCore;
 /**
  * 
  */
-public final class RuntimeBridge {
+public final class RuntimeBridge implements IRuntimeBridge {
 	private static Map mappings = new HashMap();
 
 	static {
 		mappings.put("org.eclipse.jst.server.tomcat.runtime.55", RuntimeManager.get()
-				.getRuntimeComponentType("tomcat").getVersion("5.5"));
+				.getRuntimeComponentType("org.eclipse.jst.server.tomcat").getVersion("5.5"));
 
 		mappings.put("org.eclipse.jst.server.tomcat.runtime.41", RuntimeManager.get()
-				.getRuntimeComponentType("tomcat").getVersion("4.1"));
+				.getRuntimeComponentType("org.eclipse.jst.server.tomcat").getVersion("4.1"));
 	}
 
-	public static void port() {
+	public void port() {
 		final IRuntime[] runtimes = ServerCore.getRuntimes();
 
 		for (int i = 0; i < runtimes.length; i++) {
@@ -64,11 +65,13 @@ public final class RuntimeBridge {
 					
 					components.add(RuntimeManager.get().createRuntimeComponent(mapped, properties));
 					
+					/* Does not work: loadAdapter returns null 
+                      
 					IGenericRuntime gr = (IGenericRuntime) runtime.loadAdapter(IGenericRuntime.class, null);
 					IVMInstall vmInstall = gr.getVMInstall();
-					IVMInstall2 vmInstall2 = (IVMInstall2) vmInstall;
+					IVMInstall2 vmInstall2 = (IVMInstall2) vmInstall;*/
 					
-					/*final ClasspathRuntimeTargetHandler cphandler = getClasspathHandler(runtime);
+					final ClasspathRuntimeTargetHandler cphandler = getClasspathHandler(runtime);
 					
 					final IPath jrecontainer = findJreContainer(cphandler
 							.getDelegateClasspathEntries(runtime, null));
@@ -77,9 +80,9 @@ public final class RuntimeBridge {
 							.getVMInstallType(jrecontainer.segment(1));
 					
 					final IVMInstall2 vminstall = (IVMInstall2) vminstalltype
-							.findVMInstallByName(jrecontainer.segment(2));*/
+							.findVMInstallByName(jrecontainer.segment(2));
 					
-					final String jvmver = vmInstall2.getJavaVersion();
+					final String jvmver = vminstall.getJavaVersion();
 					final IRuntimeComponentVersion rcv;
 					
 					if (jvmver.startsWith("1.4")) {
@@ -93,7 +96,7 @@ public final class RuntimeBridge {
 					}
 
 					properties = new HashMap();
-					properties.put("name", vmInstall.getName());
+					properties.put("name", jrecontainer.segment(2));
 					components.add(RuntimeManager.get().createRuntimeComponent(rcv, properties));
 
 					RuntimeManager.get().defineRuntime(name, components, null);

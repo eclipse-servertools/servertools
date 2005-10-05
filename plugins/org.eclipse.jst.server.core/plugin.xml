@@ -88,31 +88,24 @@
       class="org.eclipse.jst.server.core.internal.J2EELaunchableClient"/>
   </extension>
 
-<!--
   <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
     <runtime-component-type
        id="org.eclipse.jst.server.tomcat">
-      <icon>images/tomcat.gif</icon>
+      <!-- <icon>images/tomcat.gif</icon> -->
     </runtime-component-type>
 
     <runtime-component-version
-       type="org.eclipse.jst.server.tomcat" version="5.5">
-      <delegate
-         class="org.eclipse.wst.common.project.facet.base.TomcatRuntimeComponentDelegate"/>
-    </runtime-component-version>
+       type="org.eclipse.jst.server.tomcat" version="5.5"/>
 
     <runtime-component-version
         type="org.eclipse.jst.server.tomcat"
-        version="4.1">
-      <delegate
-         class="org.eclipse.wst.common.project.facet.base.TomcatRuntimeComponentDelegate"/>
-    </runtime-component-version>
+        version="4.1"/>
 
     <adapter>
       <runtime-component
          id="org.eclipse.jst.server.tomcat"/>
       <factory
-         class="org.eclipse.wst.common.project.facet.base.TomcatClasspathProvider$Factory"/>
+         class="org.eclipse.jst.server.core.internal.TomcatClasspathProvider$Factory"/>
       <type
          class="org.eclipse.wst.common.project.facet.core.runtime.classpath.IClasspathProvider"/>
     </adapter>
@@ -129,13 +122,37 @@
 
     <supported>
       <runtime-component
-         id="tomcat"
+         id="org.eclipse.jst.server.tomcat"
          version="4.1"
          allow-newer="true"/>
       <facet
          id="web"
          version="2.3"/>
     </supported>
+    
+    <runtime-component-type id="standard.jre">
+      <!-- <icon>images/jre.gif</icon> -->
+    </runtime-component-type>
+    
+    <runtime-component-version type="standard.jre" version="1.4"/>
+    <runtime-component-version type="standard.jre" version="5.0"/>
+
+    <adapter>
+      <runtime-component id="standard.jre"/>
+      <factory class="org.eclipse.jst.server.core.internal.StandardJreClasspathProvider$Factory"/>
+      <type class="org.eclipse.wst.common.project.facet.core.runtime.classpath.IClasspathProvider"/>
+    </adapter>
+
+    <supported>
+      <runtime-component id="standard.jre" version="1.4"/>
+      <facet id="java" version="1.4"/>
+    </supported>
+
+    <supported>
+      <runtime-component id="standard.jre" version="5.0"/>
+      <facet id="java" version="5.0"/>
+    </supported>
+    
   </extension>
--->
+
 </plugin>
