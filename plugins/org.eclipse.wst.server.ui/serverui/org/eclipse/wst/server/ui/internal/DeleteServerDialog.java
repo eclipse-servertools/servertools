@@ -10,14 +10,23 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -26,8 +35,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServer.IOperationListener;
 /**
  * Dialog that prompts a user to delete server(s) and/or server configuration(s).
  */
@@ -35,7 +44,11 @@ public class DeleteServerDialog extends Dialog {
 	protected IServer[] servers;
 	protected IFolder[] configs;
 
-	protected Button check;
+	protected List runningServersList;
+
+	protected Button checkDeleteConfigs;
+	protected Button checkDeleteRunning;
+	protected Button checkDeleteRunningStop;
 
 	/**
 	 * DeleteServerDialog constructor comment.
@@ -52,6 +65,12 @@ public class DeleteServerDialog extends Dialog {
 		
 		this.servers = servers;
 		this.configs = configs;
+		
+		runningServersList = new ArrayList();
+		for (int i = 0 ; i < servers.length ; ++i) {
+			if (servers[i].getServerState() != IServer.STATE_STOPPED)
+				runningServersList.add(servers[i]);
+		}
 
 		setBlockOnOpen(true);
 	}
@@ -61,7 +80,7 @@ public class DeleteServerDialog extends Dialog {
 	 */
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.deleteServerResourceDialogTitle);
+		newShell.setText(Messages.deleteServerDialogTitle);
 	}
 
 	/**
@@ -81,38 +100,69 @@ public class DeleteServerDialog extends Dialog {
 		//WorkbenchHelp.setHelp(composite, ContextIds.TERMINATE_SERVER_DIALOG);
 	
 		Label label = new Label(composite, SWT.NONE);
-		if (servers.length == 1) {
-			label.setText(NLS.bind(Messages.deleteServerResourceDialogMessage, servers[0].getName()));
-		} else
-			label.setText(NLS.bind(Messages.deleteServerResourceDialogMessageMany, servers.length + ""));
-		label.setLayoutData(new GridData());
+		if (servers.length == 1)
+			label.setText(NLS.bind(Messages.deleteServerDialogMessage, servers[0].getName()));
+		else
+			label.setText(NLS.bind(Messages.deleteServerDialogMessageMany, servers.length + ""));
+		//label.setLayoutData(new GridData());
 		
 		if (configs.length > 0) {
-			check = new Button(composite, SWT.CHECK);
+			checkDeleteConfigs = new Button(composite, SWT.CHECK);
+			checkDeleteConfigs.setText(NLS.bind(Messages.deleteServerDialogLooseConfigurations, configs[0].getName()));
+			checkDeleteConfigs.setSelection(true);
+		}
 		
-			if (configs.length == 1) {
-				check.setText(NLS.bind(Messages.deleteServerResourceDialogLooseConfigurations, configs[0].getName()));
-			} else
-				check.setText(NLS.bind(Messages.deleteServerResourceDialogLooseConfigurationsMany, configs.length + ""));
-			check.setSelection(true);
-			check.setLayoutData(new GridData());
+		// prompt for stopping running servers
+		int size = runningServersList.size();
+		if (size > 0) {
+			checkDeleteRunning = new Button(composite, SWT.CHECK);
+			checkDeleteRunning.setText(NLS.bind(Messages.deleteServerDialogRunningServer, ((IServer)runningServersList.get(0)).getName()));
+			checkDeleteRunning.setSelection(true);
+			
+			checkDeleteRunningStop = new Button(composite, SWT.CHECK);
+			checkDeleteRunningStop.setText(NLS.bind(Messages.deleteServerDialogRunningServerStop, ((IServer)runningServersList.get(0)).getName()));
+			checkDeleteRunningStop.setSelection(true);
+			GridData data = new GridData();
+			data.horizontalIndent = 15;
+			checkDeleteRunningStop.setLayoutData(data);
+			
+			checkDeleteRunning.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+					checkDeleteRunningStop.setEnabled(checkDeleteRunning.getSelection());
+				}
+			});
 		}
 		
 		Dialog.applyDialogFont(composite);
-	
+		
 		return composite;
 	}
 
 	protected void okPressed() {
-		final boolean checked = (check != null && check.getSelection());
+		final boolean checked = (checkDeleteConfigs != null && checkDeleteConfigs.getSelection());
+		final boolean deleteRunning = (checkDeleteRunning != null && checkDeleteRunning.getSelection());
+		final boolean deleteRunningStop = (checkDeleteRunningStop != null && checkDeleteRunningStop.getSelection());
+		
+		if (runningServersList.size() > 0) {
+			// stop servers and/or updates servers' list
+			prepareForDeletion(deleteRunning, deleteRunningStop);
+			//monitor.worked(1);
+		}
 		
 		try {
 			WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 				protected void execute(IProgressMonitor monitor) throws CoreException {
+					// since stopping can be long, let's animate progessDialog
+					monitor.beginTask(Messages.deleteServerTask, 2);
+					
+					if (servers.length == 0) {
+						// all servers have been deleted from list
+						return;
+					}
 					try {
 						int size = servers.length;
 						for (int i = 0; i < size; i++) {
-							servers[0].delete();
+							servers[i].delete();
 						}
 						
 						if (checked) {
@@ -132,5 +182,75 @@ public class DeleteServerDialog extends Dialog {
 		}
 		
 		super.okPressed();
+	}
+
+	/**
+	 * Updates servers' & configs' lists. If <code>deleteRunning</code> is <code>true</code>
+	 * 	and a server can't be stopped, it isn't removed.
+	 * @param deleteRunning if <code>true</code> running servers will be stopped
+	 * 	before being deleted, if <code>false</code> running servers will be removed
+	 *    from deletion list.
+	 */
+	protected void prepareForDeletion(boolean deleteRunning, boolean stopRunning) {
+		// converts servers & configs to list to facilitate removal
+		List serversList = new LinkedList(Arrays.asList(servers));
+		List configsList = new LinkedList(Arrays.asList(configs));
+		if (deleteRunning == false) {
+			// don't delete servers or configurations
+			int size = runningServersList.size();
+			for (int i = 0; i < size; i++) {
+				IServer server = (IServer) runningServersList.get(i);
+				serversList.remove(server);
+				if (server.getServerConfiguration() != null)
+					configsList.remove(server.getServerConfiguration());
+			}
+		} else {
+			if (stopRunning) {
+				// stop running servers and wait for them (stop is asynchronous)
+				IServer s;
+				MultiServerStopListener listener = new MultiServerStopListener();
+				int expected = 0;
+				Iterator iter = runningServersList.iterator();
+				while (iter.hasNext()) {
+					s = (IServer) iter.next();
+					if (s.canStop().isOK()) {
+						++expected;
+						s.stop(false, listener);
+					} else {
+						// server can't be stopped, don't delete it
+						serversList.remove(s);
+						configsList.remove(s.getServerConfiguration());
+					}
+				}
+				try {
+					while (expected != listener.getNumberStopped()) {
+						Thread.sleep(100);
+					}
+				} catch (InterruptedException e) {
+					Trace.trace(Trace.WARNING, "Interrupted while waiting for servers stop");
+				}
+			}
+		}
+		servers = new IServer[serversList.size()];
+		serversList.toArray(servers);
+		configs = new IFolder[configsList.size()];
+		configsList.toArray(configs);
+	}
+
+	/**
+	 * Class used to wait all servers stop. Use one instance
+	 * for a group of servers and loop to see if the number stopped
+	 * equals the number of servers waiting to stop.
+	 */
+	class MultiServerStopListener implements IOperationListener {
+		protected int num; 
+
+		public void done(IStatus result) {
+			num++;
+		}
+
+		public int getNumberStopped() {
+			return num;
+		}
 	}
 }

@@ -23,12 +23,13 @@ public class Messages extends NLS {
 	public static String defaultServerProjectName;
 	public static String terminateServerDialogMessage;
 	public static String actionMonitorPort;
-	public static String deleteServerResourceDialogMessage;
-	public static String deleteServerResourceDialogMessageMany;
-	public static String deleteServerResourceDialogLooseConfigurations;
-	public static String deleteServerResourceDialogLooseConfigurationsMany;
-	public static String deleteServerResourceDialogRunningServer;
-	public static String deleteServerResourceDialogRunningServerMany;
+	public static String deleteServerDialogTitle;
+	public static String deleteServerDialogMessage;
+	public static String deleteServerDialogMessageMany;
+	public static String deleteServerDialogLooseConfigurations;
+	public static String deleteServerDialogRunningServer;
+	public static String deleteServerDialogRunningServerStop;
+	public static String deleteServerTask;
 	public static String errorCouldNotCreateServerProjectStatus;
 	public static String dialogStoppingServer;
 	public static String savingTask;
@@ -58,7 +59,6 @@ public class Messages extends NLS {
 	public static String errorInvalidServer;
 	public static String serverLaunchConfigurationTab;
 	public static String wizSelectClientMessage;
-	public static String deleteServerResourceDialogTitle;
 	public static String errorCouldNotCreateServerProject;
 	public static String errorDialogTitle;
 	public static String editorValidateEditFailureMessage;
