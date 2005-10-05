@@ -17,7 +17,7 @@ import junit.framework.TestCase;
 
 public class ConnectorModuleTestCase extends TestCase {
 	protected static IConnectorModule module;
-	
+
 	public static Test suite() {
 		return new OrderedTestSuite(ConnectorModuleTestCase.class, "ConnectorModuleTestCase");
 	}
@@ -25,19 +25,11 @@ public class ConnectorModuleTestCase extends TestCase {
 	public void test00Create() {
 		module = new TestConnectorModule();
 	}
-	
+
 	public void test01SpecVersion() {
 		module.getJ2EESpecificationVersion();
 	}
-	
-	public void test02Location() {
-		module.getLocation();
-	}
-	
-	public void test03Binary() {
-		module.isBinary();
-	}
-	
+
 	public void test04Classpath() {
 		module.getClasspath();
 	}

@@ -26,7 +26,7 @@ public class AllTests {
 		suite.addTestSuite(ServerUIPreferencesTestCase.class);
 		
 		suite.addTestSuite(ServerUICoreTestCase.class);
-		suite.addTestSuite(ServerUIUtilTestCase.class);
+		//suite.addTestSuite(ServerUIUtilTestCase.class);
 		suite.addTest(new OrderedTestSuite(ServerLaunchConfigurationTabTestCase.class));
 		
 		suite.addTest(new OrderedTestSuite(IServerEditorPartInputTestCase.class));
@@ -36,8 +36,6 @@ public class AllTests {
 		suite.addTestSuite(DialogsTestCase.class);
 		suite.addTestSuite(PreferencesTestCase.class);
 		suite.addTestSuite(ViewTestCase.class);
-		// seems to hang on build machine, 
-		// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=107697
 		//suite.addTestSuite(WizardTestCase.class);
 		
 		suite.addTest(new OrderedTestSuite(IOrderedTestCase.class));

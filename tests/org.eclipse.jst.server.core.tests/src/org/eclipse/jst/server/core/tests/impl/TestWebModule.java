@@ -11,6 +11,7 @@
 package org.eclipse.jst.server.core.tests.impl;
 
 import org.eclipse.jst.server.core.IWebModule;
+import org.eclipse.wst.server.core.IModule;
 
 public class TestWebModule extends TestJ2EEModule implements IWebModule {
 	public String getServletSpecificationVersion() {
@@ -27,5 +28,13 @@ public class TestWebModule extends TestJ2EEModule implements IWebModule {
 
 	public boolean isPublishRequired() {
 		return false;
+	}
+
+	public IModule[] getModules() {
+		return null;
+	}
+
+	public String getURI(IModule module) {
+		return null;
 	}
 }

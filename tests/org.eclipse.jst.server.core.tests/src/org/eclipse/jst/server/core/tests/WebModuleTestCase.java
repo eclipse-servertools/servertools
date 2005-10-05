@@ -17,7 +17,7 @@ import junit.framework.TestCase;
 
 public class WebModuleTestCase extends TestCase {
 	protected static IWebModule module;
-	
+
 	public static Test suite() {
 		return new OrderedTestSuite(WebModuleTestCase.class, "WebModuleTestCase");
 	}
@@ -25,32 +25,20 @@ public class WebModuleTestCase extends TestCase {
 	public void test00Create() {
 		module = new TestWebModule();
 	}
-	
+
 	public void test01SpecVersion() {
 		module.getJ2EESpecificationVersion();
 	}
-	
-	public void test02Location() {
-		module.getLocation();
-	}
-	
-	public void test03Binary() {
-		module.isBinary();
-	}
-	
+
 	public void test04JSPVersion() {
 		module.getJSPSpecificationVersion();
 	}
-	
+
 	public void test05ServerVersion() {
 		module.getServletSpecificationVersion();
 	}
-	
+
 	public void test06ContextRoot() {
 		module.getContextRoot();
-	}
-	
-	public void test07PublishRequired() {
-		module.isPublishRequired();
 	}
 }

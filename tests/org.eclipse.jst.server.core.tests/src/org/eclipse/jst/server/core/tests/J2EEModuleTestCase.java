@@ -17,7 +17,7 @@ import junit.framework.TestCase;
 
 public class J2EEModuleTestCase extends TestCase {
 	protected static IJ2EEModule module;
-	
+
 	public static Test suite() {
 		return new OrderedTestSuite(J2EEModuleTestCase.class, "J2EEModuleTestCase");
 	}
@@ -25,16 +25,8 @@ public class J2EEModuleTestCase extends TestCase {
 	public void test00Create() {
 		module = new TestJ2EEModule();
 	}
-	
+
 	public void test01SpecVersion() {
 		module.getJ2EESpecificationVersion();
-	}
-	
-	public void test02Location() {
-		module.getLocation();
-	}
-	
-	public void test03Binary() {
-		module.isBinary();
 	}
 }

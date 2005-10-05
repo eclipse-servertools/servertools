@@ -31,13 +31,7 @@ package org.eclipse.wst.server.core.tests;
 
 import org.eclipse.wst.server.core.tests.extension.*;
 import org.eclipse.wst.server.core.tests.model.*;
-import org.eclipse.wst.server.core.tests.util.HTTPLaunchableTestCase;
-import org.eclipse.wst.server.core.tests.util.NullModuleArtifactTestCase;
-import org.eclipse.wst.server.core.tests.util.ProjectModuleFactoryDelegateTestCase;
-import org.eclipse.wst.server.core.tests.util.ProjectModuleTestCase;
-import org.eclipse.wst.server.core.tests.util.SocketUtilTestCase;
-import org.eclipse.wst.server.core.tests.util.StaticWebTestCase;
-import org.eclipse.wst.server.core.tests.util.WebResourceTestCase;
+import org.eclipse.wst.server.core.tests.util.*;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -45,6 +39,9 @@ public class AllTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.wtp.wst.server.core.tests");
 		//$JUnit-BEGIN$
+		
+		// TODO - should add tests for specific module adapters and other extension points
+		// that exist in WTP
 		suite.addTestSuite(ExistenceTest.class);
 		suite.addTestSuite(StartupExtensionTestCase.class);
 		suite.addTestSuite(ModuleFactoriesTestCase.class);

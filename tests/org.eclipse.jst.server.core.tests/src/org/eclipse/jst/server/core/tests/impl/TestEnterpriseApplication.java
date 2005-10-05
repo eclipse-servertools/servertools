@@ -35,4 +35,8 @@ public class TestEnterpriseApplication implements IEnterpriseApplication {
 	public boolean containsLooseModules() {
 		return false;
 	}
+
+	public String getURI(IModule module) {
+		return null;
+	}
 }
