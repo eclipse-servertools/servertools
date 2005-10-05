@@ -238,16 +238,16 @@ public class AntPublisher extends GenericPublisher{
         String moduleDir="";//$NON-NLS-1$
         if(webModule!=null){    
             moduleName = this.guessModuleName(webModule);
-            moduleDir = webModule.getLocation().toString();
+            //moduleDir = webModule.getLocation().toString();
         }
         if(ejbModule!=null){  
             moduleName = getModule()[0].getName();
-            moduleDir= ejbModule.getLocation().toString();
+            //moduleDir= ejbModule.getLocation().toString();
         }
         if(earModule!=null)
         {
         	moduleName = getModule()[0].getName();
-        	moduleDir = earModule.getLocation().toString();
+        	//moduleDir = earModule.getLocation().toString();
         }
         String pluginId = getServerRuntime().getServerTypeDefinition().getConfigurationElementNamespace();
         props.put(PROP_PROJECT_WORKING_DIR,getModule()[0].getProject().getWorkingLocation(pluginId).toString());
