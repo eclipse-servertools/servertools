@@ -88,4 +88,54 @@
       class="org.eclipse.jst.server.core.internal.J2EELaunchableClient"/>
   </extension>
 
+<!--
+  <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
+    <runtime-component-type
+       id="org.eclipse.jst.server.tomcat">
+      <icon>images/tomcat.gif</icon>
+    </runtime-component-type>
+
+    <runtime-component-version
+       type="org.eclipse.jst.server.tomcat" version="5.5">
+      <delegate
+         class="org.eclipse.wst.common.project.facet.base.TomcatRuntimeComponentDelegate"/>
+    </runtime-component-version>
+
+    <runtime-component-version
+        type="org.eclipse.jst.server.tomcat"
+        version="4.1">
+      <delegate
+         class="org.eclipse.wst.common.project.facet.base.TomcatRuntimeComponentDelegate"/>
+    </runtime-component-version>
+
+    <adapter>
+      <runtime-component
+         id="org.eclipse.jst.server.tomcat"/>
+      <factory
+         class="org.eclipse.wst.common.project.facet.base.TomcatClasspathProvider$Factory"/>
+      <type
+         class="org.eclipse.wst.common.project.facet.core.runtime.classpath.IClasspathProvider"/>
+    </adapter>
+
+    <supported>
+      <runtime-component
+         id="org.eclipse.jst.server.tomcat"
+         version="5.5"
+         allow-newer="true"/>
+      <facet
+         id="web"
+         version="2.4"/>
+    </supported>
+
+    <supported>
+      <runtime-component
+         id="tomcat"
+         version="4.1"
+         allow-newer="true"/>
+      <facet
+         id="web"
+         version="2.3"/>
+    </supported>
+  </extension>
+-->
 </plugin>

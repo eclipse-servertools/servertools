@@ -9,6 +9,8 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.jst.server.core;
+
+import org.eclipse.wst.server.core.IModule;
 /**
  * A J2EE web module.
  * <p>
@@ -40,14 +42,20 @@ public interface IWebModule extends IJ2EEModule {
 	 * @return java.lang.String
 	 */
 	public String getContextRoot();
-	
+
 	/**
-	 * Returns false if the files in this module are placed in the
-	 * correct structure for testing before publishing. Returns true
-	 * if the file system resources must be published before they will
-	 * work.
-	 * 
-	 * @return boolean
+	 * Returns the utility modules contained within this WAR.
+	 *
+	 * @return a possibly empty array of modules contained within this application
 	 */
-	public boolean isPublishRequired();
+	public IModule[] getModules();
+
+	/**
+	 * Returns the URI of the given contained module.
+	 *
+	 * @param module a module
+	 * @return the URI of the given module, or <code>null</code> if the URI could
+	 *    not be found
+	 */
+	public String getURI(IModule module);
 }

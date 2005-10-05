@@ -239,8 +239,8 @@ public class WebModuleDialog extends Dialog {
 						String contextRoot = module2.getContextRoot();
 						if (contextRoot != null && !contextRoot.startsWith("/") && contextRoot.length() > 0)
 							contextRoot = "/" + contextRoot;
-						module = new WebModule(contextRoot, module2.getLocation().toOSString(), module.getMemento(), module.isReloadable());
-						docBase.setText(module2.getLocation().toOSString());
+						module = new WebModule(contextRoot, "[workspace]", module.getMemento(), module.isReloadable());
+						docBase.setText("[workspace]");
 					} catch (Exception e) {
 						// ignore
 					}

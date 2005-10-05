@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.wst.server.core.IModule;
 /**
  * A representation of a J2EE enterprise application (EAR file).
@@ -32,36 +31,19 @@ public interface IEnterpriseApplication {
 
 	/**
 	 * Returns the modules contained within this EAR. The returned modules will
-	 * all be adaptable to IJ2EEModule.
+	 * either be J2EE modules (which will be adaptable to IJ2EEModule) and
+	 * utility jars contained in the EAR.
 	 *
 	 * @return a possibly empty array of modules contained within this application
 	 */
 	public IModule[] getModules();
 
 	/**
-	 * Returns the URI of the given J2EE module within this
-	 * enterprise application.
+	 * Returns the URI of the given module within this enterprise application.
 	 *
 	 * @param module a module within this application
 	 * @return the URI of the given module, or <code>null</code> if the URI could
 	 *    not be found
 	 */
-	public String getURI(IJ2EEModule module);
-
-	/**
-	 * Returns <code>true</code> if this EAR supports loose modules and <code>false</code>
-	 * otherwise.
-	 * 
-	 * @return returns <code>true</code> if this module contains loose modules, or
-	 *    <code>false</code> otherwise
-	 */
-	public boolean containsLooseModules();
-	
-	/**
-	 * Returns the location of the root of the application. This should
-	 * be an absolute path that is not workbench relative.
-	 * 
-	 * @return the absolute path to the root of this application
-	 */
-	public IPath getLocation();
+	public String getURI(IModule module);
 }

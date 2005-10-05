@@ -208,6 +208,17 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	 * Returns the child module(s) of this module.
 	 */
 	public IModule[] getChildModules(IModule[] module) {
+		if (module == null)
+			return null;
+		
+		if (module.length == 1) {
+			IWebModule webModule = (IWebModule) module[0].loadAdapter(IWebModule.class, null);
+			if (webModule != null) {
+				/*IModule[] modules = webModule.getModules();
+				if (modules != null)
+					System.out.println(modules.length);*/
+			}
+		}
 		return new IModule[0];
 	}
 
@@ -304,7 +315,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			throw new CoreException(status);
 		
 		TomcatConfiguration config = getTomcatConfiguration();
-
+		
 		if (add != null) {
 			int size = add.length;
 			for (int i = 0; i < size; i++) {
@@ -313,8 +324,8 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 				String contextRoot = module.getContextRoot();
 				if (contextRoot != null && !contextRoot.startsWith("/") && contextRoot.length() > 0)
 					contextRoot = "/" + contextRoot;
-				WebModule module2 = new WebModule(contextRoot,
-						module.getLocation().toOSString(), module3.getId(), true);
+				String docBase = config.getDocBasePrefix() + module3.getName();
+				WebModule module2 = new WebModule(contextRoot, docBase, module3.getId(), true);
 				config.addWebModule(-1, module2);
 			}
 		}

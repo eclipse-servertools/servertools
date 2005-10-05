@@ -196,13 +196,10 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 
 		return Status.OK_STATUS;		
 	}
-
-	/**
-	 * Returns the root of the docbase parameter.
-	 *
-	 * @return java.lang.String
-	 */
-	protected abstract String getDocBaseRoot();
+	
+	public void localizeConfiguration(IPath path, TomcatServer server, IProgressMonitor monitor) {
+		// do nothing
+	}
 
 	/**
 	 * Returns the main server port.
@@ -216,7 +213,9 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	 *
 	 * @return java.lang.String
 	 */
-	public abstract String getPathPrefix();
+	public String getDocBasePrefix() {
+		return "";
+	}
 
 	/**
 	 * Returns the partial URL applicable to this module.
@@ -255,13 +254,6 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 		}
 		return null;
 	}
-
-	/**
-	 * Return the docBase of the ROOT web module.
-	 *
-	 * @return java.lang.String
-	 */
-	protected abstract String getROOTModuleDocBase();
 
 	protected abstract void save(IFolder folder, IProgressMonitor monitor) throws CoreException;
 	

@@ -31,6 +31,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.model.*;
+import org.eclipse.wst.server.core.util.ProjectModule;
 import org.eclipse.wst.server.core.util.SocketUtil;
 /**
  * Generic Tomcat server.
@@ -60,14 +61,14 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		
 		return (TomcatRuntime) getServer().getRuntime().loadAdapter(TomcatRuntime.class, null);
 	}
-	
+
 	public ITomcatVersionHandler getTomcatVersionHandler() {
 		if (getServer().getRuntime() == null || getTomcatRuntime() == null)
 			return null;
 
 		return getTomcatRuntime().getVersionHandler();
 	}
-	
+
 	public TomcatConfiguration getTomcatConfiguration() throws CoreException {
 		return getTomcatServer().getTomcatConfiguration();
 	}
@@ -205,7 +206,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			confDir = installDir;
 
 		monitor = ProgressUtil.getMonitorFor(monitor);
-		monitor.beginTask(Messages.publishServerTask, 500);
+		monitor.beginTask(Messages.publishServerTask, 600);
 		
 		IStatus status = getTomcatConfiguration().cleanupServer(confDir, installDir, ProgressUtil.getSubMonitorFor(monitor, 100));
 		if (status != null && !status.isOK())
@@ -214,6 +215,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		status = getTomcatConfiguration().backupAndPublish(confDir, !getTomcatServer().isTestEnvironment(), ProgressUtil.getSubMonitorFor(monitor, 400));
 		if (status != null && !status.isOK())
 			throw new CoreException(status);
+		
+		getTomcatConfiguration().localizeConfiguration(confDir.append("conf"), getTomcatServer(), ProgressUtil.getSubMonitorFor(monitor, 100));
 		
 		monitor.done();
 		
@@ -250,10 +253,15 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			}
 		} else {
 			IWebModule webModule = (IWebModule) module.loadAdapter(IWebModule.class, null);
-			IPath from = webModule.getLocation();
 			IPath to = getServer().getRuntime().getLocation().append("webapps").append(webModule.getContextRoot());
+			/*IPath from = webModule.getLocation();
 			FileUtil.smartCopyDirectory(from.toOSString(), to.toOSString(), monitor);
-			p.put(module.getId(), to.toOSString());
+			p.put(module.getId(), to.toOSString());*/
+			
+			ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, monitor);
+			IModuleResource[] mr = pm.members();
+			FileUtil.smartCopy(mr, to, monitor);
+			
 			setModulePublishState(moduleTree, IServer.PUBLISH_STATE_NONE);
 		}
 		

@@ -18,7 +18,9 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.IModuleFile;
+import org.eclipse.wst.server.core.model.IModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.model.IModuleResourceDelta;
 import org.eclipse.wst.server.core.model.PublishOperation;
@@ -47,36 +49,42 @@ public class PublishOperation2 extends PublishOperation {
 	}
 
 	public void execute(IProgressMonitor monitor, IAdaptable info) throws CoreException {
-		IModuleResourceDelta[] delta = server.getPublishedResourceDelta(new IModule[] { module });
-		
-		IPath path = server.getTempDirectory();
+		IPath path = server.getTempDirectory().append("webapps");
 		path = path.append(module.getName());
+		
+		if (kind == IServer.PUBLISH_CLEAN) { // clean and republish from scratch
+			FileUtil.deleteDirectory(path.toFile(), monitor);
+		}
+		
+		if (kind == IServer.PUBLISH_CLEAN || kind == IServer.PUBLISH_FULL) {
+			ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, monitor);
+			IModuleResource[] mr = pm.members();
+			copy(mr, path);
+			return;
+		}
+		
+		IModuleResourceDelta[] delta = server.getPublishedResourceDelta(new IModule[] { module });
 		
 		int size = delta.length;
 		for (int i = 0; i < size; i++) {
 			handleDelta(path, delta[i]);
 		}
-		
-		ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, monitor);
-		IModuleResource[] mr = pm.members();
-		System.out.println(mr);
-		//copy(pm.members(), path);
 	}
 
 	protected void handleDelta(IPath path, IModuleResourceDelta delta) throws CoreException {
 		IModuleResource resource = delta.getModuleResource();
-		int kind = delta.getKind();
+		int kind2 = delta.getKind();
 		
 		if (resource instanceof IModuleFile) {
 			IModuleFile file = (IModuleFile) resource;
-			if (kind == IModuleResourceDelta.REMOVED)
+			if (kind2 == IModuleResourceDelta.REMOVED)
 				deleteFile(path, file);
 			else
 				copyFile(path, file);
 			return;
 		}
 		
-		if (kind == IModuleResourceDelta.ADDED) {
+		if (kind2 == IModuleResourceDelta.ADDED) {
 			IPath path2 = path.append(resource.getModuleRelativePath()).append(resource.getName());
 			path2.toFile().mkdirs();
 		} else if (kind == IModuleResourceDelta.REMOVED) {
@@ -105,7 +113,7 @@ public class PublishOperation2 extends PublishOperation {
 	}
 
 
-	/*protected void copy(IModuleResource[] resources, IPath path) throws CoreException {
+	protected void copy(IModuleResource[] resources, IPath path) throws CoreException {
 		if (resources == null)
 			return;
 		
@@ -128,5 +136,5 @@ public class PublishOperation2 extends PublishOperation {
 				f.mkdirs();
 			FileUtil.copyFile(file.getContents(), path3.toOSString());
 		}
-	}*/
+	}
 }

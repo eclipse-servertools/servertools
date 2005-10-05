@@ -8,7 +8,6 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.jst.server.tomcat.core.internal;x-friends:="org.eclipse.jst.server.tomcat.ui",
  org.eclipse.jst.server.tomcat.core.internal.command;x-friends:="org.eclipse.jst.server.tomcat.ui",
- org.eclipse.jst.server.tomcat.core.internal.project.facet,
  org.eclipse.jst.server.tomcat.core.internal.xml;x-friends:="org.eclipse.jst.server.tomcat.ui",
  org.eclipse.jst.server.tomcat.core.internal.xml.server32;x-friends:="org.eclipse.jst.server.tomcat.ui",
  org.eclipse.jst.server.tomcat.core.internal.xml.server40;x-friends:="org.eclipse.jst.server.tomcat.ui"
@@ -19,6 +18,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jdt.core,
  org.eclipse.jdt.launching,
  org.eclipse.wst.server.core,
- org.eclipse.jst.server.core,
- org.eclipse.wst.common.project.facet.core
+ org.eclipse.jst.server.core
 Eclipse-AutoStart: true

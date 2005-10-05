@@ -59,4 +59,16 @@
         name="%cactusServletTestCase"/>
   </extension>
 
+<!--
+  <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
+    <adapter>
+      <runtime-component
+         id="org.eclipse.jst.server.tomcat"/>
+      <factory
+         class="org.eclipse.wst.common.project.facet.base.TomcatLabelProvider$Factory"/>
+      <type
+         class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
+    </adapter>
+  </extension>
+-->
 </plugin>

@@ -25,7 +25,6 @@ import org.eclipse.osgi.util.NLS;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.ServerPort;
 /**
  * Tomcat v3.2 server configuration.
@@ -55,16 +54,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	public Tomcat32Configuration(IFolder path) {
 		super(path);
 	}
-	
-	/**
-	 * Return the root of the docbase parameter.
-	 *
-	 * @return java.lang.String
-	 */
-	protected String getDocBaseRoot() {
-		return "";
-	}
-	
+
 	/**
 	 * Returns the main server port.
 	 * @return TomcatServerPort
@@ -78,7 +68,17 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 		}
 		return null;
 	}
-	
+
+	/**
+	 * Returns the prefix that is used in front of the
+	 * web module path property. (e.g. "webapps")
+	 *
+	 * @return java.lang.String
+	 */
+	public String getDocBasePrefix() {
+		return "webapps/";
+	}
+
 	/**
 	 * Returns the mime mappings.
 	 * @return java.util.List
@@ -90,25 +90,6 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 		return webAppDocument.getMimeMappings();
 	}
 
-	/**
-	 * Returns the prefix that is used in front of the
-	 * web module path property. (e.g. "webapps")
-	 *
-	 * @return java.lang.String
-	 */
-	public String getPathPrefix() {
-		return "webapps";
-	}
-	
-	/**
-	 * Return the docBase of the ROOT web module.
-	 *
-	 * @return java.lang.String
-	 */
-	protected String getROOTModuleDocBase() {
-		return "webapps/ROOT";
-	}
-	
 	/**
 	 * Returns the server object (root of server.xml).
 	 * @return org.eclipse.jst.server.tomcat.internal.xml.server32.Server
@@ -471,70 +452,44 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 			Trace.trace(Trace.SEVERE, "Error adding web module", e);
 		}
 	}
-	
+
 	/**
 	 * Localize the web projects in this configuration.
 	 *
 	 * @param path a path
-	 * @param serverType a server type
-	 * @param runtime a runtime
+	 * @param server2 a server type
 	 * @param monitor a progress monitor
 	 */
-	public void localizeConfiguration(IPath path, TomcatServer serverType, IRuntime runtime, IProgressMonitor monitor) {
+	public void localizeConfiguration(IPath path, TomcatServer server2, IProgressMonitor monitor) {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
 			monitor.beginTask(Messages.updatingConfigurationTask, 100);
-	
+			
 			Tomcat32Configuration config = new Tomcat32Configuration(null);
 			config.load(path, ProgressUtil.getSubMonitorFor(monitor, 30));
-	
+			
 			if (monitor.isCanceled())
 				return;
-	
-			if (serverType.isTestEnvironment()) {
-				config.server.getContextManager().setHome(runtime.getLocation().toOSString());
+			
+			if (server2.isTestEnvironment()) {
+				IPath tomcatPath = path.removeLastSegments(1);
+				config.server.getContextManager().setHome(tomcatPath.toOSString());
 				config.isServerDirty = true;
-			} else {
-				//IServerConfigurationWorkingCopy scwc = config.getServerConfiguration().createWorkingCopy();
-				//Tomcat32Configuration cfg = (Tomcat32Configuration) scwc.getAdapter(Tomcat32Configuration.class);
-				config.localizeWebModules();
 			}
-	
 			monitor.worked(40);
-	
+			
 			if (monitor.isCanceled())
 				return;
-
+			
 			config.save(path, false, ProgressUtil.getSubMonitorFor(monitor, 30));
-	
+			
 			if (!monitor.isCanceled())
 				monitor.done();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error localizing configuration", e);
 		}
 	}
-	
-	/**
-	 * Go through all of the web modules and make the document
-	 * base "local" to the configuration.
-	 */
-	protected void localizeWebModules() {
-		List modules = getWebModules();
 
-		int size = modules.size();
-		for (int i = 0; i < size; i++) {
-			WebModule module = (WebModule) modules.get(i);
-			String memento = module.getMemento();
-			if (memento != null && memento.length() > 0) {
-				// update document base to a relative ref
-				String docBase = getPathPrefix() + module.getPath();
-				if (docBase.startsWith("/") || docBase.startsWith("\\"))
-					docBase = docBase.substring(1);
-				modifyWebModule(i, docBase, module.getPath(), module.isReloadable());
-			}
-		}
-	}
-	
 	/**
 	 * Change the extension of a mime mapping.
 	 * 

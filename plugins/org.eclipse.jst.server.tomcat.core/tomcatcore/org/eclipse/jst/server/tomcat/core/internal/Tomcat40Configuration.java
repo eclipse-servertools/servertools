@@ -56,15 +56,6 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	public Tomcat40Configuration(IFolder path) {
 		super(path);
 	}
-		
-	/**
-	 * Returns the root of the docbase parameter.
-	 *
-	 * @return java.lang.String
-	 */
-	protected String getDocBaseRoot() {
-		return "webapps/";
-	}
 
 	/**
 	 * Return the port number.
@@ -88,25 +79,6 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 		return webAppDocument.getMimeMappings();
 	}
 
-	/**
-	 * Returns the prefix that is used in front of the
-	 * web module path property. (e.g. "webapps")
-	 *
-	 * @return java.lang.String
-	 */
-	public String getPathPrefix() {
-		return "";
-	}
-	
-	/**
-	 * Return the docBase of the ROOT web module.
-	 *
-	 * @return java.lang.String
-	 */
-	protected String getROOTModuleDocBase() {
-		return "ROOT";
-	}
-	
 	/**
 	 * Returns a list of ServerPorts that this configuration uses.
 	 *
@@ -481,65 +453,6 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error adding web module " + module.getPath(), e);
-		}
-	}
-	
-	/**
-	 * Localize the web projects in this configuration.
-	 *
-	 * @param path a path
-	 * @param server2 a server type
-	 * @param monitor a progress monitor
-	 */
-	public void localizeConfiguration(IPath path, TomcatServer server2, IProgressMonitor monitor) {
-		try {
-			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(Messages.updatingConfigurationTask, 100);
-			
-			Tomcat40Configuration config = new Tomcat40Configuration(null);
-			config.load(path, ProgressUtil.getSubMonitorFor(monitor, 40));
-	
-			if (monitor.isCanceled())
-				return;
-	
-			if (!server2.isTestEnvironment()) {
-				//IServerConfigurationWorkingCopy scwc = config.getServerConfiguration().createWorkingCopy();
-				//Tomcat40Configuration cfg = (Tomcat40Configuration) scwc.getAdapter(Tomcat40Configuration.class);
-				config.localizeWebModules();
-			}
-	
-			monitor.worked(20);
-	
-			if (monitor.isCanceled())
-				return;
-	
-			config.save(path, false, ProgressUtil.getSubMonitorFor(monitor, 40));
-	
-			if (!monitor.isCanceled())
-				monitor.done();
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error localizing configuration", e);
-		}
-	}
-	
-	/**
-	 * Go through all of the web modules and make the document
-	 * base "local" to the configuration.
-	 */
-	protected void localizeWebModules() {
-		List modules = getWebModules();
-
-		int size = modules.size();
-		for (int i = 0; i < size; i++) {
-			WebModule module = (WebModule) modules.get(i);
-			String memento = module.getMemento();
-			if (memento != null && memento.length() > 0) {
-				// update document base to a relative ref
-				String docBase = getPathPrefix() + module.getPath();
-				if (docBase.startsWith("/") || docBase.startsWith("\\"))
-					docBase = docBase.substring(1);
-				modifyWebModule(i, docBase, module.getPath(), module.isReloadable());
-			}
 		}
 	}
 

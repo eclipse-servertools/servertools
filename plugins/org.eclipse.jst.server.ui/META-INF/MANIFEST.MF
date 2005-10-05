@@ -19,5 +19,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.server.ui,
  org.eclipse.jst.server.core,
  org.eclipse.ui.ide,
- org.eclipse.jdt.ui
+ org.eclipse.jdt.ui,
+ org.eclipse.wst.common.project.facet.core,
+ org.eclipse.wst.common.project.facet.ui
 Eclipse-AutoStart: true
