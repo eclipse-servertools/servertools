@@ -23,6 +23,8 @@ public class PublishTask extends PublishTaskDelegate {
 			return null;
 		
 		TomcatServerBehaviour tomcatServer = (TomcatServerBehaviour) server.loadAdapter(TomcatServerBehaviour.class, null);
+		if (!tomcatServer.getTomcatServer().isTestEnvironment())
+			return null;
 		
 		List tasks = new ArrayList();
 		int size = modules.size();

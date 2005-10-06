@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,12 +8,17 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.server.core.internal;
+package org.eclipse.jst.server.core;
 
-import org.eclipse.jst.server.core.IJavaRuntime;
+import org.eclipse.jdt.launching.IVMInstall;
 /**
  * 
  */
-public interface IGenericRuntime extends IJavaRuntime {
-	// no additional methods
+public interface IJavaRuntime {
+	/**
+	 * Return the VM install (installed JRE) that this runtime is using.
+	 * 
+	 * @return the current VM install
+	 */
+	public IVMInstall getVMInstall();
 }

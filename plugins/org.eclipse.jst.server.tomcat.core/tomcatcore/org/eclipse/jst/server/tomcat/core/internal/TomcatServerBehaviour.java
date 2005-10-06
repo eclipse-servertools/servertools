@@ -26,6 +26,7 @@ import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.IWebModule;
+import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.osgi.util.NLS;
 
 import org.eclipse.wst.server.core.*;
@@ -247,20 +248,18 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		if (deltaKind == REMOVED) {
 			try {
 				String publishPath = (String) p.get(module.getId());
-				FileUtil.deleteDirectory(new File(publishPath), monitor);
+				PublishUtil.deleteDirectory(new File(publishPath), monitor);
 			} catch (Exception e) {
 				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, "Could not remove module", e));
 			}
 		} else {
 			IWebModule webModule = (IWebModule) module.loadAdapter(IWebModule.class, null);
 			IPath to = getServer().getRuntime().getLocation().append("webapps").append(webModule.getContextRoot());
-			/*IPath from = webModule.getLocation();
-			FileUtil.smartCopyDirectory(from.toOSString(), to.toOSString(), monitor);
-			p.put(module.getId(), to.toOSString());*/
 			
 			ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, monitor);
 			IModuleResource[] mr = pm.members();
-			FileUtil.smartCopy(mr, to, monitor);
+			PublishUtil.smartCopy(mr, to, monitor);
+			p.put(module.getId(), to.toOSString());
 			
 			setModulePublishState(moduleTree, IServer.PUBLISH_STATE_NONE);
 		}

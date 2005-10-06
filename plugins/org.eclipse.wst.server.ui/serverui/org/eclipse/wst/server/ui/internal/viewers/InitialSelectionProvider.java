@@ -13,6 +13,7 @@ package org.eclipse.wst.server.ui.internal.viewers;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
+import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 /**
@@ -41,6 +42,14 @@ public class InitialSelectionProvider extends ViewerSorter {
 			return getInitialSelection(st);
 		}
 		
+		if (obj[0] instanceof IServer) {
+			int size = obj.length;
+			IServer[] st = new IServer[size];
+			for (int i = 0; i < size; i++)
+				st[i] = (IServer) obj[i];
+			return getInitialSelection(st);
+		}
+		
 		return null;
 	}
 
@@ -59,6 +68,18 @@ public class InitialSelectionProvider extends ViewerSorter {
 				return serverTypes[i];
 		}
 		return serverTypes[0];
+	}
+
+	/**
+	 * 
+	 * @param servers
+	 * @return the initial selection
+	 */
+	public IServer getInitialSelection(IServer[] servers) {
+		if (servers == null)
+			return null;
+		
+		return servers[0];
 	}
 
 	/**

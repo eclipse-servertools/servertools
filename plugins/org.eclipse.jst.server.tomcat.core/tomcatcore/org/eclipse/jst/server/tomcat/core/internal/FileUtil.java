@@ -12,17 +12,10 @@ package org.eclipse.jst.server.tomcat.core.internal;
 
 import java.io.*;
 import java.net.URL;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.*;
+import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.wst.server.core.model.IModuleFile;
-import org.eclipse.wst.server.core.model.IModuleFolder;
-import org.eclipse.wst.server.core.model.IModuleResource;
 /**
  * Utility class with an assortment of useful file methods.
  */
@@ -155,40 +148,6 @@ public class FileUtil {
 	}
 
 	/**
-	 * Recursively deletes a directory.
-	 *
-	 * @param dir java.io.File
-	 * @param monitor a progress monitor, or <code>null</code>
-	 */
-	public static void deleteDirectory(File dir, IProgressMonitor monitor) {
-		try {
-			if (!dir.exists() || !dir.isDirectory())
-				return;
-	
-			File[] files = dir.listFiles();
-			int size = files.length;
-			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(NLS.bind(Messages.deletingTask, new String[] { dir.getAbsolutePath() }), size * 10);
-	
-			// cycle through files
-			for (int i = 0; i < size; i++) {
-				File current = files[i];
-				if (current.isFile()) {
-					current.delete();
-					monitor.worked(10);
-				} else if (current.isDirectory()) {
-					monitor.subTask(NLS.bind(Messages.deletingTask, new String[] {current.getAbsolutePath()}));
-					deleteDirectory(current, ProgressUtil.getSubMonitorFor(monitor, 10));
-				}
-			}
-			dir.delete();
-			monitor.done();
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error deleting directory " + dir.getAbsolutePath(), e);
-		}
-	}
-
-	/**
 	 * Copys a directory from a to b, only modifying as needed
 	 * and deleting old files and directories.
 	 *
@@ -227,7 +186,7 @@ public class FileUtil {
 					// delete file if it can't be found or isn't the correct type
 					if (!found) {
 						if (isDir)
-							deleteDirectory(toFiles[i], null);
+							PublishUtil.deleteDirectory(toFiles[i], null);
 						else
 							toFiles[i].delete();
 					}
@@ -286,198 +245,4 @@ public class FileUtil {
 			Trace.trace(Trace.SEVERE, "Error smart copying directory " + from + " - " + to, e);
 		}
 	}
-
-	protected static void copy(IModuleResource[] resources, IPath path) throws CoreException {
-		if (resources == null)
-			return;
-		
-		int size = resources.length;
-		for (int i = 0; i < size; i++) {
-			copy(resources[i], path);
-		}
-	}
-
-	protected static void copy(IModuleResource resource, IPath path) throws CoreException {
-		if (resource instanceof IModuleFolder) {
-			IModuleFolder folder = (IModuleFolder) resource;
-			copy(folder.members(), path);
-		} else {
-			IModuleFile mf = (IModuleFile) resource;
-			IFile file = (IFile) mf.getAdapter(IFile.class);
-			IPath path3 = path.append(mf.getModuleRelativePath()).append(mf.getName());
-			File f = path3.toFile().getParentFile();
-			if (!f.exists())
-				f.mkdirs();
-			FileUtil.copyFile(file.getContents(), path3.toOSString());
-		}
-	}
-
-	protected static void copyFile(IModuleFile mf, IPath path) throws CoreException {
-		IFile file = (IFile) mf.getAdapter(IFile.class);
-		copyFile(file.getContents(), path.toOSString());
-	}
-	
-	protected static void smartCopy(IModuleResource[] resources, IPath path, IProgressMonitor monitor) throws CoreException {
-		if (resources == null)
-			return;
-		
-		File toDir = path.toFile();
-		File[] toFiles = toDir.listFiles();
-		int fromSize = resources.length;
-		
-		if (toDir.exists() && toDir.isDirectory()) {
-			int toSize = toFiles.length;
-			// check if this exact file exists in the new directory
-			for (int i = 0; i < toSize; i++) {
-				String name = toFiles[i].getName();
-				boolean isDir = toFiles[i].isDirectory();
-				boolean found = false;
-				for (int j = 0; j < fromSize; j++) {
-					if (name.equals(resources[j].getName()) && isDir == resources[j] instanceof IModuleFolder)
-						found = true;
-				}
-	
-				// delete file if it can't be found or isn't the correct type
-				if (!found) {
-					if (isDir)
-						deleteDirectory(toFiles[i], null);
-					else
-						toFiles[i].delete();
-				}
-				if (monitor.isCanceled())
-					return;
-			}
-		} else {
-			if (toDir.isFile())
-				toDir.delete();
-			toDir.mkdir();
-		}
-			
-		monitor.worked(50);
-		
-		// cycle through files and only copy when it doesn't exist
-		// or is newer
-		toFiles = toDir.listFiles();
-		int toSize = toFiles.length;
-		int dw = 0;
-		if (toSize > 0)
-			dw = 500 / toSize;
-
-		for (int i = 0; i < fromSize; i++) {
-			IModuleResource current = resources[i];
-
-			// check if this is a new or newer file
-			boolean copy = true;
-			boolean currentIsDir = current instanceof IModuleFolder;
-			if (!currentIsDir) {
-				//String name = current.getName();
-				//IModuleFile mf = (IModuleFile) current;
-				
-				//long mod = mf.getModificationStamp();
-				// TODO
-				/*for (int j = 0; j < toSize; j++) {
-					if (name.equals(toFiles[j].getName()) && mod <= toFiles[j].lastModified())
-						copy = false;
-				}*/
-			}
-
-			if (copy) {
-				//String fromFile = current.getAbsolutePath();
-				IPath toPath = path.append(current.getName());
-				if (!currentIsDir) {
-					IModuleFile mf = (IModuleFile) current;
-					copyFile(mf, toPath);
-					monitor.worked(dw);
-				} else { //if (currentIsDir) {
-					IModuleFolder folder = (IModuleFolder) current;
-					IModuleResource[] children = folder.members();
-					monitor.subTask(NLS.bind(Messages.copyingTask, new String[] {resources[i].getName(), current.getName()}));
-					smartCopy(children, toPath, ProgressUtil.getSubMonitorFor(monitor, dw));
-				}
-			}
-			if (monitor.isCanceled())
-				return;
-		}
-		monitor.worked(500 - dw * toSize);
-		monitor.done();
-	}
-
-	public static void createJar(IModuleResource[] resource, IPath jarPath) throws Exception {
-		ZipFile zip = new ZipFile(jarPath.toFile());
-		BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(jarPath.toFile()));
-		ZipOutputStream zout = new ZipOutputStream(bout);
-		
-		//ZipEntry ze = new ZipEntry();
-		//zout.putNextEntry(e);
-	}
-
-	/**
-	 * Expand a zip file to a given directory.
-	 *
-	 * @param zipFile java.io.File
-	 * @param dir java.io.File
-	 * @param monitor
-	 */
-	/*public static void expandZip(File zipFile, File dir, IProgressMonitor monitor) {
-		ZipInputStream zis = null;
-	
-		try {
-			// first, count number of items in zip file
-			zis = new ZipInputStream(new FileInputStream(zipFile));
-			int count = 0;
-			while (zis.getNextEntry() != null)
-				count++;
-	
-			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(ServerPlugin.getResource("%unZippingTask", new String[] {zipFile.getName()}), count);
-			
-			zis = new ZipInputStream(new FileInputStream(zipFile));
-			ZipEntry ze = zis.getNextEntry();
-	
-			FileOutputStream out = null;
-	
-			while (ze != null) {
-				try {
-					monitor.subTask(ServerPlugin.getResource("%expandingTask", new String[] {ze.getName()}));
-					File f = new File(dir, ze.getName());
-	
-					if (ze.isDirectory()) {
-						out = null;
-						f.mkdirs();
-					} else {
-						out = new FileOutputStream(f);
-	
-						int avail = zis.read(buf);
-						while (avail > 0) {
-							out.write(buf, 0, avail);
-							avail = zis.read(buf);
-						}
-					}
-				} catch (FileNotFoundException ex) {
-					Trace.trace(Trace.SEVERE, "Error extracting " + ze.getName() + " from zip " + zipFile.getAbsolutePath(), ex);
-				} finally {
-					try {
-						if (out != null)
-							out.close();
-					} catch (Exception e) {
-						// ignore
-					}
-				}
-				ze = zis.getNextEntry();
-				monitor.worked(1);
-				if (monitor.isCanceled())
-					return;
-			}
-			monitor.done();
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error expanding zip file " + zipFile.getAbsolutePath(), e);
-		} finally {
-			try {
-				if (zis != null)
-					zis.close();
-			} catch (Exception ex) {
-				// ignore
-			}
-		}
-	}*/
 }

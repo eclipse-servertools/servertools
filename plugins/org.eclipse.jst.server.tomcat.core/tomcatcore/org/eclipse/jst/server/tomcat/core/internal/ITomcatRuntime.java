@@ -12,18 +12,18 @@ package org.eclipse.jst.server.tomcat.core.internal;
 
 import java.util.List;
 
-import org.eclipse.jdt.launching.IVMInstall;
+import org.eclipse.jst.server.core.IJavaRuntime;
 /**
  * 
  */
-public interface ITomcatRuntime {
+public interface ITomcatRuntime extends IJavaRuntime {
 	/**
-	 * Return the VM install (installed JRE) that this runtime is using.
+	 * Returns <code>true</code> if this server is using the default JRE, and
+	 * <code>false</code> otherwise.
 	 * 
-	 * @return the current VM install
+	 * @return <code>true</code> if this server is using the default JRE, and
+	 *    <code>false</code> otherwise
 	 */
-	public IVMInstall getVMInstall();
-	
 	public boolean isUsingDefaultJRE();
 
 	/**
