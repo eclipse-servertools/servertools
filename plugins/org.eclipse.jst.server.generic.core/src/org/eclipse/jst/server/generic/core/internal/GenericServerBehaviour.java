@@ -402,20 +402,22 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     	if ("true".equals(launch.getLaunchConfiguration().getAttribute(ATTR_STOP, "false"))) 
     		return;
 
+    	String host = getServer().getHost();
     	ServerPort[] ports = getServer().getServerPorts(null);
     	ServerPort sp = null;
-    	for(int i=0;i<ports.length;i++){
-    		sp= ports[i];
-    		if (SocketUtil.isPortInUse(ports[i].getPort(), 5))
-    			throw new CoreException(new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.bind(GenericServerCoreMessages.errorPortInUse,Integer.toString(sp.getPort()),sp.getName()),null));
+    	if(getServer().getServerType().supportsRemoteHosts()==false && SocketUtil.isLocalhost(host)){
+	    	for(int i=0;i<ports.length;i++){
+	    		sp= ports[i];
+	    		if (SocketUtil.isPortInUse(ports[i].getPort(), 5))
+	    			throw new CoreException(new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.bind(GenericServerCoreMessages.errorPortInUse,Integer.toString(sp.getPort()),sp.getName()),null));
+	    	}
     	}
-    	
     	setServerState(IServer.STATE_STARTING);
     	setMode(launchMode);
     	
     	// ping server to check for startup
     	try {
-    		String url = "http://localhost";
+    		String url = "http://"+host;
     		int port = sp.getPort();
     		if (port != 80)
     			url += ":" + port;
