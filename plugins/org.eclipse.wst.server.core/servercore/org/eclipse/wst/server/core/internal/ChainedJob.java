@@ -20,9 +20,9 @@ import org.eclipse.wst.server.core.IServer;
  * A Job that can start another job upon successful completion.
  */
 public abstract class ChainedJob extends Job {
-	protected IServer server;
-	protected Job nextJob;
-	protected IJobChangeListener listener;
+	private IServer server;
+	private Job nextJob;
+	private IJobChangeListener listener;
 
 	/**
 	 * Create a new dependant job.
@@ -33,6 +33,15 @@ public abstract class ChainedJob extends Job {
 	public ChainedJob(String name, IServer server) {
 		super(name);
 		this.server = server;
+	}
+
+	/**
+	 * Returns the server that this job was created with.
+	 * 
+	 * @return a server
+	 */
+	public IServer getServer() {
+		return server;
 	}
 
 	/**
@@ -63,12 +72,15 @@ public abstract class ChainedJob extends Job {
 		removeJobChangeListener(listener);
 		listener = null;
 		
-		if (nextJob != null && status != null && status.getSeverity() != IStatus.ERROR)
+		if (nextJob != null && status != null && status.getSeverity() != IStatus.ERROR
+				&& status.getSeverity() != IStatus.CANCEL)
 			nextJob.schedule();
 	}
 
 	/**
-	 * Set the next job that should run if this job completes successfully.
+	 * Set the next job, which should be scheduled if and only if this job completes
+	 * successfully. The next job will be run as long as the result of this job is
+	 * not an ERROR or CANCEL status.
 	 * This method is not thread-safe. However, the next job can be changed anytime
 	 * up until the current job completes.
 	 * 

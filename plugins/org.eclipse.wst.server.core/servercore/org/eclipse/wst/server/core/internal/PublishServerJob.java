@@ -135,13 +135,13 @@ public class PublishServerJob extends ChainedJob {
 		
 		if (!check)
 			return true;
-		return ServerPreferences.getInstance().isAutoPublishing() && ((Server)server).shouldPublish();
+		return ServerPreferences.getInstance().isAutoPublishing() && ((Server)getServer()).shouldPublish();
 	}
 
 	/**
 	 * @see org.eclipse.core.runtime.jobs.Job#run(IProgressMonitor)
 	 */
 	protected IStatus run(IProgressMonitor monitor) {
-		return server.publish(kind, monitor);
+		return getServer().publish(kind, monitor);
 	}
 }

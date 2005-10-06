@@ -25,7 +25,6 @@ public class RestartServerJob extends ChainedJob {
 
 	public RestartServerJob(IServer server, String launchMode) {
 		super(NLS.bind(Messages.jobRestartingServer, server.getName()), server);
-		this.server = server;
 		this.launchMode = launchMode;
 		setRule(new ServerSchedulingRule(server));
 	}
@@ -40,7 +39,7 @@ public class RestartServerJob extends ChainedJob {
 				resultStatus = result;
 			}
 		};
-		server.restart(launchMode, listener2);
+		getServer().restart(launchMode, listener2);
 		
 		// block util the restart is completed
 		while (!isRestartCompleted) {

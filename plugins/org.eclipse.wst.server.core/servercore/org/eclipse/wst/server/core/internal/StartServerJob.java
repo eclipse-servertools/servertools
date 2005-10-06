@@ -31,7 +31,7 @@ public class StartServerJob extends ChainedJob {
 	 */
 	protected IStatus run(IProgressMonitor monitor) {
 		try {
-			server.synchronousStart(launchMode, monitor);
+			getServer().synchronousStart(launchMode, monitor);
 		} catch (CoreException ce) {
 			return ce.getStatus();
 		}

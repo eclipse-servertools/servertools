@@ -28,7 +28,6 @@ public class LaunchClientJob extends ChainedJob {
 
 	public LaunchClientJob(IServer server, IModule[] module, String launchMode, IModuleArtifact moduleArtifact, ILaunchableAdapter launchableAdapter, IClient client) {
 		super(Messages.launchingClientTask, server);
-		this.server = server;
 		this.module = module;
 		this.launchMode = launchMode;
 		this.moduleArtifact = moduleArtifact;
@@ -45,6 +44,7 @@ public class LaunchClientJob extends ChainedJob {
 		IStatus status = new Status(IStatus.OK, ServerUIPlugin.PLUGIN_ID, 0, "", null);
 
 		// wait for up to 5 minutes
+		final Server server = (Server) getServer();
 		int state = server.getModuleState(module);
 		int count = ServerPreferences.getInstance().getModuleStartTimeout();
 		while (state == IServer.STATE_STARTING && count > 0) {
@@ -70,13 +70,12 @@ public class LaunchClientJob extends ChainedJob {
 		Trace.trace(Trace.FINER, "LaunchClient job 3");
 		
 		// display client on UI thread
-		final Server server2 = (Server) server;
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				Trace.trace(Trace.FINEST, "Attempting to load client: " + client);
 				try {
-					Object launchable = launchableAdapter.getLaunchable(server2, moduleArtifact);
-					client.launch(server2, launchable, launchMode, server2.getExistingLaunch());
+					Object launchable = launchableAdapter.getLaunchable(server, moduleArtifact);
+					client.launch(server, launchable, launchMode, server.getExistingLaunch());
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Server client failed", e);
 				}
