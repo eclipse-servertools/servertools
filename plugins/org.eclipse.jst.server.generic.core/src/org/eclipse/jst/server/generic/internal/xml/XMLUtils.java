@@ -154,17 +154,4 @@ public class XMLUtils {
         }
         return null;
     }
-   
-	/**
-	 * Sets the definitions.
-	 * 
-	 * @param definitions
-	 *            The definitions to set
-	 */
-	private void setDefinitions(ArrayList definitions) {
-		this.definitions = definitions;
-	}
-
-	
-	
 }
