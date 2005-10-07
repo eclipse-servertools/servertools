@@ -24,13 +24,13 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	 * The server container id.
 	 */
 	public static final String SERVER_CONTAINER = JavaServerPlugin.PLUGIN_ID + ".container";
-	
+
 	private IPath path;
 	private ClasspathRuntimeTargetHandler delegate;
 	private IRuntime runtime;
-	
+
 	private String id;
-	
+
 	/**
 	 * Create a new runtime classpath container.
 	 * 
@@ -64,7 +64,7 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	 * @see org.eclipse.jdt.core.IClasspathContainer#getDescription()
 	 */
 	public String getDescription() {
-		if (runtime != null) {
+		if (runtime != null && delegate != null) {
 			String s = delegate.getClasspathContainerLabel(runtime, id);
 			if (s != null)
 				return s;
