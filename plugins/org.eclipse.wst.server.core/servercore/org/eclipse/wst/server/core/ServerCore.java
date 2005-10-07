@@ -88,6 +88,8 @@ public class ServerCore {
 	 *
 	 * @param project a project
 	 * @return the properties of the project
+	 * @deprecated Project facet support should now be used instead of this API. @see
+	 *    org.eclipse.wst.common.project.facet.core.IFacetedProject#getRuntime()
 	 */
 	public static IProjectProperties getProjectProperties(IProject project) {
 		if (project == null)

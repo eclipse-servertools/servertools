@@ -23,6 +23,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * (repeatedly) as the API evolves.
  * </p>
  * 
+ * @deprecated Project facet support should now be used instead of this API. @see
+ *    org.eclipse.wst.common.project.facet.core.IFacetedProject#getRuntime()
+ * 
  * @plannedfor 1.0
  */
 public interface IProjectProperties {
@@ -30,7 +33,9 @@ public interface IProjectProperties {
 	 * Returns the current runtime target for this project.
 	 * 
 	 * @return the current runtime target, or <code>null</code> if the project has
-	 *    no runtime target 
+	 *    no runtime target
+	 * @deprecated Project facet support should now be used instead of this API. @see
+	 *    org.eclipse.wst.common.project.facet.core.IFacetedProject#getRuntime()
 	 */
 	public IRuntime getRuntimeTarget();
 
@@ -42,6 +47,8 @@ public interface IProjectProperties {
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @throws CoreException if there is a problem setting the runtime target
+	 * @deprecated Project facet support should now be used instead of this API. @see
+	 *    org.eclipse.wst.common.project.facet.core.IFacetedProject#setRuntime()
 	 */
 	public void setRuntimeTarget(IRuntime runtime, IProgressMonitor monitor) throws CoreException;
 }

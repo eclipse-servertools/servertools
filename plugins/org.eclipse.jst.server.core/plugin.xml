@@ -95,11 +95,24 @@
     </runtime-component-type>
 
     <runtime-component-version
-       type="org.eclipse.jst.server.tomcat" version="5.5"/>
+       type="org.eclipse.jst.server.tomcat"
+       version="3.2"/>
 
     <runtime-component-version
-        type="org.eclipse.jst.server.tomcat"
-        version="4.1"/>
+       type="org.eclipse.jst.server.tomcat"
+       version="4.0"/>
+
+    <runtime-component-version
+       type="org.eclipse.jst.server.tomcat"
+       version="4.1"/>
+
+    <runtime-component-version
+       type="org.eclipse.jst.server.tomcat"
+       version="5.0"/>
+
+    <runtime-component-version
+       type="org.eclipse.jst.server.tomcat"
+       version="5.5"/>
 
     <adapter>
       <runtime-component
@@ -113,11 +126,21 @@
     <supported>
       <runtime-component
          id="org.eclipse.jst.server.tomcat"
-         version="5.5"
+         version="3.2"
          allow-newer="true"/>
       <facet
          id="web"
-         version="2.4"/>
+         version="2.2"/>
+    </supported>
+
+    <supported>
+      <runtime-component
+         id="org.eclipse.jst.server.tomcat"
+         version="4.0"
+         allow-newer="true"/>
+      <facet
+         id="web"
+         version="2.3"/>
     </supported>
 
     <supported>
@@ -127,20 +150,37 @@
          allow-newer="true"/>
       <facet
          id="web"
-         version="2.3"/>
+         version="2.4"/>
     </supported>
-    
+
+    <supported>
+      <runtime-component
+         id="org.eclipse.jst.server.tomcat"
+         version="5.5"
+         allow-newer="true"/>
+      <facet
+         id="web"
+         version="2.4"/>
+    </supported>
+
     <runtime-component-type id="standard.jre">
       <!-- <icon>images/jre.gif</icon> -->
     </runtime-component-type>
-    
-    <runtime-component-version type="standard.jre" version="1.4"/>
-    <runtime-component-version type="standard.jre" version="5.0"/>
+
+    <runtime-component-version
+       type="standard.jre"
+       version="1.4"/>
+    <runtime-component-version
+       type="standard.jre"
+       version="5.0"/>
 
     <adapter>
-      <runtime-component id="standard.jre"/>
-      <factory class="org.eclipse.jst.server.core.internal.StandardJreClasspathProvider$Factory"/>
-      <type class="org.eclipse.wst.common.project.facet.core.runtime.classpath.IClasspathProvider"/>
+      <runtime-component
+         id="standard.jre"/>
+      <factory
+         class="org.eclipse.jst.server.core.internal.StandardJreClasspathProvider$Factory"/>
+      <type
+         class="org.eclipse.wst.common.project.facet.core.runtime.classpath.IClasspathProvider"/>
     </adapter>
 
     <supported>
@@ -152,7 +192,5 @@
       <runtime-component id="standard.jre" version="5.0"/>
       <facet id="java" version="5.0"/>
     </supported>
-    
   </extension>
-
 </plugin>

@@ -42,38 +42,31 @@ public class TomcatSourcePathComputerDelegate implements ISourcePathComputerDele
 
 		IServer server = ServerUtil.getServer(configuration);
 		if (server != null) {
-			IPath basePath = ((TomcatServerBehaviour)server.getAdapter(TomcatServerBehaviour.class)).getRuntimeBaseDirectory();
+			//IPath basePath = ((TomcatServerBehaviour)server.getAdapter(TomcatServerBehaviour.class)).getRuntimeBaseDirectory();
 			List list = new ArrayList();
-			List pathList = new ArrayList();
+			//List pathList = new ArrayList();
 			IModule[] modules = server.getModules();
 			for (int i = 0; i < modules.length; i++) {
 				IProject project = modules[i].getProject();
 				if (project != null) {
-					/**
-					 * WORKAROUND for bug 93174,
-					 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=93174
-					 * 
-					 * Assume that a folder with the same name as the IModule
-					 * name located directly under the module's project is a
-					 * "flexible" module. Alter the behavior so that a folder
-					 * container is added instead.
-					 */
+					
 					IFolder moduleFolder = project.getFolder(modules[i].getName());
 					if (moduleFolder.exists()) {
 						sourcefolderList.add(new FolderSourceContainer(moduleFolder, true));
-					} else {
-						try {
-							if (project.hasNature(JavaCore.NATURE_ID)) {
-								IJavaProject javaProject = (IJavaProject) project.getNature(JavaCore.NATURE_ID);
-								list.add(javaProject);
-							}
-						} catch (Exception e) {
-							// ignore
-						}
 					}
 					
-					IPath path = basePath.append("work").append("Catalina").append("localhost").append(modules[i].getName());
-					pathList.add(path);
+					try {
+						if (project.hasNature(JavaCore.NATURE_ID)) {
+							IJavaProject javaProject = (IJavaProject) project.getNature(JavaCore.NATURE_ID);
+							if (!list.contains(javaProject))
+								list.add(javaProject);
+						}
+					} catch (Exception e) {
+						// ignore
+					}
+					
+					//IPath path = basePath.append("work").append("Catalina").append("localhost").append(modules[i].getName());
+					//pathList.add(path);
 				}
 			}
 			int size = list.size();
@@ -81,32 +74,22 @@ public class TomcatSourcePathComputerDelegate implements ISourcePathComputerDele
 			list.toArray(projects);
 			
 			int size2 = entries.length;
-			int size3 = pathList.size();
-			IRuntimeClasspathEntry[] entries2 = new IRuntimeClasspathEntry[size + size2 + size3];
+			//int size3 = pathList.size();
+			IRuntimeClasspathEntry[] entries2 = new IRuntimeClasspathEntry[size + size2];
 			System.arraycopy(entries, 0, entries2, 0, size2);
 			
-			for (int i = 0; i < size; i++) {
-				entries2[size2 + i] = JavaRuntime.newProjectRuntimeClasspathEntry(projects[i]); 
-			}
+			for (int i = 0; i < size; i++)
+				entries2[size2 + i] = JavaRuntime.newProjectRuntimeClasspathEntry(projects[i]);
 			
-			for (int i = 0; i < size3; i++) {
-				entries2[size + size2 + i] = JavaRuntime.newArchiveRuntimeClasspathEntry((IPath) pathList.get(i)); 
-			}
+			//for (int i = 0; i < size3; i++)
+			//	entries2[size + size2 + i] = JavaRuntime.newArchiveRuntimeClasspathEntry((IPath) pathList.get(i));
 			
 			entries = entries2;
 		}
 		
 		IRuntimeClasspathEntry[] resolved = JavaRuntime.resolveSourceLookupPath(entries, configuration);
 		ISourceContainer[] sourceContainers = JavaRuntime.getSourceContainers(resolved);
-
-		/**
-		 * WORKAROUND for bug 93174,
-		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=93174
-		 * 
-		 * FolderSourceContainers have a source container of null, so the
-		 * mapping of the regular classpath to source containers is done
-		 * before adding the known FolderSourceContainers.
-		 */
+		
 		if (!sourcefolderList.isEmpty()) {
 			ISourceContainer[] combinedSourceContainers = new ISourceContainer[sourceContainers.length + sourcefolderList.size()];
 			sourcefolderList.toArray(combinedSourceContainers);

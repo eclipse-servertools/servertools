@@ -30,11 +30,20 @@ public final class RuntimeBridge implements IRuntimeBridge {
 	private static Map mappings = new HashMap();
 
 	static {
-		mappings.put("org.eclipse.jst.server.tomcat.runtime.55", RuntimeManager.get()
-				.getRuntimeComponentType("org.eclipse.jst.server.tomcat").getVersion("5.5"));
-
+		mappings.put("org.eclipse.jst.server.tomcat.runtime.32", RuntimeManager.get()
+				.getRuntimeComponentType("org.eclipse.jst.server.tomcat").getVersion("3.2"));
+		
+		mappings.put("org.eclipse.jst.server.tomcat.runtime.40", RuntimeManager.get()
+				.getRuntimeComponentType("org.eclipse.jst.server.tomcat").getVersion("4.0"));
+		
 		mappings.put("org.eclipse.jst.server.tomcat.runtime.41", RuntimeManager.get()
 				.getRuntimeComponentType("org.eclipse.jst.server.tomcat").getVersion("4.1"));
+		
+		mappings.put("org.eclipse.jst.server.tomcat.runtime.50", RuntimeManager.get()
+				.getRuntimeComponentType("org.eclipse.jst.server.tomcat").getVersion("5.0"));
+		
+		mappings.put("org.eclipse.jst.server.tomcat.runtime.55", RuntimeManager.get()
+				.getRuntimeComponentType("org.eclipse.jst.server.tomcat").getVersion("5.5"));
 	}
 
 	public void port() {
@@ -64,17 +73,6 @@ public final class RuntimeBridge implements IRuntimeBridge {
 					IVMInstall vmInstall = gr.getVMInstall();
 					IVMInstall2 vmInstall2 = (IVMInstall2) vmInstall;
 					
-					/*final ClasspathRuntimeTargetHandler cphandler = getClasspathHandler(runtime);
-					
-					final IPath jrecontainer = findJreContainer(cphandler
-							.getDelegateClasspathEntries(runtime, null));
-					
-					final IVMInstallType vminstalltype = JavaRuntime
-							.getVMInstallType(jrecontainer.segment(1));
-					
-					final IVMInstall2 vminstall = (IVMInstall2) vminstalltype
-							.findVMInstallByName(jrecontainer.segment(2));*/
-					
 					final String jvmver = vmInstall2.getJavaVersion();
 					final IRuntimeComponentVersion rcv;
 					
@@ -97,30 +95,4 @@ public final class RuntimeBridge implements IRuntimeBridge {
 			}
 		}
 	}
-
-	/*private static ClasspathRuntimeTargetHandler getClasspathHandler(final IRuntime r) {
-		final IRuntimeTargetHandler[] handlers = ServerCore.getRuntimeTargetHandlers();
-
-		for (int j = 0; j < handlers.length; j++) {
-			final IRuntimeTargetHandler handler = handlers[j];
-
-			if (handler.supportsRuntimeType(r.getRuntimeType())) {
-				return (ClasspathRuntimeTargetHandler) handler
-						.getAdapter(ClasspathRuntimeTargetHandler.class);
-			}
-		}
-
-		throw new IllegalStateException();
-	}
-
-	private static IPath findJreContainer(final IClasspathEntry[] cpentries) {
-		for (int i = 0; i < cpentries.length; i++) {
-			final IPath path = cpentries[i].getPath();
-
-			if (path.segment(0).equals(JavaRuntime.JRE_CONTAINER))
-				return path;
-		}
-
-		throw new IllegalStateException();
-	}*/
 }
