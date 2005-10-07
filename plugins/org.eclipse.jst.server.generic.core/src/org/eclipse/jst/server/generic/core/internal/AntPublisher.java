@@ -43,6 +43,7 @@ import java.util.jar.JarFile;
 import org.eclipse.ant.internal.ui.IAntUIConstants;
 import org.eclipse.ant.internal.ui.launchConfigurations.IAntLaunchConfigurationConstants;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -60,8 +61,12 @@ import org.eclipse.jst.server.generic.servertype.definition.PublisherData;
 import org.eclipse.jst.server.core.IEJBModule;
 import org.eclipse.jst.server.core.IEnterpriseApplication;
 import org.eclipse.jst.server.core.IWebModule;
+import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.ui.externaltools.internal.model.IExternalToolConstants;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
+import org.eclipse.wst.server.core.model.IModuleResource;
+import org.eclipse.wst.server.core.util.ProjectModule;
 import org.osgi.framework.Bundle;
 /**
  * Ant based publisher.
@@ -238,17 +243,27 @@ public class AntPublisher extends GenericPublisher{
         String moduleDir="";//$NON-NLS-1$
         if(webModule!=null){    
             moduleName = this.guessModuleName(webModule);
-            //moduleDir = webModule.getLocation().toString();
         }
         if(ejbModule!=null){  
             moduleName = getModule()[0].getName();
-            //moduleDir= ejbModule.getLocation().toString();
         }
         if(earModule!=null)
         {
         	moduleName = getModule()[0].getName();
-        	//moduleDir = earModule.getLocation().toString();
         }
+        
+        GenericServerBehaviour gsb = (GenericServerBehaviour) getServer().getServer().loadAdapter(GenericServerBehaviour.class, null);
+        IPath tempPath = gsb.getTempDirectory().append("ant");
+        moduleDir = tempPath.toString();
+        
+        ProjectModule pm = (ProjectModule) getModule()[0].loadAdapter(ProjectModule.class, null);
+        try {
+	        IModuleResource[] mr = pm.members();
+	        PublishUtil.smartCopy(mr, tempPath, null);
+        } catch (CoreException ce) {
+      	  // TODO - should rethrow exception
+        }
+        
         String pluginId = getServerRuntime().getServerTypeDefinition().getConfigurationElementNamespace();
         props.put(PROP_PROJECT_WORKING_DIR,getModule()[0].getProject().getWorkingLocation(pluginId).toString());
 		props.put(PROP_MODULE_NAME,moduleName);

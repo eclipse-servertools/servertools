@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -505,4 +506,8 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
  	protected void setServerStarted() {
  		setServerState(IServer.STATE_STARTED);
  	}
+
+ 	protected IPath getTempDirectory() {
+		return super.getTempDirectory();
+	}
 }
