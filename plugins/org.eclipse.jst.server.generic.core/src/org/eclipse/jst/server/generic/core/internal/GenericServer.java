@@ -208,7 +208,8 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
             if (module == null || module.loadAdapter(IWebModule.class,null)==null )
 				return null;
 
-			String url = "http://localhost";
+            String host = getServer().getHost();
+			String url = "http://"+host;
 			int port = 0;
 			
 			port = getHttpPort();
