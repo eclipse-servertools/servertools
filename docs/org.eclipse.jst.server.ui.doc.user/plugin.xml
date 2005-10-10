@@ -19,7 +19,7 @@
 <plugin>
 
 <extension point="org.eclipse.help.toc">
-	<toc file="geronimo_toc.xml" />
+	<toc file="build_toc.xml" />
    </extension>
 
 </plugin>
