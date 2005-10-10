@@ -19,7 +19,6 @@ import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.osgi.util.NLS;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.internal.ServerMonitorManager;
 import org.eclipse.wst.server.core.model.*;
 /**
  * Generic Tomcat server.
@@ -134,22 +133,22 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		try {
 			if (module == null)
 				return null;
-	
+			
 			TomcatConfiguration config = getTomcatConfiguration();
 			if (config == null)
 				return null;
-	
+			
 			String url = "http://localhost";
 			int port = config.getMainPort().getPort();
-			port = ServerMonitorManager.getInstance().getMonitoredPort(getServer(), port, "web");
+			port = ServerUtil.getMonitoredPort(getServer(), port, "web");
 			if (port != 80)
 				url += ":" + port;
-
+			
 			url += config.getWebModuleURL(module);
 			
 			if (!url.endsWith("/"))
 				url += "/";
-
+			
 			return new URL(url);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not get root URL", e);

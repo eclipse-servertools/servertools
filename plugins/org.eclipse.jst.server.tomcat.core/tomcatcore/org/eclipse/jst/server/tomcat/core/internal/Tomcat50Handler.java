@@ -77,7 +77,7 @@ if (!TomcatPlugin.verifyTomcatVersionFromPath(installPath, TomcatPlugin.TOMCAT_5
 	}
 
 	/**
-	 * @see ITomcatVersionHandler#getRuntimeVMArguments(IPath, IPath, boolean, boolean)
+	 * @see ITomcatVersionHandler#getRuntimeVMArguments(IPath, IPath, boolean)
 	 */
 	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isTestEnv) {
 		List list = new ArrayList();
