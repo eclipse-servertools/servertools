@@ -480,6 +480,8 @@ public class OverviewEditorPart extends ServerEditorPart {
 		
 		insertSections(rightColumnComp, "org.eclipse.wst.server.editor.overview.right");
 		
+		form.reflow(true);
+		
 		initialize();
 	}
 
