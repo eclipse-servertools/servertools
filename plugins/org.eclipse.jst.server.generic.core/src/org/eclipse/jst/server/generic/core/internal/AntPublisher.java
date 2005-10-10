@@ -60,12 +60,12 @@ import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.PublisherData;
 import org.eclipse.jst.server.core.IEJBModule;
 import org.eclipse.jst.server.core.IEnterpriseApplication;
+import org.eclipse.jst.server.core.IJ2EEModule;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.ui.externaltools.internal.model.IExternalToolConstants;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
-import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.util.ProjectModule;
 import org.osgi.framework.Bundle;
 /**
@@ -109,6 +109,7 @@ public class AntPublisher extends GenericPublisher{
 		if(getModule().length>1)// only respond to root module calls. 
 			return null;
 		try{
+			assembleModule(monitor);
         	File file = computeBuildFile();
         	runAnt(file.toString(),getPublishTargetsForModule(),getPublishProperties(),monitor);
         }catch(CoreException e){
@@ -119,6 +120,33 @@ public class AntPublisher extends GenericPublisher{
 		return null;
 	}
 
+	private void assembleModule(IProgressMonitor monitor)throws CoreException{
+		copyModule(getModule()[0],monitor);
+		IEnterpriseApplication earModule = (IEnterpriseApplication)getModule()[0].loadAdapter(IEnterpriseApplication.class,null);
+		if(earModule!=null && earModule.getModules().length>0){
+			IModule[] childModules = earModule.getModules();
+			for (int i = 0; i < childModules.length; i++) {
+				IModule module = childModules[i];
+				IPath modulePath = copyModule(module, monitor);
+//				PublishUtil.copyFile(packModule(modulePath), getModuleWorkingDir().toString());
+			}
+		}
+	
+	}
+
+	private InputStream packModule(IPath modulePath) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private IPath copyModule(IModule module,IProgressMonitor monitor)throws CoreException{
+		ProjectModule pm =(ProjectModule)getModule()[0].loadAdapter(ProjectModule.class, monitor);
+		IPath to = getProjectWorkingLocation().append(pm.getId());
+		PublishUtil.smartCopy(pm.members(), to, monitor);
+		return to;
+	}
+	
+	
     /**
      * 
      * @return
@@ -247,31 +275,26 @@ public class AntPublisher extends GenericPublisher{
         if(ejbModule!=null){  
             moduleName = getModule()[0].getName();
         }
-        if(earModule!=null)
-        {
+        if(earModule!=null){
         	moduleName = getModule()[0].getName();
         }
         
-        GenericServerBehaviour gsb = (GenericServerBehaviour) getServer().getServer().loadAdapter(GenericServerBehaviour.class, null);
-        IPath tempPath = gsb.getTempDirectory().append("ant");
-        moduleDir = tempPath.toString();
-        
-        ProjectModule pm = (ProjectModule) getModule()[0].loadAdapter(ProjectModule.class, null);
-        try {
-	        IModuleResource[] mr = pm.members();
-	        PublishUtil.smartCopy(mr, tempPath, null);
-        } catch (CoreException ce) {
-      	  // TODO - should rethrow exception
-        }
-        
-        String pluginId = getServerRuntime().getServerTypeDefinition().getConfigurationElementNamespace();
-        props.put(PROP_PROJECT_WORKING_DIR,getModule()[0].getProject().getWorkingLocation(pluginId).toString());
+        props.put(PROP_PROJECT_WORKING_DIR,getProjectWorkingLocation().toString());
 		props.put(PROP_MODULE_NAME,moduleName);
-		props.put(PROP_MODULE_DIR,moduleDir);
+		props.put(PROP_MODULE_DIR,getModuleWorkingDir().toString());
 		props.put(PROP_SERVER_PUBLISH_DIR,modDir);
 		return props;
 	}
+	
+	private IPath getModuleWorkingDir()
+	{
+		return getProjectWorkingLocation().append(getModule()[0].getId());
+	}
 
+	private IPath getProjectWorkingLocation(){
+		String pluginId = getServerRuntime().getServerTypeDefinition().getConfigurationElementNamespace();
+		return getModule()[0].getProject().getWorkingLocation(pluginId);
+	}
 	private String guessModuleName(IWebModule webModule) {
 		String moduleName = getModule()[0].getName(); 
 		String contextRoot = webModule.getContextRoot();
