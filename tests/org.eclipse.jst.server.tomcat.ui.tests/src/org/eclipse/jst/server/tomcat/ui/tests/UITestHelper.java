@@ -13,7 +13,6 @@ package org.eclipse.jst.server.tomcat.ui.tests;
 import java.util.Iterator;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.IAdaptable;
 
@@ -39,7 +38,7 @@ import org.eclipse.ui.internal.dialogs.PropertyPageContributorManager;
 import org.eclipse.ui.internal.dialogs.PropertyPageManager;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
-public class UITestHelper extends TestCase {
+public class UITestHelper {
 	private static class PreferenceDialogWrapper extends PreferenceDialog {
 		public PreferenceDialogWrapper(Shell parentShell, PreferenceManager manager) {
 			super(parentShell, manager);
