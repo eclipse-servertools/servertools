@@ -223,6 +223,7 @@ public class Messages extends NLS {
 	public static String viewSyncPublishing2;
 	public static String editorServerEditor;
 	public static String editorPromptIrreversible;
+	public static String editorRenameFiles;
 	public static String errorEditorCantSave;
 	public static String editorReadOnly;
 	public static String editorWritable;

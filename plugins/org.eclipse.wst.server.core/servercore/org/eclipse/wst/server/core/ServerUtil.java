@@ -19,12 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunchConfiguration;
 
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.wst.server.core.internal.IModuleVisitor;
-import org.eclipse.wst.server.core.internal.Messages;
-import org.eclipse.wst.server.core.internal.ModuleFactory;
-import org.eclipse.wst.server.core.internal.Server;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
-import org.eclipse.wst.server.core.internal.Trace;
+import org.eclipse.wst.server.core.internal.*;
 /**
  * Server utility methods. These static methods can be used to perform
  * common operations on server artifacts.
@@ -418,11 +413,32 @@ public class ServerUtil {
 	 * @param type a server type
 	 * @return an unused file within the given project
 	 */
-	public static IFile getUnusedServerFile(IProject project, IServerType type) {
+	/*public static IFile getUnusedServerFile(IProject project, IServerType type) {
 		if (project == null || type == null)
 			throw new IllegalArgumentException();
 		
 		String typeName = getValidFileName(type.getName());
+		String name = NLS.bind(Messages.defaultServerName3, typeName)+ "."  + Server.FILE_EXTENSION;
+		int i = 2;
+		while (isFileNameInUse(project, name)) {
+			name = NLS.bind(Messages.defaultServerName4, new String[] {typeName, i + ""}) + "."  + Server.FILE_EXTENSION;
+			i++;
+		}
+		return project.getFile(name);
+	}*/
+
+	/**
+	 * Returns an unused file in the given project.
+	 * 
+	 * @param project a project
+	 * @param server a server
+	 * @return an unused file within the given project
+	 */
+	public static IFile getUnusedServerFile(IProject project, IServer server) {
+		if (project == null || server == null)
+			throw new IllegalArgumentException();
+		
+		String typeName = getValidFileName(server.getName());
 		String name = NLS.bind(Messages.defaultServerName3, typeName)+ "."  + Server.FILE_EXTENSION;
 		int i = 2;
 		while (isFileNameInUse(project, name)) {
@@ -721,5 +737,27 @@ public class ServerUtil {
 	 */
 	public static IStatus validateEdit(Object context, IServer server) {
 		return ((Server)server).validateEdit(context);
+	}
+
+	/**
+	 * Returns the port that is being used to monitor the given port on the server.
+	 * This method can be used whenever creating a 'client' for the server, and allows
+	 * the client to seamlessly use a monitored port instead of going directly to the
+	 * server.
+	 * 
+	 * <b>Provisional API:</b> This class/interface is part of an interim API that is still under development and expected to 
+	 * change significantly before reaching stability. It is being made available at this early stage to solicit feedback 
+	 * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
+	 * (repeatedly) as the API evolves.
+	 * </p>
+	 * 
+	 * @param server a server
+	 * @param port a port on the server
+	 * @param contentType the content type, e.g. "web"
+	 * @return the monitored port, or the original port number if the port is not
+	 *    currently being monitored
+	 */
+	public static int getMonitoredPort(IServer server, int port, String contentType) {
+		return ServerMonitorManager.getInstance().getMonitoredPort(server, port, contentType);
 	}
 }

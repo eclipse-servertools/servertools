@@ -418,7 +418,22 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			Trace.trace(Trace.SEVERE, "Error calling delegate setDefaults() " + toString(), e);
 		}
 	}
-	
+
+	public void renameFiles(IProgressMonitor monitor) throws CoreException {
+		if (getServerConfiguration() != null) {
+			IFolder folder = getServerConfiguration();
+			IFolder folder2 = ServerType.getServerProject().getFolder(getName() + "-config");
+			folder.move(folder2.getFullPath(), true, true, monitor);
+			setServerConfiguration(folder2);
+			save(true, monitor);
+		}
+		
+		if (file != null) {
+			IFile file2 = ServerUtil.getUnusedServerFile(file.getProject(), this);
+			file.move(file2.getFullPath(), true, true, monitor);
+		}
+	}
+
 	public String toString() {
 		return "ServerWorkingCopy " + getId();
 	}

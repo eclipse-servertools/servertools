@@ -969,7 +969,7 @@ public class Server extends Base implements IServer {
 	
 		try {
 			ILaunchConfiguration launchConfig = getLaunchConfiguration(true, monitor);
-			ILaunch launch = launchConfig.launch(mode2, monitor);
+			ILaunch launch = launchConfig.launch(mode2, monitor, true);
 			Trace.trace(Trace.FINEST, "Launch: " + launch);
 		} catch (CoreException e) {
 			Trace.trace(Trace.SEVERE, "Error starting server " + toString(), e);
@@ -1713,7 +1713,7 @@ public class Server extends Base implements IServer {
 	}
 
 	protected void setInternal(ServerWorkingCopy wc) {
-		map = wc.map;
+		map = new HashMap(wc.map);
 		configuration = wc.configuration;
 		runtime = wc.runtime;
 		serverSyncState = wc.serverSyncState;
@@ -2062,7 +2062,7 @@ public class Server extends Base implements IServer {
 		server.delete();
 		if (file == null) {
 			IProject project = ServerType.getServerProject();
-			file = ServerUtil.getUnusedServerFile(project, wc.getServerType());
+			file = ServerUtil.getUnusedServerFile(project, wc);
 			wc.setFile(file);
 			server.file = file;
 		} else {

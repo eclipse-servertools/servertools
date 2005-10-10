@@ -24,7 +24,7 @@ import org.eclipse.wst.server.core.util.ProjectModuleFactoryDelegate;
  * and servers or server configurations, and creates
  * notification of servers or server configurations
  * being added and removed.
- *
+ * 
  * <p>Servers and server configurations may be a single
  * resource, or they may be a folder that contains a group
  * of files. Folder-resource may not contain other servers
@@ -52,12 +52,13 @@ public class ResourceManager {
 	protected List activeBundles;
 
 	// resource change listeners
-	private IResourceChangeListener modelResourceChangeListener;
-	private IResourceChangeListener publishResourceChangeListener;
+	private IResourceChangeListener resourceChangeListener;
 	private Preferences.IPropertyChangeListener pcl;
 	protected boolean ignorePreferenceChanges = false;
 
 	/**
+	 * Server resource change listener.
+	 * 
 	 * Resource listener - tracks changes on server resources so that
 	 * we can reload/drop server instances and configurations that
 	 * may change outside of our control.
@@ -69,11 +70,11 @@ public class ResourceManager {
 	 *    attached to the project at this point - OTI defect)
 	 * 2. Projects being deleted.
 	 */
-	public class ServerModelResourceChangeListener implements IResourceChangeListener {
+	public class ServerResourceChangeListener implements IResourceChangeListener {
 		/**
-		 * Create a new ServerModelResourceChangeListener.
+		 * Create a new ServerResourceChangeListener.
 		 */
-		public ServerModelResourceChangeListener() {
+		public ServerResourceChangeListener() {
 			super();
 		}
 
@@ -87,7 +88,7 @@ public class ResourceManager {
 			if (delta == null)
 				return;
 	
-			Trace.trace(Trace.RESOURCES, "->- ServerModelResourceManager responding to resource change: " + event.getType() + " ->-");
+			Trace.trace(Trace.RESOURCES, "->- ServerResourceChangeListener responding to resource change: " + event.getType() + " ->-");
 			IResourceDelta[] children = delta.getAffectedChildren();
 			if (children != null) {
 				int size = children.length;
@@ -98,10 +99,28 @@ public class ResourceManager {
 					}
 				}
 			}
-	
-			Trace.trace(Trace.RESOURCES, "-<- Done ServerModelResourceManager responding to resource change -<-");
+			
+			// search for changes to any project using a visitor
+			try {
+				delta.accept(new IResourceDeltaVisitor() {
+					public boolean visit(IResourceDelta visitorDelta) {
+						IResource resource = visitorDelta.getResource();
+
+						// only respond to project changes
+						if (resource != null && resource instanceof IProject) {
+							publishHandleProjectChange(visitorDelta);
+							return false;
+						}
+						return true;
+					}
+				});
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Error responding to resource change", e);
+			}
+			
+			Trace.trace(Trace.RESOURCES, "-<- Done ServerResourceChangeListener responding to resource change -<-");
 		}
-	
+
 		/**
 		 * React to a change within a possible server project.
 		 *
@@ -130,49 +149,6 @@ public class ResourceManager {
 					Trace.trace(Trace.SEVERE, "Error responding to resource change", e);
 				}
 			}
-		}
-	}
-
-	/**
-	 * Publish resource listener
-	 */
-	public class PublishResourceChangeListener implements IResourceChangeListener {
-		/**
-		 * Create a new PublishResourceChangeListener.
-		 */
-		public PublishResourceChangeListener() {
-			super();
-		}
-
-		/**
-		 * Listen for projects being added or removed and act accordingly.
-		 *
-		 * @param event org.eclipse.core.resources.IResourceChangeEvent
-		 */
-		public void resourceChanged(IResourceChangeEvent event) {
-			IResourceDelta delta = event.getDelta();
-			if (delta == null)
-				return;
-		
-			Trace.trace(Trace.FINEST, "->- PublishResourceManager responding to resource change: " + event.getType() + " ->-");
-			// search for changes to any project using a visitor
-			try {
-				delta.accept(new IResourceDeltaVisitor() {
-					public boolean visit(IResourceDelta visitorDelta) {
-						IResource resource = visitorDelta.getResource();
-
-						// only respond to project changes
-						if (resource != null && resource instanceof IProject) {
-							publishHandleProjectChange(visitorDelta);
-							return false;
-						}
-						return true;
-					}
-				});
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error responding to resource change", e);
-			}
-			Trace.trace(Trace.FINEST, "-<- Done PublishResourceManager responding to resource change -<-");
 		}
 	}
 	
@@ -211,15 +187,11 @@ public class ResourceManager {
 		ServerPlugin.getInstance().getPluginPreferences().addPropertyChangeListener(pcl);
 		
 		resolveServers();
-
+		
 		// keep track of future changes to the file system
-		modelResourceChangeListener = new ServerModelResourceChangeListener();
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(modelResourceChangeListener, IResourceChangeEvent.POST_CHANGE | IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE);
-	
-		// add listener for future changes
-		publishResourceChangeListener = new PublishResourceChangeListener();
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(publishResourceChangeListener, IResourceChangeEvent.POST_CHANGE | IResourceChangeEvent.PRE_DELETE);
-	
+		resourceChangeListener = new ServerResourceChangeListener();
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener, IResourceChangeEvent.POST_CHANGE | IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE);
+		
 		/*configurationListener = new IServerConfigurationListener() {
 			public void childProjectChange(IServerConfiguration configuration) {
 				handleConfigurationChildProjectsChange(configuration);
@@ -336,10 +308,8 @@ public class ResourceManager {
 	
 	protected void shutdownImpl() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		if (workspace != null) {
-			workspace.removeResourceChangeListener(modelResourceChangeListener);
-			workspace.removeResourceChangeListener(publishResourceChangeListener);
-		}
+		if (workspace != null)
+			workspace.removeResourceChangeListener(resourceChangeListener);
 		
 		ServerPlugin.getInstance().getPluginPreferences().removePropertyChangeListener(pcl);
 		
@@ -742,25 +712,30 @@ public class ResourceManager {
 	 */
 	protected boolean handleResourceDelta(IResourceDelta delta) {
 		int kind = delta.getKind();
+		int flags = delta.getFlags();
 		IResource resource2 = delta.getResource();
-	
+		
 		// ignore markers
-		if (kind == IResourceDelta.CHANGED && (delta.getFlags() & IResourceDelta.MARKERS) != 0)
+		if (kind == IResourceDelta.CHANGED && (flags & IResourceDelta.MARKERS) != 0)
 			return false;
-	
+		
 		Trace.trace(Trace.RESOURCES, "Resource changed: " + resource2 + " " + kind);
 		
 		if (resource2 instanceof IFile) {
 			IFile file = (IFile) resource2;
-			IProgressMonitor monitor = null;
-			if (kind == IResourceDelta.ADDED) {
-				handleNewFile(file, monitor);
-			} else if (kind == IResourceDelta.REMOVED) {
-				handleRemovedFile(file);
-			} else
-				handleChangedFile(file, monitor);
-			if (monitor != null)
-				monitor.done();
+			if (Server.FILE_EXTENSION.equals(file.getFileExtension())) {
+				IProgressMonitor monitor = null;
+				if ((flags & IResourceDelta.MOVED_FROM) != 0 || (flags & IResourceDelta.MOVED_TO) != 0)
+					handleMovedFile(file, delta, monitor);
+				else if (kind == IResourceDelta.ADDED)
+					handleNewFile(file, monitor);
+				else if (kind == IResourceDelta.REMOVED)
+					handleRemovedFile(file);
+				else
+					handleChangedFile(file, monitor);
+				if (monitor != null)
+					monitor.done();
+			}
 			return false;
 		}
 		IFolder folder = (IFolder) resource2;
@@ -777,39 +752,6 @@ public class ResourceManager {
 			}
 		}
 		return true;
-	
-		/*IProgressMonitor monitor = new NullProgressMonitor();
-		List list = getResourceParentList(resource2);
-		monitor.beginTask("", list.size() * 1000);
-	
-		Iterator iterator = list.iterator();
-		while (iterator.hasNext()) {
-			IResource resource = (IResource) iterator.next();
-			if (!visited.contains(resource.getFullPath())) {
-				visited.add(resource.getFullPath());
-				if (kind == IResourceDelta.REMOVED) {
-					boolean b = handleRemovedFile(resource);
-					if (b) {
-						if (resource instanceof IContainer)
-							removeServerResourcesBelow((IContainer) resource);
-						return false;
-					} else
-						return true;
-				} else if (kind == IResourceDelta.ADDED) {
-					return !handleNewServerResource(resource, monitor);
-				} else {
-					boolean b = handleChangedServerResource(resource, monitor);
-					if (!b) {
-						handleRemovedFile(resource);
-					}
-					return true;
-				}
-			}
-		}
-
-		monitor.done();
-		Trace.trace(Trace.RESOURCES, "Ignored resource change: " + resource2);
-		return true;*/
 	}
 	
 	protected IServer loadServer(IFile file, IProgressMonitor monitor) throws CoreException {
@@ -845,11 +787,50 @@ public class ResourceManager {
 				Trace.trace(Trace.SEVERE, "Error loading server", e);
 			}
 		}
-	
+		
 		monitor.done();
 		return false;
 	}
-	
+
+	/**
+	 * Tries to load a new server resource from the given resource.
+	 * Returns true if the load and register were successful.
+	 *
+	 * @param file
+	 * @param monitor
+	 * @return boolean
+	 */
+	protected boolean handleMovedFile(IFile file, IResourceDelta delta, IProgressMonitor monitor) {
+		Trace.trace(Trace.RESOURCES, "handleMovedFile: " + file);
+		monitor = ProgressUtil.getMonitorFor(monitor);
+		monitor.beginTask("", 2000);
+		
+		IPath fromPath = delta.getMovedFromPath();
+		if (fromPath != null) {
+			IFile fromFile = ResourcesPlugin.getWorkspace().getRoot().getFile(fromPath);
+			if (((ProjectProperties)ServerCore.getProjectProperties(fromFile.getProject())).isServerProject()) {
+				Server server = (Server) findServer(fromFile);
+				if (server != null)
+					server.file = file;
+			} else {
+				handleNewFile(file, monitor);
+			}
+		} else {
+			IPath toPath = delta.getMovedToPath();
+			IFile toFile = ResourcesPlugin.getWorkspace().getRoot().getFile(toPath);
+			if (((ProjectProperties)ServerCore.getProjectProperties(toFile.getProject())).isServerProject()) {
+				Server server = (Server) findServer(file);
+				if (server != null)
+					server.file = toFile;
+			} else {
+				handleRemovedFile(file);
+			}
+		}
+		
+		monitor.done();
+		return false;
+	}
+
 	/**
 	 * Returns the server that came from the given file, or <code>null</code>
 	 * if none. This convenience method searches the list of known
@@ -900,10 +881,9 @@ public class ResourceManager {
 				Trace.trace(Trace.SEVERE, "Error reloading server " + server.getName() + " from " + file + ": " + e.getMessage());
 				deregisterServer(server);
 			}
-		}
-
-		Trace.trace(Trace.RESOURCES, "No server resource found at: " + file);
-	
+		} else
+			Trace.trace(Trace.RESOURCES, "No server found at: " + file);
+		
 		monitor.done();
 		return found;
 	}
@@ -916,15 +896,15 @@ public class ResourceManager {
 	 * @return boolean
 	 */
 	protected boolean handleRemovedFile(IFile file) {
-		Trace.trace(Trace.RESOURCES, "handleRemovedServerResource: " + file);
-	
+		Trace.trace(Trace.RESOURCES, "handleRemovedFile: " + file);
+		
 		IServer server = findServer(file);
 		if (server != null) {
 			deregisterServer(server);
 			return true;
 		}
-
-		Trace.trace(Trace.RESOURCES, "No server resource found at: " + file);
+		
+		Trace.trace(Trace.RESOURCES, "No server found at: " + file);
 		return false;
 	}
 

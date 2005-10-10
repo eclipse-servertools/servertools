@@ -32,6 +32,7 @@ import org.eclipse.ui.part.MultiPageEditorPart;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.wst.server.ui.internal.*;
@@ -101,6 +102,7 @@ public class ServerEditor extends MultiPageEditorPart {
 
 	protected IServerWorkingCopy server;
 	protected String serverId;
+	protected String serverName;
 
 	protected GlobalCommandManager commandManager;
 
@@ -143,7 +145,7 @@ public class ServerEditor extends MultiPageEditorPart {
 		super();
 		
 		ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
-
+		
 		undoAction = new Action() {
 			public void run() {
 				getCommandManager().undo(serverId);
@@ -153,7 +155,7 @@ public class ServerEditor extends MultiPageEditorPart {
 		undoAction.setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
 		//undoAction.setHoverImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_UNDO_HOVER));
 		//undoAction.setDisabledImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_UNDO_DISABLED));
-	
+		
 		redoAction = new Action() {
 			public void run() {
 				getCommandManager().redo(serverId);
@@ -269,7 +271,21 @@ public class ServerEditor extends MultiPageEditorPart {
 		
 		if (resourceListener != null)
 			ServerCore.removeServerLifecycleListener(resourceListener);
-
+		
+		if (serverName != null && !server.getName().equals(serverName)) {
+			// only prompt if the server is in the workspace or there is a configuration
+			if (server.getServerConfiguration() != null || ((Server)server).getFile() != null) {
+				String title = Messages.editorServerEditor;
+				String message = Messages.editorRenameFiles;
+				if (MessageDialog.openQuestion(getEditorSite().getShell(), title,  message))
+					try {
+						((ServerWorkingCopy)server).renameFiles(null);
+					} catch (Exception e) {
+						Trace.trace(Trace.SEVERE, "Error renaming server", e);
+					}
+			}
+		}
+		
 		super.dispose();
 		if (commandManager != null)
 			commandManager.removePropertyChangeListener(listener);
@@ -288,7 +304,7 @@ public class ServerEditor extends MultiPageEditorPart {
 	 * @see IEditorPart
 	 */
 	public void doSave(IProgressMonitor monitor) {
-		// Set the isSaving flag to true.
+		// set the isSaving flag to true
 		isSaving = true;
 		
 		// check pages for errors first
@@ -316,7 +332,7 @@ public class ServerEditor extends MultiPageEditorPart {
 
 			EclipseUtil.openError(getEditorSite().getShell(), sb.toString());
 			monitor.setCanceled(true);
-			// Reset the isSaving flag.
+			// reset the isSaving flag
 			isSaving = false;
 			return;
 		}
@@ -330,7 +346,7 @@ public class ServerEditor extends MultiPageEditorPart {
 			monitor.beginTask(NLS.bind(Messages.savingTask, name), ticks);
 			if (server != null)
 				ticks /= 2;
-
+			
 			if (server != null)  {
 				server.save(false, ProgressUtil.getSubMonitorFor(monitor, ticks));
 				getCommandManager().resourceSaved(serverId);
@@ -341,17 +357,17 @@ public class ServerEditor extends MultiPageEditorPart {
 			if (server != null)
 				setPartName(labelProvider.getText(server));
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error saving from configuration editor", e);
-	
+			Trace.trace(Trace.SEVERE, "Error saving server editor", e);
+			
 			monitor.setCanceled(true);
-	
+			
 			String title = Messages.editorSaveErrorDialog;
 			String message = NLS.bind(Messages.editorSaveErrorMessage, e.getLocalizedMessage());
 			MessageDialog.openError(getEditorSite().getShell(), title,  message);
 		} finally {
 			monitor.done();
 		}
-		// Reset the isSaving flag.
+		// reset the isSaving flag
 		isSaving = false;
 	}
 
@@ -660,6 +676,7 @@ public class ServerEditor extends MultiPageEditorPart {
 			setPartName(labelProvider.getText(server));
 			setTitleImage(labelProvider.getImage(server));
 			setTitleToolTip(serverId);
+			serverName = server.getName();
 		} else
 			setPartName("-");
 
@@ -877,9 +894,9 @@ public class ServerEditor extends MultiPageEditorPart {
 	 * 
 	 */
 	protected void checkResourceState() {
-		// Do not check the resource state change if saving through the editor.
+		// do not check the resource state change if saving through the editor
 		if (isSaving) {
-			// Do nothing.
+			// do nothing
 			return;
 		}
 		
