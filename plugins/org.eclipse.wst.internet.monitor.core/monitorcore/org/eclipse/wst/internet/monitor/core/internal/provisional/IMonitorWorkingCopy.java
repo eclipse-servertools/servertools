@@ -74,6 +74,14 @@ public interface IMonitorWorkingCopy extends IMonitor {
 	public void setProtocol(String protocolId);
 
 	/**
+	 * Sets the connection timeout. Use 0 to clear the timeout.
+	 * 
+	 * @param timeout the connection timeout
+	 * @see IMonitor#getTimeout()
+	 */
+	public void setTimeout(int timeout);
+
+	/**
 	 * Saves the changes made to this working copy.
 	 * For a brand new working copy (created by
 	 * {@link MonitorCore#createMonitor()}, and not yet saved), this method

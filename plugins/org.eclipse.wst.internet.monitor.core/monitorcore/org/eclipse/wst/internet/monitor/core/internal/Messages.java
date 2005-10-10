@@ -18,6 +18,8 @@ public class Messages extends NLS {
 	public static String errorInvalidLocalPort;
 	public static String errorInvalidRemotePort;
 	public static String errorInvalidRemoteHost;
+	public static String errorConnectToServer;
+	public static String errorConnectTimeout;
 	public static String monitorValid;
 	public static String errorPortInUse;
 

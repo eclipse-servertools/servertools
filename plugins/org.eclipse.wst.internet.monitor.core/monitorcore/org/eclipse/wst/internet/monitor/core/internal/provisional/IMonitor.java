@@ -76,6 +76,13 @@ public interface IMonitor {
 	public String getProtocol();
 
 	/**
+	 * Returns the connection timeout. Returns 0 if there is no timeout.
+	 * 
+	 * @return the timeout
+	 */
+	public int getTimeout();
+
+	/**
 	 * Returns whether this monitor is currently running. Monitor working
 	 * copies will always return false (since they cannot be run).
 	 * 

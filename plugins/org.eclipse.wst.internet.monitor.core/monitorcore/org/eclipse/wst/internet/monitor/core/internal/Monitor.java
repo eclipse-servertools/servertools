@@ -26,7 +26,8 @@ public class Monitor implements IMonitor {
 	private static final String MEMENTO_REMOTE_HOST = "remote-host";
 	private static final String MEMENTO_REMOTE_PORT = "remote-port";
 	private static final String MEMENTO_TYPE_ID = "type-id";
-	
+	private static final String MEMENTO_TIMEOUT = "timeout";
+
 	private static final int ADD = 0;
 	private static final int CHANGE = 1;
 
@@ -35,7 +36,8 @@ public class Monitor implements IMonitor {
 	protected int remotePort = 80;
 	protected int localPort = 80;
 	protected String protocolId;
-	
+	protected int timeout;
+
 	protected List requestListeners = new ArrayList(2);
 
 	/**
@@ -81,6 +83,13 @@ public class Monitor implements IMonitor {
 	}
 
 	/** (non-Javadoc)
+	 * @see IMonitor#getTimeout()
+	 */
+	public int getTimeout() {
+		return timeout;
+	}
+
+	/** (non-Javadoc)
 	 * @see IMonitor#isRunning()
 	 */
 	public boolean isRunning() {
@@ -111,21 +120,23 @@ public class Monitor implements IMonitor {
 	public IMonitorWorkingCopy createWorkingCopy() {
 		return new MonitorWorkingCopy(this);
 	}
-	
+
 	protected void setInternal(IMonitor monitor) {
 		id = monitor.getId();
 		remoteHost = monitor.getRemoteHost();
 		remotePort = monitor.getRemotePort();
 		localPort = monitor.getLocalPort();
 		protocolId = monitor.getProtocol();
+		timeout = monitor.getTimeout();
 	}
-	
+
 	protected void save(IMemento memento) {
 		memento.putString(MEMENTO_ID, id);
 		memento.putString(MEMENTO_TYPE_ID, protocolId);
 		memento.putInteger(MEMENTO_LOCAL_PORT, localPort);
 		memento.putString(MEMENTO_REMOTE_HOST, remoteHost);
 		memento.putInteger(MEMENTO_REMOTE_PORT, remotePort);
+		memento.putInteger(MEMENTO_TIMEOUT, timeout);
 	}
 
 	protected void load(IMemento memento) {
@@ -138,6 +149,9 @@ public class Monitor implements IMonitor {
 		temp = memento.getInteger(MEMENTO_REMOTE_PORT);
 		if (temp != null)
 			remotePort = temp.intValue();
+		temp = memento.getInteger(MEMENTO_TIMEOUT);
+		if (temp != null)
+			timeout = temp.intValue();
 	}
 	
 	/**

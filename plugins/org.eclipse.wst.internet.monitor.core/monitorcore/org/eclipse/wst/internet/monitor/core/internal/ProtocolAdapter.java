@@ -20,7 +20,7 @@ import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitor;
 public class ProtocolAdapter implements IProtocolAdapter {
 	protected IConfigurationElement element;
 	protected ProtocolAdapterDelegate delegate;
-	
+
 	protected ProtocolAdapter(IConfigurationElement element) {
 		this.element = element;
 	}
@@ -31,14 +31,14 @@ public class ProtocolAdapter implements IProtocolAdapter {
 	public String getId() {
 		return element.getAttribute("id");
 	}
-	
+
 	/**
 	 * @see IProtocolAdapter#getName()
 	 */
 	public String getName() {
 		return element.getAttribute("name");
 	}
-	
+
 	protected ProtocolAdapterDelegate getDelegate() {
 		if (delegate != null)
 			return delegate;
@@ -50,7 +50,7 @@ public class ProtocolAdapter implements IProtocolAdapter {
 		}
 		return delegate;
 	}
-	
+
 	/**
 	 * Connect with the protocol.
 	 * 
@@ -62,7 +62,7 @@ public class ProtocolAdapter implements IProtocolAdapter {
 	public void connect(IMonitor monitor, Socket in, Socket out) throws IOException {
 		getDelegate().connect(monitor, in, out);
 	}
-	
+
 	/**
 	 * Disconnect from the sockets.
 	 * 

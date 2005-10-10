@@ -23,9 +23,9 @@ public class AcceptThread {
 
 	protected boolean alive = true;
 	protected ServerSocket serverSocket;
-	
+
 	protected Thread thread;
-	
+
 	class ServerThread extends Thread {
 		/**
 		 * ServerThread accepts incoming connections and delegates to the protocol
@@ -42,19 +42,28 @@ public class AcceptThread {
 				Trace.trace(Trace.SEVERE, "Could not start monitoring");
 				return;
 			}
-
+			
 			while (alive) {
 				try {
 					// accept the connection from the client
 					Socket localSocket = serverSocket.accept();
 					
-					// connect to the remote server
-					Socket remoteSocket = new Socket(monitor.getRemoteHost(), monitor.getRemotePort());
-
-					// relay the call through
-					String protocolId = monitor.getProtocol();
-					ProtocolAdapter adapter = MonitorPlugin.getInstance().getProtocolAdapter(protocolId);
-					adapter.connect(monitor, localSocket, remoteSocket);
+					try {
+						// connect to the remote server
+						Socket remoteSocket = new Socket();
+						remoteSocket.connect(new InetSocketAddress(monitor.getRemoteHost(), monitor.getRemotePort()), monitor.getTimeout());
+						
+						// relay the call through
+						String protocolId = monitor.getProtocol();
+						ProtocolAdapter adapter = MonitorPlugin.getInstance().getProtocolAdapter(protocolId);
+						adapter.connect(monitor, localSocket, remoteSocket);
+					} catch (SocketTimeoutException e) {
+						FailedConnectionThread thread2 = new FailedConnectionThread((Monitor) monitor, localSocket, Messages.errorConnectTimeout);
+						thread2.start();
+					} catch (Exception e) {
+						FailedConnectionThread thread2 = new FailedConnectionThread((Monitor) monitor, localSocket, null);
+						thread2.start();
+					}
 				} catch (InterruptedIOException e) {
 					// do nothing
 				} catch (Exception e) {

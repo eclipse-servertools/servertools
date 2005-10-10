@@ -41,6 +41,7 @@ public class MonitorDialog extends Dialog {
 	private Button okButton;
 	private Text monitorPort;
 	private Text remotePort;
+	private Text timeout;
 	
 	interface StringModifyListener {
 		public void valueChanged(String s);
@@ -83,7 +84,7 @@ public class MonitorDialog extends Dialog {
 	protected Label createLabel(Composite comp, String txt) {
 		Label label = new Label(comp, SWT.NONE);
 		label.setText(txt);
-		label.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
+		label.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_CENTER));
 		return label;
 	}
 	
@@ -91,7 +92,7 @@ public class MonitorDialog extends Dialog {
 		final Text text = new Text(comp, SWT.BORDER);
 		if (txt != null)
 			text.setText(txt);
-		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
 		data.widthHint = 150;
 		text.setLayoutData(data);
 		if (listener != null)
@@ -116,7 +117,7 @@ public class MonitorDialog extends Dialog {
 		combo.setItems(items);
 		if (index >= 0)
 			combo.select(index);
-		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING);
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
 		data.widthHint = 150;
 		combo.setLayoutData(data);
 		if (listener != null)
@@ -187,6 +188,18 @@ public class MonitorDialog extends Dialog {
 			}
 		});
 		
+		createLabel(group, Messages.connectionTimeout);
+		timeout = createText(group, monitor.getTimeout() + "", new StringModifyListener() {
+			public void valueChanged(String s) {
+				try {
+					monitor.setTimeout(Integer.parseInt(s));
+				} catch (Exception e) {
+					// ignore
+				}
+				validateFields();
+			}
+		});
+		
 		return composite;
 	}
 
@@ -225,6 +238,8 @@ public class MonitorDialog extends Dialog {
 		try {
 			Integer.parseInt(remotePort.getText());
 			Integer.parseInt(monitorPort.getText());
+			if (Integer.parseInt(timeout.getText()) < 0)
+				result = false;
 		} catch (Exception e) {
 			result = false;
 		}

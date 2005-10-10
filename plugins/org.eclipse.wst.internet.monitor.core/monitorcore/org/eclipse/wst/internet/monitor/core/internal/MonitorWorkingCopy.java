@@ -78,7 +78,14 @@ public class MonitorWorkingCopy extends Monitor implements IMonitorWorkingCopy {
 	public void setProtocol(String protocolId2) {
 		protocolId = protocolId2;
 	}
-	
+
+	/** (non-Javadoc)
+	 * @see IMonitorWorkingCopy#setTimeout(int)
+	 */
+	public void setTimeout(int timeout2) {
+		timeout = timeout2;
+	}
+
 	/**
 	 * @see IMonitor#isWorkingCopy()
 	 */

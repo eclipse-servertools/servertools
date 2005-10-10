@@ -21,6 +21,7 @@ public class Messages extends NLS {
 	public static String remoteHost;
 	public static String remotePort;
 	public static String remoteGroup;
+	public static String connectionTimeout;
 	public static String parseType;
 	public static String errorDialogTitle;
 	public static String preferenceDescription;
