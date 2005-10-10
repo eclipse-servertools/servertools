@@ -253,11 +253,11 @@ public class NewServerComposite extends Composite {
 		
 		Dialog.applyDialogFont(this);
 	}
-	
+
 	protected void toggleMode(byte newMode) {
 		if (!isVisible())
 			return;
-
+		
 		if (newMode == mode)
 			return;
 		
@@ -280,7 +280,7 @@ public class NewServerComposite extends Composite {
 			updateTaskModel();
 		}
 	}
-	
+
 	protected HostnameComposite createHostComposite(Composite comp) {
 		HostnameComposite hostComp = new HostnameComposite(comp, new HostnameComposite.IHostnameSelectionListener() {
 			public void hostnameSelected(String host) {
