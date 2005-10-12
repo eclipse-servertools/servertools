@@ -13,9 +13,7 @@ package org.eclipse.wst.server.core.internal;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
-//import org.eclipse.update.standalone.InstallCommand;
-import org.osgi.framework.Bundle;
+import org.eclipse.update.standalone.InstallCommand;
 /**
  * 
  */
@@ -124,20 +122,9 @@ public class InstallableServer implements IInstallableServer {
 			return;
 		
 		try {
-			/*InstallCommand command = new InstallCommand(featureId, featureVersion, fromSite, null, "false");
+			InstallCommand command = new InstallCommand(featureId, featureVersion, fromSite, null, "false");
 			command.run(monitor);
-			EnableCommand command2 = new EnableCommand(featureId, featureVersion, null, "false");
-			command2.run(monitor);*/
-			String id = "org.eclipse.jst.server.timcat.core";
-			Bundle b = Platform.getBundle(id);
-			/*if (b == null) {
-				//id = "initial@reference:file:plugins/org.eclipse.jst.server.timcat.core_1.0.0/";
-				id = "file:/D:/dev/wtp/eclipse/plugins/org.eclipse.jst.server.timcat.core_1.0.0/";
-				b = ServerPlugin.bundleContext.installBundle(id);
-			}*/
-			System.out.println("state: " + b.getState());
-			b.start();
-			System.out.println("state2: " + b.getState());
+			command.applyChangesNow();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error installing feature", e);
 		}
