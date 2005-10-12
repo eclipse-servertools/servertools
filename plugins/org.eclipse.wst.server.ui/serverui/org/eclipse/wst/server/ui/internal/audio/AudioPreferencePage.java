@@ -105,24 +105,42 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 		data.horizontalSpan = 3;
 		enableButton.setLayoutData(data);
 		whs.setHelp(enableButton, ContextIds.AUDIO_PREFERENCES_ENABLE);
-	
-		Label l = new Label(composite, SWT.NONE);
-		l.setText(Messages.audioPrefVolume);
-	
+		
+		final Label volumeLabel = new Label(composite, SWT.NONE);
+		volumeLabel.setText(Messages.audioPrefVolume);
+		data = new GridData();
+		data.horizontalIndent = 20;
+		volumeLabel.setLayoutData(data);
+		volumeLabel.setEnabled(enableButton.getSelection());
+		
 		volume = new Spinner(composite, SWT.BORDER);
 		volume.setMinimum(0);
 		volume.setMaximum(20);
 		volume.setSelection(AudioCore.getInstance().getVolume());
-		data = new GridData(GridData.FILL_HORIZONTAL);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		data.horizontalSpan = 2;
+		data.widthHint = 60;
 		volume.setLayoutData(data);
+		volume.setEnabled(enableButton.getSelection());
 		whs.setHelp(volume, ContextIds.AUDIO_PREFERENCES_VOLUME);
 		
-		l = new Label(composite, SWT.NONE);
-		l.setText(Messages.audioPrefSounds);
+		enableButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				volumeLabel.setEnabled(enableButton.getSelection());
+				volume.setEnabled(enableButton.getSelection());
+			}
+		});
+		
+		Label label = new Label(composite, SWT.NONE);
 		data = new GridData();
 		data.horizontalSpan = 3;
-		l.setLayoutData(data);
+		label.setLayoutData(data);
+		
+		label = new Label(composite, SWT.NONE);
+		label.setText(Messages.audioPrefSounds);
+		data = new GridData();
+		data.horizontalSpan = 3;
+		label.setLayoutData(data);
 	
 		final Table table = new Table(composite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		data = new GridData(GridData.FILL_BOTH);

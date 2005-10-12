@@ -87,15 +87,23 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		layout.verticalSpacing = convertVerticalDLUsToPixels(4);
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
-		layout.numColumns = 4;
+		layout.numColumns = 3;
 		composite.setLayout(layout);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
 		composite.setLayoutData(data);
 		
+		showOnActivity = new Button(composite, SWT.CHECK);
+		showOnActivity.setText(Messages.prefShowOnActivity);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		data.horizontalSpan = 3;
+		showOnActivity.setLayoutData(data);
+		showOnActivity.setSelection(uiPreferences.getShowOnActivity());
+		whs.setHelp(showOnActivity, ContextIds.PREF_GENERAL_SHOW_ON_ACTIVITY);
+		
 		publishBeforeStart = new Button(composite, SWT.CHECK);
 		publishBeforeStart.setText(Messages.prefAutoPublish);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 4;
+		data.horizontalSpan = 3;
 		publishBeforeStart.setLayoutData(data);
 		publishBeforeStart.setSelection(preferences.isAutoPublishing());
 		whs.setHelp(publishBeforeStart, ContextIds.PREF_GENERAL_PUBLISH_BEFORE_START);
@@ -103,27 +111,32 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		autoPublishLocal = new Button(composite, SWT.CHECK);
 		autoPublishLocal.setText(Messages.prefAutoPublishLocal);
 		data = new GridData(GridData.FILL_HORIZONTAL);
-		data.horizontalSpan = 2;
+		data.horizontalSpan = 3;
 		autoPublishLocal.setLayoutData(data);
 		autoPublishLocal.setSelection(preferences.getAutoPublishLocal());
-		//WorkbenchHelp.setHelp(savePrompt, ContextIds.);
+		whs.setHelp(autoPublishLocal, ContextIds.PREF_GENERAL_AUTOPUBLISH_LOCAL);
+		
+		final Label autoPublishLocalTimeLabel = new Label(composite, SWT.NONE);
+		autoPublishLocalTimeLabel.setText(Messages.prefAutoPublishLocalTime);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		data.horizontalSpan = 2;
+		data.horizontalIndent = 20;
+		autoPublishLocalTimeLabel.setLayoutData(data);
+		autoPublishLocalTimeLabel.setEnabled(autoPublishLocal.getSelection());
 		
 		autoPublishLocalTime = new Spinner(composite, SWT.BORDER);
 		autoPublishLocalTime.setMinimum(0);
 		autoPublishLocalTime.setMaximum(120);
 		autoPublishLocalTime.setSelection(preferences.getAutoPublishLocalTime());
 		autoPublishLocalTime.setEnabled(autoPublishLocal.getSelection());
-		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		data.widthHint = 60;
 		autoPublishLocalTime.setLayoutData(data);
-		
-		Label label = new Label(composite, SWT.NONE);
-		label.setText(Messages.prefAutoPublishSeconds);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
-		label.setLayoutData(data);
+		whs.setHelp(autoPublishLocalTime, ContextIds.PREF_GENERAL_AUTOPUBLISH_LOCAL);
 		
 		autoPublishLocal.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
+				autoPublishLocalTimeLabel.setEnabled(autoPublishLocal.getSelection());
 				autoPublishLocalTime.setEnabled(autoPublishLocal.getSelection());
 			}
 		});
@@ -131,35 +144,39 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		autoPublishRemote = new Button(composite, SWT.CHECK);
 		autoPublishRemote.setText(Messages.prefAutoPublishRemote);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 2;
+		data.horizontalSpan = 3;
 		autoPublishRemote.setLayoutData(data);
 		autoPublishRemote.setSelection(preferences.getAutoPublishRemote());
 		//WorkbenchHelp.setHelp(autoPublishRemote, ContextIds.);
 		
+		final Label autoPublishRemoteTimeLabel = new Label(composite, SWT.NONE);
+		autoPublishRemoteTimeLabel.setText(Messages.prefAutoPublishRemoteTime);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		data.horizontalSpan = 2;
+		data.horizontalIndent = 20;
+		autoPublishRemoteTimeLabel.setLayoutData(data);
+		autoPublishRemoteTimeLabel.setEnabled(autoPublishRemote.getSelection());
+		
 		autoPublishRemoteTime = new Spinner(composite, SWT.BORDER);
-		autoPublishLocalTime.setMinimum(0);
-		autoPublishLocalTime.setMaximum(120);
+		autoPublishRemoteTime.setMinimum(0);
+		autoPublishRemoteTime.setMaximum(120);
 		autoPublishRemoteTime.setSelection(preferences.getAutoPublishRemoteTime());
 		autoPublishRemoteTime.setEnabled(autoPublishRemote.getSelection());
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		data.widthHint = 60;
 		autoPublishRemoteTime.setLayoutData(data);
 		
 		autoPublishRemote.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
+				autoPublishRemoteTimeLabel.setEnabled(autoPublishRemote.getSelection());
 				autoPublishRemoteTime.setEnabled(autoPublishRemote.getSelection());
 			}
 		});
 		
-		label = new Label(composite, SWT.NONE);
-		label.setText(Messages.prefAutoPublishSeconds);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_END);
-		label.setLayoutData(data);
-		
 		autoRestart = new Button(composite, SWT.CHECK);
 		autoRestart.setText(Messages.prefAutoRestart);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 4;
+		data.horizontalSpan = 3;
 		autoRestart.setLayoutData(data);
 		autoRestart.setSelection(preferences.isAutoRestarting());
 		whs.setHelp(autoRestart, ContextIds.PREF_GENERAL_AUTO_RESTART);
@@ -167,18 +184,15 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		promptIrreversible = new Button(composite, SWT.CHECK);
 		promptIrreversible.setText(Messages.prefPromptIrreversible);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 4;
+		data.horizontalSpan = 3;
 		promptIrreversible.setLayoutData(data);
 		promptIrreversible.setSelection(uiPreferences.getPromptBeforeIrreversibleChange());
 		whs.setHelp(promptIrreversible, ContextIds.PREF_GENERAL_PROMPT_IRREVERSIBLE);
 		
-		showOnActivity = new Button(composite, SWT.CHECK);
-		showOnActivity.setText(Messages.prefShowOnActivity);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 4;
-		showOnActivity.setLayoutData(data);
-		showOnActivity.setSelection(uiPreferences.getShowOnActivity());
-		whs.setHelp(showOnActivity, ContextIds.PREF_GENERAL_SHOW_ON_ACTIVITY);
+		Label label = new Label(composite, SWT.NONE);
+		data = new GridData();
+		data.horizontalSpan = 3;
+		label.setLayoutData(data);
 		
 		// save editors group
 		Group saveEditorGroup = new Group(composite, SWT.NONE);
@@ -188,7 +202,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		layout.numColumns = 3;
 		saveEditorGroup.setLayout(layout);
 		data = new GridData(GridData.FILL_HORIZONTAL);
-		data.horizontalSpan = 4;
+		data.horizontalSpan = 3;
 		saveEditorGroup.setLayoutData(data);
 		
 		saveNever = new Button(saveEditorGroup, SWT.RADIO);
@@ -219,6 +233,11 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		whs.setHelp(saveAuto, ContextIds.PREF_GENERAL_SAVE_EDITORS);
 		
 		label = new Label(composite, SWT.NONE);
+		data = new GridData();
+		data.horizontalSpan = 3;
+		label.setLayoutData(data);
+		
+		label = new Label(composite, SWT.NONE);
 		label.setText(Messages.prefMachineSpeed);
 		
 		machineSpeedCombo = new Combo(composite, SWT.READ_ONLY);
@@ -231,10 +250,10 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		};
 		machineSpeedCombo.setItems(items);
 		machineSpeedCombo.select(preferences.getMachineSpeed() / 2);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 3;
+		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		data.horizontalSpan = 2;
 		machineSpeedCombo.setLayoutData(data);
-		//whs.setHelp(machineSpeedSlider, ContextIds.PREF_GENERAL_PROMPT_IRREVERSIBLE);
+		whs.setHelp(machineSpeedCombo, ContextIds.PREF_GENERAL_TIMEOUT_DELAY);
 		
 		setSaveEditorStatus(uiPreferences.getSaveEditors());
 		

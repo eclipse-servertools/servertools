@@ -258,7 +258,6 @@ public class ServerPlugin extends Plugin {
 		Trace.trace(Trace.CONFIG, "----->----- Server Core plugin startup ----->-----");
 		super.start(context);
 		bundleContext = context;
-		System.out.println("bundle location: " + getBundle().getLocation());
 		
 		initializeDefaultPluginPreferences();
 

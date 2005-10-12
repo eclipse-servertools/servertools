@@ -71,7 +71,7 @@ public class ServersView extends ViewPart {
 		treeTable.setLinesVisible(false);
 		treeTable.setLayoutData(new GridData(GridData.FILL_BOTH));
 		treeTable.setFont(parent.getFont());
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(treeTable, ContextIds.VIEW_CONTROL);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(treeTable, ContextIds.VIEW_SERVERS);
 		
 		// add columns
 		TreeColumn column = new TreeColumn(treeTable, SWT.SINGLE);

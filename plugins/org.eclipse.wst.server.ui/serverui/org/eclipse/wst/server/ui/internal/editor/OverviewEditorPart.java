@@ -26,8 +26,12 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
+import org.eclipse.jface.preference.IPreferenceNode;
+import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -35,7 +39,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
@@ -180,14 +183,38 @@ public class OverviewEditorPart extends ServerEditorPart {
 		leftColumnComp.setLayout(layout);
 		leftColumnComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 		
-		Section section = toolkit.createSection(leftColumnComp, ExpandableComposite.TWISTIE|ExpandableComposite.EXPANDED | ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
-		section.setText(Messages.serverEditorOverviewSection);
-		section.setDescription(Messages.serverEditorOverviewDescription);
+		createGeneralSection(leftColumnComp, toolkit);
+		
+		insertSections(leftColumnComp, "org.eclipse.wst.server.editor.overview.left");
+		
+		// right column
+		Composite rightColumnComp = toolkit.createComposite(columnComp);
+		layout = new GridLayout();
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		layout.verticalSpacing = 10;
+		layout.horizontalSpacing = 0;
+		rightColumnComp.setLayout(layout);
+		rightColumnComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
+		
+		createAutoPublishSection(rightColumnComp, toolkit);
+		
+		insertSections(rightColumnComp, "org.eclipse.wst.server.editor.overview.right");
+		
+		form.reflow(true);
+		
+		initialize();
+	}
+
+	protected void createGeneralSection(Composite leftColumnComp, FormToolkit toolkit) {
+		Section section = toolkit.createSection(leftColumnComp, ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED | ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
+		section.setText(Messages.serverEditorOverviewGeneralSection);
+		section.setDescription(Messages.serverEditorOverviewGeneralDescription);
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 
 		Composite composite = toolkit.createComposite(section);
-		layout = new GridLayout();
-		layout.numColumns = 2;
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 3;
 		layout.marginHeight = 5;
 		layout.marginWidth = 10;
 		layout.verticalSpacing = 5;
@@ -205,6 +232,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			
 			serverName = toolkit.createText(composite, server.getName());
 			GridData data = new GridData(GridData.FILL_HORIZONTAL);
+			data.horizontalSpan = 2;
 			serverName.setLayoutData(data);
 			serverName.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
@@ -216,14 +244,13 @@ public class OverviewEditorPart extends ServerEditorPart {
 				}
 			});
 			whs.setHelp(serverName, ContextIds.EDITOR_SERVER);
-		}
 		
-		// hostname
-		if (server != null) {
+			// hostname
 			createLabel(toolkit, composite, Messages.serverEditorOverviewServerHostname);
 			
 			hostname = toolkit.createText(composite, server.getHost());
-			GridData data = new GridData(GridData.FILL_HORIZONTAL);
+			data = new GridData(GridData.FILL_HORIZONTAL);
+			data.horizontalSpan = 2;
 			hostname.setLayoutData(data);
 			hostname.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
@@ -280,7 +307,6 @@ public class OverviewEditorPart extends ServerEditorPart {
 				whs.setHelp(runtimeCombo, ContextIds.EDITOR_RUNTIME);
 			}
 			
-			createLabel(toolkit, composite, "");
 			Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewRuntimeEdit, SWT.NONE);
 			link.addHyperlinkListener(new HyperlinkAdapter() {
 				public void linkActivated(HyperlinkEvent e) {
@@ -310,13 +336,12 @@ public class OverviewEditorPart extends ServerEditorPart {
 			
 			whs.setHelp(serverConfigurationName, ContextIds.EDITOR_CONFIGURATION);
 			
-			createLabel(toolkit, composite, "");
 			final IFolder currentFolder = server.getServerConfiguration();
-			Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewServerConfigurationEdit, SWT.NONE);
-			link.addHyperlinkListener(new HyperlinkAdapter() {
-				public void linkActivated(HyperlinkEvent e) {
+			Button browse = toolkit.createButton(composite, Messages.serverEditorOverviewServerConfigurationBrowse, SWT.PUSH);
+			browse.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
 					ContainerSelectionDialog dialog = new ContainerSelectionDialog(serverConfigurationName.getShell(),
-						currentFolder, true, Messages.serverEditorOverviewServerConfigurationEditMessage);
+						currentFolder, true, Messages.serverEditorOverviewServerConfigurationBrowseMessage);
 					dialog.showClosedProjects(false);
 					
 					if (dialog.open() != Window.CANCEL) {
@@ -340,46 +365,103 @@ public class OverviewEditorPart extends ServerEditorPart {
 					}
 				}
 			});
-			link.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+			browse.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		}
 		
-		// auto-publish
 		if (server != null) {
-			Group group = new Group(composite, SWT.NONE);
-			group.setBackground(composite.getBackground());
-			group.setText(Messages.serverEditorOverviewPublishing);
-			layout = new GridLayout();
-			layout.numColumns = 3;
-			layout.marginHeight = 5;
-			layout.marginWidth = 10;
-			layout.verticalSpacing = 5;
-			layout.horizontalSpacing = 5;
-			group.setLayout(layout);
-			GridData data = new GridData(GridData.FILL_HORIZONTAL);
-			data.horizontalSpan = 2;
-			group.setLayoutData(data);
-			
+			IServerType serverType = server.getServerType();
+			if (serverType.supportsLaunchMode(ILaunchManager.RUN_MODE) || serverType.supportsLaunchMode(ILaunchManager.DEBUG_MODE)
+					|| serverType.supportsLaunchMode(ILaunchManager.PROFILE_MODE)) {
+				ILaunchConfigurationType launchType = ((ServerType) serverType).getLaunchConfigurationType();
+				if (launchType.isPublic()) {
+					final Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewOpenLaunchConfiguration, SWT.NONE);
+					GridData data = new GridData();
+					data.horizontalSpan = 2;
+					link.setLayoutData(data);
+					link.addHyperlinkListener(new HyperlinkAdapter() {
+						public void linkActivated(HyperlinkEvent e) {
+							try {
+								ILaunchConfiguration launchConfig = ((Server) getServer()).getLaunchConfiguration(true, null);
+								// TODO: use correct launch group
+								DebugUITools.openLaunchConfigurationPropertiesDialog(link.getShell(), launchConfig, "org.eclipse.debug.ui.launchGroup.run");
+							} catch (CoreException ce) {
+								Trace.trace(Trace.SEVERE, "Could not create launch configuration", ce);
+							}
+						}
+					});
+				}
+			}
+		}
+	}
+
+	protected void createAutoPublishSection(Composite rightColumnComp, FormToolkit toolkit) {
+		Section section = toolkit.createSection(rightColumnComp, ExpandableComposite.TWISTIE | ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
+		section.setText(Messages.serverEditorOverviewAutoPublishSection);
+		section.setDescription(Messages.serverEditorOverviewAutoPublishDescription);
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
+
+		Composite composite = toolkit.createComposite(section);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 2;
+		layout.marginHeight = 5;
+		layout.marginWidth = 10;
+		layout.verticalSpacing = 5;
+		layout.horizontalSpacing = 15;
+		composite.setLayout(layout);
+		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
+		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
+		whs.setHelp(composite, ContextIds.EDITOR_OVERVIEW_PAGE);
+		toolkit.paintBordersFor(composite);
+		section.setClient(composite);
+		
+		//	 auto-publish
+		if (server != null) {
 			final Server svr = (Server) server;
 			int publishSetting = svr.getAutoPublishSetting();
-			autoPublishDefault = toolkit.createButton(group, Messages.serverEditorOverviewAutoPublishDefault, SWT.RADIO);
-			data = new GridData(GridData.FILL_HORIZONTAL);
-			data.horizontalSpan = 3;
+			autoPublishDefault = toolkit.createButton(composite, Messages.serverEditorOverviewAutoPublishDefault, SWT.RADIO);
+			GridData data = new GridData(GridData.FILL_HORIZONTAL);
 			autoPublishDefault.setLayoutData(data);
 			autoPublishDefault.setSelection(publishSetting == Server.AUTO_PUBLISH_DEFAULT);
 			whs.setHelp(autoPublishDefault, ContextIds.EDITOR_AUTOPUBLISH_DEFAULT);
 			
-			autoPublishDisable = toolkit.createButton(group, Messages.serverEditorOverviewAutoPublishDisable, SWT.RADIO);
+			Hyperlink editDefaults = toolkit.createHyperlink(composite, Messages.serverEditorOverviewAutoPublishDefaultEdit, SWT.NONE);
+			editDefaults.addHyperlinkListener(new HyperlinkAdapter() {
+				public void linkActivated(HyperlinkEvent e) {
+					showPreferencePage();
+				}
+			});
+			editDefaults.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+			whs.setHelp(editDefaults, ContextIds.EDITOR_AUTOPUBLISH_DEFAULT);
+			
+			autoPublishDisable = toolkit.createButton(composite, Messages.serverEditorOverviewAutoPublishDisable, SWT.RADIO);
 			data = new GridData(GridData.FILL_HORIZONTAL);
-			data.horizontalSpan = 3;
+			data.horizontalSpan = 2;
 			autoPublishDisable.setLayoutData(data);
 			autoPublishDisable.setSelection(publishSetting == Server.AUTO_PUBLISH_DISABLE);
 			whs.setHelp(autoPublishDisable, ContextIds.EDITOR_AUTOPUBLISH_DISABLE);
 			
-			autoPublishOverride = toolkit.createButton(group, Messages.serverEditorOverviewAutoPublishOverride, SWT.RADIO);
+			autoPublishOverride = toolkit.createButton(composite, Messages.serverEditorOverviewAutoPublishOverride, SWT.RADIO);
 			autoPublishOverride.setSelection(publishSetting == Server.AUTO_PUBLISH_OVERRIDE);
 			data = new GridData(GridData.FILL_HORIZONTAL);
+			data.horizontalSpan = 2;
 			autoPublishOverride.setLayoutData(data);
 			whs.setHelp(autoPublishOverride, ContextIds.EDITOR_AUTOPUBLISH_OVERRIDE);
+			
+			final Label autoPublishTimeLabel = toolkit.createLabel(composite, Messages.serverEditorOverviewAutoPublishOverrideInterval);
+			data = new GridData();
+			data.horizontalIndent = 20;
+			autoPublishTimeLabel.setLayoutData(data);
+			autoPublishTimeLabel.setEnabled(autoPublishOverride.getSelection());
+			
+			autoPublishTime = new Spinner(composite, SWT.BORDER);
+			autoPublishTime.setMinimum(0);
+			autoPublishTime.setMaximum(120);
+			autoPublishTime.setSelection(svr.getAutoPublishTime());
+			data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+			data.widthHint = 60;
+			autoPublishTime.setLayoutData(data);
+			autoPublishTime.setEnabled(autoPublishOverride.getSelection());
+			whs.setHelp(autoPublishTime, ContextIds.EDITOR_AUTOPUBLISH_OVERRIDE);
 			
 			autoPublishOverride.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
@@ -388,6 +470,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 					updating = true;
 					execute(new SetServerAutoPublishDefaultCommand(getServer(), Server.AUTO_PUBLISH_OVERRIDE));
 					updating = false;
+					autoPublishTimeLabel.setEnabled(autoPublishOverride.getSelection());
 					autoPublishTime.setEnabled(autoPublishOverride.getSelection());
 				}
 			});
@@ -399,6 +482,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 					updating = true;
 					execute(new SetServerAutoPublishDefaultCommand(getServer(), Server.AUTO_PUBLISH_DEFAULT));
 					updating = false;
+					autoPublishTimeLabel.setEnabled(autoPublishOverride.getSelection());
 					autoPublishTime.setEnabled(autoPublishOverride.getSelection());
 				}
 			});
@@ -410,23 +494,10 @@ public class OverviewEditorPart extends ServerEditorPart {
 					updating = true;
 					execute(new SetServerAutoPublishDefaultCommand(getServer(), Server.AUTO_PUBLISH_DISABLE));
 					updating = false;
+					autoPublishTimeLabel.setEnabled(autoPublishOverride.getSelection());
 					autoPublishTime.setEnabled(autoPublishOverride.getSelection());
 				}
 			});
-			
-			//autoPublishTime = toolkit.createText(composite, svr.getAutoPublishTime() + "");
-			autoPublishTime = new Spinner(group, SWT.BORDER);
-			autoPublishTime.setMinimum(0);
-			autoPublishTime.setMaximum(120);
-			autoPublishTime.setSelection(svr.getAutoPublishTime());
-			data = new GridData(GridData.HORIZONTAL_ALIGN_END);
-			data.widthHint = 60;
-			autoPublishTime.setLayoutData(data);
-			autoPublishTime.setEnabled(autoPublishOverride.getSelection());
-			whs.setHelp(autoPublishTime, ContextIds.EDITOR_AUTOPUBLISH_TIME);
-			
-			Label label = toolkit.createLabel(group, Messages.prefAutoPublishSeconds);
-			label.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 			
 			autoPublishTime.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
@@ -441,48 +512,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 					updating = false;
 				}
 			});
-			
-			IServerType serverType = server.getServerType();
-			if (serverType.supportsLaunchMode(ILaunchManager.RUN_MODE) || serverType.supportsLaunchMode(ILaunchManager.DEBUG_MODE)
-					|| serverType.supportsLaunchMode(ILaunchManager.PROFILE_MODE)) {
-				ILaunchConfigurationType launchType = ((ServerType) serverType).getLaunchConfigurationType();
-				if (launchType.isPublic()) {
-					Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewOpenLaunchConfiguration, SWT.NONE);
-					data = new GridData();
-					data.horizontalSpan = 2;
-					link.setLayoutData(data);
-					link.addHyperlinkListener(new HyperlinkAdapter() {
-						public void linkActivated(HyperlinkEvent e) {
-							try {
-								ILaunchConfiguration launchConfig = svr.getLaunchConfiguration(true, null);
-								// TODO: use correct launch group
-								DebugUITools.openLaunchConfigurationPropertiesDialog(parent.getShell(), launchConfig, "org.eclipse.debug.ui.launchGroup.run");
-							} catch (CoreException ce) {
-								Trace.trace(Trace.SEVERE, "Could not create launch configuration", ce);
-							}
-						}
-					});
-				}
-			}
 		}
-		
-		insertSections(leftColumnComp, "org.eclipse.wst.server.editor.overview.left");
-		
-		// right column
-		Composite rightColumnComp = toolkit.createComposite(columnComp);
-		layout = new GridLayout();
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
-		layout.verticalSpacing = 10;
-		layout.horizontalSpacing = 0;
-		rightColumnComp.setLayout(layout);
-		rightColumnComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
-		
-		insertSections(rightColumnComp, "org.eclipse.wst.server.editor.overview.right");
-		
-		form.reflow(true);
-		
-		initialize();
 	}
 
 	protected void editRuntime(IRuntime runtime) {
@@ -494,6 +524,24 @@ public class OverviewEditorPart extends ServerEditorPart {
 				// ignore
 			}
 		}
+	}
+
+	protected boolean showPreferencePage() {
+		PreferenceManager manager = PlatformUI.getWorkbench().getPreferenceManager();
+		IPreferenceNode node = manager.find("org.eclipse.wst.server.ui.preferencePage");
+		PreferenceManager manager2 = new PreferenceManager();
+		manager2.addToRoot(node);
+		
+		final PreferenceDialog dialog = new PreferenceDialog(getSite().getShell(), manager2);
+		final boolean[] result = new boolean[] { false };
+		BusyIndicator.showWhile(getSite().getShell().getDisplay(), new Runnable() {
+			public void run() {
+				dialog.create();
+				if (dialog.open() == Window.OK)
+					result[0] = true;
+			}
+		});
+		return result[0];
 	}
 
 	protected int showWizard(final IRuntimeWorkingCopy runtimeWorkingCopy) {

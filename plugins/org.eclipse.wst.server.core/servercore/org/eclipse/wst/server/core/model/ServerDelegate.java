@@ -248,7 +248,7 @@ public abstract class ServerDelegate {
 	public abstract IModule[] getRootModules(IModule module) throws CoreException;
 
 	/**
-	 * Returns an array of IServerPorts that this server has.
+	 * Returns an array of ServerPorts that this server has.
 	 *
 	 * @return the server's ports
 	 */
