@@ -30,19 +30,19 @@ public final class RuntimeBridge implements IRuntimeBridge {
 	private static Map mappings = new HashMap();
 
 	static {
-		mappings.put("org.eclipse.jst.server.tomcat.runtime.32", RuntimeManager.get()
+		mappings.put("org.eclipse.jst.server.tomcat.runtime.32", RuntimeManager
 				.getRuntimeComponentType("org.eclipse.jst.server.tomcat").getVersion("3.2"));
 		
-		mappings.put("org.eclipse.jst.server.tomcat.runtime.40", RuntimeManager.get()
+		mappings.put("org.eclipse.jst.server.tomcat.runtime.40", RuntimeManager
 				.getRuntimeComponentType("org.eclipse.jst.server.tomcat").getVersion("4.0"));
 		
-		mappings.put("org.eclipse.jst.server.tomcat.runtime.41", RuntimeManager.get()
+		mappings.put("org.eclipse.jst.server.tomcat.runtime.41", RuntimeManager
 				.getRuntimeComponentType("org.eclipse.jst.server.tomcat").getVersion("4.1"));
 		
-		mappings.put("org.eclipse.jst.server.tomcat.runtime.50", RuntimeManager.get()
+		mappings.put("org.eclipse.jst.server.tomcat.runtime.50", RuntimeManager
 				.getRuntimeComponentType("org.eclipse.jst.server.tomcat").getVersion("5.0"));
 		
-		mappings.put("org.eclipse.jst.server.tomcat.runtime.55", RuntimeManager.get()
+		mappings.put("org.eclipse.jst.server.tomcat.runtime.55", RuntimeManager
 				.getRuntimeComponentType("org.eclipse.jst.server.tomcat").getVersion("5.5"));
 	}
 
@@ -53,7 +53,7 @@ public final class RuntimeBridge implements IRuntimeBridge {
 			final IRuntime runtime = runtimes[i];
 			final String name = runtime.getName();
 
-			if (!RuntimeManager.get().isRuntimeDefined(name)) {
+			if (!RuntimeManager.isRuntimeDefined(name)) {
 				final String type = runtime.getRuntimeType().getId();
 				final IRuntimeComponentVersion mapped = (IRuntimeComponentVersion)
 						mappings.get(type);
@@ -67,7 +67,7 @@ public final class RuntimeBridge implements IRuntimeBridge {
 					properties.put("location", runtime.getLocation().toPortableString());
 					properties.put("name", name);
 					
-					components.add(RuntimeManager.get().createRuntimeComponent(mapped, properties));
+					components.add(RuntimeManager.createRuntimeComponent(mapped, properties));
 					
 					IJavaRuntime gr = (IJavaRuntime) runtime.loadAdapter(IJavaRuntime.class, null);
 					IVMInstall vmInstall = gr.getVMInstall();
@@ -77,10 +77,10 @@ public final class RuntimeBridge implements IRuntimeBridge {
 					final IRuntimeComponentVersion rcv;
 					
 					if (jvmver.startsWith("1.4")) {
-						rcv = RuntimeManager.get().getRuntimeComponentType("standard.jre")
+						rcv = RuntimeManager.getRuntimeComponentType("standard.jre")
 								.getVersion("1.4");
 					} else if (jvmver.startsWith("1.5")) {
-						rcv = RuntimeManager.get().getRuntimeComponentType("standard.jre")
+						rcv = RuntimeManager.getRuntimeComponentType("standard.jre")
 								.getVersion("5.0");
 					} else {
 						continue;
@@ -88,9 +88,9 @@ public final class RuntimeBridge implements IRuntimeBridge {
 
 					properties = new HashMap();
 					properties.put("name", vmInstall.getName());
-					components.add(RuntimeManager.get().createRuntimeComponent(rcv, properties));
+					components.add(RuntimeManager.createRuntimeComponent(rcv, properties));
 
-					RuntimeManager.get().defineRuntime(name, components, null);
+					RuntimeManager.defineRuntime(name, components, null);
 				}
 			}
 		}
