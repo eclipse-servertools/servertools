@@ -373,7 +373,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			if (serverType.supportsLaunchMode(ILaunchManager.RUN_MODE) || serverType.supportsLaunchMode(ILaunchManager.DEBUG_MODE)
 					|| serverType.supportsLaunchMode(ILaunchManager.PROFILE_MODE)) {
 				ILaunchConfigurationType launchType = ((ServerType) serverType).getLaunchConfigurationType();
-				if (launchType.isPublic()) {
+				if (launchType != null && launchType.isPublic()) {
 					final Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewOpenLaunchConfiguration, SWT.NONE);
 					GridData data = new GridData();
 					data.horizontalSpan = 2;
