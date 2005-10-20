@@ -27,7 +27,7 @@ import org.eclipse.wst.common.project.facet.core.runtime.classpath.IClasspathPro
  * 
  */
 public final class TomcatClasspathProvider implements IClasspathProvider {
-	private static final IProjectFacet WEB_FEATURE = ProjectFacetsManager.getProjectFacet("web");
+	private static final IProjectFacet WEB_FEATURE = ProjectFacetsManager.getProjectFacet("jst.web");
 
 	private final IRuntimeComponent rc;
 

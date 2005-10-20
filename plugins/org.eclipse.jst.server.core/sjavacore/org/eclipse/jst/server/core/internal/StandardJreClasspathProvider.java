@@ -36,7 +36,7 @@ public final class StandardJreClasspathProvider
     
 {
     private static final IProjectFacet JAVA_FEATURE
-        = ProjectFacetsManager.getProjectFacet( "java" );
+        = ProjectFacetsManager.getProjectFacet( "jst.java" );
     
     private static final String STANDARD_VM_TYPE
         = "org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType";
