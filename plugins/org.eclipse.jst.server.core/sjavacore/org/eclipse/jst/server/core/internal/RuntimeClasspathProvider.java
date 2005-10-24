@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial API and implementation
+ *    IBM Corporation - Support for all server types
  ******************************************************************************/
 package org.eclipse.jst.server.core.internal;
 
@@ -26,22 +27,28 @@ import org.eclipse.wst.common.project.facet.core.runtime.classpath.IClasspathPro
 /**
  * 
  */
-public final class TomcatClasspathProvider implements IClasspathProvider {
+public final class RuntimeClasspathProvider implements IClasspathProvider {
 	private static final IProjectFacet WEB_FEATURE = ProjectFacetsManager.getProjectFacet("jst.web");
+	private static final IProjectFacet EJB_FEATURE = ProjectFacetsManager.getProjectFacet("jst.ejb");
+	private static final IProjectFacet EAR_FEATURE = ProjectFacetsManager.getProjectFacet("jst.ear");
 
 	private final IRuntimeComponent rc;
 
-	public TomcatClasspathProvider(final IRuntimeComponent rc) {
+	public RuntimeClasspathProvider(final IRuntimeComponent rc) {
 		this.rc = rc;
 	}
 
 	public List getClasspathEntries(final IProjectFacetVersion fv) {
-		if (fv.getProjectFacet() == WEB_FEATURE) {
-			IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER + "/org.eclipse.jst.server.tomcat.runtimeTarget");
+		if (fv.getProjectFacet() == WEB_FEATURE || fv.getProjectFacet() == EJB_FEATURE ||
+				fv.getProjectFacet() == EAR_FEATURE) {
+			IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER);
+			if (rc.getRuntimeComponentType().getId().indexOf("tomcat") < 0)
+				path.append("org.eclipse.jst.server.generic.runtimeTarget");
+			else
+				path.append("org.eclipse.jst.server.tomcat.runtimeTarget");
 			path = path.append(rc.getProperty("name"));
 			
-			final IClasspathEntry cpentry = JavaCore.newContainerEntry(path);
-			
+			IClasspathEntry cpentry = JavaCore.newContainerEntry(path);
 			return Collections.singletonList(cpentry);
 		}
 		
@@ -52,8 +59,8 @@ public final class TomcatClasspathProvider implements IClasspathProvider {
 		private static final Class[] ADAPTER_TYPES = { IClasspathProvider.class };
 
 		public Object getAdapter(final Object adaptable, final Class adapterType) {
-			final IRuntimeComponent rc = (IRuntimeComponent) adaptable;
-			return new TomcatClasspathProvider(rc);
+			IRuntimeComponent rc = (IRuntimeComponent) adaptable;
+			return new RuntimeClasspathProvider(rc);
 		}
 
 		public Class[] getAdapterList() {

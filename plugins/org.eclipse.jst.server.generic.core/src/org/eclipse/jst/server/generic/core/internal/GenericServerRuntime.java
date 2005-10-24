@@ -39,6 +39,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMInstallType;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.jst.server.core.IJavaRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
@@ -48,7 +49,7 @@ import org.eclipse.wst.server.core.model.RuntimeDelegate;
  *
  * @author Gorkem Ercan
  */
-public class GenericServerRuntime extends RuntimeDelegate 
+public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntime
 {
 	private static final String PROP_VM_INSTALL_TYPE_ID = "vm-install-type-id";
 	private static final String PROP_VM_INSTALL_ID = "vm-install-id";

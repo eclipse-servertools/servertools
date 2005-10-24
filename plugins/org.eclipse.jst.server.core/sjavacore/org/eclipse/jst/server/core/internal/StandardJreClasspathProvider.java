@@ -7,8 +7,8 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial API and implementation
+ *    IBM Corporation - Cleanup
  ******************************************************************************/
-
 package org.eclipse.jst.server.core.internal;
 
 import java.util.Collections;
@@ -25,66 +25,44 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
 import org.eclipse.wst.common.project.facet.core.runtime.classpath.IClasspathProvider;
-
 /**
- * @author <a href="mailto:kosta@bea.com">Konstantin Komissarchik</a>
+ * 
  */
+public final class StandardJreClasspathProvider implements IClasspathProvider {
+	private static final IProjectFacet JAVA_FEATURE = ProjectFacetsManager
+		.getProjectFacet("jst.java");
 
-public final class StandardJreClasspathProvider
+	private static final String STANDARD_VM_TYPE = "org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType";
 
-    implements IClasspathProvider
-    
-{
-    private static final IProjectFacet JAVA_FEATURE
-        = ProjectFacetsManager.getProjectFacet( "jst.java" );
-    
-    private static final String STANDARD_VM_TYPE
-        = "org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType";
+	private final IRuntimeComponent rc;
 
-    
-    private final IRuntimeComponent rc;
-    
-    public StandardJreClasspathProvider( final IRuntimeComponent rc )
-    {
-        this.rc = rc;
-    }
+	public StandardJreClasspathProvider(final IRuntimeComponent rc) {
+		this.rc = rc;
+	}
 
-    public List getClasspathEntries( final IProjectFacetVersion fv )
-    {
-        if( fv.getProjectFacet() == JAVA_FEATURE )
-        {
-            IPath path = new Path( JavaRuntime.JRE_CONTAINER );
-            path = path.append( STANDARD_VM_TYPE );
-            path = path.append( rc.getProperty( "name" ) );
-            
-            final IClasspathEntry cpentry = JavaCore.newContainerEntry( path );
-            
-            return Collections.singletonList( cpentry );
-        }
-        
-        return null;
-    }
-    
-    public static final class Factory
+	public List getClasspathEntries(final IProjectFacetVersion fv) {
+		if (fv.getProjectFacet() == JAVA_FEATURE) {
+			IPath path = new Path(JavaRuntime.JRE_CONTAINER);
+			path = path.append(STANDARD_VM_TYPE);
+			path = path.append(rc.getProperty("name"));
 
-        implements IAdapterFactory
-        
-    {
-        private static final Class[] ADAPTER_TYPES
-            = { IClasspathProvider.class };
-                        
-        public Object getAdapter( final Object adaptable, 
-                                  final Class adapterType )
-        {
-            final IRuntimeComponent rc = (IRuntimeComponent) adaptable;
-            return new StandardJreClasspathProvider( rc );
-        }
-    
-        public Class[] getAdapterList()
-        {
-            return ADAPTER_TYPES;
-        }
-    }
-    
+			IClasspathEntry cpentry = JavaCore.newContainerEntry(path);
+			return Collections.singletonList(cpentry);
+		}
 
+		return null;
+	}
+
+	public static final class Factory implements IAdapterFactory {
+		private static final Class[] ADAPTER_TYPES = { IClasspathProvider.class };
+
+		public Object getAdapter(final Object adaptable, final Class adapterType) {
+			IRuntimeComponent rc = (IRuntimeComponent) adaptable;
+			return new StandardJreClasspathProvider(rc);
+		}
+
+		public Class[] getAdapterList() {
+			return ADAPTER_TYPES;
+		}
+	}
 }
