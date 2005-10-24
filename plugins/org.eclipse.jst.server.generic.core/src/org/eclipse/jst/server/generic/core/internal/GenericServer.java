@@ -53,7 +53,6 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.internal.ServerMonitorManager;
 import org.eclipse.wst.server.core.model.IURLProvider;
 import org.eclipse.wst.server.core.model.ServerDelegate;
 
@@ -160,8 +159,9 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 			if (module.length == 1 && "j2ee.ear".equals(type)) {
 				IEnterpriseApplication enterpriseApplication = (IEnterpriseApplication) module[0]
 						.loadAdapter(IEnterpriseApplication.class, null);
-				if (enterpriseApplication.getModules() != null) {
-					return enterpriseApplication.getModules();
+				IModule[] earModules =enterpriseApplication.getModules(); 
+				if ( earModules != null) {
+					return earModules;
 				}
 			}
 		}
@@ -213,7 +213,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 			int port = 0;
 			
 			port = getHttpPort();
-			port =ServerMonitorManager.getInstance().getMonitoredPort(getServer(), port, "web");
+			port =ServerUtil.getMonitoredPort(getServer(), port, "web");
 			if (port != 80)
 				url += ":" + port;
 

@@ -35,7 +35,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -60,7 +59,6 @@ import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
 import org.eclipse.jst.server.generic.servertype.definition.ArgumentPair;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
 import org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration;
-import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
@@ -100,8 +98,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
             removeFromServer(module,monitor);
         }
         else{
-            Module m = getServerDefinition().getModule(module[0].getModuleType().getId());
-            String publisherId = m.getPublisherReference();
+            String publisherId = ServerTypeDefinitionUtil.getPublisherID(module[0], getServerDefinition());
             GenericPublisher publisher = PublishManager.getPublisher(publisherId);
             if(publisher==null){
                 IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,"Unable to create publisher",null);
@@ -124,8 +121,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 
     private void removeFromServer(IModule[] module, IProgressMonitor monitor) throws CoreException
     {
-        Module m = getServerDefinition().getModule(module[0].getModuleType().getId());
-        String publisherId = m.getPublisherReference();
+    	String publisherId = ServerTypeDefinitionUtil.getPublisherID(module[0], getServerDefinition());
         GenericPublisher publisher = PublishManager.getPublisher(publisherId);  
         if(publisher==null){
             IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,"Unable to create publisher to remove module",null);

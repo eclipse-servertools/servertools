@@ -39,7 +39,9 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
+import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IRuntime;
 
 /**
@@ -67,7 +69,11 @@ public class ServerTypeDefinitionUtil
 			CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(serverType,properties);
 		return definition;
 	}
-	
+	/**
+	 * 
+	 * @param runtime
+	 * @return
+	 */
 	public static IClasspathEntry[] getServerClassPathEntry(IRuntime runtime)
 	{
 		ServerRuntime definition = getServerTypeDefinition(runtime);
@@ -84,6 +90,20 @@ public class ServerTypeDefinitionUtil
 			entryList.add(entry);
 		}
 		return (IClasspathEntry[])entryList.toArray(new IClasspathEntry[entryList.size()]);
+	}
+	/**
+	 * Given the serverDefinition and module returns the publisher id 
+	 * that handles the publishing of module type for this serverDefinition.
+	 * @param module
+	 * @param serverDefinition
+	 * @return publisher id
+	 */
+	public static String getPublisherID(IModule module, ServerRuntime serverDefinition)
+	{
+		if(module==null || module.getModuleType()== null)
+			return null;
+		Module m = serverDefinition.getModule(module.getModuleType().getId());
+		return m.getPublisherReference();
 	}
 	
 }

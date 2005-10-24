@@ -36,7 +36,7 @@
  
  <extension point="org.eclipse.jst.server.generic.core.genericpublisher">
       <genericpublisher
-            class="org.eclipse.jst.server.generic.core.internal.AntPublisher"
+            class="org.eclipse.jst.server.generic.core.internal.publishers.AntPublisher"
             id="org.eclipse.jst.server.generic.antpublisher"/>
  </extension>
 
