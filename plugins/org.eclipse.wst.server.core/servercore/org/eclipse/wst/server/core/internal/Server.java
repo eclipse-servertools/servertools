@@ -97,17 +97,21 @@ public class Server extends Base implements IServer {
 		"unknown", "starting", "started", "started_debug",
 		"stopping", "stopped", "started_unsupported", "started_profile"
 	};*/
-	
+
 	// publish listeners
 	protected transient List publishListeners;
-	
+
 	// Server listeners
 	protected transient ServerNotificationManager notificationManager;
 
 	public class AutoPublishThread extends Thread {
 		public boolean stop;
-		public int time = 0; 
-		
+		public int time = 0;
+
+		public AutoPublishThread() {
+			super("Automatic Publishing");
+		}
+
 		public void run() {
 			Trace.trace(Trace.FINEST, "Auto-publish thread starting for " + Server.this + " - " + time + "s");
 			if (stop)
@@ -128,6 +132,18 @@ public class Server extends Base implements IServer {
 			publishJob.schedule();
 		}
 	}
+
+	private static final Comparator PUBLISH_OPERATION_COMPARTOR = new Comparator() {
+      public int compare(Object leftOp, Object rightOp) {
+          PublishOperation left = (PublishOperation) leftOp;
+          PublishOperation right = (PublishOperation) rightOp;
+          if (left.getOrder() > right.getOrder())
+              return 1;
+          if (left.getOrder() < right.getOrder())
+              return -1;
+          return 0;
+      }
+	};
 
 	// working copy, loaded resource
 	public Server(IFile file) {
@@ -738,6 +754,8 @@ public class Server extends Base implements IServer {
 				}
 			}
 		}
+		
+		Collections.sort(tasks, PUBLISH_OPERATION_COMPARTOR);
 		
 		return (PublishOperation[]) tasks.toArray(new PublishOperation[tasks.size()]);
 	}
