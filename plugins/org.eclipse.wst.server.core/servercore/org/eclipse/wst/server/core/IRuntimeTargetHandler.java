@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.IAdaptable;
  * (repeatedly) as the API evolves.
  * </p>
  * 
+ * @deprecated use project facets instead of runtime targets
  * @plannedfor 1.0
  */
 public interface IRuntimeTargetHandler extends IAdaptable {

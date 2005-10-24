@@ -20,6 +20,7 @@ public class Messages extends NLS {
 	public static String errorDuplicateRuntimeName;
 	public static String errorSaving;
 	public static String errorLoading;
+	public static String errorCannotAddModule;
 	public static String defaultVendor;
 	public static String defaultVersion;
 	public static String savingTask;
