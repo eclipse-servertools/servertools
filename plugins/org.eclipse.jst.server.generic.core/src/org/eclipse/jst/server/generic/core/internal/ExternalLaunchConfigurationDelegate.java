@@ -152,7 +152,6 @@ public class ExternalLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
         	abort(GenericServerCoreMessages.debugPortUnspecified, null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
         }
         setDebugArgument(wc, IJavaLaunchConfigurationConstants.ATTR_CONNECT_MAP, "port", port);
-        setDebugArgument(wc, ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, "debugFlag", "true");		
         return wc;
 	}
 	
