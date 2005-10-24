@@ -16,6 +16,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.internal.ServerType;
+import org.eclipse.wst.server.core.util.SocketUtil;
 
 /**
  * Thread used to ping server to test when it is started.
@@ -67,6 +68,9 @@ public class PingThread {
     		maxpings=startTimeout/PING_INTERVAL;
     	return maxpings;
     }
+	private boolean isRemote(){
+		return (server.getServerType().supportsRemoteHosts()&& !SocketUtil.isLocalhost(server.getHost()) );
+	}
 	/**
 	 * Ping the server until it is started. Then set the server
 	 * state to STATE_STARTED.
@@ -80,7 +84,7 @@ public class PingThread {
 		}
 		while (!stop) {
 			try {
-				if (count == maxPings) {
+				if (count == maxPings && !isRemote()) {
 					try {
 						server.stop(false);
 					} catch (Exception e) {
@@ -89,7 +93,8 @@ public class PingThread {
 					stop = true;
 					break;
 				}
-				count++;
+				if(!isRemote())
+					count++;
 				
 				Trace.trace(Trace.FINEST, "Ping: pinging");
 				URL pingUrl = new URL(url);
@@ -102,7 +107,8 @@ public class PingThread {
 					Thread.sleep(200);
 					genericServer.setServerStarted();
 				}
-				stop = true;
+				if(!isRemote())
+					stop = true;
 			} catch (FileNotFoundException fe) {
 				try {
 					Thread.sleep(200);
@@ -110,7 +116,8 @@ public class PingThread {
 					// ignore
 				}
 				genericServer.setServerStarted();
-				stop = true;
+				if(!isRemote())
+					stop = true;
 			} catch (Exception e) {
 				Trace.trace(Trace.FINEST, "Ping: failed");
 				// pinging failed
