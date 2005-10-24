@@ -6,12 +6,12 @@
     <type name="IModule" implement="false" subclass="false" instantiate="false"/>
     <type name="IModuleArtifact" implement="false" subclass="false" instantiate="false"/>
     <type name="IModuleType" implement="false" subclass="false" instantiate="false"/>
-    <type name="IProjectProperties" implement="false" subclass="false" instantiate="false"/>
-<!--    <type name="IRuntime" implement="false" subclass="false" instantiate="false"/>
+<!--    <type name="IProjectProperties" implement="false" subclass="false" instantiate="false"/>-->
+    <type name="IRuntime" implement="false" subclass="false" instantiate="false"/>
     <type name="IRuntimeLifecycleListener" subclass="false" instantiate="false"/>
-    <type name="IRuntimeTargetHandler" implement="false" subclass="false" instantiate="false"/>
+<!--    <type name="IRuntimeTargetHandler" implement="false" subclass="false" instantiate="false"/>-->
     <type name="IRuntimeType" implement="false" subclass="false" instantiate="false"/>
-    <type name="IRuntimeWorkingCopy" implement="false" subclass="false" instantiate="false"/> -->
+    <type name="IRuntimeWorkingCopy" implement="false" subclass="false" instantiate="false"/>
     <type name="IServer" implement="false" subclass="false" instantiate="false"/>
     <type name="IServerAttributes" implement="false" subclass="false" instantiate="false"/>
     <type name="IServerLifecycleListener" subclass="false" instantiate="false"/>
@@ -19,31 +19,41 @@
     <type name="IServerType" implement="false" subclass="false" instantiate="false"/>
     <type name="IServerWorkingCopy" implement="false" subclass="false" instantiate="false"/>
     <type name="ServerCore" implement="false" subclass="false" instantiate="false"/>
+    <type name="ServerEvent" implement="false" subclass="false" instantiate="false"/>
     <type name="ServerPort"/>
     <type name="ServerUtil" implement="false" subclass="false" instantiate="false"/>
     <type name="TaskModel" implement="false"/>
   </package>
   <package name="org.eclipse.wst.server.core.model">
     <type name="IURLProvider" subclass="false"/>
-    <type name="IModuleResource"/>
     <type name="ModuleFactoryDelegate"/>
-<!--    <type name="RuntimeDelegate"/>
+    <type name="RuntimeDelegate"/>
     <type name="RuntimeLocatorDelegate"/>
-    <type name="RuntimeTargetHandlerDelegate"/> -->
+<!--    <type name="RuntimeTargetHandlerDelegate"/> -->
     <type name="IModuleFile"/>
+    <type name="IModuleFolder"/>
+    <type name="IModuleResource"/>
     <type name="IModuleResourceDelta"/>
     <type name="ModuleArtifactAdapterDelegate"/>
-    <type name="IModuleFolder"/>
-    <type name="ServerDelegate"/>
     <type name="LaunchableAdapterDelegate"/>
     <type name="ClientDelegate"/>
     <type name="ModuleDelegate"/>
     <type name="PublishTaskDelegate"/>
     <type name="PublishOperation"/>
     <type name="ServerBehaviourDelegate"/>
+    <type name="ServerDelegate"/>
     <type name="InternalInitializer" implement="false" subclass="false" instantiate="false" reference="false"/>
   </package>
   <package name="org.eclipse.wst.server.core.util">
+    <type name="HttpLaunchable"/>
+    <type name="IStaticWeb"/>
+    <type name="NullModuleArtifact"/>
+    <type name="ProjectModule"/>
+    <type name="ProjectModuleFactoryDelegate"/>
+    <type name="RuntimeLifecycleAdapter"/>
+    <type name="ServerLifecycleAdapter"/>
+    <type name="SocketUtil"/>
+    <type name="WebResource"/>
   </package>
 
   <plugin id="org.eclipse.wst.server.ui" fragment="false"/>
