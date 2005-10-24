@@ -213,7 +213,11 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		class TerminateThread extends Thread {
 			public boolean alive = true;
 			public IServerListener listener;
-	
+
+			public TerminateThread() {
+				super("Server Termination Thread");
+			}
+
 			public void run() {
 				while (alive) {
 					ServerType serverType = (ServerType) server.getServerType();

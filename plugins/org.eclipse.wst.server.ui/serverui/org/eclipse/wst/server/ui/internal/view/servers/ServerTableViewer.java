@@ -171,7 +171,7 @@ public class ServerTableViewer extends TreeViewer {
 		if (thread != null)
 			return;
 		
-		thread = new Thread("Servers view animator") {
+		thread = new Thread("Servers View Animator") {
 			public void run() {
 				while (!stopThread) {
 					try {
@@ -183,7 +183,7 @@ public class ServerTableViewer extends TreeViewer {
 									update(rootElements, null);
 							}
 						});
-						Thread.sleep(200);
+						Thread.sleep(250);
 					} catch (Exception e) {
 						Trace.trace(Trace.FINEST, "Error in animated server view", e);
 					}

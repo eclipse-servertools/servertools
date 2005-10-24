@@ -969,7 +969,7 @@ public class Server extends Base implements IServer {
 	
 		try {
 			ILaunchConfiguration launchConfig = getLaunchConfiguration(true, monitor);
-			ILaunch launch = launchConfig.launch(mode2, monitor, true);
+			ILaunch launch = launchConfig.launch(mode2, monitor); // , true); - causes workspace lock
 			Trace.trace(Trace.FINEST, "Launch: " + launch);
 		} catch (CoreException e) {
 			Trace.trace(Trace.SEVERE, "Error starting server " + toString(), e);
@@ -1264,26 +1264,23 @@ public class Server extends Base implements IServer {
 		final Timer timer = new Timer();
 		
 		final IProgressMonitor monitor2 = monitor;
-		Thread thread = new Thread() {
+		Thread thread = new Thread("Synchronous Server Start") {
 			public void run() {
 				try {
-					int totalTimeout = serverTimeout * 1000;
+					int totalTimeout = serverTimeout;
 					boolean userCancelled = false;
-					if (totalTimeout > 0) {
-						int retryPeriod = 5000;
-						while (!userCancelled && totalTimeout > 0) {
-							Thread.sleep(totalTimeout >  retryPeriod ? retryPeriod : totalTimeout);
-							totalTimeout -= retryPeriod;
-							if (monitor2.isCanceled()) {
-								// User cancelled.
-								userCancelled = true;
-								// Set the server state to stopped since the user has cancelled the server started.
-								setServerState(IServer.STATE_STOPPED);
-								// notify waiter
-								synchronized (mutex) {
-									Trace.trace(Trace.FINEST, "synchronousStart user cancelled.");
-									mutex.notifyAll();
-								}
+					int retryPeriod = 2500;
+					while (totalTimeout > 0 && !userCancelled && !timer.alreadyDone) {
+						Thread.sleep(retryPeriod);
+						totalTimeout -= retryPeriod;
+						if (monitor2.isCanceled()) {
+							// user cancelled - set the server state to stopped
+							userCancelled = true;
+							setServerState(IServer.STATE_STOPPED);
+							// notify waiter
+							synchronized (mutex) {
+								Trace.trace(Trace.FINEST, "synchronousStart user cancelled.");
+								mutex.notifyAll();
 							}
 						}
 					}
@@ -1757,11 +1754,22 @@ public class Server extends Base implements IServer {
 	public IStatus canModifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) {
 		if (add == null && remove == null)
 			throw new IllegalArgumentException("Add and remove cannot both be null");
+		
+		if ((add == null || add.length == 0) && (remove == null || remove.length == 0))
+			throw new IllegalArgumentException("Add and remove cannot both be empty");
+		
+		if (add != null && add.length > 0) {
+			int size = add.length;
+			for (int i = 0; i < size; i++)
+				if (!ServerUtil.isSupportedModule(getServerType().getRuntimeType().getModuleTypes(), add[i].getModuleType()))
+					return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorCannotAddModule, null);
+		}
+		
 		try {
 			return getDelegate(monitor).canModifyModules(add, remove);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate canModifyModules() " + toString(), e);
-			return null;
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, "", null);
 		}
 	}
 
