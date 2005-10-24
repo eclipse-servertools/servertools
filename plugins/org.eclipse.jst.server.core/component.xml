@@ -7,15 +7,15 @@
     <type name="IEJBModule"/>
     <type name="IJ2EEModule"/>
     <type name="Servlet"/>
-    <type name="ILooseArchiveSupport"/>
-    <type name="ILooseArchive"/>
     <type name="IWebModule"/>
     <type name="IEnterpriseApplication"/>
     <type name="JndiObject"/>
     <type name="ClasspathRuntimeTargetHandler"/>
     <type name="IApplicationClientModule"/>
     <type name="EJBBean"/>
-    <type name="JndiLaunchable"/> -->
+    <type name="JndiLaunchable"/>
+    <type name="PublishUtil"/>
+    <type name="IJavaRuntime"/> -->
   </package>
 
   <plugin id="org.eclipse.jst.server.ui" fragment="false"/>
