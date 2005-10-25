@@ -75,10 +75,10 @@ public class ModuleHelper {
 
 	public static IModule getModule(String name) throws Exception {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
-		IModule[] modules = ServerUtil.getModules(project);
-		if (modules == null || modules.length != 1)
-			throw new Exception("Wrong number of modules in Web project");
+		IModule module = ServerUtil.getModule(project);
+		if (module == null)
+			throw new Exception("No module in Web project");
 		
-		return modules[0];
+		return module;
 	}
 }

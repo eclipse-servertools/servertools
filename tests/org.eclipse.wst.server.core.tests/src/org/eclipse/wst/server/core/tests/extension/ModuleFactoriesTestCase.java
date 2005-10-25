@@ -23,6 +23,6 @@ public class ModuleFactoriesTestCase extends TestCase {
 
 	public void testModuleFactoriesExtension() throws Exception {
 		// get modules
-		ServerUtil.getModules((IProject) null);
+		ServerUtil.getModule((IProject) null);
 	}
 }

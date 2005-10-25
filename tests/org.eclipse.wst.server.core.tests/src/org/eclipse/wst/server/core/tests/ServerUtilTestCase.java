@@ -43,25 +43,25 @@ public class ServerUtilTestCase extends TestCase {
 
 	public void testGetModule1() throws Exception {
 		try {
-			ServerUtil.getModule(null);
+			ServerUtil.getModule((String)null);
 			assertTrue("Should throw exception", false);
 		} catch (Exception e) {
 			// ignore
 		}
 	}
-	
+
 	public void testGetModule2() throws Exception {
 		ServerUtil.getModule("x");
 	}
-	
+
 	public void testGetModules0() throws Exception {
 		ServerUtil.getModules((IModuleType[]) null);
 	}
-	
+
 	public void testGetModules1() throws Exception {
-		ServerUtil.getModules((IProject) null);
+		ServerUtil.getModule((IProject) null);
 	}
-	
+
 	public void testGetModules2() throws Exception {
 		ServerUtil.getModules((String) null);
 	}
