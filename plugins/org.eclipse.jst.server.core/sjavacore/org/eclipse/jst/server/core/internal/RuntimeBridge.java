@@ -31,39 +31,39 @@ public final class RuntimeBridge implements IRuntimeBridge {
 	private static Map mappings = new HashMap();
 
 	static {
-		mappings.put("org.eclipse.jst.server.tomcat.runtime.32", RuntimeManager
-				.getRuntimeComponentType("org.eclipse.jst.server.tomcat").getVersion("3.2"));
+		initialize();
+	}
+
+	private static void addMapping(String id, String id2, String version) {
+		try {
+			mappings.put(id, RuntimeManager.getRuntimeComponentType(id2).getVersion(version));
+		} catch (Exception e) {
+			// ignore
+		}
+	}
+	private static void initialize() {
+		addMapping("org.eclipse.jst.server.tomcat.runtime.32", "org.eclipse.jst.server.tomcat", "3.2");
 		
-		mappings.put("org.eclipse.jst.server.tomcat.runtime.40", RuntimeManager
-				.getRuntimeComponentType("org.eclipse.jst.server.tomcat").getVersion("4.0"));
+		addMapping("org.eclipse.jst.server.tomcat.runtime.40", "org.eclipse.jst.server.tomcat", "4.0");
 		
-		mappings.put("org.eclipse.jst.server.tomcat.runtime.41", RuntimeManager
-				.getRuntimeComponentType("org.eclipse.jst.server.tomcat").getVersion("4.1"));
+		addMapping("org.eclipse.jst.server.tomcat.runtime.41", "org.eclipse.jst.server.tomcat", "4.1");
 		
-		mappings.put("org.eclipse.jst.server.tomcat.runtime.50", RuntimeManager
-				.getRuntimeComponentType("org.eclipse.jst.server.tomcat").getVersion("5.0"));
+		addMapping("org.eclipse.jst.server.tomcat.runtime.50", "org.eclipse.jst.server.tomcat", "5.0");
 		
-		mappings.put("org.eclipse.jst.server.tomcat.runtime.55", RuntimeManager
-				.getRuntimeComponentType("org.eclipse.jst.server.tomcat").getVersion("5.5"));
+		addMapping("org.eclipse.jst.server.tomcat.runtime.55", "org.eclipse.jst.server.tomcat", "5.5");
 		
 		// generic runtimes
-		mappings.put("org.eclipse.jst.server.generic.runtime.weblogic81", RuntimeManager
-				.getRuntimeComponentType("org.eclipse.jst.server.generic.runtime.weblogic").getVersion("8.1"));
+		addMapping("org.eclipse.jst.server.generic.runtime.weblogic81", "org.eclipse.jst.server.generic.runtime.weblogic", "8.1");
 		
-		mappings.put("org.eclipse.jst.server.generic.runtime.weblogic90", RuntimeManager
-				.getRuntimeComponentType("org.eclipse.jst.server.generic.runtime.weblogic").getVersion("9.0"));
+		addMapping("org.eclipse.jst.server.generic.runtime.weblogic90", "org.eclipse.jst.server.generic.runtime.weblogic", "9.0");
 		
-		mappings.put("org.eclipse.jst.server.generic.runtime.jboss323", RuntimeManager
-				.getRuntimeComponentType("org.eclipse.jst.server.generic.runtime.jboss").getVersion("3.2.3"));
+		addMapping("org.eclipse.jst.server.generic.runtime.jboss323", "org.eclipse.jst.server.generic.runtime.jboss", "3.2.3");
 		
-		mappings.put("org.eclipse.jst.server.generic.runtime.jonas4", RuntimeManager
-				.getRuntimeComponentType("org.eclipse.jst.server.generic.runtime.jonas").getVersion("4.0"));
+		addMapping("org.eclipse.jst.server.generic.runtime.jonas4", "org.eclipse.jst.server.generic.runtime.jonas", "4.0");
 		
-		mappings.put("org.eclipse.jst.server.generic.runtime.oracle1013dp4", RuntimeManager
-				.getRuntimeComponentType("org.eclipse.jst.server.generic.runtime.oracle").getVersion("1013dp4"));
+		addMapping("org.eclipse.jst.server.generic.runtime.oracle1013dp4", "org.eclipse.jst.server.generic.runtime.oracle", "1013dp4");
 		
-		mappings.put("org.eclipse.jst.server.generic.runtime.websphere.6", RuntimeManager
-				.getRuntimeComponentType("org.eclipse.jst.server.generic.runtime.websphere").getVersion("6.0"));
+		addMapping("org.eclipse.jst.server.generic.runtime.websphere.6", "org.eclipse.jst.server.generic.runtime.websphere", "6.0");
 	}
 
 	public void port() {
