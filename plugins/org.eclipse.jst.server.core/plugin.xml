@@ -10,20 +10,23 @@
 
   <extension point="org.eclipse.wst.server.core.moduleTypes">
     <moduleType
-       id="j2ee.web"
+       id="jst.web"
        name="%moduleTypeJ2EEWebName"/>
     <moduleType
-       id="j2ee.ejb"
+       id="jst.ejb"
        name="%moduleTypeJ2EEEJBName"/>
     <moduleType
-       id="j2ee.appClient"
+       id="jst.appClient"
        name="%moduleTypeJ2EEClientName"/>
     <moduleType
-       id="j2ee.connector"
+       id="jst.connector"
        name="%moduleTypeJ2EERARName"/>
     <moduleType
-       id="j2ee.ear"
+       id="jst.ear"
        name="%moduleTypeJ2EEEARName"/>
+    <moduleType
+       id="jst.utility"
+       name="%moduleTypeJ2EEUtilityName"/>
   </extension>
 
   <extension point="org.eclipse.wst.server.core.runtimeTypes">
@@ -33,10 +36,7 @@
        description="%runtimeTypeDescription"
        class="org.eclipse.jst.server.core.internal.GenericRuntime">
        <moduleType
-         types="j2ee.*"
-         versions="*"/>
-       <moduleType
-         types="utility"
+         types="jst.*"
          versions="*"/>
     </runtimeType>
   </extension>
@@ -101,12 +101,9 @@
        version="5.0"/>
 
     <adapter>
-      <runtime-component
-         id="standard.jre"/>
-      <factory
-         class="org.eclipse.jst.server.core.internal.StandardJreClasspathProvider$Factory"/>
-      <type
-         class="org.eclipse.wst.common.project.facet.core.runtime.classpath.IClasspathProvider"/>
+      <runtime-component id="standard.jre"/>
+      <factory class="org.eclipse.jst.server.core.internal.StandardJreClasspathProvider$Factory"/>
+      <type class="org.eclipse.wst.common.project.facet.core.runtime.classpath.IClasspathProvider"/>
     </adapter>
 
     <supported>

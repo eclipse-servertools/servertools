@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Konstantin Komissarchik - initial API and implementation
+ *    IBM Corporation - Support for all server types
  ******************************************************************************/
 package org.eclipse.jst.server.ui.internal;
 
@@ -18,25 +19,23 @@ import org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider;
 /**
  * 
  */
-public final class TomcatLabelProvider implements IRuntimeComponentLabelProvider {
+public final class RuntimeLabelProvider implements IRuntimeComponentLabelProvider {
 	private final IRuntimeComponent rc;
 
-	public TomcatLabelProvider(final IRuntimeComponent rc) {
+	public RuntimeLabelProvider(final IRuntimeComponent rc) {
 		this.rc = rc;
 	}
 
 	public String getLabel() {
-		final IPath location = Path.fromPortableString(rc.getProperty("location"));
-
-		final StringBuffer buf = new StringBuffer();
-
-		buf.append("Apache Tomcat ");
-		//buf.append(rc.getRuntimeComponentType());
+		IPath location = Path.fromPortableString(rc.getProperty("location"));
+		
+		StringBuffer buf = new StringBuffer();
+		buf.append(rc.getProperty("name") + " ");
 		buf.append(rc.getRuntimeComponentVersion().getVersionString());
 		buf.append(" [");
 		buf.append(location.toOSString());
 		buf.append("]");
-
+		
 		return buf.toString();
 	}
 
@@ -45,7 +44,7 @@ public final class TomcatLabelProvider implements IRuntimeComponentLabelProvider
 
 		public Object getAdapter(final Object adaptable, final Class adapterType) {
 			final IRuntimeComponent rc = (IRuntimeComponent) adaptable;
-			return new TomcatLabelProvider(rc);
+			return new RuntimeLabelProvider(rc);
 		}
 
 		public Class[] getAdapterList() {

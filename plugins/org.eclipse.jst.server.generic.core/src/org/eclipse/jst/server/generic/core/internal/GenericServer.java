@@ -134,12 +134,9 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 		    String moduleId = (String)iterator.next();
 		    int sep = moduleId.indexOf(":");
 		    IProject project =ResourcesPlugin.getWorkspace().getRoot().getProject(moduleId.substring(0,sep));
-		    IModule[] ms = ServerUtil.getModules(project);
-		    for (int i = 0; i < ms.length; i++) {
-                if(ms[i].getId().equals(moduleId.substring(sep+1)))
-                	imodules.add(ms[i]);
-            }
-	
+		    IModule mod = ServerUtil.getModule(project);
+          if(mod.getId().equals(moduleId.substring(sep+1)))
+           	imodules.add(mod);
 		}
 		if(modules!= null)
 		    return (IModule[])imodules.toArray(new IModule[imodules.size()]);

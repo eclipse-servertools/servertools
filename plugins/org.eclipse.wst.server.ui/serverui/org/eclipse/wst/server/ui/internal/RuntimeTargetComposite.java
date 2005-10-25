@@ -39,8 +39,6 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 /**
  * Dialog that prompts a user to change the target runtime.
- * 
- * TODO - must support multiple modules per project (remove [0] from getModules(IProject))
  */
 public class RuntimeTargetComposite {
 	protected IProject project;
@@ -67,7 +65,7 @@ public class RuntimeTargetComposite {
 			offset = 1;
 		
 		// get child modules
-		IModule projectModule = ServerUtil.getModules(project)[0];
+		IModule projectModule = ServerUtil.getModule(project);
 		childProjects = new ArrayList();
 		if (projectModule != null) {
 			List children = new ArrayList();
@@ -136,7 +134,7 @@ public class RuntimeTargetComposite {
 				combo.select(0);
 		}
 
-		final IModule projectModule = ServerUtil.getModules(project)[0];
+		final IModule projectModule = ServerUtil.getModule(project);
 		
 		Button newButton = SWTUtil.createButton(parent, Messages.runtimeTargetNewRuntime);
 		newButton.addSelectionListener(new SelectionAdapter() {
@@ -219,7 +217,7 @@ public class RuntimeTargetComposite {
 	}
 	
 	protected int updateRuntimes() {
-		IModule pm = ServerUtil.getModules(project)[0];
+		IModule pm = ServerUtil.getModule(project);
 		if (pm != null) {
 			IModuleType mt = pm.getModuleType();
 			targets = ServerUtil.getRuntimes(mt.getId(), mt.getVersion());

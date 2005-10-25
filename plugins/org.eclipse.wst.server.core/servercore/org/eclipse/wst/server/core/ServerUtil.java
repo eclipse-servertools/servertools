@@ -40,23 +40,19 @@ public class ServerUtil {
 	 * @param project a project
 	 * @return a possibly empty array of modules
 	 */
-	public static IModule[] getModules(IProject project) {
+	public static IModule getModule(IProject project) {
 		if (project == null)
-			return null;
+			throw new IllegalArgumentException();
 
-		List list = new ArrayList();
 		IModule[] modules = getModules();
 		if (modules != null) {
 			int size = modules.length;
 			for (int i = 0; i < size; i++) {
 				if (modules[i] != null && project.equals(modules[i].getProject()))
-					list.add(modules[i]);
+					return modules[i];
 			}
 		}
-		
-		IModule[] modules2 = new IModule[list.size()];
-		list.toArray(modules2);
-		return modules2;
+		return null;
 	}
 
 	/**

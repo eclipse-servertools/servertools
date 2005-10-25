@@ -9,27 +9,27 @@
         icon="icons/obj16/java_jar.gif"/>
      <image
         id="org.eclipse.jst.server"
-        typeIds="j2ee.web"
+        typeIds="jst.web"
         icon="icons/obj16/web_module.gif"/>
      <image
         id="org.eclipse.jst.server"
-        typeIds="j2ee.ejb"
+        typeIds="jst.ejb"
         icon="icons/obj16/ejb_module.gif"/>
      <image
         id="org.eclipse.jst.server"
-        typeIds="j2ee.ear"
+        typeIds="jst.ear"
         icon="icons/obj16/ear.gif"/>
      <image
         id="org.eclipse.jst.server"
-        typeIds="j2ee.appclient"
+        typeIds="jst.appclient"
         icon="icons/obj16/appclient_module.gif"/>
      <image
         id="org.eclipse.jst.server"
-        typeIds="j2ee.connector"
+        typeIds="jst.connector"
         icon="icons/obj16/java_jar.gif"/>
      <image
         id="org.eclipse.jst.server"
-        typeIds="j2ee.loosearchive"
+        typeIds="jst.utility"
         icon="icons/obj16/java_jar.gif"/>
   </extension>
 
@@ -61,12 +61,34 @@
 
   <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
     <adapter>
-      <runtime-component
-         id="org.eclipse.jst.server.tomcat"/>
-      <factory
-         class="org.eclipse.jst.server.ui.internal.TomcatLabelProvider$Factory"/>
-      <type
-         class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
+      <runtime-component id="org.eclipse.jst.server.tomcat"/>
+      <factory class="org.eclipse.jst.server.ui.internal.RuntimeLabelProvider$Factory"/>
+      <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
+    </adapter>
+    <adapter>
+      <runtime-component id="org.eclipse.jst.server.generic.runtime.websphere"/>
+      <factory class="org.eclipse.jst.server.ui.internal.RuntimeLabelProvider$Factory"/>
+      <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
+    </adapter>
+    <adapter>
+      <runtime-component id="org.eclipse.jst.server.generic.runtime.weblogic"/>
+      <factory class="org.eclipse.jst.server.ui.internal.RuntimeLabelProvider$Factory"/>
+      <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
+    </adapter>
+    <adapter>
+      <runtime-component id="org.eclipse.jst.server.generic.runtime.jboss"/>
+      <factory class="org.eclipse.jst.server.ui.internal.RuntimeLabelProvider$Factory"/>
+      <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
+    </adapter>
+    <adapter>
+      <runtime-component id="org.eclipse.jst.server.generic.runtime.jonas"/>
+      <factory class="org.eclipse.jst.server.ui.internal.RuntimeLabelProvider$Factory"/>
+      <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
+    </adapter>
+    <adapter>
+      <runtime-component id="org.eclipse.jst.server.generic.runtime.oracle"/>
+      <factory class="org.eclipse.jst.server.ui.internal.RuntimeLabelProvider$Factory"/>
+      <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
     </adapter>
     <adapter>
       <runtime-component id="standard.jre"/>

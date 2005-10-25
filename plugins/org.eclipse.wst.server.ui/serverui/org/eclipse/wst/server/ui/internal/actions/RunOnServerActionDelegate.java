@@ -257,9 +257,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		IClient[] clients = new IClient[0];
 		if (launchable != null)
 			clients = getClients(server, launchable, launchMode);
-
+		
 		Trace.trace(Trace.FINEST, "Launchable clients: " + clients);
-
+		
 		IClient client = null;
 		if (clients == null || clients.length == 0) {
 			EclipseUtil.openError(Messages.errorNoClient);
@@ -275,9 +275,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			if (client == null)
 				return;
 		}
-
+		
 		Trace.trace(Trace.FINEST, "Ready to launch");
-
+		
 		// start server if it's not already started
 		// and cue the client to start
 		IModule[] modules = new IModule[] { module }; // TODO: get parent heirarchy correct

@@ -927,23 +927,18 @@ public class ResourceManager {
 		// process module changes
 		ProjectModuleFactoryDelegate.handleGlobalProjectChange(project, delta);
 		
-		final IModule[] modules = ServerUtil.getModules(project);
-		if (modules == null)
+		final IModule module = ServerUtil.getModule(project);
+		if (module == null)
 			return;
 		
 		Trace.trace(Trace.FINEST, "- publishHandleProjectChange");
 		
-		if (modules != null) {
-			int size2 = modules.length;
-			for (int j = 0; j < size2; j++) {
-				IServer[] servers2 = getServers();
-				if (servers2 != null) {
-					int size = servers2.length;
-					for (int i = 0; i < size; i++) {
-					if (servers2[i].getAdapter(ServerDelegate.class) != null)
-						((Server) servers2[i]).handleModuleProjectChange(modules[j]);
-					}
-				}
+		IServer[] servers2 = getServers();
+		if (servers2 != null) {
+			int size = servers2.length;
+			for (int i = 0; i < size; i++) {
+			if (servers2[i].getAdapter(ServerDelegate.class) != null)
+				((Server) servers2[i]).handleModuleProjectChange(module);
 			}
 		}
 		Trace.trace(Trace.FINEST, "< publishHandleProjectChange");

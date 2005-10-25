@@ -11,8 +11,8 @@
        version="3.2"
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime">
        <moduleType
-         types="j2ee.web"
-         versions="1.2"/>
+         types="jst.web"
+         versions="2.2"/>
     </runtimeType>
 
     <runtimeType
@@ -23,8 +23,8 @@
        version="4.0"
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime">
        <moduleType
-         types="j2ee.web"
-         versions="1.2, 1.3"/>
+         types="jst.web"
+         versions="2.2, 2.3"/>
     </runtimeType>
 
     <runtimeType
@@ -35,8 +35,8 @@
        version="4.1"
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime">
        <moduleType
-         types="j2ee.web"
-         versions="1.2, 1.3"/>
+         types="jst.web"
+         versions="2.2, 2.3"/>
     </runtimeType>
 
     <runtimeType
@@ -47,8 +47,8 @@
        version="5.0"
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime">
        <moduleType
-         types="j2ee.web"
-         versions="1.2, 1.3, 1.4"/>
+         types="jst.web"
+         versions="2.2, 2.3, 2.4"/>
     </runtimeType>
 
     <runtimeType
@@ -59,8 +59,8 @@
        version="5.5"
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime">
        <moduleType
-         types="j2ee.web"
-         versions="1.2, 1.3, 1.4"/>
+         types="jst.web"
+         versions="2.2, 2.3, 2.4"/>
     </runtimeType>
 
   </extension>

@@ -74,11 +74,8 @@ public class ProjectPropertyPage extends PropertyPage {
 			data.horizontalSpan = 4;
 			data.widthHint = 200;
 			label.setLayoutData(data);
-
-			IModule[] modules = ServerUtil.getModules(project);
-			if (modules != null && modules.length > 0)
-				module = modules[0];
-
+			
+			module = ServerUtil.getModule(project);
 			if (module == null) {
 				label = new Label(composite, SWT.NONE);
 				label.setText(Messages.prefProjectNotModule);
