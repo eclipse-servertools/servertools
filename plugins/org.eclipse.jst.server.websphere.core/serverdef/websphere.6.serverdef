@@ -46,13 +46,13 @@
 	</port>
 
 	<module>
-		<type>j2ee.web</type>
+		<type>jst.web</type>
 		<publishDir>${wasHome}</publishDir>
 		<publisherReference>org.eclipse.jst.server.generic.websphere.antpublisher</publisherReference>
 	</module>
 
 	<module>
-		<type>j2ee.ejb</type>
+		<type>jst.ejb</type>
 		<publishDir>${wasHome}</publishDir>
 		<publisherReference>org.eclipse.jst.server.generic.websphere.antpublisher</publisherReference>
 	</module>
