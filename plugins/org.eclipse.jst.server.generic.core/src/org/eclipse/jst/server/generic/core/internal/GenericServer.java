@@ -143,8 +143,6 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 		return new IModule[0];
 	}
 
-
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -152,13 +150,14 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	 */
 	public IModule[] getChildModules(IModule[] module) {
 		if (module[0] != null && module[0].getModuleType() != null) {
-			String type = module[0].getModuleType().getId();
-			if (module.length == 1 && "j2ee.ear".equals(type)) {
+			if (module.length == 1) {
 				IEnterpriseApplication enterpriseApplication = (IEnterpriseApplication) module[0]
 						.loadAdapter(IEnterpriseApplication.class, null);
-				IModule[] earModules =enterpriseApplication.getModules(); 
-				if ( earModules != null) {
-					return earModules;
+				if (enterpriseApplication != null) {
+					IModule[] earModules = enterpriseApplication.getModules(); 
+					if ( earModules != null) {
+						return earModules;
+					}
 				}
 			}
 		}
@@ -268,45 +267,41 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
     public IModule[] getRootModules(IModule module) throws CoreException {
 
        String type = module.getModuleType().getId();
-       if (type.equals("j2ee.ejb")) {
-            IEJBModule ejbModule = (IEJBModule) module.loadAdapter(IEJBModule.class,null);
-            if (ejbModule != null) {
-            	IStatus status = canModifyModules(new IModule[] { module }, null);
-                if (status == null || !status.isOK())
-                    throw new CoreException(status);
-                IModule[] childs = doGetChildModules(module);
-                if(childs.length>0)
-                	return childs;
-                return new IModule[] { module };
-            }
-        }
-        if (type.equals("j2ee.ear")) {
-            IEnterpriseApplication enterpriseApplication = (IEnterpriseApplication) module.loadAdapter(IEnterpriseApplication.class,null);
-            if (enterpriseApplication.getModules() != null) {
-                IStatus status = canModifyModules(new IModule[] { module },null);
-                if (status == null || !status.isOK())
-                    throw new CoreException(status);
-                return new IModule[] { module };
-            }
-        }        
-        if (type.equals("j2ee.web")) {
-            IWebModule webModule = (IWebModule) module.loadAdapter(IWebModule.class,null);
-            if (webModule != null) {
-                IStatus status = canModifyModules(new IModule[] { module },null);
-                if (status == null || !status.isOK())
-                    throw new CoreException(status);
-                IModule[] childs = doGetChildModules(module);
-                if(childs.length>0)
-                	return childs;
-                return new IModule[] { module };
-            }
-        }
+       
+      IEJBModule ejbModule = (IEJBModule) module.loadAdapter(IEJBModule.class,null);
+      if (ejbModule != null) {
+      	IStatus status = canModifyModules(new IModule[] { module }, null);
+          if (status == null || !status.isOK())
+              throw new CoreException(status);
+          IModule[] childs = doGetChildModules(module);
+          if(childs.length>0)
+          	return childs;
+          return new IModule[] { module };
+      }
+
+      IEnterpriseApplication enterpriseApplication = (IEnterpriseApplication) module.loadAdapter(IEnterpriseApplication.class,null);
+      if (enterpriseApplication.getModules() != null) {
+          IStatus status = canModifyModules(new IModule[] { module },null);
+          if (status == null || !status.isOK())
+              throw new CoreException(status);
+          return new IModule[] { module };
+      }
+
+      IWebModule webModule = (IWebModule) module.loadAdapter(IWebModule.class,null);
+      if (webModule != null) {
+          IStatus status = canModifyModules(new IModule[] { module },null);
+          if (status == null || !status.isOK())
+              throw new CoreException(status);
+          IModule[] childs = doGetChildModules(module);
+          if(childs.length>0)
+          	return childs;
+          return new IModule[] { module };
+      }
         return null;
     }
 
-
 	private IModule[] doGetChildModules(IModule module) {
-		IModule[] ears = ServerUtil.getModules("j2ee.ear");
+		IModule[] ears = ServerUtil.getModules("jst.ear");
 		ArrayList list = new ArrayList();
 		for (int i = 0; i < ears.length; i++) {
 			IEnterpriseApplication ear = (IEnterpriseApplication)ears[i].loadAdapter(IEnterpriseApplication.class,null);
@@ -339,7 +334,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
  			{
  				String path= (String)getServerInstanceProperties().get(property.getId());
  				if(path!=null && !pathExist(path))
- 					return  new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.bind(GenericServerCoreMessages.invalidPath,path), null);
+ 					return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.bind(GenericServerCoreMessages.invalidPath,path), null);
  			}
  		}
  		return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "", null);

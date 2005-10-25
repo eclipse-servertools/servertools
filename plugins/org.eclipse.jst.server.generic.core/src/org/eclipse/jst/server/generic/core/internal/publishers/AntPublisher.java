@@ -140,7 +140,7 @@ public class AntPublisher extends GenericPublisher{
 
 	private void packModule(IPath modulePath, IModule module, IPath destination)throws CoreException {
 		String name =guessModuleName(module);
-		if ("j2ee.web".equals(module.getModuleType().getId())) {
+		if ("jst.web".equals(module.getModuleType().getId())) {
 			name += ".war";
 		} else {
 			name += ".jar";

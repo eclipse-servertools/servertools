@@ -133,7 +133,7 @@ public class CactusModuleArtifactAdapterDelegate extends ModuleArtifactAdapterDe
 
 	protected static IModule getModule(IProject project) {
 		IModule deployable = null;
-		Iterator iterator = Arrays.asList(ServerUtil.getModules("j2ee.web")).iterator();
+		Iterator iterator = Arrays.asList(ServerUtil.getModules("jst.web")).iterator();
 		while (iterator.hasNext()) {
 			Object next = iterator.next();
 			if (next instanceof IModule) {

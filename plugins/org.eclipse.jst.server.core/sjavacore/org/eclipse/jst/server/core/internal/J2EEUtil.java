@@ -22,6 +22,7 @@ import org.eclipse.wst.server.core.ServerUtil;
  * Utility class for dealing with J2EE modules.
  */
 public class J2EEUtil {
+	private static final String EAR_MODULE = "jst.ear";
 	/**
 	 * Returns the enterprise applications that the module is contained within.
 	 * 
@@ -32,7 +33,7 @@ public class J2EEUtil {
 	 */
 	public static IModule[] getEnterpriseApplications(IJ2EEModule module, IProgressMonitor monitor) {
 		List list = new ArrayList();
-		IModule[] modules = ServerUtil.getModules("j2ee.ear");
+		IModule[] modules = ServerUtil.getModules(EAR_MODULE);
 		if (modules != null) {
 			int size = modules.length;
 			for (int i = 0; i < size; i++) {

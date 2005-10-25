@@ -29,7 +29,7 @@ public interface IModuleType {
 	 * <p>
 	 * The module type id is a "." separated string uniquely identifying the
 	 * type of module. Like a java package name, it should scope the type from
-	 * most general to specific. For instance, "j2ee.web".
+	 * most general to specific. For instance, "jst.web".
 	 * </p>
 	 * 
 	 * @return the module type id
