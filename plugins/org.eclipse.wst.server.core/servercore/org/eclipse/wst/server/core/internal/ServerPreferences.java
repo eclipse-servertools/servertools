@@ -129,12 +129,12 @@ public class ServerPreferences {
 	}
 	
 	/**
-	 * Return the default machine speed index, 6.
+	 * Return the default machine speed index, 5.
 	 * 
 	 * @return the default speed index
 	 */
 	public int getDefaultMachineSpeed() {
-		return 6;
+		return 5;
 	}
 
 	/**

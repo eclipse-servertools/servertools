@@ -249,7 +249,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 			Messages.prefMachineSpeedVeryFast
 		};
 		machineSpeedCombo.setItems(items);
-		machineSpeedCombo.select(preferences.getMachineSpeed() / 2);
+		machineSpeedCombo.select((preferences.getMachineSpeed() - 1) / 2);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		data.horizontalSpan = 2;
 		machineSpeedCombo.setLayoutData(data);
@@ -292,7 +292,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		autoPublishRemote.setSelection(preferences.getDefaultAutoPublishRemote());
 		autoPublishRemoteTime.setSelection(preferences.getDefaultAutoPublishRemoteTime());
 		
-		machineSpeedCombo.select(preferences.getDefaultMachineSpeed() / 2);
+		machineSpeedCombo.select((preferences.getDefaultMachineSpeed() - 1) / 2);
 		
 		setSaveEditorStatus(uiPreferences.getDefaultSaveEditors());
 	
@@ -314,7 +314,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		preferences.setAutoPublishRemote(autoPublishRemote.getSelection());
 		preferences.setAutoPublishRemoteTime(autoPublishRemoteTime.getSelection());
 		
-		preferences.setMachineSpeed(machineSpeedCombo.getSelectionIndex() * 2);
+		preferences.setMachineSpeed(machineSpeedCombo.getSelectionIndex() * 2 + 1);
 	
 		// auto restart any servers that are ready for restart
 		if (autoRestart.getSelection())
