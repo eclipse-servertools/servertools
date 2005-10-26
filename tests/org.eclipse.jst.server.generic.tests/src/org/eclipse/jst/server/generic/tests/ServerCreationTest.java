@@ -154,7 +154,7 @@ public class ServerCreationTest extends TestCase {
 
 	public void testGetWebTypes() {
 
-		IRuntimeType listWeb[] = ServerUtil.getRuntimeTypes("j2ee.web", null);
+		IRuntimeType listWeb[] = ServerUtil.getRuntimeTypes("jst.web", null);
 		assertNotNull(listWeb);
 
 		boolean found = listWeb.length>0;
