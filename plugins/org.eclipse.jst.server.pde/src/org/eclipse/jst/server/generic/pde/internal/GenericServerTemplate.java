@@ -178,7 +178,7 @@ public class GenericServerTemplate extends OptionTemplateSection {
 		
 		IPluginElement moduleType = factory.createElement(runtimeType);
 		moduleType.setName("moduleType"); //$NON-NLS-1$
-		moduleType.setAttribute("types","j2ee.web"); //$NON-NLS-1$ //$NON-NLS-2$
+		moduleType.setAttribute("types","jst.web"); //$NON-NLS-1$ //$NON-NLS-2$
         moduleType.setAttribute("versions","1.2, 1.3"); //$NON-NLS-1$ //$NON-NLS-2$
         runtimeType.add(moduleType);
         
