@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.internet.monitor.core.internal.IProtocolAdapter;
@@ -39,20 +40,22 @@ public class MonitorDialog extends Dialog {
 	protected boolean isEdit;
 	
 	private Button okButton;
-	private Text monitorPort;
-	private Text remotePort;
-	private Text timeout;
-	
+	private Spinner monitorPort;
+
 	interface StringModifyListener {
 		public void valueChanged(String s);
 	}
-	
+
 	interface BooleanModifyListener {
 		public void valueChanged(boolean b);
 	}
-	
+
 	interface TypeModifyListener {
 		public void valueChanged(IProtocolAdapter type);
+	}
+
+	interface IntModifyListener {
+		public void valueChanged(int i);
 	}
 
 	/**
@@ -103,7 +106,23 @@ public class MonitorDialog extends Dialog {
 			});
 		return text;
 	}
-	
+
+	protected Spinner createSpinner(Composite comp, int v, final IntModifyListener listener) {
+		final Spinner s = new Spinner(comp, SWT.BORDER);
+		if (v != -1)
+			s.setSelection(v);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
+		data.widthHint = 150;
+		s.setLayoutData(data);
+		if (listener != null)
+			s.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {	
+					listener.valueChanged(s.getSelection());
+				}
+			});
+		return s;
+	}
+
 	protected Combo createTypeCombo(Composite comp, final String[] types, String sel, final StringModifyListener listener) {
 		final Combo combo = new Combo(comp, SWT.DROP_DOWN | SWT.READ_ONLY);
 		int size = types.length;
@@ -142,10 +161,10 @@ public class MonitorDialog extends Dialog {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, ContextIds.PREF_DIALOG);
 		
 		createLabel(composite, Messages.localPort);		
-		monitorPort = createText(composite, monitor.getLocalPort() + "", new StringModifyListener() {
-			public void valueChanged(String s) {
+		monitorPort = createSpinner(composite, monitor.getLocalPort(), new IntModifyListener() {
+			public void valueChanged(int i) {
 				try {
-					monitor.setLocalPort(Integer.parseInt(s));
+					monitor.setLocalPort(i);
 				} catch (Exception e) {
 					// ignore
 				}
@@ -170,10 +189,10 @@ public class MonitorDialog extends Dialog {
 		});
 		
 		createLabel(group, Messages.remotePort);		
-		remotePort = createText(group, monitor.getRemotePort() + "", new StringModifyListener() {
-			public void valueChanged(String s) {
+		createSpinner(group, monitor.getRemotePort(), new IntModifyListener() {
+			public void valueChanged(int i) {
 				try {
-					monitor.setRemotePort(Integer.parseInt(s));
+					monitor.setRemotePort(i);
 				} catch (Exception e) {
 					// ignore
 				}
@@ -189,10 +208,10 @@ public class MonitorDialog extends Dialog {
 		});
 		
 		createLabel(group, Messages.connectionTimeout);
-		timeout = createText(group, monitor.getTimeout() + "", new StringModifyListener() {
-			public void valueChanged(String s) {
+		createSpinner(group, monitor.getTimeout(), new IntModifyListener() {
+			public void valueChanged(int i) {
 				try {
-					monitor.setTimeout(Integer.parseInt(s));
+					monitor.setTimeout(i);
 				} catch (Exception e) {
 					// ignore
 				}
@@ -235,15 +254,6 @@ public class MonitorDialog extends Dialog {
 			return;
 		
 		boolean result = true;
-		try {
-			Integer.parseInt(remotePort.getText());
-			Integer.parseInt(monitorPort.getText());
-			if (Integer.parseInt(timeout.getText()) < 0)
-				result = false;
-		} catch (Exception e) {
-			result = false;
-		}
-		
 		IStatus status = monitor.validate();
 		if (!status.isOK())
 			result = false;
