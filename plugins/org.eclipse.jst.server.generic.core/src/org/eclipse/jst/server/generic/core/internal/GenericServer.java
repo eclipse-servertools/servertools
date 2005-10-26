@@ -64,17 +64,6 @@ import org.eclipse.wst.server.core.model.ServerDelegate;
 public class GenericServer extends ServerDelegate implements IURLProvider {
 
     private static final String ATTR_GENERIC_SERVER_MODULES = "Generic_Server_Modules_List";
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.server.core.model.IServerDelegate#publishStart(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	public IStatus publishStart(IProgressMonitor monitor) {
-	    if(getModules().length<1)
-	        return new Status(IStatus.CANCEL,CorePlugin.PLUGIN_ID,0,GenericServerCoreMessages.cancelNoPublish,null);
-		return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "PublishingStarted", null);
-	}
-
 
 	public IStatus canModifyModules(IModule[] add, IModule[] remove) {
 		Iterator iterator = getServerDefinition().getModule().iterator();
@@ -120,17 +109,11 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 
     
     
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.server.core.model.IServerDelegate#getModules()
-	 */
-	public org.eclipse.wst.server.core.IModule[] getModules() {
+	private org.eclipse.wst.server.core.IModule[] getModules() {
 		List modules = getAttribute(ATTR_GENERIC_SERVER_MODULES,(List)null);
 		List imodules = new ArrayList();
 		Iterator iterator = modules.iterator();
-		while(iterator.hasNext())
-		{
+		while(iterator.hasNext()){
 		    String moduleId = (String)iterator.next();
 		    int sep = moduleId.indexOf(":");
 		    IProject project =ResourcesPlugin.getWorkspace().getRoot().getProject(moduleId.substring(0,sep));
@@ -142,6 +125,8 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 		    return (IModule[])imodules.toArray(new IModule[imodules.size()]);
 		return new IModule[0];
 	}
+
+
 
 	/*
 	 * (non-Javadoc)
@@ -165,11 +150,13 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	}
 
 	/**
-	 * @return
+	 * Returns the server instance properties including runtime properties. 
+	 * 
+	 * @return server instance properties.
 	 */
-	private Map getServerInstanceProperties() {
+	private Map getInstanceProperties() {
 		Map runtimeProperties =getRuntimeDelegate().getServerInstanceProperties();
-		Map serverProperties = getServerInstancePropertiesImpl();
+		Map serverProperties = getServerInstanceProperties();
 		Map instanceProperties = new HashMap(runtimeProperties.size()+serverProperties.size());
 		instanceProperties.putAll(runtimeProperties);
 		instanceProperties.putAll(serverProperties);
@@ -251,7 +238,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	 */
     public ServerRuntime getServerDefinition(){
 		String rtTypeId = getServer().getRuntime().getRuntimeType().getId();
-		return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(rtTypeId,getServerInstanceProperties());
+		return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(rtTypeId,getInstanceProperties());
 	}
 
     private GenericServerRuntime getRuntimeDelegate(){
@@ -267,38 +254,42 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
     public IModule[] getRootModules(IModule module) throws CoreException {
 
        String type = module.getModuleType().getId();
-       
-      IEJBModule ejbModule = (IEJBModule) module.loadAdapter(IEJBModule.class,null);
-      if (ejbModule != null) {
-      	IStatus status = canModifyModules(new IModule[] { module }, null);
-          if (status == null || !status.isOK())
-              throw new CoreException(status);
-          IModule[] childs = doGetChildModules(module);
-          if(childs.length>0)
-          	return childs;
-          return new IModule[] { module };
-      }
-
-      IEnterpriseApplication enterpriseApplication = (IEnterpriseApplication) module.loadAdapter(IEnterpriseApplication.class,null);
-      if (enterpriseApplication.getModules() != null) {
-          IStatus status = canModifyModules(new IModule[] { module },null);
-          if (status == null || !status.isOK())
-              throw new CoreException(status);
-          return new IModule[] { module };
-      }
-
-      IWebModule webModule = (IWebModule) module.loadAdapter(IWebModule.class,null);
-      if (webModule != null) {
-          IStatus status = canModifyModules(new IModule[] { module },null);
-          if (status == null || !status.isOK())
-              throw new CoreException(status);
-          IModule[] childs = doGetChildModules(module);
-          if(childs.length>0)
-          	return childs;
-          return new IModule[] { module };
-      }
+       if (type.equals("jst.ejb")) {
+            IEJBModule ejbModule = (IEJBModule) module.loadAdapter(IEJBModule.class,null);
+            if (ejbModule != null) {
+            	IStatus status = canModifyModules(new IModule[] { module }, null);
+                if (status == null || !status.isOK())
+                    throw new CoreException(status);
+                IModule[] childs = doGetChildModules(module);
+                if(childs.length>0)
+                	return childs;
+                return new IModule[] { module };
+            }
+        }
+        if (type.equals("jst.ear")) {
+            IEnterpriseApplication enterpriseApplication = (IEnterpriseApplication) module.loadAdapter(IEnterpriseApplication.class,null);
+            if (enterpriseApplication.getModules() != null) {
+                IStatus status = canModifyModules(new IModule[] { module },null);
+                if (status == null || !status.isOK())
+                    throw new CoreException(status);
+                return new IModule[] { module };
+            }
+        }        
+        if (type.equals("jst.web")) {
+            IWebModule webModule = (IWebModule) module.loadAdapter(IWebModule.class,null);
+            if (webModule != null) {
+                IStatus status = canModifyModules(new IModule[] { module },null);
+                if (status == null || !status.isOK())
+                    throw new CoreException(status);
+                IModule[] childs = doGetChildModules(module);
+                if(childs.length>0)
+                	return childs;
+                return new IModule[] { module };
+            }
+        }
         return null;
     }
+
 
 	private IModule[] doGetChildModules(IModule module) {
 		IModule[] ears = ServerUtil.getModules("jst.ear");
@@ -313,11 +304,18 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 		}
 		return (IModule[])list.toArray(new IModule[list.size()]);
 	}
-
-    public Map getServerInstancePropertiesImpl() {
+	/**
+	 * Returns the server properties.
+	 * @return Map of properties.
+	 */
+    public Map getServerInstanceProperties() {
  		return getAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, new HashMap());
  	}
- 	
+ 	/**
+ 	 * Change the server instance properties.
+ 	 * 
+ 	 * @param map
+ 	 */
  	public void setServerInstanceProperties(Map map) {
  		setAttribute(GenericServerRuntime.SERVER_INSTANCE_PROPERTIES, map);
  	}
@@ -332,9 +330,9 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
  			Property property =(Property)props.get(i);
  			if(property.getType().equals(Property.TYPE_DIRECTORY) || property.getType().equals(Property.TYPE_FILE))
  			{
- 				String path= (String)getServerInstanceProperties().get(property.getId());
+ 				String path= (String)getInstanceProperties().get(property.getId());
  				if(path!=null && !pathExist(path))
- 					return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.bind(GenericServerCoreMessages.invalidPath,path), null);
+ 					return  new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.bind(GenericServerCoreMessages.invalidPath,path), null);
  			}
  		}
  		return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "", null);

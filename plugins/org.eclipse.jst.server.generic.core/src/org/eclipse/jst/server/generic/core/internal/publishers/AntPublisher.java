@@ -293,7 +293,7 @@ public class AntPublisher extends GenericPublisher{
 	{
         Map props = new HashMap();
         // pass all properties to build file.
-        Map serverProperties = getServer().getServerInstancePropertiesImpl();
+        Map serverProperties = getServer().getServerInstanceProperties();
         Map properties = getServerRuntime().getServerInstanceProperties();
         properties.putAll(serverProperties);
         Iterator propertyIterator = properties.keySet().iterator();
