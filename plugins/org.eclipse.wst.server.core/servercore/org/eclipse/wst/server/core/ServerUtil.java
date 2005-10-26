@@ -129,7 +129,8 @@ public class ServerUtil {
 					if (modules != null) {
 						int size2 = modules.length;
 						for (int j = 0; j < size2; j++)
-							list.add(modules[j]);
+							if(type.equals(modules[j].getModuleType().getId()))
+								list.add(modules[j]);
 					}
 				}
 			}
