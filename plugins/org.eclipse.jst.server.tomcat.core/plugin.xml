@@ -13,6 +13,9 @@
        <moduleType
          types="jst.web"
          versions="2.2"/>
+       <moduleType
+         types="jst.utility"
+         versions="1.0"/>
     </runtimeType>
 
     <runtimeType
@@ -25,6 +28,9 @@
        <moduleType
          types="jst.web"
          versions="2.2, 2.3"/>
+       <moduleType
+         types="jst.utility"
+         versions="1.0"/>
     </runtimeType>
 
     <runtimeType
@@ -37,6 +43,9 @@
        <moduleType
          types="jst.web"
          versions="2.2, 2.3"/>
+       <moduleType
+         types="jst.utility"
+         versions="1.0"/>
     </runtimeType>
 
     <runtimeType
@@ -49,6 +58,9 @@
        <moduleType
          types="jst.web"
          versions="2.2, 2.3, 2.4"/>
+       <moduleType
+         types="jst.utility"
+         versions="1.0"/>
     </runtimeType>
 
     <runtimeType
@@ -61,6 +73,9 @@
        <moduleType
          types="jst.web"
          versions="2.2, 2.3, 2.4"/>
+       <moduleType
+         types="jst.utility"
+         versions="1.0"/>
     </runtimeType>
 
   </extension>
@@ -271,6 +286,16 @@
       <facet
          id="jst.web"
          version="2.4"/>
+    </supported>
+    
+    <supported>
+      <runtime-component
+         id="org.eclipse.jst.server.tomcat"
+         version="3.2"
+         allow-newer="true"/>
+      <facet
+         id="jst.utility"
+         version="1.0"/>
     </supported>
   </extension>
 </plugin>

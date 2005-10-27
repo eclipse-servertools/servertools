@@ -12,16 +12,12 @@
 package org.eclipse.jst.server.ui.internal;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.jdt.launching.IVMInstall;
-import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
 import org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider;
 /**
  * 
  */
 public final class StandardJreLabelProvider implements IRuntimeComponentLabelProvider {
-	private static final String TYPE = "org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType";
-
    private final IRuntimeComponent rc;
 
    public StandardJreLabelProvider(final IRuntimeComponent rc) {
@@ -29,16 +25,11 @@ public final class StandardJreLabelProvider implements IRuntimeComponentLabelPro
 	}
 
 	public String getLabel() {
-		String name = this.rc.getProperty("name");
-
-		IVMInstall install = JavaRuntime.getVMInstallType(TYPE).findVMInstallByName(name);
-
 		StringBuffer buf = new StringBuffer();
-		buf.append("Standard JRE ");
-		buf.append(this.rc.getRuntimeComponentVersion().getVersionString());
-		buf.append(" [");
-		buf.append(install.getInstallLocation().toString());
-		buf.append("]");
+		buf.append("JRE ");
+		buf.append(rc.getRuntimeComponentVersion().getVersionString());
+		buf.append(": ");
+		buf.append(rc.getProperty("name"));
 
 		return buf.toString();
 	}

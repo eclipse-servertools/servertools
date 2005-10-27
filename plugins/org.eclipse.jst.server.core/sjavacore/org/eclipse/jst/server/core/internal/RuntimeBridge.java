@@ -84,27 +84,30 @@ public final class RuntimeBridge implements IRuntimeBridge {
 					Map properties = new HashMap();
 					properties.put("location", runtime.getLocation().toPortableString());
 					properties.put("name", name);
+					properties.put("type", runtime.getRuntimeType().getName());
 					properties.put("id", runtime.getId());
 					components.add(RuntimeManager.createRuntimeComponent(mapped, properties));
 					
 					// define JRE component
-					IJavaRuntime gr = (IJavaRuntime) runtime.loadAdapter(IJavaRuntime.class, null);
-					IVMInstall vmInstall = gr.getVMInstall();
-					IVMInstall2 vmInstall2 = (IVMInstall2) vmInstall;
-					
-					String jvmver = vmInstall2.getJavaVersion();
-					IRuntimeComponentVersion rcv;
-					
-					if (jvmver.startsWith("1.4")) {
-						rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("1.4");
-					} else if (jvmver.startsWith("1.5")) {
-						rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("5.0");
-					} else
-						continue;
-					
-					properties = new HashMap();
-					properties.put("name", vmInstall.getName());
-					components.add(RuntimeManager.createRuntimeComponent(rcv, properties));
+					IJavaRuntime javaRuntime = (IJavaRuntime) runtime.loadAdapter(IJavaRuntime.class, null);
+					if (javaRuntime != null) {
+						IVMInstall vmInstall = javaRuntime.getVMInstall();
+						IVMInstall2 vmInstall2 = (IVMInstall2) vmInstall;
+						
+						String jvmver = vmInstall2.getJavaVersion();
+						IRuntimeComponentVersion rcv;
+						
+						if (jvmver.startsWith("1.4")) {
+							rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("1.4");
+						} else if (jvmver.startsWith("1.5")) {
+							rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("5.0");
+						} else
+							continue;
+						
+						properties = new HashMap();
+						properties.put("name", vmInstall.getName());
+						components.add(RuntimeManager.createRuntimeComponent(rcv, properties));
+					}
 					
 					// define facet runtime
 					properties = new HashMap();

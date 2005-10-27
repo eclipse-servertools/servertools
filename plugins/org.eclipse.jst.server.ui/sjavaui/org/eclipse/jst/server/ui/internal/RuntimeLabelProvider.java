@@ -12,8 +12,6 @@
 package org.eclipse.jst.server.ui.internal;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
 import org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider;
 /**
@@ -27,16 +25,7 @@ public final class RuntimeLabelProvider implements IRuntimeComponentLabelProvide
 	}
 
 	public String getLabel() {
-		IPath location = Path.fromPortableString(rc.getProperty("location"));
-		
-		StringBuffer buf = new StringBuffer();
-		buf.append(rc.getProperty("name") + " ");
-		buf.append(rc.getRuntimeComponentVersion().getVersionString());
-		buf.append(" [");
-		buf.append(location.toOSString());
-		buf.append("]");
-		
-		return buf.toString();
+		return rc.getProperty("type");
 	}
 
 	public static final class Factory implements IAdapterFactory {
