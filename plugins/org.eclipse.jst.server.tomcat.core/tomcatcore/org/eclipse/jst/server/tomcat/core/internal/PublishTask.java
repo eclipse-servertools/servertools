@@ -30,9 +30,8 @@ public class PublishTask extends PublishTaskDelegate {
 		int size = modules.size();
 		for (int i = 0; i < size; i++) {
 			IModule[] module = (IModule[]) modules.get(i);
-			IModule m = module[module.length - 1];
 			Integer in = (Integer) kindList.get(i);
-			tasks.add(new PublishOperation2(tomcatServer, kind, m, in.intValue()));
+			tasks.add(new PublishOperation2(tomcatServer, kind, module, in.intValue()));
 		}
 		
 		return (PublishOperation[]) tasks.toArray(new PublishOperation[tasks.size()]);

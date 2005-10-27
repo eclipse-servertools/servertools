@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.core.IWebModule;
+import org.eclipse.jst.server.core.internal.J2EEUtil;
 import org.eclipse.osgi.util.NLS;
 
 import org.eclipse.wst.server.core.*;
@@ -210,12 +211,13 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		if (module == null)
 			return null;
 		
-		if (module.length == 1) {
+		if (module.length == 1 && "jst.web".equals(module[0].getModuleType().getId())) {
 			IWebModule webModule = (IWebModule) module[0].loadAdapter(IWebModule.class, null);
 			if (webModule != null) {
-				/*IModule[] modules = webModule.getModules();
-				if (modules != null)
-					System.out.println(modules.length);*/
+				IModule[] modules = webModule.getModules();
+				//if (modules != null)
+				//	System.out.println(modules.length);
+				return modules;
 			}
 		}
 		return new IModule[0];
@@ -225,13 +227,14 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	 * Returns the root module(s) of this module.
 	 */
 	public IModule[] getRootModules(IModule module) throws CoreException {
-		if (module.loadAdapter(IWebModule.class, null) != null) {
+		if ("jst.web".equals(module.getModuleType().getId())) {
 			IStatus status = canModifyModules(new IModule[] { module }, null);
 			if (status == null || !status.isOK())
 				throw new CoreException(status);
 			return new IModule[] { module };
 		}
-		return null;
+		
+		return J2EEUtil.getWebModules(module, null);
 	}
 
 	/**

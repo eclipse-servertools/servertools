@@ -11,6 +11,8 @@
 package org.eclipse.jst.server.core;
 
 import java.io.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.*;
@@ -47,7 +49,7 @@ public class PublishUtil {
 	private PublishUtil() {
 		super();
 	}
-	
+
 	/**
 	 * Copy a file from a to b. Closes the input stream after use.
 	 *
@@ -276,15 +278,48 @@ public class PublishUtil {
 		}
 	}
 
-	/*public static void createJar(IModuleResource[] resource, IPath jarPath) throws Exception {
-		ZipFile zip = new ZipFile(jarPath.toFile());
-		BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(jarPath.toFile()));
-		ZipOutputStream zout = new ZipOutputStream(bout);
-		
-		//ZipEntry ze = new ZipEntry();
-		//zout.putNextEntry(e);
-	}*/
+	public static void createZipFile(IModuleResource[] resources, IPath zipPath) throws CoreException {
+		try {
+			BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(zipPath.toFile()));
+			ZipOutputStream zout = new ZipOutputStream(bout);
+			
+			addZipEntries(zout, resources);
+			
+			zout.close();
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error zipping", e);
+			throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, Messages.errorCopyingFile, e));
+		}
+	}
 
+	private static void addZipEntries(ZipOutputStream zout, IModuleResource[] resources) throws Exception {
+		int size = resources.length;
+		for (int i = 0; i < size; i++) {
+			if (resources[i] instanceof IModuleFolder) {
+				IModuleFolder mf = (IModuleFolder) resources[i];
+				IModuleResource[] res = mf.members();
+				addZipEntries(zout, res);
+				return;
+			}
+			
+			IModuleFile mf = (IModuleFile) resources[i];
+			IPath path = mf.getModuleRelativePath().append(mf.getName());
+			
+			ZipEntry ze = new ZipEntry(path.toPortableString());
+			zout.putNextEntry(ze);
+			
+			IFile file = (IFile) mf.getAdapter(IFile.class);
+			InputStream in = file.getContents();
+			int n = 0;
+			while (n > -1) {
+				n = in.read(buf);
+				if (n > 0)
+					zout.write(buf, 0, n);
+			}
+			
+			zout.closeEntry();
+		}
+	}
 	/**
 	 * Expand a zip file to a given directory.
 	 *

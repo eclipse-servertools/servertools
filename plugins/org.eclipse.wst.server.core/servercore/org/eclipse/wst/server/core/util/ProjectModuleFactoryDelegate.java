@@ -372,6 +372,12 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 					if (".wtpmodules".equals(delta2.getResource().getName())) {
 						t.b = true;
 						return false;
+					} else if (".facets".equals(delta2.getResource().getName())) {
+						t.b = true;
+						return false;
+					} else if (".component".equals(delta2.getResource().getName())) {
+						t.b = true;
+						return false;
 					}
 					return true;
 				}

@@ -16,6 +16,7 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -371,10 +372,20 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 		if (s == null || s.length() < 2)
 			return true;
 		
+		// check absolute path
 		File f = new File(s);
 		if (f.exists())
 			return true;
 		
+		// check workspace
+		try {
+			if (ResourcesPlugin.getWorkspace().getRoot().getProject(s).exists())
+				return true;
+		} catch (Exception e) {
+			// bad path
+		}
+		
+		// check server relative path
 		try {
 			f = server.getRuntime().getLocation().append(s).toFile();
 			if (f.exists())

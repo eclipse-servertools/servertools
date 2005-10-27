@@ -163,6 +163,7 @@ public class RuntimeTargetComposite {
 			includeChildren.setText(Messages.runtimeTargetChildren);
 			data = new GridData();
 			data.horizontalSpan = 2;
+			data.horizontalIndent = 15;
 			includeChildren.setLayoutData(data);
 			includeChildren.setSelection(true);
 			

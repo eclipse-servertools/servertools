@@ -25,7 +25,6 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.osgi.util.NLS;
 
@@ -243,8 +242,30 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			// ignore
 		}
 		
-		IModule module = moduleTree[0];
+		if (moduleTree.length == 1) // web module
+			publishDir(deltaKind, p, moduleTree[0], monitor);
+		else // utility jar
+			publishJar(deltaKind, p, moduleTree, monitor);
 		
+		setModulePublishState(moduleTree, IServer.PUBLISH_STATE_NONE);
+		
+		try {
+			p.store(new FileOutputStream(path.toFile()), "Tomcat publish data");
+		} catch (Exception e) {
+			// ignore
+		}
+	}
+
+	/**
+	 * Publish a web module.
+	 * 
+	 * @param deltaKind
+	 * @param p
+	 * @param module
+	 * @param monitor
+	 * @throws CoreException
+	 */
+	private void publishDir(int deltaKind, Properties p, IModule module, IProgressMonitor monitor) throws CoreException {
 		if (deltaKind == REMOVED) {
 			try {
 				String publishPath = (String) p.get(module.getId());
@@ -253,21 +274,41 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, "Could not remove module", e));
 			}
 		} else {
-			IWebModule webModule = (IWebModule) module.loadAdapter(IWebModule.class, null);
-			IPath to = getServer().getRuntime().getLocation().append("webapps").append(webModule.getContextRoot());
+			IPath to = getServer().getRuntime().getLocation().append("webapps").append(module.getName());
 			
 			ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, monitor);
 			IModuleResource[] mr = pm.members();
 			PublishUtil.smartCopy(mr, to, monitor);
 			p.put(module.getId(), to.toOSString());
-			
-			setModulePublishState(moduleTree, IServer.PUBLISH_STATE_NONE);
 		}
+	}
+
+	/**
+	 * Publish a jar file.
+	 * 
+	 * @param deltaKind
+	 * @param p
+	 * @param module
+	 * @param monitor
+	 * @throws CoreException
+	 */
+	private void publishJar(int deltaKind, Properties p, IModule[] module, IProgressMonitor monitor) throws CoreException {
 		
-		try {
-			p.store(new FileOutputStream(path.toFile()), "Tomcat publish data");
-		} catch (Exception e) {
-			// ignore
+		if (deltaKind == REMOVED) {
+			try {
+				String publishPath = (String) p.get(module[1].getId());
+				new File(publishPath).delete();
+			} catch (Exception e) {
+				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, "Could not remove module", e));
+			}
+		} else {
+			IPath path = getServer().getRuntime().getLocation().append("webapps").append(module[0].getName());
+			path = path.append("WEB-INF").append("lib").append(module[1].getName() + ".jar");
+			
+			ProjectModule pm = (ProjectModule) module[1].loadAdapter(ProjectModule.class, monitor);
+			IModuleResource[] mr = pm.members();
+			PublishUtil.createZipFile(mr, path);
+			p.put(module[1].getId(), path.toOSString());
 		}
 	}
 
