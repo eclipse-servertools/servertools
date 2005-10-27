@@ -23,20 +23,6 @@ import org.eclipse.wst.server.core.IModule;
  */
 public interface IWebModule extends IJ2EEModule {
 	/**
-	 * Returns a version number in the form "x.y.z".
-	 * 
-	 * @return java.lang.String
-	 */
-	public String getServletSpecificationVersion();
-
-	/**
-	 * Returns a version number in the form "x.y.z".
-	 * 
-	 * @return java.lang.String
-	 */
-	public String getJSPSpecificationVersion();
-
-	/**
 	 * Returns the context root of the module.
 	 * 
 	 * @return java.lang.String

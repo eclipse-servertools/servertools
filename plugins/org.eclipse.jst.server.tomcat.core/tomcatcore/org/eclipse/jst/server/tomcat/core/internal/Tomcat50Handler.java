@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jst.server.core.IWebModule;
+import org.eclipse.wst.server.core.IModule;
 /**
  * Tomcat 50 handler.
  */
@@ -98,10 +98,11 @@ if (!TomcatPlugin.verifyTomcatVersionFromPath(installPath, TomcatPlugin.TOMCAT_5
 	}
 
 	/**
-	 * @see ITomcatVersionHandler#canAddModule(IWebModule)
+	 * @see ITomcatVersionHandler#canAddModule(IModule)
 	 */
-	public IStatus canAddModule(IWebModule module) {
-		if ("1.2".equals(module.getJ2EESpecificationVersion()) || "1.3".equals(module.getJ2EESpecificationVersion()) || "1.4".equals(module.getJ2EESpecificationVersion()))
+	public IStatus canAddModule(IModule module) {
+		String version = module.getModuleType().getVersion();
+		if ("2.2".equals(version) || "2.3".equals(version) || "2.4".equals(version))
 			return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, Messages.canAddModule, null);
 		
 		return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorSpec50, null);

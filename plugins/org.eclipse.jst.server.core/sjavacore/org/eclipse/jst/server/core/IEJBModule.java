@@ -20,10 +20,5 @@ package org.eclipse.jst.server.core;
  * @plannedfor 1.0
  */
 public interface IEJBModule extends IJ2EEModule {
-	/**
-	 * Returns a version number in the form "x.y.z".
-	 *
-	 * @return java.lang.String
-	 */
-	public String getEJBSpecificationVersion();
+	// intentionally empty
 }

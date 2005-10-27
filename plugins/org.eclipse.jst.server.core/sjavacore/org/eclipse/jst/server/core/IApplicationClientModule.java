@@ -20,5 +20,5 @@ package org.eclipse.jst.server.core;
  * @plannedfor 1.0
  */
 public interface IApplicationClientModule extends IJ2EEModule {
-	// no additional methods
+	// intentionally empty
 }

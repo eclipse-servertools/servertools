@@ -21,10 +21,5 @@ package org.eclipse.jst.server.core;
  * @plannedfor 1.0
  */
 public interface IJ2EEModule {
-	/**
-	 * Returns a version number in the form "x.y.z".
-	 * 
-	 * @return the J2EE specification version
-	 */
-	public String getJ2EESpecificationVersion();
+	// intentionally empty
 }

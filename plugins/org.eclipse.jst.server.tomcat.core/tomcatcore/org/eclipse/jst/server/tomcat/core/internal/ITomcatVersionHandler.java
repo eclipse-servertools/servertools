@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jst.server.core.IWebModule;
+import org.eclipse.wst.server.core.IModule;
 /**
  * 
  */
@@ -34,11 +34,11 @@ public interface ITomcatVersionHandler {
 	 * @return a string array of program arguments
 	 */
 	public String[] getRuntimeProgramArguments(IPath configPath, boolean debug, boolean starting);
-	
+
 	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isTestEnv);
 
 	public String getRuntimePolicyFile(IPath configPath);
-	
+
 	/**
 	 * Returns true if the given project is supported by this
 	 * server, and false otherwise.
@@ -46,8 +46,8 @@ public interface ITomcatVersionHandler {
 	 * @param module a web module
 	 * @return the status
 	 */
-	public IStatus canAddModule(IWebModule module);
-	
+	public IStatus canAddModule(IModule module);
+
 	/**
 	 * Returns the runtime base path for relative paths in the server
 	 * configuration.
