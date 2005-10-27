@@ -31,6 +31,7 @@ public final class RuntimeClasspathProvider implements IClasspathProvider {
 	private static final IProjectFacet WEB_FEATURE = ProjectFacetsManager.getProjectFacet("jst.web");
 	private static final IProjectFacet EJB_FEATURE = ProjectFacetsManager.getProjectFacet("jst.ejb");
 	private static final IProjectFacet EAR_FEATURE = ProjectFacetsManager.getProjectFacet("jst.ear");
+	private static final IProjectFacet UTILITY_FEATURE = ProjectFacetsManager.getProjectFacet("jst.utility");
 
 	private final IRuntimeComponent rc;
 
@@ -40,12 +41,12 @@ public final class RuntimeClasspathProvider implements IClasspathProvider {
 
 	public List getClasspathEntries(final IProjectFacetVersion fv) {
 		if (fv.getProjectFacet() == WEB_FEATURE || fv.getProjectFacet() == EJB_FEATURE ||
-				fv.getProjectFacet() == EAR_FEATURE) {
+				fv.getProjectFacet() == EAR_FEATURE || fv.getProjectFacet() == UTILITY_FEATURE) {
 			IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER);
 			if (rc.getRuntimeComponentType().getId().indexOf("tomcat") < 0)
-				path.append("org.eclipse.jst.server.generic.runtimeTarget");
+				path = path.append("org.eclipse.jst.server.generic.runtimeTarget");
 			else
-				path.append("org.eclipse.jst.server.tomcat.runtimeTarget");
+				path = path.append("org.eclipse.jst.server.tomcat.runtimeTarget");
 			path = path.append(rc.getProperty("name"));
 			
 			IClasspathEntry cpentry = JavaCore.newContainerEntry(path);
