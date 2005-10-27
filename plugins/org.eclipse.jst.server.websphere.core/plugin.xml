@@ -110,10 +110,22 @@
          id="jst.web"
          version="2.2"
          allow-newer="true"/>
+    </supported>
+
+    <supported>
+      <runtime-component
+         id="org.eclipse.jst.server.generic.runtime.websphere"
+         version="6.0"/>
       <facet
          id="jst.ejb"
          version="1.1"
          allow-newer="true"/>
+    </supported>
+
+    <supported>
+      <runtime-component
+         id="org.eclipse.jst.server.generic.runtime.websphere"
+         version="6.0"/>
       <facet
          id="jst.ear"
          version="1.2"
