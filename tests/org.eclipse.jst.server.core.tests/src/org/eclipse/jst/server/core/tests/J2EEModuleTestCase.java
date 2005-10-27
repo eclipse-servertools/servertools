@@ -25,8 +25,4 @@ public class J2EEModuleTestCase extends TestCase {
 	public void test00Create() {
 		module = new TestJ2EEModule();
 	}
-
-	public void test01SpecVersion() {
-		module.getJ2EESpecificationVersion();
-	}
 }

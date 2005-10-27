@@ -25,8 +25,4 @@ public class ApplicationClientTestCase extends TestCase {
 	public void test00Create() {
 		module = new TestApplicationClientModule();
 	}
-
-	public void test01SpecVersion() {
-		module.getJ2EESpecificationVersion();
-	}
 }

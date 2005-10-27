@@ -26,10 +26,6 @@ public class ConnectorModuleTestCase extends TestCase {
 		module = new TestConnectorModule();
 	}
 
-	public void test01SpecVersion() {
-		module.getJ2EESpecificationVersion();
-	}
-
 	public void test04Classpath() {
 		module.getClasspath();
 	}

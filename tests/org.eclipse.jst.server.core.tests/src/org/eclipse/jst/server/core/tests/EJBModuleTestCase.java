@@ -25,12 +25,4 @@ public class EJBModuleTestCase extends TestCase {
 	public void test00Create() {
 		module = new TestEJBModule();
 	}
-
-	public void test01SpecVersion() {
-		module.getJ2EESpecificationVersion();
-	}
-
-	public void test04EJBSpecVersion() {
-		module.getEJBSpecificationVersion();
-	}
 }

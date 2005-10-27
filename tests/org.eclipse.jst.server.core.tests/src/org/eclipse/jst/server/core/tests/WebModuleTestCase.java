@@ -26,18 +26,6 @@ public class WebModuleTestCase extends TestCase {
 		module = new TestWebModule();
 	}
 
-	public void test01SpecVersion() {
-		module.getJ2EESpecificationVersion();
-	}
-
-	public void test04JSPVersion() {
-		module.getJSPSpecificationVersion();
-	}
-
-	public void test05ServerVersion() {
-		module.getServletSpecificationVersion();
-	}
-
 	public void test06ContextRoot() {
 		module.getContextRoot();
 	}
