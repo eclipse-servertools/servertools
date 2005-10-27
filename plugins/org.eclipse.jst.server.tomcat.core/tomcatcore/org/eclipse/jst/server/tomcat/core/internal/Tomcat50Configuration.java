@@ -570,18 +570,21 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 		// TODO Refactor success detection once Bug 81060 is addressed
 		// This approach avoids refactoring TomcatConfiguration.backupFolder()
 		// and backupPath() for now.
-		if (ms.isOK() && ms.getChildren().length > 0)
-			publishContextConfig(confDir, ms, monitor);
+/*		if (ms.isOK() && ms.getChildren().length > 0)
+			publishContextConfig(confDir, ms, monitor);*/
 
 		monitor.done();
 		return ms;
 	}
 	
-	protected void publishContextConfig(IPath confDir, MultiStatus ms, IProgressMonitor monitor) {
+	protected IStatus publishContextConfig(IPath baseDir, IProgressMonitor monitor) {
+		monitor = ProgressUtil.getMonitorFor(monitor);
+		monitor.beginTask(Messages.publishConfigurationTask, 300);
+
 		Trace.trace(Trace.FINER, "Apply context configurations");
+		IPath confDir = baseDir.append("conf");
+		IPath webappsDir = baseDir.append("webapps");
 		try {
-			confDir = confDir.append("conf");
-			
 			monitor.subTask(Messages.publishContextConfigTask);
 			Factory factory = new Factory();
 			factory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server40");
@@ -601,7 +604,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 						Context context = host.getContext(j);
 						monitor.subTask(NLS.bind(Messages.checkingContextTask,
 								new String[] {context.getPath()}));
-						if (addContextConfig(context)) {
+						if (addContextConfig(webappsDir, context)) {
 							modified = true;
 						}
 					}
@@ -612,31 +615,31 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 				monitor.subTask(Messages.savingContextConfigTask);
 				factory.save(confDir.append("server.xml").toOSString());
 			}
-			monitor.worked(100);
+			monitor.done();
 			
 			Trace.trace(Trace.FINER, "Server.xml updated with context.xml configurations");
-			ms.add(new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, Messages.serverPostProcessingComplete, null));
+			return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, Messages.serverPostProcessingComplete, null);
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Could not apply context configurations published Tomcat v5.0 configuration from " + confDir.toOSString() + ": " + e.getMessage());
-			IStatus s = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPublishConfiguration, new String[] {e.getLocalizedMessage()}), e);
-			ms.add(s);
+			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPublishConfiguration, new String[] {e.getLocalizedMessage()}), e);
 		}
 	}
 	
 	/**
 	 * If the specified Context is linked to a project, try to
 	 * update any configuration found a META-INF/context.xml found
-	 * relative to the specified docBase.
+	 * relative to the specified web applications directory and context docBase.
+	 * @param webappsDir Path to server's web applications directory.
 	 * @param context Context object to receive context.xml contents.
 	 * @return Returns true if context is modified.
 	 */
-	protected boolean addContextConfig(Context context) {
+	protected boolean addContextConfig(IPath webappsDir, Context context) {
 		boolean modified = false;
 		String source = context.getSource();
 		if (source != null && source.length() > 0 )
 		{
 			String docBase = context.getDocBase();
-			Context contextConfig = loadContextConfig(docBase);
+			Context contextConfig = loadContextConfig(webappsDir.append(docBase));
 			if (null != contextConfig) {
 				if (context.hasChildNodes())
 					context.removeChildren();
@@ -649,16 +652,16 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 	
 	/**
 	 * Tries to read a META-INF/context.xml file relative to the
-	 * specified docBase.  If found, it creates a Context object
+	 * specified web application path.  If found, it creates a Context object
 	 * containing the contexts of that file.
-	 * @param docBase
+	 * @param webappDir Path to the web application
 	 * @return Context element created from context.xml, or null if not found.
 	 */
-	protected Context loadContextConfig(String docBase) {
-		File contexXML = new File(docBase + File.separator + "META-INF" + File.separator + "context.xml");
-		if (contexXML.exists()) {
+	protected Context loadContextConfig(IPath webappDir) {
+		File contextXML = new File(webappDir.toOSString()+ File.separator + "META-INF" + File.separator + "context.xml");
+		if (contextXML.exists()) {
 			try {
-				InputStream is = new FileInputStream(contexXML);
+				InputStream is = new FileInputStream(contextXML);
 				Factory ctxFactory = new Factory();
 				ctxFactory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server40");
 				Context ctx = (Context)ctxFactory.loadDocument(is);
@@ -667,7 +670,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 			} catch (FileNotFoundException e) {
 				// Ignore, should never occur
 			} catch (IOException e) {
-				Trace.trace(Trace.SEVERE, "Error reading web module's context.xml file: " + docBase, e);
+				Trace.trace(Trace.SEVERE, "Error reading web module's context.xml file: " + contextXML.getPath(), e);
 			}
 		}
 		return null;

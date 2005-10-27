@@ -182,6 +182,12 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 		}
 	}
 	
+	protected IStatus publishContextConfig(IPath baseDir, IProgressMonitor monitor) {
+		// Default implementation assumes nothing to do
+		return Status.OK_STATUS;
+	}
+
+	
 	protected IStatus cleanupServer(IPath confDir, IPath installDir, IProgressMonitor monitor) {
 		// Default implementation assumes nothing to clean
 		monitor = ProgressUtil.getMonitorFor(monitor);

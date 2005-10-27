@@ -271,6 +271,21 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		}
 	}
 
+	protected void publishFinish(IProgressMonitor monitor) throws CoreException {
+		IPath baseDir;
+		if (getTomcatServer().isTestEnvironment()) {
+			baseDir = getTempDirectory();
+		}
+		else {
+			baseDir = getServer().getRuntime().getLocation();
+		}
+
+		// Publish context configuration for servers that support META-INF/context.xml
+		IStatus status = getTomcatConfiguration().publishContextConfig(baseDir, monitor);
+		if (!status.isOK())
+			throw new CoreException(status);
+	}
+	
 	/**
 	 * Setup for starting the server.
 	 * 
