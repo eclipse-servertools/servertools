@@ -59,7 +59,11 @@ public class ServerUtilTestCase extends TestCase {
 	}
 
 	public void testGetModules1() throws Exception {
-		ServerUtil.getModule((IProject) null);
+		try {
+			ServerUtil.getModule((IProject) null);
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 
 	public void testGetModules2() throws Exception {
