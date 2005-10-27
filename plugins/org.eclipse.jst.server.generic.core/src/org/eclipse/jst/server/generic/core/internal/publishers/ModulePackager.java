@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.Path;
  */
 public class ModulePackager {
 	private ZipOutputStream outputStream;
-//	private StringBuffer manifestContents;
+	private StringBuffer manifestContents;
 
 	private boolean useCompression = true;
 

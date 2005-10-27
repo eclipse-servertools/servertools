@@ -37,6 +37,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -105,14 +107,35 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
         
     }
 
- 	/*
+    
+    
+	private org.eclipse.wst.server.core.IModule[] getModules() {
+		List modules = getAttribute(ATTR_GENERIC_SERVER_MODULES,(List)null);
+		List imodules = new ArrayList();
+		Iterator iterator = modules.iterator();
+		while(iterator.hasNext()){
+		    String moduleId = (String)iterator.next();
+		    int sep = moduleId.indexOf(":");
+		    IProject project =ResourcesPlugin.getWorkspace().getRoot().getProject(moduleId.substring(0,sep));
+		    IModule mod = ServerUtil.getModule(project);
+          if(mod.getId().equals(moduleId.substring(sep+1)))
+           	imodules.add(mod);
+		}
+		if(modules!= null)
+		    return (IModule[])imodules.toArray(new IModule[imodules.size()]);
+		return new IModule[0];
+	}
+
+
+
+	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.wst.server.core.model.IServerDelegate#getChildModules(org.eclipse.wst.server.core.model.IModule[])
 	 */
 	public IModule[] getChildModules(IModule[] module) {
 		if (module[0] != null && module[0].getModuleType() != null) {
-			if (module.length == 1 && "jst.ear".equals(module[0].getModuleType().getId())) {
+			if (module.length == 1) {
 				IEnterpriseApplication enterpriseApplication = (IEnterpriseApplication) module[0]
 						.loadAdapter(IEnterpriseApplication.class, null);
 				if (enterpriseApplication != null) {

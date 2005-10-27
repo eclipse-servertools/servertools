@@ -310,6 +310,7 @@ public class AntPublisher extends GenericPublisher{
 
        
         String moduleName=guessModuleName(getModule()[0]);
+        String moduleDir="";//$NON-NLS-1$
         props.put(PROP_PROJECT_WORKING_DIR,getProjectWorkingLocation().toString());
 		props.put(PROP_MODULE_NAME,moduleName);
 		props.put(PROP_MODULE_DIR,getModuleWorkingDir().toString());
