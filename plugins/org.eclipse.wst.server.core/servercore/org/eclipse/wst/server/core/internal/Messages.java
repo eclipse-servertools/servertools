@@ -40,8 +40,10 @@ public class Messages extends NLS {
 	public static String errorPublishNoConfiguration;
 	public static String errorNoConfiguration;
 	public static String canPublishOk;
-	public static String publishingStatus;
-	public static String publishingCancelled;
+	public static String publishingStatusOk;
+	public static String publishingStatusInfo;
+	public static String publishingStatusWarning;
+	public static String publishingStatusError;
 	public static String errorPublishing;
 	public static String publishingStop;
 	public static String publishingModule;

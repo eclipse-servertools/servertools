@@ -518,7 +518,7 @@ public abstract class ServerBehaviourDelegate {
 		Trace.trace(Trace.FINEST, "-->-- Publishing to server: " + toString() + " -->--");
 		
 		if (getServer().getServerType().hasRuntime() && getServer().getRuntime() == null)
-			return new Status(IStatus.INFO, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishNoRuntime, null);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishNoRuntime, null);
 		
 		final List moduleList = getAllModules();
 		final List kindList = new ArrayList();
@@ -547,11 +547,10 @@ public abstract class ServerBehaviourDelegate {
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.beginTask(NLS.bind(Messages.publishing, getServer().getName()), size);
 
-		// TODO - group up status until the end and use better message based on success or failure
-		MultiStatus multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.publishingStatus, null);
+		MultiStatus tempMulti = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, "", null);
 
 		if (monitor.isCanceled())
-			return new Status(IStatus.INFO, ServerPlugin.PLUGIN_ID, 0, Messages.publishingCancelled, null);
+			return Status.CANCEL_STATUS;
 		
 		// start publishing
 		Trace.trace(Trace.FINEST, "Calling publishStart()");
@@ -565,7 +564,7 @@ public abstract class ServerBehaviourDelegate {
 		// perform tasks
 		MultiStatus taskStatus = performTasks(tasks, monitor);
 		if (taskStatus != null)
-			multi.addAll(taskStatus);
+			tempMulti.addAll(taskStatus);
 		
 		// publish the server
 		try {
@@ -574,19 +573,19 @@ public abstract class ServerBehaviourDelegate {
 			}
 		} catch (CoreException ce) {
 			Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
-			multi.add(ce.getStatus());
+			tempMulti.add(ce.getStatus());
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error publishing configuration to " + toString(), e);
-			multi.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
+			tempMulti.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
 		}
 		
 		// publish modules
 		if (!monitor.isCanceled()) {
 			try {
-				publishModules(kind, moduleList, kindList, multi, monitor);
+				publishModules(kind, moduleList, kindList, tempMulti, monitor);
 			} catch (Exception e) {
 				Trace.trace(Trace.WARNING, "Error while publishing modules", e);
-				multi.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
+				tempMulti.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
 			}
 		}
 		
@@ -596,23 +595,32 @@ public abstract class ServerBehaviourDelegate {
 			publishFinish(ProgressUtil.getSubMonitorFor(monitor, 500));
 		} catch (CoreException ce) {
 			Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
-			multi.add(ce.getStatus());
+			tempMulti.add(ce.getStatus());
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error stopping publish to " + toString(), e);
-			multi.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
+			tempMulti.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
 		}
 		
-		if (monitor.isCanceled()) {
-			IStatus status = new Status(IStatus.INFO, ServerPlugin.PLUGIN_ID, 0, Messages.publishingCancelled, null);
-			multi.add(status);
-		}
+		if (monitor.isCanceled())
+			return Status.CANCEL_STATUS;
 		
 		monitor.done();
 		
 		Trace.trace(Trace.FINEST, "--<-- Done publishing --<--");
 		
-		if (multi.getChildren().length == 1)
-			return multi.getChildren()[0];
+		if (tempMulti.getChildren().length == 1)
+			return tempMulti.getChildren()[0];
+		
+		MultiStatus multi = null;
+		if (tempMulti.getSeverity() == IStatus.OK)
+			multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.publishingStatusOk, null);
+		else if (tempMulti.getSeverity() == IStatus.INFO)
+			multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.publishingStatusInfo, null);
+		else if (tempMulti.getSeverity() == IStatus.WARNING)
+			multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.publishingStatusWarning, null);
+		else if (tempMulti.getSeverity() == IStatus.ERROR)
+			multi = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, Messages.publishingStatusError, null);
+		multi.addAll(tempMulti);
 		
 		return multi;
 	}
@@ -632,6 +640,8 @@ public abstract class ServerBehaviourDelegate {
 			publishModule(kind, deltaKind, module, monitor);
 		} catch (CoreException ce) {
 			status = ce.getStatus();
+		} catch (Exception e) {
+			status = new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e);
 		}
 		
 		/*Trace.trace(Trace.FINEST, "Delta:");
