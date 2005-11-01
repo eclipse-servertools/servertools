@@ -71,54 +71,43 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	 * to the given location.  Can be overridden by version specific
 	 * class to modify or enhance what publish does.
 	 * 
+	 * @param tomcatDir Destination tomcat directory.  Equivalent to catalina.base
+	 *                  for Tomcat 4.x and up.
+	 * @param doBackup Backup existing configuration files (true if not test mode).
+	 * @param monitor Progress monitor to use
 	 * @return org.eclipse.core.runtime.IStatus
 	 */
-	protected IStatus backupAndPublish(IPath confDir, boolean doBackup, IProgressMonitor monitor) {
+	protected IStatus backupAndPublish(IPath tomcatDir, boolean doBackup, IProgressMonitor monitor) {
 		MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, Messages.publishConfigurationTask, null);
 		Trace.trace(Trace.FINER, "Backup and publish");
 		monitor = ProgressUtil.getMonitorFor(monitor);
 
-		backupAndPublish(confDir, doBackup, ms, monitor, 0);
-
-		monitor.done();
-		return ms;
-	}
-	
-	protected void backupAndPublish(IPath confDir, boolean doBackup, MultiStatus ms, IProgressMonitor monitor, int additionalWork) {
 		try {
 			IPath backup = null;
 			if (doBackup) {
 				// create backup directory
-				backup = confDir.append("backup");
+				backup = tomcatDir.append("backup");
 				if (!backup.toFile().exists())
 					backup.toFile().mkdir();
 			}
-			
-			confDir = confDir.append("conf");
-	
-			/*IServerConfiguration config = getServerConfiguration();
-			IFolder folder = config.getConfigurationDataFolder();
-			if (folder != null)
-				backupFolder(folder, confDir, backup, ms, monitor);
-			else {
-				IPath path = config.getConfigurationDataPath();
-				backupPath(configPath, confDir, backup, ms, monitor);*/
-				backupFolder(getFolder(), confDir, backup, ms, monitor, additionalWork);
-			//}
+			backupFolder(getFolder(), tomcatDir.append("conf"), backup, ms, monitor);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "backupAndPublish() error", e);
 			IStatus s = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPublishConfiguration, new String[] {e.getLocalizedMessage()}), e);
 			ms.add(s);
 		}
+
+		monitor.done();
+		return ms;
 	}
 	
-	protected void backupFolder(IFolder folder, IPath confDir, IPath backup, MultiStatus ms, IProgressMonitor monitor, int additionalWork) throws CoreException {
+	protected void backupFolder(IFolder folder, IPath confDir, IPath backup, MultiStatus ms, IProgressMonitor monitor) throws CoreException {
 		IResource[] children = folder.members();
 		if (children == null)
 			return;
 		
 		int size = children.length;
-		monitor.beginTask(Messages.publishConfigurationTask, size * 100 + additionalWork);
+		monitor.beginTask(Messages.publishConfigurationTask, size * 100);
 		for (int i = 0; i < size; i++) {
 			if (children[i] instanceof IFile) {
 				try {
@@ -190,8 +179,6 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	
 	protected IStatus cleanupServer(IPath confDir, IPath installDir, IProgressMonitor monitor) {
 		// Default implementation assumes nothing to clean
-		monitor = ProgressUtil.getMonitorFor(monitor);
-		monitor.done();
 		return Status.OK_STATUS;
 	}
 	

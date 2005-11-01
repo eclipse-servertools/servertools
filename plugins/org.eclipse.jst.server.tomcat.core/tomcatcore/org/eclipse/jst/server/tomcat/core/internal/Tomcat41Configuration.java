@@ -582,22 +582,6 @@ public class Tomcat41Configuration extends TomcatConfiguration {
 		}
 	}
 
-	protected IStatus backupAndPublish(IPath confDir, boolean doBackup, IProgressMonitor monitor) {
-		MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, Messages.publishConfigurationTask, null);
-		Trace.trace(Trace.FINER, "Backup and publish");
-		monitor = ProgressUtil.getMonitorFor(monitor);
-
-		backupAndPublish(confDir, doBackup, ms, monitor, 300);
-		// TODO Refactor success detection once Bug 81060 is addressed
-		// This approach avoids refactoring to TomcatConfiguration.backupFolder()
-		// and backupPath() for now.
-/*		if (ms.isOK() && ms.getChildren().length > 0)
-			publishContextConfig(confDir, ms, monitor);*/
-
-		monitor.done();
-		return ms;
-	}
-	
 	protected IStatus publishContextConfig(IPath baseDir, IProgressMonitor monitor) {
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.beginTask(Messages.publishConfigurationTask, 300);
