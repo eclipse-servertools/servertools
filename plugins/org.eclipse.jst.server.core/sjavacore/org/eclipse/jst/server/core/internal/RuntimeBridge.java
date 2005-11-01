@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *    Konstantin Komissarchik - initial API and implementation
  *    IBM Corporation - Support for all server types
@@ -13,6 +13,7 @@ package org.eclipse.jst.server.core.internal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -67,13 +68,23 @@ public final class RuntimeBridge implements IRuntimeBridge {
 	}
 
 	public void port() {
+		// delete old runtimes
+		Iterator iterator = RuntimeManager.getRuntimes().iterator();
+		while (iterator.hasNext()) {
+			org.eclipse.wst.common.project.facet.core.runtime.IRuntime runtime =
+				(org.eclipse.wst.common.project.facet.core.runtime.IRuntime) iterator.next();
+			if ("true".equals(runtime.getProperty("server")))
+				RuntimeManager.deleteRuntime(runtime);
+		}
+		
+		// create/bridge existing runtimes
 		IRuntime[] runtimes = ServerCore.getRuntimes();
 		
 		for (int i = 0; i < runtimes.length; i++) {
 			IRuntime runtime = runtimes[i];
 			String typeId = runtime.getRuntimeType().getId();
 			
-			if (!RuntimeManager.isRuntimeDefined(typeId)) {
+			//if (!RuntimeManager.isRuntimeDefined(typeId)) {
 				IRuntimeComponentVersion mapped = (IRuntimeComponentVersion) mappings.get(typeId);
 				
 				if (mapped != null) {
@@ -112,9 +123,10 @@ public final class RuntimeBridge implements IRuntimeBridge {
 					// define facet runtime
 					properties = new HashMap();
 					properties.put("id", runtime.getId());
+					properties.put("server", "true");
 					RuntimeManager.defineRuntime(name, components, properties);
 				}
 			}
-		}
+		//}
 	}
 }
