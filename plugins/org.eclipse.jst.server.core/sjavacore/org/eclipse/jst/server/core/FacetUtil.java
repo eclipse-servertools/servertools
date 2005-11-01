@@ -57,7 +57,6 @@ public class FacetUtil {
 			throw new IllegalArgumentException();
 		
 		String id = runtime.getId();
-		RuntimeManager.bridge();
 		
 		Set runtimes = RuntimeManager.getRuntimes();
 		Iterator iterator = runtimes.iterator();
