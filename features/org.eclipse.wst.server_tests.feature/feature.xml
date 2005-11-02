@@ -17,8 +17,8 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.wst.server_core.feature" version="0.0.0"/>
-      <import feature="org.eclipse.wst.server_ui.feature" version="0.0.0"/>
+      <import feature="org.eclipse.wst.server_core.feature"/>
+      <import feature="org.eclipse.wst.server_ui.feature"/>
    </requires>
 
    <plugin
