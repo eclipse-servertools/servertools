@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Server Tomcat Performance Plug-in
 Bundle-SymbolicName: org.eclipse.jst.server.tomcat.tests.performance
-Bundle-Version: 0.7.0
+Bundle-Version: 1.0.0
 Bundle-ClassPath: performance.jar
 Bundle-Localization: plugin
 Export-Package: org.eclipse.jst.server.tomcat.tests.performance,
