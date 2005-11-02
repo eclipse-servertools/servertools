@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.jst.server.generic.core; singleton:=true
-Bundle-Version: 0.7.0
+Bundle-Version: 1.0.0
 Bundle-ClassPath: genericserver.jar
 Bundle-Activator: org.eclipse.jst.server.generic.core.internal.CorePlugin
 Bundle-Vendor: %providerName
