@@ -24,6 +24,7 @@ import org.eclipse.jst.server.tomcat.core.internal.xml.server40.*;
 import org.eclipse.osgi.util.NLS;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import org.eclipse.wst.server.core.ServerPort;
 /**
@@ -575,6 +576,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 			
 			boolean modified = false;
 
+			MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, Messages.publishContextConfigTask, null);
 			int size = publishedServer.getServiceCount();
 			for (int i = 0; i < size; i++) {
 				Service service = publishedServer.getService(i);
@@ -586,7 +588,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 						Context context = host.getContext(j);
 						monitor.subTask(NLS.bind(Messages.checkingContextTask,
 								new String[] {context.getPath()}));
-						if (addContextConfig(webappsDir, context)) {
+						if (addContextConfig(webappsDir, context, ms)) {
 							modified = true;
 						}
 					}
@@ -599,10 +601,14 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 			}
 			monitor.done();
 			
+			// If problem(s) occurred adding context configurations, return error status
+			if (ms.getChildren().length > 0) {
+				return ms;
+			}
 			Trace.trace(Trace.FINER, "Server.xml updated with context.xml configurations");
 			return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, Messages.serverPostProcessingComplete, null);
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not apply context configurations published Tomcat v5.0 configuration from " + confDir.toOSString() + ": " + e.getMessage());
+			Trace.trace(Trace.WARNING, "Could not apply context configurations to published Tomcat v5.5 configuration from " + confDir.toOSString() + ": " + e.getMessage());
 			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPublishConfiguration, new String[] {e.getLocalizedMessage()}), e);
 		}
 	}
@@ -613,20 +619,32 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	 * relative to the specified web applications directory and context docBase.
 	 * @param webappsDir Path to server's web applications directory.
 	 * @param context Context object to receive context.xml contents.
+	 * @param ms MultiStatus object to receive error status.
 	 * @return Returns true if context is modified.
 	 */
-	protected boolean addContextConfig(IPath webappsDir, Context context) {
+	protected boolean addContextConfig(IPath webappsDir, Context context, MultiStatus ms) {
 		boolean modified = false;
 		String source = context.getSource();
 		if (source != null && source.length() > 0 )
 		{
 			String docBase = context.getDocBase();
-			Context contextConfig = loadContextConfig(webappsDir.append(docBase));
-			if (null != contextConfig) {
-				if (context.hasChildNodes())
-					context.removeChildren();
-				contextConfig.copyChildrenTo(context);
-				modified = true;
+			try {
+				Context contextConfig = loadContextConfig(webappsDir.append(docBase));
+				if (null != contextConfig) {
+					if (context.hasChildNodes())
+						context.removeChildren();
+					contextConfig.copyChildrenTo(context);
+					modified = true;
+				}
+			} catch (Exception e) {
+				String contextPath = context.getPath();
+				if (contextPath.startsWith("/")) {
+					contextPath = contextPath.substring(1);
+				}
+				Trace.trace(Trace.SEVERE, "Error reading context.xml file for " + contextPath, e);
+				IStatus s = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0,
+						NLS.bind(Messages.errorCouldNotLoadContextXml, contextPath), e);
+				ms.add(s);
 			}
 		}
 		return modified;
@@ -638,8 +656,10 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	 * containing the contexts of that file.
 	 * @param webappDir Path to the web application
 	 * @return Context element created from context.xml, or null if not found.
+	 * @throws SAXException If there is a error parsing the XML. 
+	 * @throws IOException If there is an error reading the file.
 	 */
-	protected Context loadContextConfig(IPath webappDir) {
+	protected Context loadContextConfig(IPath webappDir) throws IOException, SAXException {
 		File contextXML = new File(webappDir.toOSString()+ File.separator + "META-INF" + File.separator + "context.xml");
 		if (contextXML.exists()) {
 			try {
@@ -651,8 +671,6 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 				return ctx;
 			} catch (FileNotFoundException e) {
 				// Ignore, should never occur
-			} catch (IOException e) {
-				Trace.trace(Trace.SEVERE, "Error reading web module's context.xml file: " + contextXML.getPath(), e);
 			}
 		}
 		return null;

@@ -14,6 +14,7 @@ import java.io.*;
 
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import org.eclipse.jst.server.tomcat.core.internal.Trace;
 /**
@@ -72,12 +73,12 @@ public class Factory {
 		return packageName;
 	}
 
-	public XMLElement loadDocument(InputStream in) throws IOException {
+	public XMLElement loadDocument(InputStream in) throws IOException, SAXException {
 		try {
 			document = XMLUtil.getDocumentBuilder().parse(new InputSource(in));
 			Element element = document.getDocumentElement();
 			return newInstance(element);
-		} catch (Exception exception) {
+		} catch (IllegalArgumentException exception) {
 			Trace.trace(Trace.WARNING, "Error loading document", exception);
 			throw new IOException("Could not load document");
 		}
