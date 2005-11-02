@@ -103,7 +103,7 @@
     <adapter>
       <runtime-component id="standard.jre"/>
       <factory class="org.eclipse.jst.server.core.internal.StandardJreClasspathProvider$Factory"/>
-      <type class="org.eclipse.wst.common.project.facet.core.runtime.classpath.IClasspathProvider"/>
+      <type class="org.eclipse.jst.common.project.facet.core.IClasspathProvider"/>
     </adapter>
 
     <supported>

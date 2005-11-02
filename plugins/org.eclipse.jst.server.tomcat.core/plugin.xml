@@ -245,7 +245,7 @@
       <factory
          class="org.eclipse.jst.server.core.internal.RuntimeClasspathProvider$Factory"/>
       <type
-         class="org.eclipse.wst.common.project.facet.core.runtime.classpath.IClasspathProvider"/>
+         class="org.eclipse.jst.common.project.facet.core.IClasspathProvider"/>
     </adapter>
 
     <supported>
