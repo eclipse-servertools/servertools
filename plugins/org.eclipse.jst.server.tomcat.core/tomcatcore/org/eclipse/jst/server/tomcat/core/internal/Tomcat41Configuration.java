@@ -711,9 +711,21 @@ public class Tomcat41Configuration extends TomcatConfiguration {
 		temp = confDir.append("temp").toFile();
 		if (!temp.exists())
 			temp.mkdirs();
-		temp = confDir.append("webapps/ROOT/WEB-INF").toFile();
+		IPath tempPath = confDir.append("webapps/ROOT/WEB-INF");
+		temp = tempPath.toFile();
 		if (!temp.exists())
 			temp.mkdirs();
+		temp = tempPath.append("web.xml").toFile();
+		if (!temp.exists()) {
+			FileWriter fw;
+			try {
+				fw = new FileWriter(temp);
+				fw.write(DEFAULT_WEBXML_SERVLET23);
+				fw.close();
+			} catch (IOException e) {
+				Trace.trace(Trace.WARNING, "Unable to create web.xml for ROOT context.", e);
+			}
+		}
 		temp = confDir.append("work").toFile();
 		if (!temp.exists())
 			temp.mkdirs();
