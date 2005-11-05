@@ -28,6 +28,7 @@ import org.eclipse.wst.server.core.internal.*;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 import org.eclipse.wst.server.ui.internal.editor.IServerEditorInput;
+import org.eclipse.wst.server.ui.internal.editor.ServerEditorCore;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorInput;
 import org.eclipse.wst.server.ui.internal.viewers.InitialSelectionProvider;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
@@ -53,6 +54,11 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 
 	// server UI plugin id
 	public static final String PLUGIN_ID = "org.eclipse.wst.server.ui";
+	
+	protected static final String EXTENSION_SERVER_IMAGES = "serverImages";
+	private static final String EXTENSION_WIZARD_FRAGMENTS = "wizardFragments";
+	public static final String EXTENSION_EDITOR_PAGES = "editorPages";
+	public static final String EXTENSION_EDITOR_PAGE_SECTIONS = "editorPageSections";
 
 	//public static final byte START = 0;
 	public static final byte STOP = 1;
@@ -67,7 +73,41 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	private static Map wizardFragments;
 
 	// cached initial selection provider
-	private static InitialSelectionProvider selectionProvider; 
+	private static InitialSelectionProvider selectionProvider;
+
+	private static IRegistryChangeListener registryListener;
+
+	private static class RegistryChangeListener implements IRegistryChangeListener {
+		public void registryChanged(IRegistryChangeEvent event) {
+			IExtensionDelta[] deltas = event.getExtensionDeltas(ServerPlugin.PLUGIN_ID, EXTENSION_WIZARD_FRAGMENTS);
+			if (deltas != null) {
+				for (int i = 0; i < deltas.length; i++) {
+					handleWizardFragmentDelta(deltas[i]);
+				}
+			}
+			
+			deltas = event.getExtensionDeltas(ServerPlugin.PLUGIN_ID, EXTENSION_SERVER_IMAGES);
+			if (deltas != null) {
+				for (int i = 0; i < deltas.length; i++) {
+					ImageResource.handleServerImageDelta(deltas[i]);
+				}
+			}
+			
+			deltas = event.getExtensionDeltas(ServerPlugin.PLUGIN_ID, EXTENSION_EDITOR_PAGES);
+			if (deltas != null) {
+				for (int i = 0; i < deltas.length; i++) {
+					ServerEditorCore.handleEditorPageFactoriesDelta(deltas[i]);
+				}
+			}
+			
+			deltas = event.getExtensionDeltas(ServerPlugin.PLUGIN_ID, EXTENSION_EDITOR_PAGE_SECTIONS);
+			if (deltas != null) {
+				for (int i = 0; i < deltas.length; i++) {
+					ServerEditorCore.handleEditorPageSectionFactoriesDelta(deltas[i]);
+				}
+			}
+		}
+	}
 
 	static class WizardFragmentData {
 		String id;
@@ -180,6 +220,11 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		Trace.trace(Trace.CONFIG, "-----<----- Server UI plugin stop -----<-----");
 		super.stop(context);
+		
+		if (registryListener != null) {
+			IExtensionRegistry registry = Platform.getExtensionRegistry();
+			registry.removeRegistryChangeListener(registryListener);
+		}
 		
 		ImageResource.dispose();
 		
@@ -565,11 +610,20 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 			return;
 		Trace.trace(Trace.CONFIG, "->- Loading .wizardFragments extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "wizardFragments");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, EXTENSION_WIZARD_FRAGMENTS);
 
-		int size = cf.length;
-		wizardFragments = new HashMap(size);
-		for (int i = 0; i < size; i++) {
+		wizardFragments = new HashMap(cf.length);
+		loadWizardFragments(cf);
+		addRegistryListener();
+		
+		Trace.trace(Trace.CONFIG, "-<- Done loading .wizardFragments extension point -<-");
+	}
+
+	/**
+	 * Load wizard fragments.
+	 */
+	private static synchronized void loadWizardFragments(IConfigurationElement[] cf) {
+		for (int i = 0; i < cf.length; i++) {
 			try {
 				String id = cf[i].getAttribute("typeIds");
 				wizardFragments.put(id, new WizardFragmentData(id, cf[i]));
@@ -578,8 +632,6 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 				Trace.trace(Trace.SEVERE, "  Could not load wizardFragment: " + cf[i].getAttribute("id"), t);
 			}
 		}
-		
-		Trace.trace(Trace.CONFIG, "-<- Done loading .wizardFragments extension point -<-");
 	}
 
 	/**
@@ -649,5 +701,39 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 			delegate.selectionChanged(action, null);
 
 		delegate.run(action);
+	}
+
+	public static void addRegistryListener() {
+		if (registryListener != null)
+			return;
+		
+		registryListener = new RegistryChangeListener();
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		registry.addRegistryChangeListener(registryListener, ServerPlugin.PLUGIN_ID);
+	}
+
+	protected static void handleWizardFragmentDelta(IExtensionDelta delta) {
+		if (wizardFragments == null) // not loaded yet
+			return;
+		
+		IConfigurationElement[] cf = delta.getExtension().getConfigurationElements();
+		
+		if (delta.getKind() == IExtensionDelta.ADDED) {
+			loadWizardFragments(cf);
+		} else {
+			/*int size = wizardFragments.size();
+			WizardFragment[] wf = new WizardFragment[size];
+			wizardFragments.toArray(wf);
+			int size2 = cf.length;
+			
+			for (int i = 0; i < size; i++) {
+				for (int j = 0; j < size2; j++) {
+					if (wf[i].getId().equals(cf[j].getAttribute("id"))) {
+						wf[i].dispose();
+						wizardFragments.remove(wf[i]);
+					}
+				}
+			}*/
+		}
 	}
 }

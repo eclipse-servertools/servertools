@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionDelta;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -55,8 +56,17 @@ public class ServerEditorCore {
 	private static void loadEditorPageFactories() {
 		Trace.trace(Trace.CONFIG, "->- Loading .editorPages extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "editorPages");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, ServerUIPlugin.EXTENSION_EDITOR_PAGES);
+		editorPageSectionFactories = new ArrayList(cf.length);
+		loadEditorPageFactories(cf);
+		ServerUIPlugin.addRegistryListener();
+		Trace.trace(Trace.CONFIG, "-<- Done loading .editorPages extension point -<-");
+	}
 
+	/**
+	 * Load the editor page factory extension point.
+	 */
+	private static void loadEditorPageFactories(IConfigurationElement[] cf) {
 		int size = cf.length;
 		editorPageFactories = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
@@ -70,7 +80,30 @@ public class ServerEditorCore {
 		
 		// sort pages
 		sortOrderedList(editorPageFactories);
-		Trace.trace(Trace.CONFIG, "-<- Done loading .editorPages extension point -<-");
+	}
+
+	public static void handleEditorPageFactoriesDelta(IExtensionDelta delta) {
+		if (editorPageFactories == null) // not loaded yet
+			return;
+		
+		IConfigurationElement[] cf = delta.getExtension().getConfigurationElements();
+		
+		if (delta.getKind() == IExtensionDelta.ADDED)
+			loadEditorPageFactories(cf);
+		else {
+			int size = editorPageFactories.size();
+			ServerEditorPartFactory[] sepf = new ServerEditorPartFactory[size];
+			editorPageFactories.toArray(sepf);
+			int size2 = cf.length;
+			
+			for (int i = 0; i < size; i++) {
+				for (int j = 0; j < size2; j++) {
+					if (sepf[i].getId().equals(cf[j].getAttribute("id"))) {
+						editorPageFactories.remove(sepf[i]);
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -79,10 +112,18 @@ public class ServerEditorCore {
 	private static void loadEditorPageSectionFactories() {
 		Trace.trace(Trace.CONFIG, "->- Loading .editorPageSections extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "editorPageSections");
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, ServerUIPlugin.EXTENSION_EDITOR_PAGE_SECTIONS);
+		editorPageSectionFactories = new ArrayList(cf.length);
+		loadEditorPageSectionFactories(cf);
+		ServerUIPlugin.addRegistryListener();
+		Trace.trace(Trace.CONFIG, "-<- Done loading .editorPageSections extension point -<-");
+	}
 
+	/**
+	 * Load the editor page section factory extension point.
+	 */
+	private static void loadEditorPageSectionFactories(IConfigurationElement[] cf) {
 		int size = cf.length;
-		editorPageSectionFactories = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
 				editorPageSectionFactories.add(new ServerEditorPageSectionFactory(cf[i]));
@@ -94,7 +135,30 @@ public class ServerEditorCore {
 		
 		// sort sections
 		sortOrderedList(editorPageSectionFactories);
-		Trace.trace(Trace.CONFIG, "-<- Done loading .editorPageSections extension point -<-");
+	}
+
+	public static void handleEditorPageSectionFactoriesDelta(IExtensionDelta delta) {
+		if (editorPageSectionFactories == null) // not loaded yet
+			return;
+		
+		IConfigurationElement[] cf = delta.getExtension().getConfigurationElements();
+		
+		if (delta.getKind() == IExtensionDelta.ADDED)
+			loadEditorPageSectionFactories(cf);
+		else {
+			int size = editorPageSectionFactories.size();
+			ServerEditorPageSectionFactory[] seps = new ServerEditorPageSectionFactory[size];
+			editorPageSectionFactories.toArray(seps);
+			int size2 = cf.length;
+			
+			for (int i = 0; i < size; i++) {
+				for (int j = 0; j < size2; j++) {
+					if (seps[i].getId().equals(cf[j].getAttribute("id"))) {
+						editorPageSectionFactories.remove(seps[i]);
+					}
+				}
+			}
+		}
 	}
 
 	/**

@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionDelta;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -304,15 +305,22 @@ public class ImageResource {
 			Trace.trace(Trace.SEVERE, "Error registering image " + key + " from " + partialURL, e);
 		}
 	}
-	
+
 	/**
 	 * Load the server images.
 	 */
 	private static void loadServerImages() {
 		Trace.trace(Trace.CONFIG, "->- Loading .serverImages extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "serverImages");
+		loadServerImages(registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, ServerUIPlugin.EXTENSION_SERVER_IMAGES));
+		ServerUIPlugin.addRegistryListener();
+		Trace.trace(Trace.CONFIG, "-<- Done loading .serverImages extension point -<-");
+	}
 
+	/**
+	 * Load the server images.
+	 */
+	private static void loadServerImages(IConfigurationElement[] cf) {
 		int size = cf.length;
 		for (int i = 0; i < size; i++) {
 			try {
@@ -334,7 +342,23 @@ public class ImageResource {
 				Trace.trace(Trace.SEVERE, "  Could not load serverImage: " + cf[i].getAttribute("id"), t);
 			}
 		}
+	}
 
-		Trace.trace(Trace.CONFIG, "-<- Done loading .serverImages extension point -<-");
+	protected static void handleServerImageDelta(IExtensionDelta delta) {
+		if (imageRegistry == null) // not loaded yet
+			return;
+		
+		IConfigurationElement[] cf = delta.getExtension().getConfigurationElements();
+		
+		if (delta.getKind() == IExtensionDelta.ADDED)
+			loadServerImages(cf);
+		else {
+			int size = cf.length;
+			for (int i = 0; i < size; i++) {
+				String typeId = cf[i].getAttribute("typeIds");
+				imageRegistry.remove(typeId);
+				imageDescriptors.remove(typeId);
+			}
+		}
 	}
 }
