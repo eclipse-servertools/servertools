@@ -2097,4 +2097,20 @@ public class Server extends Base implements IServer {
 		}
 		wc.save(true, monitor);
 	}
+
+	/**
+	 * Returns the current state of the server (see SERVER_XXX constants) after
+	 * refreshing the state of the server. The only difference between this method
+	 * and the method without a progress monitor is that this method may cause
+	 * plugin loading and not return immediately. However, the server will always
+	 * be updated and in sync, so the IServer.STATE_UNKNOWN state should never be
+	 * returned.
+	 * 
+	 * @param monitor
+	 * @return the server state
+	 */
+	public int getServerState(IProgressMonitor monitor) {
+		loadAdapter(ServerBehaviourDelegate.class, monitor);
+		return getServerState();
+	}
 }
