@@ -34,11 +34,15 @@ public class NewInstallableServerWizardFragment extends WizardFragment {
 	 * @see org.eclipse.wst.server.ui.internal.task.WizardTask#getWizardPage()
 	 */
 	public Composite createComposite(Composite parent, IWizardHandle wizard) {
-		comp = new NewInstallableServerComposite(parent, getTaskModel());
+		comp = new NewInstallableServerComposite(parent, getTaskModel(), wizard);
 		
 		wizard.setTitle(Messages.wizNewInstallableServerTitle);
 		wizard.setDescription(Messages.wizNewInstallableServerDescription);
 		wizard.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_WIZBAN_NEW_SERVER));
 		return comp;
+	}
+
+	public boolean isComplete() {
+		return getTaskModel().getObject("installableServer") != null;
 	}
 }

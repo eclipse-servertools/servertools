@@ -24,6 +24,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Tree;
 
 import org.eclipse.wst.server.ui.internal.Messages;
@@ -66,7 +67,21 @@ public abstract class AbstractTreeComposite extends Composite {
 			data.verticalIndent = 7;
 		data.horizontalSpan = 2;
 		label.setLayoutData(data);
-
+		
+		String details = getDetailsLabel();
+		if (details != null) {
+			Link prefLink = new Link(this, SWT.NONE);
+			data = new GridData(GridData.HORIZONTAL_ALIGN_END);
+			data.horizontalSpan = 2;
+			prefLink.setLayoutData(data);
+			prefLink.setText("<a>" + details + "</a>");
+			prefLink.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+					detailsSelected();
+				}
+			});
+		}
+		
 		tree = new Tree(this, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE);
 		data = new GridData(GridData.FILL_BOTH);
 		data.horizontalSpan = 2;
@@ -125,6 +140,8 @@ public abstract class AbstractTreeComposite extends Composite {
 			data.heightHint = 35;
 			description.setLayoutData(data);
 		}
+		
+		tree.forceFocus();
 	}
 	
 	protected abstract String getDescriptionLabel();
@@ -163,5 +180,13 @@ public abstract class AbstractTreeComposite extends Composite {
 
 	public void remove(Object obj) {
 		treeViewer.remove(obj);
+	}
+
+	protected String getDetailsLabel() {
+		return null;
+	}
+	
+	protected void detailsSelected() {
+		// do nothing
 	}
 }

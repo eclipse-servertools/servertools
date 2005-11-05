@@ -199,7 +199,7 @@ public class Messages extends NLS {
 	public static String wizNewServerSelectExisting;
 	public static String host;
 	public static String elementUnknownName;
-	public static String serverTypeCompDescription;
+	public static String serverTypeCompLabel;
 	public static String viewServers;
 	public static String viewNoModules;
 	public static String actionMonitorProperties;
@@ -277,7 +277,6 @@ public class Messages extends NLS {
 	public static String wizNewInstallableServerTitle;
 	public static String wizNewInstallableServerDescription;
 	public static String installableServerCompTree;
-	public static String installableServerCompDescription;
 	public static String installableServerLink;
 
 	public static String errorStartingMonitor;

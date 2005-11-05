@@ -66,48 +66,6 @@ public class NewServerWizardFragment extends WizardFragment {
 		return comp;
 	}
 
-	/*protected void createConfiguration(IServerWorkingCopy server) {
-		TaskModel model = getTaskModel();
-		IRuntime runtime = (IRuntime) model.getObject(TaskModel.TASK_RUNTIME);
-		
-		IServerType type = server.getServerType();
-		if (type.hasServerConfiguration()) {
-			server.setServerConfiguration(null);
-			IStatus status = null;
-			if (runtime != null)
-				status = runtime.validate(null);
-			if (status == null || status.isOK()) {
-				try {
-					IFile file = null;
-					if (ServerCore.getServerPreferences().isCreateResourcesInWorkspace())
-						file = ServerUtil.getUnusedServerConfigurationFile(WizardUtil.getServerProject(), null);
-					
-					IServerConfigurationWorkingCopy serverConfiguration = getServerConfiguration(type.getServerConfigurationType(), file, runtime);
-					model.putObject(TaskModel.TASK_SERVER_CONFIGURATION, serverConfiguration);
-					server.setServerConfiguration(serverConfiguration);
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Could not create configuration", e);
-				}
-			}
-		}
-	}*/
-	
-	/*protected IServerConfigurationWorkingCopy getServerConfiguration(IServerConfigurationType type, IFile file, IRuntime runtime) throws CoreException {
-		Object key = type.getId() + "|" + file + "|" + runtime;
-		try {
-			IServerConfigurationWorkingCopy serverConfiguration = (IServerConfigurationWorkingCopy) configMap.get(key);
-			if (serverConfiguration != null)
-				return serverConfiguration;
-		} catch (Exception e) {
-			// ignore
-		}
-
-		IServerConfigurationWorkingCopy serverConfiguration = type.importFromRuntime(null, file, runtime, new NullProgressMonitor());
-		ServerUtil.setServerConfigurationDefaultName(serverConfiguration);
-		configMap.put(key, serverConfiguration);
-		return serverConfiguration;
-	}*/
-
 	protected WizardFragment getWizardFragment(String typeId) {
 		try {
 			WizardFragment fragment = (WizardFragment) fragmentMap.get(typeId);
@@ -159,6 +117,12 @@ public class NewServerWizardFragment extends WizardFragment {
 					list.add(new TasksWizardFragment());
 			}*/
 		}
+	}
+	
+	public boolean isComplete() {
+		if (comp == null)
+			return false;
+		return comp.getServer() != null; 
 	}
 	
 	public IServerWorkingCopy getServer() {

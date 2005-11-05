@@ -14,11 +14,15 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.IServerType;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.ui.internal.wizard.NewInstallableServerWizard;
 /**
  * 
  */
@@ -99,7 +103,7 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 	}
 
 	protected String getTitleLabel() {
-		return Messages.serverTypeCompDescription;
+		return Messages.serverTypeCompLabel;
 	}
 
 	protected String[] getComboOptions() {
@@ -126,5 +130,18 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 		ServerTypeTreeContentProvider cp = (ServerTypeTreeContentProvider) treeViewer.getContentProvider();
 		treeViewer.setContentProvider(new ServerTypeTreeContentProvider(cp.style, moduleType));
 		treeViewer.setSelection(sel);
+	}
+
+	protected String getDetailsLabel() {
+		if (ServerPlugin.getInstallableServers().length > 0)
+			return Messages.installableServerLink;
+		return null;
+	}
+
+	protected void detailsSelected() {
+		NewInstallableServerWizard wizard2 = new NewInstallableServerWizard();
+		WizardDialog dialog = new WizardDialog(getShell(), wizard2);
+		if (dialog.open() != Window.CANCEL)
+			refresh();
 	}
 }

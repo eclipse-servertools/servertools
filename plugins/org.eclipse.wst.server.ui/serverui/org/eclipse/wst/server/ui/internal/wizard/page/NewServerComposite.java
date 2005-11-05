@@ -17,8 +17,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -31,7 +29,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IModule;
@@ -44,10 +41,8 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.viewers.ServerComposite;
-import org.eclipse.wst.server.ui.internal.wizard.NewInstallableServerWizard;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 /**
@@ -235,20 +230,6 @@ public class NewServerComposite extends Composite {
 				}
 			});
 			PlatformUI.getWorkbench().getHelpSystem().setHelp(pref, ContextIds.SELECT_SERVER_PREFERENCE);
-		}
-		
-		if (ServerPlugin.getInstallableServers().length > 0) {
-			Link prefLink = new Link(this, SWT.NONE);
-			prefLink.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-			prefLink.setText("<a>" + Messages.installableServerLink + "</a>");
-			prefLink.addSelectionListener(new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent e) {
-					NewInstallableServerWizard wizard2 = new NewInstallableServerWizard();
-					WizardDialog dialog = new WizardDialog(getShell(), wizard2);
-					if (dialog.open() != Window.CANCEL)
-						manualComp.refresh();
-				}
-			});
 		}
 		
 		Dialog.applyDialogFont(this);

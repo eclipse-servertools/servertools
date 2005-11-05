@@ -65,6 +65,7 @@ public class InstallableServerComposite extends AbstractTreeComposite {
 				return r1.getName().compareToIgnoreCase(r2.getName());
 			}
 		});
+		treeViewer.expandToLevel(2);
 	}
 
 	public void setVisible(boolean visible) {
@@ -81,7 +82,7 @@ public class InstallableServerComposite extends AbstractTreeComposite {
 	}
 
 	protected String getDescriptionLabel() {
-		return Messages.installableServerCompDescription;
+		return null;
 	}
 
 	protected String[] getComboOptions() {

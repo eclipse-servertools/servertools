@@ -14,24 +14,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
 import org.eclipse.wst.server.ui.internal.viewers.RuntimeTypeComposite;
-import org.eclipse.wst.server.ui.internal.wizard.NewInstallableServerWizard;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Tree;
 /**
  * 
@@ -84,21 +77,6 @@ public class NewRuntimeComposite extends Composite {
 		GridData data = new GridData(GridData.FILL_BOTH);
 		data.heightHint = 250;
 		comp.setLayoutData(data);
-		
-		if (ServerPlugin.getInstallableServers().length > 0) {
-			Link prefLink = new Link(this, SWT.NONE);
-			prefLink.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
-			prefLink.setText("<a>" + Messages.installableServerLink + "</a>");
-			prefLink.addSelectionListener(new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent e) {
-					NewInstallableServerWizard wizard2 = new NewInstallableServerWizard();
-					WizardDialog dialog = new WizardDialog(getShell(), wizard2);
-					if (dialog.open() != Window.CANCEL) {
-						comp.refresh();
-					}
-				}
-			});
-		}
 	}
 
 	protected void handleSelection(IRuntimeType runtimeType) {

@@ -16,6 +16,7 @@ import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.core.internal.IInstallableServer;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
 import org.eclipse.wst.server.ui.internal.viewers.InstallableServerComposite;
+import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -26,16 +27,19 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class NewInstallableServerComposite extends Composite {
 	private TaskModel taskModel;
-	
+	private IWizardHandle wizard;
+
 	/**
 	 * Create a new NewInstallableServerComposite.
 	 * 
 	 * @param parent a parent composite
 	 * @param taskModel a task model
+	 * @param wizard the wizard this composite is contained in
 	 */
-	public NewInstallableServerComposite(Composite parent, TaskModel taskModel) {
+	public NewInstallableServerComposite(Composite parent, TaskModel taskModel, IWizardHandle wizard) {
 		super(parent, SWT.NONE);
 		this.taskModel = taskModel;
+		this.wizard = wizard;
 		
 		createControl();
 	}
@@ -67,5 +71,6 @@ public class NewInstallableServerComposite extends Composite {
 
 	protected void handleSelection(IInstallableServer server) {
 		taskModel.putObject("installableServer", server);
+		wizard.update();
 	}
 }
