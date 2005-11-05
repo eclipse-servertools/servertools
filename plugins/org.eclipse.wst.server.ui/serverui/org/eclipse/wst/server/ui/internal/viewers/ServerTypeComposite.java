@@ -95,7 +95,7 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 	}
 
 	protected String getDescriptionLabel() {
-		return null; //Messages.serverTypeCompDescription");
+		return null;
 	}
 
 	protected String getTitleLabel() {

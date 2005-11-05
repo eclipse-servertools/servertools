@@ -156,6 +156,7 @@ public class NewManualServerComposite extends Composite {
 			serverTypeComposite.setHost(true);
 		else
 			serverTypeComposite.setHost(false);
+		handleTypeSelection(serverTypeComposite.getSelectedServerType());
 		if (server != null) {
 			server.setHost(host);
 			ServerUtil.setServerDefaultName(server);
@@ -320,10 +321,12 @@ public class NewManualServerComposite extends Composite {
 		
 		updateRuntimeCombo(serverType);
 		if (wrong) {
+			server = null;
 			wizard.setMessage(NLS.bind(Messages.errorVersionLevel, new Object[] { moduleType.getName(), moduleType.getVersion() }), IMessageProvider.ERROR);
-		} else if (serverType == null)
+		} else if (serverType == null) {
+			server = null;
 			wizard.setMessage("", IMessageProvider.ERROR);
-		else {
+		} else {
 			wizard.setMessage(null, IMessageProvider.NONE);
 			loadServerImpl(serverType);
 		}
