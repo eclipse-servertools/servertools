@@ -48,6 +48,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	protected Button saveNever;
 	protected Button savePrompt;
 	protected Button saveAuto;
+	protected Button syncOnStartup;
 
 	protected ServerPreferences preferences;
 	protected ServerUIPreferences uiPreferences;
@@ -107,6 +108,14 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		publishBeforeStart.setLayoutData(data);
 		publishBeforeStart.setSelection(preferences.isAutoPublishing());
 		whs.setHelp(publishBeforeStart, ContextIds.PREF_GENERAL_PUBLISH_BEFORE_START);
+		
+		syncOnStartup = new Button(composite, SWT.CHECK);
+		syncOnStartup.setText(Messages.prefSyncStartup);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		data.horizontalSpan = 3;
+		syncOnStartup.setLayoutData(data);
+		syncOnStartup.setSelection(preferences.isSyncOnStartup());
+		whs.setHelp(syncOnStartup, ContextIds.PREF_GENERAL_SYNC_STARTUP);
 		
 		autoPublishLocal = new Button(composite, SWT.CHECK);
 		autoPublishLocal.setText(Messages.prefAutoPublishLocal);
@@ -288,6 +297,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		promptIrreversible.setSelection(uiPreferences.getDefaultPromptBeforeIrreversibleChange());
 		showOnActivity.setSelection(uiPreferences.getDefaultShowOnActivity());
 		
+		syncOnStartup.setSelection(preferences.getDefaultSyncOnStartup());
 		autoPublishLocal.setSelection(preferences.getDefaultAutoPublishLocal());
 		autoPublishLocalTime.setSelection(preferences.getDefaultAutoPublishLocalTime());
 		autoPublishRemote.setSelection(preferences.getDefaultAutoPublishRemote());
@@ -296,7 +306,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		machineSpeedCombo.select((preferences.getDefaultMachineSpeed() - 1) / 2);
 		
 		setSaveEditorStatus(uiPreferences.getDefaultSaveEditors());
-	
+		
 		super.performDefaults();
 	}
 
@@ -306,6 +316,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	public boolean performOk() {
 		preferences.setAutoPublishing(publishBeforeStart.getSelection());
 		preferences.setAutoRestarting(autoRestart.getSelection());
+		preferences.setSyncOnStartup(syncOnStartup.getSelection());
 		uiPreferences.setSaveEditors(saveEditors);
 		uiPreferences.setPromptBeforeIrreversibleChange(promptIrreversible.getSelection());
 		uiPreferences.setShowOnActivity(showOnActivity.getSelection());

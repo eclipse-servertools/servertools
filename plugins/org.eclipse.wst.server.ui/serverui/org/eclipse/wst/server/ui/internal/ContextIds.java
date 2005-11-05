@@ -50,6 +50,7 @@ public interface ContextIds {
 	public static final String PREF_GENERAL_SHOW_ON_ACTIVITY = ServerUIPlugin.PLUGIN_ID + ".spge0022";
 	public static final String PREF_GENERAL_SAVE_EDITORS = ServerUIPlugin.PLUGIN_ID + ".spge0024";
 	public static final String PREF_GENERAL_TIMEOUT_DELAY = ServerUIPlugin.PLUGIN_ID + ".spge0026";
+	public static final String PREF_GENERAL_SYNC_STARTUP = ServerUIPlugin.PLUGIN_ID + ".spge0028";
 
 	public static final String VIEW_SERVERS = ServerUIPlugin.PLUGIN_ID + ".svcp0000";
 

@@ -8,33 +8,30 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.ui.internal.view.servers;
+package org.eclipse.wst.server.core.internal;
 
-import org.eclipse.jface.action.Action;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.internal.*;
-import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 /**
  * Action to update a server's status.
  */
-public class UpdateStatusAction extends Action {
-	protected IServer server;
-
+public class UpdateServerJob extends ChainedJob {
 	/**
 	 * An action to update the status of a server.
 	 * 
 	 * @param server a server
 	 */
-	public UpdateStatusAction(IServer server) {
-		super(Messages.actionUpdateStatus);
-		this.server = server;
+	public UpdateServerJob(IServer server) {
+		super(NLS.bind(Messages.jobUpdateServer, server.getName()), server);
 	}
 
-	/**
-	 * Invoked when an action occurs. 
-	 */
-	public void run() {
-		UpdateServerJob job = new UpdateServerJob(server);
-		job.schedule();
+	public IStatus run(IProgressMonitor monitor) {
+		getServer().loadAdapter(ServerBehaviourDelegate.class, monitor);
+		
+		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null);
 	}
 }

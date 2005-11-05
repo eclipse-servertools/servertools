@@ -56,7 +56,7 @@ class Sound {
 	 * 
 	 * @return java.lang.String
 	 */
-	public java.lang.String getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -64,7 +64,7 @@ class Sound {
 	 * 
 	 * @return java.net.URL
 	 */
-	public java.net.URL getLocation() {
+	public URL getLocation() {
 		return location;
 	}
 
@@ -72,7 +72,7 @@ class Sound {
 	 * 
 	 * @return java.lang.String
 	 */
-	public java.lang.String getName() {
+	public String getName() {
 		return name;
 	}
 
@@ -88,7 +88,7 @@ class Sound {
 	 * 
 	 * @param newId java.lang.String
 	 */
-	public void setId(java.lang.String newId) {
+	public void setId(String newId) {
 		id = newId;
 	}
 
@@ -96,7 +96,7 @@ class Sound {
 	 * 
 	 * @param newLocation java.net.URL
 	 */
-	public void setLocation(java.net.URL newLocation) {
+	public void setLocation(URL newLocation) {
 		location = newLocation;
 	}
 
@@ -104,7 +104,7 @@ class Sound {
 	 * 
 	 * @param newName java.lang.String
 	 */
-	public void setName(java.lang.String newName) {
+	public void setName(String newName) {
 		name = newName;
 	}
 }

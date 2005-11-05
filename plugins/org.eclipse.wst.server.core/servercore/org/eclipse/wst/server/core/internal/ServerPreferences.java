@@ -26,6 +26,8 @@ public class ServerPreferences {
 	
 	private static final String PREF_MACHINE_SPEED = "machine-speed";
 
+	private static final String PREF_SYNC_ON_STARTUP = "sync-on-startup";
+
 	private Preferences preferences;
 
 	protected static ServerPreferences instance;
@@ -145,7 +147,34 @@ public class ServerPreferences {
 	public void setMachineSpeed(int speed) {
 		preferences.setValue(PREF_MACHINE_SPEED, speed);
 	}
-	
+
+	/**
+	 * Return the sync on startup value.
+	 * 
+	 * @return the sync on startup value
+	 */
+	public boolean isSyncOnStartup() {
+		return preferences.getBoolean(PREF_SYNC_ON_STARTUP);
+	}
+
+	/**
+	 * Return the default sync on startup value.
+	 * 
+	 * @return the default sync on startup value
+	 */
+	public boolean getDefaultSyncOnStartup() {
+		return false;
+	}
+
+	/**
+	 * Sets the sync on startup value.
+	 * 
+	 * @param sync the sync on startup value 
+	 */
+	public void setSyncOnStartup(boolean sync) {
+		preferences.setValue(PREF_SYNC_ON_STARTUP, sync);
+	}
+
 	/**
 	 * Returns the default setting for local auto-publishing.
 	 * 
@@ -270,6 +299,8 @@ public class ServerPreferences {
 		preferences.setDefault(PREF_AUTO_PUBLISH_LOCAL_TIME, getDefaultAutoPublishLocalTime());
 		preferences.setDefault(PREF_AUTO_PUBLISH_REMOTE, getDefaultAutoPublishRemote());
 		preferences.setDefault(PREF_AUTO_PUBLISH_REMOTE_TIME, getDefaultAutoPublishRemoteTime());
+		
+		preferences.setDefault(PREF_SYNC_ON_STARTUP, getDefaultSyncOnStartup());
 		
 		preferences.setDefault(PREF_MODULE_START_TIMEOUT, 300001);
 		boolean save = false;

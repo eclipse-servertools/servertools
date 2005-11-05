@@ -176,6 +176,13 @@
       type="java.lang.Object"
       class="org.eclipse.wst.server.ui.internal.ServerPropertyTester">
    </propertyTester>
+   <propertyTester
+      id="org.eclipse.wst.server.ui.propertyTester"
+      namespace="org.eclipse.wst.server.ui"
+      properties="serverType"
+      type="org.eclipse.wst.server.core.IServer"
+      class="org.eclipse.wst.server.ui.internal.ServerPropertyTester">
+   </propertyTester>
 </extension>
 
   <extension point="org.eclipse.wst.server.ui.editorPages">
@@ -195,7 +202,6 @@
       <adapter type="org.eclipse.ui.IActionFilter"/>
     </factory>
   </extension>
-
 
 <extension point="org.eclipse.wst.server.core.clients">
   <client

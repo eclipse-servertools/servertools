@@ -553,6 +553,15 @@ public class ResourceManager {
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Could not load servers: " + e.getMessage());
 		}
+		
+		if (ServerPreferences.getInstance().isSyncOnStartup()) {
+			Iterator iterator = servers.iterator();
+			while (iterator.hasNext()) {
+				IServer server = (IServer) iterator.next();
+				UpdateServerJob job = new UpdateServerJob(server);
+				job.schedule();
+			}
+		}
 	}
 	
 	protected void addRuntime(IRuntime runtime) {
