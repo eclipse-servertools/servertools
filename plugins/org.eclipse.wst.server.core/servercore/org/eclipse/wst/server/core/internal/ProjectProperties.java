@@ -11,8 +11,6 @@
 package org.eclipse.wst.server.core.internal;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
@@ -31,9 +29,6 @@ public class ProjectProperties implements IProjectProperties {
 
 	protected String runtimeId;
 	protected boolean serverProject = false;
-	
-	// project properties listeners
-	protected transient List listeners;
 
 	/**
 	 * ProjectProperties constructor.
@@ -53,14 +48,9 @@ public class ProjectProperties implements IProjectProperties {
 		
 		InputStream in = null;
 		try {
-			IMemento memento = null;
-			if (!project.exists() || !project.isOpen())
-				return;
-			IFile file = project.getFile(PROJECT_PREFERENCE_FILE);
-			if (file != null && file.exists()) {
-				in = file.getContents();
-				memento = XMLMemento.loadMemento(in);
-			}
+			IPath path = project.getWorkingLocation(ServerPlugin.PLUGIN_ID).append(PROJECT_PREFERENCE_FILE);
+			
+			IMemento memento = XMLMemento.loadMemento(path.toOSString());
 			
 			if (memento == null)
 				return;
@@ -85,14 +75,8 @@ public class ProjectProperties implements IProjectProperties {
 	
 	private void savePreferences(IProgressMonitor monitor) throws CoreException {
 		if (project.exists() && project.isOpen()) {
-			IFile file = project.getFile(PROJECT_PREFERENCE_FILE);
 			
-			if (file.exists() && file.isReadOnly()) {
-				IStatus status = ResourcesPlugin.getWorkspace().validateEdit(new IFile[] { file }, null);
-				if (status.getSeverity() == IStatus.ERROR)
-					// didn't work or not under source control
-					throw new CoreException(status);
-			}
+			IPath path = project.getWorkingLocation(ServerPlugin.PLUGIN_ID).append(PROJECT_PREFERENCE_FILE);
 			
 			InputStream in = null;
 			try {
@@ -106,10 +90,7 @@ public class ProjectProperties implements IProjectProperties {
 					memento.putString("servers", "false");
 				in = memento.getInputStream();
 				
-				if (file.exists())
-					file.setContents(in, true, true, monitor);
-				else
-					file.create(in, true, monitor);
+				memento.saveToFile(path.toOSString());
 			} catch (Exception e) {
 				throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, "", e));
 			} finally {
@@ -209,66 +190,9 @@ public class ProjectProperties implements IProjectProperties {
 				savePreferences(monitor);
 		}
 		
-		fireRuntimeTargetChanged(newRuntime);
 		Trace.trace(Trace.RUNTIME_TARGET, "setRuntimeTarget <");
 	}
 
-	/**
-	 * Adds a new project properties listener.
-	 * Has no effect if an identical listener is already registered.
-	 * 
-	 * @param listener the properties listener
-	 * @see #removeProjectPropertiesListener(IProjectPropertiesListener)
-	 */
-	public void addProjectPropertiesListener(IProjectPropertiesListener listener) {
-		Trace.trace(Trace.LISTENERS, "Adding project properties listener " + listener + " to " + this);
-		
-		if (listeners == null)
-			listeners = new ArrayList();
-		listeners.add(listener);
-	}
-
-	/**
-	 * Removes an existing project properties listener.
-	 * Has no effect if the listener is not registered.
-	 * 
-	 * @param listener the properties listener
-	 * @see #addProjectPropertiesListener(IProjectPropertiesListener)
-	 */
-	public void removeProjectPropertiesListener(IProjectPropertiesListener listener) {
-		Trace.trace(Trace.LISTENERS, "Removing project properties listener " + listener + " from " + this);
-		
-		if (listeners != null)
-			listeners.remove(listener);
-	}
-
-	/**
-	 * Fire a event because the runtime target changed.
-	 *
-	 * @param runtime org.eclipse.wst.server.core.IRuntime
-	 */
-	private void fireRuntimeTargetChanged(IRuntime runtime) {
-		Trace.trace(Trace.LISTENERS, "->- Firing runtimeTargetChanged event: " + runtime + " ->-");
-	
-		if (listeners == null || listeners.isEmpty())
-			return;
-	
-		int size = listeners.size();
-		IProjectPropertiesListener[] ppl = new IProjectPropertiesListener[size];
-		listeners.toArray(ppl);
-	
-		for (int i = 0; i < size; i++) {
-			Trace.trace(Trace.LISTENERS, "  Firing runtimeTargetChanged event to " + ppl[i]);
-			try {
-				ppl[i].runtimeTargetChanged(project, runtime);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "  Error firing runtimeTargetChanged event to " + ppl[i], e);
-			}
-		}
-	
-		Trace.trace(Trace.LISTENERS, "-<- Done firing runtimeTargetChanged event -<-");
-	}
-	
 	/**
 	 * Returns <code>true</code> if this project can contain server artifacts, and
 	 * <code>false</code> otherwise.

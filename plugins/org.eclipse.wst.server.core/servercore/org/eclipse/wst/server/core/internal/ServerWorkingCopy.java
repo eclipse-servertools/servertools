@@ -239,10 +239,10 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	public IServer save(boolean force, IProgressMonitor monitor) throws CoreException {
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.subTask(NLS.bind(Messages.savingTask, getName()));
-
+		
 		if (!force && getOriginal() != null)
 			wch.validateTimestamp(((Server)getOriginal()).getTimestamp());
-
+		
 		if (server == null) {
 			server = new Server(file);
 			server.setServerState(serverState);

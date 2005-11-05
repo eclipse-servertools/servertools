@@ -498,7 +498,7 @@ public class ServerCore {
 		ModuleProperties.getInstance().setDefaultServer(module, server, monitor);
 	}
 
-	public static void handleServerTypeDelta(IExtensionDelta delta) {
+	protected static void handleServerTypeDelta(IExtensionDelta delta) {
 		if (serverTypes == null) // not loaded yet
 			return;
 		
@@ -524,7 +524,7 @@ public class ServerCore {
 		getResourceManager().resolveServers();
 	}
 
-	public static void handleRuntimeTypeDelta(IExtensionDelta delta) {
+	protected static void handleRuntimeTypeDelta(IExtensionDelta delta) {
 		if (runtimeTypes == null) // not loaded yet
 			return;
 		

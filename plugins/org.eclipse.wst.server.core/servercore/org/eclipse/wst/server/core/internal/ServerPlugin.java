@@ -60,7 +60,10 @@ public class ServerPlugin extends Plugin {
 
 	//	cached copy of all installable servers
 	private static List installableServers;
-	
+
+	//	cached copy of all installable runtimes
+	private static List installableRuntimes;
+
 	// registry listener
 	private static IRegistryChangeListener registryListener;
 	
@@ -958,6 +961,38 @@ public class ServerPlugin extends Plugin {
 	}
 
 	/**
+	 * Returns an array of all known installable runtimes.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return the array of installable runtimes {@link IInstallableRuntime}
+	 */
+	public static IInstallableRuntime[] getInstallableRuntimes() {
+		if (installableRuntimes == null)
+			loadInstallableRuntimes();
+		
+		/*List availableServers = new ArrayList();
+		Iterator iterator = installableServers.iterator();
+		IRuntimeType[] runtimeTypes = ServerCore.getRuntimeTypes();
+		int size = runtimeTypes.length;
+		while (iterator.hasNext()) {
+			IInstallableServer server = (IInstallableServer) iterator.next();
+			boolean found = false;
+			for (int i = 0; i < size; i++) {
+				if (server.getId().equals(runtimeTypes[i].getId()))
+					found = true;
+			}
+			if (!found)
+				availableServers.add(server);
+		}*/
+		
+		IInstallableRuntime[] ir = new IInstallableRuntime[installableRuntimes.size()];
+		installableRuntimes.toArray(ir);
+		return ir;
+	}
+
+	/**
 	 * Load the installable servers.
 	 */
 	private static synchronized void loadInstallableServers() {
@@ -981,6 +1016,32 @@ public class ServerPlugin extends Plugin {
 		}
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .installableServers extension point -<-");
+	}
+
+	/**
+	 * Load the installable runtimes.
+	 */
+	private static synchronized void loadInstallableRuntimes() {
+		if (installableRuntimes != null)
+			return;
+		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .installableRuntimes extension point ->-");
+		
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "installableRuntimes");
+		
+		int size = cf.length;
+		installableRuntimes = new ArrayList(size);
+		for (int i = 0; i < size; i++) {
+			try {
+				InstallableRuntime ir = new InstallableRuntime(cf[i]);
+				installableRuntimes.add(ir);
+				Trace.trace(Trace.EXTENSION_POINT, "  Loaded installableRuntime: " + cf[i].getAttribute("id"));
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "  Could not load installableRuntime: " + cf[i].getAttribute("id"), t);
+			}
+		}
+		
+		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .installableRuntimes extension point -<-");
 	}
 
 	public static void setRegistryListener(IRegistryChangeListener listener) {

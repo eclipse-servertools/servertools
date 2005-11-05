@@ -16,6 +16,7 @@
   <extension-point id="internalServerMonitors" name="%extensionPointServerMonitors" schema="schema/serverMonitors.exsd"/>
   <extension-point id="internalStartup" name="%extensionPointServerStartup" schema="schema/startup.exsd"/>
   <extension-point id="installableServers" name="%extensionPointInstallableServers" schema="schema/installableServers.exsd"/>
+  <extension-point id="installableRuntimes" name="%extensionPointInstallableRuntimes" schema="schema/installableRuntimes.exsd"/>
   
   <extension point="org.eclipse.wst.server.core.moduleTypes">
     <moduleType
