@@ -299,7 +299,7 @@ public class PublishUtil {
 				IModuleFolder mf = (IModuleFolder) resources[i];
 				IModuleResource[] res = mf.members();
 				addZipEntries(zout, res);
-				return;
+				continue;
 			}
 			
 			IModuleFile mf = (IModuleFile) resources[i];

@@ -171,6 +171,8 @@ public class MonitorDialog extends Dialog {
 				validateFields();
 			}
 		});
+		monitorPort.setMinimum(0);
+		monitorPort.setMaximum(Integer.MAX_VALUE);
 		
 		Group group = new Group(composite, SWT.NONE);
 		GridLayout layout = new GridLayout(2, false);
@@ -189,7 +191,7 @@ public class MonitorDialog extends Dialog {
 		});
 		
 		createLabel(group, Messages.remotePort);		
-		createSpinner(group, monitor.getRemotePort(), new IntModifyListener() {
+		Spinner spinner = createSpinner(group, monitor.getRemotePort(), new IntModifyListener() {
 			public void valueChanged(int i) {
 				try {
 					monitor.setRemotePort(i);
@@ -199,6 +201,8 @@ public class MonitorDialog extends Dialog {
 				validateFields();
 			}
 		});
+		spinner.setMinimum(0);
+		spinner.setMaximum(Integer.MAX_VALUE);
 		
 		createLabel(group, Messages.parseType);		
 		createTypeCombo(group, new String[] {"TCP/IP","HTTP"}, monitor.getProtocol(), new StringModifyListener() {
@@ -208,7 +212,7 @@ public class MonitorDialog extends Dialog {
 		});
 		
 		createLabel(group, Messages.connectionTimeout);
-		createSpinner(group, monitor.getTimeout(), new IntModifyListener() {
+		spinner = createSpinner(group, monitor.getTimeout(), new IntModifyListener() {
 			public void valueChanged(int i) {
 				try {
 					monitor.setTimeout(i);
@@ -218,6 +222,8 @@ public class MonitorDialog extends Dialog {
 				validateFields();
 			}
 		});
+		spinner.setMinimum(0);
+		spinner.setMaximum(Integer.MAX_VALUE);
 		
 		return composite;
 	}

@@ -29,7 +29,7 @@ import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
  * 
  */
 public final class StandardJreClasspathProvider implements IClasspathProvider {
-	private static final IProjectFacet JAVA_FEATURE = ProjectFacetsManager
+	private static final IProjectFacet JAVA_FACET = ProjectFacetsManager
 		.getProjectFacet("jst.java");
 
 	private static final String STANDARD_VM_TYPE = "org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType";
@@ -41,7 +41,7 @@ public final class StandardJreClasspathProvider implements IClasspathProvider {
 	}
 
 	public List getClasspathEntries(final IProjectFacetVersion fv) {
-		if (fv.getProjectFacet() == JAVA_FEATURE) {
+		if (fv.getProjectFacet() == JAVA_FACET) {
 			IPath path = new Path(JavaRuntime.JRE_CONTAINER);
 			path = path.append(STANDARD_VM_TYPE);
 			path = path.append(rc.getProperty("name"));
