@@ -27,7 +27,7 @@ public class ServerEditorCore {
 	private static List editorPageFactories;
 	private static List editorPageSectionFactories;
 	private static List editorActionFactories;
-	
+
 	/**
 	 * Returns a List of all editor page factories
 	 *
@@ -38,7 +38,7 @@ public class ServerEditorCore {
 			loadEditorPageFactories();
 		return editorPageFactories;
 	}
-	
+
 	/**
 	 * Returns a List of all editor page section factories
 	 *
@@ -57,7 +57,7 @@ public class ServerEditorCore {
 		Trace.trace(Trace.CONFIG, "->- Loading .editorPages extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, ServerUIPlugin.EXTENSION_EDITOR_PAGES);
-		editorPageSectionFactories = new ArrayList(cf.length);
+		editorPageFactories = new ArrayList(cf.length);
 		loadEditorPageFactories(cf);
 		ServerUIPlugin.addRegistryListener();
 		Trace.trace(Trace.CONFIG, "-<- Done loading .editorPages extension point -<-");
@@ -68,7 +68,6 @@ public class ServerEditorCore {
 	 */
 	private static void loadEditorPageFactories(IConfigurationElement[] cf) {
 		int size = cf.length;
-		editorPageFactories = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
 				editorPageFactories.add(new ServerEditorPartFactory(cf[i]));
