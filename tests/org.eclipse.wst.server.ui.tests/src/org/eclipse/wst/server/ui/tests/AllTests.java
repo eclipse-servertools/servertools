@@ -26,7 +26,6 @@ public class AllTests {
 		suite.addTestSuite(ServerUIPreferencesTestCase.class);
 		
 		suite.addTestSuite(ServerUICoreTestCase.class);
-		suite.addTestSuite(ServerUIUtilTestCase.class);
 		suite.addTest(new OrderedTestSuite(ServerLaunchConfigurationTabTestCase.class));
 		
 		suite.addTest(new OrderedTestSuite(IServerEditorPartInputTestCase.class));
