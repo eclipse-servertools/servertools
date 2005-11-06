@@ -26,7 +26,7 @@ public class AllTests {
 		suite.addTestSuite(ServerUIPreferencesTestCase.class);
 		
 		suite.addTestSuite(ServerUICoreTestCase.class);
-		//suite.addTestSuite(ServerUIUtilTestCase.class);
+		suite.addTestSuite(ServerUIUtilTestCase.class);
 		suite.addTest(new OrderedTestSuite(ServerLaunchConfigurationTabTestCase.class));
 		
 		suite.addTest(new OrderedTestSuite(IServerEditorPartInputTestCase.class));
@@ -36,7 +36,7 @@ public class AllTests {
 		suite.addTestSuite(DialogsTestCase.class);
 		suite.addTestSuite(PreferencesTestCase.class);
 		suite.addTestSuite(ViewTestCase.class);
-		//suite.addTestSuite(WizardTestCase.class);
+		suite.addTestSuite(WizardTestCase.class);
 		
 		suite.addTest(new OrderedTestSuite(IOrderedTestCase.class));
 		suite.addTest(new OrderedTestSuite(ServerEditorActionFactoryDelegateTestCase.class));
