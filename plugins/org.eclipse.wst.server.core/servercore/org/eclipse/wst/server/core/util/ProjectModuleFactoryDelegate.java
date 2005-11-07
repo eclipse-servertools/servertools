@@ -378,7 +378,11 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 					} else if (".component".equals(delta2.getResource().getName())) {
 						t.b = true;
 						return false;
+					} else if ("org.eclipse.wst.common.project.facet.core.xml".equals(delta2.getResource().getName())) {
+						t.b = true;
+						return false;
 					}
+					
 					return true;
 				}
 			});
