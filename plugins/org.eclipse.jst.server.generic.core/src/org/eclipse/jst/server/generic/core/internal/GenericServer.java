@@ -41,7 +41,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jst.server.core.IEJBModule;
 import org.eclipse.jst.server.core.IEnterpriseApplication;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
@@ -64,15 +63,19 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
     private static final String ATTR_GENERIC_SERVER_MODULES = "Generic_Server_Modules_List";
 
 	public IStatus canModifyModules(IModule[] add, IModule[] remove) {
-		Iterator iterator = getServerDefinition().getModule().iterator();
-	
-	    while(iterator.hasNext())   {
-	        Module module = (Module)iterator.next();
-	        for (int i = 0; i < add.length; i++) {
-	            if(add[i].getModuleType().getId().equals(module.getType()))
-	                return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "CanModifyModules", null);
-	        }
-	    }
+		List moduleTypes = getServerDefinition().getModule();
+        int found =0;
+		for (int i = 0; i < add.length; i++) {
+			for(int j=0;j<moduleTypes.size();j++){
+				 Module module = (Module)moduleTypes.get(j);
+				 if(add[i].getModuleType()!= null && add[i].getModuleType().getId().equals(module.getType())){
+					 found++;
+					 break;
+				  }
+			}
+        }
+		if(found==add.length)
+			return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "CanModifyModules", null);
 		return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.moduleNotCompatible, null);
 	}
 	
@@ -229,46 +232,17 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
      * @see org.eclipse.wst.server.core.model.ServerDelegate#getRootModules(org.eclipse.wst.server.core.IModule)
      */
     public IModule[] getRootModules(IModule module) throws CoreException {
-
-       String type = module.getModuleType().getId();
-       if (type.equals("jst.ejb")) {
-            IEJBModule ejbModule = (IEJBModule) module.loadAdapter(IEJBModule.class,null);
-            if (ejbModule != null) {
-            	IStatus status = canModifyModules(new IModule[] { module }, null);
-                if (status == null || !status.isOK())
-                    throw new CoreException(status);
-                IModule[] childs = doGetChildModules(module);
-                if(childs.length>0)
-                	return childs;
-                return new IModule[] { module };
-            }
-        }
-        if (type.equals("jst.ear")) {
-            IEnterpriseApplication enterpriseApplication = (IEnterpriseApplication) module.loadAdapter(IEnterpriseApplication.class,null);
-            if (enterpriseApplication.getModules() != null) {
-                IStatus status = canModifyModules(new IModule[] { module },null);
-                if (status == null || !status.isOK())
-                    throw new CoreException(status);
-                return new IModule[] { module };
-            }
-        }        
-        if (type.equals("jst.web")) {
-            IWebModule webModule = (IWebModule) module.loadAdapter(IWebModule.class,null);
-            if (webModule != null) {
-                IStatus status = canModifyModules(new IModule[] { module },null);
-                if (status == null || !status.isOK())
-                    throw new CoreException(status);
-                IModule[] childs = doGetChildModules(module);
-                if(childs.length>0)
-                	return childs;
-                return new IModule[] { module };
-            }
-        }
-        return null;
+     	IStatus status = canModifyModules(new IModule[] { module }, null);
+        if (status == null || !status.isOK())
+            throw new CoreException(status);
+        IModule[] childs = doGetParentModules(module);
+        if(childs.length>0)
+        	return childs;
+        return new IModule[] { module };
     }
 
 
-	private IModule[] doGetChildModules(IModule module) {
+	private IModule[] doGetParentModules(IModule module) {
 		IModule[] ears = ServerUtil.getModules("jst.ear");
 		ArrayList list = new ArrayList();
 		for (int i = 0; i < ears.length; i++) {
