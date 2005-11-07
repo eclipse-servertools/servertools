@@ -40,7 +40,6 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
 	private ServerRuntime fDefinition;
     private Map fProperties;
 	private String fContext;
-	private GenericServerComposite fComposite;
 	private String fLastMessage = null;
 	protected IWizardHandle fWizard;
 	private List fPropertyControls= new ArrayList();
@@ -75,7 +74,7 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
 	}
 
 	public void decorate(GenericServerComposite composite) {
-		fComposite=composite;
+
 		List properties =null; 
 		if(fDefinition==null){
 			properties= new ArrayList(0);
