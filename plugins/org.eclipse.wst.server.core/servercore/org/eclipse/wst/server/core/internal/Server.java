@@ -1770,11 +1770,8 @@ public class Server extends Base implements IServer {
 	 * @see org.eclipse.wst.server.core.IServerConfiguration#canModifyModule(org.eclipse.wst.server.core.model.IModule)
 	 */
 	public IStatus canModifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) {
-		if (add == null && remove == null)
-			throw new IllegalArgumentException("Add and remove cannot both be null");
-		
 		if ((add == null || add.length == 0) && (remove == null || remove.length == 0))
-			throw new IllegalArgumentException("Add and remove cannot both be empty");
+			throw new IllegalArgumentException("Add and remove cannot both be null/empty");
 		
 		if (add != null && add.length > 0) {
 			int size = add.length;

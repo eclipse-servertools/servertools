@@ -368,8 +368,9 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	 * @see org.eclipse.wst.server.core.IServer#modifyModule(org.eclipse.wst.server.core.model.IModule)
 	 */
 	public void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
-		if (add == null && remove == null)
-			throw new IllegalArgumentException("Add and remove cannot both be null");
+		if ((add == null || add.length == 0) && (remove == null || remove.length == 0))
+			throw new IllegalArgumentException("Add and remove cannot both be null/empty");
+		
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
 			monitor.subTask(Messages.taskModifyModules);
