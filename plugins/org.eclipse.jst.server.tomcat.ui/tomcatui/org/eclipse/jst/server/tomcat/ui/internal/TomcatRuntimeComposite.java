@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMInstallType;
@@ -43,6 +44,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
+import org.eclipse.wst.server.core.internal.IInstallableRuntime;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 /**
  * Wizard page to set the server install directory.
@@ -130,7 +133,7 @@ public class TomcatRuntimeComposite extends Composite {
 				validate();
 			}
 		});
-	
+		
 		Button browse = SWTUtil.createButton(this, Messages.browse);
 		browse.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent se) {
@@ -142,6 +145,29 @@ public class TomcatRuntimeComposite extends Composite {
 					installDir.setText(selectedDirectory);
 			}
 		});
+		
+		label = new Label(this, SWT.NONE);
+		
+		if (ServerPlugin.getInstallableRuntimes().length > 0) {
+			Button install = SWTUtil.createButton(this, Messages.install);
+			install.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent se) {
+					DirectoryDialog dialog = new DirectoryDialog(TomcatRuntimeComposite.this.getShell());
+					dialog.setMessage(Messages.selectInstallDir);
+					dialog.setFilterPath(installDir.getText());
+					String selectedDirectory = dialog.open();
+					if (selectedDirectory != null) {
+						try {
+							IInstallableRuntime ir = ServerPlugin.getInstallableRuntimes()[0];
+							ir.install(new Path(selectedDirectory), new NullProgressMonitor());
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						installDir.setText(selectedDirectory);
+					}
+				}
+			});
+		}
 		
 		updateJREs();
 		
