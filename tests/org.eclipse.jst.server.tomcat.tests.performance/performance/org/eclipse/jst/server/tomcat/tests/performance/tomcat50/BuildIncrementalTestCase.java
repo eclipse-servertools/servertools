@@ -17,18 +17,18 @@ import org.eclipse.jst.server.tomcat.core.tests.module.ModuleHelper;
 import org.eclipse.test.performance.Dimension;
 import org.eclipse.test.performance.PerformanceTestCase;
 
-public class CleanBuildTestCase extends PerformanceTestCase {
+public class BuildIncrementalTestCase extends PerformanceTestCase {
 	public static Test suite() {
-		return new TestSuite(CleanBuildTestCase.class, "CleanBuildTestCase");
+		return new TestSuite(BuildIncrementalTestCase.class, "BuildIncrementalTestCase");
 	}
 
 	public void testBuild() throws Exception {
 		Dimension[] dims = new Dimension[] {Dimension.ELAPSED_PROCESS, Dimension.USED_JAVA_HEAP};
-		tagAsGlobalSummary("Build clean modules", dims);
+		tagAsSummary("Build incremental", dims);
 		
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < CreateModulesTestCase.NUM_BUILDS; i++) {
 			startMeasuring();
-			ModuleHelper.buildClean();
+			ModuleHelper.buildIncremental();
 			stopMeasuring();
 		}
 		

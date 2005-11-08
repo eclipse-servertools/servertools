@@ -23,7 +23,7 @@ public class OpenEditorTestCase extends AbstractOpenEditorTestCase {
 
   public void testOpenEditor() throws Exception {
     Dimension[] dims = new Dimension[] {Dimension.ELAPSED_PROCESS, Dimension.USED_JAVA_HEAP};
-    tagAsGlobalSummary("Open Tomcat editor", dims);
+    tagAsSummary("Open Tomcat editor", dims);
     super.testOpenEditor();
   }
 

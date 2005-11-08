@@ -26,7 +26,7 @@ public class AddRemoveModulesWizard2TestCase extends PerformanceTestCase {
 
 	public void testAddRemoveModulesWizard() throws Exception {
 		Dimension[] dims = new Dimension[] {Dimension.ELAPSED_PROCESS, Dimension.USED_JAVA_HEAP};
-		tagAsGlobalSummary("Add/remove modules wizard", dims);
+		tagAsSummary("Add/remove modules wizard", dims);
 		
 		IModule module = ModuleHelper.getModule(CreateModulesTestCase.WEB_MODULE_NAME + "0");
 		

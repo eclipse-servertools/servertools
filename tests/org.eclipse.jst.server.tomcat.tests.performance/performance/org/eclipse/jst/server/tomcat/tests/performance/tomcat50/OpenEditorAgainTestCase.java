@@ -28,7 +28,7 @@ public class OpenEditorAgainTestCase extends AbstractOpenEditorTestCase {
 
 	public void testOpenEditor() throws Exception {
 		Dimension[] dims = new Dimension[] { Dimension.ELAPSED_PROCESS, Dimension.USED_JAVA_HEAP };
-		tagAsGlobalSummary("Open Tomcat editor again", dims);
+		tagAsSummary("Open Tomcat editor again", dims);
 
 		for (int i = 0; i < 5; i++) {
 			startMeasuring();

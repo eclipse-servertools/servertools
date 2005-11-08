@@ -16,8 +16,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jst.j2ee.datamodel.properties.IJ2EEComponentCreationDataModelProperties;
 import org.eclipse.jst.j2ee.internal.web.archive.operations.WebComponentCreationDataModelProvider;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IComponentCreationDataModelProperties;
@@ -54,8 +56,8 @@ public class ModuleHelper {
 
 	public static void createJavaContent(String name, int i) throws Exception {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
-		IFile file = project.getFile(new Path("WebContent").append("test" + i + ".java"));
-		String content = "class Test { }";
+		IFile file = project.getFile(new Path("JavaSource").append("Test" + i + ".java"));
+		String content = "public class Test" + i + " { }";
 		ByteArrayInputStream in = new ByteArrayInputStream(content.getBytes());
 		file.create(in, true, null);
 	}
@@ -65,12 +67,46 @@ public class ModuleHelper {
 		project.delete(true, null);
 	}
 
-	public static void build() throws Exception {
-		ResourcesPlugin.getWorkspace().build(IncrementalProjectBuilder.FULL_BUILD, null);
+	public static void buildIncremental() throws CoreException {
+		ResourcesPlugin.getWorkspace().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
+		boolean interrupted = true;
+		while (interrupted) {
+			try {
+				Platform.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD,
+						new NullProgressMonitor());
+				interrupted = false;
+			} catch (InterruptedException e) {
+				// 
+			}
+		}
 	}
 
-	public static void buildClean() throws Exception {
+	public static void buildFull() throws CoreException {
+		ResourcesPlugin.getWorkspace().build(IncrementalProjectBuilder.FULL_BUILD, null);
+		boolean interrupted = true;
+		while (interrupted) {
+			try {
+				Platform.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD,
+						new NullProgressMonitor());
+				interrupted = false;
+			} catch (InterruptedException e) {
+				// 
+			}
+		}
+	}
+
+	public static void buildClean() throws CoreException {
 		ResourcesPlugin.getWorkspace().build(IncrementalProjectBuilder.CLEAN_BUILD, null);
+		boolean interrupted = true;
+		while (interrupted) {
+			try {
+				Platform.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD,
+						new NullProgressMonitor());
+				interrupted = false;
+			} catch (InterruptedException e) {
+				// 
+			}
+		}
 	}
 
 	public static IModule getModule(String name) throws Exception {

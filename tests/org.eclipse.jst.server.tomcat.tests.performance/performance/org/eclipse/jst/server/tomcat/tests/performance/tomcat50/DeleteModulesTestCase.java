@@ -24,7 +24,7 @@ public class DeleteModulesTestCase extends PerformanceTestCase {
 
 	public void testDeleteModules() throws Exception {
 		Dimension[] dims = new Dimension[] {Dimension.ELAPSED_PROCESS, Dimension.USED_JAVA_HEAP};
-		tagAsGlobalSummary("Delete modules", dims);
+		tagAsSummary("Delete modules", dims);
 		
 		for (int i = 0; i < CreateModulesTestCase.NUM_MODULES; i++) {
 			startMeasuring();

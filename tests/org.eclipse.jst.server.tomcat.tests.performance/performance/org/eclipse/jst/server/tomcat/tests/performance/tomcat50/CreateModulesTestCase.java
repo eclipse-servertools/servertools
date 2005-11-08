@@ -19,8 +19,9 @@ import org.eclipse.test.performance.PerformanceTestCase;
 
 public class CreateModulesTestCase extends PerformanceTestCase {
 	protected static final String WEB_MODULE_NAME = "WebModule";
-	protected static final int NUM_MODULES = 5;
-	protected static final int NUM_RESOURCES = 10;
+	protected static final int NUM_MODULES = 25;
+	protected static final int NUM_RESOURCES = 500;
+	protected static final int NUM_BUILDS = 10;
 
 	public static Test suite() {
 		return new TestSuite(CreateModulesTestCase.class, "CreateModulesTestCase");
@@ -28,7 +29,7 @@ public class CreateModulesTestCase extends PerformanceTestCase {
 
 	public void testCreateModules() throws Exception {
 		Dimension[] dims = new Dimension[] {Dimension.ELAPSED_PROCESS, Dimension.USED_JAVA_HEAP};
-		tagAsGlobalSummary("Create modules", dims);
+		tagAsSummary("Create web modules", dims);
 		
 		for (int i = 0; i < NUM_MODULES; i++) {
 			startMeasuring();

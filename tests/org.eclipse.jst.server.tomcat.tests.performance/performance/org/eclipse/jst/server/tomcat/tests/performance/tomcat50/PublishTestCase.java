@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,21 +17,31 @@ import org.eclipse.jst.server.tomcat.core.tests.module.ModuleHelper;
 import org.eclipse.test.performance.Dimension;
 import org.eclipse.test.performance.PerformanceTestCase;
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.ui.tests.dialog.WizardTestCase;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
 
-public class AddRemoveModulesWizardTestCase extends PerformanceTestCase {
+public class PublishTestCase extends PerformanceTestCase {
 	public static Test suite() {
-		return new TestSuite(AddRemoveModulesWizardTestCase.class, "AddRemoveModulesWizardTestCase");
+		return new TestSuite(PublishTestCase.class, "PublishTestCase");
 	}
 
-	public void testAddRemoveModulesWizard() throws Exception {
-		Dimension[] dims = new Dimension[] {Dimension.ELAPSED_PROCESS, Dimension.USED_JAVA_HEAP};
-		tagAsSummary("Add/remove modules wizard", dims);
+	public void testOpenEditor() throws Exception {
+		Dimension[] dims = new Dimension[] { Dimension.ELAPSED_PROCESS, Dimension.USED_JAVA_HEAP };
+		tagAsSummary("Publish to Tomcat", dims);
 		
-		IModule module = ModuleHelper.getModule(CreateModulesTestCase.WEB_MODULE_NAME + "0");
+		IServer server = AbstractTomcatServerTestCase.server;
+		IServerWorkingCopy wc = server.createWorkingCopy();
+		
+		int size = CreateModulesTestCase.NUM_MODULES;
+		IModule[] modules = new IModule[size];
+		for (int i = 0; i < size; i++)
+			modules[i] = ModuleHelper.getModule(CreateModulesTestCase.WEB_MODULE_NAME + i);
+		
+		wc.modifyModules(modules, null, null);
+		wc.save(true, null);
 		
 		startMeasuring();
-		WizardTestCase.testRoS(module);
+		server.publish(IServer.PUBLISH_FULL, null);
 		stopMeasuring();
 		
 		commitMeasurements();

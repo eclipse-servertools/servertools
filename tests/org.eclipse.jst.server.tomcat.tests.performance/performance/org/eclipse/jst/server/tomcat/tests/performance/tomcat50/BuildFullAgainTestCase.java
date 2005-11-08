@@ -16,23 +16,21 @@ import junit.framework.TestSuite;
 import org.eclipse.jst.server.tomcat.core.tests.module.ModuleHelper;
 import org.eclipse.test.performance.Dimension;
 import org.eclipse.test.performance.PerformanceTestCase;
-import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.ui.tests.dialog.WizardTestCase;
 
-public class AddRemoveModulesWizardTestCase extends PerformanceTestCase {
+public class BuildFullAgainTestCase extends PerformanceTestCase {
 	public static Test suite() {
-		return new TestSuite(AddRemoveModulesWizardTestCase.class, "AddRemoveModulesWizardTestCase");
+		return new TestSuite(BuildFullAgainTestCase.class, "BuildFullAgainTestCase");
 	}
 
-	public void testAddRemoveModulesWizard() throws Exception {
+	public void testBuild() throws Exception {
 		Dimension[] dims = new Dimension[] {Dimension.ELAPSED_PROCESS, Dimension.USED_JAVA_HEAP};
-		tagAsSummary("Add/remove modules wizard", dims);
+		tagAsSummary("Build full again", dims);
 		
-		IModule module = ModuleHelper.getModule(CreateModulesTestCase.WEB_MODULE_NAME + "0");
-		
-		startMeasuring();
-		WizardTestCase.testRoS(module);
-		stopMeasuring();
+		for (int i = 0; i < CreateModulesTestCase.NUM_BUILDS; i++) {
+			startMeasuring();
+			ModuleHelper.buildFull();
+			stopMeasuring();
+		}
 		
 		commitMeasurements();
 		assertPerformance();

@@ -34,7 +34,7 @@ public class ModuleTestCase extends TestCase {
 	}
 
 	public void test04GetModule() throws Exception {
-		ModuleHelper.build();
+		ModuleHelper.buildFull();
 		webModule = ModuleHelper.getModule(WEB_MODULE_NAME);
 	}
 }

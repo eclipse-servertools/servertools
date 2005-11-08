@@ -29,7 +29,7 @@ public class AllTests {
 		ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(false);
 		
 		suite.addTestSuite(CreateModulesTestCase.class);
-		suite.addTestSuite(BuildTestCase.class);
+		suite.addTestSuite(BuildFullTestCase.class);
 		
 		String s = System.getProperty("org.eclipse.jst.server.tomcat.50");
 		//s = "D:\\Tools\\tomcat\\jakarta-tomcat-5.0.19";
@@ -49,10 +49,15 @@ public class AllTests {
 		suite.addTestSuite(CreateWebContentTestCase.class);
 		suite.addTestSuite(CreateXMLContentTestCase.class);
 		suite.addTestSuite(CreateJavaContentTestCase.class);
-		suite.addTestSuite(Build2TestCase.class);
-		suite.addTestSuite(CleanBuildTestCase.class);
+		suite.addTestSuite(BuildFullAgainTestCase.class);
+		suite.addTestSuite(BuildCleanTestCase.class);
+		suite.addTestSuite(BuildIncrementalTestCase.class);
 		suite.addTestSuite(AddRemoveModulesWizardTestCase.class);
 		suite.addTestSuite(AddRemoveModulesWizard2TestCase.class);
+		
+		if (s != null && s.length() > 0)
+			suite.addTestSuite(PublishTestCase.class);
+		
 		suite.addTestSuite(DeleteModulesTestCase.class);
 		
 		AbstractTomcatServerTestCase.deleteServer();
