@@ -1,39 +1,22 @@
-/*******************************************************************************
- * Copyright (c) 2004 Eteration Bilisim A.S.
- * All rights reserved.   This program and the accompanying materials
- * are made available under the terms of the Common Public License v1.0
+/***************************************************************************************************
+ * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/cpl-v10.html
+ * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors:
- *     Gorkem Ercan - initial API and implementation
- *     Naci M. Dai
- * 
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL ETERATION A.S. OR
- * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
- * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals on behalf of the Eteration Bilisim A.S.  For more
- * information on eteration, please see
- * <http://www.eteration.com/>.
- ***************************************************************************/
+ * Contributors: Gorkem Ercan - initial API and implementation
+ *               
+ **************************************************************************************************/
 package org.eclipse.jst.server.generic.core.internal;
 
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IExtensionDelta;
+import org.eclipse.core.runtime.IRegistryChangeEvent;
+import org.eclipse.core.runtime.IRegistryChangeListener;
+import org.eclipse.jst.server.generic.internal.core.util.ExtensionPointUtil;
 import org.eclipse.jst.server.generic.internal.xml.XMLUtils;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 /**
@@ -46,10 +29,19 @@ public class ServerTypeDefinitionManager
 {
 	private XMLUtils fXmlUtils;
 	
-	public ServerTypeDefinitionManager(URL serverDefinitionURL)
-	{
+	private class RegistryChangeListener implements IRegistryChangeListener{
+		public void registryChanged(IRegistryChangeEvent event) {
+			IExtensionDelta[] deltas = event.getExtensionDeltas(CorePlugin.PLUGIN_ID, ExtensionPointUtil.SERVERDEFINITION_EXTENSION_ID);
+			if(deltas!=null && deltas.length>0){
+				handleServerDefinitionsChanged();
+			}
+		}		
+	}
+	
+	protected ServerTypeDefinitionManager(URL serverDefinitionURL){
 		super();
-		fXmlUtils = new XMLUtils(); 
+		fXmlUtils = new XMLUtils();
+		ExtensionPointUtil.addRegistryListener(new RegistryChangeListener());
 	}
 
 	/**
@@ -59,20 +51,25 @@ public class ServerTypeDefinitionManager
 	 * @param properties user provided properties
 	 * @return server runtime that is initialized with user properties 
 	 */
-	public ServerRuntime getServerRuntimeDefinition(String id, Map properties)
-	{
+	public ServerRuntime getServerRuntimeDefinition(String id, Map properties){
 		ServerRuntime definition =  fXmlUtils.getServerTypeDefinition(id);
 		if(definition !=null)
             definition.setPropertyValues(properties);
 		return definition;
 	}
+	
 	/**
 	 * Returns all the ServerRuntimes registered a .serverdef.
 	 * @return
 	 */
-	public ServerRuntime[] getServerTypeDefinitions()
-	{
+	public ServerRuntime[] getServerTypeDefinitions(){
 		 List definitionList = fXmlUtils.getServerTypeDefinitions();
 		 return (ServerRuntime[])definitionList.toArray(new ServerRuntime[definitionList.size()]);
 	}
+	
+	private void handleServerDefinitionsChanged(){	
+		XMLUtils utils = new XMLUtils();
+		fXmlUtils = utils;
+	}
+	
 }
