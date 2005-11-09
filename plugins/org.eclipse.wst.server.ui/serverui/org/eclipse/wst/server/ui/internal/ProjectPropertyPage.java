@@ -37,8 +37,6 @@ public class ProjectPropertyPage extends PropertyPage {
 	protected IProject project;
 	protected IModule module;
 	protected IServer server;
-	
-	protected RuntimeTargetComposite rtComp;
 
 	/**
 	 * ProjectPropertyPage constructor comment.
@@ -96,8 +94,6 @@ public class ProjectPropertyPage extends PropertyPage {
 					moduleKind.setLayoutData(data);
 					moduleKind.setText(module.getName() + " (" + mt.getName() + ")");
 				}
-				
-				rtComp = new RuntimeTargetComposite(composite, project);
 				
 				IServer prefServer = ServerCore.getDefaultServer(module);
 	
@@ -187,15 +183,12 @@ public class ProjectPropertyPage extends PropertyPage {
 		return allServers;
 	}
 
-	/** 
+	/**
 	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
 	 */
 	public boolean performOk() {
 		if (module != null) {
 			try {
-				if (rtComp.hasChanged())
-					rtComp.apply(new NullProgressMonitor());
-				
 				ServerCore.setDefaultServer(module, server, null);
 			} catch (CoreException e) {
 				Trace.trace(Trace.SEVERE, "Error setting preferred server", e);

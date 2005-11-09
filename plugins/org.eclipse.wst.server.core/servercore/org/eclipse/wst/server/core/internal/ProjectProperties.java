@@ -134,7 +134,7 @@ public class ProjectProperties implements IProjectProperties {
 	 * @param monitor a progress monitor
 	 * @throws CoreException if anything goes wrong
 	 */
-	public void setRuntimeTarget(IRuntime runtime, IProgressMonitor monitor) throws CoreException {
+	protected void setRuntimeTarget(IRuntime runtime, IProgressMonitor monitor) throws CoreException {
 		loadPreferences();
 		IRuntime oldRuntime = null;
 		if (runtimeId != null)

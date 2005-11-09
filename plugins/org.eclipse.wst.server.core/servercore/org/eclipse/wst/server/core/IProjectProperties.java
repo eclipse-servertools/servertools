@@ -9,9 +9,6 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.server.core;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * This interface holds information on the properties of a given project.
  *
@@ -38,17 +35,4 @@ public interface IProjectProperties {
 	 *    org.eclipse.wst.common.project.facet.core.IFacetedProject#getRuntime()
 	 */
 	public IRuntime getRuntimeTarget();
-
-	/**
-	 * Sets the runtime target for the project.
-	 * 
-	 * @param runtime the runtime to use as the target, or <code>null</code> to
-	 *    unset the target 
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @throws CoreException if there is a problem setting the runtime target
-	 * @deprecated Project facet support should now be used instead of this API. @see
-	 *    org.eclipse.wst.common.project.facet.core.IFacetedProject#setRuntime()
-	 */
-	public void setRuntimeTarget(IRuntime runtime, IProgressMonitor monitor) throws CoreException;
 }
