@@ -27,10 +27,13 @@ public class RuntimeClasspathContainerInitializer extends ClasspathContainerInit
 	public void initialize(IPath containerPath, IJavaProject project) throws CoreException {
 		if (containerPath.segmentCount() > 0) {
 			if (containerPath.segment(0).equals(RuntimeClasspathContainer.SERVER_CONTAINER)) {
+				RuntimeClasspathProviderWrapper delegate = null;
 				ClasspathRuntimeTargetHandler crth = null;
 				IRuntime runtime = null;
 				String id = "";
 				if (containerPath.segmentCount() > 2) {
+					delegate = JavaServerPlugin.findRuntimeClasspathProvider(containerPath.segment(1));
+					
 					IRuntimeTargetHandler handler = ServerCore.findRuntimeTargetHandler(containerPath.segment(1));
 					if (handler != null)
 						crth = (ClasspathRuntimeTargetHandler) handler.getAdapter(ClasspathRuntimeTargetHandler.class);
@@ -40,7 +43,7 @@ public class RuntimeClasspathContainerInitializer extends ClasspathContainerInit
 					if (containerPath.segmentCount() > 3)
 						id = containerPath.segment(3);
 				}
-				RuntimeClasspathContainer container = new RuntimeClasspathContainer(containerPath, crth, runtime, id);
+				RuntimeClasspathContainer container = new RuntimeClasspathContainer(containerPath, delegate, crth, runtime, id);
 				JavaCore.setClasspathContainer(containerPath, new IJavaProject[] {project}, new IClasspathContainer[] {container}, null);
 			}
 		}

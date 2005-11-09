@@ -2,6 +2,8 @@
 <?eclipse version="3.0"?>
 
 <plugin>
+  <extension-point id="runtimeClasspathProviders" name="%extensionPointRuntimeClasspathProviders" schema="schema/runtimeClasspathProviders.exsd"/>
+
   <extension point="org.eclipse.jdt.core.classpathContainerInitializer">
     <classpathContainerInitializer
       id="org.eclipse.jst.server.core.container"
@@ -112,7 +114,7 @@
     </supported>
 
     <supported>
-      <runtime-component id="standard.jre" version="5.0"/>
+      <runtime-component id="jre.standard" version="5.0"/>
       <facet id="jst.java" version="5.0"/>
     </supported>
   </extension>

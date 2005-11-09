@@ -26,15 +26,10 @@ import org.eclipse.wst.server.core.model.RuntimeTargetHandlerDelegate;
  * A runtime target handler that supports changing the classpath of the
  * project by adding one or more classpath containers. Runtime providers
  * can extend this class and implement the abstract methods to provide
- * the correct build path for their runtime type. 
+ * the correct build path for their runtime type.
  * 
- * <p>
- * <b>Provisional API:</b> This class/interface is part of an interim API that is still under development and expected to 
- * change significantly before reaching stability. It is being made available at this early stage to solicit feedback 
- * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
- * (repeatedly) as the API evolves.
- * </p>
- * @plannedfor 1.0
+ * @deprecated Should use org.eclipse.jst.server.core.runtimeClasspathProviders
+ *    extension point instead
  */
 public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandlerDelegate {
 	private class SourceAttachmentUpdate {
@@ -97,7 +92,7 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 					String id = "";
 					if (path.segmentCount() > 3)
 						id = path.segment(3);
-					RuntimeClasspathContainer rcc = new RuntimeClasspathContainer(path, this, runtime, id);
+					RuntimeClasspathContainer rcc = new RuntimeClasspathContainer(path, null, this, runtime, id);
 					JavaCore.setClasspathContainer(path, new IJavaProject[] { javaProject}, new IClasspathContainer[] { rcc }, monitor);
 				}
 			}
@@ -272,14 +267,14 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 			Trace.trace(Trace.WARNING, "Error removing runtime target", e);
 		}
 	}
-	
+
 	private static void addJarFiles(File dir, List list, boolean includeSubdirectories) {
 		int depth = 0;
 		if (includeSubdirectories)
 			depth = 2;
 		addJarFiles(dir, list, depth);
 	}
-	
+
 	private static void addJarFiles(File dir, List list, int depth) {
 		if (dir == null)
 			throw new IllegalArgumentException();
@@ -297,7 +292,7 @@ public abstract class ClasspathRuntimeTargetHandler extends RuntimeTargetHandler
 			}
 		}
 	}
-	
+
 	/**
 	 * Add library entries to the given list for every jar file found in the
 	 * given directory. Optionally search subdirectories as well.

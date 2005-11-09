@@ -20,13 +20,13 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jst.server.core.ClasspathRuntimeTargetHandler;
+import org.eclipse.jst.server.core.RuntimeClasspathProviderDelegate;
 
 import org.eclipse.wst.server.core.IRuntime;
 /**
  * 
  */
-public class TomcatRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
+public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDelegate {
 	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
 		ITomcatRuntime tomcatRuntime = (ITomcatRuntime) runtime.loadAdapter(ITomcatRuntime.class, null);
 		IVMInstall vmInstall = tomcatRuntime.getVMInstall();
@@ -39,7 +39,7 @@ public class TomcatRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
 	}
 
 	/**
-	 * @see ClasspathRuntimeTargetHandler#getClasspathContainerLabel(IRuntime, String)
+	 * @see RuntimeClasspathProviderDelegate#getClasspathContainerLabel(IRuntime, String)
 	 */
 	public String getClasspathContainerLabel(IRuntime runtime, String id) {
 		String id2 = runtime.getRuntimeType().getId();
@@ -56,7 +56,7 @@ public class TomcatRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
 	}
 
 	/**
-	 * @see ClasspathRuntimeTargetHandler#resolveClasspathContainer(IRuntime, String)
+	 * @see RuntimeClasspathProviderDelegate#resolveClasspathContainer(IRuntime, String)
 	 */
 	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime, String id) {
 		return resolveClasspathContainer(runtime);

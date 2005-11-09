@@ -26,7 +26,8 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	public static final String SERVER_CONTAINER = JavaServerPlugin.PLUGIN_ID + ".container";
 
 	private IPath path;
-	private ClasspathRuntimeTargetHandler delegate;
+	private ClasspathRuntimeTargetHandler oldDelegate;
+	private RuntimeClasspathProviderWrapper delegate;
 	private IRuntime runtime;
 
 	private String id;
@@ -36,12 +37,14 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	 * 
 	 * @param path
 	 * @param delegate
+	 * @param oldDelegate
 	 * @param runtime
 	 * @param id
 	 */
-	public RuntimeClasspathContainer(IPath path, ClasspathRuntimeTargetHandler delegate, IRuntime runtime, String id) {
+	public RuntimeClasspathContainer(IPath path, RuntimeClasspathProviderWrapper delegate, ClasspathRuntimeTargetHandler oldDelegate, IRuntime runtime, String id) {
 		this.path = path;
 		this.delegate = delegate;
+		this.oldDelegate = oldDelegate;
 		this.runtime = runtime;
 		this.id = id;
 	}
@@ -53,7 +56,9 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 		IClasspathEntry[] entries = null;
 		if (delegate != null && runtime != null)
 			entries = delegate.resolveClasspathContainerImpl(runtime, id);
-
+		if (oldDelegate != null && runtime != null)
+			entries = oldDelegate.resolveClasspathContainerImpl(runtime, id);
+		
 		if (entries == null)
 			return new IClasspathEntry[0];
 		
@@ -66,6 +71,11 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	public String getDescription() {
 		if (runtime != null && delegate != null) {
 			String s = delegate.getClasspathContainerLabel(runtime, id);
+			if (s != null)
+				return s;
+		}
+		if (runtime != null && oldDelegate != null) {
+			String s = oldDelegate.getClasspathContainerLabel(runtime, id);
 			if (s != null)
 				return s;
 		}

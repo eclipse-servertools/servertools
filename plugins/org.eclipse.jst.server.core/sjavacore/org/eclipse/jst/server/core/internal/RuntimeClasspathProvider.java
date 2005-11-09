@@ -32,6 +32,7 @@ public final class RuntimeClasspathProvider implements IClasspathProvider {
 	private static final IProjectFacet EJB_FACET = ProjectFacetsManager.getProjectFacet("jst.ejb");
 	private static final IProjectFacet EAR_FACET = ProjectFacetsManager.getProjectFacet("jst.ear");
 	private static final IProjectFacet UTILITY_FACET = ProjectFacetsManager.getProjectFacet("jst.utility");
+	private static final IProjectFacet CONNECTOR_FACET = ProjectFacetsManager.getProjectFacet("jst.connector");
 
 	private final IRuntimeComponent rc;
 
@@ -41,7 +42,8 @@ public final class RuntimeClasspathProvider implements IClasspathProvider {
 
 	public List getClasspathEntries(final IProjectFacetVersion fv) {
 		if (fv.getProjectFacet() == WEB_FACET || fv.getProjectFacet() == EJB_FACET ||
-				fv.getProjectFacet() == EAR_FACET || fv.getProjectFacet() == UTILITY_FACET) {
+				fv.getProjectFacet() == EAR_FACET || fv.getProjectFacet() == UTILITY_FACET ||
+				fv.getProjectFacet() == CONNECTOR_FACET) {
 			IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER);
 			if (rc.getRuntimeComponentType().getId().indexOf("tomcat") < 0)
 				path = path.append("org.eclipse.jst.server.generic.runtimeTarget");

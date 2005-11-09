@@ -77,7 +77,6 @@
          types="jst.utility"
          versions="1.0"/>
     </runtimeType>
-
   </extension>
 
   <extension point="org.eclipse.wst.server.core.runtimeLocators">
@@ -87,11 +86,11 @@
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntimeLocator"/>
   </extension>
 
-  <extension point="org.eclipse.wst.server.core.runtimeTargetHandlers">
-     <runtimeTargetHandler
+  <extension point="org.eclipse.jst.server.core.runtimeClasspathProviders">
+     <runtimeClasspathProvider
         id="org.eclipse.jst.server.tomcat.runtimeTarget"
         runtimeTypeIds="org.eclipse.jst.server.tomcat.runtime.*"
-        class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntimeTargetHandler"/>
+        class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntimeClasspathProvider"/>
    </extension>
 
   <extension point="org.eclipse.wst.server.core.serverTypes">

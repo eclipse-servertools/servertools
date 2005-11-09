@@ -15,7 +15,7 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jst.server.core.ClasspathRuntimeTargetHandler;
+import org.eclipse.jst.server.core.RuntimeClasspathProviderDelegate;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.IRuntime;
 /**
@@ -23,8 +23,7 @@ import org.eclipse.wst.server.core.IRuntime;
  *
  * @author Gorkem Ercan
  */
-public class GenericServerRuntimeTargetHandler extends
-		ClasspathRuntimeTargetHandler {
+public class GenericServerRuntimeTargetHandler extends RuntimeClasspathProviderDelegate {
 
 	/* (non-Javadoc)
 	 * @see ClasspathRuntimeTargetHandler#getClasspathContainerLabel(IRuntime, java.lang.String)
