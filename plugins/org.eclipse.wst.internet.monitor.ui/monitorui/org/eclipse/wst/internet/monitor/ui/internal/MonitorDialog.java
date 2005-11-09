@@ -109,6 +109,8 @@ public class MonitorDialog extends Dialog {
 
 	protected Spinner createSpinner(Composite comp, int v, final IntModifyListener listener) {
 		final Spinner s = new Spinner(comp, SWT.BORDER);
+		s.setMinimum(0);
+		s.setMaximum(Integer.MAX_VALUE);
 		if (v != -1)
 			s.setSelection(v);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
@@ -171,8 +173,6 @@ public class MonitorDialog extends Dialog {
 				validateFields();
 			}
 		});
-		monitorPort.setMinimum(0);
-		monitorPort.setMaximum(Integer.MAX_VALUE);
 		
 		Group group = new Group(composite, SWT.NONE);
 		GridLayout layout = new GridLayout(2, false);
@@ -191,7 +191,7 @@ public class MonitorDialog extends Dialog {
 		});
 		
 		createLabel(group, Messages.remotePort);		
-		Spinner spinner = createSpinner(group, monitor.getRemotePort(), new IntModifyListener() {
+		createSpinner(group, monitor.getRemotePort(), new IntModifyListener() {
 			public void valueChanged(int i) {
 				try {
 					monitor.setRemotePort(i);
@@ -201,8 +201,6 @@ public class MonitorDialog extends Dialog {
 				validateFields();
 			}
 		});
-		spinner.setMinimum(0);
-		spinner.setMaximum(Integer.MAX_VALUE);
 		
 		createLabel(group, Messages.parseType);		
 		createTypeCombo(group, new String[] {"TCP/IP","HTTP"}, monitor.getProtocol(), new StringModifyListener() {
@@ -212,7 +210,7 @@ public class MonitorDialog extends Dialog {
 		});
 		
 		createLabel(group, Messages.connectionTimeout);
-		spinner = createSpinner(group, monitor.getTimeout(), new IntModifyListener() {
+		createSpinner(group, monitor.getTimeout(), new IntModifyListener() {
 			public void valueChanged(int i) {
 				try {
 					monitor.setTimeout(i);
@@ -222,8 +220,6 @@ public class MonitorDialog extends Dialog {
 				validateFields();
 			}
 		});
-		spinner.setMinimum(0);
-		spinner.setMaximum(Integer.MAX_VALUE);
 		
 		return composite;
 	}
