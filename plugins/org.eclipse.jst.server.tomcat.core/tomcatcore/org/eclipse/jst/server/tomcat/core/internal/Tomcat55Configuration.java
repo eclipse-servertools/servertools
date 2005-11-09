@@ -14,6 +14,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -615,7 +616,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	
 	/**
 	 * If the specified Context is linked to a project, try to
-	 * update any configuration found a META-INF/context.xml found
+	 * update it with any configuration from a META-INF/context.xml found
 	 * relative to the specified web applications directory and context docBase.
 	 * @param webappsDir Path to server's web applications directory.
 	 * @param context Context object to receive context.xml contents.
@@ -634,6 +635,17 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 					if (context.hasChildNodes())
 						context.removeChildren();
 					contextConfig.copyChildrenTo(context);
+					Map attrs = contextConfig.getAttributes();
+					Iterator iter = attrs.keySet().iterator();
+					while (iter.hasNext()) {
+						String name = (String) iter.next();
+						if (!name.equalsIgnoreCase("path")
+								&& !name.equalsIgnoreCase("docBase")
+								&& !name.equalsIgnoreCase("source")) {
+							String value = (String)attrs.get(name);
+							context.setAttributeValue(name, value);
+						}
+					}
 					modified = true;
 				}
 			} catch (Exception e) {
