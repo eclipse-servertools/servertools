@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal.xml;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.w3c.dom.*;
 /**
  * An XML element.
@@ -68,6 +71,20 @@ public class XMLElement {
 			return attr.getValue();
 		
 		return null;
+	}
+	
+	public Map getAttributes() {
+		Map attributes = new LinkedHashMap();
+		NamedNodeMap attrs = xmlElement.getAttributes();
+		if (null != attrs) {
+			for (int i = 0; i < attrs.getLength(); i++) {
+				Node attr = attrs.item(i);
+				String name = attr.getNodeName();
+				String value = attr.getNodeValue();
+				attributes.put(name, value);
+			}
+		}
+		return attributes;
 	}
 	
 	public String getElementName() {
