@@ -73,16 +73,6 @@ public abstract class AbstractRuntimeTestCase extends TestCase {
 		assertNull(props.getRuntimeTarget());
 	}
 
-	public void test0002SetRuntime() throws Exception {
-		props.setRuntimeTarget(getRuntime(), null);
-		assertEquals(props.getRuntimeTarget(), getRuntime());
-	}
-
-	public void test0003UnsetRuntime() throws Exception {
-		props.setRuntimeTarget(null, null);
-		assertNull(props.getRuntimeTarget());
-	}
-
 	public void test0004End() throws Exception {
 		project.delete(true, true, null);
 	}

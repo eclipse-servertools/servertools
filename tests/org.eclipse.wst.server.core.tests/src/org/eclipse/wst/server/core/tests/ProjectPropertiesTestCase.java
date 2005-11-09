@@ -43,10 +43,6 @@ public class ProjectPropertiesTestCase extends TestCase {
 		assertFalse(((ProjectProperties) props).isServerProject());
 	}
 
-	public void test08SetRuntime() throws Exception {
-		props.setRuntimeTarget(null, null);
-	}
-
 	public void test10SetServerProject() throws Exception {
 		ProjectProperties pp = (ProjectProperties) props;
 		pp.setServerProject(true, null);
