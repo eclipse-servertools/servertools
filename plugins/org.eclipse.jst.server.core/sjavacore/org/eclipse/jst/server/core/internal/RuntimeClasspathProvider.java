@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
@@ -45,8 +44,11 @@ public final class RuntimeClasspathProvider implements IClasspathProvider {
 		IProjectFacet pf = fv.getProjectFacet();
 		if (WEB_FACET.equals(pf) || EJB_FACET.equals(pf) || EAR_FACET.equals(pf) ||
 				UTILITY_FACET.equals(pf) || CONNECTOR_FACET.equals(pf) || APP_CLIENT_FACET.equals(pf)) {
-			IPath path = new Path(rc.getProperty(RuntimeBridge.CLASSPATH));
-			IClasspathEntry cpentry = JavaCore.newContainerEntry(path);
+			String s = rc.getProperty(RuntimeBridge.CLASSPATH);
+			if (s == null || s.length() == 0)
+				return null;
+
+			IClasspathEntry cpentry = JavaCore.newContainerEntry(new Path(s));
 			return Collections.singletonList(cpentry);
 		}
 		
