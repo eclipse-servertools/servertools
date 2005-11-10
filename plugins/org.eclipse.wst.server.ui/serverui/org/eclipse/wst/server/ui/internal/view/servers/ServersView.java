@@ -335,9 +335,12 @@ public class ServersView extends ViewPart {
 				menu.add(new UpdateStatusAction(server));
 			menu.add(new Separator());
 			
-			menu.add(new DeleteAction(shell, server));
+			if (module == null)
+				menu.add(new DeleteAction(shell, server));
+			else if (module.length == 1)
+				menu.add(new RemoveModuleAction(shell, server, module[0]));
 			menu.add(new Separator());
-		
+			
 			// server actions
 			for (int i = 0; i < actions.length - 1; i++) {
 				if (i == 3)

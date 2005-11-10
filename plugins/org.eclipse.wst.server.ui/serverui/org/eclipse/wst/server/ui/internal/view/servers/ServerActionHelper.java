@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.action.Action;
@@ -20,6 +18,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
@@ -158,17 +157,20 @@ public class ServerActionHelper {
 		if (action == ACTION_OPEN) {
 			return false;
 		} else if (action == ACTION_DELETE) {
-			if (sel.size() == 0)
-				return false;
-			
-			Iterator iterator = sel.iterator();
-			while (iterator.hasNext()) {
+			// get selection but avoid no selection or multiple selection
+			IModule[] module = null;
+			if (!sel.isEmpty()) {
+				Iterator iterator = sel.iterator();
 				Object obj = iterator.next();
-				
-				if (!(obj instanceof IServer))
-					return false;
+				if (obj instanceof ModuleServer) {
+					ModuleServer ms = (ModuleServer) obj;
+					module = ms.module;
+				}
+				if (iterator.hasNext())
+					module = null;
 			}
-			return true;
+			
+			return (module == null || module.length == 1);
 		}
 
 		return false;
@@ -198,23 +200,30 @@ public class ServerActionHelper {
 			}
 			return false;
 		} else if (action == ACTION_DELETE) {
-			if (sel.size() == 0)
-				return false;
-			
-			List list = new ArrayList();
-			Iterator iterator = sel.iterator();
-			while (iterator.hasNext()) {
+			// get selection but avoid no selection or multiple selection
+			IServer server = null;
+			IModule[] module = null;
+			if (!sel.isEmpty()) {
+				Iterator iterator = sel.iterator();
 				Object obj = iterator.next();
-				
 				if (obj instanceof IServer)
-					list.add(obj);
+					server = (IServer) obj;
+				if (obj instanceof ModuleServer) {
+					ModuleServer ms = (ModuleServer) obj;
+					server = ms.server;
+					module = ms.module;
+				}
+				if (iterator.hasNext()) {
+					server = null;
+					module = null;
+				}
 			}
 			
-			IServer[] servers = new IServer[list.size()];
-			list.toArray(servers);
+			if (module == null)
+				new DeleteAction(shell, server).run();
+			else if (module.length == 1)
+				new RemoveModuleAction(shell, server, module[0]).run();
 			
-			Action delete = new DeleteAction(shell, servers);
-			delete.run();
 			return true;
 		}
 

@@ -120,6 +120,8 @@ public class Messages extends NLS {
 	public static String actionPublishToolTip;
 	public static String actionPublish;
 	public static String actionDelete;
+	public static String actionRemove;
+	public static String dialogRemoveModuleConfirm;
 	public static String terminateServerDialogTitle;
 	public static String actionDebugOnServer;
 	public static String actionProfileOnServer;
