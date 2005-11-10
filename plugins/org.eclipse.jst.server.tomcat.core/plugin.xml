@@ -297,4 +297,27 @@
          version="1.0"/>
     </supported>
   </extension>
+  
+  <extension point="org.eclipse.jst.server.core.runtimeFacetMappings">
+    <runtimeFacetMapping
+      runtimeTypeId="org.eclipse.jst.server.tomcat.runtime.32"
+      runtime-component="org.eclipse.jst.server.tomcat"
+      version="3.2"/>
+    <runtimeFacetMapping
+      runtimeTypeId="org.eclipse.jst.server.tomcat.runtime.40"
+      runtime-component="org.eclipse.jst.server.tomcat"
+      version="4.0"/>
+    <runtimeFacetMapping
+      runtimeTypeId="org.eclipse.jst.server.tomcat.runtime.41"
+      runtime-component="org.eclipse.jst.server.tomcat"
+      version="4.1"/>
+    <runtimeFacetMapping
+      runtimeTypeId="org.eclipse.jst.server.tomcat.runtime.50"
+      runtime-component="org.eclipse.jst.server.tomcat"
+      version="5.0"/>
+    <runtimeFacetMapping
+      runtimeTypeId="org.eclipse.jst.server.tomcat.runtime.55"
+      runtime-component="org.eclipse.jst.server.tomcat"
+      version="5.5"/>
+  </extension>
 </plugin>

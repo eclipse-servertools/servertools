@@ -17,8 +17,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMInstall2;
+import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.IJavaRuntime;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeBridge;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponentVersion;
@@ -29,6 +32,8 @@ import org.eclipse.wst.server.core.ServerCore;
  * 
  */
 public final class RuntimeBridge implements IRuntimeBridge {
+	protected static final String CLASSPATH = "classpath";
+
 	private static Map mappings = new HashMap();
 
 	static {
@@ -42,16 +47,12 @@ public final class RuntimeBridge implements IRuntimeBridge {
 			// ignore
 		}
 	}
+
 	private static void initialize() {
-		addMapping("org.eclipse.jst.server.tomcat.runtime.32", "org.eclipse.jst.server.tomcat", "3.2");
-		
-		addMapping("org.eclipse.jst.server.tomcat.runtime.40", "org.eclipse.jst.server.tomcat", "4.0");
-		
-		addMapping("org.eclipse.jst.server.tomcat.runtime.41", "org.eclipse.jst.server.tomcat", "4.1");
-		
-		addMapping("org.eclipse.jst.server.tomcat.runtime.50", "org.eclipse.jst.server.tomcat", "5.0");
-		
-		addMapping("org.eclipse.jst.server.tomcat.runtime.55", "org.eclipse.jst.server.tomcat", "5.5");
+		RuntimeFacetMapping[] rfms = JavaServerPlugin.getRuntimeFacetMapping();
+		int size = rfms.length;
+		for (int i = 0; i < size; i++)
+			addMapping(rfms[i].getRuntimeTypeId(), rfms[i].getRuntimeComponent(), rfms[i].getVersion());
 		
 		// generic runtimes
 		addMapping("org.eclipse.jst.server.generic.runtime.weblogic81", "org.eclipse.jst.server.generic.runtime.weblogic", "8.1");
@@ -97,6 +98,14 @@ public final class RuntimeBridge implements IRuntimeBridge {
 					properties.put("name", name);
 					properties.put("type", runtime.getRuntimeType().getName());
 					properties.put("id", runtime.getId());
+					
+					RuntimeClasspathProviderWrapper rcpw = JavaServerPlugin.findRuntimeClasspathProvider(runtime.getId());
+					if (rcpw != null) {
+						IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER);
+						path = path.append(rcpw.getId()).append(name);
+						properties.put(CLASSPATH, path.toPortableString());
+					}
+					
 					components.add(RuntimeManager.createRuntimeComponent(mapped, properties));
 					
 					// define JRE component
@@ -117,6 +126,9 @@ public final class RuntimeBridge implements IRuntimeBridge {
 						
 						properties = new HashMap();
 						properties.put("name", vmInstall.getName());
+						IPath path = new Path(JavaRuntime.JRE_CONTAINER);
+						path.append(vmInstall.getVMInstallType().getId()).append(vmInstall.getName());
+						properties.put(CLASSPATH, path.toPortableString());
 						components.add(RuntimeManager.createRuntimeComponent(rcv, properties));
 					}
 					

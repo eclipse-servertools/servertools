@@ -15,11 +15,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.common.project.facet.core.IClasspathProvider;
 import org.eclipse.wst.common.project.facet.core.IProjectFacet;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
@@ -29,12 +27,9 @@ import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
  * 
  */
 public final class StandardJreClasspathProvider implements IClasspathProvider {
-	private static final IProjectFacet JAVA_FACET = ProjectFacetsManager
-		.getProjectFacet("jst.java");
+	private static final IProjectFacet JAVA_FACET = ProjectFacetsManager.getProjectFacet("jst.java");
 
-	private static final String STANDARD_VM_TYPE = "org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType";
-
-	private final IRuntimeComponent rc;
+	private IRuntimeComponent rc;
 
 	public StandardJreClasspathProvider(final IRuntimeComponent rc) {
 		this.rc = rc;
@@ -42,11 +37,7 @@ public final class StandardJreClasspathProvider implements IClasspathProvider {
 
 	public List getClasspathEntries(final IProjectFacetVersion fv) {
 		if (fv.getProjectFacet() == JAVA_FACET) {
-			IPath path = new Path(JavaRuntime.JRE_CONTAINER);
-			path = path.append(STANDARD_VM_TYPE);
-			path = path.append(rc.getProperty("name"));
-
-			IClasspathEntry cpentry = JavaCore.newContainerEntry(path);
+			IClasspathEntry cpentry = JavaCore.newContainerEntry(new Path(rc.getProperty(RuntimeBridge.CLASSPATH)));
 			return Collections.singletonList(cpentry);
 		}
 

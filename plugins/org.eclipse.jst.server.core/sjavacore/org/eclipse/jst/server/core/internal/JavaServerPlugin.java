@@ -30,6 +30,9 @@ public class JavaServerPlugin extends Plugin {
 	//	cached copy of all runtime classpath providers
 	private static List runtimeClasspathProviders;
 
+	//	cached copy of all runtime facet mappings
+	private static List runtimeFacetMappings;
+
 	/**
 	 * Create the JavaServerPlugin.
 	 */
@@ -133,5 +136,48 @@ public class JavaServerPlugin extends Plugin {
 		}
 		
 		Trace.trace(Trace.CONFIG, "-<- Done loading .runtimeClasspathProviders extension point -<-");
+	}
+	
+	/**
+	 * Returns an array of all known runtime classpath provider instances.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return a possibly-empty array of runtime classpath provider instances
+	 *    {@link RuntimeClasspathProviderWrapper}
+	 */
+	public static RuntimeFacetMapping[] getRuntimeFacetMapping() {
+		if (runtimeFacetMappings == null)
+			loadRuntimeFacetMapping();
+		
+		RuntimeFacetMapping[] rfm = new RuntimeFacetMapping[runtimeFacetMappings.size()];
+		runtimeFacetMappings.toArray(rfm);
+		return rfm;
+	}
+
+	/**
+	 * Load the runtime facet mappings.
+	 */
+	private static synchronized void loadRuntimeFacetMapping() {
+		if (runtimeFacetMappings != null)
+			return;
+		Trace.trace(Trace.CONFIG, "->- Loading .runtimeFacetMapping extension point ->-");
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(JavaServerPlugin.PLUGIN_ID, "runtimeFacetMappings");
+
+		int size = cf.length;
+		runtimeFacetMappings = new ArrayList(size);
+		for (int i = 0; i < size; i++) {
+			try {
+				RuntimeFacetMapping rfm = new RuntimeFacetMapping(cf[i]);
+				runtimeFacetMappings.add(rfm);
+				Trace.trace(Trace.CONFIG, "  Loaded runtimeFacetMapping: " + cf[i].getAttribute("id"));
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "  Could not load runtimeFacetMapping: " + cf[i].getAttribute("id"), t);
+			}
+		}
+		
+		Trace.trace(Trace.CONFIG, "-<- Done loading .runtimeFacetMapping extension point -<-");
 	}
 }

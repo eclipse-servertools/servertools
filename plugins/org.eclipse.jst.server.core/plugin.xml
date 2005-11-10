@@ -3,6 +3,7 @@
 
 <plugin>
   <extension-point id="runtimeClasspathProviders" name="%extensionPointRuntimeClasspathProviders" schema="schema/runtimeClasspathProviders.exsd"/>
+  <extension-point id="runtimeFacetMappings" name="%extensionPointRuntimeFacetMappings" schema="schema/runtimeFacetMappings.exsd"/>
 
   <extension point="org.eclipse.jdt.core.classpathContainerInitializer">
     <classpathContainerInitializer
@@ -18,7 +19,7 @@
        id="jst.ejb"
        name="%moduleTypeJ2EEEJBName"/>
     <moduleType
-       id="jst.appClient"
+       id="jst.appclient"
        name="%moduleTypeJ2EEClientName"/>
     <moduleType
        id="jst.connector"
@@ -43,11 +44,11 @@
     </runtimeType>
   </extension>
 
-  <extension point="org.eclipse.wst.server.core.runtimeTargetHandlers">
-    <runtimeTargetHandler
+  <extension point="org.eclipse.jst.server.core.runtimeClasspathProviders">
+    <runtimeClasspathProvider
       id="org.eclipse.jst.server.core.runtimeTarget"
       runtimeTypeIds="org.eclipse.jst.server.core.runtimeType"
-      class="org.eclipse.jst.server.core.internal.GenericRuntimeTargetHandler"/>
+      class="org.eclipse.jst.server.core.internal.GenericRuntimeClasspathProvider"/>
   </extension>
 
   <extension point="org.eclipse.core.expressions.propertyTesters">

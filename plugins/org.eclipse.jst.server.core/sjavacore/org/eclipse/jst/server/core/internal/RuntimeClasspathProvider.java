@@ -33,6 +33,7 @@ public final class RuntimeClasspathProvider implements IClasspathProvider {
 	private static final IProjectFacet EAR_FACET = ProjectFacetsManager.getProjectFacet("jst.ear");
 	private static final IProjectFacet UTILITY_FACET = ProjectFacetsManager.getProjectFacet("jst.utility");
 	private static final IProjectFacet CONNECTOR_FACET = ProjectFacetsManager.getProjectFacet("jst.connector");
+	private static final IProjectFacet APP_CLIENT_FACET = ProjectFacetsManager.getProjectFacet("jst.appclient");
 
 	private final IRuntimeComponent rc;
 
@@ -41,16 +42,10 @@ public final class RuntimeClasspathProvider implements IClasspathProvider {
 	}
 
 	public List getClasspathEntries(final IProjectFacetVersion fv) {
-		if (fv.getProjectFacet() == WEB_FACET || fv.getProjectFacet() == EJB_FACET ||
-				fv.getProjectFacet() == EAR_FACET || fv.getProjectFacet() == UTILITY_FACET ||
-				fv.getProjectFacet() == CONNECTOR_FACET) {
-			IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER);
-			if (rc.getRuntimeComponentType().getId().indexOf("tomcat") < 0)
-				path = path.append("org.eclipse.jst.server.generic.runtimeTarget");
-			else
-				path = path.append("org.eclipse.jst.server.tomcat.runtimeTarget");
-			path = path.append(rc.getProperty("name"));
-			
+		IProjectFacet pf = fv.getProjectFacet();
+		if (WEB_FACET.equals(pf) || EJB_FACET.equals(pf) || EAR_FACET.equals(pf) ||
+				UTILITY_FACET.equals(pf) || CONNECTOR_FACET.equals(pf) || APP_CLIENT_FACET.equals(pf)) {
+			IPath path = new Path(rc.getProperty(RuntimeBridge.CLASSPATH));
 			IClasspathEntry cpentry = JavaCore.newContainerEntry(path);
 			return Collections.singletonList(cpentry);
 		}

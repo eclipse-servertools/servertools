@@ -38,6 +38,8 @@ public class ServerTableViewer extends TreeViewer {
 	protected IServerListener serverListener;
 
 	protected static Object deletedElement = null;
+	
+	//protected static Shell fShell;
 
 	// servers that are currently publishing and starting
 	protected static List publishing = new ArrayList();
@@ -130,39 +132,29 @@ public class ServerTableViewer extends TreeViewer {
 		}
 	}
 
-	/*protected void createHover(Shell parent, Point p) {
-		final Shell fShell = new Shell(parent, SWT.NO_FOCUS | SWT.ON_TOP | SWT.RESIZE | SWT.NO_TRIM);
+	/*protected void createHoverHelp(Shell parent, Point p) {
+		if (fShell != null) {
+			fShell.dispose();
+			fShell = null;
+		}
+		fShell = new Shell(parent, SWT.NO_FOCUS | SWT.ON_TOP | SWT.RESIZE | SWT.NO_TRIM);
 		GridLayout layout = new GridLayout();
-		layout.marginHeight = 1;
-		layout.marginWidth = 1;
+		layout.marginHeight = 3;
+		layout.marginWidth = 3;
 		fShell.setLayout(layout);
 		
 		Display display = parent.getDisplay();
 		StyledText text = new StyledText(fShell, SWT.NONE);
 		text.setForeground(display.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
 		text.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
-		text.append("Testing <b>me</b>");
+		text.append("Testing\nThis is multi-line");
 		
 		fShell.setLocation(p.x, p.y);
 		fShell.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
 		fShell.pack();
 		fShell.setVisible(true);
-		
-		Thread t = new Thread() {
-			public void run() {
-				try {
-					Thread.sleep(2000);
-				} catch (Exception e) { }
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						fShell.dispose();
-					}
-				});
-			}
-		};
-		t.start();
 	}*/
-	
+
 	protected Thread thread = null;
 	protected boolean stopThread = false;
 	
@@ -208,15 +200,25 @@ public class ServerTableViewer extends TreeViewer {
 	public ServerTableViewer(final ServersView view, final Tree tree) {
 		super(tree);
 		this.view = view;
-		/*table.addMouseTrackListener(new MouseTrackListener() {
+		/*tree.addMouseMoveListener(new MouseMoveListener() {
+			public void mouseMove(MouseEvent e) {
+				if (fShell != null) {
+					fShell.dispose();
+					fShell = null;
+				}
+			}
+		});
+		tree.addMouseTrackListener(new MouseTrackListener() {
 			public void mouseEnter(MouseEvent event) {
+				// ignore
 			}
 
 			public void mouseExit(MouseEvent event) {
+				// ignore
 			}
 
 			public void mouseHover(MouseEvent event) {
-				createHover(table.getShell(), table.toDisplay(event.x, event.y));
+				createHoverHelp(tree.getShell(), tree.toDisplay(event.x, event.y));
 			}
 		});*/
 	

@@ -14,42 +14,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.launching.IVMInstall;
-import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jst.server.core.ClasspathRuntimeTargetHandler;
+import org.eclipse.jst.server.core.RuntimeClasspathProviderDelegate;
 
 import org.eclipse.wst.server.core.IRuntime;
 /**
  * 
  */
-public class GenericRuntimeTargetHandler extends ClasspathRuntimeTargetHandler {
+public class GenericRuntimeClasspathProvider extends RuntimeClasspathProviderDelegate {
 	/**
-	 * @see ClasspathRuntimeTargetHandler#getDelegateClasspathEntries(IRuntime, IProgressMonitor)
-	 */
-	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
-		GenericRuntime genericRuntime = (GenericRuntime) runtime.getAdapter(GenericRuntime.class);
-		IVMInstall vmInstall = genericRuntime.getVMInstall();
-		if (vmInstall != null) {
-			String name = vmInstall.getName();
-			String typeId = vmInstall.getVMInstallType().getId();
-			return new IClasspathEntry[] { JavaCore.newContainerEntry(new Path(JavaRuntime.JRE_CONTAINER).append(typeId).append(name)) };
-		}
-		return null;
-	}
-
-	/**
-	 * @see ClasspathRuntimeTargetHandler#getClasspathContainerLabel(IRuntime, String)
+	 * @see RuntimeClasspathProviderDelegate#getClasspathContainerLabel(IRuntime, String)
 	 */
 	public String getClasspathContainerLabel(IRuntime runtime, String id) {
 		return runtime.getRuntimeType().getName();
 	}
 
 	/** (non-Javadoc)
-	 * @see ClasspathRuntimeTargetHandler#resolveClasspathContainer(IRuntime, String)
+	 * @see RuntimeClasspathProviderDelegate#resolveClasspathContainer(IRuntime, String)
 	 */
 	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime, String id) {
 		IPath installPath = runtime.getLocation();
