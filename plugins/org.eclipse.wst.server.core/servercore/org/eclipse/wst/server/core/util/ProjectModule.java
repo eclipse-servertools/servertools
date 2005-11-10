@@ -276,14 +276,6 @@ public abstract class ProjectModule extends ModuleDelegate {
 
 		return true;
 	}
-	
-	/**
-	 * Called when the listener paths from the module factory change.
-	 * Use this method to re-cache information about the module.
-	 */
-	protected void update() {
-		// do nothing
-	}
 
 	/**
 	 * Returns the child modules of this module.

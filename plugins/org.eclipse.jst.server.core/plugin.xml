@@ -114,7 +114,7 @@
     </supported>
 
     <supported>
-      <runtime-component id="jre.standard" version="5.0"/>
+      <runtime-component id="standard.jre" version="5.0"/>
       <facet id="jst.java" version="5.0"/>
     </supported>
   </extension>

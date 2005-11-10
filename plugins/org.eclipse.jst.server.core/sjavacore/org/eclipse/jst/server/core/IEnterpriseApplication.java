@@ -23,13 +23,6 @@ import org.eclipse.wst.server.core.IModule;
  */
 public interface IEnterpriseApplication {
 	/**
-	 * Returns a version number in the form "x.y.z".
-	 * 
-	 * @return the J2EE specification version
-	 */
-	public String getJ2EESpecificationVersion();
-
-	/**
 	 * Returns the modules contained within this EAR. The returned modules will
 	 * either be J2EE modules (which will be adaptable to IJ2EEModule) and
 	 * utility jars contained in the EAR.

@@ -25,7 +25,7 @@ import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
  */
 public class ModuleFactory implements IOrdered {
 	private IConfigurationElement element;
-	private ModuleFactoryDelegate delegate;
+	public ModuleFactoryDelegate delegate;
 	private List moduleTypes;
 	
 	private List modules;
@@ -127,7 +127,6 @@ public class ModuleFactory implements IOrdered {
 	 */
 	public IModule[] getModules() {
 		//Trace.trace(Trace.FINER, "getModules() > " + this);
-		//modules = null;
 		if (modules == null) {
 			try {
 				modules = new ArrayList();
