@@ -17,7 +17,7 @@
    </license>
 
    <includes
-         id="org.eclipse.wst.server_sdk.feature.source"
+         id="org.eclipse.wst.server_ui.feature.source"
          version="0.0.0"/>
 
    <requires>
@@ -26,32 +26,5 @@
       <import feature="org.eclipse.wst.common_ui.feature" version="1.0.0"/>
    </requires>
 
-   <plugin
-         id="org.eclipse.wst.server.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.wst.server.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.wst.internet.monitor.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.wst.internet.monitor.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
 </feature>
