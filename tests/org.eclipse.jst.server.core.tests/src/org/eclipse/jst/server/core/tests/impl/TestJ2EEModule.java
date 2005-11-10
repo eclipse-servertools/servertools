@@ -10,19 +10,19 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core.tests.impl;
 
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.jst.server.core.IJ2EEModule;
 
 public class TestJ2EEModule implements IJ2EEModule {
-	public String getJ2EESpecificationVersion() {
-		return null;
-	}
-
-	public IPath getLocation() {
-		return null;
-	}
-
 	public boolean isBinary() {
 		return false;
+	}
+
+	public IContainer[] getResourceFolders() {
+		return null;
+	}
+
+	public IContainer[] getJavaOutputFolders() {
+		return null;
 	}
 }

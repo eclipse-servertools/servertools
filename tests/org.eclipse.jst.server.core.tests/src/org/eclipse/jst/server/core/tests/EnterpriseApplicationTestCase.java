@@ -27,10 +27,6 @@ public class EnterpriseApplicationTestCase extends TestCase {
 		app = new TestEnterpriseApplication();
 	}
 
-	public void test01SpecVersion() {
-		app.getJ2EESpecificationVersion();
-	}
-
 	public void test03Modules() {
 		app.getModules();
 	}

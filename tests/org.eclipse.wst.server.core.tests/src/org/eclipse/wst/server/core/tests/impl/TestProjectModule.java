@@ -28,6 +28,5 @@ public class TestProjectModule extends ProjectModule {
 		} catch (Exception e) {
 			// ignore
 		}
-		update();
 	}
 }

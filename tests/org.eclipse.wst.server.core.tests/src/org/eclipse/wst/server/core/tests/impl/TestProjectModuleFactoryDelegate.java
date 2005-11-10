@@ -21,9 +21,6 @@ public class TestProjectModuleFactoryDelegate extends ProjectModuleFactoryDelega
 	}
 
 	public void testProtected() throws Exception {
-		addListener();
-		fireGlobalEvents();
-		cacheModules();
 		createModules(null);
 		getListenerPaths();
 		isValidModule(null);
@@ -47,7 +44,7 @@ public class TestProjectModuleFactoryDelegate extends ProjectModuleFactoryDelega
 		return null;
 	}
 
-	public IModule[] getModules() {
+	protected IModule createModule(IProject project) {
 		return null;
 	}
 }

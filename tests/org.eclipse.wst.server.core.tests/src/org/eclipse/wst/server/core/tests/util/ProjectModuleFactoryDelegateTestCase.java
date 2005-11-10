@@ -35,10 +35,6 @@ public class ProjectModuleFactoryDelegateTestCase extends TestCase {
 		delegate.getModules();
 	}
 
-	public void test05GetModules() {
-		delegate.getModules(null);
-	}
-
 	public void test06TestProtected() throws Exception {
 		((TestProjectModuleFactoryDelegate)delegate).testProtected();
 	}
