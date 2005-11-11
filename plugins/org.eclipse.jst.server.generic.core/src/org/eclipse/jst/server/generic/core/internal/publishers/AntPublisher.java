@@ -22,7 +22,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import org.eclipse.ant.internal.ui.IAntUIConstants;
 import org.eclipse.ant.internal.ui.launchConfigurations.IAntLaunchConfigurationConstants;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -36,21 +35,16 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
+import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.core.internal.GenericPublisher;
 import org.eclipse.jst.server.generic.core.internal.GenericServerCoreMessages;
 import org.eclipse.jst.server.generic.internal.core.util.FileUtil;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.PublisherData;
-import org.eclipse.jst.server.core.IEnterpriseApplication;
-import org.eclipse.jst.server.core.IWebModule;
-import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.ui.externaltools.internal.model.IExternalToolConstants;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
-import org.eclipse.wst.server.core.model.IModuleFolder;
-import org.eclipse.wst.server.core.model.IModuleResource;
-import org.eclipse.wst.server.core.util.ProjectModule;
 import org.osgi.framework.Bundle;
 /**
  * Ant based publisher.
@@ -105,73 +99,10 @@ public class AntPublisher extends GenericPublisher{
 	}
 
 	private void assembleModule(IProgressMonitor monitor)throws CoreException{
-		IPath parent =copyModule(getModule()[0],monitor);
-		IEnterpriseApplication earModule = (IEnterpriseApplication)getModule()[0].loadAdapter(IEnterpriseApplication.class,null);
-		if(earModule!=null && earModule.getModules().length>0){
-			IModule[] childModules = earModule.getModules();
-			for (int i = 0; i < childModules.length; i++) {
-				IModule module = childModules[i];
-				IPath modulePath = copyModule(module, monitor);
-				packModule(modulePath, module, parent);
-			}
-		}
-	
+		AbstractModuleAssembler assembler= AbstractModuleAssembler.Factory.getModuleAssembler(getModule()[0], getServerRuntime().getServerTypeDefinition());
+		assembler.assemble(monitor);
 	}
 
-	private void packModule(IPath modulePath, IModule module, IPath destination)throws CoreException {
-		String name =guessModuleName(module);
-		if ("jst.web".equals(module.getModuleType().getId())) {
-			name += ".war";
-		} else {
-			name += ".jar";
-		}
-		String dest = destination.append(name).toString();
-		ModulePackager packager = null;
-		try {
-			packager = new ModulePackager(dest, false);
-			ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, null);
-			IModuleResource[] resources = pm.members();
-			for (int i = 0; i < resources.length; i++) {
-				doPackModule(resources[i], packager);
-			}
-		} catch (IOException e) {
-			IStatus status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0,
-					"unable to assemble module", e);
-			throw new CoreException(status);
-		}
-		finally{
-			try{
-				packager.finished();
-			}
-			catch(IOException e){
-				//unhandled
-			}
-		}
-	}
-
-	private void doPackModule(IModuleResource resource, ModulePackager packager) throws CoreException, IOException
-	{
-			if (resource instanceof IModuleFolder) {
-				packager.writeFolder(resource.getModuleRelativePath().append(resource.getName()).toString());
-				IModuleFolder mFolder = (IModuleFolder)resource;
-				IModuleResource[] resources = mFolder.members();
-				for (int i = 0; i < resources.length; i++) {
-					doPackModule(resources[i], packager);
-				}
-			} else {
-				IFile file = (IFile) resource.getAdapter(IFile.class);
-				String destination = resource.getModuleRelativePath().append(resource.getName()).toString();
-				packager.write(file, destination);
-			}
-	}
-	private IPath copyModule(IModule module,IProgressMonitor monitor)throws CoreException{
-		ProjectModule pm =(ProjectModule)module.loadAdapter(ProjectModule.class, monitor);
-		IPath to = getProjectWorkingLocation().append(pm.getId());
-		PublishUtil.smartCopy(pm.members(), to, monitor);
-		return to;
-	}
-	
-	
     /**
      * 
      * @return
@@ -346,8 +277,11 @@ public class AntPublisher extends GenericPublisher{
 
 
 
-    /* (non-Javadoc)
-     */
+  /**
+   * Hook method for subclasses.
+   * 
+   * @param wc
+   */
     protected void setupAntLaunchConfiguration(ILaunchConfigurationWorkingCopy wc) {		
 	}
 
