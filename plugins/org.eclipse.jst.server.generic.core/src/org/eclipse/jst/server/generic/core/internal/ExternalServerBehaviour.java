@@ -25,12 +25,9 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jst.server.generic.internal.xml.Resolver;
 import org.eclipse.jst.server.generic.servertype.definition.External;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.internal.Server;
@@ -105,12 +102,6 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 							GenericServerCoreMessages.errorStartingExternalDebugging, ce); 
 				CorePlugin.getDefault().getLog().log(status);
 				Trace.trace(Trace.SEVERE, GenericServerCoreMessages.errorStartingExternalDebugging, ce);
-				// inform user via an error dialog
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						ErrorDialog.openError(new Shell(PlatformUI.getWorkbench().getDisplay()), null, null, status);						
-					}
-				});
 			} finally {
 				clearDebuggingConfig();
 			}

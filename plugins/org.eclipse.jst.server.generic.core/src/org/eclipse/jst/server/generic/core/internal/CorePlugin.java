@@ -11,7 +11,7 @@ package org.eclipse.jst.server.generic.core.internal;
 
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.ui.plugin.*;
+import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 import java.io.IOException;
 import java.net.URL;
@@ -21,7 +21,7 @@ import java.net.URL;
  * 
  * @author Gorkem Ercan
  */
-public class CorePlugin extends AbstractUIPlugin {
+public class CorePlugin extends Plugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.jst.server.generic.core";
 
