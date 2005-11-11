@@ -24,11 +24,4 @@
          id="org.eclipse.wst.server_ui.feature.source"
          version="0.0.0"/>
 
-   <requires>
-      <import feature="org.eclipse.wst.server_ui.feature" version="1.0.0"/>
-      <import feature="org.eclipse.wst.common_sdk.feature" version="1.0.0"/>
-      <import feature="org.eclipse.wst.common_ui.feature" version="1.0.0"/>
-   </requires>
-
-
 </feature>
