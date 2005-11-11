@@ -214,6 +214,10 @@ public class Module implements IModule {
 		return true;
 	}
 
+	public int hashCode() {
+		return getId().hashCode();
+	}
+
 	/**
 	 * Return a string representation of this object.
 	 * 
