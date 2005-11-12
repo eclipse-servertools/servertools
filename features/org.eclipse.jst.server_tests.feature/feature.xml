@@ -21,37 +21,37 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
+         />
 
    <plugin
          id="org.eclipse.jst.server.generic.tests"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
+         />
    <plugin
          id="org.eclipse.jst.server.tomcat.core.tests"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
+         />
    <plugin
          id="org.eclipse.jst.server.tomcat.tests.performance"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
+         />
    <plugin
          id="org.eclipse.jst.server.tomcat.ui.tests"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
+         />
    <plugin
          id="org.eclipse.jst.server.ui.tests"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
+         />
 
 </feature>
