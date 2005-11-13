@@ -26,8 +26,10 @@ import org.eclipse.jst.server.tomcat.core.internal.ITomcatServerWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatConfiguration;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.WebModule;
+import org.eclipse.jst.server.tomcat.core.internal.command.AddModuleCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.AddWebModuleCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.ModifyWebModuleCommand;
+import org.eclipse.jst.server.tomcat.core.internal.command.RemoveModuleCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.RemoveWebModuleCommand;
 import org.eclipse.jst.server.tomcat.ui.internal.ContextIds;
 import org.eclipse.jst.server.tomcat.ui.internal.Messages;
@@ -194,7 +196,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 					WebModuleDialog dialog = new WebModuleDialog(getEditorSite().getShell(), getServer(), server2, configuration, true);
 					dialog.open();
 					if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
-						execute(new AddWebModuleCommand(configuration, dialog.getWebModule()));
+						execute(new AddModuleCommand(getServer(), dialog.module4));
 					}
 				}
 			});
@@ -240,7 +242,13 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 			public void widgetSelected(SelectionEvent e) {
 				if (selection < 0)
 					return;
-				execute(new RemoveWebModuleCommand(configuration, selection));
+				TableItem item = webAppTable.getItem(selection);
+				if (item.getData() != null) {
+					IModule module = (IModule) item.getData();
+					execute(new RemoveModuleCommand(getServer(), module));
+				} else {
+					execute(new RemoveWebModuleCommand(configuration, selection));
+				}
 				remove.setEnabled(false);
 				edit.setEnabled(false);
 				selection = -1;
@@ -320,9 +328,10 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 				projectName = NLS.bind(Messages.configurationEditorProjectMissing, new String[] {memento});
 				projectImage = TomcatUIPlugin.getImage(TomcatUIPlugin.IMG_PROJECT_MISSING);
 				IModule module2 = ServerUtil.getModule(memento);
-				if (module != null) {
+				if (module2 != null) {
 					projectName = ServerUICore.getLabelProvider().getText(module2);
 					projectImage = ServerUICore.getLabelProvider().getImage(module2);
+					item.setData(module2);
 				}
 			}
 	

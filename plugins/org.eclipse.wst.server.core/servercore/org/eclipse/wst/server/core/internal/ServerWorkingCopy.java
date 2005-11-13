@@ -275,7 +275,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 					folder.create(IResource.FORCE, true, null);
 			}
 		}
-		getDelegate(monitor).saveConfiguration(monitor);
+		getWorkingCopyDelegate(monitor).saveConfiguration(monitor);
 		wch.setDirty(false);
 		
 		return server;
@@ -455,6 +455,44 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			server.setServerRestartState(state);
 		else
 			super.setServerRestartState(state);
+	}
+
+	/**
+	 * @see IServer#getAdapter(Class)
+	 */
+	public Object getAdapter(Class adapter) {
+		if (workingCopyDelegate != null) {
+			if (adapter.isInstance(workingCopyDelegate))
+				return workingCopyDelegate;
+		}
+		if (delegate != null) {
+			if (adapter.isInstance(delegate))
+				return delegate;
+		}
+		if (behaviourDelegate != null) {
+			if (adapter.isInstance(behaviourDelegate))
+				return behaviourDelegate;
+		}
+		return Platform.getAdapterManager().getAdapter(this, adapter);
+	}
+
+	/**
+	 * @see IServer#loadAdapter(Class, IProgressMonitor)
+	 */
+	public Object loadAdapter(Class adapter, IProgressMonitor monitor) {
+		getWorkingCopyDelegate(monitor);
+		if (adapter.isInstance(workingCopyDelegate))
+			return workingCopyDelegate;
+		
+		getDelegate(monitor);
+		if (adapter.isInstance(delegate))
+			return delegate;
+		
+		getBehaviourDelegate(monitor);
+		if (adapter.isInstance(behaviourDelegate))
+			return behaviourDelegate;
+		
+		return Platform.getAdapterManager().loadAdapter(this, adapter.getName());
 	}
 
 	public String toString() {

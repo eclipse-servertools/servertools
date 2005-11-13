@@ -47,6 +47,7 @@ import org.eclipse.wst.server.ui.ServerUICore;
  * Dialog to add or modify web modules.
  */
 public class WebModuleDialog extends Dialog {
+	protected IModule module4;
 	protected WebModule module;
 	protected boolean isEdit;
 	protected boolean isProject;
@@ -147,14 +148,13 @@ public class WebModuleDialog extends Dialog {
 				int size = modules.length;
 				for (int i = 0; i < size; i++) {
 					IModule module3 = modules[i];
-					IWebModule module2 = (IWebModule) module3.loadAdapter(IWebModule.class, null);
-					if (module2 != null) {
+					if ("jst.web".equals(module3.getModuleType().getId())) {
 						IStatus status = server2.canModifyModules(new IModule[] { module3 }, null, null);
 						if (status != null && status.isOK()) {
 							TableItem item = new TableItem(projTable, SWT.NONE);
 							item.setText(0, ServerUICore.getLabelProvider().getText(module3));
 							item.setImage(0, ServerUICore.getLabelProvider().getImage(module3));
-							item.setData(module2);
+							item.setData(module3);
 						}
 					}
 				}
@@ -200,47 +200,51 @@ public class WebModuleDialog extends Dialog {
 				}
 			});
 		}
-	
-		// path (context-root)
-		new Label(composite, SWT.NONE).setText(Messages.configurationEditorWebModuleDialogPath);
-		final Text path = new Text(composite, SWT.BORDER);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.widthHint = 150;
-		path.setLayoutData(data);
-		path.setText(module.getPath());
-		path.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				module = new WebModule(path.getText(), module.getDocumentBase(), module.getMemento(), module.isReloadable());
-			}
-		});
-		whs.setHelp(path, ContextIds.CONFIGURATION_EDITOR_WEBMODULE_DIALOG_PATH);
-	
-		new Label(composite, SWT.NONE).setText("");
 		
-		// auto reload
-		new Label(composite, SWT.NONE).setText("");
-		final Button reloadable = new Button(composite, SWT.CHECK);
-		reloadable.setText(Messages.configurationEditorWebModuleDialogReloadEnabled);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		reloadable.setLayoutData(data);
-		reloadable.setSelection(module.isReloadable());
-		reloadable.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				module = new WebModule(module.getPath(), module.getDocumentBase(), module.getMemento(), reloadable.getSelection());
-			}
-		});
-		whs.setHelp(reloadable, ContextIds.CONFIGURATION_EDITOR_WEBMODULE_DIALOG_RELOAD);
-	
+		if (!isProject) {
+			// path (context-root)
+			new Label(composite, SWT.NONE).setText(Messages.configurationEditorWebModuleDialogPath);
+			final Text path = new Text(composite, SWT.BORDER);
+			data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+			data.widthHint = 150;
+			path.setLayoutData(data);
+			path.setText(module.getPath());
+			path.addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent e) {
+					module = new WebModule(path.getText(), module.getDocumentBase(), module.getMemento(), module.isReloadable());
+				}
+			});
+			whs.setHelp(path, ContextIds.CONFIGURATION_EDITOR_WEBMODULE_DIALOG_PATH);
+			
+			new Label(composite, SWT.NONE).setText("");
+			
+			// auto reload
+			new Label(composite, SWT.NONE).setText("");
+			final Button reloadable = new Button(composite, SWT.CHECK);
+			reloadable.setText(Messages.configurationEditorWebModuleDialogReloadEnabled);
+			data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+			reloadable.setLayoutData(data);
+			reloadable.setSelection(module.isReloadable());
+			reloadable.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+					module = new WebModule(module.getPath(), module.getDocumentBase(), module.getMemento(), reloadable.getSelection());
+				}
+			});
+			whs.setHelp(reloadable, ContextIds.CONFIGURATION_EDITOR_WEBMODULE_DIALOG_RELOAD);
+		}
+		
 		if (!isEdit && isProject) {
 			projTable.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent event) {
 					try {
-						IWebModule module2 = (IWebModule) projTable.getSelection()[0].getData();
+						IModule module3 = (IModule) projTable.getSelection()[0].getData();
+						IWebModule module2 = (IWebModule) module3.loadAdapter(IWebModule.class, null);
 						String contextRoot = module2.getContextRoot();
 						if (contextRoot != null && !contextRoot.startsWith("/") && contextRoot.length() > 0)
 							contextRoot = "/" + contextRoot;
-						module = new WebModule(contextRoot, "[workspace]", module.getMemento(), module.isReloadable());
-						docBase.setText("[workspace]");
+						module = new WebModule(contextRoot, module3.getName(), module3.getId(), module.isReloadable());
+						docBase.setText(module3.getName());
+						module4 = module3;
 					} catch (Exception e) {
 						// ignore
 					}

@@ -115,10 +115,9 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	}
 
 	public void saveConfiguration(IProgressMonitor monitor) throws CoreException {
-		TomcatConfiguration config = getTomcatConfiguration();
-		if (config == null)
-			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotSaveConfiguration, "null"), null));
-		config.save(getServer().getServerConfiguration(), monitor);
+		if (configuration == null)
+			return;
+		configuration.save(getServer().getServerConfiguration(), monitor);
 	}
 
 	public void configurationChanged() {
@@ -194,14 +193,6 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			buf.append(commandLine[i]);
 		}	
 		return buf.toString();
-	}
-
-	/**
-	 * Return a string representation of this object.
-	 * @return java.lang.String
-	 */
-	public String toString() {
-		return "TomcatServer";
 	}
 
 	/*
@@ -345,6 +336,14 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 				}
 			}
 		}
-		config.save(config.getFolder(), monitor);
+		//config.save(config.getFolder(), monitor);
+	}
+
+	/**
+	 * Return a string representation of this object.
+	 * @return java.lang.String
+	 */
+	public String toString() {
+		return "TomcatServer";
 	}
 }
