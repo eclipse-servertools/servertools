@@ -311,7 +311,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			throw new IllegalArgumentException("Listener cannot be null");
 		wch.removePropertyChangeListener(listener);
 	}
-	
+
 	/**
 	 * Fire a property change event.
 	 * 
@@ -322,21 +322,21 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	public void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue) {
 		wch.firePropertyChangeEvent(propertyName, oldValue, newValue);
 	}
-	
+
 	public void addServerListener(IServerListener listener) {
 		if (server != null)
 			server.addServerListener(listener);
 		else
 			super.addServerListener(listener);
 	}
-	
+
 	public void removeServerListener(IServerListener listener) {
 		if (server != null)
 			server.removeServerListener(listener);
 		else
 			super.removeServerListener(listener);
 	}
-	
+
 	public void addPublishListener(IPublishListener listener) {
 		if (server != null)
 			server.addPublishListener(listener);
@@ -358,7 +358,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		else
 			setAttribute(RUNTIME_ID, (String)null);
 	}
-	
+
 	public void setRuntimeId(String runtimeId) {
 		setAttribute(RUNTIME_ID, runtimeId);
 		resolve();
@@ -433,6 +433,28 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			IFile file2 = ServerUtil.getUnusedServerFile(file.getProject(), this);
 			file.move(file2.getFullPath(), true, true, monitor);
 		}
+	}
+
+	/*
+	 * Publish to the server using the progress monitor. The result of the
+	 * publish operation is returned as an IStatus.
+	 */
+	public IStatus publish(int kind, IProgressMonitor monitor) {
+		if (server != null)
+			return server.publish(kind, monitor);
+		return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, null);
+	}
+
+	/**
+	 * Sets the server restart state.
+	 *
+	 * @param state boolean
+	 */
+	public void setServerRestartState(boolean state) {
+		if (server != null)
+			server.setServerRestartState(state);
+		else
+			super.setServerRestartState(state);
 	}
 
 	public String toString() {
