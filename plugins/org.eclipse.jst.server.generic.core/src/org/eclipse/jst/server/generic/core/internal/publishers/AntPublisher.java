@@ -239,8 +239,8 @@ public class AntPublisher extends GenericPublisher{
 	}
 	private String guessModuleName(IModule module) {
 		String moduleName = module.getName(); 
-		IWebModule webModule = (IWebModule)getModule()[0].loadAdapter(IWebModule.class,null);
-		if(webModule!=null){
+		if("jst.web".equals(getModuleTypeId())){
+			IWebModule webModule = (IWebModule)getModule()[0].loadAdapter(IWebModule.class,null);
 			String contextRoot = webModule.getContextRoot();
 			if(contextRoot.charAt(0) == '/')
 				moduleName = contextRoot.substring(1);

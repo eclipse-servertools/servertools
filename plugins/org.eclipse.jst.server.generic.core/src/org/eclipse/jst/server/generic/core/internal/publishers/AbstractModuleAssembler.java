@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
@@ -87,8 +88,13 @@ public abstract class AbstractModuleAssembler {
 		IModuleType moduleType = module.getModuleType();
 		if(moduleType==null)
 			return module.getName()+".jar";		
-		if("jst.web".equals(moduleType.getId()))
-			return module.getName()+".war";
+		if("jst.web".equals(moduleType.getId())){
+			IWebModule webmodule = (IWebModule)module.loadAdapter(IWebModule.class, null);
+			String contextRoot = webmodule.getContextRoot();
+			if(contextRoot.charAt(0) == '/')
+				return contextRoot.substring(1)+".war";
+			return contextRoot+".war";
+		}
 		if("jst.ear".equals(moduleType.getId()))
 			return module.getName()+".ear";
 		if("jst.connector".equals(moduleType.getId()))
