@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
 import org.eclipse.wst.server.core.util.SocketUtil;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.viewers.ServerTypeComposite;
@@ -199,7 +199,7 @@ public class NewManualServerComposite extends Composite {
 							server.setRuntime(runtime);
 							
 							if (server.getServerType().hasServerConfiguration()) {
-								((Server)server).importConfiguration(runtime, null);
+								((ServerWorkingCopy)server).importConfiguration(runtime, null);
 							}
 						}
 					}

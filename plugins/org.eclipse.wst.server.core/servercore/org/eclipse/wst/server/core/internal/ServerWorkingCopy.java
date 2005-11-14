@@ -495,6 +495,14 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		return Platform.getAdapterManager().loadAdapter(this, adapter.getName());
 	}
 
+	public void importConfiguration(IRuntime runtime2, IProgressMonitor monitor) {
+		try {
+			getWorkingCopyDelegate(monitor).importConfiguration(runtime2, monitor);
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error calling delegate setLaunchDefaults() " + toString(), e);
+		}
+	}
+
 	public String toString() {
 		return "ServerWorkingCopy " + getId();
 	}

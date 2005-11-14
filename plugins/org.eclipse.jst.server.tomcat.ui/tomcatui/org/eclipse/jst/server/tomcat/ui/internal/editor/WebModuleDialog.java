@@ -201,23 +201,26 @@ public class WebModuleDialog extends Dialog {
 			});
 		}
 		
-		if (!isProject) {
-			// path (context-root)
-			new Label(composite, SWT.NONE).setText(Messages.configurationEditorWebModuleDialogPath);
-			final Text path = new Text(composite, SWT.BORDER);
-			data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-			data.widthHint = 150;
-			path.setLayoutData(data);
-			path.setText(module.getPath());
+		// path (context-root)
+		new Label(composite, SWT.NONE).setText(Messages.configurationEditorWebModuleDialogPath);
+		final Text path = new Text(composite, SWT.BORDER);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		data.widthHint = 150;
+		path.setLayoutData(data);
+		path.setText(module.getPath());
+		if (isProject || (module.getMemento() != null && module.getMemento().length() > 0))
+			path.setEditable(false);
+		else
 			path.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					module = new WebModule(path.getText(), module.getDocumentBase(), module.getMemento(), module.isReloadable());
 				}
 			});
-			whs.setHelp(path, ContextIds.CONFIGURATION_EDITOR_WEBMODULE_DIALOG_PATH);
-			
-			new Label(composite, SWT.NONE).setText("");
-			
+		whs.setHelp(path, ContextIds.CONFIGURATION_EDITOR_WEBMODULE_DIALOG_PATH);
+		
+		new Label(composite, SWT.NONE).setText("");
+		
+		if (!isProject) {
 			// auto reload
 			new Label(composite, SWT.NONE).setText("");
 			final Button reloadable = new Button(composite, SWT.CHECK);
@@ -244,6 +247,7 @@ public class WebModuleDialog extends Dialog {
 							contextRoot = "/" + contextRoot;
 						module = new WebModule(contextRoot, module3.getName(), module3.getId(), module.isReloadable());
 						docBase.setText(module3.getName());
+						path.setText(contextRoot);
 						module4 = module3;
 					} catch (Exception e) {
 						// ignore

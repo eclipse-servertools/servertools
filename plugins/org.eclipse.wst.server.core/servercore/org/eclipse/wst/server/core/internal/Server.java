@@ -336,7 +336,7 @@ public class Server extends Base implements IServer {
 			new ServerEvent(ServerEvent.SERVER_CHANGE | ServerEvent.RESTART_STATE_CHANGE, this, getServerState(), 
 				getServerPublishState(), getServerRestartState()));
 	}
-	
+
 	/**
 	 * Fire a server listener state change event.
 	 */
@@ -877,14 +877,6 @@ public class Server extends Base implements IServer {
 	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) {
 		try {
 			getBehaviourDelegate(monitor).setupLaunchConfiguration(workingCopy, monitor);
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate setLaunchDefaults() " + toString(), e);
-		}
-	}
-
-	public void importConfiguration(IRuntime runtime2, IProgressMonitor monitor) {
-		try {
-			getDelegate(monitor).importConfiguration(runtime2, monitor);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate setLaunchDefaults() " + toString(), e);
 		}

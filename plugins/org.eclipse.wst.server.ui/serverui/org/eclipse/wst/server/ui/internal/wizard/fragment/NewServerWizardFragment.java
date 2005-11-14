@@ -17,7 +17,7 @@ import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.page.NewServerComposite;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
@@ -104,7 +104,7 @@ public class NewServerWizardFragment extends WizardFragment {
 			if (server != null) {
 				// createConfiguration(server);
 				if (server.getServerType().hasServerConfiguration()) {
-					((Server)server).importConfiguration(runtime, null);
+					((ServerWorkingCopy)server).importConfiguration(runtime, null);
 				}
 				WizardFragment sub = getWizardFragment(server.getServerType().getId());
 				if (sub != null)

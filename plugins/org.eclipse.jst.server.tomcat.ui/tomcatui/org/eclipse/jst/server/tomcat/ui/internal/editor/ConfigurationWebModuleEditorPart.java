@@ -334,7 +334,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 					item.setData(module2);
 				}
 			}
-	
+			
 			String reload = module.isReloadable() ? Messages.configurationEditorReloadEnabled : Messages.configurationEditorReloadDisabled;
 			String[] s = new String[] {module.getPath(), module.getDocumentBase(), projectName, reload};
 			item.setText(s);

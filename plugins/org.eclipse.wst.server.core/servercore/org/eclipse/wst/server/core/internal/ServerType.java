@@ -193,7 +193,7 @@ public class ServerType implements IServerType {
 		
 		// TODO
 		if (swc.getServerType().hasServerConfiguration())
-			((Server)swc).importConfiguration(runtime, null);
+			swc.importConfiguration(runtime, null);
 		
 		return swc;
 	}
@@ -261,7 +261,7 @@ public class ServerType implements IServerType {
 		
 		swc.setDefaults(monitor);
 		if (swc.getServerType().hasServerConfiguration())
-			((Server)swc).importConfiguration(runtime, null);
+			swc.importConfiguration(runtime, null);
 		
 		return swc;
 	}

@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.ProjectProperties;
 import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.Trace;
 /**
@@ -98,7 +99,7 @@ public class WizardTaskUtil {
 			
 			workingCopy.setRuntime(runtime);
 			if (workingCopy.getServerType().hasServerConfiguration()) {
-				((Server)workingCopy).importConfiguration(runtime, null);
+				((ServerWorkingCopy)workingCopy).importConfiguration(runtime, null);
 			}
 			taskModel.putObject(TaskModel.TASK_SERVER, workingCopy);
 		}
