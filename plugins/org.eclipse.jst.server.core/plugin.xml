@@ -119,4 +119,11 @@
       <facet id="jst.java" version="5.0"/>
     </supported>
   </extension>
+
+  <extension point="org.eclipse.wst.common.project.facet.core.runtimeBridges">
+    <bridge
+      id="org.eclipse.jst.server.core.default"
+      class="org.eclipse.jst.server.core.internal.RuntimeBridge"/>
+  </extension>
+
 </plugin>
