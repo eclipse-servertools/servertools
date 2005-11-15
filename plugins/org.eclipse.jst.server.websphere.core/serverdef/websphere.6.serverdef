@@ -8,7 +8,7 @@
 		label="%wasHome"
 		type="directory"
 		context="runtime"
-		default="/your_server_root/was-6.0" />
+		default="C:/ibm/WebSphere/AppServer" />
 
 	<property id="port"
 		label="%port"
@@ -20,19 +20,19 @@
 		label="%wasProfile"
 		type="directory"
 		context="server"
-		default="/your_server_root/was-6.0/profiles/default" />
+		default="C:/ibm/WebSphere/AppServer/profiles/default" />
 
 	<property id="wasCell"
 		label="%wasCell"
 		type="string"
 		context="server"
-		default="PEPENode01Cell" />
+		default="sanchezNode01Cell" />
 
 	<property id="wasNode"
 		label="%wasNode"
 		type="string"
 		context="server"
-		default="PEPENode01" />
+		default="sanchezNode01" />
 	<property id="wasServer"
 		label="%wasServer"
 		type="string"
@@ -50,13 +50,16 @@
 		<publishDir>${wasHome}</publishDir>
 		<publisherReference>org.eclipse.jst.server.generic.websphere.antpublisher</publisherReference>
 	</module>
-
 	<module>
 		<type>jst.ejb</type>
 		<publishDir>${wasHome}</publishDir>
 		<publisherReference>org.eclipse.jst.server.generic.websphere.antpublisher</publisherReference>
 	</module>
-
+	<module>
+		<type>jst.ear</type>
+		<publishDir>${wasHome}</publishDir>
+		<publisherReference>org.eclipse.jst.server.generic.websphere.antpublisher</publisherReference>
+	</module>
 
 	<project>
 		<classpathReference>was.project</classpathReference>
@@ -66,7 +69,7 @@
 		<mainClass>com.ibm.ws.bootstrap.WSLauncher</mainClass>
 		<workingDirectory>${wasProfile}</workingDirectory>
 		<programArguments>com.ibm.ws.runtime.WsServer "${wasProfile}/config" "${wasCell}" "${wasNode}" "${wasServer}"</programArguments>
-		<vmParameters>"-Duser.install.root=${wasProfile}"  "-Dserver.root=${wasProfile}"  "-Dwas.install.root=${wasHome}" "-Dws.ext.dirs=${wasHome}/java/lib;${wasHome}/classes;${wasHome}/lib;${wasHome}/installedChannels;${wasHome}/lib/ext;${wasHome}/web/help;${wasHome}/deploytool/itp/plugins/com.ibm.etools.ejbdeploy/runtime"  "-Xbootclasspath/p:${wasHome}/java/jre/lib/ext/ibmorb.jar;${wasHome}/java/jre/lib/ext/ibmext.jar" -Xms50m -Xmx256m "-Dcom.ibm.CORBA.ConfigURL=file:${wasProfile}/properties/sas.client.props" "-Dcom.ibm.SOAP.ConfigURL=file:${wasProfile}/properties/soap.client.props"   "-Djava.util.logging.manager=com.ibm.ws.bootstrap.WsLogManager" "-Djava.util.logging.configureByServer=true" "-Dibm.websphere.preload.classes=true"  "-Djava.library.path=${wasHome}/java/bin;${wasHome}/bin;${wasHome}/java/bin;${wasHome}/java/jre/bin"</vmParameters>
+		<vmParameters>"-Duser.install.root=${wasProfile}"  "-Dserver.root=${wasProfile}"  "-Dwas.install.root=${wasHome}" "-Dcom.ibm.itp.location=${wasHome}/bin" "-Dws.ext.dirs=${wasHome}/java/lib;${wasProfile}/classes;${wasHome}/classes;${wasHome}/lib;${wasHome}/installedChannels;${wasHome}/lib/ext;${wasHome}/web/help;${wasHome}/deploytool/itp/plugins/com.ibm.etools.ejbdeploy/runtime"  -Xbootclasspath/p:${wasHome}/java/jre/lib/ext/ibmorb.jar;${wasHome}/java/jre/lib/ext/ibmext.jar -Xms50m -Xmx256m "-Dcom.ibm.CORBA.ConfigURL=file:${wasProfile}/properties/sas.client.props" "-Dcom.ibm.SOAP.ConfigURL=file:${wasProfile}/properties/soap.client.props"   "-Djava.util.logging.manager=com.ibm.ws.bootstrap.WsLogManager" "-Djava.util.logging.configureByServer=true" "-Dibm.websphere.preload.classes=true"  "-Djava.library.path=${wasHome}/java/bin;${wasHome}/bin;${wasHome}/java/bin;${wasHome}/java/jre/bin"</vmParameters>
 		<classpathReference>was</classpathReference>
 	</start>
 
@@ -98,10 +101,19 @@
 		<publisherdata>
 			<dataname>target.unpublish.j2ee.ejb</dataname>
 			<datavalue>undeploy.j2ee.ejb</datavalue>
-		</publisherdata>			
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.publish.jst.ear</dataname>
+			<datavalue>deploy.j2ee.ear</datavalue>
+		</publisherdata>
+		<publisherdata>
+			<dataname>target.unpublish.jst.ear</dataname>
+			<datavalue>undeploy.j2ee.ear</datavalue>
+		</publisherdata>		
 	</publisher>
 
 	<classpath id="was" >
+		<archive path="${wasProfile}/properties" />
 	    <archive path="${wasHome}/properties" />
 	    <archive path="${wasHome}/lib/bootstrap.jar" />
         <archive path="${wasHome}/lib/j2ee.jar" />

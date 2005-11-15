@@ -16,6 +16,8 @@
 
 	<taskdef classpathref="toolpath" name="wsadmin" classname="com.ibm.websphere.ant.tasks.WsAdmin" />
 	<taskdef classpathref="toolpath" name="wsejbdeploy" classname="com.ibm.websphere.ant.tasks.WsEjbDeploy" />	
+	
+	<taskdef classpathref="toolpath" name="wsinstallapp" classname="com.ibm.websphere.ant.tasks.InstallApplication" />	
 
 	<target name="deploy.j2ee.web">
 		<jar destfile="${module.name}.war"> 
@@ -53,7 +55,6 @@
 			</zipfileset>
 		</jar>
 		<wsejbdeploy 
-				
 				inputJar="${module.name}.jar" 
 				wasHome="${was.home}" 
 				washome="${was.home}" 
@@ -68,12 +69,10 @@
 				compatible35="false" 
 				failonerror="true" 
 				trace="true" 
-				
 				jvmMaxMemory="256M" />
 	
 			<wsadmin  
 				washome="${was.home}" 
-				
 				properties="${wasProfile}/properties/wsadmin.properties" 
 				command="$AdminApp uninstall ${module.name}" 
 				failonerror="false">
@@ -85,7 +84,8 @@
 				command="$AdminApp install ${module.name}.jar {-appname ${module.name} -usedefaultbindings}" 
 				failonerror="true">
 			</wsadmin>
-		    <wsadmin  
+
+			<wsadmin  
 			  washome="${was.home}" 
 			  properties="${wasProfile}/properties/wsadmin.properties" 
 			  command="$AdminControl invoke [$AdminControl queryNames type=ApplicationManager,*] startApplication ${module.name}" 
@@ -93,7 +93,36 @@
 		    </wsadmin>	
 	</target>
 	
-	
+
+	<target name="deploy.j2ee.ear">
+		<jar destfile="${module.name}.ear"> 
+			<zipfileset dir="${module.dir}">
+	        	<include name="**/*.*"/>
+	       		<exclude name="**/*.java"/>
+			</zipfileset>
+		</jar>
+
+		<wsadmin  
+					washome="${was.home}" 
+					properties="${wasProfile}/properties/wsadmin.properties" 
+					command="$AdminApp uninstall ${module.name}" 
+					failonerror="false">
+		</wsadmin>
+
+		<wsadmin  
+					washome="${was.home}" 				
+					properties="${wasProfile}/properties/wsadmin.properties" 
+					command="$AdminApp install ${module.name}.ear {-appname ${module.name} -deployejb -usedefaultbindings}" 
+					failonerror="true">
+		</wsadmin>
+		<wsadmin  
+				  washome="${was.home}" 
+				  properties="${wasProfile}/properties/wsadmin.properties" 
+				  command="$AdminControl invoke [$AdminControl queryNames type=ApplicationManager,*] startApplication ${module.name}" 
+				  failonerror="true">
+		 </wsadmin>	
+		
+	</target>	
 	
 	<target name="undeploy.j2ee.web">
 		<wsadmin  
@@ -105,6 +134,16 @@
 		</wsadmin>
 	</target>
 	<target name="undeploy.j2ee.ejb">
+		<wsadmin  
+			washome="${was.home}" 
+			
+			properties="${wasProfile}/properties/wsadmin.properties" 
+			command="$AdminApp uninstall ${module.name}" 
+			failonerror="false">
+		</wsadmin>
+	</target>	
+	
+	<target name="undeploy.j2ee.ear">
 		<wsadmin  
 			washome="${was.home}" 
 			

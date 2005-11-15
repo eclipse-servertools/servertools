@@ -38,7 +38,8 @@
            behaviourClass="org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour"
            name="%websphere.6.server.name"
            hasConfiguration="false"
-           launchModes="run,debug">
+           launchModes="run,debug"
+           startBeforePublish="true">
      </serverType>
      
      
