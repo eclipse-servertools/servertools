@@ -14,9 +14,7 @@
       %license
    </license>
 
-   <includes
-         id="org.eclipse.jst.server_ui.feature"
-         version="0.0.0"/>
+
 
    <plugin
          id="org.eclipse.jst.server.tomcat.core"
