@@ -8,7 +8,7 @@
 		label="%wasHome"
 		type="directory"
 		context="runtime"
-		default="C:/ibm/WebSphere/AppServer" />
+		default="/your_server_root/was-6.0" />
 
 	<property id="port"
 		label="%port"
@@ -20,7 +20,7 @@
 		label="%wasProfile"
 		type="directory"
 		context="server"
-		default="C:/ibm/WebSphere/AppServer/profiles/default" />
+		default="/your_server_root/was-6.0/profiles/default" />
 
 	<property id="wasCell"
 		label="%wasCell"
@@ -113,7 +113,6 @@
 	</publisher>
 
 	<classpath id="was" >
-		<archive path="${wasProfile}/properties" />
 	    <archive path="${wasHome}/properties" />
 	    <archive path="${wasHome}/lib/bootstrap.jar" />
         <archive path="${wasHome}/lib/j2ee.jar" />
