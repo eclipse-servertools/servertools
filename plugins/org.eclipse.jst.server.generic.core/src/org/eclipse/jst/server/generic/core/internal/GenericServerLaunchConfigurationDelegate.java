@@ -26,6 +26,7 @@ import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
+import org.eclipse.wst.server.core.util.SocketUtil;
 /**
  * ServerLaunchConfiguration for the generic server.
  *
@@ -48,6 +49,11 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 
 		try {
 			genericServer.setupLaunch(launch, mode, monitor);
+			if(genericServer.getServer().getServerType().supportsRemoteHosts() && !SocketUtil.isLocalhost(genericServer.getServer().getHost())){
+			// no launch for remote servers
+				return;
+			}
+
 			String mainTypeName = genericServer.getStartClassName();
 			IVMInstall vm = verifyVMInstall(configuration);
 			IVMRunner runner = vm.getVMRunner(mode);

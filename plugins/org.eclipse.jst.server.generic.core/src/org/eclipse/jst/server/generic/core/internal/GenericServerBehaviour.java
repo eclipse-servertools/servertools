@@ -136,7 +136,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
      * Shuts down the server via the launch configuration.
      */
     protected void shutdown(int state) {
-		GenericServerRuntime runtime = (GenericServerRuntime) getRuntimeDelegate();
+		GenericServerRuntime runtime = getRuntimeDelegate();
 		try {
 			Trace.trace(Trace.FINEST, "Stopping Server");
 			if (state != IServer.STATE_STOPPED)
@@ -194,11 +194,17 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 		return "GenericServerStopper";
 	}
 	
+	private boolean isRemote(){
+		return (getServer().getServerType().supportsRemoteHosts()&& !SocketUtil.isLocalhost(getServer().getHost()) );
+	}	
 	/**
 	 * Sets up the launch configuration for stopping the server.
 	 * @param workingCopy
 	 */
 	protected void setupStopLaunchConfiguration(GenericServerRuntime runtime, ILaunchConfigurationWorkingCopy wc) {
+		if(isRemote())// Do not launch for remote servers.
+			return;
+		
 		wc.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
 				getServerDefinition().getResolver().resolveProperties(this.getServerDefinition().getStop().getMainClass()));
@@ -328,11 +334,14 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     }
 
     public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException {
-		workingCopy.setAttribute(
+		if(isRemote())// No launch for remote servers.
+			return;
+    	
+    	workingCopy.setAttribute(
                 IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
                 getStartClassName());
 
-        GenericServerRuntime runtime = (GenericServerRuntime) getRuntimeDelegate();
+        GenericServerRuntime runtime = getRuntimeDelegate();
 
         IVMInstall vmInstall = runtime.getVMInstall();
         workingCopy.setAttribute(
