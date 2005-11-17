@@ -64,7 +64,7 @@ import org.osgi.framework.Bundle;
  */
 
 public class AntPublisher extends GenericPublisher{
-	private static final String JAR_PROTOCOL_PREFIX = "jar";
+	private static final String JAR_PROTOCOL_PREFIX = "jar"; //$NON-NLS-1$
 
 	/**
 	 * publisher id for ANT publisher.
@@ -239,7 +239,7 @@ public class AntPublisher extends GenericPublisher{
 	}
 	private String guessModuleName(IModule module) {
 		String moduleName = module.getName(); 
-		if("jst.web".equals(getModuleTypeId())){
+		if("jst.web".equals(getModuleTypeId())){ //$NON-NLS-1$
 			IWebModule webModule = (IWebModule)getModule()[0].loadAdapter(IWebModule.class,null);
 			String contextRoot = webModule.getContextRoot();
 			if(contextRoot.charAt(0) == '/')
@@ -251,28 +251,31 @@ public class AntPublisher extends GenericPublisher{
 	private void runAnt(String buildFile,String targets,Map properties ,IProgressMonitor monitor)throws CoreException{
 		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
 		ILaunchConfigurationType type = launchManager.getLaunchConfigurationType(IAntLaunchConfigurationConstants.ID_ANT_LAUNCH_CONFIGURATION_TYPE);
-
-		ILaunchConfigurationWorkingCopy wc= type.newInstance(null,properties.get(PROP_MODULE_NAME)+" module publisher");
+		if(type==null){
+			IStatus s = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,GenericServerCoreMessages.antLauncherMissing,null);
+			throw new CoreException(s);
+		}
+		ILaunchConfigurationWorkingCopy wc= type.newInstance(null,properties.get(PROP_MODULE_NAME)+" module publisher"); //$NON-NLS-1$
 		wc.setContainer(null);
 		wc.setAttribute(IExternalToolConstants.ATTR_LOCATION, buildFile);
-		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH_PROVIDER,"org.eclipse.ant.ui.AntClasspathProvider");
+		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH_PROVIDER,"org.eclipse.ant.ui.AntClasspathProvider"); //$NON-NLS-1$
 		wc.setAttribute(IAntLaunchConfigurationConstants.ATTR_ANT_TARGETS,targets);
 		wc.setAttribute(IAntLaunchConfigurationConstants.ATTR_ANT_PROPERTIES,properties);
 		wc.setAttribute(IDebugUIConstants.ATTR_LAUNCH_IN_BACKGROUND,false);
 		wc.setAttribute(IDebugUIConstants.ATTR_CAPTURE_IN_CONSOLE,true);
 		wc.setAttribute(IDebugUIConstants.ATTR_PRIVATE,true);
 		
-		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_SOURCE_PATH_PROVIDER, "org.eclipse.ant.ui.AntClasspathProvider"); 
+		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_SOURCE_PATH_PROVIDER, "org.eclipse.ant.ui.AntClasspathProvider");  //$NON-NLS-1$
 		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_NAME,getServerRuntime().getVMInstall().getName());
 		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_TYPE,getServerRuntime().getVMInstall().getVMInstallType().getId());
-		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, "org.eclipse.ant.internal.ui.antsupport.InternalAntRunner");
+		wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, "org.eclipse.ant.internal.ui.antsupport.InternalAntRunner"); //$NON-NLS-1$
 		wc.setAttribute(DebugPlugin.ATTR_PROCESS_FACTORY_ID, IAntUIConstants.REMOTE_ANT_PROCESS_FACTORY_ID);
 		
 		setupAntLaunchConfiguration(wc);
 		
 		
 		ILaunchConfiguration launchConfig = wc.doSave();
-        launchConfig.launch("run",monitor);
+        launchConfig.launch("run",monitor); //$NON-NLS-1$
 	}
 
 

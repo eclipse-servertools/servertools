@@ -22,11 +22,11 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jdt.launching;visibility:=reexport,
  org.eclipse.wst.server.core,
  org.eclipse.jst.server.core,
- org.eclipse.debug.ui,
- org.eclipse.ant.ui,
+ org.eclipse.ant.ui;resolution:=optional,
  org.eclipse.emf.common;visibility:=reexport,
  org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
- org.eclipse.ui.externaltools,
- org.apache.ant
+ org.eclipse.ui.externaltools;resolution:=optional,
+ org.apache.ant,
+ org.eclipse.debug.ui;resolution:=optional
 Eclipse-AutoStart: true
