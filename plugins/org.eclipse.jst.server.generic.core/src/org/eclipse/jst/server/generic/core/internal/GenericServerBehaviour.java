@@ -43,6 +43,7 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerPort;
+import org.eclipse.wst.server.core.internal.DeletedModule;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.core.model.ServerDelegate;
 import org.eclipse.wst.server.core.util.SocketUtil;
@@ -54,7 +55,7 @@ import org.eclipse.wst.server.core.util.SocketUtil;
  */
 public class GenericServerBehaviour extends ServerBehaviourDelegate {
 	
-	private static final String ATTR_STOP = "stop-server";
+	private static final String ATTR_STOP = "stop-server"; //$NON-NLS-1$
     
 	// the thread used to ping the server to check for startup
 	protected transient PingThread ping = null;
@@ -74,6 +75,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     public void publishModule(int kind, int deltaKind, IModule[] module,
             IProgressMonitor monitor) throws CoreException {
  
+    	checkClosed(module);
         if(REMOVED == deltaKind){
             removeFromServer(module,monitor);
         }
@@ -81,7 +83,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
             String publisherId = ServerTypeDefinitionUtil.getPublisherID(module[0], getServerDefinition());
             GenericPublisher publisher = PublishManager.getPublisher(publisherId);
             if(publisher==null){
-                IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,"Unable to create publisher",null);
+                IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0, GenericServerCoreMessages.bind(GenericServerCoreMessages.unableToCreatePublisher,publisherId),null);
                 throw new CoreException(status);
             }
             publisher.initialize(module,getServer());
@@ -99,12 +101,23 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
         }
     }
 
+    private void checkClosed(IModule[] module) throws CoreException
+    {
+    	for(int i=0;i<module.length;i++)
+    	{
+    		if(module[i] instanceof DeletedModule)
+    		{	
+                IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0, GenericServerCoreMessages.bind(GenericServerCoreMessages.canNotPublishDeletedModule,module[i].getName()),null);
+                throw new CoreException(status);
+    		}
+    	}
+    }
     private void removeFromServer(IModule[] module, IProgressMonitor monitor) throws CoreException
     {
     	String publisherId = ServerTypeDefinitionUtil.getPublisherID(module[0], getServerDefinition());
         GenericPublisher publisher = PublishManager.getPublisher(publisherId);  
         if(publisher==null){
-            IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,"Unable to create publisher to remove module",null);
+            IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,GenericServerCoreMessages.bind(GenericServerCoreMessages.unableToCreatePublisher,publisherId),null);
             throw new CoreException(status);
         }
         publisher.initialize(module,getServer());
@@ -138,7 +151,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     protected void shutdown(int state) {
 		GenericServerRuntime runtime = getRuntimeDelegate();
 		try {
-			Trace.trace(Trace.FINEST, "Stopping Server");
+			Trace.trace(Trace.FINEST, "Stopping Server"); //$NON-NLS-1$
 			if (state != IServer.STATE_STOPPED)
 				setServerState(IServer.STATE_STOPPING);
 			String configTypeID = getConfigTypeID(); 
@@ -165,7 +178,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 			// To stop from appearing in history lists
 			wc.setAttribute(IDebugUIConstants.ATTR_PRIVATE, true);		
 			// Set the stop attribute so that we know we are stopping
-			wc.setAttribute(ATTR_STOP, "true");
+			wc.setAttribute(ATTR_STOP, "true"); //$NON-NLS-1$
 			
 			// Setup the launch config for stopping the server
 			setupStopLaunchConfiguration(runtime, wc);
@@ -174,7 +187,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 			wc.launch(ILaunchManager.RUN_MODE, new NullProgressMonitor());
 
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error stopping Server", e);
+			Trace.trace(Trace.SEVERE, "Error stopping Server", e); //$NON-NLS-1$
 		}
     }
 
@@ -191,7 +204,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 	 * @return
 	 */
 	protected String getStopLaunchName() {
-		return "GenericServerStopper";
+		return "GenericServerStopper"; //$NON-NLS-1$
 	}
 	
 	private boolean isRemote(){
@@ -384,7 +397,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
      * @param monitor IProgressMonitor
      */
     protected void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException {
-    	if ("true".equals(launch.getLaunchConfiguration().getAttribute(ATTR_STOP, "false"))) 
+    	if ("true".equals(launch.getLaunchConfiguration().getAttribute(ATTR_STOP, "false")))  //$NON-NLS-1$ //$NON-NLS-2$
     		return;
 
     	String host = getServer().getHost();
@@ -402,13 +415,13 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     	
     	// ping server to check for startup
     	try {
-    		String url = "http://"+host;
+    		String url = "http://"+host; //$NON-NLS-1$
     		int port = sp.getPort();
     		if (port != 80)
-    			url += ":" + port;
+    			url += ":" + port; //$NON-NLS-1$
     		ping = new PingThread(getServer(), url, this);
     	} catch (Exception e) {
-    		Trace.trace(Trace.SEVERE, "Can't ping for server startup.");
+    		Trace.trace(Trace.SEVERE, "Can't ping for server startup."); //$NON-NLS-1$
     	}
     }
     
@@ -460,14 +473,14 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     
     	try {
     		setServerState(IServer.STATE_STOPPING);
-    		Trace.trace(Trace.FINEST, "Killing the Server process");
+    		Trace.trace(Trace.FINEST, "Killing the Server process"); //$NON-NLS-1$
     		if (process != null && !process.isTerminated()) {
     			process.terminate();
     			
     		}
     		stopImpl();
     	} catch (Exception e) {
-    		Trace.trace(Trace.SEVERE, "Error killing the process", e);
+    		Trace.trace(Trace.SEVERE, "Error killing the process", e); //$NON-NLS-1$
     	}
     }
 

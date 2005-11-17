@@ -42,7 +42,7 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 
 		IServer server = ServerUtil.getServer(configuration);
 		if (server == null) {
-			abort("Server does not exist", null,
+			abort(GenericServerCoreMessages.missingServer, null,
 					IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
 		}
 		GenericServerBehaviour genericServer = (GenericServerBehaviour) server.loadAdapter(ServerBehaviourDelegate.class, null);
@@ -96,7 +96,7 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 			runner.run(runConfig, launch, monitor);
 			genericServer.setProcess(launch.getProcesses()[0]);
 		} catch (CoreException e) {
-			Trace.trace(Trace.SEVERE,"error lauching generic server",e);
+			Trace.trace(Trace.SEVERE,"error launching generic server",e); //$NON-NLS-1$
 			genericServer.terminate();
 			throw e;
 		}
