@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
+import org.eclipse.jst.server.generic.core.internal.Trace;
 import org.eclipse.jst.server.generic.internal.core.util.ExtensionPointUtil;
 import org.eclipse.jst.server.generic.internal.servertype.definition.ServerTypePackage;
 import org.eclipse.jst.server.generic.internal.servertype.definition.util.ServerTypeResourceFactoryImpl;
@@ -67,9 +68,12 @@ public class XMLUtils {
      * @param extension
      */
     private java.net.URI getDefinitionFile(IConfigurationElement element) {
+        
         Bundle bundle = Platform.getBundle(element.getNamespace());
         String definitionFile = element.getAttribute("definitionfile");
-		URL url = bundle.getEntry(definitionFile);
+        Trace.trace(Trace.FINEST,"Loading serverdef file "+definitionFile+" from bundle "+bundle.getSymbolicName());
+        
+        URL url = bundle.getEntry(definitionFile);
 		try {
 			java.net.URI uri = new java.net.URI(url.getProtocol(), url.getHost(),url.getPath(), url.getQuery());
 		    return uri;
