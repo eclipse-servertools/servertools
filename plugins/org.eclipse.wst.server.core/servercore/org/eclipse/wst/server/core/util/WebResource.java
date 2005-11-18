@@ -15,8 +15,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 /**
+ * A Web module resource.
  * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public class WebResource implements IModuleArtifact {
 	private IModule module;

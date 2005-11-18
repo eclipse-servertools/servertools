@@ -21,17 +21,16 @@ import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
 /**
+ * A helper class for defining a module factory that provides modules
+ * based on projects.
  * 
- * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate {
-	protected static IResourceChangeListener listener;
-
 	private static List factories = new ArrayList();
 
 	// list of IModules
-	private List projects;
+	private List modules;
 
 	/**
 	 * Construct a new ProjectModuleFactoryDelegate.
@@ -46,21 +45,21 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * Cache any preexisting modules.
 	 */
 	private final void cacheModules() {
-		if (projects != null)
+		if (modules != null)
 			return;
 		
 		try {
 			clearCache();
 			IProject[] projects2 = getWorkspaceRoot().getProjects();
 			int size = projects2.length;
-			projects = new ArrayList(size);
+			modules = new ArrayList(size);
 			for (int i = 0; i < size; i++) {
 				//Trace.trace("caching: " + this + " " + projects[i] + " " + isValidModule(projects[i]));
 				if (projects2[i].isAccessible()) {
 					try {
 						IModule module = createModule(projects2[i]);
 						if (module != null)
-							projects.add(module);
+							modules.add(module);
 					} catch (Throwable t) {
 						Trace.trace(Trace.SEVERE, "Error creating module", t);
 					}
@@ -80,12 +79,17 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		return ResourcesPlugin.getWorkspace().getRoot();
 	}
 
+	/**
+	 * Return the modules provided by this factory.
+	 * 
+	 * @return a possibly-empty array of modules
+	 */
 	public final IModule[] getModules() {
 		cacheModules();
 		
-		IModule[] modules = new IModule[projects.size()];
-		projects.toArray(modules);
-		return modules;
+		IModule[] modules2 = new IModule[modules.size()];
+		modules.toArray(modules2);
+		return modules2;
 	}
 
 	/**
@@ -101,7 +105,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 			if (factories2[i].delegate != null && factories2[i].delegate instanceof ProjectModuleFactoryDelegate) {
 				ProjectModuleFactoryDelegate pmfd = (ProjectModuleFactoryDelegate) factories2[i].delegate;
 				if (pmfd.deltaAffectsModules(delta)) {
-					pmfd.projects = null;
+					pmfd.modules = null;
 					factories2[i].clearModuleCache();
 				}
 			}

@@ -12,8 +12,9 @@ package org.eclipse.wst.server.core.model;
 
 import org.eclipse.core.runtime.IPath;
 /**
+ * A module resource delta.
  * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public interface IModuleResourceDelta {
 	/**

@@ -27,7 +27,7 @@ import org.eclipse.wst.server.core.internal.*;
  * It is not intended to be subclassed or instantiated.
  * </p>
  * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public class ServerCore {
 	private static final String EXTENSION_SERVER_TYPE = "serverTypes";
@@ -498,6 +498,12 @@ public class ServerCore {
 		ModuleProperties.getInstance().setDefaultServer(module, server, monitor);
 	}
 
+	/**
+	 * Handles a change to the server type extension point due to bundles getting added
+	 * or removed dynamically at runtime.
+	 * 
+	 * @param delta an extension delta
+	 */
 	protected static void handleServerTypeDelta(IExtensionDelta delta) {
 		if (serverTypes == null) // not loaded yet
 			return;
@@ -524,6 +530,12 @@ public class ServerCore {
 		getResourceManager().resolveServers();
 	}
 
+	/**
+	 * Handles a change to the runtime type extension point due to bundles getting added
+	 * or removed dynamically at runtime.
+	 * 
+	 * @param delta an extension delta
+	 */
 	protected static void handleRuntimeTypeDelta(IExtensionDelta delta) {
 		if (runtimeTypes == null) // not loaded yet
 			return;

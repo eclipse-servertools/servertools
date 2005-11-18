@@ -52,7 +52,7 @@ import org.eclipse.wst.server.core.internal.ServerPlugin;
  * 
  * @see IRuntime
  * @see IRuntimeWorkingCopy
- * @plannedfor 1.0
+ * @since 1.0
  */
 public abstract class RuntimeDelegate {
 	private Runtime runtime;

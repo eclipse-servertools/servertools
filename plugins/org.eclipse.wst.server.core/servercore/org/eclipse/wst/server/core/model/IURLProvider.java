@@ -14,8 +14,10 @@ import java.net.URL;
 
 import org.eclipse.wst.server.core.IModule;
 /**
+ * An interface for a server delegate that can provide URLs for a module published
+ * to the server.
  * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public interface IURLProvider {
 	/**

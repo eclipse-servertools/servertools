@@ -34,7 +34,7 @@ import org.eclipse.wst.server.core.IModule;
  * 
  * @see org.eclipse.wst.server.core.IModule
  * @see ModuleFactoryDelegate
- * @plannedfor 1.0
+ * @since 1.0
  */
 public abstract class ModuleDelegate {
 	private IModule module;

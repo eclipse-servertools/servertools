@@ -13,8 +13,9 @@ package org.eclipse.wst.server.core.util;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 /**
+ * A dummy module artifact.
  * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public class NullModuleArtifact implements IModuleArtifact {
 	private IModule module;

@@ -16,9 +16,9 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 /**
+ * A wizard handle.
  * 
- * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public interface IWizardHandle extends IMessageProvider {
 	/**

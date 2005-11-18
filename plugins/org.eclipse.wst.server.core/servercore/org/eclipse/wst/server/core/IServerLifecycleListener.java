@@ -22,7 +22,7 @@ package org.eclipse.wst.server.core;
  * 
  * @see ServerCore
  * @see IServer
- * @plannedfor 1.0
+ * @since 1.0
  */
 public interface IServerLifecycleListener {
 	/**

@@ -24,7 +24,7 @@ import org.eclipse.wst.server.ui.internal.editor.ServerResourceCommandManager;
 /**
  * An abstract server editor section.
  * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public abstract class ServerEditorSection {
 	private String errorMessage = null;
@@ -122,7 +122,7 @@ public abstract class ServerEditorSection {
 	/**
 	 * Set an error message for this page.
 	 * 
-	 * @param error java.lang.String
+	 * @param error an error message
 	 */
 	public void setErrorMessage(String error) {
 		if (error == null && errorMessage == null)
@@ -140,7 +140,7 @@ public abstract class ServerEditorSection {
 	 * Get a form toolkit to create widgets. It will automatically be disposed
 	 * when the editor is disposed.
 	 * 
-	 * @param display
+	 * @param display the display
 	 * @return FormToolkit
 	 */
 	protected FormToolkit getFormToolkit(Display display) {

@@ -35,7 +35,7 @@ import org.eclipse.wst.server.core.internal.ModuleFactory;
  * 
  * @see org.eclipse.wst.server.core.IModule
  * @see ModuleDelegate
- * @plannedfor 1.0
+ * @since 1.0
  */
 public abstract class ModuleFactoryDelegate {
 	private ModuleFactory factory;

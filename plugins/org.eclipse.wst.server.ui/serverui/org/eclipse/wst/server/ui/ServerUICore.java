@@ -16,7 +16,7 @@ import org.eclipse.wst.server.ui.internal.ServerLabelProvider;
 /**
  * Server UI core.
  * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public class ServerUICore {
 	private static ServerLabelProvider labelProvider;

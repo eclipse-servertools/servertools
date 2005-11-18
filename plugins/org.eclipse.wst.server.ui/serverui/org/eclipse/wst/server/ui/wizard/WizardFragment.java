@@ -37,7 +37,7 @@ import org.eclipse.wst.server.core.TaskModel;
  * be called multiple times as the tree is updated and it must return the
  * same instance of any children that have previously been returned.
  * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public abstract class WizardFragment {
 	private TaskModel taskModel;
@@ -58,8 +58,8 @@ public abstract class WizardFragment {
 	 * Creates the composite associated with this fragment.
 	 * This method is only called when hasComposite() returns true.
 	 * 
-	 * @param parent
-	 * @param handle
+	 * @param parent a parent composite
+	 * @param handle a wizard handle
 	 * @return the created composite
 	 */
 	public Composite createComposite(Composite parent, IWizardHandle handle) {

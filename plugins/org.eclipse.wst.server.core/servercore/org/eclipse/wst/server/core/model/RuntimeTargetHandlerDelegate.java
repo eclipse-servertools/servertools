@@ -30,7 +30,7 @@ import org.eclipse.wst.server.core.IRuntimeTargetHandler;
  * (repeatedly) as the API evolves.
  * </p>
  * 
- * @plannedfor 1.0
+ * @deprecated This function is deprecated.
  */
 public abstract class RuntimeTargetHandlerDelegate {
 	private IRuntimeTargetHandler handler;

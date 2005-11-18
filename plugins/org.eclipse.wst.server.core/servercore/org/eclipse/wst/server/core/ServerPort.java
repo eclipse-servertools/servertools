@@ -12,7 +12,7 @@ package org.eclipse.wst.server.core;
 /**
  * This class represents a port on a server.
  * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public class ServerPort {
 	private String id;

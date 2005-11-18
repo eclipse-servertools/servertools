@@ -24,7 +24,7 @@ import org.eclipse.wst.server.core.internal.*;
  * Server utility methods. These static methods can be used to perform
  * common operations on server artifacts.
  * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public class ServerUtil {
 	/**
@@ -270,7 +270,7 @@ public class ServerUtil {
 	 * @param remove an array of modules to remove, or <code>null</code> to not remove any
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
-	 * @throws CoreException
+	 * @throws CoreException if anything goes wrong
 	 */
 	public static void modifyModules(IServerWorkingCopy server, IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
 		if (server == null)

@@ -22,7 +22,7 @@ import java.util.Map;
  * of another.
  * </p>
  * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public class TaskModel {
 	/**

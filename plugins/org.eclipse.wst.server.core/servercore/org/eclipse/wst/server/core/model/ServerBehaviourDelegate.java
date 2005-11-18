@@ -47,7 +47,7 @@ import org.eclipse.wst.server.core.internal.Trace;
  * 
  * @see org.eclipse.wst.server.core.IServer
  * @see org.eclipse.wst.server.core.IServerWorkingCopy
- * @plannedfor 1.0
+ * @since 1.0
  */
 public abstract class ServerBehaviourDelegate {
 	private Server server;
@@ -117,6 +117,9 @@ public abstract class ServerBehaviourDelegate {
 	 * This method is called by the server core framework.
 	 * Clients should never call this method.
 	 * </p>
+	 * 
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 */
 	protected void initialize(IProgressMonitor monitor) {
 		// do nothing
@@ -657,15 +660,15 @@ public abstract class ServerBehaviourDelegate {
 		Trace.trace(Trace.FINEST, "Done publishing: " + module);
 		return status;
 	}
-	
+
 	protected boolean hasBeenPublished(IModule[] module) {
 		return server.getServerPublishInfo().hasModulePublishInfo(module);
 	}
-	
+
 	protected void addRemovedModules(List moduleList, List kindList) {
 		server.getServerPublishInfo().addRemovedModules(moduleList, kindList);
 	}
-	
+
 	protected void updatePublishInfo(int deltaKind, IModule[] module) {
 		if (deltaKind == ServerBehaviourDelegate.REMOVED)
 			server.getServerPublishInfo().removeModulePublishInfo(module);

@@ -30,7 +30,7 @@ import org.eclipse.wst.server.ui.internal.editor.*;
  * This class also provides each editor page with an error message which
  * will be displayed on the status bar of the editor.
  * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public abstract class ServerEditorPart extends EditorPart {
 	/**
@@ -291,7 +291,7 @@ public abstract class ServerEditorPart extends EditorPart {
 	 * Get a form toolkit to create widgets. It will automatically be disposed
 	 * when the editor is disposed.
 	 * 
-	 * @param display
+	 * @param display the display
 	 * @return FormToolkit
 	 */
 	protected FormToolkit getFormToolkit(Display display) {

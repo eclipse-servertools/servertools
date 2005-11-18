@@ -47,7 +47,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * (repeatedly) as the API evolves.
  * </p>
  * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public interface IModule extends IAdaptable {
 	/**

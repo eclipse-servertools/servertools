@@ -12,8 +12,10 @@ package org.eclipse.wst.server.core.util;
 
 import java.net.URL;
 /**
- *
- * @plannedfor 1.0
+ * An HTTP launchable object. Encapsulates a launch of a URL for the Run on Server
+ * support.
+ * 
+ * @since 1.0
  */
 public class HttpLaunchable {
 	private URL url;

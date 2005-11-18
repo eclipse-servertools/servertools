@@ -17,7 +17,7 @@ import org.eclipse.wst.server.core.IRuntimeLifecycleListener;
  * with empty methods.
  * 
  * @see org.eclipse.wst.server.core.IRuntimeLifecycleListener
- * @plannedfor 1.0
+ * @since 1.0
  */
 public class RuntimeLifecycleAdapter implements IRuntimeLifecycleListener {
 	/**

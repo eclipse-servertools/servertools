@@ -21,7 +21,7 @@ import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
  * to extend the <code>runtimeLocators</code> extension point.
  * </p>
  * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public abstract class RuntimeLocatorDelegate {
 	/**

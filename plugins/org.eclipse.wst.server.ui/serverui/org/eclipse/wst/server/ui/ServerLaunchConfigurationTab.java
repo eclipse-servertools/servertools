@@ -35,20 +35,20 @@ import org.eclipse.wst.server.ui.internal.*;
 /**
  * Server launch configuration tab.
  * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab {
-	protected String[] serverTypeIds;
+	private String[] serverTypeIds;
 
-	protected Combo serverCombo;
-	
-	protected Label runtimeLabel;
-	protected Label hostname;
-	
-	protected IServer server;
-	
+	private Combo serverCombo;
+
+	private Label runtimeLabel;
+	private Label hostname;
+
+	private IServer server;
+
 	// list of servers that are in combo
-	protected List servers;
+	private List servers;
 
 	// flag to be used to decide whether to enable combo in launch config dialog
 	// after the user requests a launch, they cannot change it

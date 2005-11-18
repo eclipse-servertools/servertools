@@ -22,8 +22,6 @@ package org.eclipse.wst.server.core;
  * 
  * @deprecated Project facet support should now be used instead of this API. @see
  *    org.eclipse.wst.common.project.facet.core.IFacetedProject#getRuntime()
- * 
- * @plannedfor 1.0
  */
 public interface IProjectProperties {
 	/**

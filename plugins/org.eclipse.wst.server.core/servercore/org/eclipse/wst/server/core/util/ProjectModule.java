@@ -23,7 +23,7 @@ import org.eclipse.wst.server.core.model.*;
  * A simple IModuleProject that maps a folder within a project
  * (or the root of the project itself) to the module.
  * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public abstract class ProjectModule extends ModuleDelegate {
 	protected IProject project;
@@ -66,84 +66,6 @@ public abstract class ProjectModule extends ModuleDelegate {
 		return root;
 	}
 
-	/*
-	 * @see IModuleProject#getModuleResourceDelta(IResourceDelta)
-	 */
-	/*public IModuleResourceDelta getModuleResourceDelta(IResourceDelta delta) {
-		Trace.trace(Trace.FINEST, "> getModuleResourceDelta");
-		IPath root2 = null;
-		try {
-			root2 = getRootFolder();
-		} catch (Exception e) {
-			Trace.trace(Trace.FINEST, "Error getting root2");
-		}
-		if (root2 == null) {
-			return convertChildren(delta, null);
-		}
-		class Helper {
-			boolean found = false;
-			IModuleResourceDelta delta2;
-		}
-		final Helper helper = new Helper();
-		final IPath root3 = root2;
-		try {
-			delta.accept(new IResourceDeltaVisitor() {
-				public boolean visit(IResourceDelta visitDelta) {
-					if (!helper.found && root3.equals(visitDelta.getProjectRelativePath())) {
-						helper.delta2 = convertChildren(visitDelta, null);
-						helper.found = true;
-						return false;
-					}
-					return true;
-				}
-			});
-			Trace.trace(Trace.FINEST, "< getModuleResourceDelta");
-			return helper.delta2;
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not get module resource delta");
-		}
-		Trace.trace(Trace.FINEST, "< getModuleResourceDelta null");
-		return null;
-	}*/
-	
-	/**
-	 * 
-	 */
-	/*protected IModuleResourceDelta convertChildren(IResourceDelta delta, IModuleFolder parent) {
-		int flags = delta.getKind();
-		int kind = IModuleResourceDelta.NO_CHANGE;
-		if (flags == IResourceDelta.ADDED)
-			kind = IModuleResourceDelta.ADDED;
-		else if (flags == IResourceDelta.REMOVED)
-			kind = IModuleResourceDelta.REMOVED;
-		else if (flags == IResourceDelta.CHANGED)
-			kind = IModuleResourceDelta.CHANGED;
-		
-		IResource resource = delta.getResource();
-		
-		IModuleResource pubResource = null;
-		if (resource instanceof IContainer)
-			pubResource = new ProjectModuleFolder(this, parent, (IContainer) resource);	
-		else if (resource instanceof IFile) {
-			if (delta.getFlags() == IResourceDelta.MARKERS)
-				return null;
-			pubResource = new ProjectModuleFile(this, parent, (IFile) resource);
-		}
-		
-		ModuleResourceDelta deployDelta = new ModuleResourceDelta(pubResource, kind);
-		
-		IResourceDelta[] children = delta.getAffectedChildren();
-		if (children != null && pubResource instanceof IModuleFolder) {
-			int size = children.length;
-			for (int i = 0; i < size; i++) {
-				IModuleResourceDelta childDelta = convertChildren(children[i], (IModuleFolder) pubResource);
-				if (childDelta != null)
-					deployDelta.addChild(childDelta);
-			}
-		}
-		return deployDelta;
-	}*/
-
 	/**
 	 * Helper method - returns the module's id.
 	 * 
@@ -182,41 +104,41 @@ public abstract class ProjectModule extends ModuleDelegate {
 		}
 	}
 
-    protected IModuleResource[] getModuleResources(IPath path, IContainer container) throws CoreException {
-        List list = new ArrayList();
+	/**
+	 * Return the module resources for a given path.
+	 * 
+	 * @param path a path
+	 * @param container a container
+	 * @return an array of module resources
+	 * @throws CoreException
+	 */
+	protected IModuleResource[] getModuleResources(IPath path, IContainer container) throws CoreException {
+		List list = new ArrayList();
 
-        IResource[] resources = container.members();
-        if (resources != null) {
-            int size = resources.length;
-            for (int i = 0; i < size; i++) {
-                IResource resource = resources[i];
-                if (resource instanceof IContainer) {
-                    IContainer container2 = getContainerResource(resource);
-                    if (container2 != null && container2.exists()) {
-                        ModuleFolder mf = new ModuleFolder(container, container2.getName(), path);
-                        mf.setMembers(getModuleResources(path.append(container2.getName()), container2));
-                        list.add(mf);
-                    }
-                } else if (resource instanceof IFile) {
-                    IFile file = getFileResource(resource);
-                    if (file != null && file.exists())
-                        list.add(new ModuleFile(file, file.getName(), path, file.getModificationStamp()));
-                }
-            }
-        }
-        
-        IModuleResource[] moduleResources = new IModuleResource[list.size()];
-        list.toArray(moduleResources);
-        return moduleResources;
-    }
-    
-    protected IContainer getContainerResource(IResource resource){
-        return (IContainer)resource;
-    }
-    
-    protected IFile getFileResource(IResource resource){
-        return (IFile)resource;
-    }
+		IResource[] resources = container.members();
+		if (resources != null) {
+			int size = resources.length;
+			for (int i = 0; i < size; i++) {
+				IResource resource = resources[i];
+				if (resource instanceof IContainer) {
+					IContainer container2 = (IContainer) resource;
+					if (container2 != null && container2.exists()) {
+						ModuleFolder mf = new ModuleFolder(container, container2.getName(), path);
+						mf.setMembers(getModuleResources(path.append(container2.getName()), container2));
+						list.add(mf);
+					}
+				} else if (resource instanceof IFile) {
+					IFile file = (IFile) resource;
+					if (file != null && file.exists())
+						list.add(new ModuleFile(file, file.getName(), path, file.getModificationStamp()));
+				}
+			}
+		}
+
+		IModuleResource[] moduleResources = new IModuleResource[list.size()];
+		list.toArray(moduleResources);
+		return moduleResources;
+	}
 
 	/**
 	 * Helper method - returns the module's name.

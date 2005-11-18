@@ -22,7 +22,7 @@ import org.eclipse.wst.server.core.TaskModel;
  * after the server is started the modules are added to the server; however, the EJB deploy task
  * makes more sense to be run before adding the project to the server.]
  * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public abstract class PublishOperation {
 	private TaskModel model;

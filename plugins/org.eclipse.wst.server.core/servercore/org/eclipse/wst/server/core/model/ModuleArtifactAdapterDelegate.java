@@ -23,7 +23,7 @@ import org.eclipse.wst.server.core.IModuleArtifact;
  * to extend the <code>moduleArtifactAdapters</code> extension point.
  * </p>
  * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public abstract class ModuleArtifactAdapterDelegate {
 	/**

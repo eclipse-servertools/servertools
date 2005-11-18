@@ -13,7 +13,7 @@ package org.eclipse.wst.server.core.util;
  * A static Web module that could be deployed to Apache or another
  * HTTP server.
  * 
- * @plannedfor 1.0
+ * @since 1.0
  */
 public interface IStaticWeb {
 	/**
