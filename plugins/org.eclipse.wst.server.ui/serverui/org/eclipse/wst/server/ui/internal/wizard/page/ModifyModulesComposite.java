@@ -288,7 +288,8 @@ public class ModifyModulesComposite extends Composite {
 			IModule module = (IModule) iterator.next();
 			try {
 				IModule[] children = server.getChildModules(new IModule[] { module }, null);
-				childModuleMap.put(new ChildModuleMapKey(module), children);
+				if (children != null && children.length > 0)
+					childModuleMap.put(new ChildModuleMapKey(module), children);
 			} catch (Exception e) {
 				// ignore
 			}
@@ -299,7 +300,8 @@ public class ModifyModulesComposite extends Composite {
 			IModule module = (IModule) iterator.next();
 			try {
 				IModule[] children = server.getChildModules(new IModule[] { module }, null);
-				childModuleMap.put(new ChildModuleMapKey(module), children);
+				if (children != null && children.length > 0)
+					childModuleMap.put(new ChildModuleMapKey(module), children);
 			} catch (Exception e) {
 				// ignore
 			}
@@ -514,46 +516,6 @@ public class ModifyModulesComposite extends Composite {
 		else
 			removeAll.setEnabled(deployed.size() > 1);
 	}
-
-	/*protected void addChildren(TreeItem item, IModule[] module) {
-		try {
-			IModule[] children = (IModule[]) childModuleMap.get(new ChildModuleMapKey(module));
-			if (children != null) {
-				int size = children.length;
-				for (int i = 0; i < size; i++) {
-					IModule child = children[i];
-					TreeItem childItem = new TreeItem(item, SWT.NONE);
-					childItem.setText(slp.getText(child));
-					childItem.setImage(slp.getImage(child));
-					childItem.setData(child);
-					parentTreeItemMap.put(childItem, item);
-					
-					int size2 = module.length;
-					IModule[] module2 = new IModule[size2 + 1];
-					System.arraycopy(module, 0, module2, 0, size2);
-					module2[size2] = child;
-					addChildren(childItem, module2);
-				}
-			}
-		} catch (Exception e) {
-			// ignore
-		}
-	}*/
-
-	/*protected void fillTree(Tree tree, List modules2) {
-		tree.removeAll();
-
-		Iterator iterator = modules2.iterator();
-		while (iterator.hasNext()) {
-			IModule module = (IModule) iterator.next();
-			TreeItem item = new TreeItem(tree, SWT.NONE);
-			item.setText(slp.getText(module));
-			item.setImage(slp.getImage(module));
-			item.setData(module);
-			parentTreeItemMap.put(item, item);
-			addChildren(item, new IModule[] { module });
-		}
-	}*/
 
 	protected void add(boolean all) {
 		if (all) {

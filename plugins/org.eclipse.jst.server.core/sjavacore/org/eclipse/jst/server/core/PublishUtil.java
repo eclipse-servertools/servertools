@@ -278,7 +278,23 @@ public class PublishUtil {
 		}
 	}
 
+	/**
+	 * Creates a new zip file containing the given module resources. Deletes the existing file
+	 * (and doesn't create a new one) if resources is null or empty.
+	 * 
+	 * @param resources
+	 * @param zipPath
+	 * @throws CoreException
+	 */
 	public static void createZipFile(IModuleResource[] resources, IPath zipPath) throws CoreException {
+		if (resources == null || resources.length == 0) {
+			// should also check if resources consists of all empty directories
+			File file = zipPath.toFile();
+			if (file.exists())
+				file.delete();
+			return;
+		}
+		
 		try {
 			BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(zipPath.toFile()));
 			ZipOutputStream zout = new ZipOutputStream(bout);

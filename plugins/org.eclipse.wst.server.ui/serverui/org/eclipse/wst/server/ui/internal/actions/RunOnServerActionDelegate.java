@@ -425,7 +425,8 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 
 		IStructuredSelection select = (IStructuredSelection) sel;
 		Iterator iterator = select.iterator();
-		selection = iterator.next();
+		if (iterator.hasNext())
+			selection = iterator.next();
 		if (iterator.hasNext()) { // more than one selection (should never happen)
 			action.setEnabled(false);
 			selection = null;
