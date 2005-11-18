@@ -38,7 +38,7 @@ import org.eclipse.wst.server.core.IRuntime;
  * (repeatedly) as the API evolves.
  * </p>
  * 
- * @plannedfor 1.0
+ * @plannedfor 1.5
  */
 public abstract class RuntimeClasspathProviderDelegate {
 	private class SourceAttachmentUpdate {

@@ -34,7 +34,7 @@ import org.eclipse.wst.server.core.model.IModuleResourceDelta;
  * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
  * (repeatedly) as the API evolves.
  * </p>
- * @since 1.0
+ * @since 1.5
  */
 public class PublishUtil {
 	// size of the buffer

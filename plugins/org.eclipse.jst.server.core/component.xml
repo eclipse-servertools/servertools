@@ -2,8 +2,8 @@
 <component xmlns="http://eclipse.org/wtp/releng/tools/component-model" name="org.eclipse.jst.server">
 <component-depends unrestricted="true"/>
   <plugin id="org.eclipse.jst.server.core" fragment="false"/>
-  <package name="org.eclipse.jst.server.core">
-<!--    <type name="IConnectorModule"/>
+<!--  <package name="org.eclipse.jst.server.core">
+    <type name="IConnectorModule"/>
     <type name="IEJBModule"/>
     <type name="IJ2EEModule"/>
     <type name="Servlet"/>
@@ -15,8 +15,8 @@
     <type name="EJBBean"/>
     <type name="JndiLaunchable"/>
     <type name="PublishUtil"/>
-    <type name="IJavaRuntime"/> -->
-  </package>
+    <type name="IJavaRuntime"/>
+  </package>-->
 
   <plugin id="org.eclipse.jst.server.ui" fragment="false"/>
 

@@ -20,7 +20,7 @@ import org.eclipse.core.resources.IContainer;
  * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
  * (repeatedly) as the API evolves.
  * </p>
- * @plannedfor 1.0
+ * @plannedfor 1.5
  */
 public interface IJ2EEModule {
 	/**
