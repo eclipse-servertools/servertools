@@ -92,9 +92,7 @@
   </extension>
 
   <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
-    <runtime-component-type id="standard.jre">
-      <!-- <icon>images/jre.gif</icon> -->
-    </runtime-component-type>
+    <runtime-component-type id="standard.jre"/>
 
     <runtime-component-version
        type="standard.jre"

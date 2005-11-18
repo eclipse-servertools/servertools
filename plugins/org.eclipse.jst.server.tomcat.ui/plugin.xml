@@ -120,7 +120,7 @@
          typeIds="org.eclipse.jst.server.tomcat.runtime.55"
          class="org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeWizardFragment"/>
    </extension>
-   
+
   <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
     <launchConfigurationTypeImage
       id="org.eclipse.jst.server.tomcat.ui.launchConfigurationTypeImage"
@@ -137,4 +137,8 @@
     </launchConfigurationTabGroup>
   </extension>
 
+  <extension point="org.eclipse.wst.common.project.facet.ui.images">
+    <image runtime-component-type="org.eclipse.jst.server.tomcat"
+      path="icons/obj16/tomcat.gif"/>
+  </extension>
 </plugin>

@@ -97,4 +97,8 @@
     </adapter>
   </extension>
 
+  <extension point="org.eclipse.wst.common.project.facet.ui.images">
+    <image runtime-component-type="standard.jre"
+       path="icons/obj16/jre.gif"/>
+  </extension>
 </plugin>
