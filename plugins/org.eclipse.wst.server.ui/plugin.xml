@@ -10,13 +10,6 @@
   <extension-point id="initialSelectionProvider" name="%extensionPointInitialSelectionProvider" schema="schema/initialSelectionProvider.exsd"/>
   <extension-point id="audio" name="%extensionPointAudio" schema="schema/audio.exsd"/>
 
-<extension point="org.eclipse.ui.ide.projectNatureImages">
-  <image
-    id="org.eclipse.wst.server.ui.projectNatureImage"
-    natureId="org.eclipse.wst.server.core.nature"
-    icon="icons/ovr16/server_ovr.gif"/>
-</extension>
-
 <extension point="org.eclipse.ui.newWizards">
   <category
     id="org.eclipse.wst.server.ui"
