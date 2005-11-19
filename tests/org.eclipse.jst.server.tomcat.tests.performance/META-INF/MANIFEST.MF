@@ -5,8 +5,7 @@ Bundle-SymbolicName: org.eclipse.jst.server.tomcat.tests.performance
 Bundle-Version: 1.0.0
 Bundle-ClassPath: performance.jar
 Bundle-Localization: plugin
-Export-Package: org.eclipse.jst.server.tomcat.tests.performance,
- org.eclipse.jst.server.tomcat.tests.performance.tomcat50
+Export-Package: org.eclipse.jst.server.tomcat.tests.performance.tomcat50
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.junit,
