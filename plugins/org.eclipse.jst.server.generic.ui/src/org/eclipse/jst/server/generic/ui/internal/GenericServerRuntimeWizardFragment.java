@@ -91,7 +91,11 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
 	}
 	
 	public void exit() {
-//		fRuntimeDelegate=null;
+		//validate to save latest values
+	    for (int i = 0; i < fDecorators.length; i++) {
+			if(fDecorators[i].validate())
+				return;
+		}
 	}
 
 

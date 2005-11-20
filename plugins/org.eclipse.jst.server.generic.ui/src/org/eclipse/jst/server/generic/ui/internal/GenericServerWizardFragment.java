@@ -113,7 +113,13 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
 				return;
 		}
      }
-	
+	public void exit() {
+	    //validate needed to save the latest values.
+		for (int i = 0; i < fDecorators.length; i++) {
+			if(fDecorators[i].validate())
+				return;
+		}
+	}	
     /* (non-Javadoc)
      * @see org.eclipse.jst.server.generic.internal.ui.ServerDefinitionTypeAwareWizardFragment#description()
      */
