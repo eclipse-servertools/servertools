@@ -138,7 +138,7 @@ public class RuntimeBridge implements IRuntimeBridge {
 				properties = new HashMap();
 				properties.put("name", vmInstall.getName());
 				IPath path = new Path(JavaRuntime.JRE_CONTAINER);
-				path.append(vmInstall.getVMInstallType().getId()).append(vmInstall.getName());
+				path = path.append(vmInstall.getVMInstallType().getId()).append(vmInstall.getName());
 				properties.put(CLASSPATH, path.toPortableString());
 				components.add(RuntimeManager.createRuntimeComponent(rcv, properties));
 			}
