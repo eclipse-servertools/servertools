@@ -12,10 +12,7 @@ package org.eclipse.wst.server.core.internal;
 
 import java.util.*;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.*;
@@ -407,31 +404,19 @@ public class Server extends Base implements IServer {
 		
 		IModuleVisitor visitor = new IModuleVisitor() {
 			public boolean visit(IModule[] module2) {
+				if (helper.changed)
+					return false;
+				
 				int size = module2.length;
 				IModule m = module2[size - 1];
 				if (m.getProject() == null)
 					return true;
 				
 				if (module.equals(m)) {
-					IModuleResourceDelta[] delta2 = getPublishedResourceDelta(module2);
-					if (delta2.length > 0)
+					if (hasPublishedResourceDelta(module2)) {
 						helper.changed = true;
-					
-					// TODO
-					/*if (deployableDelta[i] == null)
-						deployableDelta[i] = moduleProjects[i].getModuleResourceDelta(delta);
-					
-					if (deployableDelta[i] != null) {
-						// updateDeployable(module, deployableDelta[i]);
-
-						ModulePublishInfo control = PublishInfo.getPublishInfo().getPublishControl(Server.this, parents, module);
-						if (control.isDirty())
-							return true;
-	
-						control.setDirty(true);
-						firePublishStateChange(parents, module);
-					}*/
-					return true;
+						return false;
+					}
 				}
 				return true;
 			}
@@ -447,7 +432,7 @@ public class Server extends Base implements IServer {
 		
 		autoPublish();
 		
-		//Trace.trace(Trace.FINEST, "< handleDeployableProjectChange()");
+		Trace.trace(Trace.FINEST, "< handleDeployableProjectChange()");
 	}
 	
 	protected void stopAutoPublish() {
@@ -797,6 +782,18 @@ public class Server extends Base implements IServer {
 		if (module == null)
 			throw new IllegalArgumentException("Module cannot be null");
 		return getServerPublishInfo().getDelta(module);
+	}
+
+	/*
+	 * Returns the delta of the current module resources that have been
+	 * published compared to the current state of the module.
+	 * 
+	 * @see ServerBehaviourDelegate.getPublishedResourceDelta(IModule[], IModule)
+	 */
+	public boolean hasPublishedResourceDelta(IModule[] module) {
+		if (module == null)
+			throw new IllegalArgumentException("Module cannot be null");
+		return getServerPublishInfo().hasDelta(module);
 	}
 
 	/**
@@ -1853,7 +1850,10 @@ public class Server extends Base implements IServer {
 		if (module == null)
 			throw new IllegalArgumentException("Module cannot be null");
 		try {
-			return getDelegate(monitor).getChildModules(module);
+			IModule[] children = getDelegate(monitor).getChildModules(module);
+			if (children != null && children.length == 1 && children[0].equals(module[module.length - 1]))
+				return null;
+			return children;
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate getChildModules() " + toString(), e);
 			return null;

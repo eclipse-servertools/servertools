@@ -295,6 +295,73 @@ public class ServerPublishInfo {
 		return delta;
 	}
 
+	protected boolean hasDelta(IModule[] module) {
+		if (module == null)
+			return false;
+		
+		ModulePublishInfo mpi = getModulePublishInfo(module);
+		int size = module.length;
+		ModuleDelegate pm = (ModuleDelegate) module[size - 1].loadAdapter(ModuleDelegate.class, null);
+		IModuleResource[] resources = null;
+		try {
+			if (pm != null)
+				resources = pm.members();
+		} catch (CoreException ce) {
+			// ignore
+		}
+		if (resources == null)
+			resources = new IModuleResource[0];
+		return hasDelta(mpi.getResources(), resources);
+	}
+
+	protected boolean hasDelta(IModuleResource[] original, IModuleResource[] current) {
+		if (original == null || current == null)
+			return false;
+	
+		// look for duplicates
+		List found = new ArrayList();
+		int size = original.length;
+		int size2 = current.length;
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size2; j++) {
+				if (!found.contains(original[i]) && !found.contains(current[j]) && original[i].equals(current[j])) {
+					// found a match
+					found.add(original[i]);
+					if (original[i] instanceof IModuleFile) {
+						// include files only if the modification stamp has changed
+						IModuleFile mf1 = (IModuleFile) original[i];
+						IModuleFile mf2 = (IModuleFile) current[j];
+						if (mf1.getModificationStamp() != mf2.getModificationStamp())
+							return true;
+					} else {
+						// include folders only if their contents have changed
+						IModuleFolder mf1 = (IModuleFolder) original[i];
+						IModuleFolder mf2 = (IModuleFolder) current[j];
+						IModuleResourceDelta[] mrdc = getDelta(mf1.members(), mf2.members());
+						if (mrdc.length > 0)
+							return true;
+					}
+				}
+			}
+		}
+		
+		// add deletions (unfound items in the original list)
+		for (int i = 0; i < size; i++) {
+			if (!found.contains(original[i])) {
+				return true;
+			}
+		}
+		
+		//	add additions (unfound items in the current list)
+		for (int j = 0; j < size2; j++) {
+			if (!found.contains(current[j])) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 	/**
 	 * Create a resource delta for an entire tree.
 	 */
