@@ -54,6 +54,14 @@ public abstract class RuntimeClasspathProviderDelegate {
 
 	private String extensionId;
 
+	/**
+	 * Initializes this classpath provider with its life-long id.
+	 * <p>
+	 * This method is called by the framework.
+	 * Clients should never call this method.
+	 * </p>
+	 * @param id the extension id
+	 */
 	public final void initialize(String id) {
 		extensionId = id;
 	}
