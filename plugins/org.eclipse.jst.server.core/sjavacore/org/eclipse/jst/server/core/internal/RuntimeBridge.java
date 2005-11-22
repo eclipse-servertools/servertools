@@ -87,7 +87,16 @@ public class RuntimeBridge implements IRuntimeBridge {
 	}
 
 	public IStub bridge(String name) throws CoreException {
-		return new Stub(ServerCore.findRuntime(name));
+		if (name == null)
+			throw new IllegalArgumentException();
+		
+		IRuntime[] runtimes = ServerCore.getRuntimes();
+		int size = runtimes.length;
+		for (int i = 0; i < size; i++) {
+			if (runtimes[i].getName().equals(name))
+				return new Stub(runtimes[i]);
+		}
+		return null;
 	}
 
 	private static class Stub implements IStub {
@@ -99,28 +108,30 @@ public class RuntimeBridge implements IRuntimeBridge {
 
 		public List getRuntimeComponents() {
 			List components = new ArrayList(2);
+			if (runtime == null)
+				return components;
 			
 			// define server runtime component
 			String typeId = runtime.getRuntimeType().getId();
 			IRuntimeComponentVersion mapped = (IRuntimeComponentVersion) mappings.get(typeId);
 			
 			Map properties = new HashMap();
-			properties.put("location", this.runtime.getLocation().toPortableString());
-			properties.put("name", this.runtime.getName());
-			properties.put("type", this.runtime.getRuntimeType().getName());
-			properties.put("id", this.runtime.getId());
+			properties.put("location", runtime.getLocation().toPortableString());
+			properties.put("name", runtime.getName());
+			properties.put("type", runtime.getRuntimeType().getName());
+			properties.put("id", runtime.getId());
 			
 			RuntimeClasspathProviderWrapper rcpw = JavaServerPlugin.findRuntimeClasspathProvider(runtime.getRuntimeType());
 			if (rcpw != null) {
 				IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER);
-				path = path.append(rcpw.getId()).append(this.runtime.getName());
+				path = path.append(rcpw.getId()).append(runtime.getName());
 				properties.put(CLASSPATH, path.toPortableString());
 			}
 			
 			components.add(RuntimeManager.createRuntimeComponent(mapped, properties));
 			
 			// define JRE component
-			IJavaRuntime javaRuntime = (IJavaRuntime) this.runtime.loadAdapter(IJavaRuntime.class, null);
+			IJavaRuntime javaRuntime = (IJavaRuntime) runtime.loadAdapter(IJavaRuntime.class, null);
 			if (javaRuntime != null) {
 				IVMInstall vmInstall = javaRuntime.getVMInstall();
 				IVMInstall2 vmInstall2 = (IVMInstall2) vmInstall;
@@ -128,12 +139,12 @@ public class RuntimeBridge implements IRuntimeBridge {
 				String jvmver = vmInstall2.getJavaVersion();
 				IRuntimeComponentVersion rcv;
 				
-				if (jvmver.startsWith("1.4")) {
+				if (jvmver.startsWith("1.4"))
 					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("1.4");
-				} else if (jvmver.startsWith("1.5")) {
+				else if (jvmver.startsWith("1.5"))
 					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("5.0");
-				} else
-					throw new IllegalStateException(); // TODO: Handle this better.
+				else
+					throw new IllegalStateException();
 				
 				properties = new HashMap();
 				properties.put("name", vmInstall.getName());
@@ -147,6 +158,8 @@ public class RuntimeBridge implements IRuntimeBridge {
 		}
 
 		public Map getProperties() {
+			if (runtime == null)
+				return new HashMap(0);
 			return Collections.singletonMap("id", runtime.getId());
 		}
 	}
