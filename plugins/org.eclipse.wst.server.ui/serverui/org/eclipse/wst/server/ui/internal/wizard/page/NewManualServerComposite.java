@@ -19,12 +19,19 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.preference.IPreferenceNode;
+import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.jface.preference.PreferenceManager;
+import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -52,22 +59,21 @@ public class NewManualServerComposite extends Composite {
 	}
 	protected IWizardHandle2 wizard;
 
-	//private IContainer defaultContainer;
-	//private String defaultServerTypeId;
-	private ServerTypeComposite serverTypeComposite;
-	
+	protected ServerTypeComposite serverTypeComposite;
+
 	protected Label runtimeLabel;
 	protected Combo runtimeCombo;
+	protected Button runtimeButton;
 	protected IRuntime[] runtimes;
 
 	protected IRuntime runtime;
 	protected IServerWorkingCopy server;
 	protected ServerSelectionListener listener;
-	
+
 	protected String host;
-	
+
 	protected IModuleType moduleType;
-	
+
 	protected ElementCreationCache cache = new ElementCreationCache();
 
 	/**
@@ -88,7 +94,7 @@ public class NewManualServerComposite extends Composite {
 		this.moduleType = moduleType;
 
 		createControl();
-		wizard.setMessage("", IMessageProvider.ERROR);
+		wizard.setMessage("", IMessageProvider.ERROR); //$NON-NLS-1$
 	}
 
 	/**
@@ -97,7 +103,7 @@ public class NewManualServerComposite extends Composite {
 	protected void createControl() {
 		// top level group
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
+		layout.numColumns = 3;
 		layout.horizontalSpacing = SWTUtil.convertHorizontalDLUsToPixels(this, 4);
 		layout.verticalSpacing = SWTUtil.convertVerticalDLUsToPixels(this, 4);
 		layout.marginWidth = 0;
@@ -116,7 +122,7 @@ public class NewManualServerComposite extends Composite {
 		});
 		serverTypeComposite.setIncludeIncompatibleVersions(true);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
-		data.horizontalSpan = 2;
+		data.horizontalSpan = 3;
 		serverTypeComposite.setLayoutData(data);
 		whs.setHelp(serverTypeComposite, ContextIds.NEW_SERVER_TYPE);
 		
@@ -124,8 +130,7 @@ public class NewManualServerComposite extends Composite {
 		runtimeLabel.setText(Messages.wizNewServerRuntime);
 		
 		runtimeCombo = new Combo(this, SWT.READ_ONLY);
-		data = new GridData(GridData.FILL_HORIZONTAL);
-		runtimeCombo.setLayoutData(data);
+		runtimeCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		runtimeCombo.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				try {
@@ -143,7 +148,32 @@ public class NewManualServerComposite extends Composite {
 			}
 		});
 		
+		runtimeButton = SWTUtil.createButton(this, Messages.installedRuntimes);
+		runtimeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		runtimeButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				if (showPreferencePage())
+					updateRuntimeCombo(serverTypeComposite.getSelectedServerType());
+			}
+		});
 		Dialog.applyDialogFont(this);
+	}
+
+	protected boolean showPreferencePage() {
+		PreferenceManager manager = PlatformUI.getWorkbench().getPreferenceManager();
+		IPreferenceNode node = manager.find("org.eclipse.wst.server.ui.preferencePage").findSubNode("org.eclipse.wst.server.ui.runtime.preferencePage"); //$NON-NLS-1$ //$NON-NLS-2$
+		PreferenceManager manager2 = new PreferenceManager();
+		manager2.addToRoot(node);
+		final PreferenceDialog dialog = new PreferenceDialog(this.getShell(), manager2);
+		final boolean[] result = new boolean[] { false };
+		BusyIndicator.showWhile(this.getDisplay(), new Runnable() {
+			public void run() {
+				dialog.create();
+				if (dialog.open() == Window.OK)
+					result[0] = true;
+			}
+		});
+		return result[0];
 	}
 
 	public void setHost(String host) {
@@ -206,7 +236,7 @@ public class NewManualServerComposite extends Composite {
 				} catch (CoreException cex) {
 					ce[0] = cex;
 				} catch (Throwable t) {
-					Trace.trace(Trace.SEVERE, "Error creating element", t);
+					Trace.trace(Trace.SEVERE, "Error creating element", t); //$NON-NLS-1$
 				} finally {
 					monitor.done();
 				}
@@ -215,7 +245,7 @@ public class NewManualServerComposite extends Composite {
 		try {
 			wizard.run(true, false, runnable);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error with runnable", e);
+			Trace.trace(Trace.SEVERE, "Error with runnable", e); //$NON-NLS-1$
 		}
 	
 		if (ce[0] != null)
@@ -253,6 +283,9 @@ public class NewManualServerComposite extends Composite {
 				runtimeCombo.setEnabled(false);
 				runtimeLabel.setVisible(false);
 				runtimeCombo.setVisible(false);
+				runtimeButton.setEnabled(false);
+				runtimeButton.setVisible(false);
+				
 			}
 			return;
 		}
@@ -280,7 +313,7 @@ public class NewManualServerComposite extends Composite {
 				runtimes = new IRuntime[1];
 				runtimes[0] = runtimeWC;
 			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Couldn't create runtime", e);
+				Trace.trace(Trace.SEVERE, "Couldn't create runtime", e); //$NON-NLS-1$
 			}
 		}
 		
@@ -298,10 +331,14 @@ public class NewManualServerComposite extends Composite {
 						runtimeCombo.select(i);
 				}
 			}
-			runtimeCombo.setEnabled(size > 1);
-			runtimeLabel.setEnabled(size > 1);
-			runtimeLabel.setVisible(size > 1);
-			runtimeCombo.setVisible(size > 1);
+			
+			boolean showRuntime = ServerUIPlugin.getRuntimes(runtimeType).length >=1;
+			runtimeCombo.setEnabled(showRuntime);
+			runtimeLabel.setEnabled(showRuntime);
+			runtimeButton.setEnabled(showRuntime);
+			runtimeLabel.setVisible(showRuntime);
+			runtimeCombo.setVisible(showRuntime);
+			runtimeButton.setVisible(showRuntime);
 		}
 	}
 
@@ -325,7 +362,7 @@ public class NewManualServerComposite extends Composite {
 			wizard.setMessage(NLS.bind(Messages.errorVersionLevel, new Object[] { moduleType.getName(), moduleType.getVersion() }), IMessageProvider.ERROR);
 		} else if (serverType == null) {
 			server = null;
-			wizard.setMessage("", IMessageProvider.ERROR);
+			wizard.setMessage("", IMessageProvider.ERROR); //$NON-NLS-1$
 		} else {
 			wizard.setMessage(null, IMessageProvider.NONE);
 			loadServerImpl(serverType);

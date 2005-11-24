@@ -198,6 +198,7 @@ public class Messages extends NLS {
 	public static String vendor;
 	public static String version;
 	public static String moduleSupport;
+	public static String installedRuntimes;
 	public static String wizNewServerSelectExisting;
 	public static String host;
 	public static String elementUnknownName;
