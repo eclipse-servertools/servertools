@@ -275,7 +275,7 @@
          version="4.1"/>
       <facet
          id="jst.web"
-         version="2.2,2.3,2.4"/>
+         version="2.2,2.3"/>
       <facet
          id="jst.utility"
          version="1.0"/>
