@@ -516,7 +516,15 @@ public abstract class ServerBehaviourDelegate {
 	protected final void setModuleStatus(IModule[] module, IStatus status) {
 		server.setModuleStatus(module, status);
 	}
-	
+
+	/**
+	 * Publish to the server.
+	 * 
+	 * @param kind the publish kind
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return the publish status
+	 */
 	public IStatus publish(int kind, IProgressMonitor monitor) {
 		Trace.trace(Trace.FINEST, "-->-- Publishing to server: " + toString() + " -->--");
 		
@@ -630,6 +638,13 @@ public abstract class ServerBehaviourDelegate {
 
 	/**
 	 * Publish a single module.
+	 * 
+	 * @param kind a publish kind
+	 * @param module a module
+	 * @param deltaKind the delta kind
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return the status
 	 */
 	protected IStatus publishModule(int kind, IModule[] module, int deltaKind, IProgressMonitor monitor) {
 		Trace.trace(Trace.FINEST, "Publishing module: " + module);
@@ -661,14 +676,34 @@ public abstract class ServerBehaviourDelegate {
 		return status;
 	}
 
+	/**
+	 * Returns <code>true</code> if the given module has been published, and
+	 *    <code>false</code> otherwise.
+	 * 
+	 * @param module a module
+	 * @return <code>true</code> if the given module has been published, and
+	 *    <code>false</code> otherwise
+	 */
 	protected boolean hasBeenPublished(IModule[] module) {
 		return server.getServerPublishInfo().hasModulePublishInfo(module);
 	}
 
+	/**
+	 * Adds removed modules.
+	 * 
+	 * @param moduleList a list of modules
+	 * @param kindList a list of publish kinds
+	 */
 	protected void addRemovedModules(List moduleList, List kindList) {
 		server.getServerPublishInfo().addRemovedModules(moduleList, kindList);
 	}
 
+	/**
+	 * Update the stored publish info for the given module.
+	 * 
+	 * @param deltaKind a publish delta kind
+	 * @param module a module
+	 */
 	protected void updatePublishInfo(int deltaKind, IModule[] module) {
 		if (deltaKind == ServerBehaviourDelegate.REMOVED)
 			server.getServerPublishInfo().removeModulePublishInfo(module);
@@ -681,6 +716,13 @@ public abstract class ServerBehaviourDelegate {
 	 * should continue, or false if publishing has failed or is cancelled.
 	 * 
 	 * Uses 500 ticks plus 3500 ticks per module
+	 * 
+	 * @param kind the publish kind
+	 * @param modules a list of modules
+	 * @param deltaKind a list of delta kinds
+	 * @param multi a multistatus to add the status to
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
 	 */
 	protected void publishModules(int kind, List modules, List deltaKind, MultiStatus multi, IProgressMonitor monitor) {
 		if (modules == null)
