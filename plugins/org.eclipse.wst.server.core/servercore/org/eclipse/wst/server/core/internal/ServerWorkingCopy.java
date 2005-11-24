@@ -176,6 +176,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	/**
 	 * Disable the preferred publish operation.
 	 * 
+	 * @param op a publish operation
 	 * @return true if change is made. 
 	 */
 	public boolean disablePreferredPublishOperations(PublishOperation op) {
@@ -187,13 +188,14 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		if (list.contains(opId))
 			return false;
 		list.add(opId);
-		setAttribute(PROP_DISABLED_PERFERRED_TASKS, (List)list);
+		setAttribute(PROP_DISABLED_PERFERRED_TASKS, list);
 		return true;
 	}
 
 	/**
 	 * Enable the optional publish operation. Optional publish operation is not ran by default.
 	 * 
+	 * @param op a publish operation
 	 * @return true if change is made. 
 	 */
 	public boolean enableOptionalPublishOperations(PublishOperation op) {
@@ -205,7 +207,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		if (list.contains(opId))
 			return false;
 		list.add(opId);
-		setAttribute(PROP_ENABLED_OPTIONAL_TASKS, (List)list);
+		setAttribute(PROP_ENABLED_OPTIONAL_TASKS, list);
 		return true;
 	}
 

@@ -17,9 +17,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.*;
 
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.internal.IPublishListener;
-import org.eclipse.wst.server.core.internal.PublishAdapter;
 import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.util.PublishAdapter;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Display;

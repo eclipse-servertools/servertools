@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.*;
+import org.eclipse.wst.server.core.util.PublishAdapter;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 import org.eclipse.wst.server.ui.internal.editor.IServerEditorInput;

@@ -7,6 +7,7 @@
     <type name="IModuleArtifact" implement="false" subclass="false" instantiate="false"/>
     <type name="IModuleType" implement="false" subclass="false" instantiate="false"/>
 <!--    <type name="IProjectProperties" implement="false" subclass="false" instantiate="false"/>-->
+    <type name="IPublishListener" subclass="false" instantiate="false"/>
     <type name="IRuntime" implement="false" subclass="false" instantiate="false"/>
     <type name="IRuntimeLifecycleListener" subclass="false" instantiate="false"/>
 <!--    <type name="IRuntimeTargetHandler" implement="false" subclass="false" instantiate="false"/>-->
@@ -48,6 +49,7 @@
     <type name="HttpLaunchable"/>
     <type name="IStaticWeb"/>
     <type name="NullModuleArtifact"/>
+    <type name="PublishAdapter"/>
     <type name="ProjectModule"/>
     <type name="ProjectModuleFactoryDelegate"/>
     <type name="RuntimeLifecycleAdapter"/>

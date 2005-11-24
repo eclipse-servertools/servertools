@@ -78,10 +78,10 @@ public class ServerCore {
 	 *
 	 * @return org.eclipse.wst.server.core.internal.ResourceManager
 	 */
-	private static ResourceManager getResourceManager() {
+	private final static ResourceManager getResourceManager() {
 		return ResourceManager.getInstance();
 	}
-	
+
 	/**
 	 * Returns the preference information for the project. The project may not
 	 * be null.

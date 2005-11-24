@@ -70,13 +70,8 @@ public interface IServer extends IServerAttributes {
 	/**
 	 * An operation listener is used to receive notification back about a
 	 * specific server operation, such as starting or stopping a server.
-	 *
-	 * <b>Provisional API:</b> This class/interface is part of an interim API
-	 * that is still under development and expected to change significantly
-	 * before reaching stability. It is being made available at this early
-	 * stage to solicit feedback from pioneering adopters on the understanding
-	 * that any code that uses this API will almost certainly be broken
-	 * (repeatedly) as the API evolves.
+	 * 
+	 * @since 1.0
 	 */
 	public interface IOperationListener {
 		/**
@@ -262,6 +257,24 @@ public interface IServer extends IServerAttributes {
 	 * @see #addServerListener(IServerListener)
 	 */
 	public void removeServerListener(IServerListener listener);
+
+	/**
+	 * Adds a publish listener to this server.
+	 * Has no effect if an identical listener is already registered.
+	 *
+	 * @param listener the publish listener
+	 * @see #removePublishListener(IPublishListener)
+	 */
+	public void addPublishListener(IPublishListener listener);
+
+	/**
+	 * Removes a publish listener from this server.
+	 * Has no effect if the listener is not registered.
+	 *
+	 * @param listener the publish listener
+	 * @see #addPublishListener(IPublishListener)
+	 */
+	public void removePublishListener(IPublishListener listener);
 
 	/**
 	 * Returns whether this server is in a state that it can

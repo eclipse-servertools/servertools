@@ -267,6 +267,8 @@ public class Server extends Base implements IServer {
 	/**
     * Returns a list of id (String) of preferred publish operations that will not be run
     * during publish.
+    * 
+    * @return a list of publish operation ids
     */
 	public List getDisabledPreferredPublishOperationIds() {
 		return getAttribute(PROP_DISABLED_PERFERRED_TASKS, EMPTY_LIST);		
@@ -275,6 +277,8 @@ public class Server extends Base implements IServer {
 	/**
     * Returns a list of id (String) of optional publish operations that are enabled to 
     * be run during publish.
+    * 
+    * @return a list of publish operation ids
     */
 	public List getEnabledOptionalPublishOperationIds() {
 		return getAttribute(PROP_ENABLED_OPTIONAL_TASKS, EMPTY_LIST);
@@ -288,7 +292,7 @@ public class Server extends Base implements IServer {
 	public int getServerState() {
 		return serverState;
 	}
-	
+
 	public String getMode() {
 		return mode;
 	}
@@ -300,7 +304,7 @@ public class Server extends Base implements IServer {
 		this.serverState = state;
 		fireServerStateChangeEvent();
 	}
-	
+
 	/**
 	 * Add a listener to this server.
 	 *
@@ -312,7 +316,7 @@ public class Server extends Base implements IServer {
 		Trace.trace(Trace.LISTENERS, "Adding server listener " + listener + " to " + this);
 		getServerNotificationManager().addListener(listener);
 	}
-	
+
 	/**
 	 * Add a listener to this server with the given event mask.
 	 *
@@ -395,13 +399,13 @@ public class Server extends Base implements IServer {
 		moduleState.put(getKey(module), in);
 		fireServerModuleStateChangeEvent(module);
 	}
-	
+
 	public void setModulePublishState(IModule[] module, int state) {
 		if (module == null)
 			throw new IllegalArgumentException("Module cannot be null");
 		Integer in = new Integer(state);
 		modulePublishState.put(getKey(module), in);
-		//fireServerModuleStateChangeEvent(module);
+		fireServerModuleStateChangeEvent(module);
 	}
 
 	public void setModuleRestartState(IModule[] module, boolean r) {
@@ -409,7 +413,7 @@ public class Server extends Base implements IServer {
 			throw new IllegalArgumentException("Module cannot be null");
 		Boolean b = new Boolean(r);
 		moduleState.put(getKey(module), b);
-		//fireServerModuleStateChangeEvent(module);
+		fireServerModuleStateChangeEvent(module);
 	}
 
 	protected void handleModuleProjectChange(final IModule module) {
@@ -513,7 +517,7 @@ public class Server extends Base implements IServer {
 		if (state == serverSyncState)
 			return;
 		serverSyncState = state;
-		//fireConfigurationSyncStateChangeEvent();
+		firePublishStateChange();
 	}
 
 	/**
@@ -599,6 +603,20 @@ public class Server extends Base implements IServer {
 		}
 
 		Trace.trace(Trace.FINEST, "-<- Done firing publishing finished event -<-");
+	}
+
+	/**
+	 * Fire a publish state change event.
+	 */
+	protected void firePublishStateChange() {
+		Trace.trace(Trace.FINEST, "->- Firing publish state change event ->-");
+		
+		if (notificationManager == null || notificationManager.hasListenerEntries())
+			return;
+		
+		notificationManager.broadcastChange(
+			new ServerEvent(ServerEvent.SERVER_CHANGE | ServerEvent.PUBLISH_STATE_CHANGE, this, getServerState(), 
+					getServerPublishState(), getServerRestartState()));
 	}
 
 	/**
@@ -777,18 +795,23 @@ public class Server extends Base implements IServer {
 	
 	/**
 	 * Returns all publish tasks that have been targetted to this server.
+	 * 
+	 * @param moduleList a list of modules
+	 * @return an array of publish operations
 	 */
 	public PublishOperation[] getAllTasks(List moduleList) {
 		String serverTypeId = getServerType().getId();
+		if (serverTypeId == null)
+			return new PublishOperation[0];
+		
 		List tasks = new ArrayList();
-
-		// server tasks
+		
 		IPublishTask[] publishTasks = ServerPlugin.getPublishTasks();
 		if (publishTasks != null) {
 			int size = publishTasks.length;
 			for (int i = 0; i < size; i++) {
 				IPublishTask task = publishTasks[i];
-				if (serverTypeId != null && task.supportsType(serverTypeId)) {
+				if (task.supportsType(serverTypeId)) {
 					PublishOperation[] tasks2 = task.getTasks(this, modules);
 					tasks.addAll(Arrays.asList(tasks2));
 				}
@@ -796,7 +819,7 @@ public class Server extends Base implements IServer {
 		}
 		
 		Collections.sort(tasks, PUBLISH_OPERATION_COMPARTOR);
-
+		
 		return (PublishOperation[])tasks.toArray(new PublishOperation[tasks.size()]);
 	}
 	
