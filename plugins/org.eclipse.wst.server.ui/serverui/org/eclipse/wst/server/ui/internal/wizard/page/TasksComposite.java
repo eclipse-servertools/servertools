@@ -115,18 +115,12 @@ public class TasksComposite extends Composite {
 			else
 				description.setText(Messages.elementUnknownName);
 			
-			int kind = sti.kind;
-			/*if (kind == PublishOperation.TASK_COMPLETED) {
-				checkbox.setEnabled(false);
-				description.setEnabled(false);
-			} else*/ 
-			if (kind == PublishOperation.PREFERRED) {
-				checkbox.setSelection(true);
-			} else if (kind == PublishOperation.REQUIRED) {
+			if (sti.kind == PublishOperation.REQUIRED) {
 				checkbox.setSelection(true);
 				checkbox.setEnabled(false);
 				description.setEnabled(false);
-			}
+			} else
+				checkbox.setSelection(sti.getDefaultSelected());
 		}
 		
 		if (size == 0) {

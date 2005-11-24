@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.model.InternalInitializer;
+import org.eclipse.wst.server.core.model.PublishOperation;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.core.model.ServerDelegate;
 /**
@@ -170,6 +171,56 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			setAttribute(CONFIGURATION_ID, (String)null);
 		else
 			setAttribute(CONFIGURATION_ID, configuration.getFullPath().toString());
+	}
+
+	/**
+	 * Disable the preferred publish operation.
+	 * 
+	 * @return true if change is made. 
+	 */
+	public boolean disablePreferredPublishOperations(PublishOperation op) {
+		List list = getAttribute(PROP_DISABLED_PERFERRED_TASKS, (List)null);
+		if (list == null)
+			list = new ArrayList();
+		
+		String opId = getPublishOperationId(op);
+		if (list.contains(opId))
+			return false;
+		list.add(opId);
+		setAttribute(PROP_DISABLED_PERFERRED_TASKS, (List)list);
+		return true;
+	}
+
+	/**
+	 * Enable the optional publish operation. Optional publish operation is not ran by default.
+	 * 
+	 * @return true if change is made. 
+	 */
+	public boolean enableOptionalPublishOperations(PublishOperation op) {
+		List list = getAttribute(PROP_ENABLED_OPTIONAL_TASKS, (List)null);
+		if (list == null)
+			list = new ArrayList();
+		
+		String opId = getPublishOperationId(op);
+		if (list.contains(opId))
+			return false;
+		list.add(opId);
+		setAttribute(PROP_ENABLED_OPTIONAL_TASKS, (List)list);
+		return true;
+	}
+
+	/**
+	 * Reset all preferred operations to default
+	 */
+	public void resetPreferredPublishOperations() {
+		setAttribute(PROP_DISABLED_PERFERRED_TASKS, (List)null);
+	}
+
+	/**
+	 * Reset all optional operations to default
+	 */
+	public void resetOptionalPublishOperations() {
+		setAttribute(PROP_ENABLED_OPTIONAL_TASKS, (List)null);
 	}
 
 	/**
@@ -404,6 +455,8 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 				list.add(module.getName() + "::" + module.getId());
 			}
 			setAttribute(MODULE_LIST, list);
+			resetOptionalPublishOperations();
+			resetPreferredPublishOperations();
 		} catch (CoreException ce) {
 			throw ce;
 		} catch (Exception e) {

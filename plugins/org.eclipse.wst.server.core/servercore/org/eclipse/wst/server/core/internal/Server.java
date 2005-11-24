@@ -59,6 +59,8 @@ public class Server extends Base implements IServer {
 	protected static final String RUNTIME_ID = "runtime-id";
 	protected static final String CONFIGURATION_ID = "configuration-id";
 	protected static final String MODULE_LIST = "modules";
+	protected static final String PROP_DISABLED_PERFERRED_TASKS = "disabled-preferred-publish-tasks";
+	protected static final String PROP_ENABLED_OPTIONAL_TASKS = "enabled-optional-publish-tasks";
 	public static final String PROP_AUTO_PUBLISH_TIME = "auto-publish-time";
 	public static final String PROP_AUTO_PUBLISH_SETTING = "auto-publish-setting";
 
@@ -260,6 +262,22 @@ public class Server extends Base implements IServer {
 	
 	public int getAutoPublishSetting() {
 		return getAttribute(PROP_AUTO_PUBLISH_SETTING, AUTO_PUBLISH_DEFAULT);
+	}
+
+	/**
+    * Returns a list of id (String) of preferred publish operations that will not be run
+    * during publish.
+    */
+	public List getDisabledPreferredPublishOperationIds() {
+		return getAttribute(PROP_DISABLED_PERFERRED_TASKS, EMPTY_LIST);		
+	}
+
+	/**
+    * Returns a list of id (String) of optional publish operations that are enabled to 
+    * be run during publish.
+    */
+	public List getEnabledOptionalPublishOperationIds() {
+		return getAttribute(PROP_ENABLED_OPTIONAL_TASKS, EMPTY_LIST);
 	}
 
 	/**
@@ -724,6 +742,9 @@ public class Server extends Base implements IServer {
 		
 		IPublishTask[] publishTasks = ServerPlugin.getPublishTasks();
 		if (publishTasks != null) {
+			List enabledTasks = getEnabledOptionalPublishOperationIds();
+			List disabledTasks = getDisabledPreferredPublishOperationIds();
+			
 			int size = publishTasks.length;
 			for (int i = 0; i < size; i++) {
 				IPublishTask task = publishTasks[i];
@@ -732,8 +753,17 @@ public class Server extends Base implements IServer {
 					if (tasks2 != null) {
 						int size2 = tasks2.length;
 						for (int j = 0; j < size2; j++) {
-							if (tasks2[j].getKind() == PublishOperation.REQUIRED)
+							if (tasks2[j].getKind() == PublishOperation.REQUIRED) {
 								tasks.add(tasks2[j]);
+							} else if (tasks2[j].getKind() == PublishOperation.PREFERRED) {
+								String opId = getPublishOperationId(tasks2[j]);
+								if (!disabledTasks.contains(opId))
+									tasks.add(tasks2[j]);
+							} else if (tasks2[j].getKind() == PublishOperation.OPTIONAL) {
+								String opId = getPublishOperationId(tasks2[j]);
+								if (enabledTasks.contains(opId))
+									tasks.add(tasks2[j]);
+							}
 						}
 					}
 				}
@@ -743,6 +773,35 @@ public class Server extends Base implements IServer {
 		Collections.sort(tasks, PUBLISH_OPERATION_COMPARTOR);
 		
 		return (PublishOperation[]) tasks.toArray(new PublishOperation[tasks.size()]);
+	}
+	
+	/**
+	 * Returns all publish tasks that have been targetted to this server.
+	 */
+	public PublishOperation[] getAllTasks(List moduleList) {
+		String serverTypeId = getServerType().getId();
+		List tasks = new ArrayList();
+
+		// server tasks
+		IPublishTask[] publishTasks = ServerPlugin.getPublishTasks();
+		if (publishTasks != null) {
+			int size = publishTasks.length;
+			for (int i = 0; i < size; i++) {
+				IPublishTask task = publishTasks[i];
+				if (serverTypeId != null && task.supportsType(serverTypeId)) {
+					PublishOperation[] tasks2 = task.getTasks(this, modules);
+					tasks.addAll(Arrays.asList(tasks2));
+				}
+			}
+		}
+		
+		Collections.sort(tasks, PUBLISH_OPERATION_COMPARTOR);
+
+		return (PublishOperation[])tasks.toArray(new PublishOperation[tasks.size()]);
+	}
+	
+	public String getPublishOperationId(PublishOperation op) {
+		return getId()+"|"+op.getLabel();
 	}
 	
 	public List getAllModules() {
@@ -2022,8 +2081,8 @@ public class Server extends Base implements IServer {
 		
 		return true;
 	}
-	
-	private String getKey(IModule[] module) {
+
+	protected String getKey(IModule[] module) {
 		StringBuffer sb = new StringBuffer();
 		
 		if (module != null) {
@@ -2037,7 +2096,7 @@ public class Server extends Base implements IServer {
 		
 		return sb.toString();
 	}
-	
+
 	public void setModuleStatus(IModule[] module, IStatus status) {
 		if (module == null)
 			throw new IllegalArgumentException("Module cannot be null");

@@ -16,8 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
@@ -25,12 +23,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.*;
 import org.eclipse.wst.server.core.model.PublishOperation;
-import org.eclipse.wst.server.ui.internal.EclipseUtil;
-import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.ProgressUtil;
-import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.editor.IOrdered;
-import org.eclipse.wst.server.ui.internal.editor.ServerEditorCore;
 import org.eclipse.wst.server.ui.internal.wizard.page.TasksComposite;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
@@ -61,7 +54,11 @@ public class TasksWizardFragment extends WizardFragment {
 		public void setDefaultSelected(boolean sel) {
 			selectedTaskMap.put(DEFAULT + getId(), new Boolean(sel));
 		}
-		
+
+		public boolean getDefaultSelected() {
+			return ((Boolean) selectedTaskMap.get(DEFAULT + id)).booleanValue();
+		}
+
 		public void setSelected(boolean sel) {
 			selectedTaskMap.put(getId(), new Boolean(sel));
 		}
@@ -137,41 +134,37 @@ public class TasksWizardFragment extends WizardFragment {
 	}
 	
 	protected void createTasks(IServer server, List modules) {
-		String serverTypeId = null;
-		if (server != null)
-			serverTypeId = server.getServerType().getId();
-		
-		// server tasks
-		IPublishTask[] publishTasks = ServerPlugin.getPublishTasks();
-		if (publishTasks != null) {
-			int size = publishTasks.length;
-			for (int i = 0; i < size; i++) {
-				IPublishTask task = publishTasks[i];
-				if (serverTypeId != null && task.supportsType(serverTypeId)) {
-					PublishOperation[] tasks2 = task.getTasks(server, modules);
-					if (tasks2 != null) {
-						int size2 = tasks2.length;
-						for (int j = 0; j < size2; j++) {
-							int kind = tasks2[j].getKind(); 
-							if (kind == PublishOperation.OPTIONAL || kind == PublishOperation.PREFERRED)
-								hasOptionalTasks = true;
-							tasks2[j].setTaskModel(getTaskModel());
-							addServerTask(server, tasks2[j]);
-						}
-					}
-				}
+		if (server == null)
+			return;
+
+		List enabledTasks = ((Server)server).getEnabledOptionalPublishOperationIds();
+		List disabledTasks = ((Server)server).getDisabledPreferredPublishOperationIds();
+		PublishOperation[] tasks2 = ((Server)server).getAllTasks(modules);
+		for (int j = 0; j < tasks2.length; j++) {
+			int kind = tasks2[j].getKind(); 
+			String id = ((Server)server).getPublishOperationId(tasks2[j]);
+			if (kind == PublishOperation.OPTIONAL || kind == PublishOperation.PREFERRED)
+				hasOptionalTasks = true;
+			tasks2[j].setTaskModel(getTaskModel());
+			
+			boolean selected = true;
+			if (kind == PublishOperation.OPTIONAL) {
+				if (!enabledTasks.contains(id))
+					selected = false;
+			} else if (kind == PublishOperation.PREFERRED) {
+				if (disabledTasks.contains(id))
+					selected = false;
 			}
+			addServerTask(server, tasks2[j], selected);
 		}
 	}
 
-	public void addServerTask(IServer server, PublishOperation task2) {
+	public void addServerTask(IServer server, PublishOperation task2, boolean selected) {
 		TaskInfo sti = new TaskInfo();
 		sti.task2 = task2;
 		sti.kind = task2.getKind();
-		String id = server.getId();
-		sti.id = id + "|" + task2.getLabel();
-		if (sti.kind == PublishOperation.PREFERRED || sti.kind == PublishOperation.REQUIRED)
-			sti.setDefaultSelected(true);
+		sti.id = ((Server)server).getPublishOperationId(task2);
+		sti.setDefaultSelected(selected);
 		
 		tasks.add(sti);
 	}
@@ -192,81 +185,45 @@ public class TasksWizardFragment extends WizardFragment {
 	 * @see WizardFragment#performFinish(IProgressMonitor)
 	 */
 	public void performFinish(IProgressMonitor monitor) throws CoreException {
-		List performTasks = new ArrayList();
-
-		if (tasks == null)
-			return;
-		int size = tasks.size();
-		for (int i = 0; i < size; i++) {
-			TaskInfo ti = (TaskInfo) tasks.get(i);
-			if (ti.isSelected())
-				performTasks.add(tasks.get(i));
-		}
-		
-		Trace.trace(Trace.FINEST, "Performing wizard tasks: " + performTasks.size());
-		
-		if (performTasks.size() == 0)
+		if (!hasOptionalTasks)
 			return;
 		
-		// get most recent server/configuration
-		boolean createdServerWC = false;
+		if (tasks == null || tasks.isEmpty())
+			return;
+		
 		TaskModel taskModel = getTaskModel();
-		IServer server = (IServer) taskModel.getObject(TaskModel.TASK_SERVER);
+		IServer server = (IServer)taskModel.getObject(TaskModel.TASK_SERVER);
 		if (server == null)
 			return;
-
-		// get working copies
-		IServerWorkingCopy serverWC = null;
-		if (server instanceof IServerWorkingCopy)
-			serverWC = (IServerWorkingCopy) server;
+		
+		boolean createdWC = false;
+		ServerWorkingCopy wc = null;
+		if (server instanceof ServerWorkingCopy)
+			wc = (ServerWorkingCopy)server;
 		else {
-			serverWC = server.createWorkingCopy();
-			createdServerWC = true;
+			wc = (ServerWorkingCopy)server.createWorkingCopy();
+			createdWC = true;
 		}
+		wc.resetPreferredPublishOperations();
+		wc.resetOptionalPublishOperations();
 		
-		taskModel.putObject(TaskModel.TASK_SERVER, serverWC);
-		
-		// begin task
-		monitor.beginTask(Messages.performingTasks, performTasks.size() * 1000);
-		
-		ServerEditorCore.sortOrderedList(performTasks);
-
-		Iterator iterator = performTasks.iterator();
+		Iterator iterator = tasks.iterator();
 		while (iterator.hasNext()) {
-			IProgressMonitor subMonitor = ProgressUtil.getSubMonitorFor(monitor, 1000);
-			Object obj = iterator.next();
-			if (obj instanceof TasksWizardFragment.TaskInfo) {
-				TasksWizardFragment.TaskInfo sti = (TasksWizardFragment.TaskInfo) obj;
-				try {
-					Trace.trace(Trace.FINER, "Executing task: " + sti.task2.getLabel());
-					sti.task2.setTaskModel(taskModel);
-					sti.task2.execute(subMonitor, null);
-				} catch (final CoreException ce) {
-					Trace.trace(Trace.SEVERE, "Error executing task " + sti.task2.getLabel(), ce);
-					throw ce;
-				}
+			TaskInfo task = (TaskInfo)iterator.next();
+			if (PublishOperation.REQUIRED == task.kind)
+				continue;
+			
+			if (PublishOperation.PREFERRED == task.kind) {
+				if (!task.isSelected())
+					wc.disablePreferredPublishOperations(task.task2);
+			} else if (PublishOperation.OPTIONAL == task.kind) {
+				if (task.isSelected())
+					wc.enableOptionalPublishOperations(task.task2);
 			}
-			subMonitor.done();
 		}
 		
-		if (createdServerWC) {
-			if (serverWC.isDirty()) {
-				IFile file = ((Server)serverWC).getFile();
-				if (file != null) {
-					IProject project = file.getProject();
-					
-					if (!file.getProject().exists())
-						EclipseUtil.createNewServerProject(null, project.getName(), null, monitor);
-					
-					ProjectProperties pp = (ProjectProperties) ServerCore.getProjectProperties(project);
-					if (!pp.isServerProject())
-						pp.setServerProject(true, monitor);
-				}
-				taskModel.putObject(TaskModel.TASK_SERVER, serverWC.save(false, monitor));
-			} else
-				taskModel.putObject(TaskModel.TASK_SERVER, serverWC.getOriginal());
-		}
-				
+		if (createdWC && wc.isDirty())
+			wc.save(true, monitor);
 		monitor.done();
 	}
 
