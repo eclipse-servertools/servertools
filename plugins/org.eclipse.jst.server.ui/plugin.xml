@@ -100,5 +100,7 @@
   <extension point="org.eclipse.wst.common.project.facet.ui.images">
     <image runtime-component-type="standard.jre"
        path="icons/obj16/jre.gif"/>
+    <image runtime-component-type="org.eclipse.jst.server.core.runtimeType"
+       path="icons/obj16/java_jar.gif"/>
   </extension>
 </plugin>
