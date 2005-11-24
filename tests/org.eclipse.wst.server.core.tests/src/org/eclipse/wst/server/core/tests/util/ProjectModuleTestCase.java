@@ -30,15 +30,11 @@ public class ProjectModuleTestCase extends TestCase {
 	public void test01Create() {
 		pm = new TestProjectModule(null);
 	}
-	
+
 	public void test02GetProject() {
 		pm.getProject();
 	}
-	
-	public void test03GetRootFolder() {
-		pm.getRootFolder();
-	}
-	
+
 	public void test04GetId() {
 		try {
 			pm.getId();
@@ -46,11 +42,11 @@ public class ProjectModuleTestCase extends TestCase {
 			// ignore
 		}
 	}
-	
+
 	public void test05Validate() {
 		pm.validate();
 	}
-	
+
 	public void test06Members() {
 		try {
 			pm.members();
@@ -58,7 +54,7 @@ public class ProjectModuleTestCase extends TestCase {
 			// ignore
 		}
 	}
-	
+
 	public void test07GetName() {
 		try {
 			pm.getName();
@@ -66,20 +62,16 @@ public class ProjectModuleTestCase extends TestCase {
 			// ignore
 		}
 	}
-	
+
 	public void test08Exists() {
 		pm.exists();
 	}
-	
+
 	public void test09Equals() {
 		pm.equals(null);
 	}
 
 	public void test10() {
 		pm.getChildModules();
-	}
-	
-	public void test11TestProtected() throws Exception {
-		((TestProjectModule)pm).testProtected();
 	}
 }

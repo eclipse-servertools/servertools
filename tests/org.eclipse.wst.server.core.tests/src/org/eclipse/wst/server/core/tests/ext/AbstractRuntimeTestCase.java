@@ -73,15 +73,15 @@ public abstract class AbstractRuntimeTestCase extends TestCase {
 		assertNull(props.getRuntimeTarget());
 	}
 
-	public void test0004End() throws Exception {
+	public void test0003End() throws Exception {
 		project.delete(true, true, null);
 	}
 
-	public void test0005Delegate() throws Exception {
+	public void test0004GetAdapter() throws Exception {
 		getRuntime().getAdapter(RuntimeDelegate.class);
 	}
-	
-	public void test0005bDelegate() throws Exception {
+
+	public void test0005LoadAdapter() throws Exception {
 		getRuntime().loadAdapter(RuntimeDelegate.class, null);
 	}
 
@@ -89,7 +89,7 @@ public abstract class AbstractRuntimeTestCase extends TestCase {
 		IStatus status = getRuntime().validate(null);
 		assertTrue(status.isOK() || status.getSeverity() == IStatus.WARNING);
 	}
-	
+
 	public void test0007Validate() throws Exception {
 		IRuntimeWorkingCopy wc = getRuntime().createWorkingCopy();
 		wc.setLocation(null);
@@ -111,6 +111,14 @@ public abstract class AbstractRuntimeTestCase extends TestCase {
 	
 	public void test0010IsReadOnly() {
 		runtime.isReadOnly();
+	}
+
+	public void test0011GetId() {
+		runtime.getId();
+	}
+
+	public void test0011GetName() {
+		runtime.getName();
 	}
 
 	public void test0012GetTimestamp() {

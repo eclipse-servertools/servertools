@@ -8,18 +8,18 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core.tests;
+package org.eclipse.wst.server.core.tests.util;
 
-import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
+import org.eclipse.wst.server.core.util.RuntimeLifecycleAdapter;
 
 import junit.framework.TestCase;
 
-public class ServerLifecycleAdapterTestCase extends TestCase {
+public class RuntimeLifecycleAdapterTestCase extends TestCase {
 	public void testListener() {
-		ServerLifecycleAdapter listener = new ServerLifecycleAdapter();
+		RuntimeLifecycleAdapter listener = new RuntimeLifecycleAdapter();
 		
-		listener.serverAdded(null);
-		listener.serverChanged(null);
-		listener.serverRemoved(null);
+		listener.runtimeAdded(null);
+		listener.runtimeChanged(null);
+		listener.runtimeRemoved(null);
 	}
 }

@@ -170,37 +170,43 @@ public class ServerEventTestCase extends TestCase {
 			public void restartModule(IModule[] module, IServer.IOperationListener listener) {
 				// do nothing
 			}
+			public void addPublishListener(IPublishListener listener) {
+				// do nothing
+			}
+			public void removePublishListener(IPublishListener listener) {
+				// do nothing
+			}
 		};
 	}
-	
+
 	public static ServerEvent createSampleServerEvent() {
 		return new ServerEvent(SAMPLE_KIND, SAMPLE_SERVER, SAMPLE_STATE, SAMPLE_PUBLISHING_STATE, SAMPLE_RESTART_STATE);
 	}
-	
+
 	public void test010CreateServerEvent() {
 		event = ServerEventTestCase.createSampleServerEvent();
 	}
-	
+
 	public void test011ServerGetKind() {
 		assertTrue((event.getKind() & (ServerEvent.SERVER_CHANGE | SAMPLE_KIND)) != 0);
 	}
-	
+
 	public void test013ServerGetPublishingState() {
 		assertEquals(SAMPLE_PUBLISHING_STATE, event.getPublishState());
 	}
-	
+
 	public void test014ServerGetRestartState() {
 		assertEquals(SAMPLE_RESTART_STATE, event.getRestartState());
 	}
-	
+
 	public void test015ServerGetServer() {
 		assertEquals(SAMPLE_SERVER, event.getServer());
 	}
-	
+
 	public void test016ServerGetState() {
 		assertEquals(SAMPLE_STATE,event.getState());
 	}
-	
+
 	public void test110CreateModuleEvent() {
 		try {
 			event = new ServerEvent(SAMPLE_KIND, SAMPLE_SERVER, SAMPLE_MODULE_TREE, SAMPLE_STATE, SAMPLE_PUBLISHING_STATE, SAMPLE_RESTART_STATE);
@@ -208,11 +214,11 @@ public class ServerEventTestCase extends TestCase {
 			// ignore
 		}
 	}
-	
+
 	public void test111ModuleGetKind() {
 		assertTrue((event.getKind() & (ServerEvent.MODULE_CHANGE | SAMPLE_KIND)) != 0);
 	}
-	
+
 	public void test112ModuleGetModuleTree() {
 		try {
 			assertEquals(SAMPLE_MODULE_TREE, event.getModule());
@@ -224,15 +230,15 @@ public class ServerEventTestCase extends TestCase {
 	public void test113ModuleGetPublishingState() {
 		assertEquals(SAMPLE_PUBLISHING_STATE, event.getPublishState());
 	}
-	
+
 	public void test114ModuleGetRestartState() {
 		assertEquals(SAMPLE_RESTART_STATE, event.getRestartState());
 	}
-	
+
 	public void test115ModuleGetServer() {
 		assertEquals(SAMPLE_SERVER, event.getServer());
 	}
-	
+
 	public void test116ModuleGetState() {
 		assertEquals(SAMPLE_STATE,event.getState());
 	}

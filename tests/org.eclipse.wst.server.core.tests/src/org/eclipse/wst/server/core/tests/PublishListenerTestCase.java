@@ -10,16 +10,25 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests;
 
-import org.eclipse.wst.server.core.util.RuntimeLifecycleAdapter;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.wst.server.core.IPublishListener;
+import org.eclipse.wst.server.core.IServer;
 
 import junit.framework.TestCase;
 
-public class RuntimeLifecycleAdapterTestCase extends TestCase {
+public class PublishListenerTestCase extends TestCase {
 	public void testListener() {
-		RuntimeLifecycleAdapter listener = new RuntimeLifecycleAdapter();
+		IPublishListener listener = new IPublishListener() {
+			public void publishStarted(IServer server) {
+				// ignore
+			}
+
+			public void publishFinished(IServer server, IStatus status) {
+				// ignore
+			}
+		};
 		
-		listener.runtimeAdded(null);
-		listener.runtimeChanged(null);
-		listener.runtimeRemoved(null);
+		listener.publishStarted(null);
+		listener.publishFinished(null, null);
 	}
 }

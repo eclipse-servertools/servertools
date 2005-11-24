@@ -8,23 +8,17 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.server.core.tests.impl;
+package org.eclipse.wst.server.core.tests.util;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.wst.server.core.model.IModuleResource;
-import org.eclipse.wst.server.core.util.ProjectModule;
+import org.eclipse.wst.server.core.util.PublishAdapter;
 
-public class TestProjectModule extends ProjectModule {
-	public TestProjectModule() {
-		super();
-	}
-	
-	public TestProjectModule(IProject project) {
-		super(project);
-	}
+import junit.framework.TestCase;
 
-	public IModuleResource[] members() throws CoreException {
-		return null;
+public class PublishAdapterTestCase extends TestCase {
+	public void testListener() {
+		PublishAdapter listener = new PublishAdapter();
+		
+		listener.publishStarted(null);
+		listener.publishFinished(null, null);
 	}
 }

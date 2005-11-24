@@ -32,6 +32,7 @@ package org.eclipse.wst.server.core.tests;
 import org.eclipse.wst.server.core.tests.extension.*;
 import org.eclipse.wst.server.core.tests.model.*;
 import org.eclipse.wst.server.core.tests.util.*;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -69,9 +70,8 @@ public class AllTests {
 		
 		suite.addTestSuite(RuntimeLifecycleListenerTestCase.class);
 		suite.addTestSuite(ServerLifecycleListenerTestCase.class);
+		suite.addTestSuite(PublishListenerTestCase.class);
 		suite.addTestSuite(ServerListenerTestCase.class);
-		suite.addTestSuite(RuntimeLifecycleAdapterTestCase.class);
-		suite.addTestSuite(ServerLifecycleAdapterTestCase.class);
 		suite.addTest(new OrderedTestSuite(ServerEventTestCase.class));
 		
 		suite.addTest(new OrderedTestSuite(ClientDelegateTestCase.class));
@@ -103,6 +103,9 @@ public class AllTests {
 		suite.addTest(new OrderedTestSuite(WebResourceTestCase.class));
 		suite.addTest(new OrderedTestSuite(NullModuleArtifactTestCase.class));
 		suite.addTestSuite(SocketUtilTestCase.class);
+		suite.addTestSuite(RuntimeLifecycleAdapterTestCase.class);
+		suite.addTestSuite(ServerLifecycleAdapterTestCase.class);
+		suite.addTestSuite(PublishAdapterTestCase.class);
 		//$JUnit-END$
 		return suite;
 	}

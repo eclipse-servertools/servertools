@@ -105,43 +105,43 @@ public abstract class AbstractServerTestCase extends TestCase {
 	public void test0006Delegate() throws Exception {
 		getServer().getAdapter(ServerBehaviourDelegate.class);
 	}
-	
+
 	public void test0007Publish() throws Exception {
 		getServer().publish(IServer.PUBLISH_FULL, null);
 	}
-	
+
 	public void test0008CanRun() throws Exception {
 		assertTrue(getServer().canStart(ILaunchManager.RUN_MODE).isOK());
 	}
-	
+
 	public void test0009Run() throws Exception {
 		getServer().synchronousStart(ILaunchManager.RUN_MODE, null);
 	}
-	
+
 	public void test0010CanStop() throws Exception {
 		assertTrue(getServer().canStop().isOK());
 	}
-	
+
 	public void test0011Stop() throws Exception {
 		getServer().synchronousStop(false);
 	}
-	
+
 	public void test0012CanDebug() throws Exception {
 		assertTrue(getServer().canStart(ILaunchManager.DEBUG_MODE).isOK());
 	}
-	
+
 	public void test0013Debug() throws Exception {
 		server.synchronousStart(ILaunchManager.DEBUG_MODE, null);
 	}
-	
+
 	public void test0014CanStop() {
 		assertTrue(server.canStop().isOK());
 	}
-	
+
 	public void test0015Stop() {
 		server.synchronousStop(false);
 	}
-	
+
 	public void test0016GetServerPorts() {
 		ServerPort[] ports = server.getServerPorts(null);
 		if (ports != null) {
@@ -159,15 +159,15 @@ public abstract class AbstractServerTestCase extends TestCase {
 			}
 		}
 	}
-	
+
 	public void test0017GetServerState() {
 		server.getServerState();
 	}
-	
+
 	public void test0018GetServerPublishState() {
 		server.getServerPublishState();
 	}
-	
+
 	public void test0019GetServerRestartState() {
 		server.getServerRestartState();
 	}
@@ -199,7 +199,7 @@ public abstract class AbstractServerTestCase extends TestCase {
 	public void test0023GetMode() {
 		server.getMode();
 	}
-	
+
 	public void test0024CanPublish() {
 		server.canPublish();
 	}
