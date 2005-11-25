@@ -7,6 +7,9 @@
  * 
  * Contributors:
  *     IBM Corporation - Initial API and implementation
+ *     
+ *     2005-11-25 Arthur Ryman, ryman@ca.ibm.com
+ *     - fixed bug 118102: set xmlTagMissing correctly each time setContent() is called
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.ui.internal.viewers;
  
@@ -68,8 +71,7 @@ public class XMLViewer extends ContentViewer {
 		}
 		
 		String out_temp = out.toLowerCase();
-		if (out_temp.indexOf("<?xml") < 0) 
-			xmlTagMissing = true;
+		xmlTagMissing = !out_temp.startsWith("<?xml");
 		
 		if (out.length() > 0) {
 			byte[] b1 = createDocument(out);
