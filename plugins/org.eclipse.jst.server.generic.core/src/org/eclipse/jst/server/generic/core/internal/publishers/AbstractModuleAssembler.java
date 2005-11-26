@@ -105,15 +105,17 @@ public abstract class AbstractModuleAssembler {
 	
 	private void doPackModule(IModuleResource resource, ModulePackager packager) throws CoreException, IOException{
 			if (resource instanceof IModuleFolder) {
-				packager.writeFolder(resource.getModuleRelativePath().append(resource.getName()).toString());
 				IModuleFolder mFolder = (IModuleFolder)resource;
 				IModuleResource[] resources = mFolder.members();
-				for (int i = 0; i < resources.length; i++) {
+				if(resources==null || resources.length==0){
+					packager.writeFolder(resource.getModuleRelativePath().append(resource.getName()).toPortableString());
+				}
+				for (int i = 0; resources!= null && i < resources.length; i++) {
 					doPackModule(resources[i], packager);
 				}
 			} else {
 				IFile file = (IFile) resource.getAdapter(IFile.class);
-				String destination = resource.getModuleRelativePath().append(resource.getName()).toString();
+				String destination = resource.getModuleRelativePath().append(resource.getName()).toPortableString();
 				packager.write(file, destination);
 			}
 	}
