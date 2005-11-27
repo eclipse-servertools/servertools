@@ -10,10 +10,15 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.internal.ModuleFile;
+import org.eclipse.wst.server.core.internal.ModuleFolder;
 import org.eclipse.wst.server.core.model.*;
 /**
  * A simple IModuleProject that maps a folder within a project
@@ -113,5 +118,51 @@ public abstract class ProjectModule extends ModuleDelegate {
 	 */
 	public IModule[] getChildModules() {
 		return null;
+	}
+
+	/**
+	 * Basic implementation of members() method. Assumes that the entire project should
+	 * be published to a server.
+	 * 
+	 * @see ModuleDelegate#members()
+	 */
+	public IModuleResource[] members() throws CoreException {
+		return getModuleResources(Path.EMPTY, getProject());
+	}
+
+	/**
+	 * Return the module resources for a given path.
+	 * 
+	 * @param path a path
+	 * @param container a container
+	 * @return an array of module resources
+	 * @throws CoreException
+	 */
+	private IModuleResource[] getModuleResources(IPath path, IContainer container) throws CoreException {
+		List list = new ArrayList();
+
+		IResource[] resources = container.members();
+		if (resources != null) {
+			int size = resources.length;
+			for (int i = 0; i < size; i++) {
+				IResource resource = resources[i];
+				if (resource instanceof IContainer) {
+					IContainer container2 = (IContainer) resource;
+					if (container2 != null && container2.exists()) {
+						ModuleFolder mf = new ModuleFolder(container, container2.getName(), path);
+						mf.setMembers(getModuleResources(path.append(container2.getName()), container2));
+						list.add(mf);
+					}
+				} else if (resource instanceof IFile) {
+					IFile file = (IFile) resource;
+					if (file != null && file.exists())
+						list.add(new ModuleFile(file, file.getName(), path, file.getModificationStamp()));
+				}
+			}
+		}
+
+		IModuleResource[] moduleResources = new IModuleResource[list.size()];
+		list.toArray(moduleResources);
+		return moduleResources;
 	}
 }
