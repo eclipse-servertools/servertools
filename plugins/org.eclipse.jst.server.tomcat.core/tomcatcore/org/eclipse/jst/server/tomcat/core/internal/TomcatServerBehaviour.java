@@ -749,7 +749,35 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		int size = delta.length;
 		for (int i = 0; i < size; i++) {
 			IModuleResourceDelta d = delta[i];
-			if ("WEB-INF".equals(d.getModuleResource().getName()))
+			if (d.getModuleRelativePath().segmentCount() == 0) {
+				if ("WEB-INF".equals(d.getModuleResource().getName())) {
+					return containsNonResourceChange(d.getAffectedChildren());
+				}
+				continue;
+			}
+			if (d.getModuleResource() instanceof IModuleFile)
+				return true;
+			
+			boolean b = containsNonAddChange(d.getAffectedChildren());
+			if (b)
+				return true;
+		}
+		return false;
+	}
+
+	protected boolean containsNonAddChange(IModuleResourceDelta[] delta) {
+		if (delta == null)
+			return false;
+		int size = delta.length;
+		for (int i = 0; i < size; i++) {
+			IModuleResourceDelta d = delta[i];
+			if (d.getModuleResource() instanceof IModuleFile) {
+				if (d.getKind() != IModuleResourceDelta.ADDED)
+					return true;
+			}
+			
+			boolean b = containsNonAddChange(d.getAffectedChildren());
+			if (b)
 				return true;
 		}
 		return false;
