@@ -191,10 +191,8 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 	}
 
 	protected void updateRuntimeReferences(final String oldId, final String newId, final IRuntime origRuntime) {
-		class UpdateRuntimeReferencesJob extends Job {
-			/**
-			 * A job that updates runtime references when a runtime changes.
-			 */
+		// TODO fix me
+		/*class UpdateRuntimeReferencesJob extends Job {
 			public UpdateRuntimeReferencesJob() {
 				super(NLS.bind(Messages.savingTask, newId));
 			}
@@ -240,7 +238,7 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 			}
 		}
 		UpdateRuntimeReferencesJob job = new UpdateRuntimeReferencesJob();
-		job.schedule();
+		job.schedule();*/
 	}
 	
 	/**
@@ -253,10 +251,8 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		if (runtime == null)
 			return;
 
-		class RebuildRuntimeReferencesJob extends Job {
-			/**
-			 * A job that rebuilds projects when a runtime changes.
-			 */
+		// TODO fix me
+		/*class RebuildRuntimeReferencesJob extends Job {
 			public RebuildRuntimeReferencesJob() {
 				super(Messages.taskPerforming);
 			}
@@ -287,7 +283,7 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 			}
 		}
 		RebuildRuntimeReferencesJob job = new RebuildRuntimeReferencesJob();
-		job.schedule();
+		job.schedule();*/
 	}
 
 	protected RuntimeDelegate getWorkingCopyDelegate(IProgressMonitor monitor) {
