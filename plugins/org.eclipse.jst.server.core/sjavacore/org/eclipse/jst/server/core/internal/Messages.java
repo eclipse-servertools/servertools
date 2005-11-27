@@ -20,8 +20,11 @@ public class Messages extends NLS {
 	public static String classpathContainerDescription;
 	
 	public static String copyingTask;
-	public static String errorCopyingFile;
 	public static String deletingTask;
+	public static String errorCopyingFile;
+	public static String errorCreatingZipFile;
+	public static String errorDelete;
+	public static String errorRename;
 	
 	static {
 		NLS.initializeMessages(JavaServerPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);

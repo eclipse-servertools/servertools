@@ -245,7 +245,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		if (moduleTree.length == 1) // web module
 			publishDir(deltaKind, p, moduleTree[0], monitor);
 		else // utility jar
-			publishJar(deltaKind, p, moduleTree, monitor);
+			publishJar(kind, deltaKind, p, moduleTree, monitor);
 		
 		setModulePublishState(moduleTree, IServer.PUBLISH_STATE_NONE);
 		
@@ -292,8 +292,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 * @param monitor
 	 * @throws CoreException
 	 */
-	private void publishJar(int deltaKind, Properties p, IModule[] module, IProgressMonitor monitor) throws CoreException {
-		
+	private void publishJar(int kind, int deltaKind, Properties p, IModule[] module, IProgressMonitor monitor) throws CoreException {
 		if (deltaKind == REMOVED) {
 			try {
 				String publishPath = (String) p.get(module[1].getId());
@@ -304,6 +303,13 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		} else {
 			IPath path = getServer().getRuntime().getLocation().append("webapps").append(module[0].getName());
 			path = path.append("WEB-INF").append("lib").append(module[1].getName() + ".jar");
+			
+			if (kind != IServer.PUBLISH_CLEAN && kind != IServer.PUBLISH_FULL) {
+				// avoid changes if no changes to module since last publish
+				IModuleResourceDelta[] delta = getPublishedResourceDelta(module);
+				if (delta == null || delta.length == 0)
+					return;
+			}
 			
 			ProjectModule pm = (ProjectModule) module[1].loadAdapter(ProjectModule.class, monitor);
 			IModuleResource[] mr = pm.members();

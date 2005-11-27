@@ -15,6 +15,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.core.internal.JavaServerPlugin;
 import org.eclipse.jst.server.core.internal.Messages;
@@ -59,7 +60,7 @@ public class PublishUtil {
 	 */
 	public static IStatus copyFile(InputStream in, String to) {
 		OutputStream out = null;
-	
+		
 		try {
 			out = new FileOutputStream(to);
 	
@@ -68,7 +69,7 @@ public class PublishUtil {
 				out.write(buf, 0, avail);
 				avail = in.read(buf);
 			}
-			return new Status(IStatus.OK, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.copyingTask, new String[] {to}), null);
+			return Status.OK_STATUS;
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error copying file", e);
 			return new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCopyingFile, new String[] {to, e.getLocalizedMessage()}), e);
@@ -87,12 +88,68 @@ public class PublishUtil {
 			}
 		}
 	}
+
+	/**
+	 * Copy a file from a to b. Closes the input stream after use.
+	 *
+	 * @param in an input stream
+	 * @param to a path to copy to. the directory must already exist
+	 * @param ts timestamp
+	 * @throws CoreException if anything goes wrong
+	 */
+	private static void copyFile(InputStream in, IPath to, long ts) throws CoreException {
+		OutputStream out = null;
+		
+		File tempFile = null;
+		try {
+			File file = to.toFile();
+			File tempDir = JavaServerPlugin.getInstance().getStateLocation().toFile();
+			tempFile = File.createTempFile("tmp", to.getFileExtension(), tempDir);
+			
+			out = new FileOutputStream(tempFile);
 	
-	protected static void copyFile(IModuleFile mf, IPath path) throws CoreException {
-		IFile file = (IFile) mf.getAdapter(IFile.class);
-		copyFile(file.getContents(), path.toOSString());
+			int avail = in.read(buf);
+			while (avail > 0) {
+				out.write(buf, 0, avail);
+				avail = in.read(buf);
+			}
+			
+			out.close();
+			out = null;
+			
+			if (file.exists()) {
+				if (!file.delete())
+					throw new Exception(NLS.bind(Messages.errorDelete, file.toString()));
+			}
+			if (!tempFile.renameTo(file))
+				throw new Exception(NLS.bind(Messages.errorRename, tempFile.toString(), file.toString()));
+			
+			if (ts != IResource.NULL_STAMP)
+				file.setLastModified(ts);
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error copying file", e);
+			throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCopyingFile, to.toOSString(), e.getLocalizedMessage()), e));
+		} finally {
+			try {
+				if (in != null)
+					in.close();
+			} catch (Exception ex) {
+				// ignore
+			}
+			try {
+				if (out != null)
+					out.close();
+			} catch (Exception ex) {
+				// ignore
+			}
+		}
 	}
-	
+
+	private static void copyFile(IModuleFile mf, IPath path) throws CoreException {
+		IFile file = (IFile) mf.getAdapter(IFile.class);
+		copyFile(file.getContents(), path, file.getLocalTimeStamp());
+	}
+
 	/**
 	 * Recursively deletes a directory.
 	 *
@@ -244,13 +301,13 @@ public class PublishUtil {
 		path2.toFile().delete();
 	}
 
-	protected static void copyFile(IPath path, IModuleFile file) throws CoreException {
+	private static void copyFile(IPath path, IModuleFile file) throws CoreException {
 		IFile file2 = (IFile) file.getAdapter(IFile.class);
 		IPath path3 = path.append(file.getModuleRelativePath()).append(file.getName());
 		File f = path3.toFile().getParentFile();
 		if (!f.exists())
 			f.mkdirs();
-		copyFile(file2.getContents(), path3.toOSString());
+		copyFile(file2.getContents(), path3, file2.getLocalTimeStamp());
 	}
 
 	public static void copy(IModuleResource[] resources, IPath path) throws CoreException {
@@ -263,7 +320,7 @@ public class PublishUtil {
 		}
 	}
 
-	protected static void copy(IModuleResource resource, IPath path) throws CoreException {
+	private static void copy(IModuleResource resource, IPath path) throws CoreException {
 		if (resource instanceof IModuleFolder) {
 			IModuleFolder folder = (IModuleFolder) resource;
 			copy(folder.members(), path);
@@ -274,7 +331,7 @@ public class PublishUtil {
 			File f = path3.toFile().getParentFile();
 			if (!f.exists())
 				f.mkdirs();
-			copyFile(file.getContents(), path3.toOSString());
+			copyFile(file.getContents(), path3, file.getLocalTimeStamp());
 		}
 	}
 
@@ -295,16 +352,28 @@ public class PublishUtil {
 			return;
 		}
 		
+		File tempFile = null;
 		try {
-			BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(zipPath.toFile()));
+			File file = zipPath.toFile();
+			File tempDir = JavaServerPlugin.getInstance().getStateLocation().toFile();
+			tempFile = File.createTempFile("tmp", zipPath.getFileExtension(), tempDir);
+			
+			BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(tempFile));
 			ZipOutputStream zout = new ZipOutputStream(bout);
-			
 			addZipEntries(zout, resources);
-			
 			zout.close();
+			
+			if (file.exists()) {
+				if (!file.delete())
+					throw new Exception(NLS.bind(Messages.errorDelete, file.toString()));
+			}
+			if (!tempFile.renameTo(file))
+				throw new Exception(NLS.bind(Messages.errorRename, tempFile.toString(), file.toString()));
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error zipping", e);
-			throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, Messages.errorCopyingFile, e));
+			if (tempFile != null && tempFile.exists())
+				tempFile.deleteOnExit();
+			throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCreatingZipFile, zipPath.lastSegment(), e.getLocalizedMessage()), e));
 		}
 	}
 
@@ -322,9 +391,14 @@ public class PublishUtil {
 			IPath path = mf.getModuleRelativePath().append(mf.getName());
 			
 			ZipEntry ze = new ZipEntry(path.toPortableString());
-			zout.putNextEntry(ze);
 			
 			IFile file = (IFile) mf.getAdapter(IFile.class);
+			long ts = file.getLocalTimeStamp();
+			if (ts != IResource.NULL_STAMP)
+				ze.setTime(ts);
+			
+			zout.putNextEntry(ze);
+			
 			InputStream in = file.getContents();
 			int n = 0;
 			while (n > -1) {

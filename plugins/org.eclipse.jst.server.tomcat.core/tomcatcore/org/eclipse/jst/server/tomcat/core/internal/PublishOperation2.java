@@ -81,26 +81,15 @@ public class PublishOperation2 extends PublishOperation {
 		path = path.append(module[0].getName()).append("WEB-INF").append("lib").append(module[1].getName() + ".jar");
 		module2 = module[1];
 		
-		if (kind == IServer.PUBLISH_CLEAN) { // clean and republish from scratch
-			path.toFile().delete();
+		if (kind != IServer.PUBLISH_CLEAN && kind != IServer.PUBLISH_FULL) {
+			// avoid changes if no changes to module since last publish
+			IModuleResourceDelta[] delta = server.getPublishedResourceDelta(module);
+			if (delta == null || delta.length == 0)
+				return;
 		}
 		
 		ProjectModule pm = (ProjectModule) module2.loadAdapter(ProjectModule.class, monitor);
 		IModuleResource[] mr = pm.members();
 		PublishUtil.createZipFile(mr, path);
-		
-		/*if (kind == IServer.PUBLISH_CLEAN || kind == IServer.PUBLISH_FULL) {
-			ProjectModule pm = (ProjectModule) module2.loadAdapter(ProjectModule.class, monitor);
-			IModuleResource[] mr = pm.members();
-			PublishUtil.copy(mr, path);
-			return;
-		}*/
-		
-		/*IModuleResourceDelta[] delta = server.getPublishedResourceDelta(module);
-		
-		int size = delta.length;
-		for (int i = 0; i < size; i++) {
-			PublishUtil.handleDelta(kind, path, delta[i]);
-		}*/
 	}
 }
