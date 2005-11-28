@@ -587,7 +587,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 		temp = confDir.append("work").toFile();
 		if (!temp.exists())
 			temp.mkdirs();
-
-		return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, Messages.runtimeDirPrepared, null);		
+		
+		return Status.OK_STATUS;		
 	}
 }

@@ -47,29 +47,29 @@ public class EclipseUtil {
 	private static IStatus createServerProject(String name, IPath path, IProgressMonitor monitor) {
 		//monitor = ProgressUtil.getMonitorFor(monitor);
 		//monitor.beginTask(ServerPlugin.getResource("%createServerProjectTask"), 3000);
-
+		
 		try {
 			IWorkspace workspace = ResourcesPlugin.getWorkspace();
 			IProject project = workspace.getRoot().getProject(name);
-	
+			
 			// get a project descriptor
 			IProjectDescription description = workspace.newProjectDescription(name);
 			description.setLocation(path);
-	
+			
 			project.create(description, ProgressUtil.getSubMonitorFor(monitor, 1000));
 			if (monitor.isCanceled())
 				return null;
 			project.open(ProgressUtil.getSubMonitorFor(monitor, 1000));
 			if (monitor.isCanceled())
 				return null;
-
+			
 			// add the server project nature
 			((ProjectProperties)ServerCore.getProjectProperties(project)).setServerProject(true, monitor);
-	
+			
 			if (monitor.isCanceled())
 				return null;
-	
-			return new Status(IStatus.OK, ServerUIPlugin.PLUGIN_ID, 0, "", null);
+			
+			return Status.OK_STATUS;
 		} catch (CoreException ce) {
 			Trace.trace(Trace.SEVERE, "Could not create server project named " + name, ce);
 			return new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotCreateServerProjectStatus, ce.getMessage()), ce);

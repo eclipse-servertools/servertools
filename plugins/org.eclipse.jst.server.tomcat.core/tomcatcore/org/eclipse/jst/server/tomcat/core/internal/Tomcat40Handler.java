@@ -105,7 +105,7 @@ public class Tomcat40Handler implements ITomcatVersionHandler {
 	public IStatus canAddModule(IModule module) {
 		String version = module.getModuleType().getVersion();
 		if ("2.2".equals(version) || "2.3".equals(version))
-			return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, Messages.canAddModule, null);
+			return Status.OK_STATUS;
 		
 		return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorSpec40, null);
 	}

@@ -95,7 +95,7 @@ public class Tomcat32Handler implements ITomcatVersionHandler {
 	 */
 	public IStatus canAddModule(IModule module) {
 		if ("2.2".equals(module.getModuleType().getVersion()))
-			return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, Messages.canAddModule, null);
+			return Status.OK_STATUS;
 		
 		return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorSpec32, null);
 	}

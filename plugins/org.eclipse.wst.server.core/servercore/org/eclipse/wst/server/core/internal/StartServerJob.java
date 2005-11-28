@@ -35,6 +35,6 @@ public class StartServerJob extends ChainedJob {
 		} catch (CoreException ce) {
 			return ce.getStatus();
 		}
-		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null);
+		return Status.OK_STATUS;
 	}
 }

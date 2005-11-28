@@ -128,7 +128,7 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 		if (!found)
 			return new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, Messages.warningJRE, null);
 		
-		return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, "", null);
+		return Status.OK_STATUS;
 	}
 
 	/**

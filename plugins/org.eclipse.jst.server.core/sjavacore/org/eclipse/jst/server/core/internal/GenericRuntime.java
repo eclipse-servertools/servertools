@@ -85,7 +85,7 @@ public class GenericRuntime extends RuntimeDelegate implements IGenericRuntime, 
 		else if (getVMInstall() == null)
 			return new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, Messages.errorJRE, null);
 		else
-			return new Status(IStatus.OK, JavaServerPlugin.PLUGIN_ID, 0, "", null);
+			return Status.OK_STATUS;
 	}
 
 	/**

@@ -137,7 +137,7 @@ public abstract class RuntimeDelegate {
 		if (path == null || path.isEmpty())
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, "", null);
 		
-		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null);
+		return Status.OK_STATUS;
 	}
 
 	/**

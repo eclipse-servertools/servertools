@@ -41,7 +41,7 @@ public class LaunchClientJob extends ChainedJob {
 	 */
 	protected IStatus run(IProgressMonitor monitor) {
 		Trace.trace(Trace.FINER, "LaunchClient job");
-		IStatus status = new Status(IStatus.OK, ServerUIPlugin.PLUGIN_ID, 0, "", null);
+		IStatus status = Status.OK_STATUS;
 
 		// wait for up to 5 minutes
 		final Server server = (Server) getServer();

@@ -607,7 +607,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 				return ms;
 			}
 			Trace.trace(Trace.FINER, "Server.xml updated with context.xml configurations");
-			return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, Messages.serverPostProcessingComplete, null);
+			return Status.OK_STATUS;
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Could not apply context configurations to published Tomcat v5.5 configuration from " + confDir.toOSString() + ": " + e.getMessage());
 			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPublishConfiguration, new String[] {e.getLocalizedMessage()}), e);
@@ -719,6 +719,6 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 		if (!temp.exists())
 			temp.mkdirs();
 
-		return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, Messages.runtimeDirPrepared, null);		
+		return Status.OK_STATUS;		
 	}
 }

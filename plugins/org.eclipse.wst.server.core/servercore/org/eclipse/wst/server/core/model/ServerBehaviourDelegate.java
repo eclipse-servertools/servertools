@@ -653,7 +653,7 @@ public abstract class ServerBehaviourDelegate {
 		IModule m = module[size - 1];
 		monitor.beginTask(NLS.bind(Messages.publishingModule, m.getName()), 1000);
 		
-		IStatus status = new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.publishedModule, m.getName()), null);
+		IStatus status = Status.OK_STATUS;
 		try {
 			publishModule(kind, deltaKind, module, monitor);
 		} catch (CoreException ce) {

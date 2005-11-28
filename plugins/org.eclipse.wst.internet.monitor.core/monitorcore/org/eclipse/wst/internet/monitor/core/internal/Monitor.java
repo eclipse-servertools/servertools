@@ -253,7 +253,7 @@ public class Monitor implements IMonitor {
 		if (isLocalhost(remoteHost) && localPort == remotePort)
 			return new Status(IStatus.ERROR, MonitorPlugin.PLUGIN_ID, 0, Messages.errorInvalidLocalPort, null);
 	
-		return new Status(IStatus.OK, MonitorPlugin.PLUGIN_ID, 0, Messages.monitorValid, null);
+		return Status.OK_STATUS;
 	}
 
 	protected static boolean isValidHostname(String host) {

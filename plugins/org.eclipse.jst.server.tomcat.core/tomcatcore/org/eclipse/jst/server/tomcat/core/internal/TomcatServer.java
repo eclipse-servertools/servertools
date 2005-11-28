@@ -250,7 +250,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			}
 		}
 		
-		return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, "", null);
+		return Status.OK_STATUS;
 	}
 
 	public ServerPort[] getServerPorts() {

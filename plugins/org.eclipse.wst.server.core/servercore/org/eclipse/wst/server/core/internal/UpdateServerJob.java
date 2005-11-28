@@ -32,6 +32,6 @@ public class UpdateServerJob extends ChainedJob {
 	public IStatus run(IProgressMonitor monitor) {
 		getServer().loadAdapter(ServerBehaviourDelegate.class, monitor);
 		
-		return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null);
+		return Status.OK_STATUS;
 	}
 }

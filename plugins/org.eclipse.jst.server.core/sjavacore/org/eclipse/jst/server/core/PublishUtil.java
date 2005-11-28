@@ -118,8 +118,10 @@ public class PublishUtil {
 			out = null;
 			
 			if (file.exists()) {
-				if (!file.delete())
+				if (!file.delete()) {
+					tempFile.delete();
 					throw new Exception(NLS.bind(Messages.errorDelete, file.toString()));
+				}
 			}
 			if (!tempFile.renameTo(file))
 				throw new Exception(NLS.bind(Messages.errorRename, tempFile.toString(), file.toString()));
@@ -130,6 +132,8 @@ public class PublishUtil {
 			Trace.trace(Trace.SEVERE, "Error copying file", e);
 			throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCopyingFile, to.toOSString(), e.getLocalizedMessage()), e));
 		} finally {
+			if (tempFile != null && tempFile.exists())
+				tempFile.deleteOnExit();
 			try {
 				if (in != null)
 					in.close();
@@ -364,16 +368,19 @@ public class PublishUtil {
 			zout.close();
 			
 			if (file.exists()) {
-				if (!file.delete())
+				if (!file.delete()) {
+					tempFile.delete();
 					throw new Exception(NLS.bind(Messages.errorDelete, file.toString()));
+				}
 			}
 			if (!tempFile.renameTo(file))
 				throw new Exception(NLS.bind(Messages.errorRename, tempFile.toString(), file.toString()));
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error zipping", e);
+			throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCreatingZipFile, zipPath.lastSegment(), e.getLocalizedMessage()), e));
+		} finally {
 			if (tempFile != null && tempFile.exists())
 				tempFile.deleteOnExit();
-			throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCreatingZipFile, zipPath.lastSegment(), e.getLocalizedMessage()), e));
 		}
 	}
 
@@ -410,73 +417,4 @@ public class PublishUtil {
 			zout.closeEntry();
 		}
 	}
-	/**
-	 * Expand a zip file to a given directory.
-	 *
-	 * @param zipFile java.io.File
-	 * @param dir java.io.File
-	 * @param monitor
-	 */
-	/*public static void expandZip(File zipFile, File dir, IProgressMonitor monitor) {
-		ZipInputStream zis = null;
-	
-		try {
-			// first, count number of items in zip file
-			zis = new ZipInputStream(new FileInputStream(zipFile));
-			int count = 0;
-			while (zis.getNextEntry() != null)
-				count++;
-	
-			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(ServerPlugin.getResource("%unZippingTask", new String[] {zipFile.getName()}), count);
-			
-			zis = new ZipInputStream(new FileInputStream(zipFile));
-			ZipEntry ze = zis.getNextEntry();
-	
-			FileOutputStream out = null;
-	
-			while (ze != null) {
-				try {
-					monitor.subTask(ServerPlugin.getResource("%expandingTask", new String[] {ze.getName()}));
-					File f = new File(dir, ze.getName());
-	
-					if (ze.isDirectory()) {
-						out = null;
-						f.mkdirs();
-					} else {
-						out = new FileOutputStream(f);
-	
-						int avail = zis.read(buf);
-						while (avail > 0) {
-							out.write(buf, 0, avail);
-							avail = zis.read(buf);
-						}
-					}
-				} catch (FileNotFoundException ex) {
-					Trace.trace(Trace.SEVERE, "Error extracting " + ze.getName() + " from zip " + zipFile.getAbsolutePath(), ex);
-				} finally {
-					try {
-						if (out != null)
-							out.close();
-					} catch (Exception e) {
-						// ignore
-					}
-				}
-				ze = zis.getNextEntry();
-				monitor.worked(1);
-				if (monitor.isCanceled())
-					return;
-			}
-			monitor.done();
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error expanding zip file " + zipFile.getAbsolutePath(), e);
-		} finally {
-			try {
-				if (zis != null)
-					zis.close();
-			} catch (Exception ex) {
-				// ignore
-			}
-		}
-	}*/
 }

@@ -609,7 +609,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 				return ms;
 			}
 			Trace.trace(Trace.FINER, "Server.xml updated with context.xml configurations");
-			return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, Messages.serverPostProcessingComplete, null);
+			return Status.OK_STATUS;
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Could not apply context configurations to published Tomcat v5.0 configuration from " + confDir.toOSString() + ": " + e.getMessage());
 			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPublishConfiguration, new String[] {e.getLocalizedMessage()}), e);
@@ -759,7 +759,6 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 								Trace.trace(Trace.FINER, "Leftover context file " + fileName + " deleted.");
 								ms.add(new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0,
 										NLS.bind(Messages.deletedContextFile, fileName), null));
-								
 							} else {
 								Trace.trace(Trace.SEVERE, "Could not delete obsolete context file " + contextPath.toOSString());
 								ms.add(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0,
@@ -819,6 +818,6 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 		if (!temp.exists())
 			temp.mkdirs();
 
-		return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, Messages.runtimeDirPrepared, null);		
+		return Status.OK_STATUS;		
 	}
 }

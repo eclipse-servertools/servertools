@@ -200,7 +200,7 @@ public class TaskWizard implements IWizard {
 								Trace.trace(Trace.SEVERE, "Error finishing wizard job", ce);
 								return new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, ce.getLocalizedMessage(), null);
 							}
-							return new Status(IStatus.OK, ServerUIPlugin.PLUGIN_ID, 0, "", null);
+							return Status.OK_STATUS;
 						}
 					}
 					

@@ -95,7 +95,7 @@ public class FileUtil {
 				out.write(buf, 0, avail);
 				avail = in.read(buf);
 			}
-			return new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.copyingTask, new String[] {to}), null);
+			return Status.OK_STATUS;
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error copying file", e);
 			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCopyingFile, new String[] {to, e.getLocalizedMessage()}), e);

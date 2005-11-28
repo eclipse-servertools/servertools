@@ -291,7 +291,7 @@ public class ServerPlugin extends Plugin {
 
 			public IStatus run(IProgressMonitor monitor2) {
 				ResourceManager.getInstance().shutdownBundle(bundleId);
-				return new Status(IStatus.OK, PLUGIN_ID, 0, "", null);
+				return Status.OK_STATUS;
 			}
 		}
 		
