@@ -7,8 +7,6 @@
       </appInfo>
       <documentation>
          This extension point is used to load a secondary plugin. The extension point will be called when the monitor core plugin starts up.
-
-This extension point is internal and should not be used by any other plugins.
       </documentation>
    </annotation>
 
@@ -69,6 +67,15 @@ This extension point is internal and should not be used by any other plugins.
          </attribute>
       </complexType>
    </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         &lt;b&gt;This extension point is internal and should not be used by any other plugins.&lt;/b&gt;
+      </documentation>
+   </annotation>
 
    <annotation>
       <appInfo>
