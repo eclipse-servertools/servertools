@@ -973,24 +973,38 @@ public class ServerPlugin extends Plugin {
 		if (installableRuntimes == null)
 			loadInstallableRuntimes();
 		
-		/*List availableServers = new ArrayList();
-		Iterator iterator = installableServers.iterator();
-		IRuntimeType[] runtimeTypes = ServerCore.getRuntimeTypes();
-		int size = runtimeTypes.length;
-		while (iterator.hasNext()) {
-			IInstallableServer server = (IInstallableServer) iterator.next();
-			boolean found = false;
-			for (int i = 0; i < size; i++) {
-				if (server.getId().equals(runtimeTypes[i].getId()))
-					found = true;
-			}
-			if (!found)
-				availableServers.add(server);
-		}*/
-		
 		IInstallableRuntime[] ir = new IInstallableRuntime[installableRuntimes.size()];
 		installableRuntimes.toArray(ir);
 		return ir;
+	}
+
+	/**
+	 * Returns the installable runtime for the given runtime type, or <code>null</code>
+	 * if none exists.
+	 * 
+	 * @param runtimeTypeId a runtime type id
+	 * @return the installable runtime for the given runtime type, or <code>null</code>
+	 *    if none exists {@link IInstallableRuntime}
+	 */
+	public static IInstallableRuntime findInstallableRuntime(String runtimeTypeId) {
+		if (runtimeTypeId == null)
+			throw new IllegalArgumentException();
+		
+		if (installableRuntimes == null)
+			loadInstallableRuntimes();
+		
+		Iterator iterator = installableRuntimes.iterator();
+		IRuntimeType[] runtimeTypes = ServerCore.getRuntimeTypes();
+		int size = runtimeTypes.length;
+		while (iterator.hasNext()) {
+			IInstallableRuntime runtime = (IInstallableRuntime) iterator.next();
+			for (int i = 0; i < size; i++) {
+				if (runtime.getId().equals(runtimeTypeId))
+					return runtime;
+			}
+		}
+		
+		return null;
 	}
 
 	/**

@@ -146,9 +146,10 @@ public class TomcatRuntimeComposite extends Composite {
 			}
 		});
 		
-		label = new Label(this, SWT.NONE);
-		
-		if (ServerPlugin.getInstallableRuntimes().length > 0) {
+		final IInstallableRuntime ir = ServerPlugin.findInstallableRuntime("org.eclipse.jst.server.timcat.runtime.32");
+		if (ir != null) {
+			label = new Label(this, SWT.NONE);
+			
 			Button install = SWTUtil.createButton(this, Messages.install);
 			install.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent se) {
@@ -158,10 +159,9 @@ public class TomcatRuntimeComposite extends Composite {
 					String selectedDirectory = dialog.open();
 					if (selectedDirectory != null) {
 						try {
-							IInstallableRuntime ir = ServerPlugin.getInstallableRuntimes()[0];
 							ir.install(new Path(selectedDirectory), new NullProgressMonitor());
 						} catch (Exception e) {
-							e.printStackTrace();
+							Trace.trace(Trace.SEVERE, "Error installing runtime", e);
 						}
 						installDir.setText(selectedDirectory);
 					}
