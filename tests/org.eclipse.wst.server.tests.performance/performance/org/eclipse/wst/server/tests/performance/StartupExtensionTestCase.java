@@ -27,7 +27,6 @@ public class StartupExtensionTestCase extends PerformanceTestCase {
 		tagAsGlobalSummary("Runtime/Server startup", dims);
 		startMeasuring();
 		ServerCore.getRuntimes();
-		ServerCore.getRuntimeTargetHandlers();
 		ServerCore.getRuntimeTypes();
 		ServerCore.getServers();
 		ServerCore.getServerTypes();

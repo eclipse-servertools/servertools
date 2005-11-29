@@ -10,54 +10,38 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core.tests;
 
-import org.eclipse.jst.server.core.ClasspathRuntimeTargetHandler;
-import org.eclipse.jst.server.core.tests.impl.TestClasspathRuntimeTargetHandler;
+import org.eclipse.jst.server.core.RuntimeClasspathProviderDelegate;
+import org.eclipse.jst.server.core.tests.impl.TestRuntimeClasspathProviderDelegate;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-public class ClasspathRuntimeTargetHandlerTestCase extends TestCase {
-	protected static ClasspathRuntimeTargetHandler handler;
+public class RuntimeClasspathProviderDelegateTestCase extends TestCase {
+	protected static RuntimeClasspathProviderDelegate handler;
 
 	public static Test suite() {
-		return new OrderedTestSuite(ClasspathRuntimeTargetHandlerTestCase.class, "ClasspathRuntimeTargetHandlerTestCase");
+		return new OrderedTestSuite(RuntimeClasspathProviderDelegateTestCase.class, "RuntimeClasspathProviderDelegateTestCase");
 	}
 
 	public void test00Create() {
-		handler = new TestClasspathRuntimeTargetHandler();
+		handler = new TestRuntimeClasspathProviderDelegate();
 	}
 
 	public void test01GetClasspathContainerLabel() {
 		handler.getClasspathContainerLabel(null, null);
 	}
 
-	public void test02GetClasspathEntryIds() {
-		handler.getClasspathEntryIds();
-	}
-
 	public void test03ResolveClasspathContainer() {
 		handler.resolveClasspathContainer(null, null);
 	}
-	
+
 	public void test04ResolveClasspathContainerImpl() {
 		handler.resolveClasspathContainerImpl(null, null);
 	}
-	
+
 	public void test05TestAddMethods() {
-		((TestClasspathRuntimeTargetHandler) handler).testAddMethods();
+		((TestRuntimeClasspathProviderDelegate) handler).testAddMethods();
 	}
-	
-	public void test06SetRuntimeTarget() throws Exception {
-		handler.setRuntimeTarget(null, null, null);
-	}
-	
-	public void test07RemoveRuntimeTarget() {
-		handler.removeRuntimeTarget(null, null, null);
-	}
-	
-	public void test09GetDelegateClasspathEntries() {
-		handler.getDelegateClasspathEntries(null, null);
-	}
-	
+
 	public void test10RequestClasspathContainerUpdate() {
 		handler.requestClasspathContainerUpdate(null, null, null);
 	}

@@ -20,6 +20,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.ProjectProperties;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.core.model.ServerDelegate;
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
@@ -34,7 +36,7 @@ import org.eclipse.wst.server.core.tests.OrderedTestSuite;
  */
 public abstract class AbstractServerTestCase extends TestCase {
 	protected static IProject project;
-	protected static IProjectProperties props;
+	protected static ProjectProperties props;
 	
 	protected static IServer server;
 	protected static IServerAttributes serverAttr;
@@ -78,7 +80,7 @@ public abstract class AbstractServerTestCase extends TestCase {
 			project.create(null);
 			project.open(null);
 		}
-		props = ServerCore.getProjectProperties(project);
+		props = ServerPlugin.getProjectProperties(project);
 	}
 
 	public void test0004End() throws Exception {

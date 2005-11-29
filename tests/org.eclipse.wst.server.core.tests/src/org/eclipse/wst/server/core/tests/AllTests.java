@@ -47,7 +47,6 @@ public class AllTests {
 		suite.addTestSuite(StartupExtensionTestCase.class);
 		suite.addTestSuite(ModuleFactoriesTestCase.class);
 		suite.addTestSuite(RuntimeTypesTestCase.class);
-		suite.addTestSuite(RuntimeTargetHandlersTestCase.class);
 		suite.addTestSuite(RuntimeLocatorsTestCase.class);
 		suite.addTestSuite(ServerTypesTestCase.class);
 		suite.addTestSuite(ServerTasksTestCase.class);
@@ -77,7 +76,6 @@ public class AllTests {
 		suite.addTest(new OrderedTestSuite(ClientDelegateTestCase.class));
 		suite.addTest(new OrderedTestSuite(RuntimeLocatorDelegateTestCase.class));
 		suite.addTest(new OrderedTestSuite(ModuleDelegateTestCase.class));
-		suite.addTest(new OrderedTestSuite(RuntimeTargetHandlersTestCase.class));
 		suite.addTest(new OrderedTestSuite(RuntimeDelegateTestCase.class));
 		suite.addTest(new OrderedTestSuite(ServerDelegateTestCase.class));
 		suite.addTest(new OrderedTestSuite(ServerBehaviourDelegateTestCase.class));

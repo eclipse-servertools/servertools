@@ -20,7 +20,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.ProjectProperties;
 import org.eclipse.wst.server.core.internal.Runtime;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 /**
@@ -34,7 +36,7 @@ import org.eclipse.wst.server.core.tests.OrderedTestSuite;
  */
 public abstract class AbstractRuntimeTestCase extends TestCase {
 	protected static IProject project;
-	protected static IProjectProperties props;
+	protected static ProjectProperties props;
 
 	protected static IRuntime runtime;
 	protected static IRuntimeWorkingCopy runtimeWC;
@@ -66,7 +68,7 @@ public abstract class AbstractRuntimeTestCase extends TestCase {
 			project.create(null);
 			project.open(null);
 		}
-		props = ServerCore.getProjectProperties(project);
+		props = ServerPlugin.getProjectProperties(project);
 	}
 
 	public void test0001GetRuntime() throws Exception {

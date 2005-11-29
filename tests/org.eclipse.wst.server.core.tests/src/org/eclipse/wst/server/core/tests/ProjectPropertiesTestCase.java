@@ -15,12 +15,12 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.ProjectProperties;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 
 public class ProjectPropertiesTestCase extends TestCase {
 	protected static IProject project;
-	protected static IProjectProperties props;
+	protected static ProjectProperties props;
 
 	public static Test suite() {
 		return new OrderedTestSuite(ProjectPropertiesTestCase.class, "AbstractServerTestCase");
@@ -32,7 +32,7 @@ public class ProjectPropertiesTestCase extends TestCase {
 			project.create(null);
 			project.open(null);
 		}
-		props = ServerCore.getProjectProperties(project);
+		props = ServerPlugin.getProjectProperties(project);
 	}
 
 	public void test03GetRuntime() throws Exception {
@@ -40,19 +40,17 @@ public class ProjectPropertiesTestCase extends TestCase {
 	}
 
 	public void test04GetServerProject() throws Exception {
-		assertFalse(((ProjectProperties) props).isServerProject());
+		assertFalse(props.isServerProject());
 	}
 
 	public void test10SetServerProject() throws Exception {
-		ProjectProperties pp = (ProjectProperties) props;
-		pp.setServerProject(true, null);
-		assertTrue(pp.isServerProject());
+		props.setServerProject(true, null);
+		assertTrue(props.isServerProject());
 	}
 
 	public void test11UnsetServerProject() throws Exception {
-		ProjectProperties pp = (ProjectProperties) props;
-		pp.setServerProject(false, null);
-		assertFalse(pp.isServerProject());
+		props.setServerProject(false, null);
+		assertFalse(props.isServerProject());
 	}
 
 	public void test14End() throws Exception {

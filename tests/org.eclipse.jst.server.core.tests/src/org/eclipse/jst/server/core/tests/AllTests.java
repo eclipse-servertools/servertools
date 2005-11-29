@@ -32,7 +32,7 @@ public class AllTests {
 		suite.addTest(new OrderedTestSuite(JndiObjectTestCase.class));
 		suite.addTest(new OrderedTestSuite(JndiLaunchableTestCase.class));
 		
-		suite.addTest(new OrderedTestSuite(ClasspathRuntimeTargetHandlerTestCase.class));
+		suite.addTest(new OrderedTestSuite(RuntimeClasspathProviderDelegateTestCase.class));
 		//$JUnit-END$
 		return suite;
 	}

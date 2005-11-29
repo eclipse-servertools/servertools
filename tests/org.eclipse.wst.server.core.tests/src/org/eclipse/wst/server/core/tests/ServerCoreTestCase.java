@@ -67,36 +67,23 @@ public class ServerCoreTestCase extends TestCase {
 	public void testFindServers1Extension() throws Exception {
 		assertTrue(ServerCore.findServer("x") == null);
 	}
-	
+
 	public void testDefaultRuntimeExtension() throws Exception {
 		ResourceManager.getInstance().getDefaultRuntime();
 	}
-	
-	public void testFindRuntimeTargetHandlers0Extension() throws Exception {
-		try {
-			ServerCore.findRuntimeTargetHandler(null);
-			assertTrue("Should throw exception", false);
-		} catch (Exception e) {
-			// ignore
-		}
-	}
-	
-	public void testFindRuntimesTargetHandler1Extension() throws Exception {
-		assertTrue(ServerCore.findRuntimeTargetHandler("x") == null);
-	}
-	
+
 	public void testAddRuntimeLifecycleListener() {
 		ServerCore.addRuntimeLifecycleListener(null);
 	}
-	
+
 	public void testRemoveRuntimeLifecycleListener() {
 		ServerCore.removeRuntimeLifecycleListener(null);
 	}
-	
+
 	public void testAddServerLifecycleListener() {
 		ServerCore.addServerLifecycleListener(null);
 	}
-	
+
 	public void testRemoveServerLifecycleListener() {
 		ServerCore.removeServerLifecycleListener(null);
 	}

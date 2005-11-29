@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core.tests.impl;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jst.server.core.IEnterpriseApplication;
 import org.eclipse.jst.server.core.IJ2EEModule;
@@ -37,6 +38,10 @@ public class TestEnterpriseApplication implements IEnterpriseApplication {
 	}
 
 	public String getURI(IModule module) {
+		return null;
+	}
+
+	public IContainer[] getResourceFolders() {
 		return null;
 	}
 }
