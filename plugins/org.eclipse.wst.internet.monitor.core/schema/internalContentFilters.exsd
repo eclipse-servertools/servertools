@@ -73,7 +73,7 @@ Content filter instances of this type will delegate to instances of this class.
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="order" type="string">
+         <attribute name="order" type="int">
             <annotation>
                <documentation>
                   an integer used to order filters relative to each other. Lower orders are processed first
@@ -85,15 +85,6 @@ Content filter instances of this type will delegate to instances of this class.
          </attribute>
       </complexType>
    </element>
-
-   <annotation>
-      <appInfo>
-         <meta.section type="since"/>
-      </appInfo>
-      <documentation>
-         1.0
-      </documentation>
-   </annotation>
 
    <annotation>
       <appInfo>
@@ -129,7 +120,7 @@ Content filter instances of this type will delegate to instances of this class.
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-         Copyright (c) 2003, 2005 IBM Corporation and others.&lt;br&gt;
+         Copyright (c) 2003, 2004 IBM Corporation and others.&lt;br&gt;
 All rights reserved. This program and the accompanying materials are made 
 available under the terms of the Eclipse Public License v1.0 which accompanies 
 this distribution, and is available at 
