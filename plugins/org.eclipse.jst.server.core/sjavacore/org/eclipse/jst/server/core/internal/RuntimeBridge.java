@@ -124,7 +124,7 @@ public class RuntimeBridge implements IRuntimeBridge {
 			RuntimeClasspathProviderWrapper rcpw = JavaServerPlugin.findRuntimeClasspathProvider(runtime.getRuntimeType());
 			if (rcpw != null) {
 				IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER);
-				path = path.append(rcpw.getId()).append(runtime.getName());
+				path = path.append(rcpw.getId()).append(runtime.getId());
 				properties.put(CLASSPATH, path.toPortableString());
 			}
 			
