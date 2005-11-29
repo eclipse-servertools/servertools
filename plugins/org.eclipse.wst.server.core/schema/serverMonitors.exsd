@@ -92,6 +92,15 @@ This extension point is internal and should not be used by any other plugins.
 
    <annotation>
       <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         1.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
          <meta.section type="examples"/>
       </appInfo>
       <documentation>

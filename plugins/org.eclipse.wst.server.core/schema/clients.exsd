@@ -102,6 +102,15 @@ Clieint instances of this type will delegate to instances of this class to launc
 
    <annotation>
       <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         1.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
