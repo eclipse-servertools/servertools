@@ -93,21 +93,21 @@
          <attribute name="featureId" type="string" use="required">
             <annotation>
                <documentation>
-                  the feature id
+                  the id of the feature containing the server adapter bundle
                </documentation>
             </annotation>
          </attribute>
          <attribute name="featureVersion" type="string" use="required">
             <annotation>
                <documentation>
-                  the feature version
+                  the version of the feature containing the server adapter bundle
                </documentation>
             </annotation>
          </attribute>
          <attribute name="featureSite" type="string" use="required">
             <annotation>
                <documentation>
-                  the feature site URL
+                  the feature (update manager) site URL
                </documentation>
             </annotation>
          </attribute>
@@ -133,6 +133,16 @@
 &lt;p&gt;
 &lt;pre&gt;
   &lt;extension point=&quot;org.eclipse.wst.server.core.installableServers&quot;&gt;
+    &lt;installableServer
+       id=&quot;com.myserver.id&quot;
+       name=&quot;My runtime name&quot;
+       description=&quot;My runtime description&quot;
+       vendor=&quot;xyz&quot;
+       version=&quot;1.0&quot;
+       featureVersion=&quot;1.0.0&quot;
+       featureId=&quot;com.myfeature&quot;
+       featureSite=&quot;xyz&quot;&gt;
+    &lt;/installableServer&gt;
   &lt;/extension&gt;
 &lt;/pre&gt;
 &lt;/p&gt;

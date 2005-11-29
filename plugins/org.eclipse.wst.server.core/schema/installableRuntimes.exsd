@@ -59,28 +59,28 @@
          <attribute name="featureId" type="string" use="required">
             <annotation>
                <documentation>
-                  the feature id
+                  the id of the feature containing the runtime bundle
                </documentation>
             </annotation>
          </attribute>
          <attribute name="featureVersion" type="string" use="required">
             <annotation>
                <documentation>
-                  the feature version
+                  the version of the feature containing the runtime bundle
                </documentation>
             </annotation>
          </attribute>
          <attribute name="featureSite" type="string" use="required">
             <annotation>
                <documentation>
-                  the feature site URL
+                  the feature (update manager) site URL
                </documentation>
             </annotation>
          </attribute>
          <attribute name="bundleId" type="string" use="required">
             <annotation>
                <documentation>
-                  the bundle in which the runtime zip is in
+                  the id of the bundle in which the runtime zip is in
                </documentation>
             </annotation>
          </attribute>
@@ -113,6 +113,14 @@
 &lt;p&gt;
 &lt;pre&gt;
   &lt;extension point=&quot;org.eclipse.wst.server.core.installableRuntimes&quot;&gt;
+    &lt;installableRuntime
+       id=&quot;com.myruntime.id&quot;
+       featureVersion=&quot;1.0.0&quot;
+       featureId=&quot;com.myfeature&quot;
+       featureSite=&quot;xyz&quot;
+       bundleId=&quot;com.ibm.mybundle&quot;
+       path=&quot;/zips/myRuntime.zip&quot;&gt;
+    &lt;/installableRuntime&gt;
   &lt;/extension&gt;
 &lt;/pre&gt;
 &lt;/p&gt;
