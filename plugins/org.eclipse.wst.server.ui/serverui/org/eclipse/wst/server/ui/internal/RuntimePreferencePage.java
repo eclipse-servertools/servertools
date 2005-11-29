@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -297,7 +295,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 			}
 		}
 		
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		/*IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		if (projects != null) {
 			int size = projects.length;
 			for (int i = 0; i < size; i++) {
@@ -305,7 +303,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 				if (runtime.equals(props.getRuntimeTarget()))
 					inUse = true;
 			}
-		}
+		}*/
 		
 		if (inUse) {
 			if (!MessageDialog.openConfirm(getShell(), Messages.defaultDialogTitle, Messages.dialogRuntimeInUse))

@@ -127,7 +127,7 @@ public class ResourceManager {
 		 * @param delta org.eclipse.core.resources.IResourceDelta
 		 */
 		protected void projectChanged(IProject project, IResourceDelta delta) {
-			if (!((ProjectProperties)ServerCore.getProjectProperties(project)).isServerProject()) {
+			if (!ServerPlugin.getProjectProperties(project).isServerProject()) {
 				Trace.trace(Trace.RESOURCES, "Not a server project: " + project.getName());
 				return;
 			}
@@ -203,7 +203,7 @@ public class ResourceManager {
 		if (projects != null) {
 			int size = projects.length;
 			for (int i = 0; i < size; i++) {
-				if (((ProjectProperties)ServerCore.getProjectProperties(projects[i])).isServerProject())
+				if (ServerPlugin.getProjectProperties(projects[i]).isServerProject())
 					loadFromProject(projects[i]);
 			}
 		}
@@ -817,7 +817,7 @@ public class ResourceManager {
 		IPath fromPath = delta.getMovedFromPath();
 		if (fromPath != null) {
 			IFile fromFile = ResourcesPlugin.getWorkspace().getRoot().getFile(fromPath);
-			if (((ProjectProperties)ServerCore.getProjectProperties(fromFile.getProject())).isServerProject()) {
+			if (ServerPlugin.getProjectProperties(fromFile.getProject()).isServerProject()) {
 				Server server = (Server) findServer(fromFile);
 				if (server != null)
 					server.file = file;
@@ -827,7 +827,7 @@ public class ResourceManager {
 		} else {
 			IPath toPath = delta.getMovedToPath();
 			IFile toFile = ResourcesPlugin.getWorkspace().getRoot().getFile(toPath);
-			if (((ProjectProperties)ServerCore.getProjectProperties(toFile.getProject())).isServerProject()) {
+			if (ServerPlugin.getProjectProperties(toFile.getProject()).isServerProject()) {
 				Server server = (Server) findServer(file);
 				if (server != null)
 					server.file = toFile;

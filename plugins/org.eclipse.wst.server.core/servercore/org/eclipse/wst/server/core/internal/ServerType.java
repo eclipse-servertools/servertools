@@ -271,7 +271,7 @@ public class ServerType implements IServerType {
 		if (projects != null) {
 			int size = projects.length;
 			for (int i = 0; i < size; i++) {
-				if (((ProjectProperties)ServerCore.getProjectProperties(projects[i])).isServerProject())
+				if (ServerPlugin.getProjectProperties(projects[i]).isServerProject())
 					return projects[i];
 			}
 		}
@@ -280,7 +280,7 @@ public class ServerType implements IServerType {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(s);
 		project.create(null);
 		project.open(null);
-		((ProjectProperties)ServerCore.getProjectProperties(project)).setServerProject(true, null);
+		ServerPlugin.getProjectProperties(project).setServerProject(true, null);
 		return project;
 	}
 

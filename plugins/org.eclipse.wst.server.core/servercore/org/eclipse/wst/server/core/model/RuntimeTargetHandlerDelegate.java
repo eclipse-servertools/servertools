@@ -24,24 +24,17 @@ import org.eclipse.wst.server.core.IRuntimeTargetHandler;
  * to extend the <code>runtimeTargetHandlers</code> extension point.
  * </p>
  * <p>
- * <b>Provisional API:</b> This class/interface is part of an interim API that is still under development and expected to 
- * change significantly before reaching stability. It is being made available at this early stage to solicit feedback 
- * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
- * (repeatedly) as the API evolves.
- * </p>
  * 
  * @deprecated This function is deprecated.
  */
 public abstract class RuntimeTargetHandlerDelegate {
-	private IRuntimeTargetHandler handler;
-
 	/**
 	 * Initializes the runtime target handler.
 	 * 
 	 * @param newHandler the new handler
 	 */
 	public final void initialize(IRuntimeTargetHandler newHandler) {
-		handler = newHandler;
+		throw new RuntimeException("Attempt to use deprecated code");
 	}
 
 	/**
@@ -50,7 +43,7 @@ public abstract class RuntimeTargetHandlerDelegate {
 	 * @return the runtime target handler
 	 */
 	public IRuntimeTargetHandler getRuntimeTargetHandler() {
-		return handler;
+		throw new RuntimeException("Attempt to use deprecated code");
 	}
 
 	/**

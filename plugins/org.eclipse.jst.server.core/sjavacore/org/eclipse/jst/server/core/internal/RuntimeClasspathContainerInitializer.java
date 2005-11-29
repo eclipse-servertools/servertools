@@ -13,9 +13,7 @@ package org.eclipse.jst.server.core.internal;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.*;
-import org.eclipse.jst.server.core.*;
 import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.IRuntimeTargetHandler;
 import org.eclipse.wst.server.core.ServerCore;
 /**
  * 
@@ -28,22 +26,18 @@ public class RuntimeClasspathContainerInitializer extends ClasspathContainerInit
 		if (containerPath.segmentCount() > 0) {
 			if (containerPath.segment(0).equals(RuntimeClasspathContainer.SERVER_CONTAINER)) {
 				RuntimeClasspathProviderWrapper delegate = null;
-				ClasspathRuntimeTargetHandler crth = null;
 				IRuntime runtime = null;
 				String id = "";
 				if (containerPath.segmentCount() > 2) {
 					delegate = JavaServerPlugin.findRuntimeClasspathProvider(containerPath.segment(1));
 					
-					IRuntimeTargetHandler handler = ServerCore.findRuntimeTargetHandler(containerPath.segment(1));
-					if (handler != null)
-						crth = (ClasspathRuntimeTargetHandler) handler.getAdapter(ClasspathRuntimeTargetHandler.class);
 					String runtimeId = containerPath.segment(2);
 					if (runtimeId != null)
 						runtime = ServerCore.findRuntime(runtimeId);
 					if (containerPath.segmentCount() > 3)
 						id = containerPath.segment(3);
 				}
-				RuntimeClasspathContainer container = new RuntimeClasspathContainer(containerPath, delegate, crth, runtime, id);
+				RuntimeClasspathContainer container = new RuntimeClasspathContainer(containerPath, delegate, runtime, id);
 				JavaCore.setClasspathContainer(containerPath, new IJavaProject[] {project}, new IClasspathContainer[] {container}, null);
 			}
 		}
@@ -69,20 +63,17 @@ public class RuntimeClasspathContainerInitializer extends ClasspathContainerInit
 	public void requestClasspathContainerUpdate(IPath containerPath, IJavaProject project, IClasspathContainer containerSuggestion) throws CoreException {
 		if (containerPath.segmentCount() > 0) {
 			if (containerPath.segment(0).equals(RuntimeClasspathContainer.SERVER_CONTAINER)) {
-				ClasspathRuntimeTargetHandler crth = null;
+				RuntimeClasspathProviderWrapper delegate = null;
 				IRuntime runtime = null;
 				String id = "";
 				if (containerPath.segmentCount() > 2) {
-					IRuntimeTargetHandler handler = ServerCore.findRuntimeTargetHandler(containerPath.segment(1));
-					if (handler != null) {
-						crth = (ClasspathRuntimeTargetHandler) handler.getAdapter(ClasspathRuntimeTargetHandler.class);
-					}
+					delegate = JavaServerPlugin.findRuntimeClasspathProvider(containerPath.segment(1));
 					String runtimeId = containerPath.segment(2);
 					if (runtimeId != null)
 						runtime = ServerCore.findRuntime(runtimeId);
 					if (containerPath.segmentCount() > 3)
 						id = containerPath.segment(3);
-					crth.requestClasspathContainerUpdate(runtime, id, containerSuggestion.getClasspathEntries());
+					delegate.requestClasspathContainerUpdate(runtime, id, containerSuggestion.getClasspathEntries());
 				}
 			}
 		}

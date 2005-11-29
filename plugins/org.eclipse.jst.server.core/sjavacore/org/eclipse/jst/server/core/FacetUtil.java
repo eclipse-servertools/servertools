@@ -24,7 +24,6 @@ import org.eclipse.wst.server.core.ServerCore;
  * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
  * (repeatedly) as the API evolves.
  * </p>
- * @plannedfor 1.5
  */
 public class FacetUtil {
 	/**

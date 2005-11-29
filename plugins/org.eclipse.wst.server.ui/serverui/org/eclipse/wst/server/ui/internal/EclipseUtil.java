@@ -21,9 +21,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.internal.ProjectProperties;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 /**
  * Eclipse utility methods.
  */
@@ -64,7 +63,7 @@ public class EclipseUtil {
 				return null;
 			
 			// add the server project nature
-			((ProjectProperties)ServerCore.getProjectProperties(project)).setServerProject(true, monitor);
+			ServerPlugin.getProjectProperties(project).setServerProject(true, monitor);
 			
 			if (monitor.isCanceled())
 				return null;

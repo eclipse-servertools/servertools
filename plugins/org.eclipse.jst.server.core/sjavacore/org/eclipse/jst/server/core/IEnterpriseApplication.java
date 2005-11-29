@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.wst.server.core.IModule;
 /**
  * A representation of a J2EE enterprise application (EAR file).
@@ -24,19 +25,26 @@ import org.eclipse.wst.server.core.IModule;
 public interface IEnterpriseApplication {
 	/**
 	 * Returns the modules contained within this EAR. The returned modules will
-	 * either be J2EE modules (which will be adaptable to IJ2EEModule) and
+	 * either be J2EE modules (which will be adaptable to IJ2EEModule) or
 	 * utility jars contained in the EAR.
-	 *
+	 * 
 	 * @return a possibly empty array of modules contained within this application
 	 */
 	public IModule[] getModules();
 
 	/**
 	 * Returns the URI of the given module within this enterprise application.
-	 *
+	 * 
 	 * @param module a module within this application
 	 * @return the URI of the given module, or <code>null</code> if the URI could
 	 *    not be found
 	 */
 	public String getURI(IModule module);
+
+	/**
+	 * Returns the root folders for the resources in this module.
+	 * 
+	 * @return a possibly-empty array of resource folders
+	 */
+	public IContainer[] getResourceFolders();
 }

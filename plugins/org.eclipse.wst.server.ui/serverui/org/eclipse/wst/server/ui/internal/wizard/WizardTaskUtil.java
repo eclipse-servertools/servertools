@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.ProjectProperties;
 import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
 import org.eclipse.wst.server.ui.internal.Trace;
@@ -53,7 +54,7 @@ public class WizardTaskUtil {
 					if (!file.getProject().exists())
 						EclipseUtil.createNewServerProject(null, project.getName(), null, monitor);
 					
-					ProjectProperties pp = (ProjectProperties) ServerCore.getProjectProperties(project);
+					ProjectProperties pp = ServerPlugin.getProjectProperties(project);
 					if (!pp.isServerProject())
 						pp.setServerProject(true, monitor);
 				}
@@ -88,7 +89,7 @@ public class WizardTaskUtil {
 				if (!file.getProject().exists())
 					EclipseUtil.createNewServerProject(null, project.getName(), null, monitor);
 				
-				ProjectProperties pp = (ProjectProperties) ServerCore.getProjectProperties(project);
+				ProjectProperties pp = ServerPlugin.getProjectProperties(project);
 				if (!pp.isServerProject())
 					pp.setServerProject(true, monitor);
 			}
@@ -163,7 +164,7 @@ public class WizardTaskUtil {
 			if (!file.getProject().exists())
 				EclipseUtil.createNewServerProject(null, project.getName(), null, monitor);
 			
-			ProjectProperties pp = (ProjectProperties) ServerCore.getProjectProperties(project);
+			ProjectProperties pp = ServerPlugin.getProjectProperties(project);
 			if (!pp.isServerProject())
 				pp.setServerProject(true, monitor);
 		}

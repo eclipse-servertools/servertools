@@ -12,7 +12,7 @@ package org.eclipse.wst.server.core;
 
 import java.util.*;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.wst.server.core.internal.*;
 /**
@@ -35,9 +35,6 @@ public class ServerCore {
 
 	//	cached copy of all runtime types
 	private static List runtimeTypes;
-
-	//	cached copy of all runtime target handlers
-	private static List runtimeTargetHandlers;
 
 	//	cached copy of all server and configuration types
 	private static List serverTypes;
@@ -94,7 +91,11 @@ public class ServerCore {
 	public static IProjectProperties getProjectProperties(IProject project) {
 		if (project == null)
 			throw new IllegalArgumentException();
-		return new ProjectProperties(project);
+		return new IProjectProperties() {
+			public IRuntime getRuntimeTarget() {
+				return null;
+			}
+		};
 	}
 
 	/**
@@ -150,12 +151,7 @@ public class ServerCore {
 	 *    {@link IRuntimeTargetHandler}
 	 */
 	public static IRuntimeTargetHandler[] getRuntimeTargetHandlers() {
-		if (runtimeTargetHandlers == null)
-			loadRuntimeTargetHandlers();
-		
-		IRuntimeTargetHandler[] rth = new IRuntimeTargetHandler[runtimeTargetHandlers.size()];
-		runtimeTargetHandlers.toArray(rth);
-		return rth;
+		throw new RuntimeException("Attempt to use deprecated code");
 	}
 
 	/**
@@ -170,19 +166,7 @@ public class ServerCore {
 	 *   there is no runtime target handler with the given id
 	 */
 	public static IRuntimeTargetHandler findRuntimeTargetHandler(String id) {
-		if (id == null)
-			throw new IllegalArgumentException();
-
-		if (runtimeTargetHandlers == null)
-			loadRuntimeTargetHandlers();
-		
-		Iterator iterator = runtimeTargetHandlers.iterator();
-		while (iterator.hasNext()) {
-			IRuntimeTargetHandler runtimeTargetListener = (IRuntimeTargetHandler) iterator.next();
-			if (id.equals(runtimeTargetListener.getId()))
-				return runtimeTargetListener;
-		}
-		return null;
+		throw new RuntimeException("Attempt to use deprecated code");
 	}
 
 	/**
@@ -284,32 +268,6 @@ public class ServerCore {
 				Trace.trace(Trace.SEVERE, "  Could not load runtimeType: " + cf[i].getAttribute("id"), t);
 			}
 		}
-	}
-	
-	/**
-	 * Load the runtime target handlers.
-	 */
-	private static synchronized void loadRuntimeTargetHandlers() {
-		if (runtimeTargetHandlers != null)
-			return;
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .runtimeTargetHandlers extension point ->-");
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "runtimeTargetHandlers");
-
-		int size = cf.length;
-		runtimeTargetHandlers = new ArrayList(size);
-		for (int i = 0; i < size; i++) {
-			try {
-				RuntimeTargetHandler runtimeTargetListener = new RuntimeTargetHandler(cf[i]);
-				runtimeTargetHandlers.add(runtimeTargetListener);
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded runtimeTargetHandler: " + cf[i].getAttribute("id"));
-			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load runtimeTargetHandler: " + cf[i].getAttribute("id"), t);
-			}
-		}
-		sortOrderedList(runtimeTargetHandlers);
-		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .runtimeTargetHandlers extension point -<-");
 	}
 
 	/**
@@ -443,31 +401,6 @@ public class ServerCore {
 		getResourceManager().removeServerLifecycleListener(listener);
 	}
 
-	/**
-	 * Sort the given list of IOrdered items into indexed order.
-	 *
-	 * @param list java.util.List
-	 * @return java.util.List
-	 */
-	private static List sortOrderedList(List list) {
-		if (list == null)
-			return null;
-
-		int size = list.size();
-		for (int i = 0; i < size - 1; i++) {
-			for (int j = i + 1; j < size; j++) {
-				IOrdered a = (IOrdered) list.get(i);
-				IOrdered b = (IOrdered) list.get(j);
-				if (a.getOrder() > b.getOrder()) {
-					Object temp = a;
-					list.set(i, b);
-					list.set(j, temp);
-				}
-			}
-		}
-		return list;
-	}
-	
 	/**
 	 * Returns the preferred runtime server for the given module. This method
 	 * returns null if the server was never chosen or does not currently exist. (if the

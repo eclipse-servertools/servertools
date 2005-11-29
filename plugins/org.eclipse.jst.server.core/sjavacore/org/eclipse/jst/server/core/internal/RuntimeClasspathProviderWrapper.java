@@ -124,12 +124,8 @@ public class RuntimeClasspathProviderWrapper {
 		return delegate;
 	}
 
-	/**
-	 * Set the runtime target on the given project.
-	 * 
-	 * @param id
-	 * @param runtime the target runtime
-	 * @return classpath entries
+	/*
+	 * @see RuntimeClasspathProviderDelegate#resolveClasspathContainerImpl(IRuntime, String)
 	 */
 	public IClasspathEntry[] resolveClasspathContainerImpl(IRuntime runtime, String id) {
 		if (runtime == null)
@@ -142,13 +138,8 @@ public class RuntimeClasspathProviderWrapper {
 		return null;
 	}
 
-	/**
-	 * Remove the runtime target from the given project. This method will undo
-	 * all changes made in setRuntimeTarget().
-	 * 
-	 * @param id
-	 * @param runtime the target runtime
-	 * @return a label
+	/*
+	 * @see RuntimeClasspathProviderDelegate#getClasspathContainerLabel(IRuntime, String)
 	 */
 	public String getClasspathContainerLabel(IRuntime runtime, String id) {
 		if (runtime == null)
@@ -159,6 +150,19 @@ public class RuntimeClasspathProviderWrapper {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
 		}
 		return "n/a";
+	}
+
+	/*
+	 * @see RuntimeClasspathProviderDelegate#requestClasspathContainerUpdate(IRuntime, String, IClasspathEntry[])
+	 */
+	public void requestClasspathContainerUpdate(IRuntime runtime, String id, IClasspathEntry[] entries) {
+		if (runtime == null)
+			return;
+		try {
+			getDelegate().requestClasspathContainerUpdate(runtime, id, entries);
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
+		}
 	}
 
 	public String toString() {

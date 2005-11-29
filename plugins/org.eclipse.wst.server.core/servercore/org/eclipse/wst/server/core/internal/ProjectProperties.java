@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.wst.server.core.IProjectProperties;
 import org.eclipse.wst.server.core.IRuntime;
 /**
  * Helper class that stores preference information for the server tools.
@@ -31,7 +30,7 @@ import org.eclipse.wst.server.core.IRuntime;
  * TODO: Currently this class always reads from disk. It should cache the file
  * and have a resource listener.
  */
-public class ProjectProperties implements IProjectProperties {
+public class ProjectProperties {
 	private static final String PREFERENCE_FOLDER = ".settings";
 	private static final String PREFERENCE_FILE = "org.eclipse.wst.server.core.prefs";
 	private static final String SERVER_PROJECT_PREF = "org.eclipse.wst.server.core.isServerProject";

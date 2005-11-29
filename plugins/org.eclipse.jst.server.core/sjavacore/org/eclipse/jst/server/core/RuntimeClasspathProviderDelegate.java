@@ -12,6 +12,7 @@ package org.eclipse.jst.server.core;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
@@ -206,5 +207,75 @@ public abstract class RuntimeClasspathProviderDelegate {
 		if (dir == null)
 			throw new IllegalArgumentException();
 		addJarFiles(dir, list, includeSubdirectories);
+	}
+
+	/**
+	 * Request that the classpath container for the given runtime and id be updated
+	 * with the given classpath container entries.
+	 * 
+	 * @param runtime a runtime
+	 * @param id an id
+	 * @param entries an array of classpath entries
+	 */
+	public void requestClasspathContainerUpdate(IRuntime runtime, String id, IClasspathEntry[] entries) {
+		// default behaviour is to save the source path entries
+		if (runtime == null || entries == null)
+			return;
+		
+		// find the source attachments
+		sourceAttachments = new ArrayList();
+		
+		int size = entries.length;
+		for (int i = 0; i < size; i++) {
+			if (entries[i].getSourceAttachmentPath() != null || entries[i].getExtraAttributes() != null) {
+				SourceAttachmentUpdate sau = new SourceAttachmentUpdate();
+				sau.runtimeId = runtime.getId();
+				sau.id = id;
+				sau.entry = entries[i].getPath();
+				sau.sourceAttachmentPath = entries[i].getSourceAttachmentPath();
+				sau.sourceAttachmentRootPath = entries[i].getSourceAttachmentRootPath();
+				sau.attributes = entries[i].getExtraAttributes();
+				sourceAttachments.add(sau);
+			}
+		}
+		save();
+	}
+
+	private void save() {
+		if (sourceAttachments == null)
+			return;
+		String id = extensionId;
+		String filename = JavaServerPlugin.getInstance().getStateLocation().append(id + ".xml").toOSString();
+		try {
+			XMLMemento memento = XMLMemento.createWriteRoot("classpath");
+
+			Iterator iterator = sourceAttachments.iterator();
+			while (iterator.hasNext()) {
+				SourceAttachmentUpdate sau = (SourceAttachmentUpdate) iterator.next();
+				IMemento child = memento.createChild("source-attachment");
+				child.putString("runtime-id", sau.runtimeId);
+				if (sau.id != null)
+					child.putString("id", sau.id);
+				if (sau.entry != null)
+					child.putString("entry", sau.entry.toPortableString());
+				if (sau.sourceAttachmentPath != null)
+					child.putString("source-attachment-path", sau.sourceAttachmentPath.toPortableString());
+				if (sau.sourceAttachmentRootPath != null)
+					child.putString("source-attachment-root-path", sau.sourceAttachmentRootPath.toPortableString());
+				if (sau.attributes != null) {
+					int size = sau.attributes.length;
+					for (int i = 0; i < size; i++) {
+						IClasspathAttribute attr = sau.attributes[i];
+						IMemento attrChild = child.createChild("attribute");
+						attrChild.putString("name", attr.getName());
+						attrChild.putString("value", attr.getValue());
+					}
+				}
+			}
+			
+			memento.saveToFile(filename);
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error saving source path info", e);
+		}
 	}
 }

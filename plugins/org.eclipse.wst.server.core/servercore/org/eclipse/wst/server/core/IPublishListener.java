@@ -31,15 +31,15 @@ public interface IPublishListener {
 	/**
 	 * Fired to notify that publishing has begun.
 	 *
-	 * @param server
+	 * @param server the server that publishing started on
 	 */
 	public void publishStarted(IServer server);
 
 	/**
 	 * Publishing has finished. Returns the overall status.
 	 *
-	 * @param server
-	 * @param status
+	 * @param server the server that publishing finished on
+	 * @param status indicating what (if anything) went wrong
 	 */
 	public void publishFinished(IServer server, IStatus status);
 }

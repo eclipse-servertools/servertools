@@ -14,6 +14,7 @@ import java.io.*;
 import java.util.*;
 import java.text.DateFormat;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
@@ -1046,5 +1047,18 @@ public class ServerPlugin extends Plugin {
 
 	public static void setRegistryListener(IRegistryChangeListener listener) {
 		registryListener = listener; 
+	}
+
+	/**
+	 * Returns the preference information for the project. The project may not
+	 * be null.
+	 * 
+	 * @param project a project
+	 * @return the properties of the project
+	 */
+	public static ProjectProperties getProjectProperties(IProject project) {
+		if (project == null)
+			throw new IllegalArgumentException();
+		return new ProjectProperties(project);
 	}
 }
