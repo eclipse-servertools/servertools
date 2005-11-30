@@ -788,4 +788,19 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		}
 		return false;
 	}
+
+	/**
+	 * Temporary method to help web services team. Returns the path that the module is
+	 * published to when in test environment mode.
+	 * 
+	 * @param module a module on the server 
+	 * @return the path that the module is published to when in test environment mode,
+	 *    or null if not running as a test environment or the module is not a web module
+	 */
+	public IPath getPublishDirectory(IModule[] module) {
+		if (!getTomcatServer().isTestEnvironment() || module == null || module.length != 1)
+			return null;
+		
+		return getTempDirectory().append("webapps").append(module[0].getName());
+	}
 }

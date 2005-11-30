@@ -202,7 +202,9 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		if (module == null)
 			return null;
 		
-		if (module.length == 1 && "jst.web".equals(module[0].getModuleType().getId())) {
+		IModuleType moduleType = module[0].getModuleType();
+		
+		if (module.length == 1 && moduleType != null && "jst.web".equals(moduleType.getId())) {
 			IWebModule webModule = (IWebModule) module[0].loadAdapter(IWebModule.class, null);
 			if (webModule != null) {
 				IModule[] modules = webModule.getModules();

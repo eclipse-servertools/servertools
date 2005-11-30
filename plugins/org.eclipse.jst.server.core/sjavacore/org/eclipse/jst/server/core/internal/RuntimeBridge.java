@@ -139,7 +139,7 @@ public class RuntimeBridge implements IRuntimeBridge {
 				String jvmver = vmInstall2.getJavaVersion();
 				IRuntimeComponentVersion rcv;
 				
-				if (jvmver.startsWith("1.4"))
+				if (jvmver == null || jvmver.startsWith("1.4"))
 					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("1.4");
 				else if (jvmver.startsWith("1.5"))
 					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("5.0");

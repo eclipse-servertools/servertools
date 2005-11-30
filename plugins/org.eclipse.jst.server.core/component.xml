@@ -29,4 +29,6 @@
   <plugin id="org.eclipse.jst.server.tomcat.core" fragment="false"/>
 
   <plugin id="org.eclipse.jst.server.tomcat.ui" fragment="false"/>
+
+  <plugin id="org.eclipse.jst.server.websphere.core" fragment="false"/>
 </component>
