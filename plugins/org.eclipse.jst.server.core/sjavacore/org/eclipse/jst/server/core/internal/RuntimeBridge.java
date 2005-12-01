@@ -30,6 +30,7 @@ import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeBridge;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponentVersion;
 import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
 import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.ServerCore;
 /**
  * 
@@ -76,10 +77,10 @@ public class RuntimeBridge implements IRuntimeBridge {
 		Set result = new HashSet(runtimes.length);
 		
 		for (int i = 0; i < runtimes.length; i++) {
-			IRuntime r = runtimes[i];
-			
-			if (mappings.containsKey(r.getRuntimeType().getId())) {
-				result.add(r.getName());
+			IRuntime runtime = runtimes[i];
+			IRuntimeType runtimeType = runtime.getRuntimeType();
+			if (runtimeType != null && mappings.containsKey(runtimeType.getId())) {
+				result.add(runtime.getName());
 			}
 		}
 		
