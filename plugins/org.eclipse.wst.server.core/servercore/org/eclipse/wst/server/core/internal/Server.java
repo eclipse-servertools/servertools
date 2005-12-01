@@ -746,7 +746,8 @@ public class Server extends Base implements IServer {
 
 	/**
 	 * Returns the publish tasks that have been targetted to this server.
-	 * These tasks should be run during publishing.
+	 * These tasks should be run during publishing and will be initialized
+	 * with a task model.
 	 * 
 	 * @param kind one of the IServer.PUBLISH_XX constants
 	 * @param moduleList a list of modules
@@ -763,6 +764,9 @@ public class Server extends Base implements IServer {
 			List enabledTasks = getEnabledOptionalPublishOperationIds();
 			List disabledTasks = getDisabledPreferredPublishOperationIds();
 			
+			TaskModel taskModel = new TaskModel();
+			taskModel.putObject(TaskModel.TASK_SERVER, this);
+			
 			int size = publishTasks.length;
 			for (int i = 0; i < size; i++) {
 				IPublishTask task = publishTasks[i];
@@ -773,14 +777,19 @@ public class Server extends Base implements IServer {
 						for (int j = 0; j < size2; j++) {
 							if (tasks2[j].getKind() == PublishOperation.REQUIRED) {
 								tasks.add(tasks2[j]);
+								tasks2[j].setTaskModel(taskModel);
 							} else if (tasks2[j].getKind() == PublishOperation.PREFERRED) {
 								String opId = getPublishOperationId(tasks2[j]);
-								if (!disabledTasks.contains(opId))
+								if (!disabledTasks.contains(opId)) {
 									tasks.add(tasks2[j]);
+									tasks2[j].setTaskModel(taskModel);
+								}
 							} else if (tasks2[j].getKind() == PublishOperation.OPTIONAL) {
 								String opId = getPublishOperationId(tasks2[j]);
-								if (enabledTasks.contains(opId))
+								if (enabledTasks.contains(opId)) {
 									tasks.add(tasks2[j]);
+									tasks2[j].setTaskModel(taskModel);
+								}
 							}
 						}
 					}
@@ -794,7 +803,8 @@ public class Server extends Base implements IServer {
 	}
 	
 	/**
-	 * Returns all publish tasks that have been targetted to this server.
+	 * Returns all publish tasks that have been targetted to this server type.
+	 * The tasks will not be initialized with a task model. 
 	 * 
 	 * @param moduleList a list of modules
 	 * @return an array of publish operations
@@ -812,7 +822,7 @@ public class Server extends Base implements IServer {
 			for (int i = 0; i < size; i++) {
 				IPublishTask task = publishTasks[i];
 				if (task.supportsType(serverTypeId)) {
-					PublishOperation[] tasks2 = task.getTasks(this, modules);
+					PublishOperation[] tasks2 = task.getTasks(this, moduleList);
 					tasks.addAll(Arrays.asList(tasks2));
 				}
 			}

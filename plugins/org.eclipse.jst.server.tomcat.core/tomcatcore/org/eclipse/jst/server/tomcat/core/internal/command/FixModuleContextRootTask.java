@@ -17,6 +17,7 @@ import org.eclipse.jst.server.tomcat.core.internal.*;
 import org.eclipse.osgi.util.NLS;
 
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.core.model.PublishOperation;
@@ -51,7 +52,13 @@ public class FixModuleContextRootTask extends PublishOperation {
 	 * @throws CoreException
 	 */
 	public void execute(IProgressMonitor monitor, IAdaptable info) throws CoreException {
-		IServerWorkingCopy wc = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
+		IServerWorkingCopy wc = null;
+		IServer server2 = (IServer) getTaskModel().getObject(TaskModel.TASK_SERVER);
+		if (server2 instanceof IServerWorkingCopy)
+			wc = (IServerWorkingCopy) server2;
+		else
+			wc = server2.createWorkingCopy();
+		
 		TomcatServer server = (TomcatServer) wc.loadAdapter(TomcatServer.class, monitor);
 		TomcatConfiguration configuration = server.getTomcatConfiguration();
 		if (configuration.getWebModules().size() <= index)
