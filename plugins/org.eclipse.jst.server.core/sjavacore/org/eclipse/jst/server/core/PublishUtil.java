@@ -407,11 +407,15 @@ public class PublishUtil {
 			zout.putNextEntry(ze);
 			
 			InputStream in = file.getContents();
-			int n = 0;
-			while (n > -1) {
-				n = in.read(buf);
-				if (n > 0)
-					zout.write(buf, 0, n);
+			try {
+				int n = 0;
+				while (n > -1) {
+					n = in.read(buf);
+					if (n > 0)
+						zout.write(buf, 0, n);
+				}
+			} finally {
+				in.close();
 			}
 			
 			zout.closeEntry();
