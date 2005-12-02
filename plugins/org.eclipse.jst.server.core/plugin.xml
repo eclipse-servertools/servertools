@@ -96,6 +96,9 @@
 
     <runtime-component-version
        type="standard.jre"
+       version="1.3"/>
+    <runtime-component-version
+       type="standard.jre"
        version="1.4"/>
     <runtime-component-version
        type="standard.jre"
@@ -106,6 +109,11 @@
       <factory class="org.eclipse.jst.server.core.internal.StandardJreClasspathProvider$Factory"/>
       <type class="org.eclipse.jst.common.project.facet.core.IClasspathProvider"/>
     </adapter>
+
+    <supported>
+      <facet id="jst.java" version="1.3"/>
+      <runtime-component id="standard.jre" version="&gt;=1.3"/>
+    </supported>
 
     <supported>
       <facet id="jst.java" version="1.4"/>
