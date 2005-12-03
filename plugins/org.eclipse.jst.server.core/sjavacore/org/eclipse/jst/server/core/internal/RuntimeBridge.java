@@ -68,7 +68,8 @@ public class RuntimeBridge implements IRuntimeBridge {
 		addMapping("org.eclipse.jst.server.generic.runtime.jonas4", "org.eclipse.jst.server.generic.runtime.jonas", "4.0");
 
 		addMapping("org.eclipse.jst.server.generic.runtime.oracle1013dp4", "org.eclipse.jst.server.generic.runtime.oracle", "1013dp4");
-
+		addMapping("org.eclipse.jst.server.generic.runtime.oracle1013", "org.eclipse.jst.server.generic.runtime.oracle", "10.1.3");
+		
 		addMapping("org.eclipse.jst.server.generic.runtime.websphere.6", "org.eclipse.jst.server.generic.runtime.websphere", "6.0");
 	}
 
