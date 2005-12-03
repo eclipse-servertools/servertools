@@ -20,6 +20,8 @@ import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.TaskModel;
+import org.eclipse.wst.server.core.internal.IInstallableRuntime;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 
@@ -56,10 +58,20 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
         if(getRuntimeDelegate()!=null){
  			properties = getRuntimeDelegate().getServerInstanceProperties();
 			definition = getServerTypeDefinition(getServerDefinitionId(),properties);
-		}
-		fDecorators= new GenericServerCompositeDecorator[2]; 
-		fDecorators[0]= new JRESelectDecorator(getRuntimeDelegate());
-		fDecorators[1]= new ServerTypeDefinitionRuntimeDecorator(definition,properties,getWizard(),getRuntimeDelegate());
+		}       
+        IInstallableRuntime ir = ServerPlugin.findInstallableRuntime(getRuntimeDelegate().getRuntime().getRuntimeType().getId());
+        if (ir!= null){	
+        	fDecorators= new GenericServerCompositeDecorator[3]; 
+        	fDecorators[0]= new JRESelectDecorator(getRuntimeDelegate());
+        	fDecorators[1]= new ServerTypeDefinitionRuntimeDecorator(definition,properties,getWizard(),getRuntimeDelegate());
+        	fDecorators[2]= new InstallableRuntimeDecorator(getRuntimeDelegate());
+        }
+        else{
+        	fDecorators= new GenericServerCompositeDecorator[2]; 
+        	fDecorators[0]= new JRESelectDecorator(getRuntimeDelegate());
+        	fDecorators[1]= new ServerTypeDefinitionRuntimeDecorator(definition,properties,getWizard(),getRuntimeDelegate());
+        }
+		
 		new GenericServerComposite(parent,fDecorators);
 	}
 
