@@ -20,6 +20,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.model.IModuleResourceDelta;
 import org.eclipse.wst.server.core.model.PublishOperation;
+import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.core.util.ProjectModule;
 
 public class PublishOperation2 extends PublishOperation {
@@ -56,8 +57,11 @@ public class PublishOperation2 extends PublishOperation {
 		IPath path = server.getTempDirectory().append("webapps");
 		path = path.append(module2.getName());
 		
-		if (kind == IServer.PUBLISH_CLEAN) { // clean and republish from scratch
+		if (kind == IServer.PUBLISH_CLEAN || deltaKind == ServerBehaviourDelegate.REMOVED) { // clean and republish from scratch
 			PublishUtil.deleteDirectory(path.toFile(), monitor);
+			
+			if (deltaKind == ServerBehaviourDelegate.REMOVED)
+				return;
 		}
 		
 		if (kind == IServer.PUBLISH_CLEAN || kind == IServer.PUBLISH_FULL) {
