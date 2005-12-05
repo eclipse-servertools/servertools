@@ -271,6 +271,8 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 
 	public void setDefaults(IProgressMonitor monitor) {
 		setTestEnvironment(true);
+		setAttribute("auto-publish-setting", 2);
+		setAttribute("auto-publish-time", 1);
 	}
 
 	/**
