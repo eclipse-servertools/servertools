@@ -29,6 +29,7 @@ import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.osgi.util.NLS;
 
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.IModulePublishHelper;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.core.util.ProjectModule;
@@ -36,7 +37,7 @@ import org.eclipse.wst.server.core.util.SocketUtil;
 /**
  * Generic Tomcat server.
  */
-public class TomcatServerBehaviour extends ServerBehaviourDelegate implements ITomcatServerBehaviour {
+public class TomcatServerBehaviour extends ServerBehaviourDelegate implements ITomcatServerBehaviour, IModulePublishHelper {
 	private static final String ATTR_STOP = "stop-server";
 
 	// the thread used to ping the server to check for startup
