@@ -228,71 +228,58 @@ public class ServerPublishInfo {
 			return new IModuleResourceDelta[0];
 	
 		List list = new ArrayList();
-		
-		// look for duplicates
-		List found = new ArrayList();
 		int size = original.length;
 		int size2 = current.length;
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size2; j++) {
-				if (!found.contains(original[i]) && !found.contains(current[j]) && original[i].equals(current[j])) {
-					// found a match
-					found.add(original[i]);
-					if (original[i] instanceof IModuleFile) {
-						// include files only if the modification stamp has changed
-						IModuleFile mf1 = (IModuleFile) original[i];
-						IModuleFile mf2 = (IModuleFile) current[j];
-						if (mf1.getModificationStamp() != mf2.getModificationStamp()) {
-							list.add(new ModuleResourceDelta(original[i], IModuleResourceDelta.CHANGED));
-						}
-					} else {
-						// include folders only if their contents have changed
-						IModuleFolder mf1 = (IModuleFolder) original[i];
-						IModuleFolder mf2 = (IModuleFolder) current[j];
-						IModuleResourceDelta[] mrdc = getDelta(mf1.members(), mf2.members());
-						if (mrdc.length > 0) {
-							ModuleResourceDelta mrd = new ModuleResourceDelta(original[i], IModuleResourceDelta.NO_CHANGE);
-							mrd.setChildren(mrdc);
-							list.add(mrd);
-						}
+		
+		Map originalMap = new HashMap(size);
+		for (int i = 0; i < size; i++)
+			originalMap.put(original[i], original[i]);
+
+		// added and changed resources
+		for (int i = 0; i < size2; i++) {
+			IModuleResource old = (IModuleResource) originalMap.remove(current[i]);
+			if (old == null) {
+				ModuleResourceDelta delta = new ModuleResourceDelta(current[i], IModuleResourceDelta.ADDED);
+				if (current[i] instanceof IModuleFolder) {
+					IModuleFolder currentFolder = (IModuleFolder) current[i]; 
+					delta.setChildren(getDeltaTree(currentFolder.members(), IModuleResourceDelta.ADDED));
+				}
+				list.add(delta);
+			} else {
+				if (current[i] instanceof IModuleFile) {
+					// include files only if the modification stamp has changed
+					IModuleFile mf1 = (IModuleFile) old;
+					IModuleFile mf2 = (IModuleFile) current[i];
+					if (mf1.getModificationStamp() != mf2.getModificationStamp()) {
+						list.add(new ModuleResourceDelta(current[i], IModuleResourceDelta.CHANGED));
+					}
+				} else {
+					// include folders only if their contents have changed
+					IModuleFolder mf1 = (IModuleFolder) old;
+					IModuleFolder mf2 = (IModuleFolder) current[i];
+					IModuleResourceDelta[] mrdc = getDelta(mf1.members(), mf2.members());
+					if (mrdc.length > 0) {
+						ModuleResourceDelta mrd = new ModuleResourceDelta(current[i], IModuleResourceDelta.NO_CHANGE);
+						mrd.setChildren(mrdc);
+						list.add(mrd);
 					}
 				}
 			}
 		}
 		
-		// add deletions (unfound items in the original list)
+		// removed resources
 		for (int i = 0; i < size; i++) {
-			if (!found.contains(original[i])) {
-				if (original[i] instanceof IModuleFile) {
-					list.add(new ModuleResourceDelta(original[i], IModuleResourceDelta.REMOVED));
-				} else {
-					IModuleFolder mf = (IModuleFolder) original[i];
-					ModuleResourceDelta mrd = new ModuleResourceDelta(original[i], IModuleResourceDelta.REMOVED);
-					IModuleResourceDelta[] mrdc = getDeltaTree(mf.members(), IModuleResourceDelta.REMOVED);
-					mrd.setChildren(mrdc);
-					list.add(mrd);
+			if (originalMap.containsKey(original[i])) {
+				ModuleResourceDelta delta = new ModuleResourceDelta(original[i], IModuleResourceDelta.REMOVED);
+				if (original[i] instanceof IModuleFolder) {
+					IModuleFolder removedFolder = (IModuleFolder) original[i]; 
+					delta.setChildren(getDeltaTree(removedFolder.members(), IModuleResourceDelta.REMOVED));
 				}
+				list.add(delta);
 			}
 		}
 		
-		//	add additions (unfound items in the current list)
-		for (int j = 0; j < size2; j++) {
-			if (!found.contains(current[j])) {
-				if (current[j] instanceof IModuleFile) {
-					list.add(new ModuleResourceDelta(current[j], IModuleResourceDelta.ADDED));
-				} else {
-					IModuleFolder mf = (IModuleFolder) current[j];
-					ModuleResourceDelta mrd = new ModuleResourceDelta(current[j], IModuleResourceDelta.ADDED);
-					IModuleResourceDelta[] mrdc = getDeltaTree(mf.members(), IModuleResourceDelta.ADDED);
-					mrd.setChildren(mrdc);
-					list.add(mrd);
-				}
-			}
-		}
-		
-		IModuleResourceDelta[] delta = new IModuleResourceDelta[list.size()];
-		list.toArray(delta);
-		return delta;
+		return (IModuleResourceDelta[]) list.toArray(new IModuleResourceDelta[list.size()]);
 	}
 
 	protected boolean hasDelta(IModule[] module) {
@@ -317,46 +304,39 @@ public class ServerPublishInfo {
 	protected boolean hasDelta(IModuleResource[] original, IModuleResource[] current) {
 		if (original == null || current == null)
 			return false;
-	
-		// look for duplicates
-		List found = new ArrayList();
+		
 		int size = original.length;
 		int size2 = current.length;
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size2; j++) {
-				if (!found.contains(original[i]) && !found.contains(current[j]) && original[i].equals(current[j])) {
-					// found a match
-					found.add(original[i]);
-					if (original[i] instanceof IModuleFile) {
-						// include files only if the modification stamp has changed
-						IModuleFile mf1 = (IModuleFile) original[i];
-						IModuleFile mf2 = (IModuleFile) current[j];
-						if (mf1.getModificationStamp() != mf2.getModificationStamp())
-							return true;
-					} else {
-						// include folders only if their contents have changed
-						IModuleFolder mf1 = (IModuleFolder) original[i];
-						IModuleFolder mf2 = (IModuleFolder) current[j];
-						IModuleResourceDelta[] mrdc = getDelta(mf1.members(), mf2.members());
-						if (mrdc.length > 0)
-							return true;
-					}
-				}
+		
+		Map originalMap = new HashMap(size);
+		for (int i = 0; i < size; i++)
+			originalMap.put(original[i], original[i]);
+		
+		// added and changed resources
+		for (int i = 0; i < size2; i++) {
+			IModuleResource old = (IModuleResource) originalMap.remove(current[i]);
+			if (old == null)
+				return true;
+			
+			if (current[i] instanceof IModuleFile) {
+				// include files only if the modification stamp has changed
+				IModuleFile mf1 = (IModuleFile) old;
+				IModuleFile mf2 = (IModuleFile) current[i];
+				if (mf1.getModificationStamp() != mf2.getModificationStamp())
+					return true;
+			} else {
+				// include folders only if their contents have changed
+				IModuleFolder mf1 = (IModuleFolder) old;
+				IModuleFolder mf2 = (IModuleFolder) current[i];
+				if (hasDelta(mf1.members(), mf2.members()))
+					return true;
 			}
 		}
 		
-		// add deletions (unfound items in the original list)
+		// removed resources
 		for (int i = 0; i < size; i++) {
-			if (!found.contains(original[i])) {
+			if (originalMap.containsKey(original[i]))
 				return true;
-			}
-		}
-		
-		//	add additions (unfound items in the current list)
-		for (int j = 0; j < size2; j++) {
-			if (!found.contains(current[j])) {
-				return true;
-			}
 		}
 		
 		return false;

@@ -117,7 +117,10 @@ public class RuntimeBridge implements IRuntimeBridge {
 			IRuntimeComponentVersion mapped = (IRuntimeComponentVersion) mappings.get(typeId);
 			
 			Map properties = new HashMap();
-			properties.put("location", runtime.getLocation().toPortableString());
+			if (runtime.getLocation() != null)
+				properties.put("location", runtime.getLocation().toPortableString());
+			else
+				properties.put("location", "");
 			properties.put("name", runtime.getName());
 			properties.put("type", runtime.getRuntimeType().getName());
 			properties.put("id", runtime.getId());

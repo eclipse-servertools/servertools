@@ -49,7 +49,7 @@ public class ModuleFile implements IModuleFile {
 	public String getName() {
 		return name;
 	}
-	
+
 	public boolean equals(Object obj) {
 		if (!(obj instanceof ModuleFile))
 			return false;
@@ -61,7 +61,11 @@ public class ModuleFile implements IModuleFile {
 			return false;
 		return true;
 	}
-	
+
+	public int hashCode() {
+		return name.hashCode() * 37 + path.hashCode();
+	}
+
 	public Object getAdapter(Class cl) {
 		if (IFile.class.equals(cl))
 			return file;

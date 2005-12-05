@@ -104,7 +104,7 @@ public class PublishUtil {
 		try {
 			File file = to.toFile();
 			File tempDir = JavaServerPlugin.getInstance().getStateLocation().toFile();
-			tempFile = File.createTempFile("tmp", to.getFileExtension(), tempDir);
+			tempFile = File.createTempFile("tmp", "." + to.getFileExtension(), tempDir);
 			
 			out = new FileOutputStream(tempFile);
 	
@@ -360,7 +360,7 @@ public class PublishUtil {
 		try {
 			File file = zipPath.toFile();
 			File tempDir = JavaServerPlugin.getInstance().getStateLocation().toFile();
-			tempFile = File.createTempFile("tmp", zipPath.getFileExtension(), tempDir);
+			tempFile = File.createTempFile("tmp", "." + zipPath.getFileExtension(), tempDir);
 			
 			BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(tempFile));
 			ZipOutputStream zout = new ZipOutputStream(bout);

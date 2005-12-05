@@ -54,7 +54,7 @@ public class ModuleFolder implements IModuleFolder {
 	public IModuleResource[] members() {
 		return members;
 	}
-	
+
 	public boolean equals(Object obj) {
 		if (!(obj instanceof ModuleFolder))
 			return false;
@@ -65,6 +65,10 @@ public class ModuleFolder implements IModuleFolder {
 		if (!path.equals(mf.path))
 			return false;
 		return true;
+	}
+
+	public int hashCode() {
+		return name.hashCode() * 37 + path.hashCode();
 	}
 
 	public Object getAdapter(Class cl) {
