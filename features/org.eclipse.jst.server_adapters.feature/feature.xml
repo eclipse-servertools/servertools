@@ -8,13 +8,14 @@
       %description
    </description>
 
-
-
    <license url="license.html">
       %license
    </license>
 
-
+   <requires>
+      <import feature="org.eclipse.jst.server_core.feature" version="1.0.0" match="equivalent"/>
+      <import feature="org.eclipse.jst.server_ui.feature" version="1.0.0" match="equivalent"/>
+   </requires>
 
    <plugin
          id="org.eclipse.jst.server.tomcat.core"

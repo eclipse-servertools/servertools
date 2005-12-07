@@ -8,8 +8,6 @@
       %description
    </description>
 
-
-
    <license url="license.html">
       %license
    </license>
@@ -17,6 +15,10 @@
    <includes
          id="org.eclipse.wst.server_userdoc.feature"
          version="0.0.0"/>
+
+   <requires>
+      <import feature="org.eclipse.wst.server_core.feature" version="1.0.0" match="equivalent"/>
+   </requires>
 
    <plugin
          id="org.eclipse.wst.internet.monitor.ui"
