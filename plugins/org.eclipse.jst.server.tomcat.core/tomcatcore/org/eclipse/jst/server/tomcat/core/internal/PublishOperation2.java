@@ -81,11 +81,6 @@ public class PublishOperation2 extends PublishOperation {
 	}
 
 	private void publishJar(IProgressMonitor monitor) throws CoreException {
-		IModule module2 = null;
-		IPath path = server.getTempDirectory().append("webapps");
-		path = path.append(module[0].getName()).append("WEB-INF").append("lib").append(module[1].getName() + ".jar");
-		module2 = module[1];
-		
 		if (kind != IServer.PUBLISH_CLEAN && kind != IServer.PUBLISH_FULL) {
 			// avoid changes if no changes to module since last publish
 			IModuleResourceDelta[] delta = server.getPublishedResourceDelta(module);
@@ -93,8 +88,14 @@ public class PublishOperation2 extends PublishOperation {
 				return;
 		}
 		
-		ProjectModule pm = (ProjectModule) module2.loadAdapter(ProjectModule.class, monitor);
+		// make directory if it doesn't exist
+		IPath path = server.getTempDirectory().append("webapps");
+		path = path.append(module[0].getName()).append("WEB-INF").append("lib");
+		if (!path.toFile().exists())
+			path.toFile().mkdirs();
+		
+		ProjectModule pm = (ProjectModule) module[1].loadAdapter(ProjectModule.class, monitor);
 		IModuleResource[] mr = pm.members();
-		PublishUtil.createZipFile(mr, path);
+		PublishUtil.createZipFile(mr, path.append(module[1].getName() + ".jar"));
 	}
 }
