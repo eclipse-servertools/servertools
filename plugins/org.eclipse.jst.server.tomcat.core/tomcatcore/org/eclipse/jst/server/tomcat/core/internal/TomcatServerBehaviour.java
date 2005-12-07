@@ -46,7 +46,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	protected transient IDebugEventSetListener processListener;
 
 	/**
-	 * TomcatServer.
+	 * TomcatServerBehaviour.
 	 */
 	public TomcatServerBehaviour() {
 		super();
@@ -803,5 +803,9 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			return null;
 		
 		return getTempDirectory().append("webapps").append(module[0].getName());
+	}
+
+	public void setModulePublishState2(IModule[] module, int state) {
+		setModulePublishState(module, state);
 	}
 }

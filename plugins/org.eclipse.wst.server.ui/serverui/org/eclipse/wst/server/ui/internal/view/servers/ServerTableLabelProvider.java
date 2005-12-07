@@ -160,11 +160,12 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 				return syncState[4];
 			
 			int i = 0;
-			if (server.getServerRestartState())
+			//if (server.getServerRestartState())
+			if (((Server)server).shouldRestart())
 				i = 1;
 			
 			// republish
-			if (server.getServerPublishState() != IServer.PUBLISH_STATE_NONE)
+			if (((Server)server).shouldPublish())
 				i += 2;
 			
 			//IServerType serverType = server.getServerType();

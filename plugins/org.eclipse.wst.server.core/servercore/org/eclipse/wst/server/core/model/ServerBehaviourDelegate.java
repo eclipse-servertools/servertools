@@ -532,27 +532,27 @@ public abstract class ServerBehaviourDelegate {
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishNoRuntime, null);
 		
 		final List moduleList = getAllModules();
-		final List kindList = new ArrayList();
+		final List deltaKindList = new ArrayList();
 		
 		Iterator iterator = moduleList.iterator();
 		while (iterator.hasNext()) {
 			IModule[] module = (IModule[]) iterator.next();
 			if (hasBeenPublished(module)) {
 				if (getPublishedResourceDelta(module).length == 0)
-					kindList.add(new Integer(ServerBehaviourDelegate.NO_CHANGE));
+					deltaKindList.add(new Integer(ServerBehaviourDelegate.NO_CHANGE));
 				else
-					kindList.add(new Integer(ServerBehaviourDelegate.CHANGED));
+					deltaKindList.add(new Integer(ServerBehaviourDelegate.CHANGED));
 			} else
-				kindList.add(new Integer(ServerBehaviourDelegate.ADDED));
+				deltaKindList.add(new Integer(ServerBehaviourDelegate.ADDED));
 		}
 		
-		addRemovedModules(moduleList, kindList);
+		addRemovedModules(moduleList, deltaKindList);
 		
-		while (moduleList.size() > kindList.size()) {
-			kindList.add(new Integer(ServerBehaviourDelegate.REMOVED));
+		while (moduleList.size() > deltaKindList.size()) {
+			deltaKindList.add(new Integer(ServerBehaviourDelegate.REMOVED));
 		}
 		
-		PublishOperation[] tasks = getTasks(kind, moduleList, kindList);
+		PublishOperation[] tasks = getTasks(kind, moduleList, deltaKindList);
 		int size = 2000 + 3500 * moduleList.size() + 500 * tasks.length;
 		
 		monitor = ProgressUtil.getMonitorFor(monitor);
@@ -593,7 +593,7 @@ public abstract class ServerBehaviourDelegate {
 		// publish modules
 		if (!monitor.isCanceled()) {
 			try {
-				publishModules(kind, moduleList, kindList, tempMulti, monitor);
+				publishModules(kind, moduleList, deltaKindList, tempMulti, monitor);
 			} catch (Exception e) {
 				Trace.trace(Trace.WARNING, "Error while publishing modules", e);
 				tempMulti.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e));
@@ -668,7 +668,6 @@ public abstract class ServerBehaviourDelegate {
 		for (int i = 0; i < size; i++) {
 			((ModuleResourceDelta)delta[i]).trace(">  ");
 		}*/
-		updatePublishInfo(deltaKind, module);
 		
 		monitor.done();
 		
@@ -701,14 +700,13 @@ public abstract class ServerBehaviourDelegate {
 	/**
 	 * Update the stored publish info for the given module.
 	 * 
+	 * @deprecated should never need to be called directly. Will be removed
+	 *    in a future version of WTP
 	 * @param deltaKind a publish delta kind
 	 * @param module a module
 	 */
 	protected void updatePublishInfo(int deltaKind, IModule[] module) {
-		if (deltaKind == ServerBehaviourDelegate.REMOVED)
-			server.getServerPublishInfo().removeModulePublishInfo(module);
-		else
-			server.getServerPublishInfo().fill(module);
+		// TODO remove
 	}
 
 	/**

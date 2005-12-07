@@ -306,7 +306,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 					return;
 			}
 			
-			PublishServerJob publishJob = new PublishServerJob(server);
+			PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, false);
 			LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
 			publishJob.setNextJob(clientJob);
 			

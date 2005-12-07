@@ -61,7 +61,7 @@ public class RestartAction extends AbstractServerAction {
 			return;
 		
 		try {
-			PublishServerJob publishJob = new PublishServerJob(server); 
+			PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, false); 
 			String launchMode = mode;
 			if (launchMode == null)
 				launchMode = server.getMode();

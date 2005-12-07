@@ -83,9 +83,37 @@ public class ServerPublishInfo {
 		return modulePublishInfo.containsKey(key);
 	}
 
-	public void removeModulePublishInfo(IModule[] module) {
+	/*public void removeModulePublishInfo(IModule[] module) {
 		String key = getKey(module);
 		modulePublishInfo.remove(key);
+		
+		save();
+	}*/
+
+	public void removeDeletedModulePublishInfo(List moduleList) {
+		int size = moduleList.size();
+		List removed = new ArrayList();
+		
+		Iterator iterator = modulePublishInfo.keySet().iterator();
+		while (iterator.hasNext()) {
+			String key = (String) iterator.next();
+			
+			boolean found = false;
+			for (int i = 0; i < size; i++) {
+				IModule[] module = (IModule[]) moduleList.get(i);
+				String key2 = getKey(module);
+				if (key != null && key.equals(key2))
+					found = true;
+			}
+			if (!found)
+				removed.add(key);
+		}
+		
+		iterator = removed.iterator();
+		while (iterator.hasNext()) {
+			String key = (String) iterator.next();
+			modulePublishInfo.remove(key);
+		}
 		
 		save();
 	}

@@ -51,6 +51,7 @@ public class PublishOperation2 extends PublishOperation {
 		} else { // utility module
 			publishJar(monitor);
 		}
+		server.setModulePublishState2(module, IServer.PUBLISH_STATE_NONE);
 	}
 
 	private void publishDir(IModule module2, IProgressMonitor monitor) throws CoreException {

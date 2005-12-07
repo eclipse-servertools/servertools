@@ -404,6 +404,8 @@ public class Server extends Base implements IServer {
 		if (module == null)
 			throw new IllegalArgumentException("Module cannot be null");
 		Integer in = new Integer(state);
+		if (state == -1)
+			modulePublishState.remove(getKey(module));
 		modulePublishState.put(getKey(module), in);
 		fireServerModuleStateChangeEvent(module);
 	}
@@ -437,6 +439,7 @@ public class Server extends Base implements IServer {
 				if (module.equals(m)) {
 					if (hasPublishedResourceDelta(module2)) {
 						helper.changed = true;
+						setModulePublishState(module2, IServer.PUBLISH_STATE_INCREMENTAL);
 						return false;
 					}
 				}
@@ -484,7 +487,7 @@ public class Server extends Base implements IServer {
 			time = getAutoPublishTime();
 		}
 		
-		if (time > 9) {
+		if (time > 0) {
 			autoPublishThread = new AutoPublishThread();
 			autoPublishThread.time = time;
 			autoPublishThread.setPriority(Thread.MIN_PRIORITY + 1);
@@ -644,54 +647,76 @@ public class Server extends Base implements IServer {
 		int state = getServerState();
 		if (state == STATE_STARTING || state == STATE_STOPPING)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishStarting, null);
-	
+		
 		// can't publish if there is no configuration
 		if (getServerType() == null || getServerType().hasServerConfiguration() && configuration == null)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishNoConfiguration, null);
-	
-		// return true if the configuration can be published
-		if (getServerPublishState() != PUBLISH_STATE_NONE)
-			return Status.OK_STATUS;
-
-		// return true if any modules can be published
-		/*class Temp {
-			boolean found = false;
-		}*/
-		//final Temp temp = new Temp();
 		
 		return Status.OK_STATUS;
-	
-		/*IModuleVisitor visitor = new IModuleVisitor() {
-			public boolean visit(IModule[] parents, IModule module) {
-				if (getModulePublishState(module) != PUBLISH_STATE_NONE) {
-					temp.found = true;
-					return false;
-				}
-				return true;
-			}
-		};
-		ServerUtil.visit(this, visitor, null);
-		
-		return temp.found;*/
 	}
 
 	/**
-	 * Returns true if the server is in a state that it can
-	 * be published to.
-	 *
+	 * Returns true if the server should be published to. This is <code>true</code> when the server
+	 * can be published to and the server's publish state or any module's publish state is not
+	 * PUBLISH_STATE_NONE. 
+	 * 
 	 * @return boolean
 	 */
 	public boolean shouldPublish() {
 		if (!canPublish().isOK())
 			return false;
-	
+		
 		if (getServerPublishState() != PUBLISH_STATE_NONE)
 			return true;
-	
-		//if (getUnpublishedModules().length > 0)
-		return true;
-	
-		//return false;
+		
+		class Temp {
+			boolean publish;
+		}
+		final Temp temp = new Temp();
+		
+		visit(new IModuleVisitor() {
+			public boolean visit(IModule[] module) {
+				if (getModulePublishState(module) != PUBLISH_STATE_NONE) {
+					temp.publish = true;
+					return false;
+				}
+				return true;
+			}
+		}, null);
+		
+		return temp.publish;
+	}
+
+	/**
+	 * Returns true if the server should be restarted. This is <code>true</code> when the server
+	 * can be restarted and the server's restart state or any module's restart states is not
+	 * false. 
+	 * 
+	 * @return boolean
+	 */
+	public boolean shouldRestart() {
+		if (!canPublish().isOK())
+			return false;
+		
+		if (getServerRestartState())
+			return true;
+		
+		class Temp {
+			boolean publish;
+		}
+		final Temp temp = new Temp();
+		
+		visit(new IModuleVisitor() {
+			public boolean visit(IModule[] module) {
+				if (getModuleRestartState(module)) {
+					temp.publish = true;
+					return false;
+				}
+				return true;
+			}
+		}, null);
+		
+		return temp.publish;
 	}
 
 	public ServerPublishInfo getServerPublishInfo() {
@@ -735,9 +760,24 @@ public class Server extends Base implements IServer {
 		Trace.trace(Trace.FINEST, "-->-- Publishing to server: " + toString() + " -->--");
 		
 		stopAutoPublish();
-
+		
 		try {
-			return getBehaviourDelegate(monitor).publish(kind, monitor);
+			IStatus status = getBehaviourDelegate(monitor).publish(kind, monitor);
+			
+			final List modules2 = new ArrayList();
+			visit(new IModuleVisitor() {
+				public boolean visit(IModule[] module) {
+					if (getModulePublishState(module) == IServer.PUBLISH_STATE_NONE)
+						getServerPublishInfo().fill(module);
+					
+					modules2.add(module);
+					return true;
+				}
+			}, monitor);
+			
+			getServerPublishInfo().removeDeletedModulePublishInfo(modules2);
+			
+			return status;
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate publish() " + toString(), e);
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, e);

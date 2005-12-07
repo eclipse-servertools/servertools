@@ -64,9 +64,9 @@ public class StartAction extends AbstractServerAction {
 		}
 		
 		try {
-			PublishServerJob publishJob = new PublishServerJob(server); 
+			PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, false); 
 			StartServerJob startJob = new StartServerJob(server, launchMode);
-
+			
 			if (((ServerType)server.getServerType()).startBeforePublish()) {
 				startJob.setNextJob(publishJob);
 				startJob.schedule();

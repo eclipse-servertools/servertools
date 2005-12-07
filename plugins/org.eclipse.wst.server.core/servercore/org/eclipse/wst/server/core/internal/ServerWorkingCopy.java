@@ -436,16 +436,20 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			if (add != null) {
 				int size = add.length;
 				for (int i = 0; i < size; i++) {
-					if (!modules.contains(add[i]))
+					if (!modules.contains(add[i])) {
 						modules.add(add[i]);
+						resetPublishState(new IModule[] { add[i] }, monitor);
+					}
 				}
 			}
 			
 			if (remove != null) {
 				int size = remove.length;
 				for (int i = 0; i < size; i++) {
-					if (modules.contains(remove[i]))
+					if (modules.contains(remove[i])) {
 						modules.remove(remove[i]);
+						resetPublishState(new IModule[] { remove[i] }, monitor);
+					}
 				}
 			}
 			
@@ -464,6 +468,23 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate modifyModule() " + toString(), e);
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, "" + e.getLocalizedMessage(), e));
+		}
+	}
+	
+	protected void resetPublishState(IModule[] module, IProgressMonitor monitor) {
+		setModulePublishState(module, -1);
+		try {
+			IModule[] children = getChildModules(module, monitor);
+			int size = children.length;
+			int size2 = module.length;
+			for (int i = 0; i < size; i++) {
+				IModule[] child = new Module[size2 + 1];
+				System.arraycopy(module, 0, child, 0, size2);
+				child[size2] = children[i];
+				resetPublishState(child, monitor);
+			}
+		} catch (Exception e) {
+			// ignore
 		}
 	}
 

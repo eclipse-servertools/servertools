@@ -145,9 +145,4 @@ public class PublishInfo {
 			Trace.trace(Trace.SEVERE, "Could not save global publish info", e);
 		}
 	}
-	
-	protected void save(IServer server) {
-		ServerPublishInfo spi = getServerPublishInfo(server);
-		spi.save();
-	}
 }

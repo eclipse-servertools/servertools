@@ -30,6 +30,7 @@ import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.window.Window;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.*;
@@ -131,6 +132,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 				} else if (event.getPropertyName().equals(Server.PROP_AUTO_PUBLISH_TIME)) {
 					Integer curAutoPublishTime = (Integer)event.getNewValue();
 					autoPublishTime.setSelection(curAutoPublishTime.intValue());
+					validate();
 				} else if (event.getPropertyName().equals(Server.PROP_AUTO_PUBLISH_SETTING)) {
 					Integer autoPublishSetting = (Integer)event.getNewValue();
 					int setting = autoPublishSetting.intValue();
@@ -138,6 +140,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 					autoPublishOverride.setSelection(setting == Server.AUTO_PUBLISH_OVERRIDE);
 					autoPublishDisable.setSelection(setting == Server.AUTO_PUBLISH_DISABLE);
 					autoPublishTime.setEnabled(setting == Server.AUTO_PUBLISH_OVERRIDE);
+					validate();
 				}
 				updating = false;
 			}
@@ -472,6 +475,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 					updating = false;
 					autoPublishTimeLabel.setEnabled(autoPublishOverride.getSelection());
 					autoPublishTime.setEnabled(autoPublishOverride.getSelection());
+					validate();
 				}
 			});
 			
@@ -484,6 +488,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 					updating = false;
 					autoPublishTimeLabel.setEnabled(autoPublishOverride.getSelection());
 					autoPublishTime.setEnabled(autoPublishOverride.getSelection());
+					validate();
 				}
 			});
 			
@@ -496,6 +501,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 					updating = false;
 					autoPublishTimeLabel.setEnabled(autoPublishOverride.getSelection());
 					autoPublishTime.setEnabled(autoPublishOverride.getSelection());
+					validate();
 				}
 			});
 			
@@ -510,6 +516,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 						// ignore
 					}
 					updating = false;
+					validate();
 				}
 			});
 		}
@@ -648,8 +655,8 @@ public class OverviewEditorPart extends ServerEditorPart {
 		
 		if (autoPublishTime.isEnabled() && autoPublishOverride.getSelection()) {
 			int i = autoPublishTime.getSelection();
-			if (i < 10) {
-				setErrorMessage(Messages.serverEditorOverviewAutoPublishInvalid);
+			if (i < 1) {
+				setErrorMessage(NLS.bind(Messages.serverEditorOverviewAutoPublishInvalid, "1"));
 				return;
 			}
 		}
