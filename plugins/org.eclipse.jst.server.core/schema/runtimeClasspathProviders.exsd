@@ -92,7 +92,6 @@ Runtime classpath provider instances of this type will delegate to instances of 
       <documentation>
          The following is an example of a runtime classpath provider extension point:
 
-&lt;p&gt;
 &lt;pre&gt;
   &lt;extension point=&quot;org.eclipse.jst.server.core.runtimeClasspathProviders&quot;&gt;
      &lt;runtimeClasspathProvider
@@ -101,7 +100,6 @@ Runtime classpath provider instances of this type will delegate to instances of 
         class=&quot;com.example.ExampleRuntimeClasspathProvider&quot;/&gt;
    &lt;/extension&gt;
 &lt;/pre&gt;
-&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -111,6 +109,15 @@ Runtime classpath provider instances of this type will delegate to instances of 
       </appInfo>
       <documentation>
          Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;b&gt;org.eclipse.jst.server.core.RuntimeClasspathProviderDelegate&lt;/b&gt; and contains a public 0-arg constructor.
+      </documentation>
+   </annotation>
+   
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         
       </documentation>
    </annotation>
 

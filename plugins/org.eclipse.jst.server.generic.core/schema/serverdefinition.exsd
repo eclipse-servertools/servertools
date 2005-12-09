@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.jst.server.generic.core" id="serverdefinition" name="Server Definition"/>
       </appInfo>
       <documentation>
-         This extension point defines a new generic server plugin
+         This extension point defines a new generic server plugin.
       </documentation>
    </annotation>
 
@@ -80,7 +80,7 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         
       </documentation>
    </annotation>
 
@@ -89,7 +89,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         
       </documentation>
    </annotation>
 
@@ -98,7 +98,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         
       </documentation>
    </annotation>
 
