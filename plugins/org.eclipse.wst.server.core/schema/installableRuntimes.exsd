@@ -110,26 +110,33 @@
       <documentation>
          The following is an example of an installable runtime extension point:
 
-&lt;p&gt;
 &lt;pre&gt;
-  &lt;extension point=&quot;org.eclipse.wst.server.core.installableRuntimes&quot;&gt;
-    &lt;installableRuntime
-       id=&quot;com.myruntime.id&quot;
-       featureVersion=&quot;1.0.0&quot;
-       featureId=&quot;com.myfeature&quot;
-       featureSite=&quot;xyz&quot;
-       bundleId=&quot;com.ibm.mybundle&quot;
-       path=&quot;/zips/myRuntime.zip&quot;&gt;
-    &lt;/installableRuntime&gt;
-  &lt;/extension&gt;
+   &lt;extension 
+         point=&quot;org.eclipse.wst.server.core.installableRuntimes&quot;&gt;
+      &lt;installableRuntime
+            id=&quot;com.myruntime.id&quot;
+            featureVersion=&quot;1.0.0&quot;
+            featureId=&quot;com.myfeature&quot;
+            featureSite=&quot;xyz&quot;
+            bundleId=&quot;com.ibm.mybundle&quot;
+            path=&quot;/zips/myRuntime.zip&quot;/&gt;
+   &lt;/extension&gt;
 &lt;/pre&gt;
-&lt;/p&gt;
       </documentation>
    </annotation>
 
    <annotation>
       <appInfo>
          <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
       </appInfo>
       <documentation>
          

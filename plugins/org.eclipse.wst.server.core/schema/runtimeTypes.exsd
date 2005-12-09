@@ -146,23 +146,22 @@ Runtime instances of this type will delegate to instances of this class. Delegat
       <documentation>
          The following is an example of a runtime type extension point:
 
-&lt;p&gt;
 &lt;pre&gt;
-  &lt;extension point=&quot;org.eclipse.wst.server.core.runtimeTypes&quot;&gt;
-    &lt;runtimeType
-       id=&quot;com.example.runtime&quot;
-       name=&quot;%runtimeTypeName&quot;
-       description=&quot;%runtimeTypeDescription&quot;
-       vendor=&quot;%runtimeTypeVendor&quot;
-       version=&quot;1.0&quot;
-       class=&quot;com.example.ExampleRuntimeDelegate&quot;&gt;
-       &lt;moduleType
-         types=&quot;j2ee.web&quot;
-         versions=&quot;1.2, 1.3, 1.4&quot;/&gt;
-    &lt;/runtimeType&gt;
-  &lt;/extension&gt;
+   &lt;extension 
+         point=&quot;org.eclipse.wst.server.core.runtimeTypes&quot;&gt;
+      &lt;runtimeType
+            id=&quot;com.example.runtime&quot;
+            name=&quot;%runtimeTypeName&quot;
+            description=&quot;%runtimeTypeDescription&quot;
+            vendor=&quot;%runtimeTypeVendor&quot;
+            version=&quot;1.0&quot;
+            class=&quot;com.example.ExampleRuntimeDelegate&quot;&gt;
+         &lt;moduleType
+               types=&quot;j2ee.web&quot;
+               versions=&quot;1.2, 1.3, 1.4&quot;/&gt;
+      &lt;/runtimeType&gt;
+   &lt;/extension&gt;
 &lt;/pre&gt;
-&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -171,7 +170,16 @@ Runtime instances of this type will delegate to instances of this class. Delegat
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;b&gt;org.eclipse.wst.server.core.model.RuntimeDelegate&lt;/b&gt; and contains a public 0-arg constructor.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;code&gt;org.eclipse.wst.server.core.model.RuntimeDelegate&lt;/code&gt; and contains a public 0-arg constructor.
+      </documentation>
+   </annotation>
+   
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         
       </documentation>
    </annotation>
 

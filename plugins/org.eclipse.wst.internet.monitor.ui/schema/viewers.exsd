@@ -98,17 +98,16 @@
       <documentation>
          The following is an example of a content viewer extension point:
 
-&lt;p&gt;
 &lt;pre&gt;
-&lt;extension point=&quot;org.eclipse.wst.internet.monitor.ui.viewers&quot;&gt;
-  &lt;viewer
-    id=&quot;com.example.byteviewer&quot;
-    class=&quot;com.example.ByteContentViewer&quot;
-    type=&quot;requestresponse&quot;
-    label=&quot;%byteView&quot;/&gt;
-&lt;/extension&gt;
+   &lt;extension 
+         point=&quot;org.eclipse.wst.internet.monitor.ui.viewers&quot;&gt;
+      &lt;viewer
+            id=&quot;com.example.byteviewer&quot;
+            class=&quot;com.example.ByteContentViewer&quot;
+            type=&quot;requestresponse&quot;
+            label=&quot;%byteView&quot;/&gt;
+   &lt;/extension&gt;
 &lt;/pre&gt;
-&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -117,10 +116,19 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends the abstract class &lt;b&gt;org.eclipse.wst.internet.monitor.ui.internal.provisional.ContentViewer&lt;/b&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends the abstract class &lt;code&gt;org.eclipse.wst.internet.monitor.ui.internal.provisional.ContentViewer&lt;/code&gt;.
       </documentation>
    </annotation>
 
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+   
    <annotation>
       <appInfo>
          <meta.section type="copyright"/>

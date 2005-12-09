@@ -102,16 +102,15 @@ Content filter instances of this type will delegate to instances of this class.
       <documentation>
          The following is an example of a content filter extension point:
 
-&lt;p&gt;
 &lt;pre&gt;
- &lt;extension point=&quot;org.eclipse.wst.internet.monitor.core.contentFilter&quot;&gt;
-  &lt;filter
-   id=&quot;com.example.ExampleIdentifier&quot;
-   name=&quot;%exampleName&quot;
-   class=&quot;com.example.ExampleContentFilter&quot;/&gt;
- &lt;/extension&gt;
+   &lt;extension
+         point=&quot;org.eclipse.wst.internet.monitor.core.contentFilter&quot;&gt;
+      &lt;filter
+            id=&quot;com.example.ExampleIdentifier&quot;
+            name=&quot;%exampleName&quot;
+            class=&quot;com.example.ExampleContentFilter&quot;/&gt;
+   &lt;/extension&gt;
 &lt;/pre&gt;
-&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -120,7 +119,16 @@ Content filter instances of this type will delegate to instances of this class.
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends the abstract class &lt;b&gt;org.eclipse.wst.internet.monitor.core.internal.provisional.ContentFilterDelegate&lt;/b&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends the abstract class &lt;code&gt;org.eclipse.wst.internet.monitor.core.internal.provisional.ContentFilterDelegate&lt;/code&gt;.
+      </documentation>
+   </annotation>
+   
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         
       </documentation>
    </annotation>
 

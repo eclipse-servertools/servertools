@@ -91,22 +91,30 @@
       <documentation>
          The following is an example of a server image extension point:
 
-&lt;p&gt;
 &lt;pre&gt;
- &lt;extension point=&quot;org.eclipse.wst.server.ui.serverImages&quot;&gt;
-    &lt;image
-       id=&quot;com.example&quot;
-       icon=&quot;icons/obj16/runtime.gif&quot;
-       typeIds=&quot;com.example.runtime&quot;/&gt;
- &lt;/extension&gt;
+   &lt;extension 
+         point=&quot;org.eclipse.wst.server.ui.serverImages&quot;&gt;
+      &lt;image
+            id=&quot;com.example&quot;
+            icon=&quot;icons/obj16/runtime.gif&quot;
+            typeIds=&quot;com.example.runtime&quot;/&gt;
+   &lt;/extension&gt;
 &lt;/pre&gt;
-&lt;/p&gt;
       </documentation>
    </annotation>
 
    <annotation>
       <appInfo>
          <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+   
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
       </appInfo>
       <documentation>
          

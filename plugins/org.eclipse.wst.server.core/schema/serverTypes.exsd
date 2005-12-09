@@ -181,25 +181,23 @@ Server instances of this type will delegate to instances of this class. Delegate
       <documentation>
          The following is an example of a server type extension point:
 
-&lt;p&gt;
 &lt;pre&gt;
-&lt;extension point=&quot;org.eclipse.wst.server.core.serverTypes&quot;&gt;
-     &lt;serverType
-       id=&quot;com.example.serverType&quot;
-       name=&quot;%serverTypeName&quot;
-       description=&quot;%serverTypeDescription&quot;
-       supportsRemoteHosts=&quot;true&quot;
-       runtime=&quot;true&quot;
-       initialState=&quot;stopped&quot;
-       hasConfiguration=&quot;true&quot;
-       launchConfigId=&quot;com.example.launchConfigurationType&quot;
-       runtimeTypeId=&quot;com.example.runtime&quot;
-       class=&quot;com.example.ExampleServerDelegate&quot;
-       behaviourClass=&quot;com.example.ExampleServerBehaviourDelegate&quot;&gt;
-     &lt;/serverType&gt;
+   &lt;extension 
+         point=&quot;org.eclipse.wst.server.core.serverTypes&quot;&gt;
+      &lt;serverType
+            id=&quot;com.example.serverType&quot;
+            name=&quot;%serverTypeName&quot;
+            description=&quot;%serverTypeDescription&quot;
+            supportsRemoteHosts=&quot;true&quot;
+            runtime=&quot;true&quot;
+            initialState=&quot;stopped&quot;
+            hasConfiguration=&quot;true&quot;
+            launchConfigId=&quot;com.example.launchConfigurationType&quot;
+            runtimeTypeId=&quot;com.example.runtime&quot;
+            class=&quot;com.example.ExampleServerDelegate&quot;
+            behaviourClass=&quot;com.example.ExampleServerBehaviourDelegate&quot;/&gt;
    &lt;/extension&gt;
 &lt;/pre&gt;
-&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -208,9 +206,18 @@ Server instances of this type will delegate to instances of this class. Delegate
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends the abstract class &lt;b&gt;org.eclipse.wst.server.core.model.ServerDelegate&lt;/b&gt; and has a public 0-arg constructor.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends the abstract class &lt;code&gt;org.eclipse.wst.server.core.model.ServerDelegate&lt;/code&gt; and has a public 0-arg constructor.
 
-Value of the attribute &lt;b&gt;behaviourClass&lt;/b&gt; must be a fully qualified name of a Java class that extends the abstract class &lt;b&gt;org.eclipse.wst.server.core.model.ServerBehaviourDelegate&lt;/b&gt; and has a public 0-arg constructor.
+Value of the attribute &lt;b&gt;behaviourClass&lt;/b&gt; must be a fully qualified name of a Java class that extends the abstract class &lt;code&gt;org.eclipse.wst.server.core.model.ServerBehaviourDelegate&lt;/code&gt; and has a public 0-arg constructor.
+      </documentation>
+   </annotation>
+   
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         
       </documentation>
    </annotation>
 

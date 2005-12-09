@@ -97,17 +97,16 @@ Server locator instances of this type will delegate to instances of this class.
       <documentation>
          The following is an example of a server locator extension point:
 
-&lt;p&gt;
 &lt;pre&gt;
-  &lt;extension point=&quot;org.eclipse.wst.server.core.serverLocators&quot;&gt;
-    &lt;serverLocator
-       id=&quot;com.example.locator&quot;
-       name=&quot;%serverLocatorName&quot;
-       description=&quot;%serverLocatorDescription&quot;
-       class=&quot;com.example.ExampleServerLocator&quot;/&gt;
-  &lt;/extension&gt;
+   &lt;extension 
+         point=&quot;org.eclipse.wst.server.core.serverLocators&quot;&gt;
+      &lt;serverLocator
+            id=&quot;com.example.locator&quot;
+            name=&quot;%serverLocatorName&quot;
+            description=&quot;%serverLocatorDescription&quot;
+            class=&quot;com.example.ExampleServerLocator&quot;/&gt;
+   &lt;/extension&gt;
 &lt;/pre&gt;
-&lt;/p&gt;
       </documentation>
    </annotation>
 

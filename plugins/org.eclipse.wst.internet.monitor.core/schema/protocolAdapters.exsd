@@ -92,16 +92,15 @@ Protocol adapter instances of this type will delegate to instances of this class
       <documentation>
          The following is an example of a protocol adapter extension point to define a protocol adapter for TCP/IP:
 
-&lt;p&gt;
 &lt;pre&gt;
-&lt;extension point=&quot;org.eclipse.wst.internet.monitor.core.protocolAdapters&quot;&gt;
-  &lt;protocolAdapter
-    id=&quot;TCPIP&quot;
-    class=&quot;com.example.TCPIPProtocolAdapter&quot;
-    name=&quot;%TCPIP&quot;/&gt;
-&lt;/extension&gt;
+   &lt;extension 
+         point=&quot;org.eclipse.wst.internet.monitor.core.protocolAdapters&quot;&gt;
+      &lt;protocolAdapter
+            id=&quot;TCPIP&quot;
+            class=&quot;com.example.TCPIPProtocolAdapter&quot;
+            name=&quot;%TCPIP&quot;/&gt;
+   &lt;/extension&gt;
 &lt;/pre&gt;
-&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -110,7 +109,16 @@ Protocol adapter instances of this type will delegate to instances of this class
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends the abstract class &lt;b&gt;org.eclipse.wst.internet.monitor.core.internal.ProtocolAdapterDelegate&lt;/b&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends the abstract class &lt;code&gt;org.eclipse.wst.internet.monitor.core.internal.ProtocolAdapterDelegate&lt;/code&gt;.
+      </documentation>
+   </annotation>
+   
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         
       </documentation>
    </annotation>
 

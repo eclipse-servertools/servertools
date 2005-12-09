@@ -108,18 +108,17 @@
       <documentation>
          The following is an example of an editor page section extension point:
 
-&lt;p&gt;
 &lt;pre&gt;
- &lt;extension point=&quot;org.eclipse.wst.server.ui.editorPageSections&quot;&gt;
-    &lt;section
-       id=&quot;com.example&quot;
-       order=&quot;0&quot;
-       insertionId=&quot;com.example.left&quot;
-       typeIds=&quot;com.example.*&quot;
-         class=&quot;com.example.ExampleEditorSectionFactory&quot;/&gt;
- &lt;/extension&gt;
+   &lt;extension 
+         point=&quot;org.eclipse.wst.server.ui.editorPageSections&quot;&gt;
+      &lt;section
+            id=&quot;com.example&quot;
+            order=&quot;0&quot;
+            insertionId=&quot;com.example.left&quot;
+            typeIds=&quot;com.example.*&quot;
+            class=&quot;com.example.ExampleEditorSectionFactory&quot;/&gt;
+   &lt;/extension&gt;
 &lt;/pre&gt;
-&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -128,7 +127,16 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.server.ui.editor.ServerEditorPageSectionFactoryDelegate&lt;/b&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;code&gt;org.eclipse.wst.server.ui.editor.ServerEditorPageSectionFactoryDelegate&lt;/code&gt;.
+      </documentation>
+   </annotation>
+   
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         
       </documentation>
    </annotation>
 

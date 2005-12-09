@@ -104,13 +104,15 @@ This extension point is internal and should not be used by any other plugins.
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         The following is an example of a server monitor extension point:
+         &lt;!--
+The following is an example of a server monitor extension point:
 
 &lt;p&gt;
 &lt;pre&gt;
 
 &lt;/pre&gt;
 &lt;/p&gt;
+--&gt;
       </documentation>
    </annotation>
 
@@ -119,7 +121,16 @@ This extension point is internal and should not be used by any other plugins.
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;b&gt;org.eclipse.wst.server.core.internal.ServerMonitorDelegate&lt;/b&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;code&gt;org.eclipse.wst.server.core.internal.ServerMonitorDelegate&lt;/code&gt;.
+      </documentation>
+   </annotation>
+   
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         
       </documentation>
    </annotation>
 

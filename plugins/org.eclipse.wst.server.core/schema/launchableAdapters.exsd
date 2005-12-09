@@ -92,15 +92,14 @@ Launchable adapter instances of this type will delegate to instances of this cla
       <documentation>
          The following is an example of a launchable adapter extension point:
 
-&lt;p&gt;
 &lt;pre&gt;
-  &lt;extension point=&quot;org.eclipse.wst.server.core.launchableAdapters&quot;&gt;
-     &lt;launchableAdapter
-        id=&quot;com.example.launchableAdapter&quot;
-        class=&quot;com.example.ExampleLaunchableAdapterDelegate&quot;/&gt;
-  &lt;/extension&gt;
+   &lt;extension 
+         point=&quot;org.eclipse.wst.server.core.launchableAdapters&quot;&gt;
+      &lt;launchableAdapter
+              id=&quot;com.example.launchableAdapter&quot;
+              class=&quot;com.example.ExampleLaunchableAdapterDelegate&quot;/&gt;
+   &lt;/extension&gt;
 &lt;/pre&gt;
-&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -109,7 +108,16 @@ Launchable adapter instances of this type will delegate to instances of this cla
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;b&gt;org.eclipse.wst.server.core.model.LaunchableAdapterDelegate&lt;/b&gt; and contains a public 0-arg constructor.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;code&gt;org.eclipse.wst.server.core.model.LaunchableAdapterDelegate&lt;/code&gt; and contains a public 0-arg constructor.
+      </documentation>
+   </annotation>
+   
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         
       </documentation>
    </annotation>
 
