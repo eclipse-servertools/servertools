@@ -81,51 +81,50 @@
 
 </description>
 </context>
-<context id="spge0002">
-<description>Set the preferences for the servers by selecting the appropriate check box.
 
+<context id="spge0002">
+<description>Specifies that all the files should automatically be published to the local server at every <b>seconds</b> intervals, where <b>seconds</b> is the number of seconds you have specified in the control.  The minimum value for the publishing interval is ten seconds.
 </description>
 </context>
-<context id="spge0010">
-<description>Specifies that a monitor opens to display messages when files are published.
-
+<context id="spge0006">
+<description>Specifies that all the files should automatically be published to the remote server at every <b>seconds</b> intervals, where <b>seconds</b> is the number of seconds you have specified in the control.  The minimum value for the publishing interval is ten seconds.
 </description>
 </context>
 <context id="spge0012">
 <description>Specifies that all the files should automatically be published before starting the server.
-
 </description>
 </context>
+
 <context id="spge0014">
 <description>Specifies that the server tools can automatically restart the server when it detects that the server must be restarted to handle resource changes in the workspace.
-
 </description>
 </context>
-<context id="spge0015">
-<description>Displays a list of available publishing methods. Select <b>Prompt user</b> if you want choose which resources to publish to the server or to remove from the server. Select <b>Smart Publish</b> if you want Server Tools to publish to the server only changed resources. All resources that no longer exist in the workspace are deleted on the server. This is the default value. Select <b>Publish all</b> if you want to publish all resources to the server, regardless of whether they have changed. No resources are deleted from the server.
 
-</description>
-</context>
-<context id="spge0018">
-<description>Specifies that the server tools can automatically restart the server when it detects that the server must be restarted to handle resource changes in the workspace.
 
-</description>
-</context>
 <context id="spge0020">
 <description>Specifies that the server tools will prompt you before you make a change in a editor that cannot be undone.
 
 </description>
 </context>
-<context id="spge0022">
-<description>Specifies the length of time the server tools will wait, when the server is not responding, before it prompts you to terminate the server.
 
+<context id="spge0022">
+<description>The Servers view is displayed on the workbench when there are any activities in the Servers view.
 </description>
 </context>
+
 <context id="spge0024">
 <description>Specifies the preferences for saving the changes in any open server editors before starting the server. Select <b>Never</b> to never save the changes in any open editors before starting the server. Select <b>Prompt</b> to have the server tools prompt you before saving any changes in an open server editor. Select <b>Auto-save</b> to have the server tools automatically save any changes in an open server editor before starting the server.
 
 </description>
 </context>
+
+<context id="spge0026">
+<description>Select the relative length of time you can wait before ending a server operation.
+The default setting is <b>Normal</b>.
+<b>Tip</b>:  If you have a fast processing machine, you can try using the <b>Shorter</b> timeout delay option.  If you have a slow processing machine, you can try using the <b>Longer</b> timeout delay option.
+</description>
+</context>
+
 <context id="svcf0000">
 <description>The Server Configuration view allows you to manage servers and server configurations. This view displays a list of all the servers that reside in your workspace. To view the server configurations, click the <b>Menu</b> icon and select <b>View &gt; Advanced</b>. The advanced Server Configuration view opens, displaying the servers and their associated configurations.
 
@@ -301,4 +300,48 @@
 
 </description>
 </context>
+
+<context id="seop0000">
+<description>Specify the host name and other server settings.
+</description>
+</context>
+
+<context id="seop0002">
+<description>Specify the name assign to the server.  This name is displayed in the Servers view under the Server column.
+</description>
+</context>
+
+<context id="seop0004">
+<description>Specifies the location where the server configuration files are stored on the workbench.  
+For example, if you specified the Configuration path to be <b>/Servers/Tomcat v4.1 Server @ localhost-config</b>, the files are available in the Navigator view, expand the folders: Servers > Tomcat v4.1 Server @ localhost-config.
+</description>
+</context>
+
+<context id="seop0006">
+<description>The fully qualified DNS name or IP address of the host machine where the server is running.
+</description>
+</context>
+
+<context id="seop0008">
+<description>Specifies the name of the installed server runtime environment as defined in the Preferences page (Window > Preferences > Server > Installed Runtimes).
+The installed server runtime environment defines the runtime environment of an application server for compiling your application.
+To change the installed server runtime enviornment, select the Edit runtime link.
+</description>
+
+</context>
+<context id="seop0010">
+<description>Specify to use the publishing settings as defined in the Preferences page (Windows > Preferences > Server).
+</description>
+</context>
+
+<context id="seop0012">
+<description>Specifies that all the files should automatically be published to the server at every <b>seconds</b> interval, where <b>seconds</b> is the number of seconds you have specified in the <b>Publishing interval</b> control.  The minimum value for the publishing interval is ten seconds.
+</description>
+</context>
+
+<context id="seop0016">
+<description>Specifies the tools should never publish files to the server.
+</description>
+</context>
+
 </contexts>

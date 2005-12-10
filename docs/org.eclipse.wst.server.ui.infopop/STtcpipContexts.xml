@@ -71,12 +71,13 @@ The <b>Type</b> column shows whether the request type from the Web browser are s
 <context id="tmpr0006">
 <description>This wizard allows you to add or edit TCP/IP monitoring servers.
 In the <b>Local monitoring port</b> field, specify a unique port number on your local machine.
-Use the <b>Host name</b> field under <b>Monitor</b> to specify the host name or IP address of the machine where the server is running.
-Use the <b>Port</b> field under <b>Monitor</b> to specify the port number of the remote server.
-Use the <b>Type</b> combination box under <b>Monitor</b> to specify whether the request type from the Web browser are sent by HTTP or TCP/IP.  If the HTTP option is selected the requests from the Web browser are:
+Use the <b>Host name</b> field under <b>Monitor</b> section to specify the host name or IP address of the machine where the server is running.
+Use the <b>Port</b> field under <b>Monitor</b> section to specify the port number of the remote server.
+Use the <b>Type</b> combination box under <b>Monitor</b> section to specify whether the request type from the Web browser are sent by HTTP or TCP/IP.  If the HTTP option is selected the requests from the Web browser are:
 -Modified so that the HTTP header points to the remote machine
 -Separated if multiple HTTP requests are received in the same connection.
 If the TCP/IP option is selected, all the requests are sent byte for byte.
+Use the <b>Connection Timeout</b> field under <b>Monitor</b> section to specify the length of time, in milliseconds, that you can wait before ending the TCP/IP connection to a server.
 </description>
 </context>
 <context id="tmvw0000">
