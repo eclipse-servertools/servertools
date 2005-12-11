@@ -29,6 +29,7 @@ public class FixModuleContextRootTask extends PublishOperation {
 	protected WebModule module;
 	protected IModule webModule;
 	protected String contextRoot;
+	protected int kind;
 
 	/**
 	 * FixModuleContextRootTask constructor.
@@ -36,12 +37,14 @@ public class FixModuleContextRootTask extends PublishOperation {
 	 * @param webModule
 	 * @param index
 	 * @param contextRoot
+	 * @param kind
 	 */
-	public FixModuleContextRootTask(IModule webModule, int index, String contextRoot) {
+	public FixModuleContextRootTask(IModule webModule, int index, String contextRoot, int kind) {
 		super(NLS.bind(Messages.fixModuleContextRoot, webModule.getName()), Messages.fixModuleContextRootDescription);
 		this.webModule = webModule;
 		this.index = index;
 		this.contextRoot = contextRoot;
+		this.kind = kind;
 	}
 
 	/**
@@ -66,12 +69,14 @@ public class FixModuleContextRootTask extends PublishOperation {
 		module = (WebModule) configuration.getWebModules().get(index);
 		if (contextRoot != null && !contextRoot.startsWith("/") && contextRoot.length() > 0)
 			contextRoot = "/" + contextRoot;
-		configuration.modifyWebModule(index, module.getDocumentBase(), contextRoot, module.isReloadable());
-		wc.save(true, monitor);
+		if (!contextRoot.equals(module.getPath())) {
+			configuration.modifyWebModule(index, module.getDocumentBase(), contextRoot, module.isReloadable());
+			wc.save(true, monitor);
+		}
 	}
 
 	public int getKind() {
-		return PREFERRED;
+		return kind;
 	}
 
 	public int getOrder() {

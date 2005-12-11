@@ -208,9 +208,9 @@ public class WebModuleDialog extends Dialog {
 		data.widthHint = 150;
 		path.setLayoutData(data);
 		path.setText(module.getPath());
-		if (isProject || (module.getMemento() != null && module.getMemento().length() > 0))
+		/*if (module.getMemento() != null && module.getMemento().length() > 0)
 			path.setEditable(false);
-		else
+		else*/
 			path.addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent e) {
 					module = new WebModule(path.getText(), module.getDocumentBase(), module.getMemento(), module.isReloadable());

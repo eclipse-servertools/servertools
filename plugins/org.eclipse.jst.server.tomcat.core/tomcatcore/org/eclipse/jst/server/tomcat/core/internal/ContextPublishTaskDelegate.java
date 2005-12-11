@@ -43,11 +43,13 @@ public class ContextPublishTaskDelegate extends PublishTaskDelegate {
 				String contextRoot = webModule.getContextRoot();
 				if (contextRoot != null && !contextRoot.startsWith("/") && contextRoot.length() > 0)
 					contextRoot = "/" + contextRoot;
-				if (!contextRoot.equals(webModule2.getPath())) {
-					int index = configuration.getWebModules().indexOf(webModule2);
-					FixModuleContextRootTask task = new FixModuleContextRootTask(m, index, webModule.getContextRoot());
-					tasks.add(task);
-				}
+				int kind = PublishOperation.OPTIONAL;
+				if (!contextRoot.equals(webModule2.getPath()))
+					kind = PublishOperation.PREFERRED;
+				
+				int index = configuration.getWebModules().indexOf(webModule2);
+				FixModuleContextRootTask task = new FixModuleContextRootTask(m, index, webModule.getContextRoot(), kind);
+				tasks.add(task);
 			}
 		}
 		
