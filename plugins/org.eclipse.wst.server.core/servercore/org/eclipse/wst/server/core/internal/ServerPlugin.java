@@ -970,7 +970,7 @@ public class ServerPlugin extends Plugin {
 	 * @return the array of installable runtimes {@link IInstallableRuntime}
 	 */
 	public static IInstallableRuntime[] getInstallableRuntimes() {
-		if (installableRuntimes == null)
+		//if (installableRuntimes == null)
 			loadInstallableRuntimes();
 		
 		IInstallableRuntime[] ir = new IInstallableRuntime[installableRuntimes.size()];
@@ -990,7 +990,7 @@ public class ServerPlugin extends Plugin {
 		if (runtimeTypeId == null)
 			throw new IllegalArgumentException();
 		
-		if (installableRuntimes == null)
+		//if (installableRuntimes == null)
 			loadInstallableRuntimes();
 		
 		Iterator iterator = installableRuntimes.iterator();
@@ -1037,8 +1037,8 @@ public class ServerPlugin extends Plugin {
 	 * Load the installable runtimes.
 	 */
 	private static synchronized void loadInstallableRuntimes() {
-		if (installableRuntimes != null)
-			return;
+		//if (installableRuntimes != null)
+		//	return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .installableRuntimes extension point ->-");
 		
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
