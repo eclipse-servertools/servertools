@@ -373,14 +373,42 @@ public class Server extends Base implements IServer {
 	/**
 	 * Fire a server listener module state change event.
 	 */
-	protected void fireServerModuleStateChangeEvent(IModule[] module) {
-		Trace.trace(Trace.LISTENERS, "->- Firing server module state change event: " + getName() + ", " + getServerState() + " ->-");
+	protected void fireModuleStateChangeEvent(IModule[] module) {
+		Trace.trace(Trace.LISTENERS, "->- Firing module state change event: " + getName() + ", " + getServerState() + " ->-");
 		
 		if (notificationManager == null || notificationManager.hasListenerEntries())
 			return;
-	
+		
 		notificationManager.broadcastChange(
 			new ServerEvent(ServerEvent.MODULE_CHANGE | ServerEvent.STATE_CHANGE, this, module, getModuleState(module), 
+				getModulePublishState(module), getModuleRestartState(module)));
+	}
+
+	/**
+	 * Fire a server listener module publish state change event.
+	 */
+	protected void fireModulePublishStateChangeEvent(IModule[] module) {
+		Trace.trace(Trace.LISTENERS, "->- Firing module publish state change event: " + getName() + ", " + getServerState() + " ->-");
+		
+		if (notificationManager == null || notificationManager.hasListenerEntries())
+			return;
+		
+		notificationManager.broadcastChange(
+			new ServerEvent(ServerEvent.MODULE_CHANGE | ServerEvent.PUBLISH_STATE_CHANGE, this, module, getModuleState(module), 
+				getModulePublishState(module), getModuleRestartState(module)));
+	}
+
+	/**
+	 * Fire a server listener module state change event.
+	 */
+	protected void fireModuleRestartChangeEvent(IModule[] module) {
+		Trace.trace(Trace.LISTENERS, "->- Firing module restart change event: " + getName() + ", " + getServerState() + " ->-");
+		
+		if (notificationManager == null || notificationManager.hasListenerEntries())
+			return;
+		
+		notificationManager.broadcastChange(
+			new ServerEvent(ServerEvent.MODULE_CHANGE | ServerEvent.RESTART_STATE_CHANGE, this, module, getModuleState(module), 
 				getModulePublishState(module), getModuleRestartState(module)));
 	}
 
@@ -397,7 +425,7 @@ public class Server extends Base implements IServer {
 			throw new IllegalArgumentException("Module cannot be null");
 		Integer in = new Integer(state);
 		moduleState.put(getKey(module), in);
-		fireServerModuleStateChangeEvent(module);
+		fireModuleStateChangeEvent(module);
 	}
 
 	public void setModulePublishState(IModule[] module, int state) {
@@ -407,7 +435,7 @@ public class Server extends Base implements IServer {
 		if (state == -1)
 			modulePublishState.remove(getKey(module));
 		modulePublishState.put(getKey(module), in);
-		fireServerModuleStateChangeEvent(module);
+		fireModulePublishStateChangeEvent(module);
 	}
 
 	public void setModuleRestartState(IModule[] module, boolean r) {
@@ -415,7 +443,7 @@ public class Server extends Base implements IServer {
 			throw new IllegalArgumentException("Module cannot be null");
 		Boolean b = new Boolean(r);
 		moduleState.put(getKey(module), b);
-		fireServerModuleStateChangeEvent(module);
+		fireModuleRestartChangeEvent(module);
 	}
 
 	protected void handleModuleProjectChange(final IModule module) {
@@ -426,10 +454,11 @@ public class Server extends Base implements IServer {
 		}
 		final Helper helper = new Helper();
 		
+		final List modules2 = new ArrayList();
+		
 		IModuleVisitor visitor = new IModuleVisitor() {
 			public boolean visit(IModule[] module2) {
-				if (helper.changed)
-					return false;
+				modules2.add(module2);
 				
 				int size = module2.length;
 				IModule m = module2[size - 1];
@@ -440,14 +469,16 @@ public class Server extends Base implements IServer {
 					if (hasPublishedResourceDelta(module2)) {
 						helper.changed = true;
 						setModulePublishState(module2, IServer.PUBLISH_STATE_INCREMENTAL);
-						return false;
 					}
 				}
 				return true;
 			}
 		};
-
+		
 		visit(visitor, null);
+		
+		if (getServerPublishInfo().hasStructureChanged(modules2))
+			setServerPublishState(IServer.PUBLISH_STATE_INCREMENTAL);
 		
 		if (!helper.changed)
 			return;
@@ -476,16 +507,19 @@ public class Server extends Base implements IServer {
 	protected void autoPublish() {
 		stopAutoPublish();
 		
+		if (getAutoPublishSetting() == AUTO_PUBLISH_DISABLE)
+			return;
+		
 		int time = 0;
 		if (getAutoPublishSetting() == AUTO_PUBLISH_DEFAULT) {
+			ServerPreferences pref = ServerPreferences.getInstance();
 			boolean local = SocketUtil.isLocalhost(getHost());
-			if (local && ServerPreferences.getInstance().getAutoPublishLocal())
-				time = ServerPreferences.getInstance().getAutoPublishLocalTime();
-			else if (!local && ServerPreferences.getInstance().getAutoPublishRemote())
-				time = ServerPreferences.getInstance().getAutoPublishRemoteTime();
-		} else {
+			if (local && pref.getAutoPublishLocal())
+				time = pref.getAutoPublishLocalTime();
+			else if (!local && pref.getAutoPublishRemote())
+				time = pref.getAutoPublishRemoteTime();
+		} else
 			time = getAutoPublishTime();
-		}
 		
 		if (time > 0) {
 			autoPublishThread = new AutoPublishThread();

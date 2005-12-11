@@ -340,14 +340,13 @@ public class ServerTableViewer extends TreeViewer {
 									stopThread();
 							}
 						}
-					} else if ((eventKind & ServerEvent.RESTART_STATE_CHANGE) != 0) {
+					} else
 						refreshServer(server);
-					} 
 				} else if ((eventKind & ServerEvent.MODULE_CHANGE) != 0) {
 					// module change event
-					if ((eventKind & ServerEvent.STATE_CHANGE) != 0) {
+					if ((eventKind & ServerEvent.STATE_CHANGE) != 0 || (eventKind & ServerEvent.PUBLISH_STATE_CHANGE) != 0) {
 						refreshServer(server);
-					} 
+					}
 				}
 			}
 		};

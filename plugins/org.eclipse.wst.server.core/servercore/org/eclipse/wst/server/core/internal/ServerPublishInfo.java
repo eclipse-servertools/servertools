@@ -12,6 +12,10 @@ package org.eclipse.wst.server.core.internal;
 
 import java.io.File;
 import java.util.*;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.wst.server.core.IModule;
@@ -362,12 +366,7 @@ public class ServerPublishInfo {
 		}
 		
 		// removed resources
-		for (int i = 0; i < size; i++) {
-			if (originalMap.containsKey(original[i]))
-				return true;
-		}
-		
-		return false;
+		return !originalMap.isEmpty();
 	}
 
 	/**
@@ -393,5 +392,19 @@ public class ServerPublishInfo {
 		IModuleResourceDelta[] delta = new IModuleResourceDelta[list.size()];
 		list.toArray(delta);
 		return delta;
+	}
+
+	/**
+	 * Returns true if the list of modules being published does not match the previous
+	 * list of published modules.
+	 * 
+	 * TODO: This method should compare the modules. For now, comparing the size is fine.
+	 * 
+	 * @param modules a list of modules
+	 * @return <code>true</code> if the structure of published modules has changed, or
+	 *    <code>false</code> otherwise
+	 */
+	protected boolean hasStructureChanged(List modules) {
+		return modules.size() != modulePublishInfo.keySet().size();
 	}
 }
