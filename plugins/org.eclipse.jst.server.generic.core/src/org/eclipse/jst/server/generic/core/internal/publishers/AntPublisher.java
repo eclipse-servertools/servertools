@@ -242,8 +242,10 @@ public class AntPublisher extends GenericPublisher{
 		if("jst.web".equals(getModuleTypeId())){ //$NON-NLS-1$
 			IWebModule webModule = (IWebModule)getModule()[0].loadAdapter(IWebModule.class,null);
 			String contextRoot = webModule.getContextRoot();
-			if(contextRoot.charAt(0) == '/')
-				moduleName = contextRoot.substring(1);
+			if(contextRoot.charAt(0) == '/'){
+				contextRoot = contextRoot.substring(1);
+			}
+			moduleName=contextRoot;
 		}
 		return moduleName;
 	}
