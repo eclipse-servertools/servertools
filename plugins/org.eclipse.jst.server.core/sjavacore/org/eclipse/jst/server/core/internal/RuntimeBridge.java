@@ -32,6 +32,7 @@ import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.Runtime;
 /**
  * 
  */
@@ -102,6 +103,9 @@ public class RuntimeBridge implements IRuntimeBridge {
 
 	private static class Stub implements IStub {
 		private IRuntime runtime;
+		protected int timestamp = -1;
+		protected IVMInstall vmInstall;
+		protected String jvmver;
 
 		public Stub(IRuntime runtime) {
 			this.runtime = runtime;
@@ -137,10 +141,17 @@ public class RuntimeBridge implements IRuntimeBridge {
 			// define JRE component
 			IJavaRuntime javaRuntime = (IJavaRuntime) runtime.loadAdapter(IJavaRuntime.class, null);
 			if (javaRuntime != null) {
-				IVMInstall vmInstall = javaRuntime.getVMInstall();
-				IVMInstall2 vmInstall2 = (IVMInstall2) vmInstall;
-				
-				String jvmver = vmInstall2.getJavaVersion();
+				if (timestamp != ((Runtime) runtime).getTimestamp()) {
+					vmInstall = null;
+					jvmver = null;
+					timestamp = ((Runtime) runtime).getTimestamp();
+				}
+				if (vmInstall == null)
+					vmInstall = javaRuntime.getVMInstall(); 
+				if (jvmver == null) {
+					IVMInstall2 vmInstall2 = (IVMInstall2) vmInstall;
+					jvmver = vmInstall2.getJavaVersion();
+				}
 				IRuntimeComponentVersion rcv;
 				
 				if (jvmver == null || jvmver.startsWith("1.4"))
