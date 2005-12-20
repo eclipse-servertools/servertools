@@ -91,19 +91,19 @@
 			<datavalue>/serverdef/scripts/websphere.6.x.xml</datavalue>
 		</publisherdata>
 		<publisherdata>
-			<dataname>target.publish.j2ee.web</dataname>
+			<dataname>target.publish.jst.web</dataname>
 			<datavalue>deploy.j2ee.web</datavalue>
 		</publisherdata>
 		<publisherdata>
-			<dataname>target.publish.j2ee.ejb</dataname>
+			<dataname>target.publish.jst.ejb</dataname>
 			<datavalue>deploy.j2ee.ejb</datavalue>
 		</publisherdata>
 		<publisherdata>
-			<dataname>target.unpublish.j2ee.web</dataname>
+			<dataname>target.unpublish.jst.web</dataname>
 			<datavalue>undeploy.j2ee.web</datavalue>
 		</publisherdata>
 		<publisherdata>
-			<dataname>target.unpublish.j2ee.ejb</dataname>
+			<dataname>target.unpublish.jst.ejb</dataname>
 			<datavalue>undeploy.j2ee.ejb</datavalue>
 		</publisherdata>
 		<publisherdata>

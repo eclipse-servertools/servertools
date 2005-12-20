@@ -20,7 +20,8 @@
 	<taskdef classpathref="toolpath" name="wsinstallapp" classname="com.ibm.websphere.ant.tasks.InstallApplication" />	
 
 	<target name="deploy.j2ee.web">
-		<jar destfile="${module.name}.war"> 
+		
+		<jar destfile="${project.working.dir}/${module.name}.war"> 
 			<zipfileset dir="${module.dir}">
 				<include name="**/*.*"/>
 				<exclude name="**/*.war"/>
@@ -36,7 +37,7 @@
 	    <wsadmin  
 			washome="${was.home}" 				
 			properties="${wasProfile}/properties/wsadmin.properties" 
-			command="$AdminApp install ${module.name}.war {-appname ${module.name} -contextroot  ${module.name} -usedefaultbindings}" 
+			command="$AdminApp install ${project.working.dir}/${module.name}.war {-appname ${module.name} -contextroot  ${module.name} -usedefaultbindings}" 
 			failonerror="true">
 		</wsadmin>
 	    <wsadmin  
@@ -48,18 +49,18 @@
 	</target>
 	
 	<target name="deploy.j2ee.ejb">
-		<jar destfile="${module.name}.jar"> 
+		<jar destfile="${project.working.dir}/${module.name}.jar"> 
 			<zipfileset dir="${module.dir}">
 	        	<include name="**/*.*"/>
 	       		<exclude name="**/*.java"/>
 			</zipfileset>
 		</jar>
 		<wsejbdeploy 
-				inputJar="${module.name}.jar" 
+				inputJar="${project.working.dir}/${module.name}.jar" 
 				wasHome="${was.home}" 
 				washome="${was.home}" 
 				classpathref="toolpath"
-				outputJar="${module.name}-was.jar" 
+				outputJar="${project.working.dir}/${module.name}-was.jar" 
 				codegen="true " 
 				keepGenerated="true" 
 				quiet="false" 
@@ -81,7 +82,7 @@
 		    <wsadmin  
 				washome="${was.home}" 				
 				properties="${wasProfile}/properties/wsadmin.properties" 
-				command="$AdminApp install ${module.name}.jar {-appname ${module.name} -usedefaultbindings}" 
+				command="$AdminApp install ${project.working.dir}/${module.name}.jar {-appname ${module.name} -usedefaultbindings}" 
 				failonerror="true">
 			</wsadmin>
 
@@ -95,7 +96,7 @@
 	
 
 	<target name="deploy.j2ee.ear">
-		<jar destfile="${module.name}.ear"> 
+		<jar destfile="${project.working.dir}/${module.name}.ear"> 
 			<zipfileset dir="${module.dir}">
 	        	<include name="**/*.*"/>
 	       		<exclude name="**/*.java"/>
@@ -112,7 +113,7 @@
 		<wsadmin  
 					washome="${was.home}" 				
 					properties="${wasProfile}/properties/wsadmin.properties" 
-					command="$AdminApp install ${module.name}.ear {-appname ${module.name} -deployejb -usedefaultbindings}" 
+					command="$AdminApp install ${project.working.dir}/${module.name}.ear {-appname ${module.name} -deployejb -usedefaultbindings}" 
 					failonerror="true">
 		</wsadmin>
 		<wsadmin  
@@ -125,6 +126,7 @@
 	</target>	
 	
 	<target name="undeploy.j2ee.web">
+		
 		<wsadmin  
 			washome="${was.home}" 
 			
