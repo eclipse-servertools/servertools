@@ -131,6 +131,10 @@
        <facet
          id="jst.utility"
          version="1.0"/>  
+         
+       <facet
+         id="jst.connector"
+         version="1.0,1.5"/>
     </supported>
   </extension>
 

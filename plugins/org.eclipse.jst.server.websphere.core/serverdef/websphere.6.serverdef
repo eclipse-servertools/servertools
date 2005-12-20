@@ -60,7 +60,11 @@
 		<publishDir>${wasHome}</publishDir>
 		<publisherReference>org.eclipse.jst.server.generic.websphere.antpublisher</publisherReference>
 	</module>
-
+	<module>
+		<type>jst.connector</type>
+		<publishDir>${wasHome}</publishDir>
+		<publisherReference>org.eclipse.jst.server.generic.websphere.antpublisher</publisherReference>
+	</module>
 	<project>
 		<classpathReference>was.project</classpathReference>
 	</project>
