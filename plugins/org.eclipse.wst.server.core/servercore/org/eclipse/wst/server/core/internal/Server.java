@@ -186,7 +186,7 @@ public class Server extends Base implements IServer {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.ibm.wtp.server.core.IServer2#getRuntime()
+	 * @see org.eclipse.wst.server.core.IServerAttributes#getRuntime()
 	 */
 	public IRuntime getRuntime() {
 		return runtime;
@@ -197,7 +197,7 @@ public class Server extends Base implements IServer {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.ibm.wtp.server.core.IServer2#getServerConfiguration()
+	 * @see org.eclipse.wst.server.core.IServerAttributes#getServerConfiguration()
 	 */
 	public IFolder getServerConfiguration() {
 		return configuration;
@@ -486,7 +486,8 @@ public class Server extends Base implements IServer {
 		if (getServerState() != IServer.STATE_STOPPED && behaviourDelegate != null)
 			behaviourDelegate.handleResourceChange();
 		
-		autoPublish();
+		if (getServerState() != IServer.STATE_STOPPED)
+			autoPublish();
 		
 		Trace.trace(Trace.FINEST, "< handleDeployableProjectChange()");
 	}
@@ -1560,12 +1561,15 @@ public class Server extends Base implements IServer {
 
 							// restart in a quarter second (give other listeners a chance
 							// to hear the stopped message)
-							Thread t = new Thread() {
+							Thread t = new Thread("Restart thread") {
 								public void run() {
 									try {
 										Thread.sleep(250);
 									} catch (Exception e) {
 										// ignore
+									}
+									if (ServerPreferences.getInstance().isAutoPublishing()) {
+										// TODO publish here!!
 									}
 									try {
 										Server.this.start(mode3, listener2);
