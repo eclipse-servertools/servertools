@@ -100,8 +100,9 @@ public class NewServerWizardFragment extends WizardFragment {
 					list.add(sub);
 			}
 			
-			IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
-			if (server != null) {
+			IServer svr = (IServer) getTaskModel().getObject(TaskModel.TASK_SERVER);
+			if (svr != null && svr instanceof IServerWorkingCopy) {
+				IServerWorkingCopy server = (IServerWorkingCopy) svr;
 				// createConfiguration(server);
 				if (server.getServerType().hasServerConfiguration()) {
 					((ServerWorkingCopy)server).importConfiguration(runtime, null);
