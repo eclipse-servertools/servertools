@@ -19,13 +19,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.PreferenceDialog;
-import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -37,6 +34,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
@@ -160,20 +158,10 @@ public class NewManualServerComposite extends Composite {
 	}
 
 	protected boolean showPreferencePage() {
-		PreferenceManager manager = PlatformUI.getWorkbench().getPreferenceManager();
-		IPreferenceNode node = manager.find("org.eclipse.wst.server.ui.preferencePage").findSubNode("org.eclipse.wst.server.ui.runtime.preferencePage"); //$NON-NLS-1$ //$NON-NLS-2$
-		PreferenceManager manager2 = new PreferenceManager();
-		manager2.addToRoot(node);
-		final PreferenceDialog dialog = new PreferenceDialog(this.getShell(), manager2);
-		final boolean[] result = new boolean[] { false };
-		BusyIndicator.showWhile(this.getDisplay(), new Runnable() {
-			public void run() {
-				dialog.create();
-				if (dialog.open() == Window.OK)
-					result[0] = true;
-			}
-		});
-		return result[0];
+		String id = "org.eclipse.wst.server.ui.preferencePage";
+		String id2 = "org.eclipse.wst.server.ui.runtime.preferencePage";
+		final PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), id2, new String[] { id, id2 }, null);
+		return (dialog.open() == Window.OK);
 	}
 
 	public void setHost(String host) {

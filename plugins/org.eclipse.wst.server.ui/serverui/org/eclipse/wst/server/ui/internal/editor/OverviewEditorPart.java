@@ -26,13 +26,10 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
-import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.PreferenceDialog;
-import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
@@ -47,6 +44,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -534,21 +532,9 @@ public class OverviewEditorPart extends ServerEditorPart {
 	}
 
 	protected boolean showPreferencePage() {
-		PreferenceManager manager = PlatformUI.getWorkbench().getPreferenceManager();
-		IPreferenceNode node = manager.find("org.eclipse.wst.server.ui.preferencePage");
-		PreferenceManager manager2 = new PreferenceManager();
-		manager2.addToRoot(node);
-		
-		final PreferenceDialog dialog = new PreferenceDialog(getSite().getShell(), manager2);
-		final boolean[] result = new boolean[] { false };
-		BusyIndicator.showWhile(getSite().getShell().getDisplay(), new Runnable() {
-			public void run() {
-				dialog.create();
-				if (dialog.open() == Window.OK)
-					result[0] = true;
-			}
-		});
-		return result[0];
+		String id = "org.eclipse.wst.server.ui.preferencePage";
+		final PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getSite().getShell(), id, new String[] { id }, null);
+		return (dialog.open() == Window.OK);
 	}
 
 	protected int showWizard(final IRuntimeWorkingCopy runtimeWorkingCopy) {
