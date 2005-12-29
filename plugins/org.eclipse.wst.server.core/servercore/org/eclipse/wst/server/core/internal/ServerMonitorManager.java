@@ -309,7 +309,7 @@ public class ServerMonitorManager implements IServerMonitorManager {
 				if (mp.isStarted() && mp.server.equals(server) && mp.port.getPort() == port) {
 					String[] contentTypes = mp.getContentTypes();
 					boolean found = false;
-					if (content == null || contentTypes != null) {
+					if (content != null && contentTypes != null && contentTypes.length > 0) {
 						int size = contentTypes.length;
 						for (int i = 0; i < size; i++)
 							if (content.equals(contentTypes[i]))
