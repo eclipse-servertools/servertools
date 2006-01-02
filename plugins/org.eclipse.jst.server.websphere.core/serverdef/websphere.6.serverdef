@@ -26,13 +26,13 @@
 		label="%wasCell"
 		type="string"
 		context="server"
-		default="sanchezNode01Cell" />
+		default="[cell]" />
 
 	<property id="wasNode"
 		label="%wasNode"
 		type="string"
 		context="server"
-		default="sanchezNode01" />
+		default="[Node]" />
 	<property id="wasServer"
 		label="%wasServer"
 		type="string"
