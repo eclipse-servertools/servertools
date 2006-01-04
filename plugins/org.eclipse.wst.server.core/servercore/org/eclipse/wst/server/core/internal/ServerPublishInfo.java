@@ -94,6 +94,10 @@ public class ServerPublishInfo {
 		save();
 	}*/
 
+	/**
+	 * 
+	 * Note: save() must be called manually after making this call.
+	 */
 	public void removeDeletedModulePublishInfo(List moduleList) {
 		int size = moduleList.size();
 		List removed = new ArrayList();
@@ -118,8 +122,6 @@ public class ServerPublishInfo {
 			String key = (String) iterator.next();
 			modulePublishInfo.remove(key);
 		}
-		
-		save();
 	}
 
 	/**
@@ -222,7 +224,12 @@ public class ServerPublishInfo {
 			Trace.trace(Trace.SEVERE, "Could not save publish information", e);
 		}
 	}
-	
+
+	/**
+	 * 
+	 * Note: save() must be called manually after making this call.
+	 * @param module
+	 */
 	public void fill(IModule[] module) {
 		ModulePublishInfo mpi = getModulePublishInfo(module);
 		int size = module.length;
@@ -233,7 +240,6 @@ public class ServerPublishInfo {
 		} catch (CoreException ce) {
 			// ignore
 		}
-		save();
 	}
 
 	protected IModuleResourceDelta[] getDelta(IModule[] module) {

@@ -811,6 +811,7 @@ public class Server extends Base implements IServer {
 			}, monitor);
 			
 			getServerPublishInfo().removeDeletedModulePublishInfo(modules2);
+			getServerPublishInfo().save();
 			
 			return status;
 		} catch (Exception e) {
