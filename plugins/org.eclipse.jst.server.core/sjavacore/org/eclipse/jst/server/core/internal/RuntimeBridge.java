@@ -150,7 +150,8 @@ public class RuntimeBridge implements IRuntimeBridge {
 					vmInstall = javaRuntime.getVMInstall(); 
 				if (jvmver == null) {
 					IVMInstall2 vmInstall2 = (IVMInstall2) vmInstall;
-					jvmver = vmInstall2.getJavaVersion();
+					if (vmInstall2 != null)
+						jvmver = vmInstall2.getJavaVersion();
 				}
 				IRuntimeComponentVersion rcv;
 				
