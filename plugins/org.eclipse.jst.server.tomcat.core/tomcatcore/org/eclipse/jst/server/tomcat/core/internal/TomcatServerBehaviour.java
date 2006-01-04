@@ -237,10 +237,18 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 
 		IPath path = getTempDirectory().append("publish.txt");
 		Properties p = new Properties();
+		FileInputStream fin = null;
 		try {
-			p.load(new FileInputStream(path.toFile()));
+			fin = new FileInputStream(path.toFile());
+			p.load(fin);
 		} catch (Exception e) {
 			// ignore
+		} finally {
+			try {
+				fin.close();
+			} catch (Exception ex) {
+				// ignore
+			}
 		}
 		
 		if (moduleTree.length == 1) // web module
