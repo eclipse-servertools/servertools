@@ -95,7 +95,7 @@ class AudioTableContentProvider implements IStructuredContentProvider {
 	 * @return java.util.List
 	 * @param category java.lang.String
 	 */
-	protected List getSoundsByCategory(String category) {
+	protected static List getSoundsByCategory(String category) {
 		AudioCore core = AudioCore.getInstance();
 	
 		Map sounds = core.getSounds();

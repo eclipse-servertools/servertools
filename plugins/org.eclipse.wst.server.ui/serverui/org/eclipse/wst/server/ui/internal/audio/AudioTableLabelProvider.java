@@ -18,12 +18,11 @@ import java.util.Map;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.viewers.ILockedLabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 /**
  * Audio table label provider.
  */
-class AudioTableLabelProvider implements ITableLabelProvider, ILockedLabelProvider {
+class AudioTableLabelProvider implements ITableLabelProvider {
 	protected AudioPreferencePage page;
 
 	/**
@@ -66,7 +65,7 @@ class AudioTableLabelProvider implements ITableLabelProvider, ILockedLabelProvid
 	 * @see ITableLabelProvider#getColumnImage(java.lang.Object, int)
 	 */
 	public Image getColumnImage(Object element, int columnIndex) {
-		AudioCore core = AudioCore.getInstance();
+		/*AudioCore core = AudioCore.getInstance();
 	
 		if (columnIndex == 0) {
 			if (element instanceof String) {
@@ -83,7 +82,8 @@ class AudioTableLabelProvider implements ITableLabelProvider, ILockedLabelProvid
 			if (core.isSoundEnabled(sound.getId()))
 				return ImageResource.getImage(ImageResource.IMG_AUDIO_ENABLED);
 			return ImageResource.getImage(ImageResource.IMG_AUDIO_DISABLED);
-		} else if (columnIndex == 1) {
+		} else*/
+		if (columnIndex == 1) {
 			if (element instanceof String)
 				return ImageResource.getImage(ImageResource.IMG_AUDIO_CATEGORY);
 			return ImageResource.getImage(ImageResource.IMG_AUDIO_SOUND);
@@ -95,6 +95,9 @@ class AudioTableLabelProvider implements ITableLabelProvider, ILockedLabelProvid
 	 * @see ITableLabelProvider#getColumnText(java.lang.Object, int)
 	 */
 	public String getColumnText(Object element, int columnIndex) {
+		if (columnIndex == 0)
+			return "";
+		
 		if (element instanceof String) {
 			String categoryId = (String) element;
 			if (columnIndex == 1) {
@@ -106,9 +109,8 @@ class AudioTableLabelProvider implements ITableLabelProvider, ILockedLabelProvid
 			return "";
 		}
 		Sound sound = (Sound) element;
-		if (columnIndex == 0)
-			return "";
-		else if (columnIndex == 1) {
+		
+		if (columnIndex == 1) {
 			String s = sound.getName();
 			if (s != null)
 				return s;
@@ -150,14 +152,5 @@ class AudioTableLabelProvider implements ITableLabelProvider, ILockedLabelProvid
 	 */
 	public void removeListener(ILabelProviderListener listener) {
 		// do nothing
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.ui.internal.audio.ILockedLabelProvider#isLocked(java.lang.Object)
-	 */
-	public boolean isLocked(Object element) {
-		if (element instanceof String)
-			return true;
-		return false;
 	}
 }

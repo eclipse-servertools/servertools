@@ -11,6 +11,8 @@
 package org.eclipse.wst.server.ui.internal.audio;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,7 +33,6 @@ import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
 import org.eclipse.wst.server.ui.internal.Trace;
-import org.eclipse.wst.server.ui.internal.viewers.LockedTableViewer;
 /**
  * Audio preference page.
  */
@@ -41,7 +42,7 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 
 	protected Map userSoundMap;
 
-	protected TableViewer viewer;
+	protected CategoryTableViewer viewer;
 	
 	boolean soundAvailable = true;
 
@@ -141,83 +142,62 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 		data = new GridData();
 		data.horizontalSpan = 3;
 		label.setLayoutData(data);
-	
-		final Table table = new Table(composite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
+		
+		final Table table = new Table(composite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION | SWT.CHECK);
 		data = new GridData(GridData.FILL_BOTH);
 		data.horizontalSpan = 2;
 		table.setLayoutData(data);
 		whs.setHelp(table, ContextIds.AUDIO_PREFERENCES_SOUNDS_TABLE);
-	
-		viewer = new LockedTableViewer(table);
-	
+		
+		viewer = new CategoryTableViewer(table);
+		
 		TableLayout tableLayout = new TableLayout();
 		table.setLayout(tableLayout);
 		table.setHeaderVisible(true);
-	
+		
 		tableLayout.addColumnData(new ColumnPixelData(19, false));
 		TableColumn col = new TableColumn(table, SWT.NONE, 0);
 		col.setText("");
 		col.setResizable(false);
-	
+		
 		tableLayout.addColumnData(new ColumnWeightData(11, 110, true));
 		col = new TableColumn(table, SWT.NONE, 1);
 		col.setText(Messages.audioPrefSound);
 		col.setResizable(true);
-	
+		
 		tableLayout.addColumnData(new ColumnWeightData(15, 150, true));
 		col = new TableColumn(table, SWT.NONE, 2);
 		col.setText(Messages.audioPrefFile);
 		col.setResizable(true);
-	
+		
 		viewer.setContentProvider(new AudioTableContentProvider());
 		viewer.setLabelProvider(new AudioTableLabelProvider(this));
 		viewer.setInput("root");
-		viewer.setColumnProperties(new String[] {"enabled", "sound", "file"});
-	
-		CellEditor editors[] = new CellEditor[3];
-		editors[0] = new CheckboxCellEditor(table);
-		viewer.setCellEditors(editors);
-	
-		ICellModifier cellModifier = new ICellModifier() {
-			public Object getValue(Object element, String property) {
-				if ("enabled".equals(property)) {
-					if (element instanceof String)
-						return new Boolean(core.isCategoryEnabled((String) element));
-					
-					Sound s = (Sound) element;
-					return new Boolean(core.isSoundEnabled(s.getId()));
-				}
-				return "xx";
-			}
-	
-			public boolean canModify(Object element, String property) {
-				if (!"enabled".equals(property))
-					return false;
-				if (element instanceof String)
-					return true;
-				Sound sound = (Sound) element;
-				return (core.isCategoryEnabled(sound.getCategory()));
-			}
-	
-			public void modify(Object element, String property, Object value) {
-				Item item = (Item) element;
-				Object obj = item.getData();
-				Boolean b = (Boolean) value;
-	
+		
+		setCheckState(viewer);
+		
+		viewer.addCheckStateListener(new ICheckStateListener() {
+			public void checkStateChanged(CheckStateChangedEvent event) {
+				boolean checked = event.getChecked();
+				Object obj = event.getElement();
+				
 				if (obj instanceof String) {
 					String id = (String) obj;
-					core.setCategoryEnabled(id, b.booleanValue());
-					viewer.refresh();
+					core.setCategoryEnabled(id, checked);
+					//viewer.refresh();
+					Iterator iterator = AudioTableContentProvider.getSoundsByCategory(id).iterator();
+					while (iterator.hasNext()) {
+						Sound s = (Sound) iterator.next();
+						viewer.setChecked(s, checked);
+						core.setSoundEnabled(s.getId(), checked);
+					}
 				} else {
 					Sound sound = (Sound) obj;
-					core.setSoundEnabled(sound.getId(), b.booleanValue());
-					viewer.refresh(sound);
+					core.setSoundEnabled(sound.getId(), checked);
 				}
 			}
-		};
-		viewer.setCellModifier(cellModifier);
+		});
 		
-	
 		Composite right = new Composite(composite, SWT.NONE);
 		layout = new GridLayout();
 		layout.numColumns = 1;
@@ -241,12 +221,12 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 		final Button resetButton = SWTUtil.createButton(right, Messages.audioPrefReset);
 		resetButton.setEnabled(false);
 		whs.setHelp(resetButton, ContextIds.AUDIO_PREFERENCES_RESET);
-	
-		table.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
+		
+		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
 				try {
-					int sel = table.getSelectionIndex();
-					Object obj = table.getItem(sel).getData();
+					IStructuredSelection sel = (IStructuredSelection) event.getSelection();
+					Object obj = sel.getFirstElement();
 					if (obj instanceof Sound) {
 						Sound sound = (Sound) obj;
 						URL url = getSoundURL(sound.getId());
@@ -255,7 +235,7 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 						else
 							playButton.setEnabled(false);
 						browseButton.setEnabled(true);
-	
+						
 						if (getUserSoundPath(sound.getId()) != null)
 							resetButton.setEnabled(true);
 						else
@@ -263,6 +243,7 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 					} else {
 						playButton.setEnabled(false);
 						browseButton.setEnabled(false);
+						resetButton.setEnabled(false);
 					}
 				} catch (Exception ex) {
 					Trace.trace(Trace.SEVERE, "Error in table selection", ex);
@@ -283,9 +264,8 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 					}
 				}
 			});
-		} else {
+		} else
 			playButton.setEnabled(false);
-		}
 		
 		browseButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -303,7 +283,7 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 				}
 			}
 		});
-	
+		
 		resetButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				try {
@@ -319,8 +299,49 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 		});
 		
 		Dialog.applyDialogFont(composite);
-	
+		
 		return composite;
+	}
+
+	protected void setCheckState(CheckboxTableViewer viewer) {
+		AudioCore core = AudioCore.getInstance();
+		
+		Map categories = core.getCategories();
+		
+		// first, find all the categories and sort
+		List cats = new ArrayList();
+		Iterator iterator = categories.keySet().iterator();
+		while (iterator.hasNext())
+			cats.add(iterator.next());
+		
+		// list them, ignoring empty ones
+		iterator = categories.keySet().iterator();
+		while (iterator.hasNext()) {
+			String id = (String) iterator.next();
+			List l = AudioTableContentProvider.getSoundsByCategory(id);
+			if (!l.isEmpty()) {
+				if (core.isCategoryEnabled(id))
+					viewer.setChecked(id, true);
+				
+				int size = l.size();
+				for (int i = 0; i < size; i++) {
+					Sound s = (Sound) l.get(i);
+					if (core.isSoundEnabled(s.getId()))
+						viewer.setChecked(s, true);
+				}
+			}
+		}
+		
+		// finally, list the "misc" sounds
+		List l = AudioTableContentProvider.getSoundsByCategory(null);
+		if (!l.isEmpty()) {
+			int size = l.size();
+			for (int i = 0; i < size; i++) {
+				Sound s = (Sound) l.get(i);
+				if (core.isSoundEnabled(s.getId()))
+					viewer.setChecked(s, true);
+			}
+		}
 	}
 
 	/**
