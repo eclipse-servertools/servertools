@@ -120,7 +120,7 @@ public class ModulePublishInfo {
 		
 		IModuleResource[] resources2 = new IModuleResource[list.size()];
 		list.toArray(resources2);
-		return resources;
+		return resources2;
 	}
 
 	/**
