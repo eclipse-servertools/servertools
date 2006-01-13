@@ -248,8 +248,12 @@ public class ServerUtil {
 				if (modules != null) {
 					int size2 = modules.length;
 					for (int j = 0; j < size2; j++) {
-						if (!list.contains(modules[j]))
-							list.add(modules[j]);
+						if (!list.contains(modules[j])) {
+							if (isSupportedModule(factories[i].getModuleTypes(), modules[j].getModuleType()))
+								list.add(modules[j]);
+							else
+								Trace.trace(Trace.WARNING, "Invalid module returned from factory, ignored: " + modules[j]);
+						}
 					}
 				}
 			}
