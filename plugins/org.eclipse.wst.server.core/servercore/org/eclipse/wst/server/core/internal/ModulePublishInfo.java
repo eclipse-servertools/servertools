@@ -91,6 +91,8 @@ public class ModulePublishInfo {
 			return new IModuleResource[0];
 		
 		List list = new ArrayList(5);
+		
+		// load files
 		IMemento[] children = memento.getChildren(FILE);
 		if (children != null) {
 			int size = children.length;
@@ -98,10 +100,12 @@ public class ModulePublishInfo {
 				String name2 = children[i].getString(NAME);
 				IPath path = new Path(children[i].getString(PATH));
 				long stamp = Long.parseLong(children[i].getString(STAMP));
-				ModuleFile file = new ModuleFile(null, name2, path, stamp);
+				ModuleFile file = new ModuleFile(name2, path, stamp);
 				list.add(file);
 			}
 		}
+		
+		// load folders
 		children = memento.getChildren(FOLDER);
 		if (children != null) {
 			int size = children.length;

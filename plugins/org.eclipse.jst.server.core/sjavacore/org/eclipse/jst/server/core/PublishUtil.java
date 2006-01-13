@@ -126,7 +126,7 @@ public class PublishUtil {
 			if (!tempFile.renameTo(file))
 				throw new Exception(NLS.bind(Messages.errorRename, tempFile.toString(), file.toString()));
 			
-			if (ts != IResource.NULL_STAMP)
+			if (ts != IResource.NULL_STAMP && ts != 0)
 				file.setLastModified(ts);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error copying file", e);
@@ -151,7 +151,18 @@ public class PublishUtil {
 
 	private static void copyFile(IModuleFile mf, IPath path) throws CoreException {
 		IFile file = (IFile) mf.getAdapter(IFile.class);
-		copyFile(file.getContents(), path, file.getLocalTimeStamp());
+		if (file != null) {
+			copyFile(file.getContents(), path, file.getLocalTimeStamp());
+		} else {
+			File file2 = (File) mf.getAdapter(File.class);
+			InputStream in = null;
+			try {
+				in = new FileInputStream(file2);
+			} catch (IOException e) {
+				throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorReading, file2.getAbsolutePath()), e));
+			}
+			copyFile(in, path, file2.lastModified());
+		}
 	}
 
 	/**
@@ -305,13 +316,25 @@ public class PublishUtil {
 		path2.toFile().delete();
 	}
 
-	private static void copyFile(IPath path, IModuleFile file) throws CoreException {
-		IFile file2 = (IFile) file.getAdapter(IFile.class);
-		IPath path3 = path.append(file.getModuleRelativePath()).append(file.getName());
+	private static void copyFile(IPath path, IModuleFile mf) throws CoreException {
+		IPath path3 = path.append(mf.getModuleRelativePath()).append(mf.getName());
 		File f = path3.toFile().getParentFile();
 		if (!f.exists())
 			f.mkdirs();
-		copyFile(file2.getContents(), path3, file2.getLocalTimeStamp());
+		
+		IFile file = (IFile) mf.getAdapter(IFile.class);
+		if (file != null)
+			copyFile(file.getContents(), path3, file.getLocalTimeStamp());
+		else {
+			File file2 = (File) mf.getAdapter(File.class);
+			InputStream in = null;
+			try {
+				in = new FileInputStream(file2);
+			} catch (IOException e) {
+				throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorReading, file2.getAbsolutePath()), e));
+			}
+			copyFile(in, path, file2.lastModified());
+		}
 	}
 
 	public static void copy(IModuleResource[] resources, IPath path) throws CoreException {
@@ -330,12 +353,23 @@ public class PublishUtil {
 			copy(folder.members(), path);
 		} else {
 			IModuleFile mf = (IModuleFile) resource;
-			IFile file = (IFile) mf.getAdapter(IFile.class);
 			IPath path3 = path.append(mf.getModuleRelativePath()).append(mf.getName());
 			File f = path3.toFile().getParentFile();
 			if (!f.exists())
 				f.mkdirs();
-			copyFile(file.getContents(), path3, file.getLocalTimeStamp());
+			IFile file = (IFile) mf.getAdapter(IFile.class);
+			if (file != null)
+				copyFile(file.getContents(), path3, file.getLocalTimeStamp());
+			else {
+				File file2 = (File) mf.getAdapter(File.class);
+				InputStream in = null;
+				try {
+					in = new FileInputStream(file2);
+				} catch (IOException e) {
+					throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorReading, file2.getAbsolutePath()), e));
+				}
+				copyFile(in, path, file2.lastModified());
+			}
 		}
 	}
 
@@ -399,14 +433,23 @@ public class PublishUtil {
 			
 			ZipEntry ze = new ZipEntry(path.toPortableString());
 			
+			InputStream in = null;
+			long ts = 0;
 			IFile file = (IFile) mf.getAdapter(IFile.class);
-			long ts = file.getLocalTimeStamp();
-			if (ts != IResource.NULL_STAMP)
+			if (file != null) {
+				ts = file.getLocalTimeStamp();
+				in = file.getContents();
+			} else {
+				File file2 = (File) mf.getAdapter(File.class);
+				ts = file2.lastModified();
+				in = new FileInputStream(file2);
+			}
+			
+			if (ts != IResource.NULL_STAMP && ts != 0)
 				ze.setTime(ts);
 			
 			zout.putNextEntry(ze);
 			
-			InputStream in = file.getContents();
 			try {
 				int n = 0;
 				while (n > -1) {

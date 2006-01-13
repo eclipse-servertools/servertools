@@ -23,13 +23,36 @@ public class ModuleFolder implements IModuleFolder {
 	protected String name;
 	protected IPath path;
 	protected IModuleResource[] members;
-	
+
+	/**
+	 * Creates a workspace module folder.
+	 * 
+	 * @param container
+	 * @param name
+	 * @param path
+	 */
 	public ModuleFolder(IContainer container, String name, IPath path) {
 		this.container = container;
 		this.name = name;
 		this.path = path;
 	}
-	
+
+	/**
+	 * Creates a workspace module folder with no folder reference.
+	 * 
+	 * @param name
+	 * @param path
+	 */
+	public ModuleFolder(String name, IPath path) {
+		this.name = name;
+		this.path = path;
+	}
+
+	/**
+	 * Sets the members (contents) of this folder.
+	 * 
+	 * @param members
+	 */
 	public void setMembers(IModuleResource[] members) {
 		this.members = members;
 	}

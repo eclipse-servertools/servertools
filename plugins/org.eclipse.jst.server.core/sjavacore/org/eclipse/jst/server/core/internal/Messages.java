@@ -25,6 +25,7 @@ public class Messages extends NLS {
 	public static String errorCreatingZipFile;
 	public static String errorDelete;
 	public static String errorRename;
+	public static String errorReading;
 	
 	static {
 		NLS.initializeMessages(JavaServerPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);
