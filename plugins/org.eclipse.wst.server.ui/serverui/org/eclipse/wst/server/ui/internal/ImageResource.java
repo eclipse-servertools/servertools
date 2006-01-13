@@ -22,7 +22,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 /**
  * Utility class to handle image resources.
  */
@@ -282,6 +284,9 @@ public class ImageResource {
 		registerImage(IMG_AUDIO_CATEGORY, URL_OBJ + "audio_category.gif");
 		
 		loadServerImages();
+		
+		PlatformUI.getWorkbench().getProgressService().registerIconForFamily(
+				getImageDescriptor(IMG_SERVER), ServerPlugin.PLUGIN_ID);
 	}
 
 	/**

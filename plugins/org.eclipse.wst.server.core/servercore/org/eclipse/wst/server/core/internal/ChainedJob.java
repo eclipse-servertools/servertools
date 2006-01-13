@@ -36,6 +36,13 @@ public abstract class ChainedJob extends Job {
 	}
 
 	/**
+	 * @see Job#belongsTo(java.lang.Object)
+	 */
+	public boolean belongsTo(Object family) {
+		return ServerPlugin.PLUGIN_ID.equals(family);
+	}
+
+	/**
 	 * Returns the server that this job was created with.
 	 * 
 	 * @return a server

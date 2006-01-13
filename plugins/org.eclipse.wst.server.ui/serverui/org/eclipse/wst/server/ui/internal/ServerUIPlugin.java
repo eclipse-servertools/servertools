@@ -46,6 +46,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.osgi.framework.BundleContext;
 /**
  * The server UI plugin class.
@@ -142,19 +143,22 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	protected static IServerListener serverListener = new IServerListener() {
 		public void serverChanged(ServerEvent event) {
 			int eventKind = event.getKind();
-			if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
-				showServersView();
+			// if (eventKind == (ServerEvent.SERVER_CHANGE | ServerEvent.STATE_CHANGE)) {
+			if ((eventKind & ServerEvent.STATE_CHANGE) != 0) {
+				showServersView(true);
+			} else if ((eventKind & ServerEvent.SERVER_CHANGE) != 0) {
+				showServersView(false);
 			}
 		}
 	};
-	
+
 	protected static IPublishListener publishListener = new PublishAdapter() {
 		public void publishStarted(IServer server) {
-			showServersView();
+			showServersView(false);
 		}
 
 		public void publishFinished(IServer server, IStatus status) {
-			showServersView();
+			showServersView(false);
 		}
 	};
 
@@ -459,8 +463,14 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	
 		return true;
 	}
-	
-	protected static void showServersView() {
+
+	/**
+	 * Show the Servers view. The Servers is never given focus.
+	 * 
+	 * @param bringToFront <code>true</code> to make the Servers view push to the top
+	 *    of the z-order, and <code>false</code> to just highlight it
+	 */
+	protected static void showServersView(final boolean bringToFront) {
 		if (!getPreferences().getShowOnActivity())
 			return;
 		
@@ -474,9 +484,15 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	
 					IViewPart view2 = page.findView(VIEW_ID);
 					
-					if (view2 != null)
-						page.bringToTop(view2);
-					else
+					if (view2 != null) {
+						if (bringToFront)
+							page.bringToTop(view2);
+						else {
+							IWorkbenchSiteProgressService wsps = (IWorkbenchSiteProgressService)
+								view2.getSite().getAdapter(IWorkbenchSiteProgressService.class);
+							wsps.warnOfContentChange();
+						}
+					} else
 						page.showView(VIEW_ID);
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Error opening TCP/IP view", e);
