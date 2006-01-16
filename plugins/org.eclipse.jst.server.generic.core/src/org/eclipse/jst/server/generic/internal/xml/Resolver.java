@@ -10,6 +10,7 @@
 
 package org.eclipse.jst.server.generic.internal.xml;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -60,6 +61,7 @@ public class Resolver {
 		//String vmPath = install.getInstallLocation().getCanonicalPath();
 		//vmPath = vmPath.replace('\\', '/');
 		cache.put("jrePath", "JRE");
+		cache.put("pathChar", File.pathSeparator);
 
 		String str = resolvePropertiesFromCache(proppedString, cache);
 		str = fixPassthroughProperties(str);
