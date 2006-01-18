@@ -254,6 +254,8 @@ public class TomcatPlugin extends Plugin {
 		if (installPath == null || version == null)
 			return false;
 		String s = installPath.lastSegment();
+		if (s == null)
+			return false;
 		if (s.indexOf("-3.2") > 0 || s.indexOf(" 3.2") > 0)
 			return TOMCAT_32.equals(version);
 		if (s.indexOf("-4.0") > 0 || s.indexOf(" 4.0") > 0)
