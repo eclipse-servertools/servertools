@@ -1935,9 +1935,12 @@ public class Server extends Base implements IServer {
 		
 		if (add != null && add.length > 0) {
 			int size = add.length;
-			for (int i = 0; i < size; i++)
-				if (!ServerUtil.isSupportedModule(getServerType().getRuntimeType().getModuleTypes(), add[i].getModuleType()))
-					return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorCannotAddModule, null);
+			for (int i = 0; i < size; i++) {
+				IModuleType moduleType = add[i].getModuleType(); 
+				if (!ServerUtil.isSupportedModule(getServerType().getRuntimeType().getModuleTypes(), moduleType))
+					return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCannotAddModule,
+							new Object[] { moduleType.getName(), moduleType.getVersion() }), null);
+			}
 		}
 		
 		try {
@@ -1969,9 +1972,23 @@ public class Server extends Base implements IServer {
 					moduleId = moduleId.substring(index+2);
 				}
 				
+				String moduleTypeId = null;
+				String moduleTypeVersion = null;
+				index = name.indexOf("::");
+				if (index > 0) {
+					int index2 = name.indexOf("::", index+1);
+					moduleTypeId = name.substring(index+2, index2);
+					moduleTypeVersion = name.substring(index2+2);
+					name = name.substring(0, index);
+				}
+				
 				IModule module = ServerUtil.getModule(moduleId);
-				if (module == null)
-					module = new DeletedModule(moduleId, name);
+				if (module == null) {
+					IModuleType moduleType = null;
+					if (moduleTypeId != null)
+						moduleType = new ModuleType(moduleTypeId, moduleTypeVersion);
+					module = new DeletedModule(moduleId, name, moduleType);
+				}
 				if (module != null)
 					modules.add(module);
 			}
