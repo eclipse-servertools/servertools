@@ -71,6 +71,8 @@ public class JavaServerPlugin extends Plugin {
 	 * @see Plugin#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
+		super.start(context);
+		
 		runtimeListener = new IRuntimeLifecycleListener() {
 			public void runtimeAdded(IRuntime runtime) {
 				handleRuntimeChange(runtime);
@@ -93,6 +95,7 @@ public class JavaServerPlugin extends Plugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		ServerCore.removeRuntimeLifecycleListener(runtimeListener);
+		super.stop(context);
 	}
 
 	/**
