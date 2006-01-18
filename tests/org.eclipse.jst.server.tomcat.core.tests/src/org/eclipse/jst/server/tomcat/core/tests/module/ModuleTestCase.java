@@ -37,4 +37,8 @@ public class ModuleTestCase extends TestCase {
 		ModuleHelper.buildFull();
 		webModule = ModuleHelper.getModule(WEB_MODULE_NAME);
 	}
+
+	public void test05CountFilesInModule() throws Exception {
+		assertEquals(ModuleHelper.countFilesInModule(webModule), 3);
+	}
 }
