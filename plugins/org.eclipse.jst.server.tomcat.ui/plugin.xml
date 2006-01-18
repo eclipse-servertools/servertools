@@ -141,4 +141,12 @@
     <image runtime-component-type="org.eclipse.jst.server.tomcat"
       path="icons/obj16/tomcat.gif"/>
   </extension>
+
+  <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
+    <adapter>
+      <runtime-component id="org.eclipse.jst.server.tomcat"/>
+      <factory class="org.eclipse.jst.server.ui.internal.RuntimeLabelProvider$Factory"/>
+      <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
+    </adapter>
+  </extension>
 </plugin>
