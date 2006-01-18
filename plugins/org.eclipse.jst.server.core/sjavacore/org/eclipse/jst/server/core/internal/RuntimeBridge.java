@@ -22,6 +22,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMInstall2;
 import org.eclipse.jdt.launching.JavaRuntime;
@@ -155,14 +156,16 @@ public class RuntimeBridge implements IRuntimeBridge {
 				}
 				IRuntimeComponentVersion rcv;
 				
-				if (jvmver == null || jvmver.startsWith("1.4"))
+				if (jvmver == null)
 					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("1.4");
 				else if (jvmver.startsWith("1.3"))
 					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("1.3");
-				else if (jvmver.startsWith("1.5"))
+				else if (jvmver.startsWith("1.5") || jvmver.startsWith("5.0"))
 					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("5.0");
-				else
-					throw new IllegalStateException();
+				else if (jvmver.startsWith("1.6") || jvmver.startsWith("6.0"))
+					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("5.0");
+				else // default || jvmver.startsWith("1.4"))
+					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("1.4");
 				
 				properties = new HashMap();
 				properties.put("name", vmInstall.getName());
