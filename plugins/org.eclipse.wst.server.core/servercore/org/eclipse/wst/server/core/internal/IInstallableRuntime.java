@@ -31,6 +31,13 @@ public interface IInstallableRuntime {
 	public String getId();
 
 	/**
+	 * Kicks off a background job to install the runtime.
+	 * 
+	 * @param path the path to install the runtime at
+	 */
+	public void install(IPath path);
+
+	/**
 	 * Install this runtime.
 	 * 
 	 * @param path the path to install the runtime at

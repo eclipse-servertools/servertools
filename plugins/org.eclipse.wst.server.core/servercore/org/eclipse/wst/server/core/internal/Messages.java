@@ -64,6 +64,7 @@ public class Messages extends NLS {
 	public static String jobStartingServer;
 	public static String jobRestartingServer;
 	public static String jobUpdateServer;
+	public static String jobInstallingRuntime;
 	
 	static {
 		NLS.initializeMessages(ServerPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);

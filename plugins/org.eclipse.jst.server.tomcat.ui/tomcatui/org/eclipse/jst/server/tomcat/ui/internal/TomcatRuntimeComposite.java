@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMInstallType;
@@ -158,11 +157,7 @@ public class TomcatRuntimeComposite extends Composite {
 					dialog.setFilterPath(installDir.getText());
 					String selectedDirectory = dialog.open();
 					if (selectedDirectory != null) {
-						try {
-							ir.install(new Path(selectedDirectory), new NullProgressMonitor());
-						} catch (Exception e) {
-							Trace.trace(Trace.SEVERE, "Error installing runtime", e);
-						}
+						ir.install(new Path(selectedDirectory));
 						installDir.setText(selectedDirectory);
 					}
 				}

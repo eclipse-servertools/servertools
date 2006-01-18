@@ -21,7 +21,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.update.standalone.InstallCommand;
 import org.osgi.framework.Bundle;
 /**
@@ -93,7 +96,30 @@ public class InstallableRuntime implements IInstallableRuntime {
 	}
 
 	/*
-	 * @see IInstallableServer#install(IProgressMonitor)
+	 * @see IInstallableRuntime#install(IPath)
+	 */
+	public void install(final IPath path) {
+		Job installRuntimeJob = new Job(Messages.jobInstallingRuntime) {
+			public boolean belongsTo(Object family) {
+				return ServerPlugin.PLUGIN_ID.equals(family);
+			}
+			
+			protected IStatus run(IProgressMonitor monitor) {
+				try {
+					install(path, monitor);
+				} catch (CoreException ce) {
+					return ce.getStatus();
+				}
+				
+				return Status.OK_STATUS;
+			}
+		};
+		
+		installRuntimeJob.schedule();
+	}
+
+	/*
+	 * @see IInstallableRuntime#install(IPath, IProgressMonitor)
 	 */
 	public void install(IPath path, IProgressMonitor monitor) throws CoreException {
 		String featureId = getFeatureId();
