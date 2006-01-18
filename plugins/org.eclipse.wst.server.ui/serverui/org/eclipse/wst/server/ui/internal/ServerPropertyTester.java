@@ -12,8 +12,10 @@ package org.eclipse.wst.server.ui.internal;
 
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 /**
  * 
@@ -30,6 +32,11 @@ public class ServerPropertyTester extends PropertyTester {
 
 	protected static boolean checkProperty(Object target, String property, String value) {
 		if ("isRunnable".equals(property)) {
+			// check if project has a module associated with it
+			if (target instanceof IProject)
+				return ServerUtil.getModule((IProject) target) != null;
+			
+			// check for runnable object
 			boolean b = ServerPlugin.hasModuleArtifact(target);
 			if (b)
 				return true;

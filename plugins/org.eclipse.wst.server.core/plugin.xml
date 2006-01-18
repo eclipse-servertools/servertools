@@ -22,5 +22,8 @@
     <moduleType
        id="*"
        name="%moduleTypeUnknown"/>
+    <moduleType
+       id="wst.web"
+       name="%moduleTypeJ2EEUtilityName"/>
   </extension>
 </plugin>

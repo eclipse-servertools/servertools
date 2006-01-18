@@ -106,7 +106,9 @@
     name="%propertiesServer"
     objectClass="org.eclipse.core.resources.IProject"
     adaptable="true"
-    class="org.eclipse.wst.server.ui.internal.ProjectPropertyPage"/>
+    class="org.eclipse.wst.server.ui.internal.ProjectPropertyPage">
+<!--    <filter name="isRunnable" value="true"/> -->
+  </page>
 </extension>
 
 <extension point="org.eclipse.ui.actionSets">
@@ -331,6 +333,13 @@ M4 = Platform-specific fourth key
     contextId="org.eclipse.ui.globalScope"
     commandId="org.eclipse.wst.server.launchShortcut.profile"
     schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+</extension>
+
+<extension point="org.eclipse.wst.server.ui.serverImages">
+  <image
+     id="org.eclipse.wst.server.ui.web"
+     typeIds="wst.web"
+     icon="icons/obj16/web_module.gif"/>
 </extension>
 
 </plugin>
