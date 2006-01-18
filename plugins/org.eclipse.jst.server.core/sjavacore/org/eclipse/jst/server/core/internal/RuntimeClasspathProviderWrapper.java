@@ -110,7 +110,7 @@ public class RuntimeClasspathProviderWrapper {
 	}
 
 	/*
-	 * @see 
+	 * Loads the delegate class.
 	 */
 	public RuntimeClasspathProviderDelegate getDelegate() {
 		if (delegate == null) {
@@ -125,13 +125,13 @@ public class RuntimeClasspathProviderWrapper {
 	}
 
 	/*
-	 * @see RuntimeClasspathProviderDelegate#resolveClasspathContainerImpl(IRuntime, String)
+	 * @see RuntimeClasspathProviderDelegate#resolveClasspathContainerImpl(IRuntime)
 	 */
-	public IClasspathEntry[] resolveClasspathContainerImpl(IRuntime runtime, String id) {
+	public IClasspathEntry[] resolveClasspathContainerImpl(IRuntime runtime) {
 		if (runtime == null)
 			return null;
 		try {
-			return getDelegate().resolveClasspathContainerImpl(runtime, id);
+			return getDelegate().resolveClasspathContainerImpl(runtime);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
 		}
@@ -139,13 +139,13 @@ public class RuntimeClasspathProviderWrapper {
 	}
 
 	/*
-	 * @see RuntimeClasspathProviderDelegate#getClasspathContainerLabel(IRuntime, String)
+	 * @see RuntimeClasspathProviderDelegate#getClasspathContainerLabel(IRuntime)
 	 */
-	public String getClasspathContainerLabel(IRuntime runtime, String id) {
+	public String getClasspathContainerLabel(IRuntime runtime) {
 		if (runtime == null)
 			return "n/a";
 		try {
-			return getDelegate().getClasspathContainerLabel(runtime, id);
+			return getDelegate().getClasspathContainerLabel(runtime);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
 		}
@@ -153,16 +153,30 @@ public class RuntimeClasspathProviderWrapper {
 	}
 
 	/*
-	 * @see RuntimeClasspathProviderDelegate#requestClasspathContainerUpdate(IRuntime, String, IClasspathEntry[])
+	 * @see RuntimeClasspathProviderDelegate#requestClasspathContainerUpdate(IRuntime, IClasspathEntry[])
 	 */
-	public void requestClasspathContainerUpdate(IRuntime runtime, String id, IClasspathEntry[] entries) {
+	public void requestClasspathContainerUpdate(IRuntime runtime, IClasspathEntry[] entries) {
 		if (runtime == null)
 			return;
 		try {
-			getDelegate().requestClasspathContainerUpdate(runtime, id, entries);
+			getDelegate().requestClasspathContainerUpdate(runtime, entries);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
 		}
+	}
+
+	/*
+	 * @see RuntimeClasspathProviderDelegate#hasRuntimeClasspathChanged(IRuntime)
+	 */
+	public boolean hasRuntimeClasspathChanged(IRuntime runtime) {
+		if (runtime == null)
+			return false;
+		try {
+			return getDelegate().hasRuntimeClasspathChanged(runtime);
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
+		}
+		return false;
 	}
 
 	public String toString() {

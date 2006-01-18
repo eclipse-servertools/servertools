@@ -14,8 +14,21 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jdt.core.IClasspathContainer;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IRuntimeLifecycleListener;
 import org.eclipse.wst.server.core.IRuntimeType;
+import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
+import org.osgi.framework.BundleContext;
 /**
  * The main server tooling plugin class.
  */
@@ -34,6 +47,9 @@ public class JavaServerPlugin extends Plugin {
 	//	cached copy of all runtime facet mappings
 	private static List runtimeFacetMappings;
 
+	// runtime listener
+	private static IRuntimeLifecycleListener runtimeListener;
+
 	/**
 	 * Create the JavaServerPlugin.
 	 */
@@ -49,6 +65,100 @@ public class JavaServerPlugin extends Plugin {
 	 */
 	public static JavaServerPlugin getInstance() {
 		return singleton;
+	}
+
+	/**
+	 * @see Plugin#start(org.osgi.framework.BundleContext)
+	 */
+	public void start(BundleContext context) throws Exception {
+		runtimeListener = new IRuntimeLifecycleListener() {
+			public void runtimeAdded(IRuntime runtime) {
+				handleRuntimeChange(runtime);
+			}
+
+			public void runtimeChanged(IRuntime runtime) {
+				handleRuntimeChange(runtime);
+			}
+
+			public void runtimeRemoved(IRuntime runtime) {
+				handleRuntimeChange(runtime);
+			}
+		};
+		
+		ServerCore.addRuntimeLifecycleListener(runtimeListener);
+	}
+
+	/**
+	 * @see Plugin#stop(org.osgi.framework.BundleContext)
+	 */
+	public void stop(BundleContext context) throws Exception {
+		ServerCore.removeRuntimeLifecycleListener(runtimeListener);
+	}
+
+	/**
+	 * Handle a runtime change by potentially updating the classpath container.
+	 * 
+	 * @param runtime a runtime
+	 */
+	protected void handleRuntimeChange(final IRuntime runtime) {
+		if (runtime == null)
+			throw new IllegalArgumentException();
+		
+		Trace.trace(Trace.FINEST, "Possible runtime change: " + runtime);
+		
+		final RuntimeClasspathProviderWrapper rcpw = findRuntimeClasspathProvider(runtime.getRuntimeType());
+		if (rcpw != null && rcpw.hasRuntimeClasspathChanged(runtime)) {
+			final IPath serverContainerPath = new Path(RuntimeClasspathContainer.SERVER_CONTAINER)
+				.append(rcpw.getId()).append(runtime.getId());
+			
+			class RebuildRuntimeReferencesJob extends Job {
+				public RebuildRuntimeReferencesJob() {
+					super(NLS.bind(Messages.updateClasspathContainers, runtime.getName()));
+				}
+
+				public boolean belongsTo(Object family) {
+					return ServerPlugin.PLUGIN_ID.equals(family);
+				}
+
+				public IStatus run(IProgressMonitor monitor) {
+					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+					if (projects != null) {
+						int size = projects.length;
+						for (int i = 0; i < size; i++) {
+							if (projects[i].isAccessible()) {
+								try {
+									IJavaProject javaProject = JavaCore.create(projects[i]);
+									
+									boolean found = false;
+									IClasspathEntry[] ce = javaProject.getRawClasspath();
+									for (int j = 0; j < ce.length; j++) {
+										if (ce[j].getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
+											if (serverContainerPath.isPrefixOf(ce[j].getPath()))
+												found = true;
+										}
+									}
+									
+									Trace.trace(Trace.FINEST, "Classpath change on: " + projects[i] + " " + found);
+									
+									if (found) {
+										RuntimeClasspathContainer container = new RuntimeClasspathContainer(
+												serverContainerPath, rcpw, runtime);
+										JavaCore.setClasspathContainer(serverContainerPath, new IJavaProject[] { javaProject },
+												new IClasspathContainer[] {container}, null);
+									}
+								} catch (Exception e) {
+									Trace.trace(Trace.SEVERE, "Could not update classpath container", e);
+								}
+							}
+						}
+					}
+					
+					return Status.OK_STATUS;
+				}
+			}
+			RebuildRuntimeReferencesJob job = new RebuildRuntimeReferencesJob();
+			job.schedule();
+		}
 	}
 
 	/**

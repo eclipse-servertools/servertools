@@ -24,7 +24,7 @@ import org.eclipse.jst.server.core.RuntimeClasspathProviderDelegate;
 
 import org.eclipse.wst.server.core.IRuntime;
 /**
- * 
+ * Classpath provider for the Tomcat runtime.
  */
 public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDelegate {
 	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
@@ -39,9 +39,9 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 	}
 
 	/**
-	 * @see RuntimeClasspathProviderDelegate#getClasspathContainerLabel(IRuntime, String)
+	 * @see RuntimeClasspathProviderDelegate#getClasspathContainerLabel(IRuntime)
 	 */
-	public String getClasspathContainerLabel(IRuntime runtime, String id) {
+	public String getClasspathContainerLabel(IRuntime runtime) {
 		String id2 = runtime.getRuntimeType().getId();
 		if (id2.indexOf("32") > 0)
 			return Messages.target32runtime;
@@ -56,16 +56,16 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 	}
 
 	/**
-	 * @see RuntimeClasspathProviderDelegate#resolveClasspathContainer(IRuntime, String)
+	 * @see RuntimeClasspathProviderDelegate#resolveClasspathContainer(IRuntime)
 	 */
-	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime, String id) {
-		return resolveClasspathContainer(runtime);
+	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime) {
+		return resolveClasspathContainer2(runtime);
 	}
 
 	/**
 	 * Resolve the classpath container.
 	 */
-	protected IClasspathEntry[] resolveClasspathContainer(IRuntime runtime) {
+	protected IClasspathEntry[] resolveClasspathContainer2(IRuntime runtime) {
 		IPath installPath = runtime.getLocation();
 		
 		if (installPath == null)

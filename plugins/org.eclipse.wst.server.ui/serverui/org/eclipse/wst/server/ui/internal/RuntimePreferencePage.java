@@ -145,7 +145,6 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 					IRuntimeWorkingCopy runtimeWorkingCopy = runtime.createWorkingCopy();
 					if (showWizard(runtimeWorkingCopy) != Window.CANCEL) {
 						try {
-							runtimeWorkingCopy.save(false, null);
 							runtimeComp.refresh(runtime);
 						} catch (Exception ex) {
 							// ignore

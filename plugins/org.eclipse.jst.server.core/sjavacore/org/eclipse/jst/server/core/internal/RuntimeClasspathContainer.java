@@ -28,8 +28,6 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	private RuntimeClasspathProviderWrapper delegate;
 	private IRuntime runtime;
 
-	private String id;
-
 	/**
 	 * Create a new runtime classpath container.
 	 * 
@@ -37,12 +35,25 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	 * @param delegate
 	 * @param runtime
 	 * @param id
+	 * @deprecated should use the equivalent method without the unused id variable
 	 */
 	public RuntimeClasspathContainer(IPath path, RuntimeClasspathProviderWrapper delegate, IRuntime runtime, String id) {
 		this.path = path;
 		this.delegate = delegate;
 		this.runtime = runtime;
-		this.id = id;
+	}
+
+	/**
+	 * Create a new runtime classpath container.
+	 * 
+	 * @param path
+	 * @param delegate
+	 * @param runtime
+	 */
+	public RuntimeClasspathContainer(IPath path, RuntimeClasspathProviderWrapper delegate, IRuntime runtime) {
+		this.path = path;
+		this.delegate = delegate;
+		this.runtime = runtime;
 	}
 
 	/** (non-Javadoc)
@@ -51,7 +62,7 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	public IClasspathEntry[] getClasspathEntries() {
 		IClasspathEntry[] entries = null;
 		if (delegate != null && runtime != null)
-			entries = delegate.resolveClasspathContainerImpl(runtime, id);
+			entries = delegate.resolveClasspathContainerImpl(runtime);
 		
 		if (entries == null)
 			return new IClasspathEntry[0];
@@ -64,7 +75,7 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	 */
 	public String getDescription() {
 		if (runtime != null && delegate != null) {
-			String s = delegate.getClasspathContainerLabel(runtime, id);
+			String s = delegate.getClasspathContainerLabel(runtime);
 			if (s != null)
 				return s;
 		}
