@@ -26,6 +26,10 @@ public class Messages extends NLS {
 	public static String runtimeTypeDefaultJRE;
 	public static String errorInternalCactus;
 
+	public static String classpathContainer;
+	public static String classpathContainerDescription;
+	public static String classpathContainerRuntimeList;
+
 	public static String LaunchTestAction_message_selectConfiguration;
 	public static String LaunchTestAction_message_selectDebugConfiguration;
 	public static String LaunchTestAction_message_selectRunConfiguration;
