@@ -12,6 +12,7 @@ package org.eclipse.wst.server.core.internal;
 
 import java.util.*;
 import org.eclipse.core.runtime.*;
+import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.model.IModuleFile;
 import org.eclipse.wst.server.core.model.IModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleResource;
@@ -21,6 +22,8 @@ import org.eclipse.wst.server.core.model.IModuleResource;
 public class ModulePublishInfo {
 	private static final String MODULE_ID = "module-ids";
 	private static final String NAME = "name";
+	private static final String MODULE_TYPE_ID = "module-type-id";
+	private static final String MODULE_TYPE_VERSION = "module-type-version";
 	private static final String PATH = "path";
 	private static final String STAMP = "stamp";
 	private static final String FILE = "file";
@@ -29,18 +32,21 @@ public class ModulePublishInfo {
 	private String moduleId;
 	private String name;
 	private IModuleResource[] resources = new IModuleResource[0];
+	private IModuleType moduleType;
 
 	/**
 	 * ModulePublishInfo constructor.
 	 * 
 	 * @param moduleId a module id
 	 * @param name the module's name
+	 * @param moduleType the module type
 	 */
-	public ModulePublishInfo(String moduleId, String name) {
+	public ModulePublishInfo(String moduleId, String name, IModuleType moduleType) {
 		super();
 
 		this.moduleId = moduleId;
 		this.name = name;
+		this.moduleType = moduleType;
 	}
 
 	/**
@@ -62,6 +68,10 @@ public class ModulePublishInfo {
 		return name;
 	}
 
+	public IModuleType getModuleType() {
+		return moduleType;
+	}
+
 	public IModuleResource[] getResources() {
 		return resources;
 	}
@@ -79,6 +89,10 @@ public class ModulePublishInfo {
 		try {
 			moduleId = memento.getString(MODULE_ID);
 			name = memento.getString(NAME);
+			String mt = memento.getString(MODULE_TYPE_ID);
+			String mv = memento.getString(MODULE_TYPE_VERSION);
+			if (mt != null && mt.length() > 0)
+				moduleType = new ModuleType(mt, mv);
 	
 			resources = loadResource(memento);
 		} catch (Exception e) {
@@ -131,6 +145,11 @@ public class ModulePublishInfo {
 			memento.putString(MODULE_ID, moduleId);
 			if (name != null)
 				memento.putString(NAME, name);
+			
+			if (moduleType != null) {
+				memento.putString(MODULE_TYPE_ID, moduleType.getId());
+				memento.putString(MODULE_TYPE_VERSION, moduleType.getVersion());
+			}
 			
 			saveResource(memento, resources);
 		} catch (Exception e) {

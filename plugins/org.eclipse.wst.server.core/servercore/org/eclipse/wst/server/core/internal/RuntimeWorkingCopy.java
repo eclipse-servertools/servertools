@@ -243,51 +243,6 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		UpdateRuntimeReferencesJob job = new UpdateRuntimeReferencesJob();
 		job.schedule();*/
 	}
-	
-	/**
-	 * Rebuild any projects that are targetted to this runtime.
-	 * 
-	 * @param runtime
-	 * @param add
-	 */
-	protected static void rebuildRuntime(final IRuntime runtime, final boolean add) {
-		if (runtime == null)
-			return;
-
-		// TODO fix me
-		/*class RebuildRuntimeReferencesJob extends Job {
-			public RebuildRuntimeReferencesJob() {
-				super(Messages.taskPerforming);
-			}
-
-			public IStatus run(IProgressMonitor monitor) {
-				String id = runtime.getId();
-				
-				IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-				if (projects != null) {
-					int size = projects.length;
-					for (int i = 0; i < size; i++) {
-						ProjectProperties props = (ProjectProperties) ServerCore.getProjectProperties(projects[i]);
-						if (id.equals(props.getRuntimeTargetId())) {
-							try {
-								if (add)
-									props.setRuntimeTarget(null, runtime, false, monitor);
-								else
-									props.setRuntimeTarget(runtime, null, false, monitor);
-								projects[i].build(IncrementalProjectBuilder.FULL_BUILD, monitor);
-							} catch (Exception e) {
-								Trace.trace(Trace.SEVERE, "Error setting runtime target", e);
-							}
-						}
-					}
-				}
-				
-				return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null);
-			}
-		}
-		RebuildRuntimeReferencesJob job = new RebuildRuntimeReferencesJob();
-		job.schedule();*/
-	}
 
 	protected RuntimeDelegate getWorkingCopyDelegate(IProgressMonitor monitor) {
 		if (workingCopyDelegate != null)

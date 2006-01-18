@@ -573,7 +573,6 @@ public class ResourceManager {
 			fireRuntimeEvent(runtime, EVENT_CHANGED);
 		saveRuntimesList();
 		resolveServers();
-		RuntimeWorkingCopy.rebuildRuntime(runtime, true);
 	}
 
 	protected void removeRuntime(IRuntime runtime) {
@@ -581,7 +580,6 @@ public class ResourceManager {
 			deregisterRuntime(runtime);
 			saveRuntimesList();
 			resolveServers();
-			RuntimeWorkingCopy.rebuildRuntime(runtime, false);
 		}
 	}
 

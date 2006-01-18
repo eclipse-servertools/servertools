@@ -458,7 +458,17 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			Iterator iterator = modules.iterator();
 			while (iterator.hasNext()) {
 				IModule module = (IModule) iterator.next();
-				list.add(module.getName() + "::" + module.getId());
+				StringBuffer sb = new StringBuffer(module.getName());
+				sb.append("::");
+				sb.append(module.getId());
+				IModuleType mt = module.getModuleType();
+				if (mt != null) {
+					sb.append("::");
+					sb.append(mt.getId());
+					sb.append("::");
+					sb.append(mt.getVersion());
+				}
+				list.add(sb.toString());
 			}
 			setAttribute(MODULE_LIST, list);
 			resetOptionalPublishOperations();

@@ -104,6 +104,8 @@ public class ServerPublishInfo {
 	/**
 	 * 
 	 * Note: save() must be called manually after making this call.
+	 * 
+	 * @param moduleList
 	 */
 	public void removeDeletedModulePublishInfo(List moduleList) {
 		int size = moduleList.size();
@@ -142,7 +144,8 @@ public class ServerPublishInfo {
 			return (ModulePublishInfo) modulePublishInfo.get(key);
 	
 		// have to create a new one
-		ModulePublishInfo mpi = new ModulePublishInfo(getKey(module), module[module.length - 1].getName());
+		IModule mod = module[module.length - 1];
+		ModulePublishInfo mpi = new ModulePublishInfo(getKey(module), mod.getName(), mod.getModuleType());
 		modulePublishInfo.put(key, mpi);
 		return mpi;
 	}
@@ -175,7 +178,7 @@ public class ServerPublishInfo {
 				String moduleId = mpi.getModuleId();
 				if (moduleId != null) {
 					int index = moduleId.lastIndexOf("#");
-					module2 = new IModule[] { new DeletedModule(moduleId.substring(index + 1), mpi.getName()) };
+					module2 = new IModule[] { new DeletedModule(moduleId.substring(index + 1), mpi.getName(), mpi.getModuleType()) };
 				}
 			}
 			if (module2 != null && module2.length > 0) {

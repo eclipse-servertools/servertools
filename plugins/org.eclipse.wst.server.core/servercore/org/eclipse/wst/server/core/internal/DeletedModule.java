@@ -21,10 +21,12 @@ import org.eclipse.wst.server.core.IModuleType;
 public class DeletedModule implements IModule {
 	protected String id;
 	protected String name;
+	protected IModuleType moduleType2;
 
-	public DeletedModule(String id, String name) {
+	public DeletedModule(String id, String name, IModuleType moduleType) {
 		this.id = id;
 		this.name = name;
+		this.moduleType2 = moduleType;
 	}
 
 	public String getId() {
@@ -40,7 +42,7 @@ public class DeletedModule implements IModule {
 	}
 
 	public IModuleType getModuleType() {
-		return null;
+		return moduleType2;
 	}
 
 	public IProject getProject() {
