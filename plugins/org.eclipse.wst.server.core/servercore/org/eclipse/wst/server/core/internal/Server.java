@@ -1226,6 +1226,9 @@ public class Server extends Base implements IServer {
 									} catch (Exception e) {
 										// ignore
 									}
+									if (ServerPreferences.getInstance().isAutoPublishing() && shouldPublish()) {
+										publish(PUBLISH_INCREMENTAL, null);
+									}
 									try {
 										Server.this.start(mode2, monitor);
 									} catch (Exception e) {
@@ -1543,8 +1546,8 @@ public class Server extends Base implements IServer {
 									} catch (Exception e) {
 										// ignore
 									}
-									if (ServerPreferences.getInstance().isAutoPublishing()) {
-										// TODO publish here!!
+									if (ServerPreferences.getInstance().isAutoPublishing() && shouldPublish()) {
+										publish(PUBLISH_INCREMENTAL, null);
 									}
 									try {
 										Server.this.start(mode3, listener2);
@@ -1948,12 +1951,12 @@ public class Server extends Base implements IServer {
 				
 				String moduleTypeId = null;
 				String moduleTypeVersion = null;
-				index = name.indexOf("::");
+				index = moduleId.indexOf("::");
 				if (index > 0) {
-					int index2 = name.indexOf("::", index+1);
-					moduleTypeId = name.substring(index+2, index2);
-					moduleTypeVersion = name.substring(index2+2);
-					name = name.substring(0, index);
+					int index2 = moduleId.indexOf("::", index+1);
+					moduleTypeId = moduleId.substring(index+2, index2);
+					moduleTypeVersion = moduleId.substring(index2+2);
+					moduleId = moduleId.substring(0, index);
 				}
 				
 				IModule module = ServerUtil.getModule(moduleId);

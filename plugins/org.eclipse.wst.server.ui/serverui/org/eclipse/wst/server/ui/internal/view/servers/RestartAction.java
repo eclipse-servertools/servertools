@@ -13,7 +13,6 @@ package org.eclipse.wst.server.ui.internal.view.servers;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.internal.PublishServerJob;
 import org.eclipse.wst.server.core.internal.RestartServerJob;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
@@ -61,13 +60,11 @@ public class RestartAction extends AbstractServerAction {
 			return;
 		
 		try {
-			PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, false); 
 			String launchMode = mode;
 			if (launchMode == null)
 				launchMode = server.getMode();
 			RestartServerJob restartJob = new RestartServerJob(server, launchMode);
-			publishJob.setNextJob(restartJob);
-			publishJob.schedule();
+			restartJob.schedule();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error restarting server", e);
 		}	
