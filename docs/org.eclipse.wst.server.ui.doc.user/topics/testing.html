@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-us" xml:lang="en-us">
+<head>
+<!-- /*******************************************************************************
+ * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/ -->
+<link rel="stylesheet" type="text/css" href="../../org.eclipse.wst.doc.user/common.css" />
+<title>Testing artifacts on a server</title>
+</head>
+<body onresize="location.reload();" id="testing_wst"><a name="testing_wst"><!-- --></a>
+<h1 class="topictitle1">Testing artifacts on a server</h1>
+<div><div>You can use the workbench to test one or
+more application artifacts on a server.</div><div class="p"></div>
+<div class="section"></div>
+<ol><li class="stepexpand" id="testing_wst__testing_step1"><a name="testing_wst__testing_step1"><!-- --></a><span>In the Project Explorer view from the J2EE perspective,
+expand the project that contains the file you want to test.</span></li>
+<li class="stepexpand" id="testing_wst__testing_step2"><a name="testing_wst__testing_step2"><!-- --></a><span>Right-click the artifact that you want to test.</span> Examples of artifacts include the Web project or a file within the Web
+project (such as a JSP file, servlet, or HTML file), or an enterprise bean.</li>
+<li class="stepexpand" id="testing_wst__testing_step3"><a name="testing_wst__testing_step3"><!-- --></a><span>Select  <span class="uicontrol">Run As &gt; Run on Server</span>.
+The Server selection wizard appears.</span></li>
+<li class="stepexpand" id="testing_wst__testing_step4"><a name="testing_wst__testing_step4"><!-- --></a><span>Use the radio buttons to specify how you want
+to select the server. Select from the following options:</span>
+<table border="1" frame="hsides" rules="rows" cellpadding="4" cellspacing="0" summary="" class="choicetableborder">
+<thead><tr><th id="d0e29-option" valign="bottom" align="left">Option</th>
+<th id="d0e29-desc" valign="bottom" align="left">Description</th></tr></thead>
+<tbody><tr><td valign="top" headers="d0e29-option" id="d0e31"><strong>Choose an existing server</strong></td>
+<td valign="top" headers="d0e29-desc d0e31">This option uses
+an existing server that is defined in your workbench. </td>
+</tr>
+<tr><td valign="top" headers="d0e29-option" id="d0e36"><strong>Manually define a server</strong></td>
+<td valign="top" headers="d0e29-desc d0e36">This option creates
+a new server.</td>
+</tr>
+</tbody></table>
+</li>
+<li class="stepexpand" id="testing_wst__testing_step5"><a name="testing_wst__testing_step5"><!-- --></a><span>Under the <span class="uicontrol">Select the server that
+you want to use</span> list, select a server you want to run your application.</span> The list of available servers, under the <span class="uicontrol">Select the server
+that you want to use</span> list, depends on the J2EE specification level
+you defined for the artifact and the supported servers on this workbench.</li>
+<li class="stepexpand" id="testing_wst__testing_step6"><a name="testing_wst__testing_step6"><!-- --></a><span>(Optional) Click <span class="uicontrol">Next</span> to
+configure additional settings, such as configuring settings specific to the
+server, and adding or removing projects configured on the server.</span></li>
+<li class="stepexpand"><span><span id="testing_wst__testing_step7_ph1"><a name="testing_wst__testing_step7_ph1"><!-- --></a>Click <span class="uicontrol">Finish.</span></span></span> <span id="testing_wst__testing_step7_ph2"><a name="testing_wst__testing_step7_ph2"><!-- --></a>The server tools automatically complete the
+following tasks for you: </span><ul><li id="testing_wst__testing_li1"><a name="testing_wst__testing_li1"><!-- --></a>If this is the first time you are creating the server
+on the workspace and if the server generates server configuration files, the
+workbench creates a server project with <span class="uicontrol">Servers</span> as
+the default name to hold the generated server configuration files.</li>
+<li id="testing_wst__testing_li2"><a name="testing_wst__testing_li2"><!-- --></a>Creates the server and adds it to the Servers View.</li>
+<li id="testing_wst__testing_li3"><a name="testing_wst__testing_li3"><!-- --></a>Adds your project to the server.</li>
+<li id="testing_wst__testing_li4"><a name="testing_wst__testing_li4"><!-- --></a>Starts the server. (This may take time depending on the
+server settings.)</li>
+<li id="testing_wst__testing_li5"><a name="testing_wst__testing_li5"><!-- --></a>If the  <span class="uicontrol">Automatically publish before starting
+servers</span> check box on the Server preferences page (<span class="menucascade"><span class="uicontrol">Window &gt; Preferences &gt; Server</span></span>) is selected,
+the workbench checks to see if your project and files on the server are synchronized.
+If they are not, the project and the files are automatically updated when
+the server is restarted.</li>
+<li id="testing_wst__testing_li6"><a name="testing_wst__testing_li6"><!-- --></a>Depending on the artifact you are testing, the output
+of running your artifact may display in the Console view or in a Web browser
+that automatically opens.</li>
+</ul>
+</li>
+</ol>
+</div>
+<div>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tj2ee.html" title="You can use the workbench to test one or more projects on a server.">Testing applications on a server</a></div>
+</div>
+</div>
+</body>
+</html>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <!-- /*******************************************************************************
  * Copyright (c) 2000, 2005 IBM Corporation and others.
@@ -16,115 +16,91 @@
 <link rel="stylesheet" type="text/css" href="../../org.eclipse.wst.doc.user/common.css" />
 <title>Defining the Server preference</title>
 </head>
-<body id="twsrvprf"><a name="twsrvprf"><!-- --></a>
-
+<body onresize="location.reload();" id="twsrvprf_wst"><a name="twsrvprf_wst"><!-- --></a>
 <h1 class="topictitle1">Defining the Server preference</h1>
-<div><p>Using the Preferences page, you can define attributes used for
-
-testing projects by the servers.  To define these preferences, do the
-
-following:</p><ol><li><span>From the Window menu, select  <span class="uicontrol">Preferences</span>.</span></li>
-<li><span>In the Preferences page, select  <span class="uicontrol">Server</span>.</span></li>
-<li><span>Specify one or more of the following settings by selecting the
-
+<div><div>Using the Preferences page, you can define attributes used for
+testing projects by the servers. To define these preferences, do the following:</div><ol><li class="stepexpand"><span>In the toolbar, select <span class="menucascade"><span class="uicontrol">Window</span> &gt; <span class="uicontrol">Preferences</span></span>.</span></li>
+<li class="stepexpand"><span>In the Preferences page, select  <span class="uicontrol">Server</span>.</span></li>
+<li class="stepexpand"><span>Specify one or more of the following settings by selecting the
 appropriate check box:</span>
-<table border="1" frame="hsides" rules="rows" cellpadding="4" cellspacing="0" summary="" class="skipspace">
-<thead><tr><td><b>Option</b></td><td><b>Description</b></td></tr></thead>
-<tbody>
-<tr><td align="left" valign="top" id="d0e28"><b>Automatically publish before starting servers</b></td>
-<td align="left" valign="top" headers="d0e28">Specifies that all the files should automatically be published before
-
-starting the server.</td>
+<table border="1" frame="hsides" rules="rows" cellpadding="4" cellspacing="0" summary="" class="choicetableborder">
+<thead><tr><th id="d0e28-option" valign="bottom" align="left">Option</th>
+<th id="d0e28-desc" valign="bottom" align="left">Description</th></tr></thead>
+<tbody><tr><td valign="top" headers="d0e28-option" id="d0e30"><strong>Show Servers view when server state changes</strong></td>
+<td valign="top" headers="d0e28-desc d0e30">The
+Servers view is displayed on the workbench when there are any activities in
+the Servers view. For more details about the server states refer to the <a href="rwrcview.html">Servers View</a> topic.</td>
 </tr>
-<tr><td align="left" valign="top" id="d0e38"><b>Automatically restart servers when necessary</b></td>
-<td align="left" valign="top" headers="d0e38">Specifies
-
+<tr><td valign="top" headers="d0e28-option" id="d0e38"><strong>Automatically publish when starting servers</strong></td>
+<td valign="top" headers="d0e28-desc d0e38">Specifies
+that all the files should automatically be published before starting the server.</td>
+</tr>
+<tr><td valign="top" headers="d0e28-option" id="d0e43"><strong>Automatically publish to local server</strong></td>
+<td valign="top" headers="d0e28-desc d0e43">Specifies
+that all the files should automatically be published to the local server at
+every <em>seconds</em> intervals, where <em>seconds</em> is the number of seconds
+you have specified in the <span class="uicontrol">Publishing interval (in seconds)</span> control.
+The minimum value for the publishing interval is ten seconds.</td>
+</tr>
+<tr><td valign="top" headers="d0e28-option" id="d0e57"><strong>Automatically publish to remote server</strong></td>
+<td valign="top" headers="d0e28-desc d0e57">Specifies
+that all the files should automatically be published to the remote server
+at every <em>seconds</em> intervals, where <em>seconds</em> is the number of seconds
+you have specified in the <span class="uicontrol">Publishing interval (in seconds)</span> control.
+The minimum value for the publishing interval is ten seconds.</td>
+</tr>
+<tr><td valign="top" headers="d0e28-option" id="d0e71"><strong>Automatically restart servers when necessary</strong></td>
+<td valign="top" headers="d0e28-desc d0e71">Specifies
 that the server tools can automatically restart the server when it detects
-
 that the server must be restarted to handle resource changes in the workspace.</td>
 </tr>
-<tr><td align="left" valign="top" id="d0e43"><b>Prompt before making irreversible changes within an editor</b></td>
-<td align="left" valign="top" headers="d0e43">Specifies that the server tools will prompt you before you make a
-
+<tr><td valign="top" headers="d0e28-option" id="d0e76"><strong>Prompt before making irreversible changes within an editor</strong></td>
+<td valign="top" headers="d0e28-desc d0e76">Specifies that the server tools will prompt you before you make a
 change in a editor that cannot be undone.</td>
-</tr>
-<tr><td align="left" valign="top" id="d0e48"><b>Create server resources in workspace</b></td>
-<td align="left" valign="top" headers="d0e48">Specifies
-
-that when a server is created to also create its server and server configuration
-
-files to be displayed in the workspace. For example, when this check box is
-
-selected; in the Navigator view, these server resources appear in the server
-
-project folder. By default, this option is disabled and the resources are
-
-saved as metadata.</td>
 </tr>
 </tbody></table>
 </li>
-<li><span>Under <span class="uicontrol">Save dirty editors before starting server</span>,
-
+<li class="stepexpand"><span>Under <span class="uicontrol">Save dirty editors before starting server</span>,
 specify the preferences for saving the changes in any open server editors
-
 before starting the server by selecting one of the following:</span>
-<table border="1" frame="hsides" rules="rows" cellpadding="4" cellspacing="0" summary="" class="skipspace">
-<thead><tr><td><b>Option</b></td><td><b>Description</b></td></tr></thead>
-<tbody>
-<tr><td align="left" valign="top" id="d0e60"><b>Never</b></td>
-<td align="left" valign="top" headers="d0e60">Specifies that the server tools will
-
+<table border="1" frame="hsides" rules="rows" cellpadding="4" cellspacing="0" summary="" class="choicetableborder">
+<thead><tr><th id="d0e86-option" valign="bottom" align="left">Option</th>
+<th id="d0e86-desc" valign="bottom" align="left">Description</th></tr></thead>
+<tbody><tr><td valign="top" headers="d0e86-option" id="d0e88"><strong>Never</strong></td>
+<td valign="top" headers="d0e86-desc d0e88">Specifies that the server tools will
 not save the changes in any open editors before starting the server.</td>
 </tr>
-<tr><td align="left" valign="top" id="d0e65"><b>Prompt</b></td>
-<td align="left" valign="top" headers="d0e65">Specifies that the server tools
-
+<tr><td valign="top" headers="d0e86-option" id="d0e93"><strong>Prompt</strong></td>
+<td valign="top" headers="d0e86-desc d0e93">Specifies that the server tools
 will prompt you before saving any changes in an open server editor.</td>
 </tr>
-<tr><td align="left" valign="top" id="d0e70"><b>Auto-save</b></td>
-<td align="left" valign="top" headers="d0e70">Specifies that the server tools
-
+<tr><td valign="top" headers="d0e86-option" id="d0e98"><strong>Auto-save</strong></td>
+<td valign="top" headers="d0e86-desc d0e98">Specifies that the server tools
 will automatically save any changes in an open server editor before starting
-
 the server.</td>
 </tr>
 </tbody></table>
 </li>
-
-<!-- <li><span>Under <span class="uicontrol">Publishing method</span>, specify the publisher
-
-that you want to use by selecting one of the following:</span>
-<table border="1" frame="hsides" rules="rows" cellpadding="4" cellspacing="0" summary="" class="skipspace">
-<thead><tr><td><b>Option</b></td><td><b>Description</b></td></tr></thead>
-<tbody>
-<tr><td align="left" valign="top" id="d0e104"><b>Smart publish</b></td>
-<td align="left" valign="top" headers="d0e104">Specifies that you want the
-
-server tools to publish to the server only the changed resources. All resources
-
-that no longer exist in the workspace are deleted on the server. This is the
-
-default value.</td>
-</tr>
-<tr><td align="left" valign="top" id="d0e109"><b>Prompt user</b></td>
-<td align="left" valign="top" headers="d0e109">Specifies that you want to
-
-choose which resources to publish to the server or to remove from the server.</td>
-</tr>
-<tr><td align="left" valign="top" id="d0e114"><b>Publish all</b></td>
-<td align="left" valign="top" headers="d0e114">Specifies that you want to
-
-publish all resources to the server, regardless of whether they have changed.
-
-No resources are deleted from the server.</td>
-</tr>
-</tbody></table>
-</li>-->
-<li><span>Click  <span class="uicontrol">Apply</span> and then  <span class="uicontrol">OK</span> to
-
+<li class="stepexpand"><span>Under the <span class="uicontrol">Server timeout delay</span> drop-down
+list, select one of the following relative length of time you can wait before
+ending a server operation:</span><ul><li>Longer</li>
+<li>Long</li>
+<li>Normal</li>
+<li>Short</li>
+<li>Shorter</li>
+</ul>
+ The default setting is <span class="uicontrol">Normal</span>. <div class="tip"><span class="tiptitle">Tip:</span> If you have a fast processing machine, you can try using the <span class="uicontrol">Shorter</span> timeout
+delay option.  If you have a slow processing machine, you can try using the <span class="uicontrol">Longer</span> timeout
+delay option.</div>
+</li>
+<li class="stepexpand"><span>Click  <span class="uicontrol">Apply</span> and then  <span class="uicontrol">OK</span> to
 save your changes.</span></li>
 </ol>
 </div>
-
+<div>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tpref.html" title="The server tools allow you to define the following preferences:">Defining server preferences</a></div>
+</div>
+</div>
 </body>
 </html>

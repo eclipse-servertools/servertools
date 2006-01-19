@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <!-- /*******************************************************************************
  * Copyright (c) 2000, 2005 IBM Corporation and others.
@@ -16,25 +16,31 @@
 <link rel="stylesheet" type="text/css" href="../../org.eclipse.wst.doc.user/common.css" />
 <title>Stopping a server</title>
 </head>
-<body id="twstpins"><a name="twstpins"><!-- --></a>
-
+<body onresize="location.reload();" id="twstpins_wst"><a name="twstpins_wst"><!-- --></a>
 <h1 class="topictitle1">Stopping a server</h1>
-<div><p>To stop a server:</p>
-<ol><li class="skipspace"><span>In the Servers view ( <b>Window &gt; Show View &gt; Other &gt; Server &gt;
-Servers</b>), select the server that you want to stop.</span></li>
-<li class="skipspace"><span>Click the  <span class="uicontrol">Stop the server</span>  <img src="../images/launch_stop.gif" alt="Picture of Stop icon" /> icon in the toolbar.</span> In the <span class="uicontrol">Status</span> column
-of the Servers view, the status of the server changes to  <i>Stopped</i>.</li>
-<li class="skipspace"><span>If for some reason the server fails to stop, you can terminate
-the process as follows:</span><ol type="a"><li><span>Switch to the Debug perspective.</span></li>
-<li><span>In the Process view, select the server process that you want
-to stop.</span></li>
-<li><span>Click the  <span class="uicontrol">Terminate</span>  <img src="../images/launch_stop.gif" alt="Picture of Terminate icon" /> icon in the toolbar.</span></li>
+<div><div>You can stop the server from the Servers
+view.</div><div class="section" id="twstpins_wst__twstpins_context"><a name="twstpins_wst__twstpins_context"><!-- --></a>To stop the server:</div>
+<ol><li class="stepexpand" id="twstpins_wst__twstpins_step1"><a name="twstpins_wst__twstpins_step1"><!-- --></a><span>In the Servers view ( <strong>Window &gt; Show View
+&gt; Other &gt; Server &gt; Servers &gt; OK</strong>), select the server that you want to stop.</span></li>
+<li class="stepexpand"><span><span id="twstpins_wst__twstpins_steps_ph1"><a name="twstpins_wst__twstpins_steps_ph1"><!-- --></a>Click the  <span class="uicontrol">Stop the server</span></span>  <img src="../images/launch_stop.gif" alt="Picture of Stop icon" onload="javascript:resizeimage(this);" name="../images/launch_stop.gif" /> <span id="twstpins_wst__twstpins_steps_ph2"><a name="twstpins_wst__twstpins_steps_ph2"><!-- --></a>icon
+in the toolbar.</span></span> <span id="twstpins_wst__twstpins_steps_ph3"><a name="twstpins_wst__twstpins_steps_ph3"><!-- --></a>In the <span class="uicontrol">Status</span> column
+of the Servers view, the status of the server changes to  <em>Stopped</em>.</span></li>
+<li class="stepexpand"><span><span id="twstpins_wst__twstpins_steps_ph4"><a name="twstpins_wst__twstpins_steps_ph4"><!-- --></a>If for some reason the server fails
+to stop, you can terminate the process as follows:</span></span><ol type="a"><li id="twstpins_wst__twstpins_steps_substep1"><a name="twstpins_wst__twstpins_steps_substep1"><!-- --></a><span>Switch to the Debug perspective.</span></li>
+<li id="twstpins_wst__twstpins_steps_substep2"><a name="twstpins_wst__twstpins_steps_substep2"><!-- --></a><span>In the Process view, select the
+server process that you want to stop.</span></li>
+<li><span><span id="twstpins_wst__twstpins_steps_ph6"><a name="twstpins_wst__twstpins_steps_ph6"><!-- --></a>Click the  <span class="uicontrol">Terminate</span></span>  <img src="../images/launch_stop.gif" alt="Picture of Terminate icon" onload="javascript:resizeimage(this);" name="../images/launch_stop.gif" /> <span id="twstpins_wst__twstpins_steps_ph7"><a name="twstpins_wst__twstpins_steps_ph7"><!-- --></a>icon in the toolbar.</span></span></li>
 </ol>
 </li>
 </ol>
-<div class="skipspace"><div class="note"><span class="notetitle">Note: </span>When terminating a server, the server process will be killed
-and the server will not go through the normal routine of stopping, for example
-calling the destroy() method on a servlet.</div>
+<div class="section" id="twstpins_wst__twstpins_result"><a name="twstpins_wst__twstpins_result"><!-- --></a><div class="note"><span class="notetitle">Note:</span> When terminating a server, the server process
+will end and the server will not go through the normal routine
+of stopping, for example calling the destroy() method on a servlet.</div>
+</div>
+</div>
+<div>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/twmanage.html" title="You can use the server tools views to manage servers. The following tasks may be included as part of the development path:">Managing servers</a></div>
 </div>
 </div>
 </body>

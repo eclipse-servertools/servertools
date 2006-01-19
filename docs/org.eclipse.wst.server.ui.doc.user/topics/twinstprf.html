@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-us" xml:lang="en-us">
+<head>
+<!-- /*******************************************************************************
+ * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/ -->
+<link rel="stylesheet" type="text/css" href="../../org.eclipse.wst.doc.user/common.css" />
+<title>Defining the installed server runtime environments</title>
+</head>
+<body onresize="location.reload();" id="twinstprf_wst"><a name="twinstprf_wst"><!-- --></a>
+<h1 class="topictitle1">Defining the installed server runtime environments</h1>
+<div><div>Using the Preferences page, you can direct the workbench to use
+a specific runtime environment of an application server for compiling your
+application. You can complete this by defining the installation directory
+of the server:</div><ol><li class="stepexpand"><span>From the Window menu, select  <span class="uicontrol">Preferences</span>.</span></li>
+<li class="stepexpand"><span>In the Preferences window, expand the <span class="uicontrol">Server</span> folder
+and then select  <span class="uicontrol">Installed Runtimes</span>.</span> The
+Installed Server Runtime Environments section of the Preferences dialog is
+displayed.</li>
+<li class="stepexpand"><span><strong>Optional: </strong>Click <span class="uicontrol">Search</span>.
+This searches your local directory for installed server runtime environments.
+Searching on a remote host is not supported.</span><ol type="a"><li><span>The Search for Runtimes dialog box opens. In the <span class="uicontrol">Folder</span> field,
+browse or type the directory where you would like the workbench to start searching
+for installed server runtime environments. Click <span class="uicontrol">OK</span>.</span></li>
+<li><span>If a list of installations is displayed, select the desired
+target server and click <span class="uicontrol">OK</span> in the displayed dialog;
+then click <span class="uicontrol">OK</span> in the Preferences dialog. If no installations
+of any application servers are found, continue completing the steps for this
+task.</span></li>
+</ol>
+</li>
+<li class="stepexpand"><span>Click <span class="uicontrol">Add</span>.</span> The New Server Runtime
+wizard opens.<ol type="a"><li class="substepexpand"><span>Select the target server runtime and click <span class="uicontrol">Next</span>.
+The <em>product_name</em> Runtime panel is displayed.</span></li>
+<li class="substepexpand"><span>For <span class="uicontrol">Installation directory</span> or <span class="uicontrol">Location</span> field,
+type or browse to the location of the target server.</span> <div class="tip"><span class="tiptitle">Tip:</span> If
+you specify a false location for the target server, use the workbench to assemble
+modules and then use the application server to deploy the modules.</div>
+ If you selected for a target server <strong>J2EE Runtime Library</strong>, a generic
+J2EE container, specify a directory that contains <tt>.jar</tt> files such
+a <tt>\bin\lib</tt> directory for a Java development kit installation.</li>
+<li class="substepexpand"><span>Click <span class="uicontrol">Finish</span>.</span> The target server
+name and type is added to the table in the Installed Server Runtime Environment
+section.</li>
+<li class="substepexpand"><span>In the Preferences dialog, click <span class="uicontrol">OK</span>.</span></li>
+</ol>
+</li>
+</ol>
+<div class="section"><p>To change the list of available target servers, click <strong>Window
+&gt; Preferences &gt; Server &gt; Installed Runtimes</strong> to go to the Installed Server
+Runtime Environments section of the Preferences dialog. Use the <strong>Add</strong>, <strong>Edit</strong>, <strong>Remove</strong> or <strong>Search</strong> options
+to change the list of target servers as needed.</p>
+<p>To change the target
+server for a module, right-click on the module in the Project Explorer view
+and click <strong>Properties &gt; Server</strong>. Change the value for <strong>Target runtime</strong> to
+select a different target server for the module.</p>
+<div class="important"><span class="importanttitle">Important:</span> If
+you change the target server for an EJB project, regenerate the deployment
+code. Right-click the EJB project, and select <strong>Deploy</strong>. If you attempt
+to run an application on a server target that is different from its generated
+deployment code, the application fails to run.</div>
+</div>
+</div>
+<div>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tpref.html" title="The server tools allow you to define the following preferences:">Defining server preferences</a></div>
+</div>
+</div>
+</body>
+</html>

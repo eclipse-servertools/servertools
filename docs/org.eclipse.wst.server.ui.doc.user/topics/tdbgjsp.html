@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <!-- /*******************************************************************************
  * Copyright (c) 2000, 2005 IBM Corporation and others.
@@ -16,55 +16,41 @@
 <link rel="stylesheet" type="text/css" href="../../org.eclipse.wst.doc.user/common.css" />
 <title>Debugging a JSP file on a server</title>
 </head>
-<body id="tdbgjsp"><a name="tdbgjsp"><!-- --></a>
+<body onresize="location.reload();" id="tdbgjsp_wst"><a name="tdbgjsp_wst"><!-- --></a>
+<script type="text/javascript">
+  if (navigator.appName=="Netscape") {
+    setTimeout('window.onresize = reload',500);
+  }
+  </script>
 
 <h1 class="topictitle1">Debugging a JSP file on a server</h1>
-<div><p>The debugger enables you to detect and diagnose errors in your
-
-application. It allows you to control the execution of your program by setting
-
-breakpoints, suspending threads, stepping through the code, and examining
-
-the contents of the variables. You can debug a JavaServer Pages (JSP) without
-
-losing the state of your application. </p><div class="skipspace">To debug a JSP file on a server:</div>
-<ol><li class="skipspace"><span>In the Project Explorer view, open your JSP file.</span> In
-
-a Web project, JSP files are located in the Web Content folder. Double-click
-
-the JSP file to open it on the JSP editor.</li>
-<li>To set one or more breakpoints, you can select a line of code in the editor and double-click the marker
-
-bar directly to the left of the line where you want to add the breakpoint.
-</li>
-<li class="skipspace"><span>From the JSP file's context menu in the Project Explorer view,
-
-click  <span class="uicontrol">Debug As &gt; Debug on Server.</span> The workbench switches
-
-to the Debug perspective and the server is launched in debug mode.</span></li>
-<li class="skipspace"><span>In the Debug view, step through the code and make the necessary
-
-changes to the JSP file.</span> For detailed information on debugging,
-
-refer to the Debugging Java™ applications documentation.</li>
-<li class="skipspace"><span>Save the JSP file.</span></li>
-<li class="skipspace"><span>Click the  <span class="uicontrol">Refresh</span> icon in the Web Browser
-
-to update the changes.</span> The state of your application is not lost
-
-and the server recognizes your changes.</li>
+<div><div>The debugger enables you to detect and diagnose
+errors in your application. It allows you to control the execution of your
+program by setting breakpoints, suspending threads, stepping through the code,
+and examining the contents of the variables. You can debug a JavaServer Pages
+(JSP) without losing the state of your application. </div><div class="section" id="tdbgjsp_wst__tdbgjsp_context"><a name="tdbgjsp_wst__tdbgjsp_context"><!-- --></a>To debug a JSP file on a server:</div>
+<ol><li class="stepexpand" id="tdbgjsp_wst__tdbgjsp_step1"><a name="tdbgjsp_wst__tdbgjsp_step1"><!-- --></a><span>In the Project Explorer view, open your JSP
+file.</span> In a Web project, JSP files are located in the Web Content
+folder. Double-click the JSP file, the file opens in an editor.</li>
+<li class="stepexpand" id="tdbgjsp_wst__tdbgjsp_step2"><a name="tdbgjsp_wst__tdbgjsp_step2"><!-- --></a><span>To set one or more breakpoints, you can select
+a line of code in the editor and double-click the marker bar directly to the
+left of the line where you want to add the breakpoint.</span></li>
+<li class="stepexpand" id="tdbgjsp_wst__tdbgjsp_step3"><a name="tdbgjsp_wst__tdbgjsp_step3"><!-- --></a><span>From the JSP file's context menu in the Project
+Explorer view, click  <span class="uicontrol">Debug &gt; Debug on Server.</span> The
+workbench switches to the Debug perspective and the server is launched in
+debug mode.</span></li>
+<li class="stepexpand" id="tdbgjsp_wst__tdbgjsp_step4"><a name="tdbgjsp_wst__tdbgjsp_step4"><!-- --></a><span>In the Debug view, step through the code and
+make the necessary changes to the JSP file.</span> For detailed information
+on debugging, refer to the Debugging Java applications documentation.</li>
+<li class="stepexpand" id="tdbgjsp_wst__tdbgjsp_step5"><a name="tdbgjsp_wst__tdbgjsp_step5"><!-- --></a><span>Save the JSP file.</span></li>
+<li class="stepexpand" id="tdbgjsp_wst__tdbgjsp_step6"><a name="tdbgjsp_wst__tdbgjsp_step6"><!-- --></a><span>Click the  <span class="uicontrol">Refresh</span> icon
+in the Web Browser to update the changes.</span> The state of your application
+is not lost and the server recognizes your changes.</li>
 </ol>
-<div class="skipspace"><div class="note"><span class="notetitle">Note: </span><ul><li>If you are running the JSP file on a remote WebSphere<sup>®</sup> server,
-
-the JSP cache directory must be cleared in order to force the class file to
-
-be in the correct JSP source debug mode. If the cache is not cleared, some
-
-compiled unchanged JSP files may still be compiled in the previous JSP source
-
-debug mode.</li>
-</ul>
 </div>
+<div>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tdebug.html" title="">Debugging applications on a server</a></div>
 </div>
 </div>
 </body>

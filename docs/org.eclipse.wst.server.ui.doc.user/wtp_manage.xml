@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+/*******************************************************************************
+ * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/ 
+ -->
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Managing Servers" topic="topics/twmanage.html">
+   <topic label="Managing servers" href="topics/twmanage.html">
+      <topic label="Adding projects to a server " href="topics/twaddprj.html"/>
+      <topic label="Removing a project from a server" href="topics/twremprj.html"/>
+      <topic label="Starting a server" href="topics/twsrtins.html">
+         <topic label="Starting a server in debug mode" href="topics/twsrtdbg.html"/>
+      </topic>
+      <topic label="Stopping a server" href="topics/twstpins.html"/>
+      <topic label="Setting a default server" href="topics/twprefin.html"/>
+      <topic label="Displaying or hiding the metadata of the server" href="topics/tmetasrv.html"/>
+   </topic>
+</toc>

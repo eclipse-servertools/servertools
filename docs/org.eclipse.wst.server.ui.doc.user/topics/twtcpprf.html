@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <!-- /*******************************************************************************
  * Copyright (c) 2000, 2005 IBM Corporation and others.
@@ -16,38 +16,37 @@
 <link rel="stylesheet" type="text/css" href="../../org.eclipse.wst.doc.user/common.css" />
 <title>Defining the TCP/IP Monitor preference</title>
 </head>
-<body id="twtcpprf"><a name="twtcpprf"><!-- --></a>
-
+<body onresize="location.reload();" id="twtcpprf_wst"><a name="twtcpprf_wst"><!-- --></a>
 <h1 class="topictitle1">Defining the TCP/IP Monitor preference</h1>
-<div><p>Using the Preferences page, you can define the TCP/IP Monitor attributes. To
-define these preferences, complete the following:</p><div class="section"></div>
-<ol><li class="stepexpand"><span>From the Window menu, select  <span class="uicontrol">Preferences</span>.</span></li>
-<li class="stepexpand"><span>In the Preferences window, expand  <span class="uicontrol">Internet</span> and
+<div><div>Using the Preferences page, you can define the TCP/IP Monitor attributes.Â To
+define these preferences, complete the following:</div><div class="section"></div>
+<ol><li class="stepexpand"><span>From the toolbar, select <span class="menucascade"><span class="uicontrol">Window</span> &gt; <span class="uicontrol">Preferences</span></span>.</span></li>
+<li class="stepexpand"><span>In the Preferences window, expand  <span class="uicontrol">Run/Debug</span> and
 then select  <span class="uicontrol">TCP/IP Monitor</span>.</span></li>
 <li class="stepexpand"><span>Select the <span class="uicontrol">Show TCP/IP Monitor View when there is activity</span> check
 box if you want to display the TCP/IP Monitor view when there is activity
 through a TCP/IP monitoring server.</span></li>
 <li class="stepexpand"><span>To add a TCP/IP monitoring server, complete the following:</span><ol type="a"><li class="substepexpand"><span>Under the <span class="uicontrol">TCP/IP Monitors</span> lists, click <span class="uicontrol">Add</span>.</span> A <span class="uicontrol">New Monitor</span> dialog opens.</li>
-<li class="substepexpand"><span>Specify the following settings, then click <strong>OK</strong>:</span></li>
+<li class="substepexpand"><span>Specify the following settings, then click <span class="uicontrol">OK</span>:</span></li>
 </ol>
 
 <table border="1" frame="hsides" rules="rows" cellpadding="4" cellspacing="0" summary="" class="choicetableborder">
-<thead><tr><th id="d0e53-option" valign="bottom" align="left">Option</th>
-<th id="d0e53-desc" valign="bottom" align="left">Description</th></tr></thead>
-<tbody><tr><td valign="top" headers="d0e53-option" id="d0e55"><strong>Local monitoring port</strong></td>
-<td valign="top" headers="d0e53-desc d0e55">Specify a unique
+<thead><tr><th id="d0e59-option" valign="bottom" align="left">Option</th>
+<th id="d0e59-desc" valign="bottom" align="left">Description</th></tr></thead>
+<tbody><tr><td valign="top" headers="d0e59-option" id="d0e61"><strong>Local monitoring port</strong></td>
+<td valign="top" headers="d0e59-desc d0e61">Specify a unique
 port number on your local machine.</td>
 </tr>
-<tr><td valign="top" headers="d0e53-option" id="d0e60"><strong>Host name</strong></td>
-<td valign="top" headers="d0e53-desc d0e60">Specify the host name or IP address
+<tr><td valign="top" headers="d0e59-option" id="d0e66"><strong>Host name</strong></td>
+<td valign="top" headers="d0e59-desc d0e66">Specify the host name or IP address
 of the machine where the server is running.</td>
 </tr>
-<tr><td valign="top" headers="d0e53-option" id="d0e65"><strong>Port</strong></td>
-<td valign="top" headers="d0e53-desc d0e65">Specify the port number of the remote
+<tr><td valign="top" headers="d0e59-option" id="d0e71"><strong>Port</strong></td>
+<td valign="top" headers="d0e59-desc d0e71">Specify the port number of the remote
 server.</td>
 </tr>
-<tr><td valign="top" headers="d0e53-option" id="d0e70"><strong>Type</strong></td>
-<td valign="top" headers="d0e53-desc d0e70">Specify whether the request type from
+<tr><td valign="top" headers="d0e59-option" id="d0e76"><strong>Type</strong></td>
+<td valign="top" headers="d0e59-desc d0e76">Specify whether the request type from
 the Web browser are sent by HTTP or TCP/IP. If the HTTP option is selected
 the requests from the Web browser are modified so that the HTTP header points
 to the remote machine and separated if multiple HTTP requests are received
@@ -55,22 +54,31 @@ in the same connection. If the TCP/IP option is selected, all the requests
 are sent byte for byte and the TCP/IP Monitor will not translate or modify
 any requests that it forwards. </td>
 </tr>
+<tr><td valign="top" headers="d0e59-option" id="d0e81"><strong>Connection Timeout</strong></td>
+<td valign="top" headers="d0e59-desc d0e81">Specify the length of
+time, in milliseconds, that you can wait before ending the TCP/IP connection
+to a server.</td>
+</tr>
 </tbody></table>
 </li>
 <li class="stepexpand"><span>Use the <span class="uicontrol">Start</span> and <span class="uicontrol">Stop</span> buttons
-to manage the TCP/IP monitoring servers.</span> The TCP/IP Monitor  table
+to manage the TCP/IP monitoring servers.</span> The TCP/IP Monitor table
 lists the available TCP/IP monitoring servers. You can add, edit, remove,
 start or stop the available TCP/IP monitoring servers from the TCP/IP Monitor
  table. The <strong>Status</strong> column shows if the TCP/IP monitor is started or
 stopped. The <strong>Host name</strong>  column shows the host name or IP address of
 the machine where the server is running. The <strong>Type</strong>  column shows whether
 the request type from the Web browser are sent by HTTP or TCP/IP.</li>
-<li class="stepexpand"><span>Click <strong>OK</strong> to
+<li class="stepexpand"><span>Click  <span class="uicontrol">Apply</span> and then  <span class="uicontrol">OK</span> to
 save your changes.</span></li>
 </ol>
 </div>
-<div><div class="relref"><strong>Related reference</strong><br />
-<div><a href="rwtcpvw.html" title="The TCP/IP Monitor is a simple server that monitors all the requests and the responses between a Web browser and server. If you want the TCP/IP Monitor view to open when there is TCP/IP activity, select the Show TCP/IP Monitor view when there is activity check box on the TCPIP/IP Monitor preferences page ( Window &gt; Preferences &gt; Internet &gt; TCP/IP Monitor).">TCP/IP Monitor view</a></div>
+<div>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tpref.html" title="The server tools allow you to define the following preferences:">Defining server preferences</a></div>
+</div>
+<div class="relref"><strong>Related reference</strong><br />
+<div><a href="../topics/rwtcpvw.html" title="The TCP/IP Monitor is a simple server that monitors all the requests and the responses between a Web browser and server. If you want the TCP/IP Monitor view to open when there is TCP/IP activity, select the Show TCP/IP Monitor view when there is activity check box on the TCPIP/IP Monitor preferences page ( Window &gt; Run/Debug &gt; TCP/IP Monitor).">TCP/IP Monitor view</a></div>
 </div>
 </div>
 </body>

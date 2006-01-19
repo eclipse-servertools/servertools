@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html lang="en-us" xml:lang="en-us">
 <head>
 <!-- /*******************************************************************************
  * Copyright (c) 2000, 2005 IBM Corporation and others.
@@ -16,34 +16,28 @@
 <link rel="stylesheet" type="text/css" href="../../org.eclipse.wst.doc.user/common.css" />
 <title>Starting a server</title>
 </head>
-<body id="twsrtins"><a name="twsrtins"><!-- --></a>
-
+<body onresize="location.reload();" id="twsrtins_wst"><a name="twsrtins_wst"><!-- --></a>
 <h1 class="topictitle1">Starting a server</h1>
-<div><p>When you are ready to test your projects, you must start a server.
-In some situations, listed below, the server tools start a server for you
-automatically. For more information on which test server will start, refer
-to the list of related topics at the end of this topic.</p>
-<div class="p"><b>Prerequisites</b>
-<ul>
-<li><a href="twcrtins.html#twcrtins">Create a server.</a></li>
-<li>Add a project to the server.</li>
+<div><div>When you are ready to test your projects,
+you must start a server. In some situations, listed below, the server tools
+start a server for you automatically. For more information on which test server
+will start, refer to the list of related topics at the end of this topic.</div><div class="p"><strong id="twsrtins_wst__twsrtins_prereq"><a name="twsrtins_wst__twsrtins_prereq"><!-- --></a>Prerequisites:</strong><ul><li id="twsrtins_wst__twsrtins_prereq_li1"><a name="twsrtins_wst__twsrtins_prereq_li1"><!-- --></a><a href="twcrtins.html">Create a server.</a></li>
 </ul>
 </div>
-<div class="skipspace"><p>Once you have started the server you can test the projects that
-are associated with the server. You can stop and restart the server at any
-time. The status of the server is displayed in the  <span class="uicontrol">Status</span> column
+<div class="section" id="twsrtins_wst__twrstins_context"><a name="twsrtins_wst__twrstins_context"><!-- --></a><p>Once you have started the server you can
+test the projects that are associated with the server. You can stop and restart
+the server at any time. The status of the server is displayed in the  <span class="uicontrol">Status</span> column
 of the Servers view.</p>
 <p>To manually start a server:</p>
 </div>
-<ol><li class="skipspace"><span>Switch to the Servers view.</span></li>
-<li class="skipspace"><span>In the Servers view, right-click the server you want to start.</span></li>
-<li class="skipspace"><span>Select  <span class="uicontrol">Start</span>. </span> The following
-things happen:<ul><li>If you have selected the  <span class="uicontrol">Automatically publish before starting
-servers</span> check box on the Server preferences page (Window &gt; Preferences
-&gt; Server), the server tools check to see if your project and files on the
-server are synchronized prior to starting the server. If they are not, the
-project and the files are automatically updated on the remote server when
-it is started.</li>
+<a name="twsrtins_wst__twrtins_steps"><!-- --></a><ol id="twsrtins_wst__twrtins_steps"><li class="stepexpand"><span>Switch to the Servers view.</span></li>
+<li class="stepexpand"><span>In the Servers view, right-click the server you want to start.</span></li>
+<li class="stepexpand"><span>Select  <span class="uicontrol">Start</span>. </span> The following
+things happen:<ul><li>If you have selected the  <span class="uicontrol">Automatically publish when starting
+servers</span> check box on the Server preferences page (<span class="menucascade"><span class="uicontrol">Window</span> &gt; <span class="uicontrol"> Preferences</span> &gt; <span class="uicontrol">Server</span></span> ), the workbench checks to see if your project
+and files on the server are synchronized prior to starting the server. If
+they are not, the project and the files are automatically updated on the remote
+server when it is started.</li>
 <li>A Console view opens in the workbench. It will take a minute to start
 the server. If the server fails to start, check for the reason that it failed
 in the Console.</li>
@@ -52,8 +46,23 @@ status of the server changes to  <tt class="sysout">Started</tt>.</li>
 </ul>
 </li>
 </ol>
-<div class="skipspace"><div class="tip"><span class="tiptitle">Tip: </span>The server is automatically started when you right-click
-on a file and then select  <span class="uicontrol">Run &gt; Run on Server</span>.</div>
+<div class="section" id="twsrtins_wst__twsrtins_result"><a name="twsrtins_wst__twsrtins_result"><!-- --></a><div class="tip"><span class="tiptitle">Tip:</span> The server is automatically
+started when you right-click on a file and then select  <span class="uicontrol">Run As
+&gt; Run on Server</span>.</div>
+</div>
+</div>
+<div>
+<ul class="ullinks">
+<li class="ulchildlink"><strong><a href="../topics/twsrtdbg.html">Starting a server in debug mode</a></strong><br />
+If you want to debug your projects while
+a server runs, you can start a server in debug mode.</li>
+</ul>
+
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/twmanage.html" title="You can use the server tools views to manage servers. The following tasks may be included as part of the development path:">Managing servers</a></div>
+</div>
+<div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/cwflow.html" title="A server can either be started manually or automatically. For example, it is automatically started when you right-click a project in the Project Explorer view and select Run As &gt; Run on Server. It is manually started when you click on the Start the server Picture of the Run on Server icon icon, the Start the server in debug mode PIcture of the Debug on server Icon icon , or the Start the server in profiling mode icon, located in the Servers view.">Which server will start</a></div>
 </div>
 </div>
 </body>

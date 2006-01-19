@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+/*******************************************************************************
+ * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/ 
+ -->
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc link_to="../org.eclipse.wst.server.ui.doc.user/wtp_create.xml#tomcat_create" label="tomcat_tasks" topic="topics/tomcat.html">
+   <topic label="...Apache Tomcat" href="topics/tomcat.html"/>
+</toc>

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
-<head>
+<html lang="en-us" xml:lang="en-us">
 <!-- /*******************************************************************************
  * Copyright (c) 2000, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
@@ -16,32 +15,63 @@
 <link rel="stylesheet" type="text/css" href="../../org.eclipse.wst.doc.user/common.css" />
 <title>Creating a server</title>
 </head>
-<body id="twcrtins"><a name="twcrtins"><!-- --></a>
-
+<body onresize="location.reload();" id="twcrtins_wst"><a name="twcrtins_wst"><!-- --></a>
 <h1 class="topictitle1">Creating a server</h1>
-<div><p>You can create a server to identify the run-time environment that
-you want to use for testing your project resources.</p><div class="skipspace">To create a server:</div>
-<ol><li class="skipspace"><span>In the menu bar, click <span class="uicontrol">File &gt; New &gt; Other</span>. </span></li>
-<li class="skipspace"><span>Expand the <span class="uicontrol">Server</span> folder and then select
+<div><div>You can create a server to identify the runtime environment that
+you want to use for testing your project resources.</div><div class="section">To create a server:</div>
+<ol><li class="stepexpand"><span>In the menu bar, click <span class="uicontrol">File &gt; New &gt; Other</span>. </span></li>
+<li class="stepexpand"><span>Expand the <span class="uicontrol">Server</span> folder and then select
  <span class="uicontrol">Server</span>.</span></li>
-<li class="skipspace"><span>Click  <span class="uicontrol">Next</span>.</span> The New Server wizard
+<li class="stepexpand"><span>Click  <span class="uicontrol">Next</span>.</span> The New Server wizard
 opens. This wizard defines a new server, that contains information required
-to point to a specific run-time environment for local or remote testing, or
+to point to a specific runtime environment for local or remote testing, or
 for publishing to an application server.</li>
-<li class="skipspace"><span>In the <span class="uicontrol">Host name</span> field, you can provide
-the fully qualified DNS name or IP address of the remote host machine that
-the server is running on. By default, this field is pre-filled with the default
-address for the local host (127.0.0.1).</span></li>
-<li class="skipspace"><span>In the <span class="uicontrol">Select the server type</span> list, select
+<li class="stepexpand"><span>In the <span class="uicontrol">Server's host name</span> field, you can
+provide the fully qualified DNS name or IP address of the host
+machine that where the server is running. By default, this field is pre-filled
+with the default address: <kbd class="userinput">localhost</kbd></span></li>
+<li class="stepexpand"><span>In the <span class="uicontrol">Select the server type</span> list, select
 the type of server or test environment where you want to publish or test your
-resources.</span></li>
-<li class="skipspace"><span>Click <span class="uicontrol">Next</span> and follow the instructions in
+resources.</span><ol type="a"><li class="substepexpand"><span>(Optional) Refer to the <span class="uicontrol">Description</span> section
+for brief details about the server you have selected.</span></li>
+<li class="substepexpand"><span>(Optional) In the <span class="uicontrol">View By</span> drop-down list,
+select how you would like to display the list of available servers in the <span class="uicontrol">Select
+the server type</span> list:</span> </li>
+</ol>
+
+<table border="1" frame="hsides" rules="rows" cellpadding="4" cellspacing="0" summary="" class="choicetableborder">
+<thead><tr><th id="d0e66-option" valign="bottom" align="left">Option</th>
+<th id="d0e66-desc" valign="bottom" align="left">Description</th></tr></thead>
+<tbody><tr><td valign="top" headers="d0e66-option" id="d0e68"><strong>Name</strong></td>
+<td valign="top" headers="d0e66-desc d0e68">Alphabetically sorts the list of available
+servers.</td>
+</tr>
+<tr><td valign="top" headers="d0e66-option" id="d0e73"><strong>Vendor</strong></td>
+<td valign="top" headers="d0e66-desc d0e73">Categorize the list of available
+servers in vendor-specific folders.</td>
+</tr>
+<tr><td valign="top" headers="d0e66-option" id="d0e78"><strong>Version</strong></td>
+<td valign="top" headers="d0e66-desc d0e78">Categorize the list of available
+servers in folders based on the version of the servers.</td>
+</tr>
+<tr><td valign="top" headers="d0e66-option" id="d0e83"><strong>Module Support</strong></td>
+<td valign="top" headers="d0e66-desc d0e83">Categorize the list of available
+servers based on the supported J2EE module specification level by the server.</td>
+</tr>
+</tbody></table>
+</li>
+<li class="stepexpand"><span>Click <span class="uicontrol">Next</span> and follow the instructions in
 the wizard to specify the details of the server that you want to create. For
 more information about any of the fields on this wizard, select the field
 and then press <span class="uicontrol">F1</span>.</span></li>
-<li class="skipspace"><span>Click  <span class="uicontrol">Finish</span>.</span> The new server
+<li class="stepexpand"><span>Click  <span class="uicontrol">Finish</span>.</span> The new server
 appears in the Servers view under the  <span class="uicontrol">Server</span> column.</li>
 </ol>
+</div>
+<div>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tcreate.html" title="">Creating, editing, and deleting servers</a></div>
+</div>
 </div>
 </body>
 </html>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-us" xml:lang="en-us">
+<head>
+<!-- /*******************************************************************************
+ * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/ -->
+<link rel="stylesheet" type="text/css" href="../../org.eclipse.wst.doc.user/common.css" />
+<title>Displaying or hiding the metadata of the server</title>
+</head>
+<body onresize="location.reload();" id="tmetasrv_wst"><a name="tmetasrv_wst"><!-- --></a>
+<h1 class="topictitle1">Displaying or hiding the metadata of the server</h1>
+<div><div>On the workbench, you have the option to display or hide the metadata
+of the server.</div><div class="section"><div class="p">The <em>metadata</em> contains a variety of information about the
+server such as:<ul><li>The location where the server configuration files are stored on the workbench.</li>
+<li>The fully qualified DNS name or IP address of the host machine where the
+server is running.</li>
+<li>The name assign to the server.</li>
+<li>The name of the installed server runtime environment which defines the
+runtime environment of an application server for compiling your application.</li>
+</ul>
+</div>
+<p>By default, the tool hides the metadata of the server to keep
+the development workspace clean. Displaying the metadata of the server on
+the workbench, allows you to persists the data of the server in a <em>serverName</em>.server
+file, where <em>serverName</em> is the name assigned to the server. The <em>serverName</em>.server
+file is useful when you are working in a team development environment and
+you are required to maintain the metadata of the server in a source control
+repository.</p>
+To display the metadata of the server:</div>
+<ol><li class="stepexpand"><span>In the Servers view, right-click the server you want to display
+the metadata.</span></li>
+<li class="stepexpand"><span>Select the <span class="uicontrol">Move to Workspace</span> option.</span> <div class="tip"><span class="tiptitle">Tip:</span> If the <span class="uicontrol">Move to Workspace</span> option
+is not available and you only see the <span class="uicontrol">Move to Metadata</span> option,
+this means the metadata of your server is already on the workbench. The next
+step describes where you can find it on the workbench.</div>
+</li>
+<li class="stepexpand"><span>In the Project Explorer view, expand the <strong>Others Project</strong> folder
+and then expand your server project to locate the <em>serverName</em>.server
+file, where <em>serverName</em> is the name assigned to your server.</span></li>
+<li class="stepexpand"><span>(<strong>Optional</strong>) You can double click <em>serverName</em>.server
+file to edit the server's data in the server editor.</span></li>
+</ol>
+<div class="section">To hide the metadata of the server:<div class="p"><ol><li>In the Servers view, right-click the server you want to hide the metadata.</li>
+<li>Select the <span class="uicontrol">Move to Metadata</span> option.<div class="tip"><span class="tiptitle">Tip:</span> If
+the <span class="uicontrol">Move to Metadata</span> option is not available and you
+only see the <span class="uicontrol">Move to Workspace</span> option, this means the
+metadata of your server is already hidden from the workbench.</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/twmanage.html" title="You can use the server tools views to manage servers. The following tasks may be included as part of the development path:">Managing servers</a></div>
+</div>
+</div>
+</body>
+</html>
