@@ -21,8 +21,9 @@ import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.model.IModuleResourceDelta;
 import org.eclipse.wst.server.core.model.PublishOperation;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
-import org.eclipse.wst.server.core.util.ProjectModule;
-
+/**
+ * Tomcat publish helper.
+ */
 public class PublishOperation2 extends PublishOperation {
 	protected TomcatServerBehaviour server;
 	protected IModule[] module;
@@ -66,8 +67,7 @@ public class PublishOperation2 extends PublishOperation {
 		}
 		
 		if (kind == IServer.PUBLISH_CLEAN || kind == IServer.PUBLISH_FULL) {
-			ProjectModule pm = (ProjectModule) module2.loadAdapter(ProjectModule.class, monitor);
-			IModuleResource[] mr = pm.members();
+			IModuleResource[] mr = server.getResources(module);
 			PublishUtil.copy(mr, path);
 			return;
 		}
@@ -104,8 +104,7 @@ public class PublishOperation2 extends PublishOperation {
 		if (!path.toFile().exists())
 			path.toFile().mkdirs();
 		
-		ProjectModule pm = (ProjectModule) module[1].loadAdapter(ProjectModule.class, monitor);
-		IModuleResource[] mr = pm.members();
+		IModuleResource[] mr = server.getResources(module);
 		PublishUtil.createZipFile(mr, jarPath);
 	}
 }

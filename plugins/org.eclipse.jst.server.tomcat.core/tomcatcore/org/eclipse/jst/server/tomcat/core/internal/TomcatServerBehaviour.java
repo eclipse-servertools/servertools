@@ -252,7 +252,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		}
 		
 		if (moduleTree.length == 1) // web module
-			publishDir(deltaKind, p, moduleTree[0], monitor);
+			publishDir(deltaKind, p, moduleTree, monitor);
 		else // utility jar
 			publishJar(kind, deltaKind, p, moduleTree, monitor);
 		
@@ -274,21 +274,19 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 * @param monitor
 	 * @throws CoreException
 	 */
-	private void publishDir(int deltaKind, Properties p, IModule module, IProgressMonitor monitor) throws CoreException {
+	private void publishDir(int deltaKind, Properties p, IModule module[], IProgressMonitor monitor) throws CoreException {
 		if (deltaKind == REMOVED) {
 			try {
-				String publishPath = (String) p.get(module.getId());
+				String publishPath = (String) p.get(module[0].getId());
 				PublishUtil.deleteDirectory(new File(publishPath), monitor);
 			} catch (Exception e) {
 				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, "Could not remove module", e));
 			}
 		} else {
-			IPath to = getServer().getRuntime().getLocation().append("webapps").append(module.getName());
-			
-			ProjectModule pm = (ProjectModule) module.loadAdapter(ProjectModule.class, monitor);
-			IModuleResource[] mr = pm.members();
+			IPath to = getServer().getRuntime().getLocation().append("webapps").append(module[0].getName());
+			IModuleResource[] mr = getResources(module);
 			PublishUtil.smartCopy(mr, to, monitor);
-			p.put(module.getId(), to.toOSString());
+			p.put(module[0].getId(), to.toOSString());
 		}
 	}
 
@@ -322,8 +320,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			if (!path.toFile().exists())
 				path.toFile().mkdirs();
 			
-			ProjectModule pm = (ProjectModule) module[1].loadAdapter(ProjectModule.class, monitor);
-			IModuleResource[] mr = pm.members();
+			IModuleResource[] mr = getResources(module);
 			PublishUtil.createZipFile(mr, path.append(module[1].getName() + ".jar"));
 			p.put(module[1].getId(), path.toOSString());
 		}
@@ -733,6 +730,10 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, list);
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, false);
+	}
+
+	protected IModuleResource[] getResources(IModule[] module) {
+		return super.getResources(module);
 	}
 
 	protected IModuleResourceDelta[] getPublishedResourceDelta(IModule[] module) {

@@ -451,6 +451,16 @@ public abstract class ServerBehaviourDelegate {
 	public abstract void stop(boolean force);
 
 	/**
+	 * Returns the current module resources.
+	 * 
+	 * @param module the module
+	 * @return an array containing the module's resources
+	 */
+	protected IModuleResource[] getResources(IModule[] module) {
+		return server.getResources(module);
+	}
+
+	/**
 	 * Returns the module resources that have been published to the server.
 	 * 
 	 * <p>

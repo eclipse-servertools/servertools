@@ -151,6 +151,8 @@ public abstract class RuntimeClasspathProviderDelegate {
 	 * @return a possibly empty array of classpath entries
 	 */
 	public IClasspathEntry[] resolveClasspathContainerImpl(IRuntime runtime) {
+		if (runtime == null)
+			return new IClasspathEntry[0];
 		runtimePathMap.put(runtime.getId(), runtime.getLocation());
 		IClasspathEntry[] entries = resolveClasspathContainer(runtime);
 		

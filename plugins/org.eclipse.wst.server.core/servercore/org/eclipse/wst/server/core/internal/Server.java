@@ -797,6 +797,7 @@ public class Server extends Base implements IServer {
 		stopAutoPublish();
 		
 		try {
+			getServerPublishInfo().startCaching();
 			IStatus status = getBehaviourDelegate(monitor).publish(kind, monitor);
 			
 			final List modules2 = new ArrayList();
@@ -811,6 +812,7 @@ public class Server extends Base implements IServer {
 			}, monitor);
 			
 			getServerPublishInfo().removeDeletedModulePublishInfo(modules2);
+			getServerPublishInfo().clearCache();
 			getServerPublishInfo().save();
 			
 			return status;
@@ -932,7 +934,18 @@ public class Server extends Base implements IServer {
 	/*
 	 * Returns the module resources that have been published.
 	 * 
-	 * @see ServerBehaviourDelegate.getPublishedResources(IModule[], IModule)
+	 * @see ServerBehaviourDelegate.getPublishedResources(IModule[])
+	 */
+	public IModuleResource[] getResources(IModule[] module) {
+		if (module == null)
+			throw new IllegalArgumentException("Module cannot be null");
+		return getServerPublishInfo().getResources(module);
+	}
+
+	/*
+	 * Returns the module resources that have been published.
+	 * 
+	 * @see ServerBehaviourDelegate.getPublishedResources(IModule[])
 	 */
 	public IModuleResource[] getPublishedResources(IModule[] module) {
 		if (module == null)
@@ -944,7 +957,7 @@ public class Server extends Base implements IServer {
 	 * Returns the delta of the current module resources that have been
 	 * published compared to the current state of the module.
 	 * 
-	 * @see ServerBehaviourDelegate.getPublishedResourceDelta(IModule[], IModule)
+	 * @see ServerBehaviourDelegate.getPublishedResourceDelta(IModule[])
 	 */
 	public IModuleResourceDelta[] getPublishedResourceDelta(IModule[] module) {
 		if (module == null)
@@ -956,7 +969,7 @@ public class Server extends Base implements IServer {
 	 * Returns the delta of the current module resources that have been
 	 * published compared to the current state of the module.
 	 * 
-	 * @see ServerBehaviourDelegate.getPublishedResourceDelta(IModule[], IModule)
+	 * @see ServerBehaviourDelegate.getPublishedResourceDelta(IModule[])
 	 */
 	public boolean hasPublishedResourceDelta(IModule[] module) {
 		if (module == null)

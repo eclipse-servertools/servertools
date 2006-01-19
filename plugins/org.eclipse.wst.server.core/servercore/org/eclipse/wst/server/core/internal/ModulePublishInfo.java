@@ -12,10 +12,13 @@ package org.eclipse.wst.server.core.internal;
 
 import java.util.*;
 import org.eclipse.core.runtime.*;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.model.IModuleFile;
 import org.eclipse.wst.server.core.model.IModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleResource;
+import org.eclipse.wst.server.core.model.IModuleResourceDelta;
+import org.eclipse.wst.server.core.model.ModuleDelegate;
 /**
  * Publish information for a specific module on a specific server.
  */
@@ -33,6 +36,11 @@ public class ModulePublishInfo {
 	private String name;
 	private IModuleResource[] resources = new IModuleResource[0];
 	private IModuleType moduleType;
+
+	private boolean useCache;
+	private IModuleResource[] currentResources = null;
+	private IModuleResourceDelta[] delta = null;
+	private boolean hasDelta;
 
 	/**
 	 * ModulePublishInfo constructor.
@@ -176,6 +184,126 @@ public class ModulePublishInfo {
 				IModuleResource[] resources3 = folder.members();
 				saveResource(child, resources3);
 			}
+		}
+	}
+
+	/**
+	 * Start using the module cache.
+	 */
+	protected void startCaching() {
+		useCache = true;
+		currentResources = null;
+	}
+
+	/**
+	 * Fill the module cache.
+	 * 
+	 * @param module
+	 */
+	private void fillCache(IModule[] module) {
+		if (currentResources != null)
+			return;
+		try {
+			int size = module.length;
+			ModuleDelegate pm = (ModuleDelegate) module[size - 1].loadAdapter(ModuleDelegate.class, null);
+			currentResources = pm.members();
+			
+			delta = ServerPublishInfo.getDelta(resources, currentResources);
+			hasDelta = (delta != null && delta.length > 0);
+		} catch (CoreException ce) {
+			Trace.trace(Trace.WARNING, "Couldn't fill publish cache for " + module);
+		}
+	}
+
+	protected void clearCache() {
+		useCache = false;
+		currentResources = null;
+		delta = null;
+	}
+
+	protected IModuleResource[] getModuleResources(IModule[] module) {
+		if (module == null)
+			return new IModuleResource[0];
+		
+		if (useCache) {
+			fillCache(module);
+			return currentResources;
+		}
+		
+		int size = module.length;
+		ModuleDelegate pm = (ModuleDelegate) module[size - 1].loadAdapter(ModuleDelegate.class, null);
+		try {
+			if (pm != null)
+				return pm.members();
+		} catch (CoreException ce) {
+			// ignore
+		}
+		return new IModuleResource[0];
+	}
+
+	protected IModuleResourceDelta[] getDelta(IModule[] module) {
+		if (module == null)
+			return new IModuleResourceDelta[0];
+		
+		if (useCache) {
+			fillCache(module);
+			return delta;
+		}
+		
+		int size = module.length;
+		ModuleDelegate pm = (ModuleDelegate) module[size - 1].loadAdapter(ModuleDelegate.class, null);
+		IModuleResource[] resources2 = null;
+		try {
+			if (pm != null)
+				resources2 = pm.members();
+		} catch (CoreException ce) {
+			// ignore
+		}
+		if (resources2 == null)
+			resources2 = new IModuleResource[0];
+		return ServerPublishInfo.getDelta(getResources(), resources2);
+	}
+
+	protected boolean hasDelta(IModule[] module) {
+		if (module == null)
+			return false;
+		
+		if (useCache) {
+			fillCache(module);
+			return hasDelta;
+		}
+		
+		int size = module.length;
+		ModuleDelegate pm = (ModuleDelegate) module[size - 1].loadAdapter(ModuleDelegate.class, null);
+		IModuleResource[] resources2 = null;
+		try {
+			if (pm != null)
+				resources2 = pm.members();
+		} catch (CoreException ce) {
+			// ignore
+		}
+		if (resources2 == null)
+			resources2 = new IModuleResource[0];
+		return ServerPublishInfo.hasDelta(getResources(), resources2);
+	}
+
+	public void fill(IModule[] module) {
+		if (module == null)
+			return;
+		
+		if (useCache) {
+			fillCache(module);
+			setResources(currentResources);
+			return;
+		}
+		
+		int size = module.length;
+		ModuleDelegate pm = (ModuleDelegate) module[size - 1].loadAdapter(ModuleDelegate.class, null);
+		try {
+			if (pm != null)
+				setResources(pm.members());
+		} catch (CoreException ce) {
+			// ignore
 		}
 	}
 

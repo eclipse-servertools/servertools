@@ -242,36 +242,24 @@ public class ServerPublishInfo {
 	 */
 	public void fill(IModule[] module) {
 		ModulePublishInfo mpi = getModulePublishInfo(module);
-		int size = module.length;
-		ModuleDelegate pm = (ModuleDelegate) module[size - 1].loadAdapter(ModuleDelegate.class, null);
-		try {
-			if (pm != null)
-				mpi.setResources(pm.members());
-		} catch (CoreException ce) {
-			// ignore
-		}
+		mpi.fill(module);
 	}
 
 	protected IModuleResourceDelta[] getDelta(IModule[] module) {
 		if (module == null)
 			return new IModuleResourceDelta[0];
 		
-		ModulePublishInfo mpi = getModulePublishInfo(module);
-		int size = module.length;
-		ModuleDelegate pm = (ModuleDelegate) module[size - 1].loadAdapter(ModuleDelegate.class, null);
-		IModuleResource[] resources = null;
-		try {
-			if (pm != null)
-				resources = pm.members();
-		} catch (CoreException ce) {
-			// ignore
-		}
-		if (resources == null)
-			resources = new IModuleResource[0];
-		return getDelta(mpi.getResources(), resources);
+		return getModulePublishInfo(module).getDelta(module);
 	}
 
-	protected IModuleResourceDelta[] getDelta(IModuleResource[] original, IModuleResource[] current) {
+	protected IModuleResource[] getResources(IModule[] module) {
+		if (module == null)
+			return new IModuleResource[0];
+		
+		return getModulePublishInfo(module).getModuleResources(module);
+	}
+
+	protected static IModuleResourceDelta[] getDelta(IModuleResource[] original, IModuleResource[] current) {
 		if (original == null || current == null)
 			return new IModuleResourceDelta[0];
 	
@@ -334,22 +322,10 @@ public class ServerPublishInfo {
 		if (module == null)
 			return false;
 		
-		ModulePublishInfo mpi = getModulePublishInfo(module);
-		int size = module.length;
-		ModuleDelegate pm = (ModuleDelegate) module[size - 1].loadAdapter(ModuleDelegate.class, null);
-		IModuleResource[] resources = null;
-		try {
-			if (pm != null)
-				resources = pm.members();
-		} catch (CoreException ce) {
-			// ignore
-		}
-		if (resources == null)
-			resources = new IModuleResource[0];
-		return hasDelta(mpi.getResources(), resources);
+		return getModulePublishInfo(module).hasDelta(module);
 	}
 
-	protected boolean hasDelta(IModuleResource[] original, IModuleResource[] current) {
+	protected static boolean hasDelta(IModuleResource[] original, IModuleResource[] current) {
 		if (original == null || current == null)
 			return false;
 		
@@ -388,7 +364,7 @@ public class ServerPublishInfo {
 	/**
 	 * Create a resource delta for an entire tree.
 	 */
-	protected IModuleResourceDelta[] getDeltaTree(IModuleResource[] resources, int kind) {
+	private static IModuleResourceDelta[] getDeltaTree(IModuleResource[] resources, int kind) {
 		if (resources == null)
 			return new IModuleResourceDelta[0];
 	
@@ -422,5 +398,27 @@ public class ServerPublishInfo {
 	 */
 	protected boolean hasStructureChanged(List modules) {
 		return modules.size() != modulePublishInfo.keySet().size();
+	}
+
+	/**
+	 * Fill the module cache.
+	 */
+	protected void startCaching() {
+		Iterator iterator = modulePublishInfo.values().iterator();
+		while (iterator.hasNext()) {
+			ModulePublishInfo mpi = (ModulePublishInfo) iterator.next();
+			mpi.startCaching();
+		}
+	}
+
+	/**
+	 * Clears all caches of current module resources and deltas.
+	 */
+	public void clearCache() {
+		Iterator iterator = modulePublishInfo.values().iterator();
+		while (iterator.hasNext()) {
+			ModulePublishInfo mpi = (ModulePublishInfo) iterator.next();
+			mpi.clearCache();
+		}
 	}
 }
