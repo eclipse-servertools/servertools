@@ -92,6 +92,15 @@ public class Module implements IModule {
 		return name;
 	}
 
+	/**
+	 * Returns the <code>ModuleFactory</code> that created this module.
+	 * 
+	 * @return the module factory that created this module
+	 */
+	public ModuleFactory getModuleFactory() {
+		return factory;
+	}
+
 	protected ModuleDelegate getDelegate(IProgressMonitor monitor) {
 		if (delegate != null)
 			return delegate;
