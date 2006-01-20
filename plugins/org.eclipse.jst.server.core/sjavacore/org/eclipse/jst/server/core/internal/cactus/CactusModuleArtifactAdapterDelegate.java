@@ -12,6 +12,7 @@ package org.eclipse.jst.server.core.internal.cactus;
 
 import java.util.Arrays;
 import java.util.Iterator;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
@@ -107,7 +108,7 @@ public class CactusModuleArtifactAdapterDelegate extends ModuleArtifactAdapterDe
 			}
 			return null;
 		} catch (Exception e) {
-			assert false : "Unexpected exception: " + e;
+			System.out.println("Unexpected exception: " + e);
 			return null;
 		}
 	}
@@ -177,7 +178,8 @@ public class CactusModuleArtifactAdapterDelegate extends ModuleArtifactAdapterDe
 		String[][] resolvedTypes = declaringType.resolveType(type);
 		//TODO: Are there legit cases where this would not be the case? We might need to check
 		//for this and bomb out if the type cannot be unambigiously resolved
-		assert resolvedTypes.length == 1 : "The type cannot be unambigiously resolved. Need to handle this case";
+		if (resolvedTypes.length != 1)
+			System.out.println("The type cannot be unambigiously resolved. Need to handle this case");
 		String[] resolvedType = resolvedTypes[0];
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < resolvedType.length - 1; i++) {
