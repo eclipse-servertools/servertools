@@ -19,9 +19,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
+import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
+import org.eclipse.wst.server.core.internal.Server;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.model.IModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.util.ProjectModule;
@@ -30,6 +33,7 @@ public abstract class AbstractModuleAssembler {
 
 	protected ServerRuntime fServerdefinition;
 	protected IModule fModule; 
+	protected GenericServer fServer;
 	
 	/**
 	 * Assemble the module.
@@ -41,13 +45,14 @@ public abstract class AbstractModuleAssembler {
 
 	
 	public static class Factory {		
-		public static AbstractModuleAssembler getModuleAssembler(IModule module, ServerRuntime serverdefinition)
+		public static AbstractModuleAssembler getModuleAssembler(IModule module, GenericServer server)
 		{
+			
 			if(isModuleType(module, "jst.web"))
-				return new WarModuleAssembler(module,serverdefinition);
+				return new WarModuleAssembler(module,server);
 			if(isModuleType(module, "jst.ear"))
-				return new EarModuleAssembler(module,serverdefinition);
-			return new DefaultModuleAssembler(module,serverdefinition);
+				return new EarModuleAssembler(module,server);
+			return new DefaultModuleAssembler(module,server);
 		}
 		
 		private static boolean isModuleType(IModule module, String moduleTypeId){	
@@ -128,8 +133,7 @@ public abstract class AbstractModuleAssembler {
 	}
 	
 	private IPath getProjectWorkingLocation(){
-		String pluginId = fServerdefinition.getConfigurationElementNamespace();
-		return fModule.getProject().getWorkingLocation(pluginId);
+		return ServerPlugin.getInstance().getTempDirectory(fServer.getServer().getId());
 	}
 	
 }
