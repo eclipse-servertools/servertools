@@ -16,11 +16,8 @@ package org.eclipse.jst.server.generic.core.internal;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import org.apache.tools.ant.taskdefs.Execute;
 import org.eclipse.core.runtime.CoreException;
@@ -100,17 +97,21 @@ public class ExternalLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 		// server state
 		serverBehavior.setupLaunch(launch, mode, monitor);
 		
-		// get the executable commandline
+		// get the "external" command
 		String commandline = configuration.getAttribute(COMMANDLINE, (String) null);
 		if (commandline == null || commandline.length() == 0) {
 			abort(GenericServerCoreMessages.commandlineUnspecified, null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);			
 		}
-		// specified commandline might be multiple args, need to parse
-		List cmds = new ArrayList();
-		StringTokenizer st = new StringTokenizer(commandline);
-		while (st.hasMoreTokens()) {
-			cmds.add(st.nextToken());
-		}
+		
+		// parse the "external" command into multiple args
+		String[] cmdArgs = DebugPlugin.parseArguments(commandline);
+		// get the "programArguments", parsed into multiple args
+		String[] pgmArgs = DebugPlugin.parseArguments(getProgramArguments(configuration));
+		
+		// Create the full array of cmds
+		String[] cmds = new String[cmdArgs.length + pgmArgs.length];
+		System.arraycopy(cmdArgs, 0, cmds, 0, cmdArgs.length);
+		System.arraycopy(pgmArgs, 0, cmds, cmdArgs.length, pgmArgs.length);
 		
 		// get a descriptive name for the executable
 		String executableName = configuration.getAttribute(EXECUTABLE_NAME, DEFAULT_EXECUTABLE_NAME);
@@ -127,7 +128,7 @@ public class ExternalLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 		
 		// Launch the executable for the configuration using the Ant Execute class
 		try {
-			Process process = Execute.launch(null, (String[])cmds.toArray(new String[cmds.size()]), env, workingDir, true);
+			Process process = Execute.launch(null, cmds, env, workingDir, true);
 			IProcess runtimeProcess = new RuntimeProcess(launch, process, executableName, null);
 			launch.addProcess(runtimeProcess);
 			serverBehavior.setProcess(runtimeProcess);

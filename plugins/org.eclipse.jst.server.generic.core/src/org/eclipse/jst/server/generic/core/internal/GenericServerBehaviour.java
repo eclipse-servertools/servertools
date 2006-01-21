@@ -327,7 +327,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     	return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getWorkingDirectory());
     }
 
-    private String getProgramArguments() {
+    protected String getProgramArguments() {
     	return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getProgramArgumentsAsString());
     }
 

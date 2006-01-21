@@ -169,6 +169,11 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
         if(!environVars.isEmpty()){
         	workingCopy.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES,environVars);
         }
+        String existingProgArgs  = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, (String)null);
+        String serverProgArgs =  getProgramArguments();
+        if(existingProgArgs==null || existingProgArgs.indexOf(serverProgArgs)<0) {
+            workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,serverProgArgs);
+        }
 	}
 
 	/*
