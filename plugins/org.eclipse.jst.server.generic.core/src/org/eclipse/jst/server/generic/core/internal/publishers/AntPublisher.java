@@ -45,6 +45,8 @@ import org.eclipse.jst.server.generic.servertype.definition.PublisherData;
 import org.eclipse.ui.externaltools.internal.model.IExternalToolConstants;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
+import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.osgi.framework.Bundle;
 /**
  * Ant based publisher.
@@ -99,7 +101,7 @@ public class AntPublisher extends GenericPublisher{
 	}
 
 	private void assembleModule(IProgressMonitor monitor)throws CoreException{
-		AbstractModuleAssembler assembler= AbstractModuleAssembler.Factory.getModuleAssembler(getModule()[0], getServerRuntime().getServerTypeDefinition());
+		AbstractModuleAssembler assembler= AbstractModuleAssembler.Factory.getModuleAssembler(getModule()[0], getServer());
 		assembler.assemble(monitor);
 	}
 
@@ -230,13 +232,13 @@ public class AntPublisher extends GenericPublisher{
 	
 	private IPath getModuleWorkingDir()
 	{
-		return getProjectWorkingLocation().append(getModule()[0].getId());
+		return getProjectWorkingLocation().append(getModule()[0].getName());
 	}
 
 	private IPath getProjectWorkingLocation(){
-		String pluginId = getServerRuntime().getServerTypeDefinition().getConfigurationElementNamespace();
-		return getModule()[0].getProject().getWorkingLocation(pluginId);
+		return ServerPlugin.getInstance().getTempDirectory(getServer().getServer().getId());
 	}
+	
 	private String guessModuleName(IModule module) {
 		String moduleName = module.getName(); 
 		if("jst.web".equals(getModuleTypeId())){ //$NON-NLS-1$
