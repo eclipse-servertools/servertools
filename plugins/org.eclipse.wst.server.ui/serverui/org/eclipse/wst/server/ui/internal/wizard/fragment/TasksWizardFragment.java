@@ -105,7 +105,7 @@ public class TasksWizardFragment extends WizardFragment {
 		if (getTaskModel() == null)
 			return;
 
-		IServer server = (IServer) getTaskModel().getObject(TaskModel.TASK_SERVER);
+		IServerAttributes server = (IServerAttributes) getTaskModel().getObject(TaskModel.TASK_SERVER);
 		List modules = (List) getTaskModel().getObject(TaskModel.TASK_MODULES);
 		
 		if (server != null && modules == null) {
@@ -133,7 +133,7 @@ public class TasksWizardFragment extends WizardFragment {
 			});
 	}
 	
-	protected void createTasks(IServer server, List modules) {
+	protected void createTasks(IServerAttributes server, List modules) {
 		if (server == null)
 			return;
 
@@ -159,7 +159,7 @@ public class TasksWizardFragment extends WizardFragment {
 		}
 	}
 
-	public void addServerTask(IServer server, PublishOperation task2, boolean selected) {
+	public void addServerTask(IServerAttributes server, PublishOperation task2, boolean selected) {
 		TaskInfo sti = new TaskInfo();
 		sti.task2 = task2;
 		sti.kind = task2.getKind();

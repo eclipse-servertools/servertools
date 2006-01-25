@@ -90,7 +90,7 @@ public class NewServerWizardFragment extends WizardFragment {
 	protected void createChildFragments(List list) {
 		if (getTaskModel() == null)
 			return;
-
+		
 		Byte b = (Byte) getTaskModel().getObject(MODE);
 		if (b != null && b.byteValue() == MODE_MANUAL) {
 			IRuntime runtime = (IRuntime) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
@@ -100,12 +100,12 @@ public class NewServerWizardFragment extends WizardFragment {
 					list.add(sub);
 			}
 			
-			IServer svr = (IServer) getTaskModel().getObject(TaskModel.TASK_SERVER);
-			if (svr != null && svr instanceof IServerWorkingCopy) {
-				IServerWorkingCopy server = (IServerWorkingCopy) svr;
+			IServerAttributes server = (IServerAttributes) getTaskModel().getObject(TaskModel.TASK_SERVER);
+			if (server != null) {
 				// createConfiguration(server);
-				if (server.getServerType().hasServerConfiguration()) {
-					((ServerWorkingCopy)server).importConfiguration(runtime, null);
+				if (server.getServerType().hasServerConfiguration() && server instanceof ServerWorkingCopy) {
+					ServerWorkingCopy swc = (ServerWorkingCopy) server;
+					swc.importConfiguration(runtime, null);
 				}
 				WizardFragment sub = getWizardFragment(server.getServerType().getId());
 				if (sub != null)

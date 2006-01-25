@@ -30,10 +30,13 @@ public class ModifyModulesWizard extends TaskWizard {
 				public void performFinish(IProgressMonitor monitor) throws CoreException {
 					WizardTaskUtil.saveServer(getTaskModel(), monitor);
 					
-					IServer server = (IServer) getTaskModel().getObject(TaskModel.TASK_SERVER);
-					if (server.getServerState() != IServer.STATE_STOPPED) {
-						PublishServerJob publishJob = new PublishServerJob(server);
-						publishJob.schedule();
+					IServerAttributes svr = (IServerAttributes) getTaskModel().getObject(TaskModel.TASK_SERVER);
+					if (svr instanceof IServer) {
+						IServer server = (IServer) svr;
+						if (server.getServerState() != IServer.STATE_STOPPED) {
+							PublishServerJob publishJob = new PublishServerJob(server);
+							publishJob.schedule();
+						}
 					}
 				}
 			});

@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerAttributes;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -54,7 +55,7 @@ public class NewServerWizard extends TaskWizard implements INewWizard {
 						WizardTaskUtil.saveRuntime(getTaskModel(), monitor);
 						WizardTaskUtil.saveServer(getTaskModel(), monitor);
 						try {
-							IServer server = (IServer) getTaskModel().getObject(TaskModel.TASK_SERVER);
+							IServerAttributes server = (IServerAttributes) getTaskModel().getObject(TaskModel.TASK_SERVER);
 							ServerUIPlugin.getPreferences().addHostname(server.getHost());
 						} catch (Exception e) {
 							// ignore
