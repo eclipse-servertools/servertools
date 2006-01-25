@@ -271,6 +271,16 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 		File f = new File(path);
 		return f.exists();
 	}
- 	
+ 
+	public void setDefaults(IProgressMonitor monitor) {
+ 		List props = this.getServerDefinition().getProperty();
+ 		Map instancePropsMap = new HashMap();
+ 		for (Iterator iter = props.iterator(); iter.hasNext();) {
+			Property element = (Property) iter.next();
+			if(Property.CONTEXT_SERVER.equalsIgnoreCase(element.getContext()))
+				instancePropsMap.put(element.getId(), element.getDefault());
+		}
+ 		setServerInstanceProperties(instancePropsMap);
+ 	}
  	
 }

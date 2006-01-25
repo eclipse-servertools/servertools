@@ -12,7 +12,10 @@ package org.eclipse.jst.server.generic.core.internal;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.launching.IVMInstall;
@@ -21,6 +24,7 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.IJavaRuntime;
 import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
+import org.eclipse.jst.server.generic.servertype.definition.Property;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 /**
@@ -164,4 +168,16 @@ public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntim
 		setAttribute(SERVER_DEFINITION_ID, s);
 	}
 	
+	public void setDefaults(IProgressMonitor monitor) {
+		List props = this.getServerTypeDefinition().getProperty();
+ 		Map instancePropsMap = new HashMap();
+ 		for (Iterator iter = props.iterator(); iter.hasNext();) {
+			Property element = (Property) iter.next();
+			if(Property.CONTEXT_RUNTIME.equalsIgnoreCase(element.getContext()))
+				instancePropsMap.put(element.getId(), element.getDefault());
+		}
+ 		setServerInstanceProperties(instancePropsMap);
+
+		
+	}
 }
