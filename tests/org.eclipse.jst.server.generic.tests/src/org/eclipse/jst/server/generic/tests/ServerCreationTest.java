@@ -101,23 +101,19 @@ public class ServerCreationTest extends TestCase {
 		//Finds the generic server runtime type
 		IRuntimeType runtimeType = serverType.getRuntimeType();
 		assertNotNull("Could not find runtime type for the generic server type",runtimeType);
-		
-	
-		//Create a new server instance from the type
-		IServerWorkingCopy server = serverType.createServer(ID+".Jonas.Server", null,
-				(IRuntime) null, null);
-		assertNotNull("Could not create server",server);
-
-		
 		//Create a new runtime instance from the type
 		IRuntime runtime  = runtimeType.createRuntime(ID+".Jonas.Runtime",null);
 
 		assertNotNull("Could not create runtime",runtime);
+
+		
+
+		
+		//Create a new server instance from the type
+		IServerWorkingCopy server = serverType.createServer(ID+".Jonas.Server", null,
+				(IRuntime) runtime, null);
+		assertNotNull("Could not create server",server);
 	
-		
-		//Set the runtime for the server
-		server.setRuntime(runtime);
-		
 		//Save the server
 		server.save(false,null);
 		
