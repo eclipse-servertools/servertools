@@ -25,12 +25,12 @@ public class InstallableRuntimeDecorator implements
 				.findInstallableRuntime(fRuntime.getRuntime().getRuntimeType()
 						.getId());
 
-		Button install = SWTUtil.createButton(composite, "Install Server");
+		Button install = SWTUtil.createButton(composite, GenericServerUIMessages.installServerButton);
 		install.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent se) {
 				DirectoryDialog dialog = new DirectoryDialog(composite
 						.getShell());
-				dialog.setMessage("Select installation directory");
+				dialog.setMessage(GenericServerUIMessages.installationDirectory);
 				String selectedDirectory = dialog.open();
 				if (selectedDirectory != null) {
 					try {
@@ -39,7 +39,7 @@ public class InstallableRuntimeDecorator implements
 					} catch (Exception e) {
 						Trace
 								.trace(Trace.SEVERE,
-										"Error installing runtime", e);
+										"Error installing runtime", e); //$NON-NLS-1$
 					}
 
 				}

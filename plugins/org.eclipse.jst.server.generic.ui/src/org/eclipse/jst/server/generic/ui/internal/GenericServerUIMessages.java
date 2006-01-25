@@ -30,9 +30,12 @@ public class GenericServerUIMessages extends NLS{
 	public static String jre_select_label;
 	public static String defaultJRE;
 	public static String invalidPath;
+	public static String installServerButton;
+	public static String installationDirectory;
 	
 	static{
 		  NLS.initializeMessages(RESOURCE_BUNDLE, GenericServerUIMessages.class);
 	}
+
 
 }
