@@ -113,7 +113,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 	 * @deprecated should use the equivalent method without the unused id variable
 	 */
 	public String getClasspathContainerLabel(IRuntime runtime, String id) {
-		return null;
+		return getClasspathContainerLabel(runtime);
 	}
 
 	/**
@@ -129,7 +129,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 	 * @deprecated should use the equivalent method without the unused id variable
 	 */
 	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime, String id) {
-		return null;
+		return resolveClasspathContainer(runtime);
 	}
 
 	/**
