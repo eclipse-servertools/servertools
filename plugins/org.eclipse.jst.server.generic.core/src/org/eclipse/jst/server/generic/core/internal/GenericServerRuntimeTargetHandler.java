@@ -37,6 +37,12 @@ public class GenericServerRuntimeTargetHandler extends RuntimeClasspathProviderD
 	 * @see ClasspathRuntimeTargetHandler#resolveClasspathContainer(IRuntime, java.lang.String)
 	 */
 	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime,String id){		
+		return resolveClasspathContainer(runtime);
+	}
+	/* (non-Javadoc)
+	 * @see ClasspathRuntimeTargetHandler#resolveClasspathContainer(IRuntime)
+	 */
+	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime){		
 		return ServerTypeDefinitionUtil.getServerClassPathEntry(runtime);
 	}
     
