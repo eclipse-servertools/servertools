@@ -131,7 +131,7 @@ public class RuntimeClasspathProviderWrapper {
 		if (runtime == null)
 			return null;
 		try {
-			return getDelegate().resolveClasspathContainerImpl(runtime);
+			return getDelegate().resolveClasspathContainerImpl(runtime, "");
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
 		}
@@ -145,7 +145,7 @@ public class RuntimeClasspathProviderWrapper {
 		if (runtime == null)
 			return "n/a";
 		try {
-			return getDelegate().getClasspathContainerLabel(runtime);
+			return getDelegate().getClasspathContainerLabel(runtime, "");
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
 		}
@@ -159,7 +159,7 @@ public class RuntimeClasspathProviderWrapper {
 		if (runtime == null)
 			return;
 		try {
-			getDelegate().requestClasspathContainerUpdate(runtime, entries);
+			getDelegate().requestClasspathContainerUpdate(runtime, "", entries);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
 		}
