@@ -120,7 +120,7 @@ public class RuntimeBridge implements IRuntimeBridge {
 			String typeId = runtime.getRuntimeType().getId();
 			IRuntimeComponentVersion mapped = (IRuntimeComponentVersion) mappings.get(typeId);
 			
-			Map properties = new HashMap();
+			Map properties = new HashMap(5);
 			if (runtime.getLocation() != null)
 				properties.put("location", runtime.getLocation().toPortableString());
 			else
@@ -166,12 +166,20 @@ public class RuntimeBridge implements IRuntimeBridge {
 				else // default || jvmver.startsWith("1.4"))
 					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("1.4");
 				
-				properties = new HashMap();
-				properties.put("name", vmInstall.getName());
-				IPath path = new Path(JavaRuntime.JRE_CONTAINER);
-				path = path.append(vmInstall.getVMInstallType().getId()).append(vmInstall.getName());
-				properties.put(CLASSPATH, path.toPortableString());
-				components.add(RuntimeManager.createRuntimeComponent(rcv, properties));
+				if (vmInstall != null) {
+					properties = new HashMap(3);
+					properties.put("name", vmInstall.getName());
+					IPath path = new Path(JavaRuntime.JRE_CONTAINER);
+					path = path.append(vmInstall.getVMInstallType().getId()).append(vmInstall.getName());
+					properties.put(CLASSPATH, path.toPortableString());
+					components.add(RuntimeManager.createRuntimeComponent(rcv, properties));
+				} else {
+					properties = new HashMap(3);
+					properties.put("name", "-");
+					IPath path = new Path(JavaRuntime.JRE_CONTAINER);
+					properties.put(CLASSPATH, path.toPortableString());
+					components.add(RuntimeManager.createRuntimeComponent(rcv, properties));
+				}
 			}
 			
 			return components;
