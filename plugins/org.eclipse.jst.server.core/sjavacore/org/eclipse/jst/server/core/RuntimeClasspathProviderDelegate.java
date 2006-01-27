@@ -154,7 +154,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 		if (runtime == null)
 			return new IClasspathEntry[0];
 		runtimePathMap.put(runtime.getId(), runtime.getLocation());
-		IClasspathEntry[] entries = resolveClasspathContainer(runtime);
+		IClasspathEntry[] entries = resolveClasspathContainer(runtime, "");
 		
 		if (entries == null)
 			entries = new IClasspathEntry[0];
