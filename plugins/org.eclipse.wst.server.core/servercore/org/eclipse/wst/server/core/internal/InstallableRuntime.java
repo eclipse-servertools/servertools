@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.wst.server.core.internal;
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -25,6 +26,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.update.core.ISite;
+import org.eclipse.update.core.ISiteWithMirrors;
+import org.eclipse.update.core.IURLEntry;
+import org.eclipse.update.core.SiteManager;
 import org.eclipse.update.standalone.InstallCommand;
 import org.osgi.framework.Bundle;
 /**
@@ -118,6 +123,30 @@ public class InstallableRuntime implements IInstallableRuntime {
 		installRuntimeJob.schedule();
 	}
 
+	public static String getMirror(String fromSite, IProgressMonitor monitor) {
+		//	 if the site is a site containing mirrors, set the fromSite to the first
+		// mirror site since many mirror list generators will sort the mirrors to closest
+		// geographic location
+		String mirrorSite = null;
+		try {
+			URL siteURL = new URL(fromSite);
+			ISite site = SiteManager.getSite(siteURL, monitor);
+			if (site != null && site instanceof ISiteWithMirrors) {
+				IURLEntry[] urlEntries = ((ISiteWithMirrors) site).getMirrorSiteEntries();
+				if (urlEntries.length > 0)
+					mirrorSite = urlEntries[0].getURL().toExternalForm();
+			}
+		} catch (MalformedURLException e) {
+			Trace.trace(Trace.WARNING, "Could not find mirror site", e);
+		} catch (CoreException e) {
+			Trace.trace(Trace.WARNING, "Could not find mirror site", e);
+		}
+		
+		if (mirrorSite != null) 
+			return mirrorSite;
+		return fromSite;
+	}
+
 	/*
 	 * @see IInstallableRuntime#install(IPath, IProgressMonitor)
 	 */
@@ -128,6 +157,8 @@ public class InstallableRuntime implements IInstallableRuntime {
 		
 		if (featureId == null || featureVersion == null || fromSite == null)
 			return;
+		
+		fromSite = getMirror(fromSite, monitor);
 		
 		// download and install plugins
 		Bundle bundle = Platform.getBundle(getBundleId());
