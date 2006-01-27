@@ -77,6 +77,7 @@ public class AntPublisher extends GenericPublisher{
 	private static final String PROP_PROJECT_WORKING_DIR= "project.working.dir";//$NON-NLS-1$
 	private static final String PROP_MODULE_DIR = "module.dir";//$NON-NLS-1$
 	private static final String PROP_MODULE_NAME = "module.name";//$NON-NLS-1$
+	private static final String PROP_PROJECT_NAME = "project.name";//$NON-NLS-1$
 	private static final String MODULE_PUBLISH_TARGET_PREFIX = "target.publish."; //$NON-NLS-1$
 	private static final String MODULE_UNPUBLISH_TARGET_PREFIX = "target.unpublish.";//$NON-NLS-1$
 	private static final String DATA_NAME_BUILD_FILE="build.file";//$NON-NLS-1$
@@ -220,12 +221,14 @@ public class AntPublisher extends GenericPublisher{
         Module module =  getServerRuntime().getServerTypeDefinition().getModule(getModuleTypeId());
 		String modDir = module.getPublishDir();
 		modDir = getServerRuntime().getServerTypeDefinition().getResolver().resolveProperties(modDir);
-
-       
-        String moduleName=guessModuleName(getModule()[0]);
+		IModule webModule = getModule()[0];
+		
+        String moduleName=guessModuleName(webModule);
         props.put(PROP_PROJECT_WORKING_DIR,getProjectWorkingLocation().toString());
 		props.put(PROP_MODULE_NAME,moduleName);
 		props.put(PROP_MODULE_DIR,getModuleWorkingDir().toString());
+		props.put(PROP_PROJECT_NAME,webModule.getProject().getName());
+
 		props.put(PROP_SERVER_PUBLISH_DIR,modDir);
 		return props;
 	}
