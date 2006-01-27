@@ -1,8 +1,7 @@
 <project name="deployextension"  default="deploy.j2ee.web"  basedir=".">
 
 	<property name="was.home" value="${wasHome}"/>
-
-	
+    <property name="module.working.dir" value="${project.working.dir}/${project.name}"></property>
 	<path id="toolpath">
 		<fileset dir="${was.home}/lib">
 			<include name="*.jar" />
@@ -11,18 +10,14 @@
 		<pathelement path="${was.home}/optionalLibraries/jython.jar" />
 	</path>
 
-
-
-
 	<taskdef classpathref="toolpath" name="wsadmin" classname="com.ibm.websphere.ant.tasks.WsAdmin" />
 	<taskdef classpathref="toolpath" name="wsejbdeploy" classname="com.ibm.websphere.ant.tasks.WsEjbDeploy" />	
-	
 	<taskdef classpathref="toolpath" name="wsinstallapp" classname="com.ibm.websphere.ant.tasks.InstallApplication" />	
 
 	<target name="deploy.j2ee.web">
-		
+		<echo message="Module Working Day  ${module.working.dir} Project Working Dir=${project.working.dir} Message Dir=${module.dir} Module Name ${module.name}"></echo>
 		<jar destfile="${project.working.dir}/${module.name}.war"> 
-			<zipfileset dir="${module.dir}">
+			<zipfileset dir="${module.working.dir}">
 				<include name="**/*.*"/>
 				<exclude name="**/*.war"/>
 			</zipfileset>
@@ -33,7 +28,6 @@
 			command="$AdminApp uninstall ${module.name}" 
 			failonerror="false">
 		</wsadmin>
-
 	    <wsadmin  
 			washome="${was.home}" 				
 			properties="${wasProfile}/properties/wsadmin.properties" 
@@ -94,7 +88,6 @@
 		    </wsadmin>	
 	</target>
 	
-
 	<target name="deploy.j2ee.ear">
 		<jar destfile="${project.working.dir}/${module.name}.ear"> 
 			<zipfileset dir="${module.dir}">
@@ -154,6 +147,5 @@
 			failonerror="false">
 		</wsadmin>
 	</target>	
-
 
 </project>
