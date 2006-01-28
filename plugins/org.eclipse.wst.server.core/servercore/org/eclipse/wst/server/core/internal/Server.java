@@ -1378,7 +1378,7 @@ public class Server extends Base implements IServer {
 		timer.alreadyDone = true;
 		
 		if (timer.timeout) {
-			listener2.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartTimeout, new String[] { getName(), serverTimeout + "" }), null));
+			listener2.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartTimeout, new String[] { getName(), (serverTimeout / 1000) + "" }), null));
 			return;
 		}
 		timer.alreadyDone = true;
