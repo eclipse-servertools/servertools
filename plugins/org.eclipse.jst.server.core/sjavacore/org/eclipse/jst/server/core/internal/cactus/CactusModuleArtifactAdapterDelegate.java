@@ -28,6 +28,7 @@ import org.eclipse.jdt.core.ITypeHierarchy;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
+import org.eclipse.jst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.ServerUtil;
@@ -81,7 +82,7 @@ public class CactusModuleArtifactAdapterDelegate extends ModuleArtifactAdapterDe
 				int count = outputPath.segmentCount();
 				path = path.removeFirstSegments(count);
 			}
-
+			
 			// remove initial part of classpath
 			IClasspathEntry[] classPathEntry = javaProject.getResolvedClasspath(true);
 			if (classPathEntry != null) {
@@ -95,7 +96,7 @@ public class CactusModuleArtifactAdapterDelegate extends ModuleArtifactAdapterDe
 					}
 				}
 			}
-
+			
 			// get java element
 			IJavaElement javaElement = javaProject.findElement(path);
 			IType[] types = getTypes(javaElement);
@@ -108,7 +109,7 @@ public class CactusModuleArtifactAdapterDelegate extends ModuleArtifactAdapterDe
 			}
 			return null;
 		} catch (Exception e) {
-			System.out.println("Unexpected exception: " + e);
+			Trace.trace(Trace.WARNING, "Unexpected exception: " + e);
 			return null;
 		}
 	}
@@ -179,7 +180,7 @@ public class CactusModuleArtifactAdapterDelegate extends ModuleArtifactAdapterDe
 		//TODO: Are there legit cases where this would not be the case? We might need to check
 		//for this and bomb out if the type cannot be unambigiously resolved
 		if (resolvedTypes.length != 1)
-			System.out.println("The type cannot be unambigiously resolved. Need to handle this case");
+			Trace.trace(Trace.WARNING, "The type cannot be unambigiously resolved. Need to handle this case");
 		String[] resolvedType = resolvedTypes[0];
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < resolvedType.length - 1; i++) {
