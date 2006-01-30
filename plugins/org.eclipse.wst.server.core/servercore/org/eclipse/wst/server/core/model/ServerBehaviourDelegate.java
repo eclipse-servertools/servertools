@@ -281,6 +281,10 @@ public abstract class ServerBehaviourDelegate {
 	 * deleted and does not exist anymore. In this case, a dummy module (with the
 	 * correct id) will be passed to this method.
 	 * </p>
+	 * <p>
+	 * It is recommended that clients implementing this method be responsible for
+	 * setting the module state.
+	 * </p>
 	 * 
 	 * @param kind one of the IServer.PUBLISH_XX constants. Valid values are:
 	 *    <ul>
