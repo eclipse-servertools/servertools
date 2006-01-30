@@ -63,6 +63,7 @@ public class NewManualServerComposite extends Composite {
 	protected Combo runtimeCombo;
 	protected Button runtimeButton;
 	protected IRuntime[] runtimes;
+	protected IRuntime newRuntime;
 
 	protected IRuntime runtime;
 	protected IServerWorkingCopy server;
@@ -150,8 +151,11 @@ public class NewManualServerComposite extends Composite {
 		runtimeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		runtimeButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				if (showPreferencePage())
-					updateRuntimeCombo(serverTypeComposite.getSelectedServerType());
+				if (showPreferencePage()) {
+					IServerType serverType = serverTypeComposite.getSelectedServerType();
+					updateRuntimes(serverType);
+					updateRuntimeCombo(serverType);
+				}
 			}
 		});
 		Dialog.applyDialogFont(this);
@@ -185,12 +189,11 @@ public class NewManualServerComposite extends Composite {
 	 * Return the current editable element.
 	 */
 	protected void loadServerImpl(final IServerType serverType) {
-		//runtime = null;
 		server = null;
 		
 		if (serverType == null)
 			return;
-	
+		
 		server = cache.getCachedServer(serverType, host);
 		if (server != null) {
 			server.setHost(host);
@@ -198,9 +201,9 @@ public class NewManualServerComposite extends Composite {
 			runtime = server.getRuntime();
 			return;
 		}
-	
+		
 		final CoreException[] ce = new CoreException[1];
-
+		
 		IRunnableWithProgress runnable = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) {
 				try {
@@ -214,6 +217,9 @@ public class NewManualServerComposite extends Composite {
 						ServerUtil.setServerDefaultName(server);
 					
 						if (serverType.hasRuntime() && server.getRuntime() == null) {
+							runtime = null;
+							updateRuntimes(serverType);
+							runtime = getDefaultRuntime();
 							server.setRuntime(runtime);
 							
 							if (server.getServerType().hasServerConfiguration()) {
@@ -243,7 +249,7 @@ public class NewManualServerComposite extends Composite {
 	}
 
 	/**
-	 * Look for test environment runtime first. Otherwise, pick any runtime.
+	 * Pick the first non-stub runtime first. Otherwise, just pick the first runtime.
 	 * 
 	 * @return the default runtime
 	 */
@@ -260,26 +266,14 @@ public class NewManualServerComposite extends Composite {
 		}
 		return runtimes[0];
 	}
-	
-	protected void updateRuntimeCombo(IServerType serverType) {
-		runtime = null;
-		
-		if (serverType == null || !serverType.hasRuntime()) {
-			if (runtimeLabel != null) {
-				runtimeLabel.setEnabled(false);
-				runtimeCombo.setItems(new String[0]);
-				runtimeCombo.setEnabled(false);
-				runtimeLabel.setVisible(false);
-				runtimeCombo.setVisible(false);
-				runtimeButton.setEnabled(false);
-				runtimeButton.setVisible(false);
-				
-			}
-			return;
-		}
 
+	protected void updateRuntimes(IServerType serverType) {
+		if (serverType == null)
+			return;
+		
 		IRuntimeType runtimeType = serverType.getRuntimeType();
 		runtimes = ServerUIPlugin.getRuntimes(runtimeType);
+		newRuntime = null;
 		
 		if (server != null && SocketUtil.isLocalhost(server.getHost()) && runtimes != null) {
 			List runtimes2 = new ArrayList();
@@ -293,33 +287,68 @@ public class NewManualServerComposite extends Composite {
 			runtimes2.toArray(runtimes);
 		}
 		
-		if (runtimes.length == 0) {
-			// create new runtime
-			try {
-				IRuntimeWorkingCopy runtimeWC = runtimeType.createRuntime(null, null);
-				ServerUtil.setRuntimeDefaultName(runtimeWC);
-				runtimes = new IRuntime[1];
-				runtimes[0] = runtimeWC;
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Couldn't create runtime", e); //$NON-NLS-1$
-			}
+		// create a new runtime
+		try {
+			IRuntimeWorkingCopy runtimeWC = runtimeType.createRuntime(null, null);
+			ServerUtil.setRuntimeDefaultName(runtimeWC);
+			runtimes = new IRuntime[1];
+			runtimes[0] = runtimeWC;
+			newRuntime = runtimeWC;
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Couldn't create runtime", e); //$NON-NLS-1$
 		}
+	}
+
+	protected void updateRuntimeCombo(IServerType serverType) {
+		if (serverType == null || !serverType.hasRuntime()) {
+			if (runtimeLabel != null) {
+				runtimeLabel.setEnabled(false);
+				runtimeCombo.setItems(new String[0]);
+				runtimeCombo.setEnabled(false);
+				runtimeLabel.setVisible(false);
+				runtimeCombo.setVisible(false);
+				runtimeButton.setEnabled(false);
+				runtimeButton.setVisible(false);
+			}
+			runtimes = new IRuntime[0];
+			runtime = null;
+			if (server != null)
+				server.setRuntime(null);
+			return;
+		}
+		
+		updateRuntimes(serverType);
 		
 		int size = runtimes.length;
 		String[] items = new String[size];
-		for (int i = 0; i < size; i++)
-			items[i] = runtimes[i].getName();
+		for (int i = 0; i < size; i++) {
+			if (runtimes[i].equals(newRuntime))
+				items[i] = Messages.wizNewServerRuntimeCreate;
+			else
+				items[i] = runtimes[i].getName();
+		}
 		
-		runtime = getDefaultRuntime();
+		if (runtime == null) {
+			runtime = getDefaultRuntime();
+			server.setRuntime(runtime);
+		}
 		if (runtimeCombo != null) {
 			runtimeCombo.setItems(items);
 			if (runtimes.length > 0) {
+				int sel = -1;
 				for (int i = 0; i < size; i++) {
 					if (runtimes[i].equals(runtime))
-						runtimeCombo.select(i);
+						sel = i;
 				}
+				if (sel < 0) {
+					sel = 0;
+					server.setRuntime(runtimes[0]);
+				}
+				
+				runtimeCombo.select(sel);
 			}
 			
+			IRuntimeType runtimeType = serverType.getRuntimeType();
 			boolean showRuntime = ServerUIPlugin.getRuntimes(runtimeType).length >=1;
 			runtimeCombo.setEnabled(showRuntime);
 			runtimeLabel.setEnabled(showRuntime);
@@ -344,17 +373,19 @@ public class NewManualServerComposite extends Composite {
 			}
 		}
 		
-		updateRuntimeCombo(serverType);
 		if (wrong) {
 			server = null;
+			runtime = null;
 			wizard.setMessage(NLS.bind(Messages.errorVersionLevel, new Object[] { moduleType.getName(), moduleType.getVersion() }), IMessageProvider.ERROR);
 		} else if (serverType == null) {
 			server = null;
+			runtime = null;
 			wizard.setMessage("", IMessageProvider.ERROR); //$NON-NLS-1$
 		} else {
 			wizard.setMessage(null, IMessageProvider.NONE);
 			loadServerImpl(serverType);
 		}
+		updateRuntimeCombo(serverType);
 		listener.serverSelected(server);
 		wizard.update();
 	}

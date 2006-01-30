@@ -162,6 +162,7 @@ public class Messages extends NLS {
 	public static String wizSelectServerPreferred;
 	public static String wizNewServerExisting;
 	public static String wizNewServerRuntime;
+	public static String wizNewServerRuntimeCreate;
 	public static String wizErrorServerCreationError;
 	public static String wizRunOnServerTitle;
 	public static String wizDebugOnServerTitle;
