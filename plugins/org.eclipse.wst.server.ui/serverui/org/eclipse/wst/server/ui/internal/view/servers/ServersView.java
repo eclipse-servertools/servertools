@@ -156,7 +156,7 @@ public class ServersView extends ViewPart {
 			cols[i] = 200;
 			if (memento != null) {
 				Integer in = memento.getInteger(TAG_COLUMN_WIDTH + i);
-				if (in != null)
+				if (in != null && in.intValue() > 5)
 					cols[i] = in.intValue();
 			}
 		}
@@ -164,8 +164,11 @@ public class ServersView extends ViewPart {
 
 	public void saveState(IMemento memento) {
 		TreeColumn[] tc = treeTable.getColumns();
-		for (int i = 0; i < 3; i++)
-			memento.putInteger(TAG_COLUMN_WIDTH + i, tc[i].getWidth());
+		for (int i = 0; i < 3; i++) {
+			int width = tc[i].getWidth();
+			if (width != 0)
+				memento.putInteger(TAG_COLUMN_WIDTH + i, width);
+		}
 	}
 
 	protected void selectServerProcess(Object process) {
