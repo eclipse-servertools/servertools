@@ -117,14 +117,21 @@ public class PublishUtil {
 			out.close();
 			out = null;
 			
+			int i = 0;
+			//System.out.print("file: " + file.exists() + " " + tempFile.exists());
 			if (file.exists()) {
+				i += 1;
 				if (!file.delete()) {
+					i += 2;
 					tempFile.delete();
 					throw new Exception(NLS.bind(Messages.errorDelete, file.toString()));
 				}
 			}
-			if (!tempFile.renameTo(file))
+			i += 4;
+			//System.out.println(" " + i + " " + file.exists() + " " + tempFile.exists());
+			if (!tempFile.renameTo(file)) {
 				throw new Exception(NLS.bind(Messages.errorRename, tempFile.toString(), file.toString()));
+			}
 			
 			if (ts != IResource.NULL_STAMP && ts != 0)
 				file.setLastModified(ts);
@@ -333,7 +340,7 @@ public class PublishUtil {
 			} catch (IOException e) {
 				throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorReading, file2.getAbsolutePath()), e));
 			}
-			copyFile(in, path, file2.lastModified());
+			copyFile(in, path3, file2.lastModified());
 		}
 	}
 
@@ -368,7 +375,7 @@ public class PublishUtil {
 				} catch (IOException e) {
 					throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorReading, file2.getAbsolutePath()), e));
 				}
-				copyFile(in, path, file2.lastModified());
+				copyFile(in, path3, file2.lastModified());
 			}
 		}
 	}
