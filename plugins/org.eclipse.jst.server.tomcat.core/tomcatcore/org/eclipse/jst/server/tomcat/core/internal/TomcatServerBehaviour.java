@@ -32,7 +32,6 @@ import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.IModulePublishHelper;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.model.*;
-import org.eclipse.wst.server.core.util.ProjectModule;
 import org.eclipse.wst.server.core.util.SocketUtil;
 /**
  * Generic Tomcat server.

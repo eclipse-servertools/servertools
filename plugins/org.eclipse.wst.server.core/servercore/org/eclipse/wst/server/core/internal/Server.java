@@ -14,7 +14,6 @@ import java.util.*;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.*;
 
 import org.eclipse.osgi.util.NLS;
