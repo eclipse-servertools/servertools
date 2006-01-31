@@ -46,7 +46,6 @@ import org.eclipse.ui.externaltools.internal.model.IExternalToolConstants;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
-import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.osgi.framework.Bundle;
 /**
  * Ant based publisher.

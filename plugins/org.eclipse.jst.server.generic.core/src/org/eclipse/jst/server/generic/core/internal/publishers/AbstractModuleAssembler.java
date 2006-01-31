@@ -9,6 +9,7 @@
  **************************************************************************************************/
 package org.eclipse.jst.server.generic.core.internal.publishers;
 			
+import java.io.File;
 import java.io.IOException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -106,7 +107,7 @@ public abstract class AbstractModuleAssembler {
 		
 		return module.getName()+".jar";
 	}
-	
+
 	private void doPackModule(IModuleResource resource, ModulePackager packager) throws CoreException, IOException{
 			if (resource instanceof IModuleFolder) {
 				IModuleFolder mFolder = (IModuleFolder)resource;
@@ -118,12 +119,17 @@ public abstract class AbstractModuleAssembler {
 					doPackModule(resources[i], packager);
 				}
 			} else {
-				IFile file = (IFile) resource.getAdapter(IFile.class);
 				String destination = resource.getModuleRelativePath().append(resource.getName()).toPortableString();
-				packager.write(file, destination);
+				IFile file = (IFile) resource.getAdapter(IFile.class);
+				if (file != null)
+					packager.write(file, destination);
+				else {
+					File file2 = (File) resource.getAdapter(File.class);
+					packager.write(file2, destination);
+				}
 			}
 	}
-	
+
 	protected IPath copyModule(IModule module,IProgressMonitor monitor)throws CoreException{
 		ProjectModule pm =(ProjectModule)module.loadAdapter(ProjectModule.class, monitor);
 		IPath to = getProjectWorkingLocation().append(pm.getId());
