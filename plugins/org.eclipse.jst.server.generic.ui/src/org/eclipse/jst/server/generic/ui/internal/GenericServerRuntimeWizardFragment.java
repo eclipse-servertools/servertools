@@ -64,7 +64,7 @@ public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwar
         	fDecorators= new GenericServerCompositeDecorator[3]; 
         	fDecorators[0]= new JRESelectDecorator(getRuntimeDelegate());
         	fDecorators[1]= new ServerTypeDefinitionRuntimeDecorator(definition,properties,getWizard(),getRuntimeDelegate());
-        	fDecorators[2]= new InstallableRuntimeDecorator(getRuntimeDelegate());
+        	fDecorators[2]= new InstallableRuntimeDecorator(getWizard(), getRuntimeDelegate());
         }
         else{
         	fDecorators= new GenericServerCompositeDecorator[2]; 
