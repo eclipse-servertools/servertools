@@ -1241,10 +1241,12 @@ public class Server extends Base implements IServer {
 									if (ServerPreferences.getInstance().isAutoPublishing() && shouldPublish()) {
 										publish(PUBLISH_INCREMENTAL, null);
 									}
-									try {
-										Server.this.start(mode2, monitor);
-									} catch (Exception e) {
-										Trace.trace(Trace.SEVERE, "Error while restarting server", e);
+									if (getServerState() != IServer.STATE_STARTED) {
+										try {
+											Server.this.start(mode2, monitor);
+										} catch (Exception e) {
+											Trace.trace(Trace.SEVERE, "Error while restarting server", e);
+										}
 									}
 								}
 							};
@@ -1561,10 +1563,12 @@ public class Server extends Base implements IServer {
 									if (ServerPreferences.getInstance().isAutoPublishing() && shouldPublish()) {
 										publish(PUBLISH_INCREMENTAL, null);
 									}
-									try {
-										Server.this.start(mode3, listener2);
-									} catch (Exception e) {
-										Trace.trace(Trace.SEVERE, "Error while restarting server", e);
+									if (getServerState() != IServer.STATE_STARTED) {
+										try {
+											Server.this.start(mode3, listener2);
+										} catch (Exception e) {
+											Trace.trace(Trace.SEVERE, "Error while restarting server", e);
+										}
 									}
 								}
 							};
