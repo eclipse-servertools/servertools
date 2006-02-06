@@ -1238,6 +1238,14 @@ public class Server extends Base implements IServer {
 									} catch (Exception e) {
 										// ignore
 									}
+									ServerType st = (ServerType) getServerType();
+									if (st.startBeforePublish()) {
+										try {
+											Server.this.start(mode2, monitor);
+										} catch (Exception e) {
+											Trace.trace(Trace.SEVERE, "Error while restarting server", e);
+										}
+									}
 									if (ServerPreferences.getInstance().isAutoPublishing() && shouldPublish()) {
 										publish(PUBLISH_INCREMENTAL, null);
 									}
@@ -1559,6 +1567,14 @@ public class Server extends Base implements IServer {
 										Thread.sleep(250);
 									} catch (Exception e) {
 										// ignore
+									}
+									ServerType st = (ServerType) getServerType();
+									if (st.startBeforePublish()) {
+										try {
+											Server.this.start(mode3, listener2);
+										} catch (Exception e) {
+											Trace.trace(Trace.SEVERE, "Error while restarting server", e);
+										}
 									}
 									if (ServerPreferences.getInstance().isAutoPublishing() && shouldPublish()) {
 										publish(PUBLISH_INCREMENTAL, null);
