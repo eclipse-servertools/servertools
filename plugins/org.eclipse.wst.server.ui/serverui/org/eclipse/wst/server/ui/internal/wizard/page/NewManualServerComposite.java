@@ -285,7 +285,8 @@ public class NewManualServerComposite extends Composite {
 			}
 			runtimes = new IRuntime[runtimes2.size()];
 			runtimes2.toArray(runtimes);
-			return;
+			if (runtimes2.size() > 0)
+				return;
 		}
 		
 		// create a new runtime
