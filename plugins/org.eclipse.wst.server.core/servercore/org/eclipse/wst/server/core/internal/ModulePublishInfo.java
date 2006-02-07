@@ -206,7 +206,10 @@ public class ModulePublishInfo {
 		try {
 			int size = module.length;
 			ModuleDelegate pm = (ModuleDelegate) module[size - 1].loadAdapter(ModuleDelegate.class, null);
-			currentResources = pm.members();
+			if (pm != null)
+				currentResources = pm.members();
+			else
+				currentResources = new IModuleResource[0];
 			
 			delta = ServerPublishInfo.getDelta(resources, currentResources);
 			hasDelta = (delta != null && delta.length > 0);
