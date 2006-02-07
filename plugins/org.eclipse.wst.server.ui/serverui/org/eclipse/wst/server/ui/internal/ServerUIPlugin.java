@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -81,28 +81,28 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 
 	private static class RegistryChangeListener implements IRegistryChangeListener {
 		public void registryChanged(IRegistryChangeEvent event) {
-			IExtensionDelta[] deltas = event.getExtensionDeltas(ServerPlugin.PLUGIN_ID, EXTENSION_WIZARD_FRAGMENTS);
+			IExtensionDelta[] deltas = event.getExtensionDeltas(ServerUIPlugin.PLUGIN_ID, EXTENSION_WIZARD_FRAGMENTS);
 			if (deltas != null) {
 				for (int i = 0; i < deltas.length; i++) {
 					handleWizardFragmentDelta(deltas[i]);
 				}
 			}
 			
-			deltas = event.getExtensionDeltas(ServerPlugin.PLUGIN_ID, EXTENSION_SERVER_IMAGES);
+			deltas = event.getExtensionDeltas(ServerUIPlugin.PLUGIN_ID, EXTENSION_SERVER_IMAGES);
 			if (deltas != null) {
 				for (int i = 0; i < deltas.length; i++) {
 					ImageResource.handleServerImageDelta(deltas[i]);
 				}
 			}
 			
-			deltas = event.getExtensionDeltas(ServerPlugin.PLUGIN_ID, EXTENSION_EDITOR_PAGES);
+			deltas = event.getExtensionDeltas(ServerUIPlugin.PLUGIN_ID, EXTENSION_EDITOR_PAGES);
 			if (deltas != null) {
 				for (int i = 0; i < deltas.length; i++) {
 					ServerEditorCore.handleEditorPageFactoriesDelta(deltas[i]);
 				}
 			}
 			
-			deltas = event.getExtensionDeltas(ServerPlugin.PLUGIN_ID, EXTENSION_EDITOR_PAGE_SECTIONS);
+			deltas = event.getExtensionDeltas(ServerUIPlugin.PLUGIN_ID, EXTENSION_EDITOR_PAGE_SECTIONS);
 			if (deltas != null) {
 				for (int i = 0; i < deltas.length; i++) {
 					ServerEditorCore.handleEditorPageSectionFactoriesDelta(deltas[i]);
@@ -203,7 +203,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		Trace.trace(Trace.CONFIG, "----->----- Server UI plugin start ----->-----");
 		super.start(context);
-	
+		
 		ServerUIPreferences prefs = getPreferences();
 		prefs.setDefaults();
 		
@@ -257,9 +257,9 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	public static void addTerminationWatch(final Shell shell, final IServer server, final int mode) {
 		if (terminationWatches.contains(server))
 			return;
-	
+		
 		terminationWatches.add(server);
-	
+		
 		class TerminateThread extends Thread {
 			public boolean alive = true;
 			public IServerListener listener;
@@ -720,13 +720,13 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		delegate.run(action);
 	}
 
-	public static void addRegistryListener() {
+	public static synchronized void addRegistryListener() {
 		if (registryListener != null)
 			return;
 		
 		registryListener = new RegistryChangeListener();
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		registry.addRegistryChangeListener(registryListener, ServerPlugin.PLUGIN_ID);
+		registry.addRegistryChangeListener(registryListener, ServerUIPlugin.PLUGIN_ID);
 	}
 
 	protected static void handleWizardFragmentDelta(IExtensionDelta delta) {
