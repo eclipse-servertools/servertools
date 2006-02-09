@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.jst.server_ui.feature"
       label="org.eclipse.jst.server_ui.feature"
-      version="1.0.0">
+      version="1.0.1">
 
    <description>
       %description
