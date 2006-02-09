@@ -2,13 +2,11 @@
 <feature
       id="org.eclipse.jst.server_userdoc.feature"
       label="org.eclipse.jst.server_userdoc.feature"
-      version="1.0.0">
+      version="1.0.100.qualifier">
 
    <description>
       %description
    </description>
-
-
 
    <license url="license.html">
       %license

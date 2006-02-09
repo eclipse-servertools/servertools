@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.jst.server_adapters.feature"
       label="org.eclipse.jst.server_adapters.feature"
-      version="1.0.0">
+      version="1.0.100.qualifier">
 
    <description>
       %description
