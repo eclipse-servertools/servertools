@@ -232,9 +232,8 @@ public class AntPublisher extends GenericPublisher{
 		return props;
 	}
 	
-	private IPath getModuleWorkingDir()
-	{
-		return getProjectWorkingLocation().append(getModule()[0].getName());
+	private IPath getModuleWorkingDir(){
+		return getProjectWorkingLocation().append(getModule()[0].getProject().getName());
 	}
 
 	private IPath getProjectWorkingLocation(){
