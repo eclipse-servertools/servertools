@@ -95,10 +95,7 @@ public abstract class AbstractModuleAssembler {
 			return module.getName()+".jar";		
 		if("jst.web".equals(moduleType.getId())){
 			IWebModule webmodule = (IWebModule)module.loadAdapter(IWebModule.class, null);
-			String contextRoot = webmodule.getContextRoot();
-			if(contextRoot.charAt(0) == '/')
-				return contextRoot.substring(1)+".war";
-			return contextRoot+".war";
+			return webmodule.getURI(module);
 		}
 		if("jst.ear".equals(moduleType.getId()))
 			return module.getName()+".ear";

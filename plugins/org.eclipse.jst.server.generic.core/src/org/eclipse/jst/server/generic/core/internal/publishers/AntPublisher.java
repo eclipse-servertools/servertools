@@ -245,14 +245,14 @@ public class AntPublisher extends GenericPublisher{
 		String moduleName = module.getName(); 
 		if("jst.web".equals(getModuleTypeId())){ //$NON-NLS-1$
 			IWebModule webModule = (IWebModule)getModule()[0].loadAdapter(IWebModule.class,null);
-			String contextRoot = webModule.getContextRoot();
-			if(contextRoot.charAt(0) == '/'){
-				contextRoot = contextRoot.substring(1);
+			String contextRoot = webModule.getURI(module);
+			//TODO we should really pass the full uri including the file extension in the future
+			moduleName = contextRoot.substring(0,contextRoot.lastIndexOf('.'));
 			}
-			moduleName=contextRoot;
-		}
 		return moduleName;
-	}
+		}
+
+
 
 	private void runAnt(String buildFile,String targets,Map properties ,IProgressMonitor monitor)throws CoreException{
 		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
