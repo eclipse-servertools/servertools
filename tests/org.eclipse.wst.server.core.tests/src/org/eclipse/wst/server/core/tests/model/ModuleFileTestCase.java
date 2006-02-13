@@ -13,6 +13,7 @@ package org.eclipse.wst.server.core.tests.model;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.server.core.internal.ModuleFile;
 import org.eclipse.wst.server.core.model.IModuleFile;
 import org.eclipse.wst.server.core.tests.OrderedTestSuite;
@@ -25,17 +26,17 @@ public class ModuleFileTestCase extends TestCase {
 	}
 
 	public void test00CreateDelegate() throws Exception {
-		delegate = new ModuleFile(null, "name", null, 14);
+		delegate = new ModuleFile((IFile)null, "name", null);
 	}
-	
+
 	public void test01Name() throws Exception {
 		assertEquals(delegate.getName(), "name");
 	}
-	
+
 	public void test02Path() throws Exception {
 		assertNull(delegate.getModuleRelativePath());
 	}
-	
+
 	public void test03Stamp() throws Exception {
 		assertEquals(delegate.getModificationStamp(), 14);
 	}
