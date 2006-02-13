@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.eclipse.wst.server_sdk.feature"
-      label="org.eclipse.wst.server_sdk.feature"
-      version="1.0.1.qualifier">
+      id="org.eclipse.wst.server_core.feature.source"
+      label="%featureName"
+      version="1.0.1.qualifier"
+      provider-name="%providerName">
 
    <description>
       %description
    </description>
+
+   <copyright>
+      %copyright
+   </copyright>
 
    <license url="license.html">
       %license
@@ -17,8 +22,11 @@
    </url>
 
 
-   <includes
-         id="org.eclipse.wst.server_ui.feature.source"
+
+   <plugin
+         id="org.eclipse.wst.server_core.feature.source"
+         download-size="0"
+         install-size="0"
          version="0.0.0"/>
 
 </feature>
