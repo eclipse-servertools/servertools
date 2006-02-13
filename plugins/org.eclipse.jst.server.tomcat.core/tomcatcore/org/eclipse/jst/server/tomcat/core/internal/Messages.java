@@ -57,6 +57,7 @@ public class Messages extends NLS {
 	public static String publisherPublishTask;
 	public static String errorNoConfiguration;
 	public static String errorWebModulesOnly;
+	public static String errorNoRuntime;
 	public static String publishServerTask;
 	public static String errorPortInvalid;
 	public static String errorPortInUse;

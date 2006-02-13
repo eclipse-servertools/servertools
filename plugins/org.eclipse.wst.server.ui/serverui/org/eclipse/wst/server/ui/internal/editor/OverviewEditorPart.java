@@ -37,6 +37,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
@@ -76,7 +77,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 	protected Button autoPublishDisable;
 	protected Button autoPublishOverride;
 	protected Spinner autoPublishTime;
-	
+
 	protected Color colorDefault;
 	protected Color colorRed;
 
@@ -85,6 +86,8 @@ public class OverviewEditorPart extends ServerEditorPart {
 	protected IRuntime[] runtimes;
 
 	protected PropertyChangeListener listener;
+
+	protected IRuntimeLifecycleListener runtimeListener;
 
 	/**
 	 * OverviewEditorPart constructor comment.
@@ -119,10 +122,12 @@ public class OverviewEditorPart extends ServerEditorPart {
 					IRuntime runtime = null;
 					if (runtimeId != null)
 						runtime = ServerCore.findRuntime(runtimeId);
-					int size = runtimes.length;
-					for (int i = 0; i < size; i++) {
-						if (runtimes[i].equals(runtime))
-							runtimeCombo.select(i);
+					if (runtimeCombo != null) {
+						int size = runtimes.length;
+						for (int i = 0; i < size; i++) {
+							if (runtimes[i].equals(runtime))
+								runtimeCombo.select(i);
+						}
 					}
 				} else if (event.getPropertyName().equals("configuration-id") && serverConfigurationName != null) {
 					String path = (String) event.getNewValue();
@@ -273,40 +278,34 @@ public class OverviewEditorPart extends ServerEditorPart {
 			IRuntimeType runtimeType = server.getServerType().getRuntimeType();
 			runtimes = ServerUIPlugin.getRuntimes(runtimeType);
 			
-			if (runtimes == null || runtimes.length == 0)
-				toolkit.createLabel(composite, "");
-			else if (runtimes.length == 1)
-				toolkit.createLabel(composite, runtime.getName());
-			else {
-				runtimeCombo = new Combo(composite, SWT.READ_ONLY);
-				runtimeCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-				updateRuntimeCombo();
-				
-				int size = runtimes.length;
-				for (int i = 0; i < size; i++) {
-					if (runtimes[i].equals(runtime))
-						runtimeCombo.select(i);
-				}
-				
-				runtimeCombo.addSelectionListener(new SelectionListener() {
-					public void widgetSelected(SelectionEvent e) {
-						try {
-							if (updating)
-								return;
-							updating = true;
-							IRuntime newRuntime = runtimes[runtimeCombo.getSelectionIndex()];
-							execute(new SetServerRuntimeCommand(getServer(), newRuntime));
-							updating = false;
-						} catch (Exception ex) {
-							// ignore
-						}
-					}
-					public void widgetDefaultSelected(SelectionEvent e) {
-						widgetSelected(e);
-					}
-				});
-				whs.setHelp(runtimeCombo, ContextIds.EDITOR_RUNTIME);
+			runtimeCombo = new Combo(composite, SWT.READ_ONLY);
+			runtimeCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			updateRuntimeCombo();
+			
+			int size = runtimes.length;
+			for (int i = 0; i < size; i++) {
+				if (runtimes[i].equals(runtime))
+					runtimeCombo.select(i);
 			}
+			
+			runtimeCombo.addSelectionListener(new SelectionListener() {
+				public void widgetSelected(SelectionEvent e) {
+					try {
+						if (updating)
+							return;
+						updating = true;
+						IRuntime newRuntime = runtimes[runtimeCombo.getSelectionIndex()];
+						execute(new SetServerRuntimeCommand(getServer(), newRuntime));
+						updating = false;
+					} catch (Exception ex) {
+						// ignore
+					}
+				}
+				public void widgetDefaultSelected(SelectionEvent e) {
+					widgetSelected(e);
+				}
+			});
+			whs.setHelp(runtimeCombo, ContextIds.EDITOR_RUNTIME);
 			
 			Hyperlink link = toolkit.createHyperlink(composite, Messages.serverEditorOverviewRuntimeEdit, SWT.NONE);
 			link.addHyperlinkListener(new HyperlinkAdapter() {
@@ -315,6 +314,72 @@ public class OverviewEditorPart extends ServerEditorPart {
 				}
 			});
 			link.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+			
+			// add runtime listener
+			runtimeListener = new IRuntimeLifecycleListener() {
+				public void runtimeChanged(final IRuntime runtime2) {
+					// may be name change of current runtime
+					Display.getDefault().syncExec(new Runnable() {
+						public void run() {
+							if (runtime2.equals(getServer().getRuntime())) {
+								try {
+									if (updating)
+										return;
+									updating = true;
+									execute(new SetServerRuntimeCommand(getServer(), runtime2));
+									updating = false;
+								} catch (Exception ex) {
+									// ignore
+								}
+							}
+							
+							if (runtimeCombo != null) {
+								updateRuntimeCombo();
+								
+								int size2 = runtimes.length;
+								for (int i = 0; i < size2; i++) {
+									if (runtimes[i].equals(runtime))
+										runtimeCombo.select(i);
+								}
+							}
+						}
+					});
+				}
+
+				public void runtimeAdded(final IRuntime runtime2) {
+					Display.getDefault().syncExec(new Runnable() {
+						public void run() {
+							if (runtimeCombo != null) {
+								updateRuntimeCombo();
+								
+								int size2 = runtimes.length;
+								for (int i = 0; i < size2; i++) {
+									if (runtimes[i].equals(runtime))
+										runtimeCombo.select(i);
+								}
+							}
+						}
+					});
+				}
+
+				public void runtimeRemoved(IRuntime runtime2) {
+					Display.getDefault().syncExec(new Runnable() {
+						public void run() {
+							if (runtimeCombo != null) {
+								updateRuntimeCombo();
+								
+								int size2 = runtimes.length;
+								for (int i = 0; i < size2; i++) {
+									if (runtimes[i].equals(runtime))
+										runtimeCombo.select(i);
+								}
+							}
+						}
+					});
+				}
+			};
+			
+			ServerCore.addRuntimeLifecycleListener(runtimeListener);
 		}
 		
 		// server configuration path
@@ -562,7 +627,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		ClosableWizardDialog dialog = new ClosableWizardDialog(getEditorSite().getShell(), wizard);
 		return dialog.open();
 	}
-	
+
 	protected void updateRuntimeCombo() {
 		IRuntimeType runtimeType = server.getServerType().getRuntimeType();
 		runtimes = ServerUIPlugin.getRuntimes(runtimeType);
@@ -592,12 +657,15 @@ public class OverviewEditorPart extends ServerEditorPart {
 		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
 		return label;
 	}
-	
+
 	public void dispose() {
 		super.dispose();
 		
 		if (server != null)
 			server.removePropertyChangeListener(listener);
+		
+		if (runtimeListener != null)
+			ServerCore.removeRuntimeLifecycleListener(runtimeListener);
 	}
 
 	/* (non-Javadoc)
@@ -609,7 +677,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		addChangeListener();
 		initialize();
 	}
-	
+
 	/**
 	 * Initialize the fields in this editor.
 	 */

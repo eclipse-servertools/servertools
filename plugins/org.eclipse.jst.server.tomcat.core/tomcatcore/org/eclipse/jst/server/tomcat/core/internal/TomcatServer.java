@@ -246,6 +246,9 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 				if (!"jst.web".equals(module.getModuleType().getId()))
 					return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorWebModulesOnly, null);
 				
+				if (getTomcatVersionHandler() == null)
+					return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorNoRuntime, null);
+				
 				IStatus status = getTomcatVersionHandler().canAddModule(module);
 				if (status != null && !status.isOK())
 					return status;
