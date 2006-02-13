@@ -126,9 +126,15 @@ public class InstallableServer implements IInstallableServer {
 		try {
 			InstallCommand command = new InstallCommand(featureId, featureVersion, fromSite, null, "false");
 			command.run(monitor);
-			command.applyChangesNow();
+			//command.applyChangesNow();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error installing feature", e);
+		}
+		
+		try {
+			Thread.sleep(1000);
+		} catch (Exception e) {
+			// ignore
 		}
 	}
 

@@ -31,6 +31,7 @@ public class ServerPlugin extends Plugin {
 	public static final String PROJECT_PREF_FILE = ".serverPreference";
 
 	private static final String SHUTDOWN_JOB_FAMILY = "org.eclipse.wst.server.core.family";
+	//public static final String REGISTRY_JOB_FAMILY = "org.eclipse.wst.server.registry.family";
 
 	protected static final DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 	protected static int num = 0;
@@ -271,7 +272,7 @@ public class ServerPlugin extends Plugin {
 		bundleListener = new BundleListener() {
 			public void bundleChanged(BundleEvent event) {
 				String bundleId = event.getBundle().getSymbolicName();
-				//System.out.println(event.getType() + " " + bundleId);
+				//Trace.trace(Trace.INFO, event.getType() + " " + bundleId);
 				// TODO should also look for UNINSTALLED and UNRESOLVED
 				if (BundleEvent.STOPPED == event.getType() && ResourceManager.getInstance().isActiveBundle(bundleId))
 					stopBundle(bundleId);

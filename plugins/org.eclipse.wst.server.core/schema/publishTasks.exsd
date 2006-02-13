@@ -90,13 +90,11 @@ Publish task instances of this type will delegate to instances of this class.
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         &lt;!--
-The following is an example of a publish task extension point:
+         The following is an example of a publish task extension point:
 
 &lt;pre&gt;
 
 &lt;/pre&gt;
---&gt;
       </documentation>
    </annotation>
 
@@ -108,7 +106,7 @@ The following is an example of a publish task extension point:
          Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;code&gt;org.eclipse.wst.server.core.model.PublishTaskDelegate&lt;/code&gt;.
       </documentation>
    </annotation>
-   
+
    <annotation>
       <appInfo>
          <meta.section type="implementation"/>

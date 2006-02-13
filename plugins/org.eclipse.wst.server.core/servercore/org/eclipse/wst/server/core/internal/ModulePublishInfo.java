@@ -216,6 +216,8 @@ public class ModulePublishInfo {
 		} catch (CoreException ce) {
 			Trace.trace(Trace.WARNING, "Couldn't fill publish cache for " + module);
 		}
+		if (delta == null)
+			delta = new IModuleResourceDelta[0];
 	}
 
 	protected void clearCache() {

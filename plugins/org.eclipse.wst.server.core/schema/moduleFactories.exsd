@@ -117,13 +117,11 @@ Module factory instances of this type will delegate to instances of this class.
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         &lt;!--
-The following is an example of a module factory extension point:
+         The following is an example of a module factory extension point:
 
 &lt;pre&gt;
 
 &lt;/pre&gt;
---&gt;
       </documentation>
    </annotation>
 
@@ -135,7 +133,7 @@ The following is an example of a module factory extension point:
          Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;code&gt;org.eclipse.wst.server.core.model.ModuleFactoryDelegate&lt;/code&gt; and contains a public 0-arg constructor.
       </documentation>
    </annotation>
-   
+
    <annotation>
       <appInfo>
          <meta.section type="implementation"/>

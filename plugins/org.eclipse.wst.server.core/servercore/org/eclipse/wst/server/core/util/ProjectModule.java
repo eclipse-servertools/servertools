@@ -156,7 +156,7 @@ public abstract class ProjectModule extends ModuleDelegate {
 				} else if (resource instanceof IFile) {
 					IFile file = (IFile) resource;
 					if (file != null && file.exists())
-						list.add(new ModuleFile(file, file.getName(), path, file.getModificationStamp()));
+						list.add(new ModuleFile(file, file.getName(), path));
 				}
 			}
 		}

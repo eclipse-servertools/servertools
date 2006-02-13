@@ -92,13 +92,11 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         &lt;!--
-The following is an example of a module object adapter extension point:
+         The following is an example of a module object adapter extension point:
 
 &lt;pre&gt;
 
 &lt;/pre&gt;
---&gt;
       </documentation>
    </annotation>
 
