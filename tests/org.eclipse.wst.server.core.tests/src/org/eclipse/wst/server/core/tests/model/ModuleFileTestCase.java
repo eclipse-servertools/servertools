@@ -38,6 +38,6 @@ public class ModuleFileTestCase extends TestCase {
 	}
 
 	public void test03Stamp() throws Exception {
-		assertEquals(delegate.getModificationStamp(), 14);
+		assertEquals(delegate.getModificationStamp(), -1);
 	}
 }
