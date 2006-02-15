@@ -11,6 +11,9 @@
    <license url="license.html">
       %license
    </license>
+   <url>
+      <update label="Web Tools Platform (WTP) Updates" url="http://download.eclipse.org/webtools/updates/"/>
+   </url>
 
    <requires>
       <import feature="org.eclipse.rcp" version="3.2" match="equivalent"/>
