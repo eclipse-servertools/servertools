@@ -275,17 +275,17 @@ public class NewManualServerComposite extends Composite {
 		runtimes = ServerUIPlugin.getRuntimes(runtimeType);
 		newRuntime = null;
 		
-		if (server != null && SocketUtil.isLocalhost(server.getHost()) && runtimes != null) {
+		if (server != null && runtimes != null) {
 			List runtimes2 = new ArrayList();
 			int size = runtimes.length;
 			for (int i = 0; i < size; i++) {
 				IRuntime runtime2 = runtimes[i];
-				if (!runtime2.isStub())
+				if (!SocketUtil.isLocalhost(server.getHost()) || !runtime2.isStub())
 					runtimes2.add(runtime2);
 			}
 			runtimes = new IRuntime[runtimes2.size()];
 			runtimes2.toArray(runtimes);
-			if (runtimes2.size() > 0)
+			if (runtimes.length > 0)
 				return;
 		}
 		

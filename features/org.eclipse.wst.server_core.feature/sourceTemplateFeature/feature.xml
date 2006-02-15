@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.eclipse.jst.server_adapters.feature.source"
-      label="JST Server Adapter Feature Source"
+      id="org.eclipse.wst.server_core.feature.source"
+      label="%featureName"
       version="1.0.1.qualifier"
-      provider-name="Eclipse.org">
+      provider-name="%providerName">
 
    <description>
       %description
@@ -22,12 +22,9 @@
    </url>
 
 
-   <includes
-         id="org.eclipse.jst.server_ui.feature.source"
-         version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.jst.server_adapters.feature.source"
+         id="org.eclipse.wst.server_core.feature.source"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
