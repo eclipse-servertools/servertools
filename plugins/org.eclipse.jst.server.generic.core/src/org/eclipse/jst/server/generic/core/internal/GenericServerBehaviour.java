@@ -40,6 +40,7 @@ import org.eclipse.jst.server.generic.servertype.definition.ArgumentPair;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
 import org.eclipse.jst.server.generic.servertype.definition.LaunchConfiguration;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerPort;
@@ -83,7 +84,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
             String publisherId = ServerTypeDefinitionUtil.getPublisherID(module[0], getServerDefinition());
             GenericPublisher publisher = PublishManager.getPublisher(publisherId);
             if(publisher==null){
-                IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0, GenericServerCoreMessages.bind(GenericServerCoreMessages.unableToCreatePublisher,publisherId),null);
+                IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0, NLS.bind(GenericServerCoreMessages.unableToCreatePublisher,publisherId),null);
                 throw new CoreException(status);
             }
             publisher.initialize(module,getServer());
@@ -107,7 +108,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     	{
     		if(module[i] instanceof DeletedModule)
     		{	
-                IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0, GenericServerCoreMessages.bind(GenericServerCoreMessages.canNotPublishDeletedModule,module[i].getName()),null);
+                IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0, NLS.bind(GenericServerCoreMessages.canNotPublishDeletedModule,module[i].getName()),null);
                 throw new CoreException(status);
     		}
     	}
@@ -117,7 +118,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     	String publisherId = ServerTypeDefinitionUtil.getPublisherID(module[0], getServerDefinition());
         GenericPublisher publisher = PublishManager.getPublisher(publisherId);  
         if(publisher==null){
-            IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,GenericServerCoreMessages.bind(GenericServerCoreMessages.unableToCreatePublisher,publisherId),null);
+            IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,NLS.bind(GenericServerCoreMessages.unableToCreatePublisher,publisherId),null);
             throw new CoreException(status);
         }
         publisher.initialize(module,getServer());
@@ -407,7 +408,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 	    	for(int i=0;i<ports.length;i++){
 	    		sp= ports[i];
 	    		if (SocketUtil.isPortInUse(ports[i].getPort(), 5))
-	    			throw new CoreException(new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.bind(GenericServerCoreMessages.errorPortInUse,Integer.toString(sp.getPort()),sp.getName()),null));
+	    			throw new CoreException(new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, NLS.bind(GenericServerCoreMessages.errorPortInUse,Integer.toString(sp.getPort()),sp.getName()),null));
 	    	}
     	}
     	setServerState(IServer.STATE_STARTING);
