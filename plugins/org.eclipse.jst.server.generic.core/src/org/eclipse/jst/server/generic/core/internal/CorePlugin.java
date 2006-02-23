@@ -10,6 +10,7 @@
 package org.eclipse.jst.server.generic.core.internal;
 
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
@@ -23,7 +24,7 @@ import java.net.URL;
  */
 public class CorePlugin extends Plugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.jst.server.generic.core";
+	public static final String PLUGIN_ID = "org.eclipse.jst.server.generic.core"; //$NON-NLS-1$
 
 	//The shared instance.
 	private static CorePlugin plugin;
@@ -71,7 +72,7 @@ public class CorePlugin extends Plugin {
 	private URL getInstallUrl()
 	{
 		try {
-			return Platform.resolve(this.getBundle().getEntry("/"));
+			return FileLocator.resolve(this.getBundle().getEntry("/"));
 		} catch (IOException e) {
 			return null;
 		}	
