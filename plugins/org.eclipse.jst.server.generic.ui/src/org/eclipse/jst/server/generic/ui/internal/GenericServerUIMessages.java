@@ -37,5 +37,7 @@ public class GenericServerUIMessages extends NLS{
 		  NLS.initializeMessages(RESOURCE_BUNDLE, GenericServerUIMessages.class);
 	}
 
+	public static String emptyPath;
+
 
 }
