@@ -290,7 +290,8 @@ public class AntPublisher extends GenericPublisher{
    * 
    * @param wc
    */
-    protected void setupAntLaunchConfiguration(ILaunchConfigurationWorkingCopy wc) {		
+    protected void setupAntLaunchConfiguration(ILaunchConfigurationWorkingCopy wc) {
+    	//nothing to do
 	}
 
 	/* (non-Javadoc)
