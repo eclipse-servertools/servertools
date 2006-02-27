@@ -1,7 +1,0 @@
-# Debugging options for the org.eclipse.wst.server.ui plugin
-
-# Turn on general debugging
-org.eclipse.wst.server.ui/debug=true
-
-# Prints out values
-org.eclipse.wst.server.ui/editor=false

@@ -1,7 +1,0 @@
-# Debugging options for the org.eclipse.wst.server.core plugin
-
-# Turn on general debugging
-org.eclipse.wst.server.core/debug=true
-
-# Prints out values
-org.eclipse.wst.server.core/resources=false
