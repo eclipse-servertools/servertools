@@ -1,165 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS type="org.eclipse.help.contexts"?>
-
+<!-- /*******************************************************************************
+ * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/ -->
 <contexts>
-<context id="jvcp0000">
-<description>List of class path entries defined for a specific server.
-
-</description>
-</context>
-<context id="jvcp0002">
-<description>List of class path entries defined for a specific server. This is used as the system class path when launching the server.
-
-</description>
-</context>
-<context id="jvcp0004">
-<description>Change the order in which class path entries are searched by selecting an entry and then clicking <b>Up</b> or <b>Down</b> to change its position in the list.
-
-</description>
-</context>
-<context id="jvcp0006">
-<description>Change the order in which class path entries are searched by selecting an entry and then clicking <b>Up</b> or <b>Down</b> to change its position in the list.
-
-</description>
-</context>
-<context id="jvcp0008">
-<description>Add one or more external JAR files to the <b>Class path</b> list of a specific server.
-
-</description>
-</context>
-<context id="jvcp0009">
-<description>Add an external directory to the <b>Class path</b> list of a specific server.
-
-</description>
-</context>
-<context id="jvcp0010">
-<description>Add a project or folder in the workbench to the <b>Class path</b> list of a specific server.
-
-</description>
-</context>
-<context id="jvcp0011">
-<description>Add a class path variable entry to the <b>Class path</b> list of a specific server.
-
-</description>
-</context>
-<context id="jvcp0012">
-<description>Remove a JAR file, project, folder, or directory from the <b>Class path</b> list of a specific server.
-
-</description>
-</context>
-<context id="jvcp0013">
-<description>Add an external class path entry for a directory or a JAR file to the\ <b>Class path</b> list of a specific server by typing it.
-
-</description>
-</context>
-<context id="jvcp0015">
-<description>Edit an external class path entry for a directory or a JAR file to the\ <b>Class path</b> list of a specific server by typing it.
-
-</description>
-</context>
-<context id="jvpd0000">
-<description>Use this window to either add a new system property, or to change the property name or value for an existing property.
-
-</description>
-</context>
-<context id="jvpd0002">
-<description>The name of the system property. This name is a property key.
-
-</description>
-</context>
-<context id="jvpd0004">
-<description>The value of the system property. This value is a string value that can be used to set internal system configuration properties.
-
-</description>
-</context>
-<context id="jvpt0000">
-<description>Change the path settings by typing the system path in the <b>Java Library Path</b> field. For example, to include the DB2 path for Linux, you could type /home/db2inst1/sqllib/java12/db2java.zip. To add the path settings to the end of the system path, select <b>Append to system path</b>.To add the path settings to the beginning of the system path, select <b>Prepend to system path</b>. To replace the existing system path with the one typed in the <b>Java Library Path</b> field, select <b>Replace system path</b>.
-
-</description>
-</context>
-<context id="jvpt0002">
-<description>Change the path settings by typing the system path in the <b>Java Library Path</b> field. For example, to include the DB2 path for Linux, you could type /home/db2inst1/sqllib/java12/db2java.zip. To add the path settings to the end of the system path, select <b>Append to system path</b>.To add the path settings to the beginning of the system path, select <b>Prepend to system path</b>. To replace the existing system path with the one typed in the <b>Java Library Path</b> field, select <b>Replace system path</b>.
-
-</description>
-</context>
-<context id="jvpt0004">
-<description>Change the path settings by typing the system path in the <b>Java Library Path</b> field. For example, to include the DB2 path for Linux, you could type /home/db2inst1/sqllib/java12/db2java.zip. To add the path settings to the end of the system path, select <b>Append to system path</b>.To add the path settings to the beginning of the system path, select <b>Prepend to system path</b>. To replace the existing system path with the one typed in the <b>Java Library Path</b> field, select <b>Replace system path</b>.
-
-</description>
-</context>
-<context id="jvpt0006">
-<description>Change the path settings by typing the system path in the <b>Java Library Path</b> field. For example, to include the DB2 path for Linux, you could type /home/db2inst1/sqllib/java12/db2java.zip. To add the path settings to the end of the system path, select <b>Append to system path</b>.To add the path settings to the beginning of the system path, select <b>Prepend to system path</b>. To replace the existing system path with the one typed in the <b>Java Library Path</b> field, select <b>Replace system path</b>.
-
-</description>
-</context>
-<context id="jvpt0008">
-<description>Change the path settings by typing the system path in the <b>Java Library Path</b> field. For example, to include the DB2 path for Linux, you could type /home/db2inst1/sqllib/java12/db2java.zip. To add the path settings to the end of the system path, select <b>Append to system path</b>.To add the path settings to the beginning of the system path, select <b>Prepend to system path</b>. To replace the existing system path with the one typed in the <b>Java Library Path</b> field, select <b>Replace system path</b>.
-
-</description>
-</context>
-<context id="jvsd0000">
-<description>Use this window to add an external class path entry.
-
-</description>
-</context>
-<context id="jvsd0002">
-<description>The name of the external class path for a directory or JAR file. For example, c:/test.
-
-</description>
-</context>
-<context id="jvsp0000">
-<description>Add, change, and remove the values for system properties belonging to a server process. Use the buttons on the right to change the values of the system properties.
-
-</description>
-</context>
-<context id="jvsp0002">
-<description>Add, change, and remove the values for system properties belonging to a server process. Use the buttons on the right to change the values of the system properties.
-
-</description>
-</context>
-<context id="jvsp0004">
-<description>Add, change, and remove the values for system properties belonging to a server process. Use the buttons on the right to change the values of the system properties.
-
-</description>
-</context>
-<context id="jvsp0006">
-<description>Add, change, and remove the values for system properties belonging to a server process. Use the buttons on the right to change the values of the system properties.
-
-</description>
-</context>
-<context id="jvsp0008">
-<description>Add, change, and remove the values for system properties belonging to a server process. Use the buttons on the right to change the values of the system properties.
-
-</description>
-</context>
-<context id="jvvd0000">
-<description>To share the same server between two machines, use a class path variable to point to an external JAR file. For example, an external JAR file called db2java.zip may reside in the c:/test drive directory on one machine and on the d:/ drive on another. In the Java Class Path Variables Preference page, define TEMP=c:/temp on the first machine and then define TEMP=d:/ on the second machine. Create a class path variable entry called TEMP with an extension of db2java.zip for that server.
-
-</description>
-</context>
-<context id="jvvd0002">
-<description>To share the same server between two machines, use a class path variable to point to an external JAR file. For example, an external JAR file called db2java.zip may reside in the c:/test drive directory on one machine and on the d:/ drive on another. In the Java Class Path Variables Preference page, define TEMP=c:/temp on the first machine and then define TEMP=d:/ on the second machine. Create a class path variable entry called TEMP with an extension of db2java.zip for that server.
-
-</description>
-</context>
-<context id="jvvd0004">
-<description>To share the same server between two machines, use a class path variable to point to an external JAR file. For example, an external JAR file called db2java.zip may reside in the c:/test drive directory on one machine and on the d:/ drive on another. In the Java Class Path Variables Preference page, define TEMP=c:/temp on the first machine and then define TEMP=d:/ on the second machine. Create a class path variable entry called TEMP with an extension of db2java.zip for that server.
-
-</description>
-</context>
-<context id="jvvd0006">
-<description>To share the same server between two machines, use a class path variable to point to an external JAR file. For example, an external JAR file called db2java.zip may reside in the c:/test drive directory on one machine and on the d:/ drive on another. In the Java Class Path Variables Preference page, define TEMP=c:/temp on the first machine and then define TEMP=d:/ on the second machine. Create a class path variable entry called TEMP with an extension of db2java.zip for that server.
-
-</description>
-</context>
-<context id="jvvm0000">
-<description>These arguments are passed directly to the Java VM when the server process is started. Separate more than one arguments with a space.
-
-</description>
-</context>
 <context id="jvrt0000">
 <description>This wizard allows you to provide information for configuring generic J2EE runtime.  In the <b>Name</b> field, specify the name that you want to assign to your generic J2EE runtime server.  In the <b>Location</b> field, specify the directory where your J2EE libraries are located.  You can either type the path of the directory or click <b>Browse</b> button to select it.  Under <b>JRE</b> list, select a JRE to compile against.  For example, Workbench default JRE.  You can either select the appropriate value from the JRE list or click <b>Installed JRE</b> to define a new JRE configuration.
-
 </description>
 </context>
 </contexts>

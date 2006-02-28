@@ -27,7 +27,7 @@
 </description>
 </context>
 <context id="tdpr0000">
-<description>This wizard allows you to add a Web module to this server configuration. This wizard appears if you had clicked <b>Add Web project</b> on the Modules page of the Tomcat Server Configuration Editor.
+<description>This wizard allows you to add a Web module to this server configuration. This wizard appears if you had clicked <b>Add Web Module</b> on the Modules page of the Tomcat Server Configuration Editor.
 
 </description>
 </context>
@@ -77,17 +77,17 @@
 </description>
 </context>
 <context id="tecm0004">
-<description>Add, change, and remove a MIME type and extension. To add a mime type with a new extension to the MIME Types list, click <b>Add</b>. The Add a MIME type window opens. To remove an existing MIME type with its extension from the MIME Types list, select the MIME type and then click <b>Remove</b>. The MIME type and its extension are no longer shown in the list. To change the name of the MIME type, or the extension of an existing MIME type shown in the MIME Types list, select the MIME type and then click <b>Edit</b>. The Edit a MIME type window opens.
+<description>Add, change, and remove a MIME type and extension. To add a MIME type with a new extension to the MIME Types list, click <b>Add</b>. The Add MIME Mapping window opens. To remove an existing MIME type with its extension from the MIME Types list, select the MIME type and then click <b>Remove</b>. The MIME type and its extension are no longer shown in the list. To change the name of the MIME type, or the extension of an existing MIME type shown in the MIME Types list, select the MIME type and then click <b>Edit</b>. The Edit MIME Mapping window opens.
 
 </description>
 </context>
 <context id="tecm0006">
-<description>Add, change, and remove a MIME type and extension. To add a mime type with a new extension to the MIME Types list, click <b>Add</b>. The Add a MIME type window opens. To remove an existing MIME type with its extension from the MIME Types list, select the MIME type and then click <b>Remove</b>. The MIME type and its extension are no longer shown in the list. To change the name of the MIME type, or the extension of an existing MIME type shown in the MIME Types list, select the MIME type and then click <b>Edit</b>. The Edit a MIME type window opens.
+<description>Add, change, and remove a MIME type and extension. To add a MIME type with a new extension to the MIME Types list, click <b>Add</b>. The Add MIME Mapping window opens. To remove an existing MIME type with its extension from the MIME Types list, select the MIME type and then click <b>Remove</b>. The MIME type and its extension are no longer shown in the list. To change the name of the MIME type, or the extension of an existing MIME type shown in the MIME Types list, select the MIME type and then click <b>Edit</b>. The Edit MIME Mapping window opens.
 
 </description>
 </context>
 <context id="tecm0008">
-<description>Add, change, and remove a MIME type and extension. To add a mime type with a new extension to the MIME Types list, click <b>Add</b>. The Add a MIME type window opens. To remove an existing MIME type with its extension from the MIME Types list, select the MIME type and then click <b>Remove</b>. The MIME type and its extension are no longer shown in the list. To change the name of the MIME type, or the extension of an existing MIME type shown in the MIME Types list, select the MIME type and then click <b>Edit</b>. The Edit a MIME type window opens.
+<description>Add, change, and remove a MIME type and extension. To add a MIME type with a new extension to the MIME Types list, click <b>Add</b>. The Add MIME Mapping window opens. To remove an existing MIME type with its extension from the MIME Types list, select the MIME type and then click <b>Remove</b>. The MIME type and its extension are no longer shown in the list. To change the name of the MIME type, or the extension of an existing MIME type shown in the MIME Types list, select the MIME type and then click <b>Edit</b>. The Edit MIME Mapping window opens.
 
 </description>
 </context>
@@ -251,17 +251,7 @@
 
 </description>
 </context>
-<context id="twnr0000_OLD">
-<description>This wizard allows you to provide additional installation directory information required for using Apache Tomcat.
 
-In the <b>name</b> field, specify the name that you want to assign to your Tomcat Server.
-
-In the <b>Tomcat installation directory</b> field, specify the directory where Apache Tomcat is installed. For example, d:\tomcat\jakarta-tomcat-3.2.3. You can either type the path of the 
-directory or click <b>Browse</b> to select it.
-
-In the <b>JRE</b> field, specify the directory where your JDK is installed. For example, d:\jdk1.3. You can either type the path of the directory or click <b>Installed JRE</b> to select it.
-</description>
-</context>
 <context id="twnr0000">
 <description>This wizard allows you to provide additional installation directory information required for using Apache Tomcat.
 
@@ -271,18 +261,6 @@ In the <b>Tomcat installation directory</b> field, specify the directory where A
 directory or click <b>Browse</b> to select it.
 
 Under <b>JRE</b> list, select an environment variable that specify where your JDK is installed.  For example, Workbench default JRE.  You can either select the appropriate value from the JRE list or click <b>Installed JRE</b> to define a new JRE environment variable.
-</description>
-</context>
-<context id="tecp0002">
-<description>List of available ports used by Tomcat and their respective port numbers. To change an existing port number in the list, select the port number and type the new number over it.
-
-</description>
-</context>
-<context id="???">
-<description>Enable the server tools to publish changes in your application from the workbench to the server.
-</description>
-</context><context id="???">
-<description>Specifies how long the server tools will wait before publishing the changes in your application from the workbench to the server.
 </description>
 </context>
 </contexts>
