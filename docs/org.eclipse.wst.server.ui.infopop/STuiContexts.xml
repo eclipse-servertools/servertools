@@ -11,11 +11,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/ -->
 <contexts>
-<context id="sdnp0000">
-<description>To confirm that you want to create a new server project with the given name, click <b>OK</b>.
-
-</description>
-</context>
 <context id="sdpd0000">
 <description>This dialog box displays the status of the projects that were published. For more detailed information, click <b>Details</b>. A scrollable box appears at the bottom of this dialog box.
 
@@ -36,36 +31,7 @@
 
 </description>
 </context>
-<context id="sdpr0000">
-<description>This dialog box allows you to select the resources that you want published to the remote server or removed from the remote server.
 
-</description>
-</context>
-<context id="sdpr0002">
-<description>The list displays the resources in your workspace that satisfy the filter criteria. The default filter criteria displays all the resources that are published to the server. To change the filter criteria, click <b>Filter Resources</b>. Depending on the status of the resource, appropriate actions are displayed in the <b>Action</b> column. To publish resource to a server or to remove it from a server, select the resource in the <b>Workspace Resource</b> column, select the appropriate checkbox in the <b>Action</b> column and then select <b>OK</b>. Selecting <b>Select all</b> selects all the resources in the list. Selecting <b>Deselect all</b> clears the resource selection in the list.
-
-</description>
-</context>
-<context id="sdpr0004">
-<description>The list displays the resources in your workspace that satisfy the filter criteria. The default filter criteria displays all the resources that are published to the server. To change the filter criteria, click <b>Filter Resources</b>. Depending on the status of the resource, appropriate actions are displayed in the <b>Action</b> column. To publish resource to a server or to remove it from a server, select the resource in the <b>Workspace Resource</b> column, select the appropriate checkbox in the <b>Action</b> column and then select <b>OK</b>. Selecting <b>Select all</b> selects all the resources in the list. Selecting <b>Deselect all</b> clears the resource selection in the list.
-
-</description>
-</context>
-<context id="sdpr0006">
-<description>The list displays the resources in your workspace that satisfy the filter criteria. The default filter criteria displays all the resources that are published to the server. To change the filter criteria, click <b>Filter Resources</b>. Depending on the status of the resource, appropriate actions are displayed in the <b>Action</b> column. To publish resource to a server or to remove it from a server, select the resource in the <b>Workspace Resource</b> column, select the appropriate checkbox in the <b>Action</b> column and then select <b>OK</b>. Selecting <b>Select all</b> selects all the resources in the list. Selecting <b>Deselect all</b> clears the resource selection in the list.
-
-</description>
-</context>
-<context id="sdpr0008">
-<description>The list displays the resources in your workspace that satisfy the filter criteria. The default filter criteria displays all the resources that are published to the server. To change the filter criteria, click <b>Filter Resources</b>. Depending on the status of the resource, appropriate actions are displayed in the <b>Action</b> column. To publish resource to a server or to remove it from a server, select the resource in the <b>Workspace Resource</b> column, select the appropriate checkbox in the <b>Action</b> column and then select <b>OK</b>. Selecting <b>Select all</b> selects all the resources in the list. Selecting <b>Deselect all</b> clears the resource selection in the list.
-
-</description>
-</context>
-<context id="sdpr0010">
-<description>This dialog allows you to select one or more of the following filters to be used when displaying resources in the Publishing dialog. - <b>Unpublished resources</b> to display those resources that are never published to the server. This is selected by default. - <b>Added resources</b> to display those resources that have been added to the workspace. - <b>Unmodified resources</b> to display those resources that have not been changed. - <b>Modified resources</b> to display those resources that have been changed. - <b>Deleted resources</b> to display those resources that have been deleted from the workspace.
-
-</description>
-</context>
 <context id="sdpi0000">
 <description>This change cannot be undone.
 
@@ -125,11 +91,6 @@ The default setting is <b>Normal</b>.
 </description>
 </context>
 
-<context id="svcf0000">
-<description>The Server Configuration view allows you to manage servers and server configurations. This view displays a list of all the servers that reside in your workspace. To view the server configurations, click the <b>Menu</b> icon and select <b>View &gt; Advanced</b>. The advanced Server Configuration view opens, displaying the servers and their associated configurations.
-
-</description>
-</context>
 <context id="svcp0000">
 <description>The Server view allows you to manage servers. This view displays a list of all your servers and the server configurations that are associated with each server. You can use this view to start, start in debug mode, restart, and stop servers.
 
@@ -165,61 +126,13 @@ The default setting is <b>Normal</b>.
 
 </description>
 </context>
-<context id="swnc0000">
-<description>This wizard creates a new server configuration, which contains information required to set up a server for testing or for publishing.
 
-</description>
-</context>
-<context id="swnc0002">
-<description>The name that you want to assign to this new server configuration.
-
-</description>
-</context>
-<context id="swnc0004">
-<description>The name of the server project folder in which you want the server configuration to reside. Select the name from the list of available server project folders or type in a new name.
-
-</description>
-</context>
-<context id="swnc0006">
-<description>The type of server that the new configuration represents. Select a type from the list and read the description that appears in the <b>Description</b> area of this wizard page.
-
-</description>
-</context>
-<context id="swni0000">
-<description>This wizard creates a new server, which contains information required to point to a specific run-time environment for local or remote testing, or for deployment to an application server.
-
-</description>
-</context>
-<context id="swni0002">
-<description>The name that you want to assign to this new server.
-
-</description>
-</context>
-<context id="swni0004">
-<description>The name of the server project folder in which you want the server to reside. Select the name from the list of available server project folders or type in a new name.
-
-</description>
-</context>
-<context id="swni0006">
-<description>The type of environment that you want to use for this server. A list of available server types is shown. For more details on each of the supported server types, select a type from the list and read the description that appears in the <b>Description</b> area of this wizard page.
-
-</description>
-</context>
 <context id="swns0000">
 <description>This wizard creates a new server and a new server configuration. A server contains information required to point to a specific run-time environment for local or remote testing, or for deployment to an application server. A server configuration contains information required to set up and deploy to a server.
 
 </description>
 </context>
-<context id="swns0002">
-<description>he name that you want to assign both to the server and the server configuration.
 
-</description>
-</context>
-<context id="swns0004">
-<description>The name of the server project folder in which you want the server to reside. Select the name from the list of available server project folders or type in a new name.
-
-</description>
-</context>
 <context id="swns0006">
 <description>The type of environment that you want to use for this server. A list of available server types is shown. For more details on each of the supported server types, select a type from the list and read the description that appears in the <b>Description</b> area of this wizard page.
 
@@ -267,36 +180,6 @@ The default setting is <b>Normal</b>.
 </context>
 <context id="swsl0000">
 <description>To confirm that you want to launch the selected object, click <b>Finish</b>.
-
-</description>
-</context>
-<context id="swmd0000">
-<description>In the Available projects list, specify the projects that you want to add to the server by clicking <b>Add</b>. When you select a project to add to the server, only the projects that are applicable to the type of server will appear. To remove a project from the Configured projects list, click <b>Remove</b>.
-
-</description>
-</context>
-<context id="swmd0002">
-<description>In the Available projects list, specify the projects that you want to add to the server by clicking <b>Add</b>. When you select a project to add to the server, only the projects that are applicable to the type of server will appear. To remove a project from the Configured projects list, click <b>Remove</b>.
-
-</description>
-</context>
-<context id="swmd0004">
-<description>In the Available projects list, specify the projects that you want to add to the server by clicking <b>Add</b>. When you select a project to add to the server, only the projects that are applicable to the type of server will appear. To remove a project from the Configured projects list, click <b>Remove</b>.
-
-</description>
-</context>
-<context id="swmd0006">
-<description>In the Available projects list, specify the projects that you want to add to the server by clicking <b>Add</b>. When you select a project to add to the server, only the projects that are applicable to the type of server will appear. To remove a project from the Configured projects list, click <b>Remove</b>.
-
-</description>
-</context>
-<context id="swmd0008">
-<description>In the Available projects list, specify the projects that you want to add to the server by clicking <b>Add</b>. When you select a project to add to the server, only the projects that are applicable to the type of server will appear. To remove a project from the Configured projects list, click <b>Remove</b>.
-
-</description>
-</context>
-<context id="swmd0010">
-<description>In the Available projects list, specify the projects that you want to add to the server by clicking <b>Add</b>. When you select a project to add to the server, only the projects that are applicable to the type of server will appear. To remove a project from the Configured projects list, click <b>Remove</b>.
 
 </description>
 </context>
