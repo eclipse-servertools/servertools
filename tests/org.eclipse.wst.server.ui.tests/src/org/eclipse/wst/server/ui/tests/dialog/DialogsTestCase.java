@@ -28,7 +28,7 @@ public class DialogsTestCase extends TestCase {
 		UITestHelper.assertDialog(dsd);
 	}
 
-	public void testTerminationDialog() {
+	public void _testTerminationDialog() {
 		TerminationDialog td = new TerminationDialog(getShell(), "MyServer with a really long name");
 		UITestHelper.assertDialog(td);
 	}
