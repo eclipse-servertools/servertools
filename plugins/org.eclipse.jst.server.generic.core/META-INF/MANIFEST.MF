@@ -6,13 +6,13 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.jst.server.generic.core.internal.CorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.jst.server.generic.core.internal,
- org.eclipse.jst.server.generic.core.internal.publishers,
- org.eclipse.jst.server.generic.internal.core.util,
- org.eclipse.jst.server.generic.internal.servertype.definition,
- org.eclipse.jst.server.generic.internal.servertype.definition.impl,
- org.eclipse.jst.server.generic.internal.servertype.definition.util,
- org.eclipse.jst.server.generic.internal.xml,
+Export-Package: org.eclipse.jst.server.generic.core.internal;x-internal:=true,
+ org.eclipse.jst.server.generic.core.internal.publishers;x-internal:=true,
+ org.eclipse.jst.server.generic.internal.core.util;x-internal:=true,
+ org.eclipse.jst.server.generic.internal.servertype.definition;x-internal:=true,
+ org.eclipse.jst.server.generic.internal.servertype.definition.impl;x-internal:=true,
+ org.eclipse.jst.server.generic.internal.servertype.definition.util;x-internal:=true,
+ org.eclipse.jst.server.generic.internal.xml;x-internal:=true,
  org.eclipse.jst.server.generic.servertype.definition
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
