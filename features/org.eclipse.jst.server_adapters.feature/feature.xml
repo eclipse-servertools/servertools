@@ -19,8 +19,8 @@
 
 
    <requires>
-      <import feature="org.eclipse.jst.server_core.feature" version="1.0.0" match="equivalent"/>
-      <import feature="org.eclipse.jst.server_ui.feature" version="1.0.0" match="equivalent"/>
+      <import feature="org.eclipse.jst.server_core.feature" version="1.0.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.jst.server_ui.feature" version="1.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin

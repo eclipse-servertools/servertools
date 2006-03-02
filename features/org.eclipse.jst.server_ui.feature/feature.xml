@@ -23,7 +23,7 @@
          version="0.0.0"/>
 
    <requires>
-      <import feature="org.eclipse.jst.server_core.feature" version="1.0.0"/>
+      <import feature="org.eclipse.jst.server_core.feature" version="1.0.0"  match="greaterOrEqual"/>
    </requires>
 
    <plugin
