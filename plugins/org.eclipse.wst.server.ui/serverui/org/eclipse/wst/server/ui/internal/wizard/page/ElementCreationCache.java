@@ -96,4 +96,18 @@ public class ElementCreationCache {
 
 		return null;
 	}
+
+	/**
+	 * Clears a cached server resource. 
+	 *
+	 * @param type the server type
+	 * @param host a hostname or IP
+	 */
+	public void clearCachedServer(IServerType type, String host) {
+		try {
+			elementCache.remove(getKey(type, host));
+		} catch (Exception e) {
+			// ignore
+		}
+	}
 }

@@ -91,7 +91,7 @@ public class NewManualServerComposite extends Composite {
 		this.listener = listener;
 		
 		this.moduleType = moduleType;
-
+		
 		createControl();
 		wizard.setMessage("", IMessageProvider.ERROR); //$NON-NLS-1$
 	}
@@ -133,11 +133,7 @@ public class NewManualServerComposite extends Composite {
 		runtimeCombo.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					runtime = runtimes[runtimeCombo.getSelectionIndex()];
-					if (server != null) {
-						server.setRuntime(runtime);
-						listener.runtimeSelected(runtime);
-					}
+					setRuntime(runtimes[runtimeCombo.getSelectionIndex()]);
 				} catch (Exception ex) {
 					// ignore
 				}
@@ -152,8 +148,8 @@ public class NewManualServerComposite extends Composite {
 		runtimeButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				if (showPreferencePage()) {
+					runtime = null;
 					IServerType serverType = serverTypeComposite.getSelectedServerType();
-					updateRuntimes(serverType);
 					updateRuntimeCombo(serverType);
 				}
 			}
@@ -199,6 +195,7 @@ public class NewManualServerComposite extends Composite {
 			server.setHost(host);
 			ServerUtil.setServerDefaultName(server);
 			runtime = server.getRuntime();
+			listener.runtimeSelected(runtime);
 			return;
 		}
 		
@@ -210,25 +207,26 @@ public class NewManualServerComposite extends Composite {
 					monitor = ProgressUtil.getMonitorFor(monitor);
 					int ticks = 200;
 					monitor.beginTask(NLS.bind(Messages.loadingTask, serverType.getName()), ticks);
-	
+					
 					server = cache.getServer(serverType, host, ProgressUtil.getSubMonitorFor(monitor, 200));
 					if (server != null) {
 						server.setHost(host);
 						ServerUtil.setServerDefaultName(server);
-					
+						
 						if (serverType.hasRuntime() && server.getRuntime() == null) {
 							runtime = null;
 							updateRuntimes(serverType);
-							runtime = getDefaultRuntime();
-							server.setRuntime(runtime);
+							setRuntime(getDefaultRuntime());
 							
-							if (server.getServerType().hasServerConfiguration()) {
+							if (server.getServerType().hasServerConfiguration() && !runtime.getLocation().isEmpty()) {
 								((ServerWorkingCopy)server).importConfiguration(runtime, null);
 							}
 						}
+						((ServerWorkingCopy)server).setDefaults(monitor);
 					}
 				} catch (CoreException cex) {
 					ce[0] = cex;
+					cache.clearCachedServer(serverType, host);
 				} catch (Throwable t) {
 					Trace.trace(Trace.SEVERE, "Error creating element", t); //$NON-NLS-1$
 				} finally {
@@ -242,9 +240,11 @@ public class NewManualServerComposite extends Composite {
 			Trace.trace(Trace.SEVERE, "Error with runnable", e); //$NON-NLS-1$
 		}
 	
-		if (ce[0] != null)
+		if (ce[0] != null) {
+			server = null;
+			runtime = null;
 			wizard.setMessage(ce[0].getLocalizedMessage(), IMessageProvider.ERROR);
-		else if (server == null)
+		} else if (server == null)
 			wizard.setMessage(Messages.wizErrorServerCreationError, IMessageProvider.ERROR);
 	}
 
@@ -302,7 +302,7 @@ public class NewManualServerComposite extends Composite {
 	}
 
 	protected void updateRuntimeCombo(IServerType serverType) {
-		if (serverType == null || !serverType.hasRuntime()) {
+		if (serverType == null || !serverType.hasRuntime() || server == null) {
 			if (runtimeLabel != null) {
 				runtimeLabel.setEnabled(false);
 				runtimeCombo.setItems(new String[0]);
@@ -313,9 +313,7 @@ public class NewManualServerComposite extends Composite {
 				runtimeButton.setVisible(false);
 			}
 			runtimes = new IRuntime[0];
-			runtime = null;
-			if (server != null)
-				server.setRuntime(null);
+			setRuntime(null);
 			return;
 		}
 		
@@ -330,10 +328,9 @@ public class NewManualServerComposite extends Composite {
 				items[i] = runtimes[i].getName();
 		}
 		
-		if (runtime == null) {
-			runtime = getDefaultRuntime();
-			server.setRuntime(runtime);
-		}
+		if (runtime == null)
+			setRuntime(getDefaultRuntime());
+		
 		if (runtimeCombo != null) {
 			runtimeCombo.setItems(items);
 			if (runtimes.length > 0) {
@@ -344,7 +341,7 @@ public class NewManualServerComposite extends Composite {
 				}
 				if (sel < 0) {
 					sel = 0;
-					server.setRuntime(runtimes[0]);
+					setRuntime(runtimes[0]);
 				}
 				
 				runtimeCombo.select(sel);
@@ -359,6 +356,13 @@ public class NewManualServerComposite extends Composite {
 			runtimeCombo.setVisible(showRuntime);
 			runtimeButton.setVisible(showRuntime);
 		}
+	}
+
+	protected void setRuntime(IRuntime runtime2) {
+		runtime = runtime2;
+		if (server != null)
+			server.setRuntime(runtime);
+		listener.runtimeSelected(runtime);
 	}
 
 	/**
