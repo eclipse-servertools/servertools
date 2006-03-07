@@ -18,18 +18,10 @@ import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.update.core.ISite;
-import org.eclipse.update.core.ISiteWithMirrors;
-import org.eclipse.update.core.IURLEntry;
-import org.eclipse.update.core.SiteManager;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.update.core.*;
 import org.eclipse.update.standalone.InstallCommand;
 import org.osgi.framework.Bundle;
 /**
@@ -123,28 +115,43 @@ public class InstallableRuntime implements IInstallableRuntime {
 		installRuntimeJob.schedule();
 	}
 
-	public static String getMirror(String fromSite, IProgressMonitor monitor) {
-		//	 if the site is a site containing mirrors, set the fromSite to the first
-		// mirror site since many mirror list generators will sort the mirrors to closest
-		// geographic location
-		String mirrorSite = null;
+	public static ISite getSite(String fromSite, IProgressMonitor monitor) {
 		try {
 			URL siteURL = new URL(fromSite);
-			ISite site = SiteManager.getSite(siteURL, monitor);
-			if (site != null && site instanceof ISiteWithMirrors) {
+			return SiteManager.getSite(siteURL, monitor);
+		} catch (MalformedURLException e) {
+			Trace.trace(Trace.WARNING, "Could not parse site", e);
+		} catch (CoreException e) {
+			Trace.trace(Trace.WARNING, "Could not parse site", e);
+		} catch (Exception e) {
+			Trace.trace(Trace.WARNING, "Could not parse site", e);
+		}
+		return null;
+	}
+
+	public static String getMirror(String fromSite, ISite site) {
+		if (site != null) {
+			String mirrorSite = getMirror(site);
+			if (mirrorSite != null) 
+				return mirrorSite;
+		}
+		return fromSite;
+	}
+
+	public static String getMirror(ISite site) {
+		// if the site is a site containing mirrors, set the fromSite to the
+		// first mirror site since many mirror list generators will sort the mirrors
+		// to closest geographic location
+		if (site != null && site instanceof ISiteWithMirrors) {
+			try {
 				IURLEntry[] urlEntries = ((ISiteWithMirrors) site).getMirrorSiteEntries();
 				if (urlEntries.length > 0)
-					mirrorSite = urlEntries[0].getURL().toExternalForm();
+					return urlEntries[0].getURL().toExternalForm();
+			} catch (CoreException e) {
+				Trace.trace(Trace.WARNING, "Could not find mirror site", e);
 			}
-		} catch (MalformedURLException e) {
-			Trace.trace(Trace.WARNING, "Could not find mirror site", e);
-		} catch (CoreException e) {
-			Trace.trace(Trace.WARNING, "Could not find mirror site", e);
 		}
-		
-		if (mirrorSite != null) 
-			return mirrorSite;
-		return fromSite;
+		return null;
 	}
 
 	/*
@@ -158,7 +165,8 @@ public class InstallableRuntime implements IInstallableRuntime {
 		if (featureId == null || featureVersion == null || fromSite == null)
 			return;
 		
-		fromSite = getMirror(fromSite, monitor);
+		ISite site = getSite(fromSite, monitor);
+		fromSite = getMirror(fromSite, site);
 		
 		// download and install plugins
 		Bundle bundle = Platform.getBundle(getBundleId());
@@ -166,11 +174,15 @@ public class InstallableRuntime implements IInstallableRuntime {
 			try {
 				monitor.setTaskName("Installing feature");
 				InstallCommand command = new InstallCommand(featureId, featureVersion, fromSite, null, "false");
-				command.run(monitor);
+				boolean b = command.run(monitor);
+				if (!b)
+					throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
+							Messages.errorInstallingServerFeature, null));
 				command.applyChangesNow();
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Error installing feature", e);
-				return;
+				throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
+						NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
 			}
 		}
 		
@@ -203,7 +215,9 @@ public class InstallableRuntime implements IInstallableRuntime {
 			}
 			zin.close();
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error installing feature", e);
+			Trace.trace(Trace.SEVERE, "Error unzipping runtime", e);
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
+					NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
 		} 
 	}
 

@@ -51,6 +51,8 @@ public class Messages extends NLS {
 	public static String errorStartTimeout;
 	public static String errorStartFailed;
 	public static String errorModuleRestartFailed;
+	public static String errorInstallingServer;
+	public static String errorInstallingServerFeature;
 	public static String canRestartModuleOk;
 	public static String errorRestartModule;
 	public static String canStartErrorState;

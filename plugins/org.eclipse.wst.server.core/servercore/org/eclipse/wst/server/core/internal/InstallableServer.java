@@ -13,6 +13,13 @@ package org.eclipse.wst.server.core.internal;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.PluginVersionIdentifier;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.update.core.ISite;
+import org.eclipse.update.core.ISiteFeatureReference;
+import org.eclipse.update.core.VersionedIdentifier;
 import org.eclipse.update.standalone.InstallCommand;
 /**
  * 
@@ -121,14 +128,21 @@ public class InstallableServer implements IInstallableServer {
 		if (featureId == null || featureVersion == null || fromSite == null)
 			return;
 		
-		fromSite = InstallableRuntime.getMirror(fromSite, monitor);
+		ISite site = InstallableRuntime.getSite(fromSite, monitor);
+		fromSite = InstallableRuntime.getMirror(fromSite, site);
+		featureVersion = getLatestVersion(site, featureVersion, featureId);
 		
 		try {
 			InstallCommand command = new InstallCommand(featureId, featureVersion, fromSite, null, "false");
-			command.run(monitor);
+			boolean b = command.run(monitor);
+			if (!b)
+				throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
+						Messages.errorInstallingServerFeature, null));
 			//command.applyChangesNow();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error installing feature", e);
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
+					NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
 		}
 		
 		try {
@@ -136,6 +150,31 @@ public class InstallableServer implements IInstallableServer {
 		} catch (Exception e) {
 			// ignore
 		}
+	}
+
+	public static String getLatestVersion(ISite site, String version, String featureId) {
+		String latestVersion = null;
+		
+		try {
+			PluginVersionIdentifier pvi = new PluginVersionIdentifier(version);
+			ISiteFeatureReference[] features = site.getFeatureReferences();
+			
+			for (int i = 0; i < features.length; i++) {
+				if (features[i].getName().equals(featureId)) {
+					VersionedIdentifier vi = features[i].getVersionedIdentifier();
+					if (vi.getVersion().isGreaterThan(pvi)) {
+						latestVersion = vi.getIdentifier();
+						pvi = new PluginVersionIdentifier(latestVersion);
+					}
+				}
+			}
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error searching for latest feature version", e);
+		}
+		
+		if (latestVersion == null)
+			return version;
+		return latestVersion;
 	}
 
 	public String toString() {

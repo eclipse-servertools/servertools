@@ -1055,7 +1055,7 @@ public class Server extends Base implements IServer {
 		try {
 			getBehaviourDelegate(monitor).setupLaunchConfiguration(workingCopy, monitor);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate setLaunchDefaults() " + toString(), e);
+			Trace.trace(Trace.SEVERE, "Error calling delegate setupLaunchConfiguration() " + toString(), e);
 		}
 	}
 
