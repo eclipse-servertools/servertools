@@ -11,6 +11,7 @@
 package org.eclipse.jst.server.tomcat.core.internal;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
@@ -36,9 +37,10 @@ public class TomcatSourcePathComputerDelegate implements ISourcePathComputerDele
 	 * @see org.eclipse.debug.core.sourcelookup.ISourcePathComputerDelegate#computeSourceContainers(org.eclipse.debug.core.ILaunchConfiguration, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public ISourceContainer[] computeSourceContainers(ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException {
-		IRuntimeClasspathEntry[] entries = JavaRuntime.computeUnresolvedSourceLookupPath(configuration);
+		List classpaths = new ArrayList();
+		classpaths.addAll(Arrays.asList(JavaRuntime.computeUnresolvedSourceLookupPath(configuration)));
 		List sourcefolderList = new ArrayList();
-
+		
 		IServer server = ServerUtil.getServer(configuration);
 		if (server != null) {
 			//IPath basePath = ((TomcatServerBehaviour)server.getAdapter(TomcatServerBehaviour.class)).getRuntimeBaseDirectory();
@@ -48,7 +50,6 @@ public class TomcatSourcePathComputerDelegate implements ISourcePathComputerDele
 			for (int i = 0; i < modules.length; i++) {
 				IProject project = modules[i].getProject();
 				if (project != null) {
-					
 					IFolder moduleFolder = project.getFolder(modules[i].getName());
 					if (moduleFolder.exists()) {
 						sourcefolderList.add(new FolderSourceContainer(moduleFolder, true));
@@ -72,20 +73,16 @@ public class TomcatSourcePathComputerDelegate implements ISourcePathComputerDele
 			IJavaProject[] projects = new IJavaProject[size];
 			list.toArray(projects);
 			
-			int size2 = entries.length;
-			//int size3 = pathList.size();
-			IRuntimeClasspathEntry[] entries2 = new IRuntimeClasspathEntry[size + size2];
-			System.arraycopy(entries, 0, entries2, 0, size2);
-			
 			for (int i = 0; i < size; i++)
-				entries2[size2 + i] = JavaRuntime.newProjectRuntimeClasspathEntry(projects[i]);
+				classpaths.addAll(Arrays.asList(JavaRuntime.computeUnresolvedRuntimeClasspath(projects[i])));
 			
-			//for (int i = 0; i < size3; i++)
+			// for (int i = 0; i < size3; i++)
 			//	entries2[size + size2 + i] = JavaRuntime.newArchiveRuntimeClasspathEntry((IPath) pathList.get(i));
-			
-			entries = entries2;
 		}
-		
+
+		IRuntimeClasspathEntry[] entries = new IRuntimeClasspathEntry[classpaths.size()];
+		classpaths.toArray(entries);
+
 		IRuntimeClasspathEntry[] resolved = JavaRuntime.resolveSourceLookupPath(entries, configuration);
 		ISourceContainer[] sourceContainers = JavaRuntime.getSourceContainers(resolved);
 		
