@@ -281,7 +281,7 @@ public class NewServerComposite extends Composite {
 		hostComp.setLayoutData(data);
 		return hostComp;
 	}
-	
+
 	protected void createAutoComposite(Composite comp) {
 		detectComp2 = new Composite(comp, SWT.NONE);
 		GridLayout layout = new GridLayout();

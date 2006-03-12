@@ -78,9 +78,9 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 		}
 	}
 
-	public void setHost(boolean newHost) {
+	public boolean setHost(boolean newHost) {
 		if (isLocalhost == newHost)
-			return;
+			return false;
 		
 		isLocalhost = newHost;
 		ISelection sel = treeViewer.getSelection();
@@ -88,6 +88,7 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 		treeViewer.refresh();
 		//treeViewer.expandToLevel(2);
 		treeViewer.setSelection(sel, true);
+		return true;
 	}
 
 	public void setIncludeIncompatibleVersions(boolean b) {

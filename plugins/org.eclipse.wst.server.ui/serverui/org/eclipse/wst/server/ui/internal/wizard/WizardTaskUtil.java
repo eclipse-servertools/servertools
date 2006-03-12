@@ -99,9 +99,9 @@ public class WizardTaskUtil {
 			workingCopy = server.createWorkingCopy();
 			
 			workingCopy.setRuntime(runtime);
-			if (workingCopy.getServerType().hasServerConfiguration()) {
-				((ServerWorkingCopy)workingCopy).importConfiguration(runtime, null);
-			}
+			if (workingCopy.getServerType().hasServerConfiguration())
+				((ServerWorkingCopy)workingCopy).importRuntimeConfiguration(runtime, null);
+			
 			taskModel.putObject(TaskModel.TASK_SERVER, workingCopy);
 		}
 	}

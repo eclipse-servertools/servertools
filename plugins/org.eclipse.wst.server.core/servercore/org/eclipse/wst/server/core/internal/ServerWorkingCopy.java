@@ -581,11 +581,38 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		return Platform.getAdapterManager().loadAdapter(this, adapter.getName());
 	}
 
+	/**
+	 * Import the server configuration from the given runtime.
+	 * 
+	 * @param runtime2
+	 * @param monitor
+	 * @deprecated should use importRuntimeConfiguration() instead
+	 */
 	public void importConfiguration(IRuntime runtime2, IProgressMonitor monitor) {
 		try {
 			getWorkingCopyDelegate(monitor).importConfiguration(runtime2, monitor);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate setLaunchDefaults() " + toString(), e);
+			Trace.trace(Trace.SEVERE, "Error calling delegate importConfiguration() " + toString(), e);
+		}
+	}
+
+	/**
+	 * Import the server configuration from the given runtime.
+	 * 
+	 * @param runtime2 a server runtime
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException if there is any problem importing the configuration
+	 *    from the runtime
+	 */
+	public void importRuntimeConfiguration(IRuntime runtime2, IProgressMonitor monitor) throws CoreException {
+		try {
+			getWorkingCopyDelegate(monitor).importRuntimeConfiguration(runtime2, monitor);
+		} catch (CoreException ce) {
+			Trace.trace(Trace.SEVERE, "CoreException calling delegate importConfiguration() " + toString(), ce);
+			throw ce;
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error calling delegate importConfiguration() " + toString(), e);
 		}
 	}
 

@@ -168,19 +168,23 @@ public class NewManualServerComposite extends Composite {
 		this.host = host;
 		if (serverTypeComposite == null)
 			return;
+		
+		boolean changed = false;
 		if (host == null) {
-			serverTypeComposite.setHost(true);
+			changed = serverTypeComposite.setHost(true);
 		} else if (SocketUtil.isLocalhost(host))
-			serverTypeComposite.setHost(true);
+			changed = serverTypeComposite.setHost(true);
 		else
-			serverTypeComposite.setHost(false);
-		handleTypeSelection(serverTypeComposite.getSelectedServerType());
-		if (server != null) {
+			changed = serverTypeComposite.setHost(false);
+		
+		if (changed)
+			handleTypeSelection(serverTypeComposite.getSelectedServerType());
+		else if (server != null) {
 			server.setHost(host);
 			ServerUtil.setServerDefaultName(server);
 		}
 	}
-	
+
 	/**
 	 * Return the current editable element.
 	 */
@@ -190,7 +194,9 @@ public class NewManualServerComposite extends Composite {
 		if (serverType == null)
 			return;
 		
-		server = cache.getCachedServer(serverType, host);
+		final boolean isLocalhost = SocketUtil.isLocalhost(host);
+		
+		server = cache.getCachedServer(serverType, isLocalhost);
 		if (server != null) {
 			server.setHost(host);
 			ServerUtil.setServerDefaultName(server);
@@ -208,7 +214,7 @@ public class NewManualServerComposite extends Composite {
 					int ticks = 200;
 					monitor.beginTask(NLS.bind(Messages.loadingTask, serverType.getName()), ticks);
 					
-					server = cache.getServer(serverType, host, ProgressUtil.getSubMonitorFor(monitor, 200));
+					server = cache.getServer(serverType, isLocalhost, ProgressUtil.getSubMonitorFor(monitor, 200));
 					if (server != null) {
 						server.setHost(host);
 						ServerUtil.setServerDefaultName(server);
@@ -218,15 +224,14 @@ public class NewManualServerComposite extends Composite {
 							updateRuntimes(serverType);
 							setRuntime(getDefaultRuntime());
 							
-							if (server.getServerType().hasServerConfiguration() && !runtime.getLocation().isEmpty()) {
-								((ServerWorkingCopy)server).importConfiguration(runtime, null);
-							}
+							if (server.getServerType().hasServerConfiguration() && !runtime.getLocation().isEmpty())
+								((ServerWorkingCopy)server).importRuntimeConfiguration(runtime, null);
 						}
 						((ServerWorkingCopy)server).setDefaults(monitor);
 					}
 				} catch (CoreException cex) {
 					ce[0] = cex;
-					cache.clearCachedServer(serverType, host);
+					cache.clearCachedServer(serverType, isLocalhost);
 				} catch (Throwable t) {
 					Trace.trace(Trace.SEVERE, "Error creating element", t); //$NON-NLS-1$
 				} finally {

@@ -22,6 +22,7 @@ public class Messages extends NLS {
 	public static String errorInstallDirTrailingSlash;
 	public static String errorJRE;
 	public static String warningJRE;
+	public static String warningCantReadConfig;
 	public static String target32runtime;
 	public static String target40runtime;
 	public static String target41runtime;

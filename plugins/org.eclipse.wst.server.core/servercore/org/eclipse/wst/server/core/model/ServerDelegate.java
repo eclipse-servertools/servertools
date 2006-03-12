@@ -365,8 +365,28 @@ public abstract class ServerDelegate {
 	 * @param runtime a server runtime
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
+	 * @deprecated should use importRuntimeConfiguration (which can throw a
+	 *    CoreException) instead
 	 */
 	public void importConfiguration(IRuntime runtime, IProgressMonitor monitor) {
+		try {
+			importRuntimeConfiguration(runtime, monitor);
+		} catch (CoreException ce) {
+			// ignore
+		}
+	}
+
+	/**
+	 * This method is called to import the server configuration from the given
+	 * runtime.
+	 * 
+	 * @param runtime a server runtime
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException if there is any problem importing the configuration
+	 *    from the runtime
+	 */
+	public void importRuntimeConfiguration(IRuntime runtime, IProgressMonitor monitor) throws CoreException {
 		// do nothing
 	}
 

@@ -40,25 +40,25 @@ public class ElementCreationCache {
 	 * Return the key to use for the given factory.
 	 *
 	 * @param type the server type
-	 * @param host the server host
+	 * @param isLocalhost true if the server is local
 	 * @return the key
 	 */
-	protected String getKey(IServerType type, String host) {
-		return type.getId() + "|" + host + "|";
+	protected String getKey(IServerType type, boolean isLocalhost) {
+		return type.getId() + "|" + isLocalhost + "|";
 	}
 
 	/**
 	 * Returns a server. 
 	 *
 	 * @param type
-	 * @param host a hostname or IP
+	 * @param isLocalhost true if the server is local
 	 * @param monitor a progress monitor
 	 * @return a server working copy
 	 * @throws CoreException if anything goes wrong
 	 */
-	public IServerWorkingCopy getServer(IServerType type, String host, IProgressMonitor monitor) throws CoreException {
+	public IServerWorkingCopy getServer(IServerType type, boolean isLocalhost, IProgressMonitor monitor) throws CoreException {
 		try {
-			IServerWorkingCopy server = getCachedServer(type, host);
+			IServerWorkingCopy server = getCachedServer(type, isLocalhost);
 			if (server != null)
 				return server;
 		} catch (Exception e) {
@@ -71,7 +71,7 @@ public class ElementCreationCache {
 			//	file = ServerUtil.getUnusedServerFile(WizardUtil.getServerProject(), type);
 			
 			IServerWorkingCopy server = type.createServer(null, file, (IRuntime)null, monitor);
-			elementCache.put(getKey(type, host), server);
+			elementCache.put(getKey(type, isLocalhost), server);
 			return server;
 		} catch (CoreException ce) {
 			throw ce;
@@ -82,12 +82,12 @@ public class ElementCreationCache {
 	 * Returns a cached server resource. 
 	 *
 	 * @param type the server type
-	 * @param host a hostname or IP
+	 * @param isLocalhost true if the server is local
 	 * @return a working copy
 	 */
-	public IServerWorkingCopy getCachedServer(IServerType type, String host) {
+	public IServerWorkingCopy getCachedServer(IServerType type, boolean isLocalhost) {
 		try {
-			IServerWorkingCopy server = (IServerWorkingCopy) elementCache.get(getKey(type, host));
+			IServerWorkingCopy server = (IServerWorkingCopy) elementCache.get(getKey(type, isLocalhost));
 			if (server != null)
 				return server;
 		} catch (Exception e) {
@@ -101,11 +101,11 @@ public class ElementCreationCache {
 	 * Clears a cached server resource. 
 	 *
 	 * @param type the server type
-	 * @param host a hostname or IP
+	 * @param isLocalhost true if the server is local
 	 */
-	public void clearCachedServer(IServerType type, String host) {
+	public void clearCachedServer(IServerType type, boolean isLocalhost) {
 		try {
-			elementCache.remove(getKey(type, host));
+			elementCache.remove(getKey(type, isLocalhost));
 		} catch (Exception e) {
 			// ignore
 		}
