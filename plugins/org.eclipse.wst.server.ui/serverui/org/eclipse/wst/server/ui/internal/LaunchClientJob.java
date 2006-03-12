@@ -41,7 +41,6 @@ public class LaunchClientJob extends ChainedJob {
 	 */
 	protected IStatus run(IProgressMonitor monitor) {
 		Trace.trace(Trace.FINER, "LaunchClient job");
-		IStatus status = Status.OK_STATUS;
 
 		// wait for up to 5 minutes
 		final Server server = (Server) getServer();
@@ -49,7 +48,8 @@ public class LaunchClientJob extends ChainedJob {
 		int count = ServerPreferences.getInstance().getModuleStartTimeout();
 		while (state == IServer.STATE_STARTING && count > 0) {
 			if (monitor.isCanceled())
-				return status;
+				return Status.CANCEL_STATUS;
+			
 			try {
 				Thread.sleep(2000);
 			} catch (Exception e) {
@@ -62,10 +62,10 @@ public class LaunchClientJob extends ChainedJob {
 		Trace.trace(Trace.FINER, "LaunchClient job 2 " + state);
 		
 		if (monitor.isCanceled())
-			return status;
+			return Status.CANCEL_STATUS;
 		
 		if (state == IServer.STATE_STARTING)
-			return status;
+			return Status.OK_STATUS;
 		
 		Trace.trace(Trace.FINER, "LaunchClient job 3");
 		
@@ -82,6 +82,6 @@ public class LaunchClientJob extends ChainedJob {
 			}
 		});
 		Trace.trace(Trace.FINER, "LaunchClient job 4");
-		return status;
+		return Status.OK_STATUS;
 	}
 }

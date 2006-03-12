@@ -334,8 +334,7 @@ public class ServersView extends ViewPart {
 		// open action
 		if (server != null) {
 			menu.add(new OpenAction(server));
-			if (server.getServerState() == IServer.STATE_UNKNOWN)
-				menu.add(new UpdateStatusAction(server));
+			menu.add(new UpdateStatusAction(server));
 			menu.add(new Separator());
 			
 			if (module == null)

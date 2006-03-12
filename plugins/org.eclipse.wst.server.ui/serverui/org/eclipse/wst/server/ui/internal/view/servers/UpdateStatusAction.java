@@ -28,6 +28,8 @@ public class UpdateStatusAction extends Action {
 	public UpdateStatusAction(IServer server) {
 		super(Messages.actionUpdateStatus);
 		this.server = server;
+		if (server.getServerState() != IServer.STATE_UNKNOWN)
+			setEnabled(false);
 	}
 
 	/**

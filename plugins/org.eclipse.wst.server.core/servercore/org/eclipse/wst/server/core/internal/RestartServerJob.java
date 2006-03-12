@@ -43,6 +43,9 @@ public class RestartServerJob extends ChainedJob {
 		
 		// block util the restart is completed
 		while (!isRestartCompleted) {
+			if (monitor.isCanceled())
+				return Status.CANCEL_STATUS;
+			
 			try {
 				Thread.sleep(250);
 			} catch (InterruptedException e) {
