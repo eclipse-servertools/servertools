@@ -17,7 +17,7 @@
    <topic label="Application testing and publishing" href="../org.eclipse.wst.server.ui.doc.user/topics/cwover.html">
       <topic label="Servers view" href="../org.eclipse.wst.server.ui.doc.user/topics/rwrcview.html"/>
       <topic label="Resources used by the Server Tools" href="../org.eclipse.wst.server.ui.doc.user/topics/cwres.html"/>
-      <topic label="Which test server will start" href="../org.eclipse.wst.server.ui.doc.user/topics/cwflow.html"/>
+      <topic label="Which server will start" href="../org.eclipse.wst.server.ui.doc.user/topics/cwflow.html"/>
       <topic label="Testing applications on a server" href="topics/tj2ee.html">
          <topic label="Testing artifacts on a server" href="topics/testing.html"/>
       </topic>
