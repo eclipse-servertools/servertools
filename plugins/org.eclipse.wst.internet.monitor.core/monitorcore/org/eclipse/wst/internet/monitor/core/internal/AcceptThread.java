@@ -51,6 +51,7 @@ public class AcceptThread {
 					try {
 						// connect to the remote server
 						Socket remoteSocket = new Socket();
+						remoteSocket.setSoTimeout(10000);
 						remoteSocket.connect(new InetSocketAddress(monitor.getRemoteHost(), monitor.getRemotePort()), monitor.getTimeout());
 						
 						// relay the call through
