@@ -16,6 +16,9 @@ import org.eclipse.jst.server.core.IEnterpriseApplication;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.wst.server.core.IModule;
 
+/**
+ * Utility for EAR module assembly.
+ */
 public class EarModuleAssembler extends AbstractModuleAssembler {
 
 	protected EarModuleAssembler(IModule module, GenericServer server)
@@ -31,7 +34,7 @@ public class EarModuleAssembler extends AbstractModuleAssembler {
 		IModule[] childModules = earModule.getModules();
 		for (int i = 0; i < childModules.length; i++) {
 			IModule module = childModules[i];
-			packModule(module, parent);
+			packModule(module,earModule.getURI(module), parent);
 		}
 	}
 }

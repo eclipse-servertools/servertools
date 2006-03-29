@@ -16,6 +16,10 @@ import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.wst.server.core.IModule;
 
+/**
+ * Assembly utility for war modules.
+ * 
+ */
 public class WarModuleAssembler extends AbstractModuleAssembler {
 	
 	protected WarModuleAssembler(IModule module, GenericServer server)
@@ -31,7 +35,7 @@ public class WarModuleAssembler extends AbstractModuleAssembler {
 		IModule[] childModules = webModule.getModules();
 		for (int i = 0; i < childModules.length; i++) {
 			IModule module = childModules[i];
-			packModule(module, parent.append("WEB-INF").append("lib"));
+			packModule(module, webModule.getURI(module), parent.append("WEB-INF").append("lib")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 }

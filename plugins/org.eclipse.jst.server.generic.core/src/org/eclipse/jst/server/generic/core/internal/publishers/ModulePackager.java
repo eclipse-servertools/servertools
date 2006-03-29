@@ -84,8 +84,12 @@ public class ModulePackager {
 		outputStream.closeEntry();
 	}
 
+	/**
+	 * @param destinationPath
+	 * @throws IOException
+	 */
 	public void writeFolder(String destinationPath) throws IOException {
-		if (!destinationPath.endsWith("/"))
+		if (!destinationPath.endsWith("/")) //$NON-NLS-1$
 			destinationPath = destinationPath + '/';
 		ZipEntry newEntry = new ZipEntry(destinationPath);
 		outputStream.putNextEntry(newEntry);
@@ -134,6 +138,12 @@ public class ModulePackager {
 		}
 	}
 
+	/**
+	 * @param contentStream
+	 * @param destinationPath
+	 * @throws IOException
+	 * @throws CoreException
+	 */
 	public void write(InputStream contentStream, String destinationPath) throws IOException, CoreException {
 		ByteArrayOutputStream output = null;
 

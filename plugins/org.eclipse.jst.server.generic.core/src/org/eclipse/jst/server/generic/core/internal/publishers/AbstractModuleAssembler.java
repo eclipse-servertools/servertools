@@ -17,18 +17,21 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.core.internal.GenericServer;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.model.IModuleFolder;
 import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.util.ProjectModule;
 
+/**
+ * Base class for module assemblers
+ * 
+ * @author Gorkem Ercan
+ */
 public abstract class AbstractModuleAssembler {
 
 	protected ServerRuntime fServerdefinition;
@@ -44,7 +47,19 @@ public abstract class AbstractModuleAssembler {
 	protected abstract void assemble(IProgressMonitor monitor) throws CoreException;
 
 	
+	/**
+	 * Factory for creating concrete module assemblers for 
+	 * corressponding module types.
+	 *
+	 */
 	public static class Factory {		
+		/**
+		 * Returns a concrete module assembler
+		 * 
+		 * @param module
+		 * @param server
+		 * @return assembler
+		 */
 		public static AbstractModuleAssembler getModuleAssembler(IModule module, GenericServer server)
 		{
 			
@@ -62,10 +77,10 @@ public abstract class AbstractModuleAssembler {
 		}
 	}
 	
-	protected void packModule(IModule module, IPath destination)throws CoreException {
-		String name = getDUName(module);
+	protected void packModule(IModule module, String deploymentUnitName, IPath destination)throws CoreException {
+		
 	
-		String dest = destination.append(name).toString();
+		String dest = destination.append(deploymentUnitName).toString();
 		ModulePackager packager = null;
 		try {
 			packager = new ModulePackager(dest, false);
@@ -87,22 +102,6 @@ public abstract class AbstractModuleAssembler {
 				//unhandled
 			}
 		}
-	}
-
-	private String getDUName(IModule module){
-		IModuleType moduleType = module.getModuleType();
-		if(moduleType==null)
-			return module.getName()+".jar";		
-		if("jst.web".equals(moduleType.getId())){
-			IWebModule webmodule = (IWebModule)module.loadAdapter(IWebModule.class, null);
-			return webmodule.getURI(module);
-		}
-		if("jst.ear".equals(moduleType.getId()))
-			return module.getName()+".ear";
-		if("jst.connector".equals(moduleType.getId()))
-			return module.getName()+".rar";
-		
-		return module.getName()+".jar";
 	}
 
 	private void doPackModule(IModuleResource resource, ModulePackager packager) throws CoreException, IOException{
