@@ -263,7 +263,7 @@ public class Monitor implements IMonitor {
 		int length = host.length();
 		for (int i = 0; i < length; i++) {
 			char c = host.charAt(i);
-			if (!Character.isLetterOrDigit(c) && c != ':' && c != '.')
+			if (!Character.isLetterOrDigit(c) && c != ':' && c != '.' && c != '-')
 				return false;
 		}
 		if (host.endsWith(":"))
