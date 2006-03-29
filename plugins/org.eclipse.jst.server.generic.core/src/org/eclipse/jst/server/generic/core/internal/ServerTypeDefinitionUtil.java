@@ -31,9 +31,9 @@ import org.eclipse.wst.server.core.IRuntime;
 public class ServerTypeDefinitionUtil 
 {
 	/**
-	 * 
+	 * Returns the server definition for runtime.
 	 * @param runtime
-	 * @return
+	 * @return serverRuntime
 	 */
 	public static ServerRuntime getServerTypeDefinition(IRuntime runtime)
 	{
@@ -49,9 +49,10 @@ public class ServerTypeDefinitionUtil
 		return definition;
 	}
 	/**
-	 * 
+	 * Extracts the server classpath entry array.
+	 *
 	 * @param runtime
-	 * @return
+	 * @return classpathEntry
 	 */
 	public static IClasspathEntry[] getServerClassPathEntry(IRuntime runtime)
 	{
