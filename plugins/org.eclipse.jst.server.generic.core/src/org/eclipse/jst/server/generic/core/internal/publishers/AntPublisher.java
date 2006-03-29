@@ -89,8 +89,12 @@ public class AntPublisher extends GenericPublisher{
 		if(getModule().length>1)// only respond to root module calls. 
 			return null;
 		try{
+			if(monitor.isCanceled())
+				return null;
 			assembleModule(monitor);
         	File file = computeBuildFile();
+        	if(monitor.isCanceled())
+        		return null;
         	runAnt(file.toString(),getPublishTargetsForModule(),getPublishProperties(),monitor);
         }catch(CoreException e){
             IStatus s = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,GenericServerCoreMessages.errorPublishAntpublisher,e);
@@ -107,7 +111,7 @@ public class AntPublisher extends GenericPublisher{
 
     /**
      * 
-     * @return
+     * @return file
      * @throws CoreException
      */
     private File computeBuildFile() throws CoreException {
