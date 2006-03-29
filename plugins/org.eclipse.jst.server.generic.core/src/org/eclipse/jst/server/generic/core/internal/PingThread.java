@@ -32,24 +32,23 @@ public class PingThread {
 	private int maxPings = 56; // total: 16 seconds + connection time
 
 	private boolean stop = false;
-	private String url;
-	private IServer server;
-	private GenericServerBehaviour genericServer;
+	private String fUrl;
+	private IServer fServer;
+	private GenericServerBehaviour fGenericServer;
 
 	/**
 	 * Create a new PingThread.
 	 * 
 	 * @param server
 	 * @param url
-	 * @param maxPings
 	 * @param genericServer
 	 */
 	public PingThread(IServer server, String url, GenericServerBehaviour genericServer) {
 		super();
-		this.server = server;
-		this.url = url;
+		this.fServer = server;
+		this.fUrl = url;
 		this.maxPings = guessMaxPings(genericServer);
-		this.genericServer = genericServer;
+		this.fGenericServer = genericServer;
 		Thread t = new Thread() {
 			public void run() {
 				ping();
@@ -68,7 +67,7 @@ public class PingThread {
     	return maxpings;
     }
 	private boolean isRemote(){
-		return (server.getServerType().supportsRemoteHosts()&& !SocketUtil.isLocalhost(server.getHost()) );
+		return (fServer.getServerType().supportsRemoteHosts()&& !SocketUtil.isLocalhost(fServer.getHost()) );
 	}
 	/**
 	 * Ping the server until it is started. Then set the server
@@ -85,9 +84,9 @@ public class PingThread {
 			try {
 				if (count == maxPings && !isRemote()) {
 					try {
-						server.stop(false);
+						fServer.stop(false);
 					} catch (Exception e) {
-						Trace.trace(Trace.FINEST, "Ping: could not stop server");
+						Trace.trace(Trace.FINEST, "Ping: could not stop server"); //$NON-NLS-1$
 					}
 					stop = true;
 					break;
@@ -95,16 +94,16 @@ public class PingThread {
 				if(!isRemote())
 					count++;
 				
-				Trace.trace(Trace.FINEST, "Ping: pinging");
-				URL pingUrl = new URL(url);
+				Trace.trace(Trace.FINEST, "Ping: pinging"); //$NON-NLS-1$
+				URL pingUrl = new URL(fUrl);
 				URLConnection conn = pingUrl.openConnection();
 				((HttpURLConnection)conn).getResponseCode();
 	
 				// ping worked - server is up
 				if (!stop) {
-					Trace.trace(Trace.FINEST, "Ping: success");
+					Trace.trace(Trace.FINEST, "Ping: success"); //$NON-NLS-1$
 					Thread.sleep(200);
-					genericServer.setServerStarted();
+					fGenericServer.setServerStarted();
 				}
 				if(!isRemote())
 					stop = true;
@@ -114,11 +113,11 @@ public class PingThread {
 				} catch (Exception e) {
 					// ignore
 				}
-				genericServer.setServerStarted();
+				fGenericServer.setServerStarted();
 				if(!isRemote())
 					stop = true;
 			} catch (Exception e) {
-				Trace.trace(Trace.FINEST, "Ping: failed");
+				Trace.trace(Trace.FINEST, "Ping: failed"); //$NON-NLS-1$
 				// pinging failed
 				if (!stop) {
 					try {
@@ -135,7 +134,7 @@ public class PingThread {
 	 * Tell the pinging to stop.
 	 */
 	public void stop() {
-		Trace.trace(Trace.FINEST, "Ping: stopping");
+		Trace.trace(Trace.FINEST, "Ping: stopping"); //$NON-NLS-1$
 		stop = true;
 	}
 }

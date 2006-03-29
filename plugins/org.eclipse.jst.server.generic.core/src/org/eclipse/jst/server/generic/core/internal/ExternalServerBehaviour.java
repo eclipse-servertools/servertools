@@ -41,13 +41,14 @@ import org.eclipse.wst.server.core.util.SocketUtil;
 public class ExternalServerBehaviour extends GenericServerBehaviour {
 	
 	// config for debugging session
-	private ILaunchConfigurationWorkingCopy wc;
-    private String mode;
-    private ILaunch launch; 
-    private IProgressMonitor monitor;
+	private ILaunchConfigurationWorkingCopy fLaunchConfigurationWC;
+    private String fMode;
+    private ILaunch fLaunch; 
+    private IProgressMonitor fProgressMonitor;
     
     /**
      * Override to reset the status if the state was unknown
+     * @param force 
      */
     public void stop(boolean force) {
     	resetStatus(getServer().getServerState());
@@ -66,7 +67,7 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
     	} catch (CoreException ce) {
     		ServerPort portInUse = portInUse();
     		if (portInUse != null) {
-    			Trace.trace(Trace.WARNING, "Port " + portInUse.getPort() + " is currently in use");
+    			Trace.trace(Trace.WARNING, "Port " + portInUse.getPort() + " is currently in use");  //$NON-NLS-1$//$NON-NLS-2$
 				Status status = new Status(IStatus.WARNING, CorePlugin.PLUGIN_ID, IStatus.OK, 
 							NLS.bind(GenericServerCoreMessages.errorPortInUse,Integer.toString(portInUse.getPort()),portInUse.getName()), null);
 				setServerStatus(status);
@@ -93,9 +94,9 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 	 * Override to trigger the launch of the debugging session (if appropriate).
 	 */
 	protected synchronized void setServerStarted() {
-		if (wc != null) {
+		if (fLaunchConfigurationWC != null) {
 			try {
-				ExternalLaunchConfigurationDelegate.startDebugging(wc, mode, launch, monitor);
+				ExternalLaunchConfigurationDelegate.startDebugging(fLaunchConfigurationWC, fMode, fLaunch, fProgressMonitor);
 			} catch (CoreException ce) {
 				// failed to start debugging, so set mode to run
 				setMode(ILaunchManager.RUN_MODE);
@@ -140,18 +141,21 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 		// if the shutdown did not terminate the process, forcibly terminate it
 		try {
     		if (currentProcess != null && !currentProcess.isTerminated()) {
-    			Trace.trace(Trace.FINER, "About to kill process: " + currentProcess);
+    			Trace.trace(Trace.FINER, "About to kill process: " + currentProcess); //$NON-NLS-1$
     			currentProcess.terminate();
     			currentProcess = null;
     		}
     	} catch (Exception e) {
-    		Trace.trace(Trace.SEVERE, "Error killing the process", e);
+    		Trace.trace(Trace.SEVERE, "Error killing the process", e); //$NON-NLS-1$
     	}
 	}
 	
 	/**
 	 * Override superclass method to correctly setup the launch configuration for starting an external
 	 * server.
+	 * @param workingCopy
+	 * @param monitor
+	 * @throws CoreException 
 	 */
 	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy,
 										 IProgressMonitor monitor) throws CoreException {
@@ -183,7 +187,7 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 	 * no such match is found, returns the first external that does not have an OS attribute.
 	 */
 	private String getExternalForOS(List externals) {
-		String currentOS = System.getProperty("os.name").toLowerCase();
+		String currentOS = System.getProperty("os.name").toLowerCase(); //$NON-NLS-1$
 		External external;
 		String matchingExternal = null;
 		String externalOS;
@@ -205,7 +209,7 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 
 	/**
      * Returns the String ID of the launch configuration type.
-     * @return
+     * @return launchTypeID
      */
 	protected String getConfigTypeID() {
 		return ExternalLaunchConfigurationDelegate.ID_EXTERNAL_LAUNCH_TYPE;
@@ -213,7 +217,7 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 
 	/**
 	 * Returns the String name of the stop launch configuration.
-	 * @return
+	 * @return launcherName
 	 */
 	protected String getStopLaunchName() {
 		return GenericServerCoreMessages.externalStopLauncher;
@@ -221,7 +225,7 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 	
 	/**
 	 * Sets up the launch configuration for stopping the server.
-	 * @param workingCopy
+	 * 
 	 */
 	protected void setupStopLaunchConfiguration(GenericServerRuntime runtime, ILaunchConfigurationWorkingCopy wc) {
 		clearDebuggingConfig();
@@ -247,17 +251,17 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 					 			      String mode,
 					 			      ILaunch launch, 
 					 			      IProgressMonitor monitor) {
-		this.wc = wc;
-		this.mode = mode;
-		this.launch = launch;
-		this.monitor = monitor;
+		this.fLaunchConfigurationWC = wc;
+		this.fMode = mode;
+		this.fLaunch = launch;
+		this.fProgressMonitor = monitor;
 	}
 	
 	private synchronized void clearDebuggingConfig() {
-		this.wc = null;
-		this.mode = null;
-		this.launch = null;
-		this.monitor = null;
+		this.fLaunchConfigurationWC = null;
+		this.fMode = null;
+		this.fLaunch = null;
+		this.fProgressMonitor = null;
 	}
 	
 	

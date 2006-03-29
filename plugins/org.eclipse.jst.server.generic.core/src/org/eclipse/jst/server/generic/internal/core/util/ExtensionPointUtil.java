@@ -23,15 +23,26 @@ import org.eclipse.jst.server.generic.core.internal.CorePlugin;
  * @author Gorkem Ercan
  */
 public class ExtensionPointUtil {
-    public static final String SERVERDEFINITION_EXTENSION_ID = "serverdefinition";
-    private static final String GENERICPUBLISHER_EXTENSION_ID = "genericpublisher";
+    /**
+     * serverdefinition extension id
+     */
+    public static final String SERVERDEFINITION_EXTENSION_ID = "serverdefinition"; //$NON-NLS-1$
+    private static final String GENERICPUBLISHER_EXTENSION_ID = "genericpublisher"; //$NON-NLS-1$
 
+    /**
+     * Returns serverdefinition extensions
+     * @return serverdefinitionExtensions
+     */
     public static IExtension[] getGenericServerDefinitionExtensions(){
-        return getExtensions(CorePlugin.PLUGIN_ID+"."+SERVERDEFINITION_EXTENSION_ID);
+        return getExtensions(CorePlugin.PLUGIN_ID+"."+SERVERDEFINITION_EXTENSION_ID); //$NON-NLS-1$
     }
     
+    /**
+     * Returns publisher extensions
+     * @return genericpublisher extensions
+     */
     public static IExtension[] getGenericPublisherExtension(){
-        return getExtensions(CorePlugin.PLUGIN_ID+"."+GENERICPUBLISHER_EXTENSION_ID);
+        return getExtensions(CorePlugin.PLUGIN_ID+"."+GENERICPUBLISHER_EXTENSION_ID); //$NON-NLS-1$
     }
 
     private static IExtension[] getExtensions(String extensionId){
@@ -48,10 +59,20 @@ public class ExtensionPointUtil {
     }
     
     
+    /**
+     * Returns the configuration elements
+     *
+     * @param extension
+     * @return configurationElements
+     */
     public static IConfigurationElement[] getConfigurationElements(IExtension extension){
         return extension!=null?extension.getConfigurationElements():null;
     }
     
+    /**
+     * Add listener to extension registry.
+     * @param listener
+     */
     public static void addRegistryListener(IRegistryChangeListener listener){
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		registry.addRegistryChangeListener(listener, CorePlugin.PLUGIN_ID);

@@ -71,7 +71,7 @@ public class ExternalLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 	/**
 	 * Default value for the descriptive name for the external executable.
 	 */
-	public static final String DEFAULT_EXECUTABLE_NAME = "External Generic Server";
+	public static final String DEFAULT_EXECUTABLE_NAME = "External Generic Server"; //$NON-NLS-1$
 	
 	/**
 	 * Debugging launch configuration delegate.
@@ -136,7 +136,7 @@ public class ExternalLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 			abort(GenericServerCoreMessages.errorLaunchingExecutable, ioe,  IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
 		}
 
-		if (mode.equals("debug")) {
+		if (mode.equals("debug")) { //$NON-NLS-1$
 			ILaunchConfigurationWorkingCopy wc = createDebuggingConfig(configuration);
 			// if we're launching the debugging we need to wait for the config to start
 			// before launching the debugging session
@@ -147,12 +147,12 @@ public class ExternalLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 	private ILaunchConfigurationWorkingCopy createDebuggingConfig(ILaunchConfiguration configuration) 
 	throws CoreException {
         ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
-        setDebugArgument(wc, IJavaLaunchConfigurationConstants.ATTR_CONNECT_MAP, "hostname", "localhost");
+        setDebugArgument(wc, IJavaLaunchConfigurationConstants.ATTR_CONNECT_MAP, "hostname", "localhost");  //$NON-NLS-1$//$NON-NLS-2$
         String port = configuration.getAttribute(DEBUG_PORT, (String) null);
         if (port==null || port.length()==0) {
         	abort(GenericServerCoreMessages.debugPortUnspecified, null, IJavaLaunchConfigurationConstants.ERR_INTERNAL_ERROR);
         }
-        setDebugArgument(wc, IJavaLaunchConfigurationConstants.ATTR_CONNECT_MAP, "port", port);
+        setDebugArgument(wc, IJavaLaunchConfigurationConstants.ATTR_CONNECT_MAP, "port", port); //$NON-NLS-1$
         return wc;
 	}
 	
@@ -163,7 +163,7 @@ public class ExternalLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 			       						 String mode,
 			       						 ILaunch launch, 
 			       						 IProgressMonitor monitor) throws CoreException {
-		Trace.trace(Trace.FINEST, "Starting debugging");
+		Trace.trace(Trace.FINEST, "Starting debugging"); //$NON-NLS-1$
 		debuggingDelegate.launch(wc, mode, launch, monitor);
 	}
 	
