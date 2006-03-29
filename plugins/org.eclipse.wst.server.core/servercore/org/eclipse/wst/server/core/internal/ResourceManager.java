@@ -42,7 +42,6 @@ public class ResourceManager {
 	// currently active runtimes and servers
 	protected List runtimes;
 	protected List servers;
-	protected IRuntime defaultRuntime;
 
 	// lifecycle listeners
 	protected transient List runtimeListeners;
@@ -366,11 +365,9 @@ public class ResourceManager {
 	protected void deregisterRuntime(IRuntime runtime) {
 		if (runtime == null)
 			return;
-
+		
 		Trace.trace(Trace.RESOURCES, "Deregistering runtime: " + runtime.getName());
-		if (runtime.equals(getDefaultRuntime()))
-			setDefaultRuntime(null);
-
+		
 		((Runtime)runtime).dispose();
 		fireRuntimeEvent(runtime, EVENT_REMOVED);
 		runtimes.remove(runtime);
@@ -458,12 +455,6 @@ public class ResourceManager {
 			ignorePreferenceChanges = true;
 			XMLMemento memento = XMLMemento.createWriteRoot("runtimes");
 			
-			if (defaultRuntime != null) {
-				int ind = runtimes.indexOf(defaultRuntime);
-				if (ind >= 0)
-					memento.putString("default", ind + "");
-			}
-
 			Iterator iterator = runtimes.iterator();
 			while (iterator.hasNext()) {
 				Runtime runtime = (Runtime) iterator.next();
@@ -520,14 +511,6 @@ public class ResourceManager {
 					Runtime runtime = new Runtime(null);
 					runtime.loadFromMemento(children[i], null);
 					runtimes.add(runtime);
-				}
-				
-				String s = memento.getString("default");
-				try {
-					int ind = Integer.parseInt(s);
-					defaultRuntime = (IRuntime) runtimes.get(ind);
-				} catch (Exception ex) {
-					// ignore
 				}
 			} catch (Exception e) {
 				Trace.trace(Trace.WARNING, "Could not load runtimes: " + e.getMessage());
@@ -608,11 +591,6 @@ public class ResourceManager {
 	public IRuntime[] getRuntimes() {
 		List list = new ArrayList(runtimes);
 		
-		if (defaultRuntime != null && list.contains(defaultRuntime)) {
-			list.remove(defaultRuntime);
-			list.add(0, defaultRuntime);
-		}
-		
 		IRuntime[] r = new IRuntime[list.size()];
 		list.toArray(r);
 		return r;
@@ -636,24 +614,25 @@ public class ResourceManager {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Returns the default runtime. Test API - do not use.
-	 *
+	 * 
+	 * @deprecated will be removed
 	 * @return java.util.List
 	 */
 	public IRuntime getDefaultRuntime() {
-		return defaultRuntime;
+		return null;
 	}
-	
+
 	/**
 	 * Sets the default runtime. Test API - do not use.
 	 * 
+	 * @deprecated will be removed
 	 * @param runtime a runtime
 	 */
 	public void setDefaultRuntime(IRuntime runtime) {
-		defaultRuntime = runtime;
-		saveRuntimesList();
+		// ignore
 	}
 
 	public void resolveRuntimes() {

@@ -10,15 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
-import org.eclipse.jface.viewers.CheckboxTableViewer;
-import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.ICheckStateListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -29,9 +21,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
-import org.eclipse.wst.server.core.internal.ResourceManager;
 import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.Trace;
 /**
  * 
  */
@@ -140,36 +130,14 @@ public class RuntimeComposite extends AbstractTableComposite {
 				// do nothing
 			}
 		});
-		
-		final ResourceManager rm = ResourceManager.getInstance();
-		defaultRuntime = rm.getDefaultRuntime();
-		if (defaultRuntime != null)
-			((CheckboxTableViewer)tableViewer).setChecked(defaultRuntime, true);
-
-		((CheckboxTableViewer)tableViewer).addCheckStateListener(new ICheckStateListener() {
-			public void checkStateChanged(CheckStateChangedEvent event) {
-				try {
-					IRuntime runtime = (IRuntime) event.getElement();
-					if (event.getChecked()) {
-						if (defaultRuntime != null && !runtime.equals(defaultRuntime))
-							((CheckboxTableViewer)tableViewer).setChecked(defaultRuntime, false);
-						rm.setDefaultRuntime(runtime);
-						defaultRuntime = runtime;
-					} else
-						rm.setDefaultRuntime(null);
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error setting default runtime", e);
-				}
-			}
-		});
 	}
 
 	protected void createTable() {
-		table = new Table(this, SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE | SWT.CHECK);
+		table = new Table(this, SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE);
 	}
 
 	protected void createTableViewer() {
-		tableViewer = new LockedCheckboxTableViewer(table);
+		tableViewer = new LockedTableViewer(table);
 	}
 
 	public IRuntime getSelectedRuntime() {

@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ * 
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  **********************************************************************/
@@ -207,14 +207,14 @@ public abstract class ServerDelegate {
 	public abstract IStatus canModifyModules(IModule[] add, IModule[] remove);
 
 	/**
-	 * Returns the child module(s) of this module. If this
-	 * module contains other modules, it should list those
-	 * modules. If not, it should return an empty list.
-	 *
-	 * <p>This method should only return the direct children.
-	 * To obtain the full module tree, this method may be
+	 * Returns the child module(s) of this module. If this module contains other
+	 * modules, it should list those modules. If not, it should return an empty
+	 * list.
+	 * 
+	 * <p>This method should only return the direct children. To obtain the full
+	 * tree of modules if they are multiple levels deep, this method may be
 	 * recursively called on the children.</p>
-	 *
+	 * 
 	 * @param module a module
 	 * @return the child modules
 	 * @see IServerAttributes#getChildModules(IModule[], IProgressMonitor)

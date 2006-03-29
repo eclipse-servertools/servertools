@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ * 
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  **********************************************************************/
@@ -1024,10 +1024,10 @@ public class Server extends Base implements IServer {
 		
 		if (getServerType() == null || !getServerType().supportsLaunchMode(mode2))
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorLaunchMode, null);
-
+		
 		return Status.OK_STATUS;
 	}
-	
+
 	public ILaunch getExistingLaunch() {
 		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
 		
