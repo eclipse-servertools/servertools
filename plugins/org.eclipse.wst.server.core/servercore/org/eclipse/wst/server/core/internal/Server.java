@@ -126,6 +126,9 @@ public class Server extends Base implements IServer {
 			
 			Trace.trace(Trace.FINEST, "Auto-publish thread publishing " + Server.this);
 			
+			if (getServerState() != IServer.STATE_STARTED)
+				return;
+			
 			PublishServerJob publishJob = new PublishServerJob(Server.this, IServer.PUBLISH_AUTO, false);
 			publishJob.schedule();
 		}
@@ -485,12 +488,12 @@ public class Server extends Base implements IServer {
 		if (getServerState() != IServer.STATE_STOPPED && behaviourDelegate != null)
 			behaviourDelegate.handleResourceChange();
 		
-		if (getServerState() != IServer.STATE_STOPPED)
+		if (getServerState() == IServer.STATE_STARTED)
 			autoPublish();
 		
 		Trace.trace(Trace.FINEST, "< handleDeployableProjectChange()");
 	}
-	
+
 	protected void stopAutoPublish() {
 		if (autoPublishThread == null)
 			return;
@@ -1908,18 +1911,19 @@ public class Server extends Base implements IServer {
 		//restartNeeded = wc.restartNeeded;
 		serverType = wc.serverType;
 		modules = wc.modules;
-
+		
 		// can never modify the following properties via the working copy
 		//serverState = wc.serverState;
 		delegate = wc.delegate;
 		
-		autoPublish();
+		if (getServerState() == IServer.STATE_STARTED)
+			autoPublish();
 	}
 
 	protected void saveState(IMemento memento) {
 		if (serverType != null)
 			memento.putString("server-type", serverType.getId());
-
+		
 		if (configuration != null)
 			memento.putString(CONFIGURATION_ID, configuration.getFullPath().toString());
 		else
