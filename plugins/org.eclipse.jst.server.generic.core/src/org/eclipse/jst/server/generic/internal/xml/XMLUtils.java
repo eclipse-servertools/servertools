@@ -32,12 +32,20 @@ import org.eclipse.jst.server.generic.internal.servertype.definition.util.Server
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.osgi.framework.Bundle;
 
+/**
+ * Utility for handling the xml data from .serverdef files
+ * 
+ * @author Gorkem Ercan
+ */
 public class XMLUtils {
 
 	
     private ArrayList definitions;
 
 
+	/**
+	 * Constructor
+	 */
 	public XMLUtils() {
 		refresh();
 	}
@@ -54,7 +62,7 @@ public class XMLUtils {
                 definitionFile = getDefinitionFile(element);
                 ServerRuntime runtime =readFile(definitionFile);
                     if(runtime!=null){
-                        runtime.setId(element.getAttribute("id"));
+                        runtime.setId(element.getAttribute("id")); //$NON-NLS-1$
                         runtime.setConfigurationElementNamespace(element.getNamespace());
                         definitions.add(runtime);
                     }
@@ -64,14 +72,12 @@ public class XMLUtils {
        }
 
 
-    /**
-     * @param extension
-     */
+
     private java.net.URI getDefinitionFile(IConfigurationElement element) {
         
         Bundle bundle = Platform.getBundle(element.getNamespace());
-        String definitionFile = element.getAttribute("definitionfile");
-        Trace.trace(Trace.FINEST,"Loading serverdef file "+definitionFile+" from bundle "+bundle.getSymbolicName());
+        String definitionFile = element.getAttribute("definitionfile"); //$NON-NLS-1$
+        Trace.trace(Trace.FINEST,"Loading serverdef file "+definitionFile+" from bundle "+bundle.getSymbolicName()); //$NON-NLS-1$ //$NON-NLS-2$
         
         URL url = bundle.getEntry(definitionFile);
 		try {
@@ -106,7 +112,7 @@ public class XMLUtils {
             // sth wrong with this .server file.
             CorePlugin.getDefault().getLog().log(
                     new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 1,
-                            "Error loading the server type definition", e));
+                            "Error loading the server type definition", e)); //$NON-NLS-1$
         }
 
         if (resource != null) {
@@ -128,6 +134,11 @@ public class XMLUtils {
 		return definitions;
 	}
 
+    /**
+     * Get the memory presentation for the .serverdef file
+     * @param id
+     * @return serverRuntime
+     */
     public ServerRuntime getServerTypeDefinition(String id) {
     	Iterator defs = getServerTypeDefinitions().iterator();
         while (defs.hasNext()) {

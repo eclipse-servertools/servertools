@@ -40,7 +40,7 @@ import org.eclipse.wst.server.core.model.ServerDelegate;
  */
 public class GenericServer extends ServerDelegate implements IURLProvider {
 
-    private static final String ATTR_GENERIC_SERVER_MODULES = "Generic_Server_Modules_List";
+    private static final String ATTR_GENERIC_SERVER_MODULES = "Generic_Server_Modules_List"; //$NON-NLS-1$
 
 	public IStatus canModifyModules(IModule[] add, IModule[] remove) {
 		List moduleTypes = getServerDefinition().getModule();
@@ -55,7 +55,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 			}
         }
 		if(found==add.length)
-			return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "CanModifyModules", null);
+			return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "CanModifyModules", null); //$NON-NLS-1$
 		return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.moduleNotCompatible, null);
 	}
 	
@@ -135,7 +135,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 		while (pIter.hasNext()) {
 			Port element = (Port) pIter.next();
 			int port = Integer.parseInt(getServerDefinition().getResolver().resolveProperties(element.getNo()));
-			ports.add(new ServerPort("server", element.getName(), port, element.getProtocol()));		
+			ports.add(new ServerPort("server", element.getName(), port, element.getProtocol()));		 //$NON-NLS-1$
 		}
 	
 		return (org.eclipse.wst.server.core.ServerPort[])ports.toArray(new org.eclipse.wst.server.core.ServerPort[ports.size()]);
@@ -152,29 +152,30 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 				return null;
 
             String host = getServer().getHost();
-			String url = "http://"+host;
+			String url = "http://"+host; //$NON-NLS-1$
 			int port = 0;
 			
 			port = getHttpPort();
-			port =ServerUtil.getMonitoredPort(getServer(), port, "web");
+			port =ServerUtil.getMonitoredPort(getServer(), port, "web"); //$NON-NLS-1$
 			if (port != 80)
-				url += ":" + port;
+				url += ":" + port; //$NON-NLS-1$
 
-			url += "/"+module.getName();
+			url += "/"+module.getName(); //$NON-NLS-1$
 
-			if (!url.endsWith("/"))
-				url += "/";
+			if (!url.endsWith("/")) //$NON-NLS-1$
+				url += "/"; //$NON-NLS-1$
 
 			return new URL(url);
 		} catch (Exception e) {
-			Trace.trace("Could not get root URL", e);
+			Trace.trace("Could not get root URL", e); //$NON-NLS-1$
 			return null;
 		}
 
 	}
 
 	/**
-	 * @return
+	 * Return http port
+	 * @return port
 	 */
 	protected int getHttpPort() {
 		int port=-1;
@@ -183,7 +184,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 			Port aPort = (Port) pIter.next();
 			if(port== -1)
 				port = Integer.parseInt(getServerDefinition().getResolver().resolveProperties(aPort.getNo()));
-			else if( "http".equals(aPort.getProtocol() ) )
+			else if( "http".equals(aPort.getProtocol() ) ) //$NON-NLS-1$
 				port = Integer.parseInt(aPort.getNo());	
 		}
 		if( port == -1)
@@ -252,7 +253,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
  	}
  	/**
  	 * Checks if the properties set for this server is valid. 
- 	 * @return
+ 	 * @return status
  	 */
  	public IStatus validate() {
  		List props = this.getServerDefinition().getProperty();
@@ -266,7 +267,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
  					return  new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, NLS.bind(GenericServerCoreMessages.invalidPath,path), null);
  			}
  		}
- 		return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "", null);
+ 		return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
  	}
 	private boolean pathExist(String path){
 		File f = new File(path);

@@ -1,4 +1,3 @@
-
 /***************************************************************************************************
  * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
  * accompanying materials are made available under the terms of the Eclipse Public License v1.0
@@ -194,7 +193,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 
     /**
      * Returns the String ID of the launch configuration type.
-     * @return
+     * @return id
      */
 	protected String getConfigTypeID() {
 		return IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION;
@@ -202,7 +201,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 
 	/**
 	 * Returns the String name of the stop launch configuration.
-	 * @return
+	 * @return launchname
 	 */
 	protected String getStopLaunchName() {
 		return "GenericServerStopper"; //$NON-NLS-1$
@@ -213,7 +212,6 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 	}	
 	/**
 	 * Sets up the launch configuration for stopping the server.
-	 * @param workingCopy
 	 */
 	protected void setupStopLaunchConfiguration(GenericServerRuntime runtime, ILaunchConfigurationWorkingCopy wc) {
 		if(isRemote())// Do not launch for remote servers.
@@ -249,10 +247,18 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 				getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStop().getVmParametersAsString()));				
 	}
 
+    /**
+     * Start class name
+     * @return name
+     */
     public String getStartClassName() {
     	return getServerDefinition().getResolver().resolveProperties(getServerDefinition().getStart().getMainClass());
     }
 
+    /** 
+     * Server definition
+     * @return serverdef
+     */
     public ServerRuntime getServerDefinition() {
         GenericServer server = (GenericServer)getServer().loadAdapter(ServerDelegate.class, null);
         return server.getServerDefinition();
@@ -269,7 +275,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 
     /**
      * @param cpRef
-     * @return
+     * @return classpath
      */
     protected List serverClasspath(String cpRef) {
     	Classpath classpath = getServerDefinition().getClasspath(cpRef);

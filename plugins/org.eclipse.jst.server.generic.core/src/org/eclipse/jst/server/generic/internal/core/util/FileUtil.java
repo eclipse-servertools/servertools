@@ -27,6 +27,13 @@ public class FileUtil {
 
 	
 	
+	/**
+	 * Returns a resolved equivalent of url, use with the 
+	 * platform relative urls
+	 * 
+	 * @param url
+	 * @return URL
+	 */
 	public static URL resolveURL(URL url){
 		try{
 			return Platform.resolve(url);
@@ -38,6 +45,12 @@ public class FileUtil {
 	
 	
 	
+	/**
+	 * Create a temporary file
+	 * @param name
+	 * @param dir
+	 * @return file
+	 */
 	public static File createTempFile(String name, String dir){
 		if(name==null || dir == null)
 			return null;
@@ -54,6 +67,12 @@ public class FileUtil {
 	
 	}
 	
+	/**
+	 * Copies a file
+	 * @param input
+	 * @param output
+	 * @throws IOException
+	 */
 	public static void copy(InputStream input, OutputStream output) throws IOException{
 		byte[] buf = new byte[4096];
 		int len = input.read(buf);
@@ -84,6 +103,12 @@ public class FileUtil {
 		path.deleteOnExit();
 	}
 
+    /**
+     * Resolves a URL to a file.
+     * 
+     * @param url
+     * @return file
+     */
     public static File resolveFile(URL url){
         try {
             URL resolvedUrl = resolveURL(url);

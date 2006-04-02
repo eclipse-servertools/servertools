@@ -39,9 +39,8 @@ public abstract class GenericPublisher
     * removed form the server instance. 
     * Subclasses may extend this method to perform their own module removal
     * 
-    * @param module
     * @param monitor
-    * @return
+    * @return status
     */ 
    public abstract IStatus[] unpublish(IProgressMonitor monitor);
     
@@ -52,18 +51,30 @@ public abstract class GenericPublisher
      * 
      * @param resource
      * @param monitor
-     * @return
+     * @return status
      */
     public abstract IStatus[] publish(IModuleArtifact[] resource,
             IProgressMonitor monitor);
    
+    /**
+     * Returns the module associated with this publisher instance
+     * @return module
+     */
     public IModule[] getModule() {
         return fModule;
     }
 
+    /**
+     * Generic server instance
+     * @return server
+     */
     public GenericServer getServer(){
     	return fServer;
     }
+    /**
+     * a handle to server definition.
+     * @return serverdef
+     */
     public GenericServerRuntime getServerRuntime() {
         return fServerRuntime;
     }

@@ -46,8 +46,13 @@ public class GenericServerRuntimeTargetHandler extends RuntimeClasspathProviderD
 		return ServerTypeDefinitionUtil.getServerClassPathEntry(runtime);
 	}
     
-	/* (non-Javadoc)
-     * @see ClasspathRuntimeTargetHandler#getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor)
+
+	/**
+	 * Read the classpath entries for the serverdef.
+	 * 
+	 * @param runtime
+	 * @param monitor
+	 * @return classpathEntries
 	 */
 	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
 		GenericServerRuntime genericRuntime = (GenericServerRuntime)runtime.loadAdapter(GenericServerRuntime.class, monitor);

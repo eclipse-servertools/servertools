@@ -35,7 +35,7 @@ public class WarModuleAssembler extends AbstractModuleAssembler {
 		IModule[] childModules = webModule.getModules();
 		for (int i = 0; i < childModules.length; i++) {
 			IModule module = childModules[i];
-			packModule(module, webModule.getURI(module), parent.append("WEB-INF").append("lib")); //$NON-NLS-1$ //$NON-NLS-2$
+			packModule(module, webModule.getURI(module), parent);
 		}
 	}
 }

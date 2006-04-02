@@ -35,24 +35,38 @@ import org.eclipse.wst.server.core.model.RuntimeDelegate;
  */
 public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntime
 {
-	private static final String PROP_VM_INSTALL_TYPE_ID = "vm-install-type-id";
-	private static final String PROP_VM_INSTALL_ID = "vm-install-id";
-	public static final String SERVER_DEFINITION_ID = "server_definition_id";
-	public static final String SERVER_INSTANCE_PROPERTIES = "generic_server_instance_properties";
+	/**
+	 * Server definition attribute id in the server attributes
+	 */
+	public static final String SERVER_DEFINITION_ID = "server_definition_id"; //$NON-NLS-1$
+	/**
+	 * Server instance properties attribute id on server attributes
+	 */
+	public static final String SERVER_INSTANCE_PROPERTIES = "generic_server_instance_properties"; //$NON-NLS-1$	
+	private static final String PROP_VM_INSTALL_TYPE_ID = "vm-install-type-id"; //$NON-NLS-1$
+	private static final String PROP_VM_INSTALL_ID = "vm-install-id"; //$NON-NLS-1$
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jst.server.core.IGenericRuntime#getVMInstallTypeId()
+
+	/**
+	 * Returns the vm type id
+	 * @return id
 	 */
 	public String getVMInstallTypeId() {
 		return getAttribute(PROP_VM_INSTALL_TYPE_ID, (String)null);
 	}
 	
+	/**
+	 * Is use default VM selected
+	 * @return boolean
+	 */
 	public boolean isUsingDefaultJRE() {
 		return getVMInstallTypeId() == null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jst.server.core.IGenericRuntime#getVMInstallId()
+
+	/**
+	 * Returns VM id
+	 * @return id
 	 */
 	public String getVMInstallId() {
 		return getAttribute(PROP_VM_INSTALL_ID, (String)null);
@@ -115,7 +129,7 @@ public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntim
 		                return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,NLS.bind(GenericServerCoreMessages.errorMissingClasspathEntry,f.getPath()),null);	
 			}
 		}
-        return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "", null);
+        return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
 	}
 	
 	/**
@@ -133,6 +147,10 @@ public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntim
 	   return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(id,properties);
 	}
 	
+	/**
+	 * SetVM to be used
+	 * @param vmInstall
+	 */
 	public void setVMInstall(IVMInstall vmInstall) {
 		if (vmInstall == null) {
 			setVMInstall(null, null);
@@ -153,18 +171,34 @@ public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntim
 	}
 	
 	
+	/**
+	 * Return instance proerties
+	 * @return property map
+	 */
 	public Map getServerInstanceProperties() {
 		return getAttribute(SERVER_INSTANCE_PROPERTIES, new HashMap());
 	}
 	
+	/**
+	 * Returns serverdef id
+	 * @return serverdef id
+	 */
 	public String getServerDefinitionId() {
 		return getAttribute(SERVER_DEFINITION_ID, (String) null);
 	}
 	
+	/**
+	 * set instance properties
+	 * @param map
+	 */
 	public void setServerInstanceProperties(Map map) {
 		setAttribute(SERVER_INSTANCE_PROPERTIES, map);
 	}
 	
+	/**
+	 * Set serverdef id
+	 * @param s
+	 */
 	public void setServerDefinitionId(String s) {
 		setAttribute(SERVER_DEFINITION_ID, s);
 	}

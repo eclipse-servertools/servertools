@@ -158,24 +158,15 @@ public class AntPublisher extends GenericPublisher{
         } 	
     }
    
-    /**
-     * @return
-     */
+
     private String getPublishTargetsForModule() {
     	return doGetTargets(MODULE_PUBLISH_TARGET_PREFIX+getModuleTypeId());
     }
 
-    /**
-     * @return
-     */
     private String getUnpublishTargetsForModule() {
         return doGetTargets(MODULE_UNPUBLISH_TARGET_PREFIX+getModuleTypeId());
     }
     
-    /**
-     * @param dataname
-     * @return
-     */
     private String doGetTargets(String dataname) {
     	StringBuffer buffer = new StringBuffer();
     	Iterator iterator = getServerRuntime().getServerTypeDefinition().getPublisher(PUBLISHER_ID).getPublisherdata().iterator();

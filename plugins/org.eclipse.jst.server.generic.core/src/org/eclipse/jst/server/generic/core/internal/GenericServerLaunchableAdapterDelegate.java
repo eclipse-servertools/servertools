@@ -29,6 +29,9 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
  * @author Gorkem Ercan 
  */
 public class GenericServerLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
+	private static final String JAVA_NAMING_PROVIDER_URL_PROPKEY = "java.naming.provider.url"; //$NON-NLS-1$
+	private static final String JAVA_NAMING_FACTORY_INITIAL_PROPKEY = "java.naming.factory.initial"; //$NON-NLS-1$
+
 	/*
 	 * @see ILaunchableAdapterDelegate#getLaunchable(IServer, IModuleObject)
 	 */
@@ -49,8 +52,8 @@ public class GenericServerLaunchableAdapterDelegate extends LaunchableAdapterDel
         GenericServer genericServer = (GenericServer)delegate;
         ServerRuntime definition = genericServer.getServerDefinition();
         Properties props = new Properties();
-        props.put("java.naming.factory.initial",definition.getJndiConnection().getInitialContextFactory());
-        props.put("java.naming.provider.url",definition.getJndiConnection().getProviderUrl());
+        props.put(JAVA_NAMING_FACTORY_INITIAL_PROPKEY,definition.getJndiConnection().getInitialContextFactory());
+        props.put(JAVA_NAMING_PROVIDER_URL_PROPKEY,definition.getJndiConnection().getProviderUrl());
         List jps = definition.getJndiConnection().getJndiProperty();
         Iterator propsIt =jps.iterator();
         while(propsIt.hasNext()){
@@ -74,35 +77,35 @@ public class GenericServerLaunchableAdapterDelegate extends LaunchableAdapterDel
     /**
      * @param moduleObject
      * @param delegate
-     * @return
+     * @return object
      */
     private Object prepareHttpLaunchable(IModuleArtifact moduleObject, ServerDelegate delegate) {
         try {
 			URL url = ((IURLProvider) delegate).getModuleRootURL(moduleObject.getModule());
 			
-			Trace.trace("root: " + url);
+			Trace.trace("root: " + url); //$NON-NLS-1$
 
 			if (moduleObject instanceof Servlet) {
 				Servlet servlet = (Servlet) moduleObject;
 				if (servlet.getAlias() != null) {
 					String path = servlet.getAlias();
-					if (path.startsWith("/"))
+					if (path.startsWith("/")) //$NON-NLS-1$
 						path = path.substring(1);
 					url = new URL(url, path);
 				} else
-					url = new URL(url, "servlet/" + servlet.getServletClassName());
+					url = new URL(url, "servlet/" + servlet.getServletClassName()); //$NON-NLS-1$
 			} else if (moduleObject instanceof WebResource) {
 				WebResource resource = (WebResource) moduleObject;
 				String path = resource.getPath().toString();
-				Trace.trace("path: " + path);
-				if (path != null && path.startsWith("/") && path.length() > 0)
+				Trace.trace("path: " + path); //$NON-NLS-1$
+				if (path != null && path.startsWith("/") && path.length() > 0) //$NON-NLS-1$
 					path = path.substring(1);
 				if (path != null && path.length() > 0)
 					url = new URL(url, path);
 			} 
 			return new HttpLaunchable(url);
 		} catch (Exception e) {
-			Trace.trace("Error getting URL for " + moduleObject, e);
+			Trace.trace("Error getting URL for " + moduleObject, e); //$NON-NLS-1$
 			return null;
 		}
     }

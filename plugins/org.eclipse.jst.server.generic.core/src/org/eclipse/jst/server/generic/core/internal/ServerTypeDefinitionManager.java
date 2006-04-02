@@ -60,7 +60,7 @@ public class ServerTypeDefinitionManager
 	
 	/**
 	 * Returns all the ServerRuntimes registered a .serverdef.
-	 * @return
+	 * @return serverRuntimes
 	 */
 	public ServerRuntime[] getServerTypeDefinitions(){
 		 List definitionList = fXmlUtils.getServerTypeDefinitions();
