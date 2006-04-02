@@ -3,7 +3,7 @@
 	primary="false"
 	label="Source for WST Server UI Feature"
 	id="org.eclipse.wst.server_ui.feature.source"
-	version="1.0.1.qualifier">
+	version="1.5.0.qualifier">
 	<description>
 		%description
 	</description>

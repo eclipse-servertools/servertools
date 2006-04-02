@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.jst.server_adapters.feature"
       label="JST Server Adapter Feature"
-      version="1.0.100.qualifier"
+      version="1.5.0.qualifier"
       provider-name="Eclipse.org">
 
    <description>
