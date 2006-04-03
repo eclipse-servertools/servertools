@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ * 
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  **********************************************************************/
@@ -125,6 +125,9 @@ public class Server extends Base implements IServer {
 				return;
 			
 			Trace.trace(Trace.FINEST, "Auto-publish thread publishing " + Server.this);
+			
+			if (getServerState() != IServer.STATE_STARTED)
+				return;
 			
 			PublishServerJob publishJob = new PublishServerJob(Server.this, IServer.PUBLISH_AUTO, false);
 			publishJob.schedule();
@@ -485,12 +488,12 @@ public class Server extends Base implements IServer {
 		if (getServerState() != IServer.STATE_STOPPED && behaviourDelegate != null)
 			behaviourDelegate.handleResourceChange();
 		
-		if (getServerState() != IServer.STATE_STOPPED)
+		if (getServerState() == IServer.STATE_STARTED)
 			autoPublish();
 		
 		Trace.trace(Trace.FINEST, "< handleDeployableProjectChange()");
 	}
-	
+
 	protected void stopAutoPublish() {
 		if (autoPublishThread == null)
 			return;
@@ -1024,10 +1027,10 @@ public class Server extends Base implements IServer {
 		
 		if (getServerType() == null || !getServerType().supportsLaunchMode(mode2))
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorLaunchMode, null);
-
+		
 		return Status.OK_STATUS;
 	}
-	
+
 	public ILaunch getExistingLaunch() {
 		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
 		
@@ -1908,18 +1911,19 @@ public class Server extends Base implements IServer {
 		//restartNeeded = wc.restartNeeded;
 		serverType = wc.serverType;
 		modules = wc.modules;
-
+		
 		// can never modify the following properties via the working copy
 		//serverState = wc.serverState;
 		delegate = wc.delegate;
 		
-		autoPublish();
+		if (getServerState() == IServer.STATE_STARTED)
+			autoPublish();
 	}
 
 	protected void saveState(IMemento memento) {
 		if (serverType != null)
 			memento.putString("server-type", serverType.getId());
-
+		
 		if (configuration != null)
 			memento.putString(CONFIGURATION_ID, configuration.getFullPath().toString());
 		else

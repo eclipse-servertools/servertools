@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ * 
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  **********************************************************************/
@@ -320,7 +320,8 @@ public class ServerPublishInfo {
 		if (module == null)
 			return false;
 		
-		return getModulePublishInfo(module).hasDelta(module);
+		return hasModulePublishInfo(module) 
+            && getModulePublishInfo(module).hasDelta(module);
 	}
 
 	protected static boolean hasDelta(IModuleResource[] original, IModuleResource[] current) {
