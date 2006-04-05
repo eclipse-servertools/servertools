@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,9 +15,14 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.launching.*;
+import org.eclipse.jst.server.core.internal.JavaServerPlugin;
+import org.eclipse.jst.server.core.internal.ServerProfiler;
 
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
@@ -33,16 +38,16 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 			// throw CoreException();
 			return;
 		}
-
+		
 		TomcatServerBehaviour tomcatServer = (TomcatServerBehaviour) server.loadAdapter(TomcatServerBehaviour.class, null);
 		tomcatServer.setupLaunch(launch, mode, monitor);
 		
 		String mainTypeName = tomcatServer.getRuntimeClass();
-
+		
 		IVMInstall vm = verifyVMInstall(configuration);
-
+		
 		IVMRunner runner = vm.getVMRunner(mode);
-
+		
 		File workingDir = verifyWorkingDirectory(configuration);
 		String workingDirName = null;
 		if (workingDir != null)
@@ -51,7 +56,16 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 		// Program & VM args
 		String pgmArgs = getProgramArguments(configuration);
 		String vmArgs = getVMArguments(configuration);
-
+		if (mode == ILaunchManager.PROFILE_MODE) {
+			ServerProfiler[] sp = JavaServerPlugin.getServerProfilers();
+			if (sp == null || runner == null) {
+				tomcatServer.stopImpl();
+				throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorNoProfiler, null));
+			}
+			String vmArgs2 = sp[0].getVMArgs();
+			vmArgs = vmArgs + " " + vmArgs2;
+		}
+		
 		ExecutionArguments execArgs = new ExecutionArguments(vmArgs, pgmArgs);
 		
 		// VM-specific attributes

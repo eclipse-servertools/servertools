@@ -47,6 +47,9 @@ public class JavaServerPlugin extends Plugin {
 	//	cached copy of all runtime facet mappings
 	private static List runtimeFacetMappings;
 
+	// cached copy of all server profilers
+	private static List serverProfilers;
+	
 	// runtime listener
 	private static IRuntimeLifecycleListener runtimeListener;
 
@@ -320,5 +323,48 @@ public class JavaServerPlugin extends Plugin {
 		}
 		
 		Trace.trace(Trace.CONFIG, "-<- Done loading .runtimeFacetMapping extension point -<-");
+	}
+	
+	/**
+	 * Returns an array of all known server profiler instances.
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @return a possibly-empty array of server profiler instances
+	 *    {@link ServerProfiler}
+	 */
+	public static ServerProfiler[] getServerProfilers() {
+		if (serverProfilers == null)
+			loadServerProfilers();
+		
+		ServerProfiler[] sp = new ServerProfiler[serverProfilers.size()];
+		serverProfilers.toArray(sp);
+		return sp;
+	}
+
+	/**
+	 * Load the server profilers.
+	 */
+	private static synchronized void loadServerProfilers() {
+		if (serverProfilers != null)
+			return;
+		Trace.trace(Trace.CONFIG, "->- Loading .serverProfilers extension point ->-");
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(JavaServerPlugin.PLUGIN_ID, "serverProfilers");
+		
+		int size = cf.length;
+		serverProfilers = new ArrayList(size);
+		for (int i = 0; i < size; i++) {
+			try {
+				ServerProfiler sp = new ServerProfiler(cf[i]);
+				serverProfilers.add(sp);
+				Trace.trace(Trace.CONFIG, "  Loaded serverProfiler: " + cf[i].getAttribute("id"));
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "  Could not load serverProfiler: " + cf[i].getAttribute("id"), t);
+			}
+		}
+		
+		Trace.trace(Trace.CONFIG, "-<- Done loading .serverProfilers extension point -<-");
 	}
 }

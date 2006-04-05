@@ -4,6 +4,7 @@
 <plugin>
   <extension-point id="runtimeClasspathProviders" name="%extensionPointRuntimeClasspathProviders" schema="schema/runtimeClasspathProviders.exsd"/>
   <extension-point id="runtimeFacetMappings" name="%extensionPointRuntimeFacetMappings" schema="schema/runtimeFacetMappings.exsd"/>
+  <extension-point id="serverProfilers" name="%extensionPointServerProfilers" schema="schema/serverProfilers.exsd"/>
 
   <extension point="org.eclipse.jdt.core.classpathContainerInitializer">
     <classpathContainerInitializer

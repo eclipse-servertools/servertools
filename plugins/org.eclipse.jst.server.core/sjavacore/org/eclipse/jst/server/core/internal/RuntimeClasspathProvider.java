@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2005 BEA Systems, Inc.
+ * Copyright (c) 2005, 2006 BEA Systems, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,7 @@ import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
 /**
  * 
  */
-public final class RuntimeClasspathProvider implements IClasspathProvider {
+public class RuntimeClasspathProvider implements IClasspathProvider {
 	private static final IProjectFacet WEB_FACET = ProjectFacetsManager.getProjectFacet("jst.web");
 	private static final IProjectFacet EJB_FACET = ProjectFacetsManager.getProjectFacet("jst.ejb");
 	private static final IProjectFacet EAR_FACET = ProjectFacetsManager.getProjectFacet("jst.ear");
@@ -34,7 +34,7 @@ public final class RuntimeClasspathProvider implements IClasspathProvider {
 	private static final IProjectFacet CONNECTOR_FACET = ProjectFacetsManager.getProjectFacet("jst.connector");
 	private static final IProjectFacet APP_CLIENT_FACET = ProjectFacetsManager.getProjectFacet("jst.appclient");
 
-	private final IRuntimeComponent rc;
+	private IRuntimeComponent rc;
 
 	public RuntimeClasspathProvider(final IRuntimeComponent rc) {
 		this.rc = rc;
@@ -42,12 +42,15 @@ public final class RuntimeClasspathProvider implements IClasspathProvider {
 
 	public List getClasspathEntries(final IProjectFacetVersion fv) {
 		IProjectFacet pf = fv.getProjectFacet();
-		if (WEB_FACET.equals(pf) || EJB_FACET.equals(pf) || EAR_FACET.equals(pf) ||
-				UTILITY_FACET.equals(pf) || CONNECTOR_FACET.equals(pf) || APP_CLIENT_FACET.equals(pf)) {
+		if (pf == null)
+			return null;
+		
+		if (pf.equals(WEB_FACET) || pf.equals(EJB_FACET) || pf.equals(EAR_FACET) ||
+				pf.equals(UTILITY_FACET) || pf.equals(CONNECTOR_FACET) || pf.equals(APP_CLIENT_FACET)) {
 			String s = rc.getProperty(RuntimeBridge.CLASSPATH);
 			if (s == null || s.length() == 0)
 				return null;
-
+			
 			IClasspathEntry cpentry = JavaCore.newContainerEntry(new Path(s));
 			return Collections.singletonList(cpentry);
 		}

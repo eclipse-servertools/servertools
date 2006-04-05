@@ -196,7 +196,7 @@
         id="org.eclipse.jst.server.tomcat.core.launchConfigurationType"
         name="%tomcatLaunchConfigurationType"
         delegate="org.eclipse.jst.server.tomcat.core.internal.TomcatLaunchConfigurationDelegate"
-        modes="run, debug"
+        modes="run, debug, profile"
         sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
         sourcePathComputerId="org.eclipse.jst.server.tomcat.core.sourcePathComputer"/>
   </extension>
