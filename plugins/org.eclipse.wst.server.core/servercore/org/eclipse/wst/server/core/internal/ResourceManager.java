@@ -368,9 +368,9 @@ public class ResourceManager {
 		
 		Trace.trace(Trace.RESOURCES, "Deregistering runtime: " + runtime.getName());
 		
-		((Runtime)runtime).dispose();
-		fireRuntimeEvent(runtime, EVENT_REMOVED);
 		runtimes.remove(runtime);
+		fireRuntimeEvent(runtime, EVENT_REMOVED);
+		((Runtime)runtime).dispose();
 	}
 
 	/**
@@ -386,10 +386,10 @@ public class ResourceManager {
 		
 		((Server) server).deleteLaunchConfigurations();
 		ServerPlugin.getInstance().removeTempDirectory(server.getId());
-
-		((Server)server).dispose();
-		fireServerEvent(server, EVENT_REMOVED);
+		
 		servers.remove(server);
+		fireServerEvent(server, EVENT_REMOVED);
+		((Server)server).dispose();
 	}
 
 	/**
