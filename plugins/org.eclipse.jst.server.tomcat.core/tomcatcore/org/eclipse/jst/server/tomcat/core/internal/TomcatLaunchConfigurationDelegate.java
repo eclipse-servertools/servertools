@@ -47,6 +47,10 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 		IVMInstall vm = verifyVMInstall(configuration);
 		
 		IVMRunner runner = vm.getVMRunner(mode);
+        if (runner==null)
+        {
+        	runner = vm.getVMRunner(ILaunchManager.RUN_MODE);
+	    }
 		
 		File workingDir = verifyWorkingDirectory(configuration);
 		String workingDirName = null;
