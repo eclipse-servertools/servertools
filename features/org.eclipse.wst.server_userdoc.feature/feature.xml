@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.server_userdoc.feature"
       label="User Documentation for WST Server Feature"
-      version="1.0.1.qualifier">
+      version="1.0.2.qualifier">
 
    <description>
       %description

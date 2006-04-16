@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.jst.server_adapters.feature"
       label="JST Server Adapter Feature"
-      version="1.0.1.qualifier"
+      version="1.0.2.qualifier"
       provider-name="Eclipse.org">
 
    <description>
@@ -19,8 +19,8 @@
 
 
    <requires>
-      <import feature="org.eclipse.jst.server_core.feature" version="1.0.0" match="equivalent"/>
-      <import feature="org.eclipse.jst.server_ui.feature" version="1.0.0" match="equivalent"/>
+      <import feature="org.eclipse.jst.server_core.feature" version="1.0.2" match="equivalent"/>
+      <import feature="org.eclipse.jst.server_ui.feature" version="1.0.2" match="equivalent"/>
    </requires>
 
    <plugin
