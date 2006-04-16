@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.wst.server_core.feature"
-      label="Server Core Feature"
-      version="1.0.100.qualifier"
-      provider-name="Eclipse.org">
+      label="org.eclipse.wst.server_core.feature"
+      version="1.0.2.qualifier">
 
    <description>
       %description
@@ -12,14 +11,13 @@
    <license url="license.html">
       %license
    </license>
-
    <url>
       <update label="Web Tools Platform (WTP) Updates" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
 
    <requires>
-      <import feature="org.eclipse.rcp" version="3.2" match="equivalent"/>
-      <import feature="org.eclipse.platform" version="3.2" match="equivalent"/>
+      <import feature="org.eclipse.rcp" version="3.1.1" match="equivalent"/>
+      <import feature="org.eclipse.platform" version="3.1.1" match="equivalent"/>
    </requires>
 
    <plugin

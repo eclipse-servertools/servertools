@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.jst.server_adapters.feature"
       label="JST Server Adapter Feature"
-      version="1.0.100.qualifier"
+      version="1.0.2.qualifier"
       provider-name="Eclipse.org">
 
    <description>
@@ -12,15 +12,15 @@
    <license url="license.html">
       %license
    </license>
-
+   
    <url>
       <update label="Web Tools Platform (WTP) Updates" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
 
 
    <requires>
-      <import feature="org.eclipse.jst.server_core.feature" version="1.0.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.jst.server_ui.feature" version="1.0.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.jst.server_core.feature" version="1.0.2" match="equivalent"/>
+      <import feature="org.eclipse.jst.server_ui.feature" version="1.0.2" match="equivalent"/>
    </requires>
 
    <plugin

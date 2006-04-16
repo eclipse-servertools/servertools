@@ -10,12 +10,11 @@
 package org.eclipse.jst.server.generic.core.internal;
 
 
-import java.io.IOException;
-import java.net.URL;
-
-import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -24,7 +23,7 @@ import org.osgi.framework.BundleContext;
  */
 public class CorePlugin extends Plugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.jst.server.generic.core"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.eclipse.jst.server.generic.core";
 
 	//The shared instance.
 	private static CorePlugin plugin;
@@ -72,7 +71,7 @@ public class CorePlugin extends Plugin {
 	private URL getInstallUrl()
 	{
 		try {
-			return FileLocator.resolve(this.getBundle().getEntry("/"));
+			return Platform.resolve(this.getBundle().getEntry("/"));
 		} catch (IOException e) {
 			return null;
 		}	

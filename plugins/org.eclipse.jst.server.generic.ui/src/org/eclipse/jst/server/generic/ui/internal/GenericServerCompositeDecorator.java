@@ -25,7 +25,7 @@ public interface GenericServerCompositeDecorator
 	 * Called if all the fields are valid. This gives subclasses opportunity to
 	 * validate and take necessary actions.
 	 * 
-	 * @return boolean
+	 * @return
 	 */
 	public abstract boolean validate();
 }

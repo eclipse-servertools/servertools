@@ -26,7 +26,6 @@ import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
 import org.eclipse.jst.server.generic.servertype.definition.Classpath;
 import org.eclipse.jst.server.generic.servertype.definition.Property;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 /**
  * Generic server runtime support.
@@ -112,7 +111,7 @@ public class GenericServerRuntime extends RuntimeDelegate implements IJavaRuntim
 				String arcPath = serverTypeDefinition.getResolver().resolveProperties(arch.getPath());
 		           File f = new File(arcPath);
 		            if(f.exists()==false)
-		                return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,NLS.bind(GenericServerCoreMessages.errorMissingClasspathEntry,f.getPath()),null);	
+		                return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0 ,GenericServerCoreMessages.bind(GenericServerCoreMessages.errorMissingClasspathEntry,f.getPath()),null);	
 			}
 		}
         return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "", null);

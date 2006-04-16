@@ -26,7 +26,6 @@ import org.eclipse.jst.server.generic.servertype.definition.Module;
 import org.eclipse.jst.server.generic.servertype.definition.Port;
 import org.eclipse.jst.server.generic.servertype.definition.Property;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.ServerUtil;
@@ -263,7 +262,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
  			{
  				String path= (String)getInstanceProperties().get(property.getId());
  				if(path!=null && !pathExist(path))
- 					return  new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, NLS.bind(GenericServerCoreMessages.invalidPath,path), null);
+ 					return  new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.bind(GenericServerCoreMessages.invalidPath,path), null);
  			}
  		}
  		return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "", null);

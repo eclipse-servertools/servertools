@@ -6,7 +6,7 @@ Bundle-Version: 1.0.1.qualifier
 Bundle-Activator: org.eclipse.jst.server.generic.ui.internal.GenericUiPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.jst.server.generic.ui.internal;x-internal:=true
+Export-Package: org.eclipse.jst.server.generic.ui.internal
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.wst.server.ui,

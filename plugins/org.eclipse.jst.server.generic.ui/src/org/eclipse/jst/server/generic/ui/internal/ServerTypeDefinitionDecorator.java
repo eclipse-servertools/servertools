@@ -20,7 +20,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jst.server.generic.servertype.definition.Property;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -57,14 +56,8 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
 	private final class PathModifyListener implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
 			String path = ((Text) e.widget).getText();
-			
-			if(path.length()<1)
-			{
-				fLastMessage = GenericServerUIMessages.emptyPath;
-				fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
-			}
-			else if(!pathExist(path)){
-				fLastMessage = NLS.bind(GenericServerUIMessages.invalidPath,path);
+			if(!pathExist(path)){
+				fLastMessage = GenericServerUIMessages.bind(GenericServerUIMessages.invalidPath,path);
 				fWizard.setMessage(fLastMessage,IMessageProvider.ERROR);
 			}else{
 				if(fLastMessage!=null && fLastMessage.equals(fWizard.getMessage())){
@@ -80,14 +73,7 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
 		}
 	}
 
-	/**
-	 * Constructor
-	 * 
-	 * @param definition
-	 * @param initialProperties
-	 * @param context
-	 * @param handle
-	 */
+	
 	public ServerTypeDefinitionDecorator(ServerRuntime definition, Map initialProperties, String context, IWizardHandle handle) {
 		super();
 		fDefinition = definition;
@@ -96,9 +82,6 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
 		fWizard = handle;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jst.server.generic.ui.internal.GenericServerCompositeDecorator#decorate(org.eclipse.jst.server.generic.ui.internal.GenericServerComposite)
-	 */
 	public void decorate(GenericServerComposite composite) {
 
 		List properties =null; 
@@ -131,7 +114,7 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
     		str.setData(property);
     		registerControl(str);
        	} else if( Property.TYPE_BOOLEAN.equals(property.getType())) {
-    	    Button bool =createLabeledCheck(property.getLabel(),("true".equals( getPropertyValue(property))),	parent); //$NON-NLS-1$
+    	    Button bool =createLabeledCheck(property.getLabel(),("true".equals( getPropertyValue(property))),	parent);
     		bool.setData(property);
     		registerControl(bool);
        	}else if(Property.TYPE_SELECT.equals(property.getType())) {
@@ -160,7 +143,7 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
     	gridData.horizontalSpan = 2;
     	combo.setLayoutData(gridData);
     	
-		StringTokenizer tokenizer = new StringTokenizer(property.getDefault(),","); //$NON-NLS-1$
+		StringTokenizer tokenizer = new StringTokenizer(property.getDefault(),",");
 		while(tokenizer.hasMoreTokens()){
 			combo.add(tokenizer.nextToken());
 		}
@@ -188,11 +171,11 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
     	fButton.setSelection(value);
     	fButton.addSelectionListener(new SelectionListener() {
             public void widgetSelected(SelectionEvent e) {
-             //nothing to do 
+              
             }
 
             public void widgetDefaultSelected(SelectionEvent e) {
-            // nothing to do
+  
             }
         });
     	
@@ -284,19 +267,19 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
 
     	return text;
     }
-	private String getPropertyValue(Property property){	
-		if(fProperties!=null && fProperties.isEmpty()==false){
-		//user properties exist use those
-			return(String)fProperties.get(property.getId()); 
-		}	
-		if(Property.CONTEXT_SERVER.equals(property.getContext()))
-			return fDefinition.getResolver().resolveProperties(property.getDefault());
-		return property.getDefault();
+	private String getPropertyValue(Property property)
+	{
+		String value = property.getDefault();
+		if(fProperties!=null && fProperties.isEmpty()==false)
+			value=(String)fProperties.get(property.getId()); 
+		return value;
 	}	
 
+
+	
    /**
     * Returns the property name/value pairs.
-    * @return Map containing the values collected from the user
+    * @return
     */
 	public Map getValues(){
 		Map propertyMap = new HashMap();

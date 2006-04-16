@@ -2,8 +2,7 @@
 <feature
       id="org.eclipse.wst.server_ui.feature"
       label="WST Server UI Feature"
-      version="1.0.100.qualifier"
-      provider-name="Eclipse.org">
+      version="1.0.2.qualifier">
 
    <description>
       %description
@@ -17,12 +16,13 @@
       <update label="Web Tools Platform (WTP) Updates" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
 
+
    <includes
          id="org.eclipse.wst.server_userdoc.feature"
          version="0.0.0"/>
 
    <requires>
-      <import feature="org.eclipse.wst.server_core.feature" version="1.0.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.wst.server_core.feature" version="1.0.2" match="equivalent"/>
    </requires>
 
    <plugin

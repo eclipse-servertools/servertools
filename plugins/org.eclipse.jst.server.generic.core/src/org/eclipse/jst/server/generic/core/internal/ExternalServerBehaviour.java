@@ -28,7 +28,6 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jst.server.generic.internal.xml.Resolver;
 import org.eclipse.jst.server.generic.servertype.definition.External;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.internal.Server;
@@ -67,8 +66,8 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
     		ServerPort portInUse = portInUse();
     		if (portInUse != null) {
     			Trace.trace(Trace.WARNING, "Port " + portInUse.getPort() + " is currently in use");
-				Status status = new Status(IStatus.WARNING, CorePlugin.PLUGIN_ID, IStatus.OK, 
-							NLS.bind(GenericServerCoreMessages.errorPortInUse,Integer.toString(portInUse.getPort()),portInUse.getName()), null);
+				Status status = new Status(Status.WARNING, CorePlugin.PLUGIN_ID, Status.OK, 
+							GenericServerCoreMessages.bind(GenericServerCoreMessages.errorPortInUse,Integer.toString(portInUse.getPort()),portInUse.getName()), null);
 				setServerStatus(status);
 				setServerState(IServer.STATE_UNKNOWN);
     		}
