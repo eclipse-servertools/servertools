@@ -90,7 +90,6 @@
     name="%serverEditor"
     icon="icons/obj16/server.gif"
     extensions="server"
-    default="true"
     class="org.eclipse.wst.server.ui.internal.editor.ServerEditor"
     contributorClass="org.eclipse.wst.server.ui.internal.editor.ServerEditorActionBarContributor"/>
 </extension>
