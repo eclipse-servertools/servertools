@@ -30,8 +30,6 @@ import org.eclipse.wst.server.core.ServerPort;
  * Tomcat v3.2 server configuration.
  */
 public class Tomcat32Configuration extends TomcatConfiguration {
-	public static final String ID = "org.eclipse.tomcat.configuration.32";
-
 	protected static final String HTTP_HANDLER = "org.apache.tomcat.service.http.HttpConnectionHandler";
 	protected static final String APACHE_HANDLER = "org.apache.tomcat.service.connector.Ajp12ConnectionHandler";
 	protected static final String SSL_SOCKET_FACTORY = "org.apache.tomcat.net.SSLSocketFactory";
