@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.jst.server.generic.oc4j;singleton:=true
+Bundle-Version: 1.5.0.qualifier
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.jst.server.generic.core,
+ org.eclipse.jst.server.generic.ui,
+ org.eclipse.jst.server.core
+Eclipse-LazyStart: true
