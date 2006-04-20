@@ -12,15 +12,11 @@ package org.eclipse.wst.server.ui.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 
 public class ExistenceTest extends TestCase {
 	public void testPluginExists() {
 		assertNotNull(ServerUIPlugin.getInstance());
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
-		ErrorDialog.AUTOMATED_MODE=true;
-	}
+
 }

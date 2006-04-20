@@ -15,7 +15,6 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.ErrorDialog;
 
 public class PreferencesTestCase extends TestCase {
 	public static Test suite() {
@@ -25,10 +24,7 @@ public class PreferencesTestCase extends TestCase {
 	public PreferencesTestCase(String name) {
 		super(name);
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
-		ErrorDialog.AUTOMATED_MODE=true;
-	}
+
 	public void testServerPreferencePage() {
 		Dialog dialog = UITestHelper.getPreferenceDialog("org.eclipse.wst.server.ui.preferencePage");
 		UITestHelper.assertDialog(dialog);

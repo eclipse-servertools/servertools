@@ -13,7 +13,6 @@ package org.eclipse.wst.server.ui.tests;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.wst.server.ui.ServerLaunchConfigurationTab;
 
 public class ServerLaunchConfigurationTabTestCase extends TestCase {
@@ -23,10 +22,7 @@ public class ServerLaunchConfigurationTabTestCase extends TestCase {
 		return new OrderedTestSuite(ServerLaunchConfigurationTabTestCase.class, "ServerLaunchConfigurationTabTestCase");
 	}
 
-	protected void setUp() throws Exception {
-		super.setUp();
-		ErrorDialog.AUTOMATED_MODE = true;
-	}
+
 
 	public void test00CreateTab() {
 		tab = new ServerLaunchConfigurationTab();

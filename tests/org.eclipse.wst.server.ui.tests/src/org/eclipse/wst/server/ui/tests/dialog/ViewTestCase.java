@@ -12,7 +12,6 @@ package org.eclipse.wst.server.ui.tests.dialog;
 
 import junit.framework.TestCase;
 
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -23,8 +22,5 @@ public class ViewTestCase extends TestCase {
 		IViewPart view = page.showView("org.eclipse.wst.server.ui.ServersView");
 		page.hideView(view);
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
-		ErrorDialog.AUTOMATED_MODE=true;
-	}
+
 }

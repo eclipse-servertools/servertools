@@ -13,7 +13,6 @@ package org.eclipse.wst.server.ui.tests.dialog;
 import junit.framework.TestCase;
 
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
@@ -35,10 +34,7 @@ public class WizardTestCase extends TestCase {
 	public void testRunOnServerWizard() throws Exception {
 		testRoS(null);
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
-		ErrorDialog.AUTOMATED_MODE=true;
-	}
+
 	public void testModifyModulesWizard() throws Exception {
 		Shell shell = UITestHelper.getShell();
 		ModifyModulesWizard wiz = new ModifyModulesWizard(null);

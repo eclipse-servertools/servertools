@@ -13,7 +13,6 @@ package org.eclipse.wst.server.ui.tests.dialog;
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
@@ -34,8 +33,5 @@ public class DialogsTestCase extends TestCase {
 		TerminationDialog td = new TerminationDialog(getShell(), "MyServer with a really long name");
 		UITestHelper.assertDialog(td);
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
-		ErrorDialog.AUTOMATED_MODE=true;
-	}
+
 }

@@ -13,7 +13,6 @@ package org.eclipse.wst.server.ui.tests.editor;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.ui.editor.ServerEditorPart;
 import org.eclipse.wst.server.ui.tests.OrderedTestSuite;
@@ -36,10 +35,7 @@ public class ServerEditorPartTestCase extends TestCase {
 			}
 		};
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
-		ErrorDialog.AUTOMATED_MODE=true;
-	}
+
 	public void test02DoSave() {
 		editor.doSave(null);
 	}

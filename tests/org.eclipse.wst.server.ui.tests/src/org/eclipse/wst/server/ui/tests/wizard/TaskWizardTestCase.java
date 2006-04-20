@@ -13,7 +13,6 @@ package org.eclipse.wst.server.ui.tests.wizard;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.tests.OrderedTestSuite;
 
@@ -23,10 +22,7 @@ public class TaskWizardTestCase extends TestCase {
 	public static Test suite() {
 		return new OrderedTestSuite(TaskWizardTestCase.class, "TaskWizardTestCase");
 	}
-	protected void setUp() throws Exception {
-		super.setUp();
-		ErrorDialog.AUTOMATED_MODE=true;
-	}
+
 	public void test00Create() {
 		wizard = new TaskWizard("title", null, null);
 	}

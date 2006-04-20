@@ -13,7 +13,6 @@ package org.eclipse.wst.server.ui.tests;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.ServerUIPreferences;
 
@@ -24,10 +23,7 @@ public class ServerUIPreferencesTestCase extends TestCase {
 		return new OrderedTestSuite(ServerUIPreferencesTestCase.class, "ServerUIPreferencesTestCase");
 	}
 
-	protected void setUp() throws Exception {
-		super.setUp();
-		ErrorDialog.AUTOMATED_MODE = true;
-	}
+
 
 	public void test00GetProperties() throws Exception {
 		prefs = ServerUIPlugin.getPreferences();
