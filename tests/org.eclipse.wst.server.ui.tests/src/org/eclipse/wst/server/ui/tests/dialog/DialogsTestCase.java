@@ -10,13 +10,15 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.tests.dialog;
 
+import junit.framework.TestCase;
+
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.DeleteServerDialog;
 import org.eclipse.wst.server.ui.internal.TerminationDialog;
-import junit.framework.TestCase;
 
 public class DialogsTestCase extends TestCase {
 	private Shell getShell() {
@@ -31,5 +33,9 @@ public class DialogsTestCase extends TestCase {
 	public void _testTerminationDialog() {
 		TerminationDialog td = new TerminationDialog(getShell(), "MyServer with a really long name");
 		UITestHelper.assertDialog(td);
+	}
+	protected void setUp() throws Exception {
+		super.setUp();
+		ErrorDialog.AUTOMATED_MODE=true;
 	}
 }

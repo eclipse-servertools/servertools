@@ -10,13 +10,14 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.tests.wizard;
 
+import junit.framework.Test;
+import junit.framework.TestCase;
+
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.wst.server.ui.tests.OrderedTestSuite;
 import org.eclipse.wst.server.ui.tests.impl.TestWizardHandle;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
 
 public class IWizardHandleTestCase extends TestCase {
 	protected static IWizardHandle wizardHandle;
@@ -26,7 +27,10 @@ public class IWizardHandleTestCase extends TestCase {
 	public static Test suite() {
 		return new OrderedTestSuite(IWizardHandleTestCase.class, "IWizardHandleTestCase");
 	}
-
+	protected void setUp() throws Exception {
+		super.setUp();
+		ErrorDialog.AUTOMATED_MODE=true;
+	}
 	public void test00Create() {
 		wizardHandle = new TestWizardHandle();
 	}

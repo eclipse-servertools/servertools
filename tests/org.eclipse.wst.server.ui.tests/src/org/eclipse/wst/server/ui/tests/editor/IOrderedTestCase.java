@@ -10,12 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.tests.editor;
 
+import junit.framework.Test;
+import junit.framework.TestCase;
+
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.wst.server.ui.internal.editor.IOrdered;
 import org.eclipse.wst.server.ui.tests.OrderedTestSuite;
 import org.eclipse.wst.server.ui.tests.impl.TestOrdered;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
 
 public class IOrderedTestCase extends TestCase {
 	protected static IOrdered ordered;
@@ -23,7 +24,10 @@ public class IOrderedTestCase extends TestCase {
 	public static Test suite() {
 		return new OrderedTestSuite(IOrderedTestCase.class, "IOrderedTestCase");
 	}
-
+	protected void setUp() throws Exception {
+		super.setUp();
+		ErrorDialog.AUTOMATED_MODE=true;
+	}
 	public void test00Create() {
 		ordered = new TestOrdered();
 	}

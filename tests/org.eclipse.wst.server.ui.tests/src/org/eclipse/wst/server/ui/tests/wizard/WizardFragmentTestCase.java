@@ -10,11 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.tests.wizard;
 
-import org.eclipse.wst.server.ui.tests.OrderedTestSuite;
-import org.eclipse.wst.server.ui.wizard.WizardFragment;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
+
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.wst.server.ui.tests.OrderedTestSuite;
+import org.eclipse.wst.server.ui.wizard.WizardFragment;
 
 public class WizardFragmentTestCase extends TestCase {
 	protected static WizardFragment fragment;
@@ -22,7 +23,10 @@ public class WizardFragmentTestCase extends TestCase {
 	public static Test suite() {
 		return new OrderedTestSuite(WizardFragmentTestCase.class, "WizardFragmentTestCase");
 	}
-
+	protected void setUp() throws Exception {
+		super.setUp();
+		ErrorDialog.AUTOMATED_MODE=true;
+	}
 	public void test00CreateFragment() {
 		fragment = new WizardFragment() {
 			// do nothing

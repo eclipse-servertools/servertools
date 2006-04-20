@@ -10,10 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.tests.editor;
 
-import org.eclipse.wst.server.ui.editor.ServerEditorSection;
-import org.eclipse.wst.server.ui.tests.OrderedTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
+
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.wst.server.ui.editor.ServerEditorSection;
+import org.eclipse.wst.server.ui.tests.OrderedTestSuite;
 
 public class ServerEditorSectionTestCase extends TestCase {
 	protected static ServerEditorSection section;
@@ -27,7 +29,10 @@ public class ServerEditorSectionTestCase extends TestCase {
 			// do nothing
 		};
 	}
-
+	protected void setUp() throws Exception {
+		super.setUp();
+		ErrorDialog.AUTOMATED_MODE=true;
+	}
 	public void test01Init() {
 		section.init(null, null);
 	}

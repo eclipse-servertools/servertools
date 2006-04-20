@@ -10,11 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.tests.editor;
 
+import junit.framework.Test;
+import junit.framework.TestCase;
+
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
 import org.eclipse.wst.server.ui.tests.OrderedTestSuite;
 import org.eclipse.wst.server.ui.tests.impl.TestServerEditorPartInput;
-import junit.framework.Test;
-import junit.framework.TestCase;
 
 public class IServerEditorPartInputTestCase extends TestCase {
 	protected static IServerEditorPartInput input;
@@ -23,14 +25,19 @@ public class IServerEditorPartInputTestCase extends TestCase {
 		return new OrderedTestSuite(IServerEditorPartInputTestCase.class, "IServerEditorPartInputTestCase");
 	}
 
+	protected void setUp() throws Exception {
+		super.setUp();
+		ErrorDialog.AUTOMATED_MODE = true;
+	}
+
 	public void test00Create() {
 		input = new TestServerEditorPartInput();
 	}
-	
+
 	public void test01GetServer() {
 		input.getServer();
 	}
-	
+
 	public void test02IsServerReadOnly() {
 		input.isServerReadOnly();
 	}
@@ -38,23 +45,23 @@ public class IServerEditorPartInputTestCase extends TestCase {
 	public void test04Exists() {
 		input.exists();
 	}
-	
+
 	public void test05GetImageDescriptor() {
 		input.getImageDescriptor();
 	}
-	
+
 	public void test06GetName() {
 		input.getName();
 	}
-	
+
 	public void test07GetPersistable() {
 		input.getPersistable();
 	}
-	
+
 	public void test08GetToolTipText() {
 		input.getToolTipText();
 	}
-	
+
 	public void test09GetAdapter() {
 		input.getAdapter(null);
 	}

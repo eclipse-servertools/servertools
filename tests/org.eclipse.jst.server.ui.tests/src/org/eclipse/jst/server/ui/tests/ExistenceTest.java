@@ -10,11 +10,17 @@
  *******************************************************************************/
 package org.eclipse.jst.server.ui.tests;
 
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jst.server.ui.internal.JavaServerUIPlugin;
 import junit.framework.TestCase;
 
 public class ExistenceTest extends TestCase {
 	public void testPluginExists() {
 		assertNotNull(JavaServerUIPlugin.getInstance());
+	}
+
+	protected void setUp() throws Exception {
+		super.setUp();
+		ErrorDialog.AUTOMATED_MODE=true;
 	}
 }

@@ -10,11 +10,18 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.tests;
 
-import org.eclipse.wst.server.ui.ServerUICore;
 import junit.framework.TestCase;
+
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.wst.server.ui.ServerUICore;
 
 public class ServerUICoreTestCase extends TestCase {
 	public void testLabelProvider() {
 		assertNotNull(ServerUICore.getLabelProvider());
+	}
+
+	protected void setUp() throws Exception {
+		super.setUp();
+		ErrorDialog.AUTOMATED_MODE = true;
 	}
 }
