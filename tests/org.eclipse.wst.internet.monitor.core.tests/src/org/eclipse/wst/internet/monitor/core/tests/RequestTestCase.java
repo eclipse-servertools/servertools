@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005,2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.core.tests;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.*;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -65,7 +62,7 @@ public class RequestTestCase extends TestCase {
 		assertTrue(!monitor.isRunning());
 		assertTrue(!monitor.isWorkingCopy());
 	}
-	
+
 	public void test03AddListener() throws Exception {
 		monitor.addRequestListener(listener);
 	}
@@ -79,13 +76,13 @@ public class RequestTestCase extends TestCase {
 		monitor.start();
 		assertTrue(monitor.isRunning());
 	}
-	
-	public void test06Ping() throws Exception {
+
+	/*public void test06Ping() throws Exception {
 		URL url = new URL("http://localhost:22152/");
 		//URL url = new URL("http://www.eclipse.org/");
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.connect();
-
+		
 		// read the server's response
 		System.out.println("Response from www.eclipse.org ----------------------------------");
 		InputStream in = conn.getInputStream();
@@ -98,18 +95,18 @@ public class RequestTestCase extends TestCase {
 		}
 		in.close();
 		System.out.println("End of response from www.eclipse.org ---------------------------");
-	}
+	}*/
 
 	public void test07CheckListener() throws Exception {
 		assertEquals(addCount, 1);
 		assertEquals(monitorEvent, monitor);
 		assertNotNull(requestEvent);
 	}
-	
+
 	public void test08VerifyMonitor() throws Exception {
 		assertEquals(requestEvent.getMonitor(), monitor);
 	}
-	
+
 	public void test09VerifyProtocol() throws Exception {
 		assertEquals(requestEvent.getProtocol(), "HTTP");
 	}
