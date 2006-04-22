@@ -57,8 +57,9 @@ public class ServerEditorCore {
 		Trace.trace(Trace.CONFIG, "->- Loading .editorPages extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, ServerUIPlugin.EXTENSION_EDITOR_PAGES);
-		editorPageFactories = new ArrayList(cf.length);
-		loadEditorPageFactories(cf);
+		List list = new ArrayList(cf.length);
+		loadEditorPageFactories(cf, list);
+		editorPageFactories = list;
 		ServerUIPlugin.addRegistryListener();
 		Trace.trace(Trace.CONFIG, "-<- Done loading .editorPages extension point -<-");
 	}
@@ -66,11 +67,11 @@ public class ServerEditorCore {
 	/**
 	 * Load the editor page factory extension point.
 	 */
-	private static void loadEditorPageFactories(IConfigurationElement[] cf) {
+	private static void loadEditorPageFactories(IConfigurationElement[] cf, List list) {
 		int size = cf.length;
 		for (int i = 0; i < size; i++) {
 			try {
-				editorPageFactories.add(new ServerEditorPartFactory(cf[i]));
+				list.add(new ServerEditorPartFactory(cf[i]));
 				Trace.trace(Trace.CONFIG, "  Loaded editorPage: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load editorPage: " + cf[i].getAttribute("id"), t);
@@ -78,7 +79,7 @@ public class ServerEditorCore {
 		}
 		
 		// sort pages
-		sortOrderedList(editorPageFactories);
+		sortOrderedList(list);
 	}
 
 	public static void handleEditorPageFactoriesDelta(IExtensionDelta delta) {
@@ -87,22 +88,24 @@ public class ServerEditorCore {
 		
 		IConfigurationElement[] cf = delta.getExtension().getConfigurationElements();
 		
+		List list = new ArrayList(editorPageFactories);
 		if (delta.getKind() == IExtensionDelta.ADDED)
-			loadEditorPageFactories(cf);
+			loadEditorPageFactories(cf, list);
 		else {
-			int size = editorPageFactories.size();
+			int size = list.size();
 			ServerEditorPartFactory[] sepf = new ServerEditorPartFactory[size];
-			editorPageFactories.toArray(sepf);
+			list.toArray(sepf);
 			int size2 = cf.length;
 			
 			for (int i = 0; i < size; i++) {
 				for (int j = 0; j < size2; j++) {
 					if (sepf[i].getId().equals(cf[j].getAttribute("id"))) {
-						editorPageFactories.remove(sepf[i]);
+						list.remove(sepf[i]);
 					}
 				}
 			}
 		}
+		editorPageFactories = list;
 	}
 
 	/**
@@ -112,8 +115,9 @@ public class ServerEditorCore {
 		Trace.trace(Trace.CONFIG, "->- Loading .editorPageSections extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, ServerUIPlugin.EXTENSION_EDITOR_PAGE_SECTIONS);
-		editorPageSectionFactories = new ArrayList(cf.length);
-		loadEditorPageSectionFactories(cf);
+		List list = new ArrayList(cf.length);
+		loadEditorPageSectionFactories(cf, list);
+		editorPageSectionFactories = list;
 		ServerUIPlugin.addRegistryListener();
 		Trace.trace(Trace.CONFIG, "-<- Done loading .editorPageSections extension point -<-");
 	}
@@ -121,11 +125,11 @@ public class ServerEditorCore {
 	/**
 	 * Load the editor page section factory extension point.
 	 */
-	private static void loadEditorPageSectionFactories(IConfigurationElement[] cf) {
+	private static void loadEditorPageSectionFactories(IConfigurationElement[] cf, List list) {
 		int size = cf.length;
 		for (int i = 0; i < size; i++) {
 			try {
-				editorPageSectionFactories.add(new ServerEditorPageSectionFactory(cf[i]));
+				list.add(new ServerEditorPageSectionFactory(cf[i]));
 				Trace.trace(Trace.CONFIG, "  Loaded editorPageSection: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load editorPageSection: " + cf[i].getAttribute("id"), t);
@@ -133,7 +137,7 @@ public class ServerEditorCore {
 		}
 		
 		// sort sections
-		sortOrderedList(editorPageSectionFactories);
+		sortOrderedList(list);
 	}
 
 	public static void handleEditorPageSectionFactoriesDelta(IExtensionDelta delta) {
@@ -142,22 +146,24 @@ public class ServerEditorCore {
 		
 		IConfigurationElement[] cf = delta.getExtension().getConfigurationElements();
 		
+		List list = new ArrayList(editorPageSectionFactories);
 		if (delta.getKind() == IExtensionDelta.ADDED)
-			loadEditorPageSectionFactories(cf);
+			loadEditorPageSectionFactories(cf, list);
 		else {
-			int size = editorPageSectionFactories.size();
+			int size = list.size();
 			ServerEditorPageSectionFactory[] seps = new ServerEditorPageSectionFactory[size];
-			editorPageSectionFactories.toArray(seps);
+			list.toArray(seps);
 			int size2 = cf.length;
 			
 			for (int i = 0; i < size; i++) {
 				for (int j = 0; j < size2; j++) {
 					if (seps[i].getId().equals(cf[j].getAttribute("id"))) {
-						editorPageSectionFactories.remove(seps[i]);
+						list.remove(seps[i]);
 					}
 				}
 			}
 		}
+		editorPageSectionFactories = list;
 	}
 
 	/**
@@ -180,10 +186,10 @@ public class ServerEditorCore {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, "editorActions");
 
 		int size = cf.length;
-		editorActionFactories = new ArrayList(size);
+		List list = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
-				editorActionFactories.add(new ServerEditorActionFactory(cf[i]));
+				list.add(new ServerEditorActionFactory(cf[i]));
 				Trace.trace(Trace.CONFIG, "  Loaded editorAction: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load editorAction: " + cf[i].getAttribute("id"), t);
@@ -191,7 +197,9 @@ public class ServerEditorCore {
 		}
 		
 		// sort pages
-		sortOrderedList(editorActionFactories);
+		sortOrderedList(list);
+		editorActionFactories = list;
+		
 		Trace.trace(Trace.CONFIG, "-<- Done loading .editorActions extension point -<-");
 	}
 	

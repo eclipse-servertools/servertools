@@ -248,9 +248,10 @@ public class ServerCore {
 		
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, EXTENSION_RUNTIME_TYPE);
-		runtimeTypes = new ArrayList(cf.length);
-		addRuntimeTypes(cf);
+		List list = new ArrayList(cf.length);
+		addRuntimeTypes(cf, list);
 		addRegistryListener();
+		runtimeTypes = list;
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .runtimeTypes extension point -<-");
 	}
@@ -258,11 +259,10 @@ public class ServerCore {
 	/**
 	 * Load the runtime types.
 	 */
-	private static synchronized void addRuntimeTypes(IConfigurationElement[] cf) {
+	private static synchronized void addRuntimeTypes(IConfigurationElement[] cf, List list) {
 		for (int i = 0; i < cf.length; i++) {
 			try {
-				RuntimeType runtimeType = new RuntimeType(cf[i]);
-				runtimeTypes.add(runtimeType);
+				list.add(new RuntimeType(cf[i]));
 				Trace.trace(Trace.EXTENSION_POINT, "  Loaded runtimeType: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load runtimeType: " + cf[i].getAttribute("id"), t);
@@ -281,9 +281,10 @@ public class ServerCore {
 		
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, EXTENSION_SERVER_TYPE);
-		serverTypes = new ArrayList(cf.length);
-		addServerTypes(cf);
+		List list = new ArrayList(cf.length);
+		addServerTypes(cf, list);
 		addRegistryListener();
+		serverTypes = list;
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .serverTypes extension point -<-");
 	}
@@ -291,11 +292,10 @@ public class ServerCore {
 	/**
 	 * Load the server types.
 	 */
-	private static synchronized void addServerTypes(IConfigurationElement[] cf) {
+	private static synchronized void addServerTypes(IConfigurationElement[] cf, List list) {
 		for (int i = 0; i < cf.length; i++) {
 			try {
-				ServerType serverType = new ServerType(cf[i]);
-				serverTypes.add(serverType);
+				list.add(new ServerType(cf[i]));
 				Trace.trace(Trace.EXTENSION_POINT, "  Loaded serverType: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load serverType: " + cf[i].getAttribute("id"), t);
@@ -443,23 +443,25 @@ public class ServerCore {
 		
 		IConfigurationElement[] cf = delta.getExtension().getConfigurationElements();
 		
+		List list = new ArrayList(serverTypes);
 		if (delta.getKind() == IExtensionDelta.ADDED) {
-			addServerTypes(cf);
+			addServerTypes(cf, list);
 		} else {
-			int size = serverTypes.size();
+			int size = list.size();
 			ServerType[] st = new ServerType[size];
-			serverTypes.toArray(st);
+			list.toArray(st);
 			int size2 = cf.length;
 			
 			for (int i = 0; i < size; i++) {
 				for (int j = 0; j < size2; j++) {
 					if (st[i].getId().equals(cf[j].getAttribute("id"))) {
 						st[i].dispose();
-						serverTypes.remove(st[i]);
+						list.remove(st[i]);
 					}
 				}
 			}
 		}
+		serverTypes = list;
 		getResourceManager().resolveServers();
 	}
 
@@ -475,23 +477,25 @@ public class ServerCore {
 		
 		IConfigurationElement[] cf = delta.getExtension().getConfigurationElements();
 		
+		List list = new ArrayList(runtimeTypes);
 		if (delta.getKind() == IExtensionDelta.ADDED) {
-			addRuntimeTypes(cf);
+			addRuntimeTypes(cf, list);
 		} else {
-			int size = runtimeTypes.size();
+			int size = list.size();
 			RuntimeType[] rt = new RuntimeType[size];
-			runtimeTypes.toArray(rt);
+			list.toArray(rt);
 			int size2 = cf.length;
 			
 			for (int i = 0; i < size; i++) {
 				for (int j = 0; j < size2; j++) {
 					if (rt[i].getId().equals(cf[j].getAttribute("id"))) {
 						rt[i].dispose();
-						runtimeTypes.remove(rt[i]);
+						list.remove(rt[i]);
 					}
 				}
 			}
 		}
+		runtimeTypes = list;
 		getResourceManager().resolveRuntimes();
 		getResourceManager().resolveServers();
 	}

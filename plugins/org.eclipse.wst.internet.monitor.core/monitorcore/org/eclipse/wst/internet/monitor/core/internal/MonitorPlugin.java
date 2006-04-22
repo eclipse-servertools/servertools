@@ -109,7 +109,7 @@ public class MonitorPlugin extends Plugin {
 		list.toArray(cf);
 		return cf;
 	}
-	
+
 	/**
 	 * Find a content filter by the id.
 	 * 
@@ -130,14 +130,15 @@ public class MonitorPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(MonitorPlugin.PLUGIN_ID, "internalProtocolAdapters");
 
 		int size = cf.length;
-		protocolAdapters = new HashMap(size);
+		Map map = new HashMap(size);
 		for (int i = 0; i < size; i++) {
 			String id = cf[i].getAttribute("id");
 			Trace.trace(Trace.CONFIG, "Loading adapter: " + id);
-			protocolAdapters.put(id, new ProtocolAdapter(cf[i]));
+			map.put(id, new ProtocolAdapter(cf[i]));
 		}
+		protocolAdapters = map;
 	}
-	
+
 	protected synchronized void loadContentFilters() {
 		if (contentFilters != null)
 			return;
@@ -146,14 +147,15 @@ public class MonitorPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(MonitorPlugin.PLUGIN_ID, "internalContentFilters");
 
 		int size = cf.length;
-		contentFilters = new HashMap(size);
+		Map map = new HashMap(size);
 		for (int i = 0; i < size; i++) {
 			String id = cf[i].getAttribute("id");
 			Trace.trace(Trace.CONFIG, "Loading filter: " + id);
-			contentFilters.put(id, new ContentFilter(cf[i]));
+			map.put(id, new ContentFilter(cf[i]));
 		}
+		contentFilters = map;
 	}
-	
+
 	protected synchronized void executeStartups() {
 		if (startupsLoaded)
 			return;
@@ -161,7 +163,7 @@ public class MonitorPlugin extends Plugin {
 		Trace.trace(Trace.CONFIG, "Loading startups"); 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(MonitorPlugin.PLUGIN_ID, "internalStartup");
-
+		
 		int size = cf.length;
 		for (int i = 0; i < size; i++) {
 			String id = cf[i].getAttribute("id");

@@ -474,15 +474,16 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "launchableAdapters");
 
 		int size = cf.length;
-		launchableAdapters = new ArrayList(size);
+		List list = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
-				launchableAdapters.add(new LaunchableAdapter(cf[i]));
+				list.add(new LaunchableAdapter(cf[i]));
 				Trace.trace(Trace.EXTENSION_POINT, "  Loaded launchableAdapter: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load launchableAdapter: " + cf[i].getAttribute("id"), t);
 			}
 		}
+		launchableAdapters = list;
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .launchableAdapters extension point -<-");
 	}
 
@@ -497,10 +498,10 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "clients");
 
 		int size = cf.length;
-		clients = new ArrayList(size);
+		List list = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
-				clients.add(new Client(cf[i]));
+				list.add(new Client(cf[i]));
 				Trace.trace(Trace.EXTENSION_POINT, "  Loaded clients: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load clients: " + cf[i].getAttribute("id"), t);
@@ -508,17 +509,18 @@ public class ServerPlugin extends Plugin {
 		}
 		
 		// sort by index to put lower numbers first in order
-		size = clients.size();
+		size = list.size();
 		for (int i = 0; i < size-1; i++) {
 			for (int j = i+1; j < size; j++) {
-				Client a = (Client) clients.get(i);
-				Client b = (Client) clients.get(j);
+				Client a = (Client) list.get(i);
+				Client b = (Client) list.get(j);
 				if (a.getPriority() < b.getPriority()) {
-					clients.set(i, b);
-					clients.set(j, a);
+					list.set(i, b);
+					list.set(j, a);
 				}
 			}
 		}
+		clients = list;
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .clients extension point -<-");
 	}
@@ -550,44 +552,20 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "publishTasks");
 
 		int size = cf.length;
-		publishTasks = new ArrayList(size);
+		List list = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
-				publishTasks.add(new PublishTask(cf[i]));
+				list.add(new PublishTask(cf[i]));
 				Trace.trace(Trace.EXTENSION_POINT, "  Loaded publishTask: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load publishTask: " + cf[i].getAttribute("id"), t);
 			}
 		}
+		publishTasks = list;
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .publishTasks extension point -<-");
 	}
-	
-	/**
-	 * Sort the given list of IOrdered items into indexed order.
-	 *
-	 * @param list java.util.List
-	 * @return java.util.List
-	 */
-	private static List sortOrderedList(List list) {
-		if (list == null)
-			return null;
 
-		int size = list.size();
-		for (int i = 0; i < size - 1; i++) {
-			for (int j = i + 1; j < size; j++) {
-				IOrdered a = (IOrdered) list.get(i);
-				IOrdered b = (IOrdered) list.get(j);
-				if (a.getOrder() > b.getOrder()) {
-					Object temp = a;
-					list.set(i, b);
-					list.set(j, temp);
-				}
-			}
-		}
-		return list;
-	}
-	
 	/**
 	 * Returns an array of all known module module factories.
 	 * <p>
@@ -604,7 +582,7 @@ public class ServerPlugin extends Plugin {
 		moduleFactories.toArray(mf);
 		return mf;
 	}
-	
+
 	/**
 	 * Returns the module factory with the given id, or <code>null</code>
 	 * if none. This convenience method searches the list of known
@@ -630,7 +608,7 @@ public class ServerPlugin extends Plugin {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Load the module factories extension point.
 	 */
@@ -642,75 +620,32 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleFactories");
 
 		int size = cf.length;
-		moduleFactories = new ArrayList(size);
+		List list = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
-				moduleFactories.add(new ModuleFactory(cf[i]));
+				list.add(new ModuleFactory(cf[i]));
 				Trace.trace(Trace.EXTENSION_POINT, "  Loaded moduleFactories: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load moduleFactories: " + cf[i].getAttribute("id"), t);
 			}
 		}
-		sortOrderedList(moduleFactories);
+		
+		size = list.size();
+		for (int i = 0; i < size - 1; i++) {
+			for (int j = i + 1; j < size; j++) {
+				ModuleFactory a = (ModuleFactory) list.get(i);
+				ModuleFactory b = (ModuleFactory) list.get(j);
+				if (a.getOrder() > b.getOrder()) {
+					list.set(i, b);
+					list.set(j, a);
+				}
+			}
+		}
+		moduleFactories = list;
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleFactories extension point -<-");
 	}
-	
-	/**
-	 * Returns all projects contained by the server. This included the
-	 * projects that are in the configuration, as well as their
-	 * children, and their children...
-	 *
-	 * @param server a server
-	 * @param monitor a progress monitor, or <code>null</code> if progress
-	 *    reporting and cancellation are not desired
-	 * @return a possibly-empty array of module instances {@link IModule}
-	 */
-	/*public static IModule[] getAllContainedModules(IServer server, IProgressMonitor monitor) {
-		//Trace.trace("> getAllContainedModules: " + getName(configuration));
-		List modules = new ArrayList();
-		if (server == null)
-			return new IModule[0];
 
-		// get all of the directly contained projects
-		IModule[] deploys = server.getModules();
-		if (deploys == null || deploys.length == 0)
-			return new IModule[0];
-
-		int size = deploys.length;
-		for (int i = 0; i < size; i++) {
-			if (deploys[i] != null && !modules.contains(deploys[i]))
-				modules.add(deploys[i]);
-		}
-
-		//Trace.trace("  getAllContainedModules: root level done");
-
-		// get all of the module's children
-		int count = 0;
-		while (count < modules.size()) {
-			IModule module = (IModule) modules.get(count);
-			try {
-				IModule[] children = server.getChildModules(module, monitor);
-				if (children != null) {
-					size = children.length;
-					for (int i = 0; i < size; i++) {
-						if (children[i] != null && !modules.contains(children[i]))
-							modules.add(children[i]);
-					}
-				}
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error getting child modules for: " + module.getName(), e);
-			}
-			count ++;
-		}
-
-		//Trace.trace("< getAllContainedModules");
-
-		IModule[] modules2 = new IModule[modules.size()];
-		modules.toArray(modules2);
-		return modules2;
-	}*/
-	
 	/**
 	 * Returns an array of all known server monitor instances.
 	 * <p>
@@ -726,7 +661,7 @@ public class ServerPlugin extends Plugin {
 		monitors.toArray(sm);
 		return sm;
 	}
-	
+
 	/**
 	 * Load the server monitor extension point.
 	 */
@@ -738,19 +673,20 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "internalServerMonitors");
 
 		int size = cf.length;
-		monitors = new ArrayList(size);
+		List list = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
-				monitors.add(new ServerMonitor(cf[i]));
+				list.add(new ServerMonitor(cf[i]));
 				Trace.trace(Trace.EXTENSION_POINT, "  Loaded serverMonitor: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load serverMonitor: " + cf[i].getAttribute("id"), t);
 			}
 		}
-	
+		monitors = list;
+		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .serverMonitors extension point -<-");
 	}
-	
+
 	/**
 	 * Returns an array of all known runtime locator instances.
 	 * <p>
@@ -766,7 +702,7 @@ public class ServerPlugin extends Plugin {
 		runtimeLocators.toArray(rl);
 		return rl;
 	}
-	
+
 	/**
 	 * Load the runtime locators.
 	 */
@@ -778,20 +714,20 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "runtimeLocators");
 
 		int size = cf.length;
-		runtimeLocators = new ArrayList(size);
+		List list = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
-				RuntimeLocator runtimeLocator = new RuntimeLocator(cf[i]);
-				runtimeLocators.add(runtimeLocator);
+				list.add(new RuntimeLocator(cf[i]));
 				Trace.trace(Trace.EXTENSION_POINT, "  Loaded runtimeLocator: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load runtimeLocator: " + cf[i].getAttribute("id"), t);
 			}
 		}
+		runtimeLocators = list;
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .runtimeLocators extension point -<-");
 	}
-	
+
 	/**
 	 * Returns an array of all module artifact adapters.
 	 *
@@ -805,7 +741,7 @@ public class ServerPlugin extends Plugin {
 		moduleArtifactAdapters.toArray(moa);
 		return moa;
 	}
-	
+
 	/**
 	 * Load the module artifact adapters extension point.
 	 */
@@ -817,10 +753,10 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleArtifactAdapters");
 
 		int size = cf.length;
-		moduleArtifactAdapters = new ArrayList(size);
+		List list = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
-				moduleArtifactAdapters.add(new ModuleArtifactAdapter(cf[i]));
+				list.add(new ModuleArtifactAdapter(cf[i]));
 				Trace.trace(Trace.EXTENSION_POINT, "  Loaded moduleArtifactAdapter: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load moduleArtifactAdapter: " + cf[i].getAttribute("id"), t);
@@ -828,17 +764,18 @@ public class ServerPlugin extends Plugin {
 		}
 		
 		// sort by index to put lower numbers first in order
-		size = moduleArtifactAdapters.size();
+		size = list.size();
 		for (int i = 0; i < size-1; i++) {
 			for (int j = i+1; j < size; j++) {
-				ModuleArtifactAdapter a = (ModuleArtifactAdapter) moduleArtifactAdapters.get(i);
-				ModuleArtifactAdapter b = (ModuleArtifactAdapter) moduleArtifactAdapters.get(j);
+				ModuleArtifactAdapter a = (ModuleArtifactAdapter) list.get(i);
+				ModuleArtifactAdapter b = (ModuleArtifactAdapter) list.get(j);
 				if (a.getPriority() < b.getPriority()) {
-					moduleArtifactAdapters.set(i, b);
-					moduleArtifactAdapters.set(j, a);
+					list.set(i, b);
+					list.set(j, a);
 				}
 			}
 		}
+		moduleArtifactAdapters = list;
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleArtifactAdapters extension point -<-");
 	}
@@ -1020,16 +957,16 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "installableServers");
 		
 		int size = cf.length;
-		installableServers = new ArrayList(size);
+		List list = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
-				InstallableServer is = new InstallableServer(cf[i]);
-				installableServers.add(is);
+				list.add(new InstallableServer(cf[i]));
 				Trace.trace(Trace.EXTENSION_POINT, "  Loaded installableServer: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load installableServer: " + cf[i].getAttribute("id"), t);
 			}
 		}
+		installableServers = list;
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .installableServers extension point -<-");
 	}
@@ -1046,16 +983,16 @@ public class ServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "installableRuntimes");
 		
 		int size = cf.length;
-		installableRuntimes = new ArrayList(size);
+		List list = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
-				InstallableRuntime ir = new InstallableRuntime(cf[i]);
-				installableRuntimes.add(ir);
+				list.add(new InstallableRuntime(cf[i]));
 				Trace.trace(Trace.EXTENSION_POINT, "  Loaded installableRuntime: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load installableRuntime: " + cf[i].getAttribute("id"), t);
 			}
 		}
+		installableRuntimes = list;
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .installableRuntimes extension point -<-");
 	}

@@ -629,9 +629,10 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, EXTENSION_WIZARD_FRAGMENTS);
 
-		wizardFragments = new HashMap(cf.length);
-		loadWizardFragments(cf);
+		Map map = new HashMap(cf.length);
+		loadWizardFragments(cf, map);
 		addRegistryListener();
+		wizardFragments = map;
 		
 		Trace.trace(Trace.CONFIG, "-<- Done loading .wizardFragments extension point -<-");
 	}
@@ -639,11 +640,11 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	/**
 	 * Load wizard fragments.
 	 */
-	private static synchronized void loadWizardFragments(IConfigurationElement[] cf) {
+	private static synchronized void loadWizardFragments(IConfigurationElement[] cf, Map map) {
 		for (int i = 0; i < cf.length; i++) {
 			try {
 				String id = cf[i].getAttribute("typeIds");
-				wizardFragments.put(id, new WizardFragmentData(id, cf[i]));
+				map.put(id, new WizardFragmentData(id, cf[i]));
 				Trace.trace(Trace.CONFIG, "  Loaded wizardFragment: " + id);
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load wizardFragment: " + cf[i].getAttribute("id"), t);
@@ -735,8 +736,9 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		
 		IConfigurationElement[] cf = delta.getExtension().getConfigurationElements();
 		
+		Map map = new HashMap(wizardFragments);
 		if (delta.getKind() == IExtensionDelta.ADDED) {
-			loadWizardFragments(cf);
+			loadWizardFragments(cf, map);
 		} else {
 			/*int size = wizardFragments.size();
 			WizardFragment[] wf = new WizardFragment[size];
@@ -752,5 +754,6 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 				}
 			}*/
 		}
+		wizardFragments = map;
 	}
 }
