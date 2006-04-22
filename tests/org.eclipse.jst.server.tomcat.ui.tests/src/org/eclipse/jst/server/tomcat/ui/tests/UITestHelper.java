@@ -102,8 +102,7 @@ public class UITestHelper {
 		if (!pages.hasNext())
 			return null;
 		
-		
-		title = title = "Title: " + name;
+		title = "Title: " + name;
 		dialog = new PropertyDialogWrapper(getShell(), manager, new StructuredSelection(element)); 
 		dialog.create();
 		dialog.getShell().setText(title);
