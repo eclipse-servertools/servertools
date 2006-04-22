@@ -266,18 +266,18 @@ public class JavaServerPlugin extends Plugin {
 		Trace.trace(Trace.CONFIG, "->- Loading .runtimeClasspathProviders extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(JavaServerPlugin.PLUGIN_ID, "runtimeClasspathProviders");
-
+		
 		int size = cf.length;
-		runtimeClasspathProviders = new ArrayList(size);
+		List list = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
-				RuntimeClasspathProviderWrapper runtimeClasspathProvider = new RuntimeClasspathProviderWrapper(cf[i]);
-				runtimeClasspathProviders.add(runtimeClasspathProvider);
+				list.add(new RuntimeClasspathProviderWrapper(cf[i]));
 				Trace.trace(Trace.CONFIG, "  Loaded runtimeClasspathProviders: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load runtimeClasspathProviders: " + cf[i].getAttribute("id"), t);
 			}
 		}
+		runtimeClasspathProviders = list;
 		
 		Trace.trace(Trace.CONFIG, "-<- Done loading .runtimeClasspathProviders extension point -<-");
 	}
@@ -311,16 +311,16 @@ public class JavaServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(JavaServerPlugin.PLUGIN_ID, "runtimeFacetMappings");
 
 		int size = cf.length;
-		runtimeFacetMappings = new ArrayList(size);
+		List list = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
-				RuntimeFacetMapping rfm = new RuntimeFacetMapping(cf[i]);
-				runtimeFacetMappings.add(rfm);
+				list.add(new RuntimeFacetMapping(cf[i]));
 				Trace.trace(Trace.CONFIG, "  Loaded runtimeFacetMapping: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load runtimeFacetMapping: " + cf[i].getAttribute("id"), t);
 			}
 		}
+		runtimeFacetMappings = list;
 		
 		Trace.trace(Trace.CONFIG, "-<- Done loading .runtimeFacetMapping extension point -<-");
 	}
@@ -354,16 +354,16 @@ public class JavaServerPlugin extends Plugin {
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(JavaServerPlugin.PLUGIN_ID, "serverProfilers");
 		
 		int size = cf.length;
-		serverProfilers = new ArrayList(size);
+		List list = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
-				ServerProfiler sp = new ServerProfiler(cf[i]);
-				serverProfilers.add(sp);
+				list.add(new ServerProfiler(cf[i]));
 				Trace.trace(Trace.CONFIG, "  Loaded serverProfiler: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load serverProfiler: " + cf[i].getAttribute("id"), t);
 			}
 		}
+		serverProfilers = list;
 		
 		Trace.trace(Trace.CONFIG, "-<- Done loading .serverProfilers extension point -<-");
 	}
