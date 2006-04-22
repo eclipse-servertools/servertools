@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: %Bundle-Name.0
+Bundle-Name: org.eclipse.wst.server.ui.tests
 Bundle-SymbolicName: org.eclipse.wst.server.ui.tests
 Bundle-Version: 1.0.0
 Bundle-ClassPath: tests.jar
 Bundle-Activator: org.eclipse.wst.server.ui.tests.TestsPlugin
-Bundle-Vendor: %Bundle-Vendor.0
+Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.server.ui.tests,
  org.eclipse.wst.server.ui.tests.dialog,
