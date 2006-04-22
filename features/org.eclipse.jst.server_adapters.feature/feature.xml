@@ -17,7 +17,6 @@
       <update label="Web Tools Platform (WTP) Updates" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
 
-
    <requires>
       <import feature="org.eclipse.jst.server_core.feature" version="1.0.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.jst.server_ui.feature" version="1.0.0" match="greaterOrEqual"/>
@@ -38,15 +37,40 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.jst.server.generic.serverdefinitions"
+         id="org.eclipse.jst.server.websphere.core"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.jst.server.websphere.core"
+         id="org.eclipse.jst.server.generic.jboss"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.jst.server.generic.jonas"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.jst.server.generic.oc4j"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.jst.server.generic.weblogic"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.jst.server.installable"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
