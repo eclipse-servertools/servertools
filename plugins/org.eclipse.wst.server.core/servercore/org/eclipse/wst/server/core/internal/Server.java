@@ -1350,7 +1350,7 @@ public class Server extends Base implements IServer {
 		Thread thread = new Thread() {
 			public void run() {
 				try {
-					Thread.sleep(serverTimeout * 1000);
+					Thread.sleep(serverTimeout);
 					if (!timer.alreadyDone) {
 						timer.timeout = true;
 						// notify waiter
@@ -1507,7 +1507,7 @@ public class Server extends Base implements IServer {
 		timer.alreadyDone = true;
 		
 		if (timer.timeout)
-			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartTimeout, new String[] { getName(), serverTimeout + "" }), null));
+			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartTimeout, new String[] { getName(), (serverTimeout / 1000) + "" }), null));
 		timer.alreadyDone = true;
 		
 		if (getServerState() == IServer.STATE_STOPPED)
