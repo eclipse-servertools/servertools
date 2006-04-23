@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.core.tests;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import org.eclipse.wst.internet.monitor.core.internal.provisional.*;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -17,6 +21,9 @@ import junit.framework.TestCase;
  * Note: use ports between 22100-22200 to ensure they are free on the build machine.
  */
 public class RequestTestCase extends TestCase {
+	private static final String CONNECT_TIMEOUT = "sun.net.client.defaultConnectTimeout";
+	private static final String READ_TIMEOUT = "sun.net.client.defaultReadTimeout";
+
 	private static IMonitor monitor;
 	
 	protected static IMonitor monitorEvent;
@@ -77,7 +84,13 @@ public class RequestTestCase extends TestCase {
 		assertTrue(monitor.isRunning());
 	}
 
-	/*public void test06Ping() throws Exception {
+	public void test06Ping() throws Exception {
+		String connectTimeout = System.getProperty(CONNECT_TIMEOUT);
+		String readTimeout = System.getProperty(READ_TIMEOUT);
+		
+		System.setProperty(CONNECT_TIMEOUT, "10000"); // 10000ms = 10s
+		System.setProperty(READ_TIMEOUT, "10000");
+		
 		URL url = new URL("http://localhost:22152/");
 		//URL url = new URL("http://www.eclipse.org/");
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -95,7 +108,14 @@ public class RequestTestCase extends TestCase {
 		}
 		in.close();
 		System.out.println("End of response from www.eclipse.org ---------------------------");
-	}*/
+		
+		try {
+			System.setProperty(CONNECT_TIMEOUT, connectTimeout);
+			System.setProperty(READ_TIMEOUT, readTimeout);
+		} catch (Exception e) {
+			// ignore - JDK bug on some systems doesn't allow null
+		}
+	}
 
 	public void test07CheckListener() throws Exception {
 		assertEquals(addCount, 1);
