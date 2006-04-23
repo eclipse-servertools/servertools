@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -95,7 +96,7 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 				getContainer().updateButtons();
 		}
 	}
-	
+
 	public void setMessage(String message, int type) {
 		if (type == IMessageProvider.ERROR && "".equals(message)) {
 			isEmptyError = true;
@@ -108,7 +109,7 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 			return;
 		getContainer().updateButtons();
 	}
-	
+
 	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable) throws InterruptedException, InvocationTargetException {
 		getWizard().getContainer().run(fork, cancelable, runnable);
 	}
@@ -116,7 +117,14 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 	public void update() {
 		fragment.updateChildFragments();
 		((TaskWizard) getWizard()).updatePages();
-		if (getContainer().getCurrentPage() != null)
-			getContainer().updateButtons();
+		
+		final IWizardContainer container = getContainer();
+		if (container.getCurrentPage() != null) {
+			getShell().getDisplay().syncExec(new Runnable() {
+				public void run() {
+					container.updateButtons();
+				}
+			});
+		}
 	}
 }

@@ -500,7 +500,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 			}
 		});
 	}
-	
+
 	/**
 	 * Returns true if the given server is already started in the given
 	 * mode, or could be (re)started in the start mode.
@@ -512,16 +512,16 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	public static boolean isCompatibleWithLaunchMode(IServer server, String launchMode) {
 		if (server == null || launchMode == null)
 			return false;
-
+		
 		int state = server.getServerState();
 		if (state == IServer.STATE_STARTED && launchMode.equals(server.getMode()))
 			return true;
-
-		if (server.getServerType().supportsLaunchMode(launchMode))
+		
+		if (server.getServerType() != null && server.getServerType().supportsLaunchMode(launchMode))
 			return true;
 		return false;
 	}
-	
+
 	/**
 	 * Open the new runtime wizard.
 	 * 

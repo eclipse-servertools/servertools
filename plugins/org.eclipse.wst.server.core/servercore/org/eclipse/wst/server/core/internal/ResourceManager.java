@@ -276,7 +276,7 @@ public class ResourceManager {
 			Server server = (Server) iterator.next();
 			try {
 				ServerType serverType = (ServerType) server.getServerType();
-				if (id.equals(serverType.getNamespace())) {
+				if (serverType != null && id.equals(serverType.getNamespace())) {
 					//server.stop(true);
 					server.dispose();
 				}
@@ -728,7 +728,7 @@ public class ResourceManager {
 		Iterator iterator = servers.iterator();
 		while (iterator.hasNext()) {
 			IServer server = (IServer) iterator.next();
-			if (server.getServerType().hasServerConfiguration() && folder.equals(server.getServerConfiguration())
+			if (server.getServerType() != null && server.getServerType().hasServerConfiguration() && folder.equals(server.getServerConfiguration())
 					&& server.getAdapter(ServerDelegate.class) != null) {
 				try {
 					((Server)server).getDelegate(null).configurationChanged();
@@ -739,13 +739,13 @@ public class ResourceManager {
 		}
 		return true;
 	}
-	
+
 	protected IServer loadServer(IFile file, IProgressMonitor monitor) throws CoreException {
 		Server server = new Server(file);
 		server.loadFromFile(monitor);
 		return server;
 	}
-	
+
 	/**
 	 * Tries to load a new server resource from the given resource.
 	 * Returns true if the load and register were successful.
