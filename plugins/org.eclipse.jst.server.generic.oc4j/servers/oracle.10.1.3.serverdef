@@ -133,8 +133,6 @@
 		<archive path="${OC4J_HOME}/lib/connector.jar"/>
 		<archive path="${OC4J_HOME}/lib/ejb.jar"/>
 		<archive path="${OC4J_HOME}/lib/ejb30.jar"/>
-		<archive path="${OC4J_HOME}/lib/persistence.jar"/>
-		<archive path="${OC4J_HOME}/lib/essentials.jar"/>
 		<archive path="${OC4J_HOME}/lib/jacc-api.jar"/>	
 		<archive path="${OC4J_HOME}/lib/javax77.jar"/>
 		<archive path="${OC4J_HOME}/lib/javax88.jar"/>		
@@ -144,7 +142,10 @@
 		<archive path="${OC4J_HOME}/lib/jta.jar"/>
 		<archive path="${OC4J_HOME}/lib/mail.jar"/>
 		<archive path="${OC4J_HOME}/lib/oc4j-unsupported-api.jar"/>
-		<archive path="${OC4J_HOME}/lib/servlet.jar"/>  		
+		<archive path="${OC4J_HOME}/lib/servlet.jar"/>
+		<archive path="${OC4J_HOME}/../../lib/xmlparserv2.jar"/>
+		<archive path="${OC4J_HOME}/../../toplink/jlib/antlr.jar"/>
+		<archive path="${OC4J_HOME}/../../toplink/jlib/toplink.jar"/>		  		
 		<archive path="${OC4J_HOME}/../../webservices/lib/soap.jar"/>
 		<archive path="${OC4J_HOME}/../../webservices/lib/wsdl.jar"/>		
 	</classpath>
