@@ -240,6 +240,9 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
         if(!environVars.isEmpty()){
         	wc.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES,environVars);
         }
+		wc.setAttribute(
+				IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
+				resolver.resolveProperties(serverDef.getStop().getProgramArgumentsAsString()));
 		wc.setAttribute(ExternalLaunchConfigurationDelegate.EXECUTABLE_NAME, external); 	
 		wc.setAttribute(Server.ATTR_SERVER_ID, getServer().getId());
 	}
