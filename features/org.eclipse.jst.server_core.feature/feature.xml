@@ -17,7 +17,6 @@
       <update label="Web Tools Platform (WTP) Updates" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
 
-
    <requires>
       <import feature="org.eclipse.platform" version="3.2" match="equivalent"/>
       <import feature="org.eclipse.emf" version="2.2" match="equivalent"/>
@@ -39,5 +38,17 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+<!--
+		 we do unpack this one, because it just contains jars which are copied as 
+       	resources, so that's easier (faster?) to do if already unpacked. 
+       	This should be investigated further in the future, to weigh tradeoffs. 
+-->
+   <plugin
+         id="org.apache.cactus"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="true"/>
 
 </feature>
