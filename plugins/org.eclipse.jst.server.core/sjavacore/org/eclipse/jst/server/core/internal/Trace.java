@@ -30,6 +30,8 @@ public class Trace {
 	 */
 	public static byte FINEST = 3;
 
+	public static byte PUBLISHING = 4;
+
 	/**
 	 * Trace constructor comment.
 	 */
@@ -46,7 +48,7 @@ public class Trace {
 	public static void trace(byte level, String s) {
 		Trace.trace(level, s, null);
 	}
-	
+
 	/**
 	 * Trace the given message and exception.
 	 *
@@ -57,8 +59,8 @@ public class Trace {
 	public static void trace(byte level, String s, Throwable t) {
 		if (!JavaServerPlugin.getInstance().isDebugging())
 			return;
-
-		System.out.println(JavaServerPlugin.PLUGIN_ID + " " +s);
+		
+		System.out.println(JavaServerPlugin.PLUGIN_ID + " " + s);
 		if (t != null)
 			t.printStackTrace();
 	}

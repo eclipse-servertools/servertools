@@ -56,6 +56,7 @@ public class PublishUtil {
 	 *
 	 * @param in java.io.InputStream
 	 * @param to java.lang.String
+	 * @deprecated Unused - will be removed.
 	 * @return a status
 	 */
 	public static IStatus copyFile(InputStream in, String to) {
@@ -97,7 +98,7 @@ public class PublishUtil {
 	 * @param ts timestamp
 	 * @throws CoreException if anything goes wrong
 	 */
-	private static void copyFile(InputStream in, IPath to, long ts) throws CoreException {
+	private static void copyFile(InputStream in, IPath to, long ts, IModuleFile mf) throws CoreException {
 		OutputStream out = null;
 		
 		File tempFile = null;
@@ -107,7 +108,7 @@ public class PublishUtil {
 			tempFile = File.createTempFile("tmp", "." + to.getFileExtension(), tempDir);
 			
 			out = new FileOutputStream(tempFile);
-	
+			
 			int avail = in.read(buf);
 			while (avail > 0) {
 				out.write(buf, 0, avail);
@@ -117,27 +118,14 @@ public class PublishUtil {
 			out.close();
 			out = null;
 			
-			int i = 0;
-			//System.out.print("file: " + file.exists() + " " + tempFile.exists());
-			if (file.exists()) {
-				i += 1;
-				if (!file.delete()) {
-					i += 2;
-					tempFile.delete();
-					throw new Exception(NLS.bind(Messages.errorDelete, file.toString()));
-				}
-			}
-			i += 4;
-			//System.out.println(" " + i + " " + file.exists() + " " + tempFile.exists());
-			if (!tempFile.renameTo(file)) {
-				throw new Exception(NLS.bind(Messages.errorRename, tempFile.toString(), file.toString()));
-			}
+			moveTempFile(tempFile, file);
 			
 			if (ts != IResource.NULL_STAMP && ts != 0)
 				file.setLastModified(ts);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error copying file", e);
-			throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCopyingFile, to.toOSString(), e.getLocalizedMessage()), e));
+			IPath path = mf.getModuleRelativePath().append(mf.getName());
+			Trace.trace(Trace.SEVERE, "Error copying file: " + to.toOSString() + " to " + path.toOSString(), e);
+			throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCopyingFile, path.toOSString(), e.getLocalizedMessage()), null));
 		} finally {
 			if (tempFile != null && tempFile.exists())
 				tempFile.deleteOnExit();
@@ -157,9 +145,10 @@ public class PublishUtil {
 	}
 
 	private static void copyFile(IModuleFile mf, IPath path) throws CoreException {
+		Trace.trace(Trace.PUBLISHING, "Publishing: " + mf.getName() + " to " + path.toString());
 		IFile file = (IFile) mf.getAdapter(IFile.class);
 		if (file != null) {
-			copyFile(file.getContents(), path, file.getLocalTimeStamp());
+			copyFile(file.getContents(), path, file.getLocalTimeStamp(), mf);
 		} else {
 			File file2 = (File) mf.getAdapter(File.class);
 			InputStream in = null;
@@ -168,7 +157,7 @@ public class PublishUtil {
 			} catch (IOException e) {
 				throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorReading, file2.getAbsolutePath()), e));
 			}
-			copyFile(in, path, file2.lastModified());
+			copyFile(in, path, file2.lastModified(), mf);
 		}
 	}
 
@@ -251,38 +240,40 @@ public class PublishUtil {
 		int dw = 0;
 		if (toSize > 0)
 			dw = 500 / toSize;
-
+		
 		for (int i = 0; i < fromSize; i++) {
 			IModuleResource current = resources[i];
-
-			// check if this is a new or newer file
-			boolean copy = true;
+			String name = current.getName();
 			boolean currentIsDir = current instanceof IModuleFolder;
+			IPath toPath = path.append(name);
+			
 			if (!currentIsDir) {
-				//String name = current.getName();
-				//IModuleFile mf = (IModuleFile) current;
+				// check if this is a new or newer file
+				boolean copy = true;
+				IModuleFile mf = (IModuleFile) current;
 				
-				//long mod = mf.getModificationStamp();
-				// TODO
-				/*for (int j = 0; j < toSize; j++) {
-					if (name.equals(toFiles[j].getName()) && mod <= toFiles[j].lastModified())
-						copy = false;
-				}*/
-			}
-
-			if (copy) {
-				//String fromFile = current.getAbsolutePath();
-				IPath toPath = path.append(current.getName());
-				if (!currentIsDir) {
-					IModuleFile mf = (IModuleFile) current;
-					copyFile(mf, toPath);
-					monitor.worked(dw);
-				} else { //if (currentIsDir) {
-					IModuleFolder folder = (IModuleFolder) current;
-					IModuleResource[] children = folder.members();
-					monitor.subTask(NLS.bind(Messages.copyingTask, new String[] {resources[i].getName(), current.getName()}));
-					smartCopy(children, toPath, ProgressUtil.getSubMonitorFor(monitor, dw));
+				long mod = -1;
+				IFile file = (IFile) mf.getAdapter(IFile.class);
+				if (file != null) {
+					mod = file.getLocalTimeStamp();
+				} else {
+					File file2 = (File) mf.getAdapter(File.class);
+					mod = file2.lastModified();
 				}
+				
+				for (int j = 0; j < toSize; j++) {
+					if (name.equals(toFiles[j].getName()) && mod == toFiles[j].lastModified())
+						copy = false;
+				}
+				
+				if (copy)
+					copyFile(mf, toPath);
+				monitor.worked(dw);
+			} else { //if (currentIsDir) {
+				IModuleFolder folder = (IModuleFolder) current;
+				IModuleResource[] children = folder.members();
+				monitor.subTask(NLS.bind(Messages.copyingTask, new String[] {resources[i].getName(), current.getName()}));
+				smartCopy(children, toPath, ProgressUtil.getSubMonitorFor(monitor, dw));
 			}
 			if (monitor.isCanceled())
 				return;
@@ -300,7 +291,7 @@ public class PublishUtil {
 			if (kind2 == IModuleResourceDelta.REMOVED)
 				deleteFile(path, file);
 			else
-				copyFile(path, file);
+				copyFile2(file, path);
 			return;
 		}
 		
@@ -319,11 +310,13 @@ public class PublishUtil {
 	}
 
 	protected static void deleteFile(IPath path, IModuleFile file) {
+		Trace.trace(Trace.PUBLISHING, "Deleting: " + file.getName() + " from " + path.toString());
 		IPath path2 = path.append(file.getModuleRelativePath()).append(file.getName());
 		path2.toFile().delete();
 	}
 
-	private static void copyFile(IPath path, IModuleFile mf) throws CoreException {
+	private static void copyFile2(IModuleFile mf, IPath path) throws CoreException {
+		Trace.trace(Trace.PUBLISHING, "Publishing: " + mf.getName() + " to " + path.toString());
 		IPath path3 = path.append(mf.getModuleRelativePath()).append(mf.getName());
 		File f = path3.toFile().getParentFile();
 		if (!f.exists())
@@ -331,7 +324,7 @@ public class PublishUtil {
 		
 		IFile file = (IFile) mf.getAdapter(IFile.class);
 		if (file != null)
-			copyFile(file.getContents(), path3, file.getLocalTimeStamp());
+			copyFile(file.getContents(), path3, file.getLocalTimeStamp(), mf);
 		else {
 			File file2 = (File) mf.getAdapter(File.class);
 			InputStream in = null;
@@ -340,7 +333,7 @@ public class PublishUtil {
 			} catch (IOException e) {
 				throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorReading, file2.getAbsolutePath()), e));
 			}
-			copyFile(in, path3, file2.lastModified());
+			copyFile(in, path3, file2.lastModified(), mf);
 		}
 	}
 
@@ -355,6 +348,7 @@ public class PublishUtil {
 	}
 
 	private static void copy(IModuleResource resource, IPath path) throws CoreException {
+		Trace.trace(Trace.PUBLISHING, "Publishing: " + resource.getName() + " to " + path.toString());
 		if (resource instanceof IModuleFolder) {
 			IModuleFolder folder = (IModuleFolder) resource;
 			copy(folder.members(), path);
@@ -366,7 +360,7 @@ public class PublishUtil {
 				f.mkdirs();
 			IFile file = (IFile) mf.getAdapter(IFile.class);
 			if (file != null)
-				copyFile(file.getContents(), path3, file.getLocalTimeStamp());
+				copyFile(file.getContents(), path3, file.getLocalTimeStamp(), mf);
 			else {
 				File file2 = (File) mf.getAdapter(File.class);
 				InputStream in = null;
@@ -375,7 +369,7 @@ public class PublishUtil {
 				} catch (IOException e) {
 					throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorReading, file2.getAbsolutePath()), e));
 				}
-				copyFile(in, path3, file2.lastModified());
+				copyFile(in, path3, file2.lastModified(), mf);
 			}
 		}
 	}
@@ -408,14 +402,7 @@ public class PublishUtil {
 			addZipEntries(zout, resources);
 			zout.close();
 			
-			if (file.exists()) {
-				if (!file.delete()) {
-					tempFile.delete();
-					throw new Exception(NLS.bind(Messages.errorDelete, file.toString()));
-				}
-			}
-			if (!tempFile.renameTo(file))
-				throw new Exception(NLS.bind(Messages.errorRename, tempFile.toString(), file.toString()));
+			moveTempFile(tempFile, file);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error zipping", e);
 			throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCreatingZipFile, zipPath.lastSegment(), e.getLocalizedMessage()), e));
@@ -470,5 +457,77 @@ public class PublishUtil {
 			
 			zout.closeEntry();
 		}
+	}
+
+	/**
+	 * Utility method to move a temp file into position by deleting the original and
+	 * swapping in a new copy.
+	 *  
+	 * @param tempFile
+	 * @param file
+	 * @throws Exception
+	 */
+	private static void moveTempFile(File tempFile, File file) throws Exception {
+		if (file.exists()) {
+			if (!safeDelete(file)) {
+				tempFile.delete();
+				throw new Exception(NLS.bind(Messages.errorDelete, file.toString()));
+			}
+		}
+		if (!safeRename(tempFile, file))
+			throw new Exception(NLS.bind(Messages.errorRename, tempFile.toString()));
+	}
+
+	/**
+	 * Safe delete. Tries to delete multiple times before giving up.
+	 * 
+	 * @param f
+	 * @return <code>true</code> if it succeeds, <code>false</code> otherwise
+	 */
+	private static boolean safeDelete(File f) {
+		int count = 0;
+		while (count < 10) {
+			if (!f.exists())
+				return true;
+			
+			f.delete();
+			
+			if (!f.exists())
+				return true;
+			
+			try {
+				Thread.sleep(100);
+			} catch (Exception e) {
+				// ignore
+			}
+			count++;
+		}
+		return false;
+	}
+
+	/**
+	 * Safe rename. Will try multiple times before giving up.
+	 * 
+	 * @param from
+	 * @param to
+	 * @return <code>true</code> if it succeeds, <code>false</code> otherwise
+	 */
+	private static boolean safeRename(File from, File to) {
+		if (!from.exists())
+			return false;
+		
+		int count = 0;
+		while (count < 10) {
+			if (from.renameTo(to))
+				return true;
+			
+			try {
+				Thread.sleep(100);
+			} catch (Exception e) {
+				// ignore
+			}
+			count++;
+		}
+		return false;
 	}
 }
