@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.jst.server.generic.core" id="serverdefinition" name="Server Definition"/>
       </appInfo>
       <documentation>
-         This extension point defines a new generic server plugin.
+         This extension point defines a new generic server definition file.
       </documentation>
    </annotation>
 
@@ -71,7 +71,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         &lt;b&gt;This extension point is part of an interim API that is still under development and expected to change significantly before reaching stability. It is being made available at this early stage to solicit feedback from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken (repeatedly) as the API evolves.&lt;/b&gt;
+         1.0
       </documentation>
    </annotation>
 
@@ -81,6 +81,12 @@
       </appInfo>
       <documentation>
          
+&lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.jst.server.generic.core.serverdefinition&quot;&gt;
+		&lt;serverdefinition id=&quot;org.eclipse.jst.server.generic.runtime.jonas4&quot; definitionfile=&quot;/servers/jonas.serverdef&quot;&gt;
+		&lt;/serverdefinition&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
       </documentation>
    </annotation>
 
@@ -107,11 +113,9 @@
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-         Copyright (c) 2000, 2005 IBM Corporation and others.&lt;br&gt;
-All rights reserved. This program and the accompanying materials are made 
-available under the terms of the Eclipse Public License v1.0 which accompanies 
-this distribution, and is available at 
+         Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at
 &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
+
       </documentation>
    </annotation>
 
