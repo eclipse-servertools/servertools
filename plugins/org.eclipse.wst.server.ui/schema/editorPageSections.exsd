@@ -54,14 +54,14 @@
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies a unique identifier for this extension point
+                  specifies a unique identifier for this section
                </documentation>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;org.eclipse.wst.server.ui.editor.IServerEditorSection&lt;/samp&gt;.
+                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;org.eclipse.wst.server.ui.editor.IServerEditorSection&lt;/samp&gt;
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.wst.server.ui.editor.IServerEditorSection"/>
@@ -71,21 +71,21 @@
          <attribute name="typeIds" type="string">
             <annotation>
                <documentation>
-                  
+                  a comma separated list of server type ids. May include wildcards (*) at the end of an id
                </documentation>
             </annotation>
          </attribute>
          <attribute name="order" type="string">
             <annotation>
                <documentation>
-                  
+                  an integer that specifies an absolute ordering of the section relative to other sections
                </documentation>
             </annotation>
          </attribute>
          <attribute name="insertionId" type="string">
             <annotation>
                <documentation>
-                  
+                  the editor page insertion id that this section should be inserted into
                </documentation>
             </annotation>
          </attribute>
@@ -130,7 +130,7 @@
          Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;code&gt;org.eclipse.wst.server.ui.editor.ServerEditorPageSectionFactoryDelegate&lt;/code&gt;.
       </documentation>
    </annotation>
-   
+
    <annotation>
       <appInfo>
          <meta.section type="implementation"/>

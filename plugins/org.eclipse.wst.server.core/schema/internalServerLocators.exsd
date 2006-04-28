@@ -67,14 +67,14 @@ Server locator instances of this type will delegate to instances of this class.
          <attribute name="supportsRemoteHosts" type="string" use="required">
             <annotation>
                <documentation>
-                  local and/or remote
+                  true if the server supports remote server support, and false if only local servers are supported
                </documentation>
             </annotation>
          </attribute>
          <attribute name="typeIds" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a comma separated list of server type ids. May include wildcards (*) at the end of an id
                </documentation>
             </annotation>
          </attribute>

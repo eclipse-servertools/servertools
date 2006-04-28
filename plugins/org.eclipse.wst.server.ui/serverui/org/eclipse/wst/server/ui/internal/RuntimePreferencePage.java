@@ -94,6 +94,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		label = new Label(composite, SWT.WRAP);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 2;
+		data.verticalIndent = 5;
 		label.setLayoutData(data);
 		label.setText(Messages.preferenceRuntimesTable);
 		

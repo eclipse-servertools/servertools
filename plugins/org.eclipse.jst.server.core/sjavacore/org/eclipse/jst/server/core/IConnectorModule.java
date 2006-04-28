@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IPath;
  * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
  * (repeatedly) as the API evolves.
  * </p>
- * @plannedfor 1.5
+ * @plannedfor 2.0
  */
 public interface IConnectorModule extends IJ2EEModule {
 	/**

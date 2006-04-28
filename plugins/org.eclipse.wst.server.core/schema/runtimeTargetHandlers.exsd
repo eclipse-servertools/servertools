@@ -42,7 +42,7 @@
    <element name="runtimeTargetHandler">
       <annotation>
          <appInfo>
-            <meta.element labelAttribute="name"/>
+            <meta.element labelAttribute="name" deprecated="true"/>
          </appInfo>
       </annotation>
       <complexType>
@@ -119,7 +119,7 @@ Runtime target handler instances of this type will delegate to instances of this
          Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;code&gt;org.eclipse.wst.server.core.model.RuntimeTargetHandlerDelegate&lt;/code&gt; and contains a public 0-arg constructor.
       </documentation>
    </annotation>
-   
+
    <annotation>
       <appInfo>
          <meta.section type="implementation"/>

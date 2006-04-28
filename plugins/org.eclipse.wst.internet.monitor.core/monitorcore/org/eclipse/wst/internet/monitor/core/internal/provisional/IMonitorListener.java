@@ -15,8 +15,6 @@ package org.eclipse.wst.internet.monitor.core.internal.provisional;
  * Clients should implement this interface and register
  * their listener via {@link MonitorCore#addMonitorListener(IMonitorListener)}.
  * </p>
- * 
- * @plannedfor 1.0
  */
 public interface IMonitorListener {
 	

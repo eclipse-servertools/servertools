@@ -16,8 +16,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
 /**
- *
- * @plannedfor 1.0
+ * 
  */
 public abstract class ServerEditorActionFactoryDelegate {
 	/**

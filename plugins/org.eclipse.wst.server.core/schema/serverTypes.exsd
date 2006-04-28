@@ -74,7 +74,7 @@
             <annotation>
                <documentation>
                   specifies the fully qualified name of the Java class that extends &lt;samp&gt;org.eclipse.wst.server.core.model.ServerDelegate&lt;/samp&gt;.
-Server instances of this type will delegate to instances of this class. Delegates must also have a public 0-arg constructor.
+Server instances of this type will delegate to instances of this class. Delegates must also have a public 0-arg constructor
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.ServerDelegate"/>
@@ -85,7 +85,7 @@ Server instances of this type will delegate to instances of this class. Delegate
             <annotation>
                <documentation>
                   specifies the fully qualified name of the Java class that implements &lt;samp&gt;org.eclipse.wst.server.core.model.ServerBehaviourDelegate&lt;/samp&gt;.
-Server instances of this type will delegate to instances of this class. Delegates must also have a public 0-arg constructor.
+Server instances of this type will delegate to instances of this class. Delegates must also have a public 0-arg constructor
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.ServerBehaviourDelegate"/>
@@ -102,7 +102,7 @@ Server instances of this type will delegate to instances of this class. Delegate
          <attribute name="runtimeTypeId" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  the runtime type id that this server type corresponds to
                </documentation>
             </annotation>
          </attribute>
@@ -123,14 +123,14 @@ Server instances of this type will delegate to instances of this class. Delegate
          <attribute name="runtime" type="boolean">
             <annotation>
                <documentation>
-                  &quot;true&quot; if this server requires a runtime, &quot;false&quot; otherwise
+                  true if this server requires a runtime, and false otherwise
                </documentation>
             </annotation>
          </attribute>
          <attribute name="launchModes" type="string">
             <annotation>
                <documentation>
-                  the launch modes that this server supports
+                  a comma separated list of the launch modes that this server supports
                </documentation>
             </annotation>
          </attribute>

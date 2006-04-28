@@ -60,7 +60,7 @@
             <annotation>
                <documentation>
                   specifies the fully qualified name of the Java class that extends &lt;samp&gt;ModuleFactoryDelegate&lt;/samp&gt;.
-Module factory instances of this type will delegate to instances of this class.
+Module factory instances of this type will delegate to instances of this class
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.wst.server.core.model.ModuleFactoryDelegate"/>
@@ -70,14 +70,14 @@ Module factory instances of this type will delegate to instances of this class.
          <attribute name="projects" type="boolean">
             <annotation>
                <documentation>
-                  
+                  true if this factory may return projects within the workspace, and false otherwise
                </documentation>
             </annotation>
          </attribute>
          <attribute name="order" type="string">
             <annotation>
                <documentation>
-                  
+                  an integer that specifies the order that the module factory is processed
                </documentation>
             </annotation>
          </attribute>
@@ -89,14 +89,14 @@ Module factory instances of this type will delegate to instances of this class.
          <attribute name="types" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a comma separated list of module type ids
                </documentation>
             </annotation>
          </attribute>
          <attribute name="versions" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a comma separated list of module versions
                </documentation>
             </annotation>
          </attribute>

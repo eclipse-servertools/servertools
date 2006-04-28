@@ -20,8 +20,6 @@ import org.eclipse.wst.internet.monitor.core.internal.MonitorManager;
  * This class provides all functionality through static members. It is not intended
  * to be instantiated or subclassed.
  * </p>
- * 
- * @plannedfor 1.0
  */
 public final class MonitorCore {
 	private static MonitorManager manager;

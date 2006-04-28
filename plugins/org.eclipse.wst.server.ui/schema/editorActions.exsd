@@ -54,7 +54,7 @@
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies a unique identifier for this extension point
+                  specifies a unique identifier for this action
                </documentation>
             </annotation>
          </attribute>
@@ -71,14 +71,14 @@
          <attribute name="typeIds" type="string">
             <annotation>
                <documentation>
-                  
+                  a comma separated list of server type ids. May include wildcards (*) at the end of an id
                </documentation>
             </annotation>
          </attribute>
          <attribute name="name" type="string">
             <annotation>
                <documentation>
-                  
+                  a translatable name used to identify this action
                </documentation>
                <appInfo>
                   <meta.attribute translatable="true"/>
@@ -88,7 +88,7 @@
          <attribute name="order" type="string">
             <annotation>
                <documentation>
-                  
+                  an integer that specifies an absolute ordering of the action relative to other actions
                </documentation>
             </annotation>
          </attribute>

@@ -69,7 +69,7 @@ Launchable adapter instances of this type will delegate to instances of this cla
          <attribute name="typeIds" type="string">
             <annotation>
                <documentation>
-                  
+                  a comma separated list of server type ids. May include wildcards (*) at the end of an id
                </documentation>
             </annotation>
          </attribute>
@@ -111,7 +111,7 @@ Launchable adapter instances of this type will delegate to instances of this cla
          Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;code&gt;org.eclipse.wst.server.core.model.LaunchableAdapterDelegate&lt;/code&gt; and contains a public 0-arg constructor.
       </documentation>
    </annotation>
-   
+
    <annotation>
       <appInfo>
          <meta.section type="implementation"/>

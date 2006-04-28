@@ -19,8 +19,6 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
  * This abstract class is intended to be extended only by clients
  * to extend the <code>serverLocators</code> extension point.
  * </p>
- * 
- * @plannedfor 1.0
  */
 public abstract class ServerLocatorDelegate {
 	/**

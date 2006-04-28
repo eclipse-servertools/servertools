@@ -52,14 +52,14 @@
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies a unique identifier for this extension point
+                  specifies a unique identifier for this category
                </documentation>
             </annotation>
          </attribute>
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a translatable name used to identify this category
                </documentation>
             </annotation>
          </attribute>
@@ -71,21 +71,21 @@
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  specifies a unique identifier for this sound
                </documentation>
             </annotation>
          </attribute>
          <attribute name="category" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a category id
                </documentation>
             </annotation>
          </attribute>
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a translatable name used to identify this sound
                </documentation>
             </annotation>
          </attribute>
@@ -127,7 +127,7 @@
          
       </documentation>
    </annotation>
-   
+
    <annotation>
       <appInfo>
          <meta.section type="implementation"/>

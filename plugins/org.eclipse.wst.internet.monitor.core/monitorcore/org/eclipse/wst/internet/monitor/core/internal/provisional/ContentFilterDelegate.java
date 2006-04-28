@@ -30,8 +30,6 @@ import java.io.IOException;
  * I assume that filters operate on the byte stream and aren't concerned with UI presentation...
  * but usually UI's and filters are tightly coupled.
  * </p>
- * 
- * @plannedfor 1.0
  */
 public abstract class ContentFilterDelegate {
 	/**

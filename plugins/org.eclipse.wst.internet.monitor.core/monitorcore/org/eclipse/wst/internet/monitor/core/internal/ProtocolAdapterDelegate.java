@@ -39,8 +39,6 @@ import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitor;
  * system when the monitor is changed or deleted, or when the plug-in is
  * being shut down.]
  * </p>
- * 
- * @plannedfor 1.0
  */
 public abstract class ProtocolAdapterDelegate {
 	/**

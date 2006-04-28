@@ -30,8 +30,6 @@ import org.eclipse.wst.internet.monitor.core.internal.Trace;
  * This interface is intended to be extended only by clients
  * to extend the <code>protocolAdapters</code> extension point. 
  * </p>
- * 
- * @plannedfor 1.0
  */
 public class Request implements IAdaptable {
 	protected Monitor monitor;

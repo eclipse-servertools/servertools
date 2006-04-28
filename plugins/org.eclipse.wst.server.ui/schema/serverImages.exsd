@@ -51,14 +51,14 @@
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies a unique identifier for this extension point
+                  specifies a unique identifier for this image
                </documentation>
             </annotation>
          </attribute>
          <attribute name="icon" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a bundle-relative path to the icon image
                </documentation>
                <appInfo>
                   <meta.attribute kind="resource"/>
@@ -68,7 +68,7 @@
          <attribute name="typeIds" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a comma separated list of runtime or server type ids
                </documentation>
             </annotation>
          </attribute>
@@ -111,7 +111,7 @@
          
       </documentation>
    </annotation>
-   
+
    <annotation>
       <appInfo>
          <meta.section type="implementation"/>

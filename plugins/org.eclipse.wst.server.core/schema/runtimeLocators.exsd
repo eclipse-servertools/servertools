@@ -67,7 +67,7 @@ Runtime locator instances of this type will delegate to instances of this class.
          <attribute name="typeIds" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a comma separated list of runtime type ids. May include wildcards (*) at the end of an id
                </documentation>
             </annotation>
          </attribute>
@@ -111,7 +111,7 @@ Runtime locator instances of this type will delegate to instances of this class.
          Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;code&gt;org.eclipse.wst.server.core.model.RuntimeLocatorDelegate&lt;/code&gt; and contains a public 0-arg constructor.
       </documentation>
    </annotation>
-   
+
    <annotation>
       <appInfo>
          <meta.section type="implementation"/>

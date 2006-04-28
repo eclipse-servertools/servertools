@@ -54,14 +54,14 @@
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies a unique identifier for this extension point
+                  specifies a unique identifier for this page
                </documentation>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;org.eclipse.ui.IEditorPart&lt;/samp&gt;.
+                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;org.eclipse.ui.IEditorPart&lt;/samp&gt;
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.ui.IEditorPart"/>
@@ -71,7 +71,7 @@
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a translatable name used to identify this page
                </documentation>
                <appInfo>
                   <meta.attribute translatable="true"/>
@@ -81,21 +81,21 @@
          <attribute name="typeIds" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a comma separated list of server type ids. May include wildcards (*) at the end of an id
                </documentation>
             </annotation>
          </attribute>
          <attribute name="order" type="string">
             <annotation>
                <documentation>
-                  
+                  an integer that specifies an absolute ordering of the page relative to other pages
                </documentation>
             </annotation>
          </attribute>
          <attribute name="insertionIds" type="string">
             <annotation>
                <documentation>
-                  
+                  a comma separated list of insertion ids that allow sections to be plugged in
                </documentation>
             </annotation>
          </attribute>
@@ -140,7 +140,7 @@
          Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;code&gt;org.eclipse.wst.server.ui.editor.ServerEditorPartFactoryDelegate&lt;/code&gt;.
       </documentation>
    </annotation>
-   
+
    <annotation>
       <appInfo>
          <meta.section type="implementation"/>
