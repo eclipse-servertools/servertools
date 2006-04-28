@@ -75,8 +75,7 @@ public class JUnitClientDelegate extends ClientDelegate {
 		try {
 			ILaunchConfigurationType configType = getJUnitLaunchConfigType();
 			ILaunchConfigurationWorkingCopy wc = configType.newInstance(null,
-					DebugPlugin.getDefault().getLaunchManager()
-							.generateUniqueLaunchConfigurationNameFrom(name));
+					DebugPlugin.getDefault().getLaunchManager().generateUniqueLaunchConfigurationNameFrom(name));
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, mainType);
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, projectName);
 			wc.setAttribute(JUnitBaseLaunchConfiguration.ATTR_KEEPRUNNING, false);
@@ -125,19 +124,17 @@ public class JUnitClientDelegate extends ClientDelegate {
 		// prompt the
 		// user to choose one.
 		int candidateCount = candidateConfigs.size();
-		if (candidateCount < 1) {
+		if (candidateCount < 1)
 			return null;
-		} else if (candidateCount == 1) {
+		else if (candidateCount == 1)
 			return (ILaunchConfiguration) candidateConfigs.get(0);
-		} else {
+		else {
 			// Prompt the user to choose a config. A null result means the user
 			// cancelled the dialog, in which case this method returns null,
 			// since cancelling the dialog should also cancel launching anything.
-			ILaunchConfiguration config = chooseConfiguration(candidateConfigs,
-					mode);
-			if (config != null) {
+			ILaunchConfiguration config = chooseConfiguration(candidateConfigs, mode);
+			if (config != null)
 				return config;
-			}
 		}
 		return null;
 	}

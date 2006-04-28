@@ -89,4 +89,12 @@
       <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
     </adapter>
   </extension>
+
+  <extension point="org.eclipse.jdt.ui.quickFixProcessors">
+    <quickFixProcessor
+       name="%cactusQuickFixProcessor"
+       class="org.eclipse.jst.server.ui.internal.cactus.CactusQuickFixProcessor"
+       id="org.eclipse.jst.server.ui.internal.cactus.CactusQuickFixProcessor">
+    </quickFixProcessor>
+  </extension>
 </plugin>

@@ -36,12 +36,23 @@ public class Messages extends NLS {
 
 	public static String NewServletTestCaseWizard_WindowTitle;
 	public static String NewServletTestCaseWizard_ErrorMessageTitleMissingLibrary;
-	public static String NewServletTestCaseWizard_ErrorMessageMissingType;
 	public static String NewServletTestCaseWizard_ErrorMessageMissingLibrary;
 	public static String NewServletTestCaseWizard_ErrorTitleNew;
 	public static String NewServletTestCaseWizard_ErrorTitleCreateOfElementFailed;
 	public static String NewServletTestCaseWizard_ErrorMessageSeeErrorLog;
-
+    public static String NewServletTestCaseWizard_WarningMessageSelectAWebProject;
+    public static String NewServletTestCaseWizard_WarningTitleWebProjectRequired;
+    public static String NewServletTestCaseWizard_WarningMessageSuperclassIsEmpty;
+    public static String NewServletTestCaseWizard_WarningMessageSuperclassDoesNotExist;
+    public static String NewServletTestCaseWizard_WarningMessageSuperclassIsInterface;
+    public static String NewServletTestCaseWizard_WarningMessageSuperclassNotServletTestCase;
+    public static String CactusAddLibrariesProposal_ErrorMessageCouldntInstallLibraries;
+    public static String CactusAddLibrariesProposal_ErrorMessageCactusBundleNotFound;
+    public static String CactusAddLibrariesProposal_ErrorMessageDestDirNotFound;
+    public static String CactusAddLibrariesProposal_ErrorMessageInstallationOfLibsFailed;
+    public static String CactusAddLibrariesProposal_ErrorMessageInstallDirNotFound;
+    public static String CactusAddLibrariesProposal_AdditionalInfoAddCactusLibraries;
+    public static String CactusAddLibrariesProposal_DisplayStringAddCactusLibs;
 	static {
 		NLS.initializeMessages(JavaServerUIPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);
 	}
