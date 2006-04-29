@@ -129,6 +129,7 @@ public class ExternalLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 		// Launch the executable for the configuration using the Ant Execute class
 		try {
 			Process process = Execute.launch(null, cmds, env, workingDir, true);
+			serverBehavior.startPingThread();
 			IProcess runtimeProcess = new RuntimeProcess(launch, process, executableName, null);
 			launch.addProcess(runtimeProcess);
 			serverBehavior.setProcess(runtimeProcess);

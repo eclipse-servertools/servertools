@@ -397,7 +397,8 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 	}
     
     /**
-     * Setup for starting the server.
+     * Setup for starting the server. Checks all ports available 
+     * and sets server state and mode.
      * 
      * @param launch ILaunch
      * @param launchMode String
@@ -419,19 +420,35 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     	}
     	setServerState(IServer.STATE_STARTING);
     	setMode(launchMode);
-    	
-    	// ping server to check for startup
+    }
+    /**
+     * Call to start Ping thread that will check for startup of the server.
+     *
+     */
+    protected void startPingThread()
+    {
     	try {
-    		String url = "http://"+host; //$NON-NLS-1$
-    		int port = sp.getPort();
+    		String url = "http://"+getServer().getHost();; //$NON-NLS-1$
+    	  	ServerPort[] ports = getServer().getServerPorts(null);
+        	ServerPort sp = null;
+    	    for(int i=0;i<ports.length;i++){
+    	    	if(ports[i].getProtocol().equalsIgnoreCase("http")){//$NON-NLS-1$
+    	    		sp=ports[i];
+    	    	}
+    	    }
+	    	if(sp==null){
+	    		Trace.trace(Trace.SEVERE, "Can't ping for server startup."); //$NON-NLS-1$
+	    		return;
+	    	}
+        	int port = sp.getPort();
     		if (port != 80)
     			url += ":" + port; //$NON-NLS-1$
     		ping = new PingThread(getServer(), url, this);
     	} catch (Exception e) {
     		Trace.trace(Trace.SEVERE, "Can't ping for server startup."); //$NON-NLS-1$
-    	}
+    	}  	
     }
-    
+   
     protected void setProcess(final IProcess newProcess) {
     	if (process != null)
     		return;

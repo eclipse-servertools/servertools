@@ -93,6 +93,7 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 
 			setDefaultSourceLocator(launch, configuration);
 			// Launch the configuration
+			genericServer.startPingThread();
 			runner.run(runConfig, launch, monitor);
 			genericServer.setProcess(launch.getProcesses()[0]);
 		} catch (CoreException e) {
