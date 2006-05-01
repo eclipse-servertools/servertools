@@ -110,8 +110,7 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 		section.setClient(composite);
 		
 		mimeTypes = toolkit.createTree(composite, SWT.V_SCROLL | SWT.SINGLE | SWT.H_SCROLL);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL);
-		data.widthHint = 220;
+		data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL);
 		data.heightHint = 200;
 		mimeTypes.setLayoutData(data);
 		whs.setHelp(mimeTypes, ContextIds.CONFIGURATION_EDITOR_MAPPINGS_LIST);
@@ -128,12 +127,10 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		buttonComp.setLayout(layout);
-		buttonComp.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING | GridData.HORIZONTAL_ALIGN_BEGINNING));
+		buttonComp.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING | GridData.HORIZONTAL_ALIGN_FILL));
 		
 		add = toolkit.createButton(buttonComp, Messages.editorAdd, SWT.PUSH);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.widthHint = 75;
-		add.setLayoutData(data);
+		add.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		
 		add.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -147,9 +144,7 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 		whs.setHelp(add, ContextIds.CONFIGURATION_EDITOR_MAPPINGS_ADD);
 		
 		edit = toolkit.createButton(buttonComp, Messages.editorEdit, SWT.PUSH);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.widthHint = 75;
-		edit.setLayoutData(data);
+		edit.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		edit.setEnabled(false);
 		
 		edit.addSelectionListener(new SelectionAdapter() {
@@ -166,9 +161,7 @@ public class ConfigurationMimeEditorSection extends ServerEditorSection {
 		whs.setHelp(edit, ContextIds.CONFIGURATION_EDITOR_MAPPINGS_EDIT);
 		
 		remove = toolkit.createButton(buttonComp, Messages.editorRemove, SWT.PUSH);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.widthHint = 75;
-		remove.setLayoutData(data);
+		remove.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		remove.setEnabled(false);
 		
 		remove.addSelectionListener(new SelectionAdapter() {
