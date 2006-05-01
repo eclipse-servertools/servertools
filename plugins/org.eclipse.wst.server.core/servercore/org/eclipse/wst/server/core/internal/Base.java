@@ -29,6 +29,7 @@ public abstract class Base {
 	protected static final String PROP_PRIVATE = "private";
 	protected static final String PROP_NAME = "name";
 	protected static final String PROP_ID = "id";
+	protected static final String PROP_TIMESTAMP = "timestamp";
 
 	protected Map map = new HashMap();
 	
@@ -65,7 +66,7 @@ public abstract class Base {
 	 * @return the object's timestamp
 	 */
 	public int getTimestamp() {
-		return getAttribute("timestamp", -1);
+		return getAttribute(PROP_TIMESTAMP, -1);
 	}
 
 	/**

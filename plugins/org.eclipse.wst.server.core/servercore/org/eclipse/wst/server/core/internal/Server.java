@@ -1916,6 +1916,9 @@ public class Server extends Base implements IServer {
 		//serverState = wc.serverState;
 		delegate = wc.delegate;
 		
+		int timestamp = wc.getTimestamp();
+		map.put(PROP_TIMESTAMP, Integer.toString(timestamp+1));
+		
 		if (getServerState() == IServer.STATE_STARTED)
 			autoPublish();
 	}

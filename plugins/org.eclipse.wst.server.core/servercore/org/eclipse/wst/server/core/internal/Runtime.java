@@ -150,7 +150,7 @@ public class Runtime extends Base implements IRuntime {
 		delegate = wc.delegate;
 		
 		int timestamp = wc.getTimestamp();
-		map.put("timestamp", Integer.toString(timestamp+1));
+		map.put(PROP_TIMESTAMP, Integer.toString(timestamp+1));
 	}
 
 	protected void loadState(IMemento memento) {

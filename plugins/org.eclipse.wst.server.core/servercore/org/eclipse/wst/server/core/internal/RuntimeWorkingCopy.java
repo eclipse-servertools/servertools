@@ -112,7 +112,7 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		wch.setName(name);
 		boolean set = getAttribute(PROP_ID_SET, false);
 		if (runtime == null && !set)
-			setAttribute("id", name);
+			setAttribute(PROP_ID, name);
 	}
 
 	public void setTestEnvironment(boolean b) {
@@ -179,7 +179,7 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		String name = getName();
 		boolean set = getAttribute(PROP_ID_SET, false);
 		if (!oldId.equals(name) && !set) {
-			setAttribute("id", name);
+			setAttribute(PROP_ID, name);
 		} else
 			oldId = null;
 		
