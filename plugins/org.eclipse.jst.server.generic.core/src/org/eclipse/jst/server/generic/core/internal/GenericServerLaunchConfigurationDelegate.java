@@ -17,12 +17,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate;
 import org.eclipse.jdt.launching.ExecutionArguments;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMRunner;
 import org.eclipse.jdt.launching.VMRunnerConfiguration;
+import org.eclipse.jst.server.core.internal.JavaServerPlugin;
+import org.eclipse.jst.server.core.internal.ServerProfiler;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
@@ -57,6 +60,10 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 			String mainTypeName = genericServer.getStartClassName();
 			IVMInstall vm = verifyVMInstall(configuration);
 			IVMRunner runner = vm.getVMRunner(mode);
+			
+			if(runner==null && mode == ILaunchManager.PROFILE_MODE){
+				runner = vm.getVMRunner(ILaunchManager.RUN_MODE);
+			}
 			if(runner== null){
 				throw new CoreException(new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,GenericServerCoreMessages.runModeNotSupported,null));
 			}
@@ -69,6 +76,15 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 			String pgmArgs = getProgramArguments(configuration);
 			String vmArgs = getVMArguments(configuration);
 
+			if (mode == ILaunchManager.PROFILE_MODE) {
+				ServerProfiler[] sp = JavaServerPlugin.getServerProfilers();
+				if (sp == null || sp.length==0 || runner == null) {
+					genericServer.stopImpl();
+					throw new CoreException(new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.noProfiler, null));
+				}
+				String vmArgs2 = sp[0].getVMArgs(); //$NON-NLS-1$
+				vmArgs = vmArgs + " " + vmArgs2; //$NON-NLS-1$
+			}
 			ExecutionArguments execArgs = new ExecutionArguments(vmArgs,
 					pgmArgs);
 

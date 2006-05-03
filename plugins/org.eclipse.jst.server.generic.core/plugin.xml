@@ -10,7 +10,7 @@
         id="org.eclipse.jst.server.generic.core.launchConfigurationType"
         name="%launchConfigurationTypeName"
         delegate="org.eclipse.jst.server.generic.core.internal.GenericServerLaunchConfigurationDelegate"
-        modes="run, debug"
+        modes="run, debug, profile"
         sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
         sourcePathComputerId="org.eclipse.jst.server.generic.core.sourcePathComputer"/>
      <launchConfigurationType

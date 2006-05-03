@@ -29,6 +29,7 @@ public class GenericServerCoreMessages extends NLS{
 	public static String errorRemoveModuleAntpublisher;
 	public static String errorPublishAntpublisher;
 	public static String commandlineUnspecified;
+	public static String noProfiler;
 	public static String workingdirUnspecified;
 	public static String errorLaunchingExecutable;
 	public static String missingServer;
