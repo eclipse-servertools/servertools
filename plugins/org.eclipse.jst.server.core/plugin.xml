@@ -105,6 +105,9 @@
     <runtime-component-version
        type="standard.jre"
        version="5.0"/>
+    <runtime-component-version
+       type="standard.jre"
+       version="6.0"/>
 
     <adapter>
       <runtime-component id="standard.jre"/>
@@ -125,6 +128,11 @@
     <supported>
       <facet id="jst.java" version="5.0"/>
       <runtime-component id="standard.jre" version="[5.0"/>
+    </supported>
+
+    <supported>
+      <facet id="jst.java" version="6.0"/>
+      <runtime-component id="standard.jre" version="[6.0"/>
     </supported>
   </extension>
 
