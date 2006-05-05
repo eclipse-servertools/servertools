@@ -23,8 +23,6 @@ public class ServerUIPreferencesTestCase extends TestCase {
 		return new OrderedTestSuite(ServerUIPreferencesTestCase.class, "ServerUIPreferencesTestCase");
 	}
 
-
-
 	public void test00GetProperties() throws Exception {
 		prefs = ServerUIPlugin.getPreferences();
 	}
@@ -48,8 +46,8 @@ public class ServerUIPreferencesTestCase extends TestCase {
 	}
 
 	public void test05SetPref() throws Exception {
-		prefs.setSaveEditors(ServerUIPreferences.SAVE_EDITORS_AUTO);
-		assertEquals(prefs.getSaveEditors(), ServerUIPreferences.SAVE_EDITORS_AUTO);
+		prefs.setSaveEditors(ServerUIPreferences.SAVE_EDITORS_ALWAYS);
+		assertEquals(prefs.getSaveEditors(), ServerUIPreferences.SAVE_EDITORS_ALWAYS);
 	}
 
 	public void test06SetPref() throws Exception {
@@ -62,12 +60,62 @@ public class ServerUIPreferencesTestCase extends TestCase {
 		assertEquals(prefs.getSaveEditors(), ServerUIPreferences.SAVE_EDITORS_PROMPT);
 	}
 
-	public void test08DefaultPref() throws Exception {
+	public void test08SetPref() throws Exception {
+		prefs.setLaunchMode(ServerUIPreferences.LAUNCH_MODE_RESTART);
+		assertEquals(prefs.getLaunchMode(), ServerUIPreferences.LAUNCH_MODE_RESTART);
+	}
+
+	public void test09SetPref() throws Exception {
+		prefs.setLaunchMode(ServerUIPreferences.LAUNCH_MODE_CONTINUE);
+		assertEquals(prefs.getLaunchMode(), ServerUIPreferences.LAUNCH_MODE_CONTINUE);
+	}
+
+	public void test10SetPref() throws Exception {
+		prefs.setLaunchMode(ServerUIPreferences.LAUNCH_MODE_PROMPT);
+		assertEquals(prefs.getLaunchMode(), ServerUIPreferences.LAUNCH_MODE_PROMPT);
+	}
+
+	public void test11SetPref() throws Exception {
+		prefs.setLaunchMode2(ServerUIPreferences.LAUNCH_MODE2_RESTART);
+		assertEquals(prefs.getLaunchMode2(), ServerUIPreferences.LAUNCH_MODE2_RESTART);
+	}
+
+	public void test12SetPref() throws Exception {
+		prefs.setLaunchMode2(ServerUIPreferences.LAUNCH_MODE2_DISABLE_BREAKPOINTS);
+		assertEquals(prefs.getLaunchMode2(), ServerUIPreferences.LAUNCH_MODE2_DISABLE_BREAKPOINTS);
+	}
+
+	public void test13SetPref() throws Exception {
+		prefs.setLaunchMode2(ServerUIPreferences.LAUNCH_MODE2_CONTINUE);
+		assertEquals(prefs.getLaunchMode2(), ServerUIPreferences.LAUNCH_MODE2_CONTINUE);
+	}
+
+	public void test14SetPref() throws Exception {
+		prefs.setLaunchMode2(ServerUIPreferences.LAUNCH_MODE2_PROMPT);
+		assertEquals(prefs.getLaunchMode2(), ServerUIPreferences.LAUNCH_MODE2_PROMPT);
+	}
+
+	public void test15SetPref() throws Exception {
+		prefs.setEnableBreakpoints(ServerUIPreferences.ENABLE_BREAKPOINTS_ALWAYS);
+		assertEquals(prefs.getEnableBreakpoints(), ServerUIPreferences.ENABLE_BREAKPOINTS_ALWAYS);
+	}
+
+	public void test16SetPref() throws Exception {
+		prefs.setEnableBreakpoints(ServerUIPreferences.ENABLE_BREAKPOINTS_NEVER);
+		assertEquals(prefs.getEnableBreakpoints(), ServerUIPreferences.ENABLE_BREAKPOINTS_NEVER);
+	}
+
+	public void test17SetPref() throws Exception {
+		prefs.setEnableBreakpoints(ServerUIPreferences.ENABLE_BREAKPOINTS_PROMPT);
+		assertEquals(prefs.getEnableBreakpoints(), ServerUIPreferences.ENABLE_BREAKPOINTS_PROMPT);
+	}
+
+	public void test18DefaultPref() throws Exception {
 		prefs.setPromptBeforeIrreversibleChange(prefs.getDefaultPromptBeforeIrreversibleChange());
 		assertEquals(prefs.getPromptBeforeIrreversibleChange(), prefs.getDefaultPromptBeforeIrreversibleChange());
 	}
 
-	public void test09DefaultPref() throws Exception {
+	public void test19DefaultPref() throws Exception {
 		prefs.setSaveEditors(prefs.getDefaultSaveEditors());
 		assertEquals(prefs.getSaveEditors(), prefs.getDefaultSaveEditors());
 	}
