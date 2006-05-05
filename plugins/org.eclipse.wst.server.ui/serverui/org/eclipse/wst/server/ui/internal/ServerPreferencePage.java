@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,11 +10,8 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.ServerPreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -25,7 +22,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.IWorkbench;
@@ -36,29 +32,21 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
  * The preference page that holds server properties.
  */
 public class ServerPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
-	protected Button publishBeforeStart;
-	protected Button autoRestart;
-
-	protected Button promptIrreversible;
-	
-	protected Button showOnActivity;
-	
-	protected byte saveEditors;
-	
-	protected Button saveNever;
-	protected Button savePrompt;
-	protected Button saveAuto;
-	protected Button syncOnStartup;
-
 	protected ServerPreferences preferences;
 	protected ServerUIPreferences uiPreferences;
-	
+
+	protected Button promptIrreversible;
+
+	protected Button showOnActivity;
+
+	protected Button syncOnStartup;
+
 	protected Button autoPublishOnAction;
 	protected Button autoPublishLocal;
 	protected Spinner autoPublishLocalTime;
 	protected Button autoPublishRemote;
 	protected Spinner autoPublishRemoteTime;
-	
+
 	protected Combo machineSpeedCombo;
 
 	/**
@@ -100,14 +88,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		showOnActivity.setLayoutData(data);
 		showOnActivity.setSelection(uiPreferences.getShowOnActivity());
 		whs.setHelp(showOnActivity, ContextIds.PREF_GENERAL_SHOW_ON_ACTIVITY);
-		
-		publishBeforeStart = new Button(composite, SWT.CHECK);
-		publishBeforeStart.setText(Messages.prefAutoPublish);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 3;
-		publishBeforeStart.setLayoutData(data);
-		publishBeforeStart.setSelection(preferences.isAutoPublishing());
-		whs.setHelp(publishBeforeStart, ContextIds.PREF_GENERAL_PUBLISH_BEFORE_START);
 		
 		syncOnStartup = new Button(composite, SWT.CHECK);
 		syncOnStartup.setText(Messages.prefSyncStartup);
@@ -183,14 +163,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 			}
 		});
 		
-		autoRestart = new Button(composite, SWT.CHECK);
-		autoRestart.setText(Messages.prefAutoRestart);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 3;
-		autoRestart.setLayoutData(data);
-		autoRestart.setSelection(preferences.isAutoRestarting());
-		whs.setHelp(autoRestart, ContextIds.PREF_GENERAL_AUTO_RESTART);
-		
 		promptIrreversible = new Button(composite, SWT.CHECK);
 		promptIrreversible.setText(Messages.prefPromptIrreversible);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -200,49 +172,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		whs.setHelp(promptIrreversible, ContextIds.PREF_GENERAL_PROMPT_IRREVERSIBLE);
 		
 		Label label = new Label(composite, SWT.NONE);
-		data = new GridData();
-		data.horizontalSpan = 3;
-		label.setLayoutData(data);
-		
-		// save editors group
-		Group saveEditorGroup = new Group(composite, SWT.NONE);
-		saveEditorGroup.setText(Messages.prefSaveEditorsGroup);
-		
-		layout = new GridLayout();
-		layout.numColumns = 3;
-		saveEditorGroup.setLayout(layout);
-		data = new GridData(GridData.FILL_HORIZONTAL);
-		data.horizontalSpan = 3;
-		saveEditorGroup.setLayoutData(data);
-		
-		saveNever = new Button(saveEditorGroup, SWT.RADIO);
-		saveNever.setText(Messages.prefSaveEditorsNever);
-		saveNever.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				saveEditors = ServerUIPreferences.SAVE_EDITORS_NEVER;
-			}
-		});
-		whs.setHelp(saveNever, ContextIds.PREF_GENERAL_SAVE_EDITORS);
-		
-		savePrompt = new Button(saveEditorGroup, SWT.RADIO);
-		savePrompt.setText(Messages.prefSaveEditorsPrompt);
-		savePrompt.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				saveEditors = ServerUIPreferences.SAVE_EDITORS_PROMPT;
-			}
-		});
-		whs.setHelp(savePrompt, ContextIds.PREF_GENERAL_SAVE_EDITORS);
-		
-		saveAuto = new Button(saveEditorGroup, SWT.RADIO);
-		saveAuto.setText(Messages.prefSaveEditorsAutosave);
-		saveAuto.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				saveEditors = ServerUIPreferences.SAVE_EDITORS_AUTO;
-			}
-		});
-		whs.setHelp(saveAuto, ContextIds.PREF_GENERAL_SAVE_EDITORS);
-		
-		label = new Label(composite, SWT.NONE);
 		data = new GridData();
 		data.horizontalSpan = 3;
 		label.setLayoutData(data);
@@ -265,20 +194,11 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		machineSpeedCombo.setLayoutData(data);
 		whs.setHelp(machineSpeedCombo, ContextIds.PREF_GENERAL_TIMEOUT_DELAY);
 		
-		setSaveEditorStatus(uiPreferences.getSaveEditors());
-		
 		Dialog.applyDialogFont(composite);
-	
+		
 		return composite;
 	}
-	
-	protected void setSaveEditorStatus(byte status) {
-		saveEditors = status;
-		saveNever.setSelection(saveEditors == ServerUIPreferences.SAVE_EDITORS_NEVER);
-		savePrompt.setSelection(saveEditors == ServerUIPreferences.SAVE_EDITORS_PROMPT);
-		saveAuto.setSelection(saveEditors == ServerUIPreferences.SAVE_EDITORS_AUTO); 
-	}
-	
+
 	/**
 	 * Initializes this preference page using the passed workbench.
 	 *
@@ -287,13 +207,11 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	public void init(IWorkbench workbench) {
 		// do nothing
 	}
-	
+
 	/**
 	 * Performs special processing when this page's Defaults button has been pressed.
 	 */
 	protected void performDefaults() {
-		autoRestart.setSelection(preferences.isDefaultAutoRestarting());
-		publishBeforeStart.setSelection(preferences.isDefaultAutoPublishing());
 		promptIrreversible.setSelection(uiPreferences.getDefaultPromptBeforeIrreversibleChange());
 		showOnActivity.setSelection(uiPreferences.getDefaultShowOnActivity());
 		
@@ -305,8 +223,6 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		
 		machineSpeedCombo.select((preferences.getDefaultMachineSpeed() - 1) / 2);
 		
-		setSaveEditorStatus(uiPreferences.getDefaultSaveEditors());
-		
 		super.performDefaults();
 	}
 
@@ -314,10 +230,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
 	 */
 	public boolean performOk() {
-		preferences.setAutoPublishing(publishBeforeStart.getSelection());
-		preferences.setAutoRestarting(autoRestart.getSelection());
 		preferences.setSyncOnStartup(syncOnStartup.getSelection());
-		uiPreferences.setSaveEditors(saveEditors);
 		uiPreferences.setPromptBeforeIrreversibleChange(promptIrreversible.getSelection());
 		uiPreferences.setShowOnActivity(showOnActivity.getSelection());
 		
@@ -327,36 +240,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		preferences.setAutoPublishRemoteTime(autoPublishRemoteTime.getSelection());
 		
 		preferences.setMachineSpeed(machineSpeedCombo.getSelectionIndex() * 2 + 1);
-	
-		// auto restart any servers that are ready for restart
-		if (autoRestart.getSelection())
-			autoRestartAll();
-	
+		
 		return true;
-	}
-
-	/**
-	 * Automatically restart any servers that require it.
-	 */
-	protected static void autoRestartAll() {
-		Trace.trace(Trace.FINEST, "Auto restarting all dirty servers");
-	
-		IServer[] servers = ServerCore.getServers();
-		if (servers != null) {
-			int size = servers.length;
-			for (int i = 0; i < size; i++) {
-				IServer server = servers[i];
-				if (server.getServerRestartState()) {
-					String mode = server.getMode();
-					if (server.canRestart(mode).isOK())
-						try {
-							Trace.trace(Trace.FINEST, "Attempting to auto restart " + server.getName());
-							server.restart(mode, (IProgressMonitor)null);
-						} catch (Exception e) {
-							Trace.trace(Trace.SEVERE, "Error restarting: " + server, e);
-						}
-				}
-			}
-		}
 	}
 }

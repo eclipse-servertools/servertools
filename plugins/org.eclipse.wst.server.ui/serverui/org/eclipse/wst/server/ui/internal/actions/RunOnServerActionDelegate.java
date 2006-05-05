@@ -16,11 +16,11 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.runtime.*;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -144,10 +144,8 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 
 	/**
 	 * Run the resource on a server.
-	 *
-	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
 	 */
-	protected void run(IProgressMonitor monitor) {
+	protected void run() {
 		final String launchMode2 = getLaunchMode();
 		final IModuleArtifact moduleArtifact = ServerPlugin.loadModuleArtifact(selection);
 		
@@ -180,7 +178,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			for (int i = 0; i < size && !found; i++) {
 				if (ServerUIPlugin.isCompatibleWithLaunchMode(servers[i], launchMode2)) {
 					try {
-						IModule[] parents = servers[i].getRootModules(module, monitor);
+						IModule[] parents = servers[i].getRootModules(module, null);
 						if (parents != null && parents.length > 0)
 							found = true;
 					} catch (Exception e) {
@@ -216,9 +214,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			return;
 
 		tasksRun = false;
-		final IServer server = getServer(module, launchMode2, monitor);
-		if (monitor.isCanceled())
-			return;
+		final IServer server = getServer(module, launchMode2, null);
+		//if (monitor.isCanceled())
+		//	return;
 		
 		Trace.trace(Trace.FINEST, "Server: " + server);
 		
@@ -242,9 +240,10 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				wizard.performFinish();
 		}
 		
-		Thread t = new Thread("Server launch shortcut") {
+		Thread thread = new Thread("Run on Server") {
 			public void run() {
 				String launchMode = launchMode2;
+				
 				// get the launchable adapter and module object
 				ILaunchableAdapter launchableAdapter = null;
 				Object launchable = null;
@@ -281,8 +280,12 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 					client = clients[0];
 				} else {
 					SelectClientWizard wizard = new SelectClientWizard(clients);
-					ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
-					dialog.open();
+					final ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
+					shell.getDisplay().syncExec(new Runnable() {
+						public void run() {
+							dialog.open();
+						}
+					});
 					client = wizard.getSelectedClient();
 					if (client == null)
 						return;
@@ -300,22 +303,59 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				} else if (state == IServer.STATE_STARTED) {
 					boolean restart = false;
 					String mode = server.getMode();
-					if (!ILaunchManager.DEBUG_MODE.equals(mode) && ILaunchManager.DEBUG_MODE.equals(launchMode)) {
-						int result = openWarningDialog(shell, Messages.dialogModeWarningDebug);
-						if (result == 1)
-							launchMode = mode;
-						else if (result == 0)
+					IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
+					boolean disabledBreakpoints = false;
+					
+					if (!ILaunchManager.RUN_MODE.equals(mode) && ILaunchManager.RUN_MODE.equals(launchMode)) {
+						boolean breakpointsOption = false;
+						if (breakpointManager.isEnabled() && ILaunchManager.DEBUG_MODE.equals(mode))
+							breakpointsOption = true;
+						int result = openOptionsDialog(shell, Messages.wizRunOnServerTitle, Messages.dialogModeWarningRun, breakpointsOption);
+						if (result == 0)
 							restart = true;
-						else
+						else if (result == 1) {
+							breakpointManager.setEnabled(false);
+							disabledBreakpoints = true;
+							launchMode = mode;
+						} else if (result == 1)
+							launchMode = mode;
+						else // result == 9
+							return;
+					} else if (!ILaunchManager.DEBUG_MODE.equals(mode) && ILaunchManager.DEBUG_MODE.equals(launchMode)) {
+						int result = openOptionsDialog(shell, Messages.wizDebugOnServerTitle, Messages.dialogModeWarningDebug, false);
+						if (result == 0)
+							restart = true;
+						else if (result == 1)
+							launchMode = mode;
+						else // result == 9
 							return;
 					} else if (!ILaunchManager.PROFILE_MODE.equals(mode) && ILaunchManager.PROFILE_MODE.equals(launchMode)) {
-						int result = openWarningDialog(shell, Messages.dialogModeWarningProfile);
-						if (result == 1)
-							launchMode = mode;
-						else if (result == 0)
+						boolean breakpointsOption = false;
+						if (breakpointManager.isEnabled() && ILaunchManager.DEBUG_MODE.equals(mode))
+							breakpointsOption = true;
+						int result = openOptionsDialog(shell, Messages.wizProfileOnServerTitle, Messages.dialogModeWarningProfile, breakpointsOption);
+						if (result == 0)
 							restart = true;
-						else
+						else if (result == 1) {
+							breakpointManager.setEnabled(false);
+							disabledBreakpoints = true;
+							launchMode = mode;
+						} else if (result == 2)
+							launchMode = mode;
+						else // result == 9
 							return;
+					}
+					
+					if (ILaunchManager.DEBUG_MODE.equals(launchMode)) {
+						if (!breakpointManager.isEnabled() && !disabledBreakpoints) {
+							int result = openBreakpointDialog(shell);
+							if (result == 0)
+								breakpointManager.setEnabled(true);
+							else if (result == 1) {
+								// ignore
+							} else // result == 2
+								return;
+						}
 					}
 					
 					PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, false);
@@ -345,8 +385,8 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				}
 			}
 		};
-		t.setDaemon(true);
-		t.start();
+		thread.setDaemon(true);
+		thread.start();
 	}
 
 	/**
@@ -376,17 +416,101 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	}
 
 	/**
-	 * Open a message dialog.
+	 * Open an options dialog.
 	 * 
 	 * @param shell
+	 * @param title
 	 * @param message
+	 * @param breakpointsOption
 	 * @return a dialog return constant
 	 */
-	protected int openWarningDialog(Shell shell, String message) {
-		MessageDialog dialog = new MessageDialog(shell, Messages.errorDialogTitle, null,
-			message,	MessageDialog.WARNING, new String[] {Messages.dialogModeWarningRestart,
-			Messages.dialogModeWarningContinue, IDialogConstants.CANCEL_LABEL}, 0);
-		return dialog.open();
+	protected int openOptionsDialog(final Shell shell, final String title, final String message, final boolean breakpointsOption) {
+		if (breakpointsOption) {
+			int current = ServerUIPlugin.getPreferences().getLaunchMode2();
+			if (current == ServerUIPreferences.LAUNCH_MODE2_RESTART)
+				return 0;
+			else if (current == ServerUIPreferences.LAUNCH_MODE2_DISABLE_BREAKPOINTS)
+				return 1;
+			else if (current == ServerUIPreferences.LAUNCH_MODE2_CONTINUE)
+				return 2;
+		} else {
+			int current = ServerUIPlugin.getPreferences().getLaunchMode();
+			if (current == ServerUIPreferences.LAUNCH_MODE_RESTART)
+				return 0;
+			else if (current == ServerUIPreferences.LAUNCH_MODE_CONTINUE)
+				return 1;
+		}
+		final int[] i = new int[1];
+		shell.getDisplay().syncExec(new Runnable() {
+			public void run() {
+				OptionsMessageDialog dialog = null;
+				String[] items = null;
+				if (breakpointsOption) {
+					items = new String[] {
+						Messages.dialogModeWarningRestart,
+						Messages.dialogModeWarningBreakpoints,
+						Messages.dialogModeWarningContinue
+					};
+				} else {
+					items = new String[] {
+						Messages.dialogModeWarningRestart,
+						Messages.dialogModeWarningContinue
+					};
+				}
+				
+				dialog = new OptionsMessageDialog(shell, title, message, items);
+				i[0] = dialog.open();
+				
+				if (dialog.isRemember()) {
+					if (breakpointsOption) {
+						if (i[0] == 0)
+							ServerUIPlugin.getPreferences().setLaunchMode2(ServerUIPreferences.LAUNCH_MODE2_RESTART);
+						else if (i[0] == 1)
+							ServerUIPlugin.getPreferences().setLaunchMode2(ServerUIPreferences.LAUNCH_MODE2_DISABLE_BREAKPOINTS);
+						else if (i[0] == 2)
+							ServerUIPlugin.getPreferences().setLaunchMode2(ServerUIPreferences.LAUNCH_MODE2_CONTINUE);
+					} else {
+						if (i[0] == 0)
+							ServerUIPlugin.getPreferences().setLaunchMode(ServerUIPreferences.LAUNCH_MODE_RESTART);
+						else if (i[0] == 1)
+							ServerUIPlugin.getPreferences().setLaunchMode(ServerUIPreferences.LAUNCH_MODE_CONTINUE);
+					}
+				}
+			}
+		});
+		return i[0];
+	}
+
+	/**
+	 * Open an options dialog.
+	 * 
+	 * @param shell
+	 * @return a dialog return constant
+	 */
+	protected int openBreakpointDialog(final Shell shell) {
+		int current = ServerUIPlugin.getPreferences().getEnableBreakpoints();
+		if (current == ServerUIPreferences.ENABLE_BREAKPOINTS_ALWAYS)
+			return 0;
+		else if (current == ServerUIPreferences.ENABLE_BREAKPOINTS_NEVER)
+			return 1;
+		
+		final int[] i = new int[1];
+		shell.getDisplay().syncExec(new Runnable() {
+			public void run() {
+				//BreakpointDialog dialog = new BreakpointDialog(shell);
+				OptionsMessageDialog dialog = new OptionsMessageDialog(shell,
+						Messages.wizDebugOnServerTitle, Messages.dialogBreakpoints, new String[] {
+						Messages.dialogBreakpointsReenable,	Messages.dialogModeWarningContinue});
+				i[0] = dialog.open();
+				if (dialog.isRemember()) {
+					if (i[0] == 0)
+						ServerUIPlugin.getPreferences().setEnableBreakpoints(ServerUIPreferences.ENABLE_BREAKPOINTS_ALWAYS);
+					else if (i[0] == 1)
+						ServerUIPlugin.getPreferences().setEnableBreakpoints(ServerUIPreferences.ENABLE_BREAKPOINTS_NEVER);
+				}
+			}
+		});
+		return i[0];
 	}
 
 	/**
@@ -399,7 +523,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	public void run(IAction action) {
 		Trace.trace(Trace.FINEST, "Running on Server...");
 		try {
-			run(new NullProgressMonitor());
+			run();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Run on Server Error", e);
 		}

@@ -17,8 +17,7 @@ import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.Preferences;
 /**
- * Helper class that stores preference information for
- * the server tools.
+ * Helper class that stores preference information for server tools UI.
  */
 public class ServerUIPreferences {
 	private static final String PREF_PROMPT_IRREVERSIBLE = "prompt-irreversible";
@@ -26,10 +25,26 @@ public class ServerUIPreferences {
 	private static final String PREF_SAVE_EDITORS = "save-editors";
 	private static final String PREF_HOST_NAMES = "host-names";
 	private static final String PREF_SHOW_ON_ACTIVITY = "show-on-activity";
+	private static final String PREF_LAUNCH_MODE = "launch-mode";
+	private static final String PREF_LAUNCH_MODE2 = "launch-mode2";
+	private static final String PREF_ENABLE_BREAKPOINTS = "enable-breakpoints";
 
+	public static final byte SAVE_EDITORS_ALWAYS = 2;
 	public static final byte SAVE_EDITORS_NEVER = 0;
 	public static final byte SAVE_EDITORS_PROMPT = 1;
-	public static final byte SAVE_EDITORS_AUTO = 2;
+
+	public static final byte LAUNCH_MODE_PROMPT = 0;
+	public static final byte LAUNCH_MODE_CONTINUE = 1;
+	public static final byte LAUNCH_MODE_RESTART = 2;
+
+	public static final byte LAUNCH_MODE2_PROMPT = 0;
+	public static final byte LAUNCH_MODE2_CONTINUE = 1;
+	public static final byte LAUNCH_MODE2_RESTART = 2;
+	public static final byte LAUNCH_MODE2_DISABLE_BREAKPOINTS = 3;
+
+	public static final byte ENABLE_BREAKPOINTS_PROMPT = 0;
+	public static final byte ENABLE_BREAKPOINTS_ALWAYS = 1;
+	public static final byte ENABLE_BREAKPOINTS_NEVER = 2;
 
 	private static final int MAX_HOSTNAMES = 10;
 
@@ -45,6 +60,9 @@ public class ServerUIPreferences {
 
 	public void setDefaults() {
 		preferences.setDefault(PREF_PROMPT_IRREVERSIBLE, getDefaultPromptBeforeIrreversibleChange());
+		preferences.setDefault(PREF_LAUNCH_MODE, getDefaultLaunchMode());
+		preferences.setDefault(PREF_LAUNCH_MODE2, getDefaultLaunchMode2());
+		preferences.setDefault(PREF_ENABLE_BREAKPOINTS, getDefaultEnableBreakpoints());
 		preferences.setDefault(PREF_SAVE_EDITORS, getDefaultSaveEditors());
 		preferences.setDefault(PREF_HOST_NAMES, "localhost");
 		preferences.setDefault(PREF_SHOW_ON_ACTIVITY, true);
@@ -74,13 +92,106 @@ public class ServerUIPreferences {
 	 * Sets whether the user should be prompted before making an
 	 * irreversible change in the editor.
 	 *
-	 * @param b true to prompt before irreversible changes
+	 * @param b <code>true</code> to prompt before irreversible changes
 	 */
 	public void setPromptBeforeIrreversibleChange(boolean b) {
 		preferences.setValue(PREF_PROMPT_IRREVERSIBLE, b);
 		ServerUIPlugin.getInstance().savePluginPreferences();
 	}
-	
+
+	/**
+	 * Returns the default value of whether the user should be prompted
+	 * when the launch mode of the server doesn't match.
+	 *
+	 * @return byte
+	 */
+	public byte getDefaultLaunchMode() {
+		return LAUNCH_MODE_PROMPT;
+	}
+
+	/**
+	 * Returns whether the user should be prompted when the launch mode
+	 * of the server doesn't match.
+	 * 
+	 * @return int
+	 */
+	public int getLaunchMode() {
+		return preferences.getInt(PREF_LAUNCH_MODE);
+	}
+
+	/**
+	 * Sets whether the user should be prompted when the launch mode
+	 * of the server doesn't match.
+	 *
+	 * @param b a launch mode constant
+	 */
+	public void setLaunchMode(int b) {
+		preferences.setValue(PREF_LAUNCH_MODE, b);
+		ServerUIPlugin.getInstance().savePluginPreferences();
+	}
+
+	/**
+	 * Returns the default value of whether the user should be prompted
+	 * when the launch mode of the server doesn't match.
+	 *
+	 * @return byte
+	 */
+	public byte getDefaultLaunchMode2() {
+		return LAUNCH_MODE2_PROMPT;
+	}
+
+	/**
+	 * Returns whether the user should be prompted when the launch mode
+	 * of the server doesn't match.
+	 * 
+	 * @return int
+	 */
+	public int getLaunchMode2() {
+		return preferences.getInt(PREF_LAUNCH_MODE2);
+	}
+
+	/**
+	 * Sets whether the user should be prompted when the launch mode
+	 * of the server doesn't match.
+	 *
+	 * @param b a launch mode constant
+	 */
+	public void setLaunchMode2(int b) {
+		preferences.setValue(PREF_LAUNCH_MODE2, b);
+		ServerUIPlugin.getInstance().savePluginPreferences();
+	}
+
+	/**
+	 * Returns the default value of whether the user should be prompted
+	 * when the breakpoint enablement doesn't match the server state.
+	 *
+	 * @return int
+	 */
+	public byte getDefaultEnableBreakpoints() {
+		return ENABLE_BREAKPOINTS_PROMPT;
+	}
+
+	/**
+	 * Returns whether the user should be prompted when the breakpoint
+	 * enablement doesn't match the server state.
+	 * 
+	 * @return int
+	 */
+	public int getEnableBreakpoints() {
+		return preferences.getInt(PREF_ENABLE_BREAKPOINTS);
+	}
+
+	/**
+	 * Sets whether the user should be prompted when the breakpoint
+	 * enablement doesn't match the server state.
+	 *
+	 * @param b a breakpoint enablement constant
+	 */
+	public void setEnableBreakpoints(int b) {
+		preferences.setValue(PREF_ENABLE_BREAKPOINTS, b);
+		ServerUIPlugin.getInstance().savePluginPreferences();
+	}
+
 	/**
 	 * Returns the import location.
 	 *
@@ -89,7 +200,7 @@ public class ServerUIPreferences {
 	public String getImportLocation() {
 		return preferences.getString(PREF_IMPORT_LOCATION);
 	}
-	
+
 	/**
 	 * Sets the import location.
 	 *
@@ -99,7 +210,7 @@ public class ServerUIPreferences {
 		preferences.setValue(PREF_IMPORT_LOCATION, s);
 		ServerUIPlugin.getInstance().savePluginPreferences();
 	}
-	
+
 	/**
 	 * Returns the default setting for saving editors before launching.
 	 * 
@@ -127,7 +238,7 @@ public class ServerUIPreferences {
 		preferences.setValue(PREF_SAVE_EDITORS, b);
 		ServerUIPlugin.getInstance().savePluginPreferences();
 	}
-	
+
 	/**
 	 * Returns the default setting for opening the servers view on activity.
 	 * 
