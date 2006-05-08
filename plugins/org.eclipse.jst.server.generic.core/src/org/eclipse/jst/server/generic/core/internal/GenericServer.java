@@ -28,6 +28,7 @@ import org.eclipse.jst.server.generic.servertype.definition.Property;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.IURLProvider;
@@ -95,13 +96,23 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	 */
 	public IModule[] getChildModules(IModule[] module) {
 		if (module[0] != null && module[0].getModuleType() != null) {
-			if (module.length == 1 && "jst.ear".equals(module[0].getModuleType().getId())) {
-				IEnterpriseApplication enterpriseApplication = (IEnterpriseApplication) module[0]
-						.loadAdapter(IEnterpriseApplication.class, null);
-				if (enterpriseApplication != null) {
-					IModule[] earModules = enterpriseApplication.getModules(); 
-					if ( earModules != null) {
-						return earModules;
+			if (module.length == 1) {
+				IModuleType moduleType = module[0].getModuleType();
+				if (moduleType != null && "jst.ear".equals(moduleType.getId())) { //$NON-NLS-1$
+					IEnterpriseApplication enterpriseApplication = (IEnterpriseApplication) module[0]
+							.loadAdapter(IEnterpriseApplication.class, null);
+					if (enterpriseApplication != null) {
+						IModule[] earModules = enterpriseApplication.getModules(); 
+						if ( earModules != null) {
+							return earModules;
+						}
+					}
+				}
+				else if (moduleType != null && "jst.web".equals(moduleType.getId())) { //$NON-NLS-1$
+					IWebModule webModule = (IWebModule) module[0].loadAdapter(IWebModule.class, null);
+					if (webModule != null) {
+						IModule[] modules = webModule.getModules();
+						return modules;
 					}
 				}
 			}
@@ -224,7 +235,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 
 
 	private IModule[] doGetParentModules(IModule module) {
-		IModule[] ears = ServerUtil.getModules("jst.ear");
+		IModule[] ears = ServerUtil.getModules("jst.ear"); //$NON-NLS-1$
 		ArrayList list = new ArrayList();
 		for (int i = 0; i < ears.length; i++) {
 			IEnterpriseApplication ear = (IEnterpriseApplication)ears[i].loadAdapter(IEnterpriseApplication.class,null);

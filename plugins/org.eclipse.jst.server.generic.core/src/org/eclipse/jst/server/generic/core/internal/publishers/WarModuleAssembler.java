@@ -22,6 +22,8 @@ import org.eclipse.wst.server.core.IModule;
  */
 public class WarModuleAssembler extends AbstractModuleAssembler {
 	
+	private static final String WEB_INF_LIB = "/WEB-INF/lib/"; //$NON-NLS-1$
+
 	protected WarModuleAssembler(IModule module, GenericServer server)
 	{
 		fModule=module;
@@ -35,7 +37,7 @@ public class WarModuleAssembler extends AbstractModuleAssembler {
 		IModule[] childModules = webModule.getModules();
 		for (int i = 0; i < childModules.length; i++) {
 			IModule module = childModules[i];
-			packModule(module, webModule.getURI(module), parent);
+			packModule(module, webModule.getURI(module), parent.append(WEB_INF_LIB)); 
 		}
 	}
 }
