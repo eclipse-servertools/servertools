@@ -106,7 +106,6 @@ public class NewServletTestCaseWizard extends Wizard implements INewWizard {
 	}
 
 	private class CactusPage1 extends NewTestCaseWizardPageOne {
-
 		private Button fBeginButton;
 
 		private Button fEndButton;
@@ -123,11 +122,16 @@ public class NewServletTestCaseWizard extends Wizard implements INewWizard {
 
 		public void init(IStructuredSelection selection) {
 			super.init(selection);
+			validateIfJUnitProject();
 		}
 
 		public void createControl(Composite parent) {
 			super.createControl(parent);
 			setSuperClass(SUPERCLASS_NAME, true);
+		}
+
+		protected void createJUnit4Controls(Composite composite, int nColumns) {
+			// ignore
 		}
 
 		protected IStatus superClassChanged() {
