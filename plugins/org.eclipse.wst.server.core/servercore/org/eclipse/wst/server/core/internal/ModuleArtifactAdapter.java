@@ -63,10 +63,10 @@ public class ModuleArtifactAdapter {
 	 * @return boolean
 	 */
 	public boolean isPluginActivated() {
-		String pluginId = element.getDeclaringExtension().getNamespace();
-		return Platform.getBundle(pluginId).getState() == Bundle.ACTIVE;
+		String name = element.getDeclaringExtension().getContributor().getName();
+		return Platform.getBundle(name).getState() == Bundle.ACTIVE;
 	}
-	
+
 	/**
 	 * Returns an expression that represents the enablement logic for the
 	 * contextual launch element of this launch shortcut description or

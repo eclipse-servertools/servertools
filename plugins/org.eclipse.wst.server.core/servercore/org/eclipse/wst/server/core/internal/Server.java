@@ -1410,7 +1410,11 @@ public class Server extends Base implements IServer {
 
 	public void synchronousStart(String mode2, IProgressMonitor monitor) throws CoreException {
 		Trace.trace(Trace.FINEST, "synchronousStart 1");
-		final Object mutex = new Object();
+		
+		class Mutex {
+			boolean notified;
+		}
+		final Mutex mutex = new Mutex();
 	
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		
@@ -1426,6 +1430,7 @@ public class Server extends Base implements IServer {
 						synchronized (mutex) {
 							try {
 								Trace.trace(Trace.FINEST, "synchronousStart notify");
+								mutex.notified = true;
 								mutex.notifyAll();
 							} catch (Exception e) {
 								Trace.trace(Trace.SEVERE, "Error notifying server start", e);
@@ -1451,16 +1456,17 @@ public class Server extends Base implements IServer {
 					int totalTimeout = serverTimeout;
 					boolean userCancelled = false;
 					int retryPeriod = 2500;
-					while (totalTimeout > 0 && !userCancelled && !timer.alreadyDone) {
+					while (!mutex.notified && totalTimeout > 0 && !userCancelled && !timer.alreadyDone) {
 						Thread.sleep(retryPeriod);
 						totalTimeout -= retryPeriod;
-						if (monitor2.isCanceled()) {
+						if (!mutex.notified && monitor2.isCanceled()) {
 							// user cancelled - set the server state to stopped
 							userCancelled = true;
 							setServerState(IServer.STATE_STOPPED);
 							// notify waiter
 							synchronized (mutex) {
 								Trace.trace(Trace.FINEST, "synchronousStart user cancelled.");
+								mutex.notified = true;
 								mutex.notifyAll();
 							}
 						}
@@ -1470,6 +1476,7 @@ public class Server extends Base implements IServer {
 						// notify waiter
 						synchronized (mutex) {
 							Trace.trace(Trace.FINEST, "synchronousStart notify timeout");
+							mutex.notified = true;
 							mutex.notifyAll();
 						}
 					}
@@ -1497,7 +1504,8 @@ public class Server extends Base implements IServer {
 		// wait for it! wait for it! ...
 		synchronized (mutex) {
 			try {
-				while (!monitor.isCanceled() && !timer.timeout && !(getServerState() == IServer.STATE_STARTED || getServerState() == IServer.STATE_STOPPED))
+				while (!mutex.notified && !monitor.isCanceled() && !timer.timeout
+						&& !(getServerState() == IServer.STATE_STARTED || getServerState() == IServer.STATE_STOPPED))
 					mutex.wait();
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Error waiting for server start", e);
@@ -2058,7 +2066,10 @@ public class Server extends Base implements IServer {
 		if (module == null)
 			throw new IllegalArgumentException("Module cannot be null");
 		try {
-			IModule[] children = getDelegate(monitor).getChildModules(module);
+			ServerDelegate sd = getDelegate(monitor);
+			if (sd == null)
+				return null;
+			IModule[] children = sd.getChildModules(module);
 			if (children != null && children.length == 1 && children[0].equals(module[module.length - 1]))
 				return null;
 			return children;
@@ -2097,7 +2108,10 @@ public class Server extends Base implements IServer {
 		if (module == null)
 			throw new IllegalArgumentException("Module cannot be null");
 		try {
-			boolean b = getBehaviourDelegate(monitor).canControlModule(module);
+			ServerBehaviourDelegate bd = getBehaviourDelegate(monitor);
+			if (bd == null)
+				return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorRestartModule, null);
+			boolean b = bd.canControlModule(module);
 			if (b)
 				return Status.OK_STATUS;
 		} catch (Exception e) {

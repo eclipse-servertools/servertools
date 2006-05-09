@@ -138,7 +138,7 @@ public class RuntimeType implements IRuntimeType {
 	public String getNamespace() {
 		if (element == null)
 			return null;
-		return element.getDeclaringExtension().getNamespace();
+		return element.getDeclaringExtension().getContributor().getName();
 	}
 
 	public String toString() {

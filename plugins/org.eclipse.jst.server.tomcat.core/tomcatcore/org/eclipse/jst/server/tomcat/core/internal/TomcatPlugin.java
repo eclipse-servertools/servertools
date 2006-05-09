@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 /**
@@ -142,7 +142,7 @@ public class TomcatPlugin extends Plugin {
 		
 		try {
 			URL url = getInstance().getBundle().getEntry(VERIFY_INSTALL_FILE);
-			url = Platform.resolve(url);
+			url = FileLocator.resolve(url);
 			Properties p = new Properties();
 			p.load(url.openStream());
 
@@ -278,7 +278,7 @@ public class TomcatPlugin extends Plugin {
 	protected static File getPlugin() {
 		try {
 			URL installURL = getInstance().getBundle().getEntry("/");
-			URL localURL = Platform.asLocalURL(installURL);
+			URL localURL = FileLocator.toFileURL(installURL);
 			return new File(localURL.getFile());
 		} catch (IOException ioe) {
 			return null;

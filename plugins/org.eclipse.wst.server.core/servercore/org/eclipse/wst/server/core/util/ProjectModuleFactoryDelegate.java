@@ -9,7 +9,7 @@
  *     IBM Corporation - Initial API and implementation
  **********************************************************************/
 package org.eclipse.wst.server.core.util;
- 
+
 import java.util.*;
 
 import org.eclipse.core.resources.*;

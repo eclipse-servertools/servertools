@@ -191,7 +191,7 @@ public class InstallableRuntime implements IInstallableRuntime {
 			byte[] buf = new byte[8192];
 			bundle = Platform.getBundle(getBundleId());
 			URL url = bundle.getEntry(getPath());
-			url = Platform.resolve(url);
+			url = FileLocator.resolve(url);
 			InputStream in = url.openStream();
 			BufferedInputStream bin = new BufferedInputStream(in);
 			ZipInputStream zin = new ZipInputStream(bin);

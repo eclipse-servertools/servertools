@@ -432,7 +432,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			terminate();
 			return;
 		}
-
+		
 		try {
 			Trace.trace(Trace.FINER, "Stopping Tomcat");
 			if (state != IServer.STATE_STOPPED)

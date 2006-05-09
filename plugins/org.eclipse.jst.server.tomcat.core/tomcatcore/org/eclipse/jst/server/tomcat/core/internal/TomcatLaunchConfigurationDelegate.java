@@ -91,7 +91,11 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 		setDefaultSourceLocator(launch, configuration);
 		
 		// Launch the configuration
-		runner.run(runConfig, launch, monitor);
-		tomcatServer.setProcess(launch.getProcesses()[0]);
+		try {
+			runner.run(runConfig, launch, monitor);
+			tomcatServer.setProcess(launch.getProcesses()[0]);
+		} catch (Exception e) {
+			// ignore - process failed
+		}
 	}
 }

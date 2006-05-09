@@ -345,7 +345,7 @@ public class ServerType implements IServerType {
 	public String getNamespace() {
 		if (element == null)
 			return null;
-		return element.getDeclaringExtension().getNamespace();
+		return element.getDeclaringExtension().getContributor().getName();
 	}
 
 	/**
