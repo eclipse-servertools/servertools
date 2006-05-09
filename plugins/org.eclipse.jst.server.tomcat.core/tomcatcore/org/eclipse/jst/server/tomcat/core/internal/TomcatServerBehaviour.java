@@ -307,21 +307,24 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, "Could not remove module", e));
 			}
 		} else {
-			if (kind != IServer.PUBLISH_CLEAN && kind != IServer.PUBLISH_FULL) {
-				// avoid changes if no changes to module since last publish
-				IModuleResourceDelta[] delta = getPublishedResourceDelta(module);
-				if (delta == null || delta.length == 0)
-					return;
-			}
-			
 			IPath path = getServer().getRuntime().getLocation().append("webapps").append(module[0].getName());
 			path = path.append("WEB-INF").append("lib");
-			if (!path.toFile().exists())
+			IPath jarPath = path.append(module[1].getName() + ".jar");
+			if (!path.toFile().exists()) {
 				path.toFile().mkdirs();
+			} else {
+				// If file still exists and we are not forcing a new one to be built
+				if (jarPath.toFile().exists() && kind != IServer.PUBLISH_CLEAN && kind != IServer.PUBLISH_FULL) {
+					// avoid changes if no changes to module since last publish
+					IModuleResourceDelta[] delta = getPublishedResourceDelta(module);
+					if (delta == null || delta.length == 0)
+						return;
+				}
+			}
 			
 			IModuleResource[] mr = getResources(module);
-			PublishUtil.createZipFile(mr, path.append(module[1].getName() + ".jar"));
-			p.put(module[1].getId(), path.toOSString());
+			PublishUtil.createZipFile(mr, jarPath);
+			p.put(module[1].getId(), jarPath.toOSString());
 		}
 	}
 
