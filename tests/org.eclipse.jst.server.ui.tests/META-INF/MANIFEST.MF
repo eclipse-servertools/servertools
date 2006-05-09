@@ -12,4 +12,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.junit,
  org.eclipse.ui,
  org.eclipse.jst.server.ui
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

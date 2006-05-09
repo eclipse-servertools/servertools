@@ -12,4 +12,4 @@ Export-Package: org.eclipse.wst.internet.monitor.core.tests,
 Require-Bundle: org.eclipse.core.runtime,
  org.junit,
  org.eclipse.wst.internet.monitor.core
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

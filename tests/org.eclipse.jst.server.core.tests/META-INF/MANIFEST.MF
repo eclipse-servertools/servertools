@@ -16,4 +16,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jdt.launching,
  org.eclipse.wst.server.core,
  org.eclipse.jst.server.core
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

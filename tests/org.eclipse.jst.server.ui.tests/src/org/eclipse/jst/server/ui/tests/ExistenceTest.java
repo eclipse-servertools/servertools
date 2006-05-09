@@ -10,14 +10,11 @@
  *******************************************************************************/
 package org.eclipse.jst.server.ui.tests;
 
-import junit.framework.TestCase;
-
 import org.eclipse.jst.server.ui.internal.JavaServerUIPlugin;
+import junit.framework.TestCase;
 
 public class ExistenceTest extends TestCase {
 	public void testPluginExists() {
 		assertNotNull(JavaServerUIPlugin.getInstance());
 	}
-
-
 }

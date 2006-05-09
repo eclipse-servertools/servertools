@@ -16,4 +16,4 @@ Require-Bundle: org.junit,
  org.eclipse.wst.server.core,
  org.eclipse.wst.server.ui,
  org.eclipse.wst.server.ui.tests
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

@@ -18,4 +18,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.server.core.tests,
  org.eclipse.wst.server.ui.tests,
  org.eclipse.jst.server.tomcat.core.tests
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true
