@@ -48,6 +48,9 @@ public class ServerProfiler {
 	 * @return the VM args
 	 */
 	public String getVMArgs() {
+		// about to launch with profiling. make sure that the profiling plugin is started
+		JavaServerPlugin.getInstance().startContributor(element.getContributor());
+		
 		return element.getAttribute("vmArgs");
 	}
 

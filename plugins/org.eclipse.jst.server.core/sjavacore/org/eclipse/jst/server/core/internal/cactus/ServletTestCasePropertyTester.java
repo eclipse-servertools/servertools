@@ -22,7 +22,7 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
-import org.eclipse.jst.server.core.internal.JavaServerPlugin;
+import org.eclipse.jst.server.core.internal.Trace;
 /**
  * 
  */
@@ -73,7 +73,7 @@ public class ServletTestCasePropertyTester extends PropertyTester {
 			}
 		} catch (JavaModelException e) {
 			// TODO: what do we do here?
-			JavaServerPlugin.log(e);
+			Trace.trace(Trace.SEVERE, "Error checking isServlet", e);
 		}
 		return false;
 	}

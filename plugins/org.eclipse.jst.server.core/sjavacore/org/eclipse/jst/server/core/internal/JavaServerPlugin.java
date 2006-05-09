@@ -11,10 +11,8 @@
 package org.eclipse.jst.server.core.internal;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -30,6 +28,7 @@ import org.eclipse.wst.server.core.IRuntimeLifecycleListener;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 /**
  * The main server tooling plugin class.
@@ -55,7 +54,8 @@ public class JavaServerPlugin extends Plugin {
 	// runtime listener
 	private static IRuntimeLifecycleListener runtimeListener;
 
-    private static final Set messagesLogged = new HashSet();
+	// cached bundle context
+	private BundleContext context;
 
 	/**
 	 * Create the JavaServerPlugin.
@@ -77,8 +77,9 @@ public class JavaServerPlugin extends Plugin {
 	/**
 	 * @see Plugin#start(org.osgi.framework.BundleContext)
 	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
+	public void start(BundleContext context2) throws Exception {
+		super.start(context2);
+		this.context = context2;
 		
 		runtimeListener = new IRuntimeLifecycleListener() {
 			public void runtimeAdded(IRuntime runtime) {
@@ -100,9 +101,9 @@ public class JavaServerPlugin extends Plugin {
 	/**
 	 * @see Plugin#stop(org.osgi.framework.BundleContext)
 	 */
-	public void stop(BundleContext context) throws Exception {
+	public void stop(BundleContext context2) throws Exception {
 		ServerCore.removeRuntimeLifecycleListener(runtimeListener);
-		super.stop(context);
+		super.stop(context2);
 	}
 
 	/**
@@ -176,68 +177,27 @@ public class JavaServerPlugin extends Plugin {
 	 *
 	 * @param status a status
 	 */
-	public static void log(IStatus status) {
+	private static void log(IStatus status) {
 		getInstance().getLog().log(status);
 	}
-	
-	/**
-	 * Convenience method for logging.
-	 *
-	 * @param t a throwable
-	 */
-	public static void log(Throwable t) {
-		log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.ERROR, "Internal error", t)); //$NON-NLS-1$
+
+	/*public static void logError(String msg) {
+		log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, msg, null));
+	}*/
+
+	public static void logWarning(String msg) {
+		log(new Status(IStatus.WARNING, PLUGIN_ID, IStatus.OK, msg, null));
 	}
 
-    public static void log( final String msg )
-    {
-        log( new Status( IStatus.ERROR, PLUGIN_ID, IStatus.OK, msg, null ) );
-    }
-    
-    public static void logError( final String msg )
-    {
-        logError( msg, false );
-    }
-    
-    public static void logError( final String msg,
-                                 final boolean suppressDuplicates )
-    {
-        if( suppressDuplicates && messagesLogged.contains( msg ) )
-        {
-            return;
-        }
-        
-        messagesLogged.add( msg );
-        
-        log( new Status( IStatus.ERROR, PLUGIN_ID, IStatus.OK, msg, null ) );
-    }
-
-    public static void logWarning( final String msg )
-    {
-        logWarning( msg, false );
-    }
-    
-    public static void logWarning( final String msg,
-                                   final boolean suppressDuplicates )
-    {
-        if( suppressDuplicates && messagesLogged.contains( msg ) )
-        {
-            return;
-        }
-        
-        messagesLogged.add( msg );
-        
-        log( new Status( IStatus.WARNING, PLUGIN_ID, IStatus.OK, msg, null ) );
-    }
-    
 	/**
 	 * Returns an array of all known runtime classpath provider instances.
 	 * <p>
-	 * A new array is returned on each call, so clients may store or modify the result.
+	 * A new array is returned on each call, so clients may store or modify the
+	 * result.
 	 * </p>
 	 * 
 	 * @return a possibly-empty array of runtime classpath provider instances
-	 *    {@link RuntimeClasspathProviderWrapper}
+	 *         {@link RuntimeClasspathProviderWrapper}
 	 */
 	public static RuntimeClasspathProviderWrapper[] getRuntimeClasspathProviders() {
 		if (runtimeClasspathProviders == null)
@@ -411,5 +371,27 @@ public class JavaServerPlugin extends Plugin {
 		serverProfilers = list;
 		
 		Trace.trace(Trace.CONFIG, "-<- Done loading .serverProfilers extension point -<-");
+	}
+
+	protected void startContributor(IContributor contributor) {
+		if (contributor == null)
+			return;
+		
+		String name = contributor.getName();
+		if (name == null)
+			return;
+		
+		try {
+			Bundle[] bundles = context.getBundles();
+			int size = bundles.length;
+			for (int i = 0; i < size; i++) {
+				if (name.equals(bundles[i].getSymbolicName())) {
+					bundles[i].start();
+					return;
+				}
+			}
+		} catch (Throwable t) {
+			// ignore
+		}
 	}
 }

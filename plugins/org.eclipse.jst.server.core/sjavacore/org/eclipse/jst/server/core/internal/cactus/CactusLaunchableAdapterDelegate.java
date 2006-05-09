@@ -13,7 +13,7 @@ package org.eclipse.jst.server.core.internal.cactus;
 import java.net.MalformedURLException;
 import java.net.URL;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jst.server.core.internal.JavaServerPlugin;
+import org.eclipse.jst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.IURLProvider;
@@ -33,7 +33,7 @@ public class CactusLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
 				try {
 					url = new URL(urlString.substring(0, urlString.length() - 1));
 				} catch (MalformedURLException e) {
-					JavaServerPlugin.log(e);
+					Trace.trace(Trace.SEVERE, "Error getting launchable", e);
 					return null;
 				}
 			}

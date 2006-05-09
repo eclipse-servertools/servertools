@@ -26,7 +26,6 @@ import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMInstall2;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.IJavaRuntime;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeBridge;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponentVersion;
 import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
@@ -156,43 +155,33 @@ public class RuntimeBridge implements IRuntimeBridge {
 				}
 				IRuntimeComponentVersion rcv;
 				
-				if (jvmver == null)
-                {
+				String vmInstallName;
+				if (vmInstall != null)
+					vmInstallName = vmInstall.getName();
+				else
+					vmInstallName = "Unknown";
+				
+				if (jvmver == null) {
+					JavaServerPlugin.logWarning("Could not determine VM version for: " + vmInstallName);
 					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("6.0");
-                    
-                    final String vmName = vmInstall.getName();
-                    
-                    final String msg 
-                        = NLS.bind( Resources.vmVersionCouldNotBeDetermined, 
-                                    vmName );
-                    
-                    JavaServerPlugin.logWarning( msg, true );
-                }
-				else if (jvmver.startsWith("1.3"))
+				} else if (jvmver.startsWith("1.3"))
 					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("1.3");
-                else if (jvmver.startsWith("1.4"))
-                    rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("1.4");
+				else if (jvmver.startsWith("1.4"))
+					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("1.4");
 				else if (jvmver.startsWith("1.5") || jvmver.startsWith("5.0"))
 					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("5.0");
 				else if (jvmver.startsWith("1.6") || jvmver.startsWith("6.0"))
 					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("6.0");
-				else
-                {
+				else {
+					JavaServerPlugin.logWarning("Invalid Java version: " + vmInstallName + ", " + jvmver);
 					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("6.0");
-                    
-                    final String vmName = vmInstall.getName();
-                    
-                    final String msg 
-                        = NLS.bind( Resources.vmVersionIsInvalid, vmName, jvmver ); 
-                    
-                    JavaServerPlugin.logWarning( msg, true );
-                }
+				}
 				
 				if (vmInstall != null) {
 					properties = new HashMap(3);
-					properties.put("name", vmInstall.getName());
+					properties.put("name", vmInstallName);
 					IPath path = new Path(JavaRuntime.JRE_CONTAINER);
-					path = path.append(vmInstall.getVMInstallType().getId()).append(vmInstall.getName());
+					path = path.append(vmInstall.getVMInstallType().getId()).append(vmInstallName);
 					properties.put(CLASSPATH, path.toPortableString());
 					components.add(RuntimeManager.createRuntimeComponent(rcv, properties));
 				} else {
@@ -213,20 +202,4 @@ public class RuntimeBridge implements IRuntimeBridge {
 			return Collections.singletonMap("id", runtime.getId());
 		}
 	}
-    
-    private static final class Resources
-    
-        extends NLS
-        
-    {
-        public static String vmVersionCouldNotBeDetermined;
-        public static String vmVersionIsInvalid;
-        
-        static
-        {
-            initializeMessages( RuntimeBridge.class.getName(), 
-                                Resources.class );
-        }
-   }
-    
 }
