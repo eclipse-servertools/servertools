@@ -109,7 +109,7 @@ public class ModifyModulesComposite extends Composite {
 
 		public Object getParent(Object element) {
 			IModule[] child = (IModule[]) element;
-			return (IModule[]) parentModuleMap.get(child);
+			return parentModuleMap.get(child);
 		}
 
 		public boolean hasChildren(Object element) {

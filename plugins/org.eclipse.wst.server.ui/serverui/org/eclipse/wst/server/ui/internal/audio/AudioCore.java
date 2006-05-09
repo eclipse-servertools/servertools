@@ -376,9 +376,9 @@ public class AudioCore {
 	
 					URL realURL = null;
 					if (location != null && location.length() > 0) {
-						String pluginId = cf[i].getDeclaringExtension().getNamespace();
-						URL url = Platform.find(Platform.getBundle(pluginId), new Path(location));
-						realURL = Platform.resolve(url);
+						String pluginId = cf[i].getDeclaringExtension().getContributor().getName();
+						URL url = FileLocator.find(Platform.getBundle(pluginId), new Path(location), null);
+						realURL = FileLocator.resolve(url);
 					}
 	
 					Sound sound = new Sound(id, category, name, realURL);

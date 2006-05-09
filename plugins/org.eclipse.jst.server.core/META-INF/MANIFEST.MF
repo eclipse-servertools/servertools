@@ -18,4 +18,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.server.core,
  org.eclipse.wst.common.project.facet.core,
  org.eclipse.jst.common.project.facet.core
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

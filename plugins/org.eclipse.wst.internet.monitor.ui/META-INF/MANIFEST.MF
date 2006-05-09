@@ -14,4 +14,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide,
  org.eclipse.ui,
  org.eclipse.wst.internet.monitor.core
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

@@ -22,4 +22,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jst.server.core,
  org.eclipse.jst.server.ui,
  org.eclipse.jst.server.tomcat.core
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

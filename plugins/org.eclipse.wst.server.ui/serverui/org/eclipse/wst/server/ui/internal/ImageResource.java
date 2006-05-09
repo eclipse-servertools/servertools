@@ -323,9 +323,9 @@ public class ImageResource {
 		int size = cf.length;
 		for (int i = 0; i < size; i++) {
 			try {
-				String pluginId = cf[i].getDeclaringExtension().getNamespace();
+				String name = cf[i].getDeclaringExtension().getContributor().getName();
 				String iconPath = cf[i].getAttribute("icon");
-				ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(pluginId, iconPath);
+				ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(name, iconPath);
 				if (imageDescriptor == null && iconPath != null && iconPath.length() > 0)
 					imageDescriptor = ImageDescriptor.getMissingImageDescriptor();
 				
