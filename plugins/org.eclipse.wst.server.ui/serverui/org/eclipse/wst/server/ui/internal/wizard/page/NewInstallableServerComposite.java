@@ -14,6 +14,7 @@ import org.eclipse.jface.dialogs.Dialog;
 
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.core.internal.IInstallableServer;
+import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
 import org.eclipse.wst.server.ui.internal.viewers.InstallableServerComposite;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
@@ -22,6 +23,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 /**
  * A composite used to select a server to install.
  */
@@ -57,12 +59,19 @@ public class NewInstallableServerComposite extends Composite {
 		setLayout(layout);
 		//WorkbenchHelp.setHelp(this, ContextIds.SELECT_CLIENT_WIZARD);
 		
+		Label label = new Label(this, SWT.WRAP);
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING);
+		data.horizontalSpan = 3;
+		data.widthHint = 200;
+		label.setLayoutData(data);
+		label.setText(Messages.wizNewInstallableServerMessage);
+		
 		InstallableServerComposite comp = new InstallableServerComposite(this, SWT.NONE, new InstallableServerComposite.InstallableServerSelectionListener() {
 			public void installableServerSelected(IInstallableServer server) {
 				handleSelection(server);
 			}
 		});
-		GridData data = new GridData(GridData.FILL_BOTH);
+		data = new GridData(GridData.FILL_BOTH);
 		data.heightHint = 200;
 		comp.setLayoutData(data);
 		
