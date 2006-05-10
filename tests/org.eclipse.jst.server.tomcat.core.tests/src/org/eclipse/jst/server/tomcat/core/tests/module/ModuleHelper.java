@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,36 +12,31 @@ package org.eclipse.jst.server.tomcat.core.tests.module;
 
 import java.io.ByteArrayInputStream;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.jst.j2ee.datamodel.properties.IJ2EEComponentCreationDataModelProperties;
-import org.eclipse.jst.j2ee.internal.web.archive.operations.WebComponentCreationDataModelProvider;
-//import org.eclipse.jst.j2ee.internal.web.archive.operations.WebFacetProjectCreationDataModelProvider;
-import org.eclipse.wst.common.componentcore.datamodel.properties.IComponentCreationDataModelProperties;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
+import org.eclipse.jst.j2ee.internal.project.J2EEProjectUtilities;
+import org.eclipse.jst.j2ee.internal.web.archive.operations.WebFacetProjectCreationDataModelProvider;
+import org.eclipse.jst.j2ee.project.facet.IJ2EEFacetProjectCreationDataModelProperties;
+import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetDataModelProperties;
+import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetProjectCreationDataModelProperties;
+import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetProjectCreationDataModelProperties.FacetDataModelMap;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.model.IModuleFile;
-import org.eclipse.wst.server.core.model.IModuleFolder;
-import org.eclipse.wst.server.core.model.IModuleResource;
-import org.eclipse.wst.server.core.model.IModuleResourceDelta;
+import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.core.util.ProjectModule;
 
 public class ModuleHelper {
 	public static void createModule(String name) throws Exception {
-		//IDataModel dataModel = DataModelFactory.createDataModel(new WebFacetProjectCreationDataModelProvider());
-		IDataModel dataModel = DataModelFactory.createDataModel(new WebComponentCreationDataModelProvider());
-      dataModel.setProperty(IComponentCreationDataModelProperties.COMPONENT_NAME, name);
-      dataModel.setBooleanProperty(IJ2EEComponentCreationDataModelProperties.ADD_TO_EAR, false);
-      dataModel.setIntProperty(IJ2EEComponentCreationDataModelProperties.COMPONENT_VERSION, 22); //J2EEVersionConstants.12);
+		IDataModel dataModel = DataModelFactory.createDataModel(new WebFacetProjectCreationDataModelProvider());
+      dataModel.setProperty(IFacetDataModelProperties.FACET_PROJECT_NAME, name);
+      dataModel.setBooleanProperty(IJ2EEFacetProjectCreationDataModelProperties.ADD_TO_EAR, false);
+      
+      FacetDataModelMap map = (FacetDataModelMap) dataModel.getProperty(IFacetProjectCreationDataModelProperties.FACET_DM_MAP);
+      IDataModel webModel = map.getFacetDataModel(J2EEProjectUtilities.DYNAMIC_WEB);
+      webModel.setStringProperty(IFacetDataModelProperties.FACET_VERSION_STR, "22");
+      
 		dataModel.getDefaultOperation().execute(new NullProgressMonitor(), null);
 		dataModel.dispose();
 	}
