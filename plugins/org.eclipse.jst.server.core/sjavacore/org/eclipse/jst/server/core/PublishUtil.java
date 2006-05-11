@@ -225,7 +225,7 @@ public class PublishUtil {
 					if (name.equals(resources[j].getName()) && isDir == resources[j] instanceof IModuleFolder)
 						found = true;
 				}
-	
+				
 				// delete file if it can't be found or isn't the correct type
 				if (!found) {
 					if (isDir)
@@ -241,52 +241,60 @@ public class PublishUtil {
 				toDir.delete();
 			toDir.mkdir();
 		}
-			
+		
 		monitor.worked(50);
 		
 		// cycle through files and only copy when it doesn't exist
 		// or is newer
 		toFiles = toDir.listFiles();
-		int toSize = toFiles.length;
+		int toSize = 0;
+		if (toFiles != null)
+			toSize = toFiles.length;
 		int dw = 0;
 		if (toSize > 0)
 			dw = 500 / toSize;
-
+		
 		for (int i = 0; i < fromSize; i++) {
 			IModuleResource current = resources[i];
-
+			
 			// check if this is a new or newer file
-			boolean copy = true;
 			boolean currentIsDir = current instanceof IModuleFolder;
+			
+			String name = current.getName();
+			IPath toPath = path.append(name);
 			if (!currentIsDir) {
-				//String name = current.getName();
-				//IModuleFile mf = (IModuleFile) current;
+				boolean copy = true;
+				IModuleFile mf = (IModuleFile) current;
 				
-				//long mod = mf.getModificationStamp();
-				// TODO
-				/*for (int j = 0; j < toSize; j++) {
-					if (name.equals(toFiles[j].getName()) && mod <= toFiles[j].lastModified())
-						copy = false;
-				}*/
-			}
-
-			if (copy) {
-				//String fromFile = current.getAbsolutePath();
-				IPath toPath = path.append(current.getName());
-				if (!currentIsDir) {
-					IModuleFile mf = (IModuleFile) current;
-					copyFile(mf, toPath);
-					monitor.worked(dw);
-				} else { //if (currentIsDir) {
-					IModuleFolder folder = (IModuleFolder) current;
-					IModuleResource[] children = folder.members();
-					monitor.subTask(NLS.bind(Messages.copyingTask, new String[] {resources[i].getName(), current.getName()}));
-					smartCopy(children, toPath, ProgressUtil.getSubMonitorFor(monitor, dw));
+				long mod = -1;
+				IFile file = (IFile) mf.getAdapter(IFile.class);
+				if (file != null) {
+					mod = file.getLocalTimeStamp();
+				} else {
+					File file2 = (File) mf.getAdapter(File.class);
+					mod = file2.lastModified();
 				}
+				
+				for (int j = 0; j < toSize; j++) {
+					if (name.equals(toFiles[j].getName())) {
+						if (mod == toFiles[j].lastModified())
+							copy = false;
+					}
+				}
+				
+				if (copy)
+					copyFile(mf, toPath);
+				monitor.worked(dw);
+			} else { //if (currentIsDir) {
+				IModuleFolder folder = (IModuleFolder) current;
+				IModuleResource[] children = folder.members();
+				monitor.subTask(NLS.bind(Messages.copyingTask, new String[] {resources[i].getName(), current.getName()}));
+				smartCopy(children, toPath, ProgressUtil.getSubMonitorFor(monitor, dw));
 			}
 			if (monitor.isCanceled())
 				return;
 		}
+		
 		monitor.worked(500 - dw * toSize);
 		monitor.done();
 	}
