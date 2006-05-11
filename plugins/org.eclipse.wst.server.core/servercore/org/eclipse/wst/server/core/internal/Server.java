@@ -1912,6 +1912,9 @@ public class Server extends Base implements IServer {
 		serverType = wc.serverType;
 		modules = wc.modules;
 		
+		int timestamp = wc.getTimestamp();
+		map.put("timestamp", Integer.toString(timestamp+1));
+		
 		// can never modify the following properties via the working copy
 		//serverState = wc.serverState;
 		delegate = wc.delegate;
