@@ -35,6 +35,7 @@ import org.eclipse.wst.server.core.internal.ServerType;
 import org.eclipse.wst.server.core.internal.StartServerJob;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.wizard.*;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
@@ -147,21 +148,29 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
 	 */
 	protected void run(IProgressMonitor monitor) {
-		String launchMode = getLaunchMode();
-		IModuleArtifact moduleArtifact = ServerPlugin.loadModuleArtifact(selection);
+		final String launchMode2 = getLaunchMode();
+		final IModuleArtifact moduleArtifact = ServerPlugin.loadModuleArtifact(selection);
 		
-		Shell shell;
+		Shell shell2 = null;
 		if (window != null)
-			shell = window.getShell();
-		else
-			shell = ServerUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
+			shell2 = window.getShell();
+		else {
+			try {
+				shell2 = ServerUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
+			} catch (Exception e) {
+				// ignore
+			}
+			if (shell2 == null)
+				shell2 = Display.getDefault().getActiveShell();
+		}
+		final Shell shell = shell2;
 
 		if (moduleArtifact == null || moduleArtifact.getModule() == null) {
 			EclipseUtil.openError(Messages.errorNoModules);
 			Trace.trace(Trace.FINEST, "No modules");
 			return;
 		}
-		IModule module = moduleArtifact.getModule();
+		final IModule module = moduleArtifact.getModule();
 
 		// check for servers with the given start mode
 		IServer[] servers = ServerCore.getServers();
@@ -169,7 +178,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size && !found; i++) {
-				if (ServerUIPlugin.isCompatibleWithLaunchMode(servers[i], launchMode)) {
+				if (ServerUIPlugin.isCompatibleWithLaunchMode(servers[i], launchMode2)) {
 					try {
 						IModule[] parents = servers[i].getRootModules(module, monitor);
 						if (parents != null && parents.length > 0)
@@ -191,7 +200,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				for (int i = 0; i < size && !found2; i++) {
 					IServerType type = serverTypes[i];
 					IModuleType[] moduleTypes = type.getRuntimeType().getModuleTypes();
-					if (type.supportsLaunchMode(launchMode) && ServerUtil.isSupportedModule(moduleTypes, module.getModuleType())) {
+					if (type.supportsLaunchMode(launchMode2) && ServerUtil.isSupportedModule(moduleTypes, module.getModuleType())) {
 						found2 = true;
 					}
 				}
@@ -207,7 +216,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			return;
 
 		tasksRun = false;
-		IServer server = getServer(module, launchMode, monitor);
+		final IServer server = getServer(module, launchMode2, monitor);
 		if (monitor.isCanceled())
 			return;
 		
@@ -233,104 +242,115 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				wizard.performFinish();
 		}
 		
-		// get the launchable adapter and module object
-		ILaunchableAdapter launchableAdapter = null;
-		Object launchable = null;
-		ILaunchableAdapter[] adapters = ServerPlugin.getLaunchableAdapters();
-		if (adapters != null) {
-			int size2 = adapters.length;
-			for (int j = 0; j < size2; j++) {
-				ILaunchableAdapter adapter = adapters[j];
-				try {
-					Object launchable2 = adapter.getLaunchable(server, moduleArtifact);
-					Trace.trace(Trace.FINEST, "adapter= " + adapter + ", launchable= " + launchable2);
-					if (launchable2 != null) {
-						launchableAdapter = adapter;
-						launchable = launchable2;
+		Thread t = new Thread("Server launch shortcut") {
+			public void run() {
+				String launchMode = launchMode2;
+				// get the launchable adapter and module object
+				ILaunchableAdapter launchableAdapter = null;
+				Object launchable = null;
+				ILaunchableAdapter[] adapters = ServerPlugin.getLaunchableAdapters();
+				if (adapters != null) {
+					int size2 = adapters.length;
+					for (int j = 0; j < size2; j++) {
+						ILaunchableAdapter adapter = adapters[j];
+						try {
+							Object launchable2 = adapter.getLaunchable(server, moduleArtifact);
+							Trace.trace(Trace.FINEST, "adapter= " + adapter + ", launchable= " + launchable2);
+							if (launchable2 != null) {
+								launchableAdapter = adapter;
+								launchable = launchable2;
+							}
+						} catch (Exception e) {
+							Trace.trace(Trace.SEVERE, "Error in launchable adapter", e);
+						}
 					}
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error in launchable adapter", e);
+				}
+				
+				IClient[] clients = new IClient[0];
+				if (launchable != null)
+					clients = getClients(server, launchable, launchMode);
+				
+				Trace.trace(Trace.FINEST, "Launchable clients: " + clients);
+				
+				IClient client = null;
+				if (clients == null || clients.length == 0) {
+					EclipseUtil.openError(Messages.errorNoClient);
+					Trace.trace(Trace.SEVERE, "No launchable clients!");
+					return;
+				} else if (clients.length == 1) {
+					client = clients[0];
+				} else {
+					SelectClientWizard wizard = new SelectClientWizard(clients);
+					final ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
+					shell.getDisplay().syncExec(new Runnable() {
+						public void run() {
+							dialog.open();
+						}
+					});
+					client = wizard.getSelectedClient();
+					if (client == null)
+						return;
+				}
+				
+				Trace.trace(Trace.FINEST, "Ready to launch");
+				
+				// start server if it's not already started
+				// and cue the client to start
+				IModule[] modules = new IModule[] { module }; // TODO: get parent heirarchy correct
+				int state = server.getServerState();
+				if (state == IServer.STATE_STARTING) {
+					LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
+					clientJob.schedule();
+				} else if (state == IServer.STATE_STARTED) {
+					boolean restart = false;
+					String mode = server.getMode();
+					if (!ILaunchManager.DEBUG_MODE.equals(mode) && ILaunchManager.DEBUG_MODE.equals(launchMode)) {
+						int result = openWarningDialog(shell, Messages.dialogModeWarningDebug);
+						if (result == 1)
+							launchMode = mode;
+						else if (result == 0)
+							restart = true;
+						else
+							return;
+					} else if (!ILaunchManager.PROFILE_MODE.equals(mode) && ILaunchManager.PROFILE_MODE.equals(launchMode)) {
+						int result = openWarningDialog(shell, Messages.dialogModeWarningProfile);
+						if (result == 1)
+							launchMode = mode;
+						else if (result == 0)
+							restart = true;
+						else
+							return;
+					}
+					
+					PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, false);
+					LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
+					publishJob.setNextJob(clientJob);
+					
+					if (restart) {
+						RestartServerJob restartJob = new RestartServerJob(server, launchMode);
+						restartJob.setNextJob(publishJob);
+						restartJob.schedule();
+					} else
+						publishJob.schedule();
+				} else if (state != IServer.STATE_STOPPING) {
+					PublishServerJob publishJob = new PublishServerJob(server);
+					StartServerJob startServerJob = new StartServerJob(server, launchMode);
+					LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
+					
+					if (((ServerType)server.getServerType()).startBeforePublish()) {
+						startServerJob.setNextJob(publishJob);
+						publishJob.setNextJob(clientJob);
+						startServerJob.schedule();
+					} else {
+						publishJob.setNextJob(startServerJob);
+						startServerJob.setNextJob(clientJob);
+						publishJob.schedule();
+					}
 				}
 			}
-		}
-		
-		IClient[] clients = new IClient[0];
-		if (launchable != null)
-			clients = getClients(server, launchable, launchMode);
-		
-		Trace.trace(Trace.FINEST, "Launchable clients: " + clients);
-		
-		IClient client = null;
-		if (clients == null || clients.length == 0) {
-			EclipseUtil.openError(Messages.errorNoClient);
-			Trace.trace(Trace.SEVERE, "No launchable clients!");
-			return;
-		} else if (clients.length == 1) {
-			client = clients[0];
-		} else {
-			SelectClientWizard wizard = new SelectClientWizard(clients);
-			ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
-			dialog.open();
-			client = wizard.getSelectedClient();
-			if (client == null)
-				return;
-		}
-		
-		Trace.trace(Trace.FINEST, "Ready to launch");
-		
-		// start server if it's not already started
-		// and cue the client to start
-		IModule[] modules = new IModule[] { module }; // TODO: get parent heirarchy correct
-		int state = server.getServerState();
-		if (state == IServer.STATE_STARTING) {
-			LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
-			clientJob.schedule();
-		} else if (state == IServer.STATE_STARTED) {
-			boolean restart = false;
-			String mode = server.getMode();
-			if (!ILaunchManager.DEBUG_MODE.equals(mode) && ILaunchManager.DEBUG_MODE.equals(launchMode)) {
-				int result = openWarningDialog(shell, Messages.dialogModeWarningDebug);
-				if (result == 1)
-					launchMode = mode;
-				else if (result == 0)
-					restart = true;
-				else
-					return;
-			} else if (!ILaunchManager.PROFILE_MODE.equals(mode) && ILaunchManager.PROFILE_MODE.equals(launchMode)) {
-				int result = openWarningDialog(shell, Messages.dialogModeWarningProfile);
-				if (result == 1)
-					launchMode = mode;
-				else if (result == 0)
-					restart = true;
-				else
-					return;
-			}
-			
-			PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, false);
-			LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
-			publishJob.setNextJob(clientJob);
-			
-			if (restart) {
-				RestartServerJob restartJob = new RestartServerJob(server, launchMode);
-				restartJob.setNextJob(publishJob);
-				restartJob.schedule();
-			} else
-				publishJob.schedule();
-		} else if (state != IServer.STATE_STOPPING) {
-			PublishServerJob publishJob = new PublishServerJob(server);
-			StartServerJob startServerJob = new StartServerJob(server, launchMode);
-			LaunchClientJob clientJob = new LaunchClientJob(server, modules, launchMode, moduleArtifact, launchableAdapter, client);
-			
-			if (((ServerType)server.getServerType()).startBeforePublish()) {
-				startServerJob.setNextJob(publishJob);
-				publishJob.setNextJob(clientJob);
-				startServerJob.schedule();
-			} else {
-				publishJob.setNextJob(startServerJob);
-				startServerJob.setNextJob(clientJob);
-				publishJob.schedule();
-			}
-		}
+		};
+		t.setDaemon(true);
+		t.start();
 	}
 
 	/**
@@ -366,11 +386,20 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * @param message
 	 * @return a dialog return constant
 	 */
-	protected int openWarningDialog(Shell shell, String message) {
-		MessageDialog dialog = new MessageDialog(shell, Messages.errorDialogTitle, null,
-			message,	MessageDialog.WARNING, new String[] {Messages.dialogModeWarningRestart,
-			Messages.dialogModeWarningContinue, IDialogConstants.CANCEL_LABEL}, 0);
-		return dialog.open();
+	protected int openWarningDialog(final Shell shell, final String message) {
+		class Int {
+			int i;
+		}
+		final Int in = new Int();
+		shell.getDisplay().syncExec(new Runnable() {
+			public void run() {
+				MessageDialog dialog = new MessageDialog(shell, Messages.errorDialogTitle, null,
+					message,	MessageDialog.WARNING, new String[] {Messages.dialogModeWarningRestart,
+					Messages.dialogModeWarningContinue, IDialogConstants.CANCEL_LABEL}, 0);
+				in.i = dialog.open();
+			}
+		});
+		return in.i;
 	}
 
 	/**
