@@ -93,6 +93,31 @@ public class InstallableRuntime implements IInstallableRuntime {
 	}
 
 	/*
+	 * @see IInstallableRuntime#getLicense(IProgressMonitor)
+	 */
+	public String getLicense(IProgressMonitor monitor) throws CoreException {
+		String featureId = getFeatureId();
+		String featureVersion = getFeatureVersion();
+		String fromSite = getFromSite();
+
+		if (featureId == null || featureVersion == null || fromSite == null)
+			return null;
+
+		ISite site = InstallableRuntime.getSite(fromSite, monitor);
+		ISiteFeatureReference[] featureRefs = site.getFeatureReferences();
+		for (int i = 0; i < featureRefs.length; i++) {
+			if (featureId.equals(featureRefs[i].getName()) && featureVersion.equals(featureRefs[i].getVersionedIdentifier().getVersion().toString())) {
+				IFeature feature = featureRefs[i].getFeature(monitor);
+				IURLEntry license = feature.getLicense();
+				if (license != null)
+					return license.getAnnotation();
+				return null;
+			}
+		}
+		return null;
+	}
+
+	/*
 	 * @see IInstallableRuntime#install(IPath)
 	 */
 	public void install(final IPath path) {

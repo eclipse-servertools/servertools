@@ -18,13 +18,18 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.core.internal.IInstallableServer;
 import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.wst.server.ui.internal.wizard.fragment.LicenseWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewInstallableServerWizardFragment;
+import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * A wizard to create a new installable server.
@@ -37,6 +42,7 @@ public class NewInstallableServerWizard extends TaskWizard {
 		super(Messages.wizNewServerWizardTitle, new WizardFragment() {
 			protected void createChildFragments(List list) {
 				list.add(new NewInstallableServerWizardFragment());
+				list.add(new LicenseWizardFragment());
 				list.add(new WizardFragment() {
 					public void performFinish(IProgressMonitor monitor) throws CoreException {
 						IInstallableServer is = (IInstallableServer) getTaskModel().getObject("installableServer");
@@ -46,6 +52,45 @@ public class NewInstallableServerWizard extends TaskWizard {
 				});
 			}
 		});
+	}
+
+	public static void invalidateLicense(TaskModel taskModel) {
+		IInstallableServer is = (IInstallableServer) taskModel.getObject("installableServer");
+		IInstallableServer ls = (IInstallableServer) taskModel.getObject(LicenseWizardFragment.LICENSE_SERVER);
+		if (is == ls)
+			return;
+		
+		taskModel.putObject(LicenseWizardFragment.LICENSE, LicenseWizardFragment.LICENSE_UNKNOWN);
+		taskModel.putObject(LicenseWizardFragment.LICENSE_ACCEPT, null);
+		taskModel.putObject(LicenseWizardFragment.LICENSE_SERVER, null);
+	}
+
+	public static void updateLicense(IWizardHandle wizard, final TaskModel taskModel) {
+		final IInstallableServer is = (IInstallableServer) taskModel.getObject("installableServer");
+		IInstallableServer ls = (IInstallableServer) taskModel.getObject(LicenseWizardFragment.LICENSE_SERVER);
+		if (is == ls)
+			return;
+		
+		IRunnableWithProgress runnable = new IRunnableWithProgress() {
+			public void run(IProgressMonitor monitor) {
+				String license = LicenseWizardFragment.LICENSE_UNKNOWN;
+				try {
+					license = is.getLicense(monitor);
+					if (license == null)
+						license = LicenseWizardFragment.LICENSE_NONE;
+				} catch (CoreException ce) {
+					// ignore
+				}
+				taskModel.putObject(LicenseWizardFragment.LICENSE, license);
+				taskModel.putObject(LicenseWizardFragment.LICENSE_SERVER, is);
+			}
+		};
+		
+		try {
+			wizard.run(true, false, runnable);
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error with runnable", e); //$NON-NLS-1$
+		}
 	}
 
 	/**

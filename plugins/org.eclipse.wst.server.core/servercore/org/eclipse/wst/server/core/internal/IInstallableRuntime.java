@@ -31,6 +31,15 @@ public interface IInstallableRuntime {
 	public String getId();
 
 	/**
+	 * Downloads the license from the update site.
+	 * 
+	 * @param monitor a progress monitor
+	 * @return the license
+	 * @throws CoreException
+	 */
+	public String getLicense(IProgressMonitor monitor) throws CoreException;
+
+	/**
 	 * Kicks off a background job to install the runtime.
 	 * 
 	 * @param path the path to install the runtime at

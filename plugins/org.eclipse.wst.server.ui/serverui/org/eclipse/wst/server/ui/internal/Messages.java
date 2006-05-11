@@ -305,6 +305,11 @@ public class Messages extends NLS {
 	public static String wizNewInstallableServerRestart;
 	public static String installableServerCompTree;
 	public static String installableServerLink;
+	public static String wizLicenseTitle;
+	public static String wizLicenseDescription;
+	public static String wizLicenseAccept;
+	public static String wizLicenseDecline;
+	public static String wizLicenseNone;
 
 	public static String errorStartingMonitor;
 	public static String audioPrefSelectFile;

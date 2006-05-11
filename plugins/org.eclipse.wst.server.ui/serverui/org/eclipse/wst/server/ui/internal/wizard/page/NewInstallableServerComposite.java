@@ -17,6 +17,7 @@ import org.eclipse.wst.server.core.internal.IInstallableServer;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
 import org.eclipse.wst.server.ui.internal.viewers.InstallableServerComposite;
+import org.eclipse.wst.server.ui.internal.wizard.NewInstallableServerWizard;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 
 import org.eclipse.swt.SWT;
@@ -62,7 +63,7 @@ public class NewInstallableServerComposite extends Composite {
 		Label label = new Label(this, SWT.WRAP);
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING);
 		data.horizontalSpan = 3;
-		data.widthHint = 200;
+		data.widthHint = 225;
 		label.setLayoutData(data);
 		label.setText(Messages.wizNewInstallableServerMessage);
 		
@@ -80,6 +81,7 @@ public class NewInstallableServerComposite extends Composite {
 
 	protected void handleSelection(IInstallableServer server) {
 		taskModel.putObject("installableServer", server);
+		NewInstallableServerWizard.invalidateLicense(taskModel);
 		wizard.update();
 	}
 }

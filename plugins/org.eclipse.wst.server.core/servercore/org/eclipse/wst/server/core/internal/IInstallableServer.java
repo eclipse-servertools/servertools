@@ -72,6 +72,15 @@ public interface IInstallableServer {
 	public String getVersion();
 
 	/**
+	 * Downloads the license from the update site.
+	 * 
+	 * @param monitor a progress monitor
+	 * @return the license
+	 * @throws CoreException
+	 */
+	public String getLicense(IProgressMonitor monitor) throws CoreException;
+
+	/**
 	 * Install this server.
 	 * 
 	 * @param monitor a progress monitor, or <code>null</code> if progress
