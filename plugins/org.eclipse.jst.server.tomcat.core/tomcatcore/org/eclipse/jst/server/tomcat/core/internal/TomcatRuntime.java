@@ -117,6 +117,13 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 				found = true;
 		}
 		
+		// on Tomcat 5.5, the Eclipse JDT compiler is used for JSP's
+		if (!found) {
+			String id = getRuntime().getRuntimeType().getId();
+			if (id != null && id.indexOf("55") > 0)
+				found = true;
+		}
+		
 		// on Mac, tools.jar is merged into classes.zip. if tools.jar wasn't found,
 		// try loading the javac class by running a check inside the VM
 		if (!found) {
