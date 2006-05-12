@@ -98,26 +98,23 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 		displayButton.setSelection(MonitorUIPlugin.getShowOnActivityPreference());
 		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		data.horizontalSpan = 2;
+		data.verticalIndent = 8;
 		displayButton.setLayoutData(data);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(displayButton, ContextIds.PREF_SHOW);
-		
-		label = new Label(composite, SWT.NONE);
-		label.setText("");
-		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		data.horizontalSpan = 2;
-		label.setLayoutData(data);
 		
 		label = new Label(composite, SWT.WRAP);
 		label.setText(Messages.monitorList);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 2;
+		data.verticalIndent = 8;
 		label.setLayoutData(data);
 		
 		table = new Table(composite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
 		data = new GridData(GridData.FILL_BOTH);
+		data.widthHint = 350;
+		table.setLayoutData(data);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(table, ContextIds.PREF_MONITORS);
 		
-		table.setLayoutData(data);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		
@@ -135,12 +132,12 @@ public class MonitorPreferencePage extends PreferencePage implements IWorkbenchP
 		
 		TableColumn httpColumn = new TableColumn(table, SWT.NONE);
 		httpColumn.setText(Messages.columnType);
-		colData = new ColumnWeightData(5, 55, true);
+		colData = new ColumnWeightData(6, 60, true);
 		tableLayout.addColumnData(colData);
 		
 		TableColumn localColumn = new TableColumn(table, SWT.NONE);
 		localColumn.setText(Messages.columnLocal);
-		colData = new ColumnWeightData(5, 50, true);
+		colData = new ColumnWeightData(6, 60, true);
 		tableLayout.addColumnData(colData);
 		
 		table.setLayout(tableLayout);
