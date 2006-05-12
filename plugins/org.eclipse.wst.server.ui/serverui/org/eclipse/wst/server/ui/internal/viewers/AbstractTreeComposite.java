@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -134,10 +135,15 @@ public abstract class AbstractTreeComposite extends Composite {
 		
 		if (hasDescription()) {
 			description = new Label(this, SWT.WRAP);
+			description.setText("Multi\nLine\nMessage");
+			Point p = description.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 			description.setText(Messages.wizDescription);
 			data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
 			data.horizontalSpan = 2;
-			data.heightHint = 35;
+			if (p.y > 10)
+				data.heightHint = p.y;
+			else
+				data.heightHint = 42;
 			description.setLayoutData(data);
 		}
 		
