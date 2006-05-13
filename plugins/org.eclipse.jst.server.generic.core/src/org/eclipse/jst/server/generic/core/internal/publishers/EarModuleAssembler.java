@@ -40,7 +40,13 @@ public class EarModuleAssembler extends AbstractModuleAssembler {
 		IModule[] childModules = earModule.getModules();
 		for (int i = 0; i < childModules.length; i++) {
 			IModule module = childModules[i];
-			packModule(module,earModule.getURI(module), parent);
+			String uri = earModule.getURI(module);
+			if(uri==null){
+				IStatus status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0,	"unable to assemble module null uri",null ); //$NON-NLS-1$
+				throw new CoreException(status);
+			}
+				
+			packModule(module,uri, parent);
 		}
 		return parent;
 	}
