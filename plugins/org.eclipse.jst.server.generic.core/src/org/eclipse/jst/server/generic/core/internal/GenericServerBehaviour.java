@@ -411,7 +411,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     	String host = getServer().getHost();
     	ServerPort[] ports = getServer().getServerPorts(null);
     	ServerPort sp = null;
-    	if(getServer().getServerType().supportsRemoteHosts()==false && SocketUtil.isLocalhost(host)){
+    	if(SocketUtil.isLocalhost(host)){
 	    	for(int i=0;i<ports.length;i++){
 	    		sp= ports[i];
 	    		if (SocketUtil.isPortInUse(ports[i].getPort(), 5))
