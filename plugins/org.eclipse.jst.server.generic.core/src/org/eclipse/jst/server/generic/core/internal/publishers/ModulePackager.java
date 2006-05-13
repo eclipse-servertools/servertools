@@ -18,7 +18,6 @@ import java.io.InputStream;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
@@ -164,5 +163,52 @@ public class ModulePackager {
 
 		write(destinationPath, output.toByteArray());
 	}
-
+	
+	/**
+	 * pack directory relative to root
+	 * @param directory
+	 * @param root
+	 * @throws CoreException
+	 * @throws IOException
+	 */
+	public void pack(File directory, String root) throws CoreException, IOException
+	{
+		File[] files = directory.listFiles();
+		for(int i=0; i<files.length;i++)
+		{
+			if(files[i].isDirectory())
+			{
+				String relativeFolder=makeRelative(files[i].getAbsolutePath(), root);
+				if(relativeFolder!=null){//should always be true
+					writeFolder(relativeFolder);
+				}
+				pack(files[i], root);
+			}
+			else{
+				String relativeFolder=makeRelative(files[i].getAbsolutePath(), root);
+				if(relativeFolder!=null){//should always be true
+					write(files[i],relativeFolder);
+				}
+			}
+		}
+		
+		
+	}
+	/**
+	 * Make directoryname relative to root
+	 * @param fileName
+	 * @param root
+	 * @return
+	 */
+	private String makeRelative(String fileName, String root)
+	{
+		String folder=null;
+		if(fileName.startsWith(root))
+		{
+			folder=fileName.substring(root.length());
+		}
+		return folder;
+		
+	}
+	
 }

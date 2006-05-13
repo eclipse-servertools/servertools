@@ -44,7 +44,7 @@ public abstract class AbstractModuleAssembler {
 	 * @param monitor
 	 * @throws CoreException
 	 */
-	protected abstract void assemble(IProgressMonitor monitor) throws CoreException;
+	protected abstract IPath assemble(IProgressMonitor monitor) throws CoreException;
 
 	
 	/**
@@ -63,9 +63,9 @@ public abstract class AbstractModuleAssembler {
 		public static AbstractModuleAssembler getModuleAssembler(IModule module, GenericServer server)
 		{
 			
-			if(isModuleType(module, "jst.web"))
+			if(isModuleType(module, "jst.web")) //$NON-NLS-1$
 				return new WarModuleAssembler(module,server);
-			if(isModuleType(module, "jst.ear"))
+			if(isModuleType(module, "jst.ear")) //$NON-NLS-1$
 				return new EarModuleAssembler(module,server);
 			return new DefaultModuleAssembler(module,server);
 		}
@@ -91,7 +91,7 @@ public abstract class AbstractModuleAssembler {
 			}
 		} catch (IOException e) {
 			IStatus status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0,
-					"unable to assemble module", e);
+					"unable to assemble module", e); //$NON-NLS-1$
 			throw new CoreException(status);
 		}
 		finally{

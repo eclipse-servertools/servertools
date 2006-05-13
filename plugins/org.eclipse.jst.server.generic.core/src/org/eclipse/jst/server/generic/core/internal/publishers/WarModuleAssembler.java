@@ -31,13 +31,16 @@ public class WarModuleAssembler extends AbstractModuleAssembler {
 		fServer=server;
 	}
 
-	protected void assemble(IProgressMonitor monitor) throws CoreException{
+	protected IPath assemble(IProgressMonitor monitor) throws CoreException{
 		IPath parent =copyModule(fModule,monitor);
 		IWebModule webModule = (IWebModule)fModule.loadAdapter(IWebModule.class, monitor);
 		IModule[] childModules = webModule.getModules();
 		for (int i = 0; i < childModules.length; i++) {
 			IModule module = childModules[i];
-			packModule(module, webModule.getURI(module), parent.append(WEB_INF_LIB)); 
+			//packModule(module, webModule.getURI(module), parent.append(WEB_INF_LIB));
+			// The correct version should be the above line
+			packModule(module, module.getName()+".jar", parent.append(WEB_INF_LIB));  //$NON-NLS-1$
 		}
+		return parent;
 	}
 }
