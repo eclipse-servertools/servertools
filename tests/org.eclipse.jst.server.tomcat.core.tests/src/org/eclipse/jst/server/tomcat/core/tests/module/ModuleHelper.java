@@ -59,7 +59,7 @@ public class ModuleHelper {
 
 	public static void createJavaContent(String name, int i) throws Exception {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
-		IFile file = project.getFile(new Path("JavaSource").append("Test" + i + ".java"));
+		IFile file = project.getFile(new Path("src").append("Test" + i + ".java"));
 		String content = "public class Test" + i + " { }";
 		ByteArrayInputStream in = new ByteArrayInputStream(content.getBytes());
 		file.create(in, true, null);
