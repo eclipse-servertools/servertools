@@ -32,7 +32,7 @@ public class AllTests {
 		suite.addTestSuite(BuildFullTestCase.class);
 		
 		String s = System.getProperty("org.eclipse.jst.server.tomcat.50");
-		//s = "D:\\Tools\\tomcat\\jakarta-tomcat-5.0.19";
+		//s = "D:\\Tools\\tomcat\\jakarta-tomcat-5.0.25";
 		if (s != null && s.length() > 0) {
 			RuntimeLocation.runtimeLocation = s;
 			
@@ -55,8 +55,12 @@ public class AllTests {
 		suite.addTestSuite(AddRemoveModulesWizardTestCase.class);
 		suite.addTestSuite(AddRemoveModulesWizard2TestCase.class);
 		
-		if (s != null && s.length() > 0)
+		suite.addTestSuite(CreateHugeModuleTestCase.class);
+		
+		if (s != null && s.length() > 0) {
 			suite.addTestSuite(PublishTestCase.class);
+			suite.addTestSuite(PublishHugeModuleTestCase.class);
+		}
 		
 		suite.addTestSuite(DeleteModulesTestCase.class);
 		
