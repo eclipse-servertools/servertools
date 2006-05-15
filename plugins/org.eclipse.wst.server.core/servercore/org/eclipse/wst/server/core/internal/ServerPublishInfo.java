@@ -260,7 +260,7 @@ public class ServerPublishInfo {
 	protected static IModuleResourceDelta[] getDelta(IModuleResource[] original, IModuleResource[] current) {
 		if (original == null || current == null)
 			return new IModuleResourceDelta[0];
-	
+		
 		List list = new ArrayList();
 		int size = original.length;
 		int size2 = current.length;
@@ -268,7 +268,7 @@ public class ServerPublishInfo {
 		Map originalMap = new HashMap(size);
 		for (int i = 0; i < size; i++)
 			originalMap.put(original[i], original[i]);
-
+		
 		// added and changed resources
 		for (int i = 0; i < size2; i++) {
 			IModuleResource old = (IModuleResource) originalMap.remove(current[i]);

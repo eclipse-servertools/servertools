@@ -203,7 +203,9 @@ public class ModulePublishInfo {
 	private void fillCache(IModule[] module) {
 		if (currentResources != null)
 			return;
+		
 		try {
+			long time = System.currentTimeMillis();
 			int size = module.length;
 			ModuleDelegate pm = (ModuleDelegate) module[size - 1].loadAdapter(ModuleDelegate.class, null);
 			if (pm != null)
@@ -213,6 +215,7 @@ public class ModulePublishInfo {
 			
 			delta = ServerPublishInfo.getDelta(resources, currentResources);
 			hasDelta = (delta != null && delta.length > 0);
+			Trace.trace(Trace.PERFORMANCE, "Filling publish cache for " + module[size-1].getName() + ": " + (System.currentTimeMillis() - time));
 		} catch (CoreException ce) {
 			Trace.trace(Trace.WARNING, "Couldn't fill publish cache for " + module);
 		}
@@ -235,15 +238,19 @@ public class ModulePublishInfo {
 			return currentResources;
 		}
 		
+		long time = System.currentTimeMillis();
+		
 		int size = module.length;
 		ModuleDelegate pm = (ModuleDelegate) module[size - 1].loadAdapter(ModuleDelegate.class, null);
+		IModuleResource[] x = new IModuleResource[0];
 		try {
 			if (pm != null)
-				return pm.members();
+				x = pm.members();
 		} catch (CoreException ce) {
 			// ignore
 		}
-		return new IModuleResource[0];
+		Trace.trace(Trace.PERFORMANCE, "Time to get members() for " + module[size - 1].getName() + ": " + (System.currentTimeMillis() - time));
+		return x;
 	}
 
 	protected IModuleResourceDelta[] getDelta(IModule[] module) {
