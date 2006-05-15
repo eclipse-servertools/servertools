@@ -100,7 +100,7 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 				for (int j = 0; j < size2; j++) {
 					Connector connector = service.getConnector(j);
 					String name = "HTTP";
-					String protocol2 = "TCPIP";
+					String protocol2 = "HTTP";
 					boolean advanced = true;
 					String[] contentTypes = null;
 					int port = -1;
