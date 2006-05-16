@@ -11,6 +11,11 @@
 package org.eclipse.jst.server.tomcat.core.tests.module;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
@@ -24,10 +29,19 @@ import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.core.internal.IMemento;
+import org.eclipse.wst.server.core.internal.XMLMemento;
 import org.eclipse.wst.server.core.model.*;
 import org.eclipse.wst.server.core.util.ProjectModule;
+import org.osgi.framework.Bundle;
 
 public class ModuleHelper {
+	// size of the buffer
+	private static final int BUFFER = 10240;
+
+	// the buffer
+	private static byte[] buf = new byte[BUFFER];
+
 	public static void createModule(String name) throws Exception {
 		IDataModel dataModel = DataModelFactory.createDataModel(new WebFacetProjectCreationDataModelProvider());
       dataModel.setProperty(IFacetDataModelProperties.FACET_PROJECT_NAME, name);
@@ -63,6 +77,57 @@ public class ModuleHelper {
 		String content = "public class Test" + i + " { }";
 		ByteArrayInputStream in = new ByteArrayInputStream(content.getBytes());
 		file.create(in, true, null);
+	}
+
+	public static void createJarContent(String name, int num, IPath path) throws Exception {
+		if (!path.toFile().exists())
+			path.toFile().mkdirs();
+		
+		// create external jars
+		for (int i = 0; i < num; i++) {
+			Bundle bundle = Platform.getBundle("org.eclipse.core.runtime");
+			URL url = bundle.getEntry("/");
+			url = FileLocator.resolve(url);
+			String s = url.toString();
+			url = new URL(s.substring(4, s.length() - 2));
+			InputStream in = url.openStream();
+			IPath path2 = path.append("external_jar" + i + ".jar");
+			copyFile(in, path2.toOSString());
+		}
+		
+		// update component file
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
+		IFile file = project.getFile(new Path(".settings").append("org.eclipse.wst.common.component"));
+		
+		InputStream in = null;
+		XMLMemento memento = null;
+		try {
+			in = file.getContents();
+			memento = (XMLMemento) XMLMemento.loadMemento(in);
+			IMemento child = memento.getChild("project-modules");
+			child = memento.getChild("wb-module");
+			
+			for (int i = 0; i < num; i++) {
+				IMemento newChild = child.createChild("dependent-module");
+				newChild.putString("deploy-path", "/WEB-INF/lib");
+				IPath path2 = path.append("external_jar" + i + ".jar");
+				newChild.putString("handle", "module:/classpath/lib/" + path2.toOSString());
+				XMLMemento child2 = (XMLMemento) newChild.createChild("dependency-type");
+				child2.putTextData("uses");
+			}
+/*			<dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/C:/Documents and Settings/Administrator/Desktop/com.ibm.version.adder_1.0.0.jar">
+         <dependency-type>uses</dependency-type>
+     </dependent-module>*/
+		} finally {
+			try {
+				in.close();
+			} catch (Exception ex) {
+				// ignore
+			}
+		}
+		//ByteArrayInputStream in = new ByteArrayInputStream(memento.getBytes());
+		in = memento.getInputStream();
+		file.setContents(in, true, true, null);
 	}
 
 	public static void deleteModule(String name) throws Exception {
@@ -195,5 +260,40 @@ public class ModuleHelper {
 		}
 		
 		return null;
+	}
+
+	/**
+	 * Copy a file from a to b. Closes the input stream after use.
+	 *
+	 * @param in java.io.InputStream
+	 * @param to java.lang.String
+	 */
+	private static void copyFile(InputStream in, String to) throws IOException {
+		OutputStream out = null;
+		
+		try {
+			out = new FileOutputStream(to);
+	
+			int avail = in.read(buf);
+			while (avail > 0) {
+				out.write(buf, 0, avail);
+				avail = in.read(buf);
+			}
+		} catch (Exception e) {
+			throw new IOException("Error copying file");
+		} finally {
+			try {
+				if (in != null)
+					in.close();
+			} catch (Exception ex) {
+				// ignore
+			}
+			try {
+				if (out != null)
+					out.close();
+			} catch (Exception ex) {
+				// ignore
+			}
+		}
 	}
 }

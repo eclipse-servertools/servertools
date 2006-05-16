@@ -17,15 +17,17 @@ import junit.framework.TestSuite;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.tomcat.core.tests.module.ModuleHelper;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 
 public class CreateHugeModuleTestCase extends TestCase {
 	protected static final String WEB_MODULE_NAME = "HugeModule";
 	protected static final int NUM_RESOURCES = 2000;
-	protected static final int NUM_BUILDS = 10;
+	protected static final int NUM_EXTERNAL_JARS = 100;
 
 	public static Test suite() {
 		return new TestSuite(CreateHugeModuleTestCase.class, "CreateHugeModuleTestCase");
@@ -42,6 +44,10 @@ public class CreateHugeModuleTestCase extends TestCase {
 						ModuleHelper.createJavaContent(WEB_MODULE_NAME, i);
 					for (int i = 0; i < NUM_RESOURCES; i++)
 						ModuleHelper.createXMLContent(WEB_MODULE_NAME, i);
+					
+					// add external jars
+					IPath path = ServerPlugin.getInstance().getStateLocation().append("jars");
+					ModuleHelper.createJarContent(WEB_MODULE_NAME, NUM_EXTERNAL_JARS, path);
 				} catch (Exception e) {
 					e.printStackTrace();
 					throw new CoreException(new Status(IStatus.ERROR, null, 0, "Error creating resources", e));
