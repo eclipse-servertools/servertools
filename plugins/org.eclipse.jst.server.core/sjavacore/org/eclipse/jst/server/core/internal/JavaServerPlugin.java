@@ -11,8 +11,10 @@
 package org.eclipse.jst.server.core.internal;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -50,6 +52,8 @@ public class JavaServerPlugin extends Plugin {
 	// runtime listener
 	private static IRuntimeLifecycleListener runtimeListener;
 
+    private static final Set messagesLogged = new HashSet();
+    
 	/**
 	 * Create the JavaServerPlugin.
 	 */
@@ -182,6 +186,47 @@ public class JavaServerPlugin extends Plugin {
 		log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.ERROR, "Internal error", t)); //$NON-NLS-1$
 	}
 
+    public static void log( final String msg )
+    {
+        log( new Status( IStatus.ERROR, PLUGIN_ID, IStatus.OK, msg, null ) );
+    }
+    
+    public static void logError( final String msg )
+    {
+        logError( msg, false );
+    }
+    
+    public static void logError( final String msg,
+                                 final boolean suppressDuplicates )
+    {
+        if( suppressDuplicates && messagesLogged.contains( msg ) )
+        {
+            return;
+        }
+        
+        messagesLogged.add( msg );
+        
+        log( new Status( IStatus.ERROR, PLUGIN_ID, IStatus.OK, msg, null ) );
+    }
+
+    public static void logWarning( final String msg )
+    {
+        logWarning( msg, false );
+    }
+    
+    public static void logWarning( final String msg,
+                                   final boolean suppressDuplicates )
+    {
+        if( suppressDuplicates && messagesLogged.contains( msg ) )
+        {
+            return;
+        }
+        
+        messagesLogged.add( msg );
+        
+        log( new Status( IStatus.WARNING, PLUGIN_ID, IStatus.OK, msg, null ) );
+    }
+    
 	/**
 	 * Returns an array of all known runtime classpath provider instances.
 	 * <p>
