@@ -409,4 +409,41 @@ public final class XMLMemento implements IMemento {
 	public void putBoolean(String key, boolean value) {
 		element.setAttribute(key, value ? "true" : "false");
 	}
+
+	/**
+    * Returns the Text node of the memento. Each memento is allowed only 
+    * one Text node.
+    * 
+    * @return the Text node of the memento, or <code>null</code> if
+    * the memento has no Text node.
+    */
+   private Text getTextNode() {
+       // Get the nodes.
+       NodeList nodes = element.getChildNodes();
+       int size = nodes.getLength();
+       if (size == 0) {
+			return null;
+		}
+       for (int nX = 0; nX < size; nX++) {
+           Node node = nodes.item(nX);
+           if (node instanceof Text) {
+               return (Text) node;
+           }
+       }
+       // a Text node was not found
+       return null;
+   }
+  
+	/* (non-Javadoc)
+    */
+   public void putTextData(String data) {
+       Text textNode = getTextNode();
+       if (textNode == null) {
+           textNode = factory.createTextNode(data);
+			// Always add the text node as the first child (fixes bug 93718) 
+			element.insertBefore(textNode, element.getFirstChild());
+       } else {
+           textNode.setData(data);
+       }
+   }
 }
