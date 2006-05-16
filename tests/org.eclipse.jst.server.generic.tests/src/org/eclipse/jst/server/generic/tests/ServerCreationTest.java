@@ -110,8 +110,7 @@ public class ServerCreationTest extends TestCase {
 
 		
 		//Create a new server instance from the type
-		IServerWorkingCopy server = serverType.createServer(ID+".Jonas.Server", null,
-				(IRuntime) runtime, null);
+		IServerWorkingCopy server = serverType.createServer(ID+".Jonas.Server", null, runtime, null);
 		assertNotNull("Could not create server",server);
 	
 		//Save the server

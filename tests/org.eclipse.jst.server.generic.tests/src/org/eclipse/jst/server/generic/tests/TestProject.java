@@ -42,6 +42,7 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -169,7 +170,7 @@ public class TestProject {
 		Bundle bundle = Platform.getBundle(plugin);
 		URL pluginURL = bundle.getEntry("/");
 		URL jarURL = new URL(pluginURL, file);
-		URL localJarURL = Platform.asLocalURL(jarURL);
+		URL localJarURL = FileLocator.toFileURL(jarURL);
 		return new Path(localJarURL.getPath());
 	}
 	private void waitForIndexer() throws JavaModelException {

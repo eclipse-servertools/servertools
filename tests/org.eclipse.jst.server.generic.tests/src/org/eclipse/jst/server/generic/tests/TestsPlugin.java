@@ -49,14 +49,14 @@ public class TestsPlugin extends AbstractUIPlugin {
 		plugin = this;
 	}
 
-	/**
+	/*
 	 * This method is called upon plug-in activation
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 	}
 
-	/**
+	/*
 	 * This method is called when the plug-in is stopped
 	 */
 	public void stop(BundleContext context) throws Exception {
@@ -65,14 +65,14 @@ public class TestsPlugin extends AbstractUIPlugin {
 		resourceBundle = null;
 	}
 
-	/**
+	/*
 	 * Returns the shared instance.
 	 */
 	public static TestsPlugin getDefault() {
 		return plugin;
 	}
 
-	/**
+	/*
 	 * Returns the string from the plugin's resource bundle,
 	 * or 'key' if not found.
 	 */
@@ -85,7 +85,7 @@ public class TestsPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	/**
+	/*
 	 * Returns the plugin's resource bundle,
 	 */
 	public ResourceBundle getResourceBundle() {
