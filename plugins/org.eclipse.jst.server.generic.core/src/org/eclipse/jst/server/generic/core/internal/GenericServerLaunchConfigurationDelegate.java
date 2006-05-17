@@ -75,6 +75,7 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 			// Program & VM args
 			String pgmArgs = getProgramArguments(configuration);
 			String vmArgs = getVMArguments(configuration);
+			String[] envp= getEnvironment(configuration);
 
 			if (mode == ILaunchManager.PROFILE_MODE) {
 				ServerProfiler[] sp = JavaServerPlugin.getServerProfilers();
@@ -100,6 +101,7 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 			runConfig.setProgramArguments(execArgs.getProgramArgumentsArray());
 			runConfig.setVMArguments(execArgs.getVMArgumentsArray());
 			runConfig.setWorkingDirectory(workingDirName);
+			runConfig.setEnvironment(envp);
 			runConfig.setVMSpecificAttributesMap(vmAttributesMap);
 
 			// Bootpath

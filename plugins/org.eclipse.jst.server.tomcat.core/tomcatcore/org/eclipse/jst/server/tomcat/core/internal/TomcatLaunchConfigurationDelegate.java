@@ -58,6 +58,7 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 		// Program & VM args
 		String pgmArgs = getProgramArguments(configuration);
 		String vmArgs = getVMArguments(configuration);
+		String[] envp= getEnvironment(configuration);
 		if (mode == ILaunchManager.PROFILE_MODE) {
 			ServerProfiler[] sp = JavaServerPlugin.getServerProfilers();
 			if (sp == null || runner == null) {
@@ -81,6 +82,7 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 		runConfig.setProgramArguments(execArgs.getProgramArgumentsArray());
 		runConfig.setVMArguments(execArgs.getVMArgumentsArray());
 		runConfig.setWorkingDirectory(workingDirName);
+		runConfig.setEnvironment(envp);
 		runConfig.setVMSpecificAttributesMap(vmAttributesMap);
 
 		// Bootpath
