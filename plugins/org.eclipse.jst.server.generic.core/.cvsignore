@@ -6,3 +6,4 @@ temp.folder
 *.settings
 genericserversrc.zip
 @dot
+javaCompiler...args
