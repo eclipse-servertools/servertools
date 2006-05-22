@@ -27,12 +27,6 @@
    </requires>
 
    <plugin
-         id="org.eclipse.wst.internet.monitor.core.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.wst.internet.monitor.ui.tests"
          download-size="0"
          install-size="0"
@@ -55,5 +49,12 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.wst.internet.monitor.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
