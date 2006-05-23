@@ -61,10 +61,10 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;org.eclipse.wst.server.ui.editor.IServerEditorSection&lt;/samp&gt;
+                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;org.eclipse.wst.server.ui.editor.ServerEditorSection&lt;/samp&gt;
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.ui.editor.IServerEditorSection"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.wst.server.ui.editor.ServerEditorSection"/>
                </appInfo>
             </annotation>
          </attribute>
