@@ -1,9 +1,12 @@
-/**
- * <copyright>
- * </copyright>
- *
- * $Id: External.java,v 1.2 2005/08/30 21:43:24 gercan Exp $
- */
+/***************************************************************************************************
+ * Copyright (c) 2005 Eteration A.S. and Gorkem Ercan. All rights reserved. This program and the
+ * accompanying materials are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Gorkem Ercan - initial API and implementation
+ *               
+ **************************************************************************************************/
 package org.eclipse.jst.server.generic.servertype.definition;
 
 import org.eclipse.emf.ecore.EObject;
