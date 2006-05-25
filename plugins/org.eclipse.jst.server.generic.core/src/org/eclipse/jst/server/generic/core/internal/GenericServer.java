@@ -158,10 +158,11 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	 */
 	public URL getModuleRootURL(IModule module) {
 
-		try {			
+		try {
             if (module == null || module.loadAdapter(IWebModule.class,null)==null )
 				return null;
-
+            
+            IWebModule webModule =(IWebModule)module.loadAdapter(IWebModule.class,null);
             String host = getServer().getHost();
 			String url = "http://"+host; //$NON-NLS-1$
 			int port = 0;
@@ -171,7 +172,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 			if (port != 80)
 				url += ":" + port; //$NON-NLS-1$
 
-			url += "/"+module.getName(); //$NON-NLS-1$
+			url += "/"+webModule.getContextRoot(); //$NON-NLS-1$
 
 			if (!url.endsWith("/")) //$NON-NLS-1$
 				url += "/"; //$NON-NLS-1$
