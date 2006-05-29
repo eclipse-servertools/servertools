@@ -84,6 +84,13 @@
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="bundleVersion" type="string">
+            <annotation>
+               <documentation>
+                  the optional version of the bundle in which the runtime zip is in
+               </documentation>
+            </annotation>
+         </attribute>
          <attribute name="path" type="string" use="required">
             <annotation>
                <documentation>

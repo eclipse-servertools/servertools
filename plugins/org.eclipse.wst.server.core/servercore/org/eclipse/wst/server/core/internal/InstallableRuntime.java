@@ -74,6 +74,15 @@ public class InstallableRuntime implements IInstallableRuntime {
 		return null;
 	}
 
+	public String getBundleVersion() {
+		try {
+			return element.getAttribute("bundleVersion");
+		} catch (Exception e) {
+			// ignore
+		}
+		return null;
+	}
+
 	public String getPath() {
 		try {
 			return element.getAttribute("path");
@@ -115,6 +124,14 @@ public class InstallableRuntime implements IInstallableRuntime {
 			}
 		}
 		return null;
+	}
+
+	protected Bundle getBundleVersion(Bundle[] bundles, String version) {
+		if (bundles == null)
+			return null;
+		
+		int size = bundles.length;
+		return bundles[size - 1];
 	}
 
 	/*
@@ -194,8 +211,8 @@ public class InstallableRuntime implements IInstallableRuntime {
 		fromSite = getMirror(fromSite, site);
 		
 		// download and install plugins
-		Bundle bundle = Platform.getBundle(getBundleId());
-		if (bundle == null) {
+		Bundle bundles[] = Platform.getBundles(getBundleId(), getBundleVersion());
+		if (bundles == null) {
 			try {
 				monitor.setTaskName("Installing feature");
 				InstallCommand command = new InstallCommand(featureId, featureVersion, fromSite, null, "false");
@@ -214,7 +231,8 @@ public class InstallableRuntime implements IInstallableRuntime {
 		// unzip from bundle into path
 		try {
 			byte[] buf = new byte[8192];
-			bundle = Platform.getBundle(getBundleId());
+			bundles = Platform.getBundles(getBundleId(), getBundleVersion());
+			Bundle bundle = getBundleVersion(bundles, getBundleVersion());
 			URL url = bundle.getEntry(getPath());
 			url = FileLocator.resolve(url);
 			InputStream in = url.openStream();
