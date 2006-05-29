@@ -61,7 +61,7 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  specifies the fully qualified name of the Java class that implements &lt;samp&gt;org.eclipse.wst.server.ui.editor.ServerEditorSection&lt;/samp&gt;
+                  specifies the fully qualified name of the Java class that extends &lt;samp&gt;org.eclipse.wst.server.ui.editor.ServerEditorSection&lt;/samp&gt;
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.wst.server.ui.editor.ServerEditorSection"/>
@@ -127,7 +127,7 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that implements the interface &lt;code&gt;org.eclipse.wst.server.ui.editor.ServerEditorPageSectionFactoryDelegate&lt;/code&gt;.
+         Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;code&gt;org.eclipse.wst.server.ui.editor.ServerEditorPageSectionFactoryDelegate&lt;/code&gt;.
       </documentation>
    </annotation>
 
