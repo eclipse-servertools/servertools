@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,8 +13,19 @@ package org.eclipse.jst.server.core;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jst.server.core.internal.JavaServerPlugin;
+import org.eclipse.jst.server.core.internal.Messages;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.common.project.facet.core.IFacetedProject;
+import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
+import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
 import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
 /**
  * Utility class for converting between facet runtimes and server runtimes.
@@ -72,5 +83,38 @@ public class FacetUtil {
 				return runtime2;
 		}
 		return null;
+	}
+
+	/**
+	 * Tests whether the facets on a project are supported by a given server. Returns
+	 * an OK status if the server's runtime supports the project's facets, and an
+	 * ERROR status (with message) if it doesn't.
+	 * 
+	 * @param project a project
+	 * @param server a server
+	 * @return OK status if the server's runtime supports the project's facets, and an
+	 *    ERROR status (with message) if it doesn't
+	 */
+	public static final IStatus verifyFacets(IProject project, IServer server) {
+		if (server == null)
+			return new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, Messages.errorNoRuntime, null);
+		IRuntime runtime = server.getRuntime();
+		if (runtime == null)
+			return new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, Messages.errorNoRuntime, null);
+		
+		org.eclipse.wst.common.project.facet.core.runtime.IRuntime runtime2 = getRuntime(runtime);
+		
+		try {
+			IFacetedProject facetedProject = ProjectFacetsManager.create(project);
+			Iterator iterator = facetedProject.getProjectFacets().iterator();
+			while (iterator.hasNext()) {
+				IProjectFacetVersion facet = (IProjectFacetVersion) iterator.next();
+				if (!runtime2.supports(facet))
+					return new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorFacet, facet.getProjectFacet().getLabel(), facet.getVersionString()), null);
+			}
+		} catch (CoreException ce) {
+			return ce.getStatus();
+		}
+		return Status.OK_STATUS;
 	}
 }

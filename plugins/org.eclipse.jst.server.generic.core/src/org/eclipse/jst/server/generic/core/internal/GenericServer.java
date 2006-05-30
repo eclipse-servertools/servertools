@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jst.server.core.FacetUtil;
 import org.eclipse.jst.server.core.IEnterpriseApplication;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.generic.servertype.definition.Module;
@@ -55,8 +56,19 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 				  }
 			}
         }
+		
+		for (int i = 0; i < add.length; i++) {
+			IModule module = add[i];
+			if (module.getProject() != null) {
+				IStatus status = FacetUtil.verifyFacets(module.getProject(), getServer());
+				if (status != null && !status.isOK())
+					return status;
+			}
+		}
+		
 		if(found==add.length)
 			return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "CanModifyModules", null); //$NON-NLS-1$
+		
 		return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.moduleNotCompatible, null);
 	}
 	

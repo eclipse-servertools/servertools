@@ -27,6 +27,8 @@ public class Messages extends NLS {
 	public static String errorRename;
 	public static String errorReading;
 	public static String updateClasspathContainers;
+	public static String errorNoRuntime;
+	public static String errorFacet;
 	
 	static {
 		NLS.initializeMessages(JavaServerPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);

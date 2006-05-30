@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.*;
+import org.eclipse.jst.server.core.FacetUtil;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.core.internal.J2EEUtil;
 import org.eclipse.osgi.util.NLS;
@@ -253,6 +254,12 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 				IStatus status = getTomcatVersionHandler().canAddModule(module);
 				if (status != null && !status.isOK())
 					return status;
+				
+				if (module.getProject() != null) {
+					status = FacetUtil.verifyFacets(module.getProject(), getServer());
+					if (status != null && !status.isOK())
+						return status;
+				}
 			}
 		}
 		
