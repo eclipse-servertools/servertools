@@ -386,7 +386,8 @@ public class JavaServerPlugin extends Plugin {
 			int size = bundles.length;
 			for (int i = 0; i < size; i++) {
 				if (name.equals(bundles[i].getSymbolicName())) {
-					bundles[i].start();
+					// try to lazy start the bundle
+					bundles[i].loadClass("does.not.exist.Test");
 					return;
 				}
 			}
