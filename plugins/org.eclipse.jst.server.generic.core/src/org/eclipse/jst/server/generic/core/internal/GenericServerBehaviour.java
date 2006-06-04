@@ -75,11 +75,12 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     public void publishModule(int kind, int deltaKind, IModule[] module,
             IProgressMonitor monitor) throws CoreException {
  
-    	checkClosed(module);
+    	
         if(REMOVED == deltaKind){
             removeFromServer(module,monitor);
         }
         else{
+        	checkClosed(module);
             String publisherId = ServerTypeDefinitionUtil.getPublisherID(module[0], getServerDefinition());
             GenericPublisher publisher = PublishManager.getPublisher(publisherId);
             if(publisher==null){

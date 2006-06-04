@@ -220,9 +220,10 @@ public class AntPublisher extends GenericPublisher{
         String moduleName=guessModuleName(webModule);
         props.put(PROP_PROJECT_WORKING_DIR,getProjectWorkingLocation().toString());
 		props.put(PROP_MODULE_NAME,moduleName);
-		props.put(PROP_MODULE_DIR,getModuleWorkingDir().toString());
-		props.put(PROP_PROJECT_NAME,webModule.getProject().getName());
-
+		if(webModule.getProject()!=null){
+			props.put(PROP_MODULE_DIR,getModuleWorkingDir().toString());
+		    props.put(PROP_PROJECT_NAME,webModule.getProject().getName());
+		}
 		props.put(PROP_SERVER_PUBLISH_DIR,modDir);
 		return props;
 	}
@@ -239,6 +240,10 @@ public class AntPublisher extends GenericPublisher{
 		String moduleName = module.getName(); 
 		if("jst.web".equals(getModuleTypeId())){ //$NON-NLS-1$
 			IWebModule webModule = (IWebModule)getModule()[0].loadAdapter(IWebModule.class,null);
+			if(webModule==null)
+			{
+				return module.getName();
+			}
 			String contextRoot = webModule.getURI(module);
 			//TODO we should really pass the full uri including the file extension in the future
 			moduleName = contextRoot.substring(0,contextRoot.lastIndexOf('.'));
