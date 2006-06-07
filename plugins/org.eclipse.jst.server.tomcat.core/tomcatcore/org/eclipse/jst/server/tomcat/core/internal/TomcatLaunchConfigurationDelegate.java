@@ -60,7 +60,7 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 		String vmArgs = getVMArguments(configuration);
 		String[] envp= getEnvironment(configuration);
 		
-		if (mode == ILaunchManager.PROFILE_MODE) {
+		if (ILaunchManager.PROFILE_MODE.equals(mode)) {
 			ServerProfiler[] sp = JavaServerPlugin.getServerProfilers();
 			if (sp == null || runner == null) {
 				tomcatServer.stopImpl();

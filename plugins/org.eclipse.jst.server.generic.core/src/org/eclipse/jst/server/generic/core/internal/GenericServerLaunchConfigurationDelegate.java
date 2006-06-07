@@ -61,10 +61,10 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 			IVMInstall vm = verifyVMInstall(configuration);
 			IVMRunner runner = vm.getVMRunner(mode);
 			
-			if(runner==null && mode == ILaunchManager.PROFILE_MODE){
+			if(runner == null && ILaunchManager.PROFILE_MODE.equals(mode)){
 				runner = vm.getVMRunner(ILaunchManager.RUN_MODE);
 			}
-			if(runner== null){
+			if(runner == null){
 				throw new CoreException(new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,GenericServerCoreMessages.runModeNotSupported,null));
 			}
 			File workingDir = verifyWorkingDirectory(configuration);
@@ -77,7 +77,7 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 			String vmArgs = getVMArguments(configuration);
 			String[] envp= getEnvironment(configuration);
 
-			if (mode == ILaunchManager.PROFILE_MODE) {
+			if (ILaunchManager.PROFILE_MODE.equals(mode)) {
 				ServerProfiler[] sp = JavaServerPlugin.getServerProfilers();
 				if (sp == null || sp.length==0 || runner == null) {
 					genericServer.stopImpl();
@@ -86,8 +86,7 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 				String vmArgs2 = sp[0].getVMArgs(); //$NON-NLS-1$
 				vmArgs = vmArgs + " " + vmArgs2; //$NON-NLS-1$
 			}
-			ExecutionArguments execArgs = new ExecutionArguments(vmArgs,
-					pgmArgs);
+			ExecutionArguments execArgs = new ExecutionArguments(vmArgs, pgmArgs);
 
 			// VM-specific attributes
 			Map vmAttributesMap = getVMSpecificAttributesMap(configuration);
