@@ -9,5 +9,5 @@ Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.internet.monitor.core.internal;x-friends:="org.eclipse.wst.internet.monitor.ui",
  org.eclipse.wst.internet.monitor.core.internal.http;x-friends:="org.eclipse.wst.internet.monitor.ui",
  org.eclipse.wst.internet.monitor.core.internal.provisional;x-friends:="org.eclipse.wst.internet.monitor.ui"
-Require-Bundle: org.eclipse.core.runtime
+Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.2.0,3.3.0)"
 Eclipse-LazyStart: true
