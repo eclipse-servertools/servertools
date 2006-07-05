@@ -79,7 +79,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 
 	private static IRegistryChangeListener registryListener;
 
-	private static class RegistryChangeListener implements IRegistryChangeListener {
+	protected static class RegistryChangeListener implements IRegistryChangeListener {
 		public void registryChanged(IRegistryChangeEvent event) {
 			IExtensionDelta[] deltas = event.getExtensionDeltas(ServerUIPlugin.PLUGIN_ID, EXTENSION_WIZARD_FRAGMENTS);
 			if (deltas != null) {

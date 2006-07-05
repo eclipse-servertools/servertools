@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -136,6 +137,7 @@ public abstract class AbstractTreeComposite extends Composite {
 		if (hasDescription()) {
 			description = new Label(this, SWT.WRAP);
 			description.setText("Multi\nLine\nMessage");
+			Dialog.applyDialogFont(this);
 			Point p = description.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 			description.setText(Messages.wizDescription);
 			data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);

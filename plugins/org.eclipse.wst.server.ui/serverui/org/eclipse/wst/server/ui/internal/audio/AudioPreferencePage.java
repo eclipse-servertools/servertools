@@ -155,9 +155,8 @@ public class AudioPreferencePage extends PreferencePage implements IWorkbenchPre
 		table.setLayout(tableLayout);
 		table.setHeaderVisible(true);
 		
-		tableLayout.addColumnData(new ColumnPixelData(19, false));
-		TableColumn col = new TableColumn(table, SWT.NONE, 0);
-		col.setText("");
+		tableLayout.addColumnData(new ColumnPixelData(23, false));
+		TableColumn col = new TableColumn(table, SWT.CENTER, 0);
 		col.setResizable(false);
 		
 		tableLayout.addColumnData(new ColumnWeightData(11, 110, true));
