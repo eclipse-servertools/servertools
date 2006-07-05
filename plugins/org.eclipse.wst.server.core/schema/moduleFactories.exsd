@@ -120,7 +120,17 @@ Module factory instances of this type will delegate to instances of this class
          The following is an example of a module factory extension point:
 
 &lt;pre&gt;
-
+&lt;extension point=&quot;org.eclipse.wst.server.core.moduleFactories&quot;&gt;
+   &lt;moduleFactory
+      projects=&quot;true&quot;
+      class=&quot;org.eclipse.MyWebFactory&quot;
+      id=&quot;org.eclipse.wst.static.web&quot;&gt;
+      &lt;moduleType
+         versions=&quot;1.0&quot;
+         types=&quot;wst.web&quot;&gt;
+      &lt;/moduleType&gt;
+   &lt;/moduleFactory&gt;
+&lt;/extension&gt;
 &lt;/pre&gt;
       </documentation>
    </annotation>
