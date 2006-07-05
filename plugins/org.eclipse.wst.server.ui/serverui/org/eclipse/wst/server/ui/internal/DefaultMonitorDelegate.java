@@ -11,6 +11,7 @@
 package org.eclipse.wst.server.ui.internal;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
@@ -18,6 +19,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitor;
+import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitorListener;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.IMonitorWorkingCopy;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.MonitorCore;
 import org.eclipse.wst.server.core.IServer;
@@ -29,6 +31,43 @@ import org.eclipse.wst.server.core.util.SocketUtil;
  */
 public class DefaultMonitorDelegate extends ServerMonitorDelegate {
 	protected Map monitors = new HashMap();
+	protected IMonitorListener listener;
+
+	private void addListener() {
+		if (listener != null)
+			return;
+		
+		listener = new IMonitorListener() {
+			public void monitorAdded(IMonitor monitor) {
+				// ignore
+			}
+
+			public void monitorChanged(IMonitor monitor) {
+				// ignore
+			}
+
+			public void monitorRemoved(IMonitor monitor) {
+				if (monitor == null)
+					return;
+				
+				Object monKey = null;
+				Iterator iterator = monitors.keySet().iterator();
+				while (iterator.hasNext()) {
+					Object key = iterator.next();
+					Object value = monitors.get(key);
+					if (monitor.equals(value))
+						monKey = key;
+				}
+				if (monKey != null)
+					monitors.remove(monKey);
+				if (monitors.isEmpty()) {
+					MonitorCore.removeMonitorListener(listener);
+					listener = null;
+				}
+			}
+		};
+		MonitorCore.addMonitorListener(listener);
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.model.ServerMonitorDelegate#startMonitoring(org.eclipse.wst.server.core.ServerPort)
@@ -50,6 +89,7 @@ public class DefaultMonitorDelegate extends ServerMonitorDelegate {
 				if ("HTTP".equals(port.getProtocol()))
 					wc.setProtocol("HTTP");
 				monitor = wc.save();
+				addListener();
 			} else
 				mport = monitor.getLocalPort();
 			monitor.start();

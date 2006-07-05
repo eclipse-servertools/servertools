@@ -169,7 +169,7 @@ public class ProjectPropertyPage extends PropertyPage {
 	protected static IServer[] getServersBySupportedModule(IModule module) {
 		if (module == null)
 			return new IServer[0];
-
+		
 		// do it the slow way - go through all servers and
 		// see if this module is configured in it
 		List list = new ArrayList();
@@ -177,7 +177,9 @@ public class ProjectPropertyPage extends PropertyPage {
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
-				if (ServerUtil.isSupportedModule(servers[i].getServerType().getRuntimeType().getModuleTypes(), module.getModuleType()))
+				if (servers[i].getServerType() != null &&
+					servers[i].getServerType().getRuntimeType() != null &&
+					ServerUtil.isSupportedModule(servers[i].getServerType().getRuntimeType().getModuleTypes(), module.getModuleType()))
 					list.add(servers[i]);
 			}
 		}
