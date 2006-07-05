@@ -113,7 +113,9 @@
     objectClass="org.eclipse.core.resources.IProject"
     adaptable="true"
     class="org.eclipse.wst.server.ui.internal.ProjectPropertyPage">
-<!--    <filter name="isRunnable" value="true"/> -->
+     <enabledWhen>
+        <test property="org.eclipse.wst.server.ui.isRunnable" value="true"/>
+     </enabledWhen>
   </page>
 </extension>
 

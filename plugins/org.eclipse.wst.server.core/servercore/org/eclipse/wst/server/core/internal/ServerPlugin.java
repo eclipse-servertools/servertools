@@ -182,7 +182,7 @@ public class ServerPlugin extends Plugin {
 			Trace.trace(Trace.WARNING, "Could not remove temp directory", e);
 		}
 	}
-	
+
 	/**
 	 * Load the temporary directory information.
 	 */
@@ -190,25 +190,25 @@ public class ServerPlugin extends Plugin {
 		Trace.trace(Trace.FINEST, "Loading temporary directory information");
 		IPath statePath = ServerPlugin.getInstance().getStateLocation();
 		String filename = statePath.append(TEMP_DATA_FILE).toOSString();
-	
+		
 		tempDirHash = new HashMap();
 		try {
 			IMemento memento = XMLMemento.loadMemento(filename);
-	
+			
 			IMemento[] children = memento.getChildren("temp-directory");
 			int size = children.length;
 			for (int i = 0; i < size; i++) {
 				String key = children[i].getString("key");
-	
+				
 				TempDir d = new TempDir();
 				d.path = children[i].getString("path");
 				d.age = children[i].getInteger("age").intValue();
 				d.age++;
-	
+				
 				tempDirHash.put(key, d);
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not load temporary directory information: " + e.getMessage());
+			Trace.trace(Trace.WARNING, "Could not load temporary directory information: " + e.getMessage());
 		}
 	}
 

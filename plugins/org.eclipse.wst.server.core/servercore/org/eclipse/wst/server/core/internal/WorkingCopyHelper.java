@@ -27,7 +27,7 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
 public class WorkingCopyHelper {
 	protected Base base;
 	protected boolean isDirty;
-	
+
 	// property change listeners
 	private transient List propertyListeners;
 
@@ -39,7 +39,7 @@ public class WorkingCopyHelper {
 		int current = base.getAttribute(attributeName, 0);
 		if (current != 0 && current == value)
 			return;
-
+		
 		isDirty = true;
 		base.map.put(attributeName, Integer.toString(value));
 		firePropertyChangeEvent(attributeName, new Integer(current), new Integer(value));
@@ -52,7 +52,7 @@ public class WorkingCopyHelper {
 		base.map.put(attributeName, Boolean.toString(value));
 		firePropertyChangeEvent(attributeName, new Boolean(current), new Boolean(value));
 	}
-	
+
 	public void setAttribute(String attributeName, String value) {
 		String current = base.getAttribute(attributeName, (String)null);
 		if (current != null && current.equals(value))
@@ -65,7 +65,7 @@ public class WorkingCopyHelper {
 			base.map.put(attributeName, value);
 		firePropertyChangeEvent(attributeName, current, value);
 	}
-	
+
 	public void setAttribute(String attributeName, List value) {
 		List current = base.getAttribute(attributeName, (List)null);
 		if (current != null && current.equals(value))
@@ -91,11 +91,11 @@ public class WorkingCopyHelper {
 			base.map.put(attributeName, value);
 		firePropertyChangeEvent(attributeName, current, value);
 	}
-	
+
 	public void setName(String name) {
 		setAttribute(Base.PROP_NAME, name);
 	}
-	
+
 	public void setLocked(boolean b) {
 		setAttribute(Base.PROP_LOCKED, b);
 	}
@@ -103,7 +103,7 @@ public class WorkingCopyHelper {
 	public void setPrivate(boolean b) {
 		setAttribute(Base.PROP_PRIVATE, b);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.core.IServerWorkingCopy#isDirty()
 	 */
@@ -126,7 +126,7 @@ public class WorkingCopyHelper {
 			propertyListeners = new ArrayList(2);
 		propertyListeners.add(listener);
 	}
-	
+
 	/**
 	 * Remove a property change listener from this server.
 	 *
@@ -136,7 +136,7 @@ public class WorkingCopyHelper {
 		if (propertyListeners != null)
 			propertyListeners.remove(listener);
 	}
-	
+
 	/**
 	 * Fire a property change event.
 	 * 
@@ -163,7 +163,7 @@ public class WorkingCopyHelper {
 			Trace.trace(Trace.SEVERE, "Error in property event", e);
 		}
 	}
-	
+
 	protected void setDirty(boolean dirty) {
 		isDirty = dirty;
 	}
