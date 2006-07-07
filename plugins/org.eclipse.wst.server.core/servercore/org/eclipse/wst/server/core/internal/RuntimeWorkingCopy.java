@@ -171,6 +171,9 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		if (!force && getOriginal() != null)
 			wch.validateTimestamp(((Runtime) getOriginal()).getTimestamp());
 		
+		int timestamp = getTimestamp();
+		map.put(PROP_TIMESTAMP, Integer.toString(timestamp+1));
+		
 		IRuntime origRuntime = runtime;
 		if (runtime == null)
 			runtime = new Runtime(file);

@@ -706,22 +706,19 @@ public class Server extends Base implements IServer {
 		if (getServerPublishState() != PUBLISH_STATE_NONE)
 			return true;
 		
-		class Temp {
-			boolean publish;
-		}
-		final Temp temp = new Temp();
+		final boolean[] publish = new boolean[1];
 		
 		visit(new IModuleVisitor() {
 			public boolean visit(IModule[] module) {
 				if (getModulePublishState(module) != PUBLISH_STATE_NONE) {
-					temp.publish = true;
+					publish[0] = true;
 					return false;
 				}
 				return true;
 			}
 		}, null);
 		
-		return temp.publish;
+		return publish[0];
 	}
 
 	/**
@@ -738,22 +735,19 @@ public class Server extends Base implements IServer {
 		if (getServerRestartState())
 			return true;
 		
-		class Temp {
-			boolean publish;
-		}
-		final Temp temp = new Temp();
+		final boolean[] publish = new boolean[1];
 		
 		visit(new IModuleVisitor() {
 			public boolean visit(IModule[] module) {
 				if (getModuleRestartState(module)) {
-					temp.publish = true;
+					publish[0] = true;
 					return false;
 				}
 				return true;
 			}
 		}, null);
 		
-		return temp.publish;
+		return publish[0];
 	}
 
 	public ServerPublishInfo getServerPublishInfo() {
@@ -1346,7 +1340,7 @@ public class Server extends Base implements IServer {
 			boolean alreadyDone;
 		}
 		final Timer timer = new Timer();
-			
+		
 		Thread thread = new Thread() {
 			public void run() {
 				try {
@@ -1395,6 +1389,7 @@ public class Server extends Base implements IServer {
 		
 		if (timer.timeout) {
 			listener2.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartTimeout, new String[] { getName(), (serverTimeout / 1000) + "" }), null));
+			stop(false);
 			return;
 		}
 		timer.alreadyDone = true;
@@ -1403,7 +1398,7 @@ public class Server extends Base implements IServer {
 			listener2.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), null));
 			return;
 		}
-	
+		
 		Trace.trace(Trace.FINEST, "synchronousStart 4");
 		listener2.done(Status.OK_STATUS);
 	}
@@ -1514,13 +1509,15 @@ public class Server extends Base implements IServer {
 		removeServerListener(listener);
 		timer.alreadyDone = true;
 		
-		if (timer.timeout)
+		if (timer.timeout) {
+			stop(false);
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartTimeout, new String[] { getName(), (serverTimeout / 1000) + "" }), null));
+		}
 		timer.alreadyDone = true;
 		
 		if (getServerState() == IServer.STATE_STOPPED)
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), null));
-	
+		
 		Trace.trace(Trace.FINEST, "synchronousStart 4");
 	}
 
@@ -1923,9 +1920,6 @@ public class Server extends Base implements IServer {
 		// can never modify the following properties via the working copy
 		//serverState = wc.serverState;
 		delegate = wc.delegate;
-		
-		int timestamp = wc.getTimestamp();
-		map.put(PROP_TIMESTAMP, Integer.toString(timestamp+1));
 		
 		if (getServerState() == IServer.STATE_STARTED)
 			autoPublish();

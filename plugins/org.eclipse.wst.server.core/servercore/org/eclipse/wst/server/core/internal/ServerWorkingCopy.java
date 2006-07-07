@@ -60,11 +60,11 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	public boolean isWorkingCopy() {
 		return true;
 	}
-	
+
 	public IServer getOriginal() {
 		return server;
 	}
-	
+
 	public IServerWorkingCopy createWorkingCopy() {
 		return this;
 	}
@@ -81,7 +81,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		else
 			super.setServerState(state);
 	}
-	
+
 	public int getServerPublishState() {
 		if (server != null)
 			return server.getServerPublishState();
@@ -295,6 +295,9 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		
 		if (!force && getOriginal() != null)
 			wch.validateTimestamp(((Server)getOriginal()).getTimestamp());
+		
+		int timestamp = getTimestamp();
+		map.put(PROP_TIMESTAMP, Integer.toString(timestamp+1));
 		
 		if (server == null) {
 			server = new Server(file);

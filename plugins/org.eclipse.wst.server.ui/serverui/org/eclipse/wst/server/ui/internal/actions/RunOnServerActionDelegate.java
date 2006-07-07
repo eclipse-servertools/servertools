@@ -169,7 +169,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			return;
 		}
 		final IModule module = moduleArtifact.getModule();
-
+		
 		// check for servers with the given start mode
 		IServer[] servers = ServerCore.getServers();
 		boolean found = false;
@@ -187,23 +187,22 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				}
 			}
 		}
-
+		
 		if (!found) {
 			// no existing server supports the project and start mode!
 			// check if there might be another one that can be created
 			IServerType[] serverTypes = ServerCore.getServerTypes();
-			boolean found2 = false;
 			if (serverTypes != null) {
 				int size = serverTypes.length;
-				for (int i = 0; i < size && !found2; i++) {
+				for (int i = 0; i < size && !found; i++) {
 					IServerType type = serverTypes[i];
 					IModuleType[] moduleTypes = type.getRuntimeType().getModuleTypes();
 					if (type.supportsLaunchMode(launchMode2) && ServerUtil.isSupportedModule(moduleTypes, module.getModuleType())) {
-						found2 = true;
+						found = true;
 					}
 				}
 			}
-			if (!found2) {
+			if (!found) {
 				EclipseUtil.openError(Messages.errorNoServer);
 				Trace.trace(Trace.FINEST, "No server for start mode");
 				return;
@@ -212,7 +211,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		
 		if (!ServerUIPlugin.saveEditors())
 			return;
-
+		
 		tasksRun = false;
 		final IServer server = getServer(module, launchMode2, null);
 		//if (monitor.isCanceled())
@@ -225,7 +224,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			Trace.trace(Trace.SEVERE, "No server found");
 			return;
 		}
-
+		
 		if (!ServerUIPlugin.promptIfDirty(shell, server))
 			return;
 		

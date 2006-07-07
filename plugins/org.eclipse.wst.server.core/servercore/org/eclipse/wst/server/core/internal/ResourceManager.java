@@ -939,14 +939,11 @@ public class ResourceManager {
 	 *    and <code>false</code> otherwise
 	 */
 	public static boolean deltaContainsChangedFiles(IResourceDelta delta) {
-		class Temp {
-			boolean b = false;
-		}
-		final Temp t = new Temp();
+		final boolean[] b = new boolean[1];
 		try {
 			delta.accept(new IResourceDeltaVisitor() {
 				public boolean visit(IResourceDelta delta2) throws CoreException {
-					if (t.b)
+					if (b[0])
 						return false;
 					//Trace.trace(Trace.FINEST, delta2.getResource() + "  " + delta2.getKind() + " " + delta2.getFlags());
 					if (delta2.getKind() == IResourceDelta.NO_CHANGE)
@@ -958,7 +955,7 @@ public class ResourceManager {
 							&& (delta2.getFlags() & IResourceDelta.SYNC) == 0)
 							return true;
 						//if (delta2.getKind() == IResourceDelta.CHANGED) { // && delta2.getAffectedChildren().length == 0) {
-						t.b = true;
+						b[0] = true;
 						return false;
 							//return true;
 						//}
@@ -970,7 +967,7 @@ public class ResourceManager {
 			// ignore
 		}
 		//Trace.trace(Trace.FINEST, "Delta contains change: " + t.b);
-		return t.b;
+		return b[0];
 	}
 
 	/**

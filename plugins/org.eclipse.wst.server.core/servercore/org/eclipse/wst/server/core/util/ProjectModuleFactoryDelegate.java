@@ -121,10 +121,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 *    and <code>false</code> otherwise
 	 */
 	private final boolean deltaAffectsModules(IResourceDelta delta) {
-		class Temp {
-			boolean b = false;
-		}
-		final Temp t = new Temp();
+		final boolean[] b = new boolean[1];
 		
 		final IPath[] listenerPaths = getListenerPaths();
 		if (listenerPaths == null || listenerPaths.length == 0)
@@ -134,14 +131,14 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		try {
 			delta.accept(new IResourceDeltaVisitor() {
 				public boolean visit(IResourceDelta delta2) throws CoreException {
-					if (t.b)
+					if (b[0])
 						return false;
 					//Trace.trace(Trace.FINEST, delta2.getResource() + "  " + delta2.getKind() + " " + delta2.getFlags());
 					boolean ok = false;
 					IPath path = delta2.getProjectRelativePath();
 					for (int i = 0; i < size; i++) {
 						if (listenerPaths[i].equals(path)) {
-							t.b = true;
+							b[0] = true;
 							return false;
 						} else if (path.isPrefixOf(listenerPaths[i])) {
 							ok = true;
@@ -154,7 +151,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 			// ignore
 		}
 		//Trace.trace(Trace.FINEST, "Delta contains change: " + t.b);
-		return t.b;
+		return b[0];
 	}
 
 	/**

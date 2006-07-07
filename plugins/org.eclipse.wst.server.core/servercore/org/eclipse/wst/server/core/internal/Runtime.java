@@ -148,9 +148,6 @@ public class Runtime extends Base implements IRuntime {
 		runtimeType = wc.runtimeType;
 		file = wc.file;
 		delegate = wc.delegate;
-		
-		int timestamp = wc.getTimestamp();
-		map.put(PROP_TIMESTAMP, Integer.toString(timestamp+1));
 	}
 
 	protected void loadState(IMemento memento) {
