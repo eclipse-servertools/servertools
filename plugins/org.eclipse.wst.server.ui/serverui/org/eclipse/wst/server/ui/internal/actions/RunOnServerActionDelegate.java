@@ -316,7 +316,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 							breakpointManager.setEnabled(false);
 							disabledBreakpoints = true;
 							launchMode = mode;
-						} else if (result == 1)
+						} else if (result == 2)
 							launchMode = mode;
 						else // result == 9
 							return;
