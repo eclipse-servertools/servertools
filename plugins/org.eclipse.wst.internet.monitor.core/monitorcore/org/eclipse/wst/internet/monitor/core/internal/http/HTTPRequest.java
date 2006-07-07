@@ -22,7 +22,7 @@ public class HTTPRequest extends Request {
 
 	protected static final String HTTP_REQUEST_BODY = "request-body";
 	protected static final String HTTP_RESPONSE_BODY = "response-body";
-	
+
 	protected static final byte[] EMPTY = new byte[0];
 
 	/**
@@ -48,7 +48,7 @@ public class HTTPRequest extends Request {
 		else
 			return getRequestContent();
 	}
-	
+
 	/**
 	 * @see Request#getResponse(int)
 	 */
@@ -60,35 +60,35 @@ public class HTTPRequest extends Request {
 		else
 			return getResponseContent();
 	}
-	
+
 	protected byte[] getRequestHeader() {
 		Object obj = getProperty(HTTP_REQUEST_HEADER);
 		if (obj == null || !(obj instanceof byte[]))
 			return null;
 		return (byte[]) obj;
 	}
-	
+
 	protected byte[] getRequestContent() {
 		Object obj = getProperty(HTTP_REQUEST_BODY);
 		if (obj == null || !(obj instanceof byte[]))
 			return null;
 		return (byte[]) obj;
 	}
-	
+
 	protected byte[] getResponseHeader() {
 		Object obj = getProperty(HTTP_RESPONSE_HEADER);
 		if (obj == null || !(obj instanceof byte[]))
 			return null;
 		return (byte[]) obj;
 	}
-	
+
 	protected byte[] getResponseContent() {
 		Object obj = getProperty(HTTP_RESPONSE_BODY);
 		if (obj == null || !(obj instanceof byte[]))
 			return null;
 		return (byte[]) obj;
 	}
-	
+
 	protected void setName(String n) {
 		super.setName(n);
 	}

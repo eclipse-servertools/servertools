@@ -622,7 +622,7 @@ Host: localhost:8081
 		}
 		Trace.trace(Trace.PARSING, "Done notifying request " + this);
 	}
-	
+
 	protected void setHTTPHeader(Request rr) {
 		if (isRequest) {
 			byte[] b = rr.getRequest(Request.ALL);
@@ -636,7 +636,7 @@ Host: localhost:8081
 			rr.setProperty(HTTPRequest.HTTP_RESPONSE_HEADER, h);
 		}
 	}
-	
+
 	protected void setHTTPBody(byte[] b) {
 		Request rr = conn.getRequestResponse(isRequest);
 		if (isRequest)

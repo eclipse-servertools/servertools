@@ -228,6 +228,7 @@ public class Request implements IAdaptable {
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not add property", e);
 		}
+		monitor.requestChanged(this);
 	}
 
 	/**
@@ -275,12 +276,12 @@ public class Request implements IAdaptable {
 	public void addToResponse(byte[] addResponse) {
 		if (addResponse == null || addResponse.length == 0)
 			return;
-	
+		
 		if (response == null || response.length == 0) {
 			setResponse(addResponse);
 			return;
 		}
-	
+		
 		int size = response.length + addResponse.length;
 		byte[] b = new byte[size];
 		System.arraycopy(response, 0, b, 0, response.length);
@@ -297,7 +298,7 @@ public class Request implements IAdaptable {
 	protected void setRequest(byte[] request) {
 		if (request == null || request.length == 0)
 			return;
-	
+		
 		this.request = request;
 		monitor.requestChanged(this);
 	}
