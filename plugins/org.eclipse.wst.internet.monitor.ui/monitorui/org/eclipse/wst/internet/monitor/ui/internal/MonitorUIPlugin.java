@@ -15,6 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
+import java.util.zip.GZIPInputStream;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -29,11 +30,13 @@ import org.osgi.framework.BundleContext;
  */
 public class MonitorUIPlugin extends AbstractUIPlugin {
 	public static final String PLUGIN_ID = "org.eclipse.wst.internet.monitor.ui";
+	
+	private static final byte[] BUFFER = new byte[4096];
 
 	private static MonitorUIPlugin singleton;
 
 	protected Map imageDescriptors = new HashMap();
-	
+
 	private static final String lineSeparator = System.getProperty("line.separator");
 
 	private static URL ICON_BASE_URL;
@@ -51,19 +54,19 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 	public static final String IMG_DLCL_SORT_RESPONSE_TIME = "IMG_DLCL_SORT_RESPONSE_TIME";
 	public static final String IMG_DLCL_CLEAR = "IMG_DLCL_CLEAR";
 	public static final String IMG_DLCL_HTTP_HEADER = "IMG_DLCL_HTTP_HEADER";
-	
+
 	public static final String IMG_REQUEST_RESPONSE = "requestResponse";
 	public static final String IMG_RESEND_REQUEST_RESPONSE = "resendRequestResponse";
-	
+
 	public static final String IMG_HOST = "host";
 	public static final String IMG_MONITOR_ON = "monitorOn";
 	public static final String IMG_MONITOR_OFF = "monitorOff";
 
 	private static final String SHOW_VIEW_ON_ACTIVITY = "show-view";
 	private static final String SHOW_HEADER = "show-header";
-	
+
 	protected List requests = new ArrayList();
-	
+
 	protected IMonitorListener monitorListener = new IMonitorListener() {
 		public void monitorAdded(IMonitor monitor) {
 			monitor.addRequestListener(requestListener);
@@ -244,7 +247,38 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 		getInstance().getPreferenceStore().setValue(SHOW_HEADER, b);
 		getInstance().savePluginPreferences();
 	}
-	
+
+	/**
+	 * Convenience method to unzip the given bytes using gzip. The returned byte
+	 * array is either the unzipped results, or the original byte array if unzipping
+	 * was not successful. The byte array must not be null.
+	 * 
+	 * @param b a byte array
+	 * @return the unzipped array, or the original array if unsuccessful
+	 */
+	public static synchronized byte[] unzip(byte[] b) {
+		if (b == null)
+			throw new IllegalArgumentException();
+		
+		try {
+			GZIPInputStream gin = new GZIPInputStream(new ByteArrayInputStream(b));
+			byte[] t = new byte[0];
+			while (gin.available() > 0) {
+				int n = gin.read(BUFFER);
+				if (n > 0) {
+					byte[] temp = new byte[t.length + n];
+					System.arraycopy(t, 0, temp, 0, t.length);
+					System.arraycopy(BUFFER, 0, temp, t.length, n);
+					t = temp;
+				}
+			}
+			return t;
+		} catch (Exception e) {
+			Trace.trace(Trace.FINEST, "Could not unzip byte array");
+			return b;
+		}
+	}
+
 	/**
 	 * Convenience method to parse the given bytes into String form. The bytes
 	 * are parsed into a line delimited string. The byte array must not be null.
@@ -255,7 +289,7 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 	public static String parse(byte[] b) {
 		if (b == null)
 			throw new IllegalArgumentException();
-
+		
 		ByteArrayInputStream bin = new ByteArrayInputStream(b);
 		BufferedReader br = new BufferedReader(new InputStreamReader(bin));
 		StringBuffer sb = new StringBuffer();
@@ -274,7 +308,7 @@ public class MonitorUIPlugin extends AbstractUIPlugin {
 		
 		return sb.toString();
 	}
-	
+
 	public void addRequest(Request request) {
 		if (!requests.contains(request))
 			requests.add(request);
