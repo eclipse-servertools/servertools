@@ -692,22 +692,19 @@ public class ServerUtil {
 			return false;
 		Trace.trace(Trace.FINEST, "containsModule() " + server + " " + module);
 		
-		class Helper {
-			boolean b;
-		}
-		final Helper h = new Helper();
-
+		final boolean[] b = new boolean[1];
+		
 		((Server)server).visit(new IModuleVisitor() {
 			public boolean visit(IModule[] modules) {
 				int size = modules.length;
 				if (modules[size - 1].equals(module)) {
-					h.b = true;
+					b[0] = true;
 					return false;
 				}
 				return true;
 			}
 		}, null);
-		return h.b;
+		return b[0];
 	}
 
 	/**

@@ -451,11 +451,7 @@ public class Server extends Base implements IServer {
 	protected void handleModuleProjectChange(final IModule module) {
 		Trace.trace(Trace.FINEST, "> handleDeployableProjectChange() " + this + " " + module);
 		
-		class Helper {
-			boolean changed;
-		}
-		final Helper helper = new Helper();
-		
+		final boolean[] changed = new boolean[1];
 		final List modules2 = new ArrayList();
 		
 		IModuleVisitor visitor = new IModuleVisitor() {
@@ -469,7 +465,7 @@ public class Server extends Base implements IServer {
 				
 				if (module.equals(m)) {
 					if (hasPublishedResourceDelta(module2)) {
-						helper.changed = true;
+						changed[0] = true;
 						setModulePublishState(module2, IServer.PUBLISH_STATE_INCREMENTAL);
 					}
 				}
@@ -482,7 +478,7 @@ public class Server extends Base implements IServer {
 		if (getServerPublishInfo().hasStructureChanged(modules2))
 			setServerPublishState(IServer.PUBLISH_STATE_INCREMENTAL);
 		
-		if (!helper.changed)
+		if (!changed[0])
 			return;
 		
 		if (getServerState() != IServer.STATE_STOPPED && behaviourDelegate != null)
