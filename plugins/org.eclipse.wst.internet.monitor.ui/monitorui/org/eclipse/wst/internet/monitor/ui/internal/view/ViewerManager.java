@@ -157,14 +157,14 @@ public class ViewerManager {
 		// set the editor to editable if the request hasn't been sent and the
 		// editor can be set as editable
 		if (request instanceof ResendHTTPRequest && request.getResponse(Request.ALL) == null) {
-			if (displayHeaderInf) {
+			if (displayHeaderInf)
 				reqHeader.setEditable(true);
-			}
+			
 			reqViewer.setEditable(true);
 		} else {
-			if (displayHeaderInf) {
+			if (displayHeaderInf)
 				reqHeader.setEditable(false);
-			}
+			
 			reqViewer.setEditable(false);
 		}
 	}

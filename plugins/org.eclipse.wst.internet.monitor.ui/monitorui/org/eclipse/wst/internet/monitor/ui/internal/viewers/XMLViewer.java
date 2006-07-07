@@ -59,10 +59,12 @@ public class XMLViewer extends ContentViewer {
 	 */
 	public void setContent(byte[] b) {
 		content = b;
-		String out = "";		
-		if (b != null)
+		String out = "";	
+		if (b != null) {
+			b = MonitorUIPlugin.unzip(b);
 			out = MonitorUIPlugin.parse(b);
-				
+		}
+		
 		String lineSeparator = System.getProperty("line.separator");
 		int ls = lineSeparator.length();
 		if (out.length() > ls) {

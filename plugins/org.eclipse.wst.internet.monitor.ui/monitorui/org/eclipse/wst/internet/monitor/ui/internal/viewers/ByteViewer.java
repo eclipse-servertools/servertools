@@ -9,7 +9,7 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.ui.internal.viewers;
- 
+
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -38,7 +38,7 @@ public class ByteViewer extends ContentViewer {
 		text.setFont(JFaceResources.getTextFont());
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(text, ContextIds.VIEW_RESPONSE);
 	}
-	
+
 	/** (non-Javadoc)
 	 * @see ContentViewer#setEditable(boolean)
 	 */
@@ -50,15 +50,15 @@ public class ByteViewer extends ContentViewer {
 	 * @see ContentViewer#getContent()
 	 */
 	public byte[] getContent() {
-		if (text == null) {
+		if (text == null)
 			return new byte[0];
-		}
+		
 		String content = text.getText().trim();
-		if (content.equals("")) {
+		if (content.equals(""))
 			return new byte[0];
-		}
-		// Need to ensure that there is a newline at the end of the content.
-		// getBytes() removes the newline.
+		
+		// Need to ensure that there is a newline at the end of the content
+		// getBytes() removes the newline
 		byte[] twoNewlines = new byte[] { '\015', '\012' };
 		byte[] contentBytes = content.getBytes();
 		byte[] retBytes = new byte[contentBytes.length + 2];
@@ -72,9 +72,11 @@ public class ByteViewer extends ContentViewer {
 	 */
 	public void setContent(byte[] b) {
 		String out = "";
-		if (b != null)
+		if (b != null) {
+			b = MonitorUIPlugin.unzip(b);
 			out = MonitorUIPlugin.parse(b);
-
+		}
+		
 		String lineSeparator = System.getProperty("line.separator");
 		int ls = lineSeparator.length();
 		if (out.length() > ls) {

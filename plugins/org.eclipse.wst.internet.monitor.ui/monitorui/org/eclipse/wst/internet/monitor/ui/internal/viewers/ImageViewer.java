@@ -19,11 +19,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wst.internet.monitor.ui.internal.Messages;
+import org.eclipse.wst.internet.monitor.ui.internal.MonitorUIPlugin;
 import org.eclipse.wst.internet.monitor.ui.internal.provisional.ContentViewer;
 /**
  * An image viewer.
  */
 public class ImageViewer extends ContentViewer {
+	protected static final byte CR = '\r';
+	protected static final byte LF = '\n';
+
 	protected Label messageLabel;
 	
 	protected byte[] content;
@@ -36,7 +40,7 @@ public class ImageViewer extends ContentViewer {
 		messageLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING));
 		messageLabel.setText(Messages.imageViewInvalid);
 	}
-	
+
 	/** (non-Javadoc)
 	 * @see ContentViewer#setContent(byte[])
 	 */
@@ -45,23 +49,28 @@ public class ImageViewer extends ContentViewer {
 		if (b == null || b.length == 0) {
 			messageLabel.setImage(null);
 		} else {
-			byte cr = '\r';
-			byte lf = '\n';
+			b = MonitorUIPlugin.unzip(b);
+			
 			int trimFront = 0;
 			int trimBack = 0;
 			int len = b.length - 1;
-			while (b[trimFront] == cr || b[trimFront] == lf)
+			while (trimFront < b.length && b[trimFront] == CR || b[trimFront] == LF)
 				trimFront++;
-			while (b[len - trimBack] == cr || b[len - trimBack] == lf)
+			while (trimBack < b.length && b[len - trimBack] == CR || b[len - trimBack] == LF)
 				trimBack++;
-				
+			
 			if (trimFront + trimBack > 0) {
-				byte[] temp = b;
-				b = new byte[temp.length - trimBack - trimFront];
-				for (int i = trimFront; i < temp.length - trimBack; i++) {
-					b[i - trimFront] = temp[i];
+				if (trimFront + trimBack > b.length) {
+					b = new byte[0];
+				} else {
+					byte[] temp = b;
+					b = new byte[temp.length - trimBack - trimFront];
+					for (int i = trimFront; i < temp.length - trimBack; i++) {
+						b[i - trimFront] = temp[i];
+					}
 				}
 			}
+			
 			try {
 				ImageData imgD = new ImageData(new ByteArrayInputStream(b));
 				Image img = new Image(null, imgD);
