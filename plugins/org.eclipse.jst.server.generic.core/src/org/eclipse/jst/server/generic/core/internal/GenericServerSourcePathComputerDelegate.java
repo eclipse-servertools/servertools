@@ -43,26 +43,11 @@ public class GenericServerSourcePathComputerDelegate implements ISourcePathCompu
 		
 		IServer server =  ServerUtil.getServer(configuration);
 		IModule[] modules = server.getModules();
+		
 		List javaProjectList = new ArrayList();
 		
-		for (int i = 0; i < modules.length; i++) {
-			IProject project = modules[i].getProject();
-			if (project != null) {
-				IFolder moduleFolder = project.getFolder(modules[i].getName());
-				if (moduleFolder.exists()) {
-					sourcefolderList.add(new FolderSourceContainer(moduleFolder, true));
-				} else {
-					try {
-						if (project.hasNature(JavaCore.NATURE_ID)) {
-							IJavaProject javaProject = (IJavaProject) project.getNature(JavaCore.NATURE_ID);
-							javaProjectList.add(javaProject);
-						}
-					} catch (Exception e) {
-						// ignore
-					}
-				}
-			}
-		}
+		processModules(sourcefolderList, modules, javaProjectList, server,monitor);
+
 
 		IRuntimeClasspathEntry[] projectEntries = new IRuntimeClasspathEntry[javaProjectList.size()];
 		for (int i = 0; i < javaProjectList.size(); i++) {
@@ -84,5 +69,35 @@ public class GenericServerSourcePathComputerDelegate implements ISourcePathCompu
 		
 		return javaSourceContainers;
 		
+	}
+
+	private void processModules(List sourcefolderList, IModule[] modules, List javaProjectList, IServer server, IProgressMonitor monitor) {
+		for (int i = 0; i < modules.length; i++) {
+			IProject project = modules[i].getProject();
+			IModule[] pModule = new IModule[1];
+			pModule[0]=modules[i];
+			IModule[] cModule = server.getChildModules(pModule, monitor);
+			if(cModule != null && cModule.length>0)
+			{
+				processModules(sourcefolderList, cModule, javaProjectList, server, monitor);
+			}
+			if (project != null) {
+				IFolder moduleFolder = project.getFolder(modules[i].getName());
+				if (moduleFolder.exists()) {
+					sourcefolderList.add(new FolderSourceContainer(moduleFolder, true));
+				} else {
+					try {
+						if (project.hasNature(JavaCore.NATURE_ID)) {
+							IJavaProject javaProject = (IJavaProject) project.getNature(JavaCore.NATURE_ID);
+							if(!javaProjectList.contains(javaProject)){
+								javaProjectList.add(javaProject);
+							}
+						}
+					} catch (Exception e) {
+						// ignore
+					}
+				}
+			}
+		}
 	}
 }
