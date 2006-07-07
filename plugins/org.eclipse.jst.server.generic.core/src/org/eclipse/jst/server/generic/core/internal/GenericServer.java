@@ -239,7 +239,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
     public IModule[] getRootModules(IModule module) throws CoreException {
      	IStatus status = canModifyModules(new IModule[] { module }, null);
         if (status != null && !status.isOK())
-            return null;
+            throw  new CoreException(status);;
         IModule[] childs = doGetParentModules(module);
         if(childs.length>0)
         	return childs;
