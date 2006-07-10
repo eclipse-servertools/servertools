@@ -291,15 +291,12 @@ public class ServerUtil {
 			boolean found = false;
 			try {
 				IModule[] parents = server.getRootModules(add[i], monitor);
-				if (parents != null) {
+				if (parents != null && parents.length > 0) {				
+					Object parent = parents[0];
 					found = true;
-					if (parents.length > 0) {				
-						Object parent = parents[0];
-						found = true;
-						if (!addParentModules.contains(parent))
-							addParentModules.add(parent);
-					}
-				} 
+					if (!addParentModules.contains(parent))
+						addParentModules.add(parent);
+				}
 			} catch (Exception e) {
 				Trace.trace(Trace.WARNING, "Could not find parent module", e);
 			}
@@ -314,15 +311,12 @@ public class ServerUtil {
 			boolean found = false;
 			try {
 				IModule[] parents = server.getRootModules(remove[i], monitor);
-				if (parents != null) {
+				if (parents != null && parents.length > 0) {				
+					Object parent = parents[0];
 					found = true;
-					if (parents.length > 0) {				
-						Object parent = parents[0];
-						found = true;
-						if (!removeParentModules.contains(parent))
-							removeParentModules.add(parent);
-					}
-				} 
+					if (!removeParentModules.contains(parent))
+						removeParentModules.add(parent);
+				}
 			} catch (Exception e) {
 				Trace.trace(Trace.WARNING, "Could not find parent module 2", e);
 			}

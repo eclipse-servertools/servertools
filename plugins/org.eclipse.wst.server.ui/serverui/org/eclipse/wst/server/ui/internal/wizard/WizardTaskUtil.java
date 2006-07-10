@@ -109,30 +109,29 @@ public class WizardTaskUtil {
 	public static void addModule(IModule module, TaskModel taskModel, IProgressMonitor monitor) throws CoreException {
 		if (module == null)
 			return;
-
+		
 		IServer server = (IServer) taskModel.getObject(TaskModel.TASK_SERVER);
 		IModule parentModule = null;
 		try {
 			IModule[] parents = server.getRootModules(module, monitor);
-			if (parents != null && parents.length > 0) {
+			if (parents != null && parents.length > 0)
 				parentModule = parents[0];
-			}
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Could not find parent module", e);
 		}
 		
 		if (parentModule == null) {
-			// Use the original module since no parent module is available.
+			// use the original module since no parent module is available
 			parentModule = module;
 		}
-
+		
 		IModule[] modules = server.getModules();
 		int size = modules.length;
 		for (int i = 0; i < size; i++) {
 			if (parentModule.equals(modules[i]))
 				return;
 		}
-
+		
 		IServerWorkingCopy workingCopy = server.createWorkingCopy();
 		workingCopy.modifyModules(new IModule[] { parentModule }, new IModule[0], monitor);
 		taskModel.putObject(TaskModel.TASK_SERVER, workingCopy.save(false, monitor));

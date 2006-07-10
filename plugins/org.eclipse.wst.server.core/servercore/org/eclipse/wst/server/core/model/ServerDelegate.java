@@ -226,23 +226,24 @@ public abstract class ServerDelegate {
 	 * project can run on a server, this method will be used to find the actual
 	 * module(s) that may be run on the server. For instance, a Web module may
 	 * return a list of EAR modules that it is contained in if the server only
-	 * supports configuring EAR modules.
-	 *
-	 * <p>If the module type is not supported, this method will return null.
-	 * If the type is normally supported but there is a configuration
-	 * problem or missing parent, etc., this method will fire a CoreException
-	 * that may then be presented to the user.</p>
-	 *
+	 * supports configuring EAR modules. If the server supports running a module
+	 * directly, the returned array should contain the module.
+	 * 
+	 * <p>If the module type is not supported, this method will return null or
+	 * an empty array. If the type is normally supported but there is a
+	 * configuration problem or missing parent, etc., this method will fire a
+	 * CoreException that may then be presented to the user.</p>
+	 * 
 	 * <p>If it does return valid parent(s), this method will always return
 	 * the topmost parent module(s), even if there are a few levels
 	 * (a heirarchy) of modules.</p>
 	 * 
 	 * [issue: should the parameter be IModule[]?]
-	 *
+	 * 
 	 * @param module a module
 	 * @return an array of possible root modules
 	 * @throws CoreException if anything went wrong
-	 *
+	 * 
 	 * @see org.eclipse.wst.server.core.IServerAttributes#getRootModules(IModule, IProgressMonitor)
 	 */
 	public abstract IModule[] getRootModules(IModule module) throws CoreException;
