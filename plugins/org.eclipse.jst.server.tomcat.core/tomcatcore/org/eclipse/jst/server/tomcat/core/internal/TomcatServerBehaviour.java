@@ -405,7 +405,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		setServerRestartState(false);
 		setServerState(IServer.STATE_STARTING);
 		setMode(launchMode);
-	
+		
 		// ping server to check for startup
 		try {
 			String url = "http://localhost";
@@ -669,10 +669,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		
 		ITomcatRuntime runtime = getTomcatRuntime();
 		IVMInstall vmInstall = runtime.getVMInstall();
-		if (vmInstall != null) {
-			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_TYPE, vmInstall.getVMInstallType().getId());
-			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_INSTALL_NAME, vmInstall.getName());
-		}
+		if (vmInstall != null)
+			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_JRE_CONTAINER_PATH, JavaRuntime.newJREContainerPath(vmInstall).toPortableString());
 		
 		// update classpath
 		IRuntimeClasspathEntry[] originalClasspath = JavaRuntime.computeUnresolvedRuntimeClasspath(workingCopy);
