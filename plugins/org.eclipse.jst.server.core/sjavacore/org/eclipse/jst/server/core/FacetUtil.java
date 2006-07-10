@@ -104,6 +104,9 @@ public class FacetUtil {
 		
 		org.eclipse.wst.common.project.facet.core.runtime.IRuntime runtime2 = getRuntime(runtime);
 		
+		if (runtime2 == null) // bug 150194 - what do we do if the facet runtime doesn't exist yet
+			return Status.OK_STATUS;
+		
 		try {
 			IFacetedProject facetedProject = ProjectFacetsManager.create(project);
 			Iterator iterator = facetedProject.getProjectFacets().iterator();
