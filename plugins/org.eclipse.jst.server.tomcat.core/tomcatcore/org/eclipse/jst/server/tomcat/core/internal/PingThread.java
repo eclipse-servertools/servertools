@@ -27,7 +27,7 @@ public class PingThread {
 	private static final int PING_INTERVAL = 250;
 
 	// maximum number of pings before giving up
-	private int maxPings = 56; // total: 16 seconds + connection time
+	private int maxPings;
 
 	private boolean stop = false;
 	private String url;
@@ -81,7 +81,7 @@ public class PingThread {
 				}
 				count++;
 				
-				Trace.trace(Trace.FINEST, "Ping: pinging");
+				Trace.trace(Trace.FINEST, "Ping: pinging " + count);
 				URL pingUrl = new URL(url);
 				URLConnection conn = pingUrl.openConnection();
 				((HttpURLConnection)conn).getResponseCode();

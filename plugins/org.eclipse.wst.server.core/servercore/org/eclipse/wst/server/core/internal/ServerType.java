@@ -28,7 +28,7 @@ import org.eclipse.wst.server.core.model.ServerDelegate;
  * 
  */
 public class ServerType implements IServerType {
-	private static final int DEFAULT_TIMEOUT = 1000 * 60 * 5;
+	private static final int DEFAULT_TIMEOUT = 1000 * 60 * 4; // 4 minutes
 	private IConfigurationElement element;
 
 	/**
@@ -306,18 +306,14 @@ public class ServerType implements IServerType {
 	 * @return the server startup timeout
 	 */
 	public int getStartTimeout() {
-		int timeout = -1;
 		try {
 			int i = Integer.parseInt(element.getAttribute("startTimeout"));
 			int s = ServerPreferences.getInstance().getMachineSpeed();
-			timeout = i * (10 - s) / 5;
-			return i;
+			return i * (10 - s) / 5;
 		} catch (NumberFormatException e) {
 			// ignore
 		}
-		if (timeout <= 0)
-			timeout = DEFAULT_TIMEOUT;
-		return timeout;
+		return DEFAULT_TIMEOUT;
 	}
 
 	/**
@@ -327,15 +323,14 @@ public class ServerType implements IServerType {
 	 * @return the server shutdown timeout
 	 */
 	public int getStopTimeout() {
-		int timeout = -1;
 		try {
-			timeout = Integer.parseInt(element.getAttribute("stopTimeout"));
+			int i = Integer.parseInt(element.getAttribute("stopTimeout"));
+			int s = ServerPreferences.getInstance().getMachineSpeed();
+			return i * (10 - s) / 5;
 		} catch (NumberFormatException e) {
 			// ignore
 		}
-		if (timeout <= 0)
-			timeout = DEFAULT_TIMEOUT;
-		return timeout;
+		return DEFAULT_TIMEOUT;
 	}
 
 	public void dispose() {
