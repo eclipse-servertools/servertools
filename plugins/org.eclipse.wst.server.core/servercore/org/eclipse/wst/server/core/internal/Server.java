@@ -1402,10 +1402,7 @@ public class Server extends Base implements IServer {
 	public void synchronousStart(String mode2, IProgressMonitor monitor) throws CoreException {
 		Trace.trace(Trace.FINEST, "synchronousStart 1");
 		
-		class Mutex {
-			boolean notified;
-		}
-		final Mutex mutex = new Mutex();
+		final boolean[] notified = new boolean[1];
 	
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		
@@ -1418,11 +1415,11 @@ public class Server extends Base implements IServer {
 					int state = server.getServerState();
 					if (state == IServer.STATE_STARTED || state == IServer.STATE_STOPPED) {
 						// notify waiter
-						synchronized (mutex) {
+						synchronized (notified) {
 							try {
 								Trace.trace(Trace.FINEST, "synchronousStart notify");
-								mutex.notified = true;
-								mutex.notifyAll();
+								notified[0] = true;
+								notified.notifyAll();
 							} catch (Exception e) {
 								Trace.trace(Trace.SEVERE, "Error notifying server start", e);
 							}
@@ -1447,28 +1444,28 @@ public class Server extends Base implements IServer {
 					int totalTimeout = serverTimeout;
 					boolean userCancelled = false;
 					int retryPeriod = 2500;
-					while (!mutex.notified && totalTimeout > 0 && !userCancelled && !timer.alreadyDone) {
+					while (!notified[0] && totalTimeout > 0 && !userCancelled && !timer.alreadyDone) {
 						Thread.sleep(retryPeriod);
 						totalTimeout -= retryPeriod;
-						if (!mutex.notified && monitor2.isCanceled()) {
+						if (!notified[0] && !timer.alreadyDone && monitor2.isCanceled()) {
 							// user cancelled - set the server state to stopped
 							userCancelled = true;
 							setServerState(IServer.STATE_STOPPED);
 							// notify waiter
-							synchronized (mutex) {
+							synchronized (notified) {
 								Trace.trace(Trace.FINEST, "synchronousStart user cancelled.");
-								mutex.notified = true;
-								mutex.notifyAll();
+								notified[0] = true;
+								notified.notifyAll();
 							}
 						}
 					}
 					if (!userCancelled && !timer.alreadyDone) {
 						timer.timeout = true;
 						// notify waiter
-						synchronized (mutex) {
+						synchronized (notified) {
 							Trace.trace(Trace.FINEST, "synchronousStart notify timeout");
-							mutex.notified = true;
-							mutex.notifyAll();
+							notified[0] = true;
+							notified.notifyAll();
 						}
 					}
 				} catch (Exception e) {
@@ -1489,15 +1486,16 @@ public class Server extends Base implements IServer {
 			timer.alreadyDone = true;
 			throw e;
 		}
-	
+		
 		Trace.trace(Trace.FINEST, "synchronousStart 3");
-	
+		
 		// wait for it! wait for it! ...
-		synchronized (mutex) {
+		synchronized (notified) {
 			try {
-				while (!mutex.notified && !monitor.isCanceled() && !timer.timeout
-						&& !(getServerState() == IServer.STATE_STARTED || getServerState() == IServer.STATE_STOPPED))
-					mutex.wait();
+				while (!notified[0] && !monitor.isCanceled() && !timer.timeout
+						&& !(getServerState() == IServer.STATE_STARTED || getServerState() == IServer.STATE_STOPPED)) {
+					notified.wait();
+				}
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Error waiting for server start", e);
 			}
