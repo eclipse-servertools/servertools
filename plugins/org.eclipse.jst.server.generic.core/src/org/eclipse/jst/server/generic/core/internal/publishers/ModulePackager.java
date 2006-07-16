@@ -15,9 +15,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.jar.JarOutputStream;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
@@ -26,7 +27,7 @@ import org.eclipse.core.runtime.Path;
  * Packages resources to a .zip file
  */
 public class ModulePackager {
-	private ZipOutputStream outputStream;
+	private JarOutputStream outputStream;
 //	private StringBuffer manifestContents;
 
 	private boolean useCompression = true;
@@ -43,7 +44,7 @@ public class ModulePackager {
 		directoryPath = (Path) directoryPath.removeLastSegments(1);
 		File newZipFile = new File(directoryPath.toString());
 		newZipFile.mkdirs();
-		outputStream = new ZipOutputStream(new FileOutputStream(filename));
+		outputStream = new JarOutputStream(new FileOutputStream(filename)); 
 		useCompression = compress;
 	}
 
@@ -88,8 +89,8 @@ public class ModulePackager {
 	 * @throws IOException
 	 */
 	public void writeFolder(String destinationPath) throws IOException {
-		if (!destinationPath.endsWith("/")) //$NON-NLS-1$
-			destinationPath = destinationPath + '/';
+//		if (!destinationPath.endsWith(File.separator )) 
+//			destinationPath = destinationPath + File.separator;
 		ZipEntry newEntry = new ZipEntry(destinationPath);
 		outputStream.putNextEntry(newEntry);
 		outputStream.closeEntry();
@@ -173,27 +174,24 @@ public class ModulePackager {
 	 */
 	public void pack(File directory, String root) throws CoreException, IOException
 	{
-		File[] files = directory.listFiles();
-		for(int i=0; i<files.length;i++)
-		{
-			if(files[i].isDirectory())
-			{
-				String relativeFolder=makeRelative(files[i].getAbsolutePath(), root);
-				if(relativeFolder!=null){//should always be true
-					writeFolder(relativeFolder);
-				}
-				pack(files[i], root);
-			}
-			else{
-				String relativeFolder=makeRelative(files[i].getAbsolutePath(), root);
-				if(relativeFolder!=null){//should always be true
-					write(files[i],relativeFolder);
-				}
-			}
-		}
-		
-		
-	}
+        File[] files = directory.listFiles();
+        for( int i = 0; i < files.length; i++ )
+        {
+            if( files[i].isDirectory() )
+            {
+                pack( files[i], root );
+            } else
+            {
+                String relativeFolder = makeRelative( files[i]
+                        .getAbsolutePath(), root );
+                if( relativeFolder != null )
+                {// should always be true
+                    write( files[i], relativeFolder );
+                }
+            }
+        }
+
+    }
 	/**
 	 * Make directoryname relative to root
 	 * @param fileName
@@ -207,8 +205,10 @@ public class ModulePackager {
 		{
 			folder=fileName.substring(root.length());
 		}
-		return folder;
-		
+        folder = folder.replaceAll("\\\\", "/");  //$NON-NLS-1$ //$NON-NLS-2$
+        if (folder.length() > 0 && folder.charAt(0) == '/')
+              folder = folder.substring(1);
+		return folder;		
 	}
 	
 }
