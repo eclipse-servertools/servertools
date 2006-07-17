@@ -13,8 +13,10 @@ package org.eclipse.wst.server.core.util;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.SocketException;
+import java.util.Enumeration;
 import java.util.Random;
 
 import org.eclipse.wst.server.core.internal.Trace;
@@ -29,7 +31,7 @@ public class SocketUtil {
 	private static final Random rand = new Random(System.currentTimeMillis());
 
 	private static String dnsHostname;
-	
+
 	private static final String DNSNAMESERVICE_CLASS = "sun.net.spi.nameservice.dns.DNSNameService";
 
 	/**
@@ -145,6 +147,7 @@ public class SocketUtil {
 	public static boolean isLocalhost(String host) {
 		if (host == null)
 			return false;
+		
 		try {
 			if ("localhost".equals(host) || "127.0.0.1".equals(host))
 				return true;
@@ -156,6 +159,8 @@ public class SocketUtil {
 			if (localHostaddr.getHostAddress().equals(host))
 				return true;
 			
+			// TODO - looks like this block is unnecessary code given the new NetworkInterface
+			// code below. it should be evaluated and removed if it no longer serves a purpose
 			if (dnsHostname == null)
 				try {
 					//	workaround to break dependency with Sun's classes
@@ -171,6 +176,20 @@ public class SocketUtil {
 			
 			if (dnsHostname != null && dnsHostname.equals(host))
 				return true;
+			
+			// check network interfaces
+			Enumeration nis = NetworkInterface.getNetworkInterfaces();
+			while (nis.hasMoreElements()) {
+				NetworkInterface inter = (NetworkInterface) nis.nextElement();
+				Enumeration ias = inter.getInetAddresses();
+				
+				while (ias.hasMoreElements()) {
+					InetAddress address = (InetAddress) ias.nextElement();
+					if (host.equals(address.getHostAddress()) || host.equals(address.getHostName())
+							|| host.equals(address.getCanonicalHostName()))
+						return true;
+				}
+			}
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Error checking for localhost", e);
 		}
