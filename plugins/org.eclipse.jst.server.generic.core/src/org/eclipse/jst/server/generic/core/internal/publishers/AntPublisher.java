@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
 import org.eclipse.ant.internal.ui.IAntUIConstants;
 import org.eclipse.ant.internal.ui.launchConfigurations.IAntLaunchConfigurationConstants;
 import org.eclipse.core.runtime.CoreException;
@@ -72,14 +73,15 @@ public class AntPublisher extends GenericPublisher{
 	 */
 	public static final String PUBLISHER_ID="org.eclipse.jst.server.generic.antpublisher"; //$NON-NLS-1$
     
-	private static final String PROP_SERVER_PUBLISH_DIR = "server.publish.dir";//$NON-NLS-1$
-	private static final String PROP_PROJECT_WORKING_DIR= "project.working.dir";//$NON-NLS-1$
-	private static final String PROP_MODULE_DIR = "module.dir";//$NON-NLS-1$
-	private static final String PROP_MODULE_NAME = "module.name";//$NON-NLS-1$
-	private static final String PROP_PROJECT_NAME = "project.name";//$NON-NLS-1$
-	private static final String MODULE_PUBLISH_TARGET_PREFIX = "target.publish."; //$NON-NLS-1$
-	private static final String MODULE_UNPUBLISH_TARGET_PREFIX = "target.unpublish.";//$NON-NLS-1$
-	private static final String DATA_NAME_BUILD_FILE="build.file";//$NON-NLS-1$
+	protected static final String PROP_SERVER_PUBLISH_DIR = "server.publish.dir";//$NON-NLS-1$
+	protected static final String PROP_PROJECT_WORKING_DIR= "project.working.dir";//$NON-NLS-1$
+	protected static final String PROP_MODULE_DIR = "module.dir";//$NON-NLS-1$
+	protected static final String PROP_MODULE_NAME = "module.name";//$NON-NLS-1$
+	protected static final String PROP_PROJECT_NAME = "project.name";//$NON-NLS-1$
+	protected static final String MODULE_PUBLISH_TARGET_PREFIX = "target.publish."; //$NON-NLS-1$
+	protected static final String MODULE_UNPUBLISH_TARGET_PREFIX = "target.unpublish.";//$NON-NLS-1$
+	protected static final String DATA_NAME_BUILD_FILE="build.file";//$NON-NLS-1$
+    protected static final String PROP_MODULE_ARCHIVE_NAME = "module.archive.name"; //$NON-NLS-1$
 	
 
     /* (non-Javadoc)
@@ -104,7 +106,7 @@ public class AntPublisher extends GenericPublisher{
 		return null;
 	}
 
-	private void assembleModule(IProgressMonitor monitor)throws CoreException{
+	protected void assembleModule(IProgressMonitor monitor)throws CoreException{
 		AbstractModuleAssembler assembler= AbstractModuleAssembler.Factory.getModuleAssembler(getModule()[0], getServer());
 		assembler.assemble(monitor);
 	}
@@ -220,6 +222,13 @@ public class AntPublisher extends GenericPublisher{
         String moduleName=guessModuleName(webModule);
         props.put(PROP_PROJECT_WORKING_DIR,getProjectWorkingLocation().toString());
 		props.put(PROP_MODULE_NAME,moduleName);
+         if (isModuleType(webModule, "jst.ear")) {//$NON-NLS-1$
+             props.put( PROP_MODULE_ARCHIVE_NAME, moduleName +".ear" ); //$NON-NLS-1$
+            } else if (isModuleType(webModule, "jst.web")) { //$NON-NLS-1$
+                props.put( PROP_MODULE_ARCHIVE_NAME, moduleName +".war" ); //$NON-NLS-1$
+                   } else if (isModuleType(webModule, "jst.ejb")) { //$NON-NLS-1$
+                       props.put( PROP_MODULE_ARCHIVE_NAME, moduleName +".jar" ); //$NON-NLS-1$
+                   }      
 		if(webModule.getProject()!=null){
 			props.put(PROP_MODULE_DIR,getModuleWorkingDir().toString());
 		    props.put(PROP_PROJECT_NAME,webModule.getProject().getName());
@@ -245,7 +254,6 @@ public class AntPublisher extends GenericPublisher{
 				return module.getName();
 			}
 			String contextRoot = webModule.getURI(module);
-			//TODO we should really pass the full uri including the file extension in the future
 			moduleName = contextRoot.substring(0,contextRoot.lastIndexOf('.'));
 			}
 		return moduleName;
@@ -294,6 +302,12 @@ public class AntPublisher extends GenericPublisher{
     	//nothing to do
 	}
 
+    private static boolean isModuleType(IModule module, String moduleTypeId){    
+        if(module.getModuleType()!=null && moduleTypeId.equals(module.getModuleType().getId()))
+            return true;
+        return false;
+    }
+    
 	/* (non-Javadoc)
      * @see org.eclipse.jst.server.generic.internal.core.GenericPublisher#unpublish(org.eclipse.wst.server.core.IModule, org.eclipse.core.runtime.IProgressMonitor)
      */

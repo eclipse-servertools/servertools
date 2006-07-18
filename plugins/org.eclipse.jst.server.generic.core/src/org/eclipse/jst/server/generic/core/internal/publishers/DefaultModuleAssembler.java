@@ -12,15 +12,12 @@ import org.eclipse.wst.server.core.IModule;
  */
 public class DefaultModuleAssembler extends AbstractModuleAssembler {
 	
-	protected DefaultModuleAssembler(IModule module, GenericServer server)
+	protected DefaultModuleAssembler(IModule module, GenericServer server, IPath assembleRoot)
 	{
-		fModule=module;
-		fServerdefinition=server.getServerDefinition();
-		fServer=server;
+		super(module, server, assembleRoot);
 	}
 	
-	
-	protected IPath assemble(IProgressMonitor monitor) throws CoreException {
+	public IPath assemble(IProgressMonitor monitor) throws CoreException {
 		return copyModule(fModule,monitor);		
 	}
 

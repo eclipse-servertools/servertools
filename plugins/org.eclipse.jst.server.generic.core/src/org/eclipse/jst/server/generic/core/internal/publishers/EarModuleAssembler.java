@@ -27,14 +27,12 @@ import org.eclipse.wst.server.core.IModule;
  */
 public class EarModuleAssembler extends AbstractModuleAssembler {
 
-	protected EarModuleAssembler(IModule module, GenericServer server)
+	protected EarModuleAssembler(IModule module, GenericServer server, IPath assembleRoot)
 	{
-		fModule=module;
-		fServerdefinition=server.getServerDefinition();
-		fServer=server;
+		super(module, server, assembleRoot);
 	}
 
-	protected IPath assemble(IProgressMonitor monitor) throws CoreException{
+	public IPath assemble(IProgressMonitor monitor) throws CoreException{
 		IPath parent =copyModule(fModule,monitor);
 		IEnterpriseApplication earModule = (IEnterpriseApplication)fModule.loadAdapter(IEnterpriseApplication.class, monitor);
 		IModule[] childModules = earModule.getModules();

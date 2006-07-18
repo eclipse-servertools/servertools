@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
@@ -37,6 +38,15 @@ public abstract class AbstractModuleAssembler {
 	protected ServerRuntime fServerdefinition;
 	protected IModule fModule; 
 	protected GenericServer fServer;
+	protected IPath fAssembleRoot;
+	
+	protected AbstractModuleAssembler(IModule module, GenericServer server, IPath assembleRoot)
+	{
+		fModule=module;
+		fServerdefinition=server.getServerDefinition();
+		fServer=server;
+		fAssembleRoot = assembleRoot;
+	}
 	
 	/**
 	 * Assemble the module.
@@ -44,7 +54,7 @@ public abstract class AbstractModuleAssembler {
 	 * @param monitor
 	 * @throws CoreException
 	 */
-	protected abstract IPath assemble(IProgressMonitor monitor) throws CoreException;
+	public abstract IPath assemble(IProgressMonitor monitor) throws CoreException;
 
 	
 	/**
@@ -53,6 +63,12 @@ public abstract class AbstractModuleAssembler {
 	 *
 	 */
 	public static class Factory {		
+		
+		public static IPath getDefaultAssembleRoot(IModule module, GenericServer server) {
+			ProjectModule pm =(ProjectModule)module.loadAdapter(ProjectModule.class, new NullProgressMonitor());
+			return ServerPlugin.getInstance().getTempDirectory(server.getServer().getId()).append(pm.getId());
+		}
+		
 		/**
 		 * Returns a concrete module assembler
 		 * 
@@ -62,12 +78,24 @@ public abstract class AbstractModuleAssembler {
 		 */
 		public static AbstractModuleAssembler getModuleAssembler(IModule module, GenericServer server)
 		{
-			
+			return getModuleAssembler(module, server, getDefaultAssembleRoot(module, server));
+		}
+		
+		/**
+		 * Returns a concrete module assembler that assembles under the specified root path
+		 * 
+		 * @param module
+		 * @param server
+		 * @param assembleRoot
+		 * @return assembler
+		 */
+		public static AbstractModuleAssembler getModuleAssembler(IModule module, GenericServer server, IPath assembleRoot)
+		{
 			if(isModuleType(module, "jst.web")) //$NON-NLS-1$
-				return new WarModuleAssembler(module,server);
+				return new WarModuleAssembler(module,server,assembleRoot);
 			if(isModuleType(module, "jst.ear")) //$NON-NLS-1$
-				return new EarModuleAssembler(module,server);
-			return new DefaultModuleAssembler(module,server);
+				return new EarModuleAssembler(module,server,assembleRoot);
+			return new DefaultModuleAssembler(module,server,assembleRoot);
 		}
 		
 		private static boolean isModuleType(IModule module, String moduleTypeId){	
@@ -126,15 +154,9 @@ public abstract class AbstractModuleAssembler {
 			}
 	}
 
-	protected IPath copyModule(IModule module,IProgressMonitor monitor)throws CoreException{
+	protected IPath copyModule(IModule module, IProgressMonitor monitor) throws CoreException {
 		ProjectModule pm =(ProjectModule)module.loadAdapter(ProjectModule.class, monitor);
-		IPath to = getProjectWorkingLocation().append(pm.getId());
-		PublishUtil.smartCopy(pm.members(), to, monitor);
-		return to;
+		PublishUtil.smartCopy(pm.members(), fAssembleRoot, monitor);
+		return fAssembleRoot;
 	}
-	
-	private IPath getProjectWorkingLocation(){
-		return ServerPlugin.getInstance().getTempDirectory(fServer.getServer().getId());
-	}
-	
 }

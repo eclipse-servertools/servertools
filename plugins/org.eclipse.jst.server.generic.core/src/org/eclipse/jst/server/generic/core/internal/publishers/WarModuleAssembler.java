@@ -22,14 +22,12 @@ import org.eclipse.wst.server.core.IModule;
  */
 public class WarModuleAssembler extends AbstractModuleAssembler {
 	
-	protected WarModuleAssembler(IModule module, GenericServer server)
+	protected WarModuleAssembler(IModule module, GenericServer server, IPath assembleRoot)
 	{
-		fModule=module;
-		fServerdefinition=server.getServerDefinition();
-		fServer=server;
+		super(module, server, assembleRoot);
 	}
 
-	protected IPath assemble(IProgressMonitor monitor) throws CoreException{
+	public IPath assemble(IProgressMonitor monitor) throws CoreException{
 		IPath parent =copyModule(fModule,monitor);
 		IWebModule webModule = (IWebModule)fModule.loadAdapter(IWebModule.class, monitor);
 		IModule[] childModules = webModule.getModules();
