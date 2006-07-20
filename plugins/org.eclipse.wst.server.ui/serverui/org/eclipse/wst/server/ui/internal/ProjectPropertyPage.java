@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,12 +35,16 @@ import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.ui.ServerUICore;
 /**
- * PropertyPage for IProjects. It shows the server and runtime preference for the project.
+ * PropertyPage for IProjects. It shows the server preference for the project.
  */
 public class ProjectPropertyPage extends PropertyPage {
 	protected IProject project;
 	protected IModule module;
 	protected IServer server;
+
+	protected Table table;
+	protected int count;
+	protected IServer defaultServer;
 
 	/**
 	 * ProjectPropertyPage constructor comment.
@@ -60,7 +64,7 @@ public class ProjectPropertyPage extends PropertyPage {
 			IAdaptable element = getElement();
 			if (element instanceof IProject)
 				project = (IProject) element;
-
+			
 			Composite composite = new Composite(parent, SWT.NONE);
 			GridLayout layout = new GridLayout();
 			layout.marginHeight = 0;
@@ -91,7 +95,7 @@ public class ProjectPropertyPage extends PropertyPage {
 					label.setText(Messages.prefProject);
 					data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 					label.setLayoutData(data);
-				
+					
 					Label moduleKind = new Label(composite, SWT.NONE);
 					data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 					data.horizontalSpan = 3;
@@ -99,8 +103,8 @@ public class ProjectPropertyPage extends PropertyPage {
 					moduleKind.setText(module.getName() + " (" + mt.getName() + ")");
 				}
 				
-				IServer prefServer = ServerCore.getDefaultServer(module);
-	
+				defaultServer = ServerCore.getDefaultServer(module);
+				
 				label = new Label(composite, SWT.NONE);
 				label.setText(Messages.prefProjectDefaultServer);
 				data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING);
@@ -114,7 +118,7 @@ public class ProjectPropertyPage extends PropertyPage {
 					data.horizontalSpan = 3;
 					label.setLayoutData(data);
 				} else {
-					final Table table = new Table(composite, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
+					table = new Table(composite, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
 					data = new GridData(GridData.FILL_HORIZONTAL);
 					data.horizontalSpan = 3;
 					data.heightHint = 70;
@@ -126,33 +130,32 @@ public class ProjectPropertyPage extends PropertyPage {
 					//item.setImage();
 					
 					int size2 = servers.length;
-					int count = 0;
+					count = 0;
 					for (int j = 0; j < size2; j++) {
 						item = new TableItem(table, SWT.NONE);
 						item.setText(ServerUICore.getLabelProvider().getText(servers[j]));
 						item.setImage(ServerUICore.getLabelProvider().getImage(servers[j]));
 						item.setData(servers[j]);
-						if (servers[j].equals(prefServer))
+						if (servers[j].equals(defaultServer))
 							count = j + 1;
 					}
-
+					
 					table.setSelection(count);
-
+					
 					table.addSelectionListener(new SelectionAdapter() {
 						public void widgetSelected(SelectionEvent event) {
 							int index = table.getSelectionIndex();
-							if (index == 0) {
+							if (index == 0)
 								server = null;
-							} else if (index > 0) {
+							else if (index > 0)
 								server = servers[index-1];
-							}
 						}
 					});
 				}
 			}
 			
 			Dialog.applyDialogFont(composite);
-
+			
 			return composite;
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error creating project property page", e);
@@ -187,6 +190,15 @@ public class ProjectPropertyPage extends PropertyPage {
 		IServer[] allServers = new IServer[list.size()];
 		list.toArray(allServers);
 		return allServers;
+	}
+
+	protected void performDefaults() {
+		if (table != null) {
+			table.select(count);
+			server = defaultServer;
+		}
+		
+		super.performDefaults();
 	}
 
 	/**

@@ -145,6 +145,7 @@ public class Messages extends NLS {
 	public static String actionMoveServerToWorkspace;
 	public static String dialogAddRemoveModulesNone;
 	public static String actionSetNewServer;
+	public static String errorNoArtifact;
 	public static String errorNoModules;
 	public static String dialogModeWarningRun;
 	public static String dialogModeWarningDebug;

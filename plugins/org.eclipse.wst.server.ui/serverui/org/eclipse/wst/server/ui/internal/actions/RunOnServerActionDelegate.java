@@ -162,10 +162,15 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				shell2 = Display.getDefault().getActiveShell();
 		}
 		final Shell shell = shell2;
-
-		if (moduleArtifact == null || moduleArtifact.getModule() == null) {
+		
+		if (moduleArtifact == null) {
+			EclipseUtil.openError(Messages.errorNoArtifact);
+			Trace.trace(Trace.FINEST, "No module artifact found");
+			return;
+		}
+		if (moduleArtifact.getModule() == null) { // 149425
 			EclipseUtil.openError(Messages.errorNoModules);
-			Trace.trace(Trace.FINEST, "No modules");
+			Trace.trace(Trace.FINEST, "Module artifact not contained in a module");
 			return;
 		}
 		final IModule module = moduleArtifact.getModule();

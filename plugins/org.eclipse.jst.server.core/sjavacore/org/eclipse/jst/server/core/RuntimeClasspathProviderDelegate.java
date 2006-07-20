@@ -46,7 +46,7 @@ import org.eclipse.wst.server.core.IRuntime;
  * @plannedfor 2.0
  */
 public abstract class RuntimeClasspathProviderDelegate {
-	private class SourceAttachmentUpdate {
+	protected class SourceAttachmentUpdate {
 		String runtimeId;
 		IPath entry;
 		IPath sourceAttachmentPath;
