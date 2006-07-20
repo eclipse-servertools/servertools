@@ -24,14 +24,16 @@ import org.eclipse.core.resources.IContainer;
  */
 public interface IJ2EEModule {
 	/**
-	 * Returns the root folders for the resources in this module.
+	 * Returns the root folders for the resources in this module. Returns an empty
+	 * array if this is a binary module.
 	 * 
 	 * @return a possibly-empty array of resource folders
 	 */
 	public IContainer[] getResourceFolders();
 
 	/**
-	 * Returns the root folders containing Java output in this module.
+	 * Returns the root folders containing Java output in this module. Returns an
+	 * empty array if this is a binary module.
 	 * 
 	 * @return a possibly-empty array of Java output folders
 	 */
