@@ -71,10 +71,10 @@ public class Server extends Base implements IServer {
 
 	protected IRuntime runtime;
 	protected IFolder configuration;
-	
+
 	// the list of modules that are to be published to the server
 	protected List modules;
-	
+
 	// transient fields
 	protected transient String mode = ILaunchManager.RUN_MODE;
 	protected transient int serverState = STATE_UNKNOWN;
@@ -84,7 +84,7 @@ public class Server extends Base implements IServer {
 	protected transient Map moduleState = new HashMap();
 	protected transient Map modulePublishState = new HashMap();
 	protected transient Map moduleRestartState = new HashMap();
-	
+
 	protected transient IStatus serverStatus;
 	protected transient Map moduleStatus = new HashMap();
 

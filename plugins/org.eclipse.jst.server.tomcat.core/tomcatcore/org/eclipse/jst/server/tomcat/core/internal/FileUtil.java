@@ -154,6 +154,7 @@ public class FileUtil {
 	 * @param from a directory
 	 * @param to a directory
 	 * @param monitor a progress monitor
+	 * @deprecated will be removed in next release
 	 */
 	public static void smartCopyDirectory(String from, String to, IProgressMonitor monitor) {
 		try {

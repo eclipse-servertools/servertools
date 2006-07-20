@@ -36,7 +36,9 @@ public class ServerUtil {
 
 	/**
 	 * Returns the module contained within the given project. If more than one module
-	 * is contained with the project, **
+	 * is contained with the project, this method will return an arbitrary module
+	 * unless the module factory defines an ordering. If there might be multiple
+	 * modules in a project, users should typically use getModules(IProject) instead.
 	 * 
 	 * @param project a project
 	 * @return a module that is contained with the project, or null if no
