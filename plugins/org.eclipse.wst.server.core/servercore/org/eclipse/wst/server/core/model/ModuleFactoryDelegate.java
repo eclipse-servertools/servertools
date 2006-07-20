@@ -61,6 +61,19 @@ public abstract class ModuleFactoryDelegate {
 	 */
 	final void initialize(ModuleFactory newFactory, IProgressMonitor monitor) {
 		factory = newFactory;
+		initialize();
+	}
+
+	/**
+	 * Initializes this module factory delegate. This method gives delegates a chance
+	 * to do their own initialization.
+	 * <p>
+	 * This method is called by the server core framework.
+	 * Clients should never call this method.
+	 * </p>
+	 */
+	public void initialize() {
+		// do nothing
 	}
 
 	/**
@@ -72,6 +85,17 @@ public abstract class ModuleFactoryDelegate {
 	 */
 	protected final String getId() {
 		return factory.getId();
+	}
+
+	/**
+	 * Clears the cache of modules returned by getModules(). Delegates can call this
+	 * method if they know that the results of the last call to getModules() is
+	 * invalid and should be refreshed.
+	 * 
+	 * @see #getModules()
+	 */
+	public void clearModuleCache() {
+		factory.clearModuleCache();
 	}
 
 	/**
