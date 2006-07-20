@@ -35,15 +35,18 @@ public class ServerUtil {
 	}
 
 	/**
-	 * Returns the project modules attached to a project.
+	 * Returns the module contained within the given project. If more than one module
+	 * is contained with the project, **
 	 * 
 	 * @param project a project
-	 * @return a possibly empty array of modules
+	 * @return a module that is contained with the project, or null if no
+	 *    modules are contained in the given project
+	 * @see #getModules(IProject)
 	 */
 	public static IModule getModule(IProject project) {
 		if (project == null)
 			throw new IllegalArgumentException();
-
+		
 		IModule[] modules = getModules();
 		if (modules != null) {
 			int size = modules.length;
@@ -53,6 +56,31 @@ public class ServerUtil {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Returns the modules contained within the given project.
+	 * 
+	 * @param project a project
+	 * @return a possibly-empty array of modules
+	 * @see #getModule(IProject)
+	 */
+	public static IModule[] getModules(IProject project) {
+		if (project == null)
+			throw new IllegalArgumentException();
+		
+		IModule[] modules = getModules();
+		List list = new ArrayList();
+		if (modules != null) {
+			int size = modules.length;
+			for (int i = 0; i < size; i++) {
+				if (modules[i] != null && project.equals(modules[i].getProject()))
+					list.add(modules[i]);
+			}
+		}
+		IModule[] modules2 = new IModule[list.size()];
+		list.toArray(modules2);
+		return modules2;
 	}
 
 	/**
@@ -109,7 +137,7 @@ public class ServerUtil {
 		list.toArray(modules);
 		return modules;
 	}
-	
+
 	/**
 	 * Return all the available modules from all factories whose
 	 * type matches the given module type id.

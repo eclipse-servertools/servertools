@@ -57,9 +57,12 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 				//Trace.trace("caching: " + this + " " + projects[i] + " " + isValidModule(projects[i]));
 				if (projects2[i].isAccessible()) {
 					try {
-						IModule module = createModule(projects2[i]);
-						if (module != null)
-							modules.add(module);
+						IModule[] modules2 = createModules(projects2[i]);
+						if (modules2 != null) {
+							int size2 = modules2.length;
+							for (int j = 0; j < size2; j++)
+								modules.add(modules2[j]);
+						}
 					} catch (Throwable t) {
 						Trace.trace(Trace.SEVERE, "Error creating module", t);
 					}
@@ -166,8 +169,27 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * 
 	 * @param project a project to create modules for
 	 * @return a module, or <code>null</code> if there was no module in the project
+	 * @see #createModules(IProject)
+	 * @deprecated Use createModules(IProject) instead, which supports multiple modules
+	 *    per project
 	 */
-	protected abstract IModule createModule(IProject project);
+	protected IModule createModule(IProject project) {
+		return null;
+	}
+
+	/**
+	 * Creates the modules that are contained within a given project.
+	 * 
+	 * @param project a project to create modules for
+	 * @return a possibly-empty array of modules
+	 */
+	protected IModule[] createModules(IProject project) {
+		IModule module = createModule(project);
+		if (module == null)
+			return new IModule[0];
+		
+		return new IModule[] { module };
+	}
 
 	/**
 	 * Returns the list of resources that the module should listen to
