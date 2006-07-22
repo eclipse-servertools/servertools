@@ -8,7 +8,7 @@
       %description
    </description>
 
-   <license url="license.html">
+   <license url="license.html"> 
       %license
    </license>
 
@@ -22,7 +22,7 @@
          version="0.0.0"/>
 
    <requires>
-      <import feature="org.eclipse.wst.server_core.feature" version="1.0.2" match="equivalent"/>
+      <import feature="org.eclipse.wst.server_core.feature" version="1.0.3" match="equivalent"/>
    </requires>
 
    <plugin
