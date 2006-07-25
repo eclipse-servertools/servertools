@@ -44,9 +44,12 @@ public class GlobalCommandManager {
 		IUndoableOperation command;
 		String id;
 	}
-	
+
 	// commands in the undo history
 	protected List undoList = new ArrayList();
+
+	// size of the undo stack on last save
+	protected int undoSaveIndex = 0;
 
 	// commands in the redo history
 	protected List redoList = new ArrayList();
@@ -61,10 +64,6 @@ public class GlobalCommandManager {
 		
 		// true if the resource is read-only
 		boolean isReadOnly;
-		
-		// true if all changes can be undone, false if
-		// a non-reversable change has been made
-		boolean canCompletelyUndo = true;
 		
 		// the element id
 		String id;
@@ -313,7 +312,7 @@ public class GlobalCommandManager {
 		if (command.canUndo())
 			addToUndoList(src);
 		else {
-			info.canCompletelyUndo = false;
+			undoSaveIndex = -1;
 			clearUndoList(id);
 		}
 
@@ -497,7 +496,7 @@ public class GlobalCommandManager {
 		CommandManagerInfo info = getExistingCommandManagerInfo(id);
 		if (info.isDirty == dirty)
 			return;
-
+		
 		info.isDirty = dirty;
 		firePropertyChangeEvent(PROP_DIRTY, id, null);
 	}
@@ -515,20 +514,22 @@ public class GlobalCommandManager {
 		}
 		if (src == null)
 			return;
-
+		
 		try {
 			src.command.undo(null, null);
 		} catch (ExecutionException ee) {
 			// do something
 		}
+		
 		undoList.remove(src);
 		firePropertyChangeEvent(PROP_UNDO, src.id, null);
 		redoList.add(src);
 		firePropertyChangeEvent(PROP_REDO, src.id, null);
-
-		CommandManagerInfo info = getExistingCommandManagerInfo(src.id);
-		if (info.canCompletelyUndo && getUndoCommand(src.id) == null)
+		
+		if (undoSaveIndex == undoList.size())
 			setDirtyState(src.id, false);
+		else
+			setDirtyState(src.id, true);
 	}
 
 	/**
@@ -554,8 +555,11 @@ public class GlobalCommandManager {
 		firePropertyChangeEvent(PROP_REDO, src.id, null);
 		undoList.add(src);
 		firePropertyChangeEvent(PROP_UNDO, src.id, null);
-
-		setDirtyState(src.id, true);
+		
+		if (undoSaveIndex == undoList.size())
+			setDirtyState(src.id, false);
+		else
+			setDirtyState(src.id, true);
 	}
 
 	/**
@@ -564,13 +568,10 @@ public class GlobalCommandManager {
 	 * @param id an id
 	 */
 	public void resourceSaved(String id) {
-		CommandManagerInfo info = getExistingCommandManagerInfo(id);
-		//clearUndoList(resource);
-		//clearRedoList(resource);
-		info.canCompletelyUndo = true;
+		undoSaveIndex = undoList.size();
 		setDirtyState(id, false);
 	}
-	
+
 	/**
 	 * Return an array of read-only files.
 	 * 
