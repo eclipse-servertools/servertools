@@ -29,14 +29,14 @@ public class RuntimeTypeComposite extends AbstractTreeComposite {
 	protected String type;
 	protected String version;
 	protected String runtimeTypeId;
-	
+
 	protected RuntimeTypeTreeContentProvider contentProvider;
 	protected boolean initialSelection = true;
-	
+
 	public interface RuntimeTypeSelectionListener {
 		public void runtimeTypeSelected(IRuntimeType runtimeType);
 	}
-	
+
 	public RuntimeTypeComposite(Composite parent, int style, boolean creation, RuntimeTypeSelectionListener listener2, String type, String version, String runtimeTypeId) {
 		super(parent, style);
 		this.listener = listener2;
@@ -44,12 +44,26 @@ public class RuntimeTypeComposite extends AbstractTreeComposite {
 		this.type = type;
 		this.version = version;
 		this.runtimeTypeId = runtimeTypeId;
-	
+		
 		contentProvider = new RuntimeTypeTreeContentProvider(RuntimeTypeTreeContentProvider.STYLE_VENDOR, creation, type, version, runtimeTypeId);
 		treeViewer.setContentProvider(contentProvider);
-		treeViewer.setLabelProvider(new RuntimeTypeTreeLabelProvider());
+		
+		ILabelProvider labelProvider = new RuntimeTypeTreeLabelProvider();
+		labelProvider.addListener(new ILabelProviderListener() {
+			public void labelProviderChanged(LabelProviderChangedEvent event) {
+				Object[] obj = event.getElements();
+				if (obj == null)
+					treeViewer.refresh(true);
+				else {
+					int size = obj.length;
+					for (int i = 0; i < size; i++)
+						treeViewer.refresh(obj[i], true);
+				}
+			}
+		});
+		treeViewer.setLabelProvider(labelProvider);
 		treeViewer.setInput(AbstractTreeContentProvider.ROOT);
-
+		
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				Object obj = getSelection(event.getSelection());

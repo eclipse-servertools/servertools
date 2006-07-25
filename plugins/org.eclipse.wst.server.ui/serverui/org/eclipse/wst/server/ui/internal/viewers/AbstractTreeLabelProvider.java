@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
+import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -18,10 +19,19 @@ import org.eclipse.ui.PlatformUI;
  */
 public abstract class AbstractTreeLabelProvider extends BaseLabelProvider {
 	/**
-	 * AbstractTreeLabelProvider constructor comment.
+	 * A standard tree label provider.
 	 */
 	public AbstractTreeLabelProvider() {
 		super();
+	}
+
+	/**
+	 * A standard tree label provider.
+	 * 
+	 * @param decorator a label decorator, or null if no decorator is required
+	 */
+	public AbstractTreeLabelProvider(ILabelDecorator decorator) {
+		super(decorator);
 	}
 
 	/**
@@ -32,9 +42,15 @@ public abstract class AbstractTreeLabelProvider extends BaseLabelProvider {
 			ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
 			return sharedImages.getImage(ISharedImages.IMG_OBJ_FOLDER);
 		}
-		return getImageImpl(element);
+		Image image = getImageImpl(element);
+		if (decorator != null) {
+			Image dec = decorator.decorateImage(image, element);
+			if (dec != null)
+				return dec;
+		}
+		return image;
 	}
-	
+
 	/**
 	 * Return an image for the given element.
 	 *  
@@ -50,9 +66,15 @@ public abstract class AbstractTreeLabelProvider extends BaseLabelProvider {
 		if (element instanceof ServerTreeContentProvider.TreeElement) {
 			return ((ServerTreeContentProvider.TreeElement) element).text;
 		}
-		return getTextImpl(element);
+		String text = getTextImpl(element);
+		if (decorator != null) {
+			String dec = decorator.decorateText(text, element);
+			if (dec != null)
+				return dec;
+		}
+		return text;
 	}
-	
+
 	/**
 	 * Return a label for the given element.
 	 *  

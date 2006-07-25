@@ -35,7 +35,21 @@ public class InstallableServerComposite extends AbstractTreeComposite {
 	
 		contentProvider = new InstallableServerContentProvider(InstallableServerContentProvider.STYLE_VENDOR);
 		treeViewer.setContentProvider(contentProvider);
-		treeViewer.setLabelProvider(new InstallableServerLabelProvider());
+		
+		ILabelProvider labelProvider = new InstallableServerLabelProvider();
+		labelProvider.addListener(new ILabelProviderListener() {
+			public void labelProviderChanged(LabelProviderChangedEvent event) {
+				Object[] obj = event.getElements();
+				if (obj == null)
+					treeViewer.refresh(true);
+				else {
+					int size = obj.length;
+					for (int i = 0; i < size; i++)
+						treeViewer.refresh(obj[i], true);
+				}
+			}
+		});
+		treeViewer.setLabelProvider(labelProvider);
 		treeViewer.setInput(AbstractTreeContentProvider.ROOT);
 
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {

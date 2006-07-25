@@ -10,32 +10,98 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.wst.server.core.internal.Trace;
 /**
  * A basic label provider.
  */
 public abstract class BaseLabelProvider implements ILabelProvider {
+	protected ILabelDecorator decorator;
+	private transient List listeners;
+	private ILabelProviderListener providerListener;
+
 	/**
-	 * BaseLabelProvider constructor comment.
+	 * A basic ILabelProvider with no decorator.
 	 */
 	public BaseLabelProvider() {
+		this(null);
+	}
+
+	/**
+	 * A basic ILabelProvider with support for a decorator.
+	 * 
+	 * @param decorator a label decorator, or null if no decorator is required
+	 */
+	public BaseLabelProvider(ILabelDecorator decorator) {
 		super();
+		if (decorator == null)
+			decorator = PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator();
+		
+		this.decorator = decorator;
+		if (decorator != null) {
+			providerListener = new ILabelProviderListener() {
+				public void labelProviderChanged(LabelProviderChangedEvent event) {
+					fireListener(event);
+				}
+			};
+			decorator.addListener(providerListener);
+		}
 	}
 
 	/**
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
 	 */
 	public void addListener(ILabelProviderListener listener) {
-		// do nothing
+		if (listener == null)
+			throw new IllegalArgumentException("Listener cannot be null");
+		
+		if (listeners == null)
+			listeners = new ArrayList();
+		listeners.add(listener);
+	}
+
+	/**
+	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
+	 */
+	public void removeListener(ILabelProviderListener listener) {
+		if (listener == null)
+			throw new IllegalArgumentException("Listener cannot be null");
+		
+		if (listeners != null)
+			listeners.remove(listener);
+	}
+
+	protected void fireListener(LabelProviderChangedEvent event) {
+		if (listeners == null || listeners.isEmpty())
+			return;
+		
+		int size = listeners.size();
+		ILabelProviderListener[] srl = new ILabelProviderListener[size];
+		listeners.toArray(srl);
+		
+		for (int i = 0; i < size; i++) {
+			try {
+				srl[i].labelProviderChanged(event);
+			} catch (Exception e) {
+				Trace.trace(Trace.WARNING, "  Error firing label change event to " + srl[i], e);
+			}
+		}
 	}
 
 	/**
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
 	 */
 	public void dispose() {
-		// do nothing
+		if (decorator != null)
+			decorator.removeListener(providerListener);
 	}
 
 	/**
@@ -59,13 +125,6 @@ public abstract class BaseLabelProvider implements ILabelProvider {
 		return false;
 	}
 
-	/**
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
-	 */
-	public void removeListener(ILabelProviderListener listener) {
-		// do nothing
-	}
-	
 	protected String notNull(String s) {
 		if (s == null)
 			return "";

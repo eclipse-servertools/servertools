@@ -12,6 +12,7 @@ package org.eclipse.wst.server.ui.internal.viewers;
 
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.ui.internal.ImageResource;
+import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.swt.graphics.Image;
 /**
  * Runtime type label provider.
@@ -22,6 +23,15 @@ public class RuntimeTypeTreeLabelProvider extends AbstractTreeLabelProvider {
 	 */
 	public RuntimeTypeTreeLabelProvider() {
 		super();
+	}
+
+	/**
+	 * RuntimeTypeTreeLabelProvider constructor comment.
+	 * 
+	 * @param decorator a label decorator, or null if no decorator is required
+	 */
+	public RuntimeTypeTreeLabelProvider(ILabelDecorator decorator) {
+		super(decorator);
 	}
 
 	/**

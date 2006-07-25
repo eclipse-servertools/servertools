@@ -19,8 +19,6 @@ import org.eclipse.wst.server.ui.internal.ServerLabelProvider;
  * @since 1.0
  */
 public class ServerUICore {
-	private static ServerLabelProvider labelProvider;
-
 	/**
 	 * ServerUICore constructor comment.
 	 */
@@ -35,8 +33,6 @@ public class ServerUICore {
 	 * @return a label provider
 	 */
 	public static ILabelProvider getLabelProvider() {
-		if (labelProvider == null)
-			labelProvider = new ServerLabelProvider();
-		return labelProvider;
+		return new ServerLabelProvider();
 	}
 }

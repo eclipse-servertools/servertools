@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
+import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
@@ -28,12 +30,29 @@ public class RuntimeTreeLabelProvider extends AbstractTreeLabelProvider implemen
 	}
 
 	/**
+	 * RuntimeTreeLabelProvider constructor comment.
+	 * 
+	 * @param decorator a label decorator, or null if no decorator is required
+	 */
+	public RuntimeTreeLabelProvider(ILabelDecorator decorator) {
+		super(decorator);
+	}
+
+	/**
 	 * 
 	 */
 	protected Image getImageImpl(Object element) {
 		IRuntime runtime = (IRuntime) element;
-		if (runtime.getRuntimeType() != null)
-			return ImageResource.getImage(runtime.getRuntimeType().getId());
+		IRuntimeType runtimeType = runtime.getRuntimeType();
+		if (runtimeType != null) {
+			Image image = ImageResource.getImage(runtimeType.getId());
+			if (decorator != null) {
+				Image dec = decorator.decorateImage(image, element);
+				if (dec != null)
+					return dec;
+			}
+			return image;
+		}
 		return null;
 	}
 
@@ -69,13 +88,19 @@ public class RuntimeTreeLabelProvider extends AbstractTreeLabelProvider implemen
 			return "";
 		}
 		IRuntime runtime = (IRuntime) element;
-		if (columnIndex == 0)
-			return runtime.getName();
-		else if (columnIndex == 1) {
+		if (columnIndex == 0) {
+			String text = notNull(runtime.getName());
+			if (decorator != null) {
+				String dec = decorator.decorateText(text, runtime);
+				if (dec != null)
+					return dec;
+			}
+			return text;
+		} else if (columnIndex == 1) {
 			if (runtime.getRuntimeType() != null)
 				return notNull(runtime.getRuntimeType().getName());
 			return "";
 		}
-		return "X";
+		return "";
 	}
 }

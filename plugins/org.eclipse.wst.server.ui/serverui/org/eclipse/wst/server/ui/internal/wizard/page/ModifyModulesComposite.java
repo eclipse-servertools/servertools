@@ -22,9 +22,12 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -43,6 +46,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.*;
+import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 /**
  * A wizard page used to add and remove modules.
@@ -86,7 +90,8 @@ public class ModifyModulesComposite extends Composite {
 		}
 		
 		public Object[] getChildren(Object parentElement) {
-			IModule[] parent = (IModule[]) parentElement;
+			ModuleServer ms = (ModuleServer) parentElement;
+			IModule[] parent = ms.module;
 			IModule[] children = (IModule[]) childModuleMap.get(new ChildModuleMapKey(parent));
 			
 			List list = new ArrayList();
@@ -101,7 +106,7 @@ public class ModifyModulesComposite extends Composite {
 					IModule[] module2 = new IModule[size2 + 1];
 					System.arraycopy(parent, 0, module2, 0, size2);
 					module2[size2] = child;
-					list.add(module2);
+					list.add(new ModuleServer(null, module2));
 				}
 			}
 			return list.toArray();
@@ -109,11 +114,12 @@ public class ModifyModulesComposite extends Composite {
 
 		public Object getParent(Object element) {
 			IModule[] child = (IModule[]) element;
-			return parentModuleMap.get(child);
+			return new ModuleServer(null, (IModule[]) parentModuleMap.get(child));
 		}
 
 		public boolean hasChildren(Object element) {
-			IModule[] parent = (IModule[]) element;
+			ModuleServer ms = (ModuleServer) element;
+			IModule[] parent = ms.module;
 			IModule[] children = (IModule[]) childModuleMap.get(new ChildModuleMapKey(parent));
 			return (children != null && children.length > 0);
 		}
@@ -125,7 +131,7 @@ public class ModifyModulesComposite extends Composite {
 			Iterator iterator = modules.iterator();
 			while (iterator.hasNext()) {
 				IModule module = (IModule) iterator.next();
-				list.add(new IModule[] { module });
+				list.add(new ModuleServer(null, new IModule[] { module }));
 			}
 			return list.toArray();
 		}
@@ -137,7 +143,7 @@ public class ModifyModulesComposite extends Composite {
 			Iterator iterator = deployed.iterator();
 			while (iterator.hasNext()) {
 				IModule module = (IModule) iterator.next();
-				list.add(new IModule[] { module });
+				list.add(new ModuleServer(null, new IModule[] { module }));
 			}
 			return list.toArray();
 		}
@@ -352,7 +358,7 @@ public class ModifyModulesComposite extends Composite {
 		
 		label = new Label(this, SWT.NONE);
 		label.setText(Messages.wizModuleDeployedList);
-
+		
 		Tree availableTree = new Tree(this, SWT.BORDER);
 		data = new GridData(GridData.FILL_BOTH);
 		data.heightHint = 200;
@@ -360,7 +366,20 @@ public class ModifyModulesComposite extends Composite {
 		availableTree.setLayoutData(data);
 		
 		availableTreeViewer = new TreeViewer(availableTree);
-		availableTreeViewer.setLabelProvider(ServerUICore.getLabelProvider());
+		ILabelProvider labelProvider = ServerUICore.getLabelProvider();
+		labelProvider.addListener(new ILabelProviderListener() {
+			public void labelProviderChanged(LabelProviderChangedEvent event) {
+				Object[] obj = event.getElements();
+				if (obj == null)
+					availableTreeViewer.refresh(true);
+				else {
+					int size = obj.length;
+					for (int i = 0; i < size; i++)
+						availableTreeViewer.refresh(obj[i], true);
+				}
+			}
+		});
+		availableTreeViewer.setLabelProvider(labelProvider);
 		availableTreeViewer.setContentProvider(new AvailableContentProvider());
 		availableTreeViewer.setSorter(new ViewerSorter());
 		availableTreeViewer.setInput("root");
@@ -377,19 +396,19 @@ public class ModifyModulesComposite extends Composite {
 					add(false);
 			}
 		});
-
+		
 		// slosh buttons
 		Composite comp = new Composite(this, SWT.NONE);
 		data = new GridData(GridData.FILL_BOTH);
 		data.widthHint = 120;
 		comp.setLayoutData(data);
-
+		
 		layout = new GridLayout();
 		layout.marginWidth = 5;
 		layout.marginHeight = 25;
 		layout.verticalSpacing = 20;
 		comp.setLayout(layout);
-
+		
 		add = new Button(comp, SWT.PUSH);
 		add.setText(Messages.wizModuleAdd);
 		add.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -435,7 +454,20 @@ public class ModifyModulesComposite extends Composite {
 		deployedTree.setLayoutData(data);
 		
 		deployedTreeViewer = new TreeViewer(deployedTree);
-		deployedTreeViewer.setLabelProvider(ServerUICore.getLabelProvider());
+		labelProvider = ServerUICore.getLabelProvider();
+		labelProvider.addListener(new ILabelProviderListener() {
+			public void labelProviderChanged(LabelProviderChangedEvent event) {
+				Object[] obj = event.getElements();
+				if (obj == null)
+					deployedTreeViewer.refresh(true);
+				else {
+					int size = obj.length;
+					for (int i = 0; i < size; i++)
+						deployedTreeViewer.refresh(obj[i], true);
+				}
+			}
+		});
+		deployedTreeViewer.setLabelProvider(labelProvider);
 		deployedTreeViewer.setContentProvider(new DeployedContentProvider());
 		deployedTreeViewer.setSorter(new ViewerSorter());
 		deployedTreeViewer.setInput("root");
@@ -461,17 +493,18 @@ public class ModifyModulesComposite extends Composite {
 
 	protected IModule getAvailableSelection() {
 		IStructuredSelection sel = (IStructuredSelection) availableTreeViewer.getSelection();
-		return getModule((IModule[]) sel.getFirstElement());
+		return getModule((ModuleServer) sel.getFirstElement());
 	}
 
 	protected IModule getDeployedSelection() {
 		IStructuredSelection sel = (IStructuredSelection) deployedTreeViewer.getSelection();
-		return getModule((IModule[]) sel.getFirstElement());
+		return getModule((ModuleServer) sel.getFirstElement());
 	}
 
-	protected static IModule getModule(IModule[] modules2) {
-		if (modules2 == null)
+	protected static IModule getModule(ModuleServer ms) {
+		if (ms == null)
 			return null;
+		IModule[] modules2 = ms.module;
 		return modules2[modules2.length - 1];
 	}
 
@@ -564,7 +597,7 @@ public class ModifyModulesComposite extends Composite {
 
 		setEnablement();
 	}
-	
+
 	protected void updateTaskModel() {
 		if (taskModel == null)
 			return;
@@ -583,7 +616,7 @@ public class ModifyModulesComposite extends Composite {
 		}
 		return list;
 	}
-	
+
 	public List getModulesToAdd() {
 		List list = new ArrayList();
 		Iterator iterator = deployed.iterator();

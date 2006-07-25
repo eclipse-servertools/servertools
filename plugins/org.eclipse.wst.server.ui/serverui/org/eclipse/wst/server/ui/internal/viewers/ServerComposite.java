@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
@@ -47,7 +50,21 @@ public class ServerComposite extends AbstractTreeComposite {
 		contentProvider = new ServerTreeContentProvider(ServerTreeContentProvider.STYLE_HOST, module, launchMode);
 		viewOption = ServerTreeContentProvider.STYLE_HOST;
 		treeViewer.setContentProvider(contentProvider);
-		treeViewer.setLabelProvider(new ServerTreeLabelProvider());
+		
+		ILabelProvider labelProvider = new ServerTreeLabelProvider();
+		labelProvider.addListener(new ILabelProviderListener() {
+			public void labelProviderChanged(LabelProviderChangedEvent event) {
+				Object[] obj = event.getElements();
+				if (obj == null)
+					treeViewer.refresh(true);
+				else {
+					int size = obj.length;
+					for (int i = 0; i < size; i++)
+						treeViewer.refresh(obj[i], true);
+				}
+			}
+		});
+		treeViewer.setLabelProvider(labelProvider);
 		treeViewer.setInput(AbstractTreeContentProvider.ROOT);
 		treeViewer.expandToLevel(1);
 

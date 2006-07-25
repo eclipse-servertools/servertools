@@ -10,20 +10,72 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.IClient;
+import org.eclipse.wst.server.core.internal.Trace;
+import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
 /**
  * A label provider for all server related objects.
  */
 public class ServerLabelProvider implements ILabelProvider {
+	private ILabelDecorator decorator;
+	protected transient List listeners;
+	protected ILabelProviderListener providerListener;
+
 	public ServerLabelProvider() {
-		// do nothing
+		decorator = PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator();
+		providerListener = new ILabelProviderListener() {
+			public void labelProviderChanged(LabelProviderChangedEvent event) {
+				fireListener(event);
+			}
+		};
+		decorator.addListener(providerListener);
+	}
+
+	public void addListener(ILabelProviderListener listener) {
+		if (listener == null)
+			throw new IllegalArgumentException("Listener cannot be null");
+		
+		if (listeners == null)
+			listeners = new ArrayList();
+		listeners.add(listener);
+	}
+
+	public void removeListener(ILabelProviderListener listener) {
+		if (listener == null)
+			throw new IllegalArgumentException("Listener cannot be null");
+		
+		if (listeners != null)
+			listeners.remove(listener);
+	}
+
+	protected void fireListener(LabelProviderChangedEvent event) {
+		if (listeners == null || listeners.isEmpty())
+			return;
+		
+		int size = listeners.size();
+		ILabelProviderListener[] srl = new ILabelProviderListener[size];
+		listeners.toArray(srl);
+		
+		for (int i = 0; i < size; i++) {
+			try {
+				srl[i].labelProviderChanged(event);
+			} catch (Exception e) {
+				Trace.trace(Trace.WARNING, "  Error firing label change event to " + srl[i], e);
+			}
+		}
 	}
 
 	protected Image getModuleImage(String typeId) {
@@ -38,7 +90,7 @@ public class ServerLabelProvider implements ILabelProvider {
 		}
 		return image;
 	}
-	
+
 	protected ImageDescriptor getModuleImageDescriptor(String typeId) {
 		if (typeId == null)
 			return null;
@@ -87,6 +139,20 @@ public class ServerLabelProvider implements ILabelProvider {
 		return null;
 	}
 
+	private Image decorate(Image image, Object obj) {
+		Image dec = decorator.decorateImage(image, obj);
+		if (dec != null)
+			return dec;
+		return image;
+	}
+
+	private String decorate(String text, Object obj) {
+		String dec = decorator.decorateText(text, obj);
+		if (dec != null)
+			return dec;
+		return text;
+	}
+
 	/*
 	 * @see ILabelProvider#getImage(Object)
 	 */
@@ -94,26 +160,26 @@ public class ServerLabelProvider implements ILabelProvider {
 		try {
 			if (element instanceof IRuntimeType) {
 				IRuntimeType runtimeType = (IRuntimeType) element;
-				return ImageResource.getImage(runtimeType.getId());
+				return decorate(ImageResource.getImage(runtimeType.getId()), runtimeType);
 			} else if (element instanceof IRuntime) {
 				IRuntime runtime = (IRuntime) element;
-				return ImageResource.getImage(runtime.getRuntimeType().getId());
+				return decorate(ImageResource.getImage(runtime.getRuntimeType().getId()), runtime);
 			} else if (element instanceof IServerType) {
 				IServerType serverType = (IServerType) element;
-				return ImageResource.getImage(serverType.getId());
+				return decorate(ImageResource.getImage(serverType.getId()), serverType);
 			} else if (element instanceof IServer) {
 				IServer server = (IServer) element;
 				if (server.getServerType() == null)
 					return null;
 				
-				return ImageResource.getImage(server.getServerType().getId());
+				return decorate(ImageResource.getImage(server.getServerType().getId()), server);
 			} else if (element instanceof IModule) {
 				IModule module = (IModule) element;
 				IModuleType mt = module.getModuleType();
 				if (mt == null)
 					return null;
 				
-				return getModuleImage(mt.getId());
+				return decorate(getModuleImage(mt.getId()), module);
 			} else if (element instanceof IModule[]) {
 				IModule[] modules = (IModule[]) element;
 				IModule module = modules[modules.length - 1];
@@ -121,7 +187,15 @@ public class ServerLabelProvider implements ILabelProvider {
 				if (mt == null)
 					return null;
 				
-				return getModuleImage(mt.getId());
+				return decorate(getModuleImage(mt.getId()), modules);
+			} else if (element instanceof ModuleServer) {
+				ModuleServer ms = (ModuleServer) element;
+				IModule module = ms.module[ms.module.length - 1];
+				IModuleType mt = module.getModuleType();
+				if (mt == null)
+					return null;
+				
+				return decorate(getModuleImage(mt.getId()), ms);
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not get image descriptor", e);
@@ -142,34 +216,38 @@ public class ServerLabelProvider implements ILabelProvider {
 	public String getText(Object element) {
 		if (element == null)
 			return "";
-
+		
 		if (element instanceof IRuntime) {
-			return getString(((IRuntime) element).getName());
+			IRuntime runtime = (IRuntime) element;
+			return decorate(getString((runtime).getName()), runtime);
 		} else if (element instanceof IServer) {
-			return getString(((IServer) element).getName());
+			IServer server = (IServer) element;
+			return decorate(getString((server).getName()), server);
 		} else if (element instanceof IRuntimeType) {
-			return ((IRuntimeType) element).getName();
+			IRuntimeType rt = (IRuntimeType) element;
+			return decorate(rt.getName(), rt);
 		} else if (element instanceof IServerType) {
-			return ((IServerType) element).getName();
+			IServerType st = (IServerType) element;
+			return decorate(st.getName(), st);
 		} else if (element instanceof IClient) {
-			return ((IClient) element).getName();
+			IClient client = (IClient) element;
+			return decorate(client.getName(), client);
 		} else if (element instanceof IModule) {
-			return ((IModule) element).getName();
+			IModule module = (IModule) element;
+			return decorate(module.getName(), module);
 		} else if (element instanceof IModule[]) {
 			IModule[] modules = (IModule[]) element;
-			return modules[modules.length - 1].getName();
+			IModule module = modules[modules.length - 1];
+			return decorate(module.getName(), modules);
+		} else if (element instanceof ModuleServer) {
+			ModuleServer ms = (ModuleServer) element;
+			IModule module = ms.module[ms.module.length - 1];
+			return decorate(module.getName(), ms);
 		} else if (element instanceof IWorkbenchAdapter) {
 			return ((IWorkbenchAdapter) element).getLabel(null);
 		}
-
+		
 		return "";
-	}
-
-	/*
-	 * @see IBaseLabelProvider#addListener(ILabelProviderListener)
-	 */
-	public void addListener(ILabelProviderListener listener) {
-		// do nothing
 	}
 
 	/*
@@ -180,16 +258,9 @@ public class ServerLabelProvider implements ILabelProvider {
 	}
 
 	/*
-	 * @see IBaseLabelProvider#removeListener(ILabelProviderListener)
-	 */
-	public void removeListener(ILabelProviderListener listener) {
-		// do nothing
-	}
-	
-	/*
 	 * @see IBaseLabelProvider#dispose()
 	 */
 	public void dispose() {
-		// do nothing
+		decorator.removeListener(providerListener);
 	}
 }

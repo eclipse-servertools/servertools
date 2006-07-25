@@ -20,12 +20,12 @@ public class ModuleServer {
 	 * The server
 	 */
 	public IServer server;
-	
+
 	/**
 	 * The module
 	 */
 	public IModule[] module;
-	
+
 	/**
 	 * Create a new module-server.
 	 * 
@@ -36,7 +36,7 @@ public class ModuleServer {
 		this.server = server;
 		this.module = module;
 	}
-	
+
 	/**
 	 * @see Object#equals(Object)
 	 */
@@ -45,7 +45,11 @@ public class ModuleServer {
 			return false;
 		
 		ModuleServer ms = (ModuleServer) obj;
-		if (!ms.server.equals(server))
+		
+		if (ms.server == null && server != null)
+			return false;
+		
+		if (ms.server != null && !ms.server.equals(server))
 			return false;
 		
 		if (ms.module.length != module.length)
@@ -58,13 +62,16 @@ public class ModuleServer {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * @see Object#toString()
 	 */
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("Server-Module [" + server.getId() + "/" + server.getName() + ", (");
+		if (server != null)
+			sb.append("Server-Module [" + server.getId() + "/" + server.getName() + ", (");
+		else
+			sb.append("Server-Module [null, (");
 		
 		int size = module.length;
 		for (int i = 0; i < size; i++) {

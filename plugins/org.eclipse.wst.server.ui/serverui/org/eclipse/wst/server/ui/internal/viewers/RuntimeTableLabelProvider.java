@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
+import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
@@ -27,14 +28,30 @@ public class RuntimeTableLabelProvider extends BaseLabelProvider implements ITab
 	}
 
 	/**
+	 * RuntimeTableLabelProvider constructor comment.
+	 * 
+	 * @param decorator a label decorator, or null if no decorator is required
+	 */
+	public RuntimeTableLabelProvider(ILabelDecorator decorator) {
+		super(decorator);
+	}
+
+	/**
 	 * @see ITableLabelProvider#getColumnImage(Object, int)
 	 */
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (columnIndex == 0) {
 			IRuntime runtime = (IRuntime) element;
 			IRuntimeType runtimeType = runtime.getRuntimeType();
-			if (runtimeType != null)
-				return ImageResource.getImage(runtimeType.getId());
+			if (runtimeType != null) {
+				Image image = ImageResource.getImage(runtimeType.getId());
+				if (decorator != null) {
+					Image dec = decorator.decorateImage(image, element);
+					if (dec != null)
+						return dec;
+				}
+				return image;
+			}
 		}
 		return null;
 	}
@@ -44,24 +61,23 @@ public class RuntimeTableLabelProvider extends BaseLabelProvider implements ITab
 	 */
 	public String getColumnText(Object element, int columnIndex) {
 		IRuntime runtime = (IRuntime) element;
-		if (columnIndex == 0)
-			return notNull(runtime.getName());
-		/*else if (columnIndex == 1) {
-			IPath location = runtime.getLocation();
-			if (location == null)
-				return "";
-			else
-				return notNull(location.toOSString());
-		}*/
-		else if (columnIndex == 1) {
+		if (columnIndex == 0) {
+			String text = notNull(runtime.getName());
+			if (decorator != null) {
+				String dec = decorator.decorateText(text, element);
+				if (dec != null)
+					return dec;
+			}
+			return text;
+		} else if (columnIndex == 1) {
 			IRuntimeType runtimeType = runtime.getRuntimeType();
 			if (runtimeType != null)
 				return notNull(runtimeType.getName());
 			return "";
 		} else
-			return "X";
+			return "";
 	}
-	
+
 	public boolean isLocked(Object element) {
 		IRuntime runtime = (IRuntime) element;
 		return runtime.isReadOnly();

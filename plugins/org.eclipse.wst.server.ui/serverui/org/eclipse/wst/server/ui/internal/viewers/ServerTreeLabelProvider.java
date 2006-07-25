@@ -12,6 +12,7 @@ package org.eclipse.wst.server.ui.internal.viewers;
 
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.ImageResource;
+import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.swt.graphics.Image;
 /**
  * Server tree label provider.
@@ -22,6 +23,15 @@ public class ServerTreeLabelProvider extends AbstractTreeLabelProvider {
 	 */
 	public ServerTreeLabelProvider() {
 		super();
+	}
+
+	/**
+	 * ServerTreeLabelProvider constructor comment.
+	 * 
+	 * @param decorator a label decorator, or null if no decorator is required
+	 */
+	public ServerTreeLabelProvider(ILabelDecorator decorator) {
+		super(decorator);
 	}
 
 	/**

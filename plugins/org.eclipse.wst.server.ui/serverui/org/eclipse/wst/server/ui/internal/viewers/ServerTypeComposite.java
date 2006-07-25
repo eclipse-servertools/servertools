@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.viewers;
 
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -46,10 +49,24 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 		this.listener = listener2;
 		
 		this.moduleType = moduleType;
-	
+		
 		contentProvider = new ServerTypeTreeContentProvider(ServerTypeTreeContentProvider.STYLE_VENDOR, moduleType);
 		treeViewer.setContentProvider(contentProvider);
-		treeViewer.setLabelProvider(new ServerTypeTreeLabelProvider());
+		
+		ILabelProvider labelProvider = new ServerTypeTreeLabelProvider();
+		labelProvider.addListener(new ILabelProviderListener() {
+			public void labelProviderChanged(LabelProviderChangedEvent event) {
+				Object[] obj = event.getElements();
+				if (obj == null)
+					treeViewer.refresh(true);
+				else {
+					int size = obj.length;
+					for (int i = 0; i < size; i++)
+						treeViewer.refresh(obj[i], true);
+				}
+			}
+		});
+		treeViewer.setLabelProvider(labelProvider);
 		treeViewer.setInput(AbstractTreeContentProvider.ROOT);
 
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {

@@ -95,11 +95,26 @@ public class RuntimeComposite extends AbstractTableComposite {
 		});
 		
 		tableViewer.setContentProvider(new RuntimeContentProvider());
-		tableViewer.setLabelProvider(new RuntimeTableLabelProvider());
+		
+		ILabelProvider labelProvider = new RuntimeTableLabelProvider();
+		labelProvider.addListener(new ILabelProviderListener() {
+			public void labelProviderChanged(LabelProviderChangedEvent event) {
+				Object[] obj = event.getElements();
+				if (obj == null)
+					tableViewer.refresh(true);
+				else {
+					int size = obj.length;
+					for (int i = 0; i < size; i++)
+						tableViewer.refresh(obj[i], true);
+				}
+			}
+		});
+		tableViewer.setLabelProvider(labelProvider);
+		
 		tableViewer.setInput(AbstractTreeContentProvider.ROOT);
 		tableViewer.setColumnProperties(new String[] {"name", "type"});
 		tableViewer.setSorter(new RuntimeViewerSorter(true));
-
+		
 		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				Object obj = getSelection(event.getSelection());
