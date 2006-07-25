@@ -53,6 +53,7 @@ public interface ContextIds {
 	public static final String PREF_GENERAL_TIMEOUT_DELAY = ServerUIPlugin.PLUGIN_ID + ".spge0026";
 	public static final String PREF_GENERAL_SYNC_STARTUP = ServerUIPlugin.PLUGIN_ID + ".spge0028";
 	public static final String PREF_GENERAL_LAUNCH_MODE = ServerUIPlugin.PLUGIN_ID + ".spge0030";
+	public static final String PREF_GENERAL_LAUNCH_MODE_DEBUG = ServerUIPlugin.PLUGIN_ID + ".spge0031";
 	public static final String PREF_GENERAL_ENABLE_BREAKPOINTS = ServerUIPlugin.PLUGIN_ID + ".spge0032";
 
 	public static final String VIEW_SERVERS = ServerUIPlugin.PLUGIN_ID + ".svcp0000";

@@ -244,7 +244,7 @@ public class LaunchingPreferencePage extends PreferencePage implements IWorkbenc
 					launchMode2 = options[b];
 				}
 			});
-			whs.setHelp(buttons[i], ContextIds.PREF_GENERAL_LAUNCH_MODE);
+			whs.setHelp(buttons[i], ContextIds.PREF_GENERAL_LAUNCH_MODE_DEBUG);
 		}
 		launchMode2Buttons = buttons;
 	}
