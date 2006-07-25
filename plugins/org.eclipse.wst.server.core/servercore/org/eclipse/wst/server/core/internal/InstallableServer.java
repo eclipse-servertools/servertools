@@ -14,15 +14,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.PluginVersionIdentifier;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.update.core.IFeature;
 import org.eclipse.update.core.ISite;
 import org.eclipse.update.core.ISiteFeatureReference;
 import org.eclipse.update.core.IURLEntry;
-import org.eclipse.update.core.VersionedIdentifier;
 import org.eclipse.update.standalone.InstallCommand;
+import org.osgi.framework.Version;
 /**
  * 
  */
@@ -180,18 +179,14 @@ public class InstallableServer implements IInstallableServer {
 	}
 
 	public static String getLatestVersion(ISite site, String version, String featureId) {
-		String latestVersion = null;
-		
+		Version latestVersion = new Version(version);
 		try {
-			PluginVersionIdentifier pvi = new PluginVersionIdentifier(version);
 			ISiteFeatureReference[] features = site.getFeatureReferences();
-			
 			for (int i = 0; i < features.length; i++) {
 				if (features[i].getName().equals(featureId)) {
-					VersionedIdentifier vi = features[i].getVersionedIdentifier();
-					if (vi.getVersion().isGreaterThan(pvi)) {
-						latestVersion = vi.getIdentifier();
-						pvi = new PluginVersionIdentifier(latestVersion);
+					Version nextCand = new Version(features[i].getVersionedIdentifier().getVersion().toString());
+					if (nextCand.compareTo(latestVersion) > 0) {
+						latestVersion = nextCand;
 					}
 				}
 			}
@@ -199,9 +194,7 @@ public class InstallableServer implements IInstallableServer {
 			Trace.trace(Trace.SEVERE, "Error searching for latest feature version", e);
 		}
 		
-		if (latestVersion == null)
-			return version;
-		return latestVersion;
+		return latestVersion.toString();
 	}
 
 	public String toString() {
