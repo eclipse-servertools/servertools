@@ -35,6 +35,8 @@ public class ModuleServer {
 	public ModuleServer(IServer server, IModule[] module) {
 		this.server = server;
 		this.module = module;
+		if (module == null)
+			throw new IllegalArgumentException();
 	}
 
 	/**

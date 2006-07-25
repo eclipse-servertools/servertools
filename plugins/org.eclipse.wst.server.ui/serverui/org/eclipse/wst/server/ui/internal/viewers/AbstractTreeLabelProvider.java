@@ -69,7 +69,7 @@ public abstract class AbstractTreeLabelProvider extends BaseLabelProvider {
 		String text = getTextImpl(element);
 		if (decorator != null) {
 			String dec = decorator.decorateText(text, element);
-			if (dec != null)
+			if (dec != null && !dec.equals(""))
 				return dec;
 		}
 		return text;
