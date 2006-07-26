@@ -19,6 +19,10 @@ import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
 import org.eclipse.wst.server.ui.internal.viewers.BaseLabelProvider;
 
 public class ModuleLabelDecorator extends BaseLabelProvider implements ILabelDecorator {
+	public ModuleLabelDecorator() {
+		super(false);
+	}
+
 	public Image decorateImage(Image image, Object element) {
 		try {
 			IModule module = null;

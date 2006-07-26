@@ -24,7 +24,6 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.actions.ActionFactory;
 /**
  * Tree view showing servers and their associations.
@@ -37,15 +36,13 @@ public class ServerTableViewer extends TreeViewer {
 	protected IServerListener serverListener;
 
 	protected static Object deletedElement = null;
-	
-	//protected static Shell fShell;
 
 	// servers that are currently publishing and starting
 	protected static List publishing = new ArrayList();
 	protected static List starting = new ArrayList();
 	
 	protected ServerTableLabelProvider labelProvider;
-	protected ISelectionListener dsListener;
+	//protected ISelectionListener dsListener;
 
 	protected ServersView view;
 	
@@ -220,22 +217,33 @@ public class ServerTableViewer extends TreeViewer {
 				createHoverHelp(tree.getShell(), tree.toDisplay(event.x, event.y));
 			}
 		});*/
-	
+		
 		setContentProvider(new ServerContentProvider());
 		labelProvider = new ServerTableLabelProvider();
+		labelProvider.addListener(new ILabelProviderListener() {
+			public void labelProviderChanged(LabelProviderChangedEvent event) {
+				Object[] obj = event.getElements();
+				if (obj == null)
+					refresh(true);
+				else {
+					int size = obj.length;
+					for (int i = 0; i < size; i++)
+						refresh(obj[i], true);
+				}
+			}
+		});
 		setLabelProvider(labelProvider);
 		setSorter(new ViewerSorter() {
 			// empty
 		});
-	
+		
 		setInput(ROOT);
-	
+		
 		addListeners();
 		
 		IActionBars actionBars = view.getViewSite().getActionBars();
 		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), new ServerAction(getControl().getShell(), this, "Delete it!", ServerActionHelper.ACTION_DELETE));
 		
-		// TODO: add default server listener
 		/*dsListener = new ISelectionListener() {
 			public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 				if (!(selection instanceof IStructuredSelection))
@@ -258,16 +266,16 @@ public class ServerTableViewer extends TreeViewer {
 				}
 				if (proj != null) {
 					final IProject project = proj;
+					final IModule module = ServerUtil.getModule(project);
 					Display.getDefault().asyncExec(new Runnable() {
 						public void run() {
 							if (getTree() == null || getTree().isDisposed())
 								return;
 
 							IServer defaultServer = null;
-							if (project != null) {
-								IProjectProperties props = ServerCore.getProjectProperties(project);
-								defaultServer = props.getDefaultServer();
-							}
+							if (module != null)
+								defaultServer = ServerCore.getDefaultServer(module);
+							
 							IServer oldDefaultServer = labelProvider.getDefaultServer();
 							if ((oldDefaultServer == null && defaultServer == null)
 									|| (oldDefaultServer != null && oldDefaultServer.equals(defaultServer)))
@@ -378,8 +386,9 @@ public class ServerTableViewer extends TreeViewer {
 
 	protected void handleDispose(DisposeEvent event) {
 		stopThread();
-		//view.getViewSite().getPage().removeSelectionListener(dsListener);
-
+		//if (dsListener != null)
+		//	view.getViewSite().getPage().removeSelectionListener(dsListener);
+		
 		ServerCore.removeServerLifecycleListener(serverResourceListener);
 		
 		// remove listeners from server

@@ -117,7 +117,7 @@ public class ModifyModulesComposite extends Composite {
 			IModule[] child = ms.module;
 			IModule[] modules2 = (IModule[]) parentModuleMap.get(child);
 			if (modules2 == null)
-				modules2 = new IModule[0];
+				return null;
 			return new ModuleServer(null, modules2);
 		}
 

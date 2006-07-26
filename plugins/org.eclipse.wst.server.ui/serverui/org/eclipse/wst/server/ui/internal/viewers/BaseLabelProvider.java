@@ -57,6 +57,15 @@ public abstract class BaseLabelProvider implements ILabelProvider {
 	}
 
 	/**
+	 * Use this method to avoid having a label decorator. This method is NOT API.
+	 * 
+	 * @param noDecorator
+	 */
+	public BaseLabelProvider(boolean noDecorator) {
+		super();
+	}
+
+	/**
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
 	 */
 	public void addListener(ILabelProviderListener listener) {

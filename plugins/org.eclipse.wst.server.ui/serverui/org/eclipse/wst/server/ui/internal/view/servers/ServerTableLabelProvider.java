@@ -11,7 +11,7 @@
 package org.eclipse.wst.server.ui.internal.view.servers;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 
 import org.eclipse.ui.ISharedImages;
@@ -19,23 +19,23 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.ui.ServerUICore;
-import org.eclipse.wst.server.ui.internal.DefaultServerLabelDecorator;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.provisional.UIDecoratorManager;
+import org.eclipse.wst.server.ui.internal.viewers.BaseLabelProvider;
 import org.eclipse.swt.graphics.Image;
 /**
  * Server table label provider.
  */
-public class ServerTableLabelProvider implements ITableLabelProvider {
+public class ServerTableLabelProvider extends BaseLabelProvider implements ITableLabelProvider {
 	public static final String[] syncState = new String[] {
 		Messages.viewSyncOkay,
 		Messages.viewSyncRestart,
 		Messages.viewSyncPublish,
 		Messages.viewSyncRestartPublish,
 		Messages.viewSyncPublishing};
-	
+
 	public static final String[] syncStateUnmanaged = new String[] {
 		Messages.viewSyncOkay2,
 		Messages.viewSyncRestart2,
@@ -44,9 +44,7 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 		Messages.viewSyncPublishing2};
 
 	private int count = 0;
-	
-	protected DefaultServerLabelDecorator decorator = new DefaultServerLabelDecorator();
-	
+
 	protected IServer defaultServer;
 
 	/**
@@ -56,18 +54,19 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 		super();
 	}
 
-	public void addListener(ILabelProviderListener listener) {
-		// do nothing
-	}
-
-	public void dispose() {
-		decorator.dispose();
+	/**
+	 * ServerTableLabelProvider constructor comment.
+	 * 
+	 * @param decorator a label decorator
+	 */
+	public ServerTableLabelProvider(ILabelDecorator decorator) {
+		super(decorator);
 	}
 
 	public void setDefaultServer(IServer ds) {
 		defaultServer = ds;
 	}
-	
+
 	public IServer getDefaultServer() {
 		return defaultServer;
 	}
@@ -76,10 +75,19 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 		if (element instanceof ModuleServer) {
 			ModuleServer ms = (ModuleServer) element;
 			if (columnIndex == 0) {
-				return ServerUICore.getLabelProvider().getImage(ms.module[ms.module.length - 1]);
-			} else if (columnIndex == 1)
+				//return ServerUICore.getLabelProvider().getImage(ms.module[ms.module.length - 1]);
+				Image image = ServerUICore.getLabelProvider().getImage(ms.module[ms.module.length - 1]);
+				if (decorator != null) {
+					Image dec = decorator.decorateImage(image, ms);
+					if (dec != null)
+						return dec;
+				}
+				return image;
+			} else if (columnIndex == 1) {
+				if (ms.server == null)
+					return null;
 				return getStateImage(ms.server.getServerType(), ms.server.getModuleState(ms.module), null);
-			else if (columnIndex == 2) {
+			} else if (columnIndex == 2) {
 				IStatus status = ((Server) ms.server).getModuleStatus(ms.module);
 				if (status != null) {
 					ISharedImages sharedImages = ServerUIPlugin.getInstance().getWorkbench().getSharedImages();
@@ -97,11 +105,17 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 		if (columnIndex == 0) {
 			if (server.getServerType() != null) {
 				Image image = ImageResource.getImage(server.getServerType().getId());
-				IStatus status = ((Server) server).getServerStatus();
+				/*IStatus status = ((Server) server).getServerStatus();
 				if (defaultServer != null && defaultServer.equals(server) || status != null) {
 					Image decorated = decorator.decorateImage(image, element);
 					if (decorated != null)
 						return decorated;
+				}*/
+				//return image;
+				if (decorator != null) {
+					Image dec = decorator.decorateImage(image, server);
+					if (dec != null)
+						return dec;
 				}
 				return image;
 			}
@@ -123,9 +137,11 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 			if (columnIndex == 0) {
 				int size = ms.module.length;
 				return ms.module[size - 1].getName();
-			} else if (columnIndex == 1)
+			} else if (columnIndex == 1) {
+				if (ms.server == null)
+					return "";
 				return getStateLabel(ms.server.getServerType(), ms.server.getModuleState(ms.module), null);
-			else if (columnIndex == 2) {
+			} else if (columnIndex == 2) {
 				IStatus status = ((Server) ms.server).getModuleStatus(ms.module);
 				if (status != null)
 					return status.getMessage();
@@ -185,10 +201,6 @@ public class ServerTableLabelProvider implements ITableLabelProvider {
 
 	public boolean isLabelProperty(Object element, String property) {
 		return false;
-	}
-
-	public void removeListener(ILabelProviderListener listener) {
-		// do nothing
 	}
 
 	/**
