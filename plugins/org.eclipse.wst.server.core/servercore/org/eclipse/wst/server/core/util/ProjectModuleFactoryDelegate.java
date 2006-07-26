@@ -61,7 +61,8 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 						if (modules2 != null) {
 							int size2 = modules2.length;
 							for (int j = 0; j < size2; j++)
-								modules.add(modules2[j]);
+								if (modules2[j] != null)
+									modules.add(modules2[j]);
 						}
 					} catch (Throwable t) {
 						Trace.trace(Trace.SEVERE, "Error creating module", t);

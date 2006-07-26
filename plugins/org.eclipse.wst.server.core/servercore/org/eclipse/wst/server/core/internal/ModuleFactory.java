@@ -148,7 +148,7 @@ public class ModuleFactory implements IOrdered {
 		modules.toArray(m);
 		return m;
 	}
-	
+
 	/**
 	 * Return a string representation of this object.
 	 * 
