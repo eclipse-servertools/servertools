@@ -72,7 +72,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	public int getServerState() {
 		if (server != null)
 			return server.getServerState();
-		return serverState;
+		return super.getServerState();
 	}
 
 	public void setServerState(int state) {
@@ -85,7 +85,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 	public int getServerPublishState() {
 		if (server != null)
 			return server.getServerPublishState();
-		return serverState;
+		return super.getServerPublishState();
 	}
 
 	public void setServerPublishState(int state) {
@@ -94,7 +94,72 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		else
 			super.setServerPublishState(state);
 	}
-	
+
+	public IStatus getServerStatus() {
+		if (server != null)
+			return server.getServerStatus();
+		return super.getServerStatus();
+	}
+
+	public void setServerStatus(IStatus status) {
+		if (server != null)
+			server.setServerStatus(status);
+		else
+			super.setServerStatus(status);
+	}
+
+	public int getModuleState(IModule[] module) {
+		if (server != null)
+			return server.getModuleState(module);
+		return super.getModuleState(module);
+	}
+
+	public void setModuleState(IModule[] module, int state) {
+		if (server != null)
+			server.setModuleState(module, state);
+		else
+			super.setModuleState(module, state);
+	}
+
+	public int getModulePublishState(IModule[] module) {
+		if (server != null)
+			return server.getModulePublishState(module);
+		return super.getModulePublishState(module);
+	}
+
+	public void setModulePublishState(IModule[] module, int state) {
+		if (server != null)
+			server.setModulePublishState(module, state);
+		else
+			super.setModulePublishState(module, state);
+	}
+
+	public boolean getModuleRestartState(IModule[] module) {
+		if (server != null)
+			return server.getModuleRestartState(module);
+		return super.getModuleRestartState(module);
+	}
+
+	public void setModuleRestartState(IModule[] module, boolean r) {
+		if (server != null)
+			server.setModuleRestartState(module, r);
+		else
+			super.setModuleRestartState(module, r);
+	}
+
+	public IStatus getModuleStatus(IModule[] module) {
+		if (server != null)
+			return server.getModuleStatus(module);
+		return super.getModuleStatus(module);
+	}
+
+	public void setModuleStatus(IModule[] module, IStatus status) {
+		if (server != null)
+			server.setModuleStatus(module, status);
+		else
+			super.setModuleStatus(module, status);
+	}
+
 	public String getMode() {
 		if (server != null)
 			return server.getMode();
@@ -441,7 +506,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 				for (int i = 0; i < size; i++) {
 					if (!modules.contains(add[i])) {
 						modules.add(add[i]);
-						resetPublishState(new IModule[] { add[i] }, monitor);
+						resetState(new IModule[] { add[i] }, monitor);
 					}
 				}
 			}
@@ -451,7 +516,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 				for (int i = 0; i < size; i++) {
 					if (modules.contains(remove[i])) {
 						modules.remove(remove[i]);
-						resetPublishState(new IModule[] { remove[i] }, monitor);
+						resetState(new IModule[] { remove[i] }, monitor);
 					}
 				}
 			}
@@ -483,9 +548,38 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, "" + e.getLocalizedMessage(), e));
 		}
 	}
-	
+
+	protected void resetState(IModule[] module, IProgressMonitor monitor) {
+		setModulePublishState(module, PUBLISH_STATE_UNKNOWN);
+		setModuleState(module, IServer.STATE_UNKNOWN);
+		setModuleRestartState(module, false);
+		setModuleStatus(module, null);
+		try {
+			IModule[] children = getChildModules(module, monitor);
+			int size = children.length;
+			int size2 = module.length;
+			for (int i = 0; i < size; i++) {
+				IModule[] child = new Module[size2 + 1];
+				System.arraycopy(module, 0, child, 0, size2);
+				child[size2] = children[i];
+				resetPublishState(child, monitor);
+				setModuleState(module, IServer.STATE_UNKNOWN);
+				setModuleRestartState(module, false);
+				setModuleStatus(module, null);
+			}
+		} catch (Exception e) {
+			// ignore
+		}
+	}
+
+	/**
+	 * 
+	 * @param module
+	 * @param monitor
+	 * @deprecated use resetState() instead
+	 */
 	protected void resetPublishState(IModule[] module, IProgressMonitor monitor) {
-		setModulePublishState(module, -1);
+		setModulePublishState(module, PUBLISH_STATE_UNKNOWN);
 		try {
 			IModule[] children = getChildModules(module, monitor);
 			int size = children.length;

@@ -274,19 +274,23 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 * @throws CoreException
 	 */
 	private void publishDir(int deltaKind, Properties p, IModule module[], IProgressMonitor monitor) throws CoreException {
+		List status = new ArrayList();
 		if (deltaKind == REMOVED) {
 			try {
 				String publishPath = (String) p.get(module[0].getId());
-				PublishUtil.deleteDirectory(new File(publishPath), monitor);
+				IStatus[] stat = PublishUtil.deleteDirectory(new File(publishPath), monitor);
+				PublishOperation2.addArrayToList(status, stat);
 			} catch (Exception e) {
 				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, "Could not remove module", e));
 			}
 		} else {
 			IPath to = getServer().getRuntime().getLocation().append("webapps").append(module[0].getName());
 			IModuleResource[] mr = getResources(module);
-			PublishUtil.smartCopy(mr, to, monitor);
+			IStatus[] stat = PublishUtil.publishSmart(mr, to, monitor);
+			PublishOperation2.addArrayToList(status, stat);
 			p.put(module[0].getId(), to.toOSString());
 		}
+		PublishOperation2.throwException(status);
 	}
 
 	/**
@@ -323,7 +327,10 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			}
 			
 			IModuleResource[] mr = getResources(module);
-			PublishUtil.createZipFile(mr, jarPath);
+			IStatus[] stat = PublishUtil.publishZip(mr, jarPath, monitor);
+			List status = new ArrayList();
+			PublishOperation2.addArrayToList(status, stat);
+			PublishOperation2.throwException(status);
 			p.put(module[1].getId(), jarPath.toOSString());
 		}
 	}
@@ -334,7 +341,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			baseDir = getTempDirectory();
 		else
 			baseDir = getServer().getRuntime().getLocation();
-
+		
 		// Publish context configuration for servers that support META-INF/context.xml
 		IStatus status = getTomcatConfiguration().publishContextConfig(baseDir, monitor);
 		if (!status.isOK())

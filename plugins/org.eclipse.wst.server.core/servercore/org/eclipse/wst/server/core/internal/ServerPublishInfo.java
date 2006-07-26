@@ -20,6 +20,7 @@ import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.IModuleFile;
 import org.eclipse.wst.server.core.model.IModuleFolder;
@@ -104,8 +105,20 @@ public class ServerPublishInfo {
 	 * Note: save() must be called manually after making this call.
 	 * 
 	 * @param moduleList
+	 * @deprecated Use removeDeletedModulePublishInfo(Server, List) instead
 	 */
 	public void removeDeletedModulePublishInfo(List moduleList) {
+		removeDeletedModulePublishInfo(null, moduleList);
+	}
+
+	/**
+	 * Removes successfully deleted modules from the next publish.
+	 * Note: save() must be called manually after making this call.
+	 * 
+	 * @param server a server
+	 * @param moduleList the modules currently on the server
+	 */
+	public void removeDeletedModulePublishInfo(Server server, List moduleList) {
 		int size = moduleList.size();
 		List removed = new ArrayList();
 		
@@ -120,6 +133,17 @@ public class ServerPublishInfo {
 				if (key != null && key.equals(key2))
 					found = true;
 			}
+			
+			if (server != null) {
+				try {
+					Integer in = (Integer) server.modulePublishState.get(key);
+					if (in != null && in.intValue() != IServer.PUBLISH_STATE_NONE)
+						found = true;
+				} catch (Exception e) {
+					// ignore
+				}
+			}
+			
 			if (!found)
 				removed.add(key);
 		}
@@ -136,11 +160,11 @@ public class ServerPublishInfo {
 	 */
 	protected ModulePublishInfo getModulePublishInfo(IModule[] module) {
 		String key = getKey(module);
-
+		
 		// check if it now exists
 		if (modulePublishInfo.containsKey(key))
 			return (ModulePublishInfo) modulePublishInfo.get(key);
-	
+		
 		// have to create a new one
 		IModule mod = module[module.length - 1];
 		ModulePublishInfo mpi = new ModulePublishInfo(getKey(module), mod.getName(), mod.getModuleType());

@@ -18,7 +18,7 @@ public class Messages extends NLS {
 	public static String errorLocation;
 	public static String errorJRE;
 	public static String classpathContainerDescription;
-	
+
 	public static String copyingTask;
 	public static String deletingTask;
 	public static String errorCopyingFile;
@@ -29,7 +29,10 @@ public class Messages extends NLS {
 	public static String updateClasspathContainers;
 	public static String errorNoRuntime;
 	public static String errorFacet;
-	
+	public static String errorDeleting;
+	public static String errorNotADirectory;
+	public static String errorMkdir;
+
 	static {
 		NLS.initializeMessages(JavaServerPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);
 	}

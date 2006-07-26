@@ -32,6 +32,7 @@ public class Messages extends NLS {
 	public static String loadingTask;
 	public static String errorCouldNotLoadConfiguration;
 	public static String savingTask;
+	public static String errorPublish;
 	public static String errorCouldNotSaveConfiguration;
 	public static String updatingConfigurationTask;
 	public static String canAddModule;

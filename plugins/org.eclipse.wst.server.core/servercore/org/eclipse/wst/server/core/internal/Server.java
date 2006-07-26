@@ -803,7 +803,7 @@ public class Server extends Base implements IServer {
 				}
 			}, monitor);
 			
-			getServerPublishInfo().removeDeletedModulePublishInfo(modules2);
+			getServerPublishInfo().removeDeletedModulePublishInfo(this, modules2);
 			getServerPublishInfo().clearCache();
 			getServerPublishInfo().save();
 			
@@ -2254,7 +2254,7 @@ public class Server extends Base implements IServer {
 		moduleStatus.put(getKey(module), status);
 		//fireServerModuleStateChangeEvent(module);
 	}
-	
+
 	public IStatus getModuleStatus(IModule[] module) {
 		if (module == null)
 			throw new IllegalArgumentException("Module cannot be null");

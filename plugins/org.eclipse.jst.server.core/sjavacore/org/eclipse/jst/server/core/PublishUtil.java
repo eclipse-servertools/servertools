@@ -11,10 +11,13 @@
 package org.eclipse.jst.server.core;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.core.internal.JavaServerPlugin;
@@ -91,8 +94,78 @@ public class PublishUtil {
 	}
 
 	/**
+	 * Smart copy the given module resources to the given path.
+	 * 
+	 * @param resources
+	 * @param path
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @throws CoreException
+	 * @deprecated This method only returns a single error in the case of failure. Use publishSmart() instead.
+	 */
+	public static void smartCopy(IModuleResource[] resources, IPath path, IProgressMonitor monitor) throws CoreException {
+		IStatus[] status = PublishUtil.publishSmart(resources, path, monitor);
+		if (status != null && status.length > 0)
+			throw new CoreException(status[0]);
+	}
+
+	/**
+	 * Handle a delta publish.
+	 * 
+	 * @param kind
+	 * @param path
+	 * @param delta
+	 * @throws CoreException
+	 * @deprecated This method only returns a single error in the case of failure. Use publishDelta() instead.
+	 */
+	public static void handleDelta(int kind, IPath path, IModuleResourceDelta delta) throws CoreException {
+		IStatus[] status = PublishUtil.publishDelta(delta, path, null);
+		if (status != null && status.length > 0)
+			throw new CoreException(status[0]);
+	}
+
+	/**
+	 * 
+	 * @param path
+	 * @param file
+	 * @deprecated does not fail or return status if delete doesn't work
+	 */
+	protected static void deleteFile(IPath path, IModuleFile file) {
+		Trace.trace(Trace.PUBLISHING, "Deleting: " + file.getName() + " from " + path.toString());
+		IPath path2 = path.append(file.getModuleRelativePath()).append(file.getName());
+		path2.toFile().delete();
+	}
+
+	/**
+	 * 
+	 * @param resources
+	 * @param path
+	 * @throws CoreException
+	 * @deprecated This method only returns a single error in the case of failure. Use publishFull() instead
+	 */
+	public static void copy(IModuleResource[] resources, IPath path) throws CoreException {
+		IStatus[] status = PublishUtil.publishFull(resources, path, null);
+		if (status != null && status.length > 0)
+			throw new CoreException(status[0]);
+	}
+
+	/**
+	 * Creates a new zip file containing the given module resources. Deletes the existing file
+	 * (and doesn't create a new one) if resources is null or empty.
+	 * 
+	 * @param resources
+	 * @param zipPath
+	 * @throws CoreException
+	 */
+	public static void createZipFile(IModuleResource[] resources, IPath zipPath) throws CoreException {
+		IStatus[] status = PublishUtil.publishZip(resources, zipPath, null);
+		if (status != null && status.length > 0)
+			throw new CoreException(status[0]);
+	}
+
+	/**
 	 * Copy a file from a to b. Closes the input stream after use.
-	 *
+	 * 
 	 * @param in an input stream
 	 * @param to a path to copy to. the directory must already exist
 	 * @param ts timestamp
@@ -122,6 +195,8 @@ public class PublishUtil {
 			
 			if (ts != IResource.NULL_STAMP && ts != 0)
 				file.setLastModified(ts);
+		} catch (CoreException e) {
+			throw e;
 		} catch (Exception e) {
 			IPath path = mf.getModuleRelativePath().append(mf.getName());
 			Trace.trace(Trace.SEVERE, "Error copying file: " + to.toOSString() + " to " + path.toOSString(), e);
@@ -144,61 +219,72 @@ public class PublishUtil {
 		}
 	}
 
-	private static void copyFile(IModuleFile mf, IPath path) throws CoreException {
-		Trace.trace(Trace.PUBLISHING, "Publishing: " + mf.getName() + " to " + path.toString());
-		IFile file = (IFile) mf.getAdapter(IFile.class);
-		if (file != null) {
-			copyFile(file.getContents(), path, file.getLocalTimeStamp(), mf);
-		} else {
-			File file2 = (File) mf.getAdapter(File.class);
-			InputStream in = null;
-			try {
-				in = new FileInputStream(file2);
-			} catch (IOException e) {
-				throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorReading, file2.getAbsolutePath()), e));
-			}
-			copyFile(in, path, file2.lastModified(), mf);
-		}
-	}
-
 	/**
-	 * Recursively deletes a directory.
+	 * Utility method to recursively delete a directory.
 	 *
-	 * @param dir java.io.File
-	 * @param monitor a progress monitor, or <code>null</code>
+	 * @param dir a directory
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return a possibly-empty array of error and warning status
 	 */
-	public static void deleteDirectory(File dir, IProgressMonitor monitor) {
+	public static IStatus[] deleteDirectory(File dir, IProgressMonitor monitor) {
+		if (!dir.exists() || !dir.isDirectory())
+			return new IStatus[] { new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorNotADirectory, dir.getAbsolutePath()), null) };
+		
+		List status = new ArrayList();
+		
 		try {
-			if (!dir.exists() || !dir.isDirectory())
-				return;
-	
 			File[] files = dir.listFiles();
 			int size = files.length;
 			monitor = ProgressUtil.getMonitorFor(monitor);
 			monitor.beginTask(NLS.bind(Messages.deletingTask, new String[] { dir.getAbsolutePath() }), size * 10);
-	
+			
 			// cycle through files
+			boolean deleteCurrent = true;
 			for (int i = 0; i < size; i++) {
 				File current = files[i];
 				if (current.isFile()) {
-					current.delete();
+					if (!current.delete()) {
+						status.add(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDeleting, files[i].getAbsolutePath()), null));
+						deleteCurrent = false;
+					}
 					monitor.worked(10);
 				} else if (current.isDirectory()) {
 					monitor.subTask(NLS.bind(Messages.deletingTask, new String[] {current.getAbsolutePath()}));
-					deleteDirectory(current, ProgressUtil.getSubMonitorFor(monitor, 10));
+					IStatus[] stat = deleteDirectory(current, ProgressUtil.getSubMonitorFor(monitor, 10));
+					if (stat != null && stat.length > 0) {
+						deleteCurrent = false;
+						addArrayToList(status, stat);
+					}
 				}
 			}
-			dir.delete();
+			if (deleteCurrent && !dir.delete())
+				status.add(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDeleting, dir.getAbsolutePath()), null));
 			monitor.done();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error deleting directory " + dir.getAbsolutePath(), e);
+			status.add(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, e.getLocalizedMessage(), null));
 		}
-	}
-	
-	public static void smartCopy(IModuleResource[] resources, IPath path, IProgressMonitor monitor) throws CoreException {
-		if (resources == null)
-			return;
 		
+		IStatus[] stat = new IStatus[status.size()];
+		status.toArray(stat);
+		return stat;
+	}
+
+	/**
+	 * Smart copy the given module resources to the given path.
+	 * 
+	 * @param resources an array of module resources
+	 * @param path an external path to copy to
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return a possibly-empty array of error and warning status 
+	 */
+	public static IStatus[] publishSmart(IModuleResource[] resources, IPath path, IProgressMonitor monitor) {
+		if (resources == null)
+			return new IStatus[0];
+		
+		List status = new ArrayList();
 		File toDir = path.toFile();
 		File[] toFiles = toDir.listFiles();
 		int fromSize = resources.length;
@@ -214,23 +300,37 @@ public class PublishUtil {
 					if (name.equals(resources[j].getName()) && isDir == resources[j] instanceof IModuleFolder)
 						found = true;
 				}
-	
+				
 				// delete file if it can't be found or isn't the correct type
 				if (!found) {
-					if (isDir)
-						deleteDirectory(toFiles[i], null);
-					else
-						toFiles[i].delete();
+					if (isDir) {
+						IStatus[] stat = deleteDirectory(toFiles[i], null);
+						addArrayToList(status, stat);
+					} else {
+						if (!toFiles[i].delete())
+							status.add(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDeleting, toFiles[i].getAbsolutePath()), null));
+					}
 				}
 				if (monitor.isCanceled())
-					return;
+					return new IStatus[] { Status.CANCEL_STATUS };
 			}
 		} else {
-			if (toDir.isFile())
-				toDir.delete();
-			toDir.mkdir();
+			if (toDir.isFile()) {
+				if (!toDir.delete()) {
+					status.add(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDeleting, toDir.getAbsolutePath()), null));
+					IStatus[] stat = new IStatus[status.size()];
+					status.toArray(stat);
+					return stat;
+				}
+			}
+			if (!toDir.mkdir()) {
+				status.add(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorMkdir, toDir.getAbsolutePath()), null));
+				IStatus[] stat = new IStatus[status.size()];
+				status.toArray(stat);
+				return stat;
+			}
 		}
-			
+		
 		monitor.worked(50);
 		
 		// cycle through files and only copy when it doesn't exist
@@ -268,65 +368,112 @@ public class PublishUtil {
 						copy = false;
 				}
 				
-				if (copy)
-					copyFile(mf, toPath);
+				if (copy) {
+					try {
+						copyFile(mf, toPath);
+					} catch (CoreException ce) {
+						status.add(ce.getStatus());
+					}
+				}
 				monitor.worked(dw);
 			} else { //if (currentIsDir) {
 				IModuleFolder folder = (IModuleFolder) current;
 				IModuleResource[] children = folder.members();
 				monitor.subTask(NLS.bind(Messages.copyingTask, new String[] {resources[i].getName(), current.getName()}));
-				smartCopy(children, toPath, ProgressUtil.getSubMonitorFor(monitor, dw));
+				IStatus[] stat = publishSmart(children, toPath, ProgressUtil.getSubMonitorFor(monitor, dw));
+				addArrayToList(status, stat);
 			}
 			if (monitor.isCanceled())
-				return;
+				return new IStatus[] { Status.CANCEL_STATUS };
 		}
 		monitor.worked(500 - dw * toSize);
 		monitor.done();
+		
+		IStatus[] stat = new IStatus[status.size()];
+		status.toArray(stat);
+		return stat;
 	}
 
-	public static void handleDelta(int kind, IPath path, IModuleResourceDelta delta) throws CoreException {
+	/**
+	 * Handle a delta publish.
+	 * 
+	 * @param delta a module resource delta
+	 * @param path the path to publish to
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return a possibly-empty array of error and warning status
+	 */
+	public static IStatus[] publishDelta(IModuleResourceDelta delta, IPath path, IProgressMonitor monitor) {
+		List status = new ArrayList();
+		
 		IModuleResource resource = delta.getModuleResource();
 		int kind2 = delta.getKind();
 		
 		if (resource instanceof IModuleFile) {
 			IModuleFile file = (IModuleFile) resource;
-			if (kind2 == IModuleResourceDelta.REMOVED)
-				deleteFile(path, file);
-			else
-				copyFile2(file, path);
-			return;
+			try {
+				if (kind2 == IModuleResourceDelta.REMOVED)
+					deleteFile2(path, file);
+				else {
+					IPath path2 = path.append(file.getModuleRelativePath()).append(file.getName());
+					File f = path2.toFile().getParentFile();
+					if (!f.exists())
+						f.mkdirs();
+					
+					copyFile(file, path2);
+				}
+			} catch (CoreException ce) {
+				status.add(ce.getStatus());
+			}
+			IStatus[] stat = new IStatus[status.size()];
+			status.toArray(stat);
+			return stat;
 		}
 		
 		if (kind2 == IModuleResourceDelta.ADDED) {
 			IPath path2 = path.append(resource.getModuleRelativePath()).append(resource.getName());
-			path2.toFile().mkdirs();
-		} else if (kind == IModuleResourceDelta.REMOVED) {
+			File file = path2.toFile();
+			if (!file.exists() && !file.mkdirs()) {
+				status.add(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorMkdir, path2), null));
+				IStatus[] stat = new IStatus[status.size()];
+				status.toArray(stat);
+				return stat;
+			}
+		} else if (kind2 == IModuleResourceDelta.REMOVED) {
 			IPath path2 = path.append(resource.getModuleRelativePath()).append(resource.getName());
-			path2.toFile().delete();
+			File file = path2.toFile();
+			if (file.exists() && !file.delete()) {
+				status.add(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDelete, path2), null));
+				IStatus[] stat = new IStatus[status.size()];
+				status.toArray(stat);
+				return stat;
+			}
 		}
+		
 		IModuleResourceDelta[] childDeltas = delta.getAffectedChildren();
 		int size = childDeltas.length;
 		for (int i = 0; i < size; i++) {
-			handleDelta(kind, path, childDeltas[i]);
+			IStatus[] stat = publishDelta(childDeltas[i], path, monitor);
+			addArrayToList(status, stat);
 		}
+		IStatus[] stat = new IStatus[status.size()];
+		status.toArray(stat);
+		return stat;
 	}
 
-	protected static void deleteFile(IPath path, IModuleFile file) {
+	private static void deleteFile2(IPath path, IModuleFile file) throws CoreException {
 		Trace.trace(Trace.PUBLISHING, "Deleting: " + file.getName() + " from " + path.toString());
 		IPath path2 = path.append(file.getModuleRelativePath()).append(file.getName());
-		path2.toFile().delete();
+		if (path2.toFile().delete())
+			throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDeleting, path2), null));
 	}
 
-	private static void copyFile2(IModuleFile mf, IPath path) throws CoreException {
-		Trace.trace(Trace.PUBLISHING, "Publishing: " + mf.getName() + " to " + path.toString());
-		IPath path3 = path.append(mf.getModuleRelativePath()).append(mf.getName());
-		File f = path3.toFile().getParentFile();
-		if (!f.exists())
-			f.mkdirs();
+	private static void copyFile(IModuleFile mf, IPath path) throws CoreException {
+		Trace.trace(Trace.PUBLISHING, "Copying: " + mf.getName() + " to " + path.toString());
 		
 		IFile file = (IFile) mf.getAdapter(IFile.class);
 		if (file != null)
-			copyFile(file.getContents(), path3, file.getLocalTimeStamp(), mf);
+			copyFile(file.getContents(), path, file.getLocalTimeStamp(), mf);
 		else {
 			File file2 = (File) mf.getAdapter(File.class);
 			InputStream in = null;
@@ -335,69 +482,83 @@ public class PublishUtil {
 			} catch (IOException e) {
 				throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorReading, file2.getAbsolutePath()), e));
 			}
-			copyFile(in, path3, file2.lastModified(), mf);
+			copyFile(in, path, file2.lastModified(), mf);
 		}
 	}
 
-	public static void copy(IModuleResource[] resources, IPath path) throws CoreException {
+	/**
+	 * Publish the given module resources to the given path.
+	 * 
+	 * @param resources an array of module resources
+	 * @param path a path to publish to
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return a possibly-empty array of error and warning status
+	 */
+	public static IStatus[] publishFull(IModuleResource[] resources, IPath path, IProgressMonitor monitor) {
 		if (resources == null)
-			return;
+			return new IStatus[0];
 		
+		List status = new ArrayList();
 		int size = resources.length;
 		for (int i = 0; i < size; i++) {
-			copy(resources[i], path);
+			IStatus[] stat = copy(resources[i], path, monitor);
+			addArrayToList(status, stat);
 		}
+		
+		IStatus[] stat = new IStatus[status.size()];
+		status.toArray(stat);
+		return stat;
 	}
 
-	private static void copy(IModuleResource resource, IPath path) throws CoreException {
-		Trace.trace(Trace.PUBLISHING, "Publishing: " + resource.getName() + " to " + path.toString());
+	private static IStatus[] copy(IModuleResource resource, IPath path, IProgressMonitor monitor) {
+		Trace.trace(Trace.PUBLISHING, "Copying: " + resource.getName() + " to " + path.toString());
+		List status = new ArrayList();
 		if (resource instanceof IModuleFolder) {
 			IModuleFolder folder = (IModuleFolder) resource;
-			copy(folder.members(), path);
+			IStatus[] stat = publishFull(folder.members(), path, monitor);
+			addArrayToList(status, stat);
 		} else {
 			IModuleFile mf = (IModuleFile) resource;
-			IPath path3 = path.append(mf.getModuleRelativePath()).append(mf.getName());
-			File f = path3.toFile().getParentFile();
+			path = path.append(mf.getModuleRelativePath()).append(mf.getName());
+			File f = path.toFile().getParentFile();
 			if (!f.exists())
 				f.mkdirs();
-			IFile file = (IFile) mf.getAdapter(IFile.class);
-			if (file != null)
-				copyFile(file.getContents(), path3, file.getLocalTimeStamp(), mf);
-			else {
-				File file2 = (File) mf.getAdapter(File.class);
-				InputStream in = null;
-				try {
-					in = new FileInputStream(file2);
-				} catch (IOException e) {
-					throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorReading, file2.getAbsolutePath()), e));
-				}
-				copyFile(in, path3, file2.lastModified(), mf);
+			try {
+				copyFile(mf, path);
+			} catch (CoreException ce) {
+				status.add(ce.getStatus());
 			}
 		}
+		IStatus[] stat = new IStatus[status.size()];
+		status.toArray(stat);
+		return stat;
 	}
 
 	/**
 	 * Creates a new zip file containing the given module resources. Deletes the existing file
 	 * (and doesn't create a new one) if resources is null or empty.
 	 * 
-	 * @param resources
-	 * @param zipPath
-	 * @throws CoreException
+	 * @param resources an array of module resources
+	 * @param path the path where the zip file should be created 
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return a possibly-empty array of error and warning status
 	 */
-	public static void createZipFile(IModuleResource[] resources, IPath zipPath) throws CoreException {
+	public static IStatus[] publishZip(IModuleResource[] resources, IPath path, IProgressMonitor monitor) {
 		if (resources == null || resources.length == 0) {
 			// should also check if resources consists of all empty directories
-			File file = zipPath.toFile();
+			File file = path.toFile();
 			if (file.exists())
 				file.delete();
-			return;
+			return new IStatus[0];
 		}
 		
 		File tempFile = null;
 		try {
-			File file = zipPath.toFile();
+			File file = path.toFile();
 			File tempDir = JavaServerPlugin.getInstance().getStateLocation().toFile();
-			tempFile = File.createTempFile("tmp", "." + zipPath.getFileExtension(), tempDir);
+			tempFile = File.createTempFile("tmp", "." + path.getFileExtension(), tempDir);
 			
 			BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(tempFile));
 			ZipOutputStream zout = new ZipOutputStream(bout);
@@ -405,13 +566,16 @@ public class PublishUtil {
 			zout.close();
 			
 			moveTempFile(tempFile, file);
+		} catch (CoreException e) {
+			return new IStatus[] { e.getStatus() };
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error zipping", e);
-			throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCreatingZipFile, zipPath.lastSegment(), e.getLocalizedMessage()), e));
+			return new Status[] { new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCreatingZipFile, path.lastSegment(), e.getLocalizedMessage()), e) };
 		} finally {
 			if (tempFile != null && tempFile.exists())
 				tempFile.deleteOnExit();
 		}
+		return new IStatus[0];
 	}
 
 	private static void addZipEntries(ZipOutputStream zout, IModuleResource[] resources) throws Exception {
@@ -420,6 +584,25 @@ public class PublishUtil {
 			if (resources[i] instanceof IModuleFolder) {
 				IModuleFolder mf = (IModuleFolder) resources[i];
 				IModuleResource[] res = mf.members();
+				
+				IPath path = mf.getModuleRelativePath().append(mf.getName());
+				String entryPath = path.toPortableString();
+				if (!entryPath.endsWith("/"))
+					entryPath += '/';
+				
+				ZipEntry ze = new ZipEntry(entryPath);
+				
+				long ts = 0;
+				IFolder folder = (IFolder) mf.getAdapter(IFolder.class);
+				if (folder != null)
+					ts = folder.getLocalTimeStamp();
+				
+				if (ts != IResource.NULL_STAMP && ts != 0)
+					ze.setTime(ts);
+				
+				zout.putNextEntry(ze);
+				zout.closeEntry();
+				
 				addZipEntries(zout, res);
 				continue;
 			}
@@ -467,17 +650,17 @@ public class PublishUtil {
 	 *  
 	 * @param tempFile
 	 * @param file
-	 * @throws Exception
+	 * @throws CoreException
 	 */
-	private static void moveTempFile(File tempFile, File file) throws Exception {
+	private static void moveTempFile(File tempFile, File file) throws CoreException {
 		if (file.exists()) {
 			if (!safeDelete(file)) {
 				tempFile.delete();
-				throw new Exception(NLS.bind(Messages.errorDelete, file.toString()));
+				throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDelete, file.toString()), null));
 			}
 		}
 		if (!safeRename(tempFile, file))
-			throw new Exception(NLS.bind(Messages.errorRename, tempFile.toString()));
+			throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorRename, tempFile.toString()), null));
 	}
 
 	/**
@@ -531,5 +714,14 @@ public class PublishUtil {
 			count++;
 		}
 		return false;
+	}
+
+	private static void addArrayToList(List list, IStatus[] a) {
+		if (list == null || a == null || a.length == 0)
+			return;
+		
+		int size = a.length;
+		for (int i = 0; i < size; i++)
+			list.add(a[i]);
 	}
 }

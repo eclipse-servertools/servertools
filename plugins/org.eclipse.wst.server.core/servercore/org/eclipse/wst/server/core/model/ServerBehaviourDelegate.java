@@ -571,9 +571,9 @@ public abstract class ServerBehaviourDelegate {
 		
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.beginTask(NLS.bind(Messages.publishing, getServer().getName()), size);
-
+		
 		MultiStatus tempMulti = new MultiStatus(ServerPlugin.PLUGIN_ID, 0, "", null);
-
+		
 		if (monitor.isCanceled())
 			return Status.CANCEL_STATUS;
 		
@@ -587,15 +587,16 @@ public abstract class ServerBehaviourDelegate {
 		}
 		
 		// perform tasks
-		MultiStatus taskStatus = performTasks(tasks, monitor);
-		if (taskStatus != null)
-			tempMulti.addAll(taskStatus);
+		if (!monitor.isCanceled()) {
+			MultiStatus taskStatus = performTasks(tasks, monitor);
+			if (taskStatus != null && !taskStatus.isOK())
+				tempMulti.addAll(taskStatus);
+		}
 		
 		// publish the server
 		try {
-			if (!monitor.isCanceled()) {
+			if (!monitor.isCanceled())
 				publishServer(kind, ProgressUtil.getSubMonitorFor(monitor, 1000));
-			}
 		} catch (CoreException ce) {
 			Trace.trace(Trace.INFO, "CoreException publishing to " + toString(), ce);
 			tempMulti.add(ce.getStatus());
@@ -669,7 +670,10 @@ public abstract class ServerBehaviourDelegate {
 		
 		IStatus status = Status.OK_STATUS;
 		try {
-			publishModule(kind, deltaKind, module, monitor);
+			int kind2 = kind;
+			if (getServer().getModulePublishState(module) == IServer.PUBLISH_STATE_UNKNOWN)
+				kind2 = IServer.PUBLISH_FULL;
+			publishModule(kind2, deltaKind, module, monitor);
 		} catch (CoreException ce) {
 			status = ce.getStatus();
 		} catch (Exception e) {
@@ -750,7 +754,8 @@ public abstract class ServerBehaviourDelegate {
 		// publish modules
 		for (int i = 0; i < size; i++) {
 			IStatus status = publishModule(kind, (IModule[]) modules.get(i), ((Integer)deltaKind.get(i)).intValue(), ProgressUtil.getSubMonitorFor(monitor, 3000));
-			multi.add(status);
+			if (status != null && !status.isOK())
+				multi.add(status);
 		}
 	}
 
