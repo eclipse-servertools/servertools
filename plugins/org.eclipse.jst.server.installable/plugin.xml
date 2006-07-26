@@ -9,7 +9,7 @@
       vendor="%vendorApache"
       version="1.0"
       featureId="org.apache.geronimo.feature"
-      featureVersion="1.0.0"
+      featureVersion="1.1.0"
       featureSite="http://www.apache.org/dist/geronimo/eclipse/updates/">
     </installableServer>
     <installableServer
