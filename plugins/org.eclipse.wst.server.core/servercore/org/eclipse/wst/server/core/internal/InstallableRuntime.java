@@ -11,6 +11,7 @@
 package org.eclipse.wst.server.core.internal;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -108,10 +109,10 @@ public class InstallableRuntime implements IInstallableRuntime {
 		String featureId = getFeatureId();
 		String featureVersion = getFeatureVersion();
 		String fromSite = getFromSite();
-
+		
 		if (featureId == null || featureVersion == null || fromSite == null)
 			return null;
-
+		
 		ISite site = InstallableRuntime.getSite(fromSite, monitor);
 		ISiteFeatureReference[] featureRefs = site.getFeatureReferences();
 		for (int i = 0; i < featureRefs.length; i++) {
@@ -210,9 +211,15 @@ public class InstallableRuntime implements IInstallableRuntime {
 		ISite site = getSite(fromSite, monitor);
 		fromSite = getMirror(fromSite, site);
 		
+		boolean install = false;
+		if (getBundleId() != null) {
+			install = Platform.getBundles(getBundleId(), getBundleVersion()) == null;
+		} else if (getPath() != null) {
+			install = !new File(getFeatureArchivePath()).exists();
+		}
+		
 		// download and install plugins
-		Bundle bundles[] = Platform.getBundles(getBundleId(), getBundleVersion());
-		if (bundles == null) {
+		if (install) {
 			try {
 				monitor.setTaskName("Installing feature");
 				InstallCommand command = new InstallCommand(featureId, featureVersion, fromSite, null, "false");
@@ -228,17 +235,24 @@ public class InstallableRuntime implements IInstallableRuntime {
 			}
 		}
 		
-		// unzip from bundle into path
 		try {
-			byte[] buf = new byte[8192];
-			bundles = Platform.getBundles(getBundleId(), getBundleVersion());
-			Bundle bundle = getBundleVersion(bundles, getBundleVersion());
-			URL url = bundle.getEntry(getPath());
-			url = FileLocator.resolve(url);
+			URL url = null;
+			if (getBundleId() != null) {
+				Bundle[] bundles = Platform.getBundles(getBundleId(), getBundleVersion());
+				Bundle bundle = getBundleVersion(bundles, getBundleVersion());
+				url = bundle.getEntry(getPath());
+				url = FileLocator.resolve(url);
+			} else {
+				// data archive used so get the url of the runtime archive from inside the feature
+				url = new File(getFeatureArchivePath()).toURL();
+			}
+			
+			// unzip from bundle into path
 			InputStream in = url.openStream();
 			BufferedInputStream bin = new BufferedInputStream(in);
 			ZipInputStream zin = new ZipInputStream(bin);
 			ZipEntry entry = zin.getNextEntry();
+			byte[] buf = new byte[8192];
 			while (entry != null) {
 				String name = entry.getName();
 				monitor.setTaskName("Unzipping: " + name);
@@ -262,6 +276,12 @@ public class InstallableRuntime implements IInstallableRuntime {
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
 					NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
 		} 
+	}
+
+	private String getFeatureArchivePath() {
+		String feature = getFeatureId() + "_" + getFeatureVersion();
+		String platformLoc = Platform.getInstallLocation().getURL().getFile();
+		return platformLoc.concat(File.separator + Site.DEFAULT_INSTALLED_FEATURE_PATH + feature + File.separator + getPath());
 	}
 
 	public String toString() {

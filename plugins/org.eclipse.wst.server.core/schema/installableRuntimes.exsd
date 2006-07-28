@@ -77,7 +77,7 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="bundleId" type="string" use="required">
+         <attribute name="bundleId" type="string">
             <annotation>
                <documentation>
                   the id of the bundle in which the runtime zip is in
@@ -94,7 +94,7 @@
          <attribute name="path" type="string" use="required">
             <annotation>
                <documentation>
-                  the relative path of the runtime zip inside the bundle
+                  if bundleId is specified then represents the relative path of the runtime zip inside the bundle, otherwise it assumes a relative path of the runtime archive inside the feature directory
                </documentation>
             </annotation>
          </attribute>
@@ -129,6 +129,33 @@
             path=&quot;/zips/myRuntime.zip&quot;/&gt;
    &lt;/extension&gt;
 &lt;/pre&gt;
+
+The following is an example of using the installable runtime extension point but having the runtime archive as a data archive in the feature.
+
+&lt;pre&gt;
+   &lt;extension 
+         point=&quot;org.eclipse.wst.server.core.installableRuntimes&quot;&gt;
+      &lt;installableRuntime
+            id=&quot;com.myruntime.id&quot;
+            featureVersion=&quot;1.0.0&quot;
+            featureId=&quot;com.myfeature&quot;
+            featureSite=&quot;xyz&quot;
+            path=&quot;myRuntime-1.0.zip&quot;/&gt;
+   &lt;/extension&gt;
+&lt;/pre&gt;
+
+In the feature manifest and data entry should be entered for the runtime archive as well as an installhandler. The default install handler can be used which will install the data archive inside the feature.
+
+&lt;data
+    id=&quot;myRuntime-1.0.zip&quot;
+    download-size=&quot;0&quot;
+    install-size=&quot;0&quot;/&gt;
+
+&lt;install-handler handler=&quot;org.eclipse.update.core.DefaultInstallHandler&quot;/&gt;
+
+If the runtime archive is not packaged within the feature, then you need to map the archive path to a relative or absolute url to the site.xml
+
+&lt;archive path=&quot;features/com.myfeature_1.0.0/myRuntime-1.0.zip&quot; url=&quot;../../1.0/myRuntime-1.0.zip&quot;/&gt;
       </documentation>
    </annotation>
 
