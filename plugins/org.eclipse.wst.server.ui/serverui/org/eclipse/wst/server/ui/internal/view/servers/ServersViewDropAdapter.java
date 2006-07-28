@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,8 @@
  *     IBM Corporation - Initial API and implementation
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
+
+import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -31,6 +33,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 /**
@@ -57,11 +60,25 @@ public class ServersViewDropAdapter extends ViewerDropAdapter {
 		if (server == null)
 			return false;
 		
+		Iterator iterator = null;
 		if (data instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) data;
-			data = sel.getFirstElement();
+			iterator = sel.iterator();
 		}
 		
+		if (iterator == null)
+			return false;
+		
+		boolean b = true;
+		while (iterator.hasNext()) {
+			Object data2 = iterator.next();
+			if (!doSel(server, data2))
+				b = false;
+		}
+		return b;
+	}
+
+	protected boolean doSel(IServer server, Object data) {
 		// check if the selection is a project (module) that we can add to the server
 		IProject project = (IProject) Platform.getAdapterManager().getAdapter(data, IProject.class);
 		if (project != null) {
@@ -87,6 +104,20 @@ public class ServersViewDropAdapter extends ViewerDropAdapter {
 		final IServer finalServer = server;
 		RunOnServerActionDelegate ros = new RunOnServerActionDelegate() {
 			public IServer getServer(IModule module, String launchMode, IProgressMonitor monitor) {
+				if (!ServerUIPlugin.isCompatibleWithLaunchMode(finalServer, launchMode))
+					return null;
+				
+				if (!ServerUtil.containsModule(finalServer, module, monitor)) {
+					IServerWorkingCopy wc = finalServer.createWorkingCopy();
+					try {
+						ServerUtil.modifyModules(wc, new IModule[] { module }, new IModule[0], monitor);
+						wc.save(false, monitor);
+					} catch (CoreException ce) {
+						Trace.trace(Trace.SEVERE, "Could not add module to server", ce);
+						return null;
+					}
+				}
+				
 				return finalServer;
 			}
 		};
