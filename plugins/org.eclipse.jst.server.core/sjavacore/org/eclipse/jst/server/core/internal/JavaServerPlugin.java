@@ -83,15 +83,15 @@ public class JavaServerPlugin extends Plugin {
 		
 		runtimeListener = new IRuntimeLifecycleListener() {
 			public void runtimeAdded(IRuntime runtime) {
-				handleRuntimeChange(runtime);
+				handleRuntimeChange(runtime, 0);
 			}
 
 			public void runtimeChanged(IRuntime runtime) {
-				handleRuntimeChange(runtime);
+				handleRuntimeChange(runtime, 1);
 			}
 
 			public void runtimeRemoved(IRuntime runtime) {
-				handleRuntimeChange(runtime);
+				handleRuntimeChange(runtime, 2);
 			}
 		};
 		
@@ -110,15 +110,25 @@ public class JavaServerPlugin extends Plugin {
 	 * Handle a runtime change by potentially updating the classpath container.
 	 * 
 	 * @param runtime a runtime
+	 * @deprecated should not be called directly, will be removed
 	 */
-	protected void handleRuntimeChange(final IRuntime runtime) {
+	protected void handleRuntimeChange(IRuntime runtime) {
+		handleRuntimeChange(runtime, 1);
+	}
+
+	/**
+	 * Handle a runtime change by potentially updating the classpath container.
+	 * 
+	 * @param runtime a runtime
+	 */
+	protected void handleRuntimeChange(final IRuntime runtime, final int act) {
 		if (runtime == null)
 			throw new IllegalArgumentException();
 		
 		Trace.trace(Trace.FINEST, "Possible runtime change: " + runtime);
 		
 		final RuntimeClasspathProviderWrapper rcpw = findRuntimeClasspathProvider(runtime.getRuntimeType());
-		if (rcpw != null && rcpw.hasRuntimeClasspathChanged(runtime)) {
+		if (rcpw != null && (rcpw.hasRuntimeClasspathChanged(runtime) || act != 1)) {
 			final IPath serverContainerPath = new Path(RuntimeClasspathContainer.SERVER_CONTAINER)
 				.append(rcpw.getId()).append(runtime.getId());
 			
@@ -138,7 +148,7 @@ public class JavaServerPlugin extends Plugin {
 						for (int i = 0; i < size; i++) {
 							if (projects[i].isAccessible()) {
 								try {
-									IJavaProject javaProject = JavaCore.create(projects[i]);
+									IJavaProject javaProject = JavaCore.create(projects[i]); // TODO is java project?
 									
 									boolean found = false;
 									IClasspathEntry[] ce = javaProject.getRawClasspath();
@@ -152,8 +162,11 @@ public class JavaServerPlugin extends Plugin {
 									Trace.trace(Trace.FINEST, "Classpath change on: " + projects[i] + " " + found);
 									
 									if (found) {
-										RuntimeClasspathContainer container = new RuntimeClasspathContainer(
-												serverContainerPath, rcpw, runtime);
+										IRuntime runtime2 = runtime;
+										if (act == 2)
+											runtime2 = null;
+										RuntimeClasspathContainer container = new RuntimeClasspathContainer(projects[i],
+												serverContainerPath, rcpw, runtime2, runtime.getId());
 										JavaCore.setClasspathContainer(serverContainerPath, new IJavaProject[] { javaProject },
 												new IClasspathContainer[] {container}, null);
 									}

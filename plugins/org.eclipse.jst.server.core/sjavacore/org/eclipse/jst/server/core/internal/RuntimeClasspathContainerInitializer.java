@@ -27,14 +27,15 @@ public class RuntimeClasspathContainerInitializer extends ClasspathContainerInit
 			if (containerPath.segment(0).equals(RuntimeClasspathContainer.SERVER_CONTAINER)) {
 				RuntimeClasspathProviderWrapper delegate = null;
 				IRuntime runtime = null;
+				String runtimeId = null;
 				if (containerPath.segmentCount() > 2) {
 					delegate = JavaServerPlugin.findRuntimeClasspathProvider(containerPath.segment(1));
 					
-					String runtimeId = containerPath.segment(2);
+					runtimeId = containerPath.segment(2);
 					if (runtimeId != null)
 						runtime = ServerCore.findRuntime(runtimeId);
 				}
-				RuntimeClasspathContainer container = new RuntimeClasspathContainer(containerPath, delegate, runtime);
+				RuntimeClasspathContainer container = new RuntimeClasspathContainer(project.getProject(), containerPath, delegate, runtime, runtimeId);
 				JavaCore.setClasspathContainer(containerPath, new IJavaProject[] {project}, new IClasspathContainer[] {container}, null);
 			}
 		}

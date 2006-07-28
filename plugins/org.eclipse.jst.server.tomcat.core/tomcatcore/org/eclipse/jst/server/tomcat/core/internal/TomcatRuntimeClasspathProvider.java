@@ -39,23 +39,6 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 	}
 
 	/**
-	 * @see RuntimeClasspathProviderDelegate#getClasspathContainerLabel(IRuntime)
-	 */
-	public String getClasspathContainerLabel(IRuntime runtime) {
-		String id2 = runtime.getRuntimeType().getId();
-		if (id2.indexOf("32") > 0)
-			return Messages.target32runtime;
-		else if (id2.indexOf("40") > 0)
-			return Messages.target40runtime;
-		else if (id2.indexOf("41") > 0)
-			return Messages.target41runtime;
-		else if (id2.indexOf("50") > 0)
-			return Messages.target50runtime;
-		
-		return Messages.target55runtime;
-	}
-
-	/**
 	 * @see RuntimeClasspathProviderDelegate#resolveClasspathContainer(IRuntime)
 	 */
 	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime) {

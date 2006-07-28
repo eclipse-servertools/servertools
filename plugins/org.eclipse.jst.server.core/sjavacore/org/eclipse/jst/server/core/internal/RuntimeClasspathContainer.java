@@ -10,11 +10,14 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core.internal;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.osgi.util.NLS;
 
 import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IRuntimeType;
 /**
  * 
  */
@@ -27,6 +30,8 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	private IPath path;
 	private RuntimeClasspathProviderWrapper delegate;
 	private IRuntime runtime;
+	private String runtimeId;
+	private IProject project;
 
 	/**
 	 * Create a new runtime classpath container.
@@ -35,7 +40,7 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	 * @param delegate
 	 * @param runtime
 	 * @param id
-	 * @deprecated should use the equivalent method without the unused id variable
+	 * @deprecated should use the constructor that accepts a project
 	 */
 	public RuntimeClasspathContainer(IPath path, RuntimeClasspathProviderWrapper delegate, IRuntime runtime, String id) {
 		this.path = path;
@@ -49,11 +54,29 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	 * @param path
 	 * @param delegate
 	 * @param runtime
+	 * @deprecated should use the constructor that accepts a project
 	 */
 	public RuntimeClasspathContainer(IPath path, RuntimeClasspathProviderWrapper delegate, IRuntime runtime) {
 		this.path = path;
 		this.delegate = delegate;
 		this.runtime = runtime;
+	}
+
+	/**
+	 * Create a new runtime classpath container.
+	 * 
+	 * @param project
+	 * @param path
+	 * @param delegate
+	 * @param runtime
+	 * @param runtimeId
+	 */
+	public RuntimeClasspathContainer(IProject project, IPath path, RuntimeClasspathProviderWrapper delegate, IRuntime runtime, String runtimeId) {
+		this.project = project;
+		this.path = path;
+		this.delegate = delegate;
+		this.runtime = runtime;
+		this.runtimeId = runtimeId;
 	}
 
 	/** (non-Javadoc)
@@ -74,13 +97,14 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	 * @see org.eclipse.jdt.core.IClasspathContainer#getDescription()
 	 */
 	public String getDescription() {
-		if (runtime != null && delegate != null) {
-			String s = delegate.getClasspathContainerLabel(runtime);
-			if (s != null)
-				return s;
+		if (runtime != null) {
+			if (runtime != null) {
+				IRuntimeType runtimeType = runtime.getRuntimeType();
+				if (runtimeType != null)
+					return NLS.bind(Messages.classpathContainer, runtimeType.getName(), runtime.getName());
+			}
 		}
-		
-		return Messages.classpathContainerDescription;
+		return NLS.bind(Messages.classpathContainerUnbound, Messages.classpathContainerDescription, runtimeId);
 	}
 
 	/** (non-Javadoc)
@@ -95,5 +119,34 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	 */
 	public IPath getPath() {
 		return path;
+	}
+
+	public boolean equals(Object obj) {
+		if (!(obj instanceof RuntimeClasspathContainer))
+			return false;
+		
+		RuntimeClasspathContainer rcc = (RuntimeClasspathContainer) obj;
+		if (delegate != null && !delegate.equals(rcc.delegate))
+			return false;
+		
+		if (runtime == null && rcc.runtime != null)
+			return false;
+		
+		if (runtime != null && !runtime.equals(rcc.runtime))
+			return false;
+		
+		if (runtimeId != null && !runtimeId.equals(rcc.runtimeId))
+			return false;
+		
+		if (project == null && rcc.project != null)
+			return false;
+		
+		if (project != null && !project.equals(rcc.project))
+			return false;
+		
+		if (path != null && !path.equals(rcc.path))
+			return false;
+		
+		return true;
 	}
 }

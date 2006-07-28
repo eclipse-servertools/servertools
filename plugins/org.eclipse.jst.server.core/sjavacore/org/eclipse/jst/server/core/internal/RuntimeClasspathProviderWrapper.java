@@ -140,6 +140,7 @@ public class RuntimeClasspathProviderWrapper {
 
 	/*
 	 * @see RuntimeClasspathProviderDelegate#getClasspathContainerLabel(IRuntime)
+	 * @deprecated No longer used
 	 */
 	public String getClasspathContainerLabel(IRuntime runtime) {
 		if (runtime == null)

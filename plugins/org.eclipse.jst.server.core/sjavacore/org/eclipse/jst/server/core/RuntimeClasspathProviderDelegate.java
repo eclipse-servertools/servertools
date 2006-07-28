@@ -83,6 +83,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 	 * 
 	 * @param runtime the runtime to resolve the container label for
 	 * @return a classpath container label
+	 * @deprecated method is no longer required. the runtime type name is used instead
 	 */
 	public String getClasspathContainerLabel(IRuntime runtime) {
 		return null;
@@ -110,7 +111,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 	 * @param runtime the runtime to resolve the container label for
 	 * @param id the classpath entry id
 	 * @return a classpath container label
-	 * @deprecated should use the equivalent method without the unused id variable
+	 * @deprecated method is no longer required. the runtime type name is used instead
 	 */
 	public String getClasspathContainerLabel(IRuntime runtime, String id) {
 		return getClasspathContainerLabel(runtime);

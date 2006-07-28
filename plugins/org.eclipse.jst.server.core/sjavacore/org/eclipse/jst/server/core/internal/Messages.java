@@ -18,6 +18,8 @@ public class Messages extends NLS {
 	public static String errorLocation;
 	public static String errorJRE;
 	public static String classpathContainerDescription;
+	public static String classpathContainer;
+	public static String classpathContainerUnbound;
 
 	public static String copyingTask;
 	public static String deletingTask;
