@@ -128,6 +128,16 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 		if (!found)
 			return new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, Messages.warningJRE, null);
 		
+		File f = getRuntime().getLocation().append("conf").toFile();
+		File[] conf = f.listFiles();
+		if (conf != null) {
+			int size = conf.length;
+			for (int i = 0; i < size; i++) {
+				if (!f.canRead())
+					return new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, Messages.warningCantReadConfig, null);
+			}
+		}
+		
 		return Status.OK_STATUS;
 	}
 

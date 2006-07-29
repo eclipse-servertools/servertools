@@ -165,7 +165,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * @see TomcatConfiguration#load(IPath, IProgressMonitor)
 	 */

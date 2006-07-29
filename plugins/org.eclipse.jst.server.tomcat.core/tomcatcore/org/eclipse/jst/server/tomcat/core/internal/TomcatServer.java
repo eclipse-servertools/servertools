@@ -87,7 +87,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		return configuration;
 	}
 
-	public void importConfiguration(IRuntime runtime, IProgressMonitor monitor) {
+	public void importRuntimeConfiguration(IRuntime runtime, IProgressMonitor monitor) throws CoreException {
 		if (runtime == null) {
 			configuration = null;
 			return;
@@ -111,6 +111,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		} catch (CoreException ce) {
 			// ignore
 			configuration = null;
+			throw ce;
 		}
 	}
 
