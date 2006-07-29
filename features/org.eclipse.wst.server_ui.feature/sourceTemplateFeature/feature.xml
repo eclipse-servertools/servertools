@@ -1,27 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-	primary="false"
-	label="Source for WST Server UI Feature"
-	id="org.eclipse.wst.server_ui.feature.source"
-	version="1.0.3.qualifier">
-	<description>
-		%description 
-	</description>
-	<copyright>
-		%copyright
-	</copyright>
-	<license url="license.html">%license</license>
+      id="org.eclipse.wst.server_ui.feature.source"
+      label="Source for WST Server UI Feature"
+      version="1.0.3.qualifier"
+      provider-name="Eclipse.org">
+
+   <description>
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="license.html">
+      %license
+   </license>
+
    <url>
       <update label="Web Tools Platform (WTP) Updates" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
-	
-	<includes
+
+   <includes
          id="org.eclipse.wst.server_core.feature.source"
          version="0.0.0"/>
-    <plugin
+
+   <plugin
          id="org.eclipse.wst.server_ui.feature.source"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>   
-                          
+         version="0.0.0"/>
+
 </feature>
