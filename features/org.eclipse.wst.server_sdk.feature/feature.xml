@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.wst.server_sdk.feature"
-      label="org.eclipse.wst.server_sdk.feature"
+      label="WST Server Feature SDK"
       version="1.0.3.qualifier"
       provider-name="Eclipse.org">
 
