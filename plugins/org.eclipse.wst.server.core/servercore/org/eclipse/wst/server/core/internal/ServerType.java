@@ -29,6 +29,8 @@ import org.eclipse.wst.server.core.model.ServerDelegate;
  */
 public class ServerType implements IServerType {
 	private static final int DEFAULT_TIMEOUT = 1000 * 60 * 4; // 4 minutes
+	private static final float[] SERVER_TIMEOUTS =
+		new float[] { 4f, 3f, 2f, 1.5f, 1f, 0.75f, 0.5f, 0.35f, 0.25f };
 	private IConfigurationElement element;
 
 	/**
@@ -311,13 +313,7 @@ public class ServerType implements IServerType {
 			int s = ServerPreferences.getInstance().getMachineSpeed();
 			if (s < 0)
 				return -1;
-			else if (s == 5)
-				return i;
-			else if (s < 5) // slower machines
-				return i * (7-s) / 2;
-			else // faster machines
-				return i * 2 / (s-3);
-			//return i * (10 - s) / 5;
+			return (int) (i * SERVER_TIMEOUTS[s-1]);
 		} catch (NumberFormatException e) {
 			// ignore
 		}
@@ -336,15 +332,7 @@ public class ServerType implements IServerType {
 			int s = ServerPreferences.getInstance().getMachineSpeed();
 			if (s < 0)
 				return -1;
-			if (s < 0)
-				return -1;
-			else if (s == 5)
-				return i;
-			else if (s < 5) // slower machines
-				return i * (7-s) / 2;
-			else // faster machines
-				return i * 2 / (s-3);
-			//return i * (10 - s) / 5;
+			return (int) (i * SERVER_TIMEOUTS[s-1]);
 		} catch (NumberFormatException e) {
 			// ignore
 		}
