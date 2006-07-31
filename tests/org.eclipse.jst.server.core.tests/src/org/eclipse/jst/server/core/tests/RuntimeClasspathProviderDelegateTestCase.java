@@ -26,12 +26,16 @@ public class RuntimeClasspathProviderDelegateTestCase extends TestCase {
 		handler = new TestRuntimeClasspathProviderDelegate();
 	}
 
-	public void test01GetClasspathContainerLabel() {
-		handler.getClasspathContainerLabel(null, null);
+	public void test01ResolveClasspathContainer() {
+		handler.resolveClasspathContainer(null);
 	}
 
-	public void test03ResolveClasspathContainer() {
+	public void test02ResolveClasspathContainer() {
 		handler.resolveClasspathContainer(null, null);
+	}
+
+	public void test03ResolveClasspathContainerImpl() {
+		handler.resolveClasspathContainerImpl(null);
 	}
 
 	public void test04ResolveClasspathContainerImpl() {
@@ -42,7 +46,11 @@ public class RuntimeClasspathProviderDelegateTestCase extends TestCase {
 		((TestRuntimeClasspathProviderDelegate) handler).testAddMethods();
 	}
 
-	public void test10RequestClasspathContainerUpdate() {
-		handler.requestClasspathContainerUpdate(null, null, null);
+	public void test06RequestClasspathContainerUpdate() {
+		handler.requestClasspathContainerUpdate(null, null);
+	}
+
+	public void test07HasRuntimeClasspathChanged() {
+		handler.hasRuntimeClasspathChanged(null);
 	}
 }
