@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,21 +39,6 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	 * @param path
 	 * @param delegate
 	 * @param runtime
-	 * @param id
-	 * @deprecated should use the constructor that accepts a project
-	 */
-	public RuntimeClasspathContainer(IPath path, RuntimeClasspathProviderWrapper delegate, IRuntime runtime, String id) {
-		this.path = path;
-		this.delegate = delegate;
-		this.runtime = runtime;
-	}
-
-	/**
-	 * Create a new runtime classpath container.
-	 * 
-	 * @param path
-	 * @param delegate
-	 * @param runtime
 	 * @deprecated should use the constructor that accepts a project
 	 */
 	public RuntimeClasspathContainer(IPath path, RuntimeClasspathProviderWrapper delegate, IRuntime runtime) {
@@ -85,7 +70,7 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	public IClasspathEntry[] getClasspathEntries() {
 		IClasspathEntry[] entries = null;
 		if (delegate != null && runtime != null)
-			entries = delegate.resolveClasspathContainerImpl(runtime);
+			entries = delegate.resolveClasspathContainerImpl(project, runtime);
 		
 		if (entries == null)
 			return new IClasspathEntry[0];

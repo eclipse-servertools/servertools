@@ -13,13 +13,9 @@ package org.eclipse.jst.server.tomcat.core.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.launching.IVMInstall;
-import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.RuntimeClasspathProviderDelegate;
 
 import org.eclipse.wst.server.core.IRuntime;
@@ -27,28 +23,10 @@ import org.eclipse.wst.server.core.IRuntime;
  * Classpath provider for the Tomcat runtime.
  */
 public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDelegate {
-	public IClasspathEntry[] getDelegateClasspathEntries(IRuntime runtime, IProgressMonitor monitor) {
-		ITomcatRuntime tomcatRuntime = (ITomcatRuntime) runtime.loadAdapter(ITomcatRuntime.class, null);
-		IVMInstall vmInstall = tomcatRuntime.getVMInstall();
-		if (vmInstall != null) {
-			String name = vmInstall.getName();
-			String typeId = vmInstall.getVMInstallType().getId();
-			return new IClasspathEntry[] { JavaCore.newContainerEntry(new Path(JavaRuntime.JRE_CONTAINER).append(typeId).append(name)) };
-		}
-		return null;
-	}
-
 	/**
-	 * @see RuntimeClasspathProviderDelegate#resolveClasspathContainer(IRuntime)
+	 * @see RuntimeClasspathProviderDelegate#resolveClasspathContainer(IProject, IRuntime)
 	 */
-	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime) {
-		return resolveClasspathContainer2(runtime);
-	}
-
-	/**
-	 * Resolve the classpath container.
-	 */
-	protected IClasspathEntry[] resolveClasspathContainer2(IRuntime runtime) {
+	public IClasspathEntry[] resolveClasspathContainer(IProject project, IRuntime runtime) {
 		IPath installPath = runtime.getLocation();
 		
 		if (installPath == null)

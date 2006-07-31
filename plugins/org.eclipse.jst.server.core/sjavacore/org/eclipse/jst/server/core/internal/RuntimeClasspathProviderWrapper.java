@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jst.server.core.RuntimeClasspathProviderDelegate;
@@ -125,32 +126,17 @@ public class RuntimeClasspathProviderWrapper {
 	}
 
 	/*
-	 * @see RuntimeClasspathProviderDelegate#resolveClasspathContainerImpl(IRuntime)
+	 * @see RuntimeClasspathProviderDelegate#resolveClasspathContainerImpl(IProject, IRuntime)
 	 */
-	public IClasspathEntry[] resolveClasspathContainerImpl(IRuntime runtime) {
+	public IClasspathEntry[] resolveClasspathContainerImpl(IProject project, IRuntime runtime) {
 		if (runtime == null)
 			return null;
 		try {
-			return getDelegate().resolveClasspathContainerImpl(runtime, "");
+			return getDelegate().resolveClasspathContainerImpl(project, runtime);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
 		}
 		return null;
-	}
-
-	/*
-	 * @see RuntimeClasspathProviderDelegate#getClasspathContainerLabel(IRuntime)
-	 * @deprecated No longer used
-	 */
-	public String getClasspathContainerLabel(IRuntime runtime) {
-		if (runtime == null)
-			return "n/a";
-		try {
-			return getDelegate().getClasspathContainerLabel(runtime, "");
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
-		}
-		return "n/a";
 	}
 
 	/*
@@ -160,7 +146,7 @@ public class RuntimeClasspathProviderWrapper {
 		if (runtime == null)
 			return;
 		try {
-			getDelegate().requestClasspathContainerUpdate(runtime, "", entries);
+			getDelegate().requestClasspathContainerUpdate(runtime, entries);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
 		}

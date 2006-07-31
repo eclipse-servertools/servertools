@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IAccessRule;
@@ -77,19 +78,6 @@ public abstract class RuntimeClasspathProviderDelegate {
 	}
 
 	/**
-	 * Returns the classpath container label for the given runtime and the given
-	 * classpath container id (returned from getClasspathEntryIds()). This method
-	 * must not return null.
-	 * 
-	 * @param runtime the runtime to resolve the container label for
-	 * @return a classpath container label
-	 * @deprecated method is no longer required. the runtime type name is used instead
-	 */
-	public String getClasspathContainerLabel(IRuntime runtime) {
-		return null;
-	}
-
-	/**
 	 * Resolves (creates the classpath entries for) the classpath container with
 	 * the given runtime and the given classpath container id (returned from
 	 * getClasspathEntryIds()). If the classpath container cannot be resolved
@@ -98,51 +86,25 @@ public abstract class RuntimeClasspathProviderDelegate {
 	 * @param runtime the runtime to resolve the container for
 	 * @return an array of classpath entries for the container, or null if the
 	 *   container could not be resolved
+	 * @deprecated use resolveClasspathContainer(IProject, IRuntime) instead
 	 */
 	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime) {
 		return null;
 	}
 
 	/**
-	 * Returns the classpath container label for the given runtime and the given
-	 * classpath container id (returned from getClasspathEntryIds()). This method
-	 * must not return null.
-	 * 
-	 * @param runtime the runtime to resolve the container label for
-	 * @param id the classpath entry id
-	 * @return a classpath container label
-	 * @deprecated method is no longer required. the runtime type name is used instead
-	 */
-	public String getClasspathContainerLabel(IRuntime runtime, String id) {
-		return getClasspathContainerLabel(runtime);
-	}
-
-	/**
 	 * Resolves (creates the classpath entries for) the classpath container with
 	 * the given runtime and the given classpath container id (returned from
 	 * getClasspathEntryIds()). If the classpath container cannot be resolved
 	 * (for instance, if the runtime does not exist), return null.
 	 * 
+	 * @param project the project to resolve
 	 * @param runtime the runtime to resolve the container for
-	 * @param id the classpath entry id
 	 * @return an array of classpath entries for the container, or null if the
 	 *   container could not be resolved
-	 * @deprecated should use the equivalent method without the unused id variable
 	 */
-	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime, String id) {
-		return resolveClasspathContainer(runtime);
-	}
-
-	/**
-	 * Resolve the classpath container.
-	 * 
-	 * @param runtime a runtime
-	 * @param id a container id
-	 * @return a possibly empty array of classpath entries
-	 * @deprecated should use the equivalent method without the unused id variable
-	 */
-	public IClasspathEntry[] resolveClasspathContainerImpl(IRuntime runtime, String id) {
-		return resolveClasspathContainerImpl(runtime);
+	public IClasspathEntry[] resolveClasspathContainer(IProject project, IRuntime runtime) {
+		return null;
 	}
 
 	/**
@@ -150,12 +112,26 @@ public abstract class RuntimeClasspathProviderDelegate {
 	 * 
 	 * @param runtime a runtime
 	 * @return a possibly empty array of classpath entries
+	 * @deprecated should use resolveClasspathContainerImpl(IProject, IRuntime) instead
 	 */
 	public IClasspathEntry[] resolveClasspathContainerImpl(IRuntime runtime) {
+		return resolveClasspathContainerImpl(null, runtime);
+	}
+
+	/**
+	 * Resolve the classpath container.
+	 * 
+	 * @param project a project
+	 * @param runtime a runtime
+	 * @return a possibly empty array of classpath entries
+	 */
+	public IClasspathEntry[] resolveClasspathContainerImpl(IProject project, IRuntime runtime) {
 		if (runtime == null)
 			return new IClasspathEntry[0];
 		runtimePathMap.put(runtime.getId(), runtime.getLocation());
-		IClasspathEntry[] entries = resolveClasspathContainer(runtime, "");
+		IClasspathEntry[] entries = resolveClasspathContainer(project, runtime);
+		if (entries == null)
+			entries = resolveClasspathContainer(runtime);
 		
 		if (entries == null)
 			entries = new IClasspathEntry[0];
@@ -235,19 +211,6 @@ public abstract class RuntimeClasspathProviderDelegate {
 		if (dir == null)
 			throw new IllegalArgumentException();
 		addJarFiles(dir, list, includeSubdirectories);
-	}
-
-	/**
-	 * Request that the classpath container for the given runtime and id be updated
-	 * with the given classpath container entries.
-	 * 
-	 * @param runtime a runtime
-	 * @param id an id
-	 * @param entries an array of classpath entries
-	 * @deprecated should use the equivalent method without the unused id variable
-	 */
-	public void requestClasspathContainerUpdate(IRuntime runtime, String id, IClasspathEntry[] entries) {
-		requestClasspathContainerUpdate(runtime, entries);
 	}
 
 	/**
