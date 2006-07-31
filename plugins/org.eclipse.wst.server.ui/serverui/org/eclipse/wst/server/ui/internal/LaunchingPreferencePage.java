@@ -10,11 +10,11 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.RestartServerJob;
 import org.eclipse.wst.server.core.internal.ServerPreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -340,7 +340,7 @@ public class LaunchingPreferencePage extends PreferencePage implements IWorkbenc
 		// auto restart any servers that are ready for restart
 		if (autoRestart.getSelection())
 			autoRestartAll();
-	
+		
 		return true;
 	}
 
@@ -349,21 +349,18 @@ public class LaunchingPreferencePage extends PreferencePage implements IWorkbenc
 	 */
 	protected static void autoRestartAll() {
 		Trace.trace(Trace.FINEST, "Auto restarting all dirty servers");
-	
+		
 		IServer[] servers = ServerCore.getServers();
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
 				IServer server = servers[i];
-				if (server.getServerRestartState()) {
+				if (server.getServerState() == IServer.STATE_STARTED && server.getServerRestartState()) {
 					String mode = server.getMode();
-					if (server.canRestart(mode).isOK())
-						try {
-							Trace.trace(Trace.FINEST, "Attempting to auto restart " + server.getName());
-							server.restart(mode, (IProgressMonitor)null);
-						} catch (Exception e) {
-							Trace.trace(Trace.SEVERE, "Error restarting: " + server, e);
-						}
+					if (server.canRestart(mode).isOK()) {
+						RestartServerJob job = new RestartServerJob(server, mode);
+						job.schedule();
+					}
 				}
 			}
 		}

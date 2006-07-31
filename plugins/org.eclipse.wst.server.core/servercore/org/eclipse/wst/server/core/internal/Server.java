@@ -349,13 +349,21 @@ public class Server extends Base implements IServer {
 	 */
 	protected void fireRestartStateChangeEvent() {
 		Trace.trace(Trace.LISTENERS, "->- Firing server restart change event: " + getName() + " ->-");
-	
+		
 		if (notificationManager == null || notificationManager.hasListenerEntries())
 			return;
-	
+		
 		notificationManager.broadcastChange(
 			new ServerEvent(ServerEvent.SERVER_CHANGE | ServerEvent.RESTART_STATE_CHANGE, this, getServerState(), 
 				getServerPublishState(), getServerRestartState()));
+		
+		if (getServerState() == IServer.STATE_STARTED && getServerRestartState() && ServerPreferences.getInstance().isAutoRestarting()) {
+			String mode = getMode();
+			if (canRestart(mode).isOK()) {
+				RestartServerJob job = new RestartServerJob(this, mode);
+				job.schedule();
+			}
+		}
 	}
 
 	/**
