@@ -39,7 +39,7 @@ public class PingThread {
 	 * 
 	 * @param server
 	 * @param url
-	 * @param maxPings
+	 * @param maxPings the maximum number of times to try pinging, or -1 to continue forever
 	 * @param behaviour
 	 */
 	public PingThread(IServer server, String url, int maxPings, TomcatServerBehaviour behaviour) {

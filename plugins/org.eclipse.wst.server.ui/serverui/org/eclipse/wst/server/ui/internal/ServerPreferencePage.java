@@ -181,6 +181,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		
 		machineSpeedCombo = new Combo(composite, SWT.READ_ONLY);
 		String[] items = new String[] {
+			Messages.prefMachineSpeedUnlimited,
 			Messages.prefMachineSpeedVerySlow,
 			Messages.prefMachineSpeedSlow,
 			Messages.prefMachineSpeedAverage,
@@ -188,7 +189,11 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 			Messages.prefMachineSpeedVeryFast
 		};
 		machineSpeedCombo.setItems(items);
-		machineSpeedCombo.select((preferences.getMachineSpeed() - 1) / 2);
+		int speed = preferences.getMachineSpeed();
+		if (speed < 0)
+			machineSpeedCombo.select(0);
+		else
+			machineSpeedCombo.select((speed - 1) / 2 + 1);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		data.horizontalSpan = 2;
 		machineSpeedCombo.setLayoutData(data);
@@ -221,7 +226,7 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		autoPublishRemote.setSelection(preferences.getDefaultAutoPublishRemote());
 		autoPublishRemoteTime.setSelection(preferences.getDefaultAutoPublishRemoteTime());
 		
-		machineSpeedCombo.select((preferences.getDefaultMachineSpeed() - 1) / 2);
+		machineSpeedCombo.select((preferences.getDefaultMachineSpeed() - 1) / 2 + 1);
 		
 		super.performDefaults();
 	}
@@ -239,7 +244,12 @@ public class ServerPreferencePage extends PreferencePage implements IWorkbenchPr
 		preferences.setAutoPublishRemote(autoPublishRemote.getSelection());
 		preferences.setAutoPublishRemoteTime(autoPublishRemoteTime.getSelection());
 		
-		preferences.setMachineSpeed(machineSpeedCombo.getSelectionIndex() * 2 + 1);
+		int speed = machineSpeedCombo.getSelectionIndex();
+		if (speed == 0)
+			speed = -1;
+		else
+			speed = (speed - 1) * 2 + 1;
+		preferences.setMachineSpeed(speed);
 		
 		return true;
 	}

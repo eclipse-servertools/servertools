@@ -122,16 +122,18 @@ public class ServerPreferences {
 	}
 
 	/**
-	 * Return the machine speed index, from 1 to 10.
+	 * Return the relative machine speed index, from 1 to 9. A value of -1 means
+	 * no timeouts, and a value of 5 is an average machine. 1-4 are slower
+	 * machines and 6-9 are faster machines.
 	 * 
 	 * @return the relative speed
 	 */
 	public int getMachineSpeed() {
 		return preferences.getInt(PREF_MACHINE_SPEED);
 	}
-	
+
 	/**
-	 * Return the default machine speed index, 5.
+	 * Return the default relative machine speed index, 5.
 	 * 
 	 * @return the default speed index
 	 */
@@ -140,12 +142,15 @@ public class ServerPreferences {
 	}
 
 	/**
-	 * Sets the relative machine speed index, from 1 to 10.
+	 * Sets the relative machine speed index, from 1 to 9. A value of -1 means
+	 * no timeouts, and a value of 5 is an average machine. 1-4 are slower
+	 * machines and 6-9 are faster machines.
 	 * 
 	 * @param speed the relative speed 
 	 */
 	public void setMachineSpeed(int speed) {
 		preferences.setValue(PREF_MACHINE_SPEED, speed);
+		ServerPlugin.getInstance().savePluginPreferences();
 	}
 
 	/**

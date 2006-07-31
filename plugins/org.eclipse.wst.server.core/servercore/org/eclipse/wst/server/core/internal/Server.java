@@ -1338,35 +1338,37 @@ public class Server extends Base implements IServer {
 		};
 		addServerListener(listener);
 		
-		final int serverTimeout = ((ServerType) getServerType()).getStartTimeout();
 		class Timer {
 			boolean timeout;
 			boolean alreadyDone;
 		}
 		final Timer timer = new Timer();
 		
-		Thread thread = new Thread() {
-			public void run() {
-				try {
-					Thread.sleep(serverTimeout);
-					if (!timer.alreadyDone) {
-						timer.timeout = true;
-						// notify waiter
-						synchronized (mutex) {
-							Trace.trace(Trace.FINEST, "synchronousStart notify timeout");
-							mutex.notifyAll();
+		final int serverTimeout = ((ServerType) getServerType()).getStartTimeout();
+		if (serverTimeout > 0) {
+			Thread thread = new Thread("Server start timeout") {
+				public void run() {
+					try {
+						Thread.sleep(serverTimeout);
+						if (!timer.alreadyDone) {
+							timer.timeout = true;
+							// notify waiter
+							synchronized (mutex) {
+								Trace.trace(Trace.FINEST, "start notify timeout");
+								mutex.notifyAll();
+							}
 						}
+					} catch (Exception e) {
+						Trace.trace(Trace.SEVERE, "Error notifying server start timeout", e);
 					}
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error notifying server start timeout", e);
 				}
-			}
-		};
-		thread.setDaemon(true);
-		thread.start();
+			};
+			thread.setDaemon(true);
+			thread.start();
+		}
 		
 		Trace.trace(Trace.FINEST, "synchronousStart 2");
-	
+		
 		// start the server
 		try {
 			start(mode2, (IProgressMonitor)null);
@@ -1450,11 +1452,14 @@ public class Server extends Base implements IServer {
 			public void run() {
 				try {
 					int totalTimeout = serverTimeout;
+					if (totalTimeout < 0)
+						totalTimeout = 1;
 					boolean userCancelled = false;
 					int retryPeriod = 2500;
 					while (!notified[0] && totalTimeout > 0 && !userCancelled && !timer.alreadyDone) {
 						Thread.sleep(retryPeriod);
-						totalTimeout -= retryPeriod;
+						if (serverTimeout > 0)
+							totalTimeout -= retryPeriod;
 						if (!notified[0] && !timer.alreadyDone && monitor2.isCanceled()) {
 							// user cancelled - set the server state to stopped
 							userCancelled = true;
@@ -1656,25 +1661,28 @@ public class Server extends Base implements IServer {
 		}
 		final Timer timer = new Timer();
 		
-		Thread thread = new Thread() {
-			public void run() {
-				try {
-					Thread.sleep(120000);
-					if (!timer.alreadyDone) {
-						timer.timeout = true;
-						// notify waiter
-						synchronized (mutex) {
-							Trace.trace(Trace.FINEST, "stop notify timeout");
-							mutex.notifyAll();
+		final int serverTimeout = ((ServerType) getServerType()).getStopTimeout();
+		if (serverTimeout > 0) {
+			Thread thread = new Thread("Server stop timeout") {
+				public void run() {
+					try {
+						Thread.sleep(serverTimeout);
+						if (!timer.alreadyDone) {
+							timer.timeout = true;
+							// notify waiter
+							synchronized (mutex) {
+								Trace.trace(Trace.FINEST, "stop notify timeout");
+								mutex.notifyAll();
+							}
 						}
+					} catch (Exception e) {
+						Trace.trace(Trace.SEVERE, "Error notifying server stop timeout", e);
 					}
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error notifying server stop timeout", e);
 				}
-			}
-		};
-		thread.setDaemon(true);
-		thread.start();
+			};
+			thread.setDaemon(true);
+			thread.start();
+		}
 	
 		// stop the server
 		stop(force);
@@ -1739,25 +1747,28 @@ public class Server extends Base implements IServer {
 		}
 		final Timer timer = new Timer();
 		
-		Thread thread = new Thread() {
-			public void run() {
-				try {
-					Thread.sleep(120000);
-					if (!timer.alreadyDone) {
-						timer.timeout = true;
-						// notify waiter
-						synchronized (mutex) {
-							Trace.trace(Trace.FINEST, "stop notify timeout");
-							mutex.notifyAll();
+		final int serverTimeout = ((ServerType) getServerType()).getStopTimeout();
+		if (serverTimeout > 0) {
+			Thread thread = new Thread("Synchronous server stop") {
+				public void run() {
+					try {
+						Thread.sleep(serverTimeout);
+						if (!timer.alreadyDone) {
+							timer.timeout = true;
+							// notify waiter
+							synchronized (mutex) {
+								Trace.trace(Trace.FINEST, "stop notify timeout");
+								mutex.notifyAll();
+							}
 						}
+					} catch (Exception e) {
+						Trace.trace(Trace.SEVERE, "Error notifying server stop timeout", e);
 					}
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error notifying server stop timeout", e);
 				}
-			}
-		};
-		thread.setDaemon(true);
-		thread.start();
+			};
+			thread.setDaemon(true);
+			thread.start();
+		}
 	
 		// stop the server
 		stop(force);
@@ -2149,7 +2160,7 @@ public class Server extends Base implements IServer {
 			Trace.trace(Trace.SEVERE, "Error calling delegate restartModule() " + toString(), e);
 		}
 	}
-	
+
 	/*
 	 * @see IServer#stopModule(IModule[], IOperationListener)
 	 */
@@ -2162,7 +2173,7 @@ public class Server extends Base implements IServer {
 			Trace.trace(Trace.SEVERE, "Error calling delegate restartModule() " + toString(), e);
 		}
 	}
-	
+
 	/*
 	 * @see IServer#restartModule(IModule[], IOperationListener, IProgressMonitor)
 	 */
@@ -2176,10 +2187,10 @@ public class Server extends Base implements IServer {
 			Trace.trace(Trace.SEVERE, "Error calling delegate restartModule() " + toString(), e);
 		}
 	}
-	
+
 	/**
 	 * Returns an array of IServerPorts that this server has.
-	 *
+	 * 
 	 * @param monitor
 	 * @return a possibly empty array of servers ports
 	 */
@@ -2191,7 +2202,7 @@ public class Server extends Base implements IServer {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Visit all the modules in the server with the given module visitor.
 	 * 

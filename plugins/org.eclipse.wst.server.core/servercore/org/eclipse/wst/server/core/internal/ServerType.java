@@ -303,13 +303,21 @@ public class ServerType implements IServerType {
 	 * Return the timeout (in ms) that should be used to wait for the server to start.
 	 * The default is 2 minutes.
 	 * 
-	 * @return the server startup timeout
+	 * @return the server startup timeout, or -1 if there is no timeout
 	 */
 	public int getStartTimeout() {
 		try {
 			int i = Integer.parseInt(element.getAttribute("startTimeout"));
 			int s = ServerPreferences.getInstance().getMachineSpeed();
-			return i * (10 - s) / 5;
+			if (s < 0)
+				return -1;
+			else if (s == 5)
+				return i;
+			else if (s < 5) // slower machines
+				return i * (7-s) / 2;
+			else // faster machines
+				return i * 2 / (s-3);
+			//return i * (10 - s) / 5;
 		} catch (NumberFormatException e) {
 			// ignore
 		}
@@ -320,13 +328,23 @@ public class ServerType implements IServerType {
 	 * Return the timeout (in ms) to wait before assuming that the server
 	 * has failed to stop. The default is 2 minutes.
 	 * 
-	 * @return the server shutdown timeout
+	 * @return the server shutdown timeout, or -1 if there is no timeout
 	 */
 	public int getStopTimeout() {
 		try {
 			int i = Integer.parseInt(element.getAttribute("stopTimeout"));
 			int s = ServerPreferences.getInstance().getMachineSpeed();
-			return i * (10 - s) / 5;
+			if (s < 0)
+				return -1;
+			if (s < 0)
+				return -1;
+			else if (s == 5)
+				return i;
+			else if (s < 5) // slower machines
+				return i * (7-s) / 2;
+			else // faster machines
+				return i * 2 / (s-3);
+			//return i * (10 - s) / 5;
 		} catch (NumberFormatException e) {
 			// ignore
 		}

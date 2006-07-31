@@ -115,6 +115,7 @@ public class Messages extends NLS {
 	public static String prefSaveEditorsNever;
 	public static String prefSaveEditorsPrompt;
 	public static String prefMachineSpeed;
+	public static String prefMachineSpeedUnlimited;
 	public static String prefMachineSpeedVerySlow;
 	public static String prefMachineSpeedSlow;
 	public static String prefMachineSpeedAverage;

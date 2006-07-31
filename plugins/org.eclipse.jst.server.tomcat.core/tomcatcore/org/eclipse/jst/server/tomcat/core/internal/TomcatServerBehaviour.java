@@ -419,7 +419,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			int port = configuration.getMainPort().getPort();
 			if (port != 80)
 				url += ":" + port;
-			ping = new PingThread(getServer(), url, 200, this);
+			ping = new PingThread(getServer(), url, -1, this);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Can't ping for Tomcat startup.");
 		}
