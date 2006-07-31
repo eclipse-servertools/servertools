@@ -25,7 +25,7 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.2.0,3.3.0)",
  org.eclipse.emf.common;visibility:="reexport";bundle-version="[2.2.0,2.3.0)",
  org.eclipse.emf.ecore;bundle-version="[2.2.0,2.3.0)",
  org.eclipse.emf.ecore.xmi;bundle-version="[2.2.0,2.3.0)",
- org.eclipse.ui.externaltools;resolution:="optional";bundle-version="[3.1.100,3.2.0)",
+ org.eclipse.ui.externaltools;resolution:="optional";bundle-version="[3.1.100,3.3.0)",
  org.apache.ant;bundle-version="[1.6.5,1.7.0)",
  org.eclipse.debug.ui;resolution:="optional";bundle-version="[3.2.0,3.3.0)"
 Eclipse-LazyStart: true
