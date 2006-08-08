@@ -14,6 +14,9 @@ import java.util.*;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.debug.core.*;
 
 import org.eclipse.osgi.util.NLS;
@@ -134,6 +137,70 @@ public class Server extends Base implements IServer {
 		}
 	}
 
+	public class ResourceChangeJob extends ChainedJob {
+		private IModule module;
+
+		public ResourceChangeJob(IModule module, IServer server) {
+			super(NLS.bind(Messages.jobUpdateServer, server.getName()), server);
+			this.module = module;
+			
+			if (module.getProject() == null)
+				setRule(new ServerSchedulingRule(server));
+			else {
+				ISchedulingRule[] rules = new ISchedulingRule[2];
+				IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
+				rules[0] = ruleFactory.createRule(module.getProject());
+				rules[1] = new ServerSchedulingRule(server);
+				setRule(MultiRule.combine(rules));
+			}
+		}
+
+		protected IModule getModule() {
+			return module;
+		}
+
+		protected IStatus run(IProgressMonitor monitor) {
+			final boolean[] changed = new boolean[1];
+			final List modules2 = new ArrayList();
+			
+			IModuleVisitor visitor = new IModuleVisitor() {
+				public boolean visit(IModule[] module2) {
+					modules2.add(module2);
+					
+					int size = module2.length;
+					IModule m = module2[size - 1];
+					if (m.getProject() == null)
+						return true;
+					
+					if (module.equals(m)) {
+						if (hasPublishedResourceDelta(module2)) {
+							changed[0] = true;
+							setModulePublishState(module2, IServer.PUBLISH_STATE_INCREMENTAL);
+						}
+					}
+					return true;
+				}
+			};
+			
+			visit(visitor, null);
+			
+			if (getServerPublishInfo().hasStructureChanged(modules2))
+				setServerPublishState(IServer.PUBLISH_STATE_INCREMENTAL);
+			
+			if (!changed[0])
+				//return;
+				return Status.OK_STATUS;
+			
+			if (getServerState() != IServer.STATE_STOPPED && behaviourDelegate != null)
+				behaviourDelegate.handleResourceChange();
+			
+			if (getServerState() == IServer.STATE_STARTED)
+				autoPublish();
+			
+			return Status.OK_STATUS;
+		}
+	};
+	
 	private static final Comparator PUBLISH_OPERATION_COMPARTOR = new Comparator() {
       public int compare(Object leftOp, Object rightOp) {
           PublishOperation left = (PublishOperation) leftOp;
@@ -456,44 +523,26 @@ public class Server extends Base implements IServer {
 		fireModuleRestartChangeEvent(module);
 	}
 
-	protected void handleModuleProjectChange(final IModule module) {
+	protected void handleModuleProjectChange(IModule module) {
 		Trace.trace(Trace.FINEST, "> handleDeployableProjectChange() " + this + " " + module);
 		
-		final boolean[] changed = new boolean[1];
-		final List modules2 = new ArrayList();
-		
-		IModuleVisitor visitor = new IModuleVisitor() {
-			public boolean visit(IModule[] module2) {
-				modules2.add(module2);
-				
-				int size = module2.length;
-				IModule m = module2[size - 1];
-				if (m.getProject() == null)
-					return true;
-				
-				if (module.equals(m)) {
-					if (hasPublishedResourceDelta(module2)) {
-						changed[0] = true;
-						setModulePublishState(module2, IServer.PUBLISH_STATE_INCREMENTAL);
-					}
+		// check for duplicate jobs already waiting and don't create a new one
+		Job[] jobs = Platform.getJobManager().find(ServerPlugin.PLUGIN_ID);
+		if (jobs != null) {
+			int size = jobs.length;
+			for (int i = 0; i < size; i++) {
+				if (jobs[i] instanceof ResourceChangeJob) {
+					ResourceChangeJob rcj = (ResourceChangeJob) jobs[i];
+					if (rcj.getServer().equals(this) && rcj.getModule().equals(module) && rcj.getState() == Job.WAITING)
+						return;
 				}
-				return true;
 			}
-		};
+		}
 		
-		visit(visitor, null);
-		
-		if (getServerPublishInfo().hasStructureChanged(modules2))
-			setServerPublishState(IServer.PUBLISH_STATE_INCREMENTAL);
-		
-		if (!changed[0])
-			return;
-		
-		if (getServerState() != IServer.STATE_STOPPED && behaviourDelegate != null)
-			behaviourDelegate.handleResourceChange();
-		
-		if (getServerState() == IServer.STATE_STARTED)
-			autoPublish();
+		ResourceChangeJob job = new ResourceChangeJob(module, this);
+		job.setSystem(true);
+		job.setPriority(Job.DECORATE);
+		job.schedule();
 		
 		Trace.trace(Trace.FINEST, "< handleDeployableProjectChange()");
 	}
