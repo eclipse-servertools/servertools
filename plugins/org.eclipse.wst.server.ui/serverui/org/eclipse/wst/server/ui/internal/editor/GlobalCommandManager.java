@@ -597,7 +597,7 @@ public class GlobalCommandManager {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -611,7 +611,7 @@ public class GlobalCommandManager {
 
 		return getReadOnlyFiles(info.wc);
 	}
-	
+
 	protected IFile[] getReadOnlyFiles(String id) {
 		List list = new ArrayList();
 		IFile[] files = getServerResourceFiles(id);

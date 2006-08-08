@@ -81,12 +81,12 @@ public class ServerEditor extends MultiPageEditorPart {
 				try {
 					checkResourceState();
 				} finally {
-					fIsHandlingActivation= false;
+					fIsHandlingActivation = false;
 				}
 			}
 		}
 	}
-	
+
 	class LifecycleListener implements IServerLifecycleListener {
 		public void serverAdded(IServer oldServer) {
 			// do nothing
@@ -110,32 +110,32 @@ public class ServerEditor extends MultiPageEditorPart {
 
 	protected IAction undoAction;
 	protected IAction redoAction;
-	
+
 	protected TextAction cutAction;
 	protected TextAction copyAction;
 	protected TextAction pasteAction;
 	protected boolean updatingActions;
-	
+
 	protected IAction[] editorActions;
 
 	protected java.util.List serverPages;
-	
+
 	// on focus change flag
 	protected boolean resourceDeleted;
-	
+
 	// input given to the contained pages
 	protected IServerEditorPartInput editorPartInput;
-	
+
 	// status line and status
 	protected IStatusLineManager status;
 	protected StatusLineContributionItem statusItem;
-	
+
 	private ActivationListener activationListener = new ActivationListener();
 	protected LifecycleListener resourceListener;
-	
-	// Used for disabling resource change check when saving through editor.
+
+	// used for disabling resource change check when saving through editor
 	protected boolean isSaving = false;
-	
+
 	protected static Map pageToFactory = new HashMap();
 
 	/**
@@ -287,11 +287,14 @@ public class ServerEditor extends MultiPageEditorPart {
 		}
 		
 		super.dispose();
-		if (commandManager != null)
+		if (commandManager != null) {
 			commandManager.removePropertyChangeListener(listener);
-
-		if (serverId != null)
-			commandManager.releaseCommandManager(serverId);
+			
+			if (serverId != null)
+				commandManager.releaseCommandManager(serverId);
+			
+			commandManager = null;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -679,11 +682,11 @@ public class ServerEditor extends MultiPageEditorPart {
 			serverName = server.getName();
 		} else
 			setPartName("-");
-
+		
 		cutAction = new TextAction(site.getShell().getDisplay(), TextAction.CUT_ACTION);
 		copyAction = new TextAction(site.getShell().getDisplay(), TextAction.COPY_ACTION);
 		pasteAction = new TextAction(site.getShell().getDisplay(), TextAction.PASTE_ACTION);
-
+		
 		listener = new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
 				if (GlobalCommandManager.PROP_DIRTY.equals(event.getPropertyName())) {
@@ -709,7 +712,7 @@ public class ServerEditor extends MultiPageEditorPart {
 		};
 		if (server != null && commandManager.isDirty(serverId))
 			firePropertyChange(PROP_DIRTY);
-
+		
 		commandManager.addPropertyChangeListener(listener);
 		
 		// create editor input
@@ -889,7 +892,7 @@ public class ServerEditor extends MultiPageEditorPart {
 	public void setFocus() {
 		super.setFocus();
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -908,7 +911,7 @@ public class ServerEditor extends MultiPageEditorPart {
 				message = NLS.bind(Messages.editorResourceDeleteServerMessage, server.getName());
 			String[] labels = new String[] {Messages.editorResourceDeleteSave, IDialogConstants.CLOSE_LABEL};
 			MessageDialog dialog = new MessageDialog(getEditorSite().getShell(), title, null, message, MessageDialog.INFORMATION, labels, 0);
-
+			
 			if (dialog.open() == 0)
 				doSave(new NullProgressMonitor());
 			else
@@ -916,7 +919,7 @@ public class ServerEditor extends MultiPageEditorPart {
 			return;
 		}
 		resourceDeleted = false;
-
+		
 		// check for server changes
 		if (serverId != null) {
 			if (!commandManager.isDirty(serverId)) {
@@ -932,10 +935,10 @@ public class ServerEditor extends MultiPageEditorPart {
 				commandManager.setReadOnly(serverId, false);
 			commandManager.updateTimestamps(serverId);
 		}
-
+		
 		updateStatusLine();
 	}
-	
+
 	/**
 	 * Set the title tooltip.
 	 * 
@@ -950,7 +953,7 @@ public class ServerEditor extends MultiPageEditorPart {
 		else
 			return "error";
 	}
-	
+
 	public int getOrientation() {
 		return Window.getDefaultOrientation();
 	}

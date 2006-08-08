@@ -279,10 +279,12 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 	}
 
 	public void dispose() {
+		super.dispose();
+		
 		if (configuration != null)
 			configuration.removePropertyChangeListener(listener);
 	}
-		
+
 	/* (non-Javadoc)
 	 * Initializes the editor part with a site and input.
 	 */

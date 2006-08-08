@@ -31,7 +31,7 @@ public class ServerResourceCommandManager {
 		this.commandManager = commandManager;
 		this.id = id;
 	}
-	
+
 	public boolean isReadOnly() {
 		return commandManager.isReadOnly(id);
 	}

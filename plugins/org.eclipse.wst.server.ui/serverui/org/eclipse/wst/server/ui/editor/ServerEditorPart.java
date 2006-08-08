@@ -43,12 +43,12 @@ public abstract class ServerEditorPart extends EditorPart {
 	private List sections = null;
 	private ServerResourceCommandManager commandManager;
 	private FormToolkit toolkit;
-	
+
 	/**
 	 * The server currently being edited.
 	 */
 	protected IServerWorkingCopy server;
-	
+
 	/**
 	 * <code>true</code> if the server is read-only, and <code>false</code>
 	 * otherwise.
@@ -270,21 +270,23 @@ public abstract class ServerEditorPart extends EditorPart {
 			section.createSection(parent);
 		}
 	}
-	
+
 	/**
 	 * Dispose of the editor.
 	 */
 	public void dispose() {
 		super.dispose();
-
+		
 		Iterator iterator = getSections().iterator();
 		while (iterator.hasNext()) {
 			ServerEditorSection section = (ServerEditorSection) iterator.next();
 			section.dispose();
 		}
 		
-		if (toolkit != null)
+		if (toolkit != null) {
 			toolkit.dispose();
+			toolkit = null;
+		}
 	}
 
 	/**
