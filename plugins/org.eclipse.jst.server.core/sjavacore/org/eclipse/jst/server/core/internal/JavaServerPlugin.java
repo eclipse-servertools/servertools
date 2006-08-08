@@ -148,6 +148,9 @@ public class JavaServerPlugin extends Plugin {
 						for (int i = 0; i < size; i++) {
 							if (projects[i].isAccessible()) {
 								try {
+									if (!projects[i].isNatureEnabled(JavaCore.NATURE_ID))
+										continue;
+									
 									IJavaProject javaProject = JavaCore.create(projects[i]); // TODO is java project?
 									
 									boolean found = false;
