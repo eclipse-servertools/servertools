@@ -70,7 +70,7 @@ public class GenericRuntimeComposite extends Composite {
 			runtime = null;
 		} else {
 			runtimeWC = newRuntime;
-			runtime = (IGenericRuntimeWorkingCopy) newRuntime.getAdapter(IGenericRuntimeWorkingCopy.class);
+			runtime = (IGenericRuntimeWorkingCopy) newRuntime.loadAdapter(IGenericRuntimeWorkingCopy.class, null);
 		}
 		
 		init();

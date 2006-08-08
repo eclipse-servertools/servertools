@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.jst.server.core.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jst.server.core.RuntimeClasspathProviderDelegate;
@@ -22,17 +23,10 @@ import org.eclipse.wst.server.core.IRuntime;
  * 
  */
 public class GenericRuntimeClasspathProvider extends RuntimeClasspathProviderDelegate {
-	/**
-	 * @see RuntimeClasspathProviderDelegate#getClasspathContainerLabel(IRuntime, String)
-	 */
-	public String getClasspathContainerLabel(IRuntime runtime, String id) {
-		return runtime.getRuntimeType().getName();
-	}
-
 	/** (non-Javadoc)
-	 * @see RuntimeClasspathProviderDelegate#resolveClasspathContainer(IRuntime, String)
+	 * @see RuntimeClasspathProviderDelegate#resolveClasspathContainer(IProject, IRuntime)
 	 */
-	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime, String id) {
+	public IClasspathEntry[] resolveClasspathContainer(IProject project, IRuntime runtime) {
 		IPath installPath = runtime.getLocation();
 		
 		if (installPath == null)
