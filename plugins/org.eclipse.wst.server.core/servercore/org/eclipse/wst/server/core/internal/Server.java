@@ -500,6 +500,10 @@ public class Server extends Base implements IServer {
 	public void setModuleState(IModule[] module, int state) {
 		if (module == null)
 			throw new IllegalArgumentException("Module cannot be null");
+		int oldState = getModuleState(module);
+		if (oldState == state)
+			return;
+		
 		Integer in = new Integer(state);
 		moduleState.put(getKey(module), in);
 		fireModuleStateChangeEvent(module);
@@ -508,6 +512,10 @@ public class Server extends Base implements IServer {
 	public void setModulePublishState(IModule[] module, int state) {
 		if (module == null)
 			throw new IllegalArgumentException("Module cannot be null");
+		int oldState = getModulePublishState(module);
+		if (oldState == state)
+			return;
+		
 		Integer in = new Integer(state);
 		if (state == -1)
 			modulePublishState.remove(getKey(module));
@@ -518,6 +526,10 @@ public class Server extends Base implements IServer {
 	public void setModuleRestartState(IModule[] module, boolean r) {
 		if (module == null)
 			throw new IllegalArgumentException("Module cannot be null");
+		boolean oldState = getModuleRestartState(module);
+		if (oldState == r)
+			return;
+		
 		Boolean b = new Boolean(r);
 		moduleState.put(getKey(module), b);
 		fireModuleRestartChangeEvent(module);
