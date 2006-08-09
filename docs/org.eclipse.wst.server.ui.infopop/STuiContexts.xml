@@ -69,7 +69,6 @@
 
 <context id="spge0020">
 <description>Specifies that the server tools will prompt you before you make a change in a editor that cannot be undone.
-
 </description>
 </context>
 
@@ -79,8 +78,7 @@
 </context>
 
 <context id="spge0024">
-<description>Specifies the preferences for saving the changes in any open server editors before starting the server. Select <b>Never</b> to never save the changes in any open editors before starting the server. Select <b>Prompt</b> to have the server tools prompt you before saving any changes in an open server editor. Select <b>Auto-save</b> to have the server tools automatically save any changes in an open server editor before starting the server.
-
+<description>Specifies the preferences for saving the changes in any open server editors before starting the server. Select <b>Never</b> to never save the changes in any open editors before starting the server. Select <b>Prompt</b> to have the server tools prompt you before saving any changes in an open server editor. Select <b>Always</b> to have the server tools automatically save any changes in an open server editor before starting the server.
 </description>
 </context>
 
@@ -88,6 +86,46 @@
 <description>Select the relative length of time you can wait before ending a server operation.
 The default setting is <b>Normal</b>.
 <b>Tip</b>:  If you have a fast processing machine, you can try using the <b>Shorter</b> timeout delay option.  If you have a slow processing machine, you can try using the <b>Longer</b> timeout delay option.
+</description>
+</context>
+
+<context id="spge0028">
+<description>This option specifies that each time you start the workbench, it will try to update the status of the server defined in the Servers view with the actual state of the server, such as Started or Stopped.
+</description>
+</context>
+
+<context id="spge0030">
+<description>When switching the server to run in a different mode, for example using the <b>Run As</b> > <b>Run on Server</b>, <b>Profile As</b> > <b>Profile on Server</b>, or <b>Debug As</b> > <b>Debug on Server</b>, specify the next action of the server by selecting one of the following options:
+
+<b>Restart</b> - specifies the workbench to stop and restart the server
+
+<b>Continue</b> - specifies to continue running the server in previous mode and ignore the change request of running in a different server mode
+
+<b>Prompt</b> - specifies the workbench to prompt you for the next server action when you switch the server to run in a different mode
+</description>
+</context>
+
+<context id="spge0031">
+<description>When you finish running the server in debug mode and switch out, for example using the <b>Run As</b> > <b>Run on Server</b> or <b>Profile As</b> > <b>Profile on Server</b> command, specify the next action of the server by selecting one of the following options:
+
+<b>Restart</b> - specifies the workbench to stop and restart the server
+
+<b>Disable breakpoints</b> - specifies to clear all previously set breakpoints from the application and continue running the application in the newly selected server mode
+
+<b>Continue</b> - specifies to continue running the server in debug mode and ignore the change request of running in a different server mode
+
+<b>Prompt</b> - specifies the workbench to prompt you for the next server action when switching the server out of debug mode
+</description>
+</context>
+
+<context id="spge0032">
+<description>When you change the server mode into debug mode, for example using the <b>Debug As</b> > <b>Debug on Server</b> command, specify how to handle the breakpoints currently set in your application by selecting one of the following options:
+
+<b>Always</b> - specifies to enable all the currently set breakpoints in your application and break at them
+
+<b>Never</b> - specifies the workbench to ignore all the breakpoints previously set in your application and continue running the application on the server in debug mode. When the workbench ignores all the breakpoints in your application, the behavior of the server mode is similar to using the <b>Run on Server</b> command. However, because the server is running in debug mode, you have the opportunity to enable or re-enable breakpoints in your application.
+
+<b>Prompt</b> - specifies the workbench will prompt you on how to handle the breakpoints set in your applications
 </description>
 </context>
 
@@ -227,4 +265,8 @@ To change the installed server runtime enviornment, select the Edit runtime link
 </description>
 </context>
 
+<context id="swmm0000">
+<description>In the Available projects list, specify the projects that you want to add to the server by clicking the <b>Add</b> button. When you select a project to add to the server, only the projects that are applicable to the type of server will appear. To remove a project from the Configured projects list, click the <b>Remove</b> button.
+</description>
+</context>
 </contexts>
