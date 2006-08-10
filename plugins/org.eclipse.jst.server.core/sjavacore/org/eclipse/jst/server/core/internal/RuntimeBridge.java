@@ -11,6 +11,7 @@
  ******************************************************************************/
 package org.eclipse.jst.server.core.internal;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -177,20 +178,17 @@ public class RuntimeBridge implements IRuntimeBridge {
 					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("6.0");
 				}
 				
-				if (vmInstall != null) {
-					properties = new HashMap(3);
+				properties = new HashMap(3);
+				if (vmInstallName != null)
 					properties.put("name", vmInstallName);
-					IPath path = new Path(JavaRuntime.JRE_CONTAINER);
-					path = path.append(vmInstall.getVMInstallType().getId()).append(vmInstallName);
-					properties.put(CLASSPATH, path.toPortableString());
-					components.add(RuntimeManager.createRuntimeComponent(rcv, properties));
-				} else {
-					properties = new HashMap(3);
+				else
 					properties.put("name", "-");
-					IPath path = new Path(JavaRuntime.JRE_CONTAINER);
-					properties.put(CLASSPATH, path.toPortableString());
-					components.add(RuntimeManager.createRuntimeComponent(rcv, properties));
-				}
+				
+				if (vmInstall == null || isUsingDefaultJRE(javaRuntime))
+					properties.put(CLASSPATH, new Path(JavaRuntime.JRE_CONTAINER).toPortableString());
+				else
+					properties.put(CLASSPATH, JavaRuntime.newJREContainerPath(vmInstall).toPortableString());
+				components.add(RuntimeManager.createRuntimeComponent(rcv, properties));
 			}
 			
 			return components;
@@ -201,5 +199,17 @@ public class RuntimeBridge implements IRuntimeBridge {
 				return new HashMap(0);
 			return Collections.singletonMap("id", runtime.getId());
 		}
+	}
+
+	protected static boolean isUsingDefaultJRE(IJavaRuntime javaRuntime) {
+		try {
+			Method m = javaRuntime.getClass().getMethod("isUsingDefaultJRE", null);
+			Object o = m.invoke(javaRuntime, null);
+			Boolean b = (Boolean) o;
+			return b.booleanValue();
+		} catch (Throwable t) {
+			// ignore - method not found
+		}
+		return false;
 	}
 }

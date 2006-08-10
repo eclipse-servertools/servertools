@@ -89,14 +89,6 @@ public class GenericRuntime extends RuntimeDelegate implements IGenericRuntime, 
 	}
 
 	/**
-	 * @see RuntimeDelegate#setDefaults(IProgressMonitor)
-	 */
-	public void setDefaults(IProgressMonitor monitor) {
-		IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
-		setVMInstall(vmInstall.getVMInstallType().getId(), vmInstall.getId());
-	}
-
-	/**
 	 * @see IGenericRuntimeWorkingCopy#setVMInstall(IVMInstall)
 	 */
 	public void setVMInstall(IVMInstall vmInstall) {

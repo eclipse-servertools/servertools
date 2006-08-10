@@ -152,9 +152,6 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 	 * @see RuntimeDelegate#setDefaults(IProgressMonitor)
 	 */
 	public void setDefaults(IProgressMonitor monitor) {
-		IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
-		setVMInstall(vmInstall.getVMInstallType().getId(), vmInstall.getId());
-		
 		IRuntimeType type = getRuntimeWorkingCopy().getRuntimeType();
 		getRuntimeWorkingCopy().setLocation(new Path(TomcatPlugin.getPreference("location" + type.getId())));
 	}
