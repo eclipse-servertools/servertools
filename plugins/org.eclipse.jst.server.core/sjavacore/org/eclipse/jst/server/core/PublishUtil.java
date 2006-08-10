@@ -67,7 +67,7 @@ public class PublishUtil {
 		
 		try {
 			out = new FileOutputStream(to);
-	
+			
 			int avail = in.read(buf);
 			while (avail > 0) {
 				out.write(buf, 0, avail);
@@ -654,12 +654,30 @@ public class PublishUtil {
 	 */
 	private static void moveTempFile(File tempFile, File file) throws CoreException {
 		if (file.exists()) {
-			if (!safeDelete(file)) {
-				tempFile.delete();
-				throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDelete, file.toString()), null));
+			if (!safeDelete(file, 2)) {
+				// attempt to rewrite an existing file with the tempFile contents if
+				// the existing file can't be deleted to permit the move
+				try {
+					InputStream in = new FileInputStream(tempFile);
+					IStatus status = copyFile(in, file.getPath());
+					if (!status.isOK()) {
+						MultiStatus status2 = new MultiStatus(JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDelete, file.toString()), null);
+						status2.add(status);
+						throw new CoreException(status2);
+					}
+					return;
+				} catch (FileNotFoundException e) {
+					// shouldn't occur
+				} finally {
+					tempFile.delete();
+				}
+				/*if (!safeDelete(file, 8)) {
+					tempFile.delete();
+					throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDelete, file.toString()), null));
+				}*/
 			}
 		}
-		if (!safeRename(tempFile, file))
+		if (!safeRename(tempFile, file, 10))
 			throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorRename, tempFile.toString()), null));
 	}
 
@@ -669,9 +687,9 @@ public class PublishUtil {
 	 * @param f
 	 * @return <code>true</code> if it succeeds, <code>false</code> otherwise
 	 */
-	private static boolean safeDelete(File f) {
+	private static boolean safeDelete(File f, int retrys) {
 		int count = 0;
-		while (count < 10) {
+		while (count < retrys) {
 			if (!f.exists())
 				return true;
 			
@@ -680,12 +698,15 @@ public class PublishUtil {
 			if (!f.exists())
 				return true;
 			
-			try {
-				Thread.sleep(100);
-			} catch (Exception e) {
-				// ignore
-			}
 			count++;
+			// delay if we are going to try again
+			if (count < retrys) {
+				try {
+					Thread.sleep(100);
+				} catch (Exception e) {
+					// ignore
+				}
+			}
 		}
 		return false;
 	}
@@ -695,23 +716,27 @@ public class PublishUtil {
 	 * 
 	 * @param from
 	 * @param to
+	 * @param retrys number of times to retry
 	 * @return <code>true</code> if it succeeds, <code>false</code> otherwise
 	 */
-	private static boolean safeRename(File from, File to) {
+	private static boolean safeRename(File from, File to, int retrys) {
 		if (!from.exists())
 			return false;
 		
 		int count = 0;
-		while (count < 10) {
+		while (count < retrys) {
 			if (from.renameTo(to))
 				return true;
 			
-			try {
-				Thread.sleep(100);
-			} catch (Exception e) {
-				// ignore
-			}
 			count++;
+			// delay if we are going to try again
+			if (count < retrys) {
+				try {
+					Thread.sleep(100);
+				} catch (Exception e) {
+					// ignore
+				}
+			}
 		}
 		return false;
 	}
