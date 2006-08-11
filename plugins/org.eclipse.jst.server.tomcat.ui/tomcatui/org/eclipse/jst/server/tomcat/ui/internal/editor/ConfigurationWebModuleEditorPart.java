@@ -20,6 +20,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatServerWorkingCopy;
@@ -315,7 +316,8 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 
 		webAppTable.removeAll();
 		setErrorMessage(null);
-	
+		
+		ILabelProvider labelProvider = ServerUICore.getLabelProvider();
 		List list = configuration.getWebModules();
 		Iterator iterator = list.iterator();
 		while (iterator.hasNext()) {
@@ -331,8 +333,9 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 				projectImage = TomcatUIPlugin.getImage(TomcatUIPlugin.IMG_PROJECT_MISSING);
 				IModule module2 = ServerUtil.getModule(memento);
 				if (module2 != null) {
-					projectName = ServerUICore.getLabelProvider().getText(module2);
-					projectImage = ServerUICore.getLabelProvider().getImage(module2);
+					
+					projectName = labelProvider.getText(module2);
+					projectImage = labelProvider.getImage(module2);
 					item.setData(module2);
 				}
 			}
@@ -349,6 +352,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 				setErrorMessage(NLS.bind(Messages.errorMissingWebModule, module.getDocumentBase()));
 			}
 		}
+		labelProvider = null;
 		
 		if (readOnly) {
 			addProject.setEnabled(false);

@@ -12,6 +12,7 @@ package org.eclipse.wst.server.ui.internal.wizard.page;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.wst.server.core.internal.IClient;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.*;
@@ -107,15 +108,17 @@ public class SelectClientComposite extends Composite {
 		whs.setHelp(elementTable, ContextIds.SELECT_CLIENT);
 	
 		if (clients != null) {
+			ILabelProvider labelProvider = ServerUICore.getLabelProvider();
 			int size = clients.length;
 			for (int i = 0; i < size; i++) {
 				TableItem item = new TableItem(elementTable, SWT.NONE);
-				item.setText(0, ServerUICore.getLabelProvider().getText(clients[i]));
-				item.setImage(0, ServerUICore.getLabelProvider().getImage(clients[i]));
+				item.setText(0, labelProvider.getText(clients[i]));
+				item.setImage(0, labelProvider.getImage(clients[i]));
 				item.setData(clients[i]);
 			}
+			labelProvider.dispose();
 		}
-	
+		
 		description = new Label(this, SWT.WRAP);
 		description.setText("");
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING);

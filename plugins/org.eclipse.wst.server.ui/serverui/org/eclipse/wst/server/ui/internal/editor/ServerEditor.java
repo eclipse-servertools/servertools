@@ -136,7 +136,7 @@ public class ServerEditor extends MultiPageEditorPart {
 	// used for disabling resource change check when saving through editor
 	protected boolean isSaving = false;
 
-	protected static Map pageToFactory = new HashMap();
+	protected Map pageToFactory = new HashMap();
 
 	/**
 	 * ServerEditor constructor comment.
@@ -196,7 +196,7 @@ public class ServerEditor extends MultiPageEditorPart {
 		actionList.toArray(editorActions);
 	}
 
-	public static IServerEditorPartFactory getPageFactory(ServerEditorPart part) {
+	public IServerEditorPartFactory getPageFactory(ServerEditorPart part) {
 		try {
 			return (IServerEditorPartFactory) pageToFactory.get(part);
 		} catch (Exception e) {
@@ -359,6 +359,7 @@ public class ServerEditor extends MultiPageEditorPart {
 			ILabelProvider labelProvider = ServerUICore.getLabelProvider();
 			if (server != null)
 				setPartName(labelProvider.getText(server));
+			labelProvider.dispose();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error saving server editor", e);
 			
@@ -682,6 +683,8 @@ public class ServerEditor extends MultiPageEditorPart {
 			serverName = server.getName();
 		} else
 			setPartName("-");
+		labelProvider.dispose();
+		labelProvider = null;
 		
 		cutAction = new TextAction(site.getShell().getDisplay(), TextAction.CUT_ACTION);
 		copyAction = new TextAction(site.getShell().getDisplay(), TextAction.COPY_ACTION);

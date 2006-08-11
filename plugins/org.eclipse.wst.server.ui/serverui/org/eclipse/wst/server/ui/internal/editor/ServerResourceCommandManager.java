@@ -95,4 +95,8 @@ public class ServerResourceCommandManager {
 		// allow edit
 		return true;
 	}
+
+	public ServerEditor getServerEditor() {
+		return editor;
+	}
 }

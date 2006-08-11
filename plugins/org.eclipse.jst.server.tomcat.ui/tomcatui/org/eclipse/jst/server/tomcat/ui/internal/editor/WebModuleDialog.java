@@ -13,6 +13,7 @@ package org.eclipse.jst.server.tomcat.ui.internal.editor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfiguration;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatServer;
@@ -143,6 +144,7 @@ public class WebModuleDialog extends Dialog {
 			whs.setHelp(projTable, ContextIds.CONFIGURATION_EDITOR_WEBMODULE_DIALOG_PROJECT);
 	
 			// fill table with web module projects
+			ILabelProvider labelProvider = ServerUICore.getLabelProvider();
 			IModule[] modules = ServerUtil.getModules(server2.getServerType().getRuntimeType().getModuleTypes());
 			if (modules != null) {
 				int size = modules.length;
@@ -152,16 +154,17 @@ public class WebModuleDialog extends Dialog {
 						IStatus status = server2.canModifyModules(new IModule[] { module3 }, null, null);
 						if (status != null && status.isOK()) {
 							TableItem item = new TableItem(projTable, SWT.NONE);
-							item.setText(0, ServerUICore.getLabelProvider().getText(module3));
-							item.setImage(0, ServerUICore.getLabelProvider().getImage(module3));
+							item.setText(0, labelProvider.getText(module3));
+							item.setImage(0, labelProvider.getImage(module3));
 							item.setData(module3);
 						}
 					}
 				}
 			}
+			labelProvider.dispose();
 			new Label(composite, SWT.NONE).setText(" ");
 		}
-	
+		
 		new Label(composite, SWT.NONE).setText(Messages.configurationEditorWebModuleDialogDocumentBase);
 		docBase = new Text(composite, SWT.BORDER);
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);

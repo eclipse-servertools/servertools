@@ -12,6 +12,7 @@ package org.eclipse.wst.server.ui.internal.view.servers;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ILabelDecorator;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 
 import org.eclipse.ui.ISharedImages;
@@ -76,7 +77,9 @@ public class ServerTableLabelProvider extends BaseLabelProvider implements ITabl
 			ModuleServer ms = (ModuleServer) element;
 			if (columnIndex == 0) {
 				//return ServerUICore.getLabelProvider().getImage(ms.module[ms.module.length - 1]);
-				Image image = ServerUICore.getLabelProvider().getImage(ms.module[ms.module.length - 1]);
+				ILabelProvider labelProvider = ServerUICore.getLabelProvider();
+				Image image = labelProvider.getImage(ms.module[ms.module.length - 1]);
+				labelProvider.dispose();
 				if (decorator != null) {
 					Image dec = decorator.decorateImage(image, ms);
 					if (dec != null)

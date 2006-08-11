@@ -161,12 +161,13 @@ public abstract class ServerEditorPart extends EditorPart {
 		if (sections == null) {
 			sections = new ArrayList();
 			sectionToInsertionId = new HashMap();
+			ServerEditor serverEditor = commandManager.getServerEditor();
 			Iterator iterator = ServerEditorCore.getServerEditorPageSectionFactories().iterator();
 			while (iterator.hasNext()) {
 				IServerEditorPageSectionFactory factory = (IServerEditorPageSectionFactory) iterator.next();
 				String insertionId = factory.getInsertionId();
 				
-				IServerEditorPartFactory pageFactory = ServerEditor.getPageFactory(this);
+				IServerEditorPartFactory pageFactory = serverEditor.getPageFactory(this);
 				if (pageFactory.supportsInsertionId(insertionId)) {
 					String serverTypeId = null;
 					if (server != null) 
@@ -194,7 +195,7 @@ public abstract class ServerEditorPart extends EditorPart {
 		}
 		return sections;
 	}
-	
+
 	private List getSections(String insertionId) {
 		if (insertionId == null)
 			return null;
@@ -234,7 +235,7 @@ public abstract class ServerEditorPart extends EditorPart {
 			section.init(site, input);
 		}
 	}
-	
+
 	/**
 	 * Executes the given operation and adds it to the operation history
 	 * with the correct context.
@@ -287,6 +288,10 @@ public abstract class ServerEditorPart extends EditorPart {
 			toolkit.dispose();
 			toolkit = null;
 		}
+		
+		commandManager = null;
+		sectionToInsertionId = null;
+		sections = null;
 	}
 
 	/**

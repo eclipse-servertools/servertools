@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -131,14 +132,16 @@ public class ProjectPropertyPage extends PropertyPage {
 					
 					int size2 = servers.length;
 					count = 0;
+					ILabelProvider labelProvider = ServerUICore.getLabelProvider();
 					for (int j = 0; j < size2; j++) {
 						item = new TableItem(table, SWT.NONE);
-						item.setText(ServerUICore.getLabelProvider().getText(servers[j]));
-						item.setImage(ServerUICore.getLabelProvider().getImage(servers[j]));
+						item.setText(labelProvider.getText(servers[j]));
+						item.setImage(labelProvider.getImage(servers[j]));
 						item.setData(servers[j]);
 						if (servers[j].equals(defaultServer))
 							count = j + 1;
 					}
+					labelProvider.dispose();
 					
 					table.setSelection(count);
 					

@@ -336,7 +336,7 @@ public class JavaServerPlugin extends Plugin {
 		for (int i = 0; i < size; i++) {
 			try {
 				list.add(new RuntimeFacetMapping(cf[i]));
-				Trace.trace(Trace.CONFIG, "  Loaded runtimeFacetMapping: " + cf[i].getAttribute("id"));
+				Trace.trace(Trace.CONFIG, "  Loaded runtimeFacetMapping: " + cf[i].getAttribute("runtimeTypeId"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load runtimeFacetMapping: " + cf[i].getAttribute("id"), t);
 			}
