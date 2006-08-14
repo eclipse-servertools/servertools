@@ -103,7 +103,7 @@ public class ServersViewDropAdapter extends ViewerDropAdapter {
 		// otherwise, try Run on Server
 		final IServer finalServer = server;
 		RunOnServerActionDelegate ros = new RunOnServerActionDelegate() {
-			public IServer getServer(IModule module, String launchMode, IProgressMonitor monitor) {
+			public IServer getServer(IModule module, String launchMode, IProgressMonitor monitor) throws CoreException {
 				if (!ServerUIPlugin.isCompatibleWithLaunchMode(finalServer, launchMode))
 					return null;
 				
@@ -113,8 +113,7 @@ public class ServersViewDropAdapter extends ViewerDropAdapter {
 						ServerUtil.modifyModules(wc, new IModule[] { module }, new IModule[0], monitor);
 						wc.save(false, monitor);
 					} catch (CoreException ce) {
-						Trace.trace(Trace.SEVERE, "Could not add module to server", ce);
-						return null;
+						throw ce;
 					}
 				}
 				

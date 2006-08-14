@@ -452,7 +452,7 @@ public class PublishUtil {
 			IPath path2 = path.append(resource.getModuleRelativePath()).append(resource.getName());
 			File file = path2.toFile();
 			if (file.exists() && !file.delete()) {
-				status.add(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDelete, path2), null));
+				status.add(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDeleting, path2), null));
 			}
 		}
 		
@@ -661,7 +661,7 @@ public class PublishUtil {
 					InputStream in = new FileInputStream(tempFile);
 					IStatus status = copyFile(in, file.getPath());
 					if (!status.isOK()) {
-						MultiStatus status2 = new MultiStatus(JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDelete, file.toString()), null);
+						MultiStatus status2 = new MultiStatus(JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDeleting, file.toString()), null);
 						status2.add(status);
 						throw new CoreException(status2);
 					}
@@ -673,7 +673,7 @@ public class PublishUtil {
 				}
 				/*if (!safeDelete(file, 8)) {
 					tempFile.delete();
-					throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDelete, file.toString()), null));
+					throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDeleting, file.toString()), null));
 				}*/
 			}
 		}

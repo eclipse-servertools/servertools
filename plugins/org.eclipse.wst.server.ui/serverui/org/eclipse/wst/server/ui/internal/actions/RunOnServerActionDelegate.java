@@ -79,8 +79,8 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	public void init(IWorkbenchWindow newWindow) {
 		window = newWindow;
 	}
-	
-	public IServer getServer(IModule module, String launchMode, IProgressMonitor monitor) {
+
+	public IServer getServer(IModule module, String launchMode, IProgressMonitor monitor) throws CoreException {
 		IServer server = ServerCore.getDefaultServer(module);
 		
 		// ignore preference if the server doesn't support this mode.
@@ -218,7 +218,14 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			return;
 		
 		tasksRun = false;
-		final IServer server = getServer(module, launchMode2, null);
+		IServer server2 = null;
+		try {
+			server2 = getServer(module, launchMode2, null);
+		} catch (CoreException ce) {
+			EclipseUtil.openError(shell, ce.getLocalizedMessage());
+			return;
+		}
+		final IServer server = server2;
 		//if (monitor.isCanceled())
 		//	return;
 		
