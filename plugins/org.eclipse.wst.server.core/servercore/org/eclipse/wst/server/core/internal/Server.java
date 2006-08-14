@@ -553,7 +553,7 @@ public class Server extends Base implements IServer {
 		
 		ResourceChangeJob job = new ResourceChangeJob(module, this);
 		job.setSystem(true);
-		job.setPriority(Job.DECORATE);
+		job.setPriority(Job.BUILD);
 		job.schedule();
 		
 		Trace.trace(Trace.FINEST, "< handleDeployableProjectChange()");
@@ -1474,7 +1474,7 @@ public class Server extends Base implements IServer {
 		Trace.trace(Trace.FINEST, "synchronousStart 1");
 		
 		final boolean[] notified = new boolean[1];
-	
+		
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		
 		// add listener to the server
@@ -1534,10 +1534,11 @@ public class Server extends Base implements IServer {
 						}
 					}
 					if (!userCancelled && !timer.alreadyDone) {
-						timer.timeout = true;
 						// notify waiter
 						synchronized (notified) {
 							Trace.trace(Trace.FINEST, "synchronousStart notify timeout");
+							if (!timer.alreadyDone)
+								timer.timeout = true;
 							notified[0] = true;
 							notified.notifyAll();
 						}
@@ -1573,15 +1574,14 @@ public class Server extends Base implements IServer {
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Error waiting for server start", e);
 			}
+			timer.alreadyDone = true;
 		}
 		removeServerListener(listener);
-		timer.alreadyDone = true;
 		
 		if (timer.timeout) {
 			stop(false);
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartTimeout, new String[] { getName(), (serverTimeout / 1000) + "" }), null));
 		}
-		timer.alreadyDone = true;
 		
 		if (getServerState() == IServer.STATE_STOPPED)
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), null));
