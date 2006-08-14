@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.eclipse.jst.server.tomcat.ui.tests
 Bundle-SymbolicName: org.eclipse.jst.server.tomcat.ui.tests
-Bundle-Version: 1.0.100
+Bundle-Version: 1.0.100.qualifier
 Bundle-ClassPath: tests.jar
 Bundle-Activator: org.eclipse.jst.server.tomcat.ui.tests.TestsPlugin
 Bundle-Vendor: Eclipse.org
