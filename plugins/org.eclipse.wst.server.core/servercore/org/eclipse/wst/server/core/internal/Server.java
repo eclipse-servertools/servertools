@@ -1412,10 +1412,11 @@ public class Server extends Base implements IServer {
 					try {
 						Thread.sleep(serverTimeout);
 						if (!timer.alreadyDone) {
-							timer.timeout = true;
 							// notify waiter
 							synchronized (mutex) {
 								Trace.trace(Trace.FINEST, "start notify timeout");
+								if (!timer.alreadyDone)
+									timer.timeout = true;
 								mutex.notifyAll();
 							}
 						}
@@ -1450,16 +1451,15 @@ public class Server extends Base implements IServer {
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Error waiting for server start", e);
 			}
+			timer.alreadyDone = true;
 		}
 		removeServerListener(listener);
-		timer.alreadyDone = true;
 		
 		if (timer.timeout) {
 			listener2.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartTimeout, new String[] { getName(), (serverTimeout / 1000) + "" }), null));
 			stop(false);
 			return;
 		}
-		timer.alreadyDone = true;
 		
 		if (getServerState() == IServer.STATE_STOPPED) {
 			listener2.done(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorStartFailed, getName()), null));
