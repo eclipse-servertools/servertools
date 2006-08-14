@@ -79,14 +79,18 @@ public class ResourceManager {
 
 		/**
 		 * Listen for projects being added or removed and act accordingly.
-		 *
+		 * 
 		 * @param event org.eclipse.core.resources.IResourceChangeEvent
 		 */
 		public void resourceChanged(IResourceChangeEvent event) {
 			IResourceDelta delta = event.getDelta();
 			if (delta == null)
 				return;
-	
+			
+			// ignore clean builds
+			if (event.getBuildKind() == IncrementalProjectBuilder.CLEAN_BUILD)
+				return;
+			
 			Trace.trace(Trace.RESOURCES, "->- ServerResourceChangeListener responding to resource change: " + event.getType() + " ->-");
 			IResourceDelta[] children = delta.getAffectedChildren();
 			if (children != null) {
@@ -189,13 +193,7 @@ public class ResourceManager {
 		
 		// keep track of future changes to the file system
 		resourceChangeListener = new ServerResourceChangeListener();
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener, IResourceChangeEvent.POST_CHANGE | IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE);
-		
-		/*configurationListener = new IServerConfigurationListener() {
-			public void childProjectChange(IServerConfiguration configuration) {
-				handleConfigurationChildProjectsChange(configuration);
-			}
-		};*/
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener, IResourceChangeEvent.POST_BUILD | IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE);
 		
 		Trace.trace(Trace.FINER, "Loading workspace servers and server configurations");
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();

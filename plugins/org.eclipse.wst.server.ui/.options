@@ -3,5 +3,8 @@
 # Turn on general debugging
 org.eclipse.wst.server.ui/debug=true
 
-# Prints out values
-org.eclipse.wst.server.ui/editor=false
+# Loading of extension points
+org.eclipse.wst.server.ui/extension_point=false
+
+# Performance of loading and calling delegates
+org.eclipse.wst.server.ui/performance=false

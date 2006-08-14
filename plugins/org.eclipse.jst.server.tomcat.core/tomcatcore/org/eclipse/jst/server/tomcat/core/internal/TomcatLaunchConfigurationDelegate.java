@@ -40,7 +40,6 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 		}
 		
 		TomcatServerBehaviour tomcatServer = (TomcatServerBehaviour) server.loadAdapter(TomcatServerBehaviour.class, null);
-		tomcatServer.setupLaunch(launch, mode, monitor);
 		
 		String mainTypeName = tomcatServer.getRuntimeClass();
 		
@@ -94,6 +93,7 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 		setDefaultSourceLocator(launch, configuration);
 		
 		// Launch the configuration
+		tomcatServer.setupLaunch(launch, mode, monitor);
 		try {
 			runner.run(runConfig, launch, monitor);
 			tomcatServer.setProcess(launch.getProcesses()[0]);

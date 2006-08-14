@@ -2,3 +2,6 @@
 
 # Turn on general debugging
 org.eclipse.jst.server.core/debug=true
+
+# Turn on general debugging
+org.eclipse.jst.server.core/publishing=false

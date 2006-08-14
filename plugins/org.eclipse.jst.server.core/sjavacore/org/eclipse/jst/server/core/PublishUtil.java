@@ -439,15 +439,6 @@ public class PublishUtil {
 				status.toArray(stat);
 				return stat;
 			}
-		} else if (kind2 == IModuleResourceDelta.REMOVED) {
-			IPath path2 = path.append(resource.getModuleRelativePath()).append(resource.getName());
-			File file = path2.toFile();
-			if (file.exists() && !file.delete()) {
-				status.add(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDelete, path2), null));
-				IStatus[] stat = new IStatus[status.size()];
-				status.toArray(stat);
-				return stat;
-			}
 		}
 		
 		IModuleResourceDelta[] childDeltas = delta.getAffectedChildren();
@@ -456,6 +447,15 @@ public class PublishUtil {
 			IStatus[] stat = publishDelta(childDeltas[i], path, monitor);
 			addArrayToList(status, stat);
 		}
+		
+		if (kind2 == IModuleResourceDelta.REMOVED) {
+			IPath path2 = path.append(resource.getModuleRelativePath()).append(resource.getName());
+			File file = path2.toFile();
+			if (file.exists() && !file.delete()) {
+				status.add(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDelete, path2), null));
+			}
+		}
+		
 		IStatus[] stat = new IStatus[status.size()];
 		status.toArray(stat);
 		return stat;
@@ -464,7 +464,7 @@ public class PublishUtil {
 	private static void deleteFile2(IPath path, IModuleFile file) throws CoreException {
 		Trace.trace(Trace.PUBLISHING, "Deleting: " + file.getName() + " from " + path.toString());
 		IPath path2 = path.append(file.getModuleRelativePath()).append(file.getName());
-		if (path2.toFile().delete())
+		if (path2.toFile().exists() && !path2.toFile().delete())
 			throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorDeleting, path2), null));
 	}
 
