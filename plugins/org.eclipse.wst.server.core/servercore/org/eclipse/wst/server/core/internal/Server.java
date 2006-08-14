@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -328,7 +328,7 @@ public class Server extends Base implements IServer {
 	public int getAutoPublishTime() {
 		return getAttribute(PROP_AUTO_PUBLISH_TIME, -1);
 	}
-	
+
 	public int getAutoPublishSetting() {
 		return getAttribute(PROP_AUTO_PUBLISH_SETTING, AUTO_PUBLISH_DEFAULT);
 	}
@@ -1202,6 +1202,16 @@ public class Server extends Base implements IServer {
 			Trace.trace(Trace.SEVERE, "Error starting server " + toString(), e);
 			throw e;
 		}
+	}
+
+	/**
+	 * Clean up any metadata associated with the server, typically in preparation for
+	 * deletion.
+	 */
+	protected void deleteMetadata() {
+		deleteLaunchConfigurations();
+		ServerPlugin.getInstance().removeTempDirectory(getId());
+		PublishInfo.getInstance().removeServerPublishInfo(this);
 	}
 
 	/**

@@ -379,11 +379,10 @@ public class ResourceManager {
 	protected void deregisterServer(IServer server) {
 		if (server == null)
 			return;
-
+		
 		Trace.trace(Trace.RESOURCES, "Deregistering server: " + server.getName());
 		
-		((Server) server).deleteLaunchConfigurations();
-		ServerPlugin.getInstance().removeTempDirectory(server.getId());
+		((Server) server).deleteMetadata();
 		
 		servers.remove(server);
 		fireServerEvent(server, EVENT_REMOVED);

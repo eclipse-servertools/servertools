@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,8 +47,11 @@ public class PublishInfo {
 	 * @return org.eclipse.wst.server.core.internal.PublishInfo
 	 */
 	public static PublishInfo getInstance() {
-		if (instance == null)
-			instance = new PublishInfo();
+		if (instance == null) {
+			synchronized (PUBLISH_DIR) {
+				instance = new PublishInfo();
+			}
+		}
 		return instance;
 	}
 
@@ -78,23 +81,47 @@ public class PublishInfo {
 		File file = new File(path.toOSString());
 		if (!file.exists())
 			file.mkdir();
-
+		
 		file = null;
 		int i = 0;
 		String partialPath = null;
-		while (file == null || file.exists()) {
-			partialPath = "publish" + i + ".xml";
-			path = ServerPlugin.getInstance().getStateLocation().append(PUBLISH_DIR).append(partialPath);
-			if (serverIdToPath.get(partialPath) == null)
-				file = new File(path.toOSString());
-			i++;
+		ServerPublishInfo spi = null;
+		synchronized (PUBLISH_DIR) {
+			while (file == null || file.exists()) {
+				partialPath = "publish" + i + ".xml";
+				path = ServerPlugin.getInstance().getStateLocation().append(PUBLISH_DIR).append(partialPath);
+				if (serverIdToPath.get(partialPath) == null)
+					file = new File(path.toOSString());
+				i++;
+			}
+			
+			spi = new ServerPublishInfo(path);
+			serverIdToPath.put(serverId, partialPath);
+			serverIdToPublishInfo.put(serverId, spi);
+			save();
 		}
-		
-		ServerPublishInfo spi = new ServerPublishInfo(path);
-		serverIdToPath.put(serverId, partialPath);
-		serverIdToPublishInfo.put(serverId, spi);
-		save();
 		return spi;
+	}
+
+	/**
+	 * Remove the server publish state.
+	 * 
+	 * @param server org.eclipse.wst.server.core.IServer
+	 */
+	public void removeServerPublishInfo(IServer server) {
+		IPath path = ServerPlugin.getInstance().getStateLocation().append(PUBLISH_DIR);
+		File file = new File(path.toOSString());
+		if (!file.exists())
+			return;
+		
+		String serverId = server.getId();
+		String path2 = (String) serverIdToPath.get(serverId);
+		synchronized (PUBLISH_DIR) {
+			serverIdToPath.remove(serverId);
+			serverIdToPublishInfo.remove(serverId);
+			save();
+		}
+		path.append(path2).toFile().delete();
 	}
 
 	/**
@@ -103,14 +130,14 @@ public class PublishInfo {
 	protected void load() {
 		Trace.trace(Trace.FINEST, "Loading publish info");
 		String filename = ServerPlugin.getInstance().getStateLocation().append("publish.xml").toOSString();
-	
+		
 		try {
 			IMemento memento = XMLMemento.loadMemento(filename);
-	
+			
 			IMemento[] serverChild = memento.getChildren("server");
 			int size = serverChild.length;
 			serverIdToPath = new HashMap(size + 2);
-	
+			
 			for (int i = 0; i < size; i++) {
 				String id = serverChild[i].getString("id");
 				String partialPath = serverChild[i].getString("path");
@@ -126,20 +153,20 @@ public class PublishInfo {
 	 */
 	protected void save() {
 		String filename = ServerPlugin.getInstance().getStateLocation().append("publish.xml").toOSString();
-	
+		
 		try {
 			XMLMemento memento = XMLMemento.createWriteRoot("publish-info");
-	
+			
 			Iterator iterator = serverIdToPath.keySet().iterator();
 			while (iterator.hasNext()) {
 				String serverId = (String) iterator.next();
 				String partialPath = (String) serverIdToPath.get(serverId);
-	
+				
 				IMemento server = memento.createChild("server");
 				server.putString("id", serverId);
 				server.putString("path", partialPath);
 			}
-	
+			
 			memento.saveToFile(filename);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not save global publish info", e);
