@@ -205,6 +205,9 @@ public class ModuleHelper {
 	protected static int countFilesInFolder(IModuleFolder mf) {
 		int count = 0;
 		IModuleResource[] mr = mf.members();
+		if (mr == null)
+			return 0;
+		
 		int size = mr.length;
 		for (int i = 0; i < size; i++) {
 			if (mr[i] instanceof IModuleFolder)
@@ -249,6 +252,9 @@ public class ModuleHelper {
 
 	protected static IModuleFile getModuleFile(IModuleFolder mf, IPath path) {
 		IModuleResource[] mr = mf.members();
+		if (mr == null)
+			return null;
+		
 		int size = mr.length;
 		for (int i = 0; i < size; i++) {
 			if (mr[i].getModuleRelativePath().equals(path)) {
