@@ -940,7 +940,7 @@ public class Server extends Base implements IServer {
 		
 		return (PublishOperation[]) tasks.toArray(new PublishOperation[tasks.size()]);
 	}
-	
+
 	/**
 	 * Returns all publish tasks that have been targetted to this server type.
 	 * The tasks will not be initialized with a task model. 

@@ -579,6 +579,9 @@ public class PublishUtil {
 	}
 
 	private static void addZipEntries(ZipOutputStream zout, IModuleResource[] resources) throws Exception {
+		if (resources == null)
+			return;
+		
 		int size = resources.length;
 		for (int i = 0; i < size; i++) {
 			if (resources[i] instanceof IModuleFolder) {

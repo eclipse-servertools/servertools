@@ -390,7 +390,7 @@ public class ServerPublishInfo {
 	private static IModuleResourceDelta[] getDeltaTree(IModuleResource[] resources, int kind) {
 		if (resources == null)
 			return new IModuleResourceDelta[0];
-	
+		
 		List list = new ArrayList();
 		
 		// look for duplicates
@@ -426,7 +426,7 @@ public class ServerPublishInfo {
 	/**
 	 * Fill the module cache.
 	 */
-	protected void startCaching() {
+	public void startCaching() {
 		Iterator iterator = modulePublishInfo.values().iterator();
 		while (iterator.hasNext()) {
 			ModulePublishInfo mpi = (ModulePublishInfo) iterator.next();

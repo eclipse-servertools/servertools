@@ -19,6 +19,7 @@ import org.eclipse.wst.server.core.model.IModuleResource;
  * 
  */
 public class ModuleFolder implements IModuleFolder {
+	private static final IModuleResource[] EMPTY_RESOURCE_ARRAY = new IModuleResource[0];
 	protected IContainer container;
 	protected String name;
 	protected IPath path;
@@ -75,6 +76,8 @@ public class ModuleFolder implements IModuleFolder {
 	 * @see org.eclipse.wst.server.core.model.IModuleFolder#members()
 	 */
 	public IModuleResource[] members() {
+		if (members == null)
+			return EMPTY_RESOURCE_ARRAY;
 		return members;
 	}
 
