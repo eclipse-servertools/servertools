@@ -11,12 +11,14 @@
 package org.eclipse.wst.server.core.util;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import org.eclipse.wst.server.core.internal.Trace;
@@ -30,9 +32,11 @@ import org.eclipse.wst.server.core.internal.Trace;
 public class SocketUtil {
 	private static final Random rand = new Random(System.currentTimeMillis());
 
-	private static String dnsHostname;
+	private static List localHostCache;
 
-	private static final String DNSNAMESERVICE_CLASS = "sun.net.spi.nameservice.dns.DNSNameService";
+	private static List addressCache;
+
+	private static Object lock = new Object();
 
 	/**
 	 * Static utility class - cannot create an instance.
@@ -129,15 +133,23 @@ public class SocketUtil {
 	}
 
 	/**
-	 * Checks if the given host (name or IP address) is pointing to the local
-	 * machine.
-	 * Although this method is not foolproof (especially if the network
-	 * configuration of the current machine is incorrect or failing), it will
-	 * correctly identify just about all loopback adapters and the local hostname
-	 * or IP address.
+	 * Checks if the given host (name, fully qualified name, or IP address) is
+	 * referring to the local machine.
 	 * <p>
-	 * This method will not attempt to make an external network connection, so
-	 * it returns quickly and is safe to use in UI interfaces.
+	 * The first time this method is called (or the first call after each time
+	 * the network configuration has changed, e.g. by the user switching from a
+	 * wired connection to wireless) a background process is used to cache the
+	 * network information. On most machines the network information will be found
+	 * quickly and the results of this call will be returned immediately.
+	 * </p><p>
+	 * On machines where the network configuration of the machine is bad or the
+	 * network has problems, this first method call will take at most 250ms, but
+	 * the results may be incorrect (incomplete).
+	 * </p><p>
+	 * All subsequent calls (until the network configuration changes) will
+	 * return very quickly. If the background process is still running it will
+	 * continue to fill the cache and each subsequent call to this method may be
+	 * more correct.
 	 * </p>
 	 * 
 	 * @param host a hostname or IP address
@@ -148,51 +160,74 @@ public class SocketUtil {
 		if (host == null)
 			return false;
 		
+		if ("localhost".equals(host) || "127.0.0.1".equals(host))
+			return true;
+		
+		// check if cache is ok
 		try {
-			if ("localhost".equals(host) || "127.0.0.1".equals(host))
-				return true;
-			
-			InetAddress localHostaddr = InetAddress.getLocalHost();
-			if (localHostaddr.getHostName().equals(host) || host.equals(localHostaddr.getCanonicalHostName()))
-				return true;
-			
-			if (localHostaddr.getHostAddress().equals(host))
-				return true;
-			
-			// TODO - looks like this block is unnecessary code given the new NetworkInterface
-			// code below. it should be evaluated and removed if it no longer serves a purpose
-			if (dnsHostname == null)
-				try {
-					//	workaround to break dependency with Sun's classes
-					Class cl = Class.forName(DNSNAMESERVICE_CLASS);
-					Method getHostByAddrMeth = cl.getMethod("getHostByAddr", new Class[] {byte[].class});
-					Object dns = cl.newInstance();
-					
-					dnsHostname = (String)getHostByAddrMeth.invoke(dns,
-						new Object[] { localHostaddr.getAddress() });
-				} catch (Throwable t) {
-					dnsHostname = "*****************";
-				}
-			
-			if (dnsHostname != null && dnsHostname.equals(host))
-				return true;
-			
-			// check network interfaces
+			// get network interfaces
+			final List currentAddresses = new ArrayList();
+			currentAddresses.add(InetAddress.getLocalHost());
 			Enumeration nis = NetworkInterface.getNetworkInterfaces();
 			while (nis.hasMoreElements()) {
 				NetworkInterface inter = (NetworkInterface) nis.nextElement();
 				Enumeration ias = inter.getInetAddresses();
-				
-				while (ias.hasMoreElements()) {
-					InetAddress address = (InetAddress) ias.nextElement();
-					if (host.equals(address.getHostAddress()) || host.equals(address.getHostName())
-							|| host.equals(address.getCanonicalHostName()))
-						return true;
+				while (ias.hasMoreElements())
+					currentAddresses.add(ias.nextElement());
+			}
+			
+			// check if cache is empty or old and refill it if necessary
+			if (addressCache == null || !addressCache.containsAll(currentAddresses) || !currentAddresses.containsAll(addressCache)) {
+				addressCache = currentAddresses;
+				final List addressList = new ArrayList(currentAddresses.size() * 3);
+				Iterator iter = currentAddresses.iterator();
+				while (iter.hasNext()) {
+					InetAddress addr = (InetAddress) iter.next();
+					String a = addr.getHostAddress();
+					if (a != null && !addressList.contains(a))
+						addressList.add(a);
 				}
+				synchronized (lock) {
+					localHostCache = addressList;
+				}
+				
+				Thread cacheThread = new Thread("Caching localhost information") {
+					public void run() {
+						Iterator iter = currentAddresses.iterator();
+						while (iter.hasNext()) {
+							InetAddress addr = (InetAddress) iter.next();
+							String host = addr.getHostName();
+							String host2 = addr.getCanonicalHostName();
+							synchronized (lock) {
+								if (host != null && !addressList.contains(host))
+									addressList.add(host);
+								if (host2 != null && !addressList.contains(host2))
+									addressList.add(host2);
+							}
+						}
+					}
+				};
+				cacheThread.setDaemon(true);
+				cacheThread.setPriority(Thread.NORM_PRIORITY - 1);
+				cacheThread.start();
+				cacheThread.join(250);
 			}
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Error checking for localhost", e);
+			// ignore
+			Trace.trace(Trace.WARNING, "Localhost caching failure", e);
 		}
+		
+		if (localHostCache == null)
+			return false;
+		
+		synchronized (lock) {
+			Iterator iterator = localHostCache.iterator();
+			while (iterator.hasNext()) {
+				if (host.equals(iterator.next()))
+					return true;
+			}
+		}
+		
 		return false;
 	}
 }
