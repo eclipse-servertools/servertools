@@ -169,18 +169,23 @@ public class ServerUtil {
 		list.toArray(modules);
 		return modules;
 	}
-	
+
 	/**
 	 * Returns <code>true</code> if any of the given moduleTypes have the given
 	 * module type id and version id.
 	 * 
 	 * @param moduleTypes an array of module types
-	 * @param typeId a module type
-	 * @param versionId a module version
+	 * @param typeId a module type id, or null for any module type
+	 * @param versionId a module version, or null for any version
 	 * @return <code>true</code> if the module type is supported, and
 	 *    <code>false</code> otherwise
 	 */
 	public static boolean isSupportedModule(IModuleType[] moduleTypes, String typeId, String versionId) {
+		if ("".equals(typeId))
+			typeId = null;
+		if ("".equals(versionId))
+			versionId = null;
+		
 		if (moduleTypes != null) {
 			int size = moduleTypes.length;
 			for (int i = 0; i < size; i++) {
@@ -207,11 +212,14 @@ public class ServerUtil {
 	 * module type.
 	 * 
 	 * @param moduleTypes an array of modules types
-	 * @param mt a module type
+	 * @param mt a module type, may not be null
 	 * @return <code>true</code> if the module type is supported, and
 	 *    <code>false</code> otherwise
 	 */
 	public static boolean isSupportedModule(IModuleType[] moduleTypes, IModuleType mt) {
+		if (mt == null)
+			throw new IllegalArgumentException();
+		
 		if (moduleTypes != null) {
 			int size = moduleTypes.length;
 			for (int i = 0; i < size; i++) {

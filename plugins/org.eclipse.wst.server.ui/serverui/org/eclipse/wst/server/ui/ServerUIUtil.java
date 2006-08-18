@@ -27,15 +27,16 @@ public class ServerUIUtil {
 	}
 
 	/**
-	 * Open the new runtime wizard.
+	 * Open the new runtime wizard. The given typeId and versionId are used to filter
+	 * the set of runtimes displayed.
 	 * 
 	 * @param shell a shell to use when creating the wizard
-	 * @param type the type of module to create a runtime for
-	 * @param version the version of module to create a runtime for
+	 * @param typeId a module type id, or null for any module type
+	 * @param versionId a module version, or null for any version
 	 * @return <code>true</code> if a runtime was created, or
 	 *    <code>false</code> otherwise
 	 */
-	public static boolean showNewRuntimeWizard(Shell shell, final String type, final String version) {
-		return ServerUIPlugin.showNewRuntimeWizard(shell, type, version, null);
+	public static boolean showNewRuntimeWizard(Shell shell, String typeId, String versionId) {
+		return ServerUIPlugin.showNewRuntimeWizard(shell, typeId, versionId, null);
 	}
 }
