@@ -1154,10 +1154,34 @@ public class Server extends Base implements IServer {
 				try {
 					String serverId = launchConfigs[i].getAttribute(SERVER_ID, (String) null);
 					if (getId().equals(serverId)) {
-						ILaunchConfigurationWorkingCopy wc = launchConfigs[i].getWorkingCopy();
+						final ILaunchConfigurationWorkingCopy wc = launchConfigs[i].getWorkingCopy();
 						setupLaunchConfiguration(wc, monitor);
-						if (wc.isDirty())
-							return wc.doSave();
+						if (wc.isDirty()) {
+							final ILaunchConfiguration[] lc = new ILaunchConfiguration[1];
+							Job job = new Job("Saving launch configuration") {
+								protected IStatus run(IProgressMonitor monitor) {
+									try {
+										lc[0] = wc.doSave();
+									} catch (CoreException ce) {
+										Trace.trace(Trace.SEVERE, "Error configuring launch", ce);
+									}
+									return Status.OK_STATUS;
+								}
+							};
+							job.setSystem(true);
+							job.schedule();
+							try {
+								job.join();
+							} catch (Exception e) {
+								Trace.trace(Trace.SEVERE, "Error configuring launch", e);
+							}
+							if (job.getState() != Job.NONE) {
+								job.cancel();
+								lc[0] = wc.doSave();
+							}
+							
+							return lc[0];
+						}
 						return launchConfigs[i];
 					}
 				} catch (CoreException e) {
