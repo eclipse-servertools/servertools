@@ -118,6 +118,7 @@ public class TasksComposite extends Composite {
 			if (sti.kind == PublishOperation.REQUIRED) {
 				checkbox.setSelection(true);
 				checkbox.setEnabled(false);
+				description.setEnabled(false);
 			} else
 				checkbox.setSelection(sti.getDefaultSelected());
 		}
