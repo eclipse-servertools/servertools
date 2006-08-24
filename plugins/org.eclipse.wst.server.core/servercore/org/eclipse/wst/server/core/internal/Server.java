@@ -1466,17 +1466,24 @@ public class Server extends Base implements IServer {
 		Trace.trace(Trace.FINEST, "synchronousStart 2");
 		
 		// start the server
+		IProgressMonitor monitor = new NullProgressMonitor();
 		try {
-			start(mode2, (IProgressMonitor)null);
+			start(mode2, monitor);
 		} catch (CoreException e) {
 			removeServerListener(listener);
 			timer.alreadyDone = true;
 			listener2.done(e.getStatus());
 			return;
 		}
-	
+		if (monitor.isCanceled()) {
+			removeServerListener(listener);
+			timer.alreadyDone = true;
+			listener2.done(Status.CANCEL_STATUS);
+			return;
+		}
+		
 		Trace.trace(Trace.FINEST, "synchronousStart 3");
-	
+		
 		// wait for it! wait for it! ...
 		synchronized (mutex) {
 			try {
@@ -1594,6 +1601,11 @@ public class Server extends Base implements IServer {
 			removeServerListener(listener);
 			timer.alreadyDone = true;
 			throw e;
+		}
+		if (monitor.isCanceled()) {
+			removeServerListener(listener);
+			timer.alreadyDone = true;
+			return;
 		}
 		
 		Trace.trace(Trace.FINEST, "synchronousStart 3");

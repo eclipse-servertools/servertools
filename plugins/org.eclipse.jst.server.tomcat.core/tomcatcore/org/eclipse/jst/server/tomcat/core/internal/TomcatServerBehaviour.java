@@ -453,6 +453,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			
 			String args = renderCommandLine(getRuntimeProgramArguments(false), " ");
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, args);
+			wc.setAttribute("org.eclipse.debug.ui.private", true);
 			wc.setAttribute(ATTR_STOP, "true");
 			wc.launch(ILaunchManager.RUN_MODE, new NullProgressMonitor());
 		} catch (Exception e) {
