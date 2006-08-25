@@ -41,6 +41,11 @@ public class GenericServerCoreMessages extends NLS{
 	public static String unableToCreatePublisher;
 	public static String canNotPublishDeletedModule;
 	public static String antLauncherMissing;
+    public static String attachingToExternalGenericServer;
+    public static String verifyingExternalServerDebuggingLaunchAttributes;
+    public static String externalServerDebugConnectorNotSpecified;
+    public static String creatingExternalServerDebuggingSourceLocator;
+    
 	
 	static{
 		  NLS.initializeMessages(RESOURCE_BUNDLE, GenericServerCoreMessages.class);

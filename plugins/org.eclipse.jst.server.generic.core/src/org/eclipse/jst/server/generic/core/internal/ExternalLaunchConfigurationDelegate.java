@@ -31,7 +31,6 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.RuntimeProcess;
-import org.eclipse.jdt.internal.launching.JavaRemoteApplicationLaunchConfigurationDelegate;
 import org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.wst.server.core.IServer;
@@ -76,8 +75,8 @@ public class ExternalLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 	/**
 	 * Debugging launch configuration delegate.
 	 */
-	private static JavaRemoteApplicationLaunchConfigurationDelegate debuggingDelegate =
-        new JavaRemoteApplicationLaunchConfigurationDelegate();
+	private static ExternalDebugLaunchConfigurationDelegate debuggingDelegate =
+        new ExternalDebugLaunchConfigurationDelegate();
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(org.eclipse.debug.core.ILaunchConfiguration, java.lang.String, org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
@@ -167,7 +166,7 @@ public class ExternalLaunchConfigurationDelegate extends AbstractJavaLaunchConfi
 		Trace.trace(Trace.FINEST, "Starting debugging"); //$NON-NLS-1$
 		debuggingDelegate.launch(wc, mode, launch, monitor);
 	}
-	
+	  
     private void setDebugArgument(ILaunchConfigurationWorkingCopy config, String attribKey, String key, String arg) {
         try {
             Map args = config.getAttribute(attribKey, (Map)null);
