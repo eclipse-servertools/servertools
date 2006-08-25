@@ -11,6 +11,7 @@ package org.eclipse.jst.server.generic.core.internal.publishers;
 			
 import java.io.File;
 import java.io.IOException;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -136,9 +137,9 @@ public abstract class AbstractModuleAssembler {
 			if (resource instanceof IModuleFolder) {
 				IModuleFolder mFolder = (IModuleFolder)resource;
 				IModuleResource[] resources = mFolder.members();
-				if(resources==null || resources.length==0){
-					packager.writeFolder(resource.getModuleRelativePath().append(resource.getName()).toPortableString());
-				}
+
+				packager.writeFolder(resource.getModuleRelativePath().append(resource.getName()).toPortableString());
+
 				for (int i = 0; resources!= null && i < resources.length; i++) {
 					doPackModule(resources[i], packager);
 				}

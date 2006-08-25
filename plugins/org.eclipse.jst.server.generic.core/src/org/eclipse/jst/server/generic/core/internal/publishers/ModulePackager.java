@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.Path;
  * Packages resources to a .zip file
  */
 public class ModulePackager {
+	private static final String JAR_FILE_SEPERATOR = "/";
 	private JarOutputStream outputStream;
 //	private StringBuffer manifestContents;
 
@@ -89,8 +90,8 @@ public class ModulePackager {
 	 * @throws IOException
 	 */
 	public void writeFolder(String destinationPath) throws IOException {
-//		if (!destinationPath.endsWith(File.separator )) 
-//			destinationPath = destinationPath + File.separator;
+		if (!destinationPath.endsWith(JAR_FILE_SEPERATOR )) 
+			destinationPath = destinationPath + JAR_FILE_SEPERATOR;
 		ZipEntry newEntry = new ZipEntry(destinationPath);
 		outputStream.putNextEntry(newEntry);
 		outputStream.closeEntry();
@@ -177,14 +178,17 @@ public class ModulePackager {
         File[] files = directory.listFiles();
         for( int i = 0; i < files.length; i++ )
         {
+        	String relativeFolder = makeRelative( files[i].getAbsolutePath(), root );
             if( files[i].isDirectory() )
             {
+            	if( relativeFolder != null )
+                {// should always be true
+                    writeFolder( relativeFolder );
+                }
                 pack( files[i], root );
             } else
             {
-                String relativeFolder = makeRelative( files[i]
-                        .getAbsolutePath(), root );
-                if( relativeFolder != null )
+            	if( relativeFolder != null )
                 {// should always be true
                     write( files[i], relativeFolder );
                 }
