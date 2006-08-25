@@ -31,7 +31,7 @@
 	    <wsadmin  
 			washome="${was.home}" 				
 			properties="${wasProfile}/properties/wsadmin.properties" 
-			command="$AdminApp install ${project.working.dir}/${module.name}.war {-appname ${module.name} -contextroot  ${module.name} -usedefaultbindings}" 
+			command="$AdminApp install ${project.working.dir}/${module.name}.war {-appname ${module.name} -contextroot  ${contextRoot} -usedefaultbindings}" 
 			failonerror="true">
 		</wsadmin>
 	    <wsadmin  
