@@ -96,7 +96,7 @@ public class JRESelectDecorator implements GenericServerCompositeDecorator {
 	
 	protected boolean showPreferencePage(GenericServerComposite composite) {
 		PreferenceManager manager = PlatformUI.getWorkbench().getPreferenceManager();
-		IPreferenceNode node = manager.find("org.eclipse.jdt.ui.preferences.JavaBasePreferencePage").findSubNode("org.eclipse.jdt.debug.ui.preferences.VMPreferencePage");
+		IPreferenceNode node = manager.find("org.eclipse.jdt.ui.preferences.JavaBasePreferencePage").findSubNode("org.eclipse.jdt.debug.ui.preferences.VMPreferencePage");  //$NON-NLS-1$//$NON-NLS-2$
 		PreferenceManager manager2 = new PreferenceManager();
 		manager2.addToRoot(node);
 		final PreferenceDialog dialog = new PreferenceDialog(composite.getShell(), manager2);
