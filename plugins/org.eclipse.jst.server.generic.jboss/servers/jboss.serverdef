@@ -61,7 +61,7 @@
 		<mainClass>org.jboss.Main</mainClass>
 		<workingDirectory>${serverRootDirectory}/bin</workingDirectory>
 		<programArguments>-c ${serverConfig}</programArguments>
-		<vmParameters>-Dprogram.name=run.bat -Djava.endorsed.dirs=${serverRootDirectory}/bin/../lib/endorsed -Xms128m -Xmx512m</vmParameters>
+		<vmParameters>-Dprogram.name=run.bat -Djava.endorsed.dirs="${serverRootDirectory}/bin/../lib/endorsed" -Xms128m -Xmx512m</vmParameters>
 		<classpathReference>jboss</classpathReference>
 	</start>
 
