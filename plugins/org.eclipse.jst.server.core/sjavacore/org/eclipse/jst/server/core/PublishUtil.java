@@ -723,8 +723,13 @@ public class PublishUtil {
 	 * @return <code>true</code> if it succeeds, <code>false</code> otherwise
 	 */
 	private static boolean safeRename(File from, File to, int retrys) {
-		if (!from.exists())
+		if (from == null || !from.exists() || to == null)
 			return false;
+		
+		// make sure parent dir exists
+		File dir = to.getParentFile();
+		if (dir != null && !dir.exists())
+			dir.mkdirs();
 		
 		int count = 0;
 		while (count < retrys) {
