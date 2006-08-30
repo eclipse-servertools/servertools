@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
+  "map.dtd">
+<map title="Server Preferences">
+<topicref href="topics/tpref.dita" id="pref_server" navtitle="Defining server preferences">
+<topicref href="topics/twsrvprf.dita" navtitle="Defining the server preferences">
+</topicref>
+<topicref href="topics/tprefaud.dita" navtitle="Defining the audio preferences">
+</topicref>
+<topicref href="topics/twlaunchpref.dita" navtitle="Defining the launching preferences">
+</topicref>
+<topicref href="topics/twinstprf.dita" navtitle="Defining the installed server runtime environments preferences">
+<navref mapref="../org.eclipse.jst.server.ui.doc.user/tomcat_pref.ditamap"/>
+</topicref>
+<topicref href="topics/twtcpprf.dita" navtitle="Defining the TCP/IP Monitor preferences"><?Pub Caret?>
+<topicref href="topics/rwtcpvw.dita" linking="sourceonly" navtitle="TCP/IP Monitor view">
+</topicref>
+</topicref>
+</topicref>
+</map>
+<?Pub *0000001021?>

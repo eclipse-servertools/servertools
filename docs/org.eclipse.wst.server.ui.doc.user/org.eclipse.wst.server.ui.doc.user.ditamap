@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
+  "map.dtd">
+<map title="For building purposes">
+<topicref href="topics/cwflow.dita" navtitle="Which test server will start">
+</topicref>
+<topicref href="topics/cwover.dita" navtitle="Application testing and publishing">
+</topicref>
+<topicref href="topics/cwres.dita" navtitle="Resources used by the Server Tools">
+</topicref>
+<topicref href="topics/rwrcview.dita" navtitle="Servers view"></topicref>
+<topicref href="topics/rwtcpvw.dita" navtitle="TCP/IP Monitor view"></topicref>
+<topicref href="topics/tdbgjsp.dita" navtitle="Debugging a JSP file on a server">
+</topicref>
+<topicref href="topics/tdebug.dita" navtitle="Debugging applications on a server">
+</topicref>
+<topicref href="topics/testing.dita" navtitle="Testing artifacts on a server">
+</topicref>
+<topicref href="topics/tj2ee.dita" navtitle="Testing applications on a server">
+</topicref>
+<topicref href="topics/tlimits.dita" navtitle="Limitations and restrictions">
+</topicref>
+<topicref href="topics/tpref.dita" navtitle="Defining server preferences">
+</topicref>
+<topicref href="topics/tprefaud.dita" navtitle="Defining the audio preference">
+</topicref>
+<topicref href="topics/tpublish.dita" navtitle="Publishing applications to a server">
+</topicref>
+<topicref href="topics/tservlet.dita" navtitle="Debugging a servlet on a server">
+</topicref>
+<topicref href="topics/twaddprj.dita" navtitle="Adding projects to a server">
+</topicref>
+<topicref href="topics/twcrtins.dita" navtitle="Creating a server"></topicref>
+<topicref href="topics/twdelins.dita" navtitle="Deleting a server"></topicref>
+<topicref href="topics/twedtins.dita" navtitle="Editing a server"></topicref>
+<topicref href="topics/twinstprf.dita" navtitle="Defining the installed server runtime environments">
+</topicref>
+<topicref href="topics/twmanage.dita" navtitle="Managing servers "></topicref>
+<topicref href="topics/twprefin.dita" navtitle="Setting a default server">
+</topicref>
+<topicref href="topics/twpub.dita" navtitle="Publishing your application">
+</topicref>
+<topicref href="topics/twremprj.dita" navtitle="Removing a project from a server">
+</topicref>
+<topicref href="topics/twsrtdbg.dita" navtitle="Starting a server in debug mode">
+</topicref>
+<topicref href="topics/twsrtins.dita" navtitle="Starting a server"></topicref>
+<topicref href="topics/twsrvprf.dita" navtitle="Defining the Server preference">
+</topicref>
+<topicref href="topics/twstpins.dita" navtitle="Stopping a server"></topicref>
+<topicref href="topics/twtcpprf.dita" navtitle="Defining the TCP/IP Monitor preference">
+</topicref>
+<topicref href="topics/tcreate.dita" navtitle="Creating, editing, and deleting servers">
+</topicref>
+<topicref href="topics/tmetasrv.dita" navtitle="Displaying or hiding the metadata of the server">
+</topicref>
+<topicref href="topics/twlaunchpref.dita" navtitle="Defining the launching preferences">
+</topicref><?Pub Caret?>
+</map>
+<?Pub *0000003036?>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
+  "map.dtd">
+<map id="relationship">
+<reltable>
+<relheader>
+<relcolspec type="concept"></relcolspec>
+<relcolspec type="task"></relcolspec>
+<relcolspec type="reference"></relcolspec>
+<relcolspec></relcolspec>
+</relheader>
+<relrow>
+<relcell>
+<topicref href="topics/cwflow.dita" navtitle="Which test server will start">
+</topicref>
+</relcell>
+<relcell>
+<topicref href="topics/twsrtins.dita" navtitle="Starting a server"></topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow>
+<relrow>
+<relcell></relcell>
+<relcell>
+<topicref href="topics/twtcpprf.dita" navtitle="Defining the TCP/IP Monitor preference">
+</topicref>
+</relcell>
+<relcell>
+<topicref href="topics/rwtcpvw.dita" navtitle="TCP/IP Monitor view"></topicref>
+</relcell>
+<relcell></relcell>
+</relrow>
+<relrow>
+<relcell>
+<topicref href="topics/cwres.dita" navtitle="Resources used by the Server Tools">
+</topicref>
+</relcell>
+<relcell>
+<topicref href="topics/tmetasrv.dita" linking="targetonly" navtitle="Displaying or hiding the metadata of the server">
+</topicref>
+<topicref href="topics/twinstprf.dita" linking="targetonly" navtitle="Defining the installed server runtime environments">
+</topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow>
+</reltable><?Pub Caret1?>
+</map>
+<?Pub *0000001422?>

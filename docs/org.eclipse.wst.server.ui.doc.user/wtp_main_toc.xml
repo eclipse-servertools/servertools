@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 
-/*******************************************************************************
- * Copyright (c) 2000, 2005 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/ 
- -->
-<?NLS TYPE="org.eclipse.help.toc"?>
-
+<?NLS  TYPE="org.eclipse.help.toc"?>
 <toc label="Testing and publishing applications" topic="../org.eclipse.wst.server.ui.doc.user/topics/cwover.html">
    <topic label="Application testing and publishing" href="../org.eclipse.wst.server.ui.doc.user/topics/cwover.html">
       <topic label="Servers view" href="../org.eclipse.wst.server.ui.doc.user/topics/rwrcview.html"/>
@@ -46,13 +33,14 @@
          <topic label="Displaying or hiding the metadata of the server" href="topics/tmetasrv.html"/>
       </topic>
       <topic label="Defining server preferences" href="topics/tpref.html">
-         <topic label="Defining the Server preference" href="topics/twsrvprf.html"/>
-         <topic label="Defining the audio preference" href="topics/tprefaud.html"/>
-         <topic label="Defining the TCP/IP Monitor preference" href="topics/twtcpprf.html">
-            <topic label="TCP/IP Monitor view" href="topics/rwtcpvw.html"/>
-         </topic>
-         <topic label="Defining the installed server run-time environments preference" href="topics/twinstprf.html">
+         <topic label="Defining the server preferences" href="topics/twsrvprf.html"/>
+         <topic label="Defining the audio preferences" href="topics/tprefaud.html"/>
+         <topic label="Defining the launching preferences" href="topics/twlaunchpref.html"/>
+         <topic label="Defining the installed server runtime environments preferences" href="topics/twinstprf.html">
             <link toc="../org.eclipse.jst.server.ui.doc.user/tomcat_pref.xml"/>
+         </topic>
+         <topic label="Defining the TCP/IP Monitor preferences" href="topics/twtcpprf.html">
+            <topic label="TCP/IP Monitor view" href="topics/rwtcpvw.html"/>
          </topic>
       </topic>
    </topic>

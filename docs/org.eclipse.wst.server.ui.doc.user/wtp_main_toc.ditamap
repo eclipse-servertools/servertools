@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
+  "map.dtd">
+<map title="Testing and publishing applications">
+<topicref href="../org.eclipse.wst.server.ui.doc.user/topics/cwover.dita"
+linking="normal" locktitle="yes" navtitle="Application testing and publishing"
+scope="peer">
+<topicref href="../org.eclipse.wst.server.ui.doc.user/topics/rwrcview.dita"
+locktitle="yes" navtitle="Servers view" scope="peer"></topicref>
+<topicref href="../org.eclipse.wst.server.ui.doc.user/topics/cwres.dita" locktitle="yes"
+navtitle="Resources used by the Server Tools" scope="peer"></topicref>
+<topicref href="../org.eclipse.wst.server.ui.doc.user/topics/cwflow.dita"
+locktitle="yes" navtitle="Which server will start" scope="peer"></topicref>
+<topicref conref="wtp_test.ditamap#testing" navtitle="Testing applications on a server">
+</topicref>
+<topicref conref="wtp_debug.ditamap#debug_server" navtitle="Debugging applications on a server">
+</topicref>
+<topicref conref="wtp_publish.ditamap#publish_server" navtitle="Publishing applications to a server">
+</topicref>
+<topicref conref="wtp_create.ditamap#create_server" navtitle="Creating, editing, and deleting servers">
+</topicref>
+<topicref conref="wtp_manage.ditamap#manage_server" navtitle="Managing servers">
+</topicref>
+<topicref conref="wtp_pref.ditamap#pref_server" navtitle="Defining server preferences">
+</topicref>
+</topicref>
+</map>
+<?Pub *0000001489?>

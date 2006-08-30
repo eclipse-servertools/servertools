@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
+  "map.dtd">
+<?Pub Inc?>
+<map title="Managing Servers">
+<topicref href="topics/twmanage.dita" id="manage_server" navtitle="Managing servers ">
+<topicref href="topics/twaddprj.dita" locktitle="yes" navtitle="Adding projects to a server ">
+</topicref>
+<topicref href="topics/twremprj.dita" locktitle="yes" navtitle="Removing a project from a server">
+</topicref>
+<topicref href="topics/twsrtins.dita" locktitle="yes" navtitle="Starting a server">
+<topicref href="topics/twsrtdbg.dita" locktitle="yes" navtitle="Starting a server in debug mode">
+</topicref>
+</topicref>
+<topicref href="topics/twstpins.dita" locktitle="yes" navtitle="Stopping a server">
+</topicref>
+<topicref href="topics/twprefin.dita" locktitle="yes" navtitle="Setting a default server">
+</topicref>
+<topicref href="topics/tmetasrv.dita" navtitle="Displaying or hiding the metadata of the server">
+</topicref>
+</topicref><?Pub Caret1?>
+</map>
+<?Pub *0000001064?>
