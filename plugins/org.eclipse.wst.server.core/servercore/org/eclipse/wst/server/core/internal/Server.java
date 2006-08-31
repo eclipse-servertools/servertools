@@ -1574,11 +1574,11 @@ public class Server extends Base implements IServer {
 							}
 						}
 					}
-					if (!userCancelled && !timer.alreadyDone) {
+					if (!userCancelled && !timer.alreadyDone && !notified[0]) {
 						// notify waiter
 						synchronized (notified) {
 							Trace.trace(Trace.FINEST, "synchronousStart notify timeout");
-							if (!timer.alreadyDone)
+							if (!timer.alreadyDone && totalTimeout < 0)
 								timer.timeout = true;
 							notified[0] = true;
 							notified.notifyAll();
