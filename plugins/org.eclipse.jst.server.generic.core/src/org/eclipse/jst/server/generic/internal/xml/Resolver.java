@@ -10,13 +10,18 @@
 
 package org.eclipse.jst.server.generic.internal.xml;
 
-import java.io.File;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.variables.IDynamicVariable;
+import org.eclipse.core.variables.VariablesPlugin;
+import org.eclipse.jst.server.generic.core.internal.CorePlugin;
 import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
 import org.eclipse.jst.server.generic.servertype.definition.Property;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
@@ -74,11 +79,6 @@ public class Resolver {
 				value = value.replace('\\','/');
 			 cache.put(element.getId(), value);
 		}
-		//String vmPath = install.getInstallLocation().getCanonicalPath();
-		//vmPath = vmPath.replace('\\', '/');
-		cache.put("jrePath", "JRE"); //$NON-NLS-1$ //$NON-NLS-2$
-		cache.put("pathChar", File.pathSeparator); //$NON-NLS-1$
-
 		String str = resolvePropertiesFromCache(proppedString, cache);
 		str = fixPassthroughProperties(str);
 		return str;
@@ -101,7 +101,7 @@ public class Resolver {
 		String proppedString,
 		HashMap cache) {
 		String resolvedString = proppedString;
-		int start = skipToProperty(resolvedString,cache);
+		int start = skipToProperty(resolvedString,cache);// see if there are properties to be resolved.
 		if (start >= 0) {
 			resolvedString = resolveProperty(resolvedString, start, cache);
 			resolvedString = resolvePropertiesFromCache(resolvedString, cache);
@@ -112,17 +112,15 @@ public class Resolver {
 	private int skipToProperty(String str,HashMap cache) {
 		int start = -1; 
 		int end =  0;
-		String value = null;
+		String key=new String();
 		do {
 			start =  str.indexOf(PROP_START,end);
 			if( start < 0)
 				return start;
 			end = str.indexOf(PROP_END, start);
-			
-			String key = str.substring(start + 2, end);
-			value = (String)cache.get(key);
+			key = str.substring(start + 2, end);
 		}
-		while(value == null);
+		while( !cache.containsKey( key ) && VariablesPlugin.getDefault().getStringVariableManager().getDynamicVariable( key ) == null );
 		return start;
 	}
 	
@@ -135,7 +133,20 @@ public class Resolver {
 		start = str.indexOf(PROP_START);
 		int end = str.indexOf(PROP_END, start);
 		String key = str.substring(start + 2, end);
-		String value = (String)cache.get(key);
+        String value = (String)cache.get(key);
+        if(value == null ){// look in eclipse variables
+            IDynamicVariable dv =  VariablesPlugin.getDefault().getStringVariableManager().getDynamicVariable( key );
+            if (dv != null ){
+                try {
+                    value = dv.getValue( null );
+                } 
+                catch( CoreException e ){
+                    CorePlugin.getDefault().getLog().log(
+                    new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 1,
+                            "Can not resolve eclipse variable", e)); //$NON-NLS-1$
+                }
+            }
+        }
 		if(value == null )
 			return str;
 		return str.substring(0, start)

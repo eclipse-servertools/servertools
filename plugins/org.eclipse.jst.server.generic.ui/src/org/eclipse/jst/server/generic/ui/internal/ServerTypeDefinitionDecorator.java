@@ -151,11 +151,9 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
     private String getPropertyValue(Property property){	
 		if(fProperties!=null && fProperties.isEmpty()==false){
 		//user properties exist use those
-			return(String)fProperties.get(property.getId()); 
+			return fDefinition.getResolver().resolveProperties((String)fProperties.get(property.getId()));
 		}	
-		if(Property.CONTEXT_SERVER.equals(property.getContext()))
-			return fDefinition.getResolver().resolveProperties(property.getDefault());
-		return property.getDefault();
+		return fDefinition.getResolver().resolveProperties(property.getDefault());
 	}	
 
    /**
