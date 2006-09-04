@@ -39,7 +39,6 @@ public class Messages extends NLS {
 	public static String errorPublishNoRuntime;
 	public static String errorPublishNoConfiguration;
 	public static String errorNoConfiguration;
-	public static String canPublishOk;
 	public static String publishingStatusOk;
 	public static String publishingStatusInfo;
 	public static String publishingStatusWarning;
@@ -53,15 +52,11 @@ public class Messages extends NLS {
 	public static String errorModuleRestartFailed;
 	public static String errorInstallingServer;
 	public static String errorInstallingServerFeature;
-	public static String canRestartModuleOk;
 	public static String errorRestartModule;
 	public static String canStartErrorState;
 	public static String errorLaunchMode;
-	public static String canStartOk;
-	public static String canRestartOk;
 	public static String errorRestartNotStarted;
 	public static String errorStopAlreadyStopped;
-	public static String canStopOk;
 	public static String moduleTypeUnknown;
 	public static String jobStartingServer;
 	public static String jobRestartingServer;

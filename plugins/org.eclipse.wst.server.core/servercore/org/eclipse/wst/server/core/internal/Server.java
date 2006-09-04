@@ -1383,7 +1383,10 @@ public class Server extends Base implements IServer {
 	public IStatus canStop() {
 		if (getServerState() == STATE_STOPPED)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorStopAlreadyStopped, null);
-
+		
+		if (getServerType() != null && !getServerType().supportsLaunchMode(getMode()))
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorLaunchMode, null);
+		
 		return Status.OK_STATUS;
 	}
 
