@@ -45,6 +45,9 @@ public class JavaServerPlugin extends Plugin {
 	//	cached copy of all runtime classpath providers
 	private static List runtimeClasspathProviders;
 
+	//	cached copy of all runtime component providers
+	private static List runtimeComponentProviders;
+
 	//	cached copy of all runtime facet mappings
 	private static List runtimeFacetMappings;
 
@@ -319,6 +322,57 @@ public class JavaServerPlugin extends Plugin {
 		RuntimeFacetMapping[] rfm = new RuntimeFacetMapping[runtimeFacetMappings.size()];
 		runtimeFacetMappings.toArray(rfm);
 		return rfm;
+	}
+
+	/**
+	 * Returns the runtime component provider that supports the given runtime type, or <code>null</code>
+	 * if none. This convenience method searches the list of known runtime
+	 * component providers for the one with a matching runtime type.
+	 * The runtimeType may not be null.
+	 *
+	 * @param runtimeType a runtime type
+	 * @return the runtime component provider instance, or <code>null</code> if
+	 *   there is no runtime component provider with the given id
+	 */
+	public static RuntimeComponentProviderWrapper findRuntimeComponentProvider(IRuntimeType runtimeType) {
+		if (runtimeType == null)
+			throw new IllegalArgumentException();
+
+		if (runtimeComponentProviders == null)
+			loadRuntimeComponentProviders();
+		
+		Iterator iterator = runtimeComponentProviders.iterator();
+		while (iterator.hasNext()) {
+			RuntimeComponentProviderWrapper runtimeComponentProvider = (RuntimeComponentProviderWrapper) iterator.next();
+			if (runtimeComponentProvider.supportsRuntimeType(runtimeType))
+				return runtimeComponentProvider;
+		}
+		return null;
+	}
+
+	/**
+	 * Load the runtime component providers.
+	 */
+	private static synchronized void loadRuntimeComponentProviders() {
+		if (runtimeComponentProviders != null)
+			return;
+		Trace.trace(Trace.CONFIG, "->- Loading .runtimeComponentProviders extension point ->-");
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(JavaServerPlugin.PLUGIN_ID, "internalRuntimeComponentProviders");
+		
+		int size = cf.length;
+		List list = new ArrayList(size);
+		for (int i = 0; i < size; i++) {
+			try {
+				list.add(new RuntimeComponentProviderWrapper(cf[i]));
+				Trace.trace(Trace.CONFIG, "  Loaded runtimeComponentProviders: " + cf[i].getAttribute("id"));
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "  Could not load runtimeComponentProvider: " + cf[i].getAttribute("id"), t);
+			}
+		}
+		runtimeComponentProviders = list;
+		
+		Trace.trace(Trace.CONFIG, "-<- Done loading .runtimeComponentProviders extension point -<-");
 	}
 
 	/**
