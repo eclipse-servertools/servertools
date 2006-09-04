@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IResourceRuleFactory;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.osgi.util.NLS;
@@ -127,21 +128,17 @@ public class PublishServerJob extends ChainedJob {
 	}
 
 	/**
-	 * @see org.eclipse.core.runtime.jobs.Job#shouldRun()
-	 */
-	public boolean shouldRun() {
-		if (!super.shouldRun())
-			return false;
-		
-		if (!check)
-			return true;
-		return ServerPreferences.getInstance().isAutoPublishing() && ((Server)getServer()).shouldPublish();
-	}
-
-	/**
 	 * @see org.eclipse.core.runtime.jobs.Job#run(IProgressMonitor)
 	 */
 	protected IStatus run(IProgressMonitor monitor) {
+		if (check) {
+			// don't run if we're autopublishing and there is no need for a publish.
+			// can't execute this code in shouldRun() because it will cancel the job
+			// instead of returning immediately
+			if (!ServerPreferences.getInstance().isAutoPublishing() || !((Server)getServer()).shouldPublish())
+				return Status.OK_STATUS;
+		}
+		
 		return getServer().publish(kind, monitor);
 	}
 }
