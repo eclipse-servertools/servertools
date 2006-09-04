@@ -121,7 +121,8 @@ public class PublishInfo {
 			serverIdToPublishInfo.remove(serverId);
 			save();
 		}
-		path.append(path2).toFile().delete();
+		if (path2 != null)
+			path.append(path2).toFile().delete();
 	}
 
 	/**
