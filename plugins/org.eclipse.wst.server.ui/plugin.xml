@@ -350,4 +350,10 @@ M4 = Platform-specific fourth key
      icon="icons/obj16/web_module.gif"/>
 </extension>
 
+<extension point="org.eclipse.ui.ide.markerResolution">
+  <markerResolutionGenerator
+     class="org.eclipse.wst.server.ui.internal.MarkerResolutionGenerator"
+     markerType="org.eclipse.wst.common.project.facet.core.validation.marker"/>
+</extension>
+
 </plugin>
