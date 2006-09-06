@@ -7,6 +7,8 @@
       </appInfo>
       <documentation>
          This extension point is used to provide a new runtime target handler. Runtime target handlers are called whenever a runtime target is added or removed from a project. They can be used to switch Java classpaths, setup default resources, etc.
+
+This extension point as well as the classes required to implement it are deprecated due to the addition of facets in WTP 1.0. If you were using this extension point for classpath then you can use the org.eclipse.jst.server.core.runtimeClasspathProviders extension point instead.
       </documentation>
    </annotation>
 
