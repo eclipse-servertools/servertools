@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.server_tests.feature"
       label="%featureName"
-      version="1.5.0.qualifier"
+      version="1.5.1.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -49,12 +49,5 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.wst.internet.monitor.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
 </feature>
