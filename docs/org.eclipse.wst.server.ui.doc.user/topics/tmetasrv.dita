@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<?Pub Inc?>
+<task id="tmetasrv_wst" xml:lang="en-us">
+<title id="tmetasrv_wst_title">Displaying or hiding the metadata of the server</title>
+<shortdesc id="tmetasrv_wst_shortdesc">On the workbench, you have the option
+to display or hide the metadata of the server.</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm>servers<indexterm>displaying metadata</indexterm><indexterm>hiding
+metadata</indexterm></indexterm><indexterm>workbench<indexterm>displaying
+server metadata</indexterm><indexterm>hiding server metadata</indexterm></indexterm>
+<indexterm>serverName.server file<indexterm>displaying on workbench</indexterm><indexterm>hiding
+from workbench<?Pub Caret?></indexterm></indexterm></keywords>
+</metadata></prolog>
+<taskbody>
+<context id="tmetasrv_wst_context"><p id="tmetasrv_wst_p1">The <i>metadata</i> contains
+a variety of information about the server such as:<ul>
+<li>The location where the server configuration files are stored on the workbench.</li>
+<li>The fully qualified DNS name or IP address of the host machine where the
+server is running.</li>
+<li>The name assign to the server.</li>
+<li>The name of the installed server runtime environment which defines the
+runtime environment of an application server for compiling your application.</li>
+</ul></p><p id="tmetasrv_wst_p2">By default, the tool hides the metadata of
+the server to keep the development workspace clean. Displaying the metadata
+of the server on the workbench, allows you to persists the data of the server
+in a <i>serverName</i>.server file, where <i>serverName</i> is the name assigned
+to the server. The <i>serverName</i>.server file is useful when you are working
+in a team development environment and you are required to maintain the metadata
+of the server in a source control repository.</p>To display the metadata of
+the server:</context>
+<steps id="tmetasrv_wst_steps">
+<step id="tmetasrv_step1"><cmd>In the Servers view, right-click the server
+you want to display the metadata.</cmd></step>
+<step id="tmetasrv_step2"><cmd>Select the <uicontrol>Move to Workspace</uicontrol> option.</cmd>
+<info><note type="tip">If the <uicontrol>Move to Workspace</uicontrol> option
+is not available and you only see the <uicontrol>Move to Metadata</uicontrol> option,
+this means the metadata of your server is already on the workbench. The next
+step describes where you can find it on the workbench.</note></info></step>
+<step id="tmetasrv_step3"><cmd>In the Project Explorer view, expand the <b>Others
+Project</b> folder and then expand your server project to locate the <i>serverName</i>.server
+file, where <i>serverName</i> is the name assigned to your server.</cmd></step>
+<step id="tmetasrv_step4"><cmd>(<b>Optional</b>) You can double click <i>serverName</i>.server
+file to edit the server's data in the server editor.</cmd></step>
+</steps>
+<result id="tmetasrv_wst_result">To hide the metadata of the server:<p><ol>
+<li>In the Servers view, right-click the server you want to hide the metadata.</li>
+<li>Select the <uicontrol>Move to Metadata</uicontrol> option.<note type="tip">If
+the <uicontrol>Move to Metadata</uicontrol> option is not available and you
+only see the <uicontrol>Move to Workspace</uicontrol> option, this means the
+metadata of your server is already hidden from the workbench.</note></li>
+</ol></p></result>
+</taskbody>
+</task>
+<?Pub *0000003518?>

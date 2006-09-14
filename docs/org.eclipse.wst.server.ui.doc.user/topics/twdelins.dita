@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="twdelins_wst" xml:lang="en-us">
+<title id="title">Deleting a server</title>
+<shortdesc id="shortdesc">You may delete a server from the Servers view.</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm>servers<indexterm>deleting</indexterm></indexterm>
+<indexterm>wizards<indexterm>Delete Server</indexterm></indexterm><indexterm>Delete
+Server wizard<?Pub Caret?></indexterm></keywords>
+</metadata></prolog>
+<taskbody>
+<context id="context">To delete a server:</context>
+<steps id="steps">
+<step><cmd>In the Servers view, right-click on the server that you want to
+delete.</cmd></step>
+<step><cmd>Select  <b>Delete</b>. </cmd><info>The Delete Server dialog box
+opens.</info></step>
+<step><cmd>Select the <uicontrol>OK</uicontrol> button to delete the server
+from the Servers view.</cmd></step>
+</steps>
+</taskbody>
+</task>
+<?Pub *0000001015?>

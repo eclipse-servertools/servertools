@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="tprefaud_wst" xml:lang="en-us">
+<title id="title">Defining the audio preferences<?Pub Caret?></title>
+<shortdesc id="shortdesc">Using the Preferences page, you can define the preferences
+that servers will use for audio purposes.</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm>preferences<indexterm>audio for servers</indexterm></indexterm>
+<indexterm>audio<indexterm>defining preferences for servers</indexterm></indexterm>
+<indexterm>workbench<indexterm>defining audio preferences for servers</indexterm></indexterm>
+</keywords>
+</metadata></prolog>
+<taskbody>
+<context id="context">To define these preferences, do the following:</context>
+<steps id="steps">
+<step><cmd>From the Window menu, select  <uicontrol>Preferences</uicontrol>.</cmd>
+</step>
+<step><cmd>In the Preferences window, expand  <uicontrol>Server</uicontrol> and
+then select  <uicontrol>Audio.</uicontrol></cmd></step>
+<step><cmd>Specify one or more of the following settings:</cmd>
+<choicetable>
+<chrow><choption>Enable sounds</choption><chdesc>Plays sound when an error
+occurs on the server, or whenever the server changes state (such as, changing
+from "Starting" to "Started")</chdesc></chrow>
+<chrow><choption>Volume</choption><chdesc>Adjusts the volume of the sound
+played on your computer.</chdesc></chrow>
+<chrow><choption>Sounds</choption><chdesc>Lists the sounds events to which
+you can enable the sound. To enable sound for an event, select the check box
+beside the event.</chdesc></chrow>
+</choicetable>
+</step>
+<step><cmd>Click  <uicontrol>Apply</uicontrol> and then  <uicontrol>OK</uicontrol> to
+save your changes.</cmd></step>
+</steps>
+</taskbody>
+</task>
+<?Pub *0000001836?>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="twcrtins_wst" xml:lang="en-us">
+<title id="title">Creating a server</title>
+<shortdesc><ph id="shortdesc">You can create a server to identify the runtime
+environment that you want to use for testing your project resources. The term <i>creating
+a server</i> defines creating a pointer from the workbench to an existing
+installation of an application server</ph>.</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm>servers<indexterm>creating</indexterm><indexterm>creating
+a <?Pub Caret?>pointer</indexterm></indexterm><indexterm>wizards<indexterm>New
+Server</indexterm></indexterm><indexterm>New Server wizard</indexterm></keywords>
+</metadata></prolog>
+<taskbody>
+<context id="context">To create a server:</context>
+<steps id="steps">
+<step><cmd>In the menu bar, click <uicontrol>File > New > Other</uicontrol>. </cmd>
+</step>
+<step><cmd>Expand the <uicontrol>Server</uicontrol> folder and then select
+ <uicontrol>Server</uicontrol>.</cmd></step>
+<step><cmd>Click  <uicontrol>Next</uicontrol>.</cmd><info>The New Server wizard
+opens. This wizard defines a new server, that contains information required
+to point to a specific runtime environment for local or remote testing, or
+for publishing to an application server.</info></step>
+<step><cmd>In the <uicontrol>Server's host name</uicontrol> field, you can
+provide the fully qualified DNS name or IP address of the host machine that
+where the server is running. By default, this field is pre-filled with the
+default address: <userinput>localhost</userinput></cmd></step>
+<step><cmd>In the <uicontrol>Select the server type</uicontrol> list, select
+the type of server or test environment where you want to publish or test your
+resources.</cmd>
+<substeps>
+<substep><cmd>(Optional) Refer to the <uicontrol>Description</uicontrol> section
+for brief details about the server you have selected.</cmd></substep>
+<substep><cmd>(Optional) In the <uicontrol>View By</uicontrol> drop-down list,
+select how you would like to display the list of available servers in the <uicontrol>Select
+the server type</uicontrol> list:</cmd><info></info></substep>
+</substeps>
+<choicetable>
+<chrow><choption>Name</choption><chdesc>Alphabetically sorts the list of available
+servers.</chdesc></chrow>
+<chrow><choption>Vendor</choption><chdesc>Categorize the list of available
+servers in vendor-specific folders.</chdesc></chrow>
+<chrow><choption>Version</choption><chdesc>Categorize the list of available
+servers in folders based on the version of the servers.</chdesc></chrow>
+<chrow><choption>Module Support</choption><chdesc>Categorize the list of available
+servers based on the supported J2EE module specification level by the server.</chdesc>
+</chrow>
+</choicetable>
+</step>
+<step><cmd>Click <uicontrol>Next</uicontrol> and follow the instructions in
+the wizard to specify the details of the server that you want to create. For
+more information about any of the fields on this wizard, select the field
+and then press <uicontrol>F1</uicontrol>.</cmd></step>
+<step><cmd>Click  <uicontrol>Finish</uicontrol>.</cmd><info>The new server
+appears in the Servers view under the  <uicontrol>Server</uicontrol> column.</info>
+</step>
+</steps>
+</taskbody>
+</task>
+<?Pub *0000003376?>

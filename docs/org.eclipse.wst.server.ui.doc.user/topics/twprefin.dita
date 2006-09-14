@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="twprefin_wst" xml:lang="en-us">
+<title id="title">Setting a default server</title>
+<shortdesc id="shortdesc">A default server is the server that you want to
+use when a project has more than one server defined.</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm>servers<indexterm>setting default on a project<?Pub Caret?></indexterm></indexterm>
+<indexterm>projects<indexterm>setting a default server</indexterm></indexterm>
+</keywords>
+</metadata></prolog>
+<taskbody>
+<context id="context"><p>To set a default server:</p></context>
+<steps id="steps">
+<step><cmd>Right-click on your project.</cmd><info>The pop-up menu for this
+project appears.</info></step>
+<step><cmd>Select <menucascade><uicontrol>Properties </uicontrol><uicontrol>Server</uicontrol>
+</menucascade>.</cmd><info>The Server pane appears on the right.</info></step>
+<step><cmd>Under the <uicontrol>Default server</uicontrol> list, select the
+server that you want to become the default server.</cmd></step>
+<step><cmd>Click  <uicontrol>Apply</uicontrol> and then <uicontrol>OK</uicontrol> to
+save your changes and close the Properties window.</cmd></step>
+</steps>
+</taskbody>
+</task>
+<?Pub *0000001344?>

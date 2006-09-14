@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<?Pub Inc?>
+<task id="twlaunchpref_wst" xml:lang="en-us">
+<title id="title">Defining the launching preferences</title>
+<shortdesc id="shortdesc"><ph id="shortdesc_ph1">Using the Preferences page,
+you can define the preferences that the servers use when starting or switching
+server modes. Switching server modes occurs when you use the <uicontrol>Run
+on Server</uicontrol></ph><ph id="shortdesc_ph2"> or <uicontrol>Debug on Server</uicontrol> commands.</ph></shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm>preferences<indexterm>launching for servers</indexterm></indexterm>
+<indexterm>servers<indexterm>launching</indexterm></indexterm><indexterm>workbench<indexterm>defining
+launching preferences for servers</indexterm></indexterm></keywords>
+</metadata></prolog>
+<taskbody>
+<prereq></prereq>
+<context id="context">To define these preferences, complete the following:</context>
+<steps>
+<step id="step1"><cmd>In the toolbar, select <menucascade><uicontrol>Window</uicontrol>
+<uicontrol>Preferences</uicontrol></menucascade>.</cmd></step>
+<step id="step2"><cmd>In the Preferences window, expand <uicontrol>Server</uicontrol> and
+then select <uicontrol>Launching</uicontrol>.</cmd></step>
+<step><cmd id="step3">Specify one or more of the following settings:</cmd>
+<choicetable>
+<chrow id="chrow1"><choption>Automatically publish when starting servers</choption>
+<chdesc>Specifies that all the files should automatically be published before
+starting the server.</chdesc></chrow>
+<chrow id="chrow2"><choption>Automatically restart servers when necessary</choption>
+<chdesc>Specifies that the server tools can automatically restart the server
+when it detects that the server must be restarted to handle resource changes
+in the workspace.</chdesc></chrow>
+<chrow id="chrow3"><choption>Save dirty editors before starting server</choption>
+<chdesc>Specify the preference for saving the changes in any open server editors
+before starting the server by selecting one of the following options:<ul>
+<li>Always - specifies the workbench will automatically save any changes in
+an open server editor before starting the server</li>
+<li>Never - specifies the workbench will not save the changes in any open
+editors before starting the server</li>
+<li>Prompt - specifies the workbench to prompt you before saving any changes
+in an open server editor</li>
+</ul></chdesc></chrow>
+<chrow><choption id="choption1">When switching to a different server mode<!--context id = .spge0030--></choption>
+<chdesc><ph id="chdesc1_ph1">When switching the server to run in a different
+mode, for example using the <menucascade><uicontrol>Run As</uicontrol><uicontrol>Run
+on Server</uicontrol></menucascade></ph> <ph id="chdesc1_ph2">or <menucascade>
+<uicontrol>Debug As</uicontrol><uicontrol>Debug on Server</uicontrol></menucascade>,
+specify the next action of the server by selecting one of the following options:</ph><ul
+id="chdesc1_ul1">
+<li>Restart - specifies the workbench to stop and restart the server</li>
+<li>Continue - specifies to continue running the server in previous mode and
+ignore the change request of running in a different server mode</li>
+<li>Prompt - specifies the workbench to prompt you for the next server action
+when you switch the server to run in a different mode</li>
+</ul></chdesc></chrow>
+<chrow><choption id="choption2">When switching the server out of debug mode<!--context id = .spge0031--></choption>
+<chdesc><ph id="chdesc2_ph1">When you finish running the server in debug mode
+and switch out, for example using the <menucascade><uicontrol>Run As</uicontrol>
+<uicontrol>Run on Server</uicontrol></menucascade></ph><ph id="chdesc2_ph2"> <?Pub Caret1?>command,
+specify the next action of the server by selecting one of the following options:</ph><ul
+id="chdesc2_ul1">
+<li>Restart - specifies the workbench to stop and restart the server</li>
+<li>Disable breakpoints - specifies to clear all previously set breakpoints
+from the application and continue running the application in the newly selected
+server mode</li>
+<li>Continue - specifies to continue running the server in debug mode and
+ignore the change request of running in a different server mode</li>
+<li>Prompt - specifies the workbench to prompt you for the next server action
+when switching the server out of debug mode</li>
+</ul></chdesc></chrow>
+<chrow id="chrow4"><choption>When switching the server into debug mode, re-enable
+breakpoints<!--context id = .spge0032--></choption><chdesc>When you change
+the server mode into debug mode, for example using the <menucascade><uicontrol>Debug
+As</uicontrol><uicontrol>Debug on Server</uicontrol></menucascade> command,
+specify how to handle the breakpoints currently set in your application by
+selecting one of the following options:<ul>
+<li>Always - specifies to enable all the currently set breakpoints in your
+application and break at them</li>
+<li>Never - specifies the workbench to ignore all the breakpoints previously
+set in your application and continue running the application on the server
+in debug mode. When the workbench ignores all the breakpoints in your application,
+the behavior of the server mode is similar to using the <b>Run on Server</b> command.
+However, because the server is running in debug mode, you have the opportunity
+to enable or re-enable breakpoints in your application.</li>
+<li>Prompt - specifies the workbench will prompt you on how to handle the
+breakpoints set in your applications</li>
+</ul></chdesc></chrow>
+</choicetable>
+</step>
+</steps>
+</taskbody>
+</task>
+<?Pub *0000005697?>

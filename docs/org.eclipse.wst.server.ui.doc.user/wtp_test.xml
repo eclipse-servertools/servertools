@@ -1,7 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<?NLS  TYPE="org.eclipse.help.toc"?>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?NLS TYPE="org.eclipse.help.toc"?>
+
 <toc label="Testing J2EE projects" topic="topics/tj2ee.html">
-   <topic label="Testing applications on a server" href="topics/tj2ee.html">
-      <topic label="Testing artifacts on a server" href="topics/testing.html"/>
-   </topic>
+<topic label="Testing applications on a server" href="topics/tj2ee.html">
+<topic label="Testing artifacts on a server" href="topics/testing.html"/>
+</topic>
 </toc>

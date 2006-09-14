@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="twpub_wst" xml:lang="en-us">
+<title id="twpub_title">Publishing your application</title>
+<shortdesc id="twpub_shortdesc"><i>Publishing</i> involves copying files (projects,
+resource files, and server configurations) to the correct location for the
+server to find and use them. In the test environments, these files may already
+be in the correct location. In some cases, temporary copies of the server
+configurations may be created.</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm>servers<indexterm>publishing applications</indexterm></indexterm>
+<indexterm>applications<indexterm>publishing to servers</indexterm><indexterm>copying
+files to server</indexterm></indexterm></keywords>
+</metadata></prolog>
+<taskbody>
+<context><p id="twpub_p1">You can either publish your application automatically
+or manually. If the  <uicontrol>Automatically publish when starting servers</uicontrol> check
+box on the Server preferences page (<menucascade><uicontrol>Window</uicontrol>
+<uicontrol>Preferences</uicontrol><uicontrol>Server</uicontrol><uicontrol>Launching<?Pub Caret?></uicontrol>
+</menucascade>) is selected, the server tools check to see if your project
+and files on the server are synchronized. If they are not, the project and
+the files are automatically updated when the server is either started or restarted.</p><p
+id="twpub_p2">To publish your application manually you can complete one of
+the following in the Servers view:</p></context>
+<steps-unordered>
+<step><cmd><ph id="twpub_steps_ph1">Select the server and then click the  <uicontrol>Publish
+to the server</uicontrol></ph> <image alt="This is an image of the Publish toolbar icon."
+href="../images/launch_publish.gif"><alt>This is an image of the Publish toolbar
+icon.</alt></image> <ph id="twpub_steps_ph2">icon located on the toolbar.</ph></cmd>
+</step>
+<step id="twpub_steps_step2"><cmd>Right-click the server and then select  <uicontrol>Publish</uicontrol>.</cmd>
+</step>
+</steps-unordered>
+<result><p id="twpub_p3">All the projects defined in the server configuration
+that are associated with the selected server are published. The resources
+in these projects are transferred to the location that is defined by the server.</p></result>
+</taskbody>
+</task>
+<?Pub *0000002418?>

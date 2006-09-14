@@ -1,8 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<?NLS  TYPE="org.eclipse.help.toc"?>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?NLS TYPE="org.eclipse.help.toc"?>
+
 <toc label="Debugging applications on a server" topic="topics/tdebug.html">
-   <topic label="Debugging applications on a server" href="topics/tdebug.html">
-      <topic label="...servlets" href="topics/tservlet.html"/>
-      <topic label="...JSP file" href="topics/tdbgjsp.html"/>
-   </topic>
+<topic label="Debugging applications on a server" href="topics/tdebug.html">
+<topic label="...servlets" href="topics/tservlet.html"/>
+<topic label="...JSP file" href="topics/tdbgjsp.html"/>
+</topic>
 </toc>

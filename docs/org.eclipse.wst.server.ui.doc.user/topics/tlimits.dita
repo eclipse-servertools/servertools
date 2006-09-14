@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="tlimits_wst" xml:lang="en-us">
+<title id="title">Limitations and restrictions</title>
+<shortdesc id="shortdesc"><?Pub Caret?>This section describes known server
+tools limitations and problems along with their solutions.</shortdesc>
+<taskbody>
+<context></context>
+</taskbody>
+</task>
+<?Pub *0000000465?>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="testing_wst" xml:lang="en-us">
+<title id="testing_title">Testing artifacts on a server</title>
+<shortdesc id="testing_shortdesc">You can use the workbench to test one or
+more application artifacts on a server.</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm>servers<indexterm>testing artifacts</indexterm></indexterm>
+<indexterm>artifacts<indexterm>testing on server</indexterm></indexterm><indexterm>wizards<indexterm>Run
+on Server</indexterm></indexterm><indexterm>Run on Server wizard</indexterm>
+</keywords>
+</metadata></prolog>
+<taskbody>
+<prereq></prereq>
+<context></context>
+<steps>
+<step id="testing_step1"><cmd>In the Project Explorer view from the J2EE perspective,
+expand the project that contains the file you want to test.</cmd></step>
+<step id="testing_step2"><cmd>Right-click the artifact that you want to test.</cmd>
+<info>Examples of artifacts include the Web project or a file within the Web
+project (such as a JSP file, servlet, or HTML file), or an enterprise bean.</info>
+</step>
+<step id="testing_step3"><cmd>Select  <uicontrol>Run As > Run on Server</uicontrol>.
+The Server selection wizard appears.</cmd></step>
+<step id="testing_step4"><cmd>Use the radio buttons to specify how you want
+to select the server. Select from the following options:</cmd>
+<choicetable>
+<chrow><choption>Choose an existing server</choption><chdesc>This option uses
+an existing server that is defined in your workbench. </chdesc></chrow>
+<chrow><choption>Manually define a server</choption><chdesc>This option creates
+a new server.</chdesc></chrow>
+</choicetable>
+</step>
+<step id="testing_step5"><cmd>Under the <uicontrol>Select the server that
+you want to use</uicontrol> list, select a server you want to run your application.</cmd>
+<info>The list of available servers, under the <uicontrol>Select the server
+that you want to use</uicontrol> list, depends on the J2EE specification level
+you defined for the artifact and the supported servers on this workbench.</info>
+</step>
+<step id="testing_step6"><cmd>(Optional) Click <uicontrol>Next</uicontrol> to
+configure additional settings, such as configuring settings specific to the
+server, and adding or removing projects configured on the server.</cmd></step>
+<step><cmd><ph id="testing_step7_ph1">Click <uicontrol>Finish.</uicontrol></ph></cmd>
+<info><ph id="testing_step7_ph2">The server tools automatically complete the
+following tasks for you: </ph><ul>
+<li id="testing_li1">If this is the first time you are creating the server
+on the workspace and if the server generates server configuration files, the
+workbench creates a server project with <uicontrol>Servers</uicontrol> as
+the default name to hold the generated server configuration files.</li>
+<li id="testing_li2">Creates the server and adds it to the Servers View.</li>
+<li id="testing_li3">Adds your project to the server.</li>
+<li id="testing_li4">Starts the server. (This may take time depending on the
+server settings.)</li>
+<li id="testing_li5">If the  <uicontrol>Automatically publish when starting
+servers</uicontrol> check box on the Server preferences page (<menucascade>
+<uicontrol>Window > Preferences > Server > Launching<?Pub Caret?></uicontrol>
+</menucascade>) is selected, the workbench checks to see if your project and
+files on the server are synchronized. If they are not, the project and the
+files are automatically updated when the server is restarted.</li>
+<li id="testing_li6">Depending on the artifact you are testing, the output
+of running your artifact may display in the Console view or in a Web browser
+that automatically opens.</li>
+</ul></info></step>
+</steps>
+</taskbody>
+</task>
+<?Pub *0000003825?>

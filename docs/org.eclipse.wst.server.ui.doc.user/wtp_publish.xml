@@ -1,7 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<?NLS  TYPE="org.eclipse.help.toc"?>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?NLS TYPE="org.eclipse.help.toc"?>
+
 <toc label="publishing" topic="topics/tpublish.html">
-   <topic label="Publishing applications to a server" href="topics/tpublish.html">
-      <topic label="Publishing your application" href="topics/twpub.html"/>
-   </topic>
+<topic label="Publishing applications to a server" href="topics/tpublish.html">
+<topic label="Publishing your application" href="topics/twpub.html"/>
+</topic>
 </toc>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="twedtins_wst" xml:lang="en-us">
+<title id="title">Editing a server</title>
+<shortdesc id="shortdesc">You can edit your server using a server editor.
+The fields that you change are dependant on what runtime environment the server
+is defined to use, or whether it is defined as a local or remote server.</shortdesc>
+<prolog><metadata>
+<keywords id="index"><indexterm>servers<indexterm>editing</indexterm><indexterm>editor<?Pub Caret?></indexterm></indexterm>
+<indexterm>editors<indexterm>server</indexterm></indexterm></keywords>
+</metadata></prolog>
+<taskbody>
+<context id="context">To edit a server:</context>
+<steps id="steps">
+<step><cmd>Open a server editor, completing one of the following:</cmd>
+<choices>
+<choice>In the Servers view, double-click on the server that you want to edit.</choice>
+<choice>Right-click on the server in the Servers view, from the pop-up menu
+select <uicontrol>Open</uicontrol>. </choice>
+</choices>
+</step>
+<step><cmd>When the server editor is open on the workbench, you can save your
+changes by either selecting from the toolbar <menucascade><uicontrol>File</uicontrol>
+<uicontrol>Save</uicontrol></menucascade> or type <userinput>CTRL+S</userinput>. </cmd>
+<info><note type="tip">Changes to the server editor that has not yet been
+saved is indicated with a * icon located at the top of the server editor.
+After you save your edits on the server editor, the * icon should no longer
+appear on the server editor.</note></info></step>
+<step><cmd>Make sure that the editor is closed before starting, restarting,
+or adding and removing modules on the server.</cmd></step>
+</steps>
+</taskbody>
+</task>
+<?Pub *0000001812?>
