@@ -215,8 +215,8 @@ public class Module implements IModule {
 		IModule m = (IModule) obj;
 		if (!getId().equals(m.getId()))
 			return false;
-		//if (!project.equals(m.getProject()))
-		//	return false;
+		if (project != null && m.getProject() != null && !project.equals(m.getProject()))
+			return false;
 		//if (!getModuleType().equals(m.getModuleType()))
 		//	return false;
 		
@@ -224,7 +224,10 @@ public class Module implements IModule {
 	}
 
 	public int hashCode() {
-		return getId().hashCode();
+		int result = getId().hashCode() + 17;
+		if (getProject() != null)
+			result += getProject().hashCode() * 37;
+		return result;
 	}
 
 	/**
