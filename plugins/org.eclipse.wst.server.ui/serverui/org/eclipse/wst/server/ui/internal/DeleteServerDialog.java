@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,12 +17,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.resources.IResourceRuleFactory;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -34,9 +38,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServer.IOperationListener;
+import org.eclipse.wst.server.core.internal.ServerSchedulingRule;
 /**
  * Dialog that prompts a user to delete server(s) and/or server configuration(s).
  */
@@ -143,43 +147,45 @@ public class DeleteServerDialog extends Dialog {
 		final boolean deleteRunning = (checkDeleteRunning != null && checkDeleteRunning.getSelection());
 		final boolean deleteRunningStop = (checkDeleteRunningStop != null && checkDeleteRunningStop.getSelection());
 		
-		if (runningServersList.size() > 0) {
-			// stop servers and/or updates servers' list
-			prepareForDeletion(deleteRunning, deleteRunningStop);
-			//monitor.worked(1);
-		}
-		
-		try {
-			WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-				protected void execute(IProgressMonitor monitor) throws CoreException {
-					// since stopping can be long, let's animate progessDialog
-					monitor.beginTask(Messages.deleteServerTask, 2);
-					
-					if (servers.length == 0) {
-						// all servers have been deleted from list
-						return;
-					}
-					try {
-						int size = servers.length;
-						for (int i = 0; i < size; i++) {
-							servers[i].delete();
-						}
-						
-						if (checked) {
-							size = configs.length;
-							for (int i = 0; i < size; i++) {
-								configs[i].delete(true, true, monitor);
-							}
-						}
-					} catch (Exception e) {
-						Trace.trace(Trace.SEVERE, "Error while deleting resources", e);
-					}
+		Job job = new Job(Messages.deleteServerTask) {
+			protected IStatus run(IProgressMonitor monitor) {
+				if (runningServersList.size() > 0) {
+					// stop servers and/or updates servers' list
+					prepareForDeletion(deleteRunning, deleteRunningStop);
 				}
-			};
-			new ProgressMonitorDialog(getShell()).run(true, true, op);
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error deleting resources", e);
-		}
+				
+				if (servers.length == 0) {
+					// all servers have been deleted from list
+					return Status.OK_STATUS;
+				}
+				try {
+					int size = servers.length;
+					for (int i = 0; i < size; i++)
+						servers[i].delete();
+					
+					if (checked) {
+						size = configs.length;
+						for (int i = 0; i < size; i++)
+							configs[i].delete(true, true, monitor);
+					}
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Error while deleting resources", e);
+				}
+						
+				return Status.OK_STATUS;
+			}
+		};
+		
+		// set rule for workspace and servers
+		int size = servers.length;
+		ISchedulingRule[] rules = new ISchedulingRule[size+1];
+		for (int i = 0; i < size; i++)
+			rules[i] = new ServerSchedulingRule(servers[i]);
+		IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
+		rules[size] = ruleFactory.createRule(ResourcesPlugin.getWorkspace().getRoot());
+		job.setRule(MultiRule.combine(rules));
+		
+		job.schedule();
 		
 		super.okPressed();
 	}
