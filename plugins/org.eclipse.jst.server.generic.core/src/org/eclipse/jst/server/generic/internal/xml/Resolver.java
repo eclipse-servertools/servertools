@@ -38,7 +38,6 @@ public class Resolver {
 	private static final String PROP_START = "${"; //$NON-NLS-1$
 	private Map fPropertyValues = new HashMap();
 	private ServerRuntime server;
-
 	/**
 	 * @param runtime 
 	 */
@@ -101,9 +100,9 @@ public class Resolver {
 		String proppedString,
 		HashMap cache) {
 		String resolvedString = proppedString;
-		int start = skipToProperty(resolvedString,cache);// see if there are properties to be resolved.
+		int start = skipToProperty(resolvedString, cache);// see if there are properties to be resolved.
 		if (start >= 0) {
-			resolvedString = resolveProperty(resolvedString, start, cache);
+			resolvedString = resolveProperty(resolvedString, cache);
 			resolvedString = resolvePropertiesFromCache(resolvedString, cache);
 		}
 		return resolvedString;
@@ -128,9 +127,9 @@ public class Resolver {
 		return str.indexOf(PROP_START2) >= 0;
 	}
 
-	private String resolveProperty(String proppedString, int start, HashMap cache) {
-		String str = proppedString;
-		start = str.indexOf(PROP_START);
+	private String resolveProperty(String proppedString, HashMap cache) {
+		StringBuffer str = new StringBuffer(proppedString);
+		int start = str.indexOf(PROP_START);
 		int end = str.indexOf(PROP_END, start);
 		String key = str.substring(start + 2, end);
         String value = (String)cache.get(key);
@@ -148,10 +147,8 @@ public class Resolver {
             }
         }
 		if(value == null )
-			return str;
-		return str.substring(0, start)
-			+ value
-			+ str.substring(end + 1);
+			return str.toString();
+		return str.replace( start, end+1, value ).toString();
 	}
 	
 	private String fixParam(String proppedString) {
