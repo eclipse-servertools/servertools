@@ -114,10 +114,26 @@ public abstract class ProjectModule extends ModuleDelegate {
 	/**
 	 * Returns the child modules of this module.
 	 *
-	 * @return org.eclipse.wst.server.core.model.IModule[]
+	 * @return an array of child modules
 	 */
 	public IModule[] getChildModules() {
 		return null;
+	}
+
+	/**
+	 * Returns <code>true</code> if this module has a simple structure based on a
+	 * single root folder, and <code>false</code> otherwise.
+	 * <p>
+	 * In a single root structure, all files that are contained within the root folder
+	 * are part of the module, and are already in the correct module structure. No
+	 * module resources exist outside of this single folder.
+	 * </p>
+	 * 
+	 * @return <code>true</code> if this module has a single root structure, and
+	 *    <code>false</code> otherwise
+	 */
+	public boolean isSingleRootStructure() {
+		return false;
 	}
 
 	/**
@@ -138,12 +154,11 @@ public abstract class ProjectModule extends ModuleDelegate {
 	 * @return an array of module resources
 	 * @throws CoreException
 	 */
-	private IModuleResource[] getModuleResources(IPath path, IContainer container) throws CoreException {
-		List list = new ArrayList();
-
+	protected IModuleResource[] getModuleResources(IPath path, IContainer container) throws CoreException {
 		IResource[] resources = container.members();
 		if (resources != null) {
 			int size = resources.length;
+			List list = new ArrayList(size);
 			for (int i = 0; i < size; i++) {
 				IResource resource = resources[i];
 				if (resource instanceof IContainer) {
@@ -159,10 +174,10 @@ public abstract class ProjectModule extends ModuleDelegate {
 						list.add(new ModuleFile(file, file.getName(), path));
 				}
 			}
+			IModuleResource[] moduleResources = new IModuleResource[list.size()];
+			list.toArray(moduleResources);
+			return moduleResources;
 		}
-
-		IModuleResource[] moduleResources = new IModuleResource[list.size()];
-		list.toArray(moduleResources);
-		return moduleResources;
+		return new IModuleResource[0];
 	}
 }
