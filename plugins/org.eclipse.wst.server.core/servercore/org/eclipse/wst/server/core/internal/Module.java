@@ -27,6 +27,7 @@ public class Module implements IModule {
 	protected String version;
 	protected IProject project;
 	protected ModuleDelegate delegate;
+	protected String id2;
 
 	/**
 	 * Module constructor.
@@ -46,6 +47,7 @@ public class Module implements IModule {
 		this.version = version;
 		this.id = id;
 		this.name = name;
+		id2 = factory.getId() + ":" + id;
 	}
 
 	/**
@@ -54,7 +56,7 @@ public class Module implements IModule {
 	 * @return java.lang.String
 	 */
 	public String getId() {
-		return factory.getId() + ":" + id;
+		return id2;
 	}
 
 	/**
@@ -213,7 +215,7 @@ public class Module implements IModule {
 			return false;
 		
 		IModule m = (IModule) obj;
-		if (!getId().equals(m.getId()))
+		if (!id2.equals(m.getId()))
 			return false;
 		if (project != null && m.getProject() != null && !project.equals(m.getProject()))
 			return false;
@@ -224,9 +226,9 @@ public class Module implements IModule {
 	}
 
 	public int hashCode() {
-		int result = getId().hashCode() + 17;
-		if (getProject() != null)
-			result += getProject().hashCode() * 37;
+		int result = id2.hashCode() + 17;
+		if (project != null)
+			result += project.hashCode() * 37;
 		return result;
 	}
 
@@ -236,6 +238,6 @@ public class Module implements IModule {
 	 * @return java.lang.String
 	 */
 	public String toString() {
-		return "Module[" + name + "," + getId() + "]";
+		return "Module[" + name + "," + id2 + "]";
 	}
 }
