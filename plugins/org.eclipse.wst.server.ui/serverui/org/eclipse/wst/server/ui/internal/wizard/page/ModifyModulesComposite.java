@@ -158,7 +158,7 @@ public class ModifyModulesComposite extends Composite {
 	 * ChildMapModuleKey
 	 */
 	protected class ChildModuleMapKey {
-		private IModule[] moduleTree;
+		protected IModule[] moduleTree;
 		
 		protected ChildModuleMapKey(IModule curModule) {
 			if (curModule != null) {
@@ -314,6 +314,29 @@ public class ModifyModulesComposite extends Composite {
 					childModuleMap.put(new ChildModuleMapKey(module), children);
 			} catch (Exception e) {
 				// ignore
+			}
+		}
+		
+		// get children recursively
+		iterator = childModuleMap.keySet().iterator();
+		while (iterator.hasNext()) {
+			ChildModuleMapKey key = (ChildModuleMapKey) iterator.next();
+			IModule[] children0 = (IModule[]) childModuleMap.get(key);
+			if (children0 != null) {
+				int size = children0.length;
+				for (int i = 0; i < size; i++) {
+					IModule[] module2 = new IModule[size + 1];
+					System.arraycopy(key.moduleTree, 0, module2, 0, size);
+					module2[size] = children0[i];
+					
+					try {
+						IModule[] children = server.getChildModules(module2, null);
+						if (children != null && children.length > 0)
+							childModuleMap.put(new ChildModuleMapKey(module2), children);
+					} catch (Exception e) {
+						// ignore
+					}
+				}
 			}
 		}
 		
