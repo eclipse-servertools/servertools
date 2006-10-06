@@ -325,9 +325,10 @@ public class ModifyModulesComposite extends Composite {
 			if (children0 != null) {
 				int size = children0.length;
 				for (int i = 0; i < size; i++) {
-					IModule[] module2 = new IModule[size + 1];
-					System.arraycopy(key.moduleTree, 0, module2, 0, size);
-					module2[size] = children0[i];
+					int size2 = key.moduleTree.length;
+					IModule[] module2 = new IModule[size2 + 1];
+					System.arraycopy(key.moduleTree, 0, module2, 0, size2);
+					module2[size2] = children0[i];
 					
 					try {
 						IModule[] children = server.getChildModules(module2, null);
