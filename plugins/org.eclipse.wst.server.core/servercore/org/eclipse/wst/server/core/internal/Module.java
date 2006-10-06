@@ -47,7 +47,11 @@ public class Module implements IModule {
 		this.version = version;
 		this.id = id;
 		this.name = name;
-		id2 = factory.getId() + ":" + id;
+		if (factory != null)
+			id2 = factory.getId() + ":";
+		else
+			id2 = ":";
+		id2 += id;
 	}
 
 	/**
