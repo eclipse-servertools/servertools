@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Generic Server Tests Plug-in
-Bundle-SymbolicName: org.eclipse.jst.server.generic.tests
+Bundle-SymbolicName: org.eclipse.jst.server.generic.tests;singleton:=true
 Bundle-Version: 1.0.100
 Bundle-ClassPath: genericServerTests.jar
 Bundle-Activator: org.eclipse.jst.server.generic.tests.TestsPlugin

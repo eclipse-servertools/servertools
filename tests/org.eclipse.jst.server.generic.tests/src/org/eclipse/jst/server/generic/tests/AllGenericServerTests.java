@@ -44,6 +44,10 @@ public class AllGenericServerTests {
         suite.addTestSuite(PluginIntegrityTest.class);
         suite.addTestSuite(ServerCreationTest.class);
         suite.addTestSuite(ServerTypeDefinitionModelTest.class);
+        suite.addTestSuite(GenericServerRuntimeTest.class);
+        suite.addTestSuite(GenericServerTest.class);
+        suite.addTestSuite(XMLUtilsTest.class);
+        suite.addTestSuite(ServerTypeDefinitionManagerTest.class);
         //$JUnit-END$
         return suite;
     }
