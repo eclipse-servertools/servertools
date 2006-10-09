@@ -3,6 +3,7 @@
 <plugin>
 
  <extension-point id="serverdefinition" name="%extensionPointServerdefinition" schema="schema/serverdefinition.exsd"/>
+ <extension-point id="runtimedefinition" name="%extensionPointRuntimedefinition" schema="schema/runtimedefinition.exsd"/>
  <extension-point id="genericpublisher" name="%extensionPointGenericpublisher" schema="schema/genericpublisher.exsd"/>
 	
  <extension point="org.eclipse.debug.core.launchConfigurationTypes">

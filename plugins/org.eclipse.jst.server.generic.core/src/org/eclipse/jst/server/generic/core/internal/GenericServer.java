@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -30,6 +31,7 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
+import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.IURLProvider;
@@ -222,8 +224,15 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	 * @return server runtime
 	 */
     public ServerRuntime getServerDefinition(){
-		String rtTypeId = getServer().getRuntime().getRuntimeType().getId();
-		return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(rtTypeId,getInstanceProperties());
+        IServer server = getServer();
+		String rtTypeId = server.getRuntime().getRuntimeType().getId();
+        String serverTypeId = server.getServerType().getId();
+        /**
+         * Pass both the serverType id and runtimeType id and ServerTypeDefinitionManager 
+         * will figure out how to give us back the correct ServerRuntime.
+         */
+		return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(
+                serverTypeId, rtTypeId, getInstanceProperties());
 	}
 
     private GenericServerRuntime getRuntimeDelegate(){

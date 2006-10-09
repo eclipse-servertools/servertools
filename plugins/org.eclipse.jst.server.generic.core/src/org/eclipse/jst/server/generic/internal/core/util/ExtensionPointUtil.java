@@ -27,14 +27,23 @@ public class ExtensionPointUtil {
      * serverdefinition extension id
      */
     public static final String SERVERDEFINITION_EXTENSION_ID = "serverdefinition"; //$NON-NLS-1$
+    public static final String RUNTIMEDEFINITION_EXTENSION_ID = "runtimedefinition"; //$NON-NLS-1$
     private static final String GENERICPUBLISHER_EXTENSION_ID = "genericpublisher"; //$NON-NLS-1$
 
     /**
      * Returns serverdefinition extensions
-     * @return serverdefinitionExtensions
+     * @return serverdefinition Extensions
      */
     public static IExtension[] getGenericServerDefinitionExtensions(){
         return getExtensions(CorePlugin.PLUGIN_ID+"."+SERVERDEFINITION_EXTENSION_ID); //$NON-NLS-1$
+    }
+
+    /**
+     * Returns runtimedefinition extensions
+     * @return runtimedefinition Extensions
+     */
+    public static IExtension[] getGenericServerRuntimeDefinitionExtensions(){
+        return getExtensions(CorePlugin.PLUGIN_ID+"."+RUNTIMEDEFINITION_EXTENSION_ID); //$NON-NLS-1$
     }
     
     /**

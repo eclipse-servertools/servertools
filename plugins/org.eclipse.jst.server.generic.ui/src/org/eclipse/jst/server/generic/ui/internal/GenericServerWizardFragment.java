@@ -69,13 +69,14 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
             runtime= (GenericServerRuntime)wc.getAdapter(GenericServerRuntime.class);
             if(runtime==null)
             	runtime= (GenericServerRuntime)wc.loadAdapter(GenericServerRuntime.class,new NullProgressMonitor());
-        }        
-        String id = runtime.getRuntime().getRuntimeType().getId();
-        if(id==null){   
+        }
+        String serverTyepId = server.getServerType().getId();
+        String runtimeTypeId = runtime.getRuntime().getRuntimeType().getId();
+        if(runtimeTypeId==null){   
             return null;
         }
         Map runtimeProperties = runtime.getServerInstanceProperties();
-		ServerRuntime definition = getServerTypeDefinition(id,runtimeProperties);
+		ServerRuntime definition = getServerTypeDefinition(serverTyepId, runtimeTypeId, runtimeProperties);
         return definition;
     }
 

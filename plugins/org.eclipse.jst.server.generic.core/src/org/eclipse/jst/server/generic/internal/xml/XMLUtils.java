@@ -14,6 +14,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IStatus;
@@ -33,14 +35,15 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.osgi.framework.Bundle;
 
 /**
- * Utility for handling the xml data from .serverdef files
+ * Utility for handling the xml data from .serverdef and .runtimedef files.
  * 
  * @author Gorkem Ercan
  */
 public class XMLUtils {
 
 	
-    private ArrayList definitions;
+    private ArrayList serverDefinitions;
+    private ArrayList runtimeDefinitions;
 
 
 	/**
@@ -50,28 +53,52 @@ public class XMLUtils {
 		refresh();
 	}
 
+	/**
+	 * Load all the serverdefinition and runtimedefinition extensions.
+	 */
 	private void refresh() {
-		definitions= new ArrayList();
-         IExtension[] extensions = ExtensionPointUtil.getGenericServerDefinitionExtensions();
-        for (int i = 0; extensions!=null && i < extensions.length; i++) {
-            java.net.URI definitionFile=null;
-            IExtension extension = extensions[i];
+        serverDefinitions = new ArrayList();
+        
+        IExtension[] serverDefExtensions = ExtensionPointUtil.getGenericServerDefinitionExtensions();
+        
+        for (int i = 0; serverDefExtensions != null && i < serverDefExtensions.length; i++) {
+            java.net.URI definitionFile = null;
+            IExtension extension = serverDefExtensions[i];
             IConfigurationElement[] elements = ExtensionPointUtil.getConfigurationElements(extension);
+            
             for (int j = 0; j < elements.length; j++) {
                 IConfigurationElement element = elements[j];
                 definitionFile = getDefinitionFile(element);
-                ServerRuntime runtime =readFile(definitionFile);
-                    if(runtime!=null){
-                        runtime.setId(element.getAttribute("id")); //$NON-NLS-1$
-                        runtime.setConfigurationElementNamespace(element.getNamespace());
-                        definitions.add(runtime);
-                    }
+                ServerRuntime runtime = readFile(definitionFile);
+                if (runtime != null) {
+                    runtime.setId(element.getAttribute("id")); //$NON-NLS-1$
+                    runtime.setConfigurationElementNamespace(element.getNamespace());
+                    serverDefinitions.add(runtime);
                 }
             }
+        }
 
-       }
-
-
+        runtimeDefinitions = new ArrayList();
+        
+        IExtension[] runtimeDefExtensions = ExtensionPointUtil.getGenericServerRuntimeDefinitionExtensions();
+        
+        for (int i = 0; runtimeDefExtensions != null && i < runtimeDefExtensions.length; i++) {
+            java.net.URI definitionFile = null;
+            IExtension extension = runtimeDefExtensions[i];
+            IConfigurationElement[] elements = ExtensionPointUtil.getConfigurationElements(extension);
+            
+            for (int j = 0; j < elements.length; j++) {
+                IConfigurationElement element = elements[j];
+                definitionFile = getDefinitionFile(element);
+                ServerRuntime runtime = readFile(definitionFile);
+                if (runtime != null) {
+                    runtime.setId(element.getAttribute("id")); //$NON-NLS-1$
+                    runtime.setConfigurationElementNamespace(element.getNamespace());
+                    runtimeDefinitions.add(runtime);
+                }
+            }
+        }
+    }
 
     private java.net.URI getDefinitionFile(IConfigurationElement element) {
         
@@ -126,12 +153,11 @@ public class XMLUtils {
 
     }
 
-
 	/**
-	 * @return ArrayList
+	 * @return <code>java.util.List</code> of <code>ServerRuntime</code>s.
 	 */
-	public ArrayList getServerTypeDefinitions() {
-		return definitions;
+	public List getServerTypeDefinitions() {
+		return serverDefinitions;
 	}
 
     /**
@@ -141,6 +167,28 @@ public class XMLUtils {
      */
     public ServerRuntime getServerTypeDefinition(String id) {
     	Iterator defs = getServerTypeDefinitions().iterator();
+        while (id != null && defs.hasNext()) {
+            ServerRuntime elem = (ServerRuntime) defs.next();
+            if (id.equals(elem.getId()))
+                return elem;
+        }
+        return null;
+    }
+
+    /**
+     * @return <code>java.util.List</code> of <code>ServerRuntime</code>s.
+     */
+    public List getRuntimeTypeDefinitions() {
+        return runtimeDefinitions;
+    }
+
+    /**
+     * Get the memory presentation for the .runtimedef file
+     * @param id
+     * @return runtime 
+     */
+    public ServerRuntime getRuntimeTypeDefinition(String id) {
+        Iterator defs = getRuntimeTypeDefinitions().iterator();
         while (defs.hasNext()) {
             ServerRuntime elem = (ServerRuntime) defs.next();
             if (id.equals(elem.getId()))
