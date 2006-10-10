@@ -107,6 +107,12 @@ public class XMLUtils {
         Trace.trace(Trace.FINEST,"Loading serverdef file "+definitionFile+" from bundle "+bundle.getSymbolicName()); //$NON-NLS-1$ //$NON-NLS-2$
         
         URL url = bundle.getEntry(definitionFile);
+        if (url == null )
+        {
+            CorePlugin.getDefault().getLog().log( new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID,1,
+                    "Definition file "+definitionFile+" can not be resolved in bundle "+ bundle.getSymbolicName() ,null) ); //$NON-NLS-1$ //$NON-NLS-2$
+            return null;
+        }
 		try {
 			java.net.URI uri = new java.net.URI(url.getProtocol(), url.getHost(),url.getPath(), url.getQuery());
 		    return uri;
