@@ -10,13 +10,23 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core.tests;
 
+import java.io.File;
+
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jst.server.core.tests.j2ee.*;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 public class AllTests {
+	public static IPath runtimeLocation;
+
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.eclipse.jst.server.core.tests");
 		//$JUnit-BEGIN$
+		System.setProperty("wtp.autotest.noninteractive", "true");
+		
 		suite.addTestSuite(ExistenceTest.class);
 		suite.addTest(new OrderedTestSuite(GenericRuntimeTestCase.class));
 		
@@ -33,6 +43,27 @@ public class AllTests {
 		suite.addTest(new OrderedTestSuite(JndiLaunchableTestCase.class));
 		
 		suite.addTest(new OrderedTestSuite(RuntimeClasspathProviderDelegateTestCase.class));
+		
+		String s = System.getProperty("org.eclipse.jst.server.tomcat.32");
+		//s = "D:\\Tools\\tomcat\\jakarta-tomcat-3.2.4";
+		if (s != null && s.length() > 0) {
+			if (!s.endsWith(File.separator))
+				s += File.separator;
+			runtimeLocation = new Path(s + "lib");
+		}
+		s = System.getProperty("org.eclipse.jst.server.tomcat.40");
+		if (s != null && s.length() > 0) {
+			if (!s.endsWith(File.separator))
+				s += File.separator;
+			runtimeLocation = new Path(s + "common" + File.separator + "lib");
+		}
+		
+		if (runtimeLocation != null)
+			suite.addTest(new OrderedTestSuite(ModuleTestCase.class));
+		
+		suite.addTest(new OrderedTestSuite(NoSourceTestCase.class));
+		suite.addTest(new OrderedTestSuite(BinaryTestCase.class));
+		
 		//$JUnit-END$
 		return suite;
 	}

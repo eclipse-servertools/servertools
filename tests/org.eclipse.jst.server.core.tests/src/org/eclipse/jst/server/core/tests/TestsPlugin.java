@@ -15,10 +15,13 @@ import org.eclipse.core.runtime.Plugin;
  *
  */
 public class TestsPlugin extends Plugin {
+	public static TestsPlugin instance;
+
 	/**
 	 * The constructor.
 	 */
 	public TestsPlugin() {
 		super();
+		instance = this;
 	}
 }
