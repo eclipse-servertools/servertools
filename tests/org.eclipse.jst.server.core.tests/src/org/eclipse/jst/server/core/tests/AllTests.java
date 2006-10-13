@@ -14,7 +14,6 @@ import java.io.File;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jst.server.core.tests.j2ee.*;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -58,12 +57,14 @@ public class AllTests {
 			runtimeLocation = new Path(s + "common" + File.separator + "lib");
 		}
 		
+		// bug 160848
+		/*
 		if (runtimeLocation != null)
 			suite.addTest(new OrderedTestSuite(ModuleTestCase.class));
 		
 		suite.addTest(new OrderedTestSuite(NoSourceTestCase.class));
 		suite.addTest(new OrderedTestSuite(BinaryTestCase.class));
-		
+		*/
 		//$JUnit-END$
 		return suite;
 	}
