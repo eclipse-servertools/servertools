@@ -76,7 +76,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
             IProgressMonitor monitor) throws CoreException {
  
     	
-        if(REMOVED == deltaKind){
+        if(REMOVED == deltaKind ){//TODO: check if the removed module is published to server
             removeFromServer(module,monitor);
         }
         else{
