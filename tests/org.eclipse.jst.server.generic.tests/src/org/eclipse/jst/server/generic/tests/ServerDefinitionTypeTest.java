@@ -97,17 +97,17 @@ public class ServerDefinitionTypeTest extends TestCase {
 			assertFalse(resolved.indexOf("${") >= 0);
 		}
 	}
-    public void testEclipseVarResolve() {
-        ServerTypeDefinitionManager serverTypeDefinitionManager = CorePlugin
-                .getDefault().getServerTypeDefinitionManager();
-        assertNotNull( serverTypeDefinitionManager );
-        ServerRuntime[] types = serverTypeDefinitionManager
-                .getServerTypeDefinitions();
-        assertNotNull( types );
-        assertTrue( types.length > 0 );
-        ServerRuntime definition = types[0];
-        String resolved = definition.getResolver().resolveProperties( "test ${workspace_loc} test " );
-        assertFalse(resolved.indexOf("${") >= 0);
-    }
+//    public void testEclipseVarResolve() {
+//        ServerTypeDefinitionManager serverTypeDefinitionManager = CorePlugin
+//                .getDefault().getServerTypeDefinitionManager();
+//        assertNotNull( serverTypeDefinitionManager );
+//        ServerRuntime[] types = serverTypeDefinitionManager
+//                .getServerTypeDefinitions();
+//        assertNotNull( types );
+//        assertTrue( types.length > 0 );
+//        ServerRuntime definition = types[0];
+//        String resolved = definition.getResolver().resolveProperties( "test ${workspace_loc} test " );
+//        assertFalse(resolved.indexOf("${") >= 0);
+//    }
     
 }
