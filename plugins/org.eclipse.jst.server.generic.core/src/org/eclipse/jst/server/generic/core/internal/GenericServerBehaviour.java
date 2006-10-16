@@ -74,29 +74,26 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
      */
     public void publishModule(int kind, int deltaKind, IModule[] module,
             IProgressMonitor monitor) throws CoreException {
- 
-    	
-        if(REMOVED == deltaKind ){//TODO: check if the removed module is published to server
-            removeFromServer(module,monitor);
+        GenericPublisher publisher = initializePublisher( module );
+        IStatus[] status = null;
+    	if(REMOVED == deltaKind ){//TODO: check if the removed module is published to server
+            status = publisher.unpublish(monitor);
         }
         else{
         	checkClosed(module);
-            String publisherId = ServerTypeDefinitionUtil.getPublisherID(module[0], getServerDefinition());
-            GenericPublisher publisher = PublishManager.getPublisher(publisherId);
-            if(publisher==null){
-                IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0, NLS.bind(GenericServerCoreMessages.unableToCreatePublisher,publisherId),null);
-                throw new CoreException(status);
-            }
-            publisher.initialize(module,getServer());
-            IStatus[] status= publisher.publish(null,monitor);
-            if(status==null){
-                setModulePublishState(module, IServer.PUBLISH_STATE_NONE);
-            }else {
-                for (int i=0; i < status.length; i++) {
-                    if (IStatus.ERROR == status[i].getSeverity()){
-                    	setModulePublishState(module, IServer.PUBLISH_STATE_UNKNOWN);
-                        throw new CoreException(status[i]);
-                    }
+            status= publisher.publish(null,monitor);
+        }
+        setModulePublishState( module, status );
+    }
+
+    private void setModulePublishState( IModule[] module, IStatus[] status ) throws CoreException {
+        if(status==null || status.length < 1 ){
+            setModulePublishState(module, IServer.PUBLISH_STATE_NONE);
+        }else {
+            for (int i=0; i < status.length; i++) {
+                if (IStatus.ERROR == status[i].getSeverity()){
+                	setModulePublishState(module, IServer.PUBLISH_STATE_UNKNOWN);
+                    throw new CoreException(status[i]);
                 }
             }
         }
@@ -104,25 +101,23 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 
     private void checkClosed(IModule[] module) throws CoreException
     {
-    	for(int i=0;i<module.length;i++)
-    	{
-    		if(module[i] instanceof DeletedModule)
-    		{	
+    	for( int i=0; i < module.length; i++ ){
+    		if( module[i] instanceof DeletedModule ){	
                 IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0, NLS.bind(GenericServerCoreMessages.canNotPublishDeletedModule,module[i].getName()),null);
                 throw new CoreException(status);
     		}
     	}
     }
-    private void removeFromServer(IModule[] module, IProgressMonitor monitor) throws CoreException
-    {
-    	String publisherId = ServerTypeDefinitionUtil.getPublisherID(module[0], getServerDefinition());
+
+    private GenericPublisher initializePublisher( IModule[] module ) throws CoreException {
+        String publisherId = ServerTypeDefinitionUtil.getPublisherID(module[0], getServerDefinition());
         GenericPublisher publisher = PublishManager.getPublisher(publisherId);  
         if(publisher==null){
             IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,NLS.bind(GenericServerCoreMessages.unableToCreatePublisher,publisherId),null);
             throw new CoreException(status);
         }
         publisher.initialize(module,getServer());
-        publisher.unpublish(monitor);
+        return publisher;
     }
     
     
