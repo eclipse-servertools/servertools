@@ -1218,6 +1218,9 @@ public class Server extends Base implements IServer {
 	public void start(String mode2, IProgressMonitor monitor) throws CoreException {
 		Trace.trace(Trace.FINEST, "Starting server: " + toString() + ", launchMode: " + mode2);
 	
+		// make sure that the delegate is loaded and the server state is correct
+		loadAdapter(ServerBehaviourDelegate.class, monitor);
+		
 		try {
 			ILaunchConfiguration launchConfig = getLaunchConfiguration(true, monitor);
 			ILaunch launch = launchConfig.launch(mode2, monitor); // , true); - causes workspace lock
@@ -1412,7 +1415,10 @@ public class Server extends Base implements IServer {
 	public void start(String mode2, IOperationListener listener2) {
 		Trace.trace(Trace.FINEST, "synchronousStart 1");
 		final Object mutex = new Object();
-	
+		
+		// make sure that the delegate is loaded and the server state is correct
+		loadAdapter(ServerBehaviourDelegate.class, null);
+		
 		// add listener to the server
 		IServerListener listener = new IServerListener() {
 			public void serverChanged(ServerEvent event) {
@@ -1516,6 +1522,9 @@ public class Server extends Base implements IServer {
 
 	public void synchronousStart(String mode2, IProgressMonitor monitor) throws CoreException {
 		Trace.trace(Trace.FINEST, "synchronousStart 1");
+		
+		// make sure that the delegate is loaded and the server state is correct
+		loadAdapter(ServerBehaviourDelegate.class, monitor);
 		
 		final boolean[] notified = new boolean[1];
 		
