@@ -1,0 +1,36 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.wst.server.ui; singleton:=true
+Bundle-Version: 1.0.104.qualifier
+Bundle-Activator: org.eclipse.wst.server.ui.internal.ServerUIPlugin
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Export-Package: org.eclipse.wst.server.ui,
+ org.eclipse.wst.server.ui.editor,
+ org.eclipse.wst.server.ui.internal;x-internal:=true,
+ org.eclipse.wst.server.ui.internal.actions;x-internal:=true,
+ org.eclipse.wst.server.ui.internal.audio;x-internal:=true,
+ org.eclipse.wst.server.ui.internal.command;x-internal:=true,
+ org.eclipse.wst.server.ui.internal.editor;x-internal:=true,
+ org.eclipse.wst.server.ui.internal.provisional;x-internal:=true,
+ org.eclipse.wst.server.ui.internal.view.servers;x-internal:=true,
+ org.eclipse.wst.server.ui.internal.viewers;x-internal:=true,
+ org.eclipse.wst.server.ui.internal.webbrowser;x-internal:=true,
+ org.eclipse.wst.server.ui.internal.wizard;x-internal:=true,
+ org.eclipse.wst.server.ui.internal.wizard.fragment;x-internal:=true,
+ org.eclipse.wst.server.ui.internal.wizard.page;x-internal:=true,
+ org.eclipse.wst.server.ui.wizard
+Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.core.resources;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.core.expressions;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.ui;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.ui.ide;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.ui.forms;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.ui.workbench.texteditor;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.ui.browser;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.debug.core;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.debug.ui;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.wst.server.core;bundle-version="[1.0.103,1.1.0)",
+ org.eclipse.wst.internet.monitor.core;bundle-version="[1.0.103,1.1.0)"
+Eclipse-LazyStart: true; exceptions="org.eclipse.wst.server.ui.internal.webbrowser"
