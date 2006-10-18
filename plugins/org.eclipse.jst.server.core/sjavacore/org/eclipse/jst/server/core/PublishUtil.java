@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jst.server.core.internal.JavaServerPlugin;
@@ -662,7 +662,7 @@ public class PublishUtil {
 				ZipEntry ze = new ZipEntry(entryPath);
 				
 				long ts = 0;
-				IFolder folder = (IFolder) mf.getAdapter(IFolder.class);
+				IContainer folder = (IContainer) mf.getAdapter(IContainer.class);
 				if (folder != null)
 					ts = folder.getLocalTimeStamp();
 				
