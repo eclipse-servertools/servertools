@@ -69,14 +69,13 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
             runtime= (GenericServerRuntime)wc.getAdapter(GenericServerRuntime.class);
             if(runtime==null)
             	runtime= (GenericServerRuntime)wc.loadAdapter(GenericServerRuntime.class,new NullProgressMonitor());
-        }
-        String serverTyepId = server.getServerType().getId();
-        String runtimeTypeId = runtime.getRuntime().getRuntimeType().getId();
-        if(runtimeTypeId==null){   
+        }        
+        String id = runtime.getRuntime().getRuntimeType().getId();
+        if(id==null){   
             return null;
         }
         Map runtimeProperties = runtime.getServerInstanceProperties();
-		ServerRuntime definition = getServerTypeDefinition(serverTyepId, runtimeTypeId, runtimeProperties);
+		ServerRuntime definition = getServerTypeDefinition(id,runtimeProperties);
         return definition;
     }
 
@@ -102,7 +101,7 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
     	int suffix=1;
     	String suffixName =name;
     	while(isNameInUse(suffixName)){
-    		suffixName = name+" "+suffix; //$NON-NLS-1$
+    		suffixName = name+" "+suffix;
     		suffix++;
     	}
     	return suffixName;
@@ -127,7 +126,7 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
     public String description() {
         String sName = getServerName();
         if(sName==null || sName.length()<1)
-            sName="Generic"; //$NON-NLS-1$
+            sName="Generic";
         return  GenericServerUIMessages.bind(GenericServerUIMessages.serverWizardDescription,sName);
     }
 
@@ -143,7 +142,7 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
     public String title() {
         String sName= getServerName();
         if(sName==null || sName.length()<1)
-            sName="Generic"; //$NON-NLS-1$
+            sName="Generic";
         return  GenericServerUIMessages.bind(GenericServerUIMessages.serverWizardTitle,sName);
     }
 }

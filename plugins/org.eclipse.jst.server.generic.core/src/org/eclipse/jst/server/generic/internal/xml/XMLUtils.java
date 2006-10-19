@@ -14,8 +14,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IStatus;
@@ -35,15 +33,14 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.osgi.framework.Bundle;
 
 /**
- * Utility for handling the xml data from .serverdef and .runtimedef files.
+ * Utility for handling the xml data from .serverdef files
  * 
  * @author Gorkem Ercan
  */
 public class XMLUtils {
 
 	
-    private ArrayList serverDefinitions;
-    private ArrayList runtimeDefinitions;
+    private ArrayList definitions;
 
 
 	/**
@@ -53,52 +50,28 @@ public class XMLUtils {
 		refresh();
 	}
 
-	/**
-	 * Load all the serverdefinition and runtimedefinition extensions.
-	 */
 	private void refresh() {
-        serverDefinitions = new ArrayList();
-        
-        IExtension[] serverDefExtensions = ExtensionPointUtil.getGenericServerDefinitionExtensions();
-        
-        for (int i = 0; serverDefExtensions != null && i < serverDefExtensions.length; i++) {
-            java.net.URI definitionFile = null;
-            IExtension extension = serverDefExtensions[i];
+		definitions= new ArrayList();
+         IExtension[] extensions = ExtensionPointUtil.getGenericServerDefinitionExtensions();
+        for (int i = 0; extensions!=null && i < extensions.length; i++) {
+            java.net.URI definitionFile=null;
+            IExtension extension = extensions[i];
             IConfigurationElement[] elements = ExtensionPointUtil.getConfigurationElements(extension);
-            
             for (int j = 0; j < elements.length; j++) {
                 IConfigurationElement element = elements[j];
                 definitionFile = getDefinitionFile(element);
-                ServerRuntime runtime = readFile(definitionFile);
-                if (runtime != null) {
-                    runtime.setId(element.getAttribute("id")); //$NON-NLS-1$
-                    runtime.setConfigurationElementNamespace(element.getNamespace());
-                    serverDefinitions.add(runtime);
+                ServerRuntime runtime =readFile(definitionFile);
+                    if(runtime!=null){
+                        runtime.setId(element.getAttribute("id")); //$NON-NLS-1$
+                        runtime.setConfigurationElementNamespace(element.getNamespace());
+                        definitions.add(runtime);
+                    }
                 }
             }
-        }
 
-        runtimeDefinitions = new ArrayList();
-        
-        IExtension[] runtimeDefExtensions = ExtensionPointUtil.getGenericServerRuntimeDefinitionExtensions();
-        
-        for (int i = 0; runtimeDefExtensions != null && i < runtimeDefExtensions.length; i++) {
-            java.net.URI definitionFile = null;
-            IExtension extension = runtimeDefExtensions[i];
-            IConfigurationElement[] elements = ExtensionPointUtil.getConfigurationElements(extension);
-            
-            for (int j = 0; j < elements.length; j++) {
-                IConfigurationElement element = elements[j];
-                definitionFile = getDefinitionFile(element);
-                ServerRuntime runtime = readFile(definitionFile);
-                if (runtime != null) {
-                    runtime.setId(element.getAttribute("id")); //$NON-NLS-1$
-                    runtime.setConfigurationElementNamespace(element.getNamespace());
-                    runtimeDefinitions.add(runtime);
-                }
-            }
-        }
-    }
+       }
+
+
 
     private java.net.URI getDefinitionFile(IConfigurationElement element) {
         
@@ -107,12 +80,6 @@ public class XMLUtils {
         Trace.trace(Trace.FINEST,"Loading serverdef file "+definitionFile+" from bundle "+bundle.getSymbolicName()); //$NON-NLS-1$ //$NON-NLS-2$
         
         URL url = bundle.getEntry(definitionFile);
-        if (url == null )
-        {
-            CorePlugin.getDefault().getLog().log( new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID,1,
-                    "Definition file "+definitionFile+" can not be resolved in bundle "+ bundle.getSymbolicName() ,null) ); //$NON-NLS-1$ //$NON-NLS-2$
-            return null;
-        }
 		try {
 			java.net.URI uri = new java.net.URI(url.getProtocol(), url.getHost(),url.getPath(), url.getQuery());
 		    return uri;
@@ -159,11 +126,12 @@ public class XMLUtils {
 
     }
 
+
 	/**
-	 * @return <code>java.util.List</code> of <code>ServerRuntime</code>s.
+	 * @return ArrayList
 	 */
-	public List getServerTypeDefinitions() {
-		return serverDefinitions;
+	public ArrayList getServerTypeDefinitions() {
+		return definitions;
 	}
 
     /**
@@ -173,28 +141,6 @@ public class XMLUtils {
      */
     public ServerRuntime getServerTypeDefinition(String id) {
     	Iterator defs = getServerTypeDefinitions().iterator();
-        while (id != null && defs.hasNext()) {
-            ServerRuntime elem = (ServerRuntime) defs.next();
-            if (id.equals(elem.getId()))
-                return elem;
-        }
-        return null;
-    }
-
-    /**
-     * @return <code>java.util.List</code> of <code>ServerRuntime</code>s.
-     */
-    public List getRuntimeTypeDefinitions() {
-        return runtimeDefinitions;
-    }
-
-    /**
-     * Get the memory presentation for the .runtimedef file
-     * @param id
-     * @return runtime 
-     */
-    public ServerRuntime getRuntimeTypeDefinition(String id) {
-        Iterator defs = getRuntimeTypeDefinitions().iterator();
         while (defs.hasNext()) {
             ServerRuntime elem = (ServerRuntime) defs.next();
             if (id.equals(elem.getId()))

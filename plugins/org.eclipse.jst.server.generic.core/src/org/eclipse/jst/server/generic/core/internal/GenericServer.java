@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -31,7 +30,6 @@ import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
-import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.IURLProvider;
@@ -47,33 +45,33 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
     private static final String ATTR_GENERIC_SERVER_MODULES = "Generic_Server_Modules_List"; //$NON-NLS-1$
 
 	public IStatus canModifyModules(IModule[] add, IModule[] remove) {
-		for ( int i = 0; i < add.length; i++ ) {         
-			if( !isSupportedModule( add[i] ) ){
-                return new Status( IStatus.ERROR, CorePlugin.PLUGIN_ID, 0,
-                        GenericServerCoreMessages.moduleNotCompatible, null );
-            }
-            if ( add[i].getProject() != null ) {
-                IStatus status = FacetUtil.verifyFacets(add[i].getProject(), getServer());
-                if (status != null && !status.isOK())
-                    return status;
-            }
+		List moduleTypes = getServerDefinition().getModule();
+        int found =0;
+		for (int i = 0; i < add.length; i++) {
+			for(int j=0;j<moduleTypes.size();j++){
+				 Module module = (Module)moduleTypes.get(j);
+				 if(add[i].getModuleType()!= null && add[i].getModuleType().getId().equals(module.getType())){
+					 found++;
+					 break;
+				  }
+			}
         }
-		return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "CanModifyModules", null); //$NON-NLS-1$ 
+		
+		for (int i = 0; i < add.length; i++) {
+			IModule module = add[i];
+			if (module.getProject() != null) {
+				IStatus status = FacetUtil.verifyFacets(module.getProject(), getServer());
+				if (status != null && !status.isOK())
+					return status;
+			}
+		}
+		
+		if(found==add.length)
+			return new Status(IStatus.OK, CorePlugin.PLUGIN_ID, 0, "CanModifyModules", null); //$NON-NLS-1$
+		
+		return new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.moduleNotCompatible, null);
 	}
 	
-    private boolean isSupportedModule(IModule module){
-        if( module == null )
-            return false;
-        List moduleTypes = getServerDefinition().getModule();
-        for( int j=0; j<moduleTypes.size(); j++ ){
-             Module moduleDefinition = (Module)moduleTypes.get(j);
-             if( module.getModuleType() != null && module.getModuleType().getId().equals(moduleDefinition.getType()) ){
-                return true;
-              }
-        }
-         return false;
-    }
-    
     /* (non-Javadoc)
      * @see org.eclipse.wst.server.core.model.ServerDelegate#modifyModules(org.eclipse.wst.server.core.IModule[], org.eclipse.wst.server.core.IModule[], org.eclipse.core.runtime.IProgressMonitor)
      */
@@ -224,15 +222,8 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 	 * @return server runtime
 	 */
     public ServerRuntime getServerDefinition(){
-        IServer server = getServer();
-		String rtTypeId = server.getRuntime().getRuntimeType().getId();
-        String serverTypeId = server.getServerType().getId();
-        /**
-         * Pass both the serverType id and runtimeType id and ServerTypeDefinitionManager 
-         * will figure out how to give us back the correct ServerRuntime.
-         */
-		return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(
-                serverTypeId, rtTypeId, getInstanceProperties());
+		String rtTypeId = getServer().getRuntime().getRuntimeType().getId();
+		return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(rtTypeId,getInstanceProperties());
 	}
 
     private GenericServerRuntime getRuntimeDelegate(){
@@ -246,14 +237,12 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
      * @see org.eclipse.wst.server.core.model.ServerDelegate#getRootModules(org.eclipse.wst.server.core.IModule)
      */
     public IModule[] getRootModules(IModule module) throws CoreException {
-     	if ( !isSupportedModule( module ) )
-            return null;
-        IStatus status = canModifyModules(new IModule[] { module }, null);
+     	IStatus status = canModifyModules(new IModule[] { module }, null);
         if (status != null && !status.isOK())
             throw  new CoreException(status);;
-        IModule[] parents = doGetParentModules(module);
-        if(parents.length>0)
-        	return parents;
+        IModule[] childs = doGetParentModules(module);
+        if(childs.length>0)
+        	return childs;
         return new IModule[] { module };
     }
 

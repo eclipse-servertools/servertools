@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IExtensionDelta;
 import org.eclipse.core.runtime.IRegistryChangeEvent;
 import org.eclipse.core.runtime.IRegistryChangeListener;
 import org.eclipse.jst.server.generic.internal.core.util.ExtensionPointUtil;
-import org.eclipse.jst.server.generic.internal.core.util.ServerRuntimeMergeUtil;
 import org.eclipse.jst.server.generic.internal.xml.XMLUtils;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 /**
@@ -30,23 +29,14 @@ public class ServerTypeDefinitionManager
 {
 	private XMLUtils fXmlUtils;
 	
-	/**
-	 * Watch for changes to serverdefinition and runtimedefinition extensions.
-	 */
-	private class RegistryChangeListener implements IRegistryChangeListener {
-        public void registryChanged(IRegistryChangeEvent event) {
-            IExtensionDelta[] deltas = event.getExtensionDeltas(CorePlugin.PLUGIN_ID, ExtensionPointUtil.SERVERDEFINITION_EXTENSION_ID);
-            if (deltas != null && deltas.length > 0) {
-                handleDefinitionsChanged();
-            }
-            else {
-                deltas = event.getExtensionDeltas(CorePlugin.PLUGIN_ID, ExtensionPointUtil.RUNTIMEDEFINITION_EXTENSION_ID);
-                if (deltas != null && deltas.length > 0) {
-                    handleDefinitionsChanged();
-                }
-            }
-        }
-    }
+	private class RegistryChangeListener implements IRegistryChangeListener{
+		public void registryChanged(IRegistryChangeEvent event) {
+			IExtensionDelta[] deltas = event.getExtensionDeltas(CorePlugin.PLUGIN_ID, ExtensionPointUtil.SERVERDEFINITION_EXTENSION_ID);
+			if(deltas!=null && deltas.length>0){
+				handleServerDefinitionsChanged();
+			}
+		}		
+	}
 	
 	protected ServerTypeDefinitionManager(URL serverDefinitionURL){
 		super();
@@ -54,66 +44,19 @@ public class ServerTypeDefinitionManager
 		ExtensionPointUtil.addRegistryListener(new RegistryChangeListener());
 	}
 
-    /**
-     * Returns either: 
-     * 
-     * 1. the ServerRuntime that represents the .serverdef file for a given 
-     *    runtime type, based on the runtimeTypeId.
-     *    
-     * 2. the ServerRuntime that represents both the .serverdef file for a
-     *    given server type, based on the serverTypeId, combined with the 
-     *    .runtimedef file for the runtime type, based on the runtimeTypeId.   
-     * 
-     * The implementation looks for (1) first, if that combination is not
-     * found, then (2) is returned.
-     * 
-     * @param serverTypeId server type id
-     * @param runtimeTypeId runtime type id
-     * @param properties user provided properties
-     * @return server runtime that is initialized with user properties 
-     */
-    public ServerRuntime getServerRuntimeDefinition(String serverTypeId, String runtimeTypeId, Map properties) {
-        
-        ServerRuntime serverdef = fXmlUtils.getServerTypeDefinition(serverTypeId);
-        
-        if (serverdef != null) {
-            ServerRuntime runtimedef = fXmlUtils.getRuntimeTypeDefinition(runtimeTypeId);
-            serverdef = ServerRuntimeMergeUtil.combine(serverdef, runtimedef);
-        }
-        else {
-            // Fall back to the original usage
-            serverdef = fXmlUtils.getServerTypeDefinition(runtimeTypeId);
-        }
-        
-        if (serverdef != null) {
-            serverdef.setPropertyValues(properties);
-        }
-        
-        return serverdef;
-    }
-    
-    /**
-     * Returns the ServerRuntime that represents the .serverdef file
-     * for a given runtime type.
-     * 
-     * @param runtimeTypeId runtime type id
-     * @param properties user provided properties
-     * @return server runtime that is initialized with user properties 
-     */
-    public ServerRuntime getServerRuntimeDefinition(String runtimeTypeId, Map properties) {
-        ServerRuntime definition = fXmlUtils.getRuntimeTypeDefinition(runtimeTypeId);
-        
-        if (definition == null) {
-            // Fall back to the original usage
-            definition = fXmlUtils.getServerTypeDefinition(runtimeTypeId);
-        }
-        
-        if (definition != null) {
+	/**
+	 * Returns the ServerRuntime that represents the .serverdef file
+	 * for a given runtime type.
+	 * @param id runtime type id
+	 * @param properties user provided properties
+	 * @return server runtime that is initialized with user properties 
+	 */
+	public ServerRuntime getServerRuntimeDefinition(String id, Map properties){
+		ServerRuntime definition =  fXmlUtils.getServerTypeDefinition(id);
+		if(definition !=null)
             definition.setPropertyValues(properties);
-        }
-        
-        return definition;
-    }
+		return definition;
+	}
 	
 	/**
 	 * Returns all the ServerRuntimes registered a .serverdef.
@@ -124,7 +67,7 @@ public class ServerTypeDefinitionManager
 		 return (ServerRuntime[])definitionList.toArray(new ServerRuntime[definitionList.size()]);
 	}
 	
-	private void handleDefinitionsChanged(){	
+	private void handleServerDefinitionsChanged(){	
 		XMLUtils utils = new XMLUtils();
 		fXmlUtils = utils;
 	}

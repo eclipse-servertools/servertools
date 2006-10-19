@@ -77,18 +77,4 @@ public abstract class ServerDefinitionTypeAwareWizardFragment extends WizardFrag
 	{
 	    return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(definitionID,properties);
 	}
-
-    /**
-     * Retuns the ServerRuntime.
-     * @param serverTypeId
-     * @param runtimeTypeId
-     * @param properties
-     * @return
-     */ 
-    protected ServerRuntime getServerTypeDefinition(String serverTypeId, String runtimeTypeId, Map properties)
-    {
-        return CorePlugin.getDefault().getServerTypeDefinitionManager().getServerRuntimeDefinition(serverTypeId, runtimeTypeId, properties);
-    }
-
 }
-
