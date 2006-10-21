@@ -27,7 +27,31 @@ public abstract class GenericPublisher
     private IModule[] fModule;
     private GenericServerRuntime fServerRuntime;
     private GenericServer fServer;
+    private int fKind;
+    private int fDeltaKind;
     
+    
+    /**
+     * Intizilazes publisher.
+     * 
+     * @param module
+     * @param server
+     */
+    protected void initialize( IModule[] module, IServer server, int kind, int deltaKind )
+    {
+        fModule = module;
+        fServer = (GenericServer)server.loadAdapter(GenericServer.class,null);
+        fServerRuntime = (GenericServerRuntime)server.getRuntime().loadAdapter(GenericServerRuntime.class,null);
+        fKind = kind;
+        fDeltaKind = deltaKind;
+    }
+    
+    /**
+     * Initializes publisher.
+     * @deprecated
+     * @param module
+     * @param server
+     */
     protected void initialize(IModule[] module, IServer server)
     {
         fModule = module;
@@ -77,5 +101,13 @@ public abstract class GenericPublisher
      */
     public GenericServerRuntime getServerRuntime() {
         return fServerRuntime;
+    }
+
+    public int getDeltaKind() {
+        return fDeltaKind;
+    }
+
+    public int getKind() {
+        return fKind;
     }
 }

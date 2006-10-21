@@ -74,7 +74,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
      */
     public void publishModule(int kind, int deltaKind, IModule[] module,
             IProgressMonitor monitor) throws CoreException {
-        GenericPublisher publisher = initializePublisher( module );
+        GenericPublisher publisher = initializePublisher( kind, deltaKind, module );
         IStatus[] status = null;
     	if(REMOVED == deltaKind ){//TODO: check if the removed module is published to server
             status = publisher.unpublish(monitor);
@@ -109,14 +109,14 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
     	}
     }
 
-    private GenericPublisher initializePublisher( IModule[] module ) throws CoreException {
+    private GenericPublisher initializePublisher(int kind, int deltaKind, IModule[] module ) throws CoreException {
         String publisherId = ServerTypeDefinitionUtil.getPublisherID(module[0], getServerDefinition());
         GenericPublisher publisher = PublishManager.getPublisher(publisherId);  
         if(publisher==null){
             IStatus status = new Status(IStatus.ERROR,CorePlugin.PLUGIN_ID,0,NLS.bind(GenericServerCoreMessages.unableToCreatePublisher,publisherId),null);
             throw new CoreException(status);
         }
-        publisher.initialize(module,getServer());
+        publisher.initialize( module,getServer(), kind, deltaKind );
         return publisher;
     }
     
