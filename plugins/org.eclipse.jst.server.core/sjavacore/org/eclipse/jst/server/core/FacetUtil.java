@@ -50,6 +50,8 @@ public class FacetUtil {
 			throw new IllegalArgumentException();
 		
 		String id = runtime.getProperty("id");
+		if (id == null)
+			return null;
 		
 		IRuntime[] runtimes = ServerCore.getRuntimes();
 		int size = runtimes.length;
@@ -74,6 +76,8 @@ public class FacetUtil {
 			throw new IllegalArgumentException();
 		
 		String id = runtime.getId();
+		if (id == null)
+			return null;
 		
 		Set runtimes = RuntimeManager.getRuntimes();
 		Iterator iterator = runtimes.iterator();
