@@ -12,6 +12,7 @@ package org.eclipse.jst.server.core.internal;
 
 import java.io.*;
 import java.util.*;
+
 import org.w3c.dom.*;
 import org.xml.sax.*;
 
@@ -259,11 +260,22 @@ public final class XMLMemento implements IMemento {
 	 * Loads a memento from the given filename.
 	 *
 	 * @param filename java.lang.String
-	 * @return org.eclipse.ui.IMemento
 	 * @exception java.io.IOException
+	 * @return a memento
 	 */
 	public static IMemento loadMemento(String filename) throws IOException {
-		return XMLMemento.createReadRoot(new FileInputStream(filename));
+		InputStream in = null;
+		try {
+			in = new BufferedInputStream(new FileInputStream(filename));
+			return XMLMemento.createReadRoot(in);
+		} finally {
+			try {
+				if (in != null)
+					in.close();
+			} catch (Exception e) {
+				// ignore
+			}
+		}
 	}
 
 	/*

@@ -273,14 +273,14 @@ public final class XMLMemento implements IMemento {
 	 * @exception java.io.IOException
 	 */
 	public static IMemento loadMemento(String filename) throws IOException {
-		FileInputStream fin = null;
+		InputStream in = null;
 		try {
-			fin = new FileInputStream(filename);
-			return XMLMemento.createReadRoot(fin);
+			in = new BufferedInputStream(new FileInputStream(filename));
+			return XMLMemento.createReadRoot(in);
 		} finally {
 			try {
-				if (fin != null)
-					fin.close();
+				if (in != null)
+					in.close();
 			} catch (Exception e) {
 				// ignore
 			}

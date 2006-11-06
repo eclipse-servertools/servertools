@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.internal;
 
+import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -362,17 +363,17 @@ public abstract class Base {
 	 * 
 	 */
 	protected void loadFromPath(IPath path, IProgressMonitor monitor) throws CoreException {
-		FileInputStream fin = null;
+		InputStream in = null;
 		try {
-			fin = new FileInputStream(path.toFile());
-			IMemento memento = XMLMemento.loadMemento(fin);
+			in = new BufferedInputStream(new FileInputStream(path.toFile()));
+			IMemento memento = XMLMemento.loadMemento(in);
 			load(memento);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not load from path: " + e.getMessage(), e);
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorLoading, path.toString()), e));
 		} finally {
 			try {
-				fin.close();
+				in.close();
 			} catch (Exception e) {
 				// ignore
 			}

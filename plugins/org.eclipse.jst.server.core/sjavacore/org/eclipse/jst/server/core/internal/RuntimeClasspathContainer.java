@@ -83,11 +83,9 @@ public class RuntimeClasspathContainer implements IClasspathContainer {
 	 */
 	public String getDescription() {
 		if (runtime != null) {
-			if (runtime != null) {
-				IRuntimeType runtimeType = runtime.getRuntimeType();
-				if (runtimeType != null)
-					return NLS.bind(Messages.classpathContainer, runtimeType.getName(), runtime.getName());
-			}
+			IRuntimeType runtimeType = runtime.getRuntimeType();
+			if (runtimeType != null)
+				return NLS.bind(Messages.classpathContainer, runtimeType.getName(), runtime.getName());
 		}
 		return NLS.bind(Messages.classpathContainerUnbound, Messages.classpathContainerDescription, runtimeId);
 	}
