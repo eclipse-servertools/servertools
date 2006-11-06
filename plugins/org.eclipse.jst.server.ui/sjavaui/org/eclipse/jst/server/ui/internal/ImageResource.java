@@ -101,9 +101,9 @@ public class ImageResource {
 	protected static void initializeImageRegistry() {
 		imageRegistry = new ImageRegistry();
 		imageDescriptors = new HashMap();
-	
-		registerImage(IMG_WIZ_RUNTIME_TYPE, URL_WIZBAN + "new_runtime_wiz.gif");
-		registerImage(IMG_WIZ_CACTUS_TEST, URL_WIZBAN + "new_test_wiz.gif");
+		
+		registerImage(IMG_WIZ_RUNTIME_TYPE, URL_WIZBAN + "new_runtime_wiz.png");
+		registerImage(IMG_WIZ_CACTUS_TEST, URL_WIZBAN + "new_test_wiz.png");
 	}
 
 	/**

@@ -60,9 +60,9 @@ public class TomcatUIPlugin extends AbstractUIPlugin {
 
 	protected ImageRegistry createImageRegistry() {
 		ImageRegistry registry = new ImageRegistry();
-	
-		registerImage(registry, IMG_WIZ_TOMCAT, URL_WIZBAN + "tomcat_wiz.gif");
-	
+		
+		registerImage(registry, IMG_WIZ_TOMCAT, URL_WIZBAN + "tomcat_wiz.png");
+		
 		registerImage(registry, IMG_WEB_MODULE, URL_OBJ + "web_module.gif");
 		registerImage(registry, IMG_MIME_MAPPING, URL_OBJ + "mime_mapping.gif");
 		registerImage(registry, IMG_MIME_EXTENSION, URL_OBJ + "mime_extension.gif");
