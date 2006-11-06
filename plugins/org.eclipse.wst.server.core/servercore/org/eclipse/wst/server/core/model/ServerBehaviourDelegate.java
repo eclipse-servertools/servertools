@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -254,9 +254,9 @@ public abstract class ServerBehaviourDelegate {
 	 * 
 	 * @param kind one of the IServer.PUBLISH_XX constants. Valid values are
 	 *    <ul>
-	 *    <li><code>PUBLSIH_FULL</code>- indicates a full publish.</li>
+	 *    <li><code>PUBLISH_FULL</code>- indicates a full publish.</li>
 	 *    <li><code>PUBLISH_INCREMENTAL</code>- indicates a incremental publish.
-	 *    <li><code>PUBLSIH_AUTO</code>- indicates an automatic incremental publish.</li>
+	 *    <li><code>PUBLISH_AUTO</code>- indicates an automatic incremental publish.</li>
 	 *    <li><code>PUBLISH_CLEAN</code>- indicates a clean request. Clean throws
 	 *      out all state and cleans up the module on the server before doing a
 	 *      full publish.
@@ -288,9 +288,9 @@ public abstract class ServerBehaviourDelegate {
 	 * 
 	 * @param kind one of the IServer.PUBLISH_XX constants. Valid values are:
 	 *    <ul>
-	 *    <li><code>PUBLSIH_FULL</code>- indicates a full publish.</li>
+	 *    <li><code>PUBLISH_FULL</code>- indicates a full publish.</li>
 	 *    <li><code>PUBLISH_INCREMENTAL</code>- indicates a incremental publish.
-	 *    <li><code>PUBLSIH_AUTO</code>- indicates an automatic incremental publish.</li>
+	 *    <li><code>PUBLISH_AUTO</code>- indicates an automatic incremental publish.</li>
 	 *    <li><code>PUBLISH_CLEAN</code>- indicates a clean request. Clean throws
 	 *      out all state and cleans up the module on the server before doing a
 	 *      full publish.
@@ -748,11 +748,11 @@ public abstract class ServerBehaviourDelegate {
 		if (size == 0)
 			return;
 		
-		if (monitor.isCanceled())
-			return;
-		
 		// publish modules
 		for (int i = 0; i < size; i++) {
+			if (monitor.isCanceled())
+				return;
+			
 			IStatus status = publishModule(kind, (IModule[]) modules.get(i), ((Integer)deltaKind.get(i)).intValue(), ProgressUtil.getSubMonitorFor(monitor, 3000));
 			if (status != null && !status.isOK())
 				multi.add(status);

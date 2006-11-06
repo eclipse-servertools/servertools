@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,8 +60,11 @@ public class PublishOperation2 extends PublishOperation {
 		path = path.append(module2.getName());
 		
 		if (kind == IServer.PUBLISH_CLEAN || deltaKind == ServerBehaviourDelegate.REMOVED) { // clean and republish from scratch
-			IStatus[] stat = PublishUtil.deleteDirectory(path.toFile(), monitor);
-			addArrayToList(status, stat);
+			File f = path.toFile();
+			if (f.exists()) {
+				IStatus[] stat = PublishUtil.deleteDirectory(f, monitor);
+				addArrayToList(status, stat);
+			}
 			
 			if (deltaKind == ServerBehaviourDelegate.REMOVED)
 				return;

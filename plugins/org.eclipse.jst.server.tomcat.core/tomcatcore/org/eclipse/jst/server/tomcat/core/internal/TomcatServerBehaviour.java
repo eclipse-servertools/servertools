@@ -278,8 +278,11 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		if (deltaKind == REMOVED) {
 			try {
 				String publishPath = (String) p.get(module[0].getId());
-				IStatus[] stat = PublishUtil.deleteDirectory(new File(publishPath), monitor);
-				PublishOperation2.addArrayToList(status, stat);
+				File f = new File(publishPath);
+				if (f.exists()) {
+					IStatus[] stat = PublishUtil.deleteDirectory(f, monitor);
+					PublishOperation2.addArrayToList(status, stat);
+				}
 			} catch (Exception e) {
 				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, "Could not remove module", e));
 			}
@@ -365,10 +368,10 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		IStatus status = getTomcatRuntime().validate();
 		if (status != null && status.getSeverity() == IStatus.ERROR)
 			throw new CoreException(status);
-
+		
 		//setRestartNeeded(false);
 		TomcatConfiguration configuration = getTomcatConfiguration();
-	
+		
 		// check that ports are free
 		Iterator iterator = configuration.getServerPorts().iterator();
 		List usedPorts = new ArrayList();
@@ -622,7 +625,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException {
 		String existingProgArgs = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, (String)null);
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, mergeArguments(existingProgArgs, getRuntimeProgramArguments(true)));
-
+		
 		String existingVMArgs = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, (String)null);
 		String[] parsedVMArgs = null;
 		if (null != existingVMArgs) {

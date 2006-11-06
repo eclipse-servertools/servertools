@@ -161,17 +161,16 @@ public abstract class ProjectModule extends ModuleDelegate {
 			List list = new ArrayList(size);
 			for (int i = 0; i < size; i++) {
 				IResource resource = resources[i];
-				if (resource instanceof IContainer) {
-					IContainer container2 = (IContainer) resource;
-					if (container2 != null && container2.exists()) {
-						ModuleFolder mf = new ModuleFolder(container2, container2.getName(), path);
-						mf.setMembers(getModuleResources(path.append(container2.getName()), container2));
+				if (resource != null && resource.exists()) {
+					String name = resource.getName();
+					if (resource instanceof IContainer) {
+						IContainer container2 = (IContainer) resource;
+						ModuleFolder mf = new ModuleFolder(container2, name, path);
+						mf.setMembers(getModuleResources(path.append(name), container2));
 						list.add(mf);
+					} else if (resource instanceof IFile) {
+						list.add(new ModuleFile((IFile) resource, name, path));
 					}
-				} else if (resource instanceof IFile) {
-					IFile file = (IFile) resource;
-					if (file != null && file.exists())
-						list.add(new ModuleFile(file, file.getName(), path));
 				}
 			}
 			IModuleResource[] moduleResources = new IModuleResource[list.size()];

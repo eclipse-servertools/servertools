@@ -138,6 +138,8 @@ public class ServerTableLabelProvider extends BaseLabelProvider implements ITabl
 		if (element instanceof ModuleServer) {
 			ModuleServer ms = (ModuleServer) element;
 			if (columnIndex == 0) {
+				if (ms.module == null)
+					return "";
 				int size = ms.module.length;
 				return ms.module[size - 1].getName();
 			} else if (columnIndex == 1) {

@@ -846,9 +846,11 @@ public class Server extends Base implements IServer {
 			}
 		}
 		
+		long time = System.currentTimeMillis();
 		firePublishStarted();
 		IStatus status = doPublish(kind, monitor);
 		firePublishFinished(status);
+		Trace.trace(Trace.PERFORMANCE, "Server.publish(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
 		return status;
 	}
 
@@ -986,7 +988,7 @@ public class Server extends Base implements IServer {
 				return true;
 			}
 		};
-
+		
 		visit(visitor, null);
 		
 		return moduleList;
