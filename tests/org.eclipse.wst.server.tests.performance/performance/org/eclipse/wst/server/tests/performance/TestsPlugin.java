@@ -10,18 +10,18 @@
  *******************************************************************************/
 package org.eclipse.wst.server.tests.performance;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.eclipse.core.runtime.Plugin;
+/**
+ *
+ */
+public class TestsPlugin extends Plugin {
+	public static TestsPlugin instance;
 
-public class AllTests {
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.wst.server.tests.performance");
-		//$JUnit-BEGIN$
-		suite.addTestSuite(StartupExtensionTestCase.class);
-		suite.addTestSuite(ModuleFactoriesExtensionTestCase.class);
-		suite.addTestSuite(AddRemoveModulesWizardTestCase.class);
-		suite.addTestSuite(MementoTestCase.class);
-		//$JUnit-END$
-		return suite;
+	/**
+	 * The constructor.
+	 */
+	public TestsPlugin() {
+		super();
+		instance = this;
 	}
 }
