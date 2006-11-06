@@ -57,7 +57,7 @@
       <keywordReference id="org.eclipse.wst.server.preferenceKeywords"/>
   </page>
   <page
-    id="org.eclipse.wst.server.ui.preferencePage"
+    id="org.eclipse.wst.server.ui.launching.preferencePage"
     name="%preferenceLaunchingTitle"
     category="org.eclipse.wst.server.ui.preferencePage"
     class="org.eclipse.wst.server.ui.internal.LaunchingPreferencePage">
@@ -355,5 +355,25 @@ M4 = Platform-specific fourth key
      class="org.eclipse.wst.server.ui.internal.MarkerResolutionGenerator"
      markerType="org.eclipse.wst.common.project.facet.core.validation.marker"/>
 </extension>
+
+<!--
+<extension point="org.eclipse.ui.decorators">
+  <decorator
+     adaptable="true"
+     class="org.eclipse.wst.server.ui.internal.ModuleLabelDecorator"
+     id="org.eclipse.wst.server.ui.decorator"
+     label="%moduleProjectDecoratorLabel"
+     lightweight="false"
+     state="false">
+    <description>%moduleProjectDecoratorDescription</description>
+    <enablement>
+      <or>
+        <objectClass name="org.eclipse.wst.server.core.IModule"/>
+        <objectClass name="org.eclipse.wst.server.ui.internal.view.servers.ModuleServer"/>
+      </or>
+    </enablement>
+  </decorator>
+</extension>
+-->
 
 </plugin>
