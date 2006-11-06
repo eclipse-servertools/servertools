@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.IRuntime;
@@ -142,11 +143,12 @@ public class NewServerComposite extends Composite {
 		layout.horizontalSpacing = SWTUtil.convertHorizontalDLUsToPixels(this, 4);
 		layout.verticalSpacing = SWTUtil.convertVerticalDLUsToPixels(this, 4);
 		setLayout(layout);
-		//WorkbenchHelp.setHelp(this, ContextIds.SELECT_CLIENT_WIZARD);
-	
+		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
+		whs.setHelp(this, ContextIds.NEW_SERVER_WIZARD);
+		
 		if (module != null)
 			createLabel(this, Messages.wizNewServerSelect, 1);
-			
+		
 		Button existing = null;
 		if (module != null) {
 			final Button predefined = createRadioButton(this, Messages.wizNewServerExisting, 1);

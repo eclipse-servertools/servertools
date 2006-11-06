@@ -25,18 +25,13 @@ public interface ContextIds {
 
 	public static final String NEW_SERVER_WIZARD = ServerUIPlugin.PLUGIN_ID + ".swns0000";
 	public static final String NEW_SERVER_TYPE = ServerUIPlugin.PLUGIN_ID + ".swns0006";
+	
+	public static final String NEW_RUNTIME_WIZARD = ServerUIPlugin.PLUGIN_ID + ".swnr0000";
 
 	public static final String LAUNCH_CONFIGURATION_SERVER_COMBO = ServerUIPlugin.PLUGIN_ID + ".swsl0000";
 
 	public static final String SELECT_TASK_WIZARD = ServerUIPlugin.PLUGIN_ID + ".sstw0000";
 
-	/*public static final String IMPORT_CONFIGURATION_WIZARD = ServerUIPlugin.PLUGIN_ID + ".swic0000";
-	public static final String IMPORT_CONFIGURATION_NAME = ServerUIPlugin.PLUGIN_ID + ".swic0002";
-	public static final String IMPORT_CONFIGURATION_FOLDER = ServerUIPlugin.PLUGIN_ID + ".swic0004";
-	public static final String IMPORT_CONFIGURATION_FACTORY = ServerUIPlugin.PLUGIN_ID + ".swic0006";
-	public static final String IMPORT_CONFIGURATION_LOCATION = ServerUIPlugin.PLUGIN_ID + ".swic0008";
-	public static final String IMPORT_CONFIGURATION_LOCATION_BROWSE = ServerUIPlugin.PLUGIN_ID + ".swic0010";*/
-	
 	public static final String MODIFY_MODULES_COMPOSITE = ServerUIPlugin.PLUGIN_ID + ".swmm0000";
 
 	public static final String TERMINATE_SERVER_DIALOG = ServerUIPlugin.PLUGIN_ID + ".sdti0000";

@@ -14,7 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
@@ -68,6 +71,8 @@ public class NewRuntimeComposite extends Composite {
 		layout.horizontalSpacing = SWTUtil.convertHorizontalDLUsToPixels(this, 4);
 		layout.verticalSpacing = SWTUtil.convertVerticalDLUsToPixels(this, 4);
 		setLayout(layout);
+		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
+		whs.setHelp(this, ContextIds.NEW_RUNTIME_WIZARD);
 		
 		final RuntimeTypeComposite comp = new RuntimeTypeComposite(this, SWT.NONE, true, new RuntimeTypeComposite.RuntimeTypeSelectionListener() {
 			public void runtimeTypeSelected(IRuntimeType runtimeType) {
