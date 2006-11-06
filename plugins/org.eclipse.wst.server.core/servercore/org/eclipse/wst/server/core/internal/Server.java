@@ -244,11 +244,11 @@ public class Server extends Base implements IServer {
 	public boolean isWorkingCopy() {
 		return false;
 	}
-	
+
 	protected void deleteFromMetadata() {
 		ResourceManager.getInstance().removeServer(this);
 	}
-	
+
 	protected void saveToMetadata(IProgressMonitor monitor) {
 		super.saveToMetadata(monitor);
 		ResourceManager.getInstance().addServer(this);
@@ -745,13 +745,16 @@ public class Server extends Base implements IServer {
 	 * @return boolean
 	 */
 	public IStatus canPublish() {
+		if (getServerType() == null)
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorMissingAdapter, null);
+		
 		// can't publish if the server is starting or stopping
 		int state = getServerState();
 		if (state == STATE_STARTING || state == STATE_STOPPING)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishStarting, null);
 		
 		// can't publish if there is no configuration
-		if (getServerType() == null || getServerType().hasServerConfiguration() && configuration == null)
+		if (getServerType().hasServerConfiguration() && configuration == null)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishNoConfiguration, null);
 		
 		return Status.OK_STATUS;
@@ -828,7 +831,7 @@ public class Server extends Base implements IServer {
 	 */
 	public IStatus publish(final int kind, IProgressMonitor monitor) {
 		if (getServerType() == null)
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorPublishing, null);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorMissingAdapter, null);
 
 		// check what is out of sync and publish
 		if (getServerType().hasServerConfiguration() && configuration == null)
@@ -1082,11 +1085,14 @@ public class Server extends Base implements IServer {
 	 * @return status
 	 */
 	public IStatus canStart(String mode2) {
+		if (getServerType() == null)
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorMissingAdapter, null);
+		
 		int state = getServerState();
 		if (state != STATE_STOPPED && state != STATE_UNKNOWN)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.canStartErrorState, null);
 		
-		if (getServerType() == null || !getServerType().supportsLaunchMode(mode2))
+		if (!getServerType().supportsLaunchMode(mode2))
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorLaunchMode, null);
 		
 		return Status.OK_STATUS;
@@ -1138,6 +1144,9 @@ public class Server extends Base implements IServer {
 	 * @throws CoreException
 	 */
 	public ILaunchConfiguration getLaunchConfiguration(boolean create, IProgressMonitor monitor) throws CoreException {
+		if (getServerType() == null)
+			return null;
+		
 		ILaunchConfigurationType launchConfigType = ((ServerType) getServerType()).getLaunchConfigurationType();
 		if (launchConfigType == null)
 			return null;
@@ -1249,6 +1258,7 @@ public class Server extends Base implements IServer {
 	protected void deleteLaunchConfigurations() {
 		if (getServerType() == null)
 			return;
+		
 		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
 		ILaunchConfigurationType launchConfigType = ((ServerType) getServerType()).getLaunchConfigurationType();
 		
@@ -1273,6 +1283,9 @@ public class Server extends Base implements IServer {
 	 * @see IServer#canRestart(String)
 	 */
 	public IStatus canRestart(String mode2) {
+		if (getServerType() == null)
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorMissingAdapter, null);
+		
 		if (!getServerType().supportsLaunchMode(mode2))
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorLaunchMode, null);
 
@@ -1312,7 +1325,7 @@ public class Server extends Base implements IServer {
 	 * @see IServer#restart(String, IProgressMonitor)
 	 */
 	public void restart(final String mode2, final IProgressMonitor monitor) {
-		if (getServerState() == STATE_STOPPED)
+		if (getServerType() == null || getServerState() == STATE_STOPPED)
 			return;
 	
 		Trace.trace(Trace.FINEST, "Restarting server: " + getName());
@@ -1386,10 +1399,13 @@ public class Server extends Base implements IServer {
 	 * @return boolean
 	 */
 	public IStatus canStop() {
+		if (getServerType() == null)
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorMissingAdapter, null);
+		
 		if (getServerState() == STATE_STOPPED)
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorStopAlreadyStopped, null);
 		
-		if (getServerType() != null && !getServerType().supportsLaunchMode(getMode()))
+		if (!getServerType().supportsLaunchMode(getMode()))
 			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorLaunchMode, null);
 		
 		return Status.OK_STATUS;
@@ -1415,6 +1431,9 @@ public class Server extends Base implements IServer {
 	 * @see IServer#start(String, IOperationListener)
 	 */
 	public void start(String mode2, IOperationListener listener2) {
+		if (getServerType() == null)
+			return;
+		
 		Trace.trace(Trace.FINEST, "synchronousStart 1");
 		final Object mutex = new Object();
 		
@@ -1523,6 +1542,9 @@ public class Server extends Base implements IServer {
 	}
 
 	public void synchronousStart(String mode2, IProgressMonitor monitor) throws CoreException {
+		if (getServerType() == null)
+			return;
+		
 		Trace.trace(Trace.FINEST, "synchronousStart 1");
 		
 		// make sure that the delegate is loaded and the server state is correct
@@ -1661,6 +1683,9 @@ public class Server extends Base implements IServer {
 	 * @see IServer#restart(String, IOperationListener)
 	 */
 	public void restart(String mode2, IOperationListener listener) {
+		if (getServerType() == null)
+			return;
+		
 		if (getServerState() == STATE_STOPPED)
 			return;
 	
@@ -1749,6 +1774,9 @@ public class Server extends Base implements IServer {
 	 * @see IServer#stop(boolean, IOperationListener)
 	 */
 	public void stop(boolean force, IOperationListener listener2) {
+		if (getServerType() == null)
+			return;
+		
 		if (getServerState() == IServer.STATE_STOPPED)
 			return;
 		
@@ -1835,6 +1863,9 @@ public class Server extends Base implements IServer {
 	 * @see IServer#synchronousStop()
 	 */
 	public void synchronousStop(boolean force) {
+		if (getServerType() == null)
+			return;
+		
 		if (getServerState() == IServer.STATE_STOPPED)
 			return;
 		
@@ -2086,6 +2117,9 @@ public class Server extends Base implements IServer {
 	 * @see org.eclipse.wst.server.core.IServerConfiguration#canModifyModule(org.eclipse.wst.server.core.model.IModule)
 	 */
 	public IStatus canModifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) {
+		if (getServerType() == null)
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorMissingAdapter, null);
+		
 		if ((add == null || add.length == 0) && (remove == null || remove.length == 0))
 			throw new IllegalArgumentException("Add and remove cannot both be null/empty");
 		

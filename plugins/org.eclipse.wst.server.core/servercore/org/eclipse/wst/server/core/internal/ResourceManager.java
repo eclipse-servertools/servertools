@@ -455,11 +455,11 @@ public class ResourceManager {
 			Iterator iterator = runtimes.iterator();
 			while (iterator.hasNext()) {
 				Runtime runtime = (Runtime) iterator.next();
-
+				
 				IMemento child = memento.createChild("runtime");
 				runtime.save(child);
 			}
-
+			
 			String xmlString = memento.saveToString();
 			Preferences prefs = ServerPlugin.getInstance().getPluginPreferences();
 			prefs.setValue("runtimes", xmlString);
@@ -469,27 +469,27 @@ public class ResourceManager {
 		}
 		ignorePreferenceChanges = false;
 	}
-	
+
 	protected void saveServersList() {
 		String filename = ServerPlugin.getInstance().getStateLocation().append(SERVER_DATA_FILE).toOSString();
 		
 		try {
 			XMLMemento memento = XMLMemento.createWriteRoot("servers");
-
+			
 			Iterator iterator = servers.iterator();
 			while (iterator.hasNext()) {
 				Server server = (Server) iterator.next();
-
+				
 				IMemento child = memento.createChild("server");
 				server.save(child);
 			}
-
+			
 			memento.saveToFile(filename);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not save servers", e);
 		}
 	}
-	
+
 	protected void loadRuntimesList() {
 		Trace.trace(Trace.FINEST, "Loading runtime info");
 		Preferences prefs = ServerPlugin.getInstance().getPluginPreferences();
@@ -500,7 +500,7 @@ public class ResourceManager {
 			try {
 				ByteArrayInputStream in = new ByteArrayInputStream(xmlString.getBytes("UTF-8"));
 				IMemento memento = XMLMemento.loadMemento(in);
-		
+				
 				IMemento[] children = memento.getChildren("runtime");
 				int size = children.length;
 				
@@ -514,7 +514,7 @@ public class ResourceManager {
 			}
 		}
 	}
-	
+
 	protected void loadServersList() {
 		Trace.trace(Trace.FINEST, "Loading server info");
 		String filename = ServerPlugin.getInstance().getStateLocation().append(SERVER_DATA_FILE).toOSString();
@@ -543,7 +543,7 @@ public class ResourceManager {
 			}
 		}
 	}
-	
+
 	protected void addRuntime(IRuntime runtime) {
 		if (runtime == null)
 			return;

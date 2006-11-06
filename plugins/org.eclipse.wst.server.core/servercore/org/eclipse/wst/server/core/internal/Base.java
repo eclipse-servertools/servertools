@@ -237,7 +237,7 @@ public abstract class Base {
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorSaving, getFile().toString()), e));
 		}
 	}
-	
+
 	protected void doSave(IProgressMonitor monitor) throws CoreException {
 		if (file != null)
 			saveToFile(monitor);
@@ -245,11 +245,11 @@ public abstract class Base {
 			saveToMetadata(monitor);
 		ResourceManager.getInstance().resolveServers();
 	}
-	
+
 	protected void saveToMetadata(IProgressMonitor monitor) {
 		// do nothing
 	}
-	
+
 	protected abstract void saveState(IMemento memento);
 
 	protected void load(IMemento memento) {
