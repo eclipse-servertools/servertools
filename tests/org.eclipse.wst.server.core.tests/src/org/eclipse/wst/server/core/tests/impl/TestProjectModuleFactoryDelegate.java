@@ -24,7 +24,11 @@ public class TestProjectModuleFactoryDelegate extends ProjectModuleFactoryDelega
 		createModules(null);
 		getListenerPaths();
 		isValidModule(null);
-		createModule(null, null, null, null, null);
+		try {
+			createModule(null, null, null, null, null);
+		} catch (Exception e) {
+			// ignore
+		}
 		try {
 			handleGlobalProjectChange(null, null);
 		} catch (Exception e) {

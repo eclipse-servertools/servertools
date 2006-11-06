@@ -44,6 +44,8 @@ public class AllTests {
 		// TODO - should add tests for specific module adapters and other extension points
 		// that exist in WTP
 		suite.addTestSuite(ExistenceTest.class);
+		//suite.addTestSuite(MatchesTestCase.class);
+		//suite.addTestSuite(ModificationStampTestCase.class);
 		suite.addTestSuite(StartupExtensionTestCase.class);
 		suite.addTestSuite(ModuleFactoriesTestCase.class);
 		suite.addTestSuite(RuntimeTypesTestCase.class);
