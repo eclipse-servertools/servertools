@@ -253,12 +253,10 @@ public class ServerUtil {
 		if (moduleType == null || mt == null)
 			throw new IllegalArgumentException();
 		
-		String type2 = moduleType.getId();
-		if (matches(mt.getId(), type2)) {
-			String version2 = moduleType.getVersion();
-			if (matches(mt.getVersion(), version2))
-				return true;
-		}
+		if (matches(mt.getId(), moduleType.getId()) &&
+				matches(mt.getVersion(), moduleType.getVersion()))
+			return true;
+		
 		return false;
 	}
 
@@ -276,7 +274,8 @@ public class ServerUtil {
 	 * @return a possibly empty array of modules
 	 */
 	private static IModule[] getModules() {
-		List list = new ArrayList();
+		// use a set for better contains() performance
+		Set set = new HashSet();
 		
 		ModuleFactory[] factories = ServerPlugin.getModuleFactories();
 		if (factories != null) {
@@ -286,9 +285,9 @@ public class ServerUtil {
 				if (modules != null) {
 					int size2 = modules.length;
 					for (int j = 0; j < size2; j++) {
-						if (!list.contains(modules[j])) {
+						if (!set.contains(modules[j])) {
 							if (isSupportedModule(factories[i].getModuleTypes(), modules[j].getModuleType()))
-								list.add(modules[j]);
+								set.add(modules[j]);
 							else
 								Trace.trace(Trace.WARNING, "Invalid module returned from factory, ignored: " + modules[j]);
 						}
@@ -296,8 +295,8 @@ public class ServerUtil {
 				}
 			}
 		}
-		IModule[] modules = new IModule[list.size()];
-		list.toArray(modules);
+		IModule[] modules = new IModule[set.size()];
+		set.toArray(modules);
 		return modules;
 	}
 
@@ -306,6 +305,7 @@ public class ServerUtil {
 	 * of each module and add it to the server instead. This method will handle multiple
 	 * modules having the same parent (the parent will only be added once), but may not
 	 * handle the case where the same module or parent is being both added and removed.
+	 * Entries in the add or remove arrays may not be null.
 	 * 
 	 * @param server a server
 	 * @param add an array of modules to add, or <code>null</code> to not add any
@@ -316,7 +316,7 @@ public class ServerUtil {
 	 */
 	public static void modifyModules(IServerWorkingCopy server, IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
 		if (server == null)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Server cannot be null");
 		
 		if (add == null)
 			add = new IModule[0];
@@ -324,6 +324,11 @@ public class ServerUtil {
 			remove = new IModule[0];
 		
 		int size = add.length;
+		for (int i = 0; i < size; i++) {
+			if (add[i] == null)
+				throw new IllegalArgumentException("Cannot add null entries");
+		}
+		
 		List addParentModules = new ArrayList();
 		for (int i = 0; i < size; i++) {
 			boolean found = false;
@@ -344,6 +349,11 @@ public class ServerUtil {
 		}
 		
 		size = remove.length;
+		for (int i = 0; i < size; i++) {
+			if (remove[i] == null)
+				throw new IllegalArgumentException("Cannot remove null entries");
+		}
+		
 		List removeParentModules = new ArrayList();
 		for (int i = 0; i < size; i++) {
 			boolean found = false;
@@ -720,8 +730,9 @@ public class ServerUtil {
 	 *    or <code>false</code> otherwise
 	 */
 	public static boolean containsModule(IServer server, final IModule module, IProgressMonitor monitor) {
-		if (server == null)
-			return false;
+		if (server == null || module == null)
+			throw new IllegalArgumentException("Arguments cannot be null");
+		
 		Trace.trace(Trace.FINEST, "containsModule() " + server + " " + module);
 		
 		final boolean[] b = new boolean[1];

@@ -246,6 +246,7 @@ public interface IServerWorkingCopy extends IServerAttributes {
 	 * The modules included in the <code>remove</code> list
 	 * must be associated with the server, but may or may not exist
 	 * in the workspace.
+	 * Entries in the add or remove lists may not be null.
 	 * <p>
 	 * This method will not communicate with the server. After saving,
 	 * publish() can be used to sync up with the server.

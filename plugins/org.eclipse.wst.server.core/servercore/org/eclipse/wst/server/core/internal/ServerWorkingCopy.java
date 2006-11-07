@@ -492,6 +492,20 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		if ((add == null || add.length == 0) && (remove == null || remove.length == 0))
 			throw new IllegalArgumentException("Add and remove cannot both be null/empty");
 		
+		if (add != null) {
+			int size = add.length;
+			for (int i = 0; i < size; i++)
+				if (add[i] == null)
+					throw new IllegalArgumentException("Cannot add null entries");
+		}
+		
+		if (remove != null) {
+			int size = remove.length;
+			for (int i = 0; i < size; i++)
+				if (remove[i] == null)
+					throw new IllegalArgumentException("Cannot remove null entries");
+		}
+		
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
 			monitor.subTask(Messages.taskModifyModules);
