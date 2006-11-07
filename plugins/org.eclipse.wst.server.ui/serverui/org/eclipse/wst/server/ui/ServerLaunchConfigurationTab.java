@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
@@ -38,6 +39,10 @@ import org.eclipse.wst.server.ui.internal.*;
  * @since 1.0
  */
 public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab {
+	// flag to be used to decide whether to enable combo in launch config dialog
+	// after the user requests a launch, they cannot change it
+	private static final String READ_ONLY = "read-only";
+
 	private String[] serverTypeIds;
 
 	private Combo serverCombo;
@@ -50,9 +55,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	// list of servers that are in combo
 	private List servers;
 
-	// flag to be used to decide whether to enable combo in launch config dialog
-	// after the user requests a launch, they cannot change it
-	private static final String READ_ONLY = "read-only";
+	private ILaunchConfigurationWorkingCopy wc;
 
 	/**
 	 * Create a new server launch configuration tab.
@@ -176,20 +179,26 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		} else
 			hostname.setText("");
 		
-		if (runtime != null)
+		// check if "runtime" property is true or false
+		if (runtime != null && server != null && server.getServerType() != null && server.getServerType().hasRuntime())
 			runtimeLabel.setText(runtime.getName());
 		else
 			runtimeLabel.setText("");
-
+		
+		try {
+			if (wc != null)
+				((Server)server).setupLaunchConfiguration(wc, new NullProgressMonitor());
+		} catch (Exception e) {
+			// ignore
+		}
+		
 		if (server == null)
 			setErrorMessage(Messages.errorNoServerSelected);
 		else if (server.getServerState() != IServer.STATE_STOPPED)
 			setErrorMessage(Messages.errorServerAlreadyRunning);
 		else
 			setErrorMessage(null);
-		/*if (server != null) {
-		 server.setLaunchDefaults(configuration);
-		 }*/
+		
 		updateLaunchConfigurationDialog();
 	}
 
@@ -209,6 +218,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 			if (server != null)
 				((Server) server).setupLaunchConfiguration(configuration, null);
 		}
+		wc = configuration;
 	}
 
 	/**
@@ -218,19 +228,19 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		serverCombo.setEnabled(true);
 		//remove error message that other instances may have set
 		setErrorMessage(null);
-
+		
 		try {
 			String serverId = configuration.getAttribute(Server.ATTR_SERVER_ID, "");
 			if (serverId != null && !serverId.equals("")) {
 				server = ServerCore.findServer(serverId);
-
-				if (server == null) { //server no longer exists				
+				
+				if (server == null) { // server no longer exists				
 					setErrorMessage(Messages.errorInvalidServer);
-					//serverCombo.clearSelection();  //appears to be broken...doesn't work with read only?												
+					//serverCombo.clearSelection();  // appears to be broken...doesn't work with read only?												
 					serverCombo.setEnabled(false);
 					return;
 				}
-
+				
 				serverCombo.setText(server.getName());
 				if (server.getServerState() != IServer.STATE_STOPPED)
 					setErrorMessage(Messages.errorServerAlreadyRunning);
@@ -238,7 +248,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 				if (serverCombo.getItemCount() > 0)
 					serverCombo.select(0);
 			}
-			//flag should only be set if launch has been attempted on the config
+			// flag should only be set if launch has been attempted on the config
 			if (configuration.getAttribute(READ_ONLY, false))
 				serverCombo.setEnabled(false);
 		} catch (CoreException e) {
@@ -254,6 +264,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 			configuration.setAttribute(Server.ATTR_SERVER_ID, server.getId());
 		else
 			configuration.setAttribute(Server.ATTR_SERVER_ID, (String)null);
+		wc = configuration;
 	}
 
 	/**
