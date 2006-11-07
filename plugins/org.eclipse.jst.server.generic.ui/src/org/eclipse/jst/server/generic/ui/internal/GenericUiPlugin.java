@@ -82,8 +82,8 @@ public class GenericUiPlugin extends AbstractUIPlugin {
 
     protected ImageRegistry createImageRegistry() {
         ImageRegistry registry = new ImageRegistry();
-        ImageDescriptor desc = ImageDescriptor.createFromURL(getDefault().getBundle().getEntry("/icons/wizban/new_server_wiz.gif")); //$NON-NLS-1$
-        registry.put(WIZBAN_IMAGE,desc);
+        ImageDescriptor desc = ImageDescriptor.createFromURL(getDefault().getBundle().getEntry("/icons/wizban/new_server_wiz.png")); //$NON-NLS-1$
+        registry.put(WIZBAN_IMAGE, desc);
         return registry;
     }
   	public ImageDescriptor imageDescriptor(String key){
