@@ -65,14 +65,14 @@
          <attribute name="runtime-component" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a facet runtime component id
                </documentation>
             </annotation>
          </attribute>
          <attribute name="version" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  a facet runtime component version
                </documentation>
             </annotation>
          </attribute>
@@ -115,7 +115,7 @@
          
       </documentation>
    </annotation>
-   
+
    <annotation>
       <appInfo>
          <meta.section type="implementation"/>
