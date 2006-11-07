@@ -63,8 +63,9 @@ public class ProjectPropertyPage extends PropertyPage {
 	protected Control createContents(Composite parent) {
 		try {
 			IAdaptable element = getElement();
-			if (element instanceof IProject)
-				project = (IProject) element;
+			project = (IProject) element.getAdapter(IProject.class);
+			//if (element instanceof IProject)
+			//	project = (IProject) element;
 			
 			Composite composite = new Composite(parent, SWT.NONE);
 			GridLayout layout = new GridLayout();

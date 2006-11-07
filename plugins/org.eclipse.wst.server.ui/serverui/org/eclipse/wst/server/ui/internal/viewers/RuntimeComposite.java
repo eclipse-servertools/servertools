@@ -44,13 +44,13 @@ public class RuntimeComposite extends AbstractTableComposite {
 			IRuntime r1 = (IRuntime) e1;
 			IRuntime r2 = (IRuntime) e2;
 			if (sortByName)
-				return collator.compare(notNull(r1.getName()), notNull(r2.getName()));
+				return getComparator().compare(notNull(r1.getName()), notNull(r2.getName()));
 			
 			if (r1.getRuntimeType() == null)
 				return -1;
 			if (r2.getRuntimeType() == null)
 				return 1;
-			return collator.compare(notNull(r1.getRuntimeType().getName()), notNull(r2.getRuntimeType().getName()));
+			return getComparator().compare(notNull(r1.getRuntimeType().getName()), notNull(r2.getRuntimeType().getName()));
 		}
 		
 		protected String notNull(String s) {
