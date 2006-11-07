@@ -10,20 +10,13 @@
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.core.tests.module;
 
-import org.eclipse.jst.server.tomcat.core.tests.OrderedTestSuite;
-import org.eclipse.jst.server.tomcat.core.tests.TomcatRuntimeTestCase;
 import org.eclipse.wst.server.core.IModule;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class ModuleTestCase extends TestCase {
 	protected static final String WEB_MODULE_NAME = "MyWeb";
 	public static IModule webModule;
-
-	public static Test suite() {
-		return new OrderedTestSuite(TomcatRuntimeTestCase.class, "ModuleTestCase");
-	}
 
 	public void test01CreateWebModule() throws Exception {
 		ModuleHelper.createModule(WEB_MODULE_NAME);

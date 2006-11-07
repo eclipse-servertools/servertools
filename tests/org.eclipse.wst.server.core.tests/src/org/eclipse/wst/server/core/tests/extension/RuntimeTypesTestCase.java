@@ -10,18 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.extension;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.ServerCore;
 
 public class RuntimeTypesTestCase extends TestCase {
-	public static Test suite() {
-		return new TestSuite(RuntimeTypesTestCase.class, "RuntimeTypesTestCase");
-	}
-
 	public void testRuntimeTypesExtension() throws Exception {
 		IRuntimeType[] runtimeTypes = ServerCore.getRuntimeTypes();
 		if (runtimeTypes != null) {

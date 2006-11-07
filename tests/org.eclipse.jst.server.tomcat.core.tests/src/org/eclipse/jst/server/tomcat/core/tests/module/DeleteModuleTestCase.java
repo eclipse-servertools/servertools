@@ -10,17 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.core.tests.module;
 
-import org.eclipse.jst.server.tomcat.core.tests.OrderedTestSuite;
-import org.eclipse.jst.server.tomcat.core.tests.TomcatRuntimeTestCase;
-
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class DeleteModuleTestCase extends TestCase {
-	public static Test suite() {
-		return new OrderedTestSuite(TomcatRuntimeTestCase.class, "DeleteModuleTestCase");
-	}
-
 	public void test0DeleteWebModule() throws Exception {
 		ModuleHelper.deleteModule(ModuleTestCase.WEB_MODULE_NAME);
 	}

@@ -11,7 +11,6 @@
 package org.eclipse.wst.internet.monitor.core.tests;
 
 import org.eclipse.wst.internet.monitor.core.internal.provisional.*;
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class MonitorListenerTestCase extends TestCase {
@@ -43,10 +42,6 @@ public class MonitorListenerTestCase extends TestCase {
 
 	public MonitorListenerTestCase() {
 		super();
-	}
-
-	public static Test suite() {
-		return new OrderedTestSuite(MonitorListenerTestCase.class, "MonitorListenerTestCase");
 	}
 
 	public void test0AddListener() throws Exception {

@@ -10,21 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.tests.editor;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
-import org.eclipse.wst.server.ui.tests.OrderedTestSuite;
 import org.eclipse.wst.server.ui.tests.impl.TestServerEditorPartInput;
 
 public class IServerEditorPartInputTestCase extends TestCase {
 	protected static IServerEditorPartInput input;
-
-	public static Test suite() {
-		return new OrderedTestSuite(IServerEditorPartInputTestCase.class, "IServerEditorPartInputTestCase");
-	}
-
-
 
 	public void test00Create() {
 		input = new TestServerEditorPartInput();

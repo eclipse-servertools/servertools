@@ -10,18 +10,12 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.tests.extension;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.wst.server.core.internal.ILaunchableAdapter;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 
 public class LaunchableAdaptersTestCase extends TestCase {
-	public static Test suite() {
-		return new TestSuite(LaunchableAdaptersTestCase.class, "LaunchableAdaptersTestCase");
-	}
-
 	public void testLaunchableAdaptersExtension() throws Exception {
 		ILaunchableAdapter[] la = ServerPlugin.getLaunchableAdapters();
 		if (la != null) {

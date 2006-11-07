@@ -13,15 +13,10 @@ package org.eclipse.jst.server.core.tests;
 import org.eclipse.jst.server.core.IEnterpriseApplication;
 import org.eclipse.jst.server.core.tests.impl.TestEnterpriseApplication;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class EnterpriseApplicationTestCase extends TestCase {
 	protected static IEnterpriseApplication app;
-
-	public static Test suite() {
-		return new OrderedTestSuite(EnterpriseApplicationTestCase.class, "EnterpriseApplicationTestCase");
-	}
 
 	public void test00Create() {
 		app = new TestEnterpriseApplication();

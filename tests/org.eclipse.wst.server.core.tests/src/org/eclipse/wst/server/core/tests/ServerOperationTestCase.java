@@ -12,15 +12,10 @@ package org.eclipse.wst.server.core.tests;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IServer;
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class ServerOperationTestCase extends TestCase {
 	protected static IServer.IOperationListener listener;
-
-	public static Test suite() {
-		return new OrderedTestSuite(ServerOperationTestCase.class, "ServerOperationTestCase");
-	}
 
 	public void test00Create() throws Exception {
 		listener = new IServer.IOperationListener() {

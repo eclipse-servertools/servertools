@@ -10,18 +10,11 @@
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.tests.performance.tomcat50;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.jst.server.tomcat.core.tests.module.ModuleHelper;
 import org.eclipse.test.performance.Dimension;
 import org.eclipse.test.performance.PerformanceTestCase;
 
 public class DeleteModulesTestCase extends PerformanceTestCase {
-	public static Test suite() {
-		return new TestSuite(DeleteModulesTestCase.class, "DeleteModulesTestCase");
-	}
-
 	public void testDeleteModules() throws Exception {
 		Dimension[] dims = new Dimension[] {Dimension.ELAPSED_PROCESS, Dimension.USED_JAVA_HEAP};
 		tagAsSummary("Delete modules", dims);

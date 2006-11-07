@@ -14,9 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -25,10 +22,6 @@ import org.eclipse.wst.server.core.internal.IMemento;
 import org.eclipse.wst.server.core.internal.XMLMemento;
 
 public class MementoTestCase extends PerformanceTestCase {
-	public static Test suite() {
-		return new TestSuite(MementoTestCase.class, "MementoTestCase");
-	}
-
 	protected static IPath getLocalPath(IPath path2) {
 		try {
 			URL url = FileLocator.find(TestsPlugin.instance.getBundle(), path2, null);

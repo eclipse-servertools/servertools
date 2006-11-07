@@ -13,13 +13,9 @@ package org.eclipse.jst.server.core.tests.j2ee;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jst.server.core.IEnterpriseApplication;
-import org.eclipse.jst.server.core.IJ2EEModule;
-import org.eclipse.jst.server.core.IWebModule;
-import org.eclipse.jst.server.core.tests.OrderedTestSuite;
+import org.eclipse.jst.server.core.*;
 import org.eclipse.wst.server.core.*;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class NoSourceTestCase extends TestCase {
@@ -33,10 +29,6 @@ public class NoSourceTestCase extends TestCase {
 	protected static IEnterpriseApplication ent;
 	protected static IWebModule webModule;
 	protected static IJ2EEModule j2eeModule;
-
-	public static Test suite() {
-		return new OrderedTestSuite(NoSourceTestCase.class, "NoSourceTestCase");
-	}
 
 	public void test001ImportModules() throws Exception {
 		ModuleHelper.importProject("PublishEARNoSource.zip", PROJECT_NAMES);

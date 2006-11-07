@@ -13,7 +13,6 @@ package org.eclipse.wst.server.core.tests.ext;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IProject;
@@ -24,7 +23,6 @@ import org.eclipse.wst.server.core.internal.ProjectProperties;
 import org.eclipse.wst.server.core.internal.Runtime;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
-import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 /**
  * Abstract runtime test case. Use this harness to test a specific runtime.
  * All you have to do is extend this class, implement the abstract
@@ -46,10 +44,6 @@ public abstract class AbstractRuntimeTestCase extends TestCase {
 			// ignore
 		}
 	};
-
-	public static Test suite() {
-		return new OrderedTestSuite(AbstractRuntimeTestCase.class, "AbstractRuntimeTestCase");
-	}
 
 	protected IRuntime getRuntime() throws Exception {
 		if (runtime == null)

@@ -16,18 +16,12 @@ import java.io.InputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 /**
  * Do not run - test was created solely to show a JDT compilation problem (modification
  * stamps do not get updated in the output directory) which WTP has worked around.
  */
 public class ModificationStampTestCase extends TestCase {
-	public static Test suite() {
-		return new TestSuite(ModificationStampTestCase.class, "ModificationStampTestCase");
-	}
-	
 	public void testModificationStamp() throws Exception {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("Test");
 		if (!project.exists())

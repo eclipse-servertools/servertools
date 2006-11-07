@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.*;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class ServerEventTestCase extends TestCase {
@@ -28,10 +27,6 @@ public class ServerEventTestCase extends TestCase {
 	private static int SAMPLE_STATE = 1;
 	private static int SAMPLE_PUBLISHING_STATE = 2;
 	private static boolean SAMPLE_RESTART_STATE = true;
-	
-	public static Test suite() {
-		return new OrderedTestSuite(ServerEventTestCase.class, "ServerEventTestCase");
-	}
 
 	public static IServer createSampleServer() {
 		return new IServer() {

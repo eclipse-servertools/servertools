@@ -10,18 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.util;
 
-import org.eclipse.wst.server.core.tests.OrderedTestSuite;
+import junit.framework.TestCase;
 import org.eclipse.wst.server.core.tests.impl.TestProjectModuleFactoryDelegate;
 import org.eclipse.wst.server.core.util.ProjectModuleFactoryDelegate;
-import junit.framework.Test;
-import junit.framework.TestCase;
 
 public class ProjectModuleFactoryDelegateTestCase extends TestCase {
 	protected static ProjectModuleFactoryDelegate delegate;
-
-	public static Test suite() {
-		return new OrderedTestSuite(ProjectModuleFactoryDelegateTestCase.class, "ProjectModuleFactoryDelegateTestCase");
-	}
 
 	public void test00Create() {
 		delegate = new TestProjectModuleFactoryDelegate();

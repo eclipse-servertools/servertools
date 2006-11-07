@@ -16,7 +16,6 @@ import org.eclipse.jst.server.tomcat.core.internal.ITomcatRuntime;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.*;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class TomcatRuntimeTestCase extends TestCase {
@@ -29,10 +28,6 @@ public class TomcatRuntimeTestCase extends TestCase {
 	protected static IRuntime runtime;
 	protected static ITomcatRuntime tomcatRuntime;
 
-	public static Test suite() {
-		return new OrderedTestSuite(TomcatRuntimeTestCase.class, "TomcatRuntimeTestCase");
-	}
-	
 	protected IRuntimeWorkingCopy createRuntime(String runtimeTypeId) throws Exception {
 		IRuntimeType rt = ServerCore.findRuntimeType(runtimeTypeId);
 		IRuntimeWorkingCopy wc = rt.createRuntime("a", null);

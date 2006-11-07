@@ -10,18 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.extension;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.ServerCore;
 
 public class ServerTypesTestCase extends TestCase {
-	public static Test suite() {
-		return new TestSuite(ServerTypesTestCase.class, "ServerTypesTestCase");
-	}
-
 	public void testServerTypesExtension() throws Exception {
 		IServerType[] serverTypes = ServerCore.getServerTypes();
 		if (serverTypes != null) {

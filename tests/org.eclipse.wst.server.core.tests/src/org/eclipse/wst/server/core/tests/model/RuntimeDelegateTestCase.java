@@ -10,19 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.model;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
-import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 import org.eclipse.wst.server.core.tests.impl.TestRuntimeDelegate;
 
 public class RuntimeDelegateTestCase extends TestCase {
 	protected static RuntimeDelegate delegate;
-
-	public static Test suite() {
-		return new OrderedTestSuite(RuntimeDelegateTestCase.class, "RuntimeDelegateTestCase");
-	}
 
 	public void test00CreateDelegate() throws Exception {
 		delegate = new TestRuntimeDelegate();

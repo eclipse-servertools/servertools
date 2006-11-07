@@ -10,18 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.model;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.server.core.internal.ModuleFactoryEvent;
-import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 
 public class ModuleFactoryEventTestCase extends TestCase {
 	protected static ModuleFactoryEvent event;
-
-	public static Test suite() {
-		return new OrderedTestSuite(ModuleFactoryEventTestCase.class, "ModuleFactoryEventTestCase");
-	}
 
 	public void test00CreateEvent() throws Exception {
 		event = new ModuleFactoryEvent(null, null);

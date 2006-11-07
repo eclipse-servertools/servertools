@@ -12,15 +12,10 @@ package org.eclipse.jst.server.core.tests;
 
 import org.eclipse.jst.server.core.IConnectorModule;
 import org.eclipse.jst.server.core.tests.impl.TestConnectorModule;
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class ConnectorModuleTestCase extends TestCase {
 	protected static IConnectorModule module;
-
-	public static Test suite() {
-		return new OrderedTestSuite(ConnectorModuleTestCase.class, "ConnectorModuleTestCase");
-	}
 
 	public void test00Create() {
 		module = new TestConnectorModule();

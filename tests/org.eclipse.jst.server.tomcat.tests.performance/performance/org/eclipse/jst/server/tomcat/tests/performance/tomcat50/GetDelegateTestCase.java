@@ -11,8 +11,6 @@
 package org.eclipse.jst.server.tomcat.tests.performance.tomcat50;
 
 import java.io.File;
-import junit.framework.Test;
-import junit.framework.TestSuite;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -24,11 +22,8 @@ import org.eclipse.test.performance.Dimension;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.tests.performance.common.AbstractGetDelegateTestCase;
-public class GetDelegateTestCase extends AbstractGetDelegateTestCase {
-	public static Test suite() {
-		return new TestSuite(GetDelegateTestCase.class, "GetDelegateTestCase");
-	}
 
+public class GetDelegateTestCase extends AbstractGetDelegateTestCase {
 	public void testGetDelegate() throws Exception {
 		Dimension[] dims = new Dimension[] {Dimension.ELAPSED_PROCESS, Dimension.USED_JAVA_HEAP};
 		tagAsSummary("Create Tomcat runtime", dims);

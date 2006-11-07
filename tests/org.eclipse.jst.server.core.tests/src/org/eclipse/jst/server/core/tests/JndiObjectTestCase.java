@@ -11,15 +11,10 @@
 package org.eclipse.jst.server.core.tests;
 
 import org.eclipse.jst.server.core.JndiObject;
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class JndiObjectTestCase extends TestCase {
 	protected static JndiObject obj;
-	
-	public static Test suite() {
-		return new OrderedTestSuite(JndiObjectTestCase.class, "JndiObjectTestCase");
-	}
 
 	public void test00Create() {
 		obj = new JndiObject(null, "test");

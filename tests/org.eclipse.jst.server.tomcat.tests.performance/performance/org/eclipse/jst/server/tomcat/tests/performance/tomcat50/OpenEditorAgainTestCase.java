@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.tests.performance.tomcat50;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.test.performance.Dimension;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -22,10 +19,6 @@ import org.eclipse.wst.server.tests.performance.common.AbstractOpenEditorTestCas
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorInput;
 
 public class OpenEditorAgainTestCase extends AbstractOpenEditorTestCase {
-	public static Test suite() {
-		return new TestSuite(OpenEditorAgainTestCase.class, "OpenEditorAgainTestCase");
-	}
-
 	public void testOpenEditor() throws Exception {
 		Dimension[] dims = new Dimension[] { Dimension.ELAPSED_PROCESS, Dimension.USED_JAVA_HEAP };
 		tagAsSummary("Open Tomcat editor again", dims);

@@ -11,15 +11,10 @@
 package org.eclipse.jst.server.core.tests;
 
 import org.eclipse.jst.server.core.EJBBean;
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class EJBBeanTestCase extends TestCase {
 	protected static EJBBean bean;
-	
-	public static Test suite() {
-		return new OrderedTestSuite(EJBBeanTestCase.class, "EJBBeanTestCase");
-	}
 
 	public void test00Create() {
 		bean = new EJBBean(null, "test", false, true);

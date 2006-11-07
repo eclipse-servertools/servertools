@@ -10,17 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.ui.tests.extension;
 
-import org.eclipse.wst.internet.monitor.ui.internal.provisional.ContentViewer;
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
+
+import org.eclipse.wst.internet.monitor.ui.internal.provisional.ContentViewer;
 
 public class ContentViewersTestCase extends TestCase {
 	protected static ContentViewer viewer;
-
-	public static Test suite() {
-		return new TestSuite(ContentViewersTestCase.class, "ContentViewersTestCase");
-	}
 
 	public void test00Create() {
 		viewer = new TestContentViewer();

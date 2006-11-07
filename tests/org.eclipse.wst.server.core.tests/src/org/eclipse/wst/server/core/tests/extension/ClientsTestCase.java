@@ -10,18 +10,12 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.tests.extension;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.wst.server.core.internal.IClient;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 
 public class ClientsTestCase extends TestCase {
-	public static Test suite() {
-		return new TestSuite(ClientsTestCase.class, "ClientsTestCase");
-	}
-
 	public void testClientsExtension() throws Exception {
 		IClient[] clients = ServerPlugin.getClients();
 		if (clients != null) {

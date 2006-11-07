@@ -10,19 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.tests;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.server.ui.ServerLaunchConfigurationTab;
 
 public class ServerLaunchConfigurationTabTestCase extends TestCase {
 	protected static ServerLaunchConfigurationTab tab;
-
-	public static Test suite() {
-		return new OrderedTestSuite(ServerLaunchConfigurationTabTestCase.class, "ServerLaunchConfigurationTabTestCase");
-	}
-
-
 
 	public void test00CreateTab() {
 		tab = new ServerLaunchConfigurationTab();

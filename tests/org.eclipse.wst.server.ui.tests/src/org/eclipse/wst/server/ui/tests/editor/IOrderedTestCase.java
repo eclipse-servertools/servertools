@@ -10,19 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.tests.editor;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.server.ui.internal.editor.IOrdered;
-import org.eclipse.wst.server.ui.tests.OrderedTestSuite;
 import org.eclipse.wst.server.ui.tests.impl.TestOrdered;
 
 public class IOrderedTestCase extends TestCase {
 	protected static IOrdered ordered;
-
-	public static Test suite() {
-		return new OrderedTestSuite(IOrderedTestCase.class, "IOrderedTestCase");
-	}
 
 	public void test00Create() {
 		ordered = new TestOrdered();

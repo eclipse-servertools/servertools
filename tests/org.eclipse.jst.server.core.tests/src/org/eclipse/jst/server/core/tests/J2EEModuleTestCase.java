@@ -12,15 +12,10 @@ package org.eclipse.jst.server.core.tests;
 
 import org.eclipse.jst.server.core.IJ2EEModule;
 import org.eclipse.jst.server.core.tests.impl.TestJ2EEModule;
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class J2EEModuleTestCase extends TestCase {
 	protected static IJ2EEModule module;
-
-	public static Test suite() {
-		return new OrderedTestSuite(J2EEModuleTestCase.class, "J2EEModuleTestCase");
-	}
 
 	public void test00Create() {
 		module = new TestJ2EEModule();

@@ -10,18 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.tests.editor;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.server.ui.editor.ServerEditorSection;
-import org.eclipse.wst.server.ui.tests.OrderedTestSuite;
 
 public class ServerEditorSectionTestCase extends TestCase {
 	protected static ServerEditorSection section;
-
-	public static Test suite() {
-		return new OrderedTestSuite(ServerEditorSectionTestCase.class, "ServerEditorSectionTestCase");
-	}
 
 	public void test00Create() {
 		section = new ServerEditorSection() {

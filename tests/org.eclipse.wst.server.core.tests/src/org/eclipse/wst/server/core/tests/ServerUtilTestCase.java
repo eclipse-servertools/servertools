@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -23,10 +21,6 @@ import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.internal.ResourceManager;
 
 public class ServerUtilTestCase extends TestCase {
-	public static Test suite() {
-		return new TestSuite(ServerUtilTestCase.class, "ServerUtilTestCase");
-	}
-	
 	public void testFindServer0Extension() throws Exception {
 		try {
 			ResourceManager.findServer(null);

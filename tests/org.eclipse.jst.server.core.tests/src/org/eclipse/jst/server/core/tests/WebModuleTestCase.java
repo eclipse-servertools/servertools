@@ -12,15 +12,10 @@ package org.eclipse.jst.server.core.tests;
 
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.core.tests.impl.TestWebModule;
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class WebModuleTestCase extends TestCase {
 	protected static IWebModule module;
-
-	public static Test suite() {
-		return new OrderedTestSuite(WebModuleTestCase.class, "WebModuleTestCase");
-	}
 
 	public void test00Create() {
 		module = new TestWebModule();

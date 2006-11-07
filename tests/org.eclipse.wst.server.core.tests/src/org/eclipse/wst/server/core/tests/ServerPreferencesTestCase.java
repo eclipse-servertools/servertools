@@ -10,17 +10,12 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.tests;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.server.core.internal.ServerPreferences;
 
 public class ServerPreferencesTestCase extends TestCase {
 	protected static ServerPreferences prefs;	
-
-	public static Test suite() {
-		return new OrderedTestSuite(ServerPreferencesTestCase.class, "ServerPreferencesTestCase");
-	}
 
 	public void test00GetProperties() throws Exception {
 		prefs = ServerPreferences.getInstance();

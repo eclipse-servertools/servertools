@@ -10,18 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.tests.performance;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
 import org.eclipse.test.performance.Dimension;
 import org.eclipse.test.performance.PerformanceTestCase;
 import org.eclipse.wst.server.core.internal.ModuleFactory;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 
 public class ModuleFactoriesExtensionTestCase extends PerformanceTestCase {
-	public static Test suite() {
-		return new TestSuite(ModuleFactoriesExtensionTestCase.class, "ModuleFactoriesExtensionTestCase");
-	}
-  
 	public void testModuleFactoriesExtension() throws Exception {
 		Dimension[] dims = new Dimension[] {Dimension.ELAPSED_PROCESS, Dimension.USED_JAVA_HEAP};
 		tagAsGlobalSummary("Module Factories", dims);

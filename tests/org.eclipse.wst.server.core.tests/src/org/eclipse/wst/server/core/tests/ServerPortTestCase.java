@@ -11,15 +11,9 @@
 package org.eclipse.wst.server.core.tests;
 
 import org.eclipse.wst.server.core.ServerPort;
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 public class ServerPortTestCase extends TestCase {
-	public static Test suite() {
-		return new TestSuite(ServerPortTestCase.class, "ServerPortTestCase");
-	}
-	
 	public void test00CreatePort() throws Exception {
 		new ServerPort(null, null, 0, null);
 	}

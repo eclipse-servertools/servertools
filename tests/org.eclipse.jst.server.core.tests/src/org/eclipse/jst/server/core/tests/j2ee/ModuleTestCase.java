@@ -17,10 +17,8 @@ import org.eclipse.jst.server.core.IEnterpriseApplication;
 import org.eclipse.jst.server.core.IJ2EEModule;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.core.tests.AllTests;
-import org.eclipse.jst.server.core.tests.OrderedTestSuite;
 import org.eclipse.wst.server.core.*;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 /**
  * TODO Tests left to do:
@@ -42,10 +40,6 @@ public class ModuleTestCase extends TestCase {
 	protected static IEnterpriseApplication ent;
 	protected static IWebModule webModule;
 	protected static IJ2EEModule j2eeModule;
-
-	public static Test suite() {
-		return new OrderedTestSuite(ModuleTestCase.class, "ModuleTestCase");
-	}
 
 	public void test000CreateRuntime() throws Exception {
 		IRuntimeType rt = ServerCore.findRuntimeType(RUNTIME_TYPE_ID);

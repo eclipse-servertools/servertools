@@ -11,19 +11,13 @@
 package org.eclipse.wst.server.core.tests.model;
 
 import java.net.URL;
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.model.IURLProvider;
-import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 
 public class IURLProviderTestCase extends TestCase {
 	protected static IURLProvider urlProvider;
-
-	public static Test suite() {
-		return new OrderedTestSuite(IURLProviderTestCase.class, "IURLProviderTestCase");
-	}
 
 	public void test00CreateDelegate() throws Exception {
 		urlProvider = new IURLProvider() {

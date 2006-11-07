@@ -10,15 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.extension;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 public class ServerLocatorsTestCase extends TestCase {
-	public static Test suite() {
-		return new TestSuite(ServerLocatorsTestCase.class, "ServerLocatorsTestCase");
-	}
-
 	public void testServerLocatorsExtension() throws Exception {
 		/*IServerLocator[] serverLocators = ServerCore.getser();
 		if (runtimeLocators != null) {

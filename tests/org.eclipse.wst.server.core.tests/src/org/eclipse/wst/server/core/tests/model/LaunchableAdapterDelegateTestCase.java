@@ -10,21 +10,15 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.model;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.LaunchableAdapterDelegate;
-import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 
 public class LaunchableAdapterDelegateTestCase extends TestCase {
 	protected static LaunchableAdapterDelegate delegate;
-
-	public static Test suite() {
-		return new OrderedTestSuite(LaunchableAdapterDelegateTestCase.class, "LaunchableAdapterDelegateTestCase");
-	}
 
 	public void test00CreateDelegate() {
 		delegate = new LaunchableAdapterDelegate() {

@@ -10,19 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.model;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.server.core.model.IModuleResource;
-import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 import org.eclipse.wst.server.core.tests.impl.TestModuleResource;
 
 public class ModuleResourceTestCase extends TestCase {
 	protected static IModuleResource resource;
-
-	public static Test suite() {
-		return new OrderedTestSuite(ModuleResourceTestCase.class, "ModuleResourceTestCase");
-	}
 
 	public void test00CreateDelegate() throws Exception {
 		resource = new TestModuleResource();

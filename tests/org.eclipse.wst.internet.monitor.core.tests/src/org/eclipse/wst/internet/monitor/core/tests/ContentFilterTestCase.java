@@ -12,16 +12,11 @@ package org.eclipse.wst.internet.monitor.core.tests;
 
 import org.eclipse.wst.internet.monitor.core.internal.provisional.ContentFilterDelegate;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class ContentFilterTestCase extends TestCase {
 	protected static ContentFilterDelegate delegate;
-	
-	public static Test suite() {
-		return new OrderedTestSuite(MonitorListenerTestCase.class, "MonitorTestCase");
-	}
-	
+
 	public void test00Creation() {
 		delegate = new TestContentFilterDelegate();
 	}

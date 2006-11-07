@@ -10,18 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.server.tests.performance;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.test.performance.Dimension;
 import org.eclipse.test.performance.PerformanceTestCase;
 import org.eclipse.wst.server.ui.tests.dialog.WizardTestCase;
 
 public class AddRemoveModulesWizardTestCase extends PerformanceTestCase {
-	public static Test suite() {
-		return new TestSuite(AddRemoveModulesWizardTestCase.class, "AddRemoveModulesWizardTestCase");
-	}
-
 	public void testAddRemoveModulesWizard() throws Exception {
 		Dimension[] dims = new Dimension[] {Dimension.ELAPSED_PROCESS, Dimension.USED_JAVA_HEAP};
 		tagAsGlobalSummary("Add/remove modules wizard", dims);

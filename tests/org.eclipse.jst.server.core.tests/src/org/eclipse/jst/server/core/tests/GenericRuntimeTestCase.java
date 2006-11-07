@@ -17,7 +17,6 @@ import org.eclipse.jst.server.core.internal.IGenericRuntime;
 import org.eclipse.jst.server.core.internal.IGenericRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.*;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class GenericRuntimeTestCase extends TestCase {
@@ -27,10 +26,6 @@ public class GenericRuntimeTestCase extends TestCase {
 	protected static IRuntime runtimeWC;
 	protected static IGenericRuntime genericRuntime;
 	protected static IGenericRuntimeWorkingCopy genericRuntimeWC;
-
-	public static Test suite() {
-		return new OrderedTestSuite(GenericRuntimeTestCase.class, "GenericRuntimeTestCase");
-	}
 
 	public void test00CreateRuntime() throws Exception {
 		IRuntimeType rt = ServerCore.findRuntimeType(RUNTIME_TYPE_ID);

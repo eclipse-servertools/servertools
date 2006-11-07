@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.tests;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
@@ -18,10 +17,6 @@ import org.eclipse.wst.server.ui.internal.ServerUIPreferences;
 
 public class ServerUIPreferencesTestCase extends TestCase {
 	protected static ServerUIPreferences prefs;
-
-	public static Test suite() {
-		return new OrderedTestSuite(ServerUIPreferencesTestCase.class, "ServerUIPreferencesTestCase");
-	}
 
 	public void test00GetProperties() throws Exception {
 		prefs = ServerUIPlugin.getPreferences();

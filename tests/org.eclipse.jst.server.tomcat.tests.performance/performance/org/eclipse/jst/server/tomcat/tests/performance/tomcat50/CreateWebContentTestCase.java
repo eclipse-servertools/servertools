@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.tests.performance.tomcat50;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -23,10 +21,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.tomcat.core.tests.module.ModuleHelper;
 
 public class CreateWebContentTestCase extends TestCase {
-	public static Test suite() {
-		return new TestSuite(CreateWebContentTestCase.class, "CreateWebContentTestCase");
-	}
-
 	public void testCreateWebModuleContent() throws Exception {
 		for (int i = 0; i < CreateModulesTestCase.NUM_MODULES; i++) {
 			final int ii = i;

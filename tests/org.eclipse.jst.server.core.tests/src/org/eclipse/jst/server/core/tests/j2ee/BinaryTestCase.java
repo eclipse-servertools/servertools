@@ -16,10 +16,8 @@ import java.util.List;
 import org.eclipse.jst.server.core.IEnterpriseApplication;
 import org.eclipse.jst.server.core.IJ2EEModule;
 import org.eclipse.jst.server.core.IWebModule;
-import org.eclipse.jst.server.core.tests.OrderedTestSuite;
 import org.eclipse.wst.server.core.*;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class BinaryTestCase extends TestCase {
@@ -33,10 +31,6 @@ public class BinaryTestCase extends TestCase {
 	protected static IEnterpriseApplication ent;
 	protected static IWebModule webModule;
 	protected static IJ2EEModule j2eeModule;
-
-	public static Test suite() {
-		return new OrderedTestSuite(BinaryTestCase.class, "BinaryTestCase");
-	}
 
 	public void test001ImportModules() throws Exception {
 		ModuleHelper.importProject("PublishTestBinary.zip", new String[] { PROJECT_NAMES[0] } );

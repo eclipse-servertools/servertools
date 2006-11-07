@@ -10,19 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.model;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
-import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 import org.eclipse.wst.server.core.tests.impl.TestModuleFactoryDelegate;
 
 public class ModuleFactoryDelegateTestCase extends TestCase {
 	protected static ModuleFactoryDelegate delegate;
-
-	public static Test suite() {
-		return new OrderedTestSuite(ModuleFactoryDelegateTestCase.class, "ModuleFactoryDelegateTestCase");
-	}
 
 	public void test00CreateDelegate() throws Exception {
 		delegate = new TestModuleFactoryDelegate();

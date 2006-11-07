@@ -10,18 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.extension;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.wst.server.core.internal.IPublishTask;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 
 public class ServerTasksTestCase extends TestCase {
-	public static Test suite() {
-		return new TestSuite(ServerTasksTestCase.class, "ServerTasksTestCase");
-	}
-
 	public void testServerTasksExtension() throws Exception {
 		IPublishTask[] serverTasks = ServerPlugin.getPublishTasks();
 		if (serverTasks != null) {

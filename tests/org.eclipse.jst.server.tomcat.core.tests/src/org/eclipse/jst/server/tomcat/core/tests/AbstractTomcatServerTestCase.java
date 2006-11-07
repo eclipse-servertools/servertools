@@ -11,7 +11,6 @@
 package org.eclipse.jst.server.tomcat.core.tests;
 
 import java.util.List;
-import junit.framework.Test;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -22,10 +21,6 @@ import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.tests.ext.AbstractServerTestCase;
 
 public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCase {
-	public static Test suite() {
-		return new OrderedTestSuite(AbstractTomcatServerTestCase.class, "TomcatServerTestCase");
-	}
-
 	protected abstract String getServerTypeId();
 
 	public void deleteServer(IServer server2) throws Exception {

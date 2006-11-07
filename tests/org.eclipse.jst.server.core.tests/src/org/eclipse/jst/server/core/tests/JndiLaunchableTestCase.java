@@ -11,15 +11,10 @@
 package org.eclipse.jst.server.core.tests;
 
 import org.eclipse.jst.server.core.JndiLaunchable;
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class JndiLaunchableTestCase extends TestCase {
 	protected static JndiLaunchable launch;
-	
-	public static Test suite() {
-		return new OrderedTestSuite(JndiLaunchableTestCase.class, "JndiLaunchableTestCase");
-	}
 
 	public void test00Create() {
 		launch = new JndiLaunchable(null, "test");

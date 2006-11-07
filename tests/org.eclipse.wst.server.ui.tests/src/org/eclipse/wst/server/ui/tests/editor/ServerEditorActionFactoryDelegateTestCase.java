@@ -10,19 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.tests.editor;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.server.ui.internal.provisional.ServerEditorActionFactoryDelegate;
-import org.eclipse.wst.server.ui.tests.OrderedTestSuite;
 import org.eclipse.wst.server.ui.tests.impl.TestServerEditorActionFactoryDelegate;
 
 public class ServerEditorActionFactoryDelegateTestCase extends TestCase {
 	protected static ServerEditorActionFactoryDelegate delegate;
-
-	public static Test suite() {
-		return new OrderedTestSuite(ServerEditorActionFactoryDelegateTestCase.class, "ServerEditorActionFactoryDelegateTestCase");
-	}
 
 	public void test00CreateDelegate() throws Exception {
 		delegate = new TestServerEditorActionFactoryDelegate();

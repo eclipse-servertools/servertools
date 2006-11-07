@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.tests.performance.tomcat50;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -28,10 +26,6 @@ public class CreateHugeModuleTestCase extends TestCase {
 	protected static final String WEB_MODULE_NAME = "HugeModule";
 	protected static final int NUM_RESOURCES = 2000;
 	protected static final int NUM_EXTERNAL_JARS = 100;
-
-	public static Test suite() {
-		return new TestSuite(CreateHugeModuleTestCase.class, "CreateHugeModuleTestCase");
-	}
 
 	public void testCreateHugeWebModule() throws Exception {
 		ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {

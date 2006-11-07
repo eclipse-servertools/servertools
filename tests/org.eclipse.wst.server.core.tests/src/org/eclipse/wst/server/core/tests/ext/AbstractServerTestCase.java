@@ -13,7 +13,6 @@ package org.eclipse.wst.server.core.tests.ext;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IProject;
@@ -24,7 +23,6 @@ import org.eclipse.wst.server.core.internal.ProjectProperties;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.eclipse.wst.server.core.model.ServerDelegate;
-import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 /**
  * Abstract server test case. Use this harness to test a specific server.
  * All you have to do is extend this class, implement the abstract
@@ -54,10 +52,6 @@ public abstract class AbstractServerTestCase extends TestCase {
 		}
 	};
 
-	public static Test suite() {
-		return new OrderedTestSuite(AbstractServerTestCase.class, "AbstractServerTestCase");
-	}
-	
 	protected IServer getServer() throws Exception {
 		if (server == null) {
 			server = createServer();

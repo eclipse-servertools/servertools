@@ -11,15 +11,10 @@
 package org.eclipse.jst.server.core.tests;
 
 import org.eclipse.jst.server.core.Servlet;
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class ServletTestCase extends TestCase {
 	protected static Servlet servlet;
-	
-	public static Test suite() {
-		return new OrderedTestSuite(ServletTestCase.class, "ServletTestCase");
-	}
 
 	public void test00Create() {
 		servlet = new Servlet(null, "class", "alias");

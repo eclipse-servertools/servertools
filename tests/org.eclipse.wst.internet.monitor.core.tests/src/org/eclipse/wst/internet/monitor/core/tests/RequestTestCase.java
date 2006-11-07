@@ -15,7 +15,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.eclipse.wst.internet.monitor.core.internal.provisional.*;
-import junit.framework.Test;
 import junit.framework.TestCase;
 /**
  * Note: use ports between 22100-22200 to ensure they are free on the build machine.
@@ -49,10 +48,6 @@ public class RequestTestCase extends TestCase {
 		super();
 	}
 
-	public static Test suite() {
-		return new OrderedTestSuite(RequestTestCase.class, "RequestTestCase");
-	}
-	
 	public void test00GetMonitors() throws Exception {
 		assertNotNull(MonitorCore.getMonitors());
 	}

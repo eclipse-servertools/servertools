@@ -10,19 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.model;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.model.ModuleArtifactAdapterDelegate;
-import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 
 public class ModuleArtifactAdapterDelegateTestCase extends TestCase {
 	protected static ModuleArtifactAdapterDelegate delegate;
-
-	public static Test suite() {
-		return new OrderedTestSuite(ModuleArtifactAdapterDelegateTestCase.class, "ModuleArtifactAdapterDelegateTestCase");
-	}
 
 	public void test00CreateDelegate() {
 		delegate = new ModuleArtifactAdapterDelegate() {

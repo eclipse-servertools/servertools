@@ -11,9 +11,7 @@
 package org.eclipse.jst.server.tomcat.tests.performance.tomcat50;
 
 import java.util.List;
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfigurationWorkingCopy;
@@ -24,10 +22,6 @@ import org.eclipse.wst.server.core.*;
 
 public abstract class AbstractTomcatServerTestCase extends TestCase {
 	protected static IServer server;
-
-	public static Test suite() {
-		return new TestSuite(AbstractTomcatServerTestCase.class, "TomcatServerTestCase");
-	}
 
 	protected IServer getServer() throws Exception {
 		if (server == null) {

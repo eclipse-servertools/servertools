@@ -10,19 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
 
 public class ServerCoreTestCase extends TestCase {
-	public static Test suite() {
-		return new TestSuite(ServerCoreTestCase.class, "RuntimeLocatorDelegateTestCase");
-	}
-
 	public void testGetRuntimesExtension() throws Exception {
 		IRuntime[] runtimes = ServerCore.getRuntimes();
 		if (runtimes != null) {

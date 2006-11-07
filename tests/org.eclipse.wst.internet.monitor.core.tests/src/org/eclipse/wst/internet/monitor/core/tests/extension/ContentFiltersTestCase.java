@@ -12,15 +12,10 @@ package org.eclipse.wst.internet.monitor.core.tests.extension;
 
 import org.eclipse.wst.internet.monitor.core.internal.IContentFilter;
 import org.eclipse.wst.internet.monitor.core.internal.MonitorPlugin;
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
+
 
 public class ContentFiltersTestCase extends TestCase {
-	public static Test suite() {
-		return new TestSuite(ContentFiltersTestCase.class, "ContentFiltersTestCase");
-	}
-
 	public void test1ContentFiltersExtension() throws Exception {
 		IContentFilter[] cf = MonitorPlugin.getInstance().getContentFilters();
 		if (cf != null) {

@@ -10,20 +10,14 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.model;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.model.RuntimeLocatorDelegate;
-import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 import org.eclipse.wst.server.core.tests.impl.TestRuntimeLocatorDelegate;
 
 public class RuntimeLocatorDelegateTestCase extends TestCase {
 	protected static RuntimeLocatorDelegate delegate;
-
-	public static Test suite() {
-		return new OrderedTestSuite(RuntimeLocatorDelegateTestCase.class, "RuntimeLocatorDelegateTestCase");
-	}
 
 	public void test00CreateDelegate() throws Exception {
 		delegate = new TestRuntimeLocatorDelegate();

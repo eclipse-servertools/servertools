@@ -10,16 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core.tests.j2ee;
 
-import org.eclipse.jst.server.core.tests.OrderedTestSuite;
-
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class DeleteModuleTestCase extends TestCase {
-	public static Test suite() {
-		return new OrderedTestSuite(DeleteModuleTestCase.class, "DeleteModuleTestCase");
-	}
-
 	public void test0DeleteWebModule() throws Exception {
 		//ModuleHelper.deleteModule(ModuleTestCase.WEB_MODULE_NAME);
 	}

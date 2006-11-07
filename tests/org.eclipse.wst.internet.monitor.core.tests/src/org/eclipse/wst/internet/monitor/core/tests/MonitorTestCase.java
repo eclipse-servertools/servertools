@@ -11,7 +11,6 @@
 package org.eclipse.wst.internet.monitor.core.tests;
 
 import org.eclipse.wst.internet.monitor.core.internal.provisional.*;
-import junit.framework.Test;
 import junit.framework.TestCase;
 /**
  * Note: use ports between 22100-22200 to ensure they are free on the build machine.
@@ -21,10 +20,6 @@ public class MonitorTestCase extends TestCase {
 
 	public MonitorTestCase() {
 		super();
-	}
-
-	public static Test suite() {
-		return new OrderedTestSuite(MonitorListenerTestCase.class, "MonitorTestCase");
 	}
 	
 	public void test00GetMonitors() throws Exception {

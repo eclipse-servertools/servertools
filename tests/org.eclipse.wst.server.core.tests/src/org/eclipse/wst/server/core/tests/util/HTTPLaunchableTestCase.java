@@ -10,17 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.util;
 
-import org.eclipse.wst.server.core.tests.OrderedTestSuite;
-import org.eclipse.wst.server.core.util.HttpLaunchable;
-import junit.framework.Test;
 import junit.framework.TestCase;
+import org.eclipse.wst.server.core.util.HttpLaunchable;
 
 public class HTTPLaunchableTestCase extends TestCase {
 	protected static HttpLaunchable launch;
-	
-	public static Test suite() {
-		return new OrderedTestSuite(HTTPLaunchableTestCase.class, "HTTPLaunchableTestCase");
-	}
 
 	public void test00Create() {
 		launch = new HttpLaunchable(null);

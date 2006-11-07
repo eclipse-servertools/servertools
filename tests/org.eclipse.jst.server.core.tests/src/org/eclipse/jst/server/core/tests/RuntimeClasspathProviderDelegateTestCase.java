@@ -12,15 +12,10 @@ package org.eclipse.jst.server.core.tests;
 
 import org.eclipse.jst.server.core.RuntimeClasspathProviderDelegate;
 import org.eclipse.jst.server.core.tests.impl.TestRuntimeClasspathProviderDelegate;
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 public class RuntimeClasspathProviderDelegateTestCase extends TestCase {
 	protected static RuntimeClasspathProviderDelegate handler;
-
-	public static Test suite() {
-		return new OrderedTestSuite(RuntimeClasspathProviderDelegateTestCase.class, "RuntimeClasspathProviderDelegateTestCase");
-	}
 
 	public void test00Create() {
 		handler = new TestRuntimeClasspathProviderDelegate();

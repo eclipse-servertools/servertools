@@ -72,7 +72,7 @@ public class ModuleHelper {
 		boolean interrupted = true;
 		while (interrupted) {
 			try {
-				Platform.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD,
+				Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD,
 						new NullProgressMonitor());
 				interrupted = false;
 			} catch (InterruptedException e) {
@@ -86,7 +86,7 @@ public class ModuleHelper {
 		boolean interrupted = true;
 		while (interrupted) {
 			try {
-				Platform.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD,
+				Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD,
 						new NullProgressMonitor());
 				interrupted = false;
 			} catch (InterruptedException e) {
@@ -100,7 +100,7 @@ public class ModuleHelper {
 		boolean interrupted = true;
 		while (interrupted) {
 			try {
-				Platform.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD,
+				Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD,
 						new NullProgressMonitor());
 				interrupted = false;
 			} catch (InterruptedException e) {

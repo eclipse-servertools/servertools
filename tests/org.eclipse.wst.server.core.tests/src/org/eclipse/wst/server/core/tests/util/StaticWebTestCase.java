@@ -10,18 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.util;
 
-import org.eclipse.wst.server.core.tests.OrderedTestSuite;
+import junit.framework.TestCase;
 import org.eclipse.wst.server.core.tests.impl.TestStaticWeb;
 import org.eclipse.wst.server.core.util.IStaticWeb;
-import junit.framework.Test;
-import junit.framework.TestCase;
 
 public class StaticWebTestCase extends TestCase {
 	protected static IStaticWeb web;
-	
-	public static Test suite() {
-		return new OrderedTestSuite(StaticWebTestCase.class, "StaticWebTestCase");
-	}
 
 	public void test00Create() {
 		web = new TestStaticWeb();

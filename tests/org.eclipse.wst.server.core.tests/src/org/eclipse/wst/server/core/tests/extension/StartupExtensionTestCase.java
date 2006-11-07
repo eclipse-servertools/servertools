@@ -10,16 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.extension;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import org.eclipse.wst.server.core.ServerCore;
 
 public class StartupExtensionTestCase extends TestCase {
-	public static Test suite() {
-		return new TestSuite(StartupExtensionTestCase.class, "StartupExtensionTestCase");
-	}
-
 	public void testStartupExtension() throws Exception {
 		// startup
 		ServerCore.getServers();

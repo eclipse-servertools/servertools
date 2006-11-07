@@ -10,11 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.tests.wizard;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.wst.server.ui.tests.OrderedTestSuite;
 import org.eclipse.wst.server.ui.tests.impl.TestWizardHandle;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 
@@ -22,10 +20,6 @@ public class IWizardHandleTestCase extends TestCase {
 	protected static IWizardHandle wizardHandle;
 	private final String sampleMessage = "Sample message";
 	private final int sampleMessageType = IMessageProvider.ERROR;
-
-	public static Test suite() {
-		return new OrderedTestSuite(IWizardHandleTestCase.class, "IWizardHandleTestCase");
-	}
 
 	public void test00Create() {
 		wizardHandle = new TestWizardHandle();

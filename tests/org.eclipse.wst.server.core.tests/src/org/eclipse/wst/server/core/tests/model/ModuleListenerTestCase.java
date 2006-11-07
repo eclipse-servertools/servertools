@@ -10,19 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.model;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.server.core.internal.IModuleListener;
-import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 import org.eclipse.wst.server.core.tests.impl.TestModuleListener;
 
 public class ModuleListenerTestCase extends TestCase {
 	protected static IModuleListener listener;
-
-	public static Test suite() {
-		return new OrderedTestSuite(ModuleListenerTestCase.class, "ModuleListenerTestCase");
-	}
 
 	public void test00CreateListener() throws Exception {
 		listener = new TestModuleListener();

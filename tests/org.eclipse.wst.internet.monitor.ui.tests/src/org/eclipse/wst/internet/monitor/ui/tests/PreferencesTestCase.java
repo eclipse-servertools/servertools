@@ -10,17 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.internet.monitor.ui.tests;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.jface.dialogs.Dialog;
 
 public class PreferencesTestCase extends TestCase {
-	public static Test suite() {
-		return new TestSuite(PreferencesTestCase.class);
-	}
-
 	public PreferencesTestCase(String name) {
 		super(name);
 	}

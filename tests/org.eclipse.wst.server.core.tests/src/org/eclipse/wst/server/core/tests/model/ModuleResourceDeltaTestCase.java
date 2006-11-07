@@ -10,19 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.model;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.server.core.model.IModuleResourceDelta;
-import org.eclipse.wst.server.core.tests.OrderedTestSuite;
 import org.eclipse.wst.server.core.tests.impl.TestModuleResourceDelta;
 
 public class ModuleResourceDeltaTestCase extends TestCase {
 	protected static IModuleResourceDelta delta;
-
-	public static Test suite() {
-		return new OrderedTestSuite(ModuleResourceDeltaTestCase.class, "ModuleResourceDeltaTestCase");
-	}
 
 	public void test00CreateDelegate() {
 		delta = new TestModuleResourceDelta();

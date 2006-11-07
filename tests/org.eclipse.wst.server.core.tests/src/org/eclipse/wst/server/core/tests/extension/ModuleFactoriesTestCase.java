@@ -10,17 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.extension;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.wst.server.core.ServerUtil;
 
 public class ModuleFactoriesTestCase extends TestCase {
-  public static Test suite() {
-		return new TestSuite(ModuleFactoriesTestCase.class, "ModuleFactoriesTestCase");
-	}
-
 	public void testModuleFactoriesExtension() throws Exception {
 		// get modules
 		try {

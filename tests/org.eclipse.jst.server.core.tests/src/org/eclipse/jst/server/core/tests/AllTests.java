@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import java.io.File;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jst.server.core.tests.j2ee.*;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -50,7 +51,7 @@ public class AllTests {
 				s += File.separator;
 			runtimeLocation = new Path(s + "lib");
 		}
-		s = System.getProperty("org.eclipse.jst.server.tomcat.40");
+		//s = System.getProperty("org.eclipse.jst.server.tomcat.40");
 		if (s != null && s.length() > 0) {
 			if (!s.endsWith(File.separator))
 				s += File.separator;
@@ -58,13 +59,13 @@ public class AllTests {
 		}
 		
 		// bug 160848
-		/*
+		
 		if (runtimeLocation != null)
 			suite.addTest(new OrderedTestSuite(ModuleTestCase.class));
 		
 		suite.addTest(new OrderedTestSuite(NoSourceTestCase.class));
 		suite.addTest(new OrderedTestSuite(BinaryTestCase.class));
-		*/
+		
 		//$JUnit-END$
 		return suite;
 	}

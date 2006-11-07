@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.tests.performance.tomcat50;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.jst.server.tomcat.core.tests.module.ModuleHelper;
 import org.eclipse.test.performance.Dimension;
 import org.eclipse.test.performance.PerformanceTestCase;
@@ -20,10 +17,6 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.ui.tests.dialog.WizardTestCase;
 
 public class AddRemoveModulesWizardTestCase extends PerformanceTestCase {
-	public static Test suite() {
-		return new TestSuite(AddRemoveModulesWizardTestCase.class, "AddRemoveModulesWizardTestCase");
-	}
-
 	public void testAddRemoveModulesWizard() throws Exception {
 		Dimension[] dims = new Dimension[] {Dimension.ELAPSED_PROCESS, Dimension.USED_JAVA_HEAP};
 		tagAsSummary("Add/remove modules wizard", dims);

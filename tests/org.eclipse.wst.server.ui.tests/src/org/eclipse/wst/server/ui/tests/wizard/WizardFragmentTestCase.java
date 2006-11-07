@@ -10,18 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.tests.wizard;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.wst.server.ui.tests.OrderedTestSuite;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 
 public class WizardFragmentTestCase extends TestCase {
 	protected static WizardFragment fragment;
-
-	public static Test suite() {
-		return new OrderedTestSuite(WizardFragmentTestCase.class, "WizardFragmentTestCase");
-	}
 
 	public void test00CreateFragment() {
 		fragment = new WizardFragment() {

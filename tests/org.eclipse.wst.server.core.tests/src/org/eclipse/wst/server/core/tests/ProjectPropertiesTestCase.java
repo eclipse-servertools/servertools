@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IProject;
@@ -21,10 +20,6 @@ import org.eclipse.wst.server.core.internal.ServerPlugin;
 public class ProjectPropertiesTestCase extends TestCase {
 	protected static IProject project;
 	protected static ProjectProperties props;
-
-	public static Test suite() {
-		return new OrderedTestSuite(ProjectPropertiesTestCase.class, "AbstractServerTestCase");
-	}
 
 	public void test00GetProperties() throws Exception {
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject("test");

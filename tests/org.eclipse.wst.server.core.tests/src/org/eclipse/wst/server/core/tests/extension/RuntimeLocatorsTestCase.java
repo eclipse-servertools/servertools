@@ -10,18 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.extension;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.wst.server.core.internal.IRuntimeLocator;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 
 public class RuntimeLocatorsTestCase extends TestCase {
-	public static Test suite() {
-		return new TestSuite(RuntimeLocatorsTestCase.class, "RuntimeLocatorsTestCase");
-	}
-
 	public void testRuntimeLocatorsExtension() throws Exception {
 		IRuntimeLocator[] runtimeLocators = ServerPlugin.getRuntimeLocators();
 		if (runtimeLocators != null) {

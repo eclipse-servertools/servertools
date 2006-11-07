@@ -10,17 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.tests.util;
 
-import org.eclipse.wst.server.core.tests.OrderedTestSuite;
-import org.eclipse.wst.server.core.util.WebResource;
-import junit.framework.Test;
 import junit.framework.TestCase;
+import org.eclipse.wst.server.core.util.WebResource;
 
 public class WebResourceTestCase extends TestCase {
 	protected static WebResource web;
-	
-	public static Test suite() {
-		return new OrderedTestSuite(WebResourceTestCase.class, "WebResourceTestCase");
-	}
 
 	public void test00Create() {
 		web = new WebResource(null, null);
