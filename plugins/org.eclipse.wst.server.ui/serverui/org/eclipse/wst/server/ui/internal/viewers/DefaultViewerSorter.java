@@ -57,6 +57,15 @@ public class DefaultViewerSorter extends ViewerSorter {
 	 *    element is greater than the second element
 	 */
 	protected int compareCategories(String s1, String s2) {
+		try {
+			Version v1 = Version.parseVersion(s1);
+			Version v2 = Version.parseVersion(s2);
+			
+			return Version.compare(v1, v2);
+		} catch (NumberFormatException nfe) {
+			// ignore
+		}
+		
 		return s1.compareTo(s2);
 	}
 
