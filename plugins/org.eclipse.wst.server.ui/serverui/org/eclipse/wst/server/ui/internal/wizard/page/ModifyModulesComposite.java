@@ -304,7 +304,7 @@ public class ModifyModulesComposite extends Composite {
 				// ignore
 			}
 		}
-
+		
 		iterator = modules.iterator();
 		while (iterator.hasNext()) {
 			IModule module = (IModule) iterator.next();
@@ -317,8 +317,15 @@ public class ModifyModulesComposite extends Composite {
 			}
 		}
 		
-		// get children recursively
+		// get children recursively one level
+		// put child elements into a different list to avoid concurrent modifications
 		iterator = childModuleMap.keySet().iterator();
+		List list = new ArrayList();
+		while (iterator.hasNext()) {
+			list.add(iterator.next());
+		}
+		
+		iterator = list.iterator();
 		while (iterator.hasNext()) {
 			ChildModuleMapKey key = (ChildModuleMapKey) iterator.next();
 			IModule[] children0 = (IModule[]) childModuleMap.get(key);
