@@ -127,11 +127,15 @@ public class ServerUtilTestCase extends TestCase {
 	public void testGetServersByModule() throws Exception {
 		ServerUtil.getServersByModule(null, null);
 	}
-	
+
 	public void testContainsModule() throws Exception {
-		ServerUtil.containsModule(null, null, null);
+		try {
+			ServerUtil.containsModule(null, null, null);
+		} catch (Exception e) {
+			// ignore
+		}
 	}
-	
+
 	public void testGetServer() throws Exception {
 		try {
 			ServerUtil.getServer(null);
