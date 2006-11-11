@@ -35,6 +35,7 @@ public interface ContextIds {
 	public static final String MODIFY_MODULES_COMPOSITE = ServerUIPlugin.PLUGIN_ID + ".swmm0000";
 
 	public static final String TERMINATE_SERVER_DIALOG = ServerUIPlugin.PLUGIN_ID + ".sdti0000";
+	public static final String DELETE_SERVER_DIALOG = ServerUIPlugin.PLUGIN_ID + ".sdde0000";
 
 	public static final String PREF_GENERAL = ServerUIPlugin.PLUGIN_ID + ".spge0000";
 	public static final String PREF_GENERAL_AUTOPUBLISH_LOCAL = ServerUIPlugin.PLUGIN_ID + ".spge0002";
