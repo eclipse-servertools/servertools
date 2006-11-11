@@ -12,7 +12,6 @@
  ******************************************************************************/
 package org.eclipse.jst.server.core.internal;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -185,7 +184,7 @@ public class RuntimeBridge implements IRuntimeBridge {
 				else
 					properties.put("name", "-");
 				
-				if (vmInstall == null || isUsingDefaultJRE(javaRuntime))
+				if (vmInstall == null || javaRuntime.isUsingDefaultJRE())
 					properties.put(CLASSPATH, new Path(JavaRuntime.JRE_CONTAINER).toPortableString());
 				else
 					properties.put(CLASSPATH, JavaRuntime.newJREContainerPath(vmInstall).toPortableString());
@@ -207,17 +206,5 @@ public class RuntimeBridge implements IRuntimeBridge {
 				return new HashMap(0);
 			return Collections.singletonMap("id", runtime.getId());
 		}
-	}
-
-	protected static boolean isUsingDefaultJRE(IJavaRuntime javaRuntime) {
-		try {
-			Method m = javaRuntime.getClass().getMethod("isUsingDefaultJRE", null);
-			Object o = m.invoke(javaRuntime, null);
-			Boolean b = (Boolean) o;
-			return b.booleanValue();
-		} catch (Throwable t) {
-			// ignore - method not found
-		}
-		return false;
 	}
 }

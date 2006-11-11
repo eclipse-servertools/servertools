@@ -28,4 +28,12 @@ public interface IJavaRuntime {
 	 * @return the current VM install
 	 */
 	public IVMInstall getVMInstall();
+
+	/**
+	 * Returns <code>true</code> if the runtime is using the default JRE.
+	 * 
+	 * @return <code>true</code> if the runtime is using the default JRE,
+	 *    and <code>false</code> otherwise
+	 */
+	public boolean isUsingDefaultJRE();
 }
