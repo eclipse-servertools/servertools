@@ -32,6 +32,8 @@ import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
  * were published and when) for a single server.
  */
 public class ServerPublishInfo {
+	private static final String VERSION = "version";
+
 	protected IPath path;
 
 	// map of module ids to ModulePublishInfo
@@ -69,7 +71,7 @@ public class ServerPublishInfo {
 	private String getKey(String moduleId) {
 		return moduleId;
 	}
-	
+
 	private IModule[] getModule(String moduleId) {
 		if (moduleId == null || moduleId.length() == 0)
 			return new IModule[0];
@@ -220,13 +222,17 @@ public class ServerPublishInfo {
 		String filename = path.toOSString();
 		if (!(new File(filename).exists()))
 			return;
-	
+		
 		Trace.trace(Trace.FINEST, "Loading publish info from " + filename);
-
+		
 		try {
 			IMemento memento2 = XMLMemento.loadMemento(filename);
+			Float f = memento2.getFloat(VERSION);
+			if (f != null && f.floatValue() >= 3)
+				return;
+			
 			IMemento[] children = memento2.getChildren("module");
-	
+			
 			int size = children.length;
 			for (int i = 0; i < size; i++) {
 				ModulePublishInfo mpi = new ModulePublishInfo(children[i]);
@@ -243,10 +249,11 @@ public class ServerPublishInfo {
 	public void save() {
 		String filename = path.toOSString();
 		Trace.trace(Trace.FINEST, "Saving publish info to " + filename);
-	
+		
 		try {
 			XMLMemento memento = XMLMemento.createWriteRoot("server");
-
+			memento.putString(VERSION, "2.0");
+			
 			Iterator iterator = modulePublishInfo.keySet().iterator();
 			while (iterator.hasNext()) {
 				String controlRef = (String) iterator.next();

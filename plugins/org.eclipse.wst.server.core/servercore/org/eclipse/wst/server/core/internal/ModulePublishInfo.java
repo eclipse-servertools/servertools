@@ -27,7 +27,6 @@ public class ModulePublishInfo {
 	private static final String NAME = "name";
 	private static final String MODULE_TYPE_ID = "module-type-id";
 	private static final String MODULE_TYPE_VERSION = "module-type-version";
-	private static final String PATH = "path";
 	private static final String STAMP = "stamp";
 	private static final String FILE = "file";
 	private static final String FOLDER = "folder";
@@ -93,7 +92,7 @@ public class ModulePublishInfo {
 	 */
 	protected void load(IMemento memento) {
 		Trace.trace(Trace.FINEST, "Loading module publish info for: " + memento);
-	
+		
 		try {
 			moduleId = memento.getString(MODULE_ID);
 			name = memento.getString(NAME);
@@ -101,18 +100,18 @@ public class ModulePublishInfo {
 			String mv = memento.getString(MODULE_TYPE_VERSION);
 			if (mt != null && mt.length() > 0)
 				moduleType = new ModuleType(mt, mv);
-	
-			resources = loadResource(memento);
+			
+			resources = loadResource(memento, new Path(""));
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Could not load module publish info information: " + e.getMessage());
 		}
 	}
 
-	protected IModuleResource[] loadResource(IMemento memento) {
+	protected IModuleResource[] loadResource(IMemento memento, IPath path) {
 		if (memento == null)
 			return new IModuleResource[0];
 		
-		List list = new ArrayList(5);
+		List list = new ArrayList(10);
 		
 		// load files
 		IMemento[] children = memento.getChildren(FILE);
@@ -120,7 +119,6 @@ public class ModulePublishInfo {
 			int size = children.length;
 			for (int i = 0; i < size; i++) {
 				String name2 = children[i].getString(NAME);
-				IPath path = new Path(children[i].getString(PATH));
 				long stamp = Long.parseLong(children[i].getString(STAMP));
 				ModuleFile file = new ModuleFile(name2, path, stamp);
 				list.add(file);
@@ -133,9 +131,8 @@ public class ModulePublishInfo {
 			int size = children.length;
 			for (int i = 0; i < size; i++) {
 				String name2 = children[i].getString(NAME);
-				IPath path = new Path(children[i].getString(PATH));
 				ModuleFolder folder = new ModuleFolder(null, name2, path);
-				folder.setMembers(loadResource(children[i]));
+				folder.setMembers(loadResource(children[i], path.append(name2)));
 				list.add(folder);
 			}
 		}
@@ -174,13 +171,11 @@ public class ModulePublishInfo {
 				IModuleFile file = (IModuleFile) resources2[i];
 				IMemento child = memento.createChild(FILE);
 				child.putString(NAME, file.getName());
-				child.putString(PATH, file.getModuleRelativePath().toPortableString());
 				child.putString(STAMP, "" + file.getModificationStamp());
 			} else {
 				IModuleFolder folder = (IModuleFolder) resources2[i];
 				IMemento child = memento.createChild(FOLDER);
 				child.putString(NAME, folder.getName());
-				child.putString(PATH, folder.getModuleRelativePath().toPortableString());
 				IModuleResource[] resources3 = folder.members();
 				saveResource(child, resources3);
 			}
@@ -193,6 +188,8 @@ public class ModulePublishInfo {
 	protected void startCaching() {
 		useCache = true;
 		currentResources = null;
+		delta = null;
+		hasDelta = false;
 	}
 
 	/**
@@ -201,6 +198,9 @@ public class ModulePublishInfo {
 	 * @param module
 	 */
 	private void fillCache(IModule[] module) {
+		if (!useCache)
+			return;
+		
 		if (currentResources != null)
 			return;
 		
@@ -227,6 +227,7 @@ public class ModulePublishInfo {
 		useCache = false;
 		currentResources = null;
 		delta = null;
+		hasDelta = false;
 	}
 
 	protected IModuleResource[] getModuleResources(IModule[] module) {
