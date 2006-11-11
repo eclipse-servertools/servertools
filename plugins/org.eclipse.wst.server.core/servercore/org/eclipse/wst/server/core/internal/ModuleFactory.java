@@ -110,9 +110,13 @@ public class ModuleFactory implements IOrdered {
 		if (modules2 != null) {
 			int size = modules2.length;
 			for (int i = 0; i < size; i++) {
-				Module module = (Module) modules2[i];
-				if (id.equals(module.getInternalId()))
-					return module;
+				String id2 = modules2[i].getId();
+				int index = id2.indexOf(":");
+				if (index >= 0)
+					id2 = id2.substring(index+1);
+				
+				if (id.equals(id2))
+					return modules2[i];
 			}
 		}
 		return null;
