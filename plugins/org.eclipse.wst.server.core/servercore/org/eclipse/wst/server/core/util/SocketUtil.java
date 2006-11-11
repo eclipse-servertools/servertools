@@ -36,7 +36,7 @@ public class SocketUtil {
 
 	private static List addressCache;
 
-	private static Object lock = new Object();
+	protected static Object lock = new Object();
 
 	/**
 	 * Static utility class - cannot create an instance.
@@ -193,16 +193,16 @@ public class SocketUtil {
 				
 				Thread cacheThread = new Thread("Caching localhost information") {
 					public void run() {
-						Iterator iter = currentAddresses.iterator();
-						while (iter.hasNext()) {
-							InetAddress addr = (InetAddress) iter.next();
-							String host = addr.getHostName();
-							String host2 = addr.getCanonicalHostName();
+						Iterator iter2 = currentAddresses.iterator();
+						while (iter2.hasNext()) {
+							InetAddress addr = (InetAddress) iter2.next();
+							String hostname = addr.getHostName();
+							String hostname2 = addr.getCanonicalHostName();
 							synchronized (lock) {
-								if (host != null && !addressList.contains(host))
-									addressList.add(host);
-								if (host2 != null && !addressList.contains(host2))
-									addressList.add(host2);
+								if (hostname != null && !addressList.contains(hostname))
+									addressList.add(hostname);
+								if (hostname2 != null && !addressList.contains(hostname2))
+									addressList.add(hostname2);
 							}
 						}
 					}

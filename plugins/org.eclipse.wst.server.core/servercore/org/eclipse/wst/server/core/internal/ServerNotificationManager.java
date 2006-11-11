@@ -21,25 +21,25 @@ import org.eclipse.wst.server.core.ServerEvent;
  */
 public class ServerNotificationManager {
 	private List listenerList = new ArrayList();
-	
+
 	/**
 	 * For masking event on all changes.
 	 */
 	public static final int ALL_EVENTS = 0xFFFF;
-	
+
 	private class ListenerEntry {
 		private IServerListener listener;
 		private int eventMask;
-		
-		private ListenerEntry(IServerListener curListener, int curEventMask) {
+
+		protected ListenerEntry(IServerListener curListener, int curEventMask) {
 			listener = curListener;
 			eventMask = curEventMask;
 		}
-		
+
 		protected IServerListener getListener() {
 			return listener;
 		}
-		
+
 		protected int getEventMask() {
 			return eventMask;
 		}

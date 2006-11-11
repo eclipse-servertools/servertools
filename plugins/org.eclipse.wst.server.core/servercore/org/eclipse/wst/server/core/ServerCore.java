@@ -45,7 +45,7 @@ public class ServerCore {
 		executeStartups();
 	}
 
-	private static class RegistryChangeListener implements IRegistryChangeListener {
+	protected static class RegistryChangeListener implements IRegistryChangeListener {
 		public void registryChanged(IRegistryChangeEvent event) {
 			IExtensionDelta[] deltas = event.getExtensionDeltas(ServerPlugin.PLUGIN_ID, EXTENSION_RUNTIME_TYPE);
 			if (deltas != null) {

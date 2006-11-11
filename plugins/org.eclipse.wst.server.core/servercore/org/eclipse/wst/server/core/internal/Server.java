@@ -172,7 +172,7 @@ public class Server extends Base implements IServer {
 					if (m.getProject() == null)
 						return true;
 					
-					if (module.equals(m)) {
+					if (getModule().equals(m)) {
 						if (hasPublishedResourceDelta(module2)) {
 							changed[0] = true;
 							setModulePublishState(module2, IServer.PUBLISH_STATE_INCREMENTAL);
@@ -199,7 +199,7 @@ public class Server extends Base implements IServer {
 			
 			return Status.OK_STATUS;
 		}
-	};
+	}
 	
 	private static final Comparator PUBLISH_OPERATION_COMPARTOR = new Comparator() {
       public int compare(Object leftOp, Object rightOp) {
@@ -425,7 +425,6 @@ public class Server extends Base implements IServer {
 				getServerPublishState(), getServerRestartState()));
 		
 		if (getServerState() == IServer.STATE_STARTED && getServerRestartState() && ServerPreferences.getInstance().isAutoRestarting()) {
-			String mode = getMode();
 			if (canRestart(mode).isOK()) {
 				RestartServerJob job = new RestartServerJob(this, mode);
 				job.schedule();
@@ -539,7 +538,7 @@ public class Server extends Base implements IServer {
 		Trace.trace(Trace.FINEST, "> handleDeployableProjectChange() " + this + " " + module);
 		
 		// check for duplicate jobs already waiting and don't create a new one
-		Job[] jobs = Platform.getJobManager().find(ServerPlugin.PLUGIN_ID);
+		Job[] jobs = Job.getJobManager().find(ServerPlugin.PLUGIN_ID);
 		if (jobs != null) {
 			int size = jobs.length;
 			for (int i = 0; i < size; i++) {
@@ -1170,7 +1169,7 @@ public class Server extends Base implements IServer {
 						if (wc.isDirty()) {
 							final ILaunchConfiguration[] lc = new ILaunchConfiguration[1];
 							Job job = new Job("Saving launch configuration") {
-								protected IStatus run(IProgressMonitor monitor) {
+								protected IStatus run(IProgressMonitor monitor2) {
 									try {
 										lc[0] = wc.doSave();
 									} catch (CoreException ce) {

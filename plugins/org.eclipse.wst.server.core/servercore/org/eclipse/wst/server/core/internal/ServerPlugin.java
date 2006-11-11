@@ -316,7 +316,7 @@ public class ServerPlugin extends Plugin {
 		ServerMonitorManager.shutdown();
 		
 		try {
-			Platform.getJobManager().join(SHUTDOWN_JOB_FAMILY, null);
+			Job.getJobManager().join(SHUTDOWN_JOB_FAMILY, null);
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Error waiting for shutdown job", e);
 		}
