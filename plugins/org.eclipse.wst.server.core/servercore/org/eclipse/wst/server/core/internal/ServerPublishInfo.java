@@ -204,8 +204,22 @@ public class ServerPublishInfo {
 			if (module2 == null || module2.length == 0) {
 				String moduleId = mpi.getModuleId();
 				if (moduleId != null) {
-					int index = moduleId.lastIndexOf("#");
-					module2 = new IModule[] { new DeletedModule(moduleId.substring(index + 1), mpi.getName(), mpi.getModuleType()) };
+					String[] ids = getModuleIds(moduleId);
+					int depth = ids.length;
+					
+					module2 = new IModule[depth];
+					String s = "";
+					for (int i = 0; i < depth; i++) {
+						s += ids[i];
+						if (i == depth - 1)
+							module2[i] = mpi.getDeletedModule();
+						else {
+							ModulePublishInfo mpi2 = (ModulePublishInfo) modulePublishInfo.get(s);
+							if (mpi2 != null)
+								module2[i] = mpi2.getDeletedModule();
+						}
+						s += "#";
+					}
 				}
 			}
 			if (module2 != null && module2.length > 0) {
@@ -213,6 +227,23 @@ public class ServerPublishInfo {
 				kindList.add(new Integer(ServerBehaviourDelegate.REMOVED));
 			}
 		}
+	}
+
+	/**
+	 * Parse a combined module id string into the individual module ids
+	 * @param moduleId
+	 * @return an array of module ids
+	 */
+	private String[] getModuleIds(String moduleId) {
+		StringTokenizer st = new StringTokenizer(moduleId, "#");
+		List list = new ArrayList(2);
+		while (st.hasMoreTokens()) {
+			list.add(st.nextToken());
+		}
+		
+		String[] s = new String[list.size()];
+		list.toArray(s);
+		return s;
 	}
 
 	/**

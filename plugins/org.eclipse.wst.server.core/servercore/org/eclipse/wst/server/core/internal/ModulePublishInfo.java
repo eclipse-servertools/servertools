@@ -320,6 +320,19 @@ public class ModulePublishInfo {
 		}
 	}
 
+	/**
+	 * Return a deleted module that represents this module.
+	 * 
+	 * @return a module
+	 */
+	protected IModule getDeletedModule() {
+		String id = moduleId;
+		int index = id.lastIndexOf("#");
+		if (index > 0)
+			id = id.substring(index+1);
+		return new DeletedModule(id, name, moduleType);
+	}
+
 	public String toString() {
 		return "ModulePublishInfo [" + moduleId + "]";
 	}
