@@ -286,6 +286,15 @@ public interface IServer extends IServerAttributes {
 	public IStatus canPublish();
 
 	/**
+	 * Returns true if the server should be published to. This is <code>true</code> when the server
+	 * can be published to and the server's publish state or any module's publish state is not
+	 * PUBLISH_STATE_NONE. 
+	 * 
+	 * @return boolean
+	 */
+	public boolean shouldPublish();
+
+	/**
 	 * Publish to the server using the progress monitor. The result of the
 	 * publish operation is returned as an IStatus.
 	 * <p>
@@ -398,6 +407,15 @@ public interface IServer extends IServerAttributes {
 	 *    be restarted, otherwise a status object indicating why it can't
 	 */
 	public IStatus canRestart(String mode);
+
+	/**
+	 * Returns true if the server should be restarted. This is <code>true</code> when the server
+	 * can be restarted and the server's restart state or any module's restart states is not
+	 * false. 
+	 * 
+	 * @return boolean
+	 */
+	public boolean shouldRestart();
 
 	/**
 	 * Returns whether this server is out of sync and needs to be
