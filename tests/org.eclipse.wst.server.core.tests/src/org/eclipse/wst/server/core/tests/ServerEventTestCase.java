@@ -171,6 +171,12 @@ public class ServerEventTestCase extends TestCase {
 			public void removePublishListener(IPublishListener listener) {
 				// do nothing
 			}
+			public boolean shouldPublish() {
+				return false;
+			}
+			public boolean shouldRestart() {
+				return false;
+			}
 		};
 	}
 
