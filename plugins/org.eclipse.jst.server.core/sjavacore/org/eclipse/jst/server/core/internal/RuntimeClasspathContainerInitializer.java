@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,11 +10,18 @@
  **********************************************************************/
 package org.eclipse.jst.server.core.internal;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.*;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.core.internal.ServerPlugin;
 /**
  * 
  */
@@ -69,9 +76,77 @@ public class RuntimeClasspathContainerInitializer extends ClasspathContainerInit
 					if (runtimeId != null)
 						runtime = ServerCore.findRuntime(runtimeId);
 					delegate.requestClasspathContainerUpdate(runtime, containerSuggestion.getClasspathEntries());
+					//JavaCore.setClasspathContainer(containerPath, new IJavaProject[] { project },
+					//		new IClasspathContainer[] { containerSuggestion }, new NullProgressMonitor());
+					updateClasspath(runtime, containerPath, containerSuggestion);
 				}
 			}
 		}
+	}
+
+	private void updateClasspath(final IRuntime runtime, final IPath containerPath, final IClasspathContainer containerSuggestion) {
+		class UpdateClasspathJob extends Job {
+			public UpdateClasspathJob() {
+				super(NLS.bind(Messages.updateClasspathContainers, runtime.getName()));
+			}
+
+			public boolean belongsTo(Object family) {
+				return ServerPlugin.PLUGIN_ID.equals(family);
+			}
+
+			public IStatus run(IProgressMonitor monitor) {
+				IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+				List list = new ArrayList();
+				if (projects != null) {
+					int size = projects.length;
+					for (int i = 0; i < size; i++) {
+						if (projects[i].isAccessible()) {
+							try {
+								if (!projects[i].isNatureEnabled(JavaCore.NATURE_ID))
+									continue;
+								
+								IJavaProject javaProject = JavaCore.create(projects[i]); // TODO is java project?
+								
+								boolean found = false;
+								IClasspathEntry[] ce = javaProject.getRawClasspath();
+								for (int j = 0; j < ce.length; j++) {
+									if (ce[j].getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
+										if (containerPath.isPrefixOf(ce[j].getPath()))
+											found = true;
+									}
+								}
+								
+								Trace.trace(Trace.FINEST, "Classpath change on: " + projects[i] + " " + found);
+								
+								if (found)
+									list.add(javaProject);
+							} catch (Exception e) {
+								Trace.trace(Trace.SEVERE, "Could not update classpath container", e);
+							}
+						}
+					}
+				}
+				
+				int size = list.size();
+				if (size > 0) {
+					IJavaProject[] javaProjects = new IJavaProject[size];
+					list.toArray(javaProjects);
+					IClasspathContainer[] containers = new IClasspathContainer[size];
+					for (int i = 0; i < size; i++)
+						containers[i] = containerSuggestion;
+					
+					try {
+						JavaCore.setClasspathContainer(containerPath, javaProjects, containers, monitor);
+					} catch (JavaModelException jme) {
+						return jme.getStatus();
+					}
+				}
+				
+				return Status.OK_STATUS;
+			}
+		}
+		UpdateClasspathJob job = new UpdateClasspathJob();
+		job.schedule();
 	}
 
 	/** (non-Javadoc)
