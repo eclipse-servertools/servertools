@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.ILaunchManager;
@@ -109,12 +110,13 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			RunOnServerWizard wizard = new RunOnServerWizard(module, launchMode);
 			ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
 			if (dialog.open() == Window.CANCEL) {
-				monitor.setCanceled(true);
+				if (monitor != null)
+					monitor.setCanceled(true);
 				return null;
 			}
 
 			try {
-				Platform.getJobManager().join("org.eclipse.wst.server.ui.family", null);
+				Job.getJobManager().join("org.eclipse.wst.server.ui.family", null);
 			} catch (Exception e) {
 				Trace.trace(Trace.WARNING, "Error waiting for job", e);
 			}
@@ -134,7 +136,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		}
 		
 		try {
-			Platform.getJobManager().join("org.eclipse.wst.server.ui.family", new NullProgressMonitor());
+			Job.getJobManager().join("org.eclipse.wst.server.ui.family", new NullProgressMonitor());
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Error waiting for job", e);
 		}
@@ -220,7 +222,10 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		tasksRun = false;
 		IServer server2 = null;
 		try {
-			server2 = getServer(module, launchMode2, null);
+			IProgressMonitor monitor = new NullProgressMonitor();
+			server2 = getServer(module, launchMode2, monitor);
+			if (monitor.isCanceled())
+				return;
 		} catch (CoreException ce) {
 			EclipseUtil.openError(shell, ce.getLocalizedMessage());
 			return;
