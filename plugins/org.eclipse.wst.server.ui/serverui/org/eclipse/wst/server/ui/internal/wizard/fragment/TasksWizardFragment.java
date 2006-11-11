@@ -18,14 +18,10 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.*;
 import org.eclipse.wst.server.core.model.PublishOperation;
 import org.eclipse.wst.server.ui.internal.editor.IOrdered;
-import org.eclipse.wst.server.ui.internal.wizard.page.TasksComposite;
-import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * 
@@ -70,26 +66,71 @@ public class TasksWizardFragment extends WizardFragment {
 		protected String getId() {
 			return id;
 		}
+		
+		public boolean equals(Object obj) {
+			if (!(obj instanceof TaskInfo))
+				return false;
+			
+			TaskInfo ti = (TaskInfo) obj;
+			if (kind != ti.kind)
+				return false;
+			
+			if (id == null || !id.equals(ti.id))
+				return false;
+			
+			if (task2 == null && ti.task2 != null)
+				return false;
+			
+			if (task2 != null && ti.task2 == null)
+				return false;
+			
+			try {
+				if (task2 != null && ti.task2 != null) {
+					if (task2.getKind() != ti.task2.getKind())
+						return false;
+					if (task2.getOrder() != ti.task2.getOrder())
+						return false;
+					if (!task2.getLabel().equals(ti.task2.getLabel()))
+						return false;
+					if (!task2.getDescription().equals(ti.task2.getDescription()))
+						return false;
+				}
+			} catch (Exception e) {
+				// ignore
+			}
+			return true;
+		}
 	}
-
-	protected TasksComposite comp;
 
 	protected List tasks;
 	protected boolean hasOptionalTasks;
-	
+	protected boolean hasPreferredTasks;
+
 	protected Map selectedTaskMap = new HashMap();
-	
+
 	public TasksWizardFragment() {
 		// do nothing
 	}
-	
+
+	protected void createChildFragments(List list) {
+		if (tasks == null)
+			return;
+		
+		int TASKS_PER_PAGE = 5;
+		int size = tasks.size();
+		int pages = (size - 1) / TASKS_PER_PAGE + 1;
+		for (int i = 0; i < pages; i++) {
+			SubTasksWizardFragment fragment = new SubTasksWizardFragment();
+			List list2 = tasks.subList(TASKS_PER_PAGE * i, Math.min(size, TASKS_PER_PAGE * (i+1)));
+			fragment.updateTasks(list2);
+			list.add(fragment);
+		}
+	}
+
 	public void enter() {
 		updateTasks();
-		
-		if (comp != null)
-			comp.createControl();
 	}
-	
+
 	public List getChildFragments() {
 		updateTasks();
 		return super.getChildFragments();
@@ -101,9 +142,10 @@ public class TasksWizardFragment extends WizardFragment {
 	}
 
 	public void updateTasks() {
-		tasks = null;
-		if (getTaskModel() == null)
+		if (getTaskModel() == null) {
+			tasks = null;
 			return;
+		}
 
 		IServerAttributes server = (IServerAttributes) getTaskModel().getObject(TaskModel.TASK_SERVER);
 		List modules = (List) getTaskModel().getObject(TaskModel.TASK_MODULES);
@@ -121,22 +163,20 @@ public class TasksWizardFragment extends WizardFragment {
 		}
 		
 		if (server != null && modules != null) {
-			tasks = new ArrayList();
-			createTasks(server, modules);
+			List taskList = new ArrayList();
+			createTasks(taskList, server, modules);
+			
+			if (tasks == null || !tasks.equals(taskList)) {
+				tasks = taskList;
+				updateChildFragments();
+			}
 		}
-		
-		if (comp != null)
-			Display.getDefault().syncExec(new Runnable() {
-				public void run() {
-					comp.setTasks(tasks);
-				}
-			});
 	}
-	
-	protected void createTasks(IServerAttributes server, List modules) {
+
+	protected void createTasks(List taskList, IServerAttributes server, List modules) {
 		if (server == null)
 			return;
-
+		
 		List enabledTasks = ((Server)server).getEnabledOptionalPublishOperationIds();
 		List disabledTasks = ((Server)server).getDisabledPreferredPublishOperationIds();
 		PublishOperation[] tasks2 = ((Server)server).getAllTasks(modules);
@@ -145,6 +185,8 @@ public class TasksWizardFragment extends WizardFragment {
 			String id = ((Server)server).getPublishOperationId(tasks2[j]);
 			if (kind == PublishOperation.OPTIONAL || kind == PublishOperation.PREFERRED)
 				hasOptionalTasks = true;
+			if (kind == PublishOperation.PREFERRED)
+				hasPreferredTasks = true;
 			tasks2[j].setTaskModel(getTaskModel());
 			
 			boolean selected = true;
@@ -155,30 +197,22 @@ public class TasksWizardFragment extends WizardFragment {
 				if (disabledTasks.contains(id))
 					selected = false;
 			}
-			addServerTask(server, tasks2[j], selected);
+			taskList.add(getServerTask(server, tasks2[j], selected));
 		}
 	}
 
-	public void addServerTask(IServerAttributes server, PublishOperation task2, boolean selected) {
+	public TaskInfo getServerTask(IServerAttributes server, PublishOperation task2, boolean selected) {
 		TaskInfo sti = new TaskInfo();
 		sti.task2 = task2;
 		sti.kind = task2.getKind();
 		sti.id = ((Server)server).getPublishOperationId(task2);
 		sti.setDefaultSelected(selected);
 		
-		tasks.add(sti);
+		return sti;
 	}
 
 	public boolean hasComposite() {
-		return hasTasks();
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.ui.internal.task.WizardTask#getWizardPage()
-	 */
-	public Composite createComposite(Composite parent, IWizardHandle wizard) {
-		comp = new TasksComposite(parent, wizard);
-		return comp;
+		return false;
 	}
 
 	/**
@@ -245,5 +279,15 @@ public class TasksWizardFragment extends WizardFragment {
 	 */
 	public boolean hasOptionalTasks() {
 		return hasOptionalTasks;
+	}
+
+	/**
+	 * Return <code>true</code> if this wizard has preferred tasks.
+	 * 
+	 * @return <code>true</code> if this wizard has preferred tasks, and
+	 *    <code>false</code> otherwise
+	 */
+	public boolean hasPreferredTasks() {
+		return hasPreferredTasks;
 	}
 }

@@ -65,4 +65,14 @@ public class SelectTasksWizard extends TaskWizard {
 	public boolean hasOptionalTasks() {
 		return fragment.hasOptionalTasks();
 	}
+
+	/**
+	 * Return <code>true</code> if this wizard has preferred tasks.
+	 * 
+	 * @return <code>true</code> if this wizard has preferred tasks, and
+	 *    <code>false</code> otherwise
+	 */
+	public boolean hasPreferredTasks() {
+		return fragment.hasPreferredTasks();
+	}
 }
