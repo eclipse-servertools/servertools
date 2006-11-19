@@ -10,7 +10,13 @@
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.core.tests.internal;
 
+import java.io.File;
+
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServerBehaviour;
+import org.eclipse.jst.server.tomcat.core.internal.VerifyResourceSpec;
+import org.eclipse.jst.server.tomcat.core.tests.RuntimeLocation;
+
 import junit.framework.TestCase;
 
 public class UtilTestCase extends TestCase {
@@ -68,5 +74,77 @@ public class UtilTestCase extends TestCase {
 	
 	public void testArgMerge14() {
 		assertEquals("a=b -c \"e f\"", TomcatServerBehaviour.mergeArguments("a=b -c \"d e\"", new String[] { "-c \"e f\"" }));
+	}
+	
+	public void testVerifySpec() {
+		VerifyResourceSpec spec = new VerifyResourceSpec("");
+		assertEquals("", spec.toString());
+		String [] paths = spec.getPaths();
+		assertEquals(1, paths.length);
+		assertEquals("", paths[0]);
+	}
+
+	public void testVerifySpec2() {
+		VerifyResourceSpec spec = new VerifyResourceSpec("file ");
+		assertEquals("file ", spec.toString());
+		String [] paths = spec.getPaths();
+		assertEquals(1, paths.length);
+		assertEquals("file", paths[0]);
+	}
+	
+	public void testVerifySpec3() {
+		VerifyResourceSpec spec = new VerifyResourceSpec("dir" + File.separator + "file");
+		String [] paths = spec.getPaths();
+		assertEquals(1, paths.length);
+		assertEquals("dir" + File.separator + "file", paths[0]);
+	}
+
+	public void testVerifySpec4() {
+		VerifyResourceSpec spec = new VerifyResourceSpec("dir" + File.separator + "file| alt ");
+		String [] paths = spec.getPaths();
+		assertEquals(2, paths.length);
+		assertEquals("dir" + File.separator + "file", paths[0]);
+		assertEquals("dir" + File.separator + "alt", paths[1]);
+	}
+
+	public void testVerifySpec5() {
+		VerifyResourceSpec spec = new VerifyResourceSpec("dir" + File.separator + "file| alt1 | alt2 ");
+		String [] paths = spec.getPaths();
+		assertEquals(3, paths.length);
+		assertEquals("dir" + File.separator + "file", paths[0]);
+		assertEquals("dir" + File.separator + "alt1", paths[1]);
+		assertEquals("dir" + File.separator + "alt2", paths[2]);
+	}
+	
+	public void testVerifySpec6() {
+		if (RuntimeLocation.runtimeLocation != null) {
+			VerifyResourceSpec spec = new VerifyResourceSpec("conf");
+			IStatus status = spec.checkResource(RuntimeLocation.runtimeLocation);
+			assertTrue(status.isOK());
+		}
+	}
+	
+	public void testVerifySpec7() {
+		if (RuntimeLocation.runtimeLocation != null) {
+			VerifyResourceSpec spec = new VerifyResourceSpec("conf" + File.separator + "server.xml");
+			IStatus status = spec.checkResource(RuntimeLocation.runtimeLocation);
+			assertTrue(status.isOK());
+		}
+	}
+
+	public void testVerifySpec8() {
+		if (RuntimeLocation.runtimeLocation != null) {
+			VerifyResourceSpec spec = new VerifyResourceSpec("conf" + File.separator + "nofile|server.xml");
+			IStatus status = spec.checkResource(RuntimeLocation.runtimeLocation);
+			assertTrue(status.isOK());
+		}
+	}
+
+	public void testVerifySpec9() {
+		if (RuntimeLocation.runtimeLocation != null) {
+			VerifyResourceSpec spec = new VerifyResourceSpec("conf" + File.separator + "nofile");
+			IStatus status = spec.checkResource(RuntimeLocation.runtimeLocation);
+			assertFalse(status.isOK());
+		}
 	}
 }
