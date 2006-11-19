@@ -19,7 +19,7 @@ import org.eclipse.wst.server.core.IModule;
  * 
  */
 public interface ITomcatVersionHandler {
-	public boolean verifyInstallPath(IPath installPath);
+	public IStatus verifyInstallPath(IPath installPath);
 	
 	public String getRuntimeClass();
 	

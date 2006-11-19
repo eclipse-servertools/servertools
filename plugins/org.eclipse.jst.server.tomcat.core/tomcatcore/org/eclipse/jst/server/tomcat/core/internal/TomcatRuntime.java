@@ -87,7 +87,7 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 	 * and false is returned.
 	 * @return boolean
 	 */
-	public boolean verifyLocation() {
+	public IStatus verifyLocation() {
 		return getVersionHandler().verifyInstallPath(getRuntime().getLocation());
 	}
 	
@@ -99,8 +99,10 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 		if (!status.isOK())
 			return status;
 	
-		if (!verifyLocation())
-			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorInstallDir, null);
+		status = verifyLocation();
+		if (!status.isOK())
+			return status;
+//			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorInstallDir, null);
 		// don't accept trailing space since that can cause startup problems
 		if (getRuntime().getLocation().hasTrailingSeparator())
 			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorInstallDirTrailingSlash, null);

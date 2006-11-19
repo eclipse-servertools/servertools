@@ -38,11 +38,15 @@ public class TomcatPlugin extends Plugin {
 	public static final String TOMCAT_55 = "org.eclipse.jst.server.tomcat.55";
 
 	protected static final String VERIFY_INSTALL_FILE = "verifyInstall.properties";
-	protected static String[] verify32;
-	protected static String[] verify40;
-	protected static String[] verify41;
-	protected static String[] verify50;
-	protected static String[] verify55;
+	protected static VerifyResourceSpec[] verify32;
+	protected static VerifyResourceSpec[] verify40;
+	protected static VerifyResourceSpec[] verify41;
+	protected static VerifyResourceSpec[] verify50;
+	protected static VerifyResourceSpec[] verify55;
+	
+	protected static final IStatus emptyInstallDirStatus = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorInstallDirEmpty, null);
+	protected static final IStatus wrongDirVersionStatus = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorInstallDirWrongVersion, null);
+	protected static final IStatus installDirDoesNotExist = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorInstallDirDoesNotExist, null);
 
 	/**
 	 * TomcatPlugin constructor comment.
@@ -134,11 +138,11 @@ public class TomcatPlugin extends Plugin {
 			return;
 	
 		// backup (empty) values
-		verify32 = new String[0];
-		verify40 = new String[0];
-		verify41 = new String[0];
-		verify50 = new String[0];
-		verify55 = new String[0];
+		verify32 = new VerifyResourceSpec[0];
+		verify40 = new VerifyResourceSpec[0];
+		verify41 = new VerifyResourceSpec[0];
+		verify50 = new VerifyResourceSpec[0];
+		verify55 = new VerifyResourceSpec[0];
 		
 		try {
 			URL url = getInstance().getBundle().getEntry(VERIFY_INSTALL_FILE);
@@ -146,63 +150,83 @@ public class TomcatPlugin extends Plugin {
 			Properties p = new Properties();
 			p.load(url.openStream());
 
-			String verify = p.getProperty("verify32install");
+			// Check backdoor system property, use internal spec if not found
+			String verify = System.getProperty(PLUGIN_ID + ".verify32install");
+			if (verify == null) {
+				verify = p.getProperty("verify32install");
+			}
 			verify.replace('/', File.separatorChar);
 
 			StringTokenizer st = new StringTokenizer(verify, ",");
 			List list = new ArrayList();
 			while (st.hasMoreTokens())
-				list.add(st.nextToken());
+				list.add(new VerifyResourceSpec(st.nextToken()));
 			Trace.trace(Trace.FINEST, "Verify32: " + list.toString());
-			verify32 = new String[list.size()];
+			verify32 = new VerifyResourceSpec[list.size()];
 			list.toArray(verify32);
 
 			// v4.0
-			verify = p.getProperty("verify40install");
+			// Check backdoor system property, use internal spec if not found
+			verify = System.getProperty(PLUGIN_ID + ".verify40install");
+			if (verify == null) {
+				verify = p.getProperty("verify40install");
+			}
 			verify.replace('/', File.separatorChar);
 
 			st = new StringTokenizer(verify, ",");
 			list = new ArrayList();
 			while (st.hasMoreTokens())
-				list.add(st.nextToken());
+				list.add(new VerifyResourceSpec(st.nextToken()));
 			Trace.trace(Trace.FINEST, "Verify40: " + list.toString());
-			verify40 = new String[list.size()];
+			verify40 = new VerifyResourceSpec[list.size()];
 			list.toArray(verify40);
 			
 			// v4.1
-			verify = p.getProperty("verify41install");
+			// Check backdoor system property, use internal spec if not found
+			verify = System.getProperty(PLUGIN_ID + ".verify41install");
+			if (verify == null) {
+				verify = p.getProperty("verify41install");
+			}
 			verify.replace('/', File.separatorChar);
 
 			st = new StringTokenizer(verify, ",");
 			list = new ArrayList();
 			while (st.hasMoreTokens())
-				list.add(st.nextToken());
+				list.add(new VerifyResourceSpec(st.nextToken()));
 			Trace.trace(Trace.FINEST, "Verify41: " + list.toString());
-			verify41 = new String[list.size()];
+			verify41 = new VerifyResourceSpec[list.size()];
 			list.toArray(verify41);
 			
 			// v5.0
-			verify = p.getProperty("verify50install");
+			// Check backdoor system property, use internal spec if not found
+			verify = System.getProperty(PLUGIN_ID + ".verify50install");
+			if (verify == null) {
+				verify = p.getProperty("verify50install");
+			}
 			verify.replace('/', File.separatorChar);
 
 			st = new StringTokenizer(verify, ",");
 			list = new ArrayList();
 			while (st.hasMoreTokens())
-				list.add(st.nextToken());
+				list.add(new VerifyResourceSpec(st.nextToken()));
 			Trace.trace(Trace.FINEST, "Verify50: " + list.toString());
-			verify50 = new String[list.size()];
+			verify50 = new VerifyResourceSpec[list.size()];
 			list.toArray(verify50);
 
 			// v5.5
-			verify = p.getProperty("verify55install");
+			// Check backdoor system property, use internal spec if not found
+			verify = System.getProperty(PLUGIN_ID + ".verify55install");
+			if (verify == null) {
+				verify = p.getProperty("verify55install");
+			}
 			verify.replace('/', File.separatorChar);
 
 			st = new StringTokenizer(verify, ",");
 			list = new ArrayList();
 			while (st.hasMoreTokens())
-				list.add(st.nextToken());
+				list.add(new VerifyResourceSpec(st.nextToken()));
 			Trace.trace(Trace.FINEST, "Verify55: " + list.toString());
-			verify55 = new String[list.size()];
+			verify55 = new VerifyResourceSpec[list.size()];
 			list.toArray(verify55);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not load installation verification properties", e);
@@ -210,63 +234,94 @@ public class TomcatPlugin extends Plugin {
 	}
 
 	/**
+	 * Utility method to verify an installation directory according to the
+	 * specified server ID.  The verification includes checking the installation
+	 * directory name to see if it indicates a different version of Tomcat.
+	 * 
+	 * @param installPath Path to verify
+	 * @param id Type ID of the server
+	 * @return Status of the verification.  Will be Status.OK_STATUS, if verification
+	 *    was successful, or error status if not.
+	 */
+	public static IStatus verifyInstallPathWithFolderCheck(IPath installPath, String id) {
+		IStatus status = verifyTomcatVersionFromPath(installPath, id);
+		if (status.isOK()) {
+			status = verifyInstallPath(installPath, id);
+		}
+		return status;
+	}
+
+	/**
 	 * Verify the Tomcat installation directory.
 	 * 
-	 * @param installPath
-	 * @param id
-	 * @return <code>true</code> if the directory may be a Tomcat installation,
-	 *    and <code>false</code> otherwise
+	 * @param installPath Path to verify
+	 * @param id Type ID of the server
+	 * @return Status of the verification.  Will be Status.OK_STATUS, if verification
+	 *    was successful, or error status if not.
 	 */
-	public static boolean verifyInstallPath(IPath installPath, String id) {
+	public static IStatus verifyInstallPath(IPath installPath, String id) {
 		if (installPath == null)
-			return false;
+			return emptyInstallDirStatus;
 		
 		String dir = installPath.toOSString();
+		if (dir.trim().length() == 0)
+			return emptyInstallDirStatus;
+
+		File file = new File(dir);
+		if (!file.exists())
+			return installDirDoesNotExist;
+
 		if (!dir.endsWith(File.separator))
 			dir += File.separator;
-
+		
 		// look for the following files and directories
 		TomcatPlugin.loadVerifyFiles();
 		
-		String[] paths = null;
+		VerifyResourceSpec[] specs = null;
 		if (TOMCAT_32.equals(id))
-			paths = verify32;
+			specs = verify32;
 		else if (TOMCAT_40.equals(id))
-			paths = verify40;
+			specs = verify40;
 		else if (TOMCAT_41.equals(id))
-			paths = verify41;
+			specs = verify41;
 		else if (TOMCAT_50.equals(id))
-			paths = verify50;
-		else if (TOMCAT_55.equals(id))
-			paths = verify55;
-		else
-			return false;
-		
-		for (int i = 0; i < paths.length; i++) {
-			File temp = new File(dir + paths[i]);
-			if (!temp.exists())
-				return false;
+			specs = verify50;
+		else if (TOMCAT_55.equals(id)) {
+			specs = verify55;
 		}
-		return true;
+		else
+			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorUnknownVersion, null);
+		
+		for (int i = 0; i < specs.length; i++) {
+			VerifyResourceSpec fs = specs[i];
+			IStatus status = fs.checkResource(dir);
+			if (!status.isOK()) {
+				return status;
+			}
+		}
+		return Status.OK_STATUS;
 	}
 
-	public static boolean verifyTomcatVersionFromPath(IPath installPath, String version) {
-		if (installPath == null || version == null)
-			return false;
+	public static IStatus verifyTomcatVersionFromPath(IPath installPath, String version) {
+		if (version == null) 
+			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorVersionEmpty, null);
+		if (installPath == null)
+			return emptyInstallDirStatus;
+
 		String s = installPath.lastSegment();
 		if (s == null)
-			return false;
+			return Status.OK_STATUS;
 		if (s.indexOf("-3.2") > 0 || s.indexOf(" 3.2") > 0)
-			return TOMCAT_32.equals(version);
+			return TOMCAT_32.equals(version) ? Status.OK_STATUS : wrongDirVersionStatus;
 		if (s.indexOf("-4.0") > 0 || s.indexOf(" 4.0") > 0)
-			return TOMCAT_40.equals(version);
+			return TOMCAT_40.equals(version) ? Status.OK_STATUS : wrongDirVersionStatus;
 		if (s.indexOf("-4.1") > 0 || s.indexOf(" 4.1") > 0)
-			return TOMCAT_41.equals(version);
+			return TOMCAT_41.equals(version) ? Status.OK_STATUS : wrongDirVersionStatus;
 		if (s.indexOf("-5.0") > 0 || s.indexOf(" 5.0") > 0)
-			return TOMCAT_50.equals(version);
+			return TOMCAT_50.equals(version) ? Status.OK_STATUS : wrongDirVersionStatus;
 		if (s.indexOf("-5.5") > 0 || s.indexOf(" 5.5") > 0)
-			return TOMCAT_55.equals(version);
-		return true;
+			return TOMCAT_55.equals(version) ? Status.OK_STATUS : wrongDirVersionStatus;
+		return Status.OK_STATUS;
 	}
 
 	/**

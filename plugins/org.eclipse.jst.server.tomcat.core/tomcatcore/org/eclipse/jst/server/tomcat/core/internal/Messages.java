@@ -18,7 +18,14 @@ public class Messages extends NLS {
 	public static String copyingTask;
 	public static String errorCopyingFile;
 	public static String deletingTask;
-	public static String errorInstallDir;
+	public static String errorVersionEmpty;
+	public static String errorUnknownVersion;
+	public static String errorInstallDirEmpty;
+	public static String errorInstallDirWrongVersion;
+	public static String errorInstallDirDoesNotExist;
+	public static String errorInstallDirMissingFile;
+	public static String errorInstallDirMissingFile2;
+	public static String errorInstallDirMissingFile3;
 	public static String errorInstallDirTrailingSlash;
 	public static String errorJRE;
 	public static String warningJRE;

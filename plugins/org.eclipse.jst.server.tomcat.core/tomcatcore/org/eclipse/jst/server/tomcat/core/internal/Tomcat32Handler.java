@@ -26,7 +26,7 @@ public class Tomcat32Handler implements ITomcatVersionHandler {
 	/**
 	 * @see ITomcatVersionHandler#verifyInstallPath(IPath)
 	 */
-	public boolean verifyInstallPath(IPath installPath) {
+	public IStatus verifyInstallPath(IPath installPath) {
 		return TomcatPlugin.verifyInstallPath(installPath, TomcatPlugin.TOMCAT_32);
 	}
 	

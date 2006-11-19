@@ -21,13 +21,8 @@ public class Tomcat55Handler extends Tomcat50Handler {
 	/**
 	 * @see ITomcatVersionHandler#verifyInstallPath(IPath)
 	 */
-	public boolean verifyInstallPath(IPath installPath) {
-		if (installPath == null)
-			return false;
-
-		if (!TomcatPlugin.verifyTomcatVersionFromPath(installPath, TomcatPlugin.TOMCAT_55))
-			return false;
-		return TomcatPlugin.verifyInstallPath(installPath, TomcatPlugin.TOMCAT_55);
+	public IStatus verifyInstallPath(IPath installPath) {
+		return TomcatPlugin.verifyInstallPathWithFolderCheck(installPath, TomcatPlugin.TOMCAT_55);
 	}
 	
 	/**

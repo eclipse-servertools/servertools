@@ -25,13 +25,8 @@ public class Tomcat41Handler implements ITomcatVersionHandler {
 	/**
 	 * @see ITomcatVersionHandler#verifyInstallPath(IPath)
 	 */
-	public boolean verifyInstallPath(IPath installPath) {
-		if (installPath == null)
-			return false;
-
-		if (!TomcatPlugin.verifyTomcatVersionFromPath(installPath, TomcatPlugin.TOMCAT_41))
-			return false;
-		return TomcatPlugin.verifyInstallPath(installPath, TomcatPlugin.TOMCAT_41);
+	public IStatus verifyInstallPath(IPath installPath) {
+		return TomcatPlugin.verifyInstallPathWithFolderCheck(installPath, TomcatPlugin.TOMCAT_41);
 	}
 	
 	/**
