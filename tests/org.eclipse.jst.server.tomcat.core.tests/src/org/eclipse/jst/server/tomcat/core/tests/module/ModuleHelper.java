@@ -50,7 +50,7 @@ public class ModuleHelper {
       
       FacetDataModelMap map = (FacetDataModelMap) dataModel.getProperty(IFacetProjectCreationDataModelProperties.FACET_DM_MAP);
       IDataModel webModel = map.getFacetDataModel(J2EEProjectUtilities.DYNAMIC_WEB);
-      webModel.setStringProperty(IFacetDataModelProperties.FACET_VERSION_STR, "22");
+      webModel.setStringProperty(IFacetDataModelProperties.FACET_VERSION_STR, "2.2");
       
 		dataModel.getDefaultOperation().execute(new NullProgressMonitor(), null);
 		dataModel.dispose();
