@@ -163,7 +163,7 @@ public class RuntimeBridge implements IRuntimeBridge {
 					vmInstallName = "Unknown";
 				
 				if (jvmver == null) {
-					JavaServerPlugin.logWarning("Could not determine VM version for: " + vmInstallName);
+					Trace.trace(Trace.WARNING, "Could not determine VM version for: " + vmInstallName);
 					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("6.0");
 				} else if (jvmver.startsWith("1.3"))
 					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("1.3");
@@ -174,7 +174,7 @@ public class RuntimeBridge implements IRuntimeBridge {
 				else if (jvmver.startsWith("1.6") || jvmver.startsWith("6.0"))
 					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("6.0");
 				else {
-					JavaServerPlugin.logWarning("Invalid Java version: " + vmInstallName + ", " + jvmver);
+					Trace.trace(Trace.WARNING, "Invalid Java version: " + vmInstallName + ", " + jvmver);
 					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("6.0");
 				}
 				
