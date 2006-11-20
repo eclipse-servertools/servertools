@@ -47,8 +47,19 @@ public class RuntimeBridge implements IRuntimeBridge {
 	}
 
 	private static void addMapping(String id, String id2, String version) {
+		ArrayList list = null;
 		try {
-			mappings.put(id, RuntimeManager.getRuntimeComponentType(id2).getVersion(version));
+			list = (ArrayList) mappings.get(id);
+		} catch (Exception e) {
+			// ignore
+		}
+		
+		if (list == null)
+			list = new ArrayList(2);
+		
+		try {
+			list.add(RuntimeManager.getRuntimeComponentType(id2).getVersion(version));
+			mappings.put(id, list);
 		} catch (Exception e) {
 			// ignore
 		}
@@ -118,9 +129,6 @@ public class RuntimeBridge implements IRuntimeBridge {
 				return components;
 			
 			// define server runtime component
-			String typeId = runtime.getRuntimeType().getId();
-			IRuntimeComponentVersion mapped = (IRuntimeComponentVersion) mappings.get(typeId);
-			
 			Map properties = new HashMap(5);
 			if (runtime.getLocation() != null)
 				properties.put("location", runtime.getLocation().toPortableString());
@@ -137,7 +145,15 @@ public class RuntimeBridge implements IRuntimeBridge {
 				properties.put(CLASSPATH, path.toPortableString());
 			}
 			
-			components.add(RuntimeManager.createRuntimeComponent(mapped, properties));
+			String typeId = runtime.getRuntimeType().getId();
+			if (mappings.containsKey(typeId)) {
+				ArrayList list = (ArrayList) mappings.get(typeId);
+				int size = list.size();
+				for (int i = 0; i < size; i++) {
+					IRuntimeComponentVersion mapped = (IRuntimeComponentVersion) list.get(i);
+					components.add(RuntimeManager.createRuntimeComponent(mapped, properties));
+				}
+			}
 			
 			// define JRE component
 			IJavaRuntime javaRuntime = (IJavaRuntime) runtime.loadAdapter(IJavaRuntime.class, null);
