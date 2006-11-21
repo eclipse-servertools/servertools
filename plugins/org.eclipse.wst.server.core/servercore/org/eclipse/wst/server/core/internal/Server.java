@@ -1380,10 +1380,9 @@ public class Server extends Base implements IServer {
 							t.start();
 						}
 					}
-					
 				}
 			});
-	
+			
 			// stop the server
 			stop(false);
 		} catch (Exception e) {
@@ -1416,9 +1415,9 @@ public class Server extends Base implements IServer {
 	public void stop(boolean force) {
 		if (getServerState() == STATE_STOPPED)
 			return;
-
+		
 		Trace.trace(Trace.FINEST, "Stopping server: " + toString());
-
+		
 		try {
 			getBehaviourDelegate(null).stop(force);
 		} catch (Throwable t) {
