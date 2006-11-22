@@ -28,5 +28,5 @@
    <includes
          id="org.eclipse.jst.server_ui.feature.source"
          version="0.0.0"/>
-
+ 
 </feature>

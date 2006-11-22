@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.eclipse.jst.server_sdk.feature"
+      id="org.eclipse.jst.server_adapters.sdk.feature"
       label="%featureName"
       version="1.6.0.qualifier"
       provider-name="%providerName">
@@ -22,11 +22,11 @@
    </url>
 
    <includes
-         id="org.eclipse.jst.server_ui.feature"
+         id="org.eclipse.jst.server_adapters.feature"
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.jst.server_ui.feature.source"
+         id="org.eclipse.jst.server_adapters.feature.source"
          version="0.0.0"/>
  
 </feature>
