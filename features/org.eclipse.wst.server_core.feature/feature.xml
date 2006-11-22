@@ -21,12 +21,7 @@
       <update label="%updateSiteName" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
 
-   <requires>
-      <import feature="org.eclipse.rcp" version="3.2" match="equivalent"/>
-      <import feature="org.eclipse.platform" version="3.2" match="equivalent"/>
-   </requires>
-
-   <plugin
+  <plugin
          id="org.eclipse.wst.server.core"
          download-size="0"
          install-size="0"

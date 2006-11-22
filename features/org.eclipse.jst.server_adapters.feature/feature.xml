@@ -21,11 +21,6 @@
       <update label="%updateSiteName" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
 
-   <requires>
-      <import feature="org.eclipse.jst.server_core.feature" version="1.0.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.jst.server_ui.feature" version="1.0.0" match="greaterOrEqual"/>
-   </requires>
-
    <plugin
          id="org.eclipse.jst.server.tomcat.core"
          download-size="0"
