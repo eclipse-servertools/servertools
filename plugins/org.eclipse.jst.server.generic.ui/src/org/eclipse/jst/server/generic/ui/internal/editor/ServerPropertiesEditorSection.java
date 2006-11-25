@@ -72,7 +72,10 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
                 else if( Property.TYPE_SELECT.equals( property.getType() )){
                     Combo c = (Combo)fControls.get( property.getId() );
                     String value = getPropertyValue( property )==null ? "": getPropertyValue( property ); //$NON-NLS-1$
-                    c.setText( getPropertyValue( property ) );
+                    //c.setText( getPropertyValue( property ) );
+                    // responding to "value not used" msg, I'm assuming value
+                    // should be used as in following block.
+                    c.setText( value );
                 }
                 else{
                     Text t = (Text)fControls.get( property.getId() );
