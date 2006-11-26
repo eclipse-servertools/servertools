@@ -109,6 +109,10 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		return getTomcatVersionHandler().getRuntimeProgramArguments(configPath, getTomcatServer().isDebug(), starting);
 	}
 
+	protected String[] getExcludedRuntimeProgramArguments(boolean starting) {
+		return getTomcatVersionHandler().getExcludedRuntimeProgramArguments(getTomcatServer().isDebug(), starting);
+	}
+
 	/**
 	 * Return the runtime (VM) arguments.
 	 *
@@ -516,13 +520,20 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	
 	/**
 	 * Merge the given arguments into the original argument string, replacing
-	 * invalid values if they have been changed.
+	 * invalid values if they have been changed.  Special handling is provided
+	 * if the keepActionLast argument is true and the last vmArg is a simple
+	 * string.  The vmArgs will be merged such that the last vmArg is guaranteed
+	 * to be the last argument in the merged string.
 	 * 
-	 * @param originalArg
-	 * @param vmArgs
+	 * @param originalArg String of original arguments.
+	 * @param vmArgs Arguments to merge into the original arguments string
+	 * @param keepActionLast If <b>true</b> the vmArguments are assumed to be Tomcat
+	 * program arguments, the last of which is the action to perform which must
+	 * remain the last argument.  This only has an impact if the last vmArg is
+	 * a simple string argument, like &quot;start&quot;.
 	 * @return merged argument string
 	 */
-	public static String mergeArguments(String originalArg, String[] vmArgs) {
+	public static String mergeArguments(String originalArg, String[] vmArgs, String[] excludeArgs, boolean keepActionLast) {
 		if (vmArgs == null)
 			return originalArg;
 		
@@ -564,15 +575,79 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 					// replace
 					String s = originalArg.substring(0, index);
 					int index2 = getNextToken(originalArg, index);
-					if (index2 >= 0)
-						originalArg = s + vmArgs[i] + originalArg.substring(index2);
-					else
-						originalArg = s + vmArgs[i];
-					vmArgs[i] = null;
+					if (!keepActionLast || i < (size - 1)) {
+						if (index2 >= 0)
+							originalArg = s + vmArgs[i] + originalArg.substring(index2);
+						else
+							originalArg = s + vmArgs[i];
+						vmArgs[i] = null;
+					}
+					else {
+						// The last VM argument needs to remain last,
+						// remove original arg and append the vmArg later
+						if (index2 >= 0)
+							originalArg = s + originalArg.substring(index2);
+						else
+							originalArg = s;
+					}
 				}
 			}
 		}
-		
+
+		// remove excluded arguments
+		if (excludeArgs != null && excludeArgs.length > 0) {
+			for (int i = 0; i < excludeArgs.length; i++) {
+				int ind = excludeArgs[i].indexOf(" ");
+				int ind2 = excludeArgs[i].indexOf("=");
+				if (ind >= 0 && (ind2 == -1 || ind < ind2)) { // -a bc style
+					int index = originalArg.indexOf(excludeArgs[i].substring(0, ind + 1));
+					if (index == 0 || (index > 0 && originalArg.charAt(index - 1) == ' ')) {
+						// remove
+						String s = originalArg.substring(0, index);
+						int index2 = getNextToken(originalArg, index + ind + 1);
+						if (index2 >= 0) {
+							// If remainder will become the first argument, remove leading blanks
+							while (index2 < originalArg.length() && originalArg.charAt(index2) == ' ')
+								index2 += 1;
+							originalArg = s + originalArg.substring(index2);
+						}
+						else
+							originalArg = s;
+					}
+				} else if (ind2 >= 0) { // a=b style
+					int index = originalArg.indexOf(excludeArgs[i].substring(0, ind2 + 1));
+					if (index == 0 || (index > 0 && originalArg.charAt(index - 1) == ' ')) {
+						// remove
+						String s = originalArg.substring(0, index);
+						int index2 = getNextToken(originalArg, index);
+						if (index2 >= 0) {
+							// If remainder will become the first argument, remove leading blanks
+							while (index2 < originalArg.length() && originalArg.charAt(index2) == ' ')
+								index2 += 1;
+							originalArg = s + originalArg.substring(index2);
+						}
+						else
+							originalArg = s;
+					}
+				} else { // abc style
+					int index = originalArg.indexOf(excludeArgs[i]);
+					if (index == 0 || (index > 0 && originalArg.charAt(index-1) == ' ')) {
+						// remove
+						String s = originalArg.substring(0, index);
+						int index2 = getNextToken(originalArg, index);
+						if (index2 >= 0) {
+							// Remove leading blanks
+							while (index2 < originalArg.length() && originalArg.charAt(index2) == ' ')
+								index2 += 1;
+							originalArg = s + originalArg.substring(index2);
+						}
+						else
+							originalArg = s;
+					}
+				}
+			}
+		}
+
 		// add remaining vmargs to the end
 		for (int i = 0; i < size; i++) {
 			if (vmArgs[i] != null) {
@@ -624,7 +699,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 
 	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor) throws CoreException {
 		String existingProgArgs = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, (String)null);
-		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, mergeArguments(existingProgArgs, getRuntimeProgramArguments(true)));
+		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
+				mergeArguments(existingProgArgs, getRuntimeProgramArguments(true), getExcludedRuntimeProgramArguments(true), true));
 		
 		String existingVMArgs = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, (String)null);
 		String[] parsedVMArgs = null;
@@ -676,7 +752,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 				existingVMArgs = filteredVMArgs.toString();
 			}
 		}
-		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, mergeArguments(existingVMArgs, configVMArgs));
+		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
+				mergeArguments(existingVMArgs, configVMArgs, null, false));
 		
 		ITomcatRuntime runtime = getTomcatRuntime();
 		IVMInstall vmInstall = runtime.getVMInstall();

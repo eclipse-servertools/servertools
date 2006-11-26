@@ -35,6 +35,16 @@ public interface ITomcatVersionHandler {
 	 */
 	public String[] getRuntimeProgramArguments(IPath configPath, boolean debug, boolean starting);
 
+	/**
+	 * Arguments that should not appear in the runtime arguments based on
+	 * the specified configuration.
+	 * 
+	 * @param debug <code>true</code> if debug mode is on
+	 * @param starting <code>true</code> if the server is starting
+	 * @return
+	 */
+	public String[] getExcludedRuntimeProgramArguments(boolean debug, boolean starting);
+	
 	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isTestEnv);
 
 	public String getRuntimePolicyFile(IPath configPath);

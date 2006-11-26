@@ -74,6 +74,10 @@ public class Tomcat32Handler implements ITomcatVersionHandler {
 		return s;
 	}
 
+	public String[] getExcludedRuntimeProgramArguments(boolean debug, boolean starting) {
+		return null;
+	}
+	
 	/**
 	 * @see ITomcatVersionHandler#getRuntimeVMArguments(IPath, IPath, boolean)
 	 */
