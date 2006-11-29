@@ -37,7 +37,7 @@ public class WorkingCopyHelper {
 
 	public void setAttribute(String attributeName, int value) {
 		int current = base.getAttribute(attributeName, 0);
-		if (current != 0 && current == value)
+		if (base.isAttributeSet(attributeName) && current == value)
 			return;
 		
 		isDirty = true;
@@ -47,7 +47,9 @@ public class WorkingCopyHelper {
 
 	public void setAttribute(String attributeName, boolean value) {
 		boolean current = base.getAttribute(attributeName, false);
-
+		if (base.isAttributeSet(attributeName) && current == value)
+			return;
+		
 		isDirty = true;
 		base.map.put(attributeName, Boolean.toString(value));
 		firePropertyChangeEvent(attributeName, new Boolean(current), new Boolean(value));
@@ -55,9 +57,9 @@ public class WorkingCopyHelper {
 
 	public void setAttribute(String attributeName, String value) {
 		String current = base.getAttribute(attributeName, (String)null);
-		if (current != null && current.equals(value))
+		if (base.isAttributeSet(attributeName) && current != null && current.equals(value))
 			return;
-
+		
 		isDirty = true;
 		if (value == null)
 			base.map.remove(attributeName);
@@ -68,9 +70,9 @@ public class WorkingCopyHelper {
 
 	public void setAttribute(String attributeName, List value) {
 		List current = base.getAttribute(attributeName, (List)null);
-		if (current != null && current.equals(value))
+		if (base.isAttributeSet(attributeName) && current != null && current.equals(value))
 			return;
-
+		
 		isDirty = true;
 		if (value == null)
 			base.map.remove(attributeName);
@@ -81,9 +83,9 @@ public class WorkingCopyHelper {
 
 	public void setAttribute(String attributeName, Map value) {
 		Map current = base.getAttribute(attributeName, (Map)null);
-		if (current != null && current.equals(value))
+		if (base.isAttributeSet(attributeName) && current != null && current.equals(value))
 			return;
-
+		
 		isDirty = true;
 		if (value == null)
 			base.map.remove(attributeName);

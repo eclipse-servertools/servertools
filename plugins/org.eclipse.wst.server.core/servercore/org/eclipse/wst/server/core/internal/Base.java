@@ -82,6 +82,25 @@ public abstract class Base {
 		return file;
 	}
 
+	/**
+	 * Returns <code>true</code> if the attribute is currently set, and <code>false</code>
+	 * otherwise.
+	 * 
+	 * @param attributeName
+	 * @return <code>true</code> if the attribute is currently set, and <code>false</code>
+	 *    otherwise
+	 */
+	public boolean isAttributeSet(String attributeName) {
+		try {
+			Object obj = map.get(attributeName);
+			if (obj != null)
+				return true;
+		} catch (Exception e) {
+			// ignore
+		}
+		return false;
+	}
+
 	public String getAttribute(String attributeName, String defaultValue) {
 		try {
 			Object obj = map.get(attributeName);
@@ -131,7 +150,7 @@ public abstract class Base {
 		}
 		return defaultValue;
 	}
-	
+
 	public Map getAttribute(String attributeName, Map defaultValue) {
 		try {
 			Object obj = map.get(attributeName);
