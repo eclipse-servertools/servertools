@@ -15,7 +15,7 @@ This extension point as well as the classes required to implement it are depreca
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="runtimeTargetHandler" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="runtimeTargetHandler" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -48,8 +48,6 @@ This extension point as well as the classes required to implement it are depreca
          </appInfo>
       </annotation>
       <complexType>
-         <sequence>
-         </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>

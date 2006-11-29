@@ -13,7 +13,7 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="filter" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="filter" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -46,8 +46,6 @@
          </appInfo>
       </annotation>
       <complexType>
-         <sequence>
-         </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
@@ -122,7 +120,7 @@ Content filter instances of this type will delegate to instances of this class.
          Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends the abstract class &lt;code&gt;org.eclipse.wst.internet.monitor.core.internal.provisional.ContentFilterDelegate&lt;/code&gt;.
       </documentation>
    </annotation>
-   
+
    <annotation>
       <appInfo>
          <meta.section type="implementation"/>

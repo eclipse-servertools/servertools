@@ -15,7 +15,7 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="editorAction" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="editorAction" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -49,7 +49,7 @@
       </annotation>
       <complexType>
          <sequence>
-            <element ref="enablement"/>
+            <element ref="enablement" minOccurs="0" maxOccurs="1"/>
          </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>

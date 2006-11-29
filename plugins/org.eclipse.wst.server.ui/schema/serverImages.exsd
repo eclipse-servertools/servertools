@@ -12,9 +12,9 @@
 
    <element name="extension">
       <complexType>
-         <choice>
-            <element ref="image" minOccurs="0" maxOccurs="unbounded"/>
-         </choice>
+         <sequence>
+            <element ref="image" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
                <documentation>
@@ -46,8 +46,6 @@
          </appInfo>
       </annotation>
       <complexType>
-         <sequence>
-         </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>

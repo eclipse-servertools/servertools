@@ -13,7 +13,7 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="startup" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="startup" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -46,8 +46,6 @@
          </appInfo>
       </annotation>
       <complexType>
-         <sequence>
-         </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
@@ -105,7 +103,7 @@ This extension point is internal and should not be used by any other plugins.
          Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;code&gt;org.eclipse.wst.server.core.model.IStartup&lt;/code&gt; and contains a public 0-arg constructor.
       </documentation>
    </annotation>
-   
+
    <annotation>
       <appInfo>
          <meta.section type="implementation"/>

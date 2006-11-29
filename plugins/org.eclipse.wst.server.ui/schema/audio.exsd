@@ -12,10 +12,10 @@
 
    <element name="extension">
       <complexType>
-         <choice>
+         <sequence>
             <element ref="category" minOccurs="0" maxOccurs="unbounded"/>
             <element ref="sound" minOccurs="0" maxOccurs="unbounded"/>
-         </choice>
+         </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
                <documentation>
@@ -47,8 +47,6 @@
          </appInfo>
       </annotation>
       <complexType>
-         <sequence>
-         </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>

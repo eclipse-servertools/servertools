@@ -47,8 +47,6 @@ This extension point is used to provide new runtime components to an existing fa
          </appInfo>
       </annotation>
       <complexType>
-         <sequence>
-         </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>

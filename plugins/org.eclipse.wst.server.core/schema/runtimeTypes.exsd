@@ -13,7 +13,7 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="runtimeType" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="runtimeType" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -173,7 +173,7 @@ Runtime instances of this type will delegate to instances of this class. Delegat
          Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;code&gt;org.eclipse.wst.server.core.model.RuntimeDelegate&lt;/code&gt; and contains a public 0-arg constructor.
       </documentation>
    </annotation>
-   
+
    <annotation>
       <appInfo>
          <meta.section type="implementation"/>

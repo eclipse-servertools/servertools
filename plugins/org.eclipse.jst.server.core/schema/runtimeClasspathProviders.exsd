@@ -13,7 +13,7 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="runtimeClasspathProvider" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="runtimeClasspathProvider" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -46,8 +46,6 @@
          </appInfo>
       </annotation>
       <complexType>
-         <sequence>
-         </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
@@ -111,7 +109,7 @@ Runtime classpath provider instances of this type will delegate to instances of 
          Value of the attribute &lt;b&gt;class&lt;/b&gt; must be a fully qualified name of a Java class that extends &lt;b&gt;org.eclipse.jst.server.core.RuntimeClasspathProviderDelegate&lt;/b&gt; and contains a public 0-arg constructor.
       </documentation>
    </annotation>
-   
+
    <annotation>
       <appInfo>
          <meta.section type="implementation"/>
