@@ -38,6 +38,13 @@ import org.eclipse.wst.server.core.util.SocketUtil;
  */
 public class TomcatServerBehaviour extends ServerBehaviourDelegate implements ITomcatServerBehaviour, IModulePublishHelper {
 	private static final String ATTR_STOP = "stop-server";
+	
+	private static final String[] JMX_EXCLUDE_ARGS = new String [] {
+		"-Dcom.sun.management.jmxremote",
+		"-Dcom.sun.management.jmxremote.port=",
+		"-Dcom.sun.management.jmxremote.ssl=",
+		"-Dcom.sun.management.jmxremote.authenticate="
+	};
 
 	// the thread used to ping the server to check for startup
 	protected transient PingThread ping = null;
@@ -459,6 +466,12 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			ILaunchConfigurationWorkingCopy wc = launchConfig.getWorkingCopy();
 			
 			String args = renderCommandLine(getRuntimeProgramArguments(false), " ");
+			// Remove JMX arguments if present
+			String existingVMArgs = wc.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, (String)null);
+			if (existingVMArgs.indexOf(JMX_EXCLUDE_ARGS[0]) >= 0) {
+				wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, 
+						mergeArguments(existingVMArgs, new String [] {}, JMX_EXCLUDE_ARGS, false));
+			}
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, args);
 			wc.setAttribute("org.eclipse.debug.ui.private", true);
 			wc.setAttribute(ATTR_STOP, "true");
