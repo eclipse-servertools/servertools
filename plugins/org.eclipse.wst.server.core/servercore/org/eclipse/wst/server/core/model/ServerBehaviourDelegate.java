@@ -313,7 +313,9 @@ public abstract class ServerBehaviourDelegate {
 	 * @throws CoreException if there is a problem publishing the module
 	 */
 	protected void publishModule(int kind, int deltaKind, IModule[] module, IProgressMonitor monitor) throws CoreException {
-		// do nothing
+		// by default, assume the module has published successfully.
+		// this will update the publish state and delta correctly
+		setModulePublishState(module, IServer.PUBLISH_STATE_NONE);
 	}
 
 	/**

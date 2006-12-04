@@ -15,15 +15,18 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.wst.server.ui.internal.ServerLabelProvider;
 /**
  * Server UI core.
- * 
+ * <p>
+ * This class provides all its functionality through static members.
+ * It is not intended to be subclassed or instantiated.
+ * </p>
  * @since 1.0
  */
-public class ServerUICore {
+public final class ServerUICore {
 	/**
-	 * ServerUICore constructor comment.
+	 * Cannot instantiate ServerUICore - use static methods.
 	 */
 	private ServerUICore() {
-		super();
+		// can't create
 	}
 
 	/**

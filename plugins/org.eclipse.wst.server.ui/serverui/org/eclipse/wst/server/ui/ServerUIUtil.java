@@ -15,15 +15,18 @@ import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.swt.widgets.Shell;
 /**
  * Server UI utility methods.
- * 
+ * <p>
+ * This class provides all its functionality through static members.
+ * It is not intended to be subclassed or instantiated.
+ * </p>
  * @since 1.0
  */
-public class ServerUIUtil {
+public final class ServerUIUtil {
 	/**
-	 * ServerUIUtil constructor comment.
+	 * Cannot instantiate ServerUIUtil - use static methods.
 	 */
 	private ServerUIUtil() {
-		super();
+		// can't create
 	}
 
 	/**

@@ -23,7 +23,10 @@ import org.eclipse.wst.server.core.internal.*;
 /**
  * Server utility methods. These static methods can be used to perform
  * common operations on server artifacts.
- * 
+ * <p>
+ * This class provides all its functionality through static members.
+ * It is not intended to be subclassed or instantiated.
+ * </p>
  * @since 1.0
  */
 public class ServerUtil {
@@ -31,7 +34,7 @@ public class ServerUtil {
 	 * Static utility class - cannot create an instance.
 	 */
 	private ServerUtil() {
-		// do nothing
+		// can't create
 	}
 
 	/**

@@ -31,7 +31,10 @@ import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.model.IModuleResourceDelta;
 /**
  * Utility class with an assortment of useful file methods.
- * 
+ * <p>
+ * This class provides all its functionality through static members.
+ * It is not intended to be subclassed or instantiated.
+ * </p>
  * <p>
  * <b>Note:</b> This class/interface is part of an interim API that is still under development and expected to
  * change significantly before reaching stability. It is being made available at this early stage to solicit feedback
@@ -40,7 +43,7 @@ import org.eclipse.wst.server.core.model.IModuleResourceDelta;
  * </p>
  * @plannedfor 2.0
  */
-public class PublishUtil {
+public final class PublishUtil {
 	// size of the buffer
 	private static final int BUFFER = 65536;
 
@@ -54,10 +57,10 @@ public class PublishUtil {
 	private static final String TEMPFILE_PREFIX = "tmp";
 
 	/**
-	 * FileUtil cannot be created. Use static methods.
+	 * PublishUtil cannot be created. Use static methods.
 	 */
 	private PublishUtil() {
-		super();
+		// can't create
 	}
 
 	/**

@@ -29,7 +29,7 @@ import org.eclipse.wst.server.core.internal.*;
  * 
  * @since 1.0
  */
-public class ServerCore {
+public final class ServerCore {
 	private static final String EXTENSION_SERVER_TYPE = "serverTypes";
 	private static final String EXTENSION_RUNTIME_TYPE = "runtimeTypes";
 
@@ -64,7 +64,7 @@ public class ServerCore {
 	}
 
 	/**
-	 * Cannot create ServerCore - use static methods.
+	 * Cannot instantiate ServerCore - use static methods.
 	 */
 	private ServerCore() {
 		// can't create

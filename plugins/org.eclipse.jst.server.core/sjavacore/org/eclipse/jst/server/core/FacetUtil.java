@@ -30,13 +30,24 @@ import org.eclipse.wst.server.core.ServerCore;
 /**
  * Utility class for converting between facet runtimes and server runtimes.
  * <p>
+ * This class provides all its functionality through static members.
+ * It is not intended to be subclassed or instantiated.
+ * </p>
+ * <p>
  * <b>Provisional API:</b> This class/interface is part of an interim API that is still under development and expected to 
  * change significantly before reaching stability. It is being made available at this early stage to solicit feedback 
  * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
  * (repeatedly) as the API evolves.
  * </p>
  */
-public class FacetUtil {
+public final class FacetUtil {
+	/**
+	 * Static utility class - cannot create an instance.
+	 */
+	private FacetUtil() {
+		// can't create
+	}
+
 	/**
 	 * Returns the server runtime that corresponds to a facet runtime, or null
 	 * if none could be found.
