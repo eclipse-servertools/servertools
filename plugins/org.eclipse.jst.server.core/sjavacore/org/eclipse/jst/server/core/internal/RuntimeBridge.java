@@ -165,12 +165,12 @@ public class RuntimeBridge implements IRuntimeBridge {
 				}
 				if (vmInstall == null)
 					vmInstall = javaRuntime.getVMInstall(); 
+				
 				if (jvmver == null) {
 					IVMInstall2 vmInstall2 = (IVMInstall2) vmInstall;
 					if (vmInstall2 != null)
 						jvmver = vmInstall2.getJavaVersion();
 				}
-				IRuntimeComponentVersion rcv;
 				
 				String vmInstallName;
 				if (vmInstall != null)
@@ -178,7 +178,11 @@ public class RuntimeBridge implements IRuntimeBridge {
 				else
 					vmInstallName = "Unknown";
 				
-				if (jvmver == null) {
+				IRuntimeComponentVersion rcv = null;
+				if (vmInstall == null) {
+					// JRE couldn't be found - assume 6.0 for now
+					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("6.0");
+				} else if (jvmver == null) {
 					Trace.trace(Trace.WARNING, "Could not determine VM version for: " + vmInstallName);
 					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("6.0");
 				} else if (jvmver.startsWith("1.3"))
@@ -194,17 +198,21 @@ public class RuntimeBridge implements IRuntimeBridge {
 					rcv = RuntimeManager.getRuntimeComponentType("standard.jre").getVersion("6.0");
 				}
 				
-				properties = new HashMap(3);
-				if (vmInstallName != null)
-					properties.put("name", vmInstallName);
-				else
-					properties.put("name", "-");
-				
-				if (vmInstall == null || javaRuntime.isUsingDefaultJRE())
-					properties.put(CLASSPATH, new Path(JavaRuntime.JRE_CONTAINER).toPortableString());
-				else
-					properties.put(CLASSPATH, JavaRuntime.newJREContainerPath(vmInstall).toPortableString());
-				components.add(RuntimeManager.createRuntimeComponent(rcv, properties));
+				if (rcv != null) {
+					properties = new HashMap(3);
+					if (vmInstallName != null)
+						properties.put("name", vmInstallName);
+					else
+						properties.put("name", "-");
+					
+					if (vmInstall == null) {
+						// no classpath
+					} else if (vmInstall == null || javaRuntime.isUsingDefaultJRE())
+						properties.put(CLASSPATH, new Path(JavaRuntime.JRE_CONTAINER).toPortableString());
+					else
+						properties.put(CLASSPATH, JavaRuntime.newJREContainerPath(vmInstall).toPortableString());
+					components.add(RuntimeManager.createRuntimeComponent(rcv, properties));
+				}
 			}
 			
 			RuntimeComponentProviderWrapper componentProvider = JavaServerPlugin.findRuntimeComponentProvider(runtime.getRuntimeType());

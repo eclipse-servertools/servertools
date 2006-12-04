@@ -37,10 +37,13 @@ public final class StandardJreClasspathProvider implements IClasspathProvider {
 
 	public List getClasspathEntries(final IProjectFacetVersion fv) {
 		if (fv.getProjectFacet() == JAVA_FACET) {
-			IClasspathEntry cpentry = JavaCore.newContainerEntry(new Path(rc.getProperty(RuntimeBridge.CLASSPATH)));
-			return Collections.singletonList(cpentry);
+			String path = rc.getProperty(RuntimeBridge.CLASSPATH);
+			if (path != null) {
+				IClasspathEntry cpentry = JavaCore.newContainerEntry(new Path(path));
+				return Collections.singletonList(cpentry);
+			}
 		}
-
+		
 		return null;
 	}
 
