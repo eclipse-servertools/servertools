@@ -23,14 +23,14 @@ import org.eclipse.wst.internet.monitor.core.internal.MonitorManager;
  */
 public final class MonitorCore {
 	private static MonitorManager manager;
-	
+
 	/**
 	 * Cannot create MonitorCore - use static methods.
 	 */
 	private MonitorCore() {
 		// can't create
 	}
-	
+
 	/**
 	 * Returns a monitor manager instance.
 	 * 
