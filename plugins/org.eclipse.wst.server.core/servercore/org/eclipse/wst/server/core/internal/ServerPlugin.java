@@ -286,7 +286,7 @@ public class ServerPlugin extends Plugin {
 			public StopJob() {
 				super("Disposing servers");
 			}
-			
+
 			public boolean belongsTo(Object family) {
 				return SHUTDOWN_JOB_FAMILY.equals(family);
 			}
@@ -297,9 +297,13 @@ public class ServerPlugin extends Plugin {
 			}
 		}
 		
-		StopJob job = new StopJob();
-		job.setUser(false);
-		job.schedule();
+		try {
+			StopJob job = new StopJob();
+			job.setUser(false);
+			job.schedule();
+		} catch (Throwable t) {
+			// ignore errors
+		}
 	}
 
 	/**
