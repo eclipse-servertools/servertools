@@ -25,6 +25,29 @@
          types="jst.utility"
          versions="1.0"/> 
      </runtimeType>
+     <runtimeType
+       id="org.eclipse.jst.server.generic.runtime.oracle10131"
+       name="%oracle.10_1_3_1.runtime.name"
+       description="%oracle.10_1_3_1.runtime.description"
+       vendor="%oracleCategory"
+       version="10.1.3.1"
+       class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntime">
+      <moduleType
+         types="jst.web"
+         versions="2.2, 2.3, 2.4"/>
+      <moduleType
+         types="jst.ejb"
+         versions="1.1, 2.0, 2.1, 3.0"/>
+      <moduleType
+         types="jst.ear"
+         versions="1.2, 1.3, 1.4"/>
+      <moduleType
+         types="jst.connector"
+         versions="1.0, 1.5"/>
+       <moduleType
+         types="jst.utility"
+         versions="1.0"/> 
+     </runtimeType>     
    </extension>
    
    <extension point="org.eclipse.wst.server.core.serverTypes">
@@ -43,6 +66,21 @@
            startBeforePublish="true"
            supportsRemoteHosts="false">           
       </serverType> 
+     <serverType
+           behaviourClass="org.eclipse.jst.server.generic.core.internal.GenericServerBehaviour"
+           class="org.eclipse.jst.server.generic.core.internal.GenericServer"
+           description="%oracle.10_1_3_1.server.description"
+           hasConfiguration="false"
+           id="org.eclipse.jst.server.generic.oracle10131"
+           initialState="stopped"
+           launchConfigId="org.eclipse.jst.server.generic.core.launchConfigurationType"
+           launchModes="run,debug"
+           name="%oracle.10_1_3_1.server.name"
+           runtime="true"
+           runtimeTypeId="org.eclipse.jst.server.generic.runtime.oracle10131"
+           startBeforePublish="true"
+           supportsRemoteHosts="false">           
+      </serverType>       
    </extension>
    
    <extension point="org.eclipse.wst.server.ui.wizardFragments">
@@ -53,7 +91,15 @@
      <fragment
         id="org.eclipse.jst.server.generic.server"
         typeIds="org.eclipse.jst.server.generic.oracle1013"
-        class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>         
+        class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>
+     <fragment
+        id="org.eclipse.jst.server.generic.runtime"
+        typeIds="org.eclipse.jst.server.generic.runtime.oracle10131"
+        class="org.eclipse.jst.server.generic.ui.internal.GenericServerRuntimeWizardFragment"/>
+     <fragment
+        id="org.eclipse.jst.server.generic.server"
+        typeIds="org.eclipse.jst.server.generic.oracle10131"
+        class="org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment"/>                 
    </extension>
    
    <extension point="org.eclipse.wst.server.ui.serverImages">   
@@ -64,19 +110,33 @@
      <image
          id="org.eclipse.jst.server.generic.image"
          icon="icons/obj16/oracle.gif"
-         typeIds="org.eclipse.jst.server.generic.runtime.oracle1013"/>   
+         typeIds="org.eclipse.jst.server.generic.runtime.oracle1013"/>
+     <image
+         id="org.eclipse.jst.server.generic.image"
+         icon="icons/obj16/oracle.gif"
+         typeIds="org.eclipse.jst.server.generic.oracle10131" />
+     <image
+         id="org.eclipse.jst.server.generic.image"
+         icon="icons/obj16/oracle.gif"
+         typeIds="org.eclipse.jst.server.generic.runtime.oracle10131"/>            
    </extension>   
    
    <extension point="org.eclipse.jst.server.core.runtimeClasspathProviders">   
      <runtimeClasspathProvider
         id="org.eclipse.jst.server.generic.runtimeTarget"
         runtimeTypeIds="org.eclipse.jst.server.generic.runtime.oracle1013"
-        class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntimeTargetHandler"/>   
+        class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntimeTargetHandler"/>           
+     <runtimeClasspathProvider
+        id="org.eclipse.jst.server.generic.runtimeTarget"
+        runtimeTypeIds="org.eclipse.jst.server.generic.runtime.oracle10131"
+        class="org.eclipse.jst.server.generic.core.internal.GenericServerRuntimeTargetHandler"/>        
    </extension>
    
    <extension point="org.eclipse.jst.server.generic.core.serverdefinition">
 		<serverdefinition id="org.eclipse.jst.server.generic.runtime.oracle1013" definitionfile="/servers/oracle.10.1.3.serverdef">
-		</serverdefinition>		
+		</serverdefinition>
+		<serverdefinition id="org.eclipse.jst.server.generic.runtime.oracle10131" definitionfile="/servers/oracle.10.1.3.1.serverdef">
+		</serverdefinition>				
    </extension>
    
    <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
@@ -87,9 +147,14 @@
        type="org.eclipse.jst.server.generic.runtime.oracle"
        version="10.1.3"/>
 
+    <runtime-component-version
+       type="org.eclipse.jst.server.generic.runtime.oracle"
+       version="10.1.3.1"/>
+
     <adapter>
       <runtime-component
-         id="org.eclipse.jst.server.generic.runtime.oracle"/>
+            id="org.eclipse.jst.server.generic.runtime.oracle"
+            />
       <factory
          class="org.eclipse.jst.server.core.internal.RuntimeClasspathProvider$Factory"/>
       <type
@@ -112,6 +177,23 @@
          version="1.0"/>
       <facet id="jst.connector"
          version="1.5"/>
+    </supported>
+    <supported>    
+      <runtime-component
+         id="org.eclipse.jst.server.generic.runtime.oracle"
+         version="10.1.3.1"/>
+      <facet id="jst.web"
+         version="2.2,2.3,2.4"/>
+      <facet id="jst.ejb"
+         version="1.1,2.0,2.1"/>
+      <facet id="jst.ear"
+         version="1.2,1.3,1.4"/>
+      <facet id="jst.appclient"
+         version="1.2,1.3,1.4"/>
+      <facet id="jst.utility"
+         version="1.0"/>
+      <facet id="jst.connector"
+         version="1.5"/>
     </supported>    
    </extension>
    
@@ -122,17 +204,23 @@
    
    <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
     <adapter>
-      <runtime-component id="org.eclipse.jst.server.generic.runtime.oracle"/>
+      <runtime-component
+            id="org.eclipse.jst.server.generic.runtime.oracle"
+            />
       <factory class="org.eclipse.jst.server.ui.internal.RuntimeLabelProvider$Factory"/>
       <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
     </adapter>   
-   </extension>
+   </extension>   
    
    <extension point="org.eclipse.jst.server.core.runtimeFacetMappings">
     <runtimeFacetMapping
       runtimeTypeId="org.eclipse.jst.server.generic.runtime.oracle1013"
       runtime-component="org.eclipse.jst.server.generic.runtime.oracle"
       version="10.1.3"/>
+    <runtimeFacetMapping
+      runtimeTypeId="org.eclipse.jst.server.generic.runtime.oracle10131"
+      runtime-component="org.eclipse.jst.server.generic.runtime.oracle"
+      version="10.1.3.1"/>      
     </extension>
    
 </plugin>
