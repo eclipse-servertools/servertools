@@ -209,14 +209,8 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		
 		ServerCore.addServerLifecycleListener(serverLifecycleListener);
 		
-		IServer[] servers = ServerCore.getServers();
-		if (servers != null) {
-			int size = servers.length;
-			for (int i = 0; i < size; i++) {
-				servers[i].addServerListener(serverListener);
-				((Server) servers[i]).addPublishListener(publishListener);
-			}
-		}
+		InitializeJob job = new InitializeJob();
+		job.schedule();
 	}
 
 	/**

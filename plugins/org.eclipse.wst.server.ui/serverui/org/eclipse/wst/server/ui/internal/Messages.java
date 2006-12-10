@@ -237,6 +237,7 @@ public class Messages extends NLS {
 	public static String actionModifyModulesToolTip;
 	public static String actionModifyModules;
 	public static String actionMonitor;
+	public static String viewInitializing;
 	public static String viewSyncOkay;
 	public static String viewSyncRestart;
 	public static String viewSyncPublish;
@@ -312,6 +313,7 @@ public class Messages extends NLS {
 	public static String wizLicenseAccept;
 	public static String wizLicenseDecline;
 	public static String wizLicenseNone;
+	public static String jobInitializing;
 
 	public static String errorStartingMonitor;
 	public static String audioPrefSelectFile;

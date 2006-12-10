@@ -12,14 +12,13 @@ package org.eclipse.wst.server.core;
 
 import java.util.*;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.wst.server.core.internal.*;
 /**
  * Main class for server core API.
  * <p>
  * This class provides API to access most of the types in the server
- * framework, including server runtimes and servers. Methods **
+ * framework, including server runtimes and servers.
  * The methods on this class are thread safe.
  * </p>
  * <p>
@@ -40,10 +39,6 @@ public final class ServerCore {
 	private static List serverTypes;
 
 	private static IRegistryChangeListener registryListener;
-
-	static {
-		executeStartups();
-	}
 
 	protected static class RegistryChangeListener implements IRegistryChangeListener {
 		public void registryChanged(IRegistryChangeEvent event) {
@@ -77,25 +72,6 @@ public final class ServerCore {
 	 */
 	private final static ResourceManager getResourceManager() {
 		return ResourceManager.getInstance();
-	}
-
-	/**
-	 * Returns the preference information for the project. The project may not
-	 * be null.
-	 *
-	 * @param project a project
-	 * @return the properties of the project
-	 * @deprecated Project facet support should now be used instead of this API. @see
-	 *    org.eclipse.wst.common.project.facet.core.IFacetedProject#getRuntime()
-	 */
-	public static IProjectProperties getProjectProperties(IProject project) {
-		if (project == null)
-			throw new IllegalArgumentException();
-		return new IProjectProperties() {
-			public IRuntime getRuntimeTarget() {
-				return null;
-			}
-		};
 	}
 
 	/**
@@ -142,34 +118,6 @@ public final class ServerCore {
 	}
 
 	/**
-	 * Returns an array of all known runtime target handler instances.
-	 * <p>
-	 * A new array is returned on each call, so clients may store or modify the result.
-	 * </p>
-	 * 
-	 * @return a possibly-empty array of runtime target handler instances
-	 *    {@link IRuntimeTargetHandler}
-	 */
-	public static IRuntimeTargetHandler[] getRuntimeTargetHandlers() {
-		throw new RuntimeException("Attempt to use deprecated code");
-	}
-
-	/**
-	 * Returns the runtime target handler with the given id, or <code>null</code>
-	 * if none. This convenience method searches the list of known runtime
-	 * target handlers ({@link #getRuntimeTargetHandlers()}) for the one with
-	 * a matching runtime target handler id ({@link IRuntimeTargetHandler#getId()}).
-	 * The id may not be null.
-	 *
-	 * @param id the runtime target handler id
-	 * @return the runtime target handler instance, or <code>null</code> if
-	 *   there is no runtime target handler with the given id
-	 */
-	public static IRuntimeTargetHandler findRuntimeTargetHandler(String id) {
-		throw new RuntimeException("Attempt to use deprecated code");
-	}
-
-	/**
 	 * Returns an array of all known server types.
 	 * <p>
 	 * A new array is returned on each call, so clients may store or modify the result.
@@ -210,32 +158,6 @@ public final class ServerCore {
 				return serverType;
 		}
 		return null;
-	}
-
-	/**
-	 * Execute the server startup extension points.
-	 */
-	private static synchronized void executeStartups() {
-		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .startup extension point ->-");
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "internalStartup");
-
-		int size = cf.length;
-		for (int i = 0; i < size; i++) {
-			try {
-				IStartup startup = (IStartup) cf[i].createExecutableExtension("class");
-				try {
-					startup.startup();
-				} catch (Exception ex) {
-					Trace.trace(Trace.SEVERE, "Startup failed" + startup.toString(), ex);
-				}
-				Trace.trace(Trace.EXTENSION_POINT, "  Loaded startup: " + cf[i].getAttribute("id"));
-			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load startup: " + cf[i].getAttribute("id"), t);
-			}
-		}
-		
-		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .startup extension point -<-");
 	}
 
 	/**

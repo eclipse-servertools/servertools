@@ -12,6 +12,10 @@ package org.eclipse.wst.server.ui.internal.view.servers;
 
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.debug.ui.IDebugView;
@@ -29,6 +33,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
@@ -86,8 +91,35 @@ public class ServersView extends ViewPart {
 		column3.setText(Messages.viewSync);
 		column3.setWidth(cols[2]);
 		
+		deferInitialization();
+	}
+
+	private void deferInitialization() {
+		TreeItem item = new TreeItem(treeTable, SWT.NONE);
+		item.setText(Messages.viewInitializing);
+		
 		tableViewer = new ServerTableViewer(this, treeTable);
 		initializeActions(tableViewer);
+		
+		Job job = new Job("Initialize Servers view") {
+			public IStatus run(IProgressMonitor monitor) {
+				ServerCore.getServers();
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						initialize();
+					}
+				});
+				return Status.OK_STATUS;
+			}
+		};
+		
+		job.setSystem(true);
+		job.setPriority(Job.SHORT);
+		job.schedule();
+	}
+
+	protected void initialize() {
+		tableViewer.initialize();
 		
 		treeTable.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
@@ -141,7 +173,7 @@ public class ServersView extends ViewPart {
 				fillContextMenu(shell, mgr);
 			}
 		});
-		Menu menu = menuManager.createContextMenu(parent);
+		Menu menu = menuManager.createContextMenu(treeTable);
 		treeTable.setMenu(menu);
 		getSite().registerContextMenu(menuManager, tableViewer);
 		getSite().setSelectionProvider(tableViewer);
@@ -197,7 +229,7 @@ public class ServersView extends ViewPart {
 	 */
 	public void initializeActions(ISelectionProvider provider) {
 		Shell shell = getSite().getShell();
-
+		
 		// create the debug action
 		Action debugAction = new StartAction(shell, provider, "debug", ILaunchManager.DEBUG_MODE);
 		debugAction.setToolTipText(Messages.actionDebugToolTip);
@@ -205,7 +237,7 @@ public class ServersView extends ViewPart {
 		debugAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_START_DEBUG));
 		debugAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_START_DEBUG));
 		debugAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_START_DEBUG));
-	
+		
 		// create the start action
 		Action runAction = new StartAction(shell, provider, "start", ILaunchManager.RUN_MODE);
 		runAction.setToolTipText(Messages.actionStartToolTip);
@@ -221,7 +253,7 @@ public class ServersView extends ViewPart {
 		profileAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_START_PROFILE));
 		profileAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_START_PROFILE));
 		profileAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_START_PROFILE));
-	
+		
 		// create the restart menu
 		restartMenu = new MenuManager(Messages.actionRestart);
 		
@@ -256,7 +288,7 @@ public class ServersView extends ViewPart {
 		restartAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_RESTART));
 		restartAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_RESTART));
 		restartAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_RESTART));
-
+		
 		// create the stop action
 		Action stopAction = new StopAction(shell, provider, "stop");
 		stopAction.setToolTipText(Messages.actionStopToolTip);
@@ -264,7 +296,7 @@ public class ServersView extends ViewPart {
 		stopAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_STOP));
 		stopAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_STOP));
 		stopAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_STOP));
-
+		
 		// create the disconnect action
 		/*Action disconnectAction = new StopAction(shell, provider, "disconnect", IServerType.SERVER_STATE_SET_ATTACHED);
 		disconnectAction.setToolTipText(Messages.actionStopToolTip2"));
@@ -272,7 +304,7 @@ public class ServersView extends ViewPart {
 		disconnectAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_DISCONNECT));
 		disconnectAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_DISCONNECT));
 		disconnectAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_DISCONNECT));*/
-
+		
 		// create the publish action
 		Action publishAction = new PublishAction(shell, provider, "publish");
 		publishAction.setToolTipText(Messages.actionPublishToolTip);

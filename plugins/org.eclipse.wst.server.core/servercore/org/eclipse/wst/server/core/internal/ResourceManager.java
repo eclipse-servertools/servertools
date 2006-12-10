@@ -46,7 +46,7 @@ public class ResourceManager {
 	// lifecycle listeners
 	protected transient List runtimeListeners;
 	protected transient List serverListeners;
-	
+
 	// cache for disposing servers & runtimes
 	protected List activeBundles;
 
@@ -54,6 +54,12 @@ public class ResourceManager {
 	private IResourceChangeListener resourceChangeListener;
 	private Preferences.IPropertyChangeListener pcl;
 	protected boolean ignorePreferenceChanges = false;
+
+	protected List moduleServerEventHandlers;
+	protected List moduleServerEventHandlerIndexes;
+
+	private static boolean initialized;
+	private static boolean initializing;
 
 	/**
 	 * Server resource change listener.
@@ -69,7 +75,7 @@ public class ResourceManager {
 	 *    attached to the project at this point - OTI defect)
 	 * 2. Projects being deleted.
 	 */
-	public class ServerResourceChangeListener implements IResourceChangeListener {
+	protected class ServerResourceChangeListener implements IResourceChangeListener {
 		/**
 		 * Create a new ServerResourceChangeListener.
 		 */
@@ -154,9 +160,6 @@ public class ResourceManager {
 			}
 		}
 	}
-	
-	protected List moduleServerEventHandlers;
-	protected List moduleServerEventHandlerIndexes;
 
 	/**
 	 * Cannot directly create a ResourceManager. Use
@@ -165,11 +168,49 @@ public class ResourceManager {
 	private ResourceManager() {
 		super();
 		instance = this;
-		
-		init();
 	}
 
-	protected void init() {
+	/**
+	 * Execute the server startup extension points.
+	 */
+	private static synchronized void executeStartups() {
+		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .startup extension point ->-");
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "internalStartup");
+		
+		int size = cf.length;
+		for (int i = 0; i < size; i++) {
+			try {
+				IStartup startup = (IStartup) cf[i].createExecutableExtension("class");
+				try {
+					startup.startup();
+				} catch (Exception ex) {
+					Trace.trace(Trace.SEVERE, "Startup failed" + startup.toString(), ex);
+				}
+				Trace.trace(Trace.EXTENSION_POINT, "  Loaded startup: " + cf[i].getAttribute("id"));
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "  Could not load startup: " + cf[i].getAttribute("id"), t);
+			}
+		}
+		
+		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .startup extension point -<-");
+	}
+
+	protected synchronized void init() {
+		if (initialized || initializing)
+			return;
+		
+		initializing = true;
+		
+		// see who's triggering API startup
+		/*try {
+			throw new NumberFormatException();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}*/
+		
+		executeStartups();
+		
 		servers = new ArrayList();
 		activeBundles = new ArrayList();
 		loadRuntimesList();
@@ -206,15 +247,17 @@ public class ResourceManager {
 		}
 		
 		addServerLifecycleListener(ServerListener.getInstance());
+		
+		initialized = true;
 	}
-	
+
 	/**
 	 * Load all of the servers and server configurations from the given project.
 	 */
 	protected static void loadFromProject(IProject project) {
 		Trace.trace(Trace.FINER, "Initial server resource load for " + project.getName(), null);
 		final ResourceManager rm = ResourceManager.getInstance();
-	
+		
 		try {
 			project.accept(new IResourceProxyVisitor() {
 				public boolean visit(IResourceProxy proxy) {
@@ -268,6 +311,9 @@ public class ResourceManager {
 	}
 
 	protected void shutdownBundle(String id) {
+		if (!initialized)
+			return;
+		
 		// dispose servers
 		Iterator iterator = servers.iterator();
 		while (iterator.hasNext()) {
@@ -364,6 +410,9 @@ public class ResourceManager {
 		if (runtime == null)
 			return;
 		
+		if (!initialized)
+			init();
+		
 		Trace.trace(Trace.RESOURCES, "Deregistering runtime: " + runtime.getName());
 		
 		runtimes.remove(runtime);
@@ -379,6 +428,9 @@ public class ResourceManager {
 	protected void deregisterServer(IServer server) {
 		if (server == null)
 			return;
+		
+		if (!initialized)
+			init();
 		
 		Trace.trace(Trace.RESOURCES, "Deregistering server: " + server.getName());
 		
@@ -547,6 +599,10 @@ public class ResourceManager {
 	protected void addRuntime(IRuntime runtime) {
 		if (runtime == null)
 			return;
+		
+		if (!initialized)
+			init();
+		
 		if (!runtimes.contains(runtime))
 			registerRuntime(runtime);
 		else
@@ -556,6 +612,9 @@ public class ResourceManager {
 	}
 
 	protected void removeRuntime(IRuntime runtime) {
+		if (!initialized)
+			init();
+		
 		if (runtimes.contains(runtime)) {
 			deregisterRuntime(runtime);
 			saveRuntimesList();
@@ -564,6 +623,12 @@ public class ResourceManager {
 	}
 
 	protected void addServer(IServer server) {
+		if (server == null)
+			return;
+		
+		if (!initialized)
+			init();
+		
 		if (!servers.contains(server))
 			registerServer(server);
 		else
@@ -573,6 +638,9 @@ public class ResourceManager {
 	}
 
 	protected void removeServer(IServer server) {
+		if (!initialized)
+			init();
+		
 		if (servers.contains(server)) {
 			deregisterServer(server);
 			saveServersList();
@@ -586,6 +654,9 @@ public class ResourceManager {
 	 * @return an array of runtimes
 	 */
 	public IRuntime[] getRuntimes() {
+		if (!initialized)
+			init();
+		
 		List list = new ArrayList(runtimes);
 		
 		IRuntime[] r = new IRuntime[list.size()];
@@ -602,7 +673,10 @@ public class ResourceManager {
 	public IRuntime getRuntime(String id) {
 		if (id == null)
 			throw new IllegalArgumentException();
-
+		
+		if (!initialized)
+			init();
+		
 		Iterator iterator = runtimes.iterator();
 		while (iterator.hasNext()) {
 			IRuntime runtime = (IRuntime) iterator.next();
@@ -612,27 +686,10 @@ public class ResourceManager {
 		return null;
 	}
 
-	/**
-	 * Returns the default runtime. Test API - do not use.
-	 * 
-	 * @deprecated will be removed
-	 * @return java.util.List
-	 */
-	public IRuntime getDefaultRuntime() {
-		return null;
-	}
-
-	/**
-	 * Sets the default runtime. Test API - do not use.
-	 * 
-	 * @deprecated will be removed
-	 * @param runtime a runtime
-	 */
-	public void setDefaultRuntime(IRuntime runtime) {
-		// ignore
-	}
-
 	public void resolveRuntimes() {
+		if (!initialized)
+			init();
+		
 		Iterator iterator = runtimes.iterator();
 		while (iterator.hasNext()) {
 			Runtime runtime = (Runtime) iterator.next();
@@ -641,6 +698,9 @@ public class ResourceManager {
 	}
 
 	public void resolveServers() {
+		if (!initialized)
+			init();
+		
 		Iterator iterator = servers.iterator();
 		while (iterator.hasNext()) {
 			Server server = (Server) iterator.next();
@@ -654,6 +714,9 @@ public class ResourceManager {
 	 * @return an array containing all servers
 	 */
 	public IServer[] getServers() {
+		if (!initialized)
+			init();
+		
 		IServer[] servers2 = new IServer[servers.size()];
 		servers.toArray(servers2);
 		
@@ -675,6 +738,9 @@ public class ResourceManager {
 	 * @return a server
 	 */
 	public IServer getServer(String id) {
+		if (!initialized)
+			init();
+		
 		if (id == null)
 			throw new IllegalArgumentException();
 	
@@ -975,9 +1041,12 @@ public class ResourceManager {
 	protected void registerRuntime(IRuntime runtime) {
 		if (runtime == null)
 			return;
-	
+		
+		if (!initialized)
+			init();
+		
 		Trace.trace(Trace.RESOURCES, "Registering runtime: " + runtime.getName());
-	
+		
 		runtimes.add(runtime);
 		fireRuntimeEvent(runtime, EVENT_ADDED);
 		
@@ -995,9 +1064,12 @@ public class ResourceManager {
 	protected void registerServer(IServer server) {
 		if (server == null)
 			return;
-	
+		
+		if (!initialized)
+			init();
+		
 		Trace.trace(Trace.RESOURCES, "Registering server: " + server.getName());
-	
+		
 		servers.add(server);
 		fireServerEvent(server, EVENT_ADDED);
 		

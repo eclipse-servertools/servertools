@@ -40,12 +40,12 @@ public class ServerTableViewer extends TreeViewer {
 	// servers that are currently publishing and starting
 	protected static List publishing = new ArrayList();
 	protected static List starting = new ArrayList();
-	
+
 	protected ServerTableLabelProvider labelProvider;
 	//protected ISelectionListener dsListener;
 
 	protected ServersView view;
-	
+
 	public class ServerContentProvider implements IStructuredContentProvider, ITreeContentProvider {
 		public Object[] getElements(Object element) {
 			List list = new ArrayList();
@@ -196,6 +196,9 @@ public class ServerTableViewer extends TreeViewer {
 	public ServerTableViewer(final ServersView view, final Tree tree) {
 		super(tree);
 		this.view = view;
+	}
+	
+	protected void initialize() {
 		/*tree.addMouseMoveListener(new MouseMoveListener() {
 			public void mouseMove(MouseEvent e) {
 				if (fShell != null) {
@@ -233,9 +236,7 @@ public class ServerTableViewer extends TreeViewer {
 			}
 		});
 		setLabelProvider(labelProvider);
-		setSorter(new ViewerSorter() {
-			// empty
-		});
+		setComparator(new ViewerComparator());
 		
 		setInput(ROOT);
 		
@@ -292,6 +293,12 @@ public class ServerTableViewer extends TreeViewer {
 			}
 		};
 		view.getViewSite().getPage().addSelectionListener(dsListener);*/
+		
+		//if (getTree().getItemCount() > 0)
+		//	getTree().setSelection(getTree().getItem(0));
+		
+		if (getTree().getItemCount() > 0)
+			this.setSelection(new StructuredSelection(getTree().getItem(0).getData()));
 	}
 
 	protected void addListeners() {
