@@ -58,7 +58,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 	private static final String ATTR_STOP = "stop-server"; //$NON-NLS-1$
     
 	// the thread used to ping the server to check for startup
-	protected transient PingThread ping = null;
+	protected transient PingThread ping;
     protected transient IDebugEventSetListener processListener;
     protected transient IProcess process;
     
@@ -438,7 +438,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 	    	}
         	int port = sp.getPort();
     		if (port != 80)
-    			url += ":" + port; //$NON-NLS-1$
+    			url += ':' + port;
     		ping = new PingThread(getServer(), url, this);
     	} catch (Exception e) {
     		Trace.trace(Trace.SEVERE, "Can't ping for server startup."); //$NON-NLS-1$

@@ -111,7 +111,7 @@ public class Resolver {
 	private int skipToProperty(String str,HashMap cache) {
 		int start = -1; 
 		int end =  0;
-		String key=new String();
+		String key=""; //$NON-NLS-1$
 		do {
 			start =  str.indexOf(PROP_START,end);
 			if( start < 0)

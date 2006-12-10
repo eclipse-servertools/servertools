@@ -31,7 +31,7 @@ public class PingThread {
 	// maximum number of pings before giving up
 	private int maxPings = 56; // total: 16 seconds + connection time
 
-	private boolean stop = false;
+	private boolean stop;
 	private String fUrl;
 	private IServer fServer;
 	private GenericServerBehaviour fGenericServer;

@@ -624,12 +624,15 @@ public class LaunchConfigurationImpl extends EObjectImpl implements LaunchConfig
 		return concatList(getVmParameters());
 	}
 	
+    /**
+     * @generated NOT
+     */
 	private String concatList(List list){
 		StringBuffer concatString = new StringBuffer();
 		Iterator iterator = list.iterator();
 		while(iterator.hasNext()){
 			concatString.append(iterator.next());
-			concatString.append(" ");
+			concatString.append(' ');
 		}
 		return concatString.toString();
 	}

@@ -8,7 +8,7 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.jst.server.generic.core.internal;x-internal:=true,
  org.eclipse.jst.server.generic.core.internal.publishers;x-internal:=true,
- org.eclipse.jst.server.generic.internal.core.util;x-internal:=true,
+ org.eclipse.jst.server.generic.internal.core.util;x-friends:="org.eclipse.jst.server.generic.ui",
  org.eclipse.jst.server.generic.internal.servertype.definition;x-internal:=true,
  org.eclipse.jst.server.generic.internal.servertype.definition.impl;x-internal:=true,
  org.eclipse.jst.server.generic.internal.servertype.definition.util;x-internal:=true,

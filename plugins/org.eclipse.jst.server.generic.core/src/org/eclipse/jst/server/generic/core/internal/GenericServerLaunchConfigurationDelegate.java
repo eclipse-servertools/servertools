@@ -83,8 +83,8 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 					genericServer.stopImpl();
 					throw new CoreException(new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.noProfiler, null));
 				}
-				String vmArgs2 = sp[0].getVMArgs(); //$NON-NLS-1$
-				vmArgs = vmArgs + " " + vmArgs2; //$NON-NLS-1$
+				String vmArgs2 = sp[0].getVMArgs();
+				vmArgs = vmArgs + ' ' + vmArgs2;
 			}
 			ExecutionArguments execArgs = new ExecutionArguments(vmArgs, pgmArgs);
 

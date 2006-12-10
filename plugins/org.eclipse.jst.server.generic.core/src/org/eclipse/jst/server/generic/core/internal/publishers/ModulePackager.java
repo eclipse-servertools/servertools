@@ -27,7 +27,7 @@ import org.eclipse.core.runtime.Path;
  * Packages resources to a .zip file
  */
 public class ModulePackager {
-	private static final String JAR_FILE_SEPERATOR = "/";
+	private static final String JAR_FILE_SEPERATOR = "/"; //$NON-NLS-1$
 	private JarOutputStream outputStream;
 //	private StringBuffer manifestContents;
 
