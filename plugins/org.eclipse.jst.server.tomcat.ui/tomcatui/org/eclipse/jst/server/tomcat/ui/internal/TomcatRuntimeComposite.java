@@ -20,13 +20,10 @@ import org.eclipse.jdt.launching.IVMInstallType;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.PreferenceDialog;
-import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatRuntimeWorkingCopy;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -41,6 +38,7 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.internal.IInstallableRuntime;
@@ -204,15 +202,16 @@ public class TomcatRuntimeComposite extends Composite {
 					combo.setText(currentVM);
 					if (combo.getSelectionIndex() == -1)
 						combo.select(0);
+					validate();
 				}
 			}
 		});
 		
 		init();
 		validate();
-
+		
 		Dialog.applyDialogFont(this);
-
+		
 		name.forceFocus();
 	}
 
@@ -240,22 +239,11 @@ public class TomcatRuntimeComposite extends Composite {
 	}
 
 	protected boolean showPreferencePage() {
-		PreferenceManager manager = PlatformUI.getWorkbench().getPreferenceManager();
-		IPreferenceNode node = manager.find("org.eclipse.jdt.ui.preferences.JavaBasePreferencePage").findSubNode("org.eclipse.jdt.debug.ui.preferences.VMPreferencePage");
-		PreferenceManager manager2 = new PreferenceManager();
-		manager2.addToRoot(node);
-		final PreferenceDialog dialog = new PreferenceDialog(getShell(), manager2);
-		final boolean[] result = new boolean[] { false };
-		BusyIndicator.showWhile(getDisplay(), new Runnable() {
-			public void run() {
-				dialog.create();
-				if (dialog.open() == Window.OK)
-					result[0] = true;
-			}
-		});
-		return result[0];
+		String id = "org.eclipse.jdt.debug.ui.preferences.VMPreferencePage";
+		PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), id, new String[] { id }, null);
+		return (dialog.open() == Window.OK);
 	}
-	
+
 	protected void init() {
 		if (name == null || runtime == null)
 			return;
@@ -264,7 +252,7 @@ public class TomcatRuntimeComposite extends Composite {
 			name.setText(runtimeWC.getName());
 		else
 			name.setText("");
-	
+		
 		if (runtimeWC.getLocation() != null)
 			installDir.setText(runtimeWC.getLocation().toOSString());
 		else
@@ -293,7 +281,7 @@ public class TomcatRuntimeComposite extends Composite {
 			wizard.setMessage("", IMessageProvider.ERROR);
 			return;
 		}
-
+		
 		IStatus status = runtimeWC.validate(null);
 		if (status == null || status.isOK())
 			wizard.setMessage(null, IMessageProvider.NONE);
