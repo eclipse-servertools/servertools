@@ -10,6 +10,9 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.internal;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.util.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.wst.server.core.IModule;
@@ -67,6 +70,18 @@ public class ModulePublishInfo {
 		load(memento);
 	}
 
+	/**
+	 * ModulePublishInfo constructor.
+	 * 
+	 * @param in an input stream
+	 * @throws IOException if the load fails
+	 */
+	public ModulePublishInfo(DataInput in) throws IOException {
+		super();
+		
+		load(in);
+	}
+
 	public String getModuleId() {
 		return moduleId;
 	}
@@ -88,7 +103,7 @@ public class ModulePublishInfo {
 	}
 
 	/**
-	 * 
+	 * Used only for reading from WTP 1.x workspaces.
 	 */
 	protected void load(IMemento memento) {
 		Trace.trace(Trace.FINEST, "Loading module publish info for: " + memento);
@@ -107,6 +122,9 @@ public class ModulePublishInfo {
 		}
 	}
 
+	/**
+	 * Used only for reading from WTP 1.x workspaces.
+	 */
 	protected IModuleResource[] loadResource(IMemento memento, IPath path) {
 		if (memento == null)
 			return new IModuleResource[0];
@@ -142,42 +160,89 @@ public class ModulePublishInfo {
 		return resources2;
 	}
 
-	/**
-	 * 
-	 */
-	protected void save(IMemento memento) {
+	protected void load(DataInput in) throws IOException {
+		Trace.trace(Trace.FINEST, "Loading module publish info");
+		
+		moduleId = in.readUTF();
+		byte b = in.readByte();
+		
+		if ((b & 1) != 0)
+			name = in.readUTF();
+		else
+			name = null;
+		
+		if ((b & 2) != 0) {
+			String mt = in.readUTF();
+			String mv = in.readUTF();
+			if (mt != null && mt.length() > 0)
+				moduleType = new ModuleType(mt, mv);
+		} else
+			moduleType = null;
+		
+		resources = loadResource(in, new Path(""));
+	}
+
+	private IModuleResource[] loadResource(DataInput in, IPath path) throws IOException {
+		int size = in.readInt();
+		IModuleResource[] resources2 = new IModuleResource[size];
+		
+		for (int i = 0; i < size; i++) {
+			byte b = in.readByte();
+			if (b == 0) {
+				String name2 = in.readUTF();
+				long stamp = in.readLong();
+				resources2[i] = new ModuleFile(name2, path, stamp);
+			} else if (b == 1) {
+				String name2 = in.readUTF();
+				ModuleFolder folder = new ModuleFolder(null, name2, path);
+				folder.setMembers(loadResource(in, path.append(name2)));
+				resources2[i] = folder;
+			}
+		}
+		
+		return resources2;
+	}
+
+	protected void save(DataOutput out) {
 		try {
-			memento.putString(MODULE_ID, moduleId);
+			out.writeUTF(moduleId);
+			byte b = 0;
 			if (name != null)
-				memento.putString(NAME, name);
+				b &= 1;
+			if (moduleType != null)
+				b &= 2;
+			out.writeByte(b);
+			
+			if (name != null)
+				out.writeUTF(name);
 			
 			if (moduleType != null) {
-				memento.putString(MODULE_TYPE_ID, moduleType.getId());
-				memento.putString(MODULE_TYPE_VERSION, moduleType.getVersion());
+				out.writeUTF(moduleType.getId());
+				out.writeUTF(moduleType.getVersion());
 			}
-			
-			saveResource(memento, resources);
+			saveResource(out, resources);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not save module publish info", e);
 		}
 	}
 
-	protected void saveResource(IMemento memento, IModuleResource[] resources2) {
+	protected void saveResource(DataOutput out, IModuleResource[] resources2) throws IOException {
 		if (resources2 == null)
 			return;
 		int size = resources2.length;
+		out.writeInt(0);
 		for (int i = 0; i < size; i++) {
 			if (resources2[i] instanceof IModuleFile) {
 				IModuleFile file = (IModuleFile) resources2[i];
-				IMemento child = memento.createChild(FILE);
-				child.putString(NAME, file.getName());
-				child.putString(STAMP, "" + file.getModificationStamp());
+				out.writeByte(0);
+				out.writeUTF(file.getName());
+				out.writeLong(file.getModificationStamp());
 			} else {
 				IModuleFolder folder = (IModuleFolder) resources2[i];
-				IMemento child = memento.createChild(FOLDER);
-				child.putString(NAME, folder.getName());
+				out.writeByte(1);
+				out.writeUTF(folder.getName());
 				IModuleResource[] resources3 = folder.members();
-				saveResource(child, resources3);
+				saveResource(out, resources3);
 			}
 		}
 	}

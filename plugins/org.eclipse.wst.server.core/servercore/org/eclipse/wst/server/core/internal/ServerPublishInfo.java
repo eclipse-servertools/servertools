@@ -10,7 +10,13 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.internal;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -251,26 +257,50 @@ public class ServerPublishInfo {
 	 */
 	public void load() {
 		String filename = path.toOSString();
-		if (!(new File(filename).exists()))
-			return;
 		
-		Trace.trace(Trace.FINEST, "Loading publish info from " + filename);
-		
-		try {
-			IMemento memento2 = XMLMemento.loadMemento(filename);
-			Float f = memento2.getFloat(VERSION);
-			if (f != null && f.floatValue() >= 3)
-				return;
+		if (new File(filename).exists()) {
+			Trace.trace(Trace.FINEST, "Loading publish info from " + filename);
 			
-			IMemento[] children = memento2.getChildren("module");
-			
-			int size = children.length;
-			for (int i = 0; i < size; i++) {
-				ModulePublishInfo mpi = new ModulePublishInfo(children[i]);
-				modulePublishInfo.put(getKey(mpi.getModuleId()), mpi);
+			DataInputStream in = null;
+			try {
+				in = new DataInputStream(new BufferedInputStream(new FileInputStream(filename)));
+				in.readByte();
+				in.readByte();
+				// version
+				int ver = in.readByte();
+				if (ver <= 1) {
+					int size = in.readInt();	
+					for (int i = 0; i < size; i++) {
+						ModulePublishInfo mpi = new ModulePublishInfo(in);
+						modulePublishInfo.put(getKey(mpi.getModuleId()), mpi);
+					}
+					return;
+				}
+			} catch (Exception e) {
+				Trace.trace(Trace.WARNING, "Could not load publish information: " + e.getMessage());
 			}
-		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not load publish information: " + e.getMessage());
+		}
+		
+		filename = filename.substring(0, filename.length() - 3) + "xml";
+		if (new File(filename).exists()) {
+			Trace.trace(Trace.FINEST, "Loading publish info from old format " + filename);
+			
+			try {
+				IMemento memento2 = XMLMemento.loadMemento(filename);
+				Float f = memento2.getFloat(VERSION);
+				if (f != null && f.floatValue() >= 3)
+					return;
+				
+				IMemento[] children = memento2.getChildren("module");
+				
+				int size = children.length;
+				for (int i = 0; i < size; i++) {
+					ModulePublishInfo mpi = new ModulePublishInfo(children[i]);
+					modulePublishInfo.put(getKey(mpi.getModuleId()), mpi);
+				}
+			} catch (Exception e) {
+				Trace.trace(Trace.WARNING, "Could not load publish information: " + e.getMessage());
+			}
 		}
 	}
 
@@ -281,21 +311,36 @@ public class ServerPublishInfo {
 		String filename = path.toOSString();
 		Trace.trace(Trace.FINEST, "Saving publish info to " + filename);
 		
+		DataOutputStream out = null;
 		try {
-			XMLMemento memento = XMLMemento.createWriteRoot("server");
-			memento.putString(VERSION, "2.0");
+			out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(filename)));
+			out.writeByte(14);
+			out.writeByte(14);
+			// version
+			out.writeByte(1);
 			
+			out.writeInt(modulePublishInfo.keySet().size());
 			Iterator iterator = modulePublishInfo.keySet().iterator();
 			while (iterator.hasNext()) {
 				String controlRef = (String) iterator.next();
 				ModulePublishInfo mpi = (ModulePublishInfo) modulePublishInfo.get(controlRef);
-				IMemento child = memento.createChild("module");
-				mpi.save(child);
+				mpi.save(out);
 			}
-			memento.saveToFile(filename);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not save publish information", e);
+		} finally {
+			try {
+				out.close();
+			} catch (Exception e) {
+				// ignore
+			}
 		}
+		
+		// remove old file
+		filename = filename.substring(0, filename.length() - 3) + "xml";
+		File f = new File(filename);
+		if (f.exists())
+			f.delete();
 	}
 
 	/**

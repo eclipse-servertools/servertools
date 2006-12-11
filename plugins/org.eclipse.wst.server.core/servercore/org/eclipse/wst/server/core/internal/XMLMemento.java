@@ -365,9 +365,9 @@ public final class XMLMemento implements IMemento {
 	 * @exception java.io.IOException
 	 */
 	public void saveToFile(String filename) throws IOException {
-		FileOutputStream w = null;
+		BufferedOutputStream w = null;
 		try {
-			w = new FileOutputStream(filename);
+			w = new BufferedOutputStream(new FileOutputStream(filename));
 			save(w);
 		} catch (IOException e) {
 			throw e;

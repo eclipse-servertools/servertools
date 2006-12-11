@@ -65,15 +65,16 @@ public class PublishInfo {
 		// have we tried loading yet?
 		String serverId = server.getId();
 		if (serverIdToPath.containsKey(serverId)) {
-			if (!serverIdToPublishInfo.containsKey(serverId)) {
-				String partialPath = (String) serverIdToPath.get(serverId);
-				IPath path = ServerPlugin.getInstance().getStateLocation().append(PUBLISH_DIR).append(partialPath);
-				ServerPublishInfo spi = new ServerPublishInfo(path);
-				serverIdToPublishInfo.put(serverId, spi);
-				return spi;
-			}
-			// already loaded
-			return (ServerPublishInfo) serverIdToPublishInfo.get(serverId); 
+			if (serverIdToPublishInfo.containsKey(serverId))
+				return (ServerPublishInfo) serverIdToPublishInfo.get(serverId);
+			
+			// force .dat extension
+			String partialPath = (String) serverIdToPath.get(serverId);
+			partialPath = partialPath.substring(0, partialPath.length() - 3) + "dat";
+			IPath path = ServerPlugin.getInstance().getStateLocation().append(PUBLISH_DIR).append(partialPath);
+			ServerPublishInfo spi = new ServerPublishInfo(path);
+			serverIdToPublishInfo.put(serverId, spi);
+			return spi;
 		}
 		
 		// first time server is being used
@@ -88,7 +89,7 @@ public class PublishInfo {
 		ServerPublishInfo spi = null;
 		synchronized (PUBLISH_DIR) {
 			while (file == null || file.exists()) {
-				partialPath = "publish" + i + ".xml";
+				partialPath = "publish" + i + ".dat";
 				path = ServerPlugin.getInstance().getStateLocation().append(PUBLISH_DIR).append(partialPath);
 				if (serverIdToPath.get(partialPath) == null)
 					file = new File(path.toOSString());
