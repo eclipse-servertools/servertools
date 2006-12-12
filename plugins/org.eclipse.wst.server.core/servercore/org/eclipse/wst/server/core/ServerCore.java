@@ -12,6 +12,7 @@ package org.eclipse.wst.server.core;
 
 import java.util.*;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.wst.server.core.internal.*;
 /**
@@ -72,6 +73,25 @@ public final class ServerCore {
 	 */
 	private final static ResourceManager getResourceManager() {
 		return ResourceManager.getInstance();
+	}
+
+	/**
+	 * Returns the preference information for the project. The project may not
+	 * be null.
+	 *
+	 * @param project a project
+	 * @return the properties of the project
+	 * @deprecated Project facet support should now be used instead of this API. @see
+	 *    org.eclipse.wst.common.project.facet.core.IFacetedProject#getRuntime()
+	 */
+	public static IProjectProperties getProjectProperties(IProject project) {
+		if (project == null)
+			throw new IllegalArgumentException();
+		return new IProjectProperties() {
+			public IRuntime getRuntimeTarget() {
+				return null;
+			}
+		};
 	}
 
 	/**
