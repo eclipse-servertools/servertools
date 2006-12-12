@@ -194,7 +194,7 @@ Host: localhost:8081
 			setHTTPBody(new byte[0]);
 			return;
 		}
-	
+		
 		if (isRequest) {
 			if (contentLength != -1) {
 				byte[] b = readBytes(contentLength);
@@ -208,7 +208,7 @@ Host: localhost:8081
 			Trace.trace(Trace.PARSING, "Done parsing request body for: " + this);
 			return;
 		}
-	
+		
 		// just return body for HTTP 1.0 responses
 		if (!isRequest && !connectionKeepAlive && contentLength == -1 && transferEncoding == -1) {
 			Trace.trace(Trace.PARSING, "Assuming HTTP 1.0 for: " + this);
@@ -242,19 +242,19 @@ Host: localhost:8081
 			setHTTPBody(body);
 			return;
 		}
-	
+		
 		// spec 4.4.1
 		if (responseType != null && responseType.startsWith("1")) {
 			setHTTPBody(new byte[0]);
 			return;
 		}
-	
+		
 		// spec 4.4.2
 		if (transferEncoding != -1 && transferEncoding != ENCODING_IDENTITY) {
 			parseChunk();
 			return;
 		}
-	
+		
 		// spec 4.4.3
 		if (contentLength != -1) {
 			byte[] b = readBytes(contentLength);
@@ -467,7 +467,7 @@ Host: localhost:8081
 					transferEncoding = -1;
 					connectionKeepAlive = false;
 					connectionClose = false;
-
+					
 					parseHeader();
 					parseBody();
 					
@@ -476,7 +476,7 @@ Host: localhost:8081
 					
 					//Request r = conn.getRequestResponse(true);
 					//r.fireChangedEvent();
-
+					
 					Trace.trace(Trace.PARSING, "Done HTTP request for " + this + " " + connectionKeepAlive);
 					if (!isRequest && (!request.connectionKeepAlive || connectionClose)) {
 						conn2.close();
@@ -493,9 +493,18 @@ Host: localhost:8081
 				}
 			} catch (IOException e) {
 				// reached end of input
-				Trace.trace(Trace.PARSING, "End of buffer for: " + this + " " + e.getMessage());
+				Trace.trace(Trace.PARSING, "End of buffer for: " + this, e);
+				if (!isRequest) {
+					try {
+						request.connectionKeepAlive = false;
+						request.conn2.close();
+						notifyRequest();
+					} catch (Exception ex) {
+						Trace.trace(Trace.PARSING, "Error closing request in response to error: " + this, e);
+					}
+				}
 			}
-
+			
 			// send rest of buffer
 			out.write(buffer, bufferIndex, buffer.length - bufferIndex);
 			out.flush();
@@ -504,7 +513,7 @@ Host: localhost:8081
 		}
 		//if (!isRequest)
 		//	conn2.close();
-
+		
 		Trace.trace(Trace.PARSING, "Closing thread " + this);
 	}
 
@@ -617,7 +626,7 @@ Host: localhost:8081
 			try {
 				request.notify();
 			} catch (Exception e) {
-				Trace.trace(Trace.PARSING, "Error in notifyRequest() " + this + " " + e.getMessage());
+				Trace.trace(Trace.PARSING, "Error in notifyRequest() " + this, e);
 			}
 		}
 		Trace.trace(Trace.PARSING, "Done notifying request " + this);

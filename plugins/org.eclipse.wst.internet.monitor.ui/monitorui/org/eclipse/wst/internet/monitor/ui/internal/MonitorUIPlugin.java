@@ -21,7 +21,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.internet.monitor.core.internal.Trace;
 import org.eclipse.wst.internet.monitor.core.internal.provisional.*;
 import org.eclipse.wst.internet.monitor.ui.internal.view.MonitorView;
 import org.osgi.framework.BundleContext;
