@@ -499,8 +499,8 @@ public class Server extends Base implements IServer {
 	}
 
 	public void setModuleState(IModule[] module, int state) {
-		if (module == null)
-			throw new IllegalArgumentException("Module cannot be null");
+		if (module == null || module.length == 0)
+			throw new IllegalArgumentException("Module cannot be null or empty");
 		int oldState = getModuleState(module);
 		if (oldState == state)
 			return;
@@ -511,8 +511,8 @@ public class Server extends Base implements IServer {
 	}
 
 	public void setModulePublishState(IModule[] module, int state) {
-		if (module == null)
-			throw new IllegalArgumentException("Module cannot be null");
+		if (module == null || module.length == 0)
+			throw new IllegalArgumentException("Module cannot be null or empty");
 		int oldState = getModulePublishState(module);
 		if (oldState == state)
 			return;
@@ -525,8 +525,8 @@ public class Server extends Base implements IServer {
 	}
 
 	public void setModuleRestartState(IModule[] module, boolean r) {
-		if (module == null)
-			throw new IllegalArgumentException("Module cannot be null");
+		if (module == null || module.length == 0)
+			throw new IllegalArgumentException("Module cannot be null or empty");
 		boolean oldState = getModuleRestartState(module);
 		if (oldState == r)
 			return;
@@ -1004,8 +1004,8 @@ public class Server extends Base implements IServer {
 	 * @see ServerBehaviourDelegate.getPublishedResources(IModule[])
 	 */
 	public IModuleResource[] getResources(IModule[] module) {
-		if (module == null)
-			throw new IllegalArgumentException("Module cannot be null");
+		if (module == null || module.length == 0)
+			throw new IllegalArgumentException("Module cannot be null or empty");
 		return getServerPublishInfo().getResources(module);
 	}
 
@@ -1015,8 +1015,8 @@ public class Server extends Base implements IServer {
 	 * @see ServerBehaviourDelegate.getPublishedResources(IModule[])
 	 */
 	public IModuleResource[] getPublishedResources(IModule[] module) {
-		if (module == null)
-			throw new IllegalArgumentException("Module cannot be null");
+		if (module == null || module.length == 0)
+			throw new IllegalArgumentException("Module cannot be null or empty");
 		return getServerPublishInfo().getModulePublishInfo(module).getResources();
 	}
 
@@ -1027,8 +1027,8 @@ public class Server extends Base implements IServer {
 	 * @see ServerBehaviourDelegate.getPublishedResourceDelta(IModule[])
 	 */
 	public IModuleResourceDelta[] getPublishedResourceDelta(IModule[] module) {
-		if (module == null)
-			throw new IllegalArgumentException("Module cannot be null");
+		if (module == null || module.length == 0)
+			throw new IllegalArgumentException("Module cannot be null or empty");
 		return getServerPublishInfo().getDelta(module);
 	}
 
@@ -1039,8 +1039,8 @@ public class Server extends Base implements IServer {
 	 * @see ServerBehaviourDelegate.getPublishedResourceDelta(IModule[])
 	 */
 	public boolean hasPublishedResourceDelta(IModule[] module) {
-		if (module == null)
-			throw new IllegalArgumentException("Module cannot be null");
+		if (module == null || module.length == 0)
+			throw new IllegalArgumentException("Module cannot be null or empty");
 		return getServerPublishInfo().hasDelta(module);
 	}
 
@@ -2193,8 +2193,8 @@ public class Server extends Base implements IServer {
 	 * @see org.eclipse.wst.server.core.IServer#getModuleState()
 	 */
 	public int getModuleState(IModule[] module) {
-		if (module == null)
-			throw new IllegalArgumentException("Module cannot be null");
+		if (module == null || module.length == 0)
+			throw new IllegalArgumentException("Module cannot be null or empty");
 		try {
 			Integer in = (Integer) moduleState.get(getKey(module));
 			if (in != null)
@@ -2209,8 +2209,8 @@ public class Server extends Base implements IServer {
 	 * @see org.eclipse.wst.server.core.IServer#getModuleState()
 	 */
 	public int getModulePublishState(IModule[] module) {
-		if (module == null)
-			throw new IllegalArgumentException("Module cannot be null");
+		if (module == null || module.length == 0)
+			throw new IllegalArgumentException("Module cannot be null or empty");
 		try {
 			Integer in = (Integer) modulePublishState.get(getKey(module));
 			if (in != null)
@@ -2225,9 +2225,13 @@ public class Server extends Base implements IServer {
 	 * @see IServer#getChildModule(IModule[])
 	 */
 	public IModule[] getChildModules(IModule[] module, IProgressMonitor monitor) {
-		if (module == null)
-			throw new IllegalArgumentException("Module cannot be null");
+		if (module == null || module.length == 0)
+			throw new IllegalArgumentException("Module cannot be null or empty");
 		try {
+			int i = module.length - 1;
+			if (module[i].getProject() == null || !module[i].getProject().isAccessible())
+				return null;
+			
 			ServerDelegate sd = getDelegate(monitor);
 			if (sd == null)
 				return null;
@@ -2267,8 +2271,8 @@ public class Server extends Base implements IServer {
 	 *    restarted, and <code>false</code> otherwise
 	 */
 	public IStatus canControlModule(IModule[] module, IProgressMonitor monitor) {
-		if (module == null)
-			throw new IllegalArgumentException("Module cannot be null");
+		if (module == null || module.length == 0)
+			throw new IllegalArgumentException("Module cannot be null or empty");
 		try {
 			ServerBehaviourDelegate bd = getBehaviourDelegate(monitor);
 			if (bd == null)
@@ -2291,8 +2295,8 @@ public class Server extends Base implements IServer {
 	 * @return boolean
 	 */
 	public boolean getModuleRestartState(IModule[] module) {
-		if (module == null)
-			throw new IllegalArgumentException("Module cannot be null");
+		if (module == null || module.length == 0)
+			throw new IllegalArgumentException("Module cannot be null or empty");
 		try {
 			Boolean b = (Boolean) moduleRestartState.get(getKey(module));
 			if (b != null)
@@ -2307,8 +2311,8 @@ public class Server extends Base implements IServer {
 	 * @see IServer#startModule(IModule[], IOperationListener)
 	 */
 	public void startModule(IModule[] module, IOperationListener listener) {
-		if (module == null)
-			throw new IllegalArgumentException("Module cannot be null");
+		if (module == null || module.length == 0)
+			throw new IllegalArgumentException("Module cannot be null or empty or empty");
 		try {
 			getBehaviourDelegate(null).startModule(module, null);
 		} catch (Exception e) {
@@ -2320,8 +2324,8 @@ public class Server extends Base implements IServer {
 	 * @see IServer#stopModule(IModule[], IOperationListener)
 	 */
 	public void stopModule(IModule[] module, IOperationListener listener) {
-		if (module == null)
-			throw new IllegalArgumentException("Module cannot be null");
+		if (module == null || module.length == 0)
+			throw new IllegalArgumentException("Module cannot be null or empty or empty");
 		try {
 			getBehaviourDelegate(null).stopModule(module, null);
 		} catch (Exception e) {
@@ -2333,8 +2337,8 @@ public class Server extends Base implements IServer {
 	 * @see IServer#restartModule(IModule[], IOperationListener, IProgressMonitor)
 	 */
 	public void restartModule(IModule[] module, IOperationListener listener) {
-		if (module == null)
-			throw new IllegalArgumentException("Module cannot be null");
+		if (module == null || module.length == 0)
+			throw new IllegalArgumentException("Module cannot be null or empty");
 		try {
 			getBehaviourDelegate(null).stopModule(module, null);
 			getBehaviourDelegate(null).startModule(module, null);
@@ -2423,15 +2427,15 @@ public class Server extends Base implements IServer {
 	}
 
 	public void setModuleStatus(IModule[] module, IStatus status) {
-		if (module == null)
-			throw new IllegalArgumentException("Module cannot be null");
+		if (module == null || module.length == 0)
+			throw new IllegalArgumentException("Module cannot be null or empty");
 		moduleStatus.put(getKey(module), status);
 		//fireServerModuleStateChangeEvent(module);
 	}
 
 	public IStatus getModuleStatus(IModule[] module) {
-		if (module == null)
-			throw new IllegalArgumentException("Module cannot be null");
+		if (module == null || module.length == 0)
+			throw new IllegalArgumentException("Module cannot be null or empty");
 		try {
 			return (IStatus) moduleStatus.get(getKey(module));
 		} catch (Exception e) {

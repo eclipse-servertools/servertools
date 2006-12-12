@@ -122,8 +122,13 @@ public class PublishInfo {
 			serverIdToPublishInfo.remove(serverId);
 			save();
 		}
-		if (path2 != null)
+		if (path2 != null) {
 			path.append(path2).toFile().delete();
+			path2 = path2.substring(0, path2.length() - 3) + "xml";
+			path.append(path2).toFile().delete();
+			path2 = path2.substring(0, path2.length() - 3) + "dat";
+			path.append(path2).toFile().delete();
+		}
 	}
 
 	/**
