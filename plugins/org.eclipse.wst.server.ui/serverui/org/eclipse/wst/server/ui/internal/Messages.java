@@ -314,6 +314,7 @@ public class Messages extends NLS {
 	public static String wizLicenseDecline;
 	public static String wizLicenseNone;
 	public static String jobInitializing;
+	public static String jobRestarting;
 
 	public static String errorStartingMonitor;
 	public static String audioPrefSelectFile;
