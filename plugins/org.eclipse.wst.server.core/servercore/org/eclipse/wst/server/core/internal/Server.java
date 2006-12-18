@@ -302,6 +302,9 @@ public class Server extends Base implements IServer {
 					behaviourDelegate = ((ServerType) serverType).createServerBehaviourDelegate();
 					InternalInitializer.initializeServerBehaviourDelegate(behaviourDelegate, Server.this, monitor);
 					Trace.trace(Trace.PERFORMANCE, "Server.getBehaviourDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getServerType().getId());
+					
+					if (getServerState() == IServer.STATE_STARTED)
+						autoPublish();
 				} catch (Throwable t) {
 					Trace.trace(Trace.SEVERE, "Could not create behaviour delegate " + toString(), t);
 				}
