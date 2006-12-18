@@ -330,11 +330,12 @@ public class ImageResource {
 					imageDescriptor = ImageDescriptor.getMissingImageDescriptor();
 				
 				if (imageDescriptor != null) {
-					String typeId = cf[i].getAttribute("typeIds");
-					if (typeId == null)
-						typeId = cf[i].getAttribute("moduleId");
-					imageRegistry.put(typeId, imageDescriptor);		
-					imageDescriptors.put(typeId, imageDescriptor);
+					String[] typeIds = ServerUIPlugin.tokenize(cf[i].getAttribute("typeIds"), ",");
+					int size2 = typeIds.length;
+					for (int j = 0; j < size2; j++) {
+						imageRegistry.put(typeIds[j], imageDescriptor);		
+						imageDescriptors.put(typeIds[j], imageDescriptor);
+					}
 				}
 				Trace.trace(Trace.CONFIG, "  Loaded serverImage: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {

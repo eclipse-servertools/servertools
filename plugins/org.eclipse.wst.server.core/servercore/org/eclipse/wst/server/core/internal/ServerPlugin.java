@@ -327,19 +327,26 @@ public class ServerPlugin extends Plugin {
 		context.removeBundleListener(bundleListener);
 	}
 
-	public static String[] tokenize(String param, String delim) {
-		if (param == null)
+	/**
+	 * Utility method to tokenize a string into an array.
+	 * 
+	 * @param str a string to be parsed
+	 * @param delim the delimiters
+	 * @return an array containing the tokenized string
+	 */
+	public static String[] tokenize(String str, String delim) {
+		if (str == null)
 			return new String[0];
 		
 		List list = new ArrayList();
 		
-		StringTokenizer st = new StringTokenizer(param, delim);
+		StringTokenizer st = new StringTokenizer(str, delim);
 		while (st.hasMoreTokens()) {
-			String str = st.nextToken();
-			if (str != null && str.length() > 0)
-				list.add(str.trim());
+			String s = st.nextToken();
+			if (s != null && s.length() > 0)
+				list.add(s.trim());
 		}
-
+		
 		String[] s = new String[list.size()];
 		list.toArray(s);
 		return s;

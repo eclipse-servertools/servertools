@@ -66,7 +66,7 @@
          <attribute name="typeIds" type="string" use="required">
             <annotation>
                <documentation>
-                  a comma separated list of runtime or server type ids
+                  a comma separated list of runtime, server, or module type ids
                </documentation>
             </annotation>
          </attribute>
