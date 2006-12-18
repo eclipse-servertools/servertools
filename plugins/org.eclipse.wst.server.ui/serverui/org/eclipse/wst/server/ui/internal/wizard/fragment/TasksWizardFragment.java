@@ -181,7 +181,7 @@ public class TasksWizardFragment extends WizardFragment {
 		List disabledTasks = ((Server)server).getDisabledPreferredPublishOperationIds();
 		PublishOperation[] tasks2 = ((Server)server).getAllTasks(modules);
 		for (int j = 0; j < tasks2.length; j++) {
-			int kind = tasks2[j].getKind(); 
+			int kind = tasks2[j].getKind();
 			String id = ((Server)server).getPublishOperationId(tasks2[j]);
 			if (kind == PublishOperation.OPTIONAL || kind == PublishOperation.PREFERRED)
 				hasOptionalTasks = true;

@@ -100,16 +100,15 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 		if (runtimeType == null)
 			return false;
 		
-		String moduleTypeId = null;
-		if (moduleType != null)
-			moduleTypeId = moduleType.getId();
+		if (moduleType == null)
+			return true;
+		
+		String moduleTypeId = moduleType.getId();
 		if (includeIncompatibleVersions) {
 			if (!ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), moduleTypeId, null))
 				return false;
 		} else {
-			String moduleVersion = null;
-			if (moduleType != null)
-				moduleVersion = moduleType.getVersion();
+			String moduleVersion = moduleType.getVersion();
 			if (!ServerUtil.isSupportedModule(runtimeType.getModuleTypes(), moduleTypeId, moduleVersion))
 				return false;
 		}

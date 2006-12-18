@@ -544,7 +544,7 @@ public class ServerPlugin extends Plugin {
 		publishTasks.toArray(st);
 		return st;
 	}
-	
+
 	/**
 	 * Load the publish task extension point.
 	 */
@@ -554,7 +554,7 @@ public class ServerPlugin extends Plugin {
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .publishTasks extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "publishTasks");
-
+		
 		int size = cf.length;
 		List list = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
@@ -600,7 +600,7 @@ public class ServerPlugin extends Plugin {
 	public static ModuleFactory findModuleFactory(String id) {
 		if (id == null)
 			throw new IllegalArgumentException();
-
+		
 		if (moduleFactories == null)
 			loadModuleFactories();
 		
@@ -622,7 +622,7 @@ public class ServerPlugin extends Plugin {
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleFactories extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleFactories");
-
+		
 		int size = cf.length;
 		List list = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
