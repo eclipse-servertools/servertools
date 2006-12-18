@@ -63,7 +63,7 @@ public class ServerUtilTestCase extends TestCase {
 	public void testGetModules2() throws Exception {
 		ServerUtil.getModules((String) null);
 	}
-	
+
 	public void testIsSupportedModule0() throws Exception {
 		try {
 			ServerUtil.isSupportedModule((IModuleType) null, null);
@@ -72,7 +72,7 @@ public class ServerUtilTestCase extends TestCase {
 			// ignore
 		}
 	}
-	
+
 	public void testIsSupportedModule1() throws Exception {
 		try {
 			ServerUtil.isSupportedModule((IModuleType[]) null, null);
@@ -80,11 +80,15 @@ public class ServerUtilTestCase extends TestCase {
 			// ignore
 		}
 	}
-	
+
 	public void testIsSupportedModule2() throws Exception {
-		ServerUtil.isSupportedModule(null, null, null);
+		try {
+			ServerUtil.isSupportedModule(null, null, null);
+		} catch (Exception e) {
+			// ignore
+		}
 	}
-	
+
 	public void testModifyModules() throws Exception {
 		try {
 			ServerUtil.modifyModules(null, null, null, null);
@@ -93,7 +97,7 @@ public class ServerUtilTestCase extends TestCase {
 			// ignore
 		}
 	}
-	
+
 	public void testSetServerDefaultName() throws Exception {
 		try {
 			ServerUtil.setServerDefaultName(null);
@@ -102,7 +106,7 @@ public class ServerUtilTestCase extends TestCase {
 			// ignore
 		}
 	}
-	
+
 	public void testGetUnusedServerFile() throws Exception {
 		try {
 			ServerUtil.getUnusedServerFile(null, null);
@@ -111,19 +115,19 @@ public class ServerUtilTestCase extends TestCase {
 			// ignore
 		}
 	}
-	
+
 	public void testGetRuntimes() throws Exception {
 		ServerUtil.getRuntimes(null, null);
 	}
-	
+
 	public void testGetRuntimeTypes() throws Exception {
 		ServerUtil.getRuntimeTypes(null, null, null);
 	}
-	
+
 	public void testGetAvailableServersForModule() throws Exception {
 		ServerUtil.getAvailableServersForModule(null, false, null);
 	}
-	
+
 	public void testGetServersByModule() throws Exception {
 		ServerUtil.getServersByModule(null, null);
 	}
@@ -143,7 +147,7 @@ public class ServerUtilTestCase extends TestCase {
 			// ignore
 		}
 	}
-	
+
 	public void testValidateEdit() throws Exception {
 		try {
 			ServerUtil.validateEdit(null, null);
