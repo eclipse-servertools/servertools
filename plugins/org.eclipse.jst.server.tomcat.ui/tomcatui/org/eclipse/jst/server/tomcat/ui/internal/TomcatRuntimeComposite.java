@@ -20,7 +20,9 @@ import org.eclipse.jdt.launching.IVMInstallType;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatRuntimeWorkingCopy;
 import org.eclipse.swt.SWT;
@@ -38,7 +40,6 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.internal.IInstallableRuntime;
@@ -240,7 +241,18 @@ public class TomcatRuntimeComposite extends Composite {
 
 	protected boolean showPreferencePage() {
 		String id = "org.eclipse.jdt.debug.ui.preferences.VMPreferencePage";
-		PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), id, new String[] { id }, null);
+		
+		// should be using the following API, but it only allows a single preference page instance.
+		// see bug 168211 for details
+		//PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), id, new String[] { id }, null);
+		//return (dialog.open() == Window.OK);		
+		
+		PreferenceManager manager = PlatformUI.getWorkbench().getPreferenceManager();
+		IPreferenceNode node = manager.find("org.eclipse.jdt.ui.preferences.JavaBasePreferencePage").findSubNode(id);
+		PreferenceManager manager2 = new PreferenceManager();
+		manager2.addToRoot(node);
+		PreferenceDialog dialog = new PreferenceDialog(getShell(), manager2);
+		dialog.create();
 		return (dialog.open() == Window.OK);
 	}
 

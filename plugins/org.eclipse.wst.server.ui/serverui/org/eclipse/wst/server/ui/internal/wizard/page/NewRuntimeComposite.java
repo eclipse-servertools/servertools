@@ -80,7 +80,7 @@ public class NewRuntimeComposite extends Composite {
 			}
 		}, type, version, runtimeTypeId);
 		GridData data = new GridData(GridData.FILL_BOTH);
-		data.heightHint = 250;
+		data.heightHint = 300;
 		comp.setLayoutData(data);
 	}
 
