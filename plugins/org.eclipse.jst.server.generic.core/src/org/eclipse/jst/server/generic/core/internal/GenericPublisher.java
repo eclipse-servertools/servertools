@@ -84,7 +84,7 @@ public abstract class GenericPublisher
      * Returns the module associated with this publisher instance
      * @return module
      */
-    public IModule[] getModule() {
+    protected IModule[] getModule() {
         return fModule;
     }
 
@@ -92,22 +92,22 @@ public abstract class GenericPublisher
      * Generic server instance
      * @return server
      */
-    public GenericServer getServer(){
+    protected GenericServer getServer(){
     	return fServer;
     }
     /**
      * a handle to server definition.
      * @return serverdef
      */
-    public GenericServerRuntime getServerRuntime() {
+    protected GenericServerRuntime getServerRuntime() {
         return fServerRuntime;
     }
 
-    public int getDeltaKind() {
+    protected int getDeltaKind() {
         return fDeltaKind;
     }
 
-    public int getKind() {
+    protected int getKind() {
         return fKind;
     }
 }

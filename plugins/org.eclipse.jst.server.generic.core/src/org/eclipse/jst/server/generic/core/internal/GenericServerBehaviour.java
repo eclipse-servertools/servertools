@@ -382,12 +382,12 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
         
         String existingProgArgs  = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, (String)null);
         String serverProgArgs =  getProgramArguments();
-        if(existingProgArgs==null || existingProgArgs.indexOf(serverProgArgs)<0) {
+        if( existingProgArgs==null ) {
             workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,serverProgArgs);
         }
         String existingVMArgs = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,(String)null);
         String serverVMArgs= getVmArguments();
-        if(existingVMArgs==null || existingVMArgs.indexOf(serverVMArgs)<0) {
+        if( existingVMArgs==null ) {
             workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,serverVMArgs);
         }
 	}
