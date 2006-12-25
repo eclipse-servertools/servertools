@@ -117,7 +117,7 @@ public class PingThread {
 				if(!isRemote())
 					stop = true;
 			} catch (Exception e) {
-				Trace.trace(Trace.FINEST, "Ping: failed"); //$NON-NLS-1$
+				Trace.trace(Trace.FINEST, "Ping: failed: "+ e); //$NON-NLS-1$
 				// pinging failed
 				if (!stop) {
 					try {
