@@ -23,60 +23,72 @@ import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
+
 /**
  * 
- *
+ * 
  * @author Gorkem Ercan
  */
-public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizardFragment 
-{
-	private GenericServerCompositeDecorator[] fDecorators;
+public class GenericServerWizardFragment extends
+        ServerDefinitionTypeAwareWizardFragment {
+    private GenericServerCompositeDecorator[] fDecorators;
 
-	/**
-	 * 
-	 */
-	public boolean isComplete() {
+    /**
+     * 
+     */
+    public boolean isComplete() {
 
-		ServerRuntime serverRuntime = getServerTypeDefinitionFor(getServer());
-		if(serverRuntime==null)
-		    return false;
+        ServerRuntime serverRuntime = getServerTypeDefinitionFor( getServer() );
+        if( serverRuntime == null )
+            return false;
 
-		IServerWorkingCopy server = getServer();
-		GenericServer dl= (GenericServer)server.loadAdapter(GenericServer.class,null);
+        IServerWorkingCopy server = getServer();
+        GenericServer dl = (GenericServer) server.loadAdapter(
+                GenericServer.class, null );
 
-		IStatus status = dl.validate();
-		return (status != null && status.isOK());
-		
-	}
+        IStatus status = dl.validate();
+        return (status != null && status.isOK());
 
-	public void createContent(Composite parent, IWizardHandle handle){
-		IServerWorkingCopy server = getServer();
-		GenericServer dl= (GenericServer)server.loadAdapter(GenericServer.class,null);
-		ServerRuntime definition = getServerTypeDefinitionFor(server);
-		fDecorators = new GenericServerCompositeDecorator[1];
-		fDecorators[0]=new ServerTypeDefinitionServerDecorator(definition,null,getWizard(),dl);
-		new GenericServerComposite(parent,fDecorators);
-		
-	}
-	/**
+    }
+
+    public void createContent( Composite parent, IWizardHandle handle ) {
+        IServerWorkingCopy server = getServer();
+        GenericServer dl = (GenericServer) server.loadAdapter(
+                GenericServer.class, null );
+        ServerRuntime definition = getServerTypeDefinitionFor( server );
+        fDecorators = new GenericServerCompositeDecorator[1];
+        fDecorators[0] = new ServerTypeDefinitionServerDecorator( definition,
+                null, getWizard(), dl );
+        new GenericServerComposite( parent, fDecorators );
+
+    }
+
+    /**
      * @param server
      * @return
      */
-    private ServerRuntime getServerTypeDefinitionFor(IServerWorkingCopy server) {        
-        GenericServerRuntime runtime = (GenericServerRuntime)server.getRuntime().getAdapter(GenericServerRuntime.class);
-        if(runtime==null){
-            IRuntime wc = (IRuntime)getTaskModel().getObject(TaskModel.TASK_RUNTIME);
-            runtime= (GenericServerRuntime)wc.getAdapter(GenericServerRuntime.class);
-            if(runtime==null)
-            	runtime= (GenericServerRuntime)wc.loadAdapter(GenericServerRuntime.class,new NullProgressMonitor());
+    private ServerRuntime getServerTypeDefinitionFor( IServerWorkingCopy server ) {
+        GenericServerRuntime runtime = (GenericServerRuntime) server
+                .getRuntime().getAdapter( GenericServerRuntime.class );
+        if( runtime == null )
+        {
+            IRuntime wc = (IRuntime) getTaskModel().getObject(
+                    TaskModel.TASK_RUNTIME );
+            runtime = (GenericServerRuntime) wc
+                    .getAdapter( GenericServerRuntime.class );
+            if( runtime == null )
+                runtime = (GenericServerRuntime) wc.loadAdapter(
+                        GenericServerRuntime.class, new NullProgressMonitor() );
         }
         String serverTyepId = server.getServerType().getId();
         String runtimeTypeId = runtime.getRuntime().getRuntimeType().getId();
-        if(runtimeTypeId==null){   
+        if( runtimeTypeId == null )
+        {
             return null;
         }
         Map runtimeProperties = runtime.getServerInstanceProperties();
-		ServerRuntime definition = getServerTypeDefinition(serverTyepId, runtimeTypeId, runtimeProperties);
+        ServerRuntime definition = getServerTypeDefinition( serverTyepId,
+                runtimeTypeId, runtimeProperties );
         return definition;
     }
 
@@ -84,66 +96,83 @@ public class GenericServerWizardFragment extends ServerDefinitionTypeAwareWizard
      * @return
      */
     private IServerWorkingCopy getServer() {
-        IServerWorkingCopy server = (IServerWorkingCopy)getTaskModel().getObject(TaskModel.TASK_SERVER);
+        IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel()
+                .getObject( TaskModel.TASK_SERVER );
         return server;
     }
 
-    private boolean isNameInUse(String name){
-       	IServer[] servers =ServerCore.getServers();   	
-    	for (int i = 0; i < servers.length; i++) {
-			if(!servers[i].equals(getServer().getOriginal()) && (servers[i].getName().equals(name) ))
-				return true;
-		}
-    	return false;
+    private boolean isNameInUse( String name ) {
+        IServer[] servers = ServerCore.getServers();
+        for( int i = 0; i < servers.length; i++ )
+        {
+            if( !servers[i].equals( getServer().getOriginal() )
+                    && (servers[i].getName().equals( name )) )
+                return true;
+        }
+        return false;
     }
-    
-    private String createName(){
-    	String name = GenericServerUIMessages.bind(GenericServerUIMessages.serverName,getServerTypeDefinitionFor(getServer()).getName());
-    	int suffix=1;
-    	String suffixName =name;
-    	while(isNameInUse(suffixName)){
-    		suffixName = name+" "+suffix; //$NON-NLS-1$
-    		suffix++;
-    	}
-    	return suffixName;
+
+    private String createName() {
+        String name = GenericServerUIMessages.bind(
+                GenericServerUIMessages.serverName, getServerTypeDefinitionFor(
+                        getServer() ).getName() );
+        int suffix = 1;
+        String suffixName = name;
+        while( isNameInUse( suffixName ) )
+        {
+            suffixName = name + ' ' + suffix;
+            suffix++;
+        }
+        return suffixName;
     }
+
     public void enter() {
-    	getServer().setName(createName());
-	    for (int i = 0; i < fDecorators.length; i++) {
-			if(fDecorators[i].validate())
-				return;
-		}
-     }
-	public void exit() {
-	    //validate needed to save the latest values.
-		for (int i = 0; i < fDecorators.length; i++) {
-			if(fDecorators[i].validate())
-				return;
-		}
-	}	
-    /* (non-Javadoc)
+        getServer().setName( createName() );
+        for( int i = 0; i < fDecorators.length; i++ )
+        {
+            if( fDecorators[i].validate() )
+                return;
+        }
+    }
+
+    public void exit() {
+        // validate needed to save the latest values.
+        for( int i = 0; i < fDecorators.length; i++ )
+        {
+            if( fDecorators[i].validate() )
+                return;
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jst.server.generic.internal.ui.ServerDefinitionTypeAwareWizardFragment#description()
      */
     public String description() {
         String sName = getServerName();
-        if(sName==null || sName.length()<1)
-            sName="Generic"; //$NON-NLS-1$
-        return  GenericServerUIMessages.bind(GenericServerUIMessages.serverWizardDescription,sName);
+        if( sName == null || sName.length() < 1 )
+            sName = "Generic"; //$NON-NLS-1$
+        return GenericServerUIMessages.bind(
+                GenericServerUIMessages.serverWizardDescription, sName );
     }
 
-    private String getServerName()
-    {
-        if(getServer()!=null && getServer().getRuntime()!=null)
-           return getServer().getRuntime().getRuntimeType().getName();
+    private String getServerName() {
+        if( getServer() != null && getServer().getRuntime() != null )
+            return getServer().getRuntime().getRuntimeType().getName();
         return null;
     }
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jst.server.generic.internal.ui.ServerDefinitionTypeAwareWizardFragment#title()
      */
     public String title() {
-        String sName= getServerName();
-        if(sName==null || sName.length()<1)
-            sName="Generic"; //$NON-NLS-1$
-        return  GenericServerUIMessages.bind(GenericServerUIMessages.serverWizardTitle,sName);
+        String sName = getServerName();
+        if( sName == null || sName.length() < 1 )
+            sName = "Generic"; //$NON-NLS-1$
+        return GenericServerUIMessages.bind(
+                GenericServerUIMessages.serverWizardTitle, sName );
     }
 }

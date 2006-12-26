@@ -58,10 +58,7 @@ public class InstallableRuntimeDecorator implements
 					
 					try {
 						fWizard.run(true, false, runnable);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					} catch (InvocationTargetException e) {
-						e.printStackTrace();
+					
 					} catch (Exception e) {
 						Trace.trace(Trace.SEVERE,
 								"Error installing runtime", e); //$NON-NLS-1$

@@ -41,7 +41,7 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
 	private ServerRuntime fDefinition;
     private Map fProperties;
 	private String fContext;
-	private String fLastMessage = null;
+	private String fLastMessage;
 	protected IWizardHandle fWizard;
 	private List fPropertyControls= new ArrayList();
 

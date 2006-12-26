@@ -141,7 +141,7 @@ public class SWTUtil {
 			button = SWTUtil.createButton(parent,
 					GenericServerUIMessages.serverTypeGroup_label_browse);
 		} else {
-			label = createFormLabel(title, parent, toolkit);
+			createFormLabel(title, parent, toolkit);
 			cText = toolkit.createText(parent, value);
 			button = toolkit.createButton(parent,
 					GenericServerUIMessages.serverTypeGroup_label_browse,
@@ -207,7 +207,7 @@ public class SWTUtil {
 			button = SWTUtil.createButton(parent,
 					GenericServerUIMessages.serverTypeGroup_label_browse);
 		} else {
-			label = createFormLabel(title, parent, toolkit);
+			createFormLabel(title, parent, toolkit);
 			cText = toolkit.createText(parent, value);
 			button = toolkit.createButton(parent,
 					GenericServerUIMessages.serverTypeGroup_label_browse,
@@ -269,7 +269,7 @@ public class SWTUtil {
 			label.setText(title);
 			text = new Text(parent, SWT.SHADOW_IN | SWT.BORDER);
 		} else {
-			label = createFormLabel(title, parent, toolkit);
+			createFormLabel(title, parent, toolkit);
 			text = toolkit.createText(parent, value);
 		}
 
@@ -311,7 +311,7 @@ public class SWTUtil {
 			label.setText(title);
 			button = new Button(parent, SWT.CHECK);
 		} else {
-			label = createFormLabel(title, parent, toolkit);
+			createFormLabel(title, parent, toolkit);
 			button = toolkit.createButton(parent, null, SWT.CHECK);
 		}
 
@@ -324,7 +324,7 @@ public class SWTUtil {
 	}
 
 	/**
-	 * Creates a label and an editable Combo
+	 * Creates a label and an editable Combo.
 	 * 
 	 * @param title
 	 * @param values
@@ -352,7 +352,7 @@ public class SWTUtil {
 			label = new Label(parent, SWT.WRAP);
 			label.setText(title);
 		} else {
-			label = createFormLabel(title, parent, toolkit);
+			createFormLabel(title, parent, toolkit);
 		}
 		Combo combo = new Combo(parent, SWT.READ_ONLY);
 		if (toolkit != null) {

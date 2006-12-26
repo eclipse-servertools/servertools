@@ -30,137 +30,161 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
  * 
  * @author Gorkem Ercan
  */
-public class GenericServerRuntimeWizardFragment extends ServerDefinitionTypeAwareWizardFragment {
-	
-	private GenericServerCompositeDecorator[] fDecorators;
-	
-	
-	/**
-	 * Constructor
-	 */
-	public GenericServerRuntimeWizardFragment() {
-		super();
-	}
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.ui.wizard.IWizardFragment#isComplete()
-	 */
-	public boolean isComplete() {
-	  	RuntimeDelegate runtime = getRuntimeDelegate();
-		if (runtime == null)
-			return false;
-		IStatus status = runtime.validate();
-		return (status != null && status.isOK());
-	}
-	
-	public void createContent(Composite parent, IWizardHandle handle) {		
-		Map properties= null;
-		ServerRuntime definition=null;
-        if(getRuntimeDelegate()!=null){
- 			properties = getRuntimeDelegate().getServerInstanceProperties();
-			definition = getServerTypeDefinition(getServerDefinitionId(),properties);
-		}       
-        IInstallableRuntime ir = ServerPlugin.findInstallableRuntime(getRuntimeDelegate().getRuntime().getRuntimeType().getId());
-        if (ir!= null){	
-        	fDecorators= new GenericServerCompositeDecorator[3]; 
-        	fDecorators[0]= new JRESelectDecorator(getRuntimeDelegate());
-        	fDecorators[1]= new ServerTypeDefinitionRuntimeDecorator(definition,properties,getWizard(),getRuntimeDelegate());
-        	fDecorators[2]= new InstallableRuntimeDecorator(getWizard(), getRuntimeDelegate());
+public class GenericServerRuntimeWizardFragment extends
+        ServerDefinitionTypeAwareWizardFragment {
+
+    private GenericServerCompositeDecorator[] fDecorators;
+
+    /**
+     * Constructor
+     */
+    public GenericServerRuntimeWizardFragment() {
+        super();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.wst.server.ui.wizard.IWizardFragment#isComplete()
+     */
+    public boolean isComplete() {
+        RuntimeDelegate runtime = getRuntimeDelegate();
+        if( runtime == null )
+            return false;
+        IStatus status = runtime.validate();
+        return (status != null && status.isOK());
+    }
+
+    public void createContent( Composite parent, IWizardHandle handle ) {
+        Map properties = null;
+        ServerRuntime definition = null;
+        if( getRuntimeDelegate() != null )
+        {
+            properties = getRuntimeDelegate().getServerInstanceProperties();
+            definition = getServerTypeDefinition( getServerDefinitionId(),
+                    properties );
         }
-        else{
-        	fDecorators= new GenericServerCompositeDecorator[2]; 
-        	fDecorators[0]= new JRESelectDecorator(getRuntimeDelegate());
-        	fDecorators[1]= new ServerTypeDefinitionRuntimeDecorator(definition,properties,getWizard(),getRuntimeDelegate());
+        IInstallableRuntime ir = ServerPlugin
+                .findInstallableRuntime( getRuntimeDelegate().getRuntime()
+                        .getRuntimeType().getId() );
+        if( ir != null )
+        {
+            fDecorators = new GenericServerCompositeDecorator[3];
+            fDecorators[0] = new JRESelectDecorator( getRuntimeDelegate() );
+            fDecorators[1] = new ServerTypeDefinitionRuntimeDecorator(
+                    definition, properties, getWizard(), getRuntimeDelegate() );
+            fDecorators[2] = new InstallableRuntimeDecorator( getWizard(),
+                    getRuntimeDelegate() );
+        } else
+        {
+            fDecorators = new GenericServerCompositeDecorator[2];
+            fDecorators[0] = new JRESelectDecorator( getRuntimeDelegate() );
+            fDecorators[1] = new ServerTypeDefinitionRuntimeDecorator(
+                    definition, properties, getWizard(), getRuntimeDelegate() );
         }
-		
-		new GenericServerComposite(parent,fDecorators);
-	}
 
-	
-	private String getServerDefinitionId(){
-		String currentDefinition= null;
-		if(getRuntimeDelegate()!=null)
-			currentDefinition =  getRuntimeDelegate().getRuntime().getRuntimeType().getId();
-		if(currentDefinition!= null && currentDefinition.length()>0)
-		{	
-			return currentDefinition;
-		}
-		return null;
-	}
-	
-	
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.ui.wizard.IWizardFragment#enter()
-	 */
-	public void enter() {
-	    if(getRuntimeDelegate()!=null)
-			getRuntimeDelegate().getRuntimeWorkingCopy().setName(createName());
-	    
-	    for (int i = 0; i < fDecorators.length; i++) {
-			if(fDecorators[i].validate())
-				return;
-		}
-	}
-	
-	public void exit() {
-		//validate to save latest values
-	    for (int i = 0; i < fDecorators.length; i++) {
-			if(fDecorators[i].validate())
-				return;
-		}
-	}
+        new GenericServerComposite( parent, fDecorators );
+    }
 
+    private String getServerDefinitionId() {
+        String currentDefinition = null;
+        if( getRuntimeDelegate() != null )
+            currentDefinition = getRuntimeDelegate().getRuntime()
+                    .getRuntimeType().getId();
+        if( currentDefinition != null && currentDefinition.length() > 0 )
+        {
+            return currentDefinition;
+        }
+        return null;
+    }
 
-	private String createName()
-	{
-	    RuntimeDelegate dl = getRuntimeDelegate();
-	    IRuntimeType runtimeType = dl.getRuntime().getRuntimeType();
-	    String name = GenericServerUIMessages.bind(GenericServerUIMessages.runtimeName,runtimeType.getName());
-		IRuntime[] list = ServerCore.getRuntimes();
-		int suffix = 1;
-		String suffixName=name;
-		for(int i=0;i<list.length;i++)
-	    {
-	        if((list[i].getName().equals(name)|| list[i].getName().equals(suffixName))&& !list[i].equals(dl.getRuntime()))
-	            suffix++;
-	        suffixName= name+" "+suffix; //$NON-NLS-1$
-	    }
-	    
-		if(suffix>1)
-		    return suffixName;
-	    return name;
-	}
-	
-	private GenericServerRuntime getRuntimeDelegate(){
-		IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
-		if (wc == null)
-			return null;
-		return (GenericServerRuntime) wc.loadAdapter(GenericServerRuntime.class, new NullProgressMonitor());
-	}
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.wst.server.ui.wizard.IWizardFragment#enter()
+     */
+    public void enter() {
+        if( getRuntimeDelegate() != null )
+            getRuntimeDelegate().getRuntimeWorkingCopy().setName( createName() );
+
+        for( int i = 0; i < fDecorators.length; i++ )
+        {
+            if( fDecorators[i].validate() )
+                return;
+        }
+    }
+
+    public void exit() {
+        // validate to save latest values
+        for( int i = 0; i < fDecorators.length; i++ )
+        {
+            if( fDecorators[i].validate() )
+                return;
+        }
+    }
+
+    private String createName() {
+        RuntimeDelegate dl = getRuntimeDelegate();
+        IRuntimeType runtimeType = dl.getRuntime().getRuntimeType();
+        String name = GenericServerUIMessages.bind(
+                GenericServerUIMessages.runtimeName, runtimeType.getName() );
+        IRuntime[] list = ServerCore.getRuntimes();
+        int suffix = 1;
+        String suffixName = name;
+        for( int i = 0; i < list.length; i++ )
+        {
+            if( (list[i].getName().equals( name ) || list[i].getName().equals(
+                    suffixName ))
+                    && !list[i].equals( dl.getRuntime() ) )
+                suffix++;
+            suffixName = name + ' ' + suffix;
+        }
+
+        if( suffix > 1 )
+            return suffixName;
+        return name;
+    }
+
+    private GenericServerRuntime getRuntimeDelegate() {
+        IRuntimeWorkingCopy wc = (IRuntimeWorkingCopy) getTaskModel()
+                .getObject( TaskModel.TASK_RUNTIME );
+        if( wc == null )
+            return null;
+        return (GenericServerRuntime) wc.loadAdapter(
+                GenericServerRuntime.class, new NullProgressMonitor() );
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jst.server.generic.internal.ui.ServerDefinitionTypeAwareWizardFragment#description()
      */
     public String description() {
         String rName = getRuntimeName();
-        if(rName == null || rName.length()<1)
-            rName="Generic";       //$NON-NLS-1$
-        return  GenericServerUIMessages.bind(GenericServerUIMessages.runtimeWizardDescription,rName);
+        if( rName == null || rName.length() < 1 )
+            rName = "Generic"; //$NON-NLS-1$
+        return GenericServerUIMessages.bind(
+                GenericServerUIMessages.runtimeWizardDescription, rName );
     }
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jst.server.generic.internal.ui.ServerDefinitionTypeAwareWizardFragment#title()
      */
     public String title() {
         String rName = getRuntimeName();
-        if(rName == null || rName.length()<1)
-            rName="Generic"; //$NON-NLS-1$
-       return GenericServerUIMessages.bind(GenericServerUIMessages.runtimeWizardTitle,rName);
+        if( rName == null || rName.length() < 1 )
+            rName = "Generic"; //$NON-NLS-1$
+        return GenericServerUIMessages.bind(
+                GenericServerUIMessages.runtimeWizardTitle, rName );
     }
-    
-    private String getRuntimeName()
-    {
-       if(getRuntimeDelegate()!=null && getRuntimeDelegate().getRuntime()!=null)
+
+    private String getRuntimeName() {
+        if( getRuntimeDelegate() != null
+                && getRuntimeDelegate().getRuntime() != null )
             return getRuntimeDelegate().getRuntime().getName();
         return null;
     }
-    
+
 }

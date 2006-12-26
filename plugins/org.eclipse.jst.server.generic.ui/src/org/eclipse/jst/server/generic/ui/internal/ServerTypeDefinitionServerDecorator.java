@@ -30,9 +30,12 @@ public class ServerTypeDefinitionServerDecorator extends
 	}
 
 	public boolean validate() {
-		if(fServer!=null)
+        IStatus status = null;
+        if(fServer!=null)
+        {
 			fServer.setServerInstanceProperties(getValues());
-		IStatus status = fServer.validate();
+			status = fServer.validate();
+        }
 		if(status==null || status.isOK())
 		{
 			fWizard.setMessage(null, IMessageProvider.NONE);

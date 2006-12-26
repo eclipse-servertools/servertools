@@ -36,7 +36,7 @@ public class ServerPropertiesEditorSection extends ServerEditorSection{
 	private GenericServer fServer;
 	private PropertyChangeListener fPropertyChangeListener;
 	private Map fControls = new HashMap();
-    private boolean fUpdating = false;
+    private boolean fUpdating;
     
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
