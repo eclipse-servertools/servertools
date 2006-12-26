@@ -438,7 +438,7 @@ public class GenericServerBehaviour extends ServerBehaviourDelegate {
 	    	}
         	int port = sp.getPort();
     		if (port != 80)
-    			url += ":" + port;
+    			url += ":" + port; //$NON-NLS-1$
     		ping = new PingThread(getServer(), url, this);
     	} catch (Exception e) {
     		Trace.trace(Trace.SEVERE, "Can't ping for server startup."); //$NON-NLS-1$
