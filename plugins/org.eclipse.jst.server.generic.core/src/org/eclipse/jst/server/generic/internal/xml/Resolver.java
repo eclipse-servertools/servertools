@@ -10,8 +10,6 @@
 
 package org.eclipse.jst.server.generic.internal.xml;
 
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -22,13 +20,14 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.variables.IDynamicVariable;
 import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.jst.server.generic.core.internal.CorePlugin;
-import org.eclipse.jst.server.generic.servertype.definition.ArchiveType;
 import org.eclipse.jst.server.generic.servertype.definition.Property;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 
 /**
- * Utility to resolve serverdef properties with the user provided data.
- * 
+ * Utility to resolve serverdef/runtimedef properties with the user provided data.
+ * Resolver also looks through eclipse platform provided dynamic variables to 
+ * resolve a property. 
+ *
  * @author Gorkem Ercan
  */
 public class Resolver {
@@ -38,7 +37,8 @@ public class Resolver {
 	private static final String PROP_START = "${"; //$NON-NLS-1$
 	private Map fPropertyValues = new HashMap();
 	private ServerRuntime server;
-	/**
+	
+    /**
 	 * @param runtime 
 	 */
 	public Resolver(ServerRuntime runtime) {
@@ -46,23 +46,8 @@ public class Resolver {
 	}
 	
 	/**
-	 * Resolves a classpath element.
-	 * 
-	 * @param cpList
-	 * @return list
-	 */
-	public List resolveClasspathProperties(List cpList)
-	{
-		ArrayList list = new ArrayList(cpList.size());
-		for (int i = 0; i < cpList.size(); i++) {
-			ArchiveType item = (ArchiveType) cpList.get(i);
-			String cpath = resolveProperties(item.getPath());
-			list.add(cpath);
-		}
-		return list;
-	}	
-	/**
 	 * Returns a resolved string.
+     * 
 	 * @param proppedString
 	 * @return resolved string
 	 */
@@ -158,14 +143,11 @@ public class Resolver {
 			+ PROP_START
 			+ str.substring(start+2);
 	}
-	
+    
 	/**
-	 * @return Returns the fPropertyValues.
-	 */
-	public Map getPropertyValues() {
-		return fPropertyValues;
-	}
-	/**
+     * Set the name value pairs that the receiver resolver instance
+     * uses to resolve serverdef/runtimedef properties.
+     * 
 	 * @param propertyValues The fPropertyValues to set.
 	 */
 	public void setPropertyValues(Map propertyValues) {

@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
 import org.eclipse.ant.internal.ui.IAntUIConstants;
 import org.eclipse.ant.internal.ui.launchConfigurations.IAntLaunchConfigurationConstants;
 import org.eclipse.core.runtime.CoreException;
@@ -30,6 +29,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
@@ -108,8 +108,6 @@ public class AntPublisher extends GenericPublisher {
 				return null;
 			assembleModule(monitor);
 			File file = computeBuildFile();
-			if (monitor.isCanceled())
-				return null;
 			runAnt(file.toString(), getPublishTargetsForModule(), getPublishProperties(), monitor);
 		} catch (CoreException e) {
 			IStatus s = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.errorPublishAntpublisher, e);
@@ -308,8 +306,11 @@ public class AntPublisher extends GenericPublisher {
 
 		setupAntLaunchConfiguration(wc);
 
-		ILaunchConfiguration launchConfig = wc.doSave();
-		launchConfig.launch("run", monitor); //$NON-NLS-1$
+        if ( !monitor.isCanceled() )
+        {
+            ILaunchConfiguration launchConfig = wc.doSave();          
+            launchConfig.launch(ILaunchManager.RUN_MODE, monitor, false, true);
+        }    
 	}
 
 	/**
