@@ -41,10 +41,20 @@ public class Factory {
 		Element element = document.createElement(s);
 		try {
 			Node child = node.getFirstChild();
-			for (int i = 0; i < index; i++)
+			while (child != null && !s.equals(child.getNodeName())) {
 				child = child.getNextSibling();
-	
-			node.insertBefore(element, child);
+			}
+			for (int i = 0; child != null && i < index; i++) {
+				child = child.getNextSibling();
+				while (child != null && !s.equals(child.getNodeName())) {
+					child = child.getNextSibling();
+				}
+			}
+			// TODO Try to improve formating, maybe dup an appropriate text node
+			if (child != null)
+				node.insertBefore(element, child);
+			else
+				node.appendChild(element);
 		} catch (Exception e) {
 			node.appendChild(element);
 		}

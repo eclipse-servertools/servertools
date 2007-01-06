@@ -39,6 +39,14 @@ public class Engine extends XMLElement {
 		return (Host) findElement("Host");
 	}
 	
+	public Host getHost(int index) {
+		return (Host) findElement("Host", index);
+	}
+	
+	public int getHostCount() {
+		return sizeOfElement("Host");
+	}
+	
 	public String getName() {
 		return getAttributeValue("name");
 	}

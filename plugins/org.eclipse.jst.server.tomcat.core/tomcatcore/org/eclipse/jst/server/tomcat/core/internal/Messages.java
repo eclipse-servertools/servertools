@@ -74,6 +74,13 @@ public class Messages extends NLS {
 	public static String errorDuplicateContextRoot;
 	public static String errorCouldNotLoadContextXml;
 	public static String errorNoProfiler;
+	public static String errorXMLServiceNotFound;
+	public static String errorXMLNoService;
+	public static String errorXMLEngineNotFound;
+	public static String errorXMLHostNotFound;
+	public static String errorXMLContextNotFoundPath;
+	public static String errorXMLContextMangerNotFound;
+	public static String errorXMLContextNotFoundPath32;
 	public static String configurationEditorActionModifyPortDescription;
 	public static String configurationEditorActionModifyPort;
 	public static String configurationEditorActionModifyMimeMappingDescription;
