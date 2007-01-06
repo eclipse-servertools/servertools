@@ -46,6 +46,9 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 	protected String policyFile;
 	protected boolean isPolicyDirty;
 
+	protected String propertiesFile;
+	protected boolean isPropertiesDirty;
+	
 	/**
 	 * Tomcat50Configuration constructor.
 	 * 
@@ -172,7 +175,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 	public void load(IPath path, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(Messages.loadingTask, 5);
+			monitor.beginTask(Messages.loadingTask, 6);
 			
 			// check for catalina.policy to verify that this is a v5.0 config
 			InputStream in = new FileInputStream(path.append("catalina.policy").toFile());
@@ -192,21 +195,15 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 			monitor.worked(1);
 			
 			// load policy file
-			BufferedReader br = null;
-			try {
-				br = new BufferedReader(new InputStreamReader(new FileInputStream(path.append("catalina.policy").toFile())));
-				String temp = br.readLine();
-				policyFile = "";
-				while (temp != null) {
-					policyFile += temp + "\n";
-					temp = br.readLine();
-				}
-			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Could not load policy file", e);
-			} finally {
-				if (br != null)
-					br.close();
-			}
+			policyFile = TomcatVersionHelper.getFileContents(new FileInputStream(path.append("catalina.policy").toFile()));
+			monitor.worked(1);
+
+			// load properties file
+			File file = path.append("catalina.properties").toFile();
+			if (file.exists())
+				propertiesFile = TomcatVersionHelper.getFileContents(new FileInputStream(file));
+			else
+				propertiesFile = null;
 			monitor.worked(1);
 			
 			if (monitor.isCanceled())
@@ -218,6 +215,9 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 		}
 	}
 
+	/**
+	 * @see TomcatConfiguration#importFromPath(IPath, boolean, IProgressMonitor)
+	 */
 	public void importFromPath(IPath path, boolean isTestEnv, IProgressMonitor monitor) throws CoreException {
 		load(path, monitor);
 		
@@ -244,7 +244,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 	public void load(IFolder folder, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(Messages.loadingTask, 800);
+			monitor.beginTask(Messages.loadingTask, 1000);
 	
 			// check for catalina.policy to verify that this is a v4.0 config
 			IFile file = folder.getFile("catalina.policy");
@@ -274,23 +274,19 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 			// load catalina.policy
 			file = folder.getFile("catalina.policy");
 			in = file.getContents();
-			BufferedReader br = null;
-			try {
-				br = new BufferedReader(new InputStreamReader(in));
-				String temp = br.readLine();
-				policyFile = "";
-				while (temp != null) {
-					policyFile += temp + "\n";
-					temp = br.readLine();
-				}
-			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Could not load policy file", e);
-			} finally {
-				if (br != null)
-					br.close();
-			}
+			policyFile = TomcatVersionHelper.getFileContents(in);
 			monitor.worked(200);
-	
+
+			// load catalina.properties
+			file = folder.getFile("catalina.properties");
+			if (file.exists()) {
+				in = file.getContents();
+				propertiesFile = TomcatVersionHelper.getFileContents(in);
+			}
+			else
+				propertiesFile = null;
+			monitor.worked(200);
+			
 			if (monitor.isCanceled())
 				throw new Exception("Cancelled");
 			monitor.done();
@@ -310,7 +306,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 	protected void save(IPath path, boolean forceDirty, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(Messages.savingTask, 3);
+			monitor.beginTask(Messages.savingTask, 4);
 	
 			// make sure directory exists
 			if (!path.toFile().exists()) {
@@ -340,8 +336,15 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 				bw.close();
 			}
 			monitor.worked(1);
+			if (propertiesFile != null && (forceDirty || isPropertiesDirty)) {
+				BufferedWriter bw = new BufferedWriter(new FileWriter(path.append("catalina.properties").toFile()));
+				bw.write(propertiesFile);
+				bw.close();
+			}
+			monitor.worked(1);
 			isServerDirty = false;
 			isPolicyDirty = false;
+			isPropertiesDirty = false;
 	
 			if (monitor.isCanceled())
 				return;
@@ -352,6 +355,13 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 		}
 	}
 	
+	/**
+	 * Save to the given directory.  All files are forced to be saved.
+	 * 
+	 * @param path desination path for the files
+	 * @param monitor a progress monitor
+	 * @exception CoreException
+	 */
 	public void save(IPath path, IProgressMonitor monitor) throws CoreException {
 		save(path, true, monitor);
 	}
@@ -366,7 +376,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 	public void save(IFolder folder, IProgressMonitor monitor) throws CoreException {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
-			monitor.beginTask(Messages.savingTask, 900);
+			monitor.beginTask(Messages.savingTask, 1100);
 	
 			// save server.xml
 			byte[] data = serverFactory.getContents();
@@ -401,7 +411,21 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 				//file.setContents(in, true, true, ProgressUtil.getSubMonitorFor(monitor, 200));
 			else
 				file.create(in, true, ProgressUtil.getSubMonitorFor(monitor, 200));
-	
+
+			// save catalina.properties
+			if (propertiesFile != null) {
+				in = new ByteArrayInputStream(propertiesFile.getBytes());
+				file = folder.getFile("catalina.properties");
+				if (file.exists())
+					monitor.worked(200);
+					//file.setContents(in, true, true, ProgressUtil.getSubMonitorFor(monitor, 200));
+				else
+					file.create(in, true, ProgressUtil.getSubMonitorFor(monitor, 200));
+			}
+			else {
+				monitor.worked(200);
+			}
+			
 			if (monitor.isCanceled())
 				return;
 			monitor.done();

@@ -186,6 +186,9 @@ public class Tomcat41Configuration extends TomcatConfiguration {
 		return list;
 	}
 	
+	/**
+	 * @see org.eclipse.jst.server.tomcat.core.internal.TomcatConfiguration#importFromPath(org.eclipse.core.runtime.IPath, boolean, org.eclipse.core.runtime.IProgressMonitor)
+	 */
 	public void importFromPath(IPath path, boolean isTestEnv, IProgressMonitor monitor) throws CoreException {
 		load(path, monitor);
 		
@@ -232,21 +235,7 @@ public class Tomcat41Configuration extends TomcatConfiguration {
 			monitor.worked(1);
 		
 			// load policy file
-			BufferedReader br = null;
-			try {
-				br = new BufferedReader(new InputStreamReader(new FileInputStream(path.append("catalina.policy").toFile())));
-				String temp = br.readLine();
-				policyFile = "";
-				while (temp != null) {
-					policyFile += temp + "\n";
-					temp = br.readLine();
-				}
-			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Could not load policy file", e);
-			} finally {
-				if (br != null)
-					br.close();
-			}
+			policyFile = TomcatVersionHelper.getFileContents(new FileInputStream(path.append("catalina.policy").toFile()));
 			monitor.worked(1);
 	
 			if (monitor.isCanceled())
@@ -294,21 +283,7 @@ public class Tomcat41Configuration extends TomcatConfiguration {
 			// load catalina.policy
 			file = folder.getFile("catalina.policy");
 			in = file.getContents();
-			BufferedReader br = null;
-			try {
-				br = new BufferedReader(new InputStreamReader(in));
-				String temp = br.readLine();
-				policyFile = "";
-				while (temp != null) {
-					policyFile += temp + "\n";
-					temp = br.readLine();
-				}
-			} catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Could not load policy file", e);
-			} finally {
-				if (br != null)
-					br.close();
-			}
+			policyFile = TomcatVersionHelper.getFileContents(in);
 			monitor.worked(200);
 	
 			if (monitor.isCanceled())
@@ -373,6 +348,13 @@ public class Tomcat41Configuration extends TomcatConfiguration {
 		}
 	}
 	
+	/**
+	 * Save to the given directory.  All files are forced to be saved.
+	 * 
+	 * @param path desination path for the files
+	 * @param monitor a progress monitor
+	 * @exception CoreException
+	 */
 	public void save(IPath path, IProgressMonitor monitor) throws CoreException {
 		save(path, true, monitor);
 	}
