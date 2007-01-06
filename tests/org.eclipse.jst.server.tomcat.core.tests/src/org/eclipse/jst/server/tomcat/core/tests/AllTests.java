@@ -11,6 +11,7 @@
 package org.eclipse.jst.server.tomcat.core.tests;
 
 import org.eclipse.jst.server.tomcat.core.tests.internal.UtilTestCase;
+import org.eclipse.jst.server.tomcat.core.tests.internal.XmlTestCase;
 import org.eclipse.jst.server.tomcat.core.tests.module.DeleteModuleTestCase;
 import org.eclipse.jst.server.tomcat.core.tests.module.ModuleTestCase;
 
@@ -75,6 +76,7 @@ public class AllTests {
 		}
 		
 		suite.addTestSuite(UtilTestCase.class);
+		suite.addTestSuite(XmlTestCase.class);
 		
 		suite.addTest(new OrderedTestSuite(DeleteModuleTestCase.class));
 		//$JUnit-END$
