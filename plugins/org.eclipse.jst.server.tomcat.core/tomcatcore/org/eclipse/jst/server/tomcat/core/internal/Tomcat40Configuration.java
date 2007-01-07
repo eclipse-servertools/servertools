@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2005, 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,23 +10,34 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.core.internal;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.tomcat.core.internal.xml.Factory;
 import org.eclipse.jst.server.tomcat.core.internal.xml.XMLUtil;
-import org.eclipse.jst.server.tomcat.core.internal.xml.server40.*;
+import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Connector;
+import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Context;
+import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Server;
+import org.eclipse.jst.server.tomcat.core.internal.xml.server40.ServerInstance;
+import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Service;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.server.core.ServerPort;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
-
-import org.eclipse.wst.server.core.ServerPort;
 /**
  * Tomcat v4.0 server configuration.
  */
@@ -38,6 +49,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	protected static final String APACHE_CONNECTOR = "org.apache.catalina.connector.warp.WarpConnector";
 
 	protected Server server;
+	protected ServerInstance serverInstance;
 	protected Factory serverFactory;
 	protected boolean isServerDirty;
 
@@ -65,7 +77,8 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 		Iterator iterator = getServerPorts().iterator();
 		while (iterator.hasNext()) {
 			ServerPort port = (ServerPort) iterator.next();
-			if (port.getName().equals("HTTP Connector"))
+			// Return only an HTTP port from the selected Service
+			if (port.getName().equals("HTTP Connector") && port.getId().indexOf('/') < 0)
 				return port;
 		}
 		return null;
@@ -97,6 +110,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	
 		// add connectors
 		try {
+			String instanceServiceName = serverInstance.getService().getName();
 			int size = server.getServiceCount();
 			for (int i = 0; i < size; i++) {
 				Service service = server.getService(i);
@@ -132,8 +146,13 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 							advanced = false;
 					} else if (APACHE_CONNECTOR.equals(className))
 						name = "Apache Connector";
+					String portId;
+					if (instanceServiceName != null && instanceServiceName.equals(service.getName()))
+						portId = Integer.toString(i);
+					else
+						portId = i +"/" + j;
 					if (className != null && className.length() > 0)
-						ports.add(new ServerPort(i + "/" + j, name, port, protocol, contentTypes, advanced));
+						ports.add(new ServerPort(portId, name, port, protocol, contentTypes, advanced));
 				}
 			}
 		} catch (Exception e) {
@@ -150,23 +169,17 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 		List list = new ArrayList();
 	
 		try {
-			int size = server.getServiceCount();
-			for (int i = 0; i < size; i++) {
-				Service service = server.getService(i);
-				if (service.getName().equalsIgnoreCase(DEFAULT_SERVICE)) {
-					Engine engine = service.getEngine();
-					Host host = engine.getHost();
-					int size2 = host.getContextCount();
-					for (int j = 0; j < size2; j++) {
-						Context context = host.getContext(j);
-						String reload = context.getReloadable();
-						if (reload == null)
-							reload = "false";
-						WebModule module = new WebModule(context.getPath(), 
-							context.getDocBase(), context.getSource(),
-							reload.equalsIgnoreCase("true") ? true : false);
-						list.add(module);
-					}
+			Context [] contexts = serverInstance.getContexts();
+			if (contexts != null) {
+				for (int i = 0; i < contexts.length; i++) {
+					Context context = contexts[i];
+					String reload = context.getReloadable();
+					if (reload == null)
+						reload = "false";
+					WebModule module = new WebModule(context.getPath(), 
+						context.getDocBase(), context.getSource(),
+						reload.equalsIgnoreCase("true") ? true : false);
+					list.add(module);
 				}
 			}
 		} catch (Exception e) {
@@ -176,7 +189,25 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	}
 	
 	/**
-	 * @see org.eclipse.jst.server.tomcat.core.internal.TomcatConfiguration#importFromPath(org.eclipse.core.runtime.IPath, boolean, org.eclipse.core.runtime.IProgressMonitor)
+	 * @see TomcatConfiguration#getServerWorkDirectory(IPath)
+	 */
+	public IPath getServerWorkDirectory(IPath basePath) {
+		return serverInstance.getHostWorkDirectory(basePath);
+	}
+
+	/**
+	 * @see TomcatConfiguration#getContextWorkDirectory(IPath, ITomcatWebModule)
+	 */
+	public IPath getContextWorkDirectory(IPath basePath, ITomcatWebModule module) {
+		Context context = serverInstance.getContext(module.getPath());
+		if (context != null)
+			return serverInstance.getContextWorkDirectory(basePath, context);
+		
+		return null;
+	}
+
+	/**
+	 * @see TomcatConfiguration#importFromPath(IPath, boolean, IProgressMonitor)
 	 */
 	public void importFromPath(IPath path, boolean isTestEnv, IProgressMonitor monitor) throws CoreException {
 		load(path, monitor);
@@ -184,16 +215,8 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 		// for test environment, remove existing contexts since a separate
 		// catalina.base will be used
 		if (isTestEnv) {
-			int size = server.getServiceCount();
-			for (int i = 0; i < size; i++) {
-				Service service = server.getService(i);
-				if (service.getName().equalsIgnoreCase(DEFAULT_SERVICE)) {
-					Host host = service.getEngine().getHost();
-					int size2 = host.getContextCount();
-					for (int j = 0; j < size2; j++) {
-						host.removeElement("Context", 0);
-					}
-				}
+			while (serverInstance.removeContext(0)) {
+				// no-op
 			}
 		}
 	}
@@ -215,6 +238,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 			serverFactory = new Factory();
 			serverFactory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server40");
 			server = (Server) serverFactory.loadDocument(new FileInputStream(path.append("server.xml").toFile()));
+			serverInstance = new ServerInstance(server, null, null);
 			monitor.worked(1);
 
 			webAppDocument = new WebAppDocument(path.append("web.xml"));
@@ -255,6 +279,7 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 			serverFactory = new Factory();
 			serverFactory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server40");
 			server = (Server) serverFactory.loadDocument(in);
+			serverInstance = new ServerInstance(server, null, null);
 			monitor.worked(200);
 	
 			// load web.xml
@@ -416,22 +441,15 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	 */
 	public void addWebModule(int index, ITomcatWebModule module) {
 		try {
-			int size = server.getServiceCount();
-			for (int i = 0; i < size; i++) {
-				Service service = server.getService(i);
-				if (service.getName().equalsIgnoreCase(DEFAULT_SERVICE)) {
-					Engine engine = service.getEngine();
-					Host host = engine.getHost();
-					Context context = (Context) host.createElement(index, "Context");
-					context.setDocBase(module.getDocumentBase());
-					context.setPath(module.getPath());
-					context.setReloadable(module.isReloadable() ? "true" : "false");
-					if (module.getMemento() != null && module.getMemento().length() > 0)
-						context.setSource(module.getMemento());
-					isServerDirty = true;
-					firePropertyChangeEvent(ADD_WEB_MODULE_PROPERTY, null, module);
-					return;
-				}
+			Context context = serverInstance.createContext(index);
+			if (context != null) {
+				context.setDocBase(module.getDocumentBase());
+				context.setPath(module.getPath());
+				context.setReloadable(module.isReloadable() ? "true" : "false");
+				if (module.getMemento() != null && module.getMemento().length() > 0)
+					context.setSource(module.getMemento());
+				isServerDirty = true;
+				firePropertyChangeEvent(ADD_WEB_MODULE_PROPERTY, null, module);
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error adding web module " + module.getPath(), e);
@@ -465,14 +483,27 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 			}
 	
 			int i = id.indexOf("/");
-			int servNum = Integer.parseInt(id.substring(0, i));
-			int connNum = Integer.parseInt(id.substring(i + 1));
-			
-			Service service = server.getService(servNum);
-			Connector connector = service.getConnector(connNum);
-			connector.setPort(port + "");
-			isServerDirty = true;
-			firePropertyChangeEvent(MODIFY_PORT_PROPERTY, id, new Integer(port));
+			// If a connector in the instance Service
+			if (i < 0) {
+				int connNum = Integer.parseInt(id);
+				Connector connector = serverInstance.getConnector(connNum);
+				if (connector != null) {
+					connector.setPort(port + "");
+					isServerDirty = true;
+					firePropertyChangeEvent(MODIFY_PORT_PROPERTY, id, new Integer(port));
+				}
+			}
+			// Else a connector in another Service
+			else {
+				int servNum = Integer.parseInt(id.substring(0, i));
+				int connNum = Integer.parseInt(id.substring(i + 1));
+				
+				Service service = server.getService(servNum);
+				Connector connector = service.getConnector(connNum);
+				connector.setPort(port + "");
+				isServerDirty = true;
+				firePropertyChangeEvent(MODIFY_PORT_PROPERTY, id, new Integer(port));
+			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error modifying server port " + id, e);
 		}
@@ -486,21 +517,14 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	 */
 	public void modifyWebModule(int index, String docBase, String path, boolean reloadable) {
 		try {
-			int size = server.getServiceCount();
-			for (int i = 0; i < size; i++) {
-				Service service = server.getService(i);
-				if (service.getName().equalsIgnoreCase(DEFAULT_SERVICE)) {
-					Engine engine = service.getEngine();
-					Host host = engine.getHost();
-					Context context = host.getContext(index);
-					context.setPath(path);
-					context.setDocBase(docBase);
-					context.setReloadable(reloadable ? "true" : "false");
-					isServerDirty = true;
-					WebModule module = new WebModule(path, docBase, null, reloadable);
-					firePropertyChangeEvent(MODIFY_WEB_MODULE_PROPERTY, new Integer(index), module);
-					return;
-				}
+			Context context = serverInstance.getContext(index);
+			if (context != null) {
+				context.setPath(path);
+				context.setDocBase(docBase);
+				context.setReloadable(reloadable ? "true" : "false");
+				isServerDirty = true;
+				WebModule module = new WebModule(path, docBase, null, reloadable);
+				firePropertyChangeEvent(MODIFY_WEB_MODULE_PROPERTY, new Integer(index), module);
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error modifying web module " + index, e);
@@ -522,54 +546,37 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	 */
 	public void removeWebModule(int index) {
 		try {
-			int size = server.getServiceCount();
-			for (int i = 0; i < size; i++) {
-				Service service = server.getService(i);
-				if (service.getName().equalsIgnoreCase(DEFAULT_SERVICE)) {
-					Engine engine = service.getEngine();
-					Host host = engine.getHost();
-					host.removeElement("Context", index);
-					isServerDirty = true;
-					firePropertyChangeEvent(REMOVE_WEB_MODULE_PROPERTY, null, new Integer(index));
-					return;
-				}
-			}
+			serverInstance.removeContext(index);
+			isServerDirty = true;
+			firePropertyChangeEvent(REMOVE_WEB_MODULE_PROPERTY, null, new Integer(index));
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error removing module ref " + index, e);
 		}
 	}
 
-	protected IStatus prepareRuntimeDirectory(IPath confDir) {
-		Trace.trace(Trace.FINER, "Preparing runtime directory");
-		// Prepare a catalina.base directory structure
-		File temp = confDir.append("conf").toFile();
-		if (!temp.exists())
-			temp.mkdirs();
-		temp = confDir.append("logs").toFile();
-		if (!temp.exists())
-			temp.mkdirs();
-		temp = confDir.append("temp").toFile();
-		if (!temp.exists())
-			temp.mkdirs();
-		IPath tempPath = confDir.append("webapps/ROOT/WEB-INF");
-		temp = tempPath.toFile();
-		if (!temp.exists())
-			temp.mkdirs();
-		temp = tempPath.append("web.xml").toFile();
-		if (!temp.exists()) {
-			FileWriter fw;
-			try {
-				fw = new FileWriter(temp);
-				fw.write(DEFAULT_WEBXML_SERVLET23);
-				fw.close();
-			} catch (IOException e) {
-				Trace.trace(Trace.WARNING, "Unable to create web.xml for ROOT context.", e);
-			}
-		}
-		temp = confDir.append("work").toFile();
-		if (!temp.exists())
-			temp.mkdirs();
-		
-		return Status.OK_STATUS;		
+	/**
+	 * Cleanup the server instance.  This consists of deleting the work
+	 * directory associated with Contexts that are going away in the
+	 * up coming publish.
+	 * 
+	 * @param baseDir path to server instance directory, i.e. catalina.base
+	 * @param installDir path to server installation directory (not currently used)
+	 * @param monitor a progress monitor or null
+	 * @return MultiStatus containing results of the cleanup operation
+	 */
+	protected IStatus cleanupServer(IPath baseDir, IPath installDir, IProgressMonitor monitor) {
+		List modules = getWebModules();
+		return TomcatVersionHelper.cleanupCatalinaServer(baseDir, installDir, modules, monitor);
+	}
+
+	/**
+	 * Prepare server runtime directory. Create catalina instance set of
+	 * directories.
+	 * 
+	 * @param baseDir directory at which to prepare the runtime directory.
+	 * @return result of creation operation 
+	 */
+	protected IStatus prepareRuntimeDirectory(IPath baseDir) {
+		return TomcatVersionHelper.createCatalinaInstanceDirectory(baseDir, DEFAULT_WEBXML_SERVLET23);
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -313,9 +313,33 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	
 	protected abstract void load(IFolder folder, IProgressMonitor monitor) throws CoreException;
 	
+	/**
+	 * @see ITomcatConfigurationWorkingCopy#addWebModule(int, ITomcatWebModule)
+	 */
 	public abstract void addWebModule(int index, ITomcatWebModule module);
 	
+	/**
+	 * @see ITomcatConfigurationWorkingCopy#removeWebModule(int)
+	 */
 	public abstract void removeWebModule(int index);
+
+	/**
+	 * Gets the work directory for the server.
+	 * 
+	 * @param basePath path to server runtime directory
+	 * @return path for the server's work directory
+	 */
+	public abstract IPath getServerWorkDirectory(IPath basePath);
+
+	/**
+	 * Gets the work directory for the specified module on the
+	 * server.
+	 * 
+	 * @param basePath path to server runtime directory
+	 * @param module a Tomcat web module
+	 * @return path for the module's work directory on the server
+	 */
+	public abstract IPath getContextWorkDirectory(IPath basePath, ITomcatWebModule module);
 
 	/**
 	 * Return a string representation of this object.

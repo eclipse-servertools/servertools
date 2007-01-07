@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2005, 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,12 +12,15 @@ package org.eclipse.jst.server.tomcat.core.internal;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.*;
+import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.jst.server.tomcat.core.internal.xml.Factory;
 import org.eclipse.jst.server.tomcat.core.internal.xml.XMLUtil;
 import org.eclipse.jst.server.tomcat.core.internal.xml.server32.*;
@@ -34,7 +37,16 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	protected static final String APACHE_HANDLER = "org.apache.tomcat.service.connector.Ajp12ConnectionHandler";
 	protected static final String SSL_SOCKET_FACTORY = "org.apache.tomcat.net.SSLSocketFactory";
 
+	/**
+	 * Sting containing contents for a default web.xml for Servlet 2.2.
+	 */
+	public static final String DEFAULT_WEBXML_SERVLET22 = 
+		"<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" +
+		"<!DOCTYPE web-app PUBLIC \"-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN\" \"http://java.sun.com/j2ee/dtds/web-app_2_2.dtd\">\n" +
+		"<web-app>\n</web-app>";
+	
 	protected Server server;
+	protected ServerInstance serverInstance;
 	protected Factory serverFactory;
 	protected boolean isServerDirty;
 
@@ -105,44 +117,46 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 		List ports = new ArrayList();
 	
 		try {
-			int count = server.getContextManager().getConnectorCount();
-			for (int i = 0; i < count; i++) {
-				Connector connector = server.getContextManager().getConnector(i);
-				int paramCount = connector.getParameterCount();
-				String handler = null;
-				String name = Messages.portUnknown;
-				String socketFactory = null;
-				String protocol = "TCPIP";
-				boolean advanced = true;
-				String[] contentTypes = null;
-				int port = -1;
-				for (int j = 0; j < paramCount; j++) {
-					Parameter p = connector.getParameter(j);
-					if ("port".equals(p.getName())) {
-						try {
-							port = Integer.parseInt(p.getValue());
-						} catch (Exception e) {
-							// ignore
-						}
-					} else if ("handler".equals(p.getName()))
-						handler = p.getValue();
-					else if ("socketFactory".equals(p.getName()))
-						socketFactory = p.getValue();
-				}
-				if (HTTP_HANDLER.equals(handler)) {
-					protocol = "HTTP";
-					contentTypes = new String[] { "web", "webservices" };
-					if (SSL_SOCKET_FACTORY.equals(socketFactory)) {
-						protocol = "SSL";
-						name = "SSL Connector";
-					} else {
-						name = "HTTP Connector";
-						advanced = false;
+			Connector [] connectors = serverInstance.getConnectors();
+			if (connectors != null) {
+				for (int i = 0; i < connectors.length; i++) {
+					Connector connector = connectors[i];
+					int paramCount = connector.getParameterCount();
+					String handler = null;
+					String name = Messages.portUnknown;
+					String socketFactory = null;
+					String protocol = "TCPIP";
+					boolean advanced = true;
+					String[] contentTypes = null;
+					int port = -1;
+					for (int j = 0; j < paramCount; j++) {
+						Parameter p = connector.getParameter(j);
+						if ("port".equals(p.getName())) {
+							try {
+								port = Integer.parseInt(p.getValue());
+							} catch (Exception e) {
+								// ignore
+							}
+						} else if ("handler".equals(p.getName()))
+							handler = p.getValue();
+						else if ("socketFactory".equals(p.getName()))
+							socketFactory = p.getValue();
 					}
-				} else if (APACHE_HANDLER.equals(handler))
-					name = "Apache Connector";
-				if (handler != null)
-					ports.add(new ServerPort(i + "", name, port, protocol, contentTypes, advanced));
+					if (HTTP_HANDLER.equals(handler)) {
+						protocol = "HTTP";
+						contentTypes = new String[] { "web", "webservices" };
+						if (SSL_SOCKET_FACTORY.equals(socketFactory)) {
+							protocol = "SSL";
+							name = "SSL Connector";
+						} else {
+							name = "HTTP Connector";
+							advanced = false;
+						}
+					} else if (APACHE_HANDLER.equals(handler))
+						name = "Apache Connector";
+					if (handler != null)
+						ports.add(new ServerPort(i + "", name, port, protocol, contentTypes, advanced));
+				}
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error getting server ports", e);
@@ -168,18 +182,18 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 		List list = new ArrayList();
 	
 		try {
-			ContextManager contextManager = server.getContextManager();
-	
-			int size = contextManager.getContextCount();
-			for (int i = 0; i < size; i++) {
-				Context context = contextManager.getContext(i);
-				String reload = context.getReloadable();
-				if (reload == null)
-					reload = "false";
-				WebModule module = new WebModule(context.getPath(), 
-					context.getDocBase(), context.getSource(),
-					reload.equalsIgnoreCase("true") ? true : false);
-				list.add(module);
+			Context [] contexts = serverInstance.getContexts();
+			if (contexts != null) {
+				for (int i = 0; i < contexts.length; i++) {
+					Context context = contexts[i];
+					String reload = context.getReloadable();
+					if (reload == null)
+						reload = "false";
+					WebModule module = new WebModule(context.getPath(), 
+						context.getDocBase(), context.getSource(),
+						reload.equalsIgnoreCase("true") ? true : false);
+					list.add(module);
+				}
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error getting project refs", e);
@@ -188,6 +202,24 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 		return list;
 	}
 	
+	/**
+	 * @see TomcatConfiguration#getServerWorkDirectory(IPath)
+	 */
+	public IPath getServerWorkDirectory(IPath basePath) {
+		return serverInstance.getServerWorkDirectory(basePath);
+	}
+
+	/**
+	 * @see TomcatConfiguration#getContextWorkDirectory(IPath, ITomcatWebModule)
+	 */
+	public IPath getContextWorkDirectory(IPath basePath, ITomcatWebModule module) {
+		Context context = serverInstance.getContext(module.getPath());
+		if (context != null)
+			return serverInstance.getContextWorkDirectory(basePath, context);
+		
+		return null;
+	}
+
 	/**
 	 * @see TomcatConfiguration#load(IPath, IProgressMonitor)
 	 */
@@ -206,6 +238,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 			serverFactory = new Factory();
 			serverFactory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server32");
 			server = (Server) serverFactory.loadDocument(new FileInputStream(path.append("server.xml").toFile()));
+			serverInstance = new ServerInstance(server);
 			monitor.worked(1);
 	
 			webAppDocument = new WebAppDocument(path.append("web.xml"));
@@ -229,6 +262,21 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	}
 	
 	/**
+	 * @see TomcatConfiguration#importFromPath(IPath, boolean, IProgressMonitor)
+	 */
+	public void importFromPath(IPath path, boolean isTestEnv, IProgressMonitor monitor) throws CoreException {
+		load(path, monitor);
+		
+		// for test environment, remove existing contexts since an instance
+		// directory relative to server.xml will be used
+		if (isTestEnv) {
+			while (serverInstance.removeContext(0)) {
+				// no-op
+			}
+		}
+	}
+
+	/**
 	 * @see TomcatConfiguration#load(IFolder, IProgressMonitor)
 	 */
 	public void load(IFolder folder, IProgressMonitor monitor) throws CoreException {
@@ -247,6 +295,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 			serverFactory = new Factory();
 			serverFactory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server32");
 			server = (Server) serverFactory.loadDocument(in);
+			serverInstance = new ServerInstance(server);
 			monitor.worked(200);
 	
 			// load web.xml
@@ -414,9 +463,8 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	 */
 	public void addWebModule(int index, ITomcatWebModule module) {
 		try {
-			ContextManager contextManager = server.getContextManager();
-			Context context = (Context) contextManager.createElement(index, "Context");
-	
+			Context context = serverInstance.createContext(index);
+
 			context.setPath(module.getPath());
 			context.setDocBase(module.getDocumentBase());
 			context.setReloadable(module.isReloadable() ? "true" : "false");
@@ -486,7 +534,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	public void modifyServerPort(String id, int port) {
 		try {
 			int con = Integer.parseInt(id);
-			Connector connector = server.getContextManager().getConnector(con);
+			Connector connector = serverInstance.getConnector(con);
 	
 			int size = connector.getParameterCount();
 			for (int i = 0; i < size; i++) {
@@ -512,8 +560,7 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	 */
 	public void modifyWebModule(int index, String docBase, String path, boolean reloadable) {
 		try {
-			ContextManager contextManager = server.getContextManager();
-			Context context = contextManager.getContext(index);
+			Context context = serverInstance.getContext(index);
 			context.setPath(path);
 			context.setDocBase(docBase);
 			context.setReloadable(reloadable ? "true" : "false");
@@ -540,12 +587,126 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	 */
 	public void removeWebModule(int index) {
 		try {
-			ContextManager contextManager = server.getContextManager();
-			contextManager.removeElement("Context", index);
+			serverInstance.removeContext(index);
 			isServerDirty = true;
 			firePropertyChangeEvent(REMOVE_WEB_MODULE_PROPERTY, null, new Integer(index));
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error removing web module " + index, e);
 		}
+	}
+
+	protected IStatus cleanupServer(IPath confDir, IPath installDir, IProgressMonitor monitor) {
+		MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, Messages.cleanupServerTask, null);
+		monitor = ProgressUtil.getMonitorFor(monitor);
+		monitor.beginTask(Messages.cleanupServerTask, 200);
+
+		try {
+			monitor.subTask(Messages.detectingRemovedProjects);
+
+			// Try to read old server configuration
+			Factory factory = new Factory();
+			factory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server32");
+			File serverFile = confDir.append("conf").append("server.xml").toFile();
+			if (serverFile.exists()) {
+				Server oldServer = (Server) factory.loadDocument(new FileInputStream(serverFile));
+				ServerInstance oldInstance = new ServerInstance(oldServer);
+				
+				// Collect paths of old web modules managed by WTP
+				Set oldPaths = new HashSet();
+				Context [] contexts = oldInstance.getContexts();
+				if (contexts != null) {
+					for (int i = 0; i < contexts.length; i++) {
+						String source = contexts[i].getSource();
+						if (source != null && source.length() > 0 )	{
+							oldPaths.add(contexts[i].getPath());
+						}
+					}
+				}
+
+				// Remove paths for web modules that are staying around
+				List modules = getWebModules();
+				int size = modules.size();
+				for (int i = 0; i < size; i++) {
+					WebModule module = (WebModule) modules.get(i);
+					oldPaths.remove(module.getPath());
+				}
+				monitor.worked(100);
+
+				// Delete work directories for managed web modules that have gone away
+				if (oldPaths.size() > 0 ) {
+					IProgressMonitor subMonitor = ProgressUtil.getSubMonitorFor(monitor, 100);
+					subMonitor.beginTask(Messages.deletingContextFilesTask, oldPaths.size() * 100);
+					
+					Iterator iter = oldPaths.iterator();
+					while (iter.hasNext()) {
+						String oldPath = (String)iter.next();
+						
+						// Delete work directory associated with the removed context if it is within confDir.
+						// If it is outside of confDir, assume user is going to manage it.
+						Context ctx = oldInstance.getContext(oldPath);
+						IPath ctxWorkPath = oldInstance.getContextWorkDirectory(confDir, ctx);
+						if (confDir.isPrefixOf(ctxWorkPath)) {
+							File ctxWorkDir = ctxWorkPath.toFile();
+							if (ctxWorkDir.exists() && ctxWorkDir.isDirectory()) {
+								IStatus [] results = PublishUtil.deleteDirectory(ctxWorkDir, ProgressUtil.getSubMonitorFor(monitor, 100));
+								if (results.length > 0) {
+									Trace.trace(Trace.SEVERE, "Could not delete work directory " + ctxWorkDir.getPath() + " for removed context " + oldPath);
+									for (int i = 0; i < results.length; i++) {
+										ms.add(results[i]);
+									}
+								}
+							}
+							else
+								monitor.worked(100);
+						}
+						else
+							monitor.worked(100);
+					}
+					subMonitor.done();
+				} else {
+					monitor.worked(100);
+				}
+			}
+			// Else no server.xml.  Assume first publish to new temp directory
+			else {
+				monitor.worked(200);
+			}
+			Trace.trace(Trace.FINER, "Server cleaned");
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Could not cleanup server at " + confDir.toOSString() + ": " + e.getMessage());
+			ms.add(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0,
+					NLS.bind(Messages.errorCleanupServer, new String[] {e.getLocalizedMessage()}), e));
+		}
+		
+		monitor.done();
+		return ms;
+	}
+	
+	protected IStatus prepareRuntimeDirectory(IPath confDir) {
+		Trace.trace(Trace.FINER, "Preparing runtime directory");
+		// Prepare instance directory structure that is relative to server.xml
+		File temp = confDir.append("conf").toFile();
+		if (!temp.exists())
+			temp.mkdirs();
+		IPath tempPath = confDir.append("webapps/ROOT/WEB-INF");
+		temp = tempPath.toFile();
+		if (!temp.exists())
+			temp.mkdirs();
+		temp = tempPath.append("web.xml").toFile();
+		if (!temp.exists()) {
+			FileWriter fw;
+			try {
+				fw = new FileWriter(temp);
+				fw.write(DEFAULT_WEBXML_SERVLET22);
+				fw.close();
+			} catch (IOException e) {
+				Trace.trace(Trace.WARNING, "Unable to create web.xml for ROOT context.", e);
+			}
+		}
+		temp = confDir.append("work").toFile();
+		if (!temp.exists())
+			temp.mkdirs();
+
+		return Status.OK_STATUS;		
 	}
 }
