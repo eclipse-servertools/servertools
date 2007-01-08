@@ -18,6 +18,7 @@ import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
+import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.swt.SWT;
@@ -122,10 +123,8 @@ public class TasksComposite extends Composite {
 				checkbox.setSelection(sti.isSelected());
 		}
 		
-		if (size == 0) {
-			Label label = new Label(this, SWT.NONE);
-			label.setText(Messages.wizTaskNone);
-		}
+		if (size == 0)
+			Trace.trace(Trace.SEVERE, "Task composite appeared with no tasks!");
 		
 		Dialog.applyDialogFont(this);
 		layout(true, true);

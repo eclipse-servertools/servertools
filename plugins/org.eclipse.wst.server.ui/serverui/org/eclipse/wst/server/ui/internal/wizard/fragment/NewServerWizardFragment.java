@@ -35,14 +35,14 @@ public class NewServerWizardFragment extends WizardFragment {
 	protected NewServerComposite comp;
 	protected IModule module;
 	protected String launchMode;
-	
+
 	protected Map fragmentMap = new HashMap();
 	protected Map configMap = new HashMap();
-	
+
 	public NewServerWizardFragment() {
 		// do nothing
 	}
-	
+
 	public NewServerWizardFragment(IModule module, String launchMode) {
 		this.module = module;
 		this.launchMode = launchMode;
@@ -124,13 +124,13 @@ public class NewServerWizardFragment extends WizardFragment {
 			}*/
 		}
 	}
-	
+
 	public boolean isComplete() {
 		if (comp == null)
 			return false;
 		return comp.getServer() != null; 
 	}
-	
+
 	public IServerWorkingCopy getServer() {
 		if (comp == null)
 			return null;

@@ -26,19 +26,4 @@
        id="wst.web"
        name="%moduleTypeStaticWebName"/>
   </extension>
-
-  <extension point="org.eclipse.wst.server.core.launchableAdapters">
-    <launchableAdapter
-      class="org.eclipse.wst.server.core.internal.NullLaunchableAdapterDelegate"
-      id="org.eclipse.wst.server.core.null"/>
-  </extension>
-
-  <extension point="org.eclipse.wst.server.core.clients">
-    <client
-      id="org.eclipse.wst.server.core.null"
-      name="%clientNoneLabel"
-      description="%clientNoneDescription"
-      launchable="org.eclipse.wst.server.core.util.NullModuleArtifact"
-      class="org.eclipse.wst.server.core.internal.NullClientDelegate"/>
-  </extension>
 </plugin>

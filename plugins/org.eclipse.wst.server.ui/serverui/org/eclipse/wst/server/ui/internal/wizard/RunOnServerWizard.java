@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,13 +16,16 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerAttributes;
 import org.eclipse.wst.server.core.TaskModel;
+import org.eclipse.wst.server.core.internal.IClient;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment;
+import org.eclipse.wst.server.ui.internal.wizard.fragment.OptionalClientWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
@@ -30,14 +33,20 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
  */
 public class RunOnServerWizard extends TaskWizard {
 	protected static NewServerWizardFragment task;
+	protected static OptionalClientWizardFragment fragment;
+
+	public RunOnServerWizard(IModule module, String launchMode) {
+		this(module, launchMode, null);
+	}
 
 	/**
 	 * RunOnServerWizard constructor comment.
 	 * 
 	 * @param module a module
 	 * @param launchMode a launch mode
+	 * @param moduleArtifact a module artifact
 	 */
-	public RunOnServerWizard(final IModule module, final String launchMode) {
+	public RunOnServerWizard(final IModule module, final String launchMode, final IModuleArtifact moduleArtifact) {
 		super(Messages.wizRunOnServerTitle, new WizardFragment() {
 			protected void createChildFragments(List list) {
 				task = new NewServerWizardFragment(module, launchMode);
@@ -62,9 +71,11 @@ public class RunOnServerWizard extends TaskWizard {
 						}
 					}
 				});
+				//fragment = new OptionalClientWizardFragment(moduleArtifact, launchMode);
+				//list.add(fragment);
 			}
 		});
-	
+		
 		setNeedsProgressMonitor(true);
 		if (ILaunchManager.DEBUG_MODE.equals(launchMode))
 			setWindowTitle(Messages.wizDebugOnServerTitle);
@@ -74,7 +85,7 @@ public class RunOnServerWizard extends TaskWizard {
 
 	/**
 	 * Return the server.
-	 * @return org.eclipse.wst.server.core.IServer
+	 * @return the server
 	 */
 	public IServer getServer() {
 		try {
@@ -83,10 +94,18 @@ public class RunOnServerWizard extends TaskWizard {
 			return null;
 		}
 	}
-	
+
 	public boolean isPreferredServer() {
 		if (task == null)
 			return false;
 		return task.isPreferredServer();
+	}
+
+	/**
+	 * Return the selected client.
+	 * @return the client
+	 */
+	public IClient getSelectedClient() {
+		return fragment.getSelectedClient();
 	}
 }

@@ -113,7 +113,7 @@ public class TasksWizardFragment extends WizardFragment {
 	}
 
 	protected void createChildFragments(List list) {
-		if (tasks == null)
+		if (tasks == null || tasks.isEmpty())
 			return;
 		
 		int TASKS_PER_PAGE = 5;
@@ -146,7 +146,7 @@ public class TasksWizardFragment extends WizardFragment {
 			tasks = null;
 			return;
 		}
-
+		
 		IServerAttributes server = (IServerAttributes) getTaskModel().getObject(TaskModel.TASK_SERVER);
 		List modules = (List) getTaskModel().getObject(TaskModel.TASK_MODULES);
 		
@@ -158,7 +158,7 @@ public class TasksWizardFragment extends WizardFragment {
 					return true;
 				}
 			}, null);
-
+			
 			modules = moduleList;
 		}
 		
@@ -209,10 +209,6 @@ public class TasksWizardFragment extends WizardFragment {
 		sti.setDefaultSelected(selected);
 		
 		return sti;
-	}
-
-	public boolean hasComposite() {
-		return false;
 	}
 
 	/**

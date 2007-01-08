@@ -40,17 +40,17 @@ public class TasksLayout extends Layout {
 		Control[] children = composite.getChildren();
 		Rectangle r = composite.getClientArea();
 		
-		int y = r.y;
+		int y = r.y + 5;
 		if (children != null) {
 			int size = children.length;
 			for (int i = 0; i < size; i++) {
 				if (i % 2 == 0) {
-					int h = children[i].computeSize(r.width, SWT.DEFAULT).y;
-					children[i].setBounds(r.x, y, r.width, h);
+					int h = children[i].computeSize(r.width - 10, SWT.DEFAULT).y;
+					children[i].setBounds(r.x + 5, y, r.width - 10, h);
 					y += h + verticalSpacing;
 				} else {
-					int h = Math.max(50, children[i].computeSize(r.width - 20, SWT.DEFAULT).y);
-					children[i].setBounds(r.x + 20, y, r.width - 20, h);
+					int h = Math.max(50, children[i].computeSize(r.width - 30, SWT.DEFAULT).y);
+					children[i].setBounds(r.x + 25, y, r.width - 30, h);
 					y += h + verticalSpacing;
 				}
 			}
