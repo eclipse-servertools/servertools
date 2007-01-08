@@ -26,10 +26,10 @@ public class ModifyModulesWizard extends TaskWizard {
 	static class ModifyModulesWizard2 extends WizardFragment {
 		protected void createChildFragments(List list) {
 			list.add(new ModifyModulesWizardFragment());
+			list.add(WizardTaskUtil.SaveServerFragment);
+			
 			list.add(new WizardFragment() {
 				public void performFinish(IProgressMonitor monitor) throws CoreException {
-					WizardTaskUtil.saveServer(getTaskModel(), monitor);
-					
 					IServerAttributes svr = (IServerAttributes) getTaskModel().getObject(TaskModel.TASK_SERVER);
 					if (svr instanceof IServer) {
 						IServer server = (IServer) svr;

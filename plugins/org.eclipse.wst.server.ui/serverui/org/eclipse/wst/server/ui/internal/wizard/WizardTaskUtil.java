@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,15 +21,65 @@ import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
 import org.eclipse.wst.server.ui.internal.EclipseUtil;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * 
  */
 public class WizardTaskUtil {
+	public static final String TASK_LAUNCHABLE_ADAPTER = "launchableAdapter";
+	public static final String TASK_LAUNCHABLE = "launchable";
+	public static final String TASK_CLIENT = "client";
+	public static final String TASK_CLIENTS = "clients";
+	public static final String TASK_DEFAULT_SERVER = "defaultServer";
+	public static final String TASK_MODE = "mode";
+	public static final String TASK_HAS_TASKS = "hasTasks";
+	public static final String TASK_HAS_CLIENTS = "hasClients";
+
+	public static final byte MODE_EXISTING = 0;
+	public static final byte MODE_DETECT = 1;
+	public static final byte MODE_MANUAL = 2;
+
+	public static final WizardFragment SaveRuntimeFragment = new WizardFragment() {
+		public void performFinish(IProgressMonitor monitor) throws CoreException {
+			WizardTaskUtil.saveRuntime(getTaskModel(), monitor);
+		}
+	};
+
+	public static final WizardFragment SaveServerFragment = new WizardFragment() {
+		public void performFinish(IProgressMonitor monitor) throws CoreException {
+			WizardTaskUtil.saveServer(getTaskModel(), monitor);
+		}
+	};
+
+	public static final WizardFragment TempSaveRuntimeFragment = new WizardFragment() {
+		public void performFinish(IProgressMonitor monitor) throws CoreException {
+			WizardTaskUtil.tempSaveRuntime(getTaskModel(), monitor);
+		}
+	};
+
+	public static final WizardFragment TempSaveServerFragment = new WizardFragment() {
+		public void performFinish(IProgressMonitor monitor) throws CoreException {
+			WizardTaskUtil.tempSaveServer(getTaskModel(), monitor);
+		}
+	};
+
+	public static final WizardFragment SaveHostnameFragment = new WizardFragment() {
+		public void performFinish(IProgressMonitor monitor) throws CoreException {
+			try {
+				IServerAttributes server2 = (IServerAttributes) getTaskModel().getObject(TaskModel.TASK_SERVER);
+				ServerUIPlugin.getPreferences().addHostname(server2.getHost());
+			} catch (Exception e) {
+				// ignore
+			}
+		}
+	};
+
 	private WizardTaskUtil() {
 		// do nothing
 	}
-	
+
 	public static void saveRuntime(TaskModel taskModel, IProgressMonitor monitor) throws CoreException {
 		IRuntime runtime = (IRuntime) taskModel.getObject(TaskModel.TASK_RUNTIME);
 		if (runtime != null && runtime instanceof IRuntimeWorkingCopy) {
@@ -62,7 +112,7 @@ public class WizardTaskUtil {
 			}
 		}
 	}
-	
+
 	public static void tempSaveRuntime(TaskModel taskModel, IProgressMonitor monitor) throws CoreException {
 		IRuntime runtime = (IRuntime) taskModel.getObject(TaskModel.TASK_RUNTIME);
 		if (runtime != null && runtime instanceof IRuntimeWorkingCopy) {
@@ -74,7 +124,7 @@ public class WizardTaskUtil {
 			taskModel.putObject(TaskModel.TASK_RUNTIME, runtime.createWorkingCopy());
 		}
 	}
-	
+
 	public static void tempSaveServer(TaskModel taskModel, IProgressMonitor monitor) throws CoreException {
 		IServer server = (IServer) taskModel.getObject(TaskModel.TASK_SERVER);
 		if (server != null && server instanceof IServerWorkingCopy) {
@@ -105,7 +155,7 @@ public class WizardTaskUtil {
 			taskModel.putObject(TaskModel.TASK_SERVER, workingCopy);
 		}
 	}
-	
+
 	public static void addModule(IModule module, TaskModel taskModel, IProgressMonitor monitor) throws CoreException {
 		if (module == null)
 			return;
@@ -136,7 +186,7 @@ public class WizardTaskUtil {
 		workingCopy.modifyModules(new IModule[] { parentModule }, new IModule[0], monitor);
 		taskModel.putObject(TaskModel.TASK_SERVER, workingCopy.save(false, monitor));
 	}
-	
+
 	public static void modifyModules(List add, List remove, TaskModel taskModel, IProgressMonitor monitor) throws CoreException {
 		if ((add == null || add.isEmpty()) && (remove == null || remove.isEmpty()))
 			return;

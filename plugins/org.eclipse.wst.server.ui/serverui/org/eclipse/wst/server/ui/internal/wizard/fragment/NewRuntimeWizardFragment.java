@@ -24,19 +24,17 @@ import org.eclipse.swt.widgets.Composite;
  * 
  */
 public class NewRuntimeWizardFragment extends WizardFragment {
-	protected NewRuntimeComposite page;
-	
 	// filter by type/version
 	protected String type;
 	protected String version;
-	
+
 	// filter by partial runtime type id
 	protected String runtimeTypeId;
-	
+
 	public NewRuntimeWizardFragment() {
 		// do nothing
 	}
-	
+
 	public NewRuntimeWizardFragment(String type, String version, String runtimeTypeId) {
 		this.type = type;
 		this.version = version;
@@ -51,8 +49,7 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 	 * @see org.eclipse.wst.server.ui.internal.task.WizardTask#getWizardPage()
 	 */
 	public Composite createComposite(Composite parent, IWizardHandle wizard) {
-		page = new NewRuntimeComposite(parent, wizard, getTaskModel(), type, version, runtimeTypeId);
-		return page;
+		return new NewRuntimeComposite(parent, wizard, getTaskModel(), type, version, runtimeTypeId);
 	}
 
 	protected void createChildFragments(List list) {

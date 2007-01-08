@@ -340,7 +340,7 @@ public class TaskWizard implements IWizard {
 						fragmentData.put(fragment, page2);
 						addPage(page2);
 					}
-				}	
+				}
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error adding fragments to wizard", e);
@@ -348,7 +348,7 @@ public class TaskWizard implements IWizard {
 			addingPages = false;
 		}
 	}
-	
+
 	/*private static void updateWizardPages() {
 		try {
 			current.updatePages();
@@ -357,7 +357,7 @@ public class TaskWizard implements IWizard {
 			Trace.trace(Trace.SEVERE, "Error updating wizard pages", e);
 		}
 	}*/
-	
+
 	private TaskWizardPage getFragmentData(WizardFragment fragment) {
 		try {
 			TaskWizardPage page = (TaskWizardPage) fragmentData.get(fragment);
@@ -369,7 +369,7 @@ public class TaskWizard implements IWizard {
 		
 		return null;
 	}
-	
+
 	protected void updatePages() {
 		addPages();
 	}

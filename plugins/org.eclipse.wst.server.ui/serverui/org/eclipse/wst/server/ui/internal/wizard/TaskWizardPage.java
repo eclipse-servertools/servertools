@@ -31,6 +31,7 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 	protected WizardFragment fragment;
 	
 	protected boolean isEmptyError = false;
+	protected boolean isCreated = false;
 
 	public TaskWizardPage(WizardFragment fragment) {
 		super(fragment.toString());
@@ -55,6 +56,9 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 		//data.heightHint = convertVerticalDLUsToPixels(350);
 		comp.setLayoutData(data);
 		setControl(comp);
+		
+		isCreated = true;
+		update();
 	}
 
 	public boolean isPageComplete() {
@@ -115,6 +119,9 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 	}
 
 	public void update() {
+		if (!isCreated)
+			return;
+		
 		fragment.updateChildFragments();
 		((TaskWizard) getWizard()).updatePages();
 		

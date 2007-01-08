@@ -10,35 +10,19 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.wizard;
 
-import java.util.List;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerAttributes;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.core.internal.IClient;
+import org.eclipse.wst.server.core.internal.ILaunchableAdapter;
 import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
-import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
-import org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment;
-import org.eclipse.wst.server.ui.internal.wizard.fragment.OptionalClientWizardFragment;
-import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
-import org.eclipse.wst.server.ui.wizard.WizardFragment;
+import org.eclipse.wst.server.ui.internal.wizard.fragment.RunOnServerWizardFragment;
 /**
- * A wizard used to select a server from various lists.
+ * A wizard used for Run on Server.
  */
 public class RunOnServerWizard extends TaskWizard {
-	protected static NewServerWizardFragment task;
-	protected static OptionalClientWizardFragment fragment;
-
-	public RunOnServerWizard(IModule module, String launchMode) {
-		this(module, launchMode, null);
-	}
-
 	/**
 	 * RunOnServerWizard constructor comment.
 	 * 
@@ -46,66 +30,128 @@ public class RunOnServerWizard extends TaskWizard {
 	 * @param launchMode a launch mode
 	 * @param moduleArtifact a module artifact
 	 */
-	public RunOnServerWizard(final IModule module, final String launchMode, final IModuleArtifact moduleArtifact) {
-		super(Messages.wizRunOnServerTitle, new WizardFragment() {
-			protected void createChildFragments(List list) {
-				task = new NewServerWizardFragment(module, launchMode);
-				list.add(task);
-				list.add(new WizardFragment() {
-					public void performFinish(IProgressMonitor monitor) throws CoreException {
-						WizardTaskUtil.tempSaveRuntime(getTaskModel(), monitor);
-						WizardTaskUtil.tempSaveServer(getTaskModel(), monitor);
-					}
-				});
-				list.add(new ModifyModulesWizardFragment(module));
-				list.add(new TasksWizardFragment());
-				list.add(new WizardFragment() {
-					public void performFinish(IProgressMonitor monitor) throws CoreException {
-						WizardTaskUtil.saveRuntime(getTaskModel(), monitor);
-						WizardTaskUtil.saveServer(getTaskModel(), monitor);
-						try {
-							IServerAttributes server = (IServerAttributes) getTaskModel().getObject(TaskModel.TASK_SERVER);
-							ServerUIPlugin.getPreferences().addHostname(server.getHost());
-						} catch (Exception e) {
-							// ignore
-						}
-					}
-				});
-				//fragment = new OptionalClientWizardFragment(moduleArtifact, launchMode);
-				//list.add(fragment);
-			}
-		});
+	public RunOnServerWizard(IModule module, String launchMode, IModuleArtifact moduleArtifact) {
+		super(Messages.wizRunOnServerTitle, new RunOnServerWizardFragment(module, launchMode, moduleArtifact));
 		
 		setNeedsProgressMonitor(true);
 		if (ILaunchManager.DEBUG_MODE.equals(launchMode))
 			setWindowTitle(Messages.wizDebugOnServerTitle);
 		else if (ILaunchManager.PROFILE_MODE.equals(launchMode))
 			setWindowTitle(Messages.wizProfileOnServerTitle);
+		getTaskModel().putObject(TaskModel.TASK_LAUNCH_MODE, launchMode);
+	}
+
+	/**
+	 * RunOnServerWizard constructor comment.
+	 * 
+	 * @param server a server
+	 * @param launchMode a launch mode
+	 * @param moduleArtifact a module artifact
+	 */
+	public RunOnServerWizard(IServer server, String launchMode, IModuleArtifact moduleArtifact) {
+		super(Messages.wizRunOnServerTitle, new RunOnServerWizardFragment(server, launchMode, moduleArtifact));
+		
+		setNeedsProgressMonitor(true);
+		if (ILaunchManager.DEBUG_MODE.equals(launchMode))
+			setWindowTitle(Messages.wizDebugOnServerTitle);
+		else if (ILaunchManager.PROFILE_MODE.equals(launchMode))
+			setWindowTitle(Messages.wizProfileOnServerTitle);
+		
+		getTaskModel().putObject(TaskModel.TASK_SERVER, server);
+		getTaskModel().putObject(TaskModel.TASK_LAUNCH_MODE, launchMode);
+		addPages();
 	}
 
 	/**
 	 * Return the server.
+	 * 
 	 * @return the server
 	 */
 	public IServer getServer() {
 		try {
-			return (IServer) getRootFragment().getTaskModel().getObject(TaskModel.TASK_SERVER);
+			return (IServer) getTaskModel().getObject(TaskModel.TASK_SERVER);
 		} catch (Exception e) {
 			return null;
 		}
 	}
 
+	/**
+	 * Return if the user wants to use the server as a default.
+	 * 
+	 * @return true if the server should be the default
+	 */
 	public boolean isPreferredServer() {
-		if (task == null)
+		try {
+			Boolean b = (Boolean) getTaskModel().getObject(WizardTaskUtil.TASK_DEFAULT_SERVER);
+			return b.booleanValue();
+		} catch (Exception e) {
 			return false;
-		return task.isPreferredServer();
+		}
 	}
 
 	/**
 	 * Return the selected client.
+	 * 
 	 * @return the client
 	 */
 	public IClient getSelectedClient() {
-		return fragment.getSelectedClient();
+		try {
+			return (IClient) getTaskModel().getObject(WizardTaskUtil.TASK_CLIENT);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	/**
+	 * Return the launchable adapter.
+	 * 
+	 * @return the adapter
+	 */
+	public ILaunchableAdapter getLaunchableAdapter() {
+		try {
+			return (ILaunchableAdapter) getTaskModel().getObject(WizardTaskUtil.TASK_LAUNCHABLE_ADAPTER);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns true if this wizard should be shown to the user.
+	 * 
+	 * @return <code>true</code> if this wizard should be shown, and <code>false</code>
+	 *    otherwise
+	 */
+	public boolean shouldAppear() {
+		return getServer() == null || hasTasks() || hasClients();
+	}
+
+	/**
+	 * Return <code>true</code> if this wizard has tasks.
+	 * 
+	 * @return <code>true</code> if this wizard has tasks, and <code>false</code>
+	 *    otherwise
+	 */
+	protected boolean hasTasks() {
+		try {
+			Boolean b = (Boolean) getTaskModel().getObject(WizardTaskUtil.TASK_HAS_TASKS);
+			return b.booleanValue();
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	/**
+	 * Return <code>true</code> if this wizard has multiple clients to show.
+	 * 
+	 * @return <code>true</code> if this wizard has multiple clients, and <code>false</code>
+	 *    otherwise
+	 */
+	protected boolean hasClients() {
+		try {
+			Boolean b = (Boolean) getTaskModel().getObject(WizardTaskUtil.TASK_HAS_CLIENTS);
+			return b.booleanValue();
+		} catch (Exception e) {
+			return false;
+		}
 	}
 }

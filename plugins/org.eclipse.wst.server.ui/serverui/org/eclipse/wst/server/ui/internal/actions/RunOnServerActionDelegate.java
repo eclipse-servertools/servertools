@@ -10,7 +10,6 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal.actions;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -57,7 +56,10 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 
 	protected static Map globalLaunchMode;
 
-	protected boolean tasksRun;
+	protected boolean tasksAndClientShown;
+
+	public ILaunchableAdapter launchableAdapter;
+	public IClient client;
 
 	/**
 	 * RunOnServerActionDelegate constructor comment.
@@ -125,7 +127,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			}
 			server = wizard.getServer();
 			boolean preferred = wizard.isPreferredServer();
-			tasksRun = true;
+			tasksAndClientShown = true;
+			client = wizard.getSelectedClient();
+			launchableAdapter = wizard.getLaunchableAdapter();
 			
 			// set preferred server if requested
 			if (server != null && preferred) {
@@ -222,8 +226,10 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		if (!ServerUIPlugin.saveEditors())
 			return;
 		
-		tasksRun = false;
+		tasksAndClientShown = false;
 		IServer server2 = null;
+		client = null;
+		launchableAdapter = null;
 		try {
 			IProgressMonitor monitor = new NullProgressMonitor();
 			server2 = getServer(module, launchMode2, moduleArtifact, monitor);
@@ -254,70 +260,23 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		if (!ServerUIPlugin.promptIfDirty(shell, server))
 			return;
 		
-		if (!tasksRun) {
-			SelectTasksWizard wizard = new SelectTasksWizard(server);
-			wizard.addPages();
-			if (wizard.hasTasks() && wizard.hasOptionalTasks()) {
+		if (!tasksAndClientShown) {
+			RunOnServerWizard wizard = new RunOnServerWizard(server, launchMode2, moduleArtifact);
+			if (wizard.shouldAppear()) {
 				WizardDialog dialog = new WizardDialog(shell, wizard);
 				if (dialog.open() == Window.CANCEL)
 					return;
 			} else
 				wizard.performFinish();
+			client = wizard.getSelectedClient();
+			launchableAdapter = wizard.getLaunchableAdapter();
 		}
 		
 		Thread thread = new Thread("Run on Server") {
 			public void run() {
 				String launchMode = launchMode2;
 				
-				// get the launchable adapter and module object
-				ILaunchableAdapter launchableAdapter = null;
-				Object launchable = null;
-				ILaunchableAdapter[] adapters = ServerPlugin.getLaunchableAdapters();
-				if (adapters != null) {
-					int size2 = adapters.length;
-					IStatus lastStatus = null;
-					for (int j = 0; j < size2; j++) {
-						ILaunchableAdapter adapter = adapters[j];
-						try {
-							Object launchable2 = adapter.getLaunchable(server, moduleArtifact);
-							Trace.trace(Trace.FINEST, "adapter= " + adapter + ", launchable= " + launchable2);
-							if (launchable2 != null) {
-								launchableAdapter = adapter;
-								launchable = launchable2;
-							}
-						} catch (CoreException ce) {
-							lastStatus = ce.getStatus();
-						} catch (Exception e) {
-							Trace.trace(Trace.SEVERE, "Error in launchable adapter", e);
-						}
-					}
-					if (launchable == null && lastStatus != null) {
-						EclipseUtil.openError(null, lastStatus);
-						return;
-					}
-				}
-				if (launchable == null) {
-					launchableAdapter = new ILaunchableAdapter() {
-						public String getId() {
-							return "org.eclipse.wst.server.ui.launchable.adapter.default";
-						}
-
-						public Object getLaunchable(IServer server3, IModuleArtifact moduleArtifact2) throws CoreException {
-							return "launchable";
-						}
-					};
-					try {
-						launchable = launchableAdapter.getLaunchable(server, moduleArtifact);
-					} catch (CoreException ce) {
-						// ignore
-					}
-				}
-				
-				IClient[] clients = getClients(server, launchable, launchMode);
-				Trace.trace(Trace.FINEST, "Launchable clients: " + clients.length);
-				
-				IClient client = null;
-				if (clients == null || clients.length == 0) {
+				if (client == null) {
 					// if there is no client, use a dummy
 					client = new IClient() {
 						public String getDescription() {
@@ -340,19 +299,6 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 							return true;
 						}
 					};
-				} else if (clients.length == 1) {
-					client = clients[0];
-				} else {
-					SelectClientWizard wizard = new SelectClientWizard(clients);
-					final ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
-					shell.getDisplay().syncExec(new Runnable() {
-						public void run() {
-							dialog.open();
-						}
-					});
-					client = wizard.getSelectedClient();
-					if (client == null)
-						return;
 				}
 				
 				Trace.trace(Trace.FINEST, "Ready to launch");
@@ -461,32 +407,6 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		};
 		thread.setDaemon(true);
 		thread.start();
-	}
-
-	/**
-	 * Returns the launchable clients for the given server and launchable
-	 * object.
-	 * 
-	 * @param server org.eclipse.wst.server.core.IServer
-	 * @param launchable
-	 * @param launchMode String
-	 * @return an array of clients
-	 */
-	public static IClient[] getClients(IServer server, Object launchable, String launchMode) {
-		ArrayList list = new ArrayList(5);
-		IClient[] clients = ServerPlugin.getClients();
-		if (clients != null) {
-			int size = clients.length;
-			for (int i = 0; i < size; i++) {
-				Trace.trace(Trace.FINEST, "client= " + clients[i]);
-				if (clients[i].supports(server, launchable, launchMode))
-					list.add(clients[i]);
-			}
-		}
-		
-		IClient[] clients2 = new IClient[list.size()];
-		list.toArray(clients2);
-		return clients2;
 	}
 
 	/**

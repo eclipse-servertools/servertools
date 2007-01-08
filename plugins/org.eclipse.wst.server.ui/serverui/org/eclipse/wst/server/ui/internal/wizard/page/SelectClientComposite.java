@@ -13,9 +13,11 @@ package org.eclipse.wst.server.ui.internal.wizard.page;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.core.internal.IClient;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.internal.*;
+import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -33,6 +35,7 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
  */
 public class SelectClientComposite extends Composite {
 	protected IWizardHandle wizard;
+	protected TaskModel taskModel;
 
 	// the list of elements to select from
 	protected IClient[] clients;
@@ -51,25 +54,23 @@ public class SelectClientComposite extends Composite {
 	 * 
 	 * @param parent a parent composite
 	 * @param wizard a wizard handle
-	 * @param clients an array of clients
+	 * @param taskModel a task model
 	 */
-	public SelectClientComposite(Composite parent, IWizardHandle wizard, IClient[] clients) {
+	public SelectClientComposite(Composite parent, IWizardHandle wizard, TaskModel taskModel) {
 		super(parent, SWT.NONE);
 		this.wizard = wizard;
-		this.clients = clients;
+		this.taskModel = taskModel;
+		try {
+			clients = (IClient[]) taskModel.getObject(WizardTaskUtil.TASK_CLIENTS);
+		} catch (Exception e) {
+			// ignore
+		}
 	
 		wizard.setTitle(Messages.wizSelectClientTitle);
 		wizard.setDescription(Messages.wizSelectClientDescription);
 		wizard.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_WIZBAN_SELECT_SERVER_CLIENT));
 		
 		createControl();
-	}
-
-	/**
-	 * Clears the selected client.
-	 */
-	public void clearSelectedClient() {
-		selectedClient = null;
 	}
 
 	/**
@@ -127,15 +128,6 @@ public class SelectClientComposite extends Composite {
 	}
 
 	/**
-	 * Return the selected client.
-	 *
-	 * @return org.eclipse.wst.server.core.IClient
-	 */
-	public IClient getSelectedClient() {
-		return selectedClient;
-	}
-
-	/**
 	 * Handle the selection of a client.
 	 */
 	protected void handleSelection() {
@@ -145,18 +137,19 @@ public class SelectClientComposite extends Composite {
 		else
 			selectedClient = clients[index];
 		
+		taskModel.putObject(WizardTaskUtil.TASK_CLIENT, selectedClient);
 		if (selectedClient != null)
 			wizard.setMessage(null, IMessageProvider.NONE);
 		else
 			wizard.setMessage("", IMessageProvider.ERROR);
-	
+		
 		String desc = null;
 		if (selectedClient != null)
 			desc = selectedClient.getDescription();
 		if (desc == null)
 			desc = "";
 		description.setText(desc);
-	
+		
 		wizard.update();
 	}
 }

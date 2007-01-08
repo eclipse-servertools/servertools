@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,14 +12,10 @@ package org.eclipse.wst.server.ui.internal.wizard;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
-import org.eclipse.wst.server.core.IServerAttributes;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
@@ -41,26 +37,16 @@ public class NewServerWizard extends TaskWizard implements INewWizard {
 		super(Messages.wizNewServerWizardTitle, new WizardFragment() {
 			protected void createChildFragments(List list) {
 				list.add(new NewServerWizardFragment());
-				list.add(new WizardFragment() {
-					public void performFinish(IProgressMonitor monitor) throws CoreException {
-						WizardTaskUtil.tempSaveRuntime(getTaskModel(), monitor);
-						WizardTaskUtil.tempSaveServer(getTaskModel(), monitor);
-					}
-				});
+
+				list.add(WizardTaskUtil.TempSaveRuntimeFragment);
+				list.add(WizardTaskUtil.TempSaveServerFragment);
+				
 				list.add(new ModifyModulesWizardFragment());
 				list.add(new TasksWizardFragment());
-				list.add(new WizardFragment() {
-					public void performFinish(IProgressMonitor monitor) throws CoreException {
-						WizardTaskUtil.saveRuntime(getTaskModel(), monitor);
-						WizardTaskUtil.saveServer(getTaskModel(), monitor);
-						try {
-							IServerAttributes server = (IServerAttributes) getTaskModel().getObject(TaskModel.TASK_SERVER);
-							ServerUIPlugin.getPreferences().addHostname(server.getHost());
-						} catch (Exception e) {
-							// ignore
-						}
-					}
-				});
+				
+				list.add(WizardTaskUtil.SaveRuntimeFragment);
+				list.add(WizardTaskUtil.SaveServerFragment);
+				list.add(WizardTaskUtil.SaveHostnameFragment);
 			}
 		});
 		

@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.internal.wizard.page.NewServerComposite;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
@@ -27,14 +28,11 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
  * 
  */
 public class NewServerWizardFragment extends WizardFragment {
-	public static final String MODE = "mode";
-	public static final byte MODE_EXISTING = 0;
-	public static final byte MODE_DETECT = 1;
-	public static final byte MODE_MANUAL= 2;
+	public static final byte MODE_EXISTING = WizardTaskUtil.MODE_EXISTING;
+	public static final byte MODE_DETECT = WizardTaskUtil.MODE_DETECT;
+	public static final byte MODE_MANUAL= WizardTaskUtil.MODE_MANUAL;
 
-	protected NewServerComposite comp;
 	protected IModule module;
-	protected String launchMode;
 
 	protected Map fragmentMap = new HashMap();
 	protected Map configMap = new HashMap();
@@ -43,9 +41,8 @@ public class NewServerWizardFragment extends WizardFragment {
 		// do nothing
 	}
 
-	public NewServerWizardFragment(IModule module, String launchMode) {
+	public NewServerWizardFragment(IModule module) {
 		this.module = module;
-		this.launchMode = launchMode;
 	}
 
 	public boolean hasComposite() {
@@ -54,14 +51,14 @@ public class NewServerWizardFragment extends WizardFragment {
 
 	public void enter() {
 		super.enter();
-		getTaskModel().putObject(TaskModel.TASK_LAUNCH_MODE, launchMode);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.ui.internal.task.WizardTask#getWizardPage()
 	 */
 	public Composite createComposite(Composite parent, IWizardHandle wizard) {
-		comp = new NewServerComposite(parent, wizard, module, launchMode);
+		String launchMode = (String) getTaskModel().getObject(TaskModel.TASK_LAUNCH_MODE);
+		NewServerComposite comp = new NewServerComposite(parent, wizard, module, launchMode);
 		if (getTaskModel() != null)
 			comp.setTaskModel(getTaskModel());
 		return comp;
@@ -92,7 +89,7 @@ public class NewServerWizardFragment extends WizardFragment {
 		if (getTaskModel() == null)
 			return;
 		
-		Byte b = (Byte) getTaskModel().getObject(MODE);
+		Byte b = (Byte) getTaskModel().getObject(WizardTaskUtil.TASK_MODE);
 		if (b != null && b.byteValue() == MODE_MANUAL) {
 			IRuntime runtime = (IRuntime) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 			if (runtime != null && runtime instanceof IRuntimeWorkingCopy) {
@@ -126,20 +123,14 @@ public class NewServerWizardFragment extends WizardFragment {
 	}
 
 	public boolean isComplete() {
-		if (comp == null)
-			return false;
-		return comp.getServer() != null; 
+		return getServer() != null; 
 	}
 
-	public IServerWorkingCopy getServer() {
-		if (comp == null)
+	private IServerWorkingCopy getServer() {
+		try {
+			return (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
+		} catch (Exception e) {
 			return null;
-		return comp.getServer();
-	}
-
-	public boolean isPreferredServer() {
-		if (comp == null)
-			return false;
-		return comp.isPreferredServer();
+		}
 	}
 }

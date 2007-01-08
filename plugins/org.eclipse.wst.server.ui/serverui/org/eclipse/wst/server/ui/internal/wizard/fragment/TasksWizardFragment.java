@@ -22,6 +22,7 @@ import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.*;
 import org.eclipse.wst.server.core.model.PublishOperation;
 import org.eclipse.wst.server.ui.internal.editor.IOrdered;
+import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * 
@@ -163,12 +164,19 @@ public class TasksWizardFragment extends WizardFragment {
 		}
 		
 		if (server != null && modules != null) {
-			List taskList = new ArrayList();
+			hasOptionalTasks = false;
+			hasPreferredTasks = false;
+			List taskList = new ArrayList(5);
 			createTasks(taskList, server, modules);
 			
 			if (tasks == null || !tasks.equals(taskList)) {
 				tasks = taskList;
 				updateChildFragments();
+				
+				boolean b = tasks == null || !tasks.isEmpty();
+				if (hasOptionalTasks)
+					b = true;
+				getTaskModel().putObject(WizardTaskUtil.TASK_HAS_TASKS, new Boolean(b));
 			}
 		}
 	}
@@ -255,35 +263,5 @@ public class TasksWizardFragment extends WizardFragment {
 		if (createdWC && wc.isDirty())
 			wc.save(true, monitor);
 		monitor.done();
-	}
-
-	/**
-	 * Return <code>true</code> if this wizard has tasks.
-	 * 
-	 * @return <code>true</code> if this wizard has tasks, and <code>false</code>
-	 *    otherwise
-	 */
-	public boolean hasTasks() {
-		return tasks == null || !tasks.isEmpty();
-	}
-	
-	/**
-	 * Return <code>true</code> if this wizard has optional tasks.
-	 * 
-	 * @return <code>true</code> if this wizard has optional tasks, and
-	 *    <code>false</code> otherwise
-	 */
-	public boolean hasOptionalTasks() {
-		return hasOptionalTasks;
-	}
-
-	/**
-	 * Return <code>true</code> if this wizard has preferred tasks.
-	 * 
-	 * @return <code>true</code> if this wizard has preferred tasks, and
-	 *    <code>false</code> otherwise
-	 */
-	public boolean hasPreferredTasks() {
-		return hasPreferredTasks;
 	}
 }

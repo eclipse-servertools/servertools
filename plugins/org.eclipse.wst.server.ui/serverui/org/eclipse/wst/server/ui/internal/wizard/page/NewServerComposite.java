@@ -44,7 +44,7 @@ import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.viewers.ServerComposite;
-import org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment;
+import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 /**
  * A wizard page used to select a server.
@@ -55,9 +55,9 @@ public class NewServerComposite extends Composite {
 	protected IModule module;
 	protected String launchMode;
 	
-	protected static final byte MODE_EXISTING = 0;
-	protected static final byte MODE_DETECT = 1;
-	protected static final byte MODE_MANUAL= 2;
+	protected static final byte MODE_EXISTING = WizardTaskUtil.MODE_EXISTING;
+	protected static final byte MODE_DETECT = WizardTaskUtil.MODE_DETECT;
+	protected static final byte MODE_MANUAL = WizardTaskUtil.MODE_MANUAL;
 	protected byte mode;
 
 	protected Composite detectComp2;
@@ -72,9 +72,6 @@ public class NewServerComposite extends Composite {
 	protected StackLayout stackLayout; 
 	
 	protected String lastHostname;
-	
-	protected Button pref;
-	protected boolean preferred;
 	
 	protected IServerWorkingCopy existingWC;
 
@@ -219,16 +216,13 @@ public class NewServerComposite extends Composite {
 		
 		if (module != null) {
 			// preferred server button
-			pref = new Button(this, SWT.CHECK | SWT.WRAP);
+			final Button pref = new Button(this, SWT.CHECK | SWT.WRAP);
 			pref.setText(Messages.wizSelectServerPreferred);
 			data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_END);
-			//pref.setSelection(true);
-			//preferred = true;
-			data.horizontalSpan = 1;
 			pref.setLayoutData(data);
 			pref.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
-					preferred = pref.getSelection();
+					taskModel.putObject(WizardTaskUtil.TASK_DEFAULT_SERVER, new Boolean(pref.getSelection()));
 				}
 			});
 			PlatformUI.getWorkbench().getHelpSystem().setHelp(pref, ContextIds.SELECT_SERVER_PREFERENCE);
@@ -259,7 +253,7 @@ public class NewServerComposite extends Composite {
 		}
 		stack.layout();
 		if (taskModel != null) {
-			taskModel.putObject(NewServerWizardFragment.MODE, new Byte(mode));
+			taskModel.putObject(WizardTaskUtil.TASK_MODE, new Byte(mode));
 			updateTaskModel();
 		}
 	}
@@ -474,7 +468,7 @@ public class NewServerComposite extends Composite {
 
 	public void setTaskModel(TaskModel model) {
 		taskModel = model;
-		taskModel.putObject(NewServerWizardFragment.MODE, new Byte(mode));
+		taskModel.putObject(WizardTaskUtil.TASK_MODE, new Byte(mode));
 		updateTaskModel();
 	}
 
@@ -498,16 +492,7 @@ public class NewServerComposite extends Composite {
 		else
 			return manualComp.getRuntime();
 	}
-	
-	/**
-	 * Returns true if this server should become the preferred server.
-	 * 
-	 * @return boolean
-	 */
-	public boolean isPreferredServer() {
-		return preferred;
-	}
-	
+
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		

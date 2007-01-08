@@ -779,4 +779,78 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		list.toArray(s);
 		return s;
 	}
+
+	/**
+	 * Returns the launchable clients for the given server and launchable
+	 * object.
+	 * 
+	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param launchable
+	 * @param launchMode String
+	 * @return an array of clients
+	 */
+	public static IClient[] getClients(IServer server, Object launchable, String launchMode) {
+		if (server == null || launchable == null)
+			return new IClient[0];
+		
+		ArrayList list = new ArrayList(5);
+		IClient[] clients = ServerPlugin.getClients();
+		if (clients != null) {
+			int size = clients.length;
+			for (int i = 0; i < size; i++) {
+				Trace.trace(Trace.FINEST, "client= " + clients[i]);
+				if (clients[i].supports(server, launchable, launchMode))
+					list.add(clients[i]);
+			}
+		}
+		
+		IClient[] clients2 = new IClient[list.size()];
+		list.toArray(clients2);
+		return clients2;
+	}
+
+	public static Object[] getLaunchableAdapter(IServer server, IModuleArtifact moduleArtifact) throws CoreException {
+		ILaunchableAdapter launchableAdapter = null;
+		Object launchable = null;
+		
+		ILaunchableAdapter[] adapters = ServerPlugin.getLaunchableAdapters();
+		if (adapters != null) {
+			int size2 = adapters.length;
+			IStatus lastStatus = null;
+			for (int j = 0; j < size2; j++) {
+				ILaunchableAdapter adapter = adapters[j];
+				try {
+					Object launchable2 = adapter.getLaunchable(server, moduleArtifact);
+					Trace.trace(Trace.FINEST, "adapter= " + adapter + ", launchable= " + launchable2);
+					if (launchable2 != null) {
+						launchableAdapter = adapter;
+						launchable = launchable2;
+					}
+				} catch (CoreException ce) {
+					lastStatus = ce.getStatus();
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Error in launchable adapter", e);
+				}
+			}
+			if (launchable == null && lastStatus != null)
+				throw new CoreException(lastStatus);
+		}
+		if (launchable == null) {
+			launchableAdapter = new ILaunchableAdapter() {
+				public String getId() {
+					return "org.eclipse.wst.server.ui.launchable.adapter.default";
+				}
+
+				public Object getLaunchable(IServer server3, IModuleArtifact moduleArtifact2) throws CoreException {
+					return "launchable";
+				}
+			};
+			try {
+				launchable = launchableAdapter.getLaunchable(server, moduleArtifact);
+			} catch (CoreException ce) {
+				// ignore
+			}
+		}
+		return new Object[] { launchableAdapter, launchable };
+	}
 }

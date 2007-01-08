@@ -12,6 +12,7 @@ package org.eclipse.wst.server.ui.internal.wizard.fragment;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.internal.IClient;
+import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
 import org.eclipse.wst.server.ui.internal.wizard.page.SelectClientComposite;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
@@ -19,32 +20,27 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
  * A fragment used to select a client.
  */
 public class SelectClientWizardFragment extends WizardFragment {
-	protected IClient[] clients;
-	protected SelectClientComposite comp;
-
-	public SelectClientWizardFragment(IClient[] clients) {
+	public SelectClientWizardFragment() {
 		super();
-		this.clients = clients;
 	}
 
 	public boolean hasComposite() {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.server.ui.internal.task.WizardTask#getWizardPage()
-	 */
 	public Composite createComposite(Composite parent, IWizardHandle wizard) {
-		comp = new SelectClientComposite(parent, wizard, clients);
-		return comp;
+		return new SelectClientComposite(parent, wizard, getTaskModel());
 	}
 
-	/**
-	 * Return the selected client.
-	 * 
-	 * @return the client
-	 */
-	public IClient getSelectedClient() {
-		return comp.getSelectedClient();
+	public boolean isComplete() {
+		try {
+			IClient[] clients = (IClient[]) getTaskModel().getObject(WizardTaskUtil.TASK_CLIENTS);
+			if (clients == null || clients.length < 2)
+				return true;
+		} catch (Exception e) {
+			return true;
+		}
+		
+		return getTaskModel().getObject(WizardTaskUtil.TASK_CLIENT) != null;
 	}
 }
