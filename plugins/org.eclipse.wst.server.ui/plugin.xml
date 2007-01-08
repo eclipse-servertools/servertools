@@ -118,6 +118,26 @@
        </and>
      </enabledWhen>
   </page>
+  <page
+    id="org.eclipse.wst.server.ui.properties"
+    name="%propertiesServerInfo"
+    class="org.eclipse.wst.server.ui.internal.ServerPropertyPage">
+     <enabledWhen>
+       <and>
+         <adapt type="org.eclipse.wst.server.core.IServer"/>
+       </and>
+     </enabledWhen>
+  </page>
+  <page
+    id="org.eclipse.wst.server.ui.properties.monitor"
+    name="%propertiesMonitor"
+    class="org.eclipse.wst.server.ui.internal.view.servers.MonitorPropertyPage">
+     <enabledWhen>
+       <and>
+         <adapt type="org.eclipse.wst.server.core.IServer"/>
+       </and>
+     </enabledWhen>
+  </page>
 </extension>
 
 <extension point="org.eclipse.ui.actionSets">
@@ -187,6 +207,41 @@
       type="org.eclipse.wst.server.core.IServer"
       class="org.eclipse.wst.server.ui.internal.ServerPropertyTester">
    </propertyTester>
+   <propertyTester
+      id="org.eclipse.wst.server.ui.propertyTester"
+      namespace="org.eclipse.wst.server.ui"
+      properties="serverType"
+      type="org.eclipse.wst.server.ui.internal.view.servers.ModuleServer"
+      class="org.eclipse.wst.server.ui.internal.ServerPropertyTester">
+   </propertyTester>
+   <propertyTester
+      id="org.eclipse.wst.server.ui.propertyTester"
+      namespace="org.eclipse.wst.server.ui"
+      properties="moduleType"
+      type="org.eclipse.wst.server.core.IModule"
+      class="org.eclipse.wst.server.ui.internal.ServerPropertyTester">
+   </propertyTester>
+   <propertyTester
+      id="org.eclipse.wst.server.ui.propertyTester"
+      namespace="org.eclipse.wst.server.ui"
+      properties="moduleType"
+      type="org.eclipse.wst.server.ui.internal.view.servers.ModuleServer"
+      class="org.eclipse.wst.server.ui.internal.ServerPropertyTester">
+   </propertyTester>
+   <propertyTester
+      id="org.eclipse.wst.server.ui.propertyTester"
+      namespace="org.eclipse.wst.server.ui"
+      properties="moduleVersion"
+      type="org.eclipse.wst.server.core.IModule"
+      class="org.eclipse.wst.server.ui.internal.ServerPropertyTester">
+   </propertyTester>
+   <propertyTester
+      id="org.eclipse.wst.server.ui.propertyTester"
+      namespace="org.eclipse.wst.server.ui"
+      properties="moduleVersion"
+      type="org.eclipse.wst.server.ui.internal.view.servers.ModuleServer"
+      class="org.eclipse.wst.server.ui.internal.ServerPropertyTester">
+   </propertyTester>
 </extension>
 
   <extension point="org.eclipse.wst.server.ui.editorPages">
@@ -204,6 +259,7 @@
       class="org.eclipse.wst.server.ui.internal.ServerAdapterFactory"
       adaptableType="org.eclipse.wst.server.core.IServer">
       <adapter type="org.eclipse.ui.IActionFilter"/>
+      <adapter type="org.eclipse.ui.model.IWorkbenchAdapter"/>
     </factory>
   </extension>
 

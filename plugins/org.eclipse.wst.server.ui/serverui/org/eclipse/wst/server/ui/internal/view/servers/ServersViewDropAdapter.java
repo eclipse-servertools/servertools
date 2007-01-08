@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.ServerUtil;
@@ -103,7 +104,7 @@ public class ServersViewDropAdapter extends ViewerDropAdapter {
 		// otherwise, try Run on Server
 		final IServer finalServer = server;
 		RunOnServerActionDelegate ros = new RunOnServerActionDelegate() {
-			public IServer getServer(IModule module, String launchMode, IProgressMonitor monitor) throws CoreException {
+			public IServer getServer(IModule module, String launchMode, IModuleArtifact moduleArtifact, IProgressMonitor monitor) throws CoreException {
 				if (!ServerUIPlugin.isCompatibleWithLaunchMode(finalServer, launchMode))
 					return null;
 				

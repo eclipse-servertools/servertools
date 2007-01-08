@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.wst.server.ui.internal.wizard.ModifyModulesWizard;
@@ -28,8 +29,12 @@ import org.eclipse.wst.server.ui.internal.wizard.ModifyModulesWizard;
  * 
  */
 public class ModuleSloshAction extends AbstractServerAction {
-	public ModuleSloshAction(Shell shell, ISelectionProvider selectionProvider, String name) {
-		super(shell, selectionProvider, name);
+	public ModuleSloshAction(Shell shell, ISelectionProvider selectionProvider) {
+		super(shell, selectionProvider, Messages.actionModifyModules);
+		setToolTipText(Messages.actionModifyModulesToolTip);
+		setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ETOOL_MODIFY_MODULES));
+		setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CTOOL_MODIFY_MODULES));
+		setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DTOOL_MODIFY_MODULES));
 	}
 
 	/**
@@ -38,7 +43,7 @@ public class ModuleSloshAction extends AbstractServerAction {
 	 * @param server org.eclipse.wst.server.core.IServer
 	 */
 	public boolean accept(IServer server) {
-		return true;
+		return server.getServerType() != null;
 	}
 
 	/**

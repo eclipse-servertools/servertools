@@ -226,7 +226,7 @@ public class ServerEditor extends MultiPageEditorPart {
 			Iterator iterator = ServerEditorCore.getServerEditorPageFactories().iterator();
 			while (iterator.hasNext()) {
 				IServerEditorPartFactory factory = (IServerEditorPartFactory) iterator.next();
-				if (serverTypeId != null && factory.supportsType(serverTypeId) && factory.shouldCreatePage(server)) {
+				if (factory.supportsType(serverTypeId) && factory.shouldCreatePage(server)) {
 					Trace.trace(Trace.FINEST, "Adding page: " + factory.getId() + " " + editorPartInput);
 					try {
 						IEditorPart page = factory.createPage();
@@ -245,7 +245,8 @@ public class ServerEditor extends MultiPageEditorPart {
 				}
 			}
 			
-			setActivePage(0);
+			if (pageCount > 0)
+				setActivePage(0);
 			
 			// register for events that might change the cut/copy/paste actions
 			int count = getPageCount();

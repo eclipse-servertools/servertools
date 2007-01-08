@@ -69,7 +69,6 @@ public class ImageResource {
 	public static final String IMG_CLCL_START = "IMG_CLCL_START";
 	public static final String IMG_CLCL_START_DEBUG = "IMG_CLCL_START_DEBUG";
 	public static final String IMG_CLCL_START_PROFILE = "IMG_CLCL_START_PROFILE";
-	public static final String IMG_CLCL_RESTART = "IMG_CLCL_RESTART";
 	public static final String IMG_CLCL_STOP = "IMG_CLCL_STOP";
 	public static final String IMG_CLCL_PUBLISH = "IMG_CLCL_PUBLISH";
 	public static final String IMG_CLCL_DISCONNECT = "IMG_CLCL_DISCONNECT";
@@ -77,7 +76,6 @@ public class ImageResource {
 	public static final String IMG_ELCL_START = "IMG_ELCL_START";
 	public static final String IMG_ELCL_START_DEBUG = "IMG_ELCL_START_DEBUG";
 	public static final String IMG_ELCL_START_PROFILE = "IMG_ELCL_START_PROFILE";
-	public static final String IMG_ELCL_RESTART = "IMG_ELCL_RESTART";
 	public static final String IMG_ELCL_STOP = "IMG_ELCL_STOP";
 	public static final String IMG_ELCL_PUBLISH = "IMG_ELCL_PUBLISH";
 	public static final String IMG_ELCL_DISCONNECT = "IMG_ELCL_DISCONNECT";
@@ -85,7 +83,6 @@ public class ImageResource {
 	public static final String IMG_DLCL_START = "IMG_DLCL_START";
 	public static final String IMG_DLCL_START_DEBUG = "IMG_DLCL_START_DEBUG";
 	public static final String IMG_DLCL_START_PROFILE = "IMG_DLCL_START_PROFILE";
-	public static final String IMG_DLCL_RESTART = "IMG_DLCL_RESTART";
 	public static final String IMG_DLCL_STOP = "IMG_DLCL_STOP";
 	public static final String IMG_DLCL_PUBLISH = "IMG_DLCL_PUBLISH";
 	public static final String IMG_DLCL_DISCONNECT = "IMG_DLCL_DISCONNECT";
@@ -244,7 +241,6 @@ public class ImageResource {
 		registerImage(IMG_ELCL_START, URL_ELCL + "launch_run.gif");
 		registerImage(IMG_ELCL_START_DEBUG, URL_ELCL + "launch_debug.gif");
 		registerImage(IMG_ELCL_START_PROFILE, URL_ELCL + "launch_profile.gif");
-		registerImage(IMG_ELCL_RESTART, URL_ELCL + "launch_restart.gif");
 		registerImage(IMG_ELCL_STOP, URL_ELCL + "launch_stop.gif");
 		registerImage(IMG_ELCL_DISCONNECT, URL_ELCL + "launch_disconnect.gif");
 	
@@ -252,7 +248,6 @@ public class ImageResource {
 		registerImage(IMG_CLCL_START, URL_CLCL + "launch_run.gif");
 		registerImage(IMG_CLCL_START_DEBUG, URL_CLCL + "launch_debug.gif");
 		registerImage(IMG_CLCL_START_PROFILE, URL_CLCL + "launch_profile.gif");
-		registerImage(IMG_CLCL_RESTART, URL_CLCL + "launch_restart.gif");
 		registerImage(IMG_CLCL_STOP, URL_CLCL + "launch_stop.gif");
 		registerImage(IMG_CLCL_DISCONNECT, URL_CLCL + "launch_disconnect.gif");
 	
@@ -260,7 +255,6 @@ public class ImageResource {
 		registerImage(IMG_DLCL_START, URL_DLCL + "launch_run.gif");
 		registerImage(IMG_DLCL_START_DEBUG, URL_DLCL + "launch_debug.gif");
 		registerImage(IMG_DLCL_START_PROFILE, URL_DLCL + "launch_profile.gif");
-		registerImage(IMG_DLCL_RESTART, URL_DLCL + "launch_restart.gif");
 		registerImage(IMG_DLCL_STOP, URL_DLCL + "launch_stop.gif");
 		registerImage(IMG_DLCL_DISCONNECT, URL_DLCL + "launch_disconnect.gif");
 	

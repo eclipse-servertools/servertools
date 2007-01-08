@@ -71,59 +71,65 @@ public class ProjectPropertyPage extends PropertyPage {
 			GridLayout layout = new GridLayout();
 			layout.marginHeight = 0;
 			layout.marginWidth = 0;
-			layout.numColumns = 4;
-			layout.verticalSpacing = 10;
+			layout.numColumns = 2;
+			layout.verticalSpacing = 5;
 			composite.setLayout(layout);
 			composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 			
-			Label label = new Label(composite, SWT.WRAP);
+			/*Label label = new Label(composite, SWT.WRAP);
 			label.setText(Messages.prefProjectDescription);
 			GridData data = new GridData(GridData.FILL_HORIZONTAL);
-			data.horizontalSpan = 4;
+			data.horizontalSpan = 2;
 			data.widthHint = 200;
-			label.setLayoutData(data);
+			label.setLayoutData(data);*/
 			
 			module = ServerUtil.getModule(project);
 			if (module == null) {
-				label = new Label(composite, SWT.NONE);
+				Label label = new Label(composite, SWT.NONE);
 				label.setText(Messages.prefProjectNotModule);
-				data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-				data.horizontalSpan = 4;
+				GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+				data.horizontalSpan = 2;
+				data.verticalIndent = 5;
 				label.setLayoutData(data);
 			} else {
 				IModuleType mt = module.getModuleType();
 				if (mt != null) {
-					label = new Label(composite, SWT.NONE);
+					Label label = new Label(composite, SWT.NONE);
 					label.setText(Messages.prefProject);
-					data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+					GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+					data.verticalIndent = 5;
 					label.setLayoutData(data);
 					
 					Label moduleKind = new Label(composite, SWT.NONE);
 					data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-					data.horizontalSpan = 3;
+					data.verticalIndent = 5;
 					moduleKind.setLayoutData(data);
 					moduleKind.setText(module.getName() + " (" + mt.getName() + ")");
 				}
 				
 				defaultServer = ServerCore.getDefaultServer(module);
 				
-				label = new Label(composite, SWT.NONE);
-				label.setText(Messages.prefProjectDefaultServer);
-				data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING);
-				label.setLayoutData(data);
-				
 				final IServer[] servers = getServersBySupportedModule(module);
 				if (servers == null || servers.length == 0) {
-					label = new Label(composite, SWT.WRAP);
+					Label label = new Label(composite, SWT.WRAP);
 					label.setText(Messages.prefProjectNotConfigured);
-					data = new GridData();
-					data.horizontalSpan = 3;
+					GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+					data.horizontalSpan = 2;
+					data.verticalIndent = 5;
 					label.setLayoutData(data);
 				} else {
+					Label label = new Label(composite, SWT.NONE);
+					label.setText(Messages.prefProjectDefaultServer);
+					GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING);
+					data.horizontalSpan = 2;
+					data.verticalIndent = 5;
+					label.setLayoutData(data);
+					
 					table = new Table(composite, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
 					data = new GridData(GridData.FILL_HORIZONTAL);
-					data.horizontalSpan = 3;
-					data.heightHint = 70;
+					data.horizontalSpan = 2;
+					data.horizontalIndent = 15;
+					data.heightHint = 90;
 					table.setLayoutData(data);
 					
 					// add none option

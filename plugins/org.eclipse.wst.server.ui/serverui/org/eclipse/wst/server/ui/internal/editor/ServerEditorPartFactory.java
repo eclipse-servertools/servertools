@@ -147,11 +147,11 @@ public class ServerEditorPartFactory implements IServerEditorPartFactory {
 	 * @see IServerEditorPartFactory#supportsType(String)
 	 */
 	public boolean supportsType(String id) {
-		if (id == null || id.length() == 0)
-			return false;
-
 		String[] s = getTypeIds();
-		if (s == null)
+		if (s == null || s.length == 0 || "*".equals(s[0]))
+			return true;
+		
+		if (id == null || id.length() == 0)
 			return false;
 		
 		int size = s.length;

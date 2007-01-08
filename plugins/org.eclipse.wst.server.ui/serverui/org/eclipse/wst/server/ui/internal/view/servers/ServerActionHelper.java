@@ -20,7 +20,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.actions.NewServerWizardAction;
 import org.eclipse.swt.widgets.Shell;
@@ -77,72 +76,21 @@ public class ServerActionHelper {
 			}
 		};
 	
-		// create the debug action
-		Action debugAction = new StartAction(shell, provider, "debug", ILaunchManager.DEBUG_MODE);
-		debugAction.setToolTipText(Messages.actionDebugToolTip);
-		debugAction.setText(Messages.actionDebug);
-		debugAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_START_DEBUG));
-		debugAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_START_DEBUG));
-		debugAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_START_DEBUG));
-		menu.add(debugAction);
-	
-		// create the start action
-		Action runAction = new StartAction(shell, provider, "start", ILaunchManager.RUN_MODE);
-		runAction.setToolTipText(Messages.actionStartToolTip);
-		runAction.setText(Messages.actionStart);
-		runAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_START));
-		runAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_START));
-		runAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_START));
-		menu.add(runAction);
+		// create the start actions
+		menu.add(new StartAction(shell, provider, ILaunchManager.DEBUG_MODE));
+		menu.add(new StartAction(shell, provider, ILaunchManager.RUN_MODE));
+		menu.add(new StartAction(shell, provider, ILaunchManager.PROFILE_MODE));
 		
-		// create the profile action
-		Action profileAction = new StartAction(shell, provider, "profile", ILaunchManager.PROFILE_MODE);
-		profileAction.setToolTipText(Messages.actionProfileToolTip);
-		profileAction.setText(Messages.actionProfile);
-		profileAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_START_PROFILE));
-		profileAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_START_PROFILE));
-		profileAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_START_PROFILE));
-		menu.add(profileAction);
-	
-		// create the restart action
+		// create the restart menu
 		MenuManager menuManager = new MenuManager(Messages.actionRestart);
-		
-		Action restartAction = new RestartAction(shell, provider, "restart", ILaunchManager.RUN_MODE);
-		restartAction.setToolTipText(Messages.actionRestartToolTip);
-		restartAction.setText(Messages.actionRestart);
-		restartAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_RESTART));
-		restartAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_RESTART));
-		restartAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_RESTART));
-		menuManager.add(restartAction);
-		//menu.add(restartAction);
+		menuManager.add(new RestartAction(shell, provider, ILaunchManager.DEBUG_MODE));
+		menuManager.add(new RestartAction(shell, provider, ILaunchManager.RUN_MODE));
+		menuManager.add(new RestartAction(shell, provider, ILaunchManager.PROFILE_MODE));
 		menu.add(menuManager);
-
-		// create the stop action
-		/*Action stopAction = new StopAction(shell, provider, "stop", IServerFactory.SERVER_STATE_SET_MANAGED);
-		stopAction.setToolTipText(Messages.actionStopToolTip"));
-		stopAction.setText(Messages.actionStop"));
-		stopAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_STOP));
-		stopAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_STOP));
-		stopAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_STOP));
-		menu.add(stopAction);
-
-		// create the disconnect action
-		Action disconnectAction = new StopAction(shell, provider, "disconnect", IServerFactory.SERVER_STATE_SET_ATTACHED);
-		disconnectAction.setToolTipText(Messages.actionStopToolTip2"));
-		disconnectAction.setText(Messages.actionStop2"));
-		disconnectAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_DISCONNECT));
-		disconnectAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_DISCONNECT));
-		disconnectAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_DISCONNECT));
-		menu.add(disconnectAction);*/
-
-		// create the publish action
-		Action publishAction = new PublishAction(shell, provider, "publish");
-		publishAction.setToolTipText(Messages.actionPublishToolTip);
-		publishAction.setText(Messages.actionPublish);
-		publishAction.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_PUBLISH));
-		publishAction.setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_PUBLISH));
-		publishAction.setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_PUBLISH));
-		menu.add(publishAction);
+		
+		// create the publish actions
+		menu.add(new PublishAction(shell, provider));
+		menu.add(new PublishCleanAction(shell, provider));
 	}
 
 	public static boolean isActionEnabled(ISelection selection, byte action) {

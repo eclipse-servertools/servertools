@@ -24,8 +24,8 @@ import org.eclipse.wst.server.core.IServer;
 public abstract class AbstractServerAction extends SelectionProviderAction {
 	public Shell shell;
 
-	public AbstractServerAction(Shell shell, ISelectionProvider selectionProvider, String name) {
-		super(selectionProvider, name);
+	public AbstractServerAction(Shell shell, ISelectionProvider selectionProvider, String text) {
+		super(selectionProvider, text);
 		this.shell = shell;
 		setEnabled(false);
 	}
@@ -36,7 +36,9 @@ public abstract class AbstractServerAction extends SelectionProviderAction {
 	 * @return boolean
 	 * @param server org.eclipse.wst.server.core.IServer
 	 */
-	public abstract boolean accept(IServer server);
+	public boolean accept(IServer server) {
+		return true;
+	}
 
 	/**
 	 * Perform action on this server.

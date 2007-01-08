@@ -383,7 +383,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		}
 		
 		// server configuration path
-		if (server != null && server.getServerType().hasServerConfiguration()) {
+		if (server != null && server.getServerType() != null && server.getServerType().hasServerConfiguration()) {
 			createLabel(toolkit, composite, Messages.serverEditorOverviewServerConfigurationPath);
 			
 			IFolder folder = server.getServerConfiguration();
@@ -434,7 +434,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			browse.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		}
 		
-		if (server != null) {
+		if (server != null && server.getServerType() != null) {
 			IServerType serverType = server.getServerType();
 			if (serverType.supportsLaunchMode(ILaunchManager.RUN_MODE) || serverType.supportsLaunchMode(ILaunchManager.DEBUG_MODE)
 					|| serverType.supportsLaunchMode(ILaunchManager.PROFILE_MODE)) {
@@ -699,7 +699,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 	}
 
 	protected void validate() {
-		if (server != null && server.getServerType().hasServerConfiguration()) {
+		if (server != null && server.getServerType() != null && server.getServerType().hasServerConfiguration()) {
 			IFolder folder = getServer().getServerConfiguration();
 			if (folder == null || !folder.exists()) {
 				setErrorMessage(Messages.errorMissingConfiguration);

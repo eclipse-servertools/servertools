@@ -52,7 +52,7 @@ public class MonitorDialog extends Dialog {
 
 		this.server = server;
 	}
-	
+
 	public MonitorDialog(Shell parentShell, IServer server, ServerPort port, int monitorPort, String[] contentTypes) {
 		this(parentShell, server);
 		this.monitorPort = monitorPort;
@@ -68,7 +68,7 @@ public class MonitorDialog extends Dialog {
 		super.configureShell(newShell);
 		newShell.setText(Messages.dialogMonitorTitle);
 	}
-	
+
 	protected void createButtonsForButtonBar(Composite parent) {
 		ok = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);

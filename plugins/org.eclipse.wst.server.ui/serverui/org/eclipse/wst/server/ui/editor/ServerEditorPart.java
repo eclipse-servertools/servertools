@@ -170,7 +170,7 @@ public abstract class ServerEditorPart extends EditorPart {
 				IServerEditorPartFactory pageFactory = serverEditor.getPageFactory(this);
 				if (pageFactory.supportsInsertionId(insertionId)) {
 					String serverTypeId = null;
-					if (server != null) 
+					if (server != null && server.getServerType() != null)
 						serverTypeId = server.getServerType().getId();
 					if (serverTypeId != null && factory.supportsType(serverTypeId)
 							&& factory.shouldCreateSection(server)) {

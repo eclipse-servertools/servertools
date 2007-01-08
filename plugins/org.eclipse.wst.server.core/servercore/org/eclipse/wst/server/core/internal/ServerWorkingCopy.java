@@ -371,7 +371,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			server.notificationManager = notificationManager;
 		}
 		
-		if (getServerType().hasServerConfiguration()) {
+		if (getServerType() != null && getServerType().hasServerConfiguration()) {
 			IFolder folder = getServerConfiguration();
 			if (folder == null) {
 				folder = ServerType.getServerProject().getFolder(getName() + "-config");
@@ -383,7 +383,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		
 		server.setInternal(this);
 		server.doSave(monitor);
-		if (getServerType().hasServerConfiguration()) {
+		if (getServerType() != null && getServerType().hasServerConfiguration()) {
 			IFolder folder = getServerConfiguration();
 			if (folder != null) {
 				IProject project = folder.getProject();
@@ -396,7 +396,8 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 					folder.create(IResource.FORCE, true, null);
 			}
 		}
-		getWorkingCopyDelegate(monitor).saveConfiguration(monitor);
+		if (getWorkingCopyDelegate(monitor) != null)
+			getWorkingCopyDelegate(monitor).saveConfiguration(monitor);
 		wch.setDirty(false);
 		
 		return server;
@@ -464,7 +465,7 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		else
 			super.addPublishListener(listener);
 	}
-	
+
 	public void removePublishListener(IPublishListener listener) {
 		if (server != null)
 			server.removePublishListener(listener);

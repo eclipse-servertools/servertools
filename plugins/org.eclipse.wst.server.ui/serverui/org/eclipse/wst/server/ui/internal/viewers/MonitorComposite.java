@@ -57,6 +57,8 @@ public class MonitorComposite extends Composite {
 		GridLayout layout = new GridLayout();
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
+		layout.verticalSpacing = 5;
+		layout.horizontalSpacing = 5;
 		layout.numColumns = 2;
 		setLayout(layout);
 
@@ -138,6 +140,8 @@ public class MonitorComposite extends Composite {
 				}
 			}
 		});
+		if (server.getServerType() == null)
+			add.setEnabled(false);
 		
 		final Button edit = SWTUtil.createButton(buttonComp, Messages.edit);
 		edit.addSelectionListener(new SelectionAdapter() {
