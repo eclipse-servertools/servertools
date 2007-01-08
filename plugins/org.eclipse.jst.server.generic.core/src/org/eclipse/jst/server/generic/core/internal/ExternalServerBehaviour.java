@@ -96,6 +96,7 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 	protected synchronized void setServerStarted() {
 		if (fLaunchConfigurationWC != null) {
 			try {
+				setupSourceLocator( fLaunch );
 				ExternalLaunchConfigurationDelegate.startDebugging(fLaunchConfigurationWC, fMode, fLaunch, fProgressMonitor);
 			} catch (CoreException ce) {
 				// failed to start debugging, so set mode to run
@@ -111,6 +112,15 @@ public class ExternalServerBehaviour extends GenericServerBehaviour {
 		setServerState(IServer.STATE_STARTED);
  	}
 	
+	/**
+	 * Subclasses may override this method to replace default source locator or add additional
+	 * sourceLookupParticipant, if necessary 
+	 * @param launch 	the ILaunch object of the debug session
+	 */
+	protected void setupSourceLocator(ILaunch launch) {
+        //nothing to do
+	}
+
 	/*
 	 * If the server state is unknown, reset the status to OK
 	 */
