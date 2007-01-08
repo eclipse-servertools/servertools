@@ -507,7 +507,7 @@ public class ServerPlugin extends Plugin {
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .clients extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "clients");
-
+		
 		int size = cf.length;
 		List list = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
@@ -535,7 +535,7 @@ public class ServerPlugin extends Plugin {
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .clients extension point -<-");
 	}
-	
+
 	/**
 	 * Returns an array of all known publish tasks.
 	 * <p>
@@ -790,7 +790,7 @@ public class ServerPlugin extends Plugin {
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleArtifactAdapters extension point -<-");
 	}
-	
+
 	/**
 	 * Returns <code>true</code> if a module artifact may be available for the given object,
 	 * and <code>false</code> otherwise.

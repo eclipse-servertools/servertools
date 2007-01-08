@@ -91,10 +91,12 @@ public class ModuleFactory implements IOrdered {
 	public ModuleFactoryDelegate getDelegate(IProgressMonitor monitor) {
 		if (delegate == null) {
 			try {
+				long time = System.currentTimeMillis();
 				delegate = (ModuleFactoryDelegate) element.createExecutableExtension("class");
 				//delegate.initialize(this);
 				InternalInitializer.initializeModuleFactoryDelegate(delegate, this, monitor);
 				//ResourceManager.getInstance().addModuleFactoryListener(delegate);
+				Trace.trace(Trace.PERFORMANCE, "ModuleFactory.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getId());
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + t.getMessage());
 			}

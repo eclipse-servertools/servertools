@@ -64,14 +64,16 @@ public class PublishTask implements IPublishTask {
 	public PublishTaskDelegate getDelegate() {
 		if (delegate == null) {
 			try {
+				long time = System.currentTimeMillis();
 				delegate = (PublishTaskDelegate) element.createExecutableExtension("class");
+				Trace.trace(Trace.PERFORMANCE, "PublishTask.getDelegate(): <" + (System.currentTimeMillis() - time) + "> " + getId());
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "Could not create delegate" + toString() + ": " + t.getMessage());
 			}
 		}
 		return delegate;
 	}
-	
+
 	/*
 	 * @see
 	 */

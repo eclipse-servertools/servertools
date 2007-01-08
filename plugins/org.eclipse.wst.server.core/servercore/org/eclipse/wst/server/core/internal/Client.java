@@ -59,7 +59,7 @@ public class Client implements IClient {
 	public String getDescription() {
 		return element.getAttribute("description");
 	}
-	
+
 	protected String getLaunchable() {
 		return element.getAttribute("launchable");
 	}
@@ -117,7 +117,7 @@ public class Client implements IClient {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Return a string representation of this object.
 	 * 
