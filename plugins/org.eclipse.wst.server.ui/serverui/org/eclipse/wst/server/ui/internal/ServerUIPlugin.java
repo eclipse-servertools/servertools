@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.*;
+import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.util.PublishAdapter;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
@@ -691,17 +692,19 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	protected static WizardFragment getWizardFragment(WizardFragmentData fragment) {
 		if (fragment == null)
 			return null;
-	
+		
 		if (fragment.fragment == null) {
 			try {
+				long time = System.currentTimeMillis();
 				fragment.fragment = (WizardFragment) fragment.ce.createExecutableExtension("class");
+				Trace.trace(Trace.PERFORMANCE, "ServerUIPlugin.getWizardFragment(): <" + (System.currentTimeMillis() - time) + "> " + fragment.ce.getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "Could not create wizardFragment: " + fragment.ce.getAttribute("id"), t);
 			}
 		}
 		return fragment.fragment;
 	}
-	
+
 	public static void runOnServer(Object object, String launchMode) {
 		RunOnServerActionDelegate delegate = new RunOnServerActionDelegate();
 		Action action = new Action() {
