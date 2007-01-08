@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.ui.internal;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -75,7 +76,11 @@ public class LaunchClientJob extends ChainedJob {
 				Trace.trace(Trace.FINEST, "Attempting to load client: " + client);
 				try {
 					Object launchable = launchableAdapter.getLaunchable(server, moduleArtifact);
-					client.launch(server, launchable, launchMode, server.getExistingLaunch());
+					IStatus status = client.launch(server, launchable, launchMode, server.getExistingLaunch());
+					if (status != null && status.getSeverity() == IStatus.ERROR)
+						EclipseUtil.openError(null, status);
+				} catch (CoreException ce) {
+					EclipseUtil.openError(null, ce.getStatus());
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Server client failed", e);
 				}

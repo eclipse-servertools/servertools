@@ -10,6 +10,7 @@
  **********************************************************************/
 package org.eclipse.wst.server.core.internal;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
 import org.eclipse.wst.server.core.IModuleArtifact;
@@ -55,9 +56,11 @@ public class LaunchableAdapter implements ILaunchableAdapter {
 	/**
 	 * @see ILaunchableAdapter#getLaunchable(IServer, IModuleArtifact)
 	 */
-	public Object getLaunchable(IServer server, IModuleArtifact object) {
+	public Object getLaunchable(IServer server, IModuleArtifact object) throws CoreException {
 		try {
 			return getDelegate().getLaunchable(server, object);
+		} catch (CoreException ce) {
+			throw ce;
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
 			return null;
