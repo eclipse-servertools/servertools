@@ -20,13 +20,11 @@ import org.eclipse.wst.server.ui.internal.wizard.ModifyModulesWizard;
 import org.eclipse.wst.server.ui.internal.wizard.NewRuntimeWizard;
 import org.eclipse.wst.server.ui.internal.wizard.NewServerWizard;
 import org.eclipse.wst.server.ui.internal.wizard.RunOnServerWizard;
-import org.eclipse.wst.server.ui.internal.wizard.SelectClientWizard;
-import org.eclipse.wst.server.ui.internal.wizard.SelectTasksWizard;
 
 public class WizardTestCase extends TestCase {
 	public static void testRoS(IModule module) {
 		Shell shell = UITestHelper.getShell();
-		RunOnServerWizard ros = new RunOnServerWizard(module, ILaunchManager.RUN_MODE);
+		RunOnServerWizard ros = new RunOnServerWizard(module, ILaunchManager.RUN_MODE, null);
 		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, ros);
 		UITestHelper.assertDialog(dialog);
 	}
@@ -52,20 +50,6 @@ public class WizardTestCase extends TestCase {
 	public void testNewServerWizard() throws Exception {
 		Shell shell = UITestHelper.getShell();
 		NewServerWizard wiz = new NewServerWizard();
-		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wiz);
-		UITestHelper.assertDialog(dialog);
-	}
-	
-	public void testSelectClientWizard() throws Exception {
-		Shell shell = UITestHelper.getShell();
-		SelectClientWizard wiz = new SelectClientWizard(null);
-		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wiz);
-		UITestHelper.assertDialog(dialog);
-	}
-	
-	public void testSelectTasksWizard() throws Exception {
-		Shell shell = UITestHelper.getShell();
-		SelectTasksWizard wiz = new SelectTasksWizard(null);
 		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wiz);
 		UITestHelper.assertDialog(dialog);
 	}
