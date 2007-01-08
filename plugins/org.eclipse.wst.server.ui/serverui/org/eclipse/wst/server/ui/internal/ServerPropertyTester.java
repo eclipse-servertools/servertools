@@ -14,9 +14,11 @@ import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
+import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
 /**
  * 
  */
@@ -27,6 +29,9 @@ public class ServerPropertyTester extends PropertyTester {
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		if (expectedValue instanceof String)
 			return checkProperty(receiver, property, (String) expectedValue);
+		if (expectedValue != null)
+			return checkProperty(receiver, property, expectedValue.toString());
+		
 		return checkProperty(receiver, property, null);
 	}
 
@@ -62,23 +67,64 @@ public class ServerPropertyTester extends PropertyTester {
 			}
 			return false;
 		} else if ("serverType".equals(property)) {
-			if (!(target instanceof IServer))
+			IServer server = null;
+			if (target instanceof IServer) {
+				server = (IServer) target;
+			} else if (target instanceof ModuleServer) {
+				ModuleServer ms = (ModuleServer) target;
+				server = ms.server;
+			}
+			if (server == null)
 				return false;
 			
-			IServer server = (IServer) target;
-			
 			String[] typeIds = ServerPlugin.tokenize(value, ",");
-			return supportsServerType(server.getServerType().getId(), typeIds);
+			return matches(server.getServerType().getId(), typeIds);
+		} else if ("moduleType".equals(property)) {
+			IModule[] module = null;
+			if (target instanceof IModule[]) {
+				module = (IModule[]) target;
+			} else if (target instanceof IModule) {
+				module = new IModule[] {(IModule) target};
+			} else if (target instanceof ModuleServer) {
+				ModuleServer ms = (ModuleServer) target;
+				module = ms.module;
+			}
+			if (module == null)
+				return false;
+			if (module.length == 0)
+				return false;
+			
+			String[] values = ServerPlugin.tokenize(value, ",");
+			IModule m = module[module.length - 1];
+			return matches(m.getModuleType().getId(), values);
+		} else if ("moduleVersion".equals(property)) {
+			IModule[] module = null;
+			if (target instanceof IModule[]) {
+				module = (IModule[]) target;
+			} else if (target instanceof IModule) {
+				module = new IModule[] {(IModule) target};
+			} else if (target instanceof ModuleServer) {
+				ModuleServer ms = (ModuleServer) target;
+				module = ms.module;
+			}
+			if (module == null)
+				return false;
+			if (module.length == 0)
+				return false;
+			
+			String[] values = ServerPlugin.tokenize(value, ",");
+			IModule m = module[module.length - 1];
+			return matches(m.getModuleType().getVersion(), values);
 		}
 		return false;
 	}
 	
 	/**
-	 * Returns true if the given server type (given by the id) can use this action.
+	 * Returns true if the given type (given by the id) can use this action.
 	 *
 	 * @return boolean
 	 */
-	protected static boolean supportsServerType(String id, String[] typeIds) {
+	protected static boolean matches(String id, String[] typeIds) {
 		if (id == null || id.length() == 0)
 			return false;
 
