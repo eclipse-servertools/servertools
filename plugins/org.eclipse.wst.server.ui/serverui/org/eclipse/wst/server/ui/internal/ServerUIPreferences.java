@@ -28,6 +28,7 @@ public class ServerUIPreferences {
 	private static final String PREF_LAUNCH_MODE = "launch-mode";
 	private static final String PREF_LAUNCH_MODE2 = "launch-mode2";
 	private static final String PREF_ENABLE_BREAKPOINTS = "enable-breakpoints";
+	private static final String PREF_RESTART = "restart";
 
 	public static final byte SAVE_EDITORS_ALWAYS = 2;
 	public static final byte SAVE_EDITORS_NEVER = 0;
@@ -46,6 +47,10 @@ public class ServerUIPreferences {
 	public static final byte ENABLE_BREAKPOINTS_ALWAYS = 1;
 	public static final byte ENABLE_BREAKPOINTS_NEVER = 2;
 
+	public static final byte RESTART_PROMPT = 0;
+	public static final byte RESTART_ALWAYS = 1;
+	public static final byte RESTART_NEVER = 2;
+
 	private static final int MAX_HOSTNAMES = 10;
 
 	private Preferences preferences;
@@ -63,6 +68,7 @@ public class ServerUIPreferences {
 		preferences.setDefault(PREF_LAUNCH_MODE, getDefaultLaunchMode());
 		preferences.setDefault(PREF_LAUNCH_MODE2, getDefaultLaunchMode2());
 		preferences.setDefault(PREF_ENABLE_BREAKPOINTS, getDefaultEnableBreakpoints());
+		preferences.setDefault(PREF_RESTART, getDefaultRestart());
 		preferences.setDefault(PREF_SAVE_EDITORS, getDefaultSaveEditors());
 		preferences.setDefault(PREF_HOST_NAMES, "localhost");
 		preferences.setDefault(PREF_SHOW_ON_ACTIVITY, true);
@@ -189,6 +195,36 @@ public class ServerUIPreferences {
 	 */
 	public void setEnableBreakpoints(int b) {
 		preferences.setValue(PREF_ENABLE_BREAKPOINTS, b);
+		ServerUIPlugin.getInstance().savePluginPreferences();
+	}
+
+	/**
+	 * Returns the default value of whether the user should be prompted
+	 * when the server requires restarting.
+	 *
+	 * @return int
+	 */
+	public byte getDefaultRestart() {
+		return RESTART_PROMPT;
+	}
+
+	/**
+	 * Returns whether the user should be prompted when the server requires
+	 * restarting.
+	 * 
+	 * @return int
+	 */
+	public int getRestart() {
+		return preferences.getInt(PREF_RESTART);
+	}
+
+	/**
+	 * Sets whether the user should be prompted when the server requires restarting.
+	 *
+	 * @param b a breakpoint enablement constant
+	 */
+	public void setRestart(int b) {
+		preferences.setValue(PREF_RESTART, b);
 		ServerUIPlugin.getInstance().savePluginPreferences();
 	}
 

@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.*;
  * Helper class that stores preference information for server tools.
  */
 public class ServerPreferences {
-	private static final String PREF_AUTO_RESTART = "auto-restart";
 	private static final String PREF_AUTO_PUBLISH = "auto-publish";
 	private static final String PREF_MODULE_START_TIMEOUT = "module-start-timeout";
 	
@@ -52,26 +51,6 @@ public class ServerPreferences {
 	}
 
 	/**
-	 * Returns whether servers will be automatically restarted when
-	 * required.
-	 *
-	 * @return boolean
-	 */
-	public boolean isAutoRestarting() {
-		return preferences.getBoolean(PREF_AUTO_RESTART);
-	}
-
-	/**
-	 * Returns whether servers will be automatically restarted when
-	 * required.
-	 *
-	 * @return boolean
-	 */
-	public boolean isDefaultAutoRestarting() {
-		return false;
-	}
-
-	/**
 	 * Returns whether publishing should occur before starting the
 	 * server.
 	 *
@@ -98,8 +77,7 @@ public class ServerPreferences {
 	 * @param value
 	 */
 	public void setAutoRestarting(boolean value) {
-		preferences.setValue(PREF_AUTO_RESTART, value);
-		ServerPlugin.getInstance().savePluginPreferences();
+		// ignore
 	}
 
 	/**
@@ -297,7 +275,6 @@ public class ServerPreferences {
 	 */
 	public void setDefaults() {
 		preferences.setDefault(PREF_AUTO_PUBLISH, isDefaultAutoPublishing());
-		preferences.setDefault(PREF_AUTO_RESTART, isDefaultAutoRestarting());
 		preferences.setDefault(PREF_MACHINE_SPEED, getDefaultMachineSpeed());
 		
 		preferences.setDefault(PREF_AUTO_PUBLISH_LOCAL, getDefaultAutoPublishLocal());

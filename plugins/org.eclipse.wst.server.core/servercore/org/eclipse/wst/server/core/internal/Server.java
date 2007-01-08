@@ -425,13 +425,6 @@ public class Server extends Base implements IServer {
 		notificationManager.broadcastChange(
 			new ServerEvent(ServerEvent.SERVER_CHANGE | ServerEvent.RESTART_STATE_CHANGE, this, getServerState(), 
 				getServerPublishState(), getServerRestartState()));
-		
-		if (getServerState() == IServer.STATE_STARTED && getServerRestartState() && ServerPreferences.getInstance().isAutoRestarting()) {
-			if (canRestart(mode).isOK()) {
-				RestartServerJob job = new RestartServerJob(this, mode);
-				job.schedule();
-			}
-		}
 	}
 
 	/**

@@ -12,9 +12,6 @@ package org.eclipse.wst.server.ui.internal;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.internal.RestartServerJob;
 import org.eclipse.wst.server.core.internal.ServerPreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -38,7 +35,6 @@ public class LaunchingPreferencePage extends PreferencePage implements IWorkbenc
 	protected ServerUIPreferences uiPreferences;
 
 	protected Button publishBeforeStart;
-	protected Button autoRestart;
 
 	protected byte saveEditors;
 	protected Button[] saveButtons;
@@ -48,6 +44,8 @@ public class LaunchingPreferencePage extends PreferencePage implements IWorkbenc
 	protected Button[] launchMode2Buttons;
 	protected int breakpointEnablement;
 	protected Button[] breakpointButtons;
+	protected int restartEnablement;
+	protected Button[] restartButtons;
 
 	/**
 	 * ServerPreferencesPage constructor comment.
@@ -58,7 +56,7 @@ public class LaunchingPreferencePage extends PreferencePage implements IWorkbenc
 		preferences = ServerPreferences.getInstance();
 		uiPreferences = ServerUIPlugin.getPreferences();
 	}
-	
+
 	/**
 	 * Create the preference options.
 	 *
@@ -89,14 +87,6 @@ public class LaunchingPreferencePage extends PreferencePage implements IWorkbenc
 		publishBeforeStart.setSelection(preferences.isAutoPublishing());
 		whs.setHelp(publishBeforeStart, ContextIds.PREF_GENERAL_PUBLISH_BEFORE_START);
 		
-		autoRestart = new Button(composite, SWT.CHECK);
-		autoRestart.setText(Messages.prefAutoRestart);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 3;
-		autoRestart.setLayoutData(data);
-		autoRestart.setSelection(preferences.isAutoRestarting());
-		whs.setHelp(autoRestart, ContextIds.PREF_GENERAL_AUTO_RESTART);
-			
 		Label label = new Label(composite, SWT.NONE);
 		data = new GridData();
 		data.horizontalSpan = 3;
@@ -110,13 +100,16 @@ public class LaunchingPreferencePage extends PreferencePage implements IWorkbenc
 		
 		createBreakpointsGroup(composite);
 		
+		createRestartGroup(composite);
+		
 		setSaveEditorStatus(uiPreferences.getSaveEditors());
 		setLaunchModeStatus(uiPreferences.getLaunchMode());
 		setLaunchMode2Status(uiPreferences.getLaunchMode2());
 		setBreakpointsStatus(uiPreferences.getEnableBreakpoints());
+		setRestartStatus(uiPreferences.getRestart());
 		
 		Dialog.applyDialogFont(composite);
-	
+		
 		return composite;
 	}
 
@@ -302,6 +295,50 @@ public class LaunchingPreferencePage extends PreferencePage implements IWorkbenc
 		breakpointButtons[2].setSelection(breakpointEnablement == ServerUIPreferences.ENABLE_BREAKPOINTS_PROMPT); 
 	}
 
+	protected void createRestartGroup(Composite composite) {
+		Group group = new Group(composite, SWT.NONE);
+		group.setText(Messages.prefRestart);
+		
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 3;
+		group.setLayout(layout);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		data.horizontalSpan = 3;
+		group.setLayoutData(data);
+		
+		String[] messages = new String[] {
+			Messages.prefRestartAlways, Messages.prefRestartNever, Messages.prefRestartPrompt
+		};
+		
+		final byte[] options = new byte[] {
+			ServerUIPreferences.RESTART_ALWAYS,
+			ServerUIPreferences.RESTART_NEVER,
+			ServerUIPreferences.RESTART_PROMPT
+		};
+		
+		Button[] buttons = new Button[3];
+		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
+		for (int i = 0; i < 3; i++) {
+			buttons[i] = new Button(group, SWT.RADIO);
+			buttons[i].setText(messages[i]);
+			final int b = i;
+			buttons[i].addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent event) {
+					restartEnablement = options[b];
+				}
+			});
+			whs.setHelp(buttons[i], ContextIds.PREF_GENERAL_RESTART);
+		}
+		restartButtons = buttons;
+	}
+
+	protected void setRestartStatus(int mode) {
+		restartEnablement = mode;
+		restartButtons[0].setSelection(restartEnablement == ServerUIPreferences.RESTART_ALWAYS);
+		restartButtons[1].setSelection(restartEnablement == ServerUIPreferences.RESTART_NEVER);
+		restartButtons[2].setSelection(restartEnablement == ServerUIPreferences.RESTART_PROMPT); 
+	}
+
 	/**
 	 * Initializes this preference page using the passed workbench.
 	 *
@@ -315,13 +352,13 @@ public class LaunchingPreferencePage extends PreferencePage implements IWorkbenc
 	 * Performs special processing when this page's Defaults button has been pressed.
 	 */
 	protected void performDefaults() {
-		autoRestart.setSelection(preferences.isDefaultAutoRestarting());
 		publishBeforeStart.setSelection(preferences.isDefaultAutoPublishing());
 		
 		setSaveEditorStatus(uiPreferences.getDefaultSaveEditors());
 		setLaunchModeStatus(uiPreferences.getDefaultLaunchMode());
 		setLaunchMode2Status(uiPreferences.getDefaultLaunchMode2());
 		setBreakpointsStatus(uiPreferences.getDefaultEnableBreakpoints());
+		setRestartStatus(uiPreferences.getDefaultRestart());
 		
 		super.performDefaults();
 	}
@@ -331,38 +368,12 @@ public class LaunchingPreferencePage extends PreferencePage implements IWorkbenc
 	 */
 	public boolean performOk() {
 		preferences.setAutoPublishing(publishBeforeStart.getSelection());
-		preferences.setAutoRestarting(autoRestart.getSelection());
 		uiPreferences.setSaveEditors(saveEditors);
 		uiPreferences.setLaunchMode(launchMode);
 		uiPreferences.setLaunchMode2(launchMode2);
 		uiPreferences.setEnableBreakpoints(breakpointEnablement);
-		
-		// auto restart any servers that are ready for restart
-		if (autoRestart.getSelection())
-			autoRestartAll();
+		uiPreferences.setRestart(restartEnablement);
 		
 		return true;
-	}
-
-	/**
-	 * Automatically restart any servers that require it.
-	 */
-	protected static void autoRestartAll() {
-		Trace.trace(Trace.FINEST, "Auto restarting all dirty servers");
-		
-		IServer[] servers = ServerCore.getServers();
-		if (servers != null) {
-			int size = servers.length;
-			for (int i = 0; i < size; i++) {
-				IServer server = servers[i];
-				if (server.getServerState() == IServer.STATE_STARTED && server.getServerRestartState()) {
-					String mode = server.getMode();
-					if (server.canRestart(mode).isOK()) {
-						RestartServerJob job = new RestartServerJob(server, mode);
-						job.schedule();
-					}
-				}
-			}
-		}
 	}
 }
