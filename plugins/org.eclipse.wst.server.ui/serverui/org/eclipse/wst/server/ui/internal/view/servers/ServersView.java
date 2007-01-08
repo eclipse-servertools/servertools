@@ -112,7 +112,11 @@ public class ServersView extends ViewPart {
 				ServerCore.getServers();
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						initialize();
+						try {
+							deferredInitialize();
+						} catch (Exception e) {
+							// ignore - view has already been closed
+						}
 					}
 				});
 				return Status.OK_STATUS;
@@ -124,7 +128,7 @@ public class ServersView extends ViewPart {
 		job.schedule();
 	}
 
-	protected void initialize() {
+	protected void deferredInitialize() {
 		tableViewer.initialize();
 		
 		treeTable.addSelectionListener(new SelectionAdapter() {
