@@ -75,6 +75,15 @@ public class AllTests {
 			System.err.println("Warning: Tomcat 5.5 not found - tests skipped");
 		}
 		
+		s = System.getProperty("org.eclipse.jst.server.tomcat.60");
+		if (s != null && s.length() > 0) {
+			RuntimeLocation.runtimeLocation = s;
+			suite.addTest(new OrderedTestSuite(Tomcat60RuntimeTestCase.class));
+			suite.addTest(new OrderedTestSuite(Tomcat60ServerTestCase.class));
+		} else {
+			System.err.println("Warning: Tomcat 6.0 not found - tests skipped");
+		}
+
 		suite.addTestSuite(UtilTestCase.class);
 		suite.addTestSuite(XmlTestCase.class);
 		
