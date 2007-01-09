@@ -33,7 +33,14 @@ public class TomcatRuntimeClasspathProvider extends RuntimeClasspathProviderDele
 			return new IClasspathEntry[0];
 		
 		List list = new ArrayList();
-		if (runtime.getRuntimeType().getId().indexOf("32") > 0) {
+		String runtimeId = runtime.getRuntimeType().getId();
+		if (runtimeId.indexOf("32") > 0) {
+			IPath path = installPath.append("lib");
+			addLibraryEntries(list, path.toFile(), true);
+		} else if (runtimeId.indexOf("60") > 0) {
+			// TODO May need some flexibility in case the installation has been configured differently
+			// This lib "simplification" may cause issues for some.
+			// Not known yet whether packaged Linux installs will go along.
 			IPath path = installPath.append("lib");
 			addLibraryEntries(list, path.toFile(), true);
 		} else {

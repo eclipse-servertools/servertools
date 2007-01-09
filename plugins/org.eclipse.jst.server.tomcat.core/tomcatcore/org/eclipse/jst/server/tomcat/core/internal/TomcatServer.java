@@ -77,6 +77,8 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 				configuration = new Tomcat50Configuration(folder);
 			else if (id.indexOf("55") > 0)
 				configuration = new Tomcat55Configuration(folder);
+			else if (id.indexOf("60") > 0)
+				configuration = new Tomcat60Configuration(folder);
 			try {
 				configuration.load(folder, null);
 			} catch (CoreException ce) {
@@ -107,6 +109,8 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			configuration = new Tomcat50Configuration(folder);
 		else if (id.indexOf("55") > 0)
 			configuration = new Tomcat55Configuration(folder);
+		else if (id.indexOf("60") > 0)
+			configuration = new Tomcat60Configuration(folder);
 		try {
 			configuration.importFromPath(path, isTestEnvironment(), monitor);
 		} catch (CoreException ce) {

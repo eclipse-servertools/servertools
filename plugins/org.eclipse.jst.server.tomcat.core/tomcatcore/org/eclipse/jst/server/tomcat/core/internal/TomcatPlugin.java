@@ -36,6 +36,7 @@ public class TomcatPlugin extends Plugin {
 	public static final String TOMCAT_41 = "org.eclipse.jst.server.tomcat.41";
 	public static final String TOMCAT_50 = "org.eclipse.jst.server.tomcat.50";
 	public static final String TOMCAT_55 = "org.eclipse.jst.server.tomcat.55";
+	public static final String TOMCAT_60 = "org.eclipse.jst.server.tomcat.60";
 
 	protected static final String VERIFY_INSTALL_FILE = "verifyInstall.properties";
 	protected static VerifyResourceSpec[] verify32;
@@ -43,6 +44,7 @@ public class TomcatPlugin extends Plugin {
 	protected static VerifyResourceSpec[] verify41;
 	protected static VerifyResourceSpec[] verify50;
 	protected static VerifyResourceSpec[] verify55;
+	protected static VerifyResourceSpec[] verify60;
 	
 	protected static final IStatus emptyInstallDirStatus = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorInstallDirEmpty, null);
 	protected static final IStatus wrongDirVersionStatus = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorInstallDirWrongVersion, null);
@@ -126,6 +128,8 @@ public class TomcatPlugin extends Plugin {
 			return new Tomcat50Handler();
 		else if (TOMCAT_55.equals(id))
 			return new Tomcat55Handler();
+		else if (TOMCAT_60.equals(id))
+			return new Tomcat60Handler();
 		else
 			return null;
 	}
@@ -143,6 +147,7 @@ public class TomcatPlugin extends Plugin {
 		verify41 = new VerifyResourceSpec[0];
 		verify50 = new VerifyResourceSpec[0];
 		verify55 = new VerifyResourceSpec[0];
+		verify60 = new VerifyResourceSpec[0];
 		
 		try {
 			URL url = getInstance().getBundle().getEntry(VERIFY_INSTALL_FILE);
@@ -228,6 +233,22 @@ public class TomcatPlugin extends Plugin {
 			Trace.trace(Trace.FINEST, "Verify55: " + list.toString());
 			verify55 = new VerifyResourceSpec[list.size()];
 			list.toArray(verify55);
+
+			// v6.0
+			// Check backdoor system property, use internal spec if not found
+			verify = System.getProperty(PLUGIN_ID + ".verify60install");
+			if (verify == null) {
+				verify = p.getProperty("verify60install");
+			}
+			verify.replace('/', File.separatorChar);
+
+			st = new StringTokenizer(verify, ",");
+			list = new ArrayList();
+			while (st.hasMoreTokens())
+				list.add(new VerifyResourceSpec(st.nextToken()));
+			Trace.trace(Trace.FINEST, "Verify60: " + list.toString());
+			verify60 = new VerifyResourceSpec[list.size()];
+			list.toArray(verify60);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not load installation verification properties", e);
 		}
@@ -289,6 +310,9 @@ public class TomcatPlugin extends Plugin {
 		else if (TOMCAT_55.equals(id)) {
 			specs = verify55;
 		}
+		else if (TOMCAT_60.equals(id)) {
+			specs = verify60;
+		}
 		else
 			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorUnknownVersion, null);
 		
@@ -321,6 +345,8 @@ public class TomcatPlugin extends Plugin {
 			return TOMCAT_50.equals(version) ? Status.OK_STATUS : wrongDirVersionStatus;
 		if (s.indexOf("-5.5") > 0 || s.indexOf(" 5.5") > 0)
 			return TOMCAT_55.equals(version) ? Status.OK_STATUS : wrongDirVersionStatus;
+		if (s.indexOf("-6.0") > 0 || s.indexOf(" 6.0") > 0)
+			return TOMCAT_60.equals(version) ? Status.OK_STATUS : wrongDirVersionStatus;
 		return Status.OK_STATUS;
 	}
 

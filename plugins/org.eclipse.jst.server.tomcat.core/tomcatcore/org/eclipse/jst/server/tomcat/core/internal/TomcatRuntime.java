@@ -119,10 +119,10 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 				found = true;
 		}
 		
-		// on Tomcat 5.5, the Eclipse JDT compiler is used for JSP's
+		// on Tomcat 5.5 and 6.0, the Eclipse JDT compiler is used for JSP's
+		String id = getRuntime().getRuntimeType().getId();
 		if (!found) {
-			String id = getRuntime().getRuntimeType().getId();
-			if (id != null && id.indexOf("55") > 0)
+			if (id != null && (id.indexOf("55") > 0 || id.indexOf("60") > 0))
 				found = true;
 		}
 		
@@ -144,6 +144,17 @@ public class TomcatRuntime extends RuntimeDelegate implements ITomcatRuntime, IT
 			for (int i = 0; i < size; i++) {
 				if (!f.canRead())
 					return new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, Messages.warningCantReadConfig, null);
+			}
+		}
+		
+		// For Tomcat 6.0, ensure we have J2SE 5.0
+		if (id != null && id.indexOf("60") > 0) {
+			IVMInstall vmInstall = getVMInstall();
+			if (vmInstall instanceof IVMInstall2) {
+				String javaVersion = ((IVMInstall2)vmInstall).getJavaVersion();
+				if (javaVersion != null && javaVersion.compareTo("1.5") < 0) {
+					return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorJRETomcat60, null);
+				}
 			}
 		}
 		

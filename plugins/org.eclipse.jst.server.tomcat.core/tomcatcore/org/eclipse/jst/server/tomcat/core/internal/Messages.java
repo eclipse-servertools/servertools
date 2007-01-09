@@ -28,6 +28,7 @@ public class Messages extends NLS {
 	public static String errorInstallDirMissingFile3;
 	public static String errorInstallDirTrailingSlash;
 	public static String errorJRE;
+	public static String errorJRETomcat60;
 	public static String warningJRE;
 	public static String warningCantReadConfig;
 	public static String target32runtime;
@@ -48,6 +49,7 @@ public class Messages extends NLS {
 	public static String errorSpec41;
 	public static String errorSpec50;
 	public static String errorSpec55;
+	public static String errorSpec60;
 	public static String portServer;
 	public static String runtimeDirPrepared;
 	public static String publishConfigurationTask;
