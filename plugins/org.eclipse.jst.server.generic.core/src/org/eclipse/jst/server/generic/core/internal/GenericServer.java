@@ -184,7 +184,7 @@ public class GenericServer extends ServerDelegate implements IURLProvider {
 			port = getHttpPort();
 			port =ServerUtil.getMonitoredPort(getServer(), port, "web"); //$NON-NLS-1$
 			if (port != 80)
-				url += ':' + port;
+				url += ":" + port;
 
 			url += '/'+webModule.getContextRoot();
 
