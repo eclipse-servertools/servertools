@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,9 +15,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 /**
  * The actual Tomcat plugin. It allows the rest of the classes
@@ -112,6 +115,46 @@ public class TomcatUIPlugin extends AbstractUIPlugin {
 		getInstance().getLog().log(status);
 	}
 
+	/**
+	 * Convenience method to get a Display. The method first checks, if
+	 * the thread calling this method has an associated display. If so, this
+	 * display is returned. Otherwise the method returns the default display.
+	 * 
+	 * @return the display
+	 */
+	public static Display getStandardDisplay() {
+		Display display = Display.getCurrent();
+		if (display == null)
+			display = Display.getDefault();
+		return display;		
+	}	
+	
+	/**
+	 * Convenience method to display an error dialog.
+	 * 
+	 * @param title title for the dialog or null for default title
+	 * @param message primary message to display
+	 * @param status reason for the error
+	 */
+	public static void openError(final String title, final String message, final IStatus status) {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				Shell shell = getShell();
+				ErrorDialog.openError(shell,
+						title != null ? title : Messages.errorDefaultDialogTitle,
+						message, status);
+			}
+		});
+	}
+	/**
+	 * Convenience method to get a shell
+	 *
+	 * @return Shell
+	 */
+	public static Shell getShell() {
+		return getStandardDisplay().getActiveShell();
+	}
+	
 	/**
 	 * Register an image with the registry.
 	 * @param key java.lang.String

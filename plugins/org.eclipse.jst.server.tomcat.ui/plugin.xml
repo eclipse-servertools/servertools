@@ -161,4 +161,44 @@
       <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
     </adapter>
   </extension>
+
+  <extension point="org.eclipse.ui.popupMenus">
+    <objectContribution
+      adaptable="true"
+      id="org.eclipse.jst.server.tomcat.ui.serveractions"
+      objectClass="org.eclipse.wst.server.core.IServer">
+      <enablement>
+        <test forcePluginActivation="true"
+          property="org.eclipse.wst.server.ui.serverType"
+          value="org.eclipse.jst.server.tomcat.*" />
+      </enablement>
+      <action 
+        class="org.eclipse.jst.server.tomcat.ui.internal.actions.CleanWorkDirAction"
+        enablesFor="1"
+        id="org.eclipse.jst.server.tomcat.ui.clearworkdir"
+        label="%cleanTomcatWorkDir">
+      </action>
+    </objectContribution>
+    <objectContribution
+      adaptable="true"
+      id="org.eclipse.jst.server.tomcat.ui.serveractions"
+      objectClass="org.eclipse.wst.server.ui.internal.view.servers.ModuleServer">
+      <enablement>
+        <and>
+          <test forcePluginActivation="true"
+            property="org.eclipse.wst.server.ui.moduleType"
+            value="jst.web"/>
+          <test forcePluginActivation="true"
+            property="org.eclipse.wst.server.ui.serverType"
+            value="org.eclipse.jst.server.tomcat.*"/>
+        </and>
+      </enablement>
+      <action
+        class="org.eclipse.jst.server.tomcat.ui.internal.actions.CleanWorkDirAction"
+        enablesFor="1"
+        id="org.eclipse.jst.server.tomcat.ui.clearworkdir"
+        label="%cleanTomcatModuleWorkDir">
+      </action>
+    </objectContribution>
+  </extension>
 </plugin>

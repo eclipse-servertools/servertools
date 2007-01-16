@@ -63,6 +63,29 @@ public class Messages extends NLS {
 	public static String configurationEditorWebModuleDialogSelectDirectory;
 	public static String configurationEditorWebModuleDialogPath;
 	public static String configurationEditorWebModuleDialogReloadEnabled;
+	public static String errorDefaultDialogTitle;
+	public static String confirmCleanWorkDirTitle;
+	public static String cleanServerStateChanging;
+	public static String cleanModuleWorkDir;
+	public static String cleanServerWorkDir;
+	public static String cleanServerRunning;
+	public static String errorCleanModuleTitle;
+	public static String errorCleanServerTitle;
+	public static String errorCouldNotCleanModule;
+	public static String errorCouldNotCleanServer;
+	public static String errorCouldNotCleanStateChange;
+	public static String errorCouldNotCleanCantStop;
+	public static String errorCouldNotCleanStopFailed;
+	public static String errorCleanFailedModule;
+	public static String errorCleanFailedServer;
+	public static String errorCantIdentifyWebApp;
+	public static String errorCantIdentifyWebAppWasRunning;
+	public static String errorErrorDuringClean;
+	public static String errorErrorDuringCleanWasRunning;
+	public static String errorCleanNoRestartModule;
+	public static String errorCleanNoRestartServer;
+	public static String errorCleanCantRestart;
+	public static String errorCleanRestartFailed;
 
 	static {
 		NLS.initializeMessages(TomcatUIPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);

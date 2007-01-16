@@ -899,7 +899,82 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		}
 		return false;
 	}
+	
+	/**
+	 * Cleans the entire work directory for this server.  This involves
+	 * deleting all subdirectories of the server's work directory.
+	 * 
+	 * @param monitor a progress monitor
+	 * @return results of the clean operation
+	 * @throws CoreException
+	 */
+	public IStatus cleanServerWorkDir(IProgressMonitor monitor) throws CoreException {
+		IStatus result;
+		IPath basePath = getTomcatVersionHandler().getRuntimeBaseDirectory(this);
+		IPath workPath = getTomcatConfiguration().getServerWorkDirectory(basePath);
+		if (workPath != null) {
+			File workDir = workPath.toFile();
+			result = Status.OK_STATUS;
+			if (workDir.exists() && workDir.isDirectory()) {
+				// Delete subdirectories of the server's work dir
+				File[] files = workDir.listFiles();
+				if (files != null && files.length > 0) {
+					MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, "Problem occurred deleting work directory for module.", null);
+					int size = files.length;
+					monitor = ProgressUtil.getMonitorFor(monitor);
+					monitor.beginTask(NLS.bind("Cleaning Server Work Directory", new String[] { workDir.getAbsolutePath() }), size * 10);
 
+					for (int i = 0; i < size; i++) {
+						File current = files[i];
+						if (current.isDirectory()) {
+							IStatus [] results = PublishUtil.deleteDirectory(current, ProgressUtil.getSubMonitorFor(monitor, 10));
+							if (results != null && results.length > 0) {
+								for (int j = 0; j < results.length; j++) {
+									ms.add(results[j]);
+								}
+							}
+						}
+					}
+					monitor.done();
+					result = ms;
+				}
+			}
+		}
+		else {
+			result = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, "Could not determine work directory for module", null);
+		}
+		return result;
+	}
+	
+	/**
+	 * Cleans the work directory associated with the specified module on this
+	 * server.
+	 * 
+	 * @param module module whose work directory should be cleaned
+	 * @param monitor a progress monitor
+	 * @return result of the clean operation
+	 * @throws CoreException
+	 */
+	public IStatus cleanContextWorkDir(ITomcatWebModule module, IProgressMonitor monitor) throws CoreException {
+		IStatus result;
+		IPath basePath = getTomcatVersionHandler().getRuntimeBaseDirectory(this);
+		IPath workPath = getTomcatConfiguration().getContextWorkDirectory(basePath, module);
+		if (workPath != null) {
+			IStatus [] results = PublishUtil.deleteDirectory(workPath.toFile(), monitor);
+			MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, "Problem occurred deleting work directory for module.", null);
+			if (results != null && results.length > 0) {
+				for (int i = 0; i < results.length; i++) {
+					ms.add(results[i]);
+				}
+			}
+			result = ms;
+		}
+		else {
+			result = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, "Could not determine work directory for module", null);
+		}
+		return result;
+	}
+	
 	/**
 	 * Temporary method to help web services team. Returns the path that the module is
 	 * published to when in test environment mode.
