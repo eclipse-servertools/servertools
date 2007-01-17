@@ -624,7 +624,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		Trace.trace(Trace.CONFIG, "->- Loading .wizardFragments extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerUIPlugin.PLUGIN_ID, EXTENSION_WIZARD_FRAGMENTS);
-
+		
 		Map map = new HashMap(cf.length);
 		loadWizardFragments(cf, map);
 		addRegistryListener();
@@ -640,7 +640,10 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		for (int i = 0; i < cf.length; i++) {
 			try {
 				String id = cf[i].getAttribute("typeIds");
-				map.put(id, new WizardFragmentData(id, cf[i]));
+				String[] ids = tokenize(id, ",");
+				int size = ids.length;
+				for (int j = 0; j < size; j++)
+					map.put(ids[j], new WizardFragmentData(id, cf[i]));
 				Trace.trace(Trace.CONFIG, "  Loaded wizardFragment: " + id);
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load wizardFragment: " + cf[i].getAttribute("id"), t);
