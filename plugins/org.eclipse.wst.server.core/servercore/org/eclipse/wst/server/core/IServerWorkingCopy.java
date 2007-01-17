@@ -160,7 +160,7 @@ public interface IServerWorkingCopy extends IServerAttributes {
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return a new server instance
-	 * @throws CoreException [missing]
+	 * @throws CoreException if there is an error saving the server
 	 * @see #SAVE_CONFLICT
 	 */
 	public IServer save(boolean force, IProgressMonitor monitor) throws CoreException;
@@ -196,7 +196,8 @@ public interface IServerWorkingCopy extends IServerAttributes {
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
 	 * @return a new server instance
-	 * @throws CoreException [missing]
+	 * @throws CoreException if there is an error saving the server, runtime, or
+	 *    server configuration
 	 * @see #SAVE_CONFLICT
 	 */
 	public IServer saveAll(boolean force, IProgressMonitor monitor) throws CoreException;
@@ -252,6 +253,10 @@ public interface IServerWorkingCopy extends IServerAttributes {
 	 * publish() can be used to sync up with the server.
 	 * </p>
 	 * <p>
+	 * This method is guaranteed to fail with the same status exception
+	 * if the result of canModifyModules() is an error status.
+	 * </p>
+	 * <p>
 	 * [issue: How to formulate what it means
 	 * to say "the module must exist in the workspace"?]
 	 * </p>
@@ -264,21 +269,18 @@ public interface IServerWorkingCopy extends IServerAttributes {
 	 * lists.]
 	 * </p>
 	 * <p>
-	 * [issue: The spec had also said: "...canModifyModules()
-	 * should have returned true. The configuration must assume
-	 * any default settings and add the module without any UI."]
-	 * </p>
-	 * <p>
 	 * [issue: What error checking should be performed by this
 	 * operation, and what needs to be performed by save() if
 	 * the client tries to commit these hypothetisized changes?]
 	 * </p>
-	 *
+	 * 
 	 * @param add a possibly-empty list of modules to add
 	 * @param remove a possibly-empty list of modules to remove
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
-	 * @throws CoreException [missing]
+	 * @throws CoreException if the changes are not allowed or could not
+	 *    be processed
+	 * @see IServerAttributes#canModifyModules(IModule[], IModule[], IProgressMonitor)
 	 */
 	public void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException;
 }

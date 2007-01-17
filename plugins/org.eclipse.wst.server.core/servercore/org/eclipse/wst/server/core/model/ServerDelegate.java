@@ -190,19 +190,16 @@ public abstract class ServerDelegate {
 	 * {@link IServerAttributes#canModifyModules(IModule[], IModule[], IProgressMonitor)}
 	 * for further details. 
 	 * <p>
-	 * This method is called by the web server core framework,
-	 * in response to a call to <code>IServer.canModifyModules</code>.
-	 * Clients should never call this method.
+	 * This method is called by the web server core framework in response to
+	 * a call to <code>IServer.canModifyModules</code>. It should return quickly
+	 * without connection to the server. Clients should never call this method.
 	 * </p>
-	 * <p>
-	 * [issue: See IServerAttributes.canModifyModules(IModule[], IModule[], IProgressMonitor).]
-	 * </p>
-	 * [issue: doc that it should be quick]
 	 *
 	 * @param add a possibly-empty list of modules to add
 	 * @param remove a possibly-empty list of modules to remove
 	 * @return a status object with code <code>IStatus.OK</code> if the modules
 	 *   can be modified, otherwise a status object indicating why they can't
+	 * @see IServerAttributes#canModifyModules(IModule[], IModule[], IProgressMonitor)
 	 */
 	public abstract IStatus canModifyModules(IModule[] add, IModule[] remove);
 
@@ -243,7 +240,6 @@ public abstract class ServerDelegate {
 	 * @param module a module
 	 * @return an array of possible root modules
 	 * @throws CoreException if anything went wrong
-	 * 
 	 * @see org.eclipse.wst.server.core.IServerAttributes#getRootModules(IModule, IProgressMonitor)
 	 */
 	public abstract IModule[] getRootModules(IModule module) throws CoreException;
@@ -355,7 +351,8 @@ public abstract class ServerDelegate {
 	 * @param remove a possibly-empty list of modules to remove
 	 * @param monitor a progress monitor, or <code>null</code> if progress
 	 *    reporting and cancellation are not desired
-	 * @throws CoreException [missing]
+	 * @throws CoreException if the changes are not allowed or could not
+	 *    be processed
 	 */
 	public abstract void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException;
 

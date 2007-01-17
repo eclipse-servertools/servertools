@@ -586,9 +586,6 @@ public class GlobalCommandManager {
 			if (file != null)
 				list.add(file);
 			
-			//if ()
-			//IServerConfiguration config = (IServerConfiguration) element;
-			// TODO: get read-only files
 			IFile[] files = new IFile[list.size()];
 			list.toArray(files);
 			return files;
@@ -604,11 +601,11 @@ public class GlobalCommandManager {
 	protected IFile[] getServerResourceFiles(String id) {
 		if (id == null)
 			return new IFile[0];
-
+		
 		CommandManagerInfo info = getExistingCommandManagerInfo(id);
 		if (info == null)
 			return new IFile[0];
-
+		
 		return getReadOnlyFiles(info.wc);
 	}
 

@@ -499,7 +499,7 @@ public class ServerPublishInfo {
 	 * Returns true if the list of modules being published does not match the previous
 	 * list of published modules.
 	 * 
-	 * TODO: This method should compare the modules. For now, comparing the size is fine.
+	 * This method should compare the modules. For now, comparing the size is fine.
 	 * 
 	 * @param modules a list of modules
 	 * @return <code>true</code> if the structure of published modules has changed, or

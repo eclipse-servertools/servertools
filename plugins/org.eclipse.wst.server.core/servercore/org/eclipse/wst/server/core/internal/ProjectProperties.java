@@ -27,7 +27,7 @@ import org.eclipse.wst.server.core.IRuntime;
 /**
  * Helper class that stores preference information for the server tools.
  * 
- * TODO: Currently this class always reads from disk. It should cache the file
+ * This class currently always reads from disk. It should cache the file
  * and have a resource listener.
  */
 public class ProjectProperties {

@@ -353,12 +353,12 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		ClosableWizardDialog dialog = new ClosableWizardDialog(getShell(), wizard);
 		return dialog.open();
 	}
-	
+
 	protected IRuntime getSelection(ISelection sel2) {
 		IStructuredSelection sel = (IStructuredSelection) sel2;
 		return (IRuntime) sel.getFirstElement();
 	}
-	
+
 	/**
 	 * Initializes this preference page using the passed workbench.
 	 *
@@ -371,8 +371,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 	/** 
 	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
 	 */
-	public boolean performOk() {
-		// TODO - should not save until user hits ok 
+	public boolean performOk() { 
 		return true;
 	}
 

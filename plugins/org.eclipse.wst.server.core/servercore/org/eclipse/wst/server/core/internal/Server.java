@@ -2110,11 +2110,25 @@ public class Server extends Base implements IServer {
 	 * @see org.eclipse.wst.server.core.IServerConfiguration#canModifyModule(org.eclipse.wst.server.core.model.IModule)
 	 */
 	public IStatus canModifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) {
-		if (getServerType() == null)
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorMissingAdapter, null);
-		
 		if ((add == null || add.length == 0) && (remove == null || remove.length == 0))
 			throw new IllegalArgumentException("Add and remove cannot both be null/empty");
+		
+		if (add != null) {
+			int size = add.length;
+			for (int i = 0; i < size; i++)
+				if (add[i] == null)
+					throw new IllegalArgumentException("Cannot add null entries");
+		}
+		
+		if (remove != null) {
+			int size = remove.length;
+			for (int i = 0; i < size; i++)
+				if (remove[i] == null)
+					throw new IllegalArgumentException("Cannot remove null entries");
+		}
+		
+		if (getServerType() == null)
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, Messages.errorMissingAdapter, null);
 		
 		if (add != null && add.length > 0) {
 			int size = add.length;
@@ -2130,7 +2144,7 @@ public class Server extends Base implements IServer {
 			return getDelegate(monitor).canModifyModules(add, remove);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate canModifyModules() " + toString(), e);
-			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, "", null);
+			return new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, e.getMessage(), null);
 		}
 	}
 

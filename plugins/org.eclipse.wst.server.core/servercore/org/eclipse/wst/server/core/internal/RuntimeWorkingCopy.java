@@ -174,7 +174,6 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		int timestamp = getTimestamp();
 		map.put(PROP_TIMESTAMP, Integer.toString(timestamp+1));
 		
-		IRuntime origRuntime = runtime;
 		if (runtime == null)
 			runtime = new Runtime(file);
 		
@@ -190,61 +189,7 @@ public class RuntimeWorkingCopy extends Runtime implements IRuntimeWorkingCopy {
 		runtime.saveToMetadata(monitor);
 		wch.setDirty(false);
 		
-		if (oldId != null)
-			updateRuntimeReferences(oldId, name, origRuntime);
-		
 		return runtime;
-	}
-
-	protected void updateRuntimeReferences(final String oldId, final String newId, final IRuntime origRuntime) {
-		// TODO fix me
-		/*class UpdateRuntimeReferencesJob extends Job {
-			public UpdateRuntimeReferencesJob() {
-				super(NLS.bind(Messages.savingTask, newId));
-			}
-
-			public IStatus run(IProgressMonitor monitor) {
-				// fix .runtime files
-				IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-				if (projects != null) {
-					int size = projects.length;
-					for (int i = 0; i < size; i++) {
-						ProjectProperties props = (ProjectProperties) ServerCore.getProjectProperties(projects[i]);
-						if (oldId.equals(props.getRuntimeTargetId())) {
-							try {
-								props.setRuntimeTargetId(newId, monitor);
-							} catch (Exception e) {
-								Trace.trace(Trace.SEVERE, "Error setting runtime target", e);
-							}
-						}
-					}
-				}
-				
-				// save servers
-				if (runtime != null) {
-					ResourceManager rm = ResourceManager.getInstance();
-					IServer[] servers = rm.getServers();
-					if (servers != null) {
-						int size = servers.length;
-						for (int i = 0; i < size; i++) {
-							if (oldId.equals(((Server)servers[i]).getRuntimeId())) {
-								try {
-									ServerWorkingCopy wc = (ServerWorkingCopy) servers[i].createWorkingCopy();
-									wc.setRuntimeId(newId);
-									wc.save(false, monitor);
-								} catch (Exception e) {
-									// ignore
-								}
-							}
-						}
-					}
-				}
-				
-				return new Status(IStatus.OK, ServerPlugin.PLUGIN_ID, 0, "", null);
-			}
-		}
-		UpdateRuntimeReferencesJob job = new UpdateRuntimeReferencesJob();
-		job.schedule();*/
 	}
 
 	protected RuntimeDelegate getWorkingCopyDelegate(IProgressMonitor monitor) {

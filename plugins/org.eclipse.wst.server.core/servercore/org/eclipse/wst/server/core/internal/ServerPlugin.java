@@ -273,7 +273,6 @@ public class ServerPlugin extends Plugin {
 			public void bundleChanged(BundleEvent event) {
 				String bundleId = event.getBundle().getSymbolicName();
 				//Trace.trace(Trace.INFO, event.getType() + " " + bundleId);
-				// TODO should also look for UNINSTALLED and UNRESOLVED
 				if (BundleEvent.STOPPED == event.getType() && ResourceManager.getInstance().isActiveBundle(bundleId))
 					stopBundle(bundleId);
 			}
