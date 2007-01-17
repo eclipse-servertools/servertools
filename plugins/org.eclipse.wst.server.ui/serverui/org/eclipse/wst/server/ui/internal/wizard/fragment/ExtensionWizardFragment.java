@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,18 +13,19 @@ package org.eclipse.wst.server.ui.internal.wizard.fragment;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.wizard.NewInstallableServerWizard;
-import org.eclipse.wst.server.ui.internal.wizard.page.NewInstallableServerComposite;
+import org.eclipse.wst.server.ui.internal.wizard.ExtensionWizard;
+import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
+import org.eclipse.wst.server.ui.internal.wizard.page.Extension2Composite;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 /**
  * 
  */
-public class NewInstallableServerWizardFragment extends WizardFragment {
-	protected NewInstallableServerComposite comp;
+public class ExtensionWizardFragment extends WizardFragment {
+	protected Extension2Composite comp;
 	protected IWizardHandle wizard;
 
-	public NewInstallableServerWizardFragment() {
+	public ExtensionWizardFragment() {
 		// do nothing
 	}
 
@@ -37,7 +38,7 @@ public class NewInstallableServerWizardFragment extends WizardFragment {
 	 */
 	public Composite createComposite(Composite parent, IWizardHandle wizard2) {
 		this.wizard = wizard2;
-		comp = new NewInstallableServerComposite(parent, getTaskModel(), wizard);
+		comp = new Extension2Composite(parent, getTaskModel(), wizard);
 		
 		wizard.setTitle(Messages.wizNewInstallableServerTitle);
 		wizard.setDescription(Messages.wizNewInstallableServerDescription);
@@ -46,10 +47,10 @@ public class NewInstallableServerWizardFragment extends WizardFragment {
 	}
 
 	public boolean isComplete() {
-		return getTaskModel().getObject("installableServer") != null;
+		return getTaskModel().getObject(WizardTaskUtil.TASK_FEATURE) != null;
 	}
 
 	public void exit() {
-		NewInstallableServerWizard.updateLicense(wizard, getTaskModel());
+		ExtensionWizard.updateLicense(wizard, getTaskModel());
 	}
 }

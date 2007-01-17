@@ -42,7 +42,7 @@
    <element name="installableServer">
       <annotation>
          <appInfo>
-            <meta.element labelAttribute="name"/>
+            <meta.element labelAttribute="name" deprecated="true"/>
          </appInfo>
       </annotation>
       <complexType>
@@ -53,23 +53,23 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="name" type="string" use="required">
+         <attribute name="name" type="string">
             <annotation>
                <documentation>
                   a translatable name used to identify the runtime type
                </documentation>
                <appInfo>
-                  <meta.attribute translatable="true"/>
+                  <meta.attribute translatable="true" deprecated="true"/>
                </appInfo>
             </annotation>
          </attribute>
-         <attribute name="description" type="string" use="required">
+         <attribute name="description" type="string">
             <annotation>
                <documentation>
                   a translatable description of the runtime type
                </documentation>
                <appInfo>
-                  <meta.attribute translatable="true"/>
+                  <meta.attribute translatable="true" deprecated="true"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -78,6 +78,9 @@
                <documentation>
                   a translatable vendor name
                </documentation>
+               <appInfo>
+                  <meta.attribute deprecated="true"/>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="version" type="string">
@@ -85,6 +88,9 @@
                <documentation>
                   a translatable version number
                </documentation>
+               <appInfo>
+                  <meta.attribute deprecated="true"/>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="featureId" type="string" use="required">

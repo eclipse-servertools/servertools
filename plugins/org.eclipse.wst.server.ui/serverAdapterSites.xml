@@ -1,0 +1,6 @@
+<extensions>
+    <site url="http://www.apache.org/dist/geronimo/eclipse/updates/"/>
+    <site url="http://download.boulder.ibm.com/ibmdl/pub/software/websphere/wasce/updates/"/>
+    <site url="http://www.pramati.com/downloads/eclipse/updates/"/>
+    <site url="http://update.eclipse.org/updates/3.3/"/>
+</extensions>

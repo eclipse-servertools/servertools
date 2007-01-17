@@ -139,7 +139,7 @@ public abstract class AbstractTreeComposite extends Composite {
 			description.setText("Multi\nLine\nMessage");
 			Dialog.applyDialogFont(this);
 			Point p = description.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-			description.setText(Messages.wizDescription);
+			description.setText("");
 			data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
 			data.horizontalSpan = 2;
 			if (p.y > 10)
@@ -161,14 +161,14 @@ public abstract class AbstractTreeComposite extends Composite {
 	protected boolean hasDescription() {
 		return true;
 	}
-	
+
 	protected void setDescription(String text) {
 		if (description != null && text != null)
-			description.setText(Messages.wizDescription + " " + text);
+			description.setText(text);
 	}
-	
+
 	protected abstract void viewOptionSelected(byte option);
-	
+
 	protected TreeViewer getTreeViewer() {
 		return treeViewer;
 	}
@@ -177,11 +177,11 @@ public abstract class AbstractTreeComposite extends Composite {
 		IStructuredSelection sel = (IStructuredSelection) sel2;
 		return sel.getFirstElement();
 	}
-	
+
 	public void refresh() {
 		treeViewer.refresh();
 	}
-	
+
 	public void refresh(Object obj) {
 		treeViewer.refresh(obj);
 	}
@@ -193,7 +193,7 @@ public abstract class AbstractTreeComposite extends Composite {
 	protected String getDetailsLabel() {
 		return null;
 	}
-	
+
 	protected void detailsSelected() {
 		// do nothing
 	}

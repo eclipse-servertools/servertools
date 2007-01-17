@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.internal;
 
+import java.net.ConnectException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -125,7 +127,7 @@ public class InstallableServer implements IInstallableServer {
 		String featureId = getFeatureId();
 		String featureVersion = getFeatureVersion();
 		String fromSite = getFromSite();
-
+		
 		if (featureId == null || featureVersion == null || fromSite == null)
 			return null;
 		
@@ -143,6 +145,44 @@ public class InstallableServer implements IInstallableServer {
 		return null;
 	}
 
+	public IFeature getFeature(IProgressMonitor monitor) {
+		String featureId = getFeatureId();
+		String featureVersion = getFeatureVersion();
+		String fromSite = getFromSite();
+		
+		if (featureId == null || featureVersion == null || fromSite == null)
+			return null;
+		
+		monitor.beginTask("Searching " + fromSite, 100);
+		int mirror = 0;
+		ISite site = InstallableRuntime.getSite(fromSite, ProgressUtil.getSubMonitorFor(monitor, 50));
+		if (site == null)
+			return null;
+		fromSite = InstallableRuntime.getMirror(fromSite, site, mirror);
+		
+		Version latestVersion = new Version(featureVersion);
+		ISiteFeatureReference last = null;
+		try {
+			ISiteFeatureReference[] features = site.getFeatureReferences();
+			for (int i = 0; i < features.length; i++) {
+				if (features[i].getVersionedIdentifier().getIdentifier().equals(featureId)) {
+					Version nextCand = new Version(features[i].getVersionedIdentifier().getVersion().toString());
+					if (nextCand.compareTo(latestVersion) >= 0) {
+						latestVersion = nextCand;
+						last = features[i];
+					}
+				}
+			}
+			if (last != null)
+				return last.getFeature(ProgressUtil.getSubMonitorFor(monitor, 50));
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error searching for latest feature version", e);
+		} finally {
+			monitor.done();
+		}
+		return null;
+	}
+
 	/*
 	 * @see IInstallableServer#install(IProgressMonitor)
 	 */
@@ -154,21 +194,30 @@ public class InstallableServer implements IInstallableServer {
 		if (featureId == null || featureVersion == null || fromSite == null)
 			return;
 		
+		int mirror = 0;
 		ISite site = InstallableRuntime.getSite(fromSite, monitor);
-		fromSite = InstallableRuntime.getMirror(fromSite, site);
+		fromSite = InstallableRuntime.getMirror(fromSite, site, mirror);
 		featureVersion = getLatestVersion(site, featureVersion, featureId);
 		
-		try {
-			InstallCommand command = new InstallCommand(featureId, featureVersion, fromSite, null, "false");
-			boolean b = command.run(monitor);
-			if (!b)
+		boolean complete = false;
+		while (!complete) {
+			try {
+				InstallCommand command = new InstallCommand(featureId, featureVersion, fromSite, null, "false");
+				boolean b = command.run(monitor);
+				if (!b)
+					throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
+							Messages.errorInstallingServerFeature, null));
+				//command.applyChangesNow();
+			} catch (ConnectException ce) {
+				mirror++;
+				fromSite = InstallableRuntime.getMirror(fromSite, site, mirror);
+				if (fromSite == null)
+					complete = true;
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Error installing feature", e);
 				throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
-						Messages.errorInstallingServerFeature, null));
-			//command.applyChangesNow();
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error installing feature", e);
-			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
-					NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
+						NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
+			}
 		}
 		
 		try {
@@ -183,7 +232,7 @@ public class InstallableServer implements IInstallableServer {
 		try {
 			ISiteFeatureReference[] features = site.getFeatureReferences();
 			for (int i = 0; i < features.length; i++) {
-				if (features[i].getName().equals(featureId)) {
+				if (features[i].getVersionedIdentifier().getIdentifier().equals(featureId)) {
 					Version nextCand = new Version(features[i].getVersionedIdentifier().getVersion().toString());
 					if (nextCand.compareTo(latestVersion) > 0) {
 						latestVersion = nextCand;

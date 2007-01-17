@@ -13,7 +13,9 @@ package org.eclipse.wst.server.core.internal;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.zip.ZipEntry;
@@ -116,7 +118,7 @@ public class InstallableRuntime implements IInstallableRuntime {
 		ISite site = InstallableRuntime.getSite(fromSite, monitor);
 		ISiteFeatureReference[] featureRefs = site.getFeatureReferences();
 		for (int i = 0; i < featureRefs.length; i++) {
-			if (featureId.equals(featureRefs[i].getName()) && featureVersion.equals(featureRefs[i].getVersionedIdentifier().getVersion().toString())) {
+			if (featureId.equals(featureRefs[i].getVersionedIdentifier().getIdentifier()) && featureVersion.equals(featureRefs[i].getVersionedIdentifier().getVersion().toString())) {
 				IFeature feature = featureRefs[i].getFeature(monitor);
 				IURLEntry license = feature.getLicense();
 				if (license != null)
@@ -172,24 +174,27 @@ public class InstallableRuntime implements IInstallableRuntime {
 		return null;
 	}
 
-	public static String getMirror(String fromSite, ISite site) {
+	protected static String getMirror(String fromSite, ISite site, int mirror) {
 		if (site != null) {
-			String mirrorSite = getMirror(site);
-			if (mirrorSite != null) 
+			String mirrorSite = getMirror(site, mirror);
+			if (mirrorSite != null)
 				return mirrorSite;
 		}
+		// only return fromSite if this is the 0th mirror
+		if (mirror > 0)
+			return null;
 		return fromSite;
 	}
 
-	public static String getMirror(ISite site) {
+	protected static String getMirror(ISite site, int mirror) {
 		// if the site is a site containing mirrors, set the fromSite to the
-		// first mirror site since many mirror list generators will sort the mirrors
+		// mirrors in order site since many mirror list generators will sort the mirrors
 		// to closest geographic location
 		if (site != null && site instanceof ISiteWithMirrors) {
 			try {
 				IURLEntry[] urlEntries = ((ISiteWithMirrors) site).getMirrorSiteEntries();
-				if (urlEntries.length > 0)
-					return urlEntries[0].getURL().toExternalForm();
+				if (urlEntries.length > mirror)
+					return urlEntries[mirror].getURL().toExternalForm();
 			} catch (CoreException e) {
 				Trace.trace(Trace.WARNING, "Could not find mirror site", e);
 			}
@@ -208,8 +213,9 @@ public class InstallableRuntime implements IInstallableRuntime {
 		if (featureId == null || featureVersion == null || fromSite == null)
 			return;
 		
+		int mirror = 0;
 		ISite site = getSite(fromSite, monitor);
-		fromSite = getMirror(fromSite, site);
+		fromSite = getMirror(fromSite, site, mirror);
 		
 		boolean install = false;
 		if (getBundleId() != null) {
@@ -220,18 +226,27 @@ public class InstallableRuntime implements IInstallableRuntime {
 		
 		// download and install plugins
 		if (install) {
-			try {
-				monitor.setTaskName("Installing feature");
-				InstallCommand command = new InstallCommand(featureId, featureVersion, fromSite, null, "false");
-				boolean b = command.run(monitor);
-				if (!b)
+			boolean complete = false;
+			while (!complete) {
+				try {
+					monitor.setTaskName("Installing feature");
+					InstallCommand command = new InstallCommand(featureId, featureVersion, fromSite, null, "false");
+					boolean b = command.run(monitor);
+					if (!b)
+						throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
+								Messages.errorInstallingServerFeature, null));
+					command.applyChangesNow();
+					complete = true;
+				} catch (ConnectException ce) {
+					mirror++;
+					fromSite = getMirror(fromSite, site, mirror);
+					if (fromSite == null)
+						complete = true;
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Error installing feature", e);
 					throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
-							Messages.errorInstallingServerFeature, null));
-				command.applyChangesNow();
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error installing feature", e);
-				throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
-						NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
+							NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
+				}
 			}
 		}
 		
@@ -249,33 +264,38 @@ public class InstallableRuntime implements IInstallableRuntime {
 			
 			// unzip from bundle into path
 			InputStream in = url.openStream();
-			BufferedInputStream bin = new BufferedInputStream(in);
-			ZipInputStream zin = new ZipInputStream(bin);
-			ZipEntry entry = zin.getNextEntry();
-			byte[] buf = new byte[8192];
-			while (entry != null) {
-				String name = entry.getName();
-				monitor.setTaskName("Unzipping: " + name);
-				
-				if (entry.isDirectory()) {
-					path.append(name).toFile().mkdirs();
-				} else {
-					FileOutputStream fout = new FileOutputStream(path.append(name).toFile());
-					int r = zin.read(buf);
-					while (r >= 0) {
-						fout.write(buf, 0, r);
-						r = zin.read(buf);
-					}
-				}
-				zin.closeEntry();
-				entry = zin.getNextEntry();
-			}
-			zin.close();
+			unzip(in, path, monitor);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error unzipping runtime", e);
 			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0,
 					NLS.bind(Messages.errorInstallingServer, e.getLocalizedMessage()), e));
 		} 
+	}
+
+	private void unzip(InputStream in, IPath path, IProgressMonitor monitor) throws IOException {
+		// unzip from bundle into path
+		BufferedInputStream bin = new BufferedInputStream(in);
+		ZipInputStream zin = new ZipInputStream(bin);
+		ZipEntry entry = zin.getNextEntry();
+		byte[] buf = new byte[8192];
+		while (entry != null) {
+			String name = entry.getName();
+			monitor.setTaskName("Unzipping: " + name);
+			
+			if (entry.isDirectory()) {
+				path.append(name).toFile().mkdirs();
+			} else {
+				FileOutputStream fout = new FileOutputStream(path.append(name).toFile());
+				int r = zin.read(buf);
+				while (r >= 0) {
+					fout.write(buf, 0, r);
+					r = zin.read(buf);
+				}
+			}
+			zin.closeEntry();
+			entry = zin.getNextEntry();
+		}
+		zin.close();
 	}
 
 	private String getFeatureArchivePath() {

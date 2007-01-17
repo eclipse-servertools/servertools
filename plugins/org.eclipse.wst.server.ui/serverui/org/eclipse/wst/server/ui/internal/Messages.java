@@ -202,7 +202,6 @@ public class Messages extends NLS {
 	public static String wizSelectClientWizardTitle;
 	public static String wizTaskWizardTitle;
 	public static String viewBy;
-	public static String wizDescription;
 	public static String dialogMonitorTitle;
 	public static String dialogMonitorMonitorPort;
 	public static String dialogMonitorColumnStatus;
@@ -315,12 +314,15 @@ public class Messages extends NLS {
 	public static String wizNewInstallableServerRestart;
 	public static String installableServerCompTree;
 	public static String installableServerLink;
+	public static String installableServerLocal;
+	public static String installableServerSearching;
 	public static String wizLicenseTitle;
 	public static String wizLicenseDescription;
 	public static String wizLicenseAccept;
 	public static String wizLicenseDecline;
 	public static String wizLicenseNone;
 	public static String jobInitializing;
+	public static String jobInitializingServersView;
 	public static String jobRestarting;
 	public static String clientDefaultName;
 	public static String clientDefaultDescription;

@@ -4,43 +4,18 @@
   <extension point="org.eclipse.wst.server.core.installableServers">
     <installableServer
       id="org.apache.geronimo.generic.runtime.10"
-      name="%runtimeTypeGeronimo10Label"
-      description="%runtimeTypeGeronimo10Description"
-      vendor="%vendorApache"
-      version="1.0"
       featureId="org.apache.geronimo.feature"
-      featureVersion="1.1.0"
-      featureSite="http://www.apache.org/dist/geronimo/eclipse/updates/">
-    </installableServer>
+      featureVersion="1.2.0"
+      featureSite="http://www.apache.org/dist/geronimo/eclipse/updates/"/>
     <installableServer
-      id="org.apache.geronimo.generic.runtime.11"
-      name="%runtimeTypeGeronimo11Label"
-      description="%runtimeTypeGeronimo11Description"
-      vendor="%vendorApache"
-      version="1.1"
-      featureId="org.apache.geronimo.feature"
-      featureVersion="1.1.0"
-      featureSite="http://www.apache.org/dist/geronimo/eclipse/updates/">
-    </installableServer>
-    <installableServer
-      id="org.apache.geronimo.generic.runtime.11"
-      name="%runtimeTypeWASCE1xLabel"
-      description="%runtimeTypeWASCE1xDescription"
-      vendor="%vendorIBM"
-      version="1.1"
+      id="org.apache.geronimo.generic.runtime.10"
       featureId="com.ibm.websphere.ce.feature"
       featureVersion="1.1.0"
-      featureSite="http://download.boulder.ibm.com/ibmdl/pub/software/websphere/wasce/updates/">
-    </installableServer>
+      featureSite="http://download.boulder.ibm.com/ibmdl/pub/software/websphere/wasce/updates/"/>
     <installableServer
-      id="xxx"
-      name="%runtimeTypePramatiLabel"
-      description="%runtimeTypePramatiDescription"
-      vendor="%vendorPramati"
-      version="4.1"
+      id="com.pramati"
       featureId="com.pramati.eclipse.feature"
       featureVersion="1.0.0"
-      featureSite="http://www.pramati.com/downloads/eclipse/updates/">
-    </installableServer>
+      featureSite="http://www.pramati.com/downloads/eclipse/updates/"/>
   </extension>
 </plugin>

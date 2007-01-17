@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,35 +19,35 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.update.core.IFeature;
 import org.eclipse.wst.server.core.TaskModel;
-import org.eclipse.wst.server.core.internal.IInstallableServer;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.wst.server.ui.internal.extension.ExtensionUtility;
+import org.eclipse.wst.server.ui.internal.wizard.fragment.ExtensionWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.LicenseWizardFragment;
-import org.eclipse.wst.server.ui.internal.wizard.fragment.NewInstallableServerWizardFragment;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
  * A wizard to create a new installable server.
  */
-public class NewInstallableServerWizard extends TaskWizard {
+public class ExtensionWizard extends TaskWizard {
 	/**
 	 * NewInstallableServerWizard constructor comment.
 	 */
-	public NewInstallableServerWizard() {
-		super(Messages.wizNewServerWizardTitle, new WizardFragment() {
+	public ExtensionWizard(String title, String message) {
+		super(title, new WizardFragment() {
 			protected void createChildFragments(List list) {
-				list.add(new NewInstallableServerWizardFragment());
+				list.add(new ExtensionWizardFragment());
 				list.add(new LicenseWizardFragment());
 				list.add(new WizardFragment() {
 					public void performFinish(IProgressMonitor monitor) throws CoreException {
-						IInstallableServer is = (IInstallableServer) getTaskModel().getObject("installableServer");
+						IFeature is = (IFeature) getTaskModel().getObject(WizardTaskUtil.TASK_FEATURE);
 						if (is != null)
-							installServer(is);
+							install(is);
 					}
 				});
 			}
@@ -55,8 +55,8 @@ public class NewInstallableServerWizard extends TaskWizard {
 	}
 
 	public static void invalidateLicense(TaskModel taskModel) {
-		IInstallableServer is = (IInstallableServer) taskModel.getObject("installableServer");
-		IInstallableServer ls = (IInstallableServer) taskModel.getObject(LicenseWizardFragment.LICENSE_SERVER);
+		IFeature is = (IFeature) taskModel.getObject(WizardTaskUtil.TASK_FEATURE);
+		IFeature ls = (IFeature) taskModel.getObject(LicenseWizardFragment.LICENSE_SERVER);
 		if (is == ls)
 			return;
 		
@@ -66,23 +66,19 @@ public class NewInstallableServerWizard extends TaskWizard {
 	}
 
 	public static void updateLicense(IWizardHandle wizard, final TaskModel taskModel) {
-		final IInstallableServer is = (IInstallableServer) taskModel.getObject("installableServer");
-		IInstallableServer ls = (IInstallableServer) taskModel.getObject(LicenseWizardFragment.LICENSE_SERVER);
-		if (is == ls)
+		final IFeature feature = (IFeature) taskModel.getObject(WizardTaskUtil.TASK_FEATURE);
+		IFeature ls = (IFeature) taskModel.getObject(LicenseWizardFragment.LICENSE_SERVER);
+		if (feature.equals(ls))
 			return;
 		
 		IRunnableWithProgress runnable = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) {
 				String license = LicenseWizardFragment.LICENSE_UNKNOWN;
-				try {
-					license = is.getLicense(monitor);
-					if (license == null)
-						license = LicenseWizardFragment.LICENSE_NONE;
-				} catch (CoreException ce) {
-					// ignore
-				}
+				license = ExtensionUtility.getLicense(feature);
+				if (license == null)
+					license = LicenseWizardFragment.LICENSE_NONE;
 				taskModel.putObject(LicenseWizardFragment.LICENSE, license);
-				taskModel.putObject(LicenseWizardFragment.LICENSE_SERVER, is);
+				taskModel.putObject(LicenseWizardFragment.LICENSE_SERVER, feature);
 			}
 		};
 		
@@ -94,18 +90,18 @@ public class NewInstallableServerWizard extends TaskWizard {
 	}
 
 	/**
-	 * Install a new server adapter.
-	 * @param is
+	 * Install a new feature.
+	 * @param feature
 	 */
-	protected static void installServer(final IInstallableServer is) {
-		if (is == null)
+	protected static void install(final IFeature feature) {
+		if (feature == null)
 			return;
 		
 		final boolean[] b = new boolean[1];
 		final Display display = Display.getDefault();
 		display.syncExec(new Runnable() {
 			public void run() {
-				String msg = NLS.bind(Messages.wizNewInstallableServerConfirm, is.getName());
+				String msg = NLS.bind(Messages.wizNewInstallableServerConfirm, feature.getLabel());
 				b[0] = MessageDialog.openConfirm(display.getActiveShell(),
 					Messages.defaultDialogTitle, msg);
 			}
@@ -113,11 +109,11 @@ public class NewInstallableServerWizard extends TaskWizard {
 		if (!b[0])
 			return;
 		
-		String name = NLS.bind(Messages.wizNewInstallableServerJob, is.getName());
+		String name = NLS.bind(Messages.wizNewInstallableServerJob, feature.getLabel());
 		Job job = new Job(name) {
 			public IStatus run(IProgressMonitor monitor) {
 				try {
-					is.install(monitor);
+					ExtensionUtility.install(feature, monitor);
 					promptRestart();
 					return Status.OK_STATUS;
 				} catch (CoreException ce) {

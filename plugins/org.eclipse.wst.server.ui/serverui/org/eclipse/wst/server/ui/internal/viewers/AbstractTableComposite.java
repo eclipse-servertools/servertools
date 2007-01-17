@@ -37,7 +37,7 @@ public abstract class AbstractTableComposite extends Composite {
 		layout.marginHeight = 0;
 		layout.numColumns = 1;
 		setLayout(layout);
-
+		
 		GridData data = new GridData(GridData.FILL_BOTH);
 		setLayoutData(data);
 		
@@ -47,11 +47,11 @@ public abstract class AbstractTableComposite extends Composite {
 		table.setLinesVisible(true);
 		createTableViewer();
 	}
-	
+
 	protected void createTable() {
 		table = new Table(this, SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE);
 	}
-	
+
 	protected void createTableViewer() {
 		tableViewer = new LockedTableViewer(table);
 	}
@@ -64,11 +64,11 @@ public abstract class AbstractTableComposite extends Composite {
 		IStructuredSelection sel = (IStructuredSelection) sel2;
 		return sel.getFirstElement();
 	}
-	
+
 	public void refresh() {
 		tableViewer.refresh();
 	}
-	
+
 	public void refresh(Object obj) {
 		tableViewer.refresh(obj);
 	}

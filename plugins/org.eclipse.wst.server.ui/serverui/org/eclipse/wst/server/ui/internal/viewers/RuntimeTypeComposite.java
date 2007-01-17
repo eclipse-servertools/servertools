@@ -11,14 +11,12 @@
 package org.eclipse.wst.server.ui.internal.viewers;
 
 import org.eclipse.jface.viewers.*;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.wizard.NewInstallableServerWizard;
+import org.eclipse.wst.server.ui.internal.extension.ExtensionUtility;
 /**
  * 
  */
@@ -128,9 +126,8 @@ public class RuntimeTypeComposite extends AbstractTreeComposite {
 	}
 
 	protected void detailsSelected() {
-		NewInstallableServerWizard wizard2 = new NewInstallableServerWizard();
-		WizardDialog dialog = new WizardDialog(getShell(), wizard2);
-		if (dialog.open() != Window.CANCEL)
+		if (ExtensionUtility.launchExtensionWizard(getShell(), Messages.wizNewInstallableServerTitle,
+				Messages.wizNewInstallableServerDescription))
 			refresh();
 	}
 }

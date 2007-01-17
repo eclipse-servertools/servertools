@@ -36,6 +36,7 @@ public class WizardTaskUtil {
 	public static final String TASK_MODE = "mode";
 	public static final String TASK_HAS_TASKS = "hasTasks";
 	public static final String TASK_HAS_CLIENTS = "hasClients";
+	public static final String TASK_FEATURE = "feature";
 
 	public static final byte MODE_EXISTING = 0;
 	public static final byte MODE_DETECT = 1;

@@ -17,15 +17,13 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Composite;
 
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.ui.internal.Messages;
-import org.eclipse.wst.server.ui.internal.wizard.NewInstallableServerWizard;
+import org.eclipse.wst.server.ui.internal.extension.ExtensionUtility;
 /**
  * 
  */
@@ -157,9 +155,8 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 	}
 
 	protected void detailsSelected() {
-		NewInstallableServerWizard wizard2 = new NewInstallableServerWizard();
-		WizardDialog dialog = new WizardDialog(getShell(), wizard2);
-		if (dialog.open() != Window.CANCEL)
+		if (ExtensionUtility.launchExtensionWizard(getShell(), Messages.wizNewInstallableServerTitle,
+				Messages.wizNewInstallableServerDescription))
 			refresh();
 	}
 }
