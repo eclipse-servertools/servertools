@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.internal;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -45,7 +46,7 @@ public class ModuleProperties {
 			new ModuleProperties();
 		return instance;
 	}
-	
+
 	/**
 	 * Load the data.
 	 */
@@ -53,6 +54,8 @@ public class ModuleProperties {
 		Trace.trace(Trace.FINEST, "Loading module info");
 		String filename = ServerPlugin.getInstance().getStateLocation().append(MODULE_DATA_FILE).toOSString();
 		modules = new HashMap();
+		if (!(new File(filename).exists()))
+			return;
 		
 		try {
 			IMemento memento = XMLMemento.loadMemento(filename);
@@ -69,23 +72,23 @@ public class ModuleProperties {
 			Trace.trace(Trace.WARNING, "Could not load servers: " + e.getMessage());
 		}
 	}
-	
+
 	private void save(IProgressMonitor monitor) throws CoreException {
 		String filename = ServerPlugin.getInstance().getStateLocation().append(MODULE_DATA_FILE).toOSString();
 		
 		try {
 			XMLMemento memento = XMLMemento.createWriteRoot("modules");
-
+			
 			Iterator iterator = modules.keySet().iterator();
 			while (iterator.hasNext()) {
 				String moduleId = (String) iterator.next();
 				String serverId = (String) modules.get(moduleId);
-
+				
 				IMemento child = memento.createChild("module");
 				child.putString("moduleId", moduleId);
 				child.putString("serverId", serverId);
 			}
-
+			
 			memento.saveToFile(filename);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not save servers", e);
