@@ -259,7 +259,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	}
 
 	protected abstract void save(IFolder folder, IProgressMonitor monitor) throws CoreException;
-	
+
 	protected void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue) {
 		if (propertyListeners == null)
 			return;
@@ -346,6 +346,6 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	 * @return java.lang.String
 	 */
 	public String toString() {
-		return "TomcatConfiguration[" + this + "]";
+		return "TomcatConfiguration[" + getFolder() + "]";
 	}
 }

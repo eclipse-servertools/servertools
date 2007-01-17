@@ -57,10 +57,8 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 	protected Document tomcatUsersDocument;
 
 	protected String policyFile;
-	protected boolean isPolicyDirty;
 
 	protected String propertiesFile;
-	protected boolean isPropertiesDirty;
 	
 	/**
 	 * Tomcat50Configuration constructor.
@@ -340,38 +338,34 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 				path.toFile().mkdir();
 			}
 			monitor.worked(1);
-	
+			
 			// save files
-			if (forceDirty || isServerDirty)
+			if (forceDirty || isServerDirty) {
 				serverFactory.save(path.append("server.xml").toOSString());
+				isServerDirty = false;
+			}
 			monitor.worked(1);
-	
-			//if (forceDirty || isWebAppDirty)
-			//	webAppFactory.save(dirPath + "web.xml");
-			//webAppDocument.save(path.toOSString(), forceDirty || isPolicyDirty);
+			
 			webAppDocument.save(path.append("web.xml").toOSString(), forceDirty);
 			monitor.worked(1);
-	
+			
 			if (forceDirty)
 				XMLUtil.save(path.append("tomcat-users.xml").toOSString(), tomcatUsersDocument);
 			monitor.worked(1);
-	
-			if (forceDirty || isPolicyDirty) {
+			
+			if (forceDirty) {
 				BufferedWriter bw = new BufferedWriter(new FileWriter(path.append("catalina.policy").toFile()));
 				bw.write(policyFile);
 				bw.close();
 			}
 			monitor.worked(1);
-			if (propertiesFile != null && (forceDirty || isPropertiesDirty)) {
+			if (propertiesFile != null && forceDirty) {
 				BufferedWriter bw = new BufferedWriter(new FileWriter(path.append("catalina.properties").toFile()));
 				bw.write(propertiesFile);
 				bw.close();
 			}
 			monitor.worked(1);
-			isServerDirty = false;
-			isPolicyDirty = false;
-			isPropertiesDirty = false;
-	
+			
 			if (monitor.isCanceled())
 				return;
 			monitor.done();
@@ -380,7 +374,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 			throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorCouldNotSaveConfiguration, new String[] {e.getLocalizedMessage()}), e));
 		}
 	}
-	
+
 	/**
 	 * Save to the given directory.  All files are forced to be saved.
 	 * 
@@ -403,7 +397,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
 			monitor.beginTask(Messages.savingTask, 1100);
-	
+			
 			// save server.xml
 			byte[] data = serverFactory.getContents();
 			InputStream in = new ByteArrayInputStream(data);
@@ -415,10 +409,11 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 					monitor.worked(200);
 			} else
 				file.create(in, true, ProgressUtil.getSubMonitorFor(monitor, 200));
-	
+			isServerDirty = false;
+			
 			// save web.xml
 			webAppDocument.save(folder.getFile("web.xml"), ProgressUtil.getSubMonitorFor(monitor, 200));
-	
+			
 			// save tomcat-users.xml
 			data = XMLUtil.getContents(tomcatUsersDocument);
 			in = new ByteArrayInputStream(data);
@@ -428,7 +423,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 				//file.setContents(in, true, true, ProgressUtil.getSubMonitorFor(monitor, 200));
 			else
 				file.create(in, true, ProgressUtil.getSubMonitorFor(monitor, 200));
-	
+			
 			// save catalina.policy
 			in = new ByteArrayInputStream(policyFile.getBytes());
 			file = folder.getFile("catalina.policy");
@@ -437,7 +432,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 				//file.setContents(in, true, true, ProgressUtil.getSubMonitorFor(monitor, 200));
 			else
 				file.create(in, true, ProgressUtil.getSubMonitorFor(monitor, 200));
-
+			
 			// save catalina.properties
 			if (propertiesFile != null) {
 				in = new ByteArrayInputStream(propertiesFile.getBytes());
@@ -447,10 +442,8 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 					//file.setContents(in, true, true, ProgressUtil.getSubMonitorFor(monitor, 200));
 				else
 					file.create(in, true, ProgressUtil.getSubMonitorFor(monitor, 200));
-			}
-			else {
+			} else
 				monitor.worked(200);
-			}
 			
 			if (monitor.isCanceled())
 				return;

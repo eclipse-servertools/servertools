@@ -69,7 +69,7 @@ public class WebAppDocument {
 		XMLUtil.insertText(webAppDocument, mapping, "\n\t");
 		XMLUtil.createTextChildElement(webAppDocument, mapping, "mime-type", map.getMimeType());
 		XMLUtil.insertText(webAppDocument, mapping, "\n");
-	
+		
 		isWebAppDirty = true;
 	}
 
@@ -80,7 +80,7 @@ public class WebAppDocument {
 	 */
 	public List getMimeMappings() {
 		List map = new ArrayList();
-	
+		
 		Element root = webAppDocument.getDocumentElement();
 		Iterator iterator = XMLUtil.getNodeIterator(root, "mime-mapping");
 		while (iterator.hasNext()) {
@@ -90,7 +90,7 @@ public class WebAppDocument {
 			MimeMapping mm = new MimeMapping(extension, mimeType);
 			map.add(mm);
 		}
-	
+		
 		return map;
 	}
 
@@ -106,7 +106,7 @@ public class WebAppDocument {
 		Element element2 = (Element) list.item(index);
 		XMLUtil.setNodeValue(element2.getElementsByTagName("extension").item(0), "extension", map.getExtension());
 		XMLUtil.setNodeValue(element2.getElementsByTagName("mime-type").item(0), "mime-type", map.getMimeType());
-			
+		
 		isWebAppDirty = true;
 	}
 
@@ -122,7 +122,7 @@ public class WebAppDocument {
 		element.removeChild(node);
 		isWebAppDirty = true;
 	}
-	
+
 	/**
 	 * Saves the Web app document.
 	 *
@@ -134,7 +134,7 @@ public class WebAppDocument {
 		if (forceDirty || isWebAppDirty)
 			XMLUtil.save(path, webAppDocument);
 	}
-	
+
 	/**
 	 * Saves the Web app document.
 	 *
@@ -143,6 +143,9 @@ public class WebAppDocument {
 	 * @throws Exception if anything goes wrong 
 	 */
 	public void save(IFile file, IProgressMonitor monitor) throws Exception {
+		if (file.exists() && !isWebAppDirty)
+			return;
+		
 		byte[] data = XMLUtil.getContents(webAppDocument);
 		InputStream in = null;
 		try {
@@ -160,5 +163,6 @@ public class WebAppDocument {
 				// ignore
 			}
 		}
+		isWebAppDirty = false;
 	}
 }

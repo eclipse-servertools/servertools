@@ -35,12 +35,12 @@ public class TomcatLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
 			return null;
 		if (moduleObject.getModule().loadAdapter(IWebModule.class, null) == null)
 			return null;
-
+		
 		try {
-			URL url = ((IURLProvider) server.getAdapter(IURLProvider.class)).getModuleRootURL(moduleObject.getModule());
+			URL url = ((IURLProvider) server.loadAdapter(IURLProvider.class, null)).getModuleRootURL(moduleObject.getModule());
 			
 			Trace.trace(Trace.FINER, "root: " + url);
-
+			
 			if (moduleObject instanceof Servlet) {
 				Servlet servlet = (Servlet) moduleObject;
 				if (servlet.getAlias() != null) {

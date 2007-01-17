@@ -400,6 +400,16 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 			// bad path
 		}
 		
+		if (s.startsWith(configuration.getDocBasePrefix())) {
+			try {
+				String t = s.substring(configuration.getDocBasePrefix().length());
+				if (ResourcesPlugin.getWorkspace().getRoot().getProject(t).exists())
+					return true;
+			} catch (Exception e) {
+				// bad path
+			}
+		}
+		
 		// check server relative path
 		try {
 			f = server.getRuntime().getLocation().append(s).toFile();
