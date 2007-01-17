@@ -46,6 +46,9 @@ public class ServerTableViewer extends TreeViewer {
 
 	protected ServersView view;
 
+	protected boolean animationActive = false;
+	protected boolean stopAnimation = false;
+
 	public class ServerContentProvider implements IStructuredContentProvider, ITreeContentProvider {
 		public Object[] getElements(Object element) {
 			List list = new ArrayList();
@@ -151,40 +154,39 @@ public class ServerTableViewer extends TreeViewer {
 		fShell.setVisible(true);
 	}*/
 
-	protected Thread thread = null;
-	protected boolean stopThread = false;
-	
 	protected void startThread() {
-		stopThread = false;
-		if (thread != null)
+		if (animationActive)
 			return;
 		
-		thread = new Thread("Servers View Animator") {
+		stopAnimation = false;
+		
+		final Display display = getTree().getDisplay();
+		final int SLEEP = 200;
+		final Runnable[] animator = new Runnable[1];
+		animator[0] = new Runnable() {
 			public void run() {
-				while (!stopThread) {
+				if (!stopAnimation) {
 					try {
 						labelProvider.animate();
 						final Object[] rootElements = ((ITreeContentProvider)getContentProvider()).getElements(null); 
-						Display.getDefault().asyncExec(new Runnable() {
-							public void run() {
-								if (getTree() != null && !getTree().isDisposed())
-									update(rootElements, null);
-							}
-						});
-						Thread.sleep(250);
+						if (getTree() != null && !getTree().isDisposed())
+							update(rootElements, null);
 					} catch (Exception e) {
-						Trace.trace(Trace.FINEST, "Error in animated server view", e);
+						Trace.trace(Trace.FINEST, "Error in Servers view animation", e);
 					}
-					thread = null;
+					display.timerExec(SLEEP, animator[0]);
 				}
 			}
 		};
-		thread.setDaemon(true);
-		thread.start();
+		Display.getDefault().syncExec(new Runnable() {
+			public void run() {
+				display.timerExec(SLEEP, animator[0]);
+			}
+		});
 	}
 
 	protected void stopThread() {
-		stopThread = true;
+		stopAnimation = true;
 	}
 
 	/**

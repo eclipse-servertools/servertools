@@ -107,7 +107,7 @@ public class ServersView extends ViewPart {
 		tableViewer = new ServerTableViewer(this, treeTable);
 		initializeActions(tableViewer);
 		
-		Job job = new Job("Initialize Servers view") {
+		Job job = new Job(Messages.jobInitializingServersView) {
 			public IStatus run(IProgressMonitor monitor) {
 				ServerCore.getServers();
 				Display.getDefault().asyncExec(new Runnable() {

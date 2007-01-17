@@ -134,6 +134,10 @@ public class ServerTableLabelProvider extends BaseLabelProvider implements ITabl
 			return null;
 	}
 
+	public String getText(Object element) {
+		return getColumnText(element, 0);
+	}
+
 	public String getColumnText(Object element, int columnIndex) {
 		if (element instanceof ModuleServer) {
 			ModuleServer ms = (ModuleServer) element;
