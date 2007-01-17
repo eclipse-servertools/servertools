@@ -177,8 +177,8 @@ public class CactusModuleArtifactAdapterDelegate extends ModuleArtifactAdapterDe
 	private static String getFullyQualifiedTypeForType(String type, IType declaringType)
 			throws JavaModelException {
 		String[][] resolvedTypes = declaringType.resolveType(type);
-		//TODO: Are there legit cases where this would not be the case? We might need to check
-		//for this and bomb out if the type cannot be unambigiously resolved
+		// Are there legit cases where this would not be the case? We might need to check
+		// for this and bomb out if the type cannot be unambigiously resolved
 		if (resolvedTypes.length != 1)
 			Trace.trace(Trace.WARNING, "The type cannot be unambigiously resolved. Need to handle this case");
 		String[] resolvedType = resolvedTypes[0];

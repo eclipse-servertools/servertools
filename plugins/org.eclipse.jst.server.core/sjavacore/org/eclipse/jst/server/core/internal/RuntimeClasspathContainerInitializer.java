@@ -105,7 +105,7 @@ public class RuntimeClasspathContainerInitializer extends ClasspathContainerInit
 								if (!projects[i].isNatureEnabled(JavaCore.NATURE_ID))
 									continue;
 								
-								IJavaProject javaProject = JavaCore.create(projects[i]); // TODO is java project?
+								IJavaProject javaProject = JavaCore.create(projects[i]);
 								
 								boolean found = false;
 								IClasspathEntry[] ce = javaProject.getRawClasspath();

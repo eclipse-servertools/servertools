@@ -113,16 +113,6 @@ public class JavaServerPlugin extends Plugin {
 	 * Handle a runtime change by potentially updating the classpath container.
 	 * 
 	 * @param runtime a runtime
-	 * @deprecated should not be called directly, will be removed
-	 */
-	protected void handleRuntimeChange(IRuntime runtime) {
-		handleRuntimeChange(runtime, 1);
-	}
-
-	/**
-	 * Handle a runtime change by potentially updating the classpath container.
-	 * 
-	 * @param runtime a runtime
 	 */
 	protected void handleRuntimeChange(final IRuntime runtime, final int act) {
 		if (runtime == null)
@@ -154,7 +144,7 @@ public class JavaServerPlugin extends Plugin {
 									if (!projects[i].isNatureEnabled(JavaCore.NATURE_ID))
 										continue;
 									
-									IJavaProject javaProject = JavaCore.create(projects[i]); // TODO is java project?
+									IJavaProject javaProject = JavaCore.create(projects[i]);
 									
 									boolean found = false;
 									IClasspathEntry[] ce = javaProject.getRawClasspath();

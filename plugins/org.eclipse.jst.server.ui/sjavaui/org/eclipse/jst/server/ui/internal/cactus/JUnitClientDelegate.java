@@ -102,8 +102,8 @@ public class JUnitClientDelegate extends ClientDelegate {
 			candidateConfigs = new ArrayList(configs.length);
 			for (int i = 0; i < configs.length; i++) {
 				ILaunchConfiguration config = configs[i];
-				// TODO: we should probably extract the JUnit internal stuff and
-				// create a new CactusLaunchConfiguration
+				// we should probably extract the JUnit internal stuff and
+				// create a new CactusLaunchConfiguration instead
 				if ((config.getAttribute(
 						JUnitBaseLaunchConfiguration.LAUNCH_CONTAINER_ATTR, "").equals(container)) && //$NON-NLS-1$
 						(config.getAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
@@ -121,8 +121,7 @@ public class JUnitClientDelegate extends ClientDelegate {
 		// If there are no existing configs associated with the IType, create one.
 		// If there is exactly one config associated with the IType, return it.
 		// Otherwise, if there is more than one config associated with the IType,
-		// prompt the
-		// user to choose one.
+		// prompt the user to choose one.
 		int candidateCount = candidateConfigs.size();
 		if (candidateCount < 1)
 			return null;
@@ -161,7 +160,7 @@ public class JUnitClientDelegate extends ClientDelegate {
 	}
 
 	protected ILaunchConfigurationType getJUnitLaunchConfigType() {
-		// TODO: might want to replace this with a custom launch configuration
+		// might want to replace this with a custom launch configuration instead
 		ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
 		return lm.getLaunchConfigurationType("org.eclipse.jdt.junit.launchconfig");
 	}

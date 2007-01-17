@@ -60,19 +60,16 @@ public class ServletTestCasePropertyTester extends PropertyTester {
 			if (element instanceof ICompilationUnit) {
 				ICompilationUnit cu = (ICompilationUnit) element;
 				testType = cu.getType(Signature.getQualifier(cu.getElementName()));
-			} else if (element instanceof IClassFile) {
+			} else if (element instanceof IClassFile)
 				testType = ((IClassFile) element).getType();
-			} else if (element instanceof IType) {
+			else if (element instanceof IType)
 				testType = (IType) element;
-			} else if (element instanceof IMember) {
+			else if (element instanceof IMember)
 				testType = ((IMember) element).getDeclaringType();
-			}
-
-			if (testType != null && testType.exists() && isTestOrSuite(testType)) {
+			
+			if (testType != null && testType.exists() && isTestOrSuite(testType))
 				return true;
-			}
 		} catch (JavaModelException e) {
-			// TODO: what do we do here?
 			Trace.trace(Trace.SEVERE, "Error checking isServlet", e);
 		}
 		return false;
