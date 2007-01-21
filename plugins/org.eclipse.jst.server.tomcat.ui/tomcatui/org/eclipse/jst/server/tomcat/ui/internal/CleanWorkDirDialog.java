@@ -11,9 +11,13 @@
 package org.eclipse.jst.server.tomcat.ui.internal;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jst.server.core.IWebModule;
@@ -31,6 +35,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServer.IOperationListener;
+import org.eclipse.wst.server.core.internal.ServerSchedulingRule;
 
 /**
  * Dialog to confirm deletion of the work directory for a module on a
@@ -59,7 +64,7 @@ public class CleanWorkDirDialog extends Dialog {
 	protected IModule module;
 	protected int state;
 	protected String mode;
-	protected IStatus resultStatus = Status.OK_STATUS;
+	protected IStatus completionStatus = Status.OK_STATUS;
 	
 	/**
 	 * Creates a dialog instance confirm deletion of the work directory for a
@@ -82,16 +87,6 @@ public class CleanWorkDirDialog extends Dialog {
 		
 	}
 	
-	/**
-	 * Get the IStatus result from the stop, deletion, and start operations.
-	 * 
-	 * @return returns operation result.  Will be Status.OK_STATUS if
-	 * all operations complete successfully.  The error status if not.
-	 */
-	public IStatus getResultStatus() {
-		return resultStatus;
-	}
-
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(Messages.confirmCleanWorkDirTitle);
@@ -103,7 +98,6 @@ public class CleanWorkDirDialog extends Dialog {
 
 		// create a composite with standard margins and spacing
 		Composite composite = (Composite)super.createDialogArea(parent);
-//		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, ContextIds.DELETE_SERVER_DIALOG);
 
 		Label label = new Label(composite, SWT.WRAP);
 		if (state == IServer.STATE_STARTING || state == IServer.STATE_STOPPING || state == IServer.STATE_UNKNOWN) {
@@ -146,88 +140,120 @@ public class CleanWorkDirDialog extends Dialog {
 	}
 
 	protected void okPressed() {
-		// If state has changed since dialog was open, abort
-		if (server.getServerState() != state) {
-			newResultStatus(ERROR_PREDELETE, Messages.errorCouldNotCleanStateChange, null);
-			super.cancelPressed();
-			return;
-		}
+		// Create job to perform the deletion
+		DeleteWorkDirJob job = new DeleteWorkDirJob(Messages.cleanServerTask);
+		job.setRule(new ServerSchedulingRule(server));
 		
-		IOperationListener listener = new IOperationListener() {
-			public void done(IStatus result) {
-				resultStatus = result;
+		job.addJobChangeListener(new JobChangeAdapter() {
+			public void done(IJobChangeEvent event) {
+				IStatus status = event.getResult();
+				if (!status.isOK()) {
+					String title = module != null ? Messages.errorCleanModuleTitle : Messages.errorCleanServerTitle;
+					String message = "Message unset";
+					switch (status.getCode()) {
+					case CleanWorkDirDialog.ERROR_PREDELETE:
+						message = module != null ?
+								NLS.bind(Messages.errorCouldNotCleanModule, module.getName(), server.getName()) :
+									NLS.bind(Messages.errorCouldNotCleanServer, server.getName());
+						break;
+					case CleanWorkDirDialog.ERROR_DURINGDELETE:
+						message = module != null ?
+								NLS.bind(Messages.errorCleanFailedModule, module.getName(), server.getName()) :
+									NLS.bind(Messages.errorCleanFailedServer, server.getName());
+						break;
+					default:
+						message = module != null ?
+								NLS.bind(Messages.errorCleanNoRestartModule, module.getName()) :
+									NLS.bind(Messages.errorCleanNoRestartServer, server.getName());
+						break;
+					}
+					TomcatUIPlugin.openError(title, message, status);
+				}
 			}
-		};
-		boolean restart = false;
-		// If server isn't stopped, try to stop, clean, and restart
-		if (state != IServer.STATE_STOPPED) {
-			resultStatus = server.canStop();
-			if (!resultStatus.isOK()) {
-				wrapResultStatus(ERROR_PREDELETE, Messages.errorCouldNotCleanCantStop);
-				super.cancelPressed();
-				return;
-			}
-
-			server.stop(false, listener);
-
-			if (!resultStatus.isOK()) {
-				wrapResultStatus(ERROR_PREDELETE, Messages.errorCouldNotCleanStopFailed);
-				super.cancelPressed();
-				return;
-			}
-			if (server.getServerState() != IServer.STATE_STOPPED) {
-				newResultStatus(ERROR_PREDELETE, Messages.errorCouldNotCleanStopFailed, null);
-				super.cancelPressed();
-				return;
-			}
-			restart = true;
+		});
+		
+		job.schedule();
+		
+		super.okPressed();
+	}
+	
+	class DeleteWorkDirJob extends Job {
+		/**
+		 * @param name name for job
+		 */
+		public DeleteWorkDirJob(String name) {
+			super(name);
 		}
-			
-		// Delete the work directory
-		TomcatServerBehaviour tsb = (TomcatServerBehaviour)server.loadAdapter(
-				TomcatServerBehaviour.class, null);
-		try {
-			if (module != null) {
-				IWebModule webModule = (IWebModule)module.loadAdapter(IWebModule.class, null);
-				if (webModule != null) {
-					ITomcatWebModule tcWebModule = new WebModule(webModule.getContextRoot(), "", "", true);
-					resultStatus = tsb.cleanContextWorkDir(tcWebModule, null);
+
+		protected IStatus run(IProgressMonitor monitor) {
+			// If state has changed since dialog was open, abort
+			if (server.getServerState() != state) {
+				return newErrorStatus(ERROR_PREDELETE, Messages.errorCouldNotCleanStateChange, null);
+			}
+
+			IOperationListener listener = new IOperationListener() {
+				public void done(IStatus result) {
+					completionStatus = result;
+				}
+			};
+			boolean restart = false;
+			IStatus status = Status.OK_STATUS;
+			// If server isn't stopped, try to stop, clean, and restart
+			if (state != IServer.STATE_STOPPED) {
+				status = server.canStop();
+				if (!status.isOK()) {
+					return wrapErrorStatus(status, ERROR_PREDELETE, Messages.errorCouldNotCleanCantStop);
+				}
+
+				server.stop(false, listener);
+
+				if (!completionStatus.isOK()) {
+					return wrapErrorStatus(completionStatus, ERROR_PREDELETE, Messages.errorCouldNotCleanStopFailed);
+				}
+				if (server.getServerState() != IServer.STATE_STOPPED) {
+					return newErrorStatus(ERROR_PREDELETE, Messages.errorCouldNotCleanStopFailed, null);
+				}
+				restart = true;
+			}
+				
+			// Delete the work directory
+			TomcatServerBehaviour tsb = (TomcatServerBehaviour)server.loadAdapter(
+					TomcatServerBehaviour.class, monitor);
+			try {
+				if (module != null) {
+					IWebModule webModule = (IWebModule)module.loadAdapter(IWebModule.class, null);
+					if (webModule != null) {
+						ITomcatWebModule tcWebModule = new WebModule(webModule.getContextRoot(), "", "", true);
+						status = tsb.cleanContextWorkDir(tcWebModule, null);
+					}
+					else {
+						return newErrorStatus(ERROR_DURINGDELETE, 
+								restart ? Messages.errorCantIdentifyWebAppWasRunning : Messages.errorCantIdentifyWebApp, null);
+					}
 				}
 				else {
-					newResultStatus(ERROR_DURINGDELETE, 
-							restart ? Messages.errorCantIdentifyWebAppWasRunning : Messages.errorCantIdentifyWebApp, null);
-					super.cancelPressed();
-					return;
+					status = tsb.cleanServerWorkDir(null);
+				}
+			} catch (CoreException ce) {
+				status = ce.getStatus();
+			}
+			if (!status.isOK()) {
+				return wrapErrorStatus(status, ERROR_DURINGDELETE,
+						restart ? Messages.errorErrorDuringCleanWasRunning : Messages.errorErrorDuringClean);
+			}
+				
+			if (restart) {
+				status = server.canStart(mode);
+				if (!status.isOK()) {
+					return wrapErrorStatus(status, ERROR_POSTDELETE, Messages.errorCleanCantRestart);
+				}
+				server.start(mode, listener);
+				if (!completionStatus.isOK()) {
+					return wrapErrorStatus(completionStatus, ERROR_POSTDELETE, Messages.errorCleanRestartFailed);
 				}
 			}
-			else
-				resultStatus = tsb.cleanServerWorkDir(null);
-		} catch (CoreException ce) {
-			resultStatus = ce.getStatus();
+			return status;
 		}
-		if (!resultStatus.isOK()) {
-			wrapResultStatus(ERROR_DURINGDELETE,
-					restart ? Messages.errorErrorDuringCleanWasRunning : Messages.errorErrorDuringClean);
-			super.cancelPressed();
-			return;
-		}
-			
-		if (restart) {
-			resultStatus = server.canStart(mode);
-			if (!resultStatus.isOK()) {
-				wrapResultStatus(ERROR_POSTDELETE, Messages.errorCleanCantRestart);
-				super.cancelPressed();
-				return;
-			}
-			server.start(mode, listener);
-			if (!resultStatus.isOK()) {
-				wrapResultStatus(ERROR_POSTDELETE, Messages.errorCleanRestartFailed);
-				super.cancelPressed();
-				return;
-			}
-		}
-
-		super.okPressed();
 	}
 	
 	private void captureServerState() {
@@ -237,14 +263,14 @@ public class CleanWorkDirDialog extends Dialog {
 		}
 	}
 
-	private void newResultStatus(int errorCode, String message, Throwable throwable) {
-		resultStatus = new Status(IStatus.ERROR, TomcatUIPlugin.PLUGIN_ID, errorCode,
+	protected IStatus newErrorStatus(int errorCode, String message, Throwable throwable) {
+		return new Status(IStatus.ERROR, TomcatUIPlugin.PLUGIN_ID, errorCode,
 				message, throwable);
 	}
 	
-	private void wrapResultStatus(int errorCode, String message) {
+	protected IStatus wrapErrorStatus(IStatus status, int errorCode, String message) {
 		MultiStatus ms = new MultiStatus(TomcatUIPlugin.PLUGIN_ID, errorCode, message, null);
-		ms.add(resultStatus);
-		resultStatus = ms;
+		ms.add(status);
+		return ms;
 	}
 }

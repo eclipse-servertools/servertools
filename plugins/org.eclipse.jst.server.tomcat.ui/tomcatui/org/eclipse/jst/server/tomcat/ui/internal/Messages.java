@@ -69,6 +69,7 @@ public class Messages extends NLS {
 	public static String cleanModuleWorkDir;
 	public static String cleanServerWorkDir;
 	public static String cleanServerRunning;
+	public static String cleanServerTask;
 	public static String errorCleanModuleTitle;
 	public static String errorCleanServerTitle;
 	public static String errorCouldNotCleanModule;

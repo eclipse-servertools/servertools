@@ -10,15 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jst.server.tomcat.ui.internal.actions;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jst.server.tomcat.ui.internal.CleanWorkDirDialog;
-import org.eclipse.jst.server.tomcat.ui.internal.Messages;
-import org.eclipse.jst.server.tomcat.ui.internal.TomcatUIPlugin;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
@@ -55,31 +50,6 @@ public class CleanWorkDirAction implements IObjectActionDelegate {
 	public void run(IAction action) {
 		CleanWorkDirDialog dlg = new CleanWorkDirDialog(targetPart.getSite().getShell(), selectedServer, selectedModule);
 		dlg.open();
-		IStatus status = dlg.getResultStatus();
-		if (dlg.getReturnCode() != IDialogConstants.OK_ID && !status.isOK()) {
-			String title = selectedModule != null ? Messages.errorCleanModuleTitle : Messages.errorCleanServerTitle;
-			String message = "Message unset";
-			switch (status.getCode()) {
-			case CleanWorkDirDialog.ERROR_PREDELETE:
-				message = selectedModule != null ?
-						NLS.bind(Messages.errorCouldNotCleanModule, selectedModule.getName(), selectedServer.getName()) :
-							NLS.bind(Messages.errorCouldNotCleanServer, selectedServer.getName());
-				break;
-
-			case CleanWorkDirDialog.ERROR_DURINGDELETE:
-				message = selectedModule != null ?
-						NLS.bind(Messages.errorCleanFailedModule, selectedModule.getName(), selectedServer.getName()) :
-							NLS.bind(Messages.errorCleanFailedServer, selectedServer.getName());
-				break;
-			default:
-				message = selectedModule != null ?
-						NLS.bind(Messages.errorCleanNoRestartModule, selectedModule.getName()) :
-							NLS.bind(Messages.errorCleanNoRestartServer, selectedServer.getName());
-				break;
-			}
-			TomcatUIPlugin.openError(title, message, dlg.getResultStatus());
-			return;
-		}
 	}
 
 	/**
