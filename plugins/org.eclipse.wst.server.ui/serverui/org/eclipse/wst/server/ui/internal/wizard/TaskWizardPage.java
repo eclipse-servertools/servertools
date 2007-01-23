@@ -29,15 +29,14 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
  */
 class TaskWizardPage extends WizardPage implements IWizardHandle {
 	protected WizardFragment fragment;
-	
-	protected boolean isEmptyError = false;
+
 	protected boolean isCreated = false;
 
 	public TaskWizardPage(WizardFragment fragment) {
 		super(fragment.toString());
 		this.fragment = fragment;
 	}
-	
+
 	public void createControl(Composite parentComp) {
 		Composite comp = null;
 		try {
@@ -53,7 +52,6 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 		}
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.widthHint = convertHorizontalDLUsToPixels(150);
-		//data.heightHint = convertVerticalDLUsToPixels(350);
 		comp.setLayoutData(data);
 		setControl(comp);
 		
@@ -62,23 +60,18 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 	}
 
 	public boolean isPageComplete() {
-		//if (isEmptyError)
-		//	return false;
 		try {
 			if (!fragment.isComplete())
 				return false;
 		} catch (Exception e) {
 			return false;
 		}
-		//return (getMessage() == null || getMessageType() != ERROR);
 		return true;
 	}
 
 	public boolean canFlipToNextPage() {
 		if (getNextPage() == null)
 			return false;
-		//if (isEmptyError)
-		//	return false;
 		try {
 			if (!fragment.isComplete())
 				return false;
@@ -86,7 +79,6 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 			return false;
 		}
 		return true;
-		//return (getMessage() == null || getMessageType() != ERROR);
 	}
 
 	public void setVisible(boolean visible) {
@@ -103,10 +95,8 @@ class TaskWizardPage extends WizardPage implements IWizardHandle {
 
 	public void setMessage(String message, int type) {
 		if (type == IMessageProvider.ERROR && "".equals(message)) {
-			isEmptyError = true;
 			message = null;
-		} else
-			isEmptyError = false;
+		}
 		super.setMessage(message, type);
 		WizardFragment frag = ((TaskWizard) getWizard()).getCurrentWizardFragment();
 		if (!fragment.equals(frag))

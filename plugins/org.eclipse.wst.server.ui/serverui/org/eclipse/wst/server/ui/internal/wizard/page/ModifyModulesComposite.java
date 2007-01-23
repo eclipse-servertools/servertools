@@ -32,6 +32,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -78,6 +79,7 @@ public class ModifyModulesComposite extends Composite {
 
 	// a module that must be kept on the server
 	protected IModule requiredModule;
+	protected boolean isComplete = true;
 
 	// the parent modules of the above modules. at least one of these modules
 	// must be kept on the server
@@ -382,13 +384,13 @@ public class ModifyModulesComposite extends Composite {
 		setLayout(layout);
 		setFont(getParent().getFont());
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, ContextIds.MODIFY_MODULES_COMPOSITE);
-
+		
 		Label label = new Label(this, SWT.NONE);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
 		data.horizontalSpan = 3;
 		label.setLayoutData(data);
 		label.setText(Messages.wizModuleMessage);
-
+		
 		label = new Label(this, SWT.NONE);
 		label.setText(Messages.wizModuleAvailableList);
 		
@@ -412,6 +414,7 @@ public class ModifyModulesComposite extends Composite {
 				if (obj == null)
 					availableTreeViewer.refresh(true);
 				else {
+					obj = ServerUIPlugin.adaptLabelChangeObjects(obj);
 					int size = obj.length;
 					for (int i = 0; i < size; i++)
 						availableTreeViewer.refresh(obj[i], true);
@@ -551,6 +554,32 @@ public class ModifyModulesComposite extends Composite {
 		boolean enabled = false;
 		wizard.setMessage(null, IMessageProvider.NONE);
 		
+		int count = 0;
+		if (requiredModules != null) {
+			// count how many of requiredModules are deployed
+			int size = requiredModules.length;
+			for (int i = 0; i < size; i++) {
+				if (deployed.contains(requiredModules[i]))
+					count++;
+			}
+		}
+		
+		// give error if there are more than one possible required modules and none are
+		// added to the server
+		isComplete = true;
+		if (requiredModules != null && requiredModules.length > 1 && count == 0) {
+			String s = "";
+			int size = requiredModules.length;
+			for (int i = 0; i < size; i++) {
+				if (i > 0)
+					s += " | ";
+				s += requiredModules[i].getName();
+			}
+			wizard.setMessage(NLS.bind(Messages.wizModuleRequiredModules, s), IMessageProvider.ERROR);
+			isComplete = false;
+		}
+		
+		// selection specific messages
 		IModule module = getAvailableSelection();		
 		if (module != null) {
 			try {
@@ -573,28 +602,14 @@ public class ModifyModulesComposite extends Composite {
 		add.setEnabled(enabled);
 		addAll.setEnabled(modules.size() > 0);
 		
-		enabled = false;
+		enabled = true;
 		module = getDeployedSelection();
 		if (module != null && deployed.contains(module)) {
-			try {
-				int count = 0;
-				boolean found = false;
-				if (requiredModules != null) {
-					// count how many of newModule are deployed
-					int size = requiredModules.length;
-					for (int i = 0; i < size; i++) {
-						if (deployed.contains(requiredModules[i]))
-							count++;
-						if (module.equals(requiredModules[i]))
-							found = true;
-					}
-					if (count > 1 || !found)
-						enabled = true;
-				} else {
-					enabled = true;
-				}
-			} catch (Exception e) {
-				// ignore
+			// provide error about removing required single module
+			if (requiredModules != null && requiredModules.length == 1 &&
+					requiredModules[0].equals(module)) {
+				wizard.setMessage(NLS.bind(Messages.wizModuleRequiredModule, module.getName()), IMessageProvider.ERROR);
+				enabled = false;
 			}
 		}
 		remove.setEnabled(enabled);
@@ -731,5 +746,9 @@ public class ModifyModulesComposite extends Composite {
 		}
 		
 		return map;
+	}
+
+	public boolean isComplete() {
+		return isComplete;
 	}
 }

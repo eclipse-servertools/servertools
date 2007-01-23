@@ -114,6 +114,13 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 		}
 	}
 
+	public boolean isComplete() {
+		if (comp != null)
+			return comp.isComplete();
+		
+		return true;
+	}
+
 	public void performFinish(IProgressMonitor monitor) throws CoreException {
 		if (comp != null)
 			WizardTaskUtil.modifyModules(comp.getModulesToAdd(), comp.getModulesToRemove(), getTaskModel(), monitor);
