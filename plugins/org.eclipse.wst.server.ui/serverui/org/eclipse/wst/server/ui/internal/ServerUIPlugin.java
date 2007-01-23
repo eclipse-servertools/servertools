@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -33,6 +34,7 @@ import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 import org.eclipse.wst.server.ui.internal.editor.IServerEditorInput;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorCore;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorInput;
+import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
 import org.eclipse.wst.server.ui.internal.viewers.InitialSelectionProvider;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
@@ -58,7 +60,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 
 	// server UI plugin id
 	public static final String PLUGIN_ID = "org.eclipse.wst.server.ui";
-	
+
 	protected static final String EXTENSION_SERVER_IMAGES = "serverImages";
 	private static final String EXTENSION_WIZARD_FRAGMENTS = "wizardFragments";
 	public static final String EXTENSION_EDITOR_PAGES = "editorPages";
@@ -855,5 +857,32 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 			}
 		}
 		return new Object[] { launchableAdapter, launchable };
+	}
+
+	public static Object[] adaptLabelChangeObjects(Object[] obj) {
+		if (obj == null)
+			return obj;
+		
+		List list = new ArrayList();
+		int size = obj.length;
+		for (int i = 0; i < size; i++) {
+			if (obj[i] instanceof IModule) {
+				list.add(obj[i]);
+			} else if (obj[i] instanceof IServer) {
+				list.add(obj[i]);
+			} else if (obj[i] instanceof ModuleServer) {
+				list.add(obj[i]);
+			} else if (obj[i] instanceof IProject) {
+				IProject proj = (IProject) obj[i];
+				IModule[] m = ServerUtil.getModules(proj);
+				int size2 = m.length;
+				for (int j = 0; j < size2; j++)
+					list.add(m[j]);
+			}
+		}
+		
+		Object[] o = new Object[list.size()];
+		list.toArray(o);
+		return o;
 	}
 }

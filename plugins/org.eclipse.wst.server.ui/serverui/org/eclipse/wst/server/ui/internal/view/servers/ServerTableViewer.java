@@ -11,8 +11,10 @@
 package org.eclipse.wst.server.ui.internal.view.servers;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.*;
 
@@ -22,7 +24,9 @@ import org.eclipse.wst.server.core.util.PublishAdapter;
 import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.actions.ActionFactory;
 /**
@@ -231,6 +235,7 @@ public class ServerTableViewer extends TreeViewer {
 				if (obj == null)
 					refresh(true);
 				else {
+					obj = adaptLabelChangeObjects(obj);
 					int size = obj.length;
 					for (int i = 0; i < size; i++)
 						refresh(obj[i], true);
@@ -238,7 +243,21 @@ public class ServerTableViewer extends TreeViewer {
 			}
 		});
 		setLabelProvider(labelProvider);
-		setComparator(new ViewerComparator());
+		setComparator(new ViewerComparator() {
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof IServer && e2 instanceof IServer) {
+					IServer s1 = (IServer) e1;
+					IServer s2 = (IServer) e2;
+					return (s1.getName().compareTo(s2.getName()));
+				} else if (e1 instanceof ModuleServer && e2 instanceof ModuleServer) {
+					ModuleServer s1 = (ModuleServer) e1;
+					ModuleServer s2 = (ModuleServer) e2;
+					return (s1.module[s1.module.length - 1].getName().compareTo(s2.module[s2.module.length - 1].getName()));
+				}
+				
+				return super.compare(viewer, e1, e2);
+			}
+		});
 		
 		setInput(ROOT);
 		
@@ -301,6 +320,58 @@ public class ServerTableViewer extends TreeViewer {
 		
 		if (getTree().getItemCount() > 0)
 			this.setSelection(new StructuredSelection(getTree().getItem(0).getData()));
+	}
+
+	protected Object[] adaptLabelChangeObjects(Object[] obj) {
+		if (obj == null)
+			return obj;
+		
+		List list = new ArrayList();
+		int size = obj.length;
+		for (int i = 0; i < size; i++) {
+			if (obj[i] instanceof IModule) {
+				list.add(obj[i]);
+			} else if (obj[i] instanceof IServer) {
+				list.add(obj[i]);
+			} else if (obj[i] instanceof ModuleServer) {
+				list.add(obj[i]);
+			} else if (obj[i] instanceof IProject) {
+				IProject proj = (IProject) obj[i];
+
+				List list2 = new ArrayList();
+				getTreeChildren(list2, view.treeTable);
+				
+				Iterator iterator = list2.iterator();
+				while (iterator.hasNext()) {
+					Object o = iterator.next();
+					if (o instanceof ModuleServer) {
+						ModuleServer ms = (ModuleServer) o;
+						if (proj.equals(ms.module[ms.module.length - 1].getProject()))
+							list.add(ms);
+					}
+				}
+			}
+		}
+		
+		Object[] o = new Object[list.size()];
+		list.toArray(o);
+		return o;
+	}
+
+	private void getTreeChildren(List list, Widget widget) {
+		Item[] items = getChildren(widget);
+		for (int i = 0; i < items.length; i++) {
+			Item item = items[i];
+			Object data = item.getData();
+			if (data != null)
+				list.add(data);
+			
+			if (getExpanded(item)) {
+				// only recurse if it is expanded - if
+				// not then the children aren't visible
+				getTreeChildren(list, item);
+			}
+		}
 	}
 
 	protected void addListeners() {

@@ -177,6 +177,8 @@ public class Messages extends NLS {
 	public static String wizModuleRemove;
 	public static String wizModuleAddAll;
 	public static String wizModuleRemoveAll;
+	public static String wizModuleRequiredModule;
+	public static String wizModuleRequiredModules;
 	public static String wizTaskTitle;
 	public static String wizTaskDescription;
 	public static String wizErrorInvalidFolder;
@@ -326,6 +328,7 @@ public class Messages extends NLS {
 	public static String jobRestarting;
 	public static String clientDefaultName;
 	public static String clientDefaultDescription;
+	public static String moduleDecoratorProject;
 
 	public static String errorStartingMonitor;
 	public static String audioPrefSelectFile;

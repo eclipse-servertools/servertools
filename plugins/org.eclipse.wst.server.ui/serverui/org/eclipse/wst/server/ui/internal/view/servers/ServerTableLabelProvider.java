@@ -145,7 +145,13 @@ public class ServerTableLabelProvider extends BaseLabelProvider implements ITabl
 				if (ms.module == null)
 					return "";
 				int size = ms.module.length;
-				return ms.module[size - 1].getName();
+				String name = ms.module[size - 1].getName();
+				if (decorator != null) {
+					String dec = decorator.decorateText(name, ms);
+					if (dec != null)
+						return dec;
+				}
+				return name;
 			} else if (columnIndex == 1) {
 				if (ms.server == null)
 					return "";

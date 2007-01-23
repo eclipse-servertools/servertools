@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.extension.ExtensionUtility;
 /**
  * 
@@ -53,6 +54,7 @@ public class RuntimeTypeComposite extends AbstractTreeComposite {
 				if (obj == null)
 					treeViewer.refresh(true);
 				else {
+					obj = ServerUIPlugin.adaptLabelChangeObjects(obj);
 					int size = obj.length;
 					for (int i = 0; i < size; i++)
 						treeViewer.refresh(obj[i], true);

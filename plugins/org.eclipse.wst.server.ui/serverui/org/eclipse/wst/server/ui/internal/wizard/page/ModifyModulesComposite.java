@@ -31,7 +31,7 @@ import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -423,7 +423,17 @@ public class ModifyModulesComposite extends Composite {
 		});
 		availableTreeViewer.setLabelProvider(labelProvider);
 		availableTreeViewer.setContentProvider(new AvailableContentProvider());
-		availableTreeViewer.setSorter(new ViewerSorter());
+		availableTreeViewer.setComparator(new ViewerComparator() {
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof ModuleServer && e2 instanceof ModuleServer) {
+					ModuleServer s1 = (ModuleServer) e1;
+					ModuleServer s2 = (ModuleServer) e2;
+					return (s1.module[s1.module.length - 1].getName().compareTo(s2.module[s2.module.length - 1].getName()));
+				}
+				
+				return super.compare(viewer, e1, e2);
+			}
+		});
 		availableTreeViewer.setInput("root");
 		
 		availableTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -511,7 +521,17 @@ public class ModifyModulesComposite extends Composite {
 		});
 		deployedTreeViewer.setLabelProvider(labelProvider);
 		deployedTreeViewer.setContentProvider(new DeployedContentProvider());
-		deployedTreeViewer.setSorter(new ViewerSorter());
+		deployedTreeViewer.setComparator(new ViewerComparator() {
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				if (e1 instanceof ModuleServer && e2 instanceof ModuleServer) {
+					ModuleServer s1 = (ModuleServer) e1;
+					ModuleServer s2 = (ModuleServer) e2;
+					return (s1.module[s1.module.length - 1].getName().compareTo(s2.module[s2.module.length - 1].getName()));
+				}
+				
+				return super.compare(viewer, e1, e2);
+			}
+		});
 		deployedTreeViewer.setInput("root");
 		
 		deployedTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {

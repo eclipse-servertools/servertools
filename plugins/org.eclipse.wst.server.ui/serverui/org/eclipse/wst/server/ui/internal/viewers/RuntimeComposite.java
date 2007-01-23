@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 /**
  * 
  */
@@ -103,6 +104,7 @@ public class RuntimeComposite extends AbstractTableComposite {
 				if (obj == null)
 					tableViewer.refresh(true);
 				else {
+					obj = ServerUIPlugin.adaptLabelChangeObjects(obj);
 					int size = obj.length;
 					for (int i = 0; i < size; i++)
 						tableViewer.refresh(obj[i], true);

@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 /**
  * 
  */
@@ -58,6 +59,7 @@ public class ServerComposite extends AbstractTreeComposite {
 				if (obj == null)
 					treeViewer.refresh(true);
 				else {
+					obj = ServerUIPlugin.adaptLabelChangeObjects(obj);
 					int size = obj.length;
 					for (int i = 0; i < size; i++)
 						treeViewer.refresh(obj[i], true);

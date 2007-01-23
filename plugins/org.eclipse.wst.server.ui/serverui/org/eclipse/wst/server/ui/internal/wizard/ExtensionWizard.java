@@ -36,7 +36,10 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
  */
 public class ExtensionWizard extends TaskWizard {
 	/**
-	 * NewInstallableServerWizard constructor comment.
+	 * Create a new ExtensionWizard.
+	 * 
+	 * @param title the wizard title
+	 * @param message the description message
 	 */
 	public ExtensionWizard(String title, String message) {
 		super(title, new WizardFragment() {

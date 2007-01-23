@@ -74,7 +74,7 @@ public class ServerPropertyTester extends PropertyTester {
 				ModuleServer ms = (ModuleServer) target;
 				server = ms.server;
 			}
-			if (server == null)
+			if (server == null || server.getServerType() == null)
 				return false;
 			
 			String[] typeIds = ServerPlugin.tokenize(value, ",");
