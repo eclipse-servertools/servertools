@@ -805,8 +805,20 @@ public class ServerPlugin extends Plugin {
 			for (int i = 0; i < size; i++) {
 				try {
 					if (adapters[i].isEnabled(obj)) {
-						Trace.trace(Trace.FINER, "Run On Server for " + obj + " is enabled by " + adapters[i].getId());
-						return true;
+						Trace.trace(Trace.FINER, "ServerPlugin.hasModuleArtifact() - " + adapters[i].getId());
+						if (adapters[i].isDelegateLoaded()) {
+							long time = System.currentTimeMillis();
+							IModuleArtifact ma = adapters[i].getModuleArtifact(obj);
+							Trace.trace(Trace.FINER, "Deep enabled time: " + (System.currentTimeMillis() - time));
+							if (ma != null) {
+								Trace.trace(Trace.FINER, "Deep enabled");
+								return true;
+							}
+							Trace.trace(Trace.FINER, "Not enabled");
+						} else {
+							Trace.trace(Trace.FINER, "Enabled");
+							return true;
+						}
 					}
 				} catch (CoreException ce) {
 					Trace.trace(Trace.WARNING, "Could not use moduleArtifactAdapter", ce);
@@ -847,36 +859,6 @@ public class ServerPlugin extends Plugin {
 		return null;
 	}
 
-	/**
-	 * Returns a module artifact if possible, loading any plugins required.
-	 * 
-	 * @param obj
-	 * @return a module artifact, or null
-	 */
-	public static IModuleArtifact loadModuleArtifact(Object obj) {
-		Trace.trace(Trace.FINEST, "ServerPlugin.loadModuleArtifact() " + obj);
-		ModuleArtifactAdapter[] adapters = getModuleArtifactAdapters();
-		if (adapters != null) {
-			int size = adapters.length;
-			for (int i = 0; i < size; i++) {
-				try {
-					if (adapters[i].isEnabled(obj)) {
-						IModuleArtifact ma = adapters[i].getModuleArtifact(obj);
-						if (ma != null)
-							return ma;
-						/*if (Platform.getAdapterManager().hasAdapter(obj, MODULE_ARTIFACT_CLASS)) {
-							return (IModuleArtifact) Platform.getAdapterManager().loadAdapter(obj, MODULE_ARTIFACT_CLASS);
-						}*/
-					}
-				} catch (Exception e) {
-					Trace.trace(Trace.WARNING, "Could not use moduleArtifactAdapter " + adapters[i], e);
-				}
-			}
-		}
-		
-		return null;
-	}
-	
 	/**
 	 * Returns an array of all known installable servers.
 	 * <p>

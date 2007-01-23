@@ -156,7 +156,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 */
 	protected void run() {
 		final String launchMode2 = getLaunchMode();
-		final IModuleArtifact moduleArtifact = ServerPlugin.loadModuleArtifact(selection);
+		final IModuleArtifact moduleArtifact = ServerPlugin.getModuleArtifact(selection);
 		
 		Shell shell2 = null;
 		if (window != null)
