@@ -251,6 +251,8 @@ public abstract class RuntimeClasspathProviderDelegate {
 		
 		String id = extensionId;
 		String filename = JavaServerPlugin.getInstance().getStateLocation().append(id + ".xml").toOSString();
+		if (!(new File(filename)).exists())
+			return;
 		
 		try {
 			IMemento memento = XMLMemento.loadMemento(filename);
@@ -283,7 +285,7 @@ public abstract class RuntimeClasspathProviderDelegate {
 					}
 					sourceAttachments.add(sau);
 				} catch (Exception e) {
-					Trace.trace(Trace.WARNING, "Could not load monitor: " + e);
+					Trace.trace(Trace.WARNING, "Could not load source attachment: " + e);
 				}
 			}
 		} catch (Exception e) {

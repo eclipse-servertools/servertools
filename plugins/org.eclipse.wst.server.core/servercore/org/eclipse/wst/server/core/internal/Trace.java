@@ -16,18 +16,18 @@ import java.util.Date;
  * Helper class to route trace output.
  */
 public class Trace {
-	public static int CONFIG = 0;
-	public static int INFO = 1;
-	public static int WARNING = 2;
-	public static int SEVERE = 3;
-	public static int FINER = 4;
-	public static int FINEST = 5;
+	public static final byte CONFIG = 0;
+	public static final byte INFO = 1;
+	public static final byte WARNING = 2;
+	public static final byte SEVERE = 3;
+	public static final byte FINER = 4;
+	public static final byte FINEST = 5;
 	
-	public static int RESOURCES = 6;
-	public static int EXTENSION_POINT = 7;
-	public static int LISTENERS = 8;
-	public static int RUNTIME_TARGET = 9;
-	public static int PERFORMANCE = 10;
+	public static final byte RESOURCES = 6;
+	public static final byte EXTENSION_POINT = 7;
+	public static final byte LISTENERS = 8;
+	public static final byte RUNTIME_TARGET = 9;
+	public static final byte PERFORMANCE = 10;
 
 	private static final String[] levelNames = new String[] {
 		"CONFIG   ", "INFO     ", "WARNING  ", "SEVERE   ", "FINER    ", "FINEST   ",

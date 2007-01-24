@@ -16,27 +16,27 @@ public class Trace {
 	/**
 	 * Config trace event.
 	 */
-	public static byte CONFIG = 0;
+	public static final byte CONFIG = 0;
 	
 	/**
 	 * Warning trace event.
 	 */
-	public static byte WARNING = 1;
+	public static final byte WARNING = 1;
 	
 	/**
 	 * Severe trace event.
 	 */
-	public static byte SEVERE = 2;
+	public static final byte SEVERE = 2;
 	
 	/**
 	 * Finest trace event.
 	 */
-	public static byte FINEST = 3;
+	public static final byte FINEST = 3;
 	
 	/**
 	 * Parsing trace event.
 	 */
-	public static byte PARSING = 4;
+	public static final byte PARSING = 4;
 
 	/**
 	 * Trace constructor comment.

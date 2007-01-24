@@ -13,11 +13,11 @@ package org.eclipse.jst.server.tomcat.ui.internal;
  * Helper class to route trace output.
  */
 public class Trace {
-	public static byte CONFIG = 0;
-	public static byte WARNING = 1;
-	public static byte SEVERE = 2;
-	public static byte FINEST = 3;
-	public static byte FINER = 4;
+	public static final byte CONFIG = 0;
+	public static final byte WARNING = 1;
+	public static final byte SEVERE = 2;
+	public static final byte FINEST = 3;
+	public static final byte FINER = 4;
 
 	/**
 	 * Trace constructor comment.

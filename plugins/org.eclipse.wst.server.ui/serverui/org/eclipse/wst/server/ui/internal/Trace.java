@@ -16,14 +16,14 @@ import java.util.Date;
  * Helper class to route trace output.
  */
 public class Trace {
-	public static byte CONFIG = 0;
-	public static byte INFO = 1;
-	public static byte WARNING = 2;
-	public static byte SEVERE = 3;
-	public static byte FINEST = 4;
-	public static byte FINER = 5;
-	public static byte PERFORMANCE = 6;
-	public static byte EXTENSION_POINT = 7;
+	public static final byte CONFIG = 0;
+	public static final byte INFO = 1;
+	public static final byte WARNING = 2;
+	public static final byte SEVERE = 3;
+	public static final byte FINEST = 4;
+	public static final byte FINER = 5;
+	public static final byte PERFORMANCE = 6;
+	public static final byte EXTENSION_POINT = 7;
 	
 	protected static int pluginLength = -1;
 	
