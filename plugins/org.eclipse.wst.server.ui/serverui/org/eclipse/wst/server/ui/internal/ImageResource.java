@@ -24,7 +24,7 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
+import org.eclipse.wst.server.core.ServerUtil;
 /**
  * Utility class to handle image resources.
  */
@@ -280,7 +280,7 @@ public class ImageResource {
 		loadServerImages();
 		
 		PlatformUI.getWorkbench().getProgressService().registerIconForFamily(
-				getImageDescriptor(IMG_SERVER), ServerPlugin.PLUGIN_ID);
+				getImageDescriptor(IMG_SERVER), ServerUtil.SERVER_JOB_FAMILY);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,8 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.jobs.IJobManager;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.debug.core.ILaunchConfiguration;
 
 import org.eclipse.osgi.util.NLS;
@@ -30,6 +32,13 @@ import org.eclipse.wst.server.core.internal.*;
  * @since 1.0
  */
 public class ServerUtil {
+	/**
+	 * Constant identifying the job family identifier for server operations.
+	 * 
+	 * @see IJobManager#join(Object, IProgressMonitor)
+	 */
+	public static final Object SERVER_JOB_FAMILY = ServerPlugin.PLUGIN_ID;
+
 	/**
 	 * Static utility class - cannot create an instance.
 	 */
@@ -806,5 +815,16 @@ public class ServerUtil {
 	 */
 	public static int getMonitoredPort(IServer server, int port, String contentType) {
 		return ServerMonitorManager.getInstance().getMonitoredPort(server, port, contentType);
+	}
+
+	/**
+	 * Returns a scheduling rule to prevent jobs from simultaneously starting,
+	 * publishing, or stopping the same server.
+	 * 
+	 * @param server a server
+	 * @return a scheduling rule for this server
+	 */
+	public static ISchedulingRule getServerSchedulingRule(IServer server) {
+		return new ServerSchedulingRule(server);
 	}
 }

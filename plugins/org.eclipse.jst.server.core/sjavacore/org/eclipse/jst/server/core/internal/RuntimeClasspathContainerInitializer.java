@@ -21,7 +21,7 @@ import org.eclipse.jdt.core.*;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
+import org.eclipse.wst.server.core.ServerUtil;
 /**
  * 
  */
@@ -91,7 +91,7 @@ public class RuntimeClasspathContainerInitializer extends ClasspathContainerInit
 			}
 
 			public boolean belongsTo(Object family) {
-				return ServerPlugin.PLUGIN_ID.equals(family);
+				return ServerUtil.SERVER_JOB_FAMILY.equals(family);
 			}
 
 			public IStatus run(IProgressMonitor monitor) {

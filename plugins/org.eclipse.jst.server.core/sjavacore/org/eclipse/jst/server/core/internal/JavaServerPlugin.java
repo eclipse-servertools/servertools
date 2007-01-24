@@ -27,7 +27,7 @@ import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeLifecycleListener;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
+import org.eclipse.wst.server.core.ServerUtil;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 /**
@@ -131,7 +131,7 @@ public class JavaServerPlugin extends Plugin {
 				}
 
 				public boolean belongsTo(Object family) {
-					return ServerPlugin.PLUGIN_ID.equals(family);
+					return ServerUtil.SERVER_JOB_FAMILY.equals(family);
 				}
 
 				public IStatus run(IProgressMonitor monitor) {

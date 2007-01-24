@@ -970,11 +970,11 @@ public class Server extends Base implements IServer {
 		
 		return (PublishOperation[])tasks.toArray(new PublishOperation[tasks.size()]);
 	}
-	
+
 	public String getPublishOperationId(PublishOperation op) {
 		return getId()+"|"+op.getLabel();
 	}
-	
+
 	public List getAllModules() {
 		final List moduleList = new ArrayList();
 		

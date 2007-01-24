@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerUtil;
 /**
  * A Job that can start another job upon successful completion.
  */
@@ -39,7 +40,7 @@ public abstract class ChainedJob extends Job {
 	 * @see Job#belongsTo(java.lang.Object)
 	 */
 	public boolean belongsTo(Object family) {
-		return ServerPlugin.PLUGIN_ID.equals(family);
+		return ServerUtil.SERVER_JOB_FAMILY.equals(family);
 	}
 
 	/**

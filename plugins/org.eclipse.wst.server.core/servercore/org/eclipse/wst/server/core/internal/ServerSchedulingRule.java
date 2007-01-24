@@ -18,11 +18,11 @@ import org.eclipse.wst.server.core.IServer;
  */
 public class ServerSchedulingRule implements ISchedulingRule {
 	protected IServer server;
-	
+
 	public ServerSchedulingRule(IServer server) {
 		this.server = server;
 	}
-	
+
 	public boolean contains(ISchedulingRule rule) {
 		if (!(rule instanceof ServerSchedulingRule))
 			return false;
@@ -37,7 +37,7 @@ public class ServerSchedulingRule implements ISchedulingRule {
 		ServerSchedulingRule ssrule = (ServerSchedulingRule) rule;
 		return ssrule.server.equals(server);
 	}
-	
+
 	public String toString() {
 		return "Server scheduling rule for " + server;
 	}
