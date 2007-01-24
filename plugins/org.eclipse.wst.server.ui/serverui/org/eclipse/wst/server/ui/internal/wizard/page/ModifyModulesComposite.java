@@ -53,6 +53,8 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
  * A wizard page used to add and remove modules.
  */
 public class ModifyModulesComposite extends Composite {
+	private static final String ROOT = "root";
+
 	protected IWizardHandle wizard;
 
 	protected IServerAttributes server;
@@ -354,7 +356,8 @@ public class ModifyModulesComposite extends Composite {
 			}
 		}
 		
-		if (availableTreeViewer != null)
+		//if (availableTreeViewer != null && add != null && add.isVisible())
+		/*if (availableTreeViewer != null)
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
 					try { // update trees if we can
@@ -365,10 +368,25 @@ public class ModifyModulesComposite extends Composite {
 						// ignore
 					}
 				}
-			});
+			});*/
 		updateTaskModel();
 	}
-	
+
+	public void setVisible(boolean b) {
+		Display.getDefault().syncExec(new Runnable() {
+			public void run() {
+				try { // update trees if we can
+					availableTreeViewer.refresh();
+					deployedTreeViewer.refresh();
+					setEnablement();
+				} catch (Exception e) {
+					// ignore
+				}
+			}
+		});
+		super.setVisible(b);
+	}
+
 	public void setTaskModel(TaskModel model) {
 		this.taskModel = model;
 	}
@@ -428,13 +446,13 @@ public class ModifyModulesComposite extends Composite {
 				if (e1 instanceof ModuleServer && e2 instanceof ModuleServer) {
 					ModuleServer s1 = (ModuleServer) e1;
 					ModuleServer s2 = (ModuleServer) e2;
-					return (s1.module[s1.module.length - 1].getName().compareTo(s2.module[s2.module.length - 1].getName()));
+					return (s1.module[s1.module.length - 1].getName().compareToIgnoreCase(s2.module[s2.module.length - 1].getName()));
 				}
 				
 				return super.compare(viewer, e1, e2);
 			}
 		});
-		availableTreeViewer.setInput("root");
+		availableTreeViewer.setInput(ROOT);
 		
 		availableTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -526,13 +544,13 @@ public class ModifyModulesComposite extends Composite {
 				if (e1 instanceof ModuleServer && e2 instanceof ModuleServer) {
 					ModuleServer s1 = (ModuleServer) e1;
 					ModuleServer s2 = (ModuleServer) e2;
-					return (s1.module[s1.module.length - 1].getName().compareTo(s2.module[s2.module.length - 1].getName()));
+					return (s1.module[s1.module.length - 1].getName().compareToIgnoreCase(s2.module[s2.module.length - 1].getName()));
 				}
 				
 				return super.compare(viewer, e1, e2);
 			}
 		});
-		deployedTreeViewer.setInput("root");
+		deployedTreeViewer.setInput(ROOT);
 		
 		deployedTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -553,14 +571,14 @@ public class ModifyModulesComposite extends Composite {
 		Dialog.applyDialogFont(this);
 	}
 
-	protected IModule getAvailableSelection() {
+	protected ModuleServer getAvailableSelection() {
 		IStructuredSelection sel = (IStructuredSelection) availableTreeViewer.getSelection();
-		return getModule((ModuleServer) sel.getFirstElement());
+		return (ModuleServer) sel.getFirstElement();
 	}
 
-	protected IModule getDeployedSelection() {
+	protected ModuleServer getDeployedSelection() {
 		IStructuredSelection sel = (IStructuredSelection) deployedTreeViewer.getSelection();
-		return getModule((ModuleServer) sel.getFirstElement());
+		return (ModuleServer) sel.getFirstElement();
 	}
 
 	protected static IModule getModule(ModuleServer ms) {
@@ -600,39 +618,49 @@ public class ModifyModulesComposite extends Composite {
 		}
 		
 		// selection specific messages
-		IModule module = getAvailableSelection();		
-		if (module != null) {
-			try {
-				IStatus status = (IStatus) errorMap.get(module);
-				if (modules.contains(module)) {
-					if (status == null)
-						enabled = true;
-					else if (status.getSeverity() == IStatus.ERROR)
-						wizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
-					else if (status.getSeverity() == IStatus.WARNING)
-						wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
-					else if (status.getSeverity() == IStatus.INFO)
-						wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
+		ModuleServer ms = getAvailableSelection();
+		if (ms == null || ms.module == null ||  ms.module.length > 1) {
+			add.setEnabled(false);
+		} else {
+			IModule module = getModule(ms);
+			if (module != null) {
+				try {
+					IStatus status = (IStatus) errorMap.get(module);
+					if (modules.contains(module)) {
+						if (status == null)
+							enabled = true;
+						else if (status.getSeverity() == IStatus.ERROR)
+							wizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
+						else if (status.getSeverity() == IStatus.WARNING)
+							wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
+						else if (status.getSeverity() == IStatus.INFO)
+							wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
+					}
+				} catch (Exception e) {
+					// ignore
 				}
-			} catch (Exception e) {
-				// ignore
 			}
+			add.setEnabled(enabled);
 		}
-		
-		add.setEnabled(enabled);
 		addAll.setEnabled(modules.size() > 0);
 		
 		enabled = true;
-		module = getDeployedSelection();
-		if (module != null && deployed.contains(module)) {
-			// provide error about removing required single module
-			if (requiredModules != null && requiredModules.length == 1 &&
-					requiredModules[0].equals(module)) {
-				wizard.setMessage(NLS.bind(Messages.wizModuleRequiredModule, module.getName()), IMessageProvider.ERROR);
-				enabled = false;
+		ms = getDeployedSelection();
+		if (ms == null || ms.module == null ||  ms.module.length > 1) {
+			remove.setEnabled(false);
+		} else {
+			IModule module = getModule(ms);
+			if (module != null && deployed.contains(module)) {
+				// provide error about removing required single module
+				if (requiredModules != null && requiredModules.length == 1 &&
+						requiredModules[0].equals(module)) {
+					wizard.setMessage(NLS.bind(Messages.wizModuleRequiredModule, module.getName()), IMessageProvider.ERROR);
+					enabled = false;
+				}
 			}
+			remove.setEnabled(enabled);
 		}
-		remove.setEnabled(enabled);
+	
 		if (requiredModules == null)
 			removeAll.setEnabled(deployed.size() > 0);
 		else
@@ -645,7 +673,7 @@ public class ModifyModulesComposite extends Composite {
 			modules.toArray(modules2);
 			moveAll(modules2, true);
 		} else
-			moveAll(new IModule[] { getAvailableSelection() }, true);
+			moveAll(new IModule[] { getModule(getAvailableSelection()) }, true);
 		updateTaskModel();
 	}
 
@@ -670,7 +698,7 @@ public class ModifyModulesComposite extends Composite {
 			
 			moveAll(modules2, false);
 		} else
-			moveAll(new IModule[] { getDeployedSelection() }, false);
+			moveAll(new IModule[] { getModule(getDeployedSelection()) }, false);
 		updateTaskModel();
 	}
 
@@ -687,17 +715,22 @@ public class ModifyModulesComposite extends Composite {
 		Iterator iterator = list.iterator();
 		while (iterator.hasNext()) {
 			IModule module = (IModule) iterator.next();
+			ModuleServer ms = new ModuleServer(null, new IModule[] { module });
 			if (add2) {
 				modules.remove(module);
 				deployed.add(module);
+				availableTreeViewer.remove(ms);
+				deployedTreeViewer.add(ROOT, ms);
 			} else {
 				modules.add(module);
 				deployed.remove(module);
+				availableTreeViewer.add(ROOT, ms);
+				deployedTreeViewer.remove(ms);
 			}
 		}
 		
-		availableTreeViewer.refresh();
-		deployedTreeViewer.refresh();
+		//availableTreeViewer.refresh();
+		//deployedTreeViewer.refresh();
 
 		setEnablement();
 	}
