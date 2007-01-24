@@ -51,11 +51,17 @@ public class Messages extends NLS {
 	public static String configurationEditorMimeMapppingDialogTitleAdd;
 	public static String configurationEditorMimeMapppingDialogMimeType;
 	public static String configurationEditorMimeMapppingDialogMimeExtension;
+	public static String configurationEditorBrowseDeploy;
+	public static String configurationEditorBrowseDeployMessage;
 	public static String serverEditorGeneralSection;
 	public static String serverEditorGeneralDescription;
 	public static String serverEditorTestEnvironment;
 	public static String serverEditorSecure;
 	public static String serverEditorDebugMode;
+	public static String serverEditorDeployDir;
+	public static String serverEditorBrowse;
+	public static String serverEditorSpecialFieldsLabel;
+	public static String errorDeployDirNotSpecified;
 	public static String configurationEditorWebModuleDialogTitleEdit;
 	public static String configurationEditorWebModuleDialogTitleAdd;
 	public static String configurationEditorWebModuleDialogProjects;

@@ -32,10 +32,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.IServer.IOperationListener;
-import org.eclipse.wst.server.core.internal.ServerSchedulingRule;
 
 /**
  * Dialog to confirm deletion of the work directory for a module on a
@@ -98,6 +99,8 @@ public class CleanWorkDirDialog extends Dialog {
 
 		// create a composite with standard margins and spacing
 		Composite composite = (Composite)super.createDialogArea(parent);
+		// Since there are only label widgets on this page, set the help on the parent
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, ContextIds.SERVER_CLEAN_WORK_DIR);
 
 		Label label = new Label(composite, SWT.WRAP);
 		if (state == IServer.STATE_STARTING || state == IServer.STATE_STOPPING || state == IServer.STATE_UNKNOWN) {
@@ -142,7 +145,7 @@ public class CleanWorkDirDialog extends Dialog {
 	protected void okPressed() {
 		// Create job to perform the deletion
 		DeleteWorkDirJob job = new DeleteWorkDirJob(Messages.cleanServerTask);
-		job.setRule(new ServerSchedulingRule(server));
+		job.setRule(ServerUtil.getServerSchedulingRule(server));
 		
 		job.addJobChangeListener(new JobChangeAdapter() {
 			public void done(IJobChangeEvent event) {
