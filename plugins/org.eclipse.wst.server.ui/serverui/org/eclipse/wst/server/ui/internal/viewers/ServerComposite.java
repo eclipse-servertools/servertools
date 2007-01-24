@@ -32,15 +32,15 @@ public class ServerComposite extends AbstractTreeComposite {
 	protected ServerTreeContentProvider contentProvider;
 	protected boolean initialSelection = true;
 	protected byte viewOption;
-	
+
 	protected IModule module;
 	protected String launchMode;
 	protected boolean includeIncompatibleVersions;
-	
+
 	public interface ServerSelectionListener {
 		public void serverSelected(IServer server);
 	}
-	
+
 	public ServerComposite(Composite parent, int style, ServerSelectionListener listener2, IModule module, String launchMode) {
 		super(parent, style);
 		this.module = module;
@@ -69,7 +69,7 @@ public class ServerComposite extends AbstractTreeComposite {
 		treeViewer.setLabelProvider(labelProvider);
 		treeViewer.setInput(AbstractTreeContentProvider.ROOT);
 		treeViewer.expandToLevel(1);
-
+		
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				Object obj = getSelection(event.getSelection());
@@ -88,7 +88,7 @@ public class ServerComposite extends AbstractTreeComposite {
 	public ServerComposite(Composite parent, int style, ServerSelectionListener listener2) {
 		this(parent, style, listener2, null, null);
 	}
-	
+
 	public void setIncludeIncompatibleVersions(boolean b) {
 		includeIncompatibleVersions = b;
 		ISelection sel = treeViewer.getSelection();
@@ -115,9 +115,9 @@ public class ServerComposite extends AbstractTreeComposite {
 	}
 
 	protected String getDescriptionLabel() {
-		return null; //Messages.serverTypeCompDescription");
+		return null;
 	}
-	
+
 	protected String getTitleLabel() {
 		return Messages.wizNewServerSelectExisting;
 	}
@@ -135,12 +135,15 @@ public class ServerComposite extends AbstractTreeComposite {
 		treeViewer.setContentProvider(contentProvider);
 		treeViewer.setSelection(sel);
 	}
-	
+
 	public IServer getSelectedServer() {
 		return selection;
 	}
-	
+
 	public void setSelection(IServer server) {
-		treeViewer.setSelection(new StructuredSelection(server), true);
+		if (server != null)
+			treeViewer.setSelection(new StructuredSelection(server), true);
+		else
+			treeViewer.setSelection(null);
 	}
 }

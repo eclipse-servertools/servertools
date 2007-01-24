@@ -190,15 +190,16 @@ public class ServerType implements IServerType {
 		if (id == null || id.length() == 0)
 			id = ServerPlugin.generateId();
 		ServerWorkingCopy swc = new ServerWorkingCopy(id, file, runtime, this);
-		swc.setRuntime(runtime);
+		if (hasRuntime())
+			swc.setRuntime(runtime);
 		swc.setDefaults(monitor);
 		
-		if (swc.getServerType().hasServerConfiguration())
+		if (hasServerConfiguration() && runtime != null && !runtime.getLocation().isEmpty())
 			swc.importRuntimeConfiguration(runtime, null);
 		
 		return swc;
 	}
-	
+
 	/**
 	 * Returns an array of all known runtime instances of
 	 * the given runtime type. This convenience method filters the list of known

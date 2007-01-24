@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,7 +22,7 @@ import org.eclipse.debug.ui.IDebugView;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.wst.server.core.*;
-import org.eclipse.wst.server.core.internal.Trace;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.model.ServerDelegate;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.swt.SWT;
@@ -109,7 +109,16 @@ public class ServersView extends ViewPart {
 		
 		Job job = new Job(Messages.jobInitializingServersView) {
 			public IStatus run(IProgressMonitor monitor) {
-				ServerCore.getServers();
+				IServer[] servers = ServerCore.getServers();
+				int size = servers.length;
+				for (int i = 0; i < size; i++) {
+					((Server)servers[i]).getAllModules().iterator();
+					/*while (iterator.hasNext()) {
+						Module module = (Module) iterator.next();
+						module.g
+					}*/
+				}
+				
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
 						try {

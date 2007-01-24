@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,9 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.wizard.page;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
@@ -21,11 +24,16 @@ import org.eclipse.wst.server.ui.internal.ContextIds;
 import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
+import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
+import org.eclipse.wst.server.ui.internal.Trace;
 import org.eclipse.wst.server.ui.internal.viewers.RuntimeTypeComposite;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
@@ -35,16 +43,21 @@ import org.eclipse.swt.widgets.Tree;
 public class NewRuntimeComposite extends Composite {
 	protected Tree tree;
 	protected TreeViewer treeViewer;
+	protected Button createServer;
 
 	protected IRuntimeWorkingCopy runtime;
-	protected Map runtimeMap = new HashMap();
-	
+
+	// cache of created runtimes and servers
+	protected Map cache = new HashMap();
+	protected Map serverCache = new HashMap();
+
 	protected TaskModel taskModel;
 	protected IWizardHandle wizard;
-	
+
 	protected String type;
 	protected String version;
 	protected String runtimeTypeId;
+	protected IServerType serverType;
 
 	public NewRuntimeComposite(Composite parent, IWizardHandle wizard, TaskModel tm, String type, String version, String runtimeTypeId) {
 		super(parent, SWT.NONE);
@@ -82,6 +95,16 @@ public class NewRuntimeComposite extends Composite {
 		GridData data = new GridData(GridData.FILL_BOTH);
 		data.heightHint = 300;
 		comp.setLayoutData(data);
+		
+		createServer = new Button(this, SWT.CHECK);
+		createServer.setText(Messages.wizNewRuntimeCreateServer);
+		createServer.setSelection(ServerUIPlugin.getPreferences().getCreateServerWithRuntime());
+		createServer.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				handleServer();
+				ServerUIPlugin.getPreferences().setCreateServerWithRuntime(createServer.getSelection());
+			}
+		});
 	}
 
 	protected void handleSelection(IRuntimeType runtimeType) {
@@ -90,7 +113,7 @@ public class NewRuntimeComposite extends Composite {
 		else {
 			try {
 				runtime = null;
-				runtime = (IRuntimeWorkingCopy) runtimeMap.get(runtimeType);
+				runtime = (IRuntimeWorkingCopy) cache.get(runtimeType);
 			} catch (Exception e) {
 				// ignore
 			}
@@ -99,15 +122,70 @@ public class NewRuntimeComposite extends Composite {
 					runtime = runtimeType.createRuntime(null, null);
 					ServerUtil.setRuntimeDefaultName(runtime);
 					if (runtime != null)
-						runtimeMap.put(runtimeType, runtime);
+						cache.put(runtimeType, runtime);
 				} catch (Exception e) {
 					// ignore
 				}
 			}
 		}
+		serverType = getCompatibleServerType(runtimeType);
+		handleServer();
+	}
 
+	protected void handleServer() {
+		boolean option = false;
+		if (serverType != null && serverType.hasRuntime())
+			option = true;
+		createServer.setVisible(option);
+		
+		if (option && createServer.getSelection()) {
+			IServerWorkingCopy server = getServer();
+			taskModel.putObject(TaskModel.TASK_SERVER, server);
+		} else
+			taskModel.putObject(TaskModel.TASK_SERVER, null);
+		
 		taskModel.putObject(TaskModel.TASK_RUNTIME, runtime);
 		wizard.update();
+	}
+
+	protected static IServerType getCompatibleServerType(IRuntimeType runtimeType) {
+		List list = new ArrayList();
+		IServerType[] serverTypes = ServerCore.getServerTypes();
+		int size = serverTypes.length;
+		for (int i = 0; i < size; i++) {
+			IRuntimeType rt = serverTypes[i].getRuntimeType();
+			if (rt.equals(runtimeType))
+				list.add(serverTypes[i]);
+		}
+		if (list.size() == 1)
+			return (IServerType) list.get(0);
+		return null;
+	}
+
+	/**
+	 * Get a server of the given type.
+	 */
+	protected IServerWorkingCopy getServer() {
+		if (serverType == null || runtime == null || !serverType.hasRuntime())
+			return null;
+		
+		IServerWorkingCopy server = (IServerWorkingCopy) serverCache.get(runtime);
+		if (server != null)
+			return server;
+		
+		try {
+			server = serverType.createServer(null, null, runtime, null);
+			if (server != null) {
+				server.setHost("localhost");
+				ServerUtil.setServerDefaultName(server);
+				serverCache.put(runtime, server);
+				return server;
+			}
+		} catch (CoreException ce) {
+			Trace.trace(Trace.SEVERE, "Error creating server", ce);
+		}
+		
+		return null;
 	}
 
 	public IRuntimeWorkingCopy getRuntime() {

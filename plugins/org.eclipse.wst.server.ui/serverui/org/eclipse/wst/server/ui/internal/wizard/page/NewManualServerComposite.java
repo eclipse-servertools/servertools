@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -73,7 +72,7 @@ public class NewManualServerComposite extends Composite {
 
 	protected IModuleType moduleType;
 
-	protected ElementCreationCache cache = new ElementCreationCache();
+	protected ServerCreationCache cache = new ServerCreationCache();
 
 	/**
 	 * Creates a new server and server configuration.  If the initial
@@ -186,15 +185,15 @@ public class NewManualServerComposite extends Composite {
 	}
 
 	/**
-	 * Return the current editable element.
+	 * Load a server of the given type.
 	 */
-	protected void loadServerImpl(final IServerType serverType) {
+	protected void loadServerImpl(IServerType serverType) {
 		server = null;
 		
 		if (serverType == null)
 			return;
 		
-		final boolean isLocalhost = SocketUtil.isLocalhost(host);
+		boolean isLocalhost = SocketUtil.isLocalhost(host);
 		
 		server = cache.getCachedServer(serverType, isLocalhost);
 		if (server != null) {
@@ -205,51 +204,30 @@ public class NewManualServerComposite extends Composite {
 			return;
 		}
 		
-		final CoreException[] ce = new CoreException[1];
-		
-		IRunnableWithProgress runnable = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor) {
-				try {
-					monitor = ProgressUtil.getMonitorFor(monitor);
-					int ticks = 200;
-					monitor.beginTask(NLS.bind(Messages.loadingTask, serverType.getName()), ticks);
-					
-					server = cache.getServer(serverType, isLocalhost, ProgressUtil.getSubMonitorFor(monitor, 200));
-					if (server != null) {
-						server.setHost(host);
-						ServerUtil.setServerDefaultName(server);
-						
-						if (serverType.hasRuntime() && server.getRuntime() == null) {
-							runtime = null;
-							updateRuntimes(serverType);
-							setRuntime(getDefaultRuntime());
-							
-							if (server.getServerType().hasServerConfiguration() && !runtime.getLocation().isEmpty())
-								((ServerWorkingCopy)server).importRuntimeConfiguration(runtime, null);
-						}
-						((ServerWorkingCopy)server).setDefaults(monitor);
-					}
-				} catch (CoreException cex) {
-					ce[0] = cex;
-					cache.clearCachedServer(serverType, isLocalhost);
-				} catch (Throwable t) {
-					Trace.trace(Trace.SEVERE, "Error creating element", t); //$NON-NLS-1$
-				} finally {
-					monitor.done();
-				}
-			}
-		};
 		try {
-			wizard.run(true, false, runnable);
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error with runnable", e); //$NON-NLS-1$
-		}
-	
-		if (ce[0] != null) {
+			server = cache.getServer(serverType, isLocalhost, null);
+			if (server != null) {
+				server.setHost(host);
+				ServerUtil.setServerDefaultName(server);
+				
+				if (serverType.hasRuntime() && server.getRuntime() == null) {
+					runtime = null;
+					updateRuntimes(serverType);
+					setRuntime(getDefaultRuntime());
+					
+					if (server.getServerType().hasServerConfiguration() && !runtime.getLocation().isEmpty())
+						((ServerWorkingCopy)server).importRuntimeConfiguration(runtime, null);
+				}
+				((ServerWorkingCopy)server).setDefaults(null);
+			}
+		} catch (CoreException ce) {
+			Trace.trace(Trace.SEVERE, "Error creating server", ce);
 			server = null;
 			runtime = null;
-			wizard.setMessage(ce[0].getLocalizedMessage(), IMessageProvider.ERROR);
-		} else if (server == null)
+			wizard.setMessage(ce.getLocalizedMessage(), IMessageProvider.ERROR);
+		}
+		
+		if (server == null)
 			wizard.setMessage(Messages.wizErrorServerCreationError, IMessageProvider.ERROR);
 	}
 

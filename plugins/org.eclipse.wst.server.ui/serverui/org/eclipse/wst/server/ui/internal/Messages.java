@@ -198,6 +198,7 @@ public class Messages extends NLS {
 	public static String wizProfileOnServerTitle;
 	public static String wizNewRuntimeTitle;
 	public static String wizNewRuntimeDescription;
+	public static String wizNewRuntimeCreateServer;
 	public static String performingTasks;
 	public static String wizModuleWizardTitle;
 	public static String wizNewServerWizardTitle;

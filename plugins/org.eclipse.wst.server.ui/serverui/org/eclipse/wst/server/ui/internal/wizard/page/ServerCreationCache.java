@@ -13,7 +13,6 @@ package org.eclipse.wst.server.ui.internal.wizard.page;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -21,93 +20,65 @@ import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 /**
- * A helper class used to cache the creation of server elements.
+ * A helper class used to cache the creation of servers.
  */
-public class ElementCreationCache {
-	protected Map elementCache;
-	protected Map taskCache;
+public class ServerCreationCache {
+	protected Map cache;
 
 	/**
-	 * ElementCreationCache constructor comment.
+	 * ServerCreationCache constructor comment.
 	 */
-	public ElementCreationCache() {
+	public ServerCreationCache() {
 		super();
-		elementCache = new HashMap();
-		taskCache = new HashMap();
+		cache = new HashMap();
 	}
-	
+
 	/**
-	 * Return the key to use for the given factory.
-	 *
+	 * Return the key to use for the given server type.
+	 * 
 	 * @param type the server type
 	 * @param isLocalhost true if the server is local
 	 * @return the key
 	 */
-	protected String getKey(IServerType type, boolean isLocalhost) {
+	private String getKey(IServerType type, boolean isLocalhost) {
 		return type.getId() + "|" + isLocalhost + "|";
 	}
 
 	/**
-	 * Returns a server. 
+	 * Returns a server, from the cache if possible and otherwise by creating
 	 *
-	 * @param type
+	 * @param type the server type
 	 * @param isLocalhost true if the server is local
 	 * @param monitor a progress monitor
 	 * @return a server working copy
 	 * @throws CoreException if anything goes wrong
 	 */
 	public IServerWorkingCopy getServer(IServerType type, boolean isLocalhost, IProgressMonitor monitor) throws CoreException {
-		try {
-			IServerWorkingCopy server = getCachedServer(type, isLocalhost);
-			if (server != null)
-				return server;
-		} catch (Exception e) {
-			// ignore
-		}
-	
-		try {
-			IFile file = null;
-			//if (ServerPreferences.getInstance().isCreateResourcesInWorkspace())
-			//	file = ServerUtil.getUnusedServerFile(WizardUtil.getServerProject(), type);
-			
-			IServerWorkingCopy server = type.createServer(null, file, (IRuntime)null, monitor);
-			elementCache.put(getKey(type, isLocalhost), server);
+		IServerWorkingCopy server = getCachedServer(type, isLocalhost);
+		if (server != null)
 			return server;
-		} catch (CoreException ce) {
-			throw ce;
-		}
+		
+		server = type.createServer(null, null, (IRuntime)null, monitor);
+		cache.put(getKey(type, isLocalhost), server);
+		return server;
 	}
 
 	/**
-	 * Returns a cached server resource. 
-	 *
+	 * Returns a previously cached server, if one exists
+	 * 
 	 * @param type the server type
 	 * @param isLocalhost true if the server is local
 	 * @return a working copy
 	 */
 	public IServerWorkingCopy getCachedServer(IServerType type, boolean isLocalhost) {
 		try {
-			IServerWorkingCopy server = (IServerWorkingCopy) elementCache.get(getKey(type, isLocalhost));
+			IServerWorkingCopy server = (IServerWorkingCopy) cache.get(getKey(type, isLocalhost));
 			if (server != null)
 				return server;
 		} catch (Exception e) {
 			// ignore
 		}
-
+		
 		return null;
-	}
-
-	/**
-	 * Clears a cached server resource. 
-	 *
-	 * @param type the server type
-	 * @param isLocalhost true if the server is local
-	 */
-	public void clearCachedServer(IServerType type, boolean isLocalhost) {
-		try {
-			elementCache.remove(getKey(type, isLocalhost));
-		} catch (Exception e) {
-			// ignore
-		}
 	}
 }

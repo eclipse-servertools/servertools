@@ -37,13 +37,13 @@ public abstract class AbstractTreeComposite extends Composite {
 	protected Tree tree;
 	protected TreeViewer treeViewer;
 	protected Label description;
-	
+
 	public AbstractTreeComposite(Composite parent, int style) {
 		super(parent, style);
 		
 		createWidgets();
 	}
-	
+
 	protected void createWidgets() {
 		GridLayout layout = new GridLayout();
 		layout.horizontalSpacing = 3;
@@ -62,18 +62,10 @@ public abstract class AbstractTreeComposite extends Composite {
 			label.setLayoutData(data);
 		}
 		
-		Label label = new Label(this, SWT.WRAP);
-		label.setText(getTitleLabel());
-		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
-		if (descriptionText != null)
-			data.verticalIndent = 7;
-		data.horizontalSpan = 2;
-		label.setLayoutData(data);
-		
 		String details = getDetailsLabel();
 		if (details != null) {
 			Link prefLink = new Link(this, SWT.NONE);
-			data = new GridData(GridData.HORIZONTAL_ALIGN_END);
+			GridData data = new GridData(GridData.HORIZONTAL_ALIGN_END);
 			data.horizontalSpan = 2;
 			prefLink.setLayoutData(data);
 			prefLink.setText("<a>" + details + "</a>");
@@ -83,6 +75,15 @@ public abstract class AbstractTreeComposite extends Composite {
 				}
 			});
 		}
+		
+		Label label = new Label(this, SWT.WRAP);
+		label.setText(getTitleLabel());
+		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
+		if (descriptionText != null && details == null)
+			data.verticalIndent = 7;
+		label.setLayoutData(data);
+		
+		createViewComposite();
 		
 		tree = new Tree(this, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE);
 		data = new GridData(GridData.FILL_BOTH);
@@ -98,40 +99,6 @@ public abstract class AbstractTreeComposite extends Composite {
 				if (treeViewer.isExpandable(element))
 					treeViewer.setExpandedState(element, !treeViewer.getExpandedState(element));
 		    }
-		});
-		
-		label = new Label(this, SWT.NONE);
-		label.setText("");
-		data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
-		label.setLayoutData(data);
-		
-		// view composite
-		Composite comp = new Composite(this, SWT.NONE);
-		layout = new GridLayout();
-		layout.horizontalSpacing = 3;
-		layout.verticalSpacing = 0;
-		layout.marginWidth = 0;
-		layout.marginHeight = 0;
-		layout.numColumns = 2;
-		comp.setLayout(layout);
-
-		data = new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.VERTICAL_ALIGN_CENTER);
-		comp.setLayoutData(data);
-		
-		label = new Label(comp, SWT.NONE);
-		label.setText(Messages.viewBy);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.VERTICAL_ALIGN_CENTER);
-		label.setLayoutData(data);
-	
-		final Combo combo = new Combo(comp, SWT.DROP_DOWN | SWT.READ_ONLY);
-		combo.setItems(getComboOptions());
-		combo.select(1);
-		combo.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.GRAB_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER));
-		combo.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				int sel = combo.getSelectionIndex();
-				viewOptionSelected((byte) sel);
-			}
 		});
 		
 		if (hasDescription()) {
@@ -151,13 +118,42 @@ public abstract class AbstractTreeComposite extends Composite {
 		
 		tree.forceFocus();
 	}
-	
+
+	protected void createViewComposite() {
+		Composite comp = new Composite(this, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.horizontalSpacing = 3;
+		layout.verticalSpacing = 0;
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		layout.numColumns = 2;
+		comp.setLayout(layout);
+		
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.VERTICAL_ALIGN_END);
+		comp.setLayoutData(data);
+		
+		Label label = new Label(comp, SWT.NONE);
+		label.setText(Messages.viewBy);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.VERTICAL_ALIGN_CENTER);
+		label.setLayoutData(data);
+		
+		final Combo combo = new Combo(comp, SWT.DROP_DOWN | SWT.READ_ONLY);
+		combo.setItems(getComboOptions());
+		combo.select(1);
+		combo.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.GRAB_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER));
+		combo.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				int sel = combo.getSelectionIndex();
+				viewOptionSelected((byte) sel);
+			}
+		});
+	}
 	protected abstract String getDescriptionLabel();
-	
+
 	protected abstract String getTitleLabel();
-	
+
 	protected abstract String[] getComboOptions();
-	
+
 	protected boolean hasDescription() {
 		return true;
 	}

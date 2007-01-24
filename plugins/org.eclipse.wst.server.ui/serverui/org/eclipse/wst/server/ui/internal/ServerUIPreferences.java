@@ -29,6 +29,7 @@ public class ServerUIPreferences {
 	private static final String PREF_LAUNCH_MODE2 = "launch-mode2";
 	private static final String PREF_ENABLE_BREAKPOINTS = "enable-breakpoints";
 	private static final String PREF_RESTART = "restart";
+	private static final String PREF_CREATE_SERVER_WITH_RUNTIME = "create-server";
 
 	public static final byte SAVE_EDITORS_ALWAYS = 2;
 	public static final byte SAVE_EDITORS_NEVER = 0;
@@ -72,6 +73,7 @@ public class ServerUIPreferences {
 		preferences.setDefault(PREF_SAVE_EDITORS, getDefaultSaveEditors());
 		preferences.setDefault(PREF_HOST_NAMES, "localhost");
 		preferences.setDefault(PREF_SHOW_ON_ACTIVITY, true);
+		preferences.setDefault(PREF_CREATE_SERVER_WITH_RUNTIME, true);
 	}
 
 	/**
@@ -348,6 +350,27 @@ public class ServerUIPreferences {
 			sb.append("|*|");
 		}
 		preferences.setValue(PREF_HOST_NAMES, sb.toString());
+		ServerUIPlugin.getInstance().savePluginPreferences();
+	}
+
+	/**
+	 * Returns the setting for whether a server should be created with runtimes
+	 * when possible.
+	 * 
+	 * @return boolean
+	 */
+	public boolean getCreateServerWithRuntime() {
+		return preferences.getBoolean(PREF_CREATE_SERVER_WITH_RUNTIME);
+	}
+
+	/**
+	 * Sets the value for whether a server should be created with runtimes
+	 * when possible.
+	 * 
+	 * @param b
+	 */
+	public void setCreateServerWithRuntime(boolean b) {
+		preferences.setValue(PREF_CREATE_SERVER_WITH_RUNTIME, b);
 		ServerUIPlugin.getInstance().savePluginPreferences();
 	}
 }

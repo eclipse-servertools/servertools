@@ -248,11 +248,11 @@ public class ServerTableViewer extends TreeViewer {
 				if (e1 instanceof IServer && e2 instanceof IServer) {
 					IServer s1 = (IServer) e1;
 					IServer s2 = (IServer) e2;
-					return (s1.getName().compareTo(s2.getName()));
+					return (s1.getName().compareToIgnoreCase(s2.getName()));
 				} else if (e1 instanceof ModuleServer && e2 instanceof ModuleServer) {
 					ModuleServer s1 = (ModuleServer) e1;
 					ModuleServer s2 = (ModuleServer) e2;
-					return (s1.module[s1.module.length - 1].getName().compareTo(s2.module[s2.module.length - 1].getName()));
+					return (s1.module[s1.module.length - 1].getName().compareToIgnoreCase(s2.module[s2.module.length - 1].getName()));
 				}
 				
 				return super.compare(viewer, e1, e2);
@@ -260,9 +260,7 @@ public class ServerTableViewer extends TreeViewer {
 		});
 		
 		setInput(ROOT);
-		
 		addListeners();
-		
 		IActionBars actionBars = view.getViewSite().getActionBars();
 		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), new ServerAction(getControl().getShell(), this, "Delete it!", ServerActionHelper.ACTION_DELETE));
 		

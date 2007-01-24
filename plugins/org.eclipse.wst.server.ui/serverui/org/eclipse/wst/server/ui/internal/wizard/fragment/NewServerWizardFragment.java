@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.ServerWorkingCopy;
@@ -36,6 +37,7 @@ public class NewServerWizardFragment extends WizardFragment {
 
 	protected Map fragmentMap = new HashMap();
 	protected Map configMap = new HashMap();
+	protected IPath runtimeLocation = null;
 
 	public NewServerWizardFragment() {
 		// do nothing
@@ -102,12 +104,16 @@ public class NewServerWizardFragment extends WizardFragment {
 			if (server != null) {
 				if (server.getServerType().hasServerConfiguration() && server instanceof ServerWorkingCopy) {
 					ServerWorkingCopy swc = (ServerWorkingCopy) server;
-					try {
-						if (swc != null && runtime != null && runtime.getLocation() != null && !runtime.getLocation().isEmpty())
-							swc.importRuntimeConfiguration(runtime, null);
-					} catch (CoreException ce) {
-						// ignore
-					}
+					if (swc != null && runtime != null && runtime.getLocation() != null && !runtime.getLocation().isEmpty()) {
+						if (runtimeLocation == null || !runtimeLocation.equals(runtime.getLocation()))
+							try {
+								swc.importRuntimeConfiguration(runtime, null);
+							} catch (CoreException ce) {
+								// ignore
+							}
+						runtimeLocation = runtime.getLocation();
+					} else
+						runtimeLocation = null;
 				}
 				WizardFragment sub = getWizardFragment(server.getServerType().getId());
 				if (sub != null)

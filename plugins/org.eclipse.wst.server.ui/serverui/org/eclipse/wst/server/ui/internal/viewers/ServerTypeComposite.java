@@ -33,16 +33,16 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 	protected ServerTypeSelectionListener listener;
 	protected ServerTypeTreeContentProvider contentProvider;
 	protected boolean initialSelection = true;
-	
+
 	protected IModuleType moduleType;
-	
+
 	protected boolean isLocalhost;
 	protected boolean includeIncompatibleVersions;
-	
+
 	public interface ServerTypeSelectionListener {
 		public void serverTypeSelected(IServerType type);
 	}
-	
+
 	public ServerTypeComposite(Composite parent, int style, IModuleType moduleType, ServerTypeSelectionListener listener2) {
 		super(parent, style);
 		this.listener = listener2;
