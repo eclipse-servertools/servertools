@@ -12,12 +12,16 @@ package org.eclipse.jst.server.tomcat.core.tests;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatConfigurationWorkingCopy;
+import org.eclipse.jst.server.tomcat.core.internal.ITomcatServerWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
+import org.eclipse.jst.server.tomcat.core.internal.TomcatServerBehaviour;
 import org.eclipse.jst.server.tomcat.core.tests.module.ModuleTestCase;
 import org.eclipse.wst.server.core.*;
+import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.tests.ext.AbstractServerTestCase;
 
 public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCase {
@@ -58,6 +62,14 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 		}
 		
 		return wc.save(true, null);
+	}
+
+	public TomcatServer getTomcatServer() throws Exception {
+		return (TomcatServer)getServer().loadAdapter(TomcatServer.class, null);
+	}
+	
+	public TomcatServerBehaviour getTomcatServerBehaviour() throws Exception {
+		return (TomcatServerBehaviour)getServer().loadAdapter(TomcatServerBehaviour.class, null);
 	}
 
 	public void test0100CanAddModule() {
@@ -117,5 +129,122 @@ public abstract class AbstractTomcatServerTestCase extends AbstractServerTestCas
 		}
 		if (found)
 			assertTrue(false);
+	}
+	
+	/*
+	 * Tests to verify modules are deployed correctly per configuration
+	 */
+	
+	/**
+	 * @throws Exception
+	 */
+	public void test200VerifyDefaultDeployConfig() throws Exception {
+		TomcatServer ts = getTomcatServer();
+		assertNotNull(ts);
+		TomcatServerBehaviour tsb = getTomcatServerBehaviour();
+		assertNotNull(tsb);
+		assertEquals(ITomcatServerWorkingCopy.DEFAULT_DEPLOYDIR, ts.getDeployDirectory());
+		IPath tempDir = tsb.getTempDirectory();
+		IPath baseDir = tsb.getRuntimeBaseDirectory();
+		assertEquals(tempDir, baseDir);
+		IPath deployDir = tsb.getServerDeployDirectory();
+		assertEquals(baseDir.append(ITomcatServerWorkingCopy.DEFAULT_DEPLOYDIR), deployDir);
+	}
+
+	protected abstract void verifyPublishedModule(IPath baseDir, IModule module) throws Exception;
+	
+	/**
+	 * @throws Exception
+	 */
+	public void test201VerifyDefaultAddPublish() throws Exception {
+		IModule webModule = ModuleTestCase.webModule;
+		IServerWorkingCopy wc = getServer().createWorkingCopy();
+		wc.modifyModules(new IModule[] { webModule }, null, null);
+		wc.save(true, null);
+		getServer().publish(IServer.PUBLISH_FULL, null);
+		
+		TomcatServerBehaviour tsb = getTomcatServerBehaviour();
+		IPath baseDir = tsb.getRuntimeBaseDirectory();
+		IPath moduleDir = baseDir.append(ITomcatServerWorkingCopy.DEFAULT_DEPLOYDIR).append(ModuleTestCase.webModule.getName());
+		assertTrue(moduleDir.toFile().exists());
+		verifyPublishedModule(baseDir, ModuleTestCase.webModule);
+	}
+	
+	/**
+	 * @throws Exception
+	 */
+	public void test202VerifyDefaultRemovePublish() throws Exception {
+		IModule webModule = ModuleTestCase.webModule;
+		IServerWorkingCopy wc = server.createWorkingCopy();
+		wc.modifyModules(null, new IModule[] { webModule }, null);
+		wc.save(true, null);
+		getServer().publish(IServer.PUBLISH_FULL, null);
+		
+		TomcatServerBehaviour tsb = getTomcatServerBehaviour();
+		IPath baseDir = tsb.getRuntimeBaseDirectory();
+		IPath moduleDir = baseDir.append(ITomcatServerWorkingCopy.DEFAULT_DEPLOYDIR).append(ModuleTestCase.webModule.getName());
+		assertFalse(moduleDir.toFile().exists());
+	}
+
+	/**
+	 * Verify configuration when deployment directory is unset.
+	 * Deployment directory should default to "webapps".
+	 * @throws Exception
+	 */
+	public void test203VerifyLegacyDeployConfig() throws Exception {
+		TomcatServer ts = getTomcatServer();
+		assertNotNull(ts);
+		ts.setDeployDirectory("webapps");
+		TomcatServerBehaviour tsb = getTomcatServerBehaviour();
+		assertNotNull(tsb);
+		assertEquals("webapps", ts.getDeployDirectory());
+		// Verify that legacy setting results in attribute removal
+		Server svr = (Server)getServer().loadAdapter(Server.class, null);
+		assertNotNull(svr);
+		String attr = svr.getAttribute("webapps", (String)null);
+		assertNull(attr);
+
+		IPath tempDir = tsb.getTempDirectory();
+		IPath baseDir = tsb.getRuntimeBaseDirectory();
+		assertEquals(tempDir, baseDir);
+		IPath deployDir = tsb.getServerDeployDirectory();
+		assertEquals(baseDir.append("webapps"), deployDir);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void test204VerifyLegacyAddPublish() throws Exception {
+		IModule webModule = ModuleTestCase.webModule;
+		IServerWorkingCopy wc = getServer().createWorkingCopy();
+		// Unset the deployment directory
+		((TomcatServer)wc.loadAdapter(TomcatServer.class, null)).setDeployDirectory(null);
+		wc.modifyModules(new IModule[] { webModule }, null, null);
+		wc.save(true, null);
+		getServer().publish(IServer.PUBLISH_FULL, null);
+		
+		TomcatServerBehaviour tsb = getTomcatServerBehaviour();
+		IPath baseDir = tsb.getRuntimeBaseDirectory();
+		IPath moduleDir = baseDir.append("webapps").append(ModuleTestCase.webModule.getName());
+		assertTrue(moduleDir.toFile().exists());
+		verifyPublishedModule(baseDir, ModuleTestCase.webModule);
+	}
+	
+	/**
+	 * @throws Exception
+	 */
+	public void test205VerifyLegacyRemovePublish() throws Exception {
+		IModule webModule = ModuleTestCase.webModule;
+		IServerWorkingCopy wc = server.createWorkingCopy();
+		// Unset the deployment directory
+		((TomcatServer)wc.loadAdapter(TomcatServer.class, null)).setDeployDirectory(null);
+		wc.modifyModules(null, new IModule[] { webModule }, null);
+		wc.save(true, null);
+		getServer().publish(IServer.PUBLISH_FULL, null);
+		
+		TomcatServerBehaviour tsb = getTomcatServerBehaviour();
+		IPath baseDir = tsb.getRuntimeBaseDirectory();
+		IPath moduleDir = baseDir.append("webapps").append(ModuleTestCase.webModule.getName());
+		assertFalse(moduleDir.toFile().exists());
 	}
 }

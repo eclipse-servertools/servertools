@@ -10,8 +10,51 @@
  **********************************************************************/
 package org.eclipse.jst.server.tomcat.core.tests;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.jst.server.tomcat.core.internal.Tomcat60Configuration;
+import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Context;
+import org.eclipse.jst.server.tomcat.core.internal.xml.server40.ServerInstance;
+import org.eclipse.wst.server.core.IModule;
+
+/**
+ *
+ */
 public class Tomcat60ServerTestCase extends AbstractTomcatServerTestCase {
 	protected String getServerTypeId() {
 		return "org.eclipse.jst.server.tomcat.60";
+	}
+
+	protected void verifyPublishedModule(IPath baseDir, IModule module)
+			throws Exception {
+		Tomcat60TestConfiguration config = new Tomcat60TestConfiguration(null);
+		config.load(baseDir.append("conf"), null);
+		
+		ServerInstance serverInstance = config.getServerInstance();
+		Context context = serverInstance.getContext(module.getName());
+
+		String deployDir = getTomcatServer().getDeployDirectory();
+		if ("webapps".equals(deployDir)) {
+			assertEquals(module.getName(), context.getDocBase());
+		}
+		else {
+			assertEquals(getTomcatServerBehaviour().getModuleDeployDirectory(module).toOSString(), context.getDocBase());
+		}
+	}
+}
+
+class Tomcat60TestConfiguration extends  Tomcat60Configuration {
+	/**
+	 * @param path
+	 */
+	public Tomcat60TestConfiguration(IFolder path) {
+		super(path);
+	}
+
+	/**
+	 * @return server instance
+	 */
+	public ServerInstance getServerInstance() {
+		return serverInstance;
 	}
 }
