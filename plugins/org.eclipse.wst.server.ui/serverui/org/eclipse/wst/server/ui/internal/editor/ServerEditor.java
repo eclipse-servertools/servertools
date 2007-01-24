@@ -507,14 +507,14 @@ public class ServerEditor extends MultiPageEditorPart {
 				status.setMessage("");
 		}
 	}
-	
+
 	/**
 	 * 
 	 */
 	public void updateStatusError() {
 		if (status == null)
 			return;
-
+		
 		String error = null;
 		IEditorPart part = getActiveEditor();
 		if (part instanceof ServerEditorPart)
@@ -533,7 +533,7 @@ public class ServerEditor extends MultiPageEditorPart {
 		}
 		status.setErrorMessage(error);
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -875,18 +875,18 @@ public class ServerEditor extends MultiPageEditorPart {
 	/**
 	 * 
 	 */
-	protected void promptReloadServerFile(String id, IServerWorkingCopy wc) {
+	protected void promptReloadServerFile(String id) {
 		String title = Messages.editorResourceModifiedTitle;
 		String message = Messages.editorServerModifiedMessage;
-
+		
 		if (MessageDialog.openQuestion(getEditorSite().getShell(), title, message)) {
-			try {
+			/*try {
 				//wc.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
 				//TODO: refresh local server
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Error refreshing server", e);
-			}
-			commandManager.reload(id, new NullProgressMonitor());
+			}*/
+			commandManager.reload(id);
 		}
 	}
 
@@ -927,11 +927,16 @@ public class ServerEditor extends MultiPageEditorPart {
 		// check for server changes
 		if (serverId != null) {
 			if (!commandManager.isDirty(serverId)) {
-				if (commandManager.hasChanged(serverId))
-					promptReloadServerFile(serverId, server);
+				if (commandManager.hasChanged(serverId)) {
+					IServer newServer = ServerCore.findServer(serverId);
+					if (newServer != null && ((Server)newServer).getTimestamp() > ((Server)server).getTimestamp())
+						commandManager.reload(serverId);
+					else
+						promptReloadServerFile(serverId);
+				}
 			} else {
 				if (commandManager.hasChanged(serverId) && !commandManager.areFilesReadOnly(serverId))
-					promptReloadServerFile(serverId, server);
+					promptReloadServerFile(serverId);
 				else if (commandManager.areFilesReadOnly(serverId) && !commandManager.isReadOnly(serverId))
 					promptReadOnlyServerFile(serverId);
 			}

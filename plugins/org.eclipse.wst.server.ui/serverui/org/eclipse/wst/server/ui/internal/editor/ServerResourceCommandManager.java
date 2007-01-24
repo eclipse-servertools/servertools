@@ -67,7 +67,7 @@ public class ServerResourceCommandManager {
 	protected boolean validateEdit() {
 		if (commandManager.isDirty(id))
 			return true;
-
+		
 		IFile[] files = commandManager.getReadOnlyFiles(id);
 		if (files.length == 0)
 			return true;
@@ -89,7 +89,7 @@ public class ServerResourceCommandManager {
 		IServerAttributes serverfile = commandManager.getServerResource(id);
 		if (commandManager.hasChanged(id)) {
 			if (serverfile instanceof IServer)
-				editor.promptReloadServerFile(id, (IServerWorkingCopy) serverfile);
+				editor.promptReloadServerFile(id);
 		}
 		
 		// allow edit

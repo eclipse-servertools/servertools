@@ -73,6 +73,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 	protected Text serverConfigurationName;
 	protected Text hostname;
 	protected Combo runtimeCombo;
+	protected Button browse;
 	protected Button autoPublishDefault;
 	protected Button autoPublishDisable;
 	protected Button autoPublishOverride;
@@ -403,7 +404,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			whs.setHelp(serverConfigurationName, ContextIds.EDITOR_CONFIGURATION);
 			
 			final IFolder currentFolder = server.getServerConfiguration();
-			Button browse = toolkit.createButton(composite, Messages.serverEditorOverviewServerConfigurationBrowse, SWT.PUSH);
+			browse = toolkit.createButton(composite, Messages.serverEditorOverviewServerConfigurationBrowse, SWT.PUSH);
 			browse.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					ContainerSelectionDialog dialog = new ContainerSelectionDialog(serverConfigurationName.getShell(),
@@ -692,6 +693,54 @@ public class OverviewEditorPart extends ServerEditorPart {
 				serverName.setEditable(false);
 			else
 				serverName.setEditable(true);
+			
+			hostname.setText(server.getHost());
+			if (readOnly)
+				hostname.setEditable(false);
+			else
+				hostname.setEditable(true);
+			
+			if (runtimeCombo != null) {
+				updateRuntimeCombo();
+				if (readOnly)
+					runtimeCombo.setEnabled(false);
+				else
+					runtimeCombo.setEnabled(true);
+			}
+			
+			if (serverConfigurationName != null) {
+				IFolder folder = server.getServerConfiguration();
+				if (folder == null)
+					serverConfigurationName.setText(Messages.elementUnknownName);
+				else
+					serverConfigurationName.setText("" + server.getServerConfiguration().getFullPath());
+				if (readOnly) {
+					serverConfigurationName.setEditable(false);
+					browse.setEnabled(false);
+				} else {
+					serverConfigurationName.setEditable(true);
+					browse.setEnabled(true);
+				}
+			}
+			
+			Server svr = (Server) server;
+			int publishSetting = svr.getAutoPublishSetting();
+			autoPublishDefault.setSelection(publishSetting == Server.AUTO_PUBLISH_DEFAULT);
+			autoPublishDisable.setSelection(publishSetting == Server.AUTO_PUBLISH_DISABLE);
+			autoPublishOverride.setSelection(publishSetting == Server.AUTO_PUBLISH_OVERRIDE);
+			autoPublishTime.setSelection(svr.getAutoPublishTime());
+			
+			if (readOnly) {
+				autoPublishDefault.setEnabled(false);
+				autoPublishDisable.setEnabled(false);
+				autoPublishOverride.setEnabled(false);
+				autoPublishTime.setEnabled(false);
+			} else {
+				autoPublishDefault.setEnabled(true);
+				autoPublishDisable.setEnabled(true);
+				autoPublishOverride.setEnabled(true);
+				autoPublishTime.setEnabled(true);
+			}
 		}
 		
 		updating = false;

@@ -22,7 +22,6 @@ import java.util.Map;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.wst.server.core.*;
@@ -202,9 +201,8 @@ public class GlobalCommandManager {
 	 * Reload the command manager for a given id.
 	 * 
 	 * @param id an id
-	 * @param monitor a progress monitor
 	 */
-	public void reload(String id, IProgressMonitor monitor) {
+	public void reload(String id) {
 		try {
 			CommandManagerInfo info = getExistingCommandManagerInfo(id);
 			if (info != null) {
@@ -213,15 +211,18 @@ public class GlobalCommandManager {
 					server = ServerCore.findServer(id);
 				if (server != null)
 					info.wc = server.createWorkingCopy();
-				//info.serverElement = ServerCore.getResourceManager().getServer()
-				//info.serverElement = ServerCore.getEditManager().reloadEditModel(info.file, monitor);
 				firePropertyChangeEvent(PROP_RELOAD, id, null);
 			}
+			clearUndoList(id);
+			clearRedoList(id);
+			undoSaveIndex = undoList.size();
+			setDirtyState(id, false);
+			updateTimestamps(id);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not release command manager", e);
 		}
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -637,7 +638,7 @@ public class GlobalCommandManager {
 		IFile[] files = getServerResourceFiles(id);
 		if (files != null) {
 			int size = files.length;
-		
+			
 			for (int i = 0; i < size; i++) {
 				if (files[i] != null) {
 					File f = files[i].getLocation().toFile();
@@ -650,10 +651,10 @@ public class GlobalCommandManager {
 		}
 		info.timestamp = getTimestamp(info);
 	}
-	
+
 	protected static int getTimestamp(CommandManagerInfo info) {
 		IServer server = info.wc.getOriginal();
-
+		
 		if (server != null)
 			return ((Server)server).getTimestamp();
 		return -1;
@@ -668,7 +669,7 @@ public class GlobalCommandManager {
 			return false;
 		IFile[] files = getServerResourceFiles(id);
 		int size = files.length;
-
+		
 		int count = 0;
 		for (int i = 0; i < size; i++) {
 			count++;
@@ -685,7 +686,7 @@ public class GlobalCommandManager {
 		int timestamp = getTimestamp(info);
 		if (info.timestamp != timestamp)
 			return true;
-
+		
 		if (count != info.fileMap.size())
 			return true;
 		return false;

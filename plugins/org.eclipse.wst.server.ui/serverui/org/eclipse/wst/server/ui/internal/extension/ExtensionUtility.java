@@ -63,7 +63,7 @@ public class ExtensionUtility {
 		}
 		
 		if (in == null)
-			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, "Could not load extensions", null));
+			throw new CoreException(new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, "Could not load extensions", null));
 		
 		try {
 			IMemento memento = XMLMemento.loadMemento(in);
@@ -79,7 +79,7 @@ public class ExtensionUtility {
 			list.toArray(items);
 			return items;
 		} catch (Exception e) {
-			throw new CoreException(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, e.getMessage(), e));
+			throw new CoreException(new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, 0, e.getMessage(), e));
 		}
 	}
 
