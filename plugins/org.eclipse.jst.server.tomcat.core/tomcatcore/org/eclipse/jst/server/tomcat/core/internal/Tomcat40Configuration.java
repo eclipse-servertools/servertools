@@ -567,13 +567,9 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	}
 
 	/**
-	 * Prepare server runtime directory. Create catalina instance set of
-	 * directories.
-	 * 
-	 * @param baseDir directory at which to prepare the runtime directory.
-	 * @return result of creation operation 
+	 * @see TomcatConfiguration#localizeConfiguration(IPath, IPath, TomcatServer, IProgressMonitor)
 	 */
-	protected IStatus prepareRuntimeDirectory(IPath baseDir) {
-		return TomcatVersionHelper.createCatalinaInstanceDirectory(baseDir, DEFAULT_WEBXML_SERVLET23);
+	public IStatus localizeConfiguration(IPath baseDir, IPath deployDir, TomcatServer tomcatServer, IProgressMonitor monitor) {
+		return TomcatVersionHelper.localizeConfiguration(baseDir, deployDir, tomcatServer, monitor);
 	}
 }

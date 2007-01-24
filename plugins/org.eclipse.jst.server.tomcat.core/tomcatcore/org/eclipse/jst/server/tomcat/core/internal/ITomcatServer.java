@@ -15,7 +15,18 @@ import org.eclipse.wst.server.core.model.IURLProvider;
  *
  */
 public interface ITomcatServer extends IURLProvider {
+	/**
+	 * Property which specifies whether this server is configured
+	 * for testing environment.
+	 */
 	public static final String PROPERTY_TEST_ENVIRONMENT = "testEnvironment";
+
+	/**
+	 * Property which specifies the directory where web applications
+	 * are published.
+	 */
+	public static final String PROPERTY_DEPLOYDIR = "deployDir";
+
 	/**
 	 * Returns true if this is a test (publish and run code out of the
 	 * workbench) environment server.
@@ -23,4 +34,13 @@ public interface ITomcatServer extends IURLProvider {
 	 * @return boolean
 	 */
 	public boolean isTestEnvironment();
+
+	/**
+	 * Gets the directory to which web applications are to be deployed.
+	 * If relative, it is relative to the runtime base directory for the
+	 * server.
+	 * 
+	 * @return directory where web applications are deployed
+	 */
+	public String getDeployDirectory();
 }

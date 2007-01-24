@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2005, 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -70,10 +70,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	}
 
 	public ITomcatVersionHandler getTomcatVersionHandler() {
-		if (getServer().getRuntime() == null || getTomcatRuntime() == null)
-			return null;
-
-		return getTomcatRuntime().getVersionHandler();
+		return getTomcatServer().getTomcatVersionHandler();
 	}
 
 	public TomcatConfiguration getTomcatConfiguration() throws CoreException {
@@ -207,19 +204,19 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		IPath confDir = null;
 		if (getTomcatServer().isTestEnvironment()) {
 			confDir = getTempDirectory();
-			IStatus status = getTomcatConfiguration().prepareRuntimeDirectory(confDir);
+			IStatus status = getTomcatVersionHandler().prepareRuntimeDirectory(confDir);
 			if (status != null && !status.isOK())
 				throw new CoreException(status);
-/*			File temp = confDir.append("conf").toFile();
-			if (!temp.exists())
-				temp.mkdirs();*/
 		} else
 			confDir = installDir;
+		IStatus status = getTomcatVersionHandler().prepareDeployDirectory(getServerDeployDirectory());
+		if (status != null && !status.isOK())
+			throw new CoreException(status);
 
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.beginTask(Messages.publishServerTask, 600);
 		
-		IStatus status = getTomcatConfiguration().cleanupServer(confDir, installDir, ProgressUtil.getSubMonitorFor(monitor, 100));
+		status = getTomcatConfiguration().cleanupServer(confDir, installDir, ProgressUtil.getSubMonitorFor(monitor, 100));
 		if (status != null && !status.isOK())
 			throw new CoreException(status);
 		
@@ -227,7 +224,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		if (status != null && !status.isOK())
 			throw new CoreException(status);
 		
-		getTomcatConfiguration().localizeConfiguration(confDir.append("conf"), getTomcatServer(), ProgressUtil.getSubMonitorFor(monitor, 100));
+		getTomcatConfiguration().localizeConfiguration(confDir, getServerDeployDirectory(),
+				getTomcatServer(), ProgressUtil.getSubMonitorFor(monitor, 100));
 		
 		monitor.done();
 		
@@ -298,11 +296,11 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, "Could not remove module", e));
 			}
 		} else {
-			IPath to = getServer().getRuntime().getLocation().append("webapps").append(module[0].getName());
+			IPath path = getModuleDeployDirectory(module[0]);
 			IModuleResource[] mr = getResources(module);
-			IStatus[] stat = PublishUtil.publishSmart(mr, to, monitor);
+			IStatus[] stat = PublishUtil.publishSmart(mr, path, monitor);
 			PublishOperation2.addArrayToList(status, stat);
-			p.put(module[0].getId(), to.toOSString());
+			p.put(module[0].getId(), path.toOSString());
 		}
 		PublishOperation2.throwException(status);
 	}
@@ -325,7 +323,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, "Could not remove module", e));
 			}
 		} else {
-			IPath path = getServer().getRuntime().getLocation().append("webapps").append(module[0].getName());
+			IPath path = getModuleDeployDirectory(module[0]);
 			path = path.append("WEB-INF").append("lib");
 			IPath jarPath = path.append(module[1].getName() + ".jar");
 			if (!path.toFile().exists()) {
@@ -357,7 +355,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 			baseDir = getServer().getRuntime().getLocation();
 		
 		// Publish context configuration for servers that support META-INF/context.xml
-		IStatus status = getTomcatConfiguration().publishContextConfig(baseDir, monitor);
+		IStatus status = getTomcatConfiguration().publishContextConfig(baseDir, getServerDeployDirectory(), monitor);
 		if (!status.isOK())
 			throw new CoreException(status);
 	}
@@ -458,7 +456,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		}
 		
 		try {
-			Trace.trace(Trace.FINER, "Stopping Tomcat");
+			if (Trace.isTraceEnabled())
+				Trace.trace(Trace.FINER, "Stopping Tomcat");
 			if (state != IServer.STATE_STOPPED)
 				setServerState(IServer.STATE_STOPPING);
 	
@@ -490,7 +489,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 
 		try {
 			setServerState(IServer.STATE_STOPPING);
-			Trace.trace(Trace.FINER, "Killing the Tomcat process");
+			if (Trace.isTraceEnabled())
+				Trace.trace(Trace.FINER, "Killing the Tomcat process");
 			if (process != null && !process.isTerminated()) {
 				process.terminate();
 				stopImpl();
@@ -976,18 +976,44 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	}
 	
 	/**
+	 * Gets the directory to which modules should be deployed for
+	 * this server.
+	 * 
+	 * @return full path to deployment directory for the server
+	 */
+	public IPath getServerDeployDirectory() {
+		String deployDir = getTomcatServer().getDeployDirectory();
+		IPath deployPath = new Path(deployDir);
+		if (!deployPath.isAbsolute()) {
+			IPath base = getRuntimeBaseDirectory();
+			deployPath = base.append(deployPath);
+		}
+		return deployPath;
+	}
+	
+	/**
+	 * Gets the directory to which to deploy a module's web application.
+	 * 
+	 * @param module a module
+	 * @return full path to deployment directory for the module
+	 */
+	public IPath getModuleDeployDirectory(IModule module) {
+		return getServerDeployDirectory().append(module.getName());
+	}
+	
+	/**
 	 * Temporary method to help web services team. Returns the path that the module is
-	 * published to when in test environment mode.
+	 * published to.
 	 * 
 	 * @param module a module on the server 
 	 * @return the path that the module is published to when in test environment mode,
-	 *    or null if not running as a test environment or the module is not a web module
+	 *    or null if the module is not a web module
 	 */
 	public IPath getPublishDirectory(IModule[] module) {
-		if (!getTomcatServer().isTestEnvironment() || module == null || module.length != 1)
+		if (module == null || module.length != 1)
 			return null;
 		
-		return getTempDirectory().append("webapps").append(module[0].getName());
+		return getModuleDeployDirectory(module[0]);
 	}
 
 	public void setModulePublishState2(IModule[] module, int state) {

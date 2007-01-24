@@ -598,11 +598,12 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	 * present in projects to published server.xml.
 	 * 
 	 * @param baseDir path to catalina instance directory
+	 * @param deployDir path to deployment directory
 	 * @param monitor a progress monitor or null
 	 * @return result of operation
 	 */
-	protected IStatus publishContextConfig(IPath baseDir, IProgressMonitor monitor) {
-		return TomcatVersionHelper.publishCatalinaContextConfig(baseDir, monitor);
+	protected IStatus publishContextConfig(IPath baseDir, IPath deployDir, IProgressMonitor monitor) {
+		return TomcatVersionHelper.publishCatalinaContextConfig(baseDir, deployDir, monitor);
 	}
 	
 	/**
@@ -621,13 +622,9 @@ public class Tomcat55Configuration extends TomcatConfiguration {
 	}
 
 	/**
-	 * Prepare server runtime directory. Create catalina instance set of
-	 * directories.
-	 * 
-	 * @param baseDir directory at which to prepare the runtime directory.
-	 * @return result of creation operation 
+	 * @see TomcatConfiguration#localizeConfiguration(IPath, IPath, TomcatServer, IProgressMonitor)
 	 */
-	protected IStatus prepareRuntimeDirectory(IPath baseDir) {
-		return TomcatVersionHelper.createCatalinaInstanceDirectory(baseDir, DEFAULT_WEBXML_SERVLET24);
+	public IStatus localizeConfiguration(IPath baseDir, IPath deployDir, TomcatServer tomcatServer, IProgressMonitor monitor) {
+		return TomcatVersionHelper.localizeConfiguration(baseDir, deployDir, tomcatServer, monitor);
 	}
 }

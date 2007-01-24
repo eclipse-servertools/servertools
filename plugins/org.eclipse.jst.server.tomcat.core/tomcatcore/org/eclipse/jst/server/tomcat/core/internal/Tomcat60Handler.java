@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -117,5 +117,23 @@ public class Tomcat60Handler implements ITomcatVersionHandler {
 		if (serverBehaviour.getTomcatServer().isTestEnvironment())
 			return serverBehaviour.getTempDirectory();
 		return serverBehaviour.getServer().getRuntime().getLocation();
+	}
+
+	/**
+	 * @see ITomcatVersionHandler#prepareRuntimeDirectory(IPath)
+	 */
+	public IStatus prepareRuntimeDirectory(IPath baseDir) {
+		// TODO Update to Servlet 2.5 when supported
+		return TomcatVersionHelper.createCatalinaInstanceDirectory(baseDir,
+				TomcatVersionHelper.DEFAULT_WEBXML_SERVLET24);
+	}
+
+	/**
+	 * @see ITomcatVersionHandler#prepareDeployDirectory(IPath)
+	 */
+	public IStatus prepareDeployDirectory(IPath deployPath) {
+		// TODO Update to Servlet 2.5 when available
+		return TomcatVersionHelper.createDeploymentDirectory(deployPath,
+				TomcatVersionHelper.DEFAULT_WEBXML_SERVLET24);
 	}
 }

@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2005 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -74,6 +74,9 @@ public class Tomcat32Handler implements ITomcatVersionHandler {
 		return s;
 	}
 
+	/**
+	 * @see ITomcatVersionHandler#getExcludedRuntimeProgramArguments(boolean, boolean)
+	 */
 	public String[] getExcludedRuntimeProgramArguments(boolean debug, boolean starting) {
 		return null;
 	}
@@ -90,6 +93,9 @@ public class Tomcat32Handler implements ITomcatVersionHandler {
 		return s;
 	}
 
+	/**
+	 * @see ITomcatVersionHandler#getRuntimePolicyFile(IPath)
+	 */
 	public String getRuntimePolicyFile(IPath configPath) {
 		return configPath.append("conf").append("tomcat.policy").toOSString();
 	}
@@ -108,6 +114,36 @@ public class Tomcat32Handler implements ITomcatVersionHandler {
 	 * @see ITomcatVersionHandler#getRuntimeBaseDirectory(TomcatServerBehaviour)
 	 */
 	public IPath getRuntimeBaseDirectory(TomcatServerBehaviour serverBehaviour) {
+		if (serverBehaviour.getTomcatServer().isTestEnvironment())
+			return serverBehaviour.getTempDirectory();
 		return serverBehaviour.getServer().getRuntime().getLocation();
+	}
+
+	/**
+	 * @see ITomcatVersionHandler#prepareRuntimeDirectory(IPath)
+	 */
+	public IStatus prepareRuntimeDirectory(IPath confDir) {
+		if (Trace.isTraceEnabled())
+			Trace.trace(Trace.FINER, "Preparing runtime directory");
+		// Prepare instance directory structure that is relative to server.xml
+		File temp = confDir.append("conf").toFile();
+		if (!temp.exists())
+			temp.mkdirs();
+		temp = confDir.append("webapps").toFile();
+		if (!temp.exists())
+			temp.mkdirs();
+		temp = confDir.append("work").toFile();
+		if (!temp.exists())
+			temp.mkdirs();
+
+		return Status.OK_STATUS;		
+	}
+
+	/**
+	 * @see ITomcatVersionHandler#prepareDeployDirectory(IPath)
+	 */
+	public IStatus prepareDeployDirectory(IPath deployPath) {
+		return TomcatVersionHelper.createDeploymentDirectory(deployPath,
+				TomcatVersionHelper.DEFAULT_WEBXML_SERVLET22);
 	}
 }

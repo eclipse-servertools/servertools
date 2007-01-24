@@ -602,11 +602,12 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 	 * present in projects to published server.xml.
 	 * 
 	 * @param baseDir path to catalina instance directory
+	 * @param deployDir path to deployment directory
 	 * @param monitor a progress monitor or null
 	 * @return result of operation
 	 */
-	protected IStatus publishContextConfig(IPath baseDir, IProgressMonitor monitor) {
-		return TomcatVersionHelper.publishCatalinaContextConfig(baseDir, monitor);
+	protected IStatus publishContextConfig(IPath baseDir, IPath deployDir, IProgressMonitor monitor) {
+		return TomcatVersionHelper.publishCatalinaContextConfig(baseDir, deployDir, monitor);
 	}
 	
 	/**
@@ -657,7 +658,8 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 							if (contextFile.exists()) {
 								subMonitor.subTask(NLS.bind(Messages.deletingContextFile, fileName));
 								if (contextFile.delete()) {
-									Trace.trace(Trace.FINER, "Leftover context file " + fileName + " deleted.");
+									if (Trace.isTraceEnabled())
+										Trace.trace(Trace.FINER, "Leftover context file " + fileName + " deleted.");
 									ms.add(new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0,
 											NLS.bind(Messages.deletedContextFile, fileName), null));
 								} else {
@@ -699,7 +701,8 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 			else {
 				monitor.worked(200);
 			}
-			Trace.trace(Trace.FINER, "Server cleaned");
+			if (Trace.isTraceEnabled())
+				Trace.trace(Trace.FINER, "Server cleaned");
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not cleanup server at " + baseDir.toOSString() + ": " + e.getMessage());
 			ms.add(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0,
@@ -711,13 +714,9 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 	}
 
 	/**
-	 * Prepare server runtime directory. Create catalina instance set of
-	 * directories.
-	 * 
-	 * @param baseDir directory at which to prepare the runtime directory.
-	 * @return result of creation operation 
+	 * @see TomcatConfiguration#localizeConfiguration(IPath, IPath, TomcatServer, IProgressMonitor)
 	 */
-	protected IStatus prepareRuntimeDirectory(IPath baseDir) {
-		return TomcatVersionHelper.createCatalinaInstanceDirectory(baseDir, DEFAULT_WEBXML_SERVLET24);
+	public IStatus localizeConfiguration(IPath baseDir, IPath deployDir, TomcatServer tomcatServer, IProgressMonitor monitor) {
+		return TomcatVersionHelper.localizeConfiguration(baseDir, deployDir, tomcatServer, monitor);
 	}
 }

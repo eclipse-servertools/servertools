@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2005, 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -94,5 +94,14 @@ public class Trace {
 		System.out.println(sb.toString());
 		if (t != null)
 			t.printStackTrace();
+	}
+	
+	/**
+	 * Gets state of debug flag for the plug-in.
+	 * 
+	 * @return true if tracing is enabled
+	 */
+	public static boolean isTraceEnabled() {
+		return TomcatPlugin.getInstance().isDebugging();
 	}
 }

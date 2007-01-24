@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -600,11 +600,12 @@ public class Tomcat60Configuration extends TomcatConfiguration {
 	 * present in projects to published server.xml.
 	 * 
 	 * @param baseDir path to catalina instance directory
+	 * @param deployDir path to deployment directory
 	 * @param monitor a progress monitor or null
 	 * @return result of operation
 	 */
-	protected IStatus publishContextConfig(IPath baseDir, IProgressMonitor monitor) {
-		return TomcatVersionHelper.publishCatalinaContextConfig(baseDir, monitor);
+	protected IStatus publishContextConfig(IPath baseDir, IPath deployDir, IProgressMonitor monitor) {
+		return TomcatVersionHelper.publishCatalinaContextConfig(baseDir, deployDir, monitor);
 	}
 	
 	/**
@@ -623,14 +624,9 @@ public class Tomcat60Configuration extends TomcatConfiguration {
 	}
 
 	/**
-	 * Prepare server runtime directory. Create catalina instance set of
-	 * directories.
-	 * 
-	 * @param baseDir directory at which to prepare the runtime directory.
-	 * @return result of creation operation 
+	 * @see TomcatConfiguration#localizeConfiguration(IPath, IPath, TomcatServer, IProgressMonitor)
 	 */
-	protected IStatus prepareRuntimeDirectory(IPath baseDir) {
-		// TODO Update to Servlet 2.5 when supported
-		return TomcatVersionHelper.createCatalinaInstanceDirectory(baseDir, DEFAULT_WEBXML_SERVLET24);
+	public IStatus localizeConfiguration(IPath baseDir, IPath deployDir, TomcatServer tomcatServer, IProgressMonitor monitor) {
+		return TomcatVersionHelper.localizeConfiguration(baseDir, deployDir, tomcatServer, monitor);
 	}
 }

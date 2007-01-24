@@ -42,16 +42,6 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	public static final String ADD_WEB_MODULE_PROPERTY = "addWebModule";
 	public static final String REMOVE_WEB_MODULE_PROPERTY = "removeWebModule";
 	
-	public static final String DEFAULT_WEBXML_SERVLET23 = 
-		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-		"<!DOCTYPE web-app PUBLIC \"-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN\" \"http://java.sun.com/dtd/web-app_2_3.dtd\">\n" +
-		"<web-app>\n</web-app>";
-	
-	public static final String DEFAULT_WEBXML_SERVLET24 = 
-	"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-	"<web-app id=\"WebApp_ID\" version=\"2.4\" xmlns=\"http://java.sun.com/xml/ns/j2ee\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd\">\n" +
-	"</web-app>";
-	
 	protected IFolder configPath;
 
 	// property change listeners
@@ -85,11 +75,12 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 	 *                  for Tomcat 4.x and up.
 	 * @param doBackup Backup existing configuration files (true if not test mode).
 	 * @param monitor Progress monitor to use
-	 * @return org.eclipse.core.runtime.IStatus
+	 * @return result of operation
 	 */
 	protected IStatus backupAndPublish(IPath tomcatDir, boolean doBackup, IProgressMonitor monitor) {
 		MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, Messages.publishConfigurationTask, null);
-		Trace.trace(Trace.FINER, "Backup and publish");
+		if (Trace.isTraceEnabled())
+			Trace.trace(Trace.FINER, "Backup and publish");
 		monitor = ProgressUtil.getMonitorFor(monitor);
 
 		try {
@@ -124,7 +115,8 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 					IFile file = (IFile) children[i];
 					String name = file.getName();
 					monitor.subTask(NLS.bind(Messages.publisherPublishTask, new String[] {name}));
-					Trace.trace(Trace.FINEST, "Publishing " + name);
+					if (Trace.isTraceEnabled())
+						Trace.trace(Trace.FINEST, "Publishing " + name);
 
 					// backup and copy file
 					boolean copy = true;
@@ -160,7 +152,8 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 				File file = files[i];
 				String name = file.getName();
 				monitor.subTask(NLS.bind(Messages.publisherPublishTask, new String[] {name}));
-				Trace.trace(Trace.FINEST, "Publishing " + name);
+				if (Trace.isTraceEnabled())
+					Trace.trace(Trace.FINEST, "Publishing " + name);
 
 				// backup and copy file
 				boolean copy = true;
@@ -181,7 +174,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 		}
 	}
 	
-	protected IStatus publishContextConfig(IPath baseDir, IProgressMonitor monitor) {
+	protected IStatus publishContextConfig(IPath baseDir, IPath deployDir, IProgressMonitor monitor) {
 		// Default implementation assumes nothing to do
 		return Status.OK_STATUS;
 	}
@@ -192,17 +185,17 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 		return Status.OK_STATUS;
 	}
 	
-	protected IStatus prepareRuntimeDirectory(IPath confDir) {
-		File temp = confDir.append("conf").toFile();
-		if (!temp.exists())
-			temp.mkdirs();
-
-		return Status.OK_STATUS;		
-	}
-	
-	public void localizeConfiguration(IPath path, TomcatServer server, IProgressMonitor monitor) {
-		// do nothing
-	}
+	/**
+	 * Make any local changes to the server configuration at the specified runtime
+	 * base directory needed to complete publishing the server.
+	 * 
+	 * @param baseDir runtime base directory for the server
+	 * @param deployDir deployment directory for the server
+	 * @param server server being localized
+	 * @param monitor a progress monitor
+	 * @return result of operation
+	 */
+	public abstract IStatus localizeConfiguration(IPath baseDir, IPath deployDir, TomcatServer server, IProgressMonitor monitor);
 
 	/**
 	 * Returns the main server port.

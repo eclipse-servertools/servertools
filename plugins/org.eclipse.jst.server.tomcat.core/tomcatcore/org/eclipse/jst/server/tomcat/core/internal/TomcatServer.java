@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2005, 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,7 +29,9 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	public static final String PROPERTY_SECURE = "secure";
 	public static final String PROPERTY_DEBUG = "debug";
 
+
 	protected transient TomcatConfiguration configuration;
+	protected transient ITomcatVersionHandler versionHandler;
 
 	/**
 	 * TomcatServer.
@@ -38,6 +40,11 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		super();
 	}
 
+	/**
+	 * Get the Tomcat runtime for this server.
+	 * 
+	 * @return Tomcat runtime for this server
+	 */
 	public TomcatRuntime getTomcatRuntime() {
 		if (getServer().getRuntime() == null)
 			return null;
@@ -45,11 +52,19 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		return (TomcatRuntime) getServer().getRuntime().loadAdapter(TomcatRuntime.class, null);
 	}
 
+	/**
+	 * Gets the Tomcat version handler for this server.
+	 * 
+	 * @return version handler for this server
+	 */
 	public ITomcatVersionHandler getTomcatVersionHandler() {
-		if (getServer().getRuntime() == null || getTomcatRuntime() == null)
-			return null;
+		if (versionHandler == null) {
+			if (getServer().getRuntime() == null || getTomcatRuntime() == null)
+				return null;
 
-		return getTomcatRuntime().getVersionHandler();
+			versionHandler = getTomcatRuntime().getVersionHandler();
+		}
+		return versionHandler;
 	}
 
 	public ITomcatConfiguration getServerConfiguration() throws CoreException {
@@ -190,6 +205,14 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		return getAttribute(PROPERTY_SECURE, false);
 	}
 	
+	/**
+	 * @see ITomcatServer#getDeployDirectory()
+	 */
+	public String getDeployDirectory() {
+		// Default to value used by prior WTP versions
+		return getAttribute(PROPERTY_DEPLOYDIR, LEGACY_DEPLOYDIR);
+	}
+	
 	protected static String renderCommandLine(String[] commandLine, String separator) {
 		if (commandLine == null || commandLine.length < 1)
 			return "";
@@ -288,6 +311,7 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		setTestEnvironment(true);
 		setAttribute("auto-publish-setting", 2);
 		setAttribute("auto-publish-time", 1);
+		setDeployDirectory(DEFAULT_DEPLOYDIR);
 	}
 
 	/**
@@ -317,6 +341,21 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		setAttribute(PROPERTY_TEST_ENVIRONMENT, b);
 	}
 	
+	/**
+	 * Set the deployment directory for this server.  May be absolute
+	 * or relative to runtime base directory.
+	 * 
+	 * @param deployDir deployment directory for the server
+	 */
+	public void setDeployDirectory(String deployDir) {
+		// Remove attribute if setting to legacy value assumed in prior versions of WTP.
+		// Allowing values that differ only in case is asking for more trouble that it is worth.
+		if (LEGACY_DEPLOYDIR.equalsIgnoreCase(deployDir))
+			setAttribute(PROPERTY_DEPLOYDIR, (String)null);
+		else
+			setAttribute(PROPERTY_DEPLOYDIR, deployDir);
+	}
+
 	/**
 	 * @see ServerDelegate#modifyModules(IModule[], IModule[], IProgressMonitor)
 	 */

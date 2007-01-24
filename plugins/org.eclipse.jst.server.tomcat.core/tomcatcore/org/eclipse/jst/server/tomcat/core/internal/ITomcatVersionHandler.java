@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2005, 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -67,4 +67,22 @@ public interface ITomcatVersionHandler {
 	 * @return the base path
 	 */
 	public IPath getRuntimeBaseDirectory(TomcatServerBehaviour serverBehaviour);
+
+	/**
+	 * Prepare server runtime directory. Create catalina instance set of
+	 * directories.
+	 * 
+	 * @param baseDir directory at which to prepare the runtime directory.
+	 * @return result of creation operation 
+	 */
+	public IStatus prepareRuntimeDirectory(IPath baseDir);
+	
+	/**
+	 * Prepares the specified directory by making sure it exists and is
+	 * initialized appropriately.
+	 * 
+	 * @param deployPath path to the deployment directory
+	 * @return status result of the operation
+	 */
+	public IStatus prepareDeployDirectory(IPath deployPath);
 }

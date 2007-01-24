@@ -103,6 +103,8 @@ public class Messages extends NLS {
 	public static String serverEditorActionSetSecure;
 	public static String serverEditorActionSetTestEnvironmentDescription;
 	public static String serverEditorActionSetTestEnvironment;
+	public static String serverEditorActionSetDeployDirectory;
+	public static String serverEditorActionSetDeployDirectoryDescription;
 	public static String configurationEditorActionEditWebModuleDescription;
 	public static String configurationEditorActionEditWebModulePath;
 	public static String fixModuleContextRootDescription;

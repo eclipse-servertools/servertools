@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -56,8 +56,7 @@ public class PublishOperation2 extends PublishOperation {
 	}
 
 	private void publishDir(IModule module2, List status, IProgressMonitor monitor) throws CoreException {
-		IPath path = server.getTempDirectory().append("webapps");
-		path = path.append(module2.getName());
+		IPath path = server.getModuleDeployDirectory(module2);
 		
 		if (kind == IServer.PUBLISH_CLEAN || deltaKind == ServerBehaviourDelegate.REMOVED) { // clean and republish from scratch
 			File f = path.toFile();
@@ -87,8 +86,8 @@ public class PublishOperation2 extends PublishOperation {
 	}
 
 	private void publishJar(List status, IProgressMonitor monitor) throws CoreException {
-		IPath path = server.getTempDirectory().append("webapps");
-		path = path.append(module[0].getName()).append("WEB-INF").append("lib");
+		IPath path = server.getModuleDeployDirectory(module[0]);
+		path = path.append("WEB-INF").append("lib");
 		IPath jarPath = path.append(module[1].getName() + ".jar");
 		
 		if (kind == IServer.PUBLISH_CLEAN || deltaKind == ServerBehaviourDelegate.REMOVED) { // clean and republish from scratch

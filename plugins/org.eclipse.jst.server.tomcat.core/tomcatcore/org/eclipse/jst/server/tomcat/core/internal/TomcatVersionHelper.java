@@ -47,6 +47,30 @@ import org.xml.sax.SAXException;
 public class TomcatVersionHelper {
 
 	/**
+	 * Sting containing contents for a default web.xml for Servlet 2.2.
+	 */
+	public static final String DEFAULT_WEBXML_SERVLET22 = 
+		"<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" +
+		"<!DOCTYPE web-app PUBLIC \"-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN\" \"http://java.sun.com/j2ee/dtds/web-app_2_2.dtd\">\n" +
+		"<web-app>\n</web-app>";
+
+	/**
+	 * Default web.xml contents for a Servlet 2.3 web application.
+	 */
+	public static final String DEFAULT_WEBXML_SERVLET23 = 
+		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+		"<!DOCTYPE web-app PUBLIC \"-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN\" \"http://java.sun.com/dtd/web-app_2_3.dtd\">\n" +
+		"<web-app>\n</web-app>";
+
+	/**
+	 * Default web.xml contents for a Servlet 2.4 web application.
+	 */
+	public static final String DEFAULT_WEBXML_SERVLET24 = 
+	"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+	"<web-app id=\"WebApp_ID\" version=\"2.4\" xmlns=\"http://java.sun.com/xml/ns/j2ee\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd\">\n" +
+	"</web-app>";
+
+	/**
 	 * Reads the from the specified InputStream and returns
 	 * the result as a String. Each line is terminated by
 	 * &quot;\n&quot;.  Returns whatever is read regardless
@@ -151,10 +175,9 @@ public class TomcatVersionHelper {
 	 */
 	public static IStatus cleanupCatalinaServer(IPath baseDir, IPath installDir, List modules, IProgressMonitor monitor) {
 		MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, Messages.cleanupServerTask, null);
-		monitor = ProgressUtil.getMonitorFor(monitor);
-		monitor.beginTask(Messages.cleanupServerTask, 200);
-
 		try {
+			monitor = ProgressUtil.getMonitorFor(monitor);
+			monitor.beginTask(Messages.cleanupServerTask, 200);
 			monitor.subTask(Messages.detectingRemovedProjects);
 
 			IPath serverXml = baseDir.append("conf").append("server.xml");
@@ -202,14 +225,17 @@ public class TomcatVersionHelper {
 			else {
 				monitor.worked(200);
 			}
-			Trace.trace(Trace.FINER, "Server cleaned");
+			if (Trace.isTraceEnabled())
+				Trace.trace(Trace.FINER, "Server cleaned");
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not cleanup server at " + baseDir.toOSString() + ": " + e.getMessage());
 			ms.add(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0,
 					NLS.bind(Messages.errorCleanupServer, new String[] {e.getLocalizedMessage()}), e));
 		}
+		finally {
+			monitor.done();
+		}
 		
-		monitor.done();
 		return ms;
 	}
 
@@ -221,11 +247,12 @@ public class TomcatVersionHelper {
 	 * @param baseDir directory at which to create Catalina instance
 	 * directories.
 	 * @param webxml web.xml content for ROOT web application
-	 * @return Status.OK_STATUS 
+	 * @return result status of the operation
 	 */
 	public static IStatus createCatalinaInstanceDirectory(IPath baseDir, String webxml) {
-		Trace.trace(Trace.FINER, "Preparing runtime directory");
-		// TODO Add error handling.
+		if (Trace.isTraceEnabled())
+			Trace.trace(Trace.FINER, "Creating runtime directory at " + baseDir.toOSString());
+		// TODO Add more error handling.
 		// Prepare a catalina.base directory structure
 		File temp = baseDir.append("conf").toFile();
 		if (!temp.exists())
@@ -236,7 +263,34 @@ public class TomcatVersionHelper {
 		temp = baseDir.append("temp").toFile();
 		if (!temp.exists())
 			temp.mkdirs();
-		IPath tempPath = baseDir.append("webapps/ROOT/WEB-INF");
+		temp = baseDir.append("webapps").toFile();
+		if (!temp.exists())
+			temp.mkdirs();
+		temp = baseDir.append("work").toFile();
+		if (!temp.exists())
+			temp.mkdirs();
+
+		return Status.OK_STATUS;		
+	}
+	
+	/**
+	 * Creates the specified deployment directory if it does not already exist.
+	 * It will include a default ROOT web application using the specified web.xml.
+	 * 
+	 * @param deployDir path to deployment directory to create
+	 * @param webxml web.xml context to use for the ROOT web application.
+	 * @return result status of the operation
+	 */
+	public static IStatus createDeploymentDirectory(IPath deployDir, String webxml) {
+		if (Trace.isTraceEnabled())
+			Trace.trace(Trace.FINER, "Creating deployment directory at " + deployDir.toOSString());
+
+		// TODO Add more error handling.
+		File temp = deployDir.toFile();
+		if (!temp.exists())
+			temp.mkdirs();
+
+		IPath tempPath = deployDir.append("ROOT/WEB-INF");
 		temp = tempPath.toFile();
 		if (!temp.exists())
 			temp.mkdirs();
@@ -251,10 +305,7 @@ public class TomcatVersionHelper {
 				Trace.trace(Trace.WARNING, "Unable to create web.xml for ROOT context.", e);
 			}
 		}
-		temp = baseDir.append("work").toFile();
-		if (!temp.exists())
-			temp.mkdirs();
-
+		
 		return Status.OK_STATUS;		
 	}
 
@@ -264,18 +315,19 @@ public class TomcatVersionHelper {
 	 * Tomcat 4.1, 5.0, and 5.5 which support use of META-INF/context.xml
 	 * in some form.
 	 * 
-	 * @param baseDir path to catalina instance directory
+	 * @param baseDir absolute path to catalina instance directory
+	 * @param webappsDir absolute path to deployment directory
 	 * @param monitor a progress monitor or null
 	 * @return result of operation
 	 */
-	public static IStatus publishCatalinaContextConfig(IPath baseDir, IProgressMonitor monitor) {
-		monitor = ProgressUtil.getMonitorFor(monitor);
-		monitor.beginTask(Messages.publishConfigurationTask, 300);
-
-		Trace.trace(Trace.FINER, "Apply context configurations");
+	public static IStatus publishCatalinaContextConfig(IPath baseDir, IPath webappsDir, IProgressMonitor monitor) {
+		if (Trace.isTraceEnabled())
+			Trace.trace(Trace.FINER, "Apply context configurations");
 		IPath confDir = baseDir.append("conf");
-		IPath webappsDir = baseDir.append("webapps");
 		try {
+			monitor = ProgressUtil.getMonitorFor(monitor);
+			monitor.beginTask(Messages.publishConfigurationTask, 300);
+
 			monitor.subTask(Messages.publishContextConfigTask);
 			Factory factory = new Factory();
 			factory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server40");
@@ -302,17 +354,20 @@ public class TomcatVersionHelper {
 				monitor.subTask(Messages.savingContextConfigTask);
 				factory.save(confDir.append("server.xml").toOSString());
 			}
-			monitor.done();
 			
 			// If problem(s) occurred adding context configurations, return error status
 			if (ms.getChildren().length > 0) {
 				return ms;
 			}
-			Trace.trace(Trace.FINER, "Server.xml updated with context.xml configurations");
+			if (Trace.isTraceEnabled())
+				Trace.trace(Trace.FINER, "Server.xml updated with context.xml configurations");
 			return Status.OK_STATUS;
 		} catch (Exception e) {
-			Trace.trace(Trace.WARNING, "Could not apply context configurations to published Tomcat v5.0 configuration from " + confDir.toOSString() + ": " + e.getMessage());
+			Trace.trace(Trace.WARNING, "Could not apply context configurations to published Tomcat configuration from " + confDir.toOSString() + ": " + e.getMessage());
 			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPublishConfiguration, new String[] {e.getLocalizedMessage()}), e);
+		}
+		finally {
+			monitor.done();
 		}
 	}
 
@@ -331,9 +386,11 @@ public class TomcatVersionHelper {
 		String source = context.getSource();
 		if (source != null && source.length() > 0 )
 		{
-			String docBase = context.getDocBase();
+			File docBase = new File(context.getDocBase());
+			if (!docBase.isAbsolute())
+				docBase = new File(webappsDir.toOSString(), docBase.getPath());
 			try {
-				Context contextConfig = loadCatalinaContextConfig(webappsDir.append(docBase));
+				Context contextConfig = loadCatalinaContextConfig(docBase);
 				if (null != contextConfig) {
 					if (context.hasChildNodes())
 						context.removeChildren();
@@ -370,13 +427,13 @@ public class TomcatVersionHelper {
 	 * specified web application path.  If found, it creates a Context object
 	 * containing the contexts of that file.
 	 * 
-	 * @param webappDir Path to the web application
+	 * @param docBase File with absolute path to the web application
 	 * @return Context element created from context.xml, or null if not found.
 	 * @throws SAXException If there is a error parsing the XML. 
 	 * @throws IOException If there is an error reading the file.
 	 */
-	private static Context loadCatalinaContextConfig(IPath webappDir) throws IOException, SAXException {
-		File contextXML = new File(webappDir.toOSString()+ File.separator + "META-INF" + File.separator + "context.xml");
+	private static Context loadCatalinaContextConfig(File docBase) throws IOException, SAXException {
+		File contextXML = new File(docBase, "META-INF" + File.separator + "context.xml");
 		if (contextXML.exists()) {
 			try {
 				InputStream is = new FileInputStream(contextXML);
@@ -391,4 +448,86 @@ public class TomcatVersionHelper {
 		}
 		return null;
  	}
+	
+	/**
+	 * If modules are not being deployed to the "webapps" directory, the
+	 * context for the published modules is updated to contain the
+	 * corrected docBase.
+	 * 
+	 * @param baseDir runtime base directory for the server
+	 * @param deployDir deployment directory for the server
+	 * @param server server being localized
+	 * @param monitor a progress monitor
+	 * @return result of operation
+	 */
+	public static IStatus localizeConfiguration(IPath baseDir, IPath deployDir, TomcatServer server, IProgressMonitor monitor) {
+		// If not deploying to "webapps", context docBase attributes need updating
+		// TODO Improve to compare with appBase value instead of hardcoded "webapps"
+		// TODO Need to add a root context if deploying to webapps but with auto-deploy off
+		if (!"webapps".equals(server.getDeployDirectory())) {
+			try {
+				if (Trace.isTraceEnabled())
+					Trace.trace(Trace.FINER, "Localizing configuration at " + baseDir);
+				monitor = ProgressUtil.getMonitorFor(monitor);
+				monitor.beginTask(Messages.publishConfigurationTask, 300);
+
+				IPath serverXml = baseDir.append("conf/server.xml");
+				Factory factory = new Factory();
+				factory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server40");
+				Server publishedServer = (Server)factory.loadDocument(
+						new FileInputStream(serverXml.toFile()));
+				ServerInstance publishedInstance = new ServerInstance(publishedServer, null, null);
+				monitor.worked(100);
+
+				if (monitor.isCanceled())
+					return Status.CANCEL_STATUS;
+				
+				boolean modified = false;
+				boolean addRootWebapp = true;
+				
+				Context [] contexts = publishedInstance.getContexts();
+				if (contexts != null) {
+					for (int i = 0; i < contexts.length; i++) {
+						Context context = contexts[i];
+						String source = context.getSource();
+						if (source != null && source.length() > 0 )	{
+							context.setDocBase(deployDir.append(context.getDocBase()).toOSString());
+							modified = true;
+						}
+						if ("".equals(context.getPath())) {
+							addRootWebapp = false;
+						}
+					}
+				}
+				if (addRootWebapp) {
+					// Add a context for the default webapp
+					Context rootContext = publishedInstance.createContext(0);
+					rootContext.setPath("");
+					rootContext.setDocBase(deployDir.append("ROOT").toOSString());
+					rootContext.setReloadable("false");
+					modified = true;
+				}
+				monitor.worked(100);
+
+				if (monitor.isCanceled())
+					return Status.CANCEL_STATUS;
+				
+				if (modified) {
+					monitor.subTask(Messages.savingContextConfigTask);
+					factory.save(serverXml.toOSString());
+				}
+				monitor.worked(100);
+				if (Trace.isTraceEnabled())
+					Trace.trace(Trace.FINER, "Context docBase settings updated in server.xml.");
+			}
+			catch (Exception e) {
+				Trace.trace(Trace.WARNING, "Could not localize server configuration published to " + baseDir.toOSString() + ": " + e.getMessage());
+				return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPublishConfiguration, new String[] {e.getLocalizedMessage()}), e);
+			}
+			finally {
+				monitor.done();
+			}
+		}
+		return Status.OK_STATUS;
+	}
 }

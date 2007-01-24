@@ -37,14 +37,6 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	protected static final String APACHE_HANDLER = "org.apache.tomcat.service.connector.Ajp12ConnectionHandler";
 	protected static final String SSL_SOCKET_FACTORY = "org.apache.tomcat.net.SSLSocketFactory";
 
-	/**
-	 * Sting containing contents for a default web.xml for Servlet 2.2.
-	 */
-	public static final String DEFAULT_WEBXML_SERVLET22 = 
-		"<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" +
-		"<!DOCTYPE web-app PUBLIC \"-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN\" \"http://java.sun.com/j2ee/dtds/web-app_2_2.dtd\">\n" +
-		"<web-app>\n</web-app>";
-	
 	protected Server server;
 	protected ServerInstance serverInstance;
 	protected Factory serverFactory;
@@ -480,38 +472,78 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 	/**
 	 * Localize the web projects in this configuration.
 	 *
-	 * @param path a path
+	 * @param baseDir runtime base directory for the server
+	 * @param deployDir deployment directory for the server
 	 * @param server2 a server type
 	 * @param monitor a progress monitor
+	 * @return result of operation
 	 */
-	public void localizeConfiguration(IPath path, TomcatServer server2, IProgressMonitor monitor) {
+	public IStatus localizeConfiguration(IPath baseDir, IPath deployDir, TomcatServer server2, IProgressMonitor monitor) {
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
 			monitor.beginTask(Messages.updatingConfigurationTask, 100);
+			IPath confDir = baseDir.append("conf");
 			
 			Tomcat32Configuration config = new Tomcat32Configuration(null);
-			config.load(path, ProgressUtil.getSubMonitorFor(monitor, 30));
+			config.load(confDir, ProgressUtil.getSubMonitorFor(monitor, 300));
 			
 			if (monitor.isCanceled())
-				return;
+				return Status.CANCEL_STATUS;
 			
 			if (server2.isTestEnvironment()) {
-				IPath tomcatPath = path.removeLastSegments(1);
-				config.server.getContextManager().setHome(tomcatPath.toOSString());
+				config.server.getContextManager().setHome(baseDir.toOSString());
 				config.isServerDirty = true;
 			}
-			monitor.worked(40);
+
+			boolean addRootWebapp = true;
 			
+			// If not deploying to "webapps", context docBase attributes need updating
+			if (!"webapps".equals(server2.getDeployDirectory())) {
+				Context [] contexts = config.serverInstance.getContexts();
+				if (contexts != null) {
+					for (int i = 0; i < contexts.length; i++) {
+						Context context = contexts[i];
+						String source = context.getSource();
+						if (source != null && source.length() > 0 )	{
+							String name = context.getDocBase();
+							// Update docBase only if name begins with the expected prefix
+							if (name.startsWith(getDocBasePrefix())) {
+								name = name.substring(getDocBasePrefix().length());
+								context.setDocBase(deployDir.append(name).toOSString());
+								config.isServerDirty = true;
+							}
+						}
+						if ("".equals(context.getPath())) {
+							addRootWebapp = false;
+						}
+						
+					}
+				}
+			}
+
+			if (addRootWebapp) {
+				// Add a context for the default webapp
+				Context rootContext = config.serverInstance.createContext(0);
+				rootContext.setPath("");
+				rootContext.setDocBase(deployDir.append("ROOT").toOSString());
+				rootContext.setReloadable("false");
+				config.isServerDirty = true;
+			}
+			monitor.worked(100);
+
 			if (monitor.isCanceled())
-				return;
+				return Status.CANCEL_STATUS;
 			
-			config.save(path, false, ProgressUtil.getSubMonitorFor(monitor, 30));
+			config.save(confDir, false, ProgressUtil.getSubMonitorFor(monitor, 30));
+			monitor.worked(100);
 			
-			if (!monitor.isCanceled())
-				monitor.done();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error localizing configuration", e);
+			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPublishConfiguration, new String[] {e.getLocalizedMessage()}), e);
+		} finally {
+			monitor.done();
 		}
+		return Status.OK_STATUS;
 	}
 
 	/**
@@ -671,7 +703,8 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 			else {
 				monitor.worked(200);
 			}
-			Trace.trace(Trace.FINER, "Server cleaned");
+			if (Trace.isTraceEnabled())
+				Trace.trace(Trace.FINER, "Server cleaned");
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not cleanup server at " + confDir.toOSString() + ": " + e.getMessage());
 			ms.add(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0,
@@ -682,31 +715,4 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 		return ms;
 	}
 	
-	protected IStatus prepareRuntimeDirectory(IPath confDir) {
-		Trace.trace(Trace.FINER, "Preparing runtime directory");
-		// Prepare instance directory structure that is relative to server.xml
-		File temp = confDir.append("conf").toFile();
-		if (!temp.exists())
-			temp.mkdirs();
-		IPath tempPath = confDir.append("webapps/ROOT/WEB-INF");
-		temp = tempPath.toFile();
-		if (!temp.exists())
-			temp.mkdirs();
-		temp = tempPath.append("web.xml").toFile();
-		if (!temp.exists()) {
-			FileWriter fw;
-			try {
-				fw = new FileWriter(temp);
-				fw.write(DEFAULT_WEBXML_SERVLET22);
-				fw.close();
-			} catch (IOException e) {
-				Trace.trace(Trace.WARNING, "Unable to create web.xml for ROOT context.", e);
-			}
-		}
-		temp = confDir.append("work").toFile();
-		if (!temp.exists())
-			temp.mkdirs();
-
-		return Status.OK_STATUS;		
-	}
 }
