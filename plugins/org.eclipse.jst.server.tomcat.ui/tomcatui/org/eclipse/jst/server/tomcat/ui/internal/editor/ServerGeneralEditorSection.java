@@ -180,6 +180,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 				if (selectedDirectory != null && !selectedDirectory.equals(deployDir.getText())) {
 					updating = true;
 					execute(new SetDeployDirectoryCommand(tomcatServer, selectedDirectory));
+					deployDir.setText(selectedDirectory);
 					updating = false;
 					validate();
 				}

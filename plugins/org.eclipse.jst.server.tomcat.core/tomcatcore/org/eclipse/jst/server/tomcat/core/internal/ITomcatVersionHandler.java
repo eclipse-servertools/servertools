@@ -41,7 +41,7 @@ public interface ITomcatVersionHandler {
 	 * 
 	 * @param debug <code>true</code> if debug mode is on
 	 * @param starting <code>true</code> if the server is starting
-	 * @return
+	 * @return array of excluded arguments
 	 */
 	public String[] getExcludedRuntimeProgramArguments(boolean debug, boolean starting);
 	

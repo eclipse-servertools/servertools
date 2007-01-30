@@ -483,7 +483,9 @@ public class TomcatVersionHelper {
 					return Status.CANCEL_STATUS;
 				
 				boolean modified = false;
-				boolean addRootWebapp = true;
+
+				// Only add root module if running in a test env (i.e. not on the installation)
+				boolean addRootWebapp = server.isTestEnvironment();
 				
 				Context [] contexts = publishedInstance.getContexts();
 				if (contexts != null) {
@@ -494,7 +496,9 @@ public class TomcatVersionHelper {
 							context.setDocBase(deployDir.append(context.getDocBase()).toOSString());
 							modified = true;
 						}
-						if ("".equals(context.getPath())) {
+						// If default webapp has not been found, check this one
+						if (addRootWebapp && "".equals(context.getPath())) {
+							// A default webapp is being deployed, don't add one
 							addRootWebapp = false;
 						}
 					}

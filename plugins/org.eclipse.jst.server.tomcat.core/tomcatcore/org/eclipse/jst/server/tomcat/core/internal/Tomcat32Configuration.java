@@ -495,7 +495,8 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 				config.isServerDirty = true;
 			}
 
-			boolean addRootWebapp = true;
+			// Only add root module if running in a test env (i.e. not on the installation)
+			boolean addRootWebapp = server2.isTestEnvironment();
 			
 			// If not deploying to "webapps", context docBase attributes need updating
 			if (!"webapps".equals(server2.getDeployDirectory())) {
@@ -513,7 +514,9 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 								config.isServerDirty = true;
 							}
 						}
-						if ("".equals(context.getPath())) {
+						// If default webapp has not been found, check this one
+						if (addRootWebapp && "".equals(context.getPath())) {
+							// A default webapp is being deployed, don't add one
 							addRootWebapp = false;
 						}
 						
