@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.wizard.fragment;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,12 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 		return new NewRuntimeComposite(parent, wizard, getTaskModel(), type, version, runtimeTypeId);
 	}
 
+	public List getChildFragments() {
+		List listImpl = new ArrayList();
+		createChildFragments(listImpl);
+		return listImpl;
+	}
+
 	protected void createChildFragments(List list) {
 		if (getTaskModel() == null)
 			return;
@@ -71,7 +78,6 @@ public class NewRuntimeWizardFragment extends WizardFragment {
 		WizardFragment sub = getWizardFragment(runtime.getRuntimeType().getId());
 		if (sub != null)
 			list.add(sub);
-		
 		
 		if (runtime != null) {
 			IServerWorkingCopy server = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
