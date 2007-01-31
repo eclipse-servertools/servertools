@@ -55,6 +55,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	protected static Object globalSelection;
 
 	protected static Map globalLaunchMode;
+	protected String launchMode = ILaunchManager.RUN_MODE;
 
 	protected boolean tasksAndClientShown;
 
@@ -85,7 +86,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		window = newWindow;
 	}
 
-	public IServer getServer(IModule module, String launchMode, IModuleArtifact moduleArtifact, IProgressMonitor monitor) throws CoreException {
+	public IServer getServer(IModule module, IModuleArtifact moduleArtifact, IProgressMonitor monitor) throws CoreException {
 		IServer server = ServerCore.getDefaultServer(module);
 		
 		// ignore preference if the server doesn't support this mode.
@@ -155,7 +156,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * Run the resource on a server.
 	 */
 	protected void run() {
-		final String launchMode2 = getLaunchMode();
+//		final String launchMode2 = getLaunchMode();
 		final IModuleArtifact moduleArtifact = ServerPlugin.getModuleArtifact(selection);
 		
 		Shell shell2 = null;
@@ -190,7 +191,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size && !found; i++) {
-				if (ServerUIPlugin.isCompatibleWithLaunchMode(servers[i], launchMode2)) {
+				if (ServerUIPlugin.isCompatibleWithLaunchMode(servers[i], launchMode)) {
 					try {
 						IModule[] parents = servers[i].getRootModules(module, null);
 						if (parents != null && parents.length > 0)
@@ -211,7 +212,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				for (int i = 0; i < size && !found; i++) {
 					IServerType type = serverTypes[i];
 					IModuleType[] moduleTypes = type.getRuntimeType().getModuleTypes();
-					if (type.supportsLaunchMode(launchMode2) && ServerUtil.isSupportedModule(moduleTypes, module.getModuleType())) {
+					if (type.supportsLaunchMode(launchMode) && ServerUtil.isSupportedModule(moduleTypes, module.getModuleType())) {
 						found = true;
 					}
 				}
@@ -232,7 +233,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		launchableAdapter = null;
 		try {
 			IProgressMonitor monitor = new NullProgressMonitor();
-			server2 = getServer(module, launchMode2, moduleArtifact, monitor);
+			server2 = getServer(module, moduleArtifact, monitor);
 			if (monitor.isCanceled())
 				return;
 			
@@ -261,7 +262,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			return;
 		
 		if (!tasksAndClientShown) {
-			RunOnServerWizard wizard = new RunOnServerWizard(server, launchMode2, moduleArtifact);
+			RunOnServerWizard wizard = new RunOnServerWizard(server, launchMode, moduleArtifact);
 			if (wizard.shouldAppear()) {
 				WizardDialog dialog = new WizardDialog(shell, wizard);
 				if (dialog.open() == Window.CANCEL)
@@ -274,8 +275,6 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		
 		Thread thread = new Thread("Run on Server") {
 			public void run() {
-				String launchMode = launchMode2;
-				
 				if (client == null) {
 					// if there is no client, use a dummy
 					client = new IClient() {
@@ -567,7 +566,16 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * Returns the start mode that the server should use.
 	 */
 	protected String getLaunchMode() {
-		return ILaunchManager.RUN_MODE;
+		return launchMode;
+	}
+
+	/**
+	 * Set the launch mode.
+	 * 
+	 * @param launchMode a {@link ILaunchManager} launch mode
+	 */
+	public void setLaunchMode(String launchMode) {
+		this.launchMode = launchMode;
 	}
 
 	/**
@@ -660,9 +668,5 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			return false;
 		}
 		return true;
-	}
-
-	protected boolean supportsLaunchMode(IServer server, String launchMode) {
-		return server.getServerType().supportsLaunchMode(launchMode);
 	}
 }

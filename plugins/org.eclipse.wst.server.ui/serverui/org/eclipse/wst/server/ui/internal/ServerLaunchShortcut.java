@@ -23,23 +23,20 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 /**
- *
+ * 
  */
 public class ServerLaunchShortcut implements ILaunchShortcut {
 	/* (non-Javadoc)
 	 * @see org.eclipse.debug.ui.ILaunchShortcut#launch(org.eclipse.jface.viewers.ISelection, java.lang.String)
 	 */
 	public void launch(ISelection selection, final String mode) {
-		RunOnServerActionDelegate del = new RunOnServerActionDelegate() {
-			protected String getLaunchMode() {
-				return mode;
-			}
-		};
+		RunOnServerActionDelegate ros = new RunOnServerActionDelegate();
+		ros.setLaunchMode(mode);
 		IAction action = new Action() {
 			// dummy action
 		};
-		del.selectionChanged(action, selection);
-		del.run(action);
+		ros.selectionChanged(action, selection);
+		ros.run(action);
 	}
 
 	/* (non-Javadoc)
@@ -52,7 +49,7 @@ public class ServerLaunchShortcut implements ILaunchShortcut {
 		// check if the editor input itself can be run. Otherwise, check if
 		// the editor has a file input that can be run
 		IEditorInput input = editor.getEditorInput();
-
+		
 		if (ServerPlugin.hasModuleArtifact(input)) {
 			launch(new StructuredSelection(input), mode);
 		} else if (input instanceof IFileEditorInput) {

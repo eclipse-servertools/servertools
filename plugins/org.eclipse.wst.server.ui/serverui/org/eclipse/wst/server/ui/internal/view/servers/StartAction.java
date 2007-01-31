@@ -61,7 +61,7 @@ public class StartAction extends AbstractServerAction {
 	/**
 	 * Return true if this server can currently be acted on.
 	 * @return boolean
-	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param server a server
 	 */
 	public boolean accept(IServer server) {
 		return server.canStart(launchMode).isOK();
@@ -69,12 +69,9 @@ public class StartAction extends AbstractServerAction {
 
 	/**
 	 * Perform action on this server.
-	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param server a server
 	 */
-	public void perform(final IServer server) {
-		//if (!ServerUIUtil.promptIfDirty(shell, server))
-		//	return;				
-		
+	public void perform(IServer server) {
 		if (!ServerUIPlugin.saveEditors())
 			return;
 		

@@ -104,7 +104,7 @@ public class ServersViewDropAdapter extends ViewerDropAdapter {
 		// otherwise, try Run on Server
 		final IServer finalServer = server;
 		RunOnServerActionDelegate ros = new RunOnServerActionDelegate() {
-			public IServer getServer(IModule module, String launchMode, IModuleArtifact moduleArtifact, IProgressMonitor monitor) throws CoreException {
+			public IServer getServer(IModule module, IModuleArtifact moduleArtifact, IProgressMonitor monitor) throws CoreException {
 				if (!ServerUIPlugin.isCompatibleWithLaunchMode(finalServer, launchMode))
 					return null;
 				
