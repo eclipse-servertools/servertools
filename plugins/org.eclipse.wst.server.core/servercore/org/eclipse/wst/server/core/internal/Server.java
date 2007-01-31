@@ -533,7 +533,7 @@ public class Server extends Base implements IServer {
 		Trace.trace(Trace.FINEST, "> handleDeployableProjectChange() " + this + " " + module);
 		
 		// check for duplicate jobs already waiting and don't create a new one
-		Job[] jobs = Job.getJobManager().find(ServerPlugin.PLUGIN_ID);
+		Job[] jobs = Job.getJobManager().find(ServerUtil.SERVER_JOB_FAMILY);
 		if (jobs != null) {
 			int size = jobs.length;
 			for (int i = 0; i < size; i++) {
@@ -1671,7 +1671,7 @@ public class Server extends Base implements IServer {
 		synchronousStop(true);
 		synchronousStart(mode2, monitor);
 	}
-	
+
 	/*
 	 * @see IServer#restart(String, IOperationListener)
 	 */
@@ -1681,9 +1681,9 @@ public class Server extends Base implements IServer {
 		
 		if (getServerState() == STATE_STOPPED)
 			return;
-	
+		
 		Trace.trace(Trace.FINEST, "Restarting server: " + getName());
-	
+		
 		try {
 			final IOperationListener listener2 = listener;
 			IServerListener curListener = new IServerListener() {
@@ -2186,8 +2186,7 @@ public class Server extends Base implements IServer {
 						moduleType = new ModuleType(moduleTypeId, moduleTypeVersion);
 					module = new DeletedModule(moduleId, name, moduleType);
 				}
-				if (module != null)
-					modules.add(module);
+				modules.add(module);
 			}
 		}
 		

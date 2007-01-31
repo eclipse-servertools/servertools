@@ -720,14 +720,6 @@ public class ResourceManager {
 		IServer[] servers2 = new IServer[servers.size()];
 		servers.toArray(servers2);
 		
-		Arrays.sort(servers2, new Comparator() {
-			public int compare(Object o1, Object o2) {
-				IServer a = (IServer) o1;
-				IServer b = (IServer) o2;
-				return a.getName().compareToIgnoreCase(b.getName());
-			}
-		});
-		
 		return servers2;
 	}
 
@@ -976,18 +968,19 @@ public class ResourceManager {
 		// process module changes
 		ProjectModuleFactoryDelegate.handleGlobalProjectChange(project, delta);
 		
-		final IModule module = ServerUtil.getModule(project);
-		if (module == null)
+		IModule[] modules = ServerUtil.getModules(project);
+		if (modules == null)
 			return;
 		
 		Trace.trace(Trace.FINEST, "- publishHandleProjectChange");
 		
 		IServer[] servers2 = getServers();
-		if (servers2 != null) {
-			int size = servers2.length;
-			for (int i = 0; i < size; i++) {
-			if (servers2[i].getAdapter(ServerDelegate.class) != null)
-				((Server) servers2[i]).handleModuleProjectChange(module);
+		int size = modules.length;
+		int size2 = servers2.length;
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size2; j++) {
+				if (servers2[j].getAdapter(ServerDelegate.class) != null)
+					((Server) servers2[j]).handleModuleProjectChange(modules[i]);
 			}
 		}
 		Trace.trace(Trace.FINEST, "< publishHandleProjectChange");

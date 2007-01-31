@@ -32,11 +32,11 @@ import org.eclipse.wst.server.core.internal.Trace;
 public class SocketUtil {
 	private static final Random rand = new Random(System.currentTimeMillis());
 
+	protected static final Object lock = new Object();
+
 	private static List localHostCache;
 
 	private static List addressCache;
-
-	protected static Object lock = new Object();
 
 	/**
 	 * Static utility class - cannot create an instance.

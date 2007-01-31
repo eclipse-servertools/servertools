@@ -36,6 +36,7 @@ public class ServerUtil {
 	 * Constant identifying the job family identifier for server operations.
 	 * 
 	 * @see IJobManager#join(Object, IProgressMonitor)
+	 * @since 2.0
 	 */
 	public static final Object SERVER_JOB_FAMILY = ServerPlugin.PLUGIN_ID;
 
@@ -51,6 +52,10 @@ public class ServerUtil {
 	 * is contained with the project, this method will return an arbitrary module
 	 * unless the module factory defines an ordering. If there might be multiple
 	 * modules in a project, users should typically use getModules(IProject) instead.
+	 * <p>
+	 * This method may trigger bundle loading and is not suitable for
+	 * short/UI operations.
+	 * </p>
 	 * 
 	 * @param project a project
 	 * @return a module that is contained with the project, or null if no
@@ -61,19 +66,19 @@ public class ServerUtil {
 		if (project == null)
 			throw new IllegalArgumentException();
 		
-		IModule[] modules = getModules();
-		if (modules != null) {
-			int size = modules.length;
-			for (int i = 0; i < size; i++) {
-				if (modules[i] != null && project.equals(modules[i].getProject()))
-					return modules[i];
-			}
-		}
+		IModule[] modules = getModules(project);
+		if (modules != null && modules.length > 0)
+			return modules[0];
+		
 		return null;
 	}
 
 	/**
 	 * Returns the modules contained within the given project.
+	 * <p>
+	 * This method may trigger bundle loading and is not suitable for
+	 * short/UI operations.
+	 * </p>
 	 * 
 	 * @param project a project
 	 * @return a possibly-empty array of modules
@@ -83,22 +88,39 @@ public class ServerUtil {
 		if (project == null)
 			throw new IllegalArgumentException();
 		
-		IModule[] modules = getModules();
-		List list = new ArrayList();
-		if (modules != null) {
-			int size = modules.length;
+		// use a set for better contains() performance
+		Set set = new HashSet();
+		
+		ModuleFactory[] factories = ServerPlugin.getModuleFactories();
+		if (factories != null) {
+			int size = factories.length;
 			for (int i = 0; i < size; i++) {
-				if (modules[i] != null && project.equals(modules[i].getProject()))
-					list.add(modules[i]);
+				IModule[] modules = factories[i].getModules(project, null);
+				if (modules != null) {
+					int size2 = modules.length;
+					for (int j = 0; j < size2; j++) {
+						if (!set.contains(modules[j])) {
+							if (isSupportedModule(factories[i].getModuleTypes(), modules[j].getModuleType()))
+								set.add(modules[j]);
+							else
+								Trace.trace(Trace.WARNING, "Invalid module returned from factory, ignored: " + modules[j]);
+						}
+					}
+				}
 			}
 		}
-		IModule[] modules2 = new IModule[list.size()];
-		list.toArray(modules2);
-		return modules2;
+		IModule[] modules = new IModule[set.size()];
+		set.toArray(modules);
+		return modules;
 	}
 
 	/**
-	 * Returns a module from the given moduleId. The moduleId must not be null.
+	 * Returns the module with the given moduleId, if one exists. The moduleId
+	 * must not be null.
+	 * <p>
+	 * This method may trigger bundle loading and is not suitable for
+	 * short/UI operations.
+	 * </p>
 	 * 
 	 * @param moduleId a module id
 	 * @return the module, or <code>null</code> if the module could not be found
@@ -115,30 +137,33 @@ public class ServerUtil {
 		ModuleFactory moduleFactory = ServerPlugin.findModuleFactory(factoryId);
 		if (moduleFactory == null)
 			return null;
-
+		
 		String moduleSubId = moduleId.substring(index+1);
-		IModule module = moduleFactory.getModule(moduleSubId);
-		if (module != null)
-			return module;
-		return null;
+		return moduleFactory.findModule(moduleSubId, null);
 	}
 
 	/**
 	 * Return all the available modules from all factories whose
 	 * type matches the given module types.
+	 * <p>
+	 * This method may trigger bundle loading and is not suitable for
+	 * short/UI operations. It also performs a search of all available
+	 * modules of the given types, and due to performance reasons should
+	 * not be used unless absolutely required.
+	 * </p>
 	 * 
 	 * @param moduleTypes an array of module types
 	 * @return a possibly empty array of modules
 	 */
 	public static IModule[] getModules(IModuleType[] moduleTypes) {
 		List list = new ArrayList();
-
+		
 		ModuleFactory[] factories = ServerPlugin.getModuleFactories();
 		if (factories != null) {
 			int size = factories.length;
 			for (int i = 0; i < size; i++) {
 				if (isSupportedModule(factories[i].getModuleTypes(), moduleTypes)) {
-					IModule[] modules = factories[i].getModules();
+					IModule[] modules = factories[i].getModules(null);
 					if (modules != null) {
 						int size2 = modules.length;
 						for (int j = 0; j < size2; j++)
@@ -155,6 +180,12 @@ public class ServerUtil {
 	/**
 	 * Return all the available modules from all factories whose
 	 * type matches the given module type id.
+	 * <p>
+	 * This method may trigger bundle loading and is not suitable for
+	 * short/UI operations. It also performs a search of all available
+	 * modules of this type, and due to performance reasons should not
+	 * be used unless absolutely required.
+	 * </p>
 	 * 
 	 * @param type a module type
 	 * @return a possibly empty array of modules
@@ -167,7 +198,7 @@ public class ServerUtil {
 			int size = factories.length;
 			for (int i = 0; i < size; i++) {
 				if (isSupportedModule(factories[i].getModuleTypes(), type, null)) {
-					IModule[] modules = factories[i].getModules();
+					IModule[] modules = factories[i].getModules(null);
 					if (modules != null) {
 						int size2 = modules.length;
 						for (int j = 0; j < size2; j++)
@@ -281,38 +312,6 @@ public class ServerUtil {
 			|| (b.endsWith(".*") && a.startsWith(b.substring(0, b.length() - 1))))
 			return true;
 		return false;
-	}
-
-	/**
-	 * Return all the available modules from all factories.
-	 * 
-	 * @return a possibly empty array of modules
-	 */
-	private static IModule[] getModules() {
-		// use a set for better contains() performance
-		Set set = new HashSet();
-		
-		ModuleFactory[] factories = ServerPlugin.getModuleFactories();
-		if (factories != null) {
-			int size = factories.length;
-			for (int i = 0; i < size; i++) {
-				IModule[] modules = factories[i].getModules();
-				if (modules != null) {
-					int size2 = modules.length;
-					for (int j = 0; j < size2; j++) {
-						if (!set.contains(modules[j])) {
-							if (isSupportedModule(factories[i].getModuleTypes(), modules[j].getModuleType()))
-								set.add(modules[j]);
-							else
-								Trace.trace(Trace.WARNING, "Invalid module returned from factory, ignored: " + modules[j]);
-						}
-					}
-				}
-			}
-		}
-		IModule[] modules = new IModule[set.size()];
-		set.toArray(modules);
-		return modules;
 	}
 
 	/**
@@ -823,6 +822,7 @@ public class ServerUtil {
 	 * 
 	 * @param server a server
 	 * @return a scheduling rule for this server
+	 * @since 2.0
 	 */
 	public static ISchedulingRule getServerSchedulingRule(IServer server) {
 		return new ServerSchedulingRule(server);

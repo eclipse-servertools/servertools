@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.server.core.IModule;
@@ -39,7 +42,7 @@ import org.eclipse.wst.server.core.internal.ModuleFactory;
  */
 public abstract class ModuleFactoryDelegate {
 	private ModuleFactory factory;
-	
+
 	/**
 	 * Delegates must have a public 0-arg constructor.
 	 */
@@ -89,19 +92,22 @@ public abstract class ModuleFactoryDelegate {
 
 	/**
 	 * Clears the cache of modules returned by getModules(). Delegates can call this
-	 * method if they know that the results of the last call to getModules() is
-	 * invalid and should be refreshed.
+	 * method if they know that the results of getModules() is invalid and should be
+	 * refreshed.
 	 * 
+	 * @deprecated This method is implementation specific and never called by the
+	 *    framework. It shouldn't be part of the public API, but subclasses are still
+	 *    welcome to provide their own method to clear the cache.
 	 * @see #getModules()
 	 */
 	public void clearModuleCache() {
-		factory.clearModuleCache();
+		// ignore
 	}
 
 	/**
 	 * Creates a module instance with the given static information. This method is used
 	 * by module factory delegates to create module instances.
-	 *  
+	 * 
 	 * @param id the module id
 	 * @param name the module name
 	 * @param type the module type id
@@ -136,4 +142,77 @@ public abstract class ModuleFactoryDelegate {
 	 * @return a possibly-empty array of modules {@link IModule}
 	 */
 	public abstract IModule[] getModules();
+
+	/**
+	 * Return all modules created by this factory that are contained within the
+	 * given project. Subclasses should override this method if they do not need
+	 * to filter through the entire project list.
+	 * <p>
+	 * This method is normally called by the web server core framework.
+	 * Clients (other than the delegate) should never call this method.
+	 * </p>
+	 * <p>
+	 * A new array is returned on each call, so clients may store or modify the result.
+	 * </p>
+	 * 
+	 * @param project a project
+	 * @return a possibly-empty array of modules {@link IModule}
+	 * @since 2.0
+	 */
+	public IModule[] getModules(IProject project) {
+		IModule[] modules = getModules();
+		if (project != null && modules != null) {
+			List list = new ArrayList(modules.length);
+			int size = modules.length;
+			for (int i = 0; i < size; i++) {
+				if (project.equals(modules[i].getProject()))
+					list.add(modules[i]);
+			}
+			
+			IModule[] m = new IModule[list.size()];
+			list.toArray(m);
+			return m;
+		}
+		
+		return new IModule[0];
+	}
+
+	/**
+	 * Returns the module created by this factory that has the given id, or
+	 * <code>null</code> if there is no module with the given id. The id must
+	 * not be null.
+	 * <p>
+	 * Subclasses should override this method if they do not need to search
+	 * through the entire project list.
+	 * </p>
+	 * <p>
+	 * This method is normally called by the web server core framework.
+	 * Clients (other than the delegate) should never call this method.
+	 * </p>
+	 * 
+	 * @param id a module id
+	 * @return the module with the given id, or <code>null</code> if no module
+	 *    could be found {@link IModule}
+	 * @since 2.0
+	 */
+	public IModule findModule(String id) {
+		if (id == null)
+			return null;
+		
+		IModule[] modules = getModules();
+		if (id != null && modules != null) {
+			int size = modules.length;
+			for (int i = 0; i < size; i++) {
+				String id2 = modules[i].getId();
+				int index = id2.indexOf(":");
+				if (index >= 0)
+					id2 = id2.substring(index+1);
+				
+				if (id.equals(id2))
+					return modules[i];
+			}
+		}
+		
+		return null;
+	}
 }

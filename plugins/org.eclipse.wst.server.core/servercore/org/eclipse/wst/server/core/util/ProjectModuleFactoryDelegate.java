@@ -27,45 +27,73 @@ import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
  * @since 1.0
  */
 public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate {
-	private static List factories = new ArrayList();
-
-	// list of IModules
-	private List modules;
+	// map of IProject to IModule[]
+	private Map modules = new HashMap();
 
 	/**
 	 * Construct a new ProjectModuleFactoryDelegate.
 	 */
 	public ProjectModuleFactoryDelegate() {
 		super();
-		
-		factories.add(this);
 	}
 
 	/**
-	 * Cache any preexisting modules.
+	 * Cache modules that exist in the given project.
+	 * 
+	 * @param project a project to cache
+	 * @since 2.0
 	 */
-	private final void cacheModules() {
-		if (modules != null)
-			return;
+	private final IModule[] cacheModules(IProject project) {
+		if (project == null || !project.isAccessible())
+			return null;
+		
+		IModule[] m = null;
+		try {
+			m = (IModule[]) modules.get(project);
+			if (m != null)
+				return m;
+		} catch (Exception e) {
+			// ignore
+		}
 		
 		try {
-			clearCache();
-			IProject[] projects2 = getWorkspaceRoot().getProjects();
-			int size = projects2.length;
-			modules = new ArrayList(size);
+			m = createModules(project);
+			if (m != null) {
+				modules.put(project, m);
+				return m;
+			}
+		} catch (Throwable t) {
+			Trace.trace(Trace.SEVERE, "Error creating module", t);
+		}
+		return new IModule[0];
+	}
+
+	/**
+	 * Cache all existing modules.
+	 */
+	private final void cacheModules() {
+		try {
+			IProject[] projects = getWorkspaceRoot().getProjects();
+			int size = projects.length;
 			for (int i = 0; i < size; i++) {
-				//Trace.trace("caching: " + this + " " + projects[i] + " " + isValidModule(projects[i]));
-				if (projects2[i].isAccessible()) {
+				if (projects[i].isAccessible()) {
+					boolean cache = true;
 					try {
-						IModule[] modules2 = createModules(projects2[i]);
-						if (modules2 != null) {
-							int size2 = modules2.length;
-							for (int j = 0; j < size2; j++)
-								if (modules2[j] != null)
-									modules.add(modules2[j]);
+						Object o = modules.get(projects[i]);
+						if (o != null)
+							cache = false;
+					} catch (Exception e) {
+						// ignore
+					}
+					
+					if (cache) {
+						try {
+							IModule[] modules2 = createModules(projects[i]);
+							if (modules2 != null)
+								modules.put(projects[i], modules2);
+						} catch (Throwable t) {
+							Trace.trace(Trace.SEVERE, "Error creating module for " + projects[i].getName(), t);
 						}
-					} catch (Throwable t) {
-						Trace.trace(Trace.SEVERE, "Error creating module", t);
 					}
 				}
 			}
@@ -75,7 +103,7 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	}
 
 	/**
-	 * Return the workspace root.
+	 * Returns the workspace root.
 	 * 
 	 * @return the workspace root
 	 */
@@ -83,16 +111,21 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		return ResourcesPlugin.getWorkspace().getRoot();
 	}
 
-	/**
-	 * Return the modules provided by this factory.
-	 * 
-	 * @return a possibly-empty array of modules
+	/*
+	 * @see ModuleFactoryDelegate#getModules()
 	 */
 	public final IModule[] getModules() {
 		cacheModules();
 		
-		IModule[] modules2 = new IModule[modules.size()];
-		modules.toArray(modules2);
+		List list = new ArrayList();
+		Iterator iter = modules.values().iterator();
+		while (iter.hasNext()) {
+			IModule[] m = (IModule[]) iter.next();
+			list.addAll(Arrays.asList(m));
+		}
+		
+		IModule[] modules2 = new IModule[list.size()];
+		list.toArray(modules2);
 		return modules2;
 	}
 
@@ -102,15 +135,15 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * @param project a project
 	 * @param delta a resource delta
 	 */
-	public final static void handleGlobalProjectChange(final IProject project, IResourceDelta delta) {
-		ModuleFactory[] factories2 = ServerPlugin.getModuleFactories();
-		int size = factories2.length;
+	public final static void handleGlobalProjectChange(IProject project, IResourceDelta delta) {
+		ModuleFactory[] factories = ServerPlugin.getModuleFactories();
+		int size = factories.length;
 		for (int i = 0; i < size; i++) {
-			if (factories2[i].delegate != null && factories2[i].delegate instanceof ProjectModuleFactoryDelegate) {
-				ProjectModuleFactoryDelegate pmfd = (ProjectModuleFactoryDelegate) factories2[i].delegate;
+			if (factories[i].delegate != null && factories[i].delegate instanceof ProjectModuleFactoryDelegate) {
+				ProjectModuleFactoryDelegate pmfd = (ProjectModuleFactoryDelegate) factories[i].delegate;
 				if (pmfd.deltaAffectsModules(delta)) {
-					pmfd.modules = null;
-					factories2[i].clearModuleCache();
+					pmfd.clearCache(project);
+					pmfd.clearCache();
 				}
 			}
 		}
@@ -159,10 +192,20 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	}
 
 	/**
-	 * Clear and cached metadata.
+	 * Clear cached metadata.
+	 * 
+	 * @deprecated use {@link #clearCache(IProject)} instead
 	 */
 	protected void clearCache() {
 		// ignore
+	}
+
+	/**
+	 * Clear cached metadata.
+	 * @since 2.0
+	 */
+	protected void clearCache(IProject project) {
+		modules.put(project, null);
 	}
 
 	/**
@@ -201,5 +244,40 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 */
 	protected IPath[] getListenerPaths() {
 		return null;
+	}
+
+	/*
+	 * @see ModuleFactoryDelegate#getModules(IProject)
+	 * @since 2.0
+	 */
+	public IModule[] getModules(IProject project) {
+		return cacheModules(project);
+	}
+
+	/*
+	 * @see ModuleFactoryDelegate#findModule(String)
+	 * @since 2.0
+	 */
+	public IModule findModule(String id) {
+		// first assume that the id is a project name
+		IProject project = getWorkspaceRoot().getProject(id);
+		if (project != null) {
+			IModule[] m = cacheModules(project);
+			if (m != null) {
+				int size = m.length;
+				for (int i = 0; i < size; i++) {
+					String id2 = m[i].getId();
+					int index = id2.indexOf(":");
+					if (index >= 0)
+						id2 = id2.substring(index+1);
+					
+					if (id.equals(id2))
+						return m[i];
+				}
+			}
+		}
+		
+		// otherwise default to searching all modules
+		return super.findModule(id);
 	}
 }

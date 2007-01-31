@@ -57,7 +57,7 @@ public class Module implements IModule {
 	/**
 	 * Returns the id of this module.
 	 *
-	 * @return java.lang.String
+	 * @return the id
 	 */
 	public String getId() {
 		return id2;
@@ -66,7 +66,7 @@ public class Module implements IModule {
 	/**
 	 * Returns the internal (partial) id of this module.
 	 *
-	 * @return the id
+	 * @return the partial id
 	 */
 	public String getInternalId() {
 		return id;
