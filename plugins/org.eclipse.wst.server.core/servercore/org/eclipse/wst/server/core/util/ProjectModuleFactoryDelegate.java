@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -121,7 +121,8 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 		Iterator iter = modules.values().iterator();
 		while (iter.hasNext()) {
 			IModule[] m = (IModule[]) iter.next();
-			list.addAll(Arrays.asList(m));
+			if (m != null)
+				list.addAll(Arrays.asList(m));
 		}
 		
 		IModule[] modules2 = new IModule[list.size()];
@@ -202,10 +203,12 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 
 	/**
 	 * Clear cached metadata.
+	 * 
 	 * @since 2.0
 	 */
 	protected void clearCache(IProject project) {
-		modules.put(project, null);
+		//modules.put(project, null);
+		modules = new HashMap();
 	}
 
 	/**
@@ -259,22 +262,26 @@ public abstract class ProjectModuleFactoryDelegate extends ModuleFactoryDelegate
 	 * @since 2.0
 	 */
 	public IModule findModule(String id) {
-		// first assume that the id is a project name
-		IProject project = getWorkspaceRoot().getProject(id);
-		if (project != null) {
-			IModule[] m = cacheModules(project);
-			if (m != null) {
-				int size = m.length;
-				for (int i = 0; i < size; i++) {
-					String id2 = m[i].getId();
-					int index = id2.indexOf(":");
-					if (index >= 0)
-						id2 = id2.substring(index+1);
-					
-					if (id.equals(id2))
-						return m[i];
+		try {
+			// first assume that the id is a project name
+			IProject project = getWorkspaceRoot().getProject(id);
+			if (project != null) {
+				IModule[] m = cacheModules(project);
+				if (m != null) {
+					int size = m.length;
+					for (int i = 0; i < size; i++) {
+						String id2 = m[i].getId();
+						int index = id2.indexOf(":");
+						if (index >= 0)
+							id2 = id2.substring(index+1);
+						
+						if (id.equals(id2))
+							return m[i];
+					}
 				}
 			}
+		} catch (Exception e) {
+			Trace.trace(Trace.FINER, "Could not find " + id + ". Reverting to default behaviour");
 		}
 		
 		// otherwise default to searching all modules
