@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,8 +53,24 @@ public final class ServerUIUtil {
 	 * @param runtimeTypeId a server runtime type, or null for any type
 	 * @return <code>true</code> if a runtime was created, or
 	 *    <code>false</code> otherwise
+	 * @since 2.0
 	 */
 	public static boolean showNewRuntimeWizard(Shell shell, String typeId, String versionId, String runtimeTypeId) {
 		return ServerUIPlugin.showNewRuntimeWizard(shell, typeId, versionId, runtimeTypeId);		
+	}
+
+	/**
+	 * Open the new server wizard.
+	 * 
+	 * @param shell a shell to use when creating the wizard
+	 * @param typeId a module type id, or null for any module type
+	 * @param versionId a module version, or null for any version
+	 * @param serverTypeId a server runtime type, or null for any type
+	 * @return <code>true</code> if a server was created, or
+	 *    <code>false</code> otherwise
+	 * @since 2.0
+	 */
+	public static boolean showNewServerWizard(Shell shell, String typeId, String versionId, String serverTypeId) {
+		return ServerUIPlugin.showNewServerWizard(shell, typeId, versionId, serverTypeId);
 	}
 }

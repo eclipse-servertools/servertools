@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,10 +24,11 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 	public static final byte STYLE_VERSION = 2;
 	public static final byte STYLE_MODULE_TYPE = 3;
 	public static final byte STYLE_TYPE = 4; // not used yet
-	
+
 	protected boolean localhost;
-	
+
 	protected IModuleType moduleType;
+	protected String serverTypeId;
 	protected boolean includeIncompatibleVersions;
 
 	/**
@@ -35,12 +36,14 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 	 * 
 	 * @param style a style
 	 * @param moduleType a module type
+	 * @param serverTypeId a server type id, or null to match any id
 	 */
-	public ServerTypeTreeContentProvider(byte style, IModuleType moduleType) {
+	public ServerTypeTreeContentProvider(byte style, IModuleType moduleType, String serverTypeId) {
 		super(style, false);
 		localhost = true;
 		
 		this.moduleType = moduleType;
+		this.serverTypeId = serverTypeId;
 		
 		fillTree();
 	}
@@ -96,6 +99,9 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 	}
 
 	protected boolean include(IServerType serverType) {
+		if (serverTypeId != null && !serverType.getId().startsWith(serverTypeId))
+			return false;
+		
 		IRuntimeType runtimeType = serverType.getRuntimeType();
 		if (runtimeType == null)
 			return false;

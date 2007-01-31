@@ -40,7 +40,7 @@ public class ModuleSloshAction extends AbstractServerAction {
 	/**
 	 * Return true if this server can currently be acted on.
 	 * @return boolean
-	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param server a server
 	 */
 	public boolean accept(IServer server) {
 		return server.getServerType() != null;
@@ -48,16 +48,13 @@ public class ModuleSloshAction extends AbstractServerAction {
 
 	/**
 	 * Perform action on this server.
-	 * @param server org.eclipse.wst.server.core.IServer
+	 * @param server a server
 	 */
 	public void perform(final IServer server) {
 		if (server == null)
 			return;
 		
-		//if (!ServerUIUtil.promptIfDirty(shell, server))
-		//	return;
-		
-		// check if there are any projects first
+		// check if there are any modules first
 		// get currently deployed modules
 		List deployed = new ArrayList();
 		List modules = new ArrayList();
@@ -68,7 +65,7 @@ public class ModuleSloshAction extends AbstractServerAction {
 				deployed.add(currentModules[i]);
 			}
 		}
-
+		
 		// get remaining modules
 		IModule[] modules2 = ServerUtil.getModules(server.getServerType().getRuntimeType().getModuleTypes());
 		if (modules != null) {
@@ -87,7 +84,7 @@ public class ModuleSloshAction extends AbstractServerAction {
 			MessageDialog.openInformation(shell, Messages.defaultDialogTitle, Messages.dialogAddRemoveModulesNone);
 			return;
 		}
-
+		
 		ModifyModulesWizard wizard = new ModifyModulesWizard(server);
 		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
 		dialog.open();

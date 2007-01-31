@@ -21,7 +21,7 @@ public class RuntimeTypeTreeContentProvider extends AbstractTreeContentProvider 
 	public static final byte STYLE_VENDOR = 1;
 	public static final byte STYLE_VERSION = 2;
 	public static final byte STYLE_MODULE_TYPE = 3;
-	
+
 	protected boolean creation;
 	protected String type;
 	protected String version;
@@ -37,7 +37,7 @@ public class RuntimeTypeTreeContentProvider extends AbstractTreeContentProvider 
 		super(style);
 		this.creation = creation;
 	}
-	
+
 	public RuntimeTypeTreeContentProvider(byte style, boolean creation, String type, String version, String runtimeTypeId) {
 		super(style, false);
 		this.type = type;
@@ -47,7 +47,7 @@ public class RuntimeTypeTreeContentProvider extends AbstractTreeContentProvider 
 		
 		fillTree();
 	}
-	
+
 	public void fillTree() {
 		clean();
 		List list = new ArrayList();

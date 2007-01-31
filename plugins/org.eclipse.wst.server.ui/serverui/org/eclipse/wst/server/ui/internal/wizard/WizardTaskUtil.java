@@ -81,7 +81,7 @@ public class WizardTaskUtil {
 		// do nothing
 	}
 
-	public static void saveRuntime(TaskModel taskModel, IProgressMonitor monitor) throws CoreException {
+	protected static void saveRuntime(TaskModel taskModel, IProgressMonitor monitor) throws CoreException {
 		IRuntime runtime = (IRuntime) taskModel.getObject(TaskModel.TASK_RUNTIME);
 		if (runtime != null && runtime instanceof IRuntimeWorkingCopy) {
 			IRuntimeWorkingCopy workingCopy = (IRuntimeWorkingCopy) runtime;
@@ -93,7 +93,7 @@ public class WizardTaskUtil {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.server.ui.internal.task.ITask#doTask()
 	 */
-	public static void saveServer(TaskModel taskModel, IProgressMonitor monitor) throws CoreException {
+	protected static void saveServer(TaskModel taskModel, IProgressMonitor monitor) throws CoreException {
 		IServer server = (IServer) taskModel.getObject(TaskModel.TASK_SERVER);
 		if (server != null && server instanceof IServerWorkingCopy) {
 			IServerWorkingCopy workingCopy = (IServerWorkingCopy) server;
@@ -114,19 +114,19 @@ public class WizardTaskUtil {
 		}
 	}
 
-	public static void tempSaveRuntime(TaskModel taskModel, IProgressMonitor monitor) throws CoreException {
+	protected static void tempSaveRuntime(TaskModel taskModel, IProgressMonitor monitor) throws CoreException {
 		IRuntime runtime = (IRuntime) taskModel.getObject(TaskModel.TASK_RUNTIME);
 		if (runtime != null && runtime instanceof IRuntimeWorkingCopy) {
 			IRuntimeWorkingCopy workingCopy = (IRuntimeWorkingCopy) runtime;
 			if (!workingCopy.isDirty())
 				return;
-		
+			
 			runtime = workingCopy.save(false, monitor);
 			taskModel.putObject(TaskModel.TASK_RUNTIME, runtime.createWorkingCopy());
 		}
 	}
 
-	public static void tempSaveServer(TaskModel taskModel, IProgressMonitor monitor) throws CoreException {
+	protected static void tempSaveServer(TaskModel taskModel, IProgressMonitor monitor) throws CoreException {
 		IServer server = (IServer) taskModel.getObject(TaskModel.TASK_SERVER);
 		if (server != null && server instanceof IServerWorkingCopy) {
 			IServerWorkingCopy workingCopy = (IServerWorkingCopy) server;
@@ -191,9 +191,9 @@ public class WizardTaskUtil {
 	public static void modifyModules(List add, List remove, TaskModel taskModel, IProgressMonitor monitor) throws CoreException {
 		if ((add == null || add.isEmpty()) && (remove == null || remove.isEmpty()))
 			return;
-
+		
 		IServerWorkingCopy workingCopy = (IServerWorkingCopy) taskModel.getObject(TaskModel.TASK_SERVER);
-
+		
 		// modify modules
 		IModule[] remove2 = new IModule[0];
 		if (remove != null) {

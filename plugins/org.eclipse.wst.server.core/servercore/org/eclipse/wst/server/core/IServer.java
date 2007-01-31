@@ -291,6 +291,7 @@ public interface IServer extends IServerAttributes {
 	 * PUBLISH_STATE_NONE. 
 	 * 
 	 * @return boolean
+	 * @since 2.0
 	 */
 	public boolean shouldPublish();
 
@@ -414,6 +415,7 @@ public interface IServer extends IServerAttributes {
 	 * false. 
 	 * 
 	 * @return boolean
+	 * @since 2.0
 	 */
 	public boolean shouldRestart();
 

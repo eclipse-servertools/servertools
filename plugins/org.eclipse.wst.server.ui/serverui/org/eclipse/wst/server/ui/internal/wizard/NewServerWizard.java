@@ -37,7 +37,7 @@ public class NewServerWizard extends TaskWizard implements INewWizard {
 		super(Messages.wizNewServerWizardTitle, new WizardFragment() {
 			protected void createChildFragments(List list) {
 				list.add(new NewServerWizardFragment());
-
+				
 				list.add(WizardTaskUtil.TempSaveRuntimeFragment);
 				list.add(WizardTaskUtil.TempSaveServerFragment);
 				
@@ -58,7 +58,7 @@ public class NewServerWizard extends TaskWizard implements INewWizard {
 			}
 		}
 	}
-	
+
 	public void init(IWorkbench newWorkbench, IStructuredSelection newSelection) {
 		// do nothing
 	}

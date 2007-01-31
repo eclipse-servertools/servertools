@@ -53,6 +53,8 @@ public class NewServerComposite extends Composite {
 	protected IWizardHandle wizard;
 	protected TaskModel taskModel;
 	protected IModule module;
+	protected IModuleType moduleType;
+	protected String serverTypeId;
 	protected String launchMode;
 	
 	protected static final byte MODE_EXISTING = WizardTaskUtil.MODE_EXISTING;
@@ -67,13 +69,36 @@ public class NewServerComposite extends Composite {
 	protected NewManualServerComposite manualComp;
 	protected HostnameComposite manualHostComp;
 	protected ServerComposite existingComp;
-	
+
 	protected Composite stack;
 	protected StackLayout stackLayout; 
-	
+
 	protected String lastHostname;
-	
+
 	protected IServerWorkingCopy existingWC;
+
+	/**
+	 * Create a new NewServerComposite.
+	 * 
+	 * @param parent a parent composite
+	 * @param wizard a wizard handle
+	 * @param moduleType a module type, or null
+	 * @param serverTypeId a server type id, or null
+	 * @param launchMode a launch mode
+	 */
+	public NewServerComposite(Composite parent, IWizardHandle wizard, IModuleType moduleType, String serverTypeId, String launchMode) {
+		super(parent, SWT.NONE);
+		this.wizard = wizard;
+		this.moduleType = moduleType;
+		this.serverTypeId = serverTypeId;
+		this.launchMode = launchMode;
+		
+		wizard.setTitle(Messages.wizNewServerTitle);
+		wizard.setDescription(Messages.wizNewServerDescription);
+		wizard.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_WIZBAN_NEW_SERVER));
+		
+		createControl();
+	}
 
 	/**
 	 * Create a new NewServerComposite.
@@ -88,16 +113,12 @@ public class NewServerComposite extends Composite {
 		this.wizard = wizard;
 		this.module = module;
 		this.launchMode = launchMode;
-	
+		
 		wizard.setTitle(Messages.wizNewServerTitle);
 		wizard.setDescription(Messages.wizNewServerDescription);
 		wizard.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_WIZBAN_NEW_SERVER));
 		
 		createControl();
-	}
-
-	public NewServerComposite(Composite parent, IWizardHandle wizard) {
-		this(parent, wizard, null, null);
 	}
 
 	protected Label createLabel(Composite parent, String text, int span) {
@@ -418,7 +439,11 @@ public class NewServerComposite extends Composite {
 		manualComp2.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		manualHostComp = createHostComposite(manualComp2);
-		IModuleType mt = null;
+		IModuleType mt = moduleType;
+		boolean includeIncompatible = true;
+		if (moduleType != null)
+			includeIncompatible = false;
+		
 		if (module != null)
 			mt = module.getModuleType();
 		
@@ -432,7 +457,7 @@ public class NewServerComposite extends Composite {
 			public void setMessage(String newMessage, int newType) {
 				wizard.setMessage(newMessage, newType);
 			}
-		}, mt, new NewManualServerComposite.ServerSelectionListener() {
+		}, mt, serverTypeId, includeIncompatible, new NewManualServerComposite.ServerSelectionListener() {
 			public void serverSelected(IServerAttributes server) {
 				updateTaskModel();
 			}

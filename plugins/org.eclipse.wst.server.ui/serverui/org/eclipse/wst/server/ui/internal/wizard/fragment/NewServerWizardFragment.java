@@ -31,9 +31,11 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 public class NewServerWizardFragment extends WizardFragment {
 	public static final byte MODE_EXISTING = WizardTaskUtil.MODE_EXISTING;
 	public static final byte MODE_DETECT = WizardTaskUtil.MODE_DETECT;
-	public static final byte MODE_MANUAL= WizardTaskUtil.MODE_MANUAL;
+	public static final byte MODE_MANUAL = WizardTaskUtil.MODE_MANUAL;
 
 	protected IModule module;
+	protected IModuleType moduleType;
+	protected String serverTypeId;
 
 	protected Map fragmentMap = new HashMap();
 	protected Map configMap = new HashMap();
@@ -41,6 +43,11 @@ public class NewServerWizardFragment extends WizardFragment {
 
 	public NewServerWizardFragment() {
 		// do nothing
+	}
+
+	public NewServerWizardFragment(IModuleType moduleType, String serverTypeId) {
+		this.moduleType = moduleType;
+		this.serverTypeId = serverTypeId;
 	}
 
 	public NewServerWizardFragment(IModule module) {
@@ -60,7 +67,11 @@ public class NewServerWizardFragment extends WizardFragment {
 	 */
 	public Composite createComposite(Composite parent, IWizardHandle wizard) {
 		String launchMode = (String) getTaskModel().getObject(TaskModel.TASK_LAUNCH_MODE);
-		NewServerComposite comp = new NewServerComposite(parent, wizard, module, launchMode);
+		NewServerComposite comp = null;
+		if (moduleType != null || serverTypeId != null)
+			comp = new NewServerComposite(parent, wizard, moduleType, serverTypeId, launchMode);
+		else
+			comp = new NewServerComposite(parent, wizard, module, launchMode);
 		if (getTaskModel() != null)
 			comp.setTaskModel(getTaskModel());
 		return comp;

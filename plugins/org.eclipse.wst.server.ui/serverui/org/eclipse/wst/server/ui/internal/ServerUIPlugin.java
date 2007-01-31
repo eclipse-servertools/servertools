@@ -29,7 +29,6 @@ import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.*;
 import org.eclipse.wst.server.core.internal.Trace;
 import org.eclipse.wst.server.core.util.PublishAdapter;
-import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.server.ui.internal.actions.RunOnServerActionDelegate;
 import org.eclipse.wst.server.ui.internal.editor.IServerEditorInput;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorCore;
@@ -39,7 +38,10 @@ import org.eclipse.wst.server.ui.internal.viewers.InitialSelectionProvider;
 import org.eclipse.wst.server.ui.internal.wizard.ClosableWizardDialog;
 import org.eclipse.wst.server.ui.internal.wizard.TaskWizard;
 import org.eclipse.wst.server.ui.internal.wizard.WizardTaskUtil;
+import org.eclipse.wst.server.ui.internal.wizard.fragment.ModifyModulesWizardFragment;
 import org.eclipse.wst.server.ui.internal.wizard.fragment.NewRuntimeWizardFragment;
+import org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment;
+import org.eclipse.wst.server.ui.internal.wizard.fragment.TasksWizardFragment;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 
 import org.eclipse.osgi.util.NLS;
@@ -523,21 +525,17 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 	/**
 	 * Open the new runtime wizard.
 	 * 
-	 * @param shell
-	 * @param type
-	 * @param version
-	 * @param runtimeTypeId
+	 * @param shell a shell
+	 * @param type a module type id
+	 * @param version a module version id
+	 * @param runtimeTypeId a runtime type id
 	 * @return true if a new runtime was created
 	 */
 	public static boolean showNewRuntimeWizard(Shell shell, final String type, final String version, final String runtimeTypeId) {
 		WizardFragment fragment = new WizardFragment() {
 			protected void createChildFragments(List list) {
 				list.add(new NewRuntimeWizardFragment(type, version, runtimeTypeId));
-				list.add(new WizardFragment() {
-					public void performFinish(IProgressMonitor monitor) throws CoreException {
-						WizardTaskUtil.saveRuntime(getTaskModel(), monitor);
-					}
-				});
+				list.add(WizardTaskUtil.SaveRuntimeFragment);
 			}
 		};
 		TaskWizard wizard = new TaskWizard(Messages.wizNewRuntimeWizardTitle, fragment);
@@ -545,12 +543,12 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
 		return (dialog.open() == IDialogConstants.OK_ID);
 	}
-	
+
 	/**
 	 * Open the new runtime wizard.
 	 * 
-	 * @param shell
-	 * @param runtimeTypeId
+	 * @param shell a shell
+	 * @param runtimeTypeId a runtime type id
 	 * @return true if a new runtime was created
 	 */
 	public static boolean showNewRuntimeWizard(Shell shell, final String runtimeTypeId) {
@@ -566,11 +564,7 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 				WizardFragment fragment = new WizardFragment() {
 					protected void createChildFragments(List list) {
 						list.add(getWizardFragment(runtimeTypeId));
-						list.add(new WizardFragment() {
-							public void performFinish(IProgressMonitor monitor) throws CoreException {
-								WizardTaskUtil.saveRuntime(getTaskModel(), monitor);
-							}
-						});
+						list.add(WizardTaskUtil.SaveRuntimeFragment);
 					}
 				};
 				TaskWizard wizard = new TaskWizard(Messages.wizNewRuntimeWizardTitle, fragment, taskModel);
@@ -583,16 +577,40 @@ public class ServerUIPlugin extends AbstractUIPlugin {
 		}
 		return showNewRuntimeWizard(shell, null, null, runtimeTypeId);
 	}
-	
+
 	/**
-	 * Open the new runtime wizard.
-	 * @param shell
-	 * @return true if a new runtime was created
+	 * Open the new server wizard.
+	 * 
+	 * @param shell a shell
+	 * @param typeId a module type id, or null for any module type
+	 * @param versionId a module version, or null for any version
+	 * @param serverTypeId a server runtime type, or null for any type
+	 * @return <code>true</code> if a server was created, or
+	 *    <code>false</code> otherwise
 	 */
-	public static boolean showNewRuntimeWizard(Shell shell) {
-		return ServerUIUtil.showNewRuntimeWizard(shell, null, null);
+	public static boolean showNewServerWizard(Shell shell, final String typeId, final String versionId, final String serverTypeId) {
+		WizardFragment fragment = new WizardFragment() {
+			protected void createChildFragments(List list) {
+				list.add(new NewServerWizardFragment(new ModuleType(typeId, versionId), serverTypeId));
+				
+				list.add(WizardTaskUtil.TempSaveRuntimeFragment);
+				list.add(WizardTaskUtil.TempSaveServerFragment);
+				
+				list.add(new ModifyModulesWizardFragment());
+				list.add(new TasksWizardFragment());
+				
+				list.add(WizardTaskUtil.SaveRuntimeFragment);
+				list.add(WizardTaskUtil.SaveServerFragment);
+				list.add(WizardTaskUtil.SaveHostnameFragment);
+			}
+		};
+		
+		TaskWizard wizard = new TaskWizard(Messages.wizNewServerWizardTitle, fragment);
+		wizard.setForcePreviousAndNextButtons(true);
+		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
+		return (dialog.open() == IDialogConstants.OK_ID);
 	}
-	
+
 	/**
 	 * Returns the wizard fragment with the given id.
 	 *

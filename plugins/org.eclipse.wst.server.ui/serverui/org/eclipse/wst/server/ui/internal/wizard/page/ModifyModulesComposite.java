@@ -271,7 +271,7 @@ public class ModifyModulesComposite extends Composite {
 		}
 		if (requiredModules != null && !deployed.contains(requiredModules[0]))
 			deployed.add(requiredModules[0]);
-
+		
 		// get remaining modules
 		IModule[] modules2 = ServerUtil.getModules(server.getServerType().getRuntimeType().getModuleTypes());
 		if (modules2 != null) {
@@ -299,7 +299,7 @@ public class ModifyModulesComposite extends Composite {
 				}
 			}
 		}
-
+		
 		// build child map
 		Iterator iterator = deployed.iterator();
 		while (iterator.hasNext()) {

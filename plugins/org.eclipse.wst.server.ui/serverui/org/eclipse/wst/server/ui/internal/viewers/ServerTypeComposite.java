@@ -35,6 +35,7 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 	protected boolean initialSelection = true;
 
 	protected IModuleType moduleType;
+	protected String serverTypeId;
 
 	protected boolean isLocalhost;
 	protected boolean includeIncompatibleVersions;
@@ -43,13 +44,14 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 		public void serverTypeSelected(IServerType type);
 	}
 
-	public ServerTypeComposite(Composite parent, int style, IModuleType moduleType, ServerTypeSelectionListener listener2) {
+	public ServerTypeComposite(Composite parent, int style, IModuleType moduleType, String serverTypeId, ServerTypeSelectionListener listener2) {
 		super(parent, style);
 		this.listener = listener2;
 		
 		this.moduleType = moduleType;
+		this.serverTypeId = serverTypeId;
 		
-		contentProvider = new ServerTypeTreeContentProvider(ServerTypeTreeContentProvider.STYLE_VENDOR, moduleType);
+		contentProvider = new ServerTypeTreeContentProvider(ServerTypeTreeContentProvider.STYLE_VENDOR, moduleType, serverTypeId);
 		treeViewer.setContentProvider(contentProvider);
 		
 		ILabelProvider labelProvider = new ServerTypeTreeLabelProvider();
@@ -132,7 +134,7 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 
 	protected void viewOptionSelected(byte option) {
 		ISelection sel = treeViewer.getSelection();
-		contentProvider = new ServerTypeTreeContentProvider(option, moduleType);
+		contentProvider = new ServerTypeTreeContentProvider(option, moduleType, serverTypeId);
 		contentProvider.setLocalhost(isLocalhost);
 		contentProvider.setIncludeIncompatibleVersions(includeIncompatibleVersions);
 		treeViewer.setContentProvider(contentProvider);
@@ -146,7 +148,7 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 	public void refresh() {
 		ISelection sel = treeViewer.getSelection();
 		ServerTypeTreeContentProvider cp = (ServerTypeTreeContentProvider) treeViewer.getContentProvider();
-		treeViewer.setContentProvider(new ServerTypeTreeContentProvider(cp.style, moduleType));
+		treeViewer.setContentProvider(new ServerTypeTreeContentProvider(cp.style, moduleType, serverTypeId));
 		treeViewer.setSelection(sel);
 	}
 

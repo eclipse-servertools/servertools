@@ -38,8 +38,11 @@ public class ServerPropertyTester extends PropertyTester {
 	protected static boolean checkProperty(Object target, String property, String value) {
 		if ("isRunnable".equals(property)) {
 			// check if project has a module associated with it
-			if (target instanceof IProject)
-				return ServerUtil.getModule((IProject) target) != null;
+			if (target instanceof IProject) {
+				IModule m = ServerUtil.getModule((IProject) target);
+				if (m == null)
+					return false;
+			}
 			
 			// check for runnable object
 			boolean b = ServerPlugin.hasModuleArtifact(target);
@@ -57,7 +60,7 @@ public class ServerPropertyTester extends PropertyTester {
 			b = ServerPlugin.hasModuleArtifact(input);
 			if (b)
 				return true;*/
-	
+			
 			if (target instanceof IFileEditorInput) {
 				IFileEditorInput fei = (IFileEditorInput) target;
 				IFile file = fei.getFile();

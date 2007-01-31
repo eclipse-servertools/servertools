@@ -34,6 +34,7 @@ public interface IJavaRuntime {
 	 * 
 	 * @return <code>true</code> if the runtime is using the default JRE,
 	 *    and <code>false</code> otherwise
+	 * @since 2.0
 	 */
 	public boolean isUsingDefaultJRE();
 }

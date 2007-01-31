@@ -322,11 +322,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 			fragment = new WizardFragment() {
 				protected void createChildFragments(List list) {
 					list.add(new NewRuntimeWizardFragment());
-					list.add(new WizardFragment() {
-						public void performFinish(IProgressMonitor monitor) throws CoreException {
-							WizardTaskUtil.saveRuntime(getTaskModel(), monitor);
-						}
-					});
+					list.add(WizardTaskUtil.SaveRuntimeFragment);
 				}
 			};
 		} else {
@@ -340,11 +336,7 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 			fragment = new WizardFragment() {
 				protected void createChildFragments(List list) {
 					list.add(fragment2);
-					list.add(new WizardFragment() {
-						public void performFinish(IProgressMonitor monitor) throws CoreException {
-							WizardTaskUtil.saveRuntime(getTaskModel(), monitor);
-						}
-					});
+					list.add(WizardTaskUtil.SaveRuntimeFragment);
 				}
 			};
 		}

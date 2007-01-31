@@ -71,6 +71,8 @@ public class NewManualServerComposite extends Composite {
 	protected String host;
 
 	protected IModuleType moduleType;
+	protected String serverTypeId;
+	protected boolean includeIncompatible;
 
 	protected ServerCreationCache cache = new ServerCreationCache();
 
@@ -82,14 +84,18 @@ public class NewManualServerComposite extends Composite {
 	 * @param parent a parent composite
 	 * @param wizard a wizard handle
 	 * @param moduleType a module type
+	 * @param serverTypeId a server type id, or null
+	 * @param includeIncompatible true to include incompatible servers that support similar module types
 	 * @param listener a server selection listener
 	 */
-	public NewManualServerComposite(Composite parent, IWizardHandle2 wizard, IModuleType moduleType, ServerSelectionListener listener) {
+	public NewManualServerComposite(Composite parent, IWizardHandle2 wizard, IModuleType moduleType, String serverTypeId, boolean includeIncompatible, ServerSelectionListener listener) {
 		super(parent, SWT.NONE);
 		this.wizard = wizard;
 		this.listener = listener;
 		
 		this.moduleType = moduleType;
+		this.serverTypeId = serverTypeId;
+		this.includeIncompatible = includeIncompatible;
 		
 		createControl();
 		wizard.setMessage("", IMessageProvider.ERROR); //$NON-NLS-1$
@@ -112,13 +118,13 @@ public class NewManualServerComposite extends Composite {
 		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
 		whs.setHelp(this, ContextIds.NEW_SERVER_WIZARD);
 		
-		serverTypeComposite = new ServerTypeComposite(this, SWT.NONE, moduleType, new ServerTypeComposite.ServerTypeSelectionListener() {
+		serverTypeComposite = new ServerTypeComposite(this, SWT.NONE, moduleType, serverTypeId, new ServerTypeComposite.ServerTypeSelectionListener() {
 			public void serverTypeSelected(IServerType type2) {
 				handleTypeSelection(type2);
 				//WizardUtil.defaultSelect(parent, CreateServerWizardPage.this);
 			}
 		});
-		serverTypeComposite.setIncludeIncompatibleVersions(true);
+		serverTypeComposite.setIncludeIncompatibleVersions(includeIncompatible);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
 		data.horizontalSpan = 3;
 		serverTypeComposite.setLayoutData(data);
