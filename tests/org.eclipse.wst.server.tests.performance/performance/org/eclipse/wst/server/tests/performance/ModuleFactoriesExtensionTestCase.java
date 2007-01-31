@@ -24,7 +24,7 @@ public class ModuleFactoriesExtensionTestCase extends PerformanceTestCase {
 		if (factories != null) {
 			int size = factories.length;
 			for (int i = 0; i < size; i++) {
-				factories[i].getModules();
+				factories[i].getModules(null);
 			}
 		}
 		stopMeasuring();
