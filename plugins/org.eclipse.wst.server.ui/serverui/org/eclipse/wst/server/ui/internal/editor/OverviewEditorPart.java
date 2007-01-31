@@ -21,7 +21,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchManager;
@@ -615,11 +614,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 		WizardFragment fragment = new WizardFragment() {
 			protected void createChildFragments(List list) {
 				list.add(fragment2);
-				list.add(new WizardFragment() {
-					public void performFinish(IProgressMonitor monitor) throws CoreException {
-						WizardTaskUtil.saveRuntime(getTaskModel(), monitor);
-					}
-				});
+				list.add(WizardTaskUtil.SaveRuntimeFragment);
 			}
 		};
 		
@@ -702,6 +697,12 @@ public class OverviewEditorPart extends ServerEditorPart {
 			
 			if (runtimeCombo != null) {
 				updateRuntimeCombo();
+				IRuntime runtime = server.getRuntime();
+				int size2 = runtimes.length;
+				for (int i = 0; i < size2; i++) {
+					if (runtimes[i].equals(runtime))
+						runtimeCombo.select(i);
+				}
 				if (readOnly)
 					runtimeCombo.setEnabled(false);
 				else
