@@ -324,9 +324,11 @@ public class NewServerComposite extends Composite {
 						wizard.setMessage(NLS.bind(Messages.errorVersionLevel, new Object[] { type, mt.getVersion() }), IMessageProvider.ERROR);
 						server = null;
 					}
+					
 					if (wizard.getMessage() == null) {
+						IModule[] rootModules = null;
 						try {
-							server.getRootModules(module, null);
+							rootModules = server.getRootModules(module, null);
 						} catch (CoreException ce) {
 							IStatus status = ce.getStatus();
 							if (status != null) {
@@ -335,10 +337,41 @@ public class NewServerComposite extends Composite {
 								else if (status.getSeverity() == IStatus.WARNING)
 									wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
 								else if (status.getSeverity() == IStatus.INFO)
-											wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
+									wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
+								server = null;
 							}
 						} catch (Exception e) {
 							Trace.trace(Trace.WARNING, "Could not find root module", e);
+						}
+						if (rootModules != null) {
+							if (rootModules.length == 0) {
+								wizard.setMessage("", IMessageProvider.ERROR);
+								server = null;
+							} else {
+								int size = rootModules.length;
+								IStatus status = null;
+								boolean found = false;
+								for (int i = 0; i < size; i++) {
+									try {
+										status = server.canModifyModules(new IModule[] {rootModules[i]}, null, null);
+										if (status != null && status.isOK())
+											found = true;
+									} catch (Exception e) {
+										Trace.trace(Trace.WARNING, "Could not find root module", e);
+									}
+								}
+								if (!found && status != null) {
+									if (status != null) {
+										if (status.getSeverity() == IStatus.ERROR)
+											wizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
+										else if (status.getSeverity() == IStatus.WARNING)
+											wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
+										else if (status.getSeverity() == IStatus.INFO)
+											wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
+										server = null;
+									}
+								}
+							}
 						}
 					}
 				}

@@ -176,7 +176,8 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		} else
 			hostname.setText("");
 		
-		if (runtime != null)
+		// check if runtime property is true or false
+		if (runtime != null && server != null && server.getServerType() != null && server.getServerType().hasRuntime())
 			runtimeLabel.setText(runtime.getName());
 		else
 			runtimeLabel.setText("");

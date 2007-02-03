@@ -183,7 +183,7 @@ public class InstallableServer implements IInstallableServer {
 		try {
 			ISiteFeatureReference[] features = site.getFeatureReferences();
 			for (int i = 0; i < features.length; i++) {
-				if (features[i].getName().equals(featureId)) {
+				if (features[i].getVersionedIdentifier().getIdentifier().equals(featureId)) {
 					Version nextCand = new Version(features[i].getVersionedIdentifier().getVersion().toString());
 					if (nextCand.compareTo(latestVersion) > 0) {
 						latestVersion = nextCand;

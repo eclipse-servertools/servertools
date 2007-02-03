@@ -41,9 +41,7 @@ public class ServerCore {
 
 	private static IRegistryChangeListener registryListener;
 
-	static {
-		executeStartups();
-	}
+	private static boolean initialized = false;
 
 	private static class RegistryChangeListener implements IRegistryChangeListener {
 		public void registryChanged(IRegistryChangeEvent event) {
@@ -238,6 +236,14 @@ public class ServerCore {
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .startup extension point -<-");
 	}
 
+	private static synchronized void initialize() {
+		if (initialized)
+			return;
+		
+		initialized = true;
+		executeStartups();
+	}
+
 	/**
 	 * Load the runtime types.
 	 */
@@ -314,6 +320,8 @@ public class ServerCore {
 	 * with the given id
 	 */
 	public static IRuntime findRuntime(String id) {
+		if (!initialized)
+			initialize();
 		return getResourceManager().getRuntime(id);
 	}
 
@@ -327,6 +335,8 @@ public class ServerCore {
 	 * @return a possibly-empty array of runtime instances {@link IRuntime}
 	 */
 	public static IRuntime[] getRuntimes() {
+		if (!initialized)
+			initialize();
 		return getResourceManager().getRuntimes();
 	}
 
@@ -341,6 +351,8 @@ public class ServerCore {
 	 * with the given id
 	 */
 	public static IServer findServer(String id) {
+		if (!initialized)
+			initialize();
 		return getResourceManager().getServer(id);
 	}
 
@@ -354,6 +366,8 @@ public class ServerCore {
 	 * @return a possibly-empty array of server instances {@link IServer}
 	 */
 	public static IServer[] getServers() {
+		if (!initialized)
+			initialize();
 		return getResourceManager().getServers();
 	}
 
@@ -412,6 +426,8 @@ public class ServerCore {
 	 *    default server
 	 */
 	public static IServer getDefaultServer(IModule module) {
+		if (!initialized)
+			initialize();
 		return ModuleProperties.getInstance().getDefaultServer(module);
 	}
 
@@ -428,6 +444,8 @@ public class ServerCore {
 	 * @throws CoreException if there is a problem setting the default server
 	 */
 	public static void setDefaultServer(IModule module, IServer server, IProgressMonitor monitor) throws CoreException {
+		if (!initialized)
+			initialize();
 		ModuleProperties.getInstance().setDefaultServer(module, server, monitor);
 	}
 

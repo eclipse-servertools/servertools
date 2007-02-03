@@ -278,8 +278,11 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		if (deltaKind == REMOVED) {
 			try {
 				String publishPath = (String) p.get(module[0].getId());
-				IStatus[] stat = PublishUtil.deleteDirectory(new File(publishPath), monitor);
-				PublishOperation2.addArrayToList(status, stat);
+				File f = new File(publishPath);
+				if (f.exists()) {
+					IStatus[] stat = PublishUtil.deleteDirectory(f, monitor);
+					PublishOperation2.addArrayToList(status, stat);
+				}
 			} catch (Exception e) {
 				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, "Could not remove module", e));
 			}

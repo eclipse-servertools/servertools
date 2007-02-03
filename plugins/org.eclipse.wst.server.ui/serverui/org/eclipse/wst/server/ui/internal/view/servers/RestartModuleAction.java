@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal.view.servers;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
@@ -37,6 +41,13 @@ public class RestartModuleAction extends Action {
 	 * Implementation of method defined on <code>IAction</code>.
 	 */
 	public void run() {
-		server.restartModule(module, null);
+		int size = module.length;
+		Job restartJob = new Job(NLS.bind(Messages.actionRestartModule, module[size-1].getName())) {
+			protected IStatus run(IProgressMonitor monitor) {
+				server.restartModule(module, null);
+				return Status.OK_STATUS;
+			}
+		};
+		restartJob.schedule();
 	}
 }

@@ -19,9 +19,7 @@ import org.eclipse.osgi.util.NLS;
 public class GenericServerUIMessages extends NLS{
 
 	private static final String RESOURCE_BUNDLE= "org.eclipse.jst.server.generic.ui.internal.GenericServerUIMessages";//$NON-NLS-1$
-	public static String ServerEditorSectionDescription;
-    public static String ServerEditorSectionTitle;
-    public static String serverTypeGroup_label_browse;
+	public static String serverTypeGroup_label_browse;
 	public static String runtimeName;
 	public static String runtimeWizardDescription;
 	public static String runtimeWizardTitle;
@@ -40,7 +38,6 @@ public class GenericServerUIMessages extends NLS{
 	}
 
 	public static String emptyPath;
-    public static String UpdateOperationDescription;
 
 
 }

@@ -926,8 +926,13 @@ public class ServerEditor extends MultiPageEditorPart {
 		// check for server changes
 		if (serverId != null) {
 			if (!commandManager.isDirty(serverId)) {
-				if (commandManager.hasChanged(serverId))
-					promptReloadServerFile(serverId, server);
+				if (commandManager.hasChanged(serverId)) {
+					IServer newServer = ServerCore.findServer(serverId);
+					if (newServer != null && ((Server)newServer).getTimestamp() > ((Server)server).getTimestamp())
+						commandManager.reload(serverId, new NullProgressMonitor());
+					else
+						promptReloadServerFile(serverId, server);
+				}
 			} else {
 				if (commandManager.hasChanged(serverId) && !commandManager.areFilesReadOnly(serverId))
 					promptReloadServerFile(serverId, server);

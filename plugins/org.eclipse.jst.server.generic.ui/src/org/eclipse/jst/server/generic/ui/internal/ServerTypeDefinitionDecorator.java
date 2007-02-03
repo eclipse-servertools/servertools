@@ -15,18 +15,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jst.server.generic.servertype.definition.Property;
 import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.jst.server.generic.ui.internal.SWTUtil;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 /**
  * Provides the UI objects for gathering user information
@@ -110,50 +119,179 @@ public abstract class ServerTypeDefinitionDecorator implements GenericServerComp
 	
     private void createPropertyControl(Composite parent, Property property){
     	if( Property.TYPE_DIRECTORY.equals(property.getType())) {
-    		Text path = SWTUtil.createLabeledPath(property.getLabel(),getPropertyValue(property),parent);
+    		Text path = createLabeledPath(property.getLabel(),getPropertyValue(property),parent);
     		path.setData(property);
-    		path.addModifyListener(new PathModifyListener());
     		registerControl(path);
      	} else if( Property.TYPE_FILE.equals(property.getType())) {
-    	    Text file = SWTUtil.createLabeledFile(property.getLabel(),getPropertyValue(property),parent);
+    	    Text file = createLabeledFile(property.getLabel(),getPropertyValue(property),parent);
     		file.setData(property);
-    		file.addModifyListener(new PathModifyListener());
     		registerControl(file);
+       	} else if( Property.TYPE_TEXT.equals(property.getType())) {
+    	    Text str = createLabeledText(property.getLabel(),getPropertyValue(property),parent);
+    		str.setData(property);
+    		registerControl(str);
        	} else if( Property.TYPE_BOOLEAN.equals(property.getType())) {
-    	    Button bool =SWTUtil.createLabeledCheck(property.getLabel(),("true".equals( getPropertyValue(property))),	parent); //$NON-NLS-1$
+    	    Button bool =createLabeledCheck(property.getLabel(),("true".equals( getPropertyValue(property))),	parent); //$NON-NLS-1$
     		bool.setData(property);
     		registerControl(bool);
        	}else if(Property.TYPE_SELECT.equals(property.getType())) {
-    		StringTokenizer tokenizer = new StringTokenizer(property.getDefault(),","); //$NON-NLS-1$
-    		int tokenCount = tokenizer.countTokens();
-    		String[] values = new String[tokenCount];
-    		int i =0;
-    		while(tokenizer.hasMoreTokens() && i<tokenCount){
-    			values[i]=tokenizer.nextToken();
-    			i++;
-    		}
-       		Combo combo = SWTUtil.createLabeledCombo(property.getLabel(),values, parent);
+       		Combo combo = createLabeledCombo(parent, property);
        		combo.setData(property);
        		registerControl(combo);
        	}
-       	else {//default is TEXT
-    	    Text defaultText= SWTUtil.createLabeledText(property.getLabel(),getPropertyValue(property),parent);
+       	else  {
+    	    Text defaultText= createLabeledText(property.getLabel(),getPropertyValue(property),parent);
     		defaultText.setData(property);
     		registerControl(defaultText);
     	}
     }
 
-	private void registerControl(Control control)
+	private Combo createLabeledCombo(Composite defPanel, Property property) {
+		
+	   	GridData gridData;
+    	Label label = new Label(defPanel, SWT.WRAP);
+    	gridData = new GridData();
+    	label.setLayoutData(gridData);
+    	label.setText(property.getLabel());
+
+		Combo combo = new Combo(defPanel,SWT.READ_ONLY);
+    	gridData = new GridData(GridData.FILL_HORIZONTAL
+    			| GridData.GRAB_HORIZONTAL);
+    	gridData.horizontalSpan = 2;
+    	combo.setLayoutData(gridData);
+    	
+		StringTokenizer tokenizer = new StringTokenizer(property.getDefault(),","); //$NON-NLS-1$
+		while(tokenizer.hasMoreTokens()){
+			combo.add(tokenizer.nextToken());
+		}
+		if(combo.getItemCount()>0)
+			combo.select(0);
+		return combo;
+	}
+    private void registerControl(Control control)
     {
     	fPropertyControls.add(control);
     }
+    private Button createLabeledCheck(String title, boolean value, Composite defPanel) {
+    	GridData gridData;
+    	Label label = new Label(defPanel, SWT.WRAP);
+    	gridData = new GridData();
+    	label.setLayoutData(gridData);
+    	label.setText(title);
+
+    	Button fButton = new Button(defPanel, SWT.CHECK);
+    	
+    	gridData = new GridData(GridData.FILL_HORIZONTAL
+    			| GridData.GRAB_HORIZONTAL);
+    	gridData.horizontalSpan = 2;
+    	fButton.setLayoutData(gridData);
+    	fButton.setSelection(value);
+    	fButton.addSelectionListener(new SelectionListener() {
+            public void widgetSelected(SelectionEvent e) {
+             //nothing to do 
+            }
+
+            public void widgetDefaultSelected(SelectionEvent e) {
+            // nothing to do
+            }
+        });
+    	
+    	return fButton;
+    }
+    private Text createLabeledFile(String title, String value,final Composite defPanel) {
+    	GridData gridData;
+    	Label label = new Label(defPanel, SWT.WRAP);
+    	gridData = new GridData();
+    	label.setLayoutData(gridData);
+    	label.setText(title);
+    
+    	final Text text = new Text(defPanel, SWT.SHADOW_IN | SWT.BORDER);
+    	gridData = new GridData(GridData.FILL_HORIZONTAL
+    			| GridData.GRAB_HORIZONTAL);
+    	gridData.horizontalSpan = 1;
+    	text.setLayoutData(gridData);
+    	text.setText(value);
+    	text.addModifyListener(new PathModifyListener());
+    	Button fButton = SWTUtil.createButton(defPanel,GenericServerUIMessages.serverTypeGroup_label_browse);
+    	
+    	fButton.addSelectionListener(new SelectionListener() {
+    		public void widgetSelected(SelectionEvent e) {
+    			FileDialog dlg = new FileDialog(defPanel.getShell());
+    			dlg.setFileName(text.getText().replace('\\','/'));
+    			String res = dlg.open();
+    			if (res != null) {
+    				text.setText(res.replace('\\','/'));
+
+    			}
+    		}
+    
+    		public void widgetDefaultSelected(SelectionEvent e) {
+    			widgetSelected(e);
+    		}
+    
+    	});
+    
+    	return text;
+    }
 	
-    private String getPropertyValue(Property property){	
+    private Text createLabeledPath(String title, String value,
+    		final Composite parent) {
+    	GridData gridData;
+    	Label label = new Label(parent, SWT.WRAP);
+    	gridData = new GridData();
+    	label.setLayoutData(gridData);
+    	label.setText(title);
+    
+    	final Text text = new Text(parent, SWT.SHADOW_IN | SWT.BORDER);
+    	gridData = new GridData(GridData.FILL_HORIZONTAL);
+    	gridData.horizontalSpan = 1;
+    	text.setLayoutData(gridData);
+    	text.setText(value);
+    	text.addModifyListener(new PathModifyListener());
+    	Button fButton = SWTUtil.createButton(parent,GenericServerUIMessages.serverTypeGroup_label_browse);
+    	fButton.addSelectionListener(new SelectionListener() {
+    		public void widgetSelected(SelectionEvent e) {
+    			DirectoryDialog dlg = new DirectoryDialog(parent.getShell());
+    			dlg.setFilterPath(text.getText().replace('\\','/'));
+    			String res = dlg.open();
+    			if (res != null) {
+    				text.setText(res.replace('\\','/'));
+
+    			}
+    		}
+    
+    		public void widgetDefaultSelected(SelectionEvent e) {
+    			widgetSelected(e);
+    		}
+    
+    	});
+    	return text;
+    }
+    private Text createLabeledText(String title, String value,
+    		Composite defPanel) {
+    	GridData gridData;
+    	Label label = new Label(defPanel, SWT.WRAP);
+    	gridData = new GridData();
+    	label.setLayoutData(gridData);
+    	label.setText(title);
+    
+    	Text text = new Text(defPanel, SWT.SHADOW_IN | SWT.BORDER);
+    	gridData = new GridData(GridData.FILL_HORIZONTAL
+    			| GridData.GRAB_HORIZONTAL);
+    	gridData.horizontalSpan = 2;
+    	text.setLayoutData(gridData);
+    	text.setText(value);
+
+    	return text;
+    }
+	private String getPropertyValue(Property property){	
 		if(fProperties!=null && fProperties.isEmpty()==false){
 		//user properties exist use those
-			return fDefinition.getResolver().resolveProperties((String)fProperties.get(property.getId()));
+			return(String)fProperties.get(property.getId()); 
 		}	
-		return fDefinition.getResolver().resolveProperties(property.getDefault());
+		if(Property.CONTEXT_SERVER.equals(property.getContext()))
+			return fDefinition.getResolver().resolveProperties(property.getDefault());
+		return property.getDefault();
 	}	
 
    /**
