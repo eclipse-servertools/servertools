@@ -124,16 +124,14 @@ public class Tomcat60Handler implements ITomcatVersionHandler {
 	 */
 	public IStatus prepareRuntimeDirectory(IPath baseDir) {
 		// TODO Update to Servlet 2.5 when supported
-		return TomcatVersionHelper.createCatalinaInstanceDirectory(baseDir,
-				TomcatVersionHelper.DEFAULT_WEBXML_SERVLET24);
+		return TomcatVersionHelper.createCatalinaInstanceDirectory(baseDir);
 	}
 
 	/**
 	 * @see ITomcatVersionHandler#prepareDeployDirectory(IPath)
 	 */
 	public IStatus prepareDeployDirectory(IPath deployPath) {
-		// TODO Update to Servlet 2.5 when available
 		return TomcatVersionHelper.createDeploymentDirectory(deployPath,
-				TomcatVersionHelper.DEFAULT_WEBXML_SERVLET24);
+				TomcatVersionHelper.DEFAULT_WEBXML_SERVLET25);
 	}
 }

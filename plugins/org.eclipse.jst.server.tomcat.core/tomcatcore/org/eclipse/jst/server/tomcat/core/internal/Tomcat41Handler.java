@@ -129,8 +129,7 @@ public class Tomcat41Handler implements ITomcatVersionHandler {
 	 * @see ITomcatVersionHandler#prepareRuntimeDirectory(IPath)
 	 */
 	public IStatus prepareRuntimeDirectory(IPath baseDir) {
-		return TomcatVersionHelper.createCatalinaInstanceDirectory(baseDir,
-				TomcatVersionHelper.DEFAULT_WEBXML_SERVLET23);
+		return TomcatVersionHelper.createCatalinaInstanceDirectory(baseDir);
 	}
 
 	/**

@@ -87,7 +87,7 @@
        class="org.eclipse.jst.server.tomcat.core.internal.TomcatRuntime">
        <moduleType
          types="jst.web"
-         versions="2.2, 2.3, 2.4"/>
+         versions="2.2, 2.3, 2.4, 2.5"/>
        <moduleType
          types="jst.utility"
          versions="1.0"/>
@@ -345,7 +345,7 @@
          version="6.0"/>
       <facet
          id="jst.web"
-         version="2.2,2.3,2.4"/>
+         version="2.2,2.3,2.4,2.5"/>
       <facet
          id="jst.utility"
          version="1.0"/>
