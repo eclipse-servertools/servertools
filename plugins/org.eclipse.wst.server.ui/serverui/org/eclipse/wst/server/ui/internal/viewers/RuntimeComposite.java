@@ -69,7 +69,7 @@ public class RuntimeComposite extends AbstractTableComposite {
 		table.setLayout(tableLayout);
 		table.setHeaderVisible(true);
 
-		tableLayout.addColumnData(new ColumnWeightData(60, 160, true));
+		tableLayout.addColumnData(new ColumnWeightData(0, 160, true));
 		TableColumn col = new TableColumn(table, SWT.NONE);
 		col.setText(Messages.columnName);
 		col.addSelectionListener(new SelectionListener() {
@@ -82,7 +82,7 @@ public class RuntimeComposite extends AbstractTableComposite {
 			}
 		});
 
-		tableLayout.addColumnData(new ColumnWeightData(45, 125, true));
+		tableLayout.addColumnData(new ColumnWeightData(0, 125, true));
 		col = new TableColumn(table, SWT.NONE);
 		col.setText(Messages.columnType);
 		col.addSelectionListener(new SelectionListener() {
@@ -147,6 +147,14 @@ public class RuntimeComposite extends AbstractTableComposite {
 				// do nothing
 			}
 		});
+		
+		// after adding an item do the packing of the table
+		if (table.getItemCount() > 0) {
+			TableColumn[] columns = table.getColumns();
+			for (int i=0; i < columns.length; i++)
+				columns[i].pack();
+			table.pack();
+		}
 	}
 
 	protected void createTable() {
