@@ -188,6 +188,13 @@ public class CleanWorkDirDialog extends Dialog {
 			super(name);
 		}
 
+		/**
+		 * @see Job#belongsTo(Object)
+		 */
+		public boolean belongsTo(Object family) {
+			return ServerUtil.SERVER_JOB_FAMILY.equals(family);
+		}
+
 		protected IStatus run(IProgressMonitor monitor) {
 			// If state has changed since dialog was open, abort
 			if (server.getServerState() != state) {
