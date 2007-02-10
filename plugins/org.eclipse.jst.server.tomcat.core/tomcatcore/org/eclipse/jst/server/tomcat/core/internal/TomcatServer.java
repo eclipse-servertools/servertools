@@ -206,13 +206,35 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	}
 	
 	/**
+	 * @see ITomcatServer#getInstanceDirectory()
+	 */
+	public String getInstanceDirectory() {
+		return getAttribute(PROPERTY_INSTANCE_DIR, (String)null);
+	}
+	
+	/**
 	 * @see ITomcatServer#getDeployDirectory()
 	 */
 	public String getDeployDirectory() {
 		// Default to value used by prior WTP versions
-		return getAttribute(PROPERTY_DEPLOYDIR, LEGACY_DEPLOYDIR);
+		return getAttribute(PROPERTY_DEPLOY_DIR, LEGACY_DEPLOYDIR);
 	}
 	
+	/**
+	 * Gets the base directory where the server instance runs.  This
+	 * path can vary depending on the configuration. Null may be returned
+	 * if a runtime hasn't been specified for the server.
+	 * 
+	 * @return path to base directory for the server or null if
+	 * runtime hasn't been specified.
+	 */
+	public IPath getRuntimeBaseDirectory() {
+		ITomcatVersionHandler tvh = getTomcatVersionHandler();
+		if (tvh != null)
+			return tvh.getRuntimeBaseDirectory(this);
+		return null;
+	}
+
 	protected static String renderCommandLine(String[] commandLine, String separator) {
 		if (commandLine == null || commandLine.length < 1)
 			return "";
@@ -342,18 +364,22 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	}
 	
 	/**
-	 * Set the deployment directory for this server.  May be absolute
-	 * or relative to runtime base directory.
-	 * 
-	 * @param deployDir deployment directory for the server
+	 * @see ITomcatServerWorkingCopy#setInstanceDirectory(String)
+	 */
+	public void setInstanceDirectory(String instanceDir) {
+		setAttribute(PROPERTY_INSTANCE_DIR, instanceDir);
+	}
+	
+	/**
+	 * @see ITomcatServerWorkingCopy#setDeployDirectory(String)
 	 */
 	public void setDeployDirectory(String deployDir) {
 		// Remove attribute if setting to legacy value assumed in prior versions of WTP.
 		// Allowing values that differ only in case is asking for more trouble that it is worth.
 		if (LEGACY_DEPLOYDIR.equalsIgnoreCase(deployDir))
-			setAttribute(PROPERTY_DEPLOYDIR, (String)null);
+			setAttribute(PROPERTY_DEPLOY_DIR, (String)null);
 		else
-			setAttribute(PROPERTY_DEPLOYDIR, deployDir);
+			setAttribute(PROPERTY_DEPLOY_DIR, deployDir);
 	}
 
 	/**

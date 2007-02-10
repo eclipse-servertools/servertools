@@ -25,10 +25,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.jst.server.tomcat.core.internal.xml.Factory;
@@ -105,6 +107,34 @@ public class TomcatVersionHelper {
 				br.close();
 		}
 		return sb.toString();
+	}
+	
+	/**
+	 * Gets the base directory for this server. This directory
+	 * is used as the "base" property for the server.
+	 * 
+	 * @param ts TomcatServer from which to derive the base directory 
+	 * directory.  Only used to get the temp directory if needed.
+	 * @return path to base directory
+	 */
+	public static IPath getStandardBaseDirectory(TomcatServer ts) {
+		if (ts.isTestEnvironment()) {
+			String baseDir = ts.getInstanceDirectory();
+			// If test mode and no instance directory specified, use temporary directory
+			if (baseDir == null) {
+				TomcatServerBehaviour tsb = (TomcatServerBehaviour)ts.getServer().loadAdapter(TomcatServerBehaviour.class, null);
+				return tsb.getTempDirectory();
+			}
+			IPath path = new Path(baseDir);
+			if (!path.isAbsolute()) {
+				IPath rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+				path = rootPath.append(path);
+			}
+			// Return specified instance directory
+			return path;
+		}
+		// Return runtime path
+		return ts.getServer().getRuntime().getLocation();
 	}
 	
 	/**

@@ -19,10 +19,31 @@ import org.eclipse.wst.server.core.IModule;
  * 
  */
 public interface ITomcatVersionHandler {
+	/**
+	 * Verifies if the specified path points to a a Tomcat
+	 * installation of this version.
+	 * 
+	 * @param installPath an installation path 
+	 * @return OK status if a valid installation
+	 * exists at the location.  If not valid, the IStatus
+	 * contains an indication of why.
+	 */
 	public IStatus verifyInstallPath(IPath installPath);
 	
+	/**
+	 * Gets the startup class for the Tomcat server.
+	 * 
+	 * @return server startup class
+	 */
 	public String getRuntimeClass();
 	
+	/**
+	 * Gets the startup classpath for the Tomcat server.
+	 * 
+	 * @param installPath an installation path
+	 * @return list of classpath entries required to
+	 * start the Tomcat server.
+	 */
 	public List getRuntimeClasspath(IPath installPath);
 	
 	/**
@@ -45,8 +66,22 @@ public interface ITomcatVersionHandler {
 	 */
 	public String[] getExcludedRuntimeProgramArguments(boolean debug, boolean starting);
 	
+	/**
+	 * Gets the startup VM arguments for the Tomcat server.
+	 * 
+	 * @param installPath installation path for the server
+	 * @param configPath configuration path for the server
+	 * @param isTestEnv test environment flag
+	 * @return array of VM arguments for starting the server
+	 */
 	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isTestEnv);
 
+	/**
+	 * Gets the contents of the Java policy file for the Tomcat server.
+	 * 
+	 * @param configPath path to configuration
+	 * @return contents of Java policy file in the configuration
+	 */
 	public String getRuntimePolicyFile(IPath configPath);
 
 	/**
@@ -62,11 +97,11 @@ public interface ITomcatVersionHandler {
 	 * Returns the runtime base path for relative paths in the server
 	 * configuration.
 	 * 
-	 * @param serverBehaviour TomcatServerBehaviour instance from
-	 * which to determine the base path
-	 * @return the base path
+	 * @param server TomcatServer instance from which to determine
+	 * the base path.
+	 * @return the server base path
 	 */
-	public IPath getRuntimeBaseDirectory(TomcatServerBehaviour serverBehaviour);
+	public IPath getRuntimeBaseDirectory(TomcatServer server);
 
 	/**
 	 * Prepare server runtime directory. Create catalina instance set of

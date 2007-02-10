@@ -117,12 +117,10 @@ public class Tomcat41Handler implements ITomcatVersionHandler {
 	}
 
 	/**
-	 * @see ITomcatVersionHandler#getRuntimeBaseDirectory(TomcatServerBehaviour)
+	 * @see ITomcatVersionHandler#getRuntimeBaseDirectory(TomcatServer)
 	 */
-	public IPath getRuntimeBaseDirectory(TomcatServerBehaviour serverBehaviour) {
-		if (serverBehaviour.getTomcatServer().isTestEnvironment())
-			return serverBehaviour.getTempDirectory();
-		return serverBehaviour.getServer().getRuntime().getLocation();
+	public IPath getRuntimeBaseDirectory(TomcatServer server) {
+		return TomcatVersionHelper.getStandardBaseDirectory(server);
 	}
 
 	/**

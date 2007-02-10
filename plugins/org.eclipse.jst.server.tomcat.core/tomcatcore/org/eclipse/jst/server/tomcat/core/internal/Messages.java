@@ -83,30 +83,19 @@ public class Messages extends NLS {
 	public static String errorXMLContextNotFoundPath;
 	public static String errorXMLContextMangerNotFound;
 	public static String errorXMLContextNotFoundPath32;
-	public static String configurationEditorActionModifyPortDescription;
+
 	public static String configurationEditorActionModifyPort;
-	public static String configurationEditorActionModifyMimeMappingDescription;
 	public static String configurationEditorActionModifyMimeMapping;
-	public static String configurationEditorActionAddMimeMappingDescription;
 	public static String configurationEditorActionAddMimeMapping;
-	public static String configurationEditorActionAddWebModuleDescription;
 	public static String configurationEditorActionAddWebModule;
-	public static String configurationEditorActionModifyWebModuleDescription;
 	public static String configurationEditorActionModifyWebModule;
-	public static String configurationEditorActionRemoveMimeMappingDescription;
 	public static String configurationEditorActionRemoveMimeMapping;
-	public static String configurationEditorActionRemoveWebModuleDescription;
 	public static String configurationEditorActionRemoveWebModule;
-	public static String serverEditorActionSetDebugModeDescription;
-	public static String serverEditorActionSetDebugMode;
-	public static String serverEditorActionSetSecureDescription;
-	public static String serverEditorActionSetSecure;
-	public static String serverEditorActionSetTestEnvironmentDescription;
-	public static String serverEditorActionSetTestEnvironment;
-	public static String serverEditorActionSetDeployDirectory;
-	public static String serverEditorActionSetDeployDirectoryDescription;
-	public static String configurationEditorActionEditWebModuleDescription;
 	public static String configurationEditorActionEditWebModulePath;
+	public static String serverEditorActionSetDebugMode;
+	public static String serverEditorActionSetSecure;
+	public static String serverEditorActionSetServerDirectory;
+	public static String serverEditorActionSetDeployDirectory;
 	public static String fixModuleContextRootDescription;
 	public static String fixModuleContextRoot;
 

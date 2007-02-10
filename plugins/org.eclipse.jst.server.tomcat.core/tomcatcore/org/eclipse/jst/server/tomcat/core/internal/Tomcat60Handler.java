@@ -111,19 +111,16 @@ public class Tomcat60Handler implements ITomcatVersionHandler {
 	}
 
 	/**
-	 * @see ITomcatVersionHandler#getRuntimeBaseDirectory(TomcatServerBehaviour)
+	 * @see ITomcatVersionHandler#getRuntimeBaseDirectory(TomcatServer)
 	 */
-	public IPath getRuntimeBaseDirectory(TomcatServerBehaviour serverBehaviour) {
-		if (serverBehaviour.getTomcatServer().isTestEnvironment())
-			return serverBehaviour.getTempDirectory();
-		return serverBehaviour.getServer().getRuntime().getLocation();
+	public IPath getRuntimeBaseDirectory(TomcatServer server) {
+		return TomcatVersionHelper.getStandardBaseDirectory(server);
 	}
 
 	/**
 	 * @see ITomcatVersionHandler#prepareRuntimeDirectory(IPath)
 	 */
 	public IStatus prepareRuntimeDirectory(IPath baseDir) {
-		// TODO Update to Servlet 2.5 when supported
 		return TomcatVersionHelper.createCatalinaInstanceDirectory(baseDir);
 	}
 

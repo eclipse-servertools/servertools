@@ -20,12 +20,18 @@ public interface ITomcatServer extends IURLProvider {
 	 * for testing environment.
 	 */
 	public static final String PROPERTY_TEST_ENVIRONMENT = "testEnvironment";
-
+	
+	/**
+	 * Property which specifies the directory where the server instance
+	 * exists.  If not specified, instance directory is derived
+	 * from the textEnvironment setting.
+	 */
+	public static final String PROPERTY_INSTANCE_DIR = "instanceDir";
 	/**
 	 * Property which specifies the directory where web applications
 	 * are published.
 	 */
-	public static final String PROPERTY_DEPLOYDIR = "deployDir";
+	public static final String PROPERTY_DEPLOY_DIR = "deployDir";
 
 	/**
 	 * Returns true if this is a test (publish and run code out of the
@@ -34,6 +40,15 @@ public interface ITomcatServer extends IURLProvider {
 	 * @return boolean
 	 */
 	public boolean isTestEnvironment();
+	
+	/**
+	 * Gets the directory where the server instance exists.  If not set,
+	 * the instance directory is derived from the testEnvironment setting.  
+	 * 
+	 * @return directory where the server instance exists. Returns null
+	 * if not set.
+	 */
+	public String getInstanceDirectory();
 
 	/**
 	 * Gets the directory to which web applications are to be deployed.

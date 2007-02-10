@@ -30,6 +30,15 @@ public interface ITomcatServerWorkingCopy extends ITomcatServer {
 	 * @param b boolean
 	 */
 	public void setTestEnvironment(boolean b);
+	
+	/**
+	 * Sets the instance directory for the server. If set to
+	 * null, the instance directory is derived from the
+	 * testEnvironment setting.'
+	 * 
+	 * @param instanceDir absolule path to the instance directory.
+	 */
+	public void setInstanceDirectory(String instanceDir);
 
 	/**
 	 * Set the deployment directory for the server.  May be absolute

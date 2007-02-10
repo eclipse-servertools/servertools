@@ -97,7 +97,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 * @return the base path
 	 */
 	public IPath getRuntimeBaseDirectory() {
-		return getTomcatVersionHandler().getRuntimeBaseDirectory(this);
+		return getTomcatServer().getRuntimeBaseDirectory();
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	protected String[] getRuntimeProgramArguments(boolean starting) {
 		IPath configPath = null;
 		if (getTomcatServer().isTestEnvironment())
-			configPath = getTempDirectory();
+			configPath = getRuntimeBaseDirectory();
 		return getTomcatVersionHandler().getRuntimeProgramArguments(configPath, getTomcatServer().isDebug(), starting);
 	}
 
@@ -124,21 +124,13 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 */
 	protected String[] getRuntimeVMArguments() {
 		IPath installPath = getServer().getRuntime().getLocation();
-		IPath configPath = null;
-		if (getTomcatServer().isTestEnvironment())
-			configPath = getTempDirectory();
-		else
-			configPath = installPath;
+		IPath configPath = getRuntimeBaseDirectory();
 		return getTomcatVersionHandler().getRuntimeVMArguments(installPath, configPath,
 				getTomcatServer().isTestEnvironment());
 	}
 	
 	protected String getRuntimePolicyFile() {
-		IPath configPath;
-		if (getTomcatServer().isTestEnvironment())
-			configPath = getTempDirectory();
-		else
-			configPath = getServer().getRuntime().getLocation();
+		IPath configPath = getRuntimeBaseDirectory();
 		return getTomcatVersionHandler().getRuntimePolicyFile(configPath);
 	}
 	
@@ -203,7 +195,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		IPath installDir = getServer().getRuntime().getLocation();
 		IPath confDir = null;
 		if (getTomcatServer().isTestEnvironment()) {
-			confDir = getTempDirectory();
+			confDir = getRuntimeBaseDirectory();
 			IStatus status = getTomcatVersionHandler().prepareRuntimeDirectory(confDir);
 			if (status != null && !status.isOK())
 				throw new CoreException(status);
@@ -348,14 +340,9 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	}
 
 	protected void publishFinish(IProgressMonitor monitor) throws CoreException {
-		IPath baseDir;
-		if (getTomcatServer().isTestEnvironment())
-			baseDir = getTempDirectory();
-		else
-			baseDir = getServer().getRuntime().getLocation();
-		
 		// Publish context configuration for servers that support META-INF/context.xml
-		IStatus status = getTomcatConfiguration().publishContextConfig(baseDir, getServerDeployDirectory(), monitor);
+		IStatus status = getTomcatConfiguration().publishContextConfig(
+				getRuntimeBaseDirectory(), getServerDeployDirectory(), monitor);
 		if (!status.isOK())
 			throw new CoreException(status);
 	}
@@ -540,6 +527,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 * 
 	 * @param originalArg String of original arguments.
 	 * @param vmArgs Arguments to merge into the original arguments string
+	 * @param excludeArgs Arguments to exclude from the original arguments string
 	 * @param keepActionLast If <b>true</b> the vmArguments are assumed to be Tomcat
 	 * program arguments, the last of which is the action to perform which must
 	 * remain the last argument.  This only has an impact if the last vmArg is
@@ -910,7 +898,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 */
 	public IStatus cleanServerWorkDir(IProgressMonitor monitor) throws CoreException {
 		IStatus result;
-		IPath basePath = getTomcatVersionHandler().getRuntimeBaseDirectory(this);
+		IPath basePath = getRuntimeBaseDirectory();
 		IPath workPath = getTomcatConfiguration().getServerWorkDirectory(basePath);
 		if (workPath != null) {
 			File workDir = workPath.toFile();
@@ -957,7 +945,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 */
 	public IStatus cleanContextWorkDir(ITomcatWebModule module, IProgressMonitor monitor) throws CoreException {
 		IStatus result;
-		IPath basePath = getTomcatVersionHandler().getRuntimeBaseDirectory(this);
+		IPath basePath = getRuntimeBaseDirectory();
 		IPath workPath = getTomcatConfiguration().getContextWorkDirectory(basePath, module);
 		if (workPath != null) {
 			IStatus [] results = PublishUtil.deleteDirectory(workPath.toFile(), monitor);

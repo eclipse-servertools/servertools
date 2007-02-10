@@ -13,29 +13,18 @@ package org.eclipse.jst.server.tomcat.ui.internal.editor;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jst.server.tomcat.core.internal.ITomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.command.SetDebugModeCommand;
-import org.eclipse.jst.server.tomcat.core.internal.command.SetDeployDirectoryCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.SetSecureCommand;
-import org.eclipse.jst.server.tomcat.core.internal.command.SetTestEnvironmentCommand;
 import org.eclipse.jst.server.tomcat.ui.internal.ContextIds;
 import org.eclipse.jst.server.tomcat.ui.internal.Messages;
-import org.eclipse.jst.server.tomcat.ui.internal.TomcatUIPlugin;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
@@ -43,10 +32,8 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
-import org.eclipse.wst.server.core.IPublishListener;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.util.PublishAdapter;
-import org.eclipse.wst.server.ui.editor.ServerEditorSection;
+
+import org.eclipse.wst.server.ui.editor.*;
 /**
  * Tomcat server general editor page.
  */
@@ -55,15 +42,9 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 
 	protected Button secure;
 	protected Button debug;
-	protected Button testEnvironment;
-	protected Text deployDir;
-	protected Button deployDirBrowse;
 	protected boolean updating;
 
 	protected PropertyChangeListener listener;
-	protected IPublishListener publishListener;
-	
-	boolean allowRestrictedEditing;
 
 	/**
 	 * ServerGeneralEditorPart constructor comment.
@@ -75,7 +56,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 	/**
 	 * 
 	 */
-	protected void addChangeListeners() {
+	protected void addChangeListener() {
 		listener = new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
 				if (updating)
@@ -87,39 +68,11 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 				} else if (TomcatServer.PROPERTY_DEBUG.equals(event.getPropertyName())) {
 					Boolean b = (Boolean) event.getNewValue();
 					ServerGeneralEditorSection.this.debug.setSelection(b.booleanValue());
-				} else if (ITomcatServer.PROPERTY_TEST_ENVIRONMENT.equals(event.getPropertyName())) {
-					Boolean b = (Boolean) event.getNewValue();
-					ServerGeneralEditorSection.this.testEnvironment.setSelection(b.booleanValue());
-				} else if (ITomcatServer.PROPERTY_DEPLOYDIR.equals(event.getPropertyName())) {
-					String s = (String) event.getNewValue();
-					ServerGeneralEditorSection.this.deployDir.setText(s);
-					validate();
 				}
 				updating = false;
 			}
 		};
 		server.addPropertyChangeListener(listener);
-		
-		publishListener = new PublishAdapter() {
-			public void publishFinished(IServer server2, IStatus status) {
-				boolean flag = false;
-				if (status.isOK() && server2.getModules().length == 0)
-					flag = true;
-				if (flag != allowRestrictedEditing) {
-					allowRestrictedEditing = flag;
-					// Update the state of the fields
-					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							if (!ServerGeneralEditorSection.this.deployDir.isDisposed())
-								ServerGeneralEditorSection.this.deployDir.setEnabled(allowRestrictedEditing);
-							if (!ServerGeneralEditorSection.this.deployDirBrowse.isDisposed())
-								ServerGeneralEditorSection.this.deployDirBrowse.setEnabled(allowRestrictedEditing);
-						}
-					});
-				}
-			}
-		};
-		server.getOriginal().addPublishListener(publishListener);
 	}
 	
 	/**
@@ -151,72 +104,9 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 		
-		// deployment directory
-		Label label = toolkit.createLabel(composite, Messages.serverEditorDeployDir);
-		GridData data = new GridData(SWT.BEGINNING, SWT.CENTER, false, false);
-		label.setLayoutData(data);
-		
-		deployDir = toolkit.createText(composite, null);
-		data = new GridData(SWT.FILL, SWT.CENTER, true, false);
-		deployDir.setLayoutData(data);
-		deployDir.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				if (updating)
-					return;
-				updating = true;
-				execute(new SetDeployDirectoryCommand(tomcatServer, deployDir.getText()));
-				updating = false;
-				validate();
-			}
-		});
-		
-		deployDirBrowse = toolkit.createButton(composite, Messages.configurationEditorBrowseDeploy, SWT.PUSH);
-		deployDirBrowse.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent se) {
-				DirectoryDialog dialog = new DirectoryDialog(deployDir.getShell());
-				dialog.setMessage(Messages.configurationEditorBrowseDeployMessage);
-				dialog.setFilterPath(deployDir.getText());
-				String selectedDirectory = dialog.open();
-				if (selectedDirectory != null && !selectedDirectory.equals(deployDir.getText())) {
-					updating = true;
-					execute(new SetDeployDirectoryCommand(tomcatServer, selectedDirectory));
-					deployDir.setText(selectedDirectory);
-					updating = false;
-					validate();
-				}
-			}
-		});
-		deployDirBrowse.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
-		
-		label = toolkit.createLabel(composite, Messages.serverEditorSpecialFieldsLabel);
-		data = new GridData(SWT.BEGINNING, SWT.CENTER, true, false);
-		data.horizontalSpan = 3;
-		label.setLayoutData(data);
-
-		Label separator = toolkit.createSeparator(composite, SWT.HORIZONTAL);
-		data = new GridData(SWT.FILL, SWT.CENTER, true, false);
-		data.horizontalSpan = 3;
-		separator.setLayoutData(data);
-		
-		// test environment
-		testEnvironment = toolkit.createButton(composite, Messages.serverEditorTestEnvironment, SWT.CHECK);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 3;
-		testEnvironment.setLayoutData(data);
-		testEnvironment.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent se) {
-				if (updating)
-					return;
-				updating = true;
-				execute(new SetTestEnvironmentCommand(tomcatServer, testEnvironment.getSelection()));
-				updating = false;
-			}
-		});
-		whs.setHelp(testEnvironment, ContextIds.SERVER_EDITOR_TEST_ENVIRONMENT);
-
 		// security
 		secure = toolkit.createButton(composite, Messages.serverEditorSecure, SWT.CHECK);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 3;
 		secure.setLayoutData(data);
 		secure.addSelectionListener(new SelectionAdapter() {
@@ -248,16 +138,13 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 	
 		initialize();
 	}
-	
+
 	/**
 	 * @see ServerEditorSection#dispose()
 	 */
 	public void dispose() {
-		if (server != null) {
+		if (server != null)
 			server.removePropertyChangeListener(listener);
-			if (server.getOriginal() != null)
-				server.getOriginal().removePublishListener(publishListener);
-		}
 	}
 
 	/**
@@ -268,7 +155,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		
 		if (server != null) {
 			tomcatServer = (TomcatServer) server.loadAdapter(TomcatServer.class, null);
-			addChangeListeners();
+			addChangeListener();
 		}
 		initialize();
 	}
@@ -280,19 +167,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		if (secure == null || tomcatServer == null)
 			return;
 		updating = true;
-		
-		allowRestrictedEditing = false;
-		if (server.getOriginal().getServerPublishState() == IServer.PUBLISH_STATE_NONE
-				&& server.getOriginal().getModules().length == 0) {
-			allowRestrictedEditing = true;
-		}
-		
-		deployDir.setText(tomcatServer.getDeployDirectory());
-		deployDir.setEnabled(allowRestrictedEditing);
-		
-		deployDirBrowse.setEnabled(allowRestrictedEditing);
 
-		testEnvironment.setSelection(tomcatServer.isTestEnvironment());
 		secure.setSelection(tomcatServer.isSecure());
 		if (server.getRuntime() != null && server.getRuntime().getRuntimeType().getId().indexOf("32") >= 0 || readOnly)
 			debug.setEnabled(false);
@@ -307,32 +182,5 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 			secure.setEnabled(true);
 		
 		updating = false;
-		validate();
-	}
-	
-	/**
-	 * @see ServerEditorSection#getSaveStatus()
-	 */
-	public IStatus[] getSaveStatus() {
-		if (tomcatServer != null) {
-			String dir = tomcatServer.getDeployDirectory();
-			if (dir == null || dir.length() == 0) {
-				return new IStatus [] {
-						new Status(IStatus.ERROR, TomcatUIPlugin.PLUGIN_ID, Messages.errorDeployDirNotSpecified)};
-			}
-		}
-		// use default implementation to return success
-		return super.getSaveStatus();
-	}
-	
-	protected void validate() {
-		if (tomcatServer != null) {
-			String dir = tomcatServer.getDeployDirectory();
-			if (dir == null || dir.length() == 0) {
-				setErrorMessage(Messages.errorDeployDirNotSpecified);
-				return;
-			}
-		}
-		setErrorMessage(null);
 	}
 }
