@@ -6,7 +6,6 @@ Bundle-Version: 1.0.200.qualifier
 Bundle-ClassPath: monitortests.jar
 Bundle-Activator: org.eclipse.wst.internet.monitor.ui.tests.TestsPlugin
 Bundle-Vendor: Eclipse.org
-Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.internet.monitor.ui.tests,
  org.eclipse.wst.internet.monitor.ui.tests.extension
 Require-Bundle: org.eclipse.core.runtime,

@@ -6,7 +6,6 @@ Bundle-Version: 1.0.200.qualifier
 Bundle-ClassPath: performance.jar
 Bundle-Activator: org.eclipse.wst.server.tests.performance.TestsPlugin
 Bundle-Vendor: Eclipse.org
-Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.server.tests.performance,
  org.eclipse.wst.server.tests.performance.common
 Require-Bundle: org.junit,
