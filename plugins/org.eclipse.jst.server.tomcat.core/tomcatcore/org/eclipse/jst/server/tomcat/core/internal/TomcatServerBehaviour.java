@@ -126,7 +126,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		IPath installPath = getServer().getRuntime().getLocation();
 		IPath configPath = getRuntimeBaseDirectory();
 		return getTomcatVersionHandler().getRuntimeVMArguments(installPath, configPath,
-				getTomcatServer().isTestEnvironment());
+				getServerDeployDirectory(), getTomcatServer().isTestEnvironment());
 	}
 	
 	protected String getRuntimePolicyFile() {
@@ -970,13 +970,7 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 * @return full path to deployment directory for the server
 	 */
 	public IPath getServerDeployDirectory() {
-		String deployDir = getTomcatServer().getDeployDirectory();
-		IPath deployPath = new Path(deployDir);
-		if (!deployPath.isAbsolute()) {
-			IPath base = getRuntimeBaseDirectory();
-			deployPath = base.append(deployPath);
-		}
-		return deployPath;
+		return getTomcatServer().getServerDeployDirectory();
 	}
 	
 	/**

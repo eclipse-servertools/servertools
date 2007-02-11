@@ -18,6 +18,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -136,6 +137,32 @@ public class TomcatVersionHelper {
 		// Return runtime path
 		return ts.getServer().getRuntime().getLocation();
 	}
+
+	/**
+	 * Gets the startup VM arguments for the Catalina server.
+	 * 
+	 * @param installPath installation path for the server
+	 * @param instancePath instance path for the server
+	 * @param deployPath deploy path for the server
+	 * @param isTestEnv test environment flag
+	 * @return array of strings containing VM arguments
+	 */
+	public static String[] getCatalinaVMArguments(IPath installPath, IPath instancePath, IPath deployPath, boolean isTestEnv) {
+		List list = new ArrayList();
+		if (isTestEnv)
+			list.add("-Dcatalina.base=\"" + instancePath.toOSString() + "\"");
+		else 
+			list.add("-Dcatalina.base=\"" + installPath.toOSString() + "\"");
+		list.add("-Dcatalina.home=\"" + installPath.toOSString() + "\"");
+		// Include a system property for the configurable deploy location
+		list.add("-Dcatalina.deploy=\"" + deployPath.toOSString() + "\"");
+		list.add("-Djava.endorsed.dirs=\"" + installPath.append("common").append("endorsed").toOSString() + "\"");
+		
+		String[] s = new String[list.size()];
+		list.toArray(s);
+		return s;
+	}
+
 	
 	/**
 	 * Gets a ServerInstance for the specified server.xml, Service name,

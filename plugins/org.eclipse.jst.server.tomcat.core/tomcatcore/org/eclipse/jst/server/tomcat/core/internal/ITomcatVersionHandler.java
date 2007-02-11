@@ -71,10 +71,11 @@ public interface ITomcatVersionHandler {
 	 * 
 	 * @param installPath installation path for the server
 	 * @param configPath configuration path for the server
+	 * @param deployPath deploy path for the server
 	 * @param isTestEnv test environment flag
 	 * @return array of VM arguments for starting the server
 	 */
-	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isTestEnv);
+	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, IPath deployPath, boolean isTestEnv);
 
 	/**
 	 * Gets the contents of the Java policy file for the Tomcat server.

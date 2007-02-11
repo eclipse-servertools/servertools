@@ -82,15 +82,17 @@ public class Tomcat40Handler implements ITomcatVersionHandler {
 	}
 	
 	/**
-	 * @see ITomcatVersionHandler#getRuntimeVMArguments(IPath, IPath, boolean)
+	 * @see ITomcatVersionHandler#getRuntimeVMArguments(IPath, IPath, IPath, boolean)
 	 */
-	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isTestEnv) {
+	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, IPath deployPath, boolean isTestEnv) {
 		List list = new ArrayList();
 		if (isTestEnv)
 			list.add("-Dcatalina.base=\"" + configPath.toOSString() + "\"");
 		else 
 			list.add("-Dcatalina.base=\"" + installPath.toOSString() + "\"");
 		list.add("-Dcatalina.home=\"" + installPath.toOSString() + "\"");
+		// Include a system property for the configurable deploy location
+		list.add("-Dcatalina.deploy=\"" + deployPath.toOSString() + "\"");
 		String endorsed = installPath.append("bin").toOSString() +
 			installPath.append("common").append("lib").toOSString();
 		list.add("-Djava.endorsed.dirs=\"" + endorsed + "\"");

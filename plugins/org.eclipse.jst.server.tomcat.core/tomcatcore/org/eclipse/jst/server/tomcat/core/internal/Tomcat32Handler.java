@@ -82,11 +82,13 @@ public class Tomcat32Handler implements ITomcatVersionHandler {
 	}
 	
 	/**
-	 * @see ITomcatVersionHandler#getRuntimeVMArguments(IPath, IPath, boolean)
+	 * @see ITomcatVersionHandler#getRuntimeVMArguments(IPath, IPath, IPath, boolean)
 	 */
-	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isTestEnv) {
+	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, IPath deployPath, boolean isTestEnv) {
 		List list = new ArrayList();
 		list.add("-Dtomcat.home=\"" + installPath.toOSString() + "\"");
+		// Include a system property for the configurable deploy location
+		list.add("-Dtomcat.deploy=\"" + deployPath.toOSString() + "\"");
 		
 		String[] s = new String[list.size()];
 		list.toArray(s);

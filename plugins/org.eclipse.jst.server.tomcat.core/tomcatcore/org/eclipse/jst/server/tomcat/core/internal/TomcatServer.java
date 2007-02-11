@@ -235,6 +235,22 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		return null;
 	}
 
+	/**
+	 * Gets the directory to which modules should be deployed for
+	 * this server.
+	 * 
+	 * @return full path to deployment directory for the server
+	 */
+	public IPath getServerDeployDirectory() {
+		String deployDir = getDeployDirectory();
+		IPath deployPath = new Path(deployDir);
+		if (!deployPath.isAbsolute()) {
+			IPath base = getRuntimeBaseDirectory();
+			deployPath = base.append(deployPath);
+		}
+		return deployPath;
+	}
+	
 	protected static String renderCommandLine(String[] commandLine, String separator) {
 		if (commandLine == null || commandLine.length < 1)
 			return "";

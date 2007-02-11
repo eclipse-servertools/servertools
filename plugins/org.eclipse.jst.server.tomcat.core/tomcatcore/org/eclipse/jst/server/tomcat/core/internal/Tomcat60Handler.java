@@ -76,20 +76,10 @@ public class Tomcat60Handler implements ITomcatVersionHandler {
 	}
 	
 	/**
-	 * @see ITomcatVersionHandler#getRuntimeVMArguments(IPath, IPath, boolean)
+	 * @see ITomcatVersionHandler#getRuntimeVMArguments(IPath, IPath, IPath, boolean)
 	 */
-	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, boolean isTestEnv) {
-		List list = new ArrayList();
-		if (isTestEnv)
-			list.add("-Dcatalina.base=\"" + configPath.toOSString() + "\"");
-		else 
-			list.add("-Dcatalina.base=\"" + installPath.toOSString() + "\"");
-		list.add("-Dcatalina.home=\"" + installPath.toOSString() + "\"");
-		list.add("-Djava.endorsed.dirs=\"" + installPath.append("endorsed").toOSString() + "\"");
-		
-		String[] s = new String[list.size()];
-		list.toArray(s);
-		return s;
+	public String[] getRuntimeVMArguments(IPath installPath, IPath configPath, IPath deployPath, boolean isTestEnv) {
+		return TomcatVersionHelper.getCatalinaVMArguments(installPath, configPath, deployPath, isTestEnv);
 	}
 
 	/**
