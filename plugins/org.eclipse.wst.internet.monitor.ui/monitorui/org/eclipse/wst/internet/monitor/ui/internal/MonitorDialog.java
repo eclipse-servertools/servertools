@@ -38,9 +38,10 @@ import org.eclipse.wst.internet.monitor.core.internal.provisional.MonitorCore;
 public class MonitorDialog extends Dialog {
 	protected IMonitorWorkingCopy monitor;
 	protected boolean isEdit;
-	
+
 	private Button okButton;
 	private Spinner monitorPort;
+	private Label validateLabel;
 
 	interface StringModifyListener {
 		public void valueChanged(String s);
@@ -162,7 +163,7 @@ public class MonitorDialog extends Dialog {
 		
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, ContextIds.PREF_DIALOG);
 		
-		createLabel(composite, Messages.localPort);		
+		createLabel(composite, Messages.localPort);
 		monitorPort = createSpinner(composite, monitor.getLocalPort(), new IntModifyListener() {
 			public void valueChanged(int i) {
 				try {
@@ -182,7 +183,7 @@ public class MonitorDialog extends Dialog {
 		group.setLayoutData(data);
 		group.setText(Messages.remoteGroup);
 		
-		createLabel(group, Messages.remoteHost);		
+		createLabel(group, Messages.remoteHost);
 		createText(group, monitor.getRemoteHost(), new StringModifyListener() {
 			public void valueChanged(String s) {
 				monitor.setRemoteHost(s);
@@ -190,7 +191,7 @@ public class MonitorDialog extends Dialog {
 			}
 		});
 		
-		createLabel(group, Messages.remotePort);		
+		createLabel(group, Messages.remotePort);
 		createSpinner(group, monitor.getRemotePort(), new IntModifyListener() {
 			public void valueChanged(int i) {
 				try {
@@ -202,7 +203,7 @@ public class MonitorDialog extends Dialog {
 			}
 		});
 		
-		createLabel(group, Messages.parseType);		
+		createLabel(group, Messages.parseType);
 		createTypeCombo(group, new String[] {"TCP/IP","HTTP"}, monitor.getProtocol(), new StringModifyListener() {
 			public void valueChanged(String protocolId) {
 				monitor.setProtocol(protocolId);
@@ -220,6 +221,9 @@ public class MonitorDialog extends Dialog {
 				validateFields();
 			}
 		});
+		
+		validateLabel = createLabel(composite, "");
+		validateLabel.setForeground(composite.getDisplay().getSystemColor(SWT.COLOR_RED));
 		
 		return composite;
 	}
@@ -257,8 +261,14 @@ public class MonitorDialog extends Dialog {
 		
 		boolean result = true;
 		IStatus status = monitor.validate();
-		if (!status.isOK())
+		if (!status.isOK()) {
+			if (monitor.getRemoteHost() == null || monitor.getRemoteHost().length() < 1)
+				validateLabel.setText("");
+			else
+				validateLabel.setText(status.getMessage());
 			result = false;
+		} else
+			validateLabel.setText("");
 		
 		setOKButtonEnabled(result);
 	}
