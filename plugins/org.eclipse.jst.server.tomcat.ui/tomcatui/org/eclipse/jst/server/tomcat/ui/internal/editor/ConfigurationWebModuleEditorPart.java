@@ -259,7 +259,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 		
 		form.setContent(section);
 		form.reflow(true);
-
+		
 		initialize();
 	}
 
@@ -323,8 +323,7 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 		while (iterator.hasNext()) {
 			WebModule module = (WebModule) iterator.next();
 			TableItem item = new TableItem(webAppTable, SWT.NONE);
-	
-			// FIX-ME
+			
 			String memento = module.getMemento();
 			String projectName = "";
 			Image projectImage = null;
@@ -333,7 +332,6 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 				projectImage = TomcatUIPlugin.getImage(TomcatUIPlugin.IMG_PROJECT_MISSING);
 				IModule module2 = ServerUtil.getModule(memento);
 				if (module2 != null) {
-					
 					projectName = labelProvider.getText(module2);
 					projectImage = labelProvider.getImage(module2);
 					item.setData(module2);
