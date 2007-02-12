@@ -6,7 +6,6 @@ Bundle-Version: 1.0.200.qualifier
 Bundle-ClassPath: tests.jar
 Bundle-Activator: org.eclipse.jst.server.tomcat.core.tests.TestsPlugin
 Bundle-Vendor: Eclipse.org
-Bundle-Localization: plugin
 Export-Package: org.eclipse.jst.server.tomcat.core.tests,
  org.eclipse.jst.server.tomcat.core.tests.internal;x-internal:=true,
  org.eclipse.jst.server.tomcat.core.tests.module
