@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.FormColors;
+import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -241,8 +241,15 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 				String selectedDirectory = dialog.open();
 				if (selectedDirectory != null && !selectedDirectory.equals(serverDir.getText())) {
 					updating = true;
+					// Make relative if relative to the workspace
+					IPath path = new Path(selectedDirectory);
+					if (workspacePath.isPrefixOf(path)) {
+						int cnt = path.matchingFirstSegments(workspacePath);
+						path = path.removeFirstSegments(cnt).setDevice(null);
+						selectedDirectory = path.toOSString();
+					}
 					execute(new SetInstanceDirectoryCommand(tomcatServer, selectedDirectory));
-					serverDir.setText(selectedDirectory);
+					updateServerDirFields();
 					updating = false;
 					validate();
 				}
@@ -257,6 +264,8 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 			public void linkActivated(HyperlinkEvent e) {
 				updating = true;
 				execute(new SetDeployDirectoryCommand(tomcatServer, ITomcatServerWorkingCopy.DEFAULT_DEPLOYDIR));
+				deployDir.setText(ITomcatServerWorkingCopy.DEFAULT_DEPLOYDIR);
+				updateDefaultDeployLink();
 				updating = false;
 				validate();
 			}
@@ -308,7 +317,7 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 
 	protected Label createLabel(FormToolkit toolkit, Composite parent, String text) {
 		Label label = toolkit.createLabel(parent, text);
-		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		return label;
 	}
 
@@ -399,7 +408,7 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 			// If under the workspace, make relative
 			else if (workspacePath.isPrefixOf(path)) {
 				int cnt = path.matchingFirstSegments(workspacePath);
-				path = path.removeFirstSegments(cnt);
+				path = path.removeFirstSegments(cnt).setDevice(null);
 				dir = path.toOSString();
 			}
 		}
@@ -436,7 +445,7 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 		IPath path = tomcatServer.getRuntimeBaseDirectory();
 		if (workspacePath.isPrefixOf(path)) {
 			int cnt = path.matchingFirstSegments(workspacePath);
-			path = path.removeFirstSegments(cnt);
+			path = path.removeFirstSegments(cnt).setDevice(null);
 			serverDir.setText(path.toOSString());
 			// cache the relative temp dir path if that is what we have
 			if (tempDirPath == null) {
