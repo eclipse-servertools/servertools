@@ -103,6 +103,13 @@ public class ModuleFactory implements IOrdered {
 	/*
 	 * @see ModuleFactoryDelegate#getModules()
 	 */
+	public IModule[] getModules() {
+		return getModules(null);
+	}
+
+	/*
+	 * @see ModuleFactoryDelegate#getModules()
+	 */
 	public IModule[] getModules(IProgressMonitor monitor) {
 		try {
 			return getDelegate(monitor).getModules();
