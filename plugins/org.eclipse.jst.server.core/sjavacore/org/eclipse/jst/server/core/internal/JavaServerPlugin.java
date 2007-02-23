@@ -28,7 +28,6 @@ import org.eclipse.wst.server.core.IRuntimeLifecycleListener;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 /**
  * The main server tooling plugin class.
@@ -57,9 +56,6 @@ public class JavaServerPlugin extends Plugin {
 	// runtime listener
 	private static IRuntimeLifecycleListener runtimeListener;
 
-	// cached bundle context
-	private BundleContext context;
-
 	/**
 	 * Create the JavaServerPlugin.
 	 */
@@ -80,9 +76,8 @@ public class JavaServerPlugin extends Plugin {
 	/**
 	 * @see Plugin#start(org.osgi.framework.BundleContext)
 	 */
-	public void start(BundleContext context2) throws Exception {
-		super.start(context2);
-		this.context = context2;
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
 		
 		runtimeListener = new IRuntimeLifecycleListener() {
 			public void runtimeAdded(IRuntime runtime) {
@@ -431,28 +426,5 @@ public class JavaServerPlugin extends Plugin {
 		serverProfilers = list;
 		
 		Trace.trace(Trace.CONFIG, "-<- Done loading .serverProfilers extension point -<-");
-	}
-
-	protected void startContributor(IContributor contributor) {
-		if (contributor == null)
-			return;
-		
-		String name = contributor.getName();
-		if (name == null)
-			return;
-		
-		try {
-			Bundle[] bundles = context.getBundles();
-			int size = bundles.length;
-			for (int i = 0; i < size; i++) {
-				if (name.equals(bundles[i].getSymbolicName())) {
-					// try to lazy start the bundle
-					bundles[i].loadClass("does.not.exist.Test");
-					return;
-				}
-			}
-		} catch (Throwable t) {
-			// ignore
-		}
 	}
 }

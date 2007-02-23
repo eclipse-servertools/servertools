@@ -11,11 +11,13 @@
 package org.eclipse.jst.server.core.internal;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.jst.server.core.ServerProfilerDelegate;
 /**
  * 
  */
 public class ServerProfiler {
 	private IConfigurationElement element;
+	private ServerProfilerDelegate delegate;
 
 	/**
 	 * Create a new server profiler.
@@ -43,15 +45,47 @@ public class ServerProfiler {
 		return element.getAttribute("name");
 	}
 
+	/*
+	 * Loads the delegate class.
+	 */
+	protected ServerProfilerDelegate getDelegate() {
+		if (delegate == null) {
+			if (element.getAttribute("class") == null)
+				return null;
+			try {
+				delegate = (ServerProfilerDelegate) element.createExecutableExtension("class");
+			} catch (Throwable t) {
+				Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + t.getMessage());
+			}
+		}
+		return delegate;
+	}
+
 	/**
 	 * 
 	 * @return the VM args
 	 */
 	public String getVMArgs() {
-		// about to launch with profiling. make sure that the profiling plugin is started
-		JavaServerPlugin.getInstance().startContributor(element.getContributor());
+		try {
+			ServerProfilerDelegate del = getDelegate();
+			if (del != null)
+				return del.getVMArguments();
+		} catch (Throwable t) {
+			Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + t.getMessage());
+		}
 		
 		return element.getAttribute("vmArgs");
+	}
+
+	public String[] getEnvironmentVariables() {
+		try {
+			ServerProfilerDelegate del = getDelegate();
+			if (del != null)
+				return del.getEnvironmentVariables();
+		} catch (Throwable t) {
+			Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + t.getMessage());
+		}
+		return null;
 	}
 
 	public String toString() {
