@@ -11,6 +11,7 @@
 package org.eclipse.wst.server.core;
 
 import org.eclipse.core.runtime.*;
+import org.eclipse.debug.core.ILaunchConfiguration;
 /**
  * Represents a server instance. Every server is an instance of a
  * particular, fixed server type.
@@ -681,4 +682,21 @@ public interface IServer extends IServerAttributes {
 	 *    required
 	 */
 	public void restartModule(IModule[] module, IOperationListener listener);
+
+	/**
+	 * Return the launch configuration for this server. If one does not exist, it
+	 * will be created if "create" is true, and otherwise will return <code>null</code>.
+	 * Will return <code>null</code> if this server type is invalid or has no associated
+	 * launch configuration type (i.e. this server type cannot be started).
+	 * 
+	 * @param create <code>true</code> if a new launch configuration should be
+	 *    created if there are none already
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @return the launch configuration, or <code>null</code> if there was no
+	 *    existing launch configuration and <code>create</code> was false
+	 * @throws CoreException
+	 * @since 2.0
+	 */
+	public ILaunchConfiguration getLaunchConfiguration(boolean create, IProgressMonitor monitor) throws CoreException;
 }
