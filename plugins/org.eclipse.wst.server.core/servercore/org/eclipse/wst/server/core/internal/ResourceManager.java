@@ -209,12 +209,13 @@ public class ResourceManager {
 			e.printStackTrace();
 		}*/
 		
-		executeStartups();
-		
 		servers = new ArrayList();
 		activeBundles = new ArrayList();
+		
 		loadRuntimesList();
 		loadServersList();
+		
+		executeStartups();
 		
 		pcl = new Preferences.IPropertyChangeListener() {
 			public void propertyChange(Preferences.PropertyChangeEvent event) {
