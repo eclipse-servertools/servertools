@@ -45,7 +45,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 import org.eclipse.ui.dialogs.PreferencesUtil;
-import org.eclipse.ui.forms.FormColors;
+import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.*;
@@ -56,6 +56,7 @@ import org.eclipse.wst.server.core.internal.ServerType;
 import org.eclipse.wst.server.core.util.SocketUtil;
 import org.eclipse.wst.server.ui.editor.*;
 import org.eclipse.wst.server.ui.internal.ContextIds;
+import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
@@ -166,7 +167,9 @@ public class OverviewEditorPart extends ServerEditorPart {
 		FormToolkit toolkit = getFormToolkit(parent.getDisplay());
 		
 		ScrolledForm form = toolkit.createScrolledForm(parent);
+		toolkit.decorateFormHeading(form.getForm());
 		form.setText(Messages.serverEditorOverviewPageTitle);
+		form.setImage(ImageResource.getImage(ImageResource.IMG_SERVER));
 		form.getBody().setLayout(new GridLayout());
 		
 		Composite columnComp = toolkit.createComposite(form.getBody());
@@ -213,18 +216,18 @@ public class OverviewEditorPart extends ServerEditorPart {
 	}
 
 	protected void createGeneralSection(Composite leftColumnComp, FormToolkit toolkit) {
-		Section section = toolkit.createSection(leftColumnComp, ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED | ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
+		Section section = toolkit.createSection(leftColumnComp, ExpandableComposite.TITLE_BAR | Section.DESCRIPTION);
 		section.setText(Messages.serverEditorOverviewGeneralSection);
 		section.setDescription(Messages.serverEditorOverviewGeneralDescription);
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
-
+		
 		Composite composite = toolkit.createComposite(section);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 3;
 		layout.marginHeight = 5;
 		layout.marginWidth = 10;
 		layout.verticalSpacing = 5;
-		layout.horizontalSpacing = 15;
+		layout.horizontalSpacing = 5;
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
@@ -650,7 +653,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 
 	protected Label createLabel(FormToolkit toolkit, Composite parent, String text) {
 		Label label = toolkit.createLabel(parent, text);
-		label.setForeground(toolkit.getColors().getColor(FormColors.TITLE));
+		label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 		return label;
 	}
 

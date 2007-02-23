@@ -221,7 +221,7 @@ public class NewManualServerComposite extends Composite {
 					updateRuntimes(serverType);
 					setRuntime(getDefaultRuntime());
 					
-					if (server.getServerType().hasServerConfiguration() && !runtime.getLocation().isEmpty())
+					if (server.getServerType() != null && server.getServerType().hasServerConfiguration() && !runtime.getLocation().isEmpty())
 						((ServerWorkingCopy)server).importRuntimeConfiguration(runtime, null);
 				}
 				((ServerWorkingCopy)server).setDefaults(null);

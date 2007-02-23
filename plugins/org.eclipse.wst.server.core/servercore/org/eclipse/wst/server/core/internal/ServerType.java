@@ -194,7 +194,7 @@ public class ServerType implements IServerType {
 			swc.setRuntime(runtime);
 		swc.setDefaults(monitor);
 		
-		if (hasServerConfiguration() && runtime != null && !runtime.getLocation().isEmpty())
+		if (hasServerConfiguration() && runtime != null && runtime.getLocation() != null && !runtime.getLocation().isEmpty())
 			swc.importRuntimeConfiguration(runtime, null);
 		
 		return swc;

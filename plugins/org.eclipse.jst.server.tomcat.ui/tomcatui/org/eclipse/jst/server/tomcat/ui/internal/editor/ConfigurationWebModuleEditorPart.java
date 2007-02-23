@@ -106,19 +106,23 @@ public class ConfigurationWebModuleEditorPart extends ServerEditorPart {
 	 */
 	public void createPartControl(Composite parent) {
 		FormToolkit toolkit = getFormToolkit(parent.getDisplay());
-
+		
 		ScrolledForm form = toolkit.createScrolledForm(parent);
+		toolkit.decorateFormHeading(form.getForm());
 		form.setText(Messages.configurationEditorWebModulesPageTitle);
-		form.getBody().setLayout(new GridLayout());
-	
-		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED
-			| ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
+		form.setImage(TomcatUIPlugin.getImage(TomcatUIPlugin.IMG_WEB_MODULE));
+		GridLayout layout = new GridLayout();
+		layout.marginTop = 6;
+		layout.marginLeft = 6;
+		form.getBody().setLayout(layout);
+		
+		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.DESCRIPTION);
 		section.setText(Messages.configurationEditorWebModulesSection);
 		section.setDescription(Messages.configurationEditorWebModulesDescription);
 		section.setLayoutData(new GridData(GridData.FILL_BOTH));
-
+		
 		Composite composite = toolkit.createComposite(section);
-		GridLayout layout = new GridLayout();
+		layout = new GridLayout();
 		layout.numColumns = 2;
 		layout.marginHeight = 5;
 		layout.marginWidth = 10;

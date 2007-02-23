@@ -16,7 +16,6 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.debug.core.ILaunchConfiguration;
 
@@ -35,7 +34,7 @@ public class ServerUtil {
 	/**
 	 * Constant identifying the job family identifier for server operations.
 	 * 
-	 * @see IJobManager#join(Object, IProgressMonitor)
+	 * @see org.eclipse.core.runtime.jobs.IJobManager#join(Object, IProgressMonitor)
 	 * @since 2.0
 	 */
 	public static final Object SERVER_JOB_FAMILY = ServerPlugin.PLUGIN_ID;
