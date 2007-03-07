@@ -212,6 +212,15 @@ public abstract class ServerBehaviourDelegate {
 	}
 
 	/**
+	 * Sets the server's external modules.
+	 *
+	 * @param module the root external module
+	 */
+	protected final void setExternalModules(IModule[] module) {
+		server.setExternalModules(module);
+	}
+
+	/**
 	 * Disposes of this server delegate.
 	 * <p>
 	 * This method is called by the web server core framework.
@@ -653,6 +662,18 @@ public abstract class ServerBehaviourDelegate {
 		return multi;
 	}
 
+	/*private void printModule(IModuleResource[] res, String ind) {
+		int size = res.length;
+		for (int i = 0; i < size; i++) {
+			if (res[i] instanceof IModuleFolder) {
+				IModuleFolder f = (IModuleFolder) res[i];
+				printModule(f.members(), ind + "  ");
+			} else {
+				Trace.trace(Trace.INFO, ind + res[i].getName());
+			}
+		}
+	}*/
+
 	/**
 	 * Publish a single module.
 	 * 
@@ -672,6 +693,9 @@ public abstract class ServerBehaviourDelegate {
 		
 		IStatus status = Status.OK_STATUS;
 		try {
+			/*IModuleResource[] res = getResources(module);
+			System.out.println("-----" + module[0].getName());
+			printModule(res, "");*/
 			int kind2 = kind;
 			if (getServer().getModulePublishState(module) == IServer.PUBLISH_STATE_UNKNOWN)
 				kind2 = IServer.PUBLISH_FULL;

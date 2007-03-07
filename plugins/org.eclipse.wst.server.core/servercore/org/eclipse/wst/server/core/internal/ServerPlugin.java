@@ -252,10 +252,6 @@ public class ServerPlugin extends Plugin {
 		}
 	}
 
-	protected void initializeDefaultPluginPreferences() {
-		ServerPreferences.getInstance().setDefaults();
-	}
-
 	/**
 	 * @see Plugin#start(org.osgi.framework.BundleContext)
 	 */
@@ -264,7 +260,7 @@ public class ServerPlugin extends Plugin {
 		super.start(context);
 		bundleContext = context;
 		
-		initializeDefaultPluginPreferences();
+		ServerPreferences.getInstance().setDefaults();
 
 		// load temp directory information
 		loadTempDirInfo();
@@ -601,7 +597,7 @@ public class ServerPlugin extends Plugin {
 	 *
 	 * @param id the module factory id
 	 * @return the module factory, or <code>null</code> if there is no module factory
-	 * with the given id
+	 *    with the given id
 	 */
 	public static ModuleFactory findModuleFactory(String id) {
 		if (id == null)
@@ -615,6 +611,58 @@ public class ServerPlugin extends Plugin {
 			ModuleFactory factory = (ModuleFactory) iterator.next();
 			if (id.equals(factory.getId()))
 				return factory;
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the launchable adapter with the given id, or <code>null</code>
+	 * if none. This convenience method searches the list of known
+	 * launchable adapters ({@link #getLaunchableAdapters()}) for the one a matching
+	 * launchable adapter id ({@link ILaunchableAdapter#getId()}). The id may not be null.
+	 *
+	 * @param id the launchable adapter id
+	 * @return the launchable adapter, or <code>null</code> if there is no launchable adapter
+	 *    with the given id
+	 */
+	public static ILaunchableAdapter findLaunchableAdapter(String id) {
+		if (id == null)
+			throw new IllegalArgumentException();
+		
+		if (launchableAdapters == null)
+			loadLaunchableAdapters();
+		
+		Iterator iterator = launchableAdapters.iterator();
+		while (iterator.hasNext()) {
+			ILaunchableAdapter la = (ILaunchableAdapter) iterator.next();
+			if (id.equals(la.getId()))
+				return la;
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the client with the given id, or <code>null</code>
+	 * if none. This convenience method searches the list of known
+	 * clients ({@link #getClients()}) for the one a matching
+	 * client id ({@link IClient#getId()}). The id may not be null.
+	 *
+	 * @param id the client id
+	 * @return the client, or <code>null</code> if there is no client
+	 *    with the given id
+	 */
+	public static IClient findClient(String id) {
+		if (id == null)
+			throw new IllegalArgumentException();
+		
+		if (clients == null)
+			loadClients();
+		
+		Iterator iterator = clients.iterator();
+		while (iterator.hasNext()) {
+			IClient client = (IClient) iterator.next();
+			if (id.equals(client.getId()))
+				return client;
 		}
 		return null;
 	}
@@ -808,7 +856,7 @@ public class ServerPlugin extends Plugin {
 						Trace.trace(Trace.FINER, "ServerPlugin.hasModuleArtifact() - " + adapters[i].getId());
 						if (adapters[i].isDelegateLoaded()) {
 							long time = System.currentTimeMillis();
-							IModuleArtifact ma = adapters[i].getModuleArtifact(obj);
+							IModuleArtifact[] ma = adapters[i].getModuleArtifacts(obj);
 							Trace.trace(Trace.FINER, "Deep enabled time: " + (System.currentTimeMillis() - time));
 							if (ma != null) {
 								Trace.trace(Trace.FINER, "Deep enabled");
@@ -835,7 +883,7 @@ public class ServerPlugin extends Plugin {
 	 * @param obj
 	 * @return a module artifact, or null
 	 */
-	public static IModuleArtifact getModuleArtifact(Object obj) {
+	public static IModuleArtifact[] getModuleArtifacts(Object obj) {
 		Trace.trace(Trace.FINEST, "ServerPlugin.getModuleArtifact() " + obj);
 		ModuleArtifactAdapter[] adapters = getModuleArtifactAdapters();
 		if (adapters != null) {
@@ -843,7 +891,7 @@ public class ServerPlugin extends Plugin {
 			for (int i = 0; i < size; i++) {
 				try {
 					if (adapters[i].isEnabled(obj)) {
-						IModuleArtifact ma = adapters[i].getModuleArtifact(obj);
+						IModuleArtifact[] ma = adapters[i].getModuleArtifacts(obj);
 						if (ma != null)
 							return ma;
 						/*if (Platform.getAdapterManager().hasAdapter(obj, MODULE_ARTIFACT_CLASS)) {

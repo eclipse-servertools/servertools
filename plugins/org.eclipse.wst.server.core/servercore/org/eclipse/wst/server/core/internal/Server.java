@@ -78,6 +78,9 @@ public class Server extends Base implements IServer {
 	// the list of modules that are to be published to the server
 	protected List modules;
 
+	// the list of external modules
+	protected List externalModules;
+
 	// transient fields
 	protected transient String mode = ILaunchManager.RUN_MODE;
 	protected transient int serverState = STATE_UNKNOWN;
@@ -529,6 +532,10 @@ public class Server extends Base implements IServer {
 		fireModuleRestartChangeEvent(module);
 	}
 
+	public void setExternalModules(IModule[] modules) {
+		externalModules = Arrays.asList(modules);
+	}
+
 	protected void handleModuleProjectChange(IModule module) {
 		Trace.trace(Trace.FINEST, "> handleDeployableProjectChange() " + this + " " + module);
 		
@@ -975,6 +982,12 @@ public class Server extends Base implements IServer {
 		return getId()+"|"+op.getLabel();
 	}
 
+	/**
+	 * Returns a list containing module arrays of every module on the
+	 * server.
+	 * 
+	 * @return a list of IModule[]
+	 */
 	public List getAllModules() {
 		final List moduleList = new ArrayList();
 		
@@ -1863,7 +1876,7 @@ public class Server extends Base implements IServer {
 			return;
 		
 		final Object mutex = new Object();
-	
+		
 		// add listener to the server
 		IServerListener listener = new IServerListener() {
 			public void serverChanged(ServerEvent event) {
@@ -2190,8 +2203,18 @@ public class Server extends Base implements IServer {
 			}
 		}
 		
-		IModule[] modules2 = new IModule[modules.size()];
+		if (externalModules == null) {
+			IModule[] modules2 = new IModule[modules.size()];
+			modules.toArray(modules2);
+			return modules2;
+		}
+		
+		IModule[] modules2 = new IModule[modules.size() + externalModules.size()];
 		modules.toArray(modules2);
+		
+		Object[] obj = externalModules.toArray();
+		System.arraycopy(obj, 0, modules2, modules.size(), externalModules.size());
+		
 		return modules2;
 	}
 
@@ -2378,6 +2401,7 @@ public class Server extends Base implements IServer {
 	public void visit(IModuleVisitor visitor, IProgressMonitor monitor) {
 		if (visitor == null)
 			throw new IllegalArgumentException("Visitor cannot be null");
+		
 		IModule[] modules2 = getModules();
 		if (modules2 != null) { 
 			int size = modules2.length;

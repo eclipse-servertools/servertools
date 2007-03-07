@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,4 +34,18 @@ public abstract class ModuleArtifactAdapterDelegate {
 	 *    adapter does not recognize or cannot adapt the object
 	 */
 	public abstract IModuleArtifact getModuleArtifact(Object obj);
+
+	/**
+	 * Converts from an arbitrary object to an module artifact.
+	 *
+	 * @param obj an arbitrary object from a view or editor
+	 * @return an module artifact, or <code>null</code> if this
+	 *    adapter does not recognize or cannot adapt the object
+	 */
+	public IModuleArtifact[] getModuleArtifacts(Object obj) {
+		IModuleArtifact artifact = getModuleArtifact(obj);
+		if (artifact != null)
+			return new IModuleArtifact[] { artifact };
+		return null;
+	}
 }

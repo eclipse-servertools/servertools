@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,7 +22,11 @@ import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.core.internal.Server;
 import org.eclipse.wst.server.core.util.PublishAdapter;
 import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Tree;
@@ -34,6 +38,8 @@ import org.eclipse.ui.actions.ActionFactory;
  */
 public class ServerTableViewer extends TreeViewer {
 	protected static final String ROOT = "root";
+	protected static Color color;
+	protected static Font font;
 
 	protected IServerLifecycleListener serverResourceListener;
 	protected IPublishListener publishListener;
@@ -318,6 +324,16 @@ public class ServerTableViewer extends TreeViewer {
 		
 		if (getTree().getItemCount() > 0)
 			this.setSelection(new StructuredSelection(getTree().getItem(0).getData()));
+		
+		if (color == null) {
+			Display display = getControl().getDisplay();
+			color = display.getSystemColor(SWT.COLOR_DARK_GRAY);
+			FontData[] fd = getControl().getFont().getFontData();
+			int size = fd.length;
+			for (int i = 0; i < size; i++)
+				fd[i].setStyle(SWT.ITALIC);
+			font = new Font(display, fd);
+		}
 	}
 
 	protected Object[] adaptLabelChangeObjects(Object[] obj) {
@@ -557,11 +573,11 @@ public class ServerTableViewer extends TreeViewer {
 
 		view.getViewSite().getActionBars().getStatusLineManager().setMessage(null, null);
 	}
-	
+
 	/*protected void handleServerResourceRemoved(IServerConfiguration configuration) {
 		configurationChange(configuration, false);
 	}*/
-	
+
 	protected void addServer(final IServer server) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
@@ -569,7 +585,7 @@ public class ServerTableViewer extends TreeViewer {
 			}
 		});
 	}
-	
+
 	protected void removeServer(final IServer server) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
@@ -577,4 +593,23 @@ public class ServerTableViewer extends TreeViewer {
 			}
 		});
 	}
+
+	/*public void doUpdateItem(Widget widget, Object element, boolean fullMap) {
+		if (widget instanceof TreeItem && color != null) {
+			TreeItem item = (TreeItem) widget;
+			if (element instanceof ModuleServer) {
+				ModuleServer ms = (ModuleServer) element;
+				IModule m = ms.module[ms.module.length-1];
+				if ("external".equals(m.getId()))
+					item.setForeground(color);
+				else
+					item.setForeground(null);
+				if (ms.server.getModulePublishState(ms.module) != IServer.PUBLISH_STATE_NONE)
+					item.setFont(0, font);
+				else
+					item.setFont(0, null);
+			}
+		}
+		super.doUpdateItem(widget, element, fullMap);
+	}*/
 }

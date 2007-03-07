@@ -90,11 +90,11 @@ public class ServersView extends ViewPart {
 		column.setWidth(cols[0]);
 		
 		TreeColumn column2 = new TreeColumn(treeTable, SWT.SINGLE);
-		column2.setText(Messages.viewStatus);
+		column2.setText(Messages.viewState);
 		column2.setWidth(cols[1]);
 		
 		TreeColumn column3 = new TreeColumn(treeTable, SWT.SINGLE);
-		column3.setText(Messages.viewSync);
+		column3.setText(Messages.viewStatus);
 		column3.setWidth(cols[2]);
 		
 		deferInitialization();

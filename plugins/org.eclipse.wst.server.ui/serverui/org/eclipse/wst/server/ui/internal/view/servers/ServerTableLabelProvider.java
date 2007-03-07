@@ -43,6 +43,12 @@ public class ServerTableLabelProvider extends BaseLabelProvider implements ITabl
 		Messages.viewSyncRestartPublish2,
 		Messages.viewSyncPublishing2};
 
+	private static final String[] modulePublishState = new String[] {
+		"",
+		Messages.viewSyncOkay,
+		Messages.viewSyncPublish,
+		Messages.viewSyncPublish};
+
 	private int count = 0;
 
 	protected IServer defaultServer;
@@ -79,6 +85,13 @@ public class ServerTableLabelProvider extends BaseLabelProvider implements ITabl
 			} else if (columnIndex == 1) {
 				if (ms.server == null)
 					return null;
+				
+				/*int state = ms.server.getModuleState(ms.module);
+				if (state == IServer.STATE_STARTED)
+					return ImageResource.getImage(ImageResource.IMG_STATE_STARTED);
+				else if (state == IServer.STATE_STOPPED)
+					return ImageResource.getImage(ImageResource.IMG_STATE_STOPPED);
+				*/
 				return getStateImage(ms.server.getServerType(), ms.server.getModuleState(ms.module), null);
 			} else if (columnIndex == 2) {
 				IStatus status = ((Server) ms.server).getModuleStatus(ms.module);
@@ -143,14 +156,16 @@ public class ServerTableLabelProvider extends BaseLabelProvider implements ITabl
 				}
 				return name;
 			} else if (columnIndex == 1) {
-				if (ms.server == null)
-					return "";
-				return getStateLabel(ms.server.getServerType(), ms.server.getModuleState(ms.module), null);
+				//if (ms.server == null)
+				//	return "";
+				//return getStateLabel(ms.server.getServerType(), ms.server.getModuleState(ms.module), null);
+				return "";
 			} else if (columnIndex == 2) {
 				IStatus status = ((Server) ms.server).getModuleStatus(ms.module);
 				if (status != null)
 					return status.getMessage();
-				return "";
+				
+				return modulePublishState[ms.server.getModulePublishState(ms.module)];
 			}
 		}
 		IServer server = (IServer) element;
