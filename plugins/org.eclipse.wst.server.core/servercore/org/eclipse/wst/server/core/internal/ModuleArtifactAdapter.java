@@ -43,7 +43,7 @@ public class ModuleArtifactAdapter {
 	public String getId() {
 		return element.getAttribute("id");
 	}
-	
+
 	/**
 	 * Returns the relative priority of this adapter.
 	 *
@@ -87,7 +87,7 @@ public class ModuleArtifactAdapter {
 		}
 		return fContextualLaunchExpr;
 	}
-	
+
 	/**
 	 * Evaluate the given expression within the given context and return
 	 * the result. Returns <code>true</code> iff result is either TRUE or NOT_LOADED.
@@ -103,7 +103,7 @@ public class ModuleArtifactAdapter {
 	protected boolean evalEnablementExpression(IEvaluationContext context, Expression exp) throws CoreException {
 		return (exp != null) ? ((exp.evaluate(context)) != EvaluationResult.FALSE) : false;
 	}
-	
+
 	/**
 	 * @return an Evaluation context with default variable = selection
 	 */
@@ -165,26 +165,26 @@ public class ModuleArtifactAdapter {
 		}
 		return delegate;
 	}
-	
+
 	public boolean isDelegateLoaded() {
 		return (delegate != null);
 	}
 
 	/**
-	 * Returns the module artifact.
+	 * Returns the module artifacts.
 	 * 
 	 * @param obj an object
 	 * @return the module artifact, or <code>null</code>
 	 */
-	public IModuleArtifact getModuleArtifact(Object obj) {
+	public IModuleArtifact[] getModuleArtifacts(Object obj) {
 		try {
-			return getDelegate().getModuleArtifact(obj);
+			return getDelegate().getModuleArtifacts(obj);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Return a string representation of this object.
 	 * 
