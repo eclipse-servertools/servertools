@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.IDebugModelPresentation;
-import org.eclipse.jdt.internal.junit.launcher.JUnitBaseLaunchConfiguration;
+import org.eclipse.jdt.internal.junit.launcher.JUnitLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jst.server.core.internal.cactus.CactusLaunchable;
@@ -78,10 +78,10 @@ public class JUnitClientDelegate extends ClientDelegate {
 					DebugPlugin.getDefault().getLaunchManager().generateUniqueLaunchConfigurationNameFrom(name));
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, mainType);
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, projectName);
-			wc.setAttribute(JUnitBaseLaunchConfiguration.ATTR_KEEPRUNNING, false);
-			wc.setAttribute(JUnitBaseLaunchConfiguration.LAUNCH_CONTAINER_ATTR, container);
+			wc.setAttribute(JUnitLaunchConfigurationConstants.ATTR_KEEPRUNNING, false);
+			wc.setAttribute(JUnitLaunchConfigurationConstants.ATTR_TEST_CONTAINER, container);
 			if (testName.length() > 0)
-				wc.setAttribute(JUnitBaseLaunchConfiguration.TESTNAME_ATTR, testName);
+				wc.setAttribute(JUnitLaunchConfigurationConstants.ATTR_TEST_METHOD_NAME, testName);
 			config = wc.doSave();
 		} catch (CoreException e) {
 			JavaServerUIPlugin.log(e);
@@ -105,10 +105,10 @@ public class JUnitClientDelegate extends ClientDelegate {
 				// we should probably extract the JUnit internal stuff and
 				// create a new CactusLaunchConfiguration instead
 				if ((config.getAttribute(
-						JUnitBaseLaunchConfiguration.LAUNCH_CONTAINER_ATTR, "").equals(container)) && //$NON-NLS-1$
+						JUnitLaunchConfigurationConstants.ATTR_TEST_CONTAINER, "").equals(container)) && //$NON-NLS-1$
 						(config.getAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
 								"").equals(testClass)) && //$NON-NLS-1$
-						(config.getAttribute(JUnitBaseLaunchConfiguration.TESTNAME_ATTR, "").equals(testName)) && //$NON-NLS-1$
+						(config.getAttribute(JUnitLaunchConfigurationConstants.ATTR_TEST_METHOD_NAME, "").equals(testName)) && //$NON-NLS-1$
 						(config.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME,
 								"").equals(javaProjectName))) { //$NON-NLS-1$
 					candidateConfigs.add(config);
