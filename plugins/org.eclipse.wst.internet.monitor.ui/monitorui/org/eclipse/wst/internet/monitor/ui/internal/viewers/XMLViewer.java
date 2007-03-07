@@ -69,7 +69,7 @@ public class XMLViewer extends ContentViewer {
 		int ls = lineSeparator.length();
 		if (out.length() > ls) {
 			while (out.substring(0, ls).indexOf(lineSeparator) >= 0)
-			out = out.substring(ls, out.length()); 
+			out = out.substring(ls, out.length());
 		}
 		
 		String out_temp = out.toLowerCase();
@@ -77,31 +77,33 @@ public class XMLViewer extends ContentViewer {
 		
 		if (out.length() > 0) {
 			byte[] b1 = createDocument(out);
-			String finalMsg = new String (b1);
+			String finalMsg = new String(b1);
 			if (finalMsg.startsWith("Invalid XML")) {
-				//case: error parsing
+				// case: error parsing
 				messageText.setVisible(false);
 				layout.topControl = messageLabel;
 				messageLabel.setVisible(true);
 				messageLabel.setText(Messages.xmlViewInvalid);
-			} else if (xmlTagMissing && finalMsg.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")) {
+			} else if (xmlTagMissing && finalMsg.toLowerCase().startsWith("<?xml version=\"1.0\" encoding=\"utf-8\"?>")) {
 				int x = finalMsg.indexOf("\n") + 1;
 				String Msg = finalMsg.substring(x);
 				finalMsg = Msg;
 				
 				messageText.setText(finalMsg);
 			} else if (setEncoding) {
-				//change back to original Encoding
-				int begin = finalMsg.indexOf("UTF-8"); //location of opening "
-				int last = begin + 5;  //location of closing "
-				String first_half = finalMsg.substring(0,begin);
-				String second_half = finalMsg.substring(last);
-				finalMsg = first_half + originalEncoding + second_half;	
+				// change back to original encoding
+				int begin = finalMsg.toLowerCase().indexOf("utf-8"); // location of opening "
+				if (begin >= 0) {
+					int last = begin + 5;  // location of closing "
+					String first_half = finalMsg.substring(0,begin);
+					String second_half = finalMsg.substring(last);
+					finalMsg = first_half + originalEncoding + second_half;
+				}
 				
 				messageText.setText(finalMsg);
 			} else if (missingEncoding) {
-				//remove encoding completely
-				int begin = finalMsg.indexOf("encoding=\"UTF-8\""); //location of opening "
+				// remove encoding completely
+				int begin = finalMsg.toLowerCase().indexOf("encoding=\"utf-8\""); //location of opening "
 				int last = begin + 16;  //location of closing "
 				String first_half = finalMsg.substring(0,begin);
 				String second_half = finalMsg.substring(last);
@@ -170,29 +172,30 @@ public class XMLViewer extends ContentViewer {
 			} else {
 				String str_temp = str.toLowerCase();
 				
-				//if encoding present,then save original Encoding, change to UTF-8
-				if (str_temp.indexOf("encoding=") >= 0) {
-					setEncoding = true;
-					String temp1 = str.substring(str_temp.indexOf("encoding="));
+				// if encoding present, then save original encoding and change to UTF-8
+				int ind = str_temp.indexOf("encoding=");
+				if (ind >= 0) {
+					String temp1 = str.substring(ind);
 					int beginIndex = temp1.indexOf("\"") + 1;
 					String temp2 = temp1.substring(beginIndex);
 					int endIndex = temp2.indexOf("\"");
 					originalEncoding = temp2.substring(0, endIndex);
-				}	
+					if (!"utf-8".equals(originalEncoding))
+						setEncoding = true;
+				}
 				
 				//if no encoding at all,then no changes to be made
-				else if (str_temp.indexOf("encoding") < 0) {
-					setEncoding = false;	
-					missingEncoding = true;		
-				}	
+				else if (ind < 0) {
+					setEncoding = false;
+					missingEncoding = true;
+				}
 			}
 			parseArray = str.getBytes();
-			document = parser.parse(new InputSource(new ByteArrayInputStream(parseArray)));  
+			document = parser.parse(new InputSource(new ByteArrayInputStream(parseArray)));
 			result = getContents(document);
-			
 		} catch (Exception e) {
 			result = "Invalid XML".getBytes();
-		} 
+		}
 		return result;
 	}
 
