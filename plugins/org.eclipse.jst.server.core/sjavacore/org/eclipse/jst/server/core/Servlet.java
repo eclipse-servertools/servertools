@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core;
 
+import org.eclipse.jst.server.core.internal.Messages;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IModuleArtifact;
+import org.eclipse.wst.server.core.model.ModuleArtifactDelegate;
 /**
  * A J2EE Servlet.
  * <p>
@@ -20,10 +22,9 @@ import org.eclipse.wst.server.core.IModuleArtifact;
  * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
  * (repeatedly) as the API evolves.
  * </p>
- * @plannedfor 2.0
+ * @plannedfor 3.0
  */
-public class Servlet implements IModuleArtifact {
-	private IModule module;
+public class Servlet extends ModuleArtifactDelegate {
 	private String className;
 	private String alias;
 	
@@ -35,16 +36,16 @@ public class Servlet implements IModuleArtifact {
 	 * @param alias the servlet's alias
 	 */
 	public Servlet(IModule module, String className, String alias) {
-		this.module = module;
+		super(module);
 		this.className = className;
 		this.alias = alias;
 	}
 
 	/**
-	 * @see IModuleArtifact#getModule()
+	 * Create a new empty servlet.
 	 */
-	public IModule getModule() {
-		return module;
+	public Servlet() {
+		super();
 	}
 
 	/**
@@ -65,10 +66,41 @@ public class Servlet implements IModuleArtifact {
 		return alias;
 	}
 
+	/*
+	 * @see ModuleArtifactDelegate#getName()
+	 */
+	public String getName() {
+		return NLS.bind(Messages.artifactServlet, className);
+	}
+
+	/*
+	 * @see ModuleArtifactDelegate#deserialize(String)
+	 */
+	public void deserialize(String s) {
+		int ind = s.indexOf("//");
+		super.deserialize(s.substring(0, ind));
+		s = s.substring(ind+2);
+		ind = s.indexOf("//");
+		className = s.substring(0, ind);
+		alias = s.substring(ind+2);
+	}
+
+	/*
+	 * @see ModuleArtifactDelegate#serialize()
+	 */
+	public String serialize() {
+		StringBuffer sb = new StringBuffer(super.serialize());
+		sb.append("//");
+		sb.append(className);
+		sb.append("//");
+		sb.append(alias);
+		return sb.toString();
+	}
+
 	/**
 	 * @see Object#toString()
 	 */
 	public String toString() {
-		return "Servlet [module=" + module + ", class=" + className + ", alias=" + alias + "]";
+		return "Servlet [module=" + getModule() + ", class=" + className + ", alias=" + alias + "]";
 	}
 }

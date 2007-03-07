@@ -587,7 +587,7 @@ public interface IServer extends IServerAttributes {
 	 * Returns the module's sync state.
 	 * 
 	 * @param module the module
-	 * @return one of the PUBLISH_XXX state flags
+	 * @return one of the PUBLISH_STATE_XXX state flags
 	 */
 	public int getModulePublishState(IModule[] module);
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,16 +11,16 @@
 package org.eclipse.wst.server.core.util;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IModuleArtifact;
+import org.eclipse.wst.server.core.model.ModuleArtifactDelegate;
 /**
  * A Web module resource.
  * 
  * @since 1.0
  */
-public class WebResource implements IModuleArtifact {
-	private IModule module;
+public class WebResource extends ModuleArtifactDelegate {
 	private IPath path;
 
 	/**
@@ -30,15 +30,12 @@ public class WebResource implements IModuleArtifact {
 	 * @param path a relative path within the module
 	 */
 	public WebResource(IModule module, IPath path) {
-		this.module = module;
+		super(module);
 		this.path = path;
 	}
 
-	/**
-	 * @see IModuleArtifact#getModule()
-	 */
-	public IModule getModule() {
-		return module;
+	public WebResource() {
+		super();
 	}
 
 	/**
@@ -50,10 +47,36 @@ public class WebResource implements IModuleArtifact {
 		return path;
 	}
 
+	/*
+	 * @see ModuleArtifactDelegate#getName()
+	 */
+	public String getName() {
+		return path.toString();
+	}
+
+	/*
+	 * @see ModuleArtifactDelegate#deserialize(String)
+	 */
+	public void deserialize(String s) {
+		int ind = s.indexOf("//");
+		super.deserialize(s.substring(0, ind));
+		path = new Path(s.substring(ind+2));
+	}
+
+	/*
+	 * @see ModuleArtifactDelegate#serialize()
+	 */
+	public String serialize() {
+		StringBuffer sb = new StringBuffer(super.serialize());
+		sb.append("//");
+		sb.append(path.toPortableString());
+		return sb.toString();
+	}
+
 	/**
 	 * @see Object#toString()
 	 */
 	public String toString() {
-		return "WebResource [module=" + module + ", path=" + path + "]";
+		return "WebResource [module=" + getModule() + ", path=" + path + "]";
 	}
 }

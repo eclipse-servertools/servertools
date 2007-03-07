@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,35 +11,40 @@
 package org.eclipse.wst.server.core.util;
 
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IModuleArtifact;
+import org.eclipse.wst.server.core.model.ModuleArtifactDelegate;
 /**
  * A dummy module artifact.
  * 
  * @since 1.0
  */
-public class NullModuleArtifact implements IModuleArtifact {
-	private IModule module;
-
+public class NullModuleArtifact extends ModuleArtifactDelegate {
 	/**
 	 * Create a new reference to a module.
 	 * 
 	 * @param module the module
 	 */
 	public NullModuleArtifact(IModule module) {
-		this.module = module;
+		super(module);
 	}
 
 	/**
-	 * @see IModuleArtifact#getModule()
+	 * Create a new empty reference to a module.
 	 */
-	public IModule getModule() {
-		return module;
+	public NullModuleArtifact() {
+		super();
+	}
+
+	/*
+	 * @see ModuleArtifactDelegate#getName()
+	 */
+	public String getName() {
+		return "";
 	}
 
 	/**
 	 * @see Object#toString()
 	 */
 	public String toString() {
-		return "NullModuleArtifact [module=" + module + "]";
+		return "NullModuleArtifact [module=" + getModule() + "]";
 	}
 }

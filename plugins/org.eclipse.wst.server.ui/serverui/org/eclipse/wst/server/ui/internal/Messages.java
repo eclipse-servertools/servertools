@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -58,6 +58,7 @@ public class Messages extends NLS {
 	public static String errorServerAlreadyRunning;
 	public static String errorInvalidServer;
 	public static String serverLaunchConfigurationTab;
+	public static String runOnServerLaunchConfigName;
 	public static String wizSelectClientMessage;
 	public static String errorCouldNotCreateServerProject;
 	public static String errorDialogTitle;
@@ -151,6 +152,7 @@ public class Messages extends NLS {
 	public static String actionSetNewServer;
 	public static String errorNoArtifact;
 	public static String errorNoModules;
+	public static String errorLaunchConfig;
 	public static String dialogModeWarningRun;
 	public static String dialogModeWarningDebug;
 	public static String dialogModeWarningProfile;
@@ -240,7 +242,7 @@ public class Messages extends NLS {
 	public static String actionOpen;
 	public static String viewServer;
 	public static String viewStatus;
-	public static String viewSync;
+	public static String viewState;
 	public static String actionStopToolTip;
 	public static String actionStop;
 	public static String actionModifyModulesToolTip;

@@ -99,6 +99,9 @@ public class ImageResource {
 	public static final String IMG_SERVER_STATE_STARTED_PROFILE = "stateStartedProfile";
 	public static final String IMG_SERVER_STATE_STOPPED = "stateStopped";
 	
+	public static final String IMG_STATE_STARTED = "stateStarted2";
+	public static final String IMG_STATE_STOPPED = "stateStopped2";
+	
 	public static final String IMG_SERVER_STATE_STARTING_1 = "stateStarting1";
 	public static final String IMG_SERVER_STATE_STARTING_2 = "stateStarting2";
 	public static final String IMG_SERVER_STATE_STARTING_3 = "stateStarting3";
@@ -227,6 +230,9 @@ public class ImageResource {
 		registerImage(IMG_SERVER_STATE_STARTED_DEBUG, URL_OBJ + "server_started_debug.gif");
 		registerImage(IMG_SERVER_STATE_STARTED_PROFILE, URL_OBJ + "server_started_profile.gif");
 		registerImage(IMG_SERVER_STATE_STOPPED, URL_OBJ + "server_stopped.gif");
+		
+		registerImage(IMG_STATE_STARTED, URL_OBJ + "state_started.gif");
+		registerImage(IMG_STATE_STOPPED, URL_OBJ + "state_stopped.gif");
 		
 		registerImage(IMG_SERVER_STATE_STARTING_1, URL_OBJ + "server_starting1.gif");
 		registerImage(IMG_SERVER_STATE_STARTING_2, URL_OBJ + "server_starting2.gif");

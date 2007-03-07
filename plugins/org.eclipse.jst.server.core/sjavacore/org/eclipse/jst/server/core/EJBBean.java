@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core;
 
+import org.eclipse.jst.server.core.internal.Messages;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IModuleArtifact;
+import org.eclipse.wst.server.core.model.ModuleArtifactDelegate;
 /**
  * An EJB bean.
  * <p>
@@ -20,10 +22,9 @@ import org.eclipse.wst.server.core.IModuleArtifact;
  * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
  * (repeatedly) as the API evolves.
  * </p>
- * @plannedfor 2.0
+ * @plannedfor 3.0
  */
-public class EJBBean implements IModuleArtifact {
-	private IModule module;
+public class EJBBean extends ModuleArtifactDelegate {
 	private String jndiName;
 	private boolean local;
 	private boolean remote;
@@ -39,17 +40,17 @@ public class EJBBean implements IModuleArtifact {
 	 *    <code>false</code> otherwise
 	 */
 	public EJBBean(IModule module, String jndiName, boolean remote, boolean local) {
-		this.module = module;
+		super(module);
 		this.jndiName = jndiName;
 		this.remote = remote;
 		this.local = local;
 	}
 
 	/**
-	 * @see IModuleArtifact#getModule()
+	 * Create a new empty EJBBean.
 	 */
-	public IModule getModule() {
-		return module;
+	public EJBBean() {
+		super();
 	}
 
 	/**
@@ -79,5 +80,47 @@ public class EJBBean implements IModuleArtifact {
 	 */
 	public boolean hasLocalInterface() {
 		return local;
+	}
+
+	/*
+	 * @see ModuleArtifactDelegate#getName()
+	 */
+	public String getName() {
+		return NLS.bind(Messages.artifactEJB, jndiName.toString());
+	}
+
+	/*
+	 * @see ModuleArtifactDelegate#deserialize(String)
+	 */
+	public void deserialize(String s) {
+		int ind = s.indexOf("//");
+		super.deserialize(s.substring(0, ind));
+		if ('T' == s.charAt(ind+2))
+			local = true;
+		else
+			local = false;
+		if ('T' == s.charAt(ind+3))
+			remote = true;
+		else
+			remote = false;
+		jndiName = s.substring(ind+4);
+	}
+
+	/*
+	 * @see ModuleArtifactDelegate#serialize()
+	 */
+	public String serialize() {
+		StringBuffer sb = new StringBuffer(super.serialize());
+		sb.append("//");
+		if (local)
+			sb.append("T");
+		else
+			sb.append("F");
+		if (remote)
+			sb.append("T");
+		else
+			sb.append("F");
+		sb.append(jndiName);
+		return sb.toString();
 	}
 }

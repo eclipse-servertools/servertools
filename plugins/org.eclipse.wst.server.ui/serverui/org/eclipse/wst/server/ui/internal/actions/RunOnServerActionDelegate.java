@@ -12,15 +12,14 @@ package org.eclipse.wst.server.ui.internal.actions;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.IBreakpointManager;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.core.*;
+import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -35,8 +34,11 @@ import org.eclipse.wst.server.core.internal.RestartServerJob;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.core.internal.ServerType;
 import org.eclipse.wst.server.core.internal.StartServerJob;
+import org.eclipse.wst.server.core.internal.Trace;
+import org.eclipse.wst.server.core.model.ModuleArtifactDelegate;
 import org.eclipse.wst.server.ui.internal.*;
 import org.eclipse.wst.server.ui.internal.wizard.*;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -59,8 +61,8 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 
 	protected boolean tasksAndClientShown;
 
-	public ILaunchableAdapter launchableAdapter;
-	public IClient client;
+	protected ILaunchableAdapter launchableAdapter;
+	protected IClient client;
 
 	/**
 	 * RunOnServerActionDelegate constructor comment.
@@ -157,7 +159,9 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 */
 	protected void run() {
 //		final String launchMode2 = getLaunchMode();
-		final IModuleArtifact moduleArtifact = ServerPlugin.getModuleArtifact(selection);
+		IModuleArtifact[] moduleArtifacts = ServerPlugin.getModuleArtifacts(selection);
+		// TODO - multiple module artifacts
+		final IModuleArtifact moduleArtifact = moduleArtifacts[0];
 		
 		Shell shell2 = null;
 		if (window != null)
@@ -271,6 +275,27 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 				wizard.performFinish();
 			client = wizard.getSelectedClient();
 			launchableAdapter = wizard.getLaunchableAdapter();
+		}
+		
+		if (moduleArtifact instanceof ModuleArtifactDelegate) {
+			boolean canLoad = false;
+			try {
+				Class c = Class.forName(moduleArtifact.getClass().getName());
+				if (c.newInstance() != null)
+					canLoad = true;
+			} catch (Throwable t) {
+				Trace.trace(Trace.WARNING, "Could not load module artifact delegate class, switching to backup");
+			}
+			if (canLoad) {
+				try {
+					IProgressMonitor monitor = new NullProgressMonitor();
+					ILaunchConfiguration config = getLaunchConfiguration(server, (ModuleArtifactDelegate) moduleArtifact, launchableAdapter, client, monitor);
+					config.launch(launchMode, monitor);
+				} catch (CoreException ce) {
+					Trace.trace(Trace.SEVERE, "Could not launch Run on Server", ce);
+				}
+				return;
+			}
 		}
 		
 		Thread thread = new Thread("Run on Server") {
@@ -408,6 +433,73 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		thread.start();
 	}
 
+	protected void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy config, IServer server, ModuleArtifactDelegate moduleArtifact, ILaunchableAdapter launchableAdapter, IClient client) {
+		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_SERVER_ID, server.getId());
+		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_MODULE_ARTIFACT, moduleArtifact.serialize());
+		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_MODULE_ARTIFACT_CLASS, moduleArtifact.getClass().getName());
+		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_LAUNCHABLE_ADAPTER_ID, launchableAdapter.getId());
+		config.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_CLIENT_ID, client.getId());
+	}
+
+	protected ILaunchConfiguration getLaunchConfiguration(IServer server, ModuleArtifactDelegate moduleArtifact, ILaunchableAdapter launchableAdapter2, IClient client2, IProgressMonitor monitor) throws CoreException {
+		String serverId = server.getId();
+		ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
+		ILaunchConfigurationType launchConfigType = launchManager.getLaunchConfigurationType("org.eclipse.wst.server.ui.launchConfigurationType");
+		ILaunchConfiguration[] launchConfigs = null;
+		try {
+			launchConfigs = launchManager.getLaunchConfigurations(launchConfigType);
+		} catch (CoreException e) {
+			// ignore
+		}
+		
+		if (launchConfigs != null) {
+			int size = launchConfigs.length;
+			for (int i = 0; i < size; i++) {
+				List list = launchConfigs[i].getAttribute(IDebugUIConstants.ATTR_FAVORITE_GROUPS, (List)null);
+				if (list == null || list.isEmpty()) {
+					try {
+						String serverId2 = launchConfigs[i].getAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_SERVER_ID, (String) null);
+						if (serverId.equals(serverId2)) {
+							final ILaunchConfigurationWorkingCopy wc = launchConfigs[i].getWorkingCopy();
+							setupLaunchConfiguration(wc, server, moduleArtifact, launchableAdapter2, client2);
+							if (wc.isDirty()) {
+								try {
+									return wc.doSave();
+								} catch (CoreException ce) {
+									Trace.trace(Trace.SEVERE, "Error configuring launch", ce);
+								}
+							}
+							return launchConfigs[i];
+						}
+					} catch (CoreException e) {
+						Trace.trace(Trace.SEVERE, "Error configuring launch", e);
+					}
+				}
+			}
+		}
+		
+		// create a new launch configuration
+		String launchName = NLS.bind(Messages.runOnServerLaunchConfigName, moduleArtifact.getName());
+		launchName = getValidLaunchConfigurationName(launchName);
+		launchName = launchManager.generateUniqueLaunchConfigurationNameFrom(launchName); 
+		ILaunchConfigurationWorkingCopy wc = launchConfigType.newInstance(null, launchName);
+		wc.setAttribute(RunOnServerLaunchConfigurationDelegate.ATTR_SERVER_ID, serverId);
+		setupLaunchConfiguration(wc, server, moduleArtifact, launchableAdapter2, client2);
+		return wc.doSave();
+	}
+
+	//protected static final char[] INVALID_CHARS = new char[] {'\\', '/', ':', '*', '?', '"', '<', '>', '|', '\0', '@', '&'};
+	protected static final char[] INVALID_CHARS = new char[] {'\\', ':', '*', '?', '"', '<', '>', '|', '\0', '@', '&'};
+	protected String getValidLaunchConfigurationName(String s) {
+		if (s == null || s.length() == 0)
+			return "1";
+		int size = INVALID_CHARS.length;
+		for (int i = 0; i < size; i++) {
+			s = s.replace(INVALID_CHARS[i], '_');
+		}
+		return s;
+	}
+
 	/**
 	 * Open an options dialog.
 	 * 
@@ -417,7 +509,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * @param breakpointsOption
 	 * @return a dialog return constant
 	 */
-	protected int openOptionsDialog(final Shell shell, final String title, final String message, final boolean breakpointsOption) {
+	protected static int openOptionsDialog(final Shell shell, final String title, final String message, final boolean breakpointsOption) {
 		if (breakpointsOption) {
 			int current = ServerUIPlugin.getPreferences().getLaunchMode2();
 			if (current == ServerUIPreferences.LAUNCH_MODE2_RESTART)
@@ -480,7 +572,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * @param shell
 	 * @return a dialog return constant
 	 */
-	protected int openBreakpointDialog(final Shell shell) {
+	protected static int openBreakpointDialog(final Shell shell) {
 		int current = ServerUIPlugin.getPreferences().getEnableBreakpoints();
 		if (current == ServerUIPreferences.ENABLE_BREAKPOINTS_ALWAYS)
 			return 0;
@@ -511,7 +603,7 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * @param shell
 	 * @return a dialog return constant
 	 */
-	protected int openRestartDialog(final Shell shell) {
+	protected static int openRestartDialog(final Shell shell) {
 		int current = ServerUIPlugin.getPreferences().getRestart();
 		if (current == ServerUIPreferences.RESTART_ALWAYS)
 			return 0;
@@ -618,8 +710,10 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 			}
 			
 			Trace.trace(Trace.FINEST, "checking for module artifact");
-			IModuleArtifact moduleArtifact = ServerPlugin.getModuleArtifact(globalSelection);
+			IModuleArtifact[] moduleArtifacts = ServerPlugin.getModuleArtifacts(globalSelection);
 			IModule module = null;
+			// TODO - multiple module artifacts
+			IModuleArtifact moduleArtifact = moduleArtifacts[0];
 			if (moduleArtifact != null)
 				module = moduleArtifact.getModule();
 			Trace.trace(Trace.FINEST, "moduleArtifact= " + moduleArtifact + ", module= " + module);

@@ -19,7 +19,7 @@ import org.eclipse.wst.server.core.IModule;
  * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
  * (repeatedly) as the API evolves.
  * </p>
- * @plannedfor 2.0
+ * @plannedfor 3.0
  */
 public interface IWebModule extends IJ2EEModule {
 	/**

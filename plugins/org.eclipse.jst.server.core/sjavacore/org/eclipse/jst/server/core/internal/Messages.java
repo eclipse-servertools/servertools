@@ -35,6 +35,11 @@ public class Messages extends NLS {
 	public static String errorNotADirectory;
 	public static String errorMkdir;
 
+	public static String artifactServlet;
+	public static String artifactEJB;
+	public static String artifactJNDI;
+	public static String artifactCactusTest;
+
 	static {
 		NLS.initializeMessages(JavaServerPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);
 	}
