@@ -53,11 +53,13 @@ public class ServerClasspathContainerPage extends WizardPage implements IClasspa
 		IRuntime[] runtimes = ServerCore.getRuntimes();
 		int size = runtimes.length;
 		for (int i = 0; i < size; i++) {
-			RuntimeClasspathProviderWrapper rcpw = JavaServerPlugin.findRuntimeClasspathProvider(runtimes[i].getRuntimeType());
-			if (rcpw != null) {
-				IPath serverContainerPath = new Path(RuntimeClasspathContainer.SERVER_CONTAINER)
-						.append(rcpw.getId()).append(runtimes[i].getId());
-				runtimeMap.put(runtimes[i], JavaCore.newContainerEntry(serverContainerPath));
+			if (runtimes[i].getRuntimeType() != null) {
+				RuntimeClasspathProviderWrapper rcpw = JavaServerPlugin.findRuntimeClasspathProvider(runtimes[i].getRuntimeType());
+				if (rcpw != null) {
+					IPath serverContainerPath = new Path(RuntimeClasspathContainer.SERVER_CONTAINER)
+							.append(rcpw.getId()).append(runtimes[i].getId());
+					runtimeMap.put(runtimes[i], JavaCore.newContainerEntry(serverContainerPath));
+				}
 			}
 		}
 	}
