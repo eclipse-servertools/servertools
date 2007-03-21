@@ -2369,8 +2369,7 @@ public class Server extends Base implements IServer {
 		if (module == null || module.length == 0)
 			throw new IllegalArgumentException("Module cannot be null or empty");
 		try {
-			getBehaviourDelegate(null).stopModule(module, null);
-			getBehaviourDelegate(null).startModule(module, null);
+			getBehaviourDelegate(null).restartModule(module, null);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate restartModule() " + toString(), e);
 		}

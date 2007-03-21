@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,24 +18,28 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
 /**
  * Restart a module on a server.
  */
-public class RestartModuleAction extends Action {
+public class StopModuleAction extends Action {
 	protected IServer server;
 	protected IModule[] module;
 
-	public RestartModuleAction(IServer server, IModule[] module) {
+	public StopModuleAction(IServer server, IModule[] module) {
 		super();
 		this.server = server;
 		this.module = module;
 		
-		setText(Messages.actionRestartModule);
-		
+		setText(Messages.actionStopModule);
+		setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_STOP));
+		setHoverImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_CLCL_STOP));
+		setDisabledImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_DLCL_STOP));
 		setEnabled(server.getServerState() == IServer.STATE_STARTED
-				&& server.getModuleState(module) != IServer.STATE_UNKNOWN
-				&&	server.canControlModule(module, null).isOK());
+				&& (server.getModuleState(module) == IServer.STATE_STARTED
+					|| server.getModuleState(module) == IServer.STATE_UNKNOWN)
+				&& server.canControlModule(module, null).isOK());
 	}
 
 	/**
@@ -43,12 +47,12 @@ public class RestartModuleAction extends Action {
 	 */
 	public void run() {
 		int size = module.length;
-		Job restartJob = new Job(NLS.bind(Messages.jobRestarting, module[size-1].getName())) {
+		Job stopJob = new Job(NLS.bind(Messages.viewStatusStopping3, module[size-1].getName())) {
 			protected IStatus run(IProgressMonitor monitor) {
-				server.restartModule(module, null);
+				server.stopModule(module, null);
 				return Status.OK_STATUS;
 			}
 		};
-		restartJob.schedule();
+		stopJob.schedule();
 	}
 }

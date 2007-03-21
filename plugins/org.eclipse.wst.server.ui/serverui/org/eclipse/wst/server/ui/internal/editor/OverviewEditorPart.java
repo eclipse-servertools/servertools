@@ -760,7 +760,7 @@ public class OverviewEditorPart extends ServerEditorPart {
 			}
 		}
 		
-		if (autoPublishTime.isEnabled() && autoPublishOverride.getSelection()) {
+		if (autoPublishTime != null && autoPublishTime.isEnabled() && autoPublishOverride.getSelection()) {
 			int i = autoPublishTime.getSelection();
 			if (i < 1) {
 				setErrorMessage(NLS.bind(Messages.serverEditorOverviewAutoPublishInvalid, "1"));

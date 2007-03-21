@@ -393,7 +393,7 @@ public abstract class ServerBehaviourDelegate {
 	public boolean canControlModule(IModule[] module) {
 		return false;
 	}
-	
+
 	/**
 	 * Starts the given module on the server. See the specification of 
 	 * {@link IServer#startModule(IModule[], IServer.IOperationListener)}
@@ -444,6 +444,33 @@ public abstract class ServerBehaviourDelegate {
 	 */
 	public void stopModule(IModule[] module, IProgressMonitor monitor) throws CoreException {
 		// do nothing
+	}
+
+	/**
+	 * Restarts the given module on the server. See the specification of 
+	 * {@link IServer#restartModule(IModule[], IServer.IOperationListener)}
+	 * for further details. 
+	 * <p>
+	 * The implementation should update the module sync state and fire
+	 * an event for the module.
+	 * </p>
+	 * <p>
+	 * This method will throw an exception if the module does not exist on
+	 * the server.
+	 * </p>
+	 * <p>
+	 * [issue: Since this method is ascynchronous, is there
+	 * any need for the progress monitor?]
+	 * </p>
+	 * 
+	 * @param module the module to be stopped
+	 * @param monitor a progress monitor, or <code>null</code> if progress
+	 *    reporting and cancellation are not desired
+	 * @exception CoreException if an error occurs while trying to restart the module
+	 */
+	public void restartModule(IModule[] module, IProgressMonitor monitor) throws CoreException {
+		stopModule(module, monitor);
+		startModule(module, monitor);
 	}
 
 	/**

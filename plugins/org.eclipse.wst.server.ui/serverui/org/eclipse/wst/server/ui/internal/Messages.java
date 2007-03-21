@@ -144,6 +144,8 @@ public class Messages extends NLS {
 	public static String actionDebugOnServer;
 	public static String actionProfileOnServer;
 	public static String actionRunOnServer;
+	public static String actionStopModule;
+	public static String actionStartModule;
 	public static String actionRestartModule;
 	public static String actionUpdateStatus;
 	public static String actionMoveServerToMetadata;

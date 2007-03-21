@@ -369,6 +369,8 @@ public class ServersView extends ViewPart {
 		
 		if (server != null && module != null) {
 			menu.add(new Separator());
+			menu.add(new StartModuleAction(server, module));
+			menu.add(new StopModuleAction(server, module));			
 			menu.add(new RestartModuleAction(server, module));
 		}
 		
