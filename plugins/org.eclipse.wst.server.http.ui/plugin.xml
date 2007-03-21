@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension point="org.eclipse.wst.server.ui.serverImages">
+      <image
+         id="org.eclipse.wst.server.http.runtime.image"
+         icon="icons/obj16/server.gif"
+         typeIds="org.eclipse.wst.server.http.runtime,org.eclipse.wst.server.http"/>
+   </extension>
+ 
+   <extension point="org.eclipse.wst.server.ui.wizardFragments">
+      <fragment
+         id="org.eclipse.wst.server.http.runtime.wizard"
+         typeIds="org.eclipse.wst.server.http.runtime"
+         class="org.eclipse.wst.server.http.ui.internal.HttpRuntimeWizardFragment"/>
+   </extension>
+
+   <extension point="org.eclipse.wst.server.ui.editorPageSections">
+   	<section
+         id="org.eclipse.wst.server.http.editor"
+         order="10"
+         insertionId="org.eclipse.wst.server.editor.overview.left"
+         typeIds="org.eclipse.wst.server.http"
+         class="org.eclipse.wst.server.http.ui.internal.HttpSection"/>
+   </extension>
+</plugin>
