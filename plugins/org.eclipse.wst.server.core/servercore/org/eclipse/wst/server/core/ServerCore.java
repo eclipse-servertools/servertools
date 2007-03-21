@@ -74,6 +74,8 @@ public class ServerCore {
 	 * @return org.eclipse.wst.server.core.internal.ResourceManager
 	 */
 	private final static ResourceManager getResourceManager() {
+		if (!initialized)
+			initialize();
 		return ResourceManager.getInstance();
 	}
 
