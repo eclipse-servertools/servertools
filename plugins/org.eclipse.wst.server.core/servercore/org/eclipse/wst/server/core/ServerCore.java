@@ -242,8 +242,6 @@ public class ServerCore {
 		if (initialized)
 			return;
 		
-		getResourceManager();
-		
 		initialized = true;
 		executeStartups();
 	}
