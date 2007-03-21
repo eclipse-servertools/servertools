@@ -336,7 +336,7 @@ public class ResourceManager {
 			Runtime runtime = (Runtime) iterator.next();
 			try {
 				RuntimeType runtimeType = (RuntimeType) runtime.getRuntimeType();
-				if (id.equals(runtimeType.getNamespace())) {
+				if (runtimeType != null && id != null && id.equals(runtimeType.getNamespace())) {
 					runtime.dispose();
 				}
 			} catch (Exception e) {

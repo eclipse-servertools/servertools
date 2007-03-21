@@ -28,10 +28,11 @@ public class Trace {
 	public static final byte LISTENERS = 8;
 	public static final byte RUNTIME_TARGET = 9;
 	public static final byte PERFORMANCE = 10;
+	public static final byte PUBLISHING = 11;
 
 	private static final String[] levelNames = new String[] {
 		"CONFIG   ", "INFO     ", "WARNING  ", "SEVERE   ", "FINER    ", "FINEST   ",
-		"RESOURCES", "EXTENSION", "LISTENERS", "TARGET   ", "PERF     "};
+		"RESOURCES", "EXTENSION", "LISTENERS", "TARGET   ", "PERF     ", "PUBLISH  "};
 	private static final String spacer = "                                   ";
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm.ss.SSS");

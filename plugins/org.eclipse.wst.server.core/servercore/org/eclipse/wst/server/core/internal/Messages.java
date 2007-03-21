@@ -63,6 +63,15 @@ public class Messages extends NLS {
 	public static String jobUpdateServer;
 	public static String jobInstallingRuntime;
 	public static String errorMissingAdapter;
+	
+	public static String errorCopyingFile;
+	public static String errorDeleting;
+	public static String errorMkdir;
+	public static String copyingTask;
+	public static String errorReading;
+	public static String errorCreatingZipFile;
+	public static String errorRename;
+	public static String errorNotADirectory;
 
 	static {
 		NLS.initializeMessages(ServerPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);
