@@ -98,12 +98,8 @@ public class ServerUtil {
 				if (modules != null) {
 					int size2 = modules.length;
 					for (int j = 0; j < size2; j++) {
-						if (!set.contains(modules[j])) {
-							if (isSupportedModule(factories[i].getModuleTypes(), modules[j].getModuleType()))
-								set.add(modules[j]);
-							else
-								Trace.trace(Trace.WARNING, "Invalid module returned from factory, ignored: " + modules[j]);
-						}
+						if (!set.contains(modules[j]))
+							set.add(modules[j]);
 					}
 				}
 			}
@@ -201,7 +197,7 @@ public class ServerUtil {
 					if (modules != null) {
 						int size2 = modules.length;
 						for (int j = 0; j < size2; j++)
-							if(type.equals(modules[j].getModuleType().getId()))
+							if (type.equals(modules[j].getModuleType().getId()))
 								list.add(modules[j]);
 					}
 				}

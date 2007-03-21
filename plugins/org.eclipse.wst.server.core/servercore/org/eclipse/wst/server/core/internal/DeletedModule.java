@@ -49,14 +49,6 @@ public class DeletedModule implements IModule {
 		return null;
 	}
 
-	public void addModuleListener(IModuleListener listener) {
-		// ignore
-	}
-
-	public void removeModuleListener(IModuleListener listener) {
-		// ignore
-	}
-
 	public IModule[] getChildModules(IProgressMonitor monitor) {
 		return null;
 	}

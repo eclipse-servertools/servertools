@@ -107,6 +107,9 @@ public class ModuleFile implements IModuleFile {
 	}
 
 	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		
 		if (!(obj instanceof IModuleFile))
 			return false;
 		

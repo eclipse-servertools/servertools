@@ -1073,10 +1073,6 @@ public class ResourceManager {
 			activeBundles.add(bundleId);
 	}
 
-	protected void fireModuleServerEvent(ModuleFactoryEvent[] factoryEvents, ModuleEvent[] events) {
-		// do nothing
-	}
-
 	public String toString() {
 		return "Server resource manager";
 	}

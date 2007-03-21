@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.internal;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -26,7 +28,7 @@ import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
 public class ModuleFactory implements IOrdered {
 	private IConfigurationElement element;
 	public ModuleFactoryDelegate delegate;
-	private List moduleTypes;
+	private Set moduleTypes;
 
 	/**
 	 * ModuleFactory constructor comment.
@@ -112,7 +114,10 @@ public class ModuleFactory implements IOrdered {
 	 */
 	public IModule[] getModules(IProgressMonitor monitor) {
 		try {
-			return getDelegate(monitor).getModules();
+			IModule[] modules = getDelegate(monitor).getModules();
+			if (hasInvalidModules(modules))
+				modules = filter(modules);
+			return modules;
 		} catch (Throwable t) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), t);
 			return new IModule[0];
@@ -124,7 +129,10 @@ public class ModuleFactory implements IOrdered {
 	 */
 	public IModule[] getModules(IProject project, IProgressMonitor monitor) {
 		try {
-			return getDelegate(monitor).getModules(project);
+			IModule[] modules = getDelegate(monitor).getModules(project);
+			if (hasInvalidModules(modules))
+				modules = filter(modules);
+			return modules;
 		} catch (Throwable t) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), t);
 			return new IModule[0];
@@ -136,11 +144,54 @@ public class ModuleFactory implements IOrdered {
 	 */
 	public IModule findModule(String id, IProgressMonitor monitor) {
 		try {
-			return getDelegate(monitor).findModule(id);
+			IModule module = getDelegate(monitor).findModule(id);
+			if (module == null)
+				return null;
+			
+			getModuleTypes();
+			if (!moduleTypes.contains(module.getModuleType()))
+				return null;
+			
+			return module;
 		} catch (Throwable t) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), t);
 			return null;
 		}
+	}
+
+	private boolean hasInvalidModules(IModule[] modules) {
+		if (modules == null)
+			return false;
+		
+		getModuleTypes();
+		
+		int size = modules.length;
+		for (int i = 0; i < size; i++) {
+			if (!moduleTypes.contains(modules[i].getModuleType()))
+				return true;
+		}
+		return false;
+	}
+
+	private IModule[] filter(IModule[] modules) {
+		if (modules == null)
+			return modules;
+		
+		getModuleTypes();
+		List list = new ArrayList();
+		
+		int size = modules.length;
+		for (int i = 0; i < size; i++) {
+			IModule m = modules[i];
+			if (moduleTypes.contains(m.getModuleType()))
+				list.add(m);
+			else
+				Trace.trace(Trace.WARNING, "Invalid module returned from factory, ignored: " + m);
+		}
+		
+		IModule[] m = new IModule[list.size()];
+		list.toArray(m);
+		return m;
 	}
 
 	/**

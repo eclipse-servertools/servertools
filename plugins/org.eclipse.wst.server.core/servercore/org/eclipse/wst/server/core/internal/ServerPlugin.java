@@ -347,11 +347,11 @@ public class ServerPlugin extends Plugin {
 		return s;
 	}
 
-	protected static List getModuleTypes(IConfigurationElement[] elements) {
-		List list = new ArrayList();
+	protected static Set getModuleTypes(IConfigurationElement[] elements) {
+		Set set = new HashSet();
 		if (elements == null)
-			return list;
-	
+			return set;
+		
 		int size = elements.length;
 		for (int i = 0; i < size; i++) {
 			String[] types = tokenize(elements[i].getAttribute("types"), ",");
@@ -359,15 +359,13 @@ public class ServerPlugin extends Plugin {
 			int sizeT = types.length;
 			int sizeV = versions.length;
 			for (int j = 0; j < sizeT; j++) {
-				for (int k = 0; k < sizeV; k++) {
-					ModuleType module = new ModuleType(types[j], versions[k]);
-					list.add(module);
-				}
+				for (int k = 0; k < sizeV; k++)
+					set.add(ModuleType.getModuleType(types[j], versions[k]));
 			}
 		}
-		return list;
+		return set;
 	}
-	
+
 	public static String generateId() {
 		String s = df.format(new Date()).toString() + num++;
 		s = s.replace(' ', '_');

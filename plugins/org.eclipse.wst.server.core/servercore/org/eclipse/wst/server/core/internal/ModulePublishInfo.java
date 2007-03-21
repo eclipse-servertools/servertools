@@ -114,7 +114,7 @@ public class ModulePublishInfo {
 			String mt = memento.getString(MODULE_TYPE_ID);
 			String mv = memento.getString(MODULE_TYPE_VERSION);
 			if (mt != null && mt.length() > 0)
-				moduleType = new ModuleType(mt, mv);
+				moduleType = ModuleType.getModuleType(mt, mv);
 			
 			resources = loadResource(memento, new Path(""));
 		} catch (Exception e) {
@@ -175,7 +175,7 @@ public class ModulePublishInfo {
 			String mt = in.readUTF();
 			String mv = in.readUTF();
 			if (mt != null && mt.length() > 0)
-				moduleType = new ModuleType(mt, mv);
+				moduleType = ModuleType.getModuleType(mt, mv);
 		} else
 			moduleType = null;
 		

@@ -24,10 +24,12 @@ import org.eclipse.wst.server.core.IModuleType;
 public class ModuleType implements IModuleType {
 	protected String id;
 	protected String version;
-	
-	//	cached copy of all module types
+
+	//	cached copy of all module kinds
+	private static List moduleKinds;
+
 	private static List moduleTypes;
-	
+
 	public ModuleType(String id, String version) {
 		super();
 		this.id = id;
@@ -37,7 +39,7 @@ public class ModuleType implements IModuleType {
 	public String getId() {
 		return id;
 	}
-	
+
 	public String getName() {
 		ModuleKind mt = findModuleType(id);
 		if (mt != null)
@@ -48,23 +50,34 @@ public class ModuleType implements IModuleType {
 	public String getVersion() {
 		return version;
 	}
-	
+
 	/**
-	 * Returns an array of all known module types.
-	 * <p>
-	 * A new array is returned on each call, so clients may store or modify the result.
-	 * </p>
+	 * Returns the module type with the given id and version, or create a new one if
+	 * none already exists.
 	 * 
-	 * @return the array of module types {@link IModuleType}
+	 * @param id the module type id
+	 * @param version the module type version
+	 * @return the module type
 	 */
-	/*public static IModuleType[] getModuleTypes() {
+	public static ModuleType getModuleType(String id, String version) {
 		if (moduleTypes == null)
-			loadModuleTypes();
+			moduleTypes = new ArrayList();
 		
-		IModuleType[] mt = new IModuleType[moduleTypes.size()];
-		moduleTypes.toArray(mt);
+		// look for an existing one first
+		Iterator iterator = moduleTypes.iterator();
+		while (iterator.hasNext()) {
+			ModuleType mt = (ModuleType) iterator.next();
+			if ((id == null && mt.id == null) || (id != null && id.equals(mt.id))) {
+				if ((version == null && mt.version == null) || (version != null && version.equals(mt.version)))
+					return mt;
+			}
+		}
+		
+		// otherwise create one
+		ModuleType mt = new ModuleType(id, version);
+		moduleTypes.add(mt);
 		return mt;
-	}*/
+	}
 
 	/**
 	 * Returns the module type with the given id, or <code>null</code>
@@ -76,14 +89,14 @@ public class ModuleType implements IModuleType {
 	 * @return the module type, or <code>null</code> if there is no module type
 	 * with the given id
 	 */
-	public static ModuleKind findModuleType(String id) {
+	private static ModuleKind findModuleType(String id) {
 		if (id == null)
 			throw new IllegalArgumentException();
 
-		if (moduleTypes == null)
+		if (moduleKinds == null)
 			loadModuleTypes();
 		
-		Iterator iterator = moduleTypes.iterator();
+		Iterator iterator = moduleKinds.iterator();
 		while (iterator.hasNext()) {
 			ModuleKind moduleType = (ModuleKind) iterator.next();
 			if (id.equals(moduleType.getId()))
@@ -91,23 +104,23 @@ public class ModuleType implements IModuleType {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Load the module types.
 	 */
 	private static synchronized void loadModuleTypes() {
-		if (moduleTypes != null)
+		if (moduleKinds != null)
 			return;
 		Trace.trace(Trace.EXTENSION_POINT, "->- Loading .moduleTypes extension point ->-");
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(ServerPlugin.PLUGIN_ID, "moduleTypes");
 
 		int size = cf.length;
-		moduleTypes = new ArrayList(size);
+		moduleKinds = new ArrayList(size);
 		for (int i = 0; i < size; i++) {
 			try {
 				ModuleKind moduleType = new ModuleKind(cf[i]);
-				moduleTypes.add(moduleType);
+				moduleKinds.add(moduleType);
 				Trace.trace(Trace.EXTENSION_POINT, "  Loaded moduleType: " + cf[i].getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(Trace.SEVERE, "  Could not load moduleType: " + cf[i].getAttribute("id"), t);
@@ -115,6 +128,27 @@ public class ModuleType implements IModuleType {
 		}
 		
 		Trace.trace(Trace.EXTENSION_POINT, "-<- Done loading .moduleTypes extension point -<-");
+	}
+
+	public int hashCode() {
+		return id.hashCode() + version.hashCode();
+	}
+
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		
+		if (!(obj instanceof ModuleType))
+			return false;
+		
+		ModuleType mt = (ModuleType) obj;
+		if (id != null && mt.id != null && !id.equals(mt.id))
+			return false;
+		
+		if (version != null && mt.version != null && !version.equals(mt.version))
+			return false;
+		
+		return true;
 	}
 
 	public String toString() {

@@ -82,6 +82,9 @@ public class ModuleFolder implements IModuleFolder {
 	}
 
 	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		
 		if (!(obj instanceof ModuleFolder))
 			return false;
 		

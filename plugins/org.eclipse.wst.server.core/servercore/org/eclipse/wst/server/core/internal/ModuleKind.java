@@ -17,19 +17,19 @@ import org.eclipse.core.runtime.IConfigurationElement;
 public class ModuleKind {
 	protected String id;
 	protected String name;
-	
+
 	public ModuleKind(IConfigurationElement ce) {
 		super();
 		this.id = ce.getAttribute("id");
 		this.name = ce.getAttribute("name");
 	}
-	
+
 	public ModuleKind(String id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
 	}
-	
+
 	public String getId() {
 		return id;
 	}

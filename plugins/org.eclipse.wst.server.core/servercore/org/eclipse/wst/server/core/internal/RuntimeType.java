@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.internal;
 
-import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -22,7 +22,7 @@ import org.eclipse.wst.server.core.model.RuntimeDelegate;
  */
 public class RuntimeType implements IRuntimeType {
 	private IConfigurationElement element;
-	private List moduleTypes;
+	private Set moduleTypes;
 
 	public RuntimeType(IConfigurationElement element) {
 		super();

@@ -23,8 +23,7 @@ public class Module implements IModule {
 	protected String id;
 	protected String name;
 	protected ModuleFactory factory;
-	protected String type;
-	protected String version;
+	protected ModuleType moduleType;
 	protected IProject project;
 	protected ModuleDelegate delegate;
 	protected String id2;
@@ -43,8 +42,7 @@ public class Module implements IModule {
 		super();
 		this.factory = factory;
 		this.project = project;
-		this.type = type;
-		this.version = version;
+		this.moduleType = ModuleType.getModuleType(type, version);
 		this.id = id;
 		this.name = name;
 		if (factory != null)
@@ -78,7 +76,7 @@ public class Module implements IModule {
 	 * @return the module type
 	 */
 	public IModuleType getModuleType() {
-		return new ModuleType(type, version);
+		return moduleType;
 	}
 
 	/**
@@ -215,6 +213,9 @@ public class Module implements IModule {
 	}
 
 	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		
 		if (!(obj instanceof IModule))
 			return false;
 		

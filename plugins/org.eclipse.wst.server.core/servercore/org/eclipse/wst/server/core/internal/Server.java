@@ -2196,7 +2196,7 @@ public class Server extends Base implements IServer {
 				if (module == null) {
 					IModuleType moduleType = null;
 					if (moduleTypeId != null)
-						moduleType = new ModuleType(moduleTypeId, moduleTypeVersion);
+						moduleType = ModuleType.getModuleType(moduleTypeId, moduleTypeVersion);
 					module = new DeletedModule(moduleId, name, moduleType);
 				}
 				modules.add(module);
