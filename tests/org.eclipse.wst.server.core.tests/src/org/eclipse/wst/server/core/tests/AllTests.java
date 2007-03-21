@@ -90,9 +90,6 @@ public class AllTests {
 		suite.addTest(new OrderedTestSuite(ModuleResourceDeltaVisitorTestCase.class));
 		suite.addTest(new OrderedTestSuite(ModuleArtifactAdapterDelegateTestCase.class));
 		suite.addTest(new OrderedTestSuite(LaunchableAdapterDelegateTestCase.class));
-		suite.addTest(new OrderedTestSuite(ModuleListenerTestCase.class));
-		suite.addTest(new OrderedTestSuite(ModuleEventTestCase.class));
-		suite.addTest(new OrderedTestSuite(ModuleFactoryEventTestCase.class));
 		suite.addTest(new OrderedTestSuite(ModuleFactoryDelegateTestCase.class));
 		
 		suite.addTest(new OrderedTestSuite(ProjectModuleTestCase.class));
