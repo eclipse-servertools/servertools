@@ -347,10 +347,10 @@ public class ServerPlugin extends Plugin {
 		return s;
 	}
 
-	protected static Set getModuleTypes(IConfigurationElement[] elements) {
-		Set set = new HashSet();
+	protected static List getModuleTypes(IConfigurationElement[] elements) {
+		List list = new ArrayList();
 		if (elements == null)
-			return set;
+			return list;
 		
 		int size = elements.length;
 		for (int i = 0; i < size; i++) {
@@ -360,10 +360,10 @@ public class ServerPlugin extends Plugin {
 			int sizeV = versions.length;
 			for (int j = 0; j < sizeT; j++) {
 				for (int k = 0; k < sizeV; k++)
-					set.add(ModuleType.getModuleType(types[j], versions[k]));
+					list.add(ModuleType.getModuleType(types[j], versions[k]));
 			}
 		}
-		return set;
+		return list;
 	}
 
 	public static String generateId() {

@@ -12,7 +12,6 @@ package org.eclipse.wst.server.core.internal;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -28,7 +27,7 @@ import org.eclipse.wst.server.core.model.ModuleFactoryDelegate;
 public class ModuleFactory implements IOrdered {
 	private IConfigurationElement element;
 	public ModuleFactoryDelegate delegate;
-	private Set moduleTypes;
+	private List moduleTypes;
 
 	/**
 	 * ModuleFactory constructor comment.

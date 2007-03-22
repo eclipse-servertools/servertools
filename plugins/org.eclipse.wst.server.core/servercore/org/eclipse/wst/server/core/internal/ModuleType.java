@@ -131,7 +131,12 @@ public class ModuleType implements IModuleType {
 	}
 
 	public int hashCode() {
-		return id.hashCode() + version.hashCode();
+		int hash = 17;
+		if (id != null)
+			hash += id.hashCode();
+		if (version != null)
+			hash += version.hashCode();
+		return hash;
 	}
 
 	public boolean equals(Object obj) {
@@ -142,13 +147,21 @@ public class ModuleType implements IModuleType {
 			return false;
 		
 		ModuleType mt = (ModuleType) obj;
-		if (id != null && mt.id != null && !id.equals(mt.id))
+		if (!matches(id, mt.id))
 			return false;
 		
-		if (version != null && mt.version != null && !version.equals(mt.version))
+		if (!matches(version, mt.version))
 			return false;
 		
 		return true;
+	}
+
+	private static boolean matches(String a, String b) {
+		if (a == null || b == null || "*".equals(a) || "*".equals(b) || a.startsWith(b) || b.startsWith(a)
+			|| (a.endsWith(".*") && b.startsWith(a.substring(0, a.length() - 1)))
+			|| (b.endsWith(".*") && a.startsWith(b.substring(0, b.length() - 1))))
+			return true;
+		return false;
 	}
 
 	public String toString() {

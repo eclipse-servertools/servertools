@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.core.internal;
 
-import java.util.Set;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -22,7 +22,7 @@ import org.eclipse.wst.server.core.model.RuntimeDelegate;
  */
 public class RuntimeType implements IRuntimeType {
 	private IConfigurationElement element;
-	private Set moduleTypes;
+	private List moduleTypes;
 
 	public RuntimeType(IConfigurationElement element) {
 		super();
@@ -94,7 +94,7 @@ public class RuntimeType implements IRuntimeType {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Return the supported module types.
 	 * 
