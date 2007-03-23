@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,49 +21,28 @@ import org.eclipse.wst.server.ui.internal.Trace;
  * Runtime content provider.
  */
 public class RuntimeTreeContentProvider extends AbstractTreeContentProvider {
-	public static final byte STYLE_VENDOR = 1;
-	public static final byte STYLE_VERSION = 2;
-	public static final byte STYLE_TYPE = 3;
-
 	/**
 	 * RuntimeTreeContentProvider constructor.
-	 * 
-	 * @param style a style
 	 */
-	public RuntimeTreeContentProvider(byte style) {
-		super(style);
+	public RuntimeTreeContentProvider() {
+		super();
 	}
-	
+
 	public void fillTree() {
 		clean();
 		List list = new ArrayList();
-		if (style != STYLE_FLAT) {
-			IRuntime[] runtimes = ServerCore.getRuntimes();
-			if (runtimes != null) {
-				int size = runtimes.length;
-				for (int i = 0; i < size; i++) {
-					IRuntimeType runtimeType = runtimes[i].getRuntimeType();
-					try {
-						TreeElement ele = null;
-						if (style == STYLE_VENDOR)
-							ele = getOrCreate(list, runtimeType.getVendor());
-						else if (style == STYLE_VERSION)
-							ele = getOrCreate(list, runtimeType.getVersion());
-						else if (style == STYLE_TYPE)
-							ele = getOrCreate(list, runtimeType.getName());
-						ele.contents.add(runtimes[i]);
-						elementToParentMap.put(runtimes[i], ele);
-					} catch (Exception e) {
-						Trace.trace(Trace.WARNING, "Error in runtime content provider", e);
-					}
+		IRuntime[] runtimes = ServerCore.getRuntimes();
+		if (runtimes != null) {
+			int size = runtimes.length;
+			for (int i = 0; i < size; i++) {
+				IRuntimeType runtimeType = runtimes[i].getRuntimeType();
+				try {
+					TreeElement ele = getOrCreate(list, runtimeType.getVendor());
+					ele.contents.add(runtimes[i]);
+					elementToParentMap.put(runtimes[i], ele);
+				} catch (Exception e) {
+					Trace.trace(Trace.WARNING, "Error in runtime content provider", e);
 				}
-			}
-		} else {
-			IRuntime[] runtimes = ServerCore.getRuntimes();
-			if (runtimes != null) {
-				int size = runtimes.length;
-				for (int i = 0; i < size; i++)
-					list.add(runtimes[i]);
 			}
 		}
 		elements = list.toArray();

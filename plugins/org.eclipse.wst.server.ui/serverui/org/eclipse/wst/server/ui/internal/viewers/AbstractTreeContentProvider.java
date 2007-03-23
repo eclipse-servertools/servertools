@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,11 +22,7 @@ import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
  * Runtime type content provider.
  */
 public abstract class AbstractTreeContentProvider implements ITreeContentProvider {
-	public static final byte STYLE_FLAT = 0;
-
 	public static final String ROOT = "root";
-
-	protected byte style;
 
 	protected Object initialSelection;
 
@@ -41,19 +37,15 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 
 	/**
 	 * AbstractTreeContentProvider constructor comment.
-	 * 
-	 * @param style a style parameter
 	 */
-	public AbstractTreeContentProvider(byte style) {
+	public AbstractTreeContentProvider() {
 		super();
-		this.style = style;
 		
 		fillTree();
 	}
 
-	public AbstractTreeContentProvider(byte style, boolean init) {
+	public AbstractTreeContentProvider(boolean init) {
 		super();
-		this.style = style;
 	}
 
 	protected abstract void fillTree();
@@ -138,9 +130,7 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 	}
 
 	public Object[] getChildren(Object element) {
-		if (style == STYLE_FLAT)
-			return null;
-		else if (!(element instanceof TreeElement))
+		if (!(element instanceof TreeElement))
 			return null;
 		
 		TreeElement rte = (TreeElement) element;
@@ -148,23 +138,12 @@ public abstract class AbstractTreeContentProvider implements ITreeContentProvide
 	}
 
 	public Object getParent(Object element) {
-		if (style == STYLE_FLAT)
-			return null;
-		//else if (element instanceof TreeElement)
-		//	return null;
-
 		return getParentImpl(element);
 	}
 
 	public boolean hasChildren(Object element) {
-		if (style == STYLE_FLAT)
-			return false;
-		//else if (!(element instanceof TreeElement))
-		//	return false;
 		Object[] children = getChildren(element);
 		return children != null && children.length > 0;
-
-		//return true;
 	}
 
 	/**

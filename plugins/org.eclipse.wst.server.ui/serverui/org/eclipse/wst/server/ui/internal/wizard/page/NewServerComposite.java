@@ -328,7 +328,7 @@ public class NewServerComposite extends Composite {
 	}
 
 	protected void createExistingComposite(Composite comp) {
-		existingComp = new ServerComposite(comp, SWT.NONE, new ServerComposite.ServerSelectionListener() {
+		existingComp = new ServerComposite(comp, new ServerComposite.ServerSelectionListener() {
 			public void serverSelected(IServer server) {
 				wizard.setMessage(null, IMessageProvider.NONE);
 				

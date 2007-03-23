@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,15 +36,15 @@ public class RuntimeTypeComposite extends AbstractTreeComposite {
 		public void runtimeTypeSelected(IRuntimeType runtimeType);
 	}
 
-	public RuntimeTypeComposite(Composite parent, int style, boolean creation, RuntimeTypeSelectionListener listener2, String type, String version, String runtimeTypeId) {
-		super(parent, style);
+	public RuntimeTypeComposite(Composite parent, boolean creation, RuntimeTypeSelectionListener listener2, String type, String version, String runtimeTypeId) {
+		super(parent);
 		this.listener = listener2;
 		this.creation = creation;
 		this.type = type;
 		this.version = version;
 		this.runtimeTypeId = runtimeTypeId;
 		
-		contentProvider = new RuntimeTypeTreeContentProvider(RuntimeTypeTreeContentProvider.STYLE_VENDOR, creation, type, version, runtimeTypeId);
+		contentProvider = new RuntimeTypeTreeContentProvider(creation, type, version, runtimeTypeId);
 		treeViewer.setContentProvider(contentProvider);
 		
 		ILabelProvider labelProvider = new RuntimeTypeTreeLabelProvider();
@@ -98,22 +98,9 @@ public class RuntimeTypeComposite extends AbstractTreeComposite {
 		return Messages.runtimeTypeCompDescription;
 	}
 
-	protected String[] getComboOptions() {
-		return new String[] { Messages.name,
-			Messages.vendor, Messages.version,
-			Messages.moduleSupport };
-	}
-
-	protected void viewOptionSelected(byte option) {
-		ISelection sel = treeViewer.getSelection();
-		treeViewer.setContentProvider(new RuntimeTypeTreeContentProvider(option, creation, type, version, runtimeTypeId));
-		treeViewer.setSelection(sel);
-	}
-
 	public void refresh() {
 		ISelection sel = treeViewer.getSelection();
-		RuntimeTypeTreeContentProvider cp = (RuntimeTypeTreeContentProvider) treeViewer.getContentProvider();
-		treeViewer.setContentProvider(new RuntimeTypeTreeContentProvider(cp.style, creation, type, version, runtimeTypeId));
+		treeViewer.setContentProvider(new RuntimeTypeTreeContentProvider(creation, type, version, runtimeTypeId));
 		treeViewer.setSelection(sel);
 	}
 

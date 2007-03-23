@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,7 +31,6 @@ public class ServerComposite extends AbstractTreeComposite {
 	protected ServerSelectionListener listener;
 	protected ServerTreeContentProvider contentProvider;
 	protected boolean initialSelection = true;
-	protected byte viewOption;
 
 	protected IModule module;
 	protected String launchMode;
@@ -41,15 +40,14 @@ public class ServerComposite extends AbstractTreeComposite {
 		public void serverSelected(IServer server);
 	}
 
-	public ServerComposite(Composite parent, int style, ServerSelectionListener listener2, IModule module, String launchMode) {
-		super(parent, style);
+	public ServerComposite(Composite parent, ServerSelectionListener listener2, IModule module, String launchMode) {
+		super(parent);
 		this.module = module;
 		this.launchMode = launchMode;
 		
 		this.listener = listener2;
 		
-		contentProvider = new ServerTreeContentProvider(ServerTreeContentProvider.STYLE_HOST, module, launchMode);
-		viewOption = ServerTreeContentProvider.STYLE_HOST;
+		contentProvider = new ServerTreeContentProvider(module, launchMode);
 		treeViewer.setContentProvider(contentProvider);
 		
 		ILabelProvider labelProvider = new ServerTreeLabelProvider();
@@ -85,8 +83,8 @@ public class ServerComposite extends AbstractTreeComposite {
 		});
 	}
 
-	public ServerComposite(Composite parent, int style, ServerSelectionListener listener2) {
-		this(parent, style, listener2, null, null);
+	public ServerComposite(Composite parent, ServerSelectionListener listener2) {
+		this(parent, listener2, null, null);
 	}
 
 	public void setIncludeIncompatibleVersions(boolean b) {
@@ -108,7 +106,7 @@ public class ServerComposite extends AbstractTreeComposite {
 
 	public void refreshAll() {
 		ISelection sel = treeViewer.getSelection();
-		contentProvider = new ServerTreeContentProvider(viewOption, module, launchMode);
+		contentProvider = new ServerTreeContentProvider(module, launchMode);
 		contentProvider.setIncludeIncompatibleVersions(includeIncompatibleVersions);
 		treeViewer.setContentProvider(contentProvider);
 		treeViewer.setSelection(sel);
@@ -120,20 +118,6 @@ public class ServerComposite extends AbstractTreeComposite {
 
 	protected String getTitleLabel() {
 		return Messages.wizNewServerSelectExisting;
-	}
-
-	protected String[] getComboOptions() {
-		return new String[] { Messages.name, Messages.host, 
-			Messages.vendor, Messages.version };
-	}
-
-	protected void viewOptionSelected(byte option) {
-		ISelection sel = treeViewer.getSelection();
-		viewOption = option;
-		contentProvider = new ServerTreeContentProvider(option, module, launchMode);
-		contentProvider.setIncludeIncompatibleVersions(includeIncompatibleVersions);
-		treeViewer.setContentProvider(contentProvider);
-		treeViewer.setSelection(sel);
 	}
 
 	public IServer getSelectedServer() {

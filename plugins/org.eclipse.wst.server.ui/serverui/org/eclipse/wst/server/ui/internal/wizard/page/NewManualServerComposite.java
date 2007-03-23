@@ -118,7 +118,7 @@ public class NewManualServerComposite extends Composite {
 		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
 		whs.setHelp(this, ContextIds.NEW_SERVER_WIZARD);
 		
-		serverTypeComposite = new ServerTypeComposite(this, SWT.NONE, moduleType, serverTypeId, new ServerTypeComposite.ServerTypeSelectionListener() {
+		serverTypeComposite = new ServerTypeComposite(this, moduleType, serverTypeId, new ServerTypeComposite.ServerTypeSelectionListener() {
 			public void serverTypeSelected(IServerType type2) {
 				handleTypeSelection(type2);
 				//WizardUtil.defaultSelect(parent, CreateServerWizardPage.this);

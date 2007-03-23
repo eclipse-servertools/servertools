@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,14 +44,14 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 		public void serverTypeSelected(IServerType type);
 	}
 
-	public ServerTypeComposite(Composite parent, int style, IModuleType moduleType, String serverTypeId, ServerTypeSelectionListener listener2) {
-		super(parent, style);
+	public ServerTypeComposite(Composite parent, IModuleType moduleType, String serverTypeId, ServerTypeSelectionListener listener2) {
+		super(parent);
 		this.listener = listener2;
 		
 		this.moduleType = moduleType;
 		this.serverTypeId = serverTypeId;
 		
-		contentProvider = new ServerTypeTreeContentProvider(ServerTypeTreeContentProvider.STYLE_VENDOR, moduleType, serverTypeId);
+		contentProvider = new ServerTypeTreeContentProvider(moduleType, serverTypeId);
 		treeViewer.setContentProvider(contentProvider);
 		
 		ILabelProvider labelProvider = new ServerTypeTreeLabelProvider();
@@ -126,29 +126,13 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 		return Messages.serverTypeCompLabel;
 	}
 
-	protected String[] getComboOptions() {
-		return new String[] { Messages.name,
-			Messages.vendor, Messages.version,
-			Messages.moduleSupport };
-	}
-
-	protected void viewOptionSelected(byte option) {
-		ISelection sel = treeViewer.getSelection();
-		contentProvider = new ServerTypeTreeContentProvider(option, moduleType, serverTypeId);
-		contentProvider.setLocalhost(isLocalhost);
-		contentProvider.setIncludeIncompatibleVersions(includeIncompatibleVersions);
-		treeViewer.setContentProvider(contentProvider);
-		treeViewer.setSelection(sel);
-	}
-
 	public IServerType getSelectedServerType() {
 		return selection;
 	}
 
 	public void refresh() {
 		ISelection sel = treeViewer.getSelection();
-		ServerTypeTreeContentProvider cp = (ServerTypeTreeContentProvider) treeViewer.getContentProvider();
-		treeViewer.setContentProvider(new ServerTypeTreeContentProvider(cp.style, moduleType, serverTypeId));
+		treeViewer.setContentProvider(new ServerTypeTreeContentProvider(moduleType, serverTypeId));
 		treeViewer.setSelection(sel);
 	}
 

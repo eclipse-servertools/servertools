@@ -87,7 +87,7 @@ public class NewRuntimeComposite extends Composite {
 		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
 		whs.setHelp(this, ContextIds.NEW_RUNTIME_WIZARD);
 		
-		final RuntimeTypeComposite comp = new RuntimeTypeComposite(this, SWT.NONE, true, new RuntimeTypeComposite.RuntimeTypeSelectionListener() {
+		final RuntimeTypeComposite comp = new RuntimeTypeComposite(this, true, new RuntimeTypeComposite.RuntimeTypeSelectionListener() {
 			public void runtimeTypeSelected(IRuntimeType runtimeType) {
 				handleSelection(runtimeType);
 			}
@@ -154,7 +154,7 @@ public class NewRuntimeComposite extends Composite {
 		int size = serverTypes.length;
 		for (int i = 0; i < size; i++) {
 			IRuntimeType rt = serverTypes[i].getRuntimeType();
-			if (rt.equals(runtimeType))
+			if (rt != null && rt.equals(runtimeType))
 				list.add(serverTypes[i]);
 		}
 		if (list.size() == 1)

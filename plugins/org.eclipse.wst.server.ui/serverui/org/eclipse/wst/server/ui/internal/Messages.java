@@ -208,7 +208,6 @@ public class Messages extends NLS {
 	public static String wizNewServerWizardTitle;
 	public static String wizSelectClientWizardTitle;
 	public static String wizTaskWizardTitle;
-	public static String viewBy;
 	public static String dialogMonitorTitle;
 	public static String dialogMonitorMonitorPort;
 	public static String dialogMonitorColumnStatus;
@@ -229,13 +228,8 @@ public class Messages extends NLS {
 	public static String columnType;
 	public static String runtimeTypeCompTree;
 	public static String runtimeTypeCompDescription;
-	public static String name;
-	public static String vendor;
-	public static String version;
-	public static String moduleSupport;
 	public static String installedRuntimes;
 	public static String wizNewServerSelectExisting;
-	public static String host;
 	public static String elementUnknownName;
 	public static String serverTypeCompLabel;
 	public static String viewServers;

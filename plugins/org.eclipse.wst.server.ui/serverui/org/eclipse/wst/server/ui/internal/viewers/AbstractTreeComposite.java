@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,23 +23,20 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
-import org.eclipse.swt.widgets.Tree;
-
-import org.eclipse.wst.server.ui.internal.Messages;
+import org.eclipse.ui.dialogs.FilteredTree;
 /**
  * 
  */
 public abstract class AbstractTreeComposite extends Composite {
-	protected Tree tree;
+	protected FilteredTree tree;
 	protected TreeViewer treeViewer;
 	protected Label description;
 
-	public AbstractTreeComposite(Composite parent, int style) {
-		super(parent, style);
+	public AbstractTreeComposite(Composite parent) {
+		super(parent, SWT.NONE);
 		
 		createWidgets();
 	}
@@ -81,16 +78,15 @@ public abstract class AbstractTreeComposite extends Composite {
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER);
 		if (descriptionText != null && details == null)
 			data.verticalIndent = 7;
+		data.horizontalSpan = 2;
 		label.setLayoutData(data);
 		
-		createViewComposite();
-		
-		tree = new Tree(this, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE);
+		tree = new FilteredTree(this, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE, new ServerPatternFilter());
 		data = new GridData(GridData.FILL_BOTH);
 		data.horizontalSpan = 2;
 		tree.setLayoutData(data);
 		
-		treeViewer = new TreeViewer(tree);
+		treeViewer = tree.getViewer();
 		treeViewer.setSorter(new ViewerSorter());
 		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
@@ -119,40 +115,9 @@ public abstract class AbstractTreeComposite extends Composite {
 		tree.forceFocus();
 	}
 
-	protected void createViewComposite() {
-		Composite comp = new Composite(this, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.horizontalSpacing = 3;
-		layout.verticalSpacing = 0;
-		layout.marginWidth = 0;
-		layout.marginHeight = 0;
-		layout.numColumns = 2;
-		comp.setLayout(layout);
-		
-		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.VERTICAL_ALIGN_END);
-		comp.setLayoutData(data);
-		
-		Label label = new Label(comp, SWT.NONE);
-		label.setText(Messages.viewBy);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.VERTICAL_ALIGN_CENTER);
-		label.setLayoutData(data);
-		
-		final Combo combo = new Combo(comp, SWT.DROP_DOWN | SWT.READ_ONLY);
-		combo.setItems(getComboOptions());
-		combo.select(1);
-		combo.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.GRAB_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER));
-		combo.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				int sel = combo.getSelectionIndex();
-				viewOptionSelected((byte) sel);
-			}
-		});
-	}
 	protected abstract String getDescriptionLabel();
 
 	protected abstract String getTitleLabel();
-
-	protected abstract String[] getComboOptions();
 
 	protected boolean hasDescription() {
 		return true;
@@ -162,8 +127,6 @@ public abstract class AbstractTreeComposite extends Composite {
 		if (description != null && text != null)
 			description.setText(text);
 	}
-
-	protected abstract void viewOptionSelected(byte option);
 
 	protected TreeViewer getTreeViewer() {
 		return treeViewer;

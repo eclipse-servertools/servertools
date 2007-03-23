@@ -20,11 +20,6 @@ import org.eclipse.wst.server.ui.internal.Trace;
  * Server type content provider.
  */
 public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
-	public static final byte STYLE_VENDOR = 1;
-	public static final byte STYLE_VERSION = 2;
-	public static final byte STYLE_MODULE_TYPE = 3;
-	public static final byte STYLE_TYPE = 4; // not used yet
-
 	protected boolean localhost;
 
 	protected IModuleType moduleType;
@@ -34,12 +29,11 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 	/**
 	 * ServerTypeTreeContentProvider constructor.
 	 * 
-	 * @param style a style
 	 * @param moduleType a module type
 	 * @param serverTypeId a server type id, or null to match any id
 	 */
-	public ServerTypeTreeContentProvider(byte style, IModuleType moduleType, String serverTypeId) {
-		super(style, false);
+	public ServerTypeTreeContentProvider(IModuleType moduleType, String serverTypeId) {
+		super(false);
 		localhost = true;
 		
 		this.moduleType = moduleType;
@@ -58,39 +52,13 @@ public class ServerTypeTreeContentProvider extends AbstractTreeContentProvider {
 			for (int i = 0; i < size; i++) {
 				IServerType serverType = serverTypes[i];
 				if (include(serverType)) {
-					if (style == STYLE_FLAT) {
-						list.add(serverType);
-					} else if (style != STYLE_MODULE_TYPE) {
-						try {
-							IRuntimeType runtimeType = serverType.getRuntimeType();
-							TreeElement ele = null;
-							if (style == STYLE_VENDOR)
-								ele = getOrCreate(list, runtimeType.getVendor());
-							else if (style == STYLE_VERSION)
-								ele = getOrCreate(list, runtimeType.getVersion());
-							else if (style == STYLE_TYPE)
-								ele = getOrCreate(list, runtimeType.getName());
-							ele.contents.add(serverType);
-							elementToParentMap.put(serverType, ele);
-						} catch (Exception e) {
-							Trace.trace(Trace.WARNING, "Error in server configuration content provider", e);
-						}
-					} else { // style = MODULE_TYPE
+					try {
 						IRuntimeType runtimeType = serverType.getRuntimeType();
-						IModuleType[] moduleTypes = runtimeType.getModuleTypes();
-						if (moduleTypes != null) {
-							int size2 = moduleTypes.length;
-							for (int j = 0; j < size2; j++) {
-								IModuleType mb = moduleTypes[j];
-								if (mb != null) {
-									TreeElement ele = getOrCreate(list, mb.getName());
-									TreeElement ele2 = getOrCreate(ele.contents, mb.getName() + "/" + mb.getVersion(), mb.getVersion());
-									ele2.contents.add(serverType);
-									elementToParentMap.put(serverType, ele2);
-									elementToParentMap.put(ele2, ele);
-								}
-							}
-						}
+						TreeElement ele = getOrCreate(list, runtimeType.getVendor());
+						ele.contents.add(serverType);
+						elementToParentMap.put(serverType, ele);
+					} catch (Exception e) {
+						Trace.trace(Trace.WARNING, "Error in server configuration content provider", e);
 					}
 				}
 			}
