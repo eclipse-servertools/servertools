@@ -15,6 +15,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.internal.PublishServerJob;
+import org.eclipse.wst.server.core.internal.RestartServerJob;
 import org.eclipse.wst.server.core.internal.ServerPreferences;
 import org.eclipse.wst.server.core.internal.ServerType;
 import org.eclipse.wst.server.core.internal.StartServerJob;
@@ -22,6 +23,7 @@ import org.eclipse.wst.server.ui.internal.ImageResource;
 import org.eclipse.wst.server.ui.internal.Messages;
 import org.eclipse.wst.server.ui.internal.ServerUIPlugin;
 import org.eclipse.wst.server.ui.internal.Trace;
+import org.eclipse.wst.server.ui.internal.provisional.UIDecoratorManager;
 import org.eclipse.swt.widgets.Shell;
 /**
  * Start a server.
@@ -64,7 +66,14 @@ public class StartAction extends AbstractServerAction {
 	 * @param server a server
 	 */
 	public boolean accept(IServer server) {
-		return server.canStart(launchMode).isOK();
+		if (server.getServerState() != IServer.STATE_STARTED) { // start
+			return server.canStart(launchMode).isOK();
+		}
+		// restart
+		String mode2 = launchMode;
+		if (mode2 == null)
+			mode2 = server.getMode();
+		return server.getServerType() != null && UIDecoratorManager.getUIDecorator(server.getServerType()).canRestart() && server.canRestart(mode2).isOK();
 	}
 
 	/**
@@ -72,28 +81,43 @@ public class StartAction extends AbstractServerAction {
 	 * @param server a server
 	 */
 	public void perform(IServer server) {
-		if (!ServerUIPlugin.saveEditors())
-			return;
-		
-		if (!ServerPreferences.getInstance().isAutoPublishing()) {
-			StartServerJob startJob = new StartServerJob(server, launchMode);
-			startJob.schedule();
-			return;
-		}
-		
-		try {
-			PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, false); 
-			StartServerJob startJob = new StartServerJob(server, launchMode);
+		if (server.getServerState() != IServer.STATE_STARTED) {
+			if (!ServerUIPlugin.saveEditors())
+				return;
 			
-			if (((ServerType)server.getServerType()).startBeforePublish()) {
-				startJob.setNextJob(publishJob);
+			if (!ServerPreferences.getInstance().isAutoPublishing()) {
+				StartServerJob startJob = new StartServerJob(server, launchMode);
 				startJob.schedule();
-			} else {
-				publishJob.setNextJob(startJob);
-				publishJob.schedule();
+				return;
 			}
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error starting server", e);
+			
+			try {
+				PublishServerJob publishJob = new PublishServerJob(server, IServer.PUBLISH_INCREMENTAL, false); 
+				StartServerJob startJob = new StartServerJob(server, launchMode);
+				
+				if (((ServerType)server.getServerType()).startBeforePublish()) {
+					startJob.setNextJob(publishJob);
+					startJob.schedule();
+				} else {
+					publishJob.setNextJob(startJob);
+					publishJob.schedule();
+				}
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Error starting server", e);
+			}
+		} else {
+			if (!ServerUIPlugin.promptIfDirty(shell, server))
+				return;
+			
+			try {
+				String launchMode2 = launchMode;
+				if (launchMode2 == null)
+					launchMode2 = server.getMode();
+				RestartServerJob restartJob = new RestartServerJob(server, launchMode2);
+				restartJob.schedule();
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Error restarting server", e);
+			}
 		}
 	}
 }

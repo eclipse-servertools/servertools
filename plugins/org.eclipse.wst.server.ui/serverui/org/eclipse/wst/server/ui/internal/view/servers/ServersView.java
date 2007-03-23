@@ -62,7 +62,6 @@ public class ServersView extends ViewPart {
 	protected Action[] actions;
 	protected Action actionModifyModules;
 	protected Action actionProperties;
-	protected MenuManager restartMenu;
 
 	/**
 	 * ServersView constructor comment.
@@ -248,13 +247,7 @@ public class ServersView extends ViewPart {
 	 */
 	public void initializeActions(ISelectionProvider provider) {
 		Shell shell = getSite().getShell();
-		
-		// create the restart menu
-		restartMenu = new MenuManager(Messages.actionRestart);
-		restartMenu.add(new RestartAction(shell, provider, ILaunchManager.DEBUG_MODE));
-		restartMenu.add(new RestartAction(shell, provider, ILaunchManager.RUN_MODE));
-		restartMenu.add(new RestartAction(shell, provider, ILaunchManager.PROFILE_MODE));
-		
+				
 		actions = new Action[6];
 		// create the start actions
 		actions[0] = new StartAction(shell, provider, ILaunchManager.DEBUG_MODE);
@@ -325,11 +318,8 @@ public class ServersView extends ViewPart {
 		
 		if (server != null && module == null) {
 			// server actions
-			for (int i = 0; i < actions.length; i++) {
-				if (i == 3) // insert restart menu
-					menu.add(restartMenu);
+			for (int i = 0; i < actions.length; i++)
 				menu.add(actions[i]);
-			}
 			
 			menu.add(new Separator());
 			menu.add(actionModifyModules);
@@ -364,7 +354,6 @@ public class ServersView extends ViewPart {
 				menuManager.add(noneAction);
 				menu.add(menuManager);
 			}
-			menu.add(new SwitchServerLocationAction(server));
 		}
 		
 		if (server != null && module != null) {

@@ -148,8 +148,9 @@ public class Messages extends NLS {
 	public static String actionStartModule;
 	public static String actionRestartModule;
 	public static String actionUpdateStatus;
-	public static String actionMoveServerToMetadata;
-	public static String actionMoveServerToWorkspace;
+	public static String actionSwitchServerLocation;
+	public static String switchServerLocation;
+	public static String switchServerLocationMetadata;
 	public static String dialogAddRemoveModulesNone;
 	public static String actionSetNewServer;
 	public static String errorNoArtifact;

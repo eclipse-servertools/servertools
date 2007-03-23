@@ -80,14 +80,7 @@ public class ServerActionHelper {
 		menu.add(new StartAction(shell, provider, ILaunchManager.DEBUG_MODE));
 		menu.add(new StartAction(shell, provider, ILaunchManager.RUN_MODE));
 		menu.add(new StartAction(shell, provider, ILaunchManager.PROFILE_MODE));
-		
-		// create the restart menu
-		MenuManager menuManager = new MenuManager(Messages.actionRestart);
-		menuManager.add(new RestartAction(shell, provider, ILaunchManager.DEBUG_MODE));
-		menuManager.add(new RestartAction(shell, provider, ILaunchManager.RUN_MODE));
-		menuManager.add(new RestartAction(shell, provider, ILaunchManager.PROFILE_MODE));
-		menu.add(menuManager);
-		
+				
 		// create the publish actions
 		menu.add(new PublishAction(shell, provider));
 		menu.add(new PublishCleanAction(shell, provider));

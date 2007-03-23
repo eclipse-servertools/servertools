@@ -10,11 +10,15 @@
  *******************************************************************************/
 package org.eclipse.wst.server.ui.internal;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -22,6 +26,7 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerType;
+import org.eclipse.wst.server.core.internal.Server;
 /**
  * PropertyPage for servers.
  */
@@ -52,7 +57,7 @@ public class ServerPropertyPage extends PropertyPage {
 			GridLayout layout = new GridLayout();
 			layout.marginHeight = 0;
 			layout.marginWidth = 0;
-			layout.numColumns = 2;
+			layout.numColumns = 3;
 			composite.setLayout(layout);
 			composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 			
@@ -62,7 +67,9 @@ public class ServerPropertyPage extends PropertyPage {
 			
 			label = new Label(composite, SWT.NONE);
 			label.setText(server.getName());
-			label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			GridData data = new GridData(GridData.FILL_HORIZONTAL);
+			data.horizontalSpan = 2;
+			label.setLayoutData(data);
 			
 			// type
 			label = new Label(composite, SWT.NONE);
@@ -74,9 +81,11 @@ public class ServerPropertyPage extends PropertyPage {
 				label.setText(serverType.getName());
 			else
 				label.setText(Messages.elementUnknownName);
-			label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			data = new GridData(GridData.FILL_HORIZONTAL);
+			data.horizontalSpan = 2;
+			label.setLayoutData(data);
 			
-			// provider
+			// vendor
 			label = new Label(composite, SWT.NONE);
 			label.setText(Messages.propServerInfoVendor);
 			
@@ -88,7 +97,40 @@ public class ServerPropertyPage extends PropertyPage {
 				label.setText(runtimeType.getVendor());
 			else
 				label.setText(Messages.elementUnknownName);
-			label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			data = new GridData(GridData.FILL_HORIZONTAL);
+			data.horizontalSpan = 2;
+			label.setLayoutData(data);
+			
+			// location
+			label = new Label(composite, SWT.NONE);
+			label.setText(Messages.switchServerLocation);
+			label.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING));
+			
+			final Label serverLocation = new Label(composite, SWT.NONE);
+			final Server svr = (Server) server;
+			if (svr.getFile() != null)
+				serverLocation.setText(svr.getFile().getFullPath().toPortableString());
+			else
+				serverLocation.setText(Messages.switchServerLocationMetadata);
+			
+			serverLocation.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
+			
+			Button switchLocation = new Button(composite, SWT.PUSH);
+			switchLocation.setText(Messages.actionSwitchServerLocation);
+			switchLocation.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+			switchLocation.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+					try {
+						Server.switchLocation(svr, null);
+					} catch (CoreException ce) {
+						Trace.trace(Trace.SEVERE, "Error switching server location", ce);
+					}
+					if (svr.getFile() != null)
+						serverLocation.setText(svr.getFile().getFullPath().toPortableString());
+					else
+						serverLocation.setText(Messages.switchServerLocationMetadata);
+				}
+			});
 			
 			Dialog.applyDialogFont(composite);
 			
