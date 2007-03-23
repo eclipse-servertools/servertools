@@ -22,8 +22,6 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationManager;
-import org.eclipse.debug.internal.ui.launchConfigurations.LaunchHistory;
-import org.eclipse.debug.ui.ILaunchGroup;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.server.core.IModule;
@@ -217,14 +215,7 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 				protected IStatus run(IProgressMonitor monitor2) {
 					try {
 						LaunchConfigurationManager lcm = DebugUIPlugin.getDefault().getLaunchConfigurationManager();
-						ILaunchGroup[] groups = lcm.getLaunchGroups();
-						int size = groups.length;
-						for (int i = 0; i < size; i++) {
-							String id = groups[i].getIdentifier();
-							LaunchHistory history = lcm.getLaunchHistory(id);
-							if (history != null)
-								history.launchAdded(launch2);
-						}
+						lcm.setRecentLaunch(launch2);
 					} catch (Throwable t) {
 						Trace.trace(Trace.WARNING, "Could not tweak debug launch history");
 					}
