@@ -22,8 +22,6 @@
 
   <plugin id="org.eclipse.jst.server.generic.core" fragment="false"/>
 
-  <plugin id="org.eclipse.jst.server.generic.serverdefinitions" fragment="false"/>
-
   <plugin id="org.eclipse.jst.server.generic.ui" fragment="false"/>
 
   <plugin id="org.eclipse.jst.server.tomcat.core" fragment="false"/>
