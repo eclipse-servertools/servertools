@@ -8,7 +8,7 @@
 <prolog><metadata>
 <keywords id="index"><indexterm>servers<indexterm>deleting</indexterm></indexterm>
 <indexterm>wizards<indexterm>Delete Server</indexterm></indexterm><indexterm>Delete
-Server wizard<?Pub Caret?></indexterm></keywords>
+Server wizard</indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context id="context">To delete a server:</context>
@@ -17,9 +17,27 @@ Server wizard<?Pub Caret?></indexterm></keywords>
 delete.</cmd></step>
 <step><cmd>Select  <b>Delete</b>. </cmd><info>The Delete Server dialog box
 opens.</info></step>
-<step><cmd>Select the <uicontrol>OK</uicontrol> button to delete the server
-from the Servers view.</cmd></step>
+<step><cmd>The Delete Server dialog box opens and prompts different options
+depending on the status of the server in the Servers view:</cmd>
+<choicetable>
+<chrow><choption>Delete unused server configurations</choption><chdesc>If
+server configuration files were created in the workspace under a server project,
+this option becomes available. Select this check box to remove the server
+configuration files from the workspace.</chdesc></chrow>
+<chrow><choption>Delete running servers</choption><chdesc>This option specifies
+to delete servers that are still running. </chdesc></chrow>
+<chrow><choption>Stop servers before deleting</choption><chdesc>This option
+is only available if the <b>Delete running servers</b> option is selected.
+This option specifies to stop running servers prior to removing them from
+the Servers view. If this option is cleared and the <b>Delete running servers</b> option
+is selected, no stop command is issued against the server, and as a result
+the server is left running after removing the server from the Servers view.</chdesc>
+</chrow>
+</choicetable>
+</step>
+<step><cmd>Select the <uicontrol>OK</uicontrol> button to apply your delete
+options.</cmd></step><?Pub Caret?>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000001015?>
+<?Pub *0000002082?>

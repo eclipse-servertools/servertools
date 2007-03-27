@@ -4,11 +4,15 @@
  "task.dtd">
 <task id="tdebug_wst" xml:lang="en-us">
 <title id="title">Debugging applications on a server</title>
-<shortdesc></shortdesc>
+<shortdesc id="shortdesc">The debugger enables you to detect and diagnose
+errors in your application. It allows you to control the execution of your
+program by setting breakpoints, suspending threads, stepping through the code,
+and examining the contents of the variables. You can debug the following artifacts
+on a server without losing the state of your application:<?Pub Caret?></shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<?Pub Caret?><indexterm>debugging applications</indexterm></indexterm>
+<keywords id="index"><indexterm>servers<indexterm>debugging applications</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody></taskbody>
 </task>
-<?Pub *0000000489?>
+<?Pub *0000000840?>
