@@ -28,6 +28,15 @@ public class PublishOperation2 extends PublishOperation {
 	protected int kind;
 	protected int deltaKind;
 
+	/**
+	 * Construct the operation object to publish the specified module
+	 * to the specified server.
+	 * 
+	 * @param server server to which the module will be published
+	 * @param kind kind of publish
+	 * @param module module to publish
+	 * @param deltaKind kind of change
+	 */
 	public PublishOperation2(TomcatServerBehaviour server, int kind, IModule[] module, int deltaKind) {
 		super("Publish to server", "Publish Web module to Tomcat server");
 		this.server = server;
@@ -36,14 +45,23 @@ public class PublishOperation2 extends PublishOperation {
 		this.deltaKind = deltaKind;
 	}
 
+	/**
+	 * @see PublishOperation#getOrder()
+	 */
 	public int getOrder() {
 		return 0;
 	}
 
+	/**
+	 * @see PublishOperation#getKind()
+	 */
 	public int getKind() {
 		return REQUIRED;
 	}
 
+	/**
+	 * @see PublishOperation#execute(IProgressMonitor, IAdaptable)
+	 */
 	public void execute(IProgressMonitor monitor, IAdaptable info) throws CoreException {
 		List status = new ArrayList();
 		if (module.length == 1) { // web module
@@ -58,14 +76,17 @@ public class PublishOperation2 extends PublishOperation {
 	private void publishDir(IModule module2, List status, IProgressMonitor monitor) throws CoreException {
 		IPath path = server.getModuleDeployDirectory(module2);
 		
-		if (kind == IServer.PUBLISH_CLEAN || deltaKind == ServerBehaviourDelegate.REMOVED) { // clean and republish from scratch
+		// Remove if requested or if previously published and are now serving without publishing
+		if (kind == IServer.PUBLISH_CLEAN || deltaKind == ServerBehaviourDelegate.REMOVED
+				|| server.getTomcatServer().isServeModulesWithoutPublish()) {
 			File f = path.toFile();
 			if (f.exists()) {
 				IStatus[] stat = PublishUtil.deleteDirectory(f, monitor);
 				addArrayToList(status, stat);
 			}
 			
-			if (deltaKind == ServerBehaviourDelegate.REMOVED)
+			if (deltaKind == ServerBehaviourDelegate.REMOVED
+					|| server.getTomcatServer().isServeModulesWithoutPublish())
 				return;
 		}
 		
@@ -90,11 +111,14 @@ public class PublishOperation2 extends PublishOperation {
 		path = path.append("WEB-INF").append("lib");
 		IPath jarPath = path.append(module[1].getName() + ".jar");
 		
-		if (kind == IServer.PUBLISH_CLEAN || deltaKind == ServerBehaviourDelegate.REMOVED) { // clean and republish from scratch
+		// Remove if requested or if previously published and are now serving without publishing
+		if (kind == IServer.PUBLISH_CLEAN || deltaKind == ServerBehaviourDelegate.REMOVED
+				|| server.getTomcatServer().isServeModulesWithoutPublish()) {
 			if (jarPath.toFile().exists())
 				jarPath.toFile().delete();
 			
-			if (deltaKind == ServerBehaviourDelegate.REMOVED)
+			if (deltaKind == ServerBehaviourDelegate.REMOVED
+					|| server.getTomcatServer().isServeModulesWithoutPublish())
 				return;
 		}
 		if (kind != IServer.PUBLISH_CLEAN && kind != IServer.PUBLISH_FULL) {

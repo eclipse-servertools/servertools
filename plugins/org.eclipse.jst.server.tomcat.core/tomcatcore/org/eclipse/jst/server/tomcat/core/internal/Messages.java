@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -83,6 +83,13 @@ public class Messages extends NLS {
 	public static String errorXMLContextNotFoundPath;
 	public static String errorXMLContextMangerNotFound;
 	public static String errorXMLContextNotFoundPath32;
+	public static String errorNoPublishNotSupported;
+	public static String errorPublishContextNotFound;
+	public static String errorPublishCouldNotRemoveModule;
+	public static String errorPublishLoaderJarNotFound;
+	public static String errorPublishURLConvert;
+	public static String errorPublishCantDeleteLoaderJar;
+	public static String errorPublishCatalinaProps;
 
 	public static String configurationEditorActionModifyPort;
 	public static String configurationEditorActionModifyMimeMapping;
@@ -96,6 +103,7 @@ public class Messages extends NLS {
 	public static String serverEditorActionSetSecure;
 	public static String serverEditorActionSetServerDirectory;
 	public static String serverEditorActionSetDeployDirectory;
+	public static String serverEditorActionSetServeWithoutPublish;
 	public static String fixModuleContextRootDescription;
 	public static String fixModuleContextRoot;
 

@@ -18,6 +18,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -27,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -34,11 +36,14 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.core.PublishUtil;
+import org.eclipse.jst.server.tomcat.core.internal.wst.ModuleTraverser;
 import org.eclipse.jst.server.tomcat.core.internal.xml.Factory;
 import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Context;
 import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Server;
 import org.eclipse.jst.server.tomcat.core.internal.xml.server40.ServerInstance;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.ServerUtil;
 import org.xml.sax.SAXException;
 
 /**
@@ -155,7 +160,7 @@ public class TomcatVersionHelper {
 			list.add("-Dcatalina.base=\"" + installPath.toOSString() + "\"");
 		list.add("-Dcatalina.home=\"" + installPath.toOSString() + "\"");
 		// Include a system property for the configurable deploy location
-		list.add("-Dcatalina.deploy=\"" + deployPath.toOSString() + "\"");
+		list.add("-Dwtp.deploy=\"" + deployPath.toOSString() + "\"");
 		list.add("-Djava.endorsed.dirs=\"" + installPath.append("common").append("endorsed").toOSString() + "\"");
 		
 		String[] s = new String[list.size()];
@@ -595,6 +600,134 @@ public class TomcatVersionHelper {
 			finally {
 				monitor.done();
 			}
+		}
+		return Status.OK_STATUS;
+	}
+	
+	/**
+	 * Copies the custom loader jar required to serve projects without
+	 * publishing to the specified destination directory.
+	 * 
+	 * @param destDir destination directory for the loader jar
+	 * @param serverId ID of the server receiving the jar
+	 * @return result of copy operation
+	 */
+	public static IStatus copyLoaderJar(IPath destDir, String serverId) {
+        String loaderJar = "/" + serverId + ".loader.jar";
+        URL installURL = TomcatPlugin.getInstance().getBundle().getEntry(loaderJar);
+        if (installURL == null) {
+			Trace.trace(Trace.SEVERE, "Loader jar not found for server ID " + serverId);
+			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPublishLoaderJarNotFound, serverId), null);
+        }
+        	
+        URL localURL;
+        try {
+            localURL = FileLocator.toFileURL(installURL);
+        } catch (IOException e) {
+			Trace.trace(Trace.SEVERE, "Could not convert " + installURL.toString() + " to file URL: " + e.getMessage());
+			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPublishURLConvert,
+					new String[] {installURL.toString(), e.getLocalizedMessage()}), e);
+        }
+		
+        destDir.toFile().mkdirs();
+        IStatus status = FileUtil.copyFile(localURL, destDir.append(loaderJar).toString());        
+        
+		return status;
+	}
+	
+	/**
+	 * Tries to delete the custom loader jar added to support serving projects directly
+	 * without publishing.  Returns a warning if not successful.
+	 *  
+	 * @param destDir destination directory containing the loader jar
+	 * @param serverId ID of the server from which to delete the jar
+	 * @return result of copy operation
+	 */
+	public static IStatus removeLoaderJar(IPath destDir, String serverId) {
+        String loaderJar = "/" + serverId + ".loader.jar";
+        File loaderFile = destDir.append(loaderJar).toFile();
+        // If loader jar exists but is not successfully deleted, return warning
+        if (loaderFile.exists() && !loaderFile.delete())
+        	return new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0,
+        			NLS.bind(Messages.errorPublishCantDeleteLoaderJar, loaderFile.getPath()), null);
+
+        return Status.OK_STATUS;
+	}
+	/**
+	 * Updates the catalina.properties file to include a extra entry in the
+	 * specified loader property to pickup the loader jar.
+	 * 
+	 * @param baseDir directory where the Catalina instance is found
+	 * @param jarLoc location of loader jar relative to baseDir
+	 * @param loader loader in catalina.properties to use
+	 * @return result of update operation
+	 */
+	public static IStatus updatePropertiesToServeDirectly(IPath baseDir, String jarLoc, String loader) {
+            File catalinaProperties = baseDir.append(
+                    "conf/catalina.properties").toFile();
+            try {
+            	CatalinaPropertiesUtil.addGlobalClasspath(catalinaProperties, loader,
+            			new String[] { "${catalina.base}/" + jarLoc + "/*.jar" });
+
+            } catch (IOException e) {
+            	return new Status(IStatus.ERROR,TomcatPlugin.PLUGIN_ID,
+            			NLS.bind(Messages.errorPublishCatalinaProps, e.getLocalizedMessage()), e);
+            }
+            return Status.OK_STATUS;
+	}
+	
+	/**
+	 * Update Contexts to serve web projects directly.
+	 * 
+	 * @param baseDir directory where the Catalina instance is found
+	 * @param loader name of the catalina.properties loader to use for global
+	 * classpath entries
+	 * @param monitor a progress monitor
+	 * @return result of update operation
+	 */
+	public static IStatus updateContextsToServeDirectly(IPath baseDir, String loader, IProgressMonitor monitor) {
+
+		IPath confDir = baseDir.append("conf");
+		IPath serverXml = confDir.append("server.xml");
+		try {
+			monitor = ProgressUtil.getMonitorFor(monitor);
+			monitor.beginTask(Messages.publishConfigurationTask, 300);
+
+			monitor.subTask(Messages.publishContextConfigTask);
+			Factory factory = new Factory();
+			factory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server40");
+			Server publishedServer = (Server) factory.loadDocument(new FileInputStream(serverXml.toFile()));
+			ServerInstance publishedInstance = new ServerInstance(publishedServer, null, null);
+			monitor.worked(100);
+
+			boolean modified = false;
+
+			// care about top-level modules only
+			TomcatPublishModuleVisitor visitor = new TomcatPublishModuleVisitor(
+					baseDir, publishedInstance, loader);
+			Context [] contexts = publishedInstance.getContexts();
+			for (int i = 0; i < contexts.length; i++) {
+				String moduleId = contexts[i].getSource();
+				if (moduleId != null && moduleId.length() > 0) {
+					IModule module = ServerUtil.getModule(moduleId);
+					ModuleTraverser.traverse(module, visitor, monitor);
+					modified = true;
+				}
+			}
+
+			if (modified) {
+				monitor.subTask(Messages.savingContextConfigTask);
+				factory.save(serverXml.toOSString());
+			}
+			monitor.worked(100);
+			if (Trace.isTraceEnabled())
+				Trace.trace(Trace.FINER, "Context docBase settings updated in server.xml.");
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Could not modify context configurations to serve directly for Tomcat configuration " + confDir.toOSString() + ": " + e.getMessage());
+			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPublishConfiguration, new String[] {e.getLocalizedMessage()}), e);
+		}
+		finally {
+			monitor.done();
 		}
 		return Status.OK_STATUS;
 	}

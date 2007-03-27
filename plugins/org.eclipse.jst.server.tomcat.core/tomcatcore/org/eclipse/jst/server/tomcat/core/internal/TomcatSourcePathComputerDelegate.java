@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2005, 2006, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,85 +14,137 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.core.sourcelookup.ISourcePathComputerDelegate;
-import org.eclipse.debug.core.sourcelookup.containers.FolderSourceContainer;
+import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.jst.server.tomcat.core.internal.wst.IModuleVisitor;
+import org.eclipse.jst.server.tomcat.core.internal.wst.ModuleTraverser;
+import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
+
 /**
- *
+ * 
  */
-public class TomcatSourcePathComputerDelegate implements ISourcePathComputerDelegate {
-	/* (non-Javadoc)
-	 * @see org.eclipse.debug.core.sourcelookup.ISourcePathComputerDelegate#computeSourceContainers(org.eclipse.debug.core.ILaunchConfiguration, org.eclipse.core.runtime.IProgressMonitor)
+public class TomcatSourcePathComputerDelegate implements
+		ISourcePathComputerDelegate {
+
+	/**
+	 * {@inheritDoc}
 	 */
-	public ISourceContainer[] computeSourceContainers(ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException {
-		List classpaths = new ArrayList();
-		classpaths.addAll(Arrays.asList(JavaRuntime.computeUnresolvedSourceLookupPath(configuration)));
-		List sourcefolderList = new ArrayList();
-		
+	public ISourceContainer[] computeSourceContainers(
+			ILaunchConfiguration configuration, IProgressMonitor monitor)
+			throws CoreException {
 		IServer server = ServerUtil.getServer(configuration);
-		if (server != null) {
-			//IPath basePath = ((TomcatServerBehaviour)server.getAdapter(TomcatServerBehaviour.class)).getRuntimeBaseDirectory();
-			List list = new ArrayList();
-			//List pathList = new ArrayList();
-			IModule[] modules = server.getModules();
-			for (int i = 0; i < modules.length; i++) {
-				IProject project = modules[i].getProject();
-				if (project != null) {
-					IFolder moduleFolder = project.getFolder(modules[i].getName());
-					if (moduleFolder.exists()) {
-						sourcefolderList.add(new FolderSourceContainer(moduleFolder, true));
-					}
-					
-					try {
-						if (project.hasNature(JavaCore.NATURE_ID)) {
-							IJavaProject javaProject = (IJavaProject) project.getNature(JavaCore.NATURE_ID);
-							if (!list.contains(javaProject))
-								list.add(javaProject);
-						}
-					} catch (Exception e) {
-						// ignore
-					}
-					
-					//IPath path = basePath.append("work").append("Catalina").append("localhost").append(modules[i].getName());
-					//pathList.add(path);
-				}
+
+		SourcePathComputerVisitor visitor = new SourcePathComputerVisitor(
+				configuration);
+
+		IModule[] modules = server.getModules();
+		for (int i = 0; i < modules.length; i++) {
+			ModuleTraverser.traverse(modules[i], visitor, monitor);
+		}
+
+		return visitor.getSourceContainers();
+	}
+
+	class SourcePathComputerVisitor implements IModuleVisitor {
+
+		final ILaunchConfiguration configuration;
+
+		/**
+		 * List<IRuntimeClasspathEntry> of unresolved IRuntimeClasspathEntries
+		 */
+		List runtimeClasspath = new ArrayList();
+
+		SourcePathComputerVisitor(ILaunchConfiguration configuration) {
+			this.configuration = configuration;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public void visitWebComponent(IVirtualComponent component)
+				throws CoreException {
+			IProject project = component.getProject();
+			if (project.hasNature(JavaCore.NATURE_ID)) {
+				IJavaProject javaProject = JavaCore.create(project);
+				runtimeClasspath.add(JavaRuntime
+						.newDefaultProjectClasspathEntry(javaProject));
 			}
-			int size = list.size();
-			IJavaProject[] projects = new IJavaProject[size];
-			list.toArray(projects);
-			
-			for (int i = 0; i < size; i++)
-				classpaths.addAll(Arrays.asList(JavaRuntime.computeUnresolvedRuntimeClasspath(projects[i])));
-			
-			// for (int i = 0; i < size3; i++)
-			//	entries2[size + size2 + i] = JavaRuntime.newArchiveRuntimeClasspathEntry((IPath) pathList.get(i));
 		}
 
-		IRuntimeClasspathEntry[] entries = new IRuntimeClasspathEntry[classpaths.size()];
-		classpaths.toArray(entries);
-
-		IRuntimeClasspathEntry[] resolved = JavaRuntime.resolveSourceLookupPath(entries, configuration);
-		ISourceContainer[] sourceContainers = JavaRuntime.getSourceContainers(resolved);
-		
-		if (!sourcefolderList.isEmpty()) {
-			ISourceContainer[] combinedSourceContainers = new ISourceContainer[sourceContainers.length + sourcefolderList.size()];
-			sourcefolderList.toArray(combinedSourceContainers);
-			System.arraycopy(sourceContainers, 0, combinedSourceContainers, sourcefolderList.size(), sourceContainers.length);
-			sourceContainers = combinedSourceContainers;
+		/**
+		 * {@inheritDoc}
+		 */
+		public void endVisitWebComponent(IVirtualComponent component)
+				throws CoreException {
+			// do nothing
 		}
 
-		return sourceContainers;
+		/**
+		 * {@inheritDoc}
+		 */
+		public void visitArchiveComponent(IPath runtimePath, IPath workspacePath) {
+			// do nothing
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public void visitDependentComponent(IPath runtimePath,
+				IPath workspacePath) {
+			// do nothing
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public void visitWebResource(IPath runtimePath, IPath workspacePath) {
+			// do nothing
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public void visitEarResource(IPath runtimePath, IPath workspacePath) {
+			// do nothing
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public void endVisitEarComponent(IVirtualComponent component)
+				throws CoreException {
+			// do nothing
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public void visitClasspathEntry(IPath rtFolder, IClasspathEntry entry) {
+			// do nothing
+		}
+
+		ISourceContainer[] getSourceContainers() throws CoreException {
+			runtimeClasspath.addAll(Arrays.asList(JavaRuntime
+					.computeUnresolvedSourceLookupPath(configuration)));
+			IRuntimeClasspathEntry[] entries = (IRuntimeClasspathEntry[]) runtimeClasspath
+					.toArray(new IRuntimeClasspathEntry[runtimeClasspath.size()]);
+			IRuntimeClasspathEntry[] resolved = JavaRuntime
+					.resolveSourceLookupPath(entries, configuration);
+			return JavaRuntime.getSourceContainers(resolved);
+		}
+
 	}
 }

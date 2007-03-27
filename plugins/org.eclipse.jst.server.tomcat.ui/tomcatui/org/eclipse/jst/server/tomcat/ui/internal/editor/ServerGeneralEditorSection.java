@@ -13,11 +13,17 @@ package org.eclipse.jst.server.tomcat.ui.internal.editor;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jst.server.tomcat.core.internal.ITomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.command.SetDebugModeCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.SetSecureCommand;
+import org.eclipse.jst.server.tomcat.core.internal.command.SetServeModulesWithoutPublishCommand;
 import org.eclipse.jst.server.tomcat.ui.internal.ContextIds;
 import org.eclipse.jst.server.tomcat.ui.internal.Messages;
+import org.eclipse.jst.server.tomcat.ui.internal.TomcatUIPlugin;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -32,8 +38,9 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
-
-import org.eclipse.wst.server.ui.editor.*;
+import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.internal.PublishServerJob;
+import org.eclipse.wst.server.ui.editor.ServerEditorSection;
 /**
  * Tomcat server general editor page.
  */
@@ -42,9 +49,12 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 
 	protected Button secure;
 	protected Button debug;
+	protected Button noPublish;
 	protected boolean updating;
 
 	protected PropertyChangeListener listener;
+	
+	protected boolean noPublishChanged;
 
 	/**
 	 * ServerGeneralEditorPart constructor comment.
@@ -68,6 +78,11 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 				} else if (TomcatServer.PROPERTY_DEBUG.equals(event.getPropertyName())) {
 					Boolean b = (Boolean) event.getNewValue();
 					ServerGeneralEditorSection.this.debug.setSelection(b.booleanValue());
+				} else if (ITomcatServer.PROPERTY_SERVE_MODULES_WITHOUT_PUBLISH.equals(event.getPropertyName())) {
+					Boolean b = (Boolean) event.getNewValue();
+					ServerGeneralEditorSection.this.noPublish.setSelection(b.booleanValue());
+					// Indicate this setting has changed
+					noPublishChanged = true;
 				}
 				updating = false;
 			}
@@ -104,9 +119,28 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 		
+		// serve modules without publish
+		noPublish = toolkit.createButton(composite, NLS.bind(Messages.serverEditorNoPublish, ""), SWT.CHECK);
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		data.horizontalSpan = 3;
+		noPublish.setLayoutData(data);
+		noPublish.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent se) {
+				if (updating)
+					return;
+				updating = true;
+				execute(new SetServeModulesWithoutPublishCommand(tomcatServer, noPublish.getSelection()));
+				// Indicate this setting has changed
+				noPublishChanged = true;
+				updating = false;
+			}
+		});
+		// TODO Address help
+//		whs.setHelp(noPublish, ContextIds.SERVER_EDITOR_SECURE);
+
 		// security
 		secure = toolkit.createButton(composite, Messages.serverEditorSecure, SWT.CHECK);
-		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 3;
 		secure.setLayoutData(data);
 		secure.addSelectionListener(new SelectionAdapter() {
@@ -167,6 +201,16 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		if (secure == null || tomcatServer == null)
 			return;
 		updating = true;
+		
+		boolean supported = tomcatServer.getTomcatVersionHandler().supportsServeModulesWithoutPublish();
+		String noPublishLabel = NLS.bind(Messages.serverEditorNoPublish,
+				supported ? "" : Messages.serverEditorNotSupported);
+		noPublish.setText(noPublishLabel);
+		noPublish.setSelection(tomcatServer.isServeModulesWithoutPublish());
+		if (readOnly || !supported)
+			noPublish.setEnabled(false);
+		else
+			noPublish.setEnabled(true);
 
 		secure.setSelection(tomcatServer.isSecure());
 		if (server.getRuntime() != null && server.getRuntime().getRuntimeType().getId().indexOf("32") >= 0 || readOnly)
@@ -182,5 +226,28 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 			secure.setEnabled(true);
 		
 		updating = false;
+	}
+
+	/**
+	 * @see ServerEditorSection#getSaveStatus()
+	 */
+	public IStatus[] getSaveStatus() {
+		// If serve modules without publishing has changed, request clean publish to be safe
+		if (noPublishChanged) {
+			// If server is running, abort the save since clean publish won't succeed
+			if (tomcatServer.getServer().getServerState() != IServer.STATE_STOPPED) {
+				return new IStatus [] {
+						new Status(IStatus.ERROR, TomcatUIPlugin.PLUGIN_ID,
+								NLS.bind(Messages.errorNoPublishServerMustBeStopped,
+										NLS.bind(Messages.serverEditorNoPublish, "").trim()))
+				};
+			}
+			// Force a clean publish
+			PublishServerJob publishJob = new PublishServerJob(tomcatServer.getServer(), IServer.PUBLISH_CLEAN, false);
+			publishJob.schedule();
+			noPublishChanged = false;
+		}
+		// use default implementation to return success
+		return super.getSaveStatus();
 	}
 }

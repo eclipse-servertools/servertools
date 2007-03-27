@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,42 +13,36 @@ package org.eclipse.jst.server.tomcat.core.internal.command;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatServerWorkingCopy;
 import org.eclipse.jst.server.tomcat.core.internal.Messages;
 /**
- * Command to change the server test mode.  The server instance directory
- * is cleared in conjunction with this command for legacy support.
+ * Command to enable or disable serving modules without publishing
  */
-public class SetTestEnvironmentCommand extends ServerCommand {
-	protected boolean te;
-	protected boolean oldTe;
-	protected String oldInstanceDir;
+public class SetServeModulesWithoutPublishCommand extends ServerCommand {
+	protected boolean smwp;
+	protected boolean oldSmwp;
 
 	/**
 	 * SetTestEnvironmentCommand constructor comment.
 	 * 
 	 * @param server a Tomcat server
-	 * @param te <code>true</code> for a test environment.
+	 * @param smwp <code>true</code> to enable serving modules without
+	 * publishing. Otherwise modules are served with standard publishing.
 	 */
-	public SetTestEnvironmentCommand(ITomcatServerWorkingCopy server, boolean te) {
-		super(server, Messages.serverEditorActionSetServerDirectory);
-		this.te = te;
+	public SetServeModulesWithoutPublishCommand(ITomcatServerWorkingCopy server, boolean smwp) {
+		super(server, Messages.serverEditorActionSetServeWithoutPublish);
+		this.smwp = smwp;
 	}
 
 	/**
 	 * Execute the command.
 	 */
 	public void execute() {
-		oldTe = server.isTestEnvironment();
-		// save old instance directory
-		oldInstanceDir = server.getInstanceDirectory();
-		server.setTestEnvironment(te);
-		// ensure instance directory is cleared
-		server.setInstanceDirectory(null);
+		oldSmwp = server.isServeModulesWithoutPublish();
+		server.setServeModulesWithoutPublish(smwp);
 	}
 
 	/**
 	 * Undo the command.
 	 */
 	public void undo() {
-		server.setTestEnvironment(oldTe);
-		server.setInstanceDirectory(oldInstanceDir);
+		server.setServeModulesWithoutPublish(oldSmwp);
 	}
 }

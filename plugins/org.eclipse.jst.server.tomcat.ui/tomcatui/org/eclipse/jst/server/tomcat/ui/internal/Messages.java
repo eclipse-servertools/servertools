@@ -66,8 +66,11 @@ public class Messages extends NLS {
 	public static String serverEditorServerDir;
 	public static String serverEditorDeployDir;
 	public static String serverEditorTestEnvironment;
+	public static String serverEditorNoPublish;
 	public static String serverEditorSecure;
 	public static String serverEditorDebugMode;
+	public static String serverEditorNotSupported;
+	public static String errorNoPublishServerMustBeStopped;
 	public static String errorServerDirIsRoot;
 	public static String errorServerDirUnderRoot;
 	public static String errorDeployDirNotSpecified;

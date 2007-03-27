@@ -100,7 +100,7 @@ public interface ITomcatVersionHandler {
 	 * 
 	 * @param server TomcatServer instance from which to determine
 	 * the base path.
-	 * @return the server base path
+	 * @return path to Tomcat instance directory
 	 */
 	public IPath getRuntimeBaseDirectory(TomcatServer server);
 
@@ -108,7 +108,7 @@ public interface ITomcatVersionHandler {
 	 * Prepare server runtime directory. Create catalina instance set of
 	 * directories.
 	 * 
-	 * @param baseDir directory at which to prepare the runtime directory.
+	 * @param baseDir Tomcat instance directory to prepare
 	 * @return result of creation operation 
 	 */
 	public IStatus prepareRuntimeDirectory(IPath baseDir);
@@ -118,7 +118,47 @@ public interface ITomcatVersionHandler {
 	 * initialized appropriately.
 	 * 
 	 * @param deployPath path to the deployment directory
+	 *  being prepared
 	 * @return status result of the operation
 	 */
 	public IStatus prepareDeployDirectory(IPath deployPath);
+	
+	/**
+	 * Prepare directory for serving contexts directly if enabled.
+	 * If not enabled, restore directory if necessary.
+	 * 
+	 * @param baseDir path to Tomcat instance directory
+	 * @param server TomcatServer instance from which to determine
+	 * if serving directly is enabled
+	 * @return status result of the operation
+	 */
+	public IStatus prepareForServingDirectly(IPath baseDir, TomcatServer server);
+	
+	/**
+	 * Gets the name of the "shared" loader to use with serving
+	 * modules without publishing.  Returns null if serving modules
+	 * without publishing is not supported.
+	 * 
+	 * @param baseDir path to Tomcat instance directory
+	 * @return name of shared loader
+	 */
+	public String getSharedLoader(IPath baseDir);
+	
+	/**
+	 * Returns true if this server supports serving modules without
+	 * publishing.
+	 * 
+	 * @return true if serving modules without publishing is supported
+	 */
+	public boolean supportsServeModulesWithoutPublish();
+	
+	/**
+	 * Returns true if this server supports a debug argument. This
+	 * argument is expected to affect the level of logging.  Newer
+	 * versions of Tomcat use different means of controlling logging
+	 * and ignore this argument.
+	 * 
+	 * @return true if debug argument is supported
+	 */
+	public boolean supportsDebugArgument();
 }

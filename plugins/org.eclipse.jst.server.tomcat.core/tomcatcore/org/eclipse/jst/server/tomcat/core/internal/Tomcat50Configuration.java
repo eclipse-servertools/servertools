@@ -609,7 +609,19 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 	protected IStatus publishContextConfig(IPath baseDir, IPath deployDir, IProgressMonitor monitor) {
 		return TomcatVersionHelper.publishCatalinaContextConfig(baseDir, deployDir, monitor);
 	}
-	
+
+	/**
+	 * Update contexts in server.xml to serve projects directly without
+	 * publishing.
+	 * 
+	 * @param baseDir path to catalina instance directory
+	 * @param monitor a progress monitor or null
+	 * @return result of operation
+	 */
+	protected IStatus updateContextsToServeDirectly(IPath baseDir, String loader, IProgressMonitor monitor) {
+		return TomcatVersionHelper.updateContextsToServeDirectly(baseDir, loader, monitor);
+	}
+
 	/**
 	 * Cleanup the server instance.  This consists of deleting the work
 	 * directory associated with Contexts that are going away in the

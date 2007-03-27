@@ -219,6 +219,18 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		// Default to value used by prior WTP versions
 		return getAttribute(PROPERTY_DEPLOY_DIR, LEGACY_DEPLOYDIR);
 	}
+
+	/**
+	 * Returns true if modules should be served without publishing.
+	 * 
+	 * @return boolean
+	 */
+	public boolean isServeModulesWithoutPublish() {
+		// If feature is supported, return current setting
+		if (versionHandler.supportsServeModulesWithoutPublish())
+			return getAttribute(PROPERTY_SERVE_MODULES_WITHOUT_PUBLISH, false);
+		return false;
+	}
 	
 	/**
 	 * Gets the base directory where the server instance runs.  This
@@ -262,8 +274,10 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		return buf.toString();
 	}
 
-	/*
+	/**
 	 * Returns the child module(s) of this module.
+	 * @param module module from which to get child module(s)
+	 * @return array of child module(s)
 	 */
 	public IModule[] getChildModules(IModule[] module) {
 		if (module == null)
@@ -283,8 +297,11 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 		return new IModule[0];
 	}
 
-	/*
+	/**
 	 * Returns the root module(s) of this module.
+	 * @param module module from which to get the root module
+	 * @return root module
+	 * @throws CoreException 
 	 */
 	public IModule[] getRootModules(IModule module) throws CoreException {
 		if ("jst.web".equals(module.getModuleType().getId())) {
@@ -396,6 +413,13 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 			setAttribute(PROPERTY_DEPLOY_DIR, (String)null);
 		else
 			setAttribute(PROPERTY_DEPLOY_DIR, deployDir);
+	}
+	
+	/**
+	 * @see ITomcatServerWorkingCopy#setServeModulesWithoutPublish(boolean)
+	 */
+	public void setServeModulesWithoutPublish(boolean b) {
+		setAttribute(PROPERTY_SERVE_MODULES_WITHOUT_PUBLISH, b);
 	}
 
 	/**

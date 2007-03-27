@@ -141,4 +141,37 @@ public class Tomcat40Handler implements ITomcatVersionHandler {
 		return TomcatVersionHelper.createDeploymentDirectory(deployPath,
 				TomcatVersionHelper.DEFAULT_WEBXML_SERVLET23);
 	}
+
+	/**
+	 * @see ITomcatVersionHandler#prepareForServingDirectly(IPath, TomcatServer)
+	 */
+	public IStatus prepareForServingDirectly(IPath baseDir, TomcatServer server) {
+		if (server.isServeModulesWithoutPublish())
+			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorNoPublishNotSupported, null);
+		return Status.OK_STATUS;
+	}	
+	
+	/**
+	 * @see ITomcatVersionHandler#getSharedLoader(IPath)
+	 */
+	public String getSharedLoader(IPath baseDir) {
+		// Not supported
+		return null;
+	}
+	
+	/**
+	 * Returns false since Tomcat 4.0 doesn't support this feature.
+	 * 
+	 * @return false since feature is not supported
+	 */
+	public boolean supportsServeModulesWithoutPublish() {
+		return false;
+	}
+
+	/**
+	 * @see ITomcatVersionHandler#supportsDebugArgument()
+	 */
+	public boolean supportsDebugArgument() {
+		return true;
+	}
 }

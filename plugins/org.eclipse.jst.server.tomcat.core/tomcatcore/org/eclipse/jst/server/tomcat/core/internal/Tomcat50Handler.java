@@ -127,4 +127,54 @@ public class Tomcat50Handler implements ITomcatVersionHandler {
 		return TomcatVersionHelper.createDeploymentDirectory(deployPath,
 				TomcatVersionHelper.DEFAULT_WEBXML_SERVLET24);
 	}
+	
+	/**
+	 * @see ITomcatVersionHandler#prepareForServingDirectly(IPath, TomcatServer)
+	 */
+	public IStatus prepareForServingDirectly(IPath baseDir, TomcatServer server) {
+		IStatus status;
+		// If serving modules without publishing, loader jar is needed
+		if (server.isServeModulesWithoutPublish()) {
+			status = TomcatVersionHelper.copyLoaderJar(
+					getRuntimeBaseDirectory(server).append("server/lib"),
+					server.getServer().getRuntime().getRuntimeType().getId());
+			// If copy successful and running a separate server instance, modify catalina.properties
+			if (status.isOK() && server.isTestEnvironment()) {
+				status = TomcatVersionHelper.updatePropertiesToServeDirectly(baseDir, "server/lib", "server");
+			}
+		}
+		// Else ensure jar is removed
+		else {
+			TomcatVersionHelper.removeLoaderJar(
+					getRuntimeBaseDirectory(server).append("server/lib"),
+					server.getServer().getRuntime().getRuntimeType().getId());
+			// TODO Decide what to do with removal warning, maybe nothing
+			status = Status.OK_STATUS;
+		}
+		return status;
+	}
+	
+	/**
+	 * @see ITomcatVersionHandler#getSharedLoader(IPath)
+	 */
+	public String getSharedLoader(IPath baseDir) {
+		// Use shared loader
+		return "shared";
+	}
+	
+	/**
+	 * Returns true since Tomcat 5.x supports this feature.
+	 * 
+	 * @return true since feature is supported
+	 */
+	public boolean supportsServeModulesWithoutPublish() {
+		return true;
+	}
+
+	/**
+	 * @see ITomcatVersionHandler#supportsDebugArgument()
+	 */
+	public boolean supportsDebugArgument() {
+		return false;
+	}
 }

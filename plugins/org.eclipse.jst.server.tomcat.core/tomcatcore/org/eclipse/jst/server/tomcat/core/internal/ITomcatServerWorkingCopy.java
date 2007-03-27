@@ -47,4 +47,11 @@ public interface ITomcatServerWorkingCopy extends ITomcatServer {
 	 * @param deployDir deployment directory for the server
 	 */
 	public void setDeployDirectory(String deployDir);
+	
+	/**
+	 * Set this server to serve modules without publishing.
+	 * 
+	 * @param b true if modules should be served without publishing
+	 */
+	public void setServeModulesWithoutPublish(boolean b);
 }

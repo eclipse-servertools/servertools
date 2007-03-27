@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IProcess;
@@ -125,8 +126,17 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	protected String[] getRuntimeVMArguments() {
 		IPath installPath = getServer().getRuntime().getLocation();
 		IPath configPath = getRuntimeBaseDirectory();
+		IPath deployPath;
+		// If serving modules without publishing, use workspace path as the deploy path
+		if (getTomcatServer().isServeModulesWithoutPublish()) {
+			deployPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+		}
+		// Else normal publishing for modules
+		else {
+			deployPath = getServerDeployDirectory();
+		}
 		return getTomcatVersionHandler().getRuntimeVMArguments(installPath, configPath,
-				getServerDeployDirectory(), getTomcatServer().isTestEnvironment());
+				deployPath, getTomcatServer().isTestEnvironment());
 	}
 	
 	protected String getRuntimePolicyFile() {
@@ -276,16 +286,20 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 */
 	private void publishDir(int deltaKind, Properties p, IModule module[], IProgressMonitor monitor) throws CoreException {
 		List status = new ArrayList();
-		if (deltaKind == REMOVED) {
-			try {
-				String publishPath = (String) p.get(module[0].getId());
-				File f = new File(publishPath);
-				if (f.exists()) {
-					IStatus[] stat = PublishUtil.deleteDirectory(f, monitor);
-					PublishOperation2.addArrayToList(status, stat);
+		// Remove if requested or if previously published and are now serving without publishing
+		if (deltaKind == REMOVED || getTomcatServer().isServeModulesWithoutPublish()) {
+			String publishPath = (String) p.get(module[0].getId());
+			if (publishPath != null) {
+				try {
+					File f = new File(publishPath);
+					if (f.exists()) {
+						IStatus[] stat = PublishUtil.deleteDirectory(f, monitor);
+						PublishOperation2.addArrayToList(status, stat);
+					}
+				} catch (Exception e) {
+					throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0,
+							NLS.bind(Messages.errorPublishCouldNotRemoveModule,module[0].getName()), e));
 				}
-			} catch (Exception e) {
-				throw new CoreException(new Status(IStatus.WARNING, TomcatPlugin.PLUGIN_ID, 0, "Could not remove module", e));
 			}
 		} else {
 			IPath path = getModuleDeployDirectory(module[0]);
@@ -307,7 +321,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	 * @throws CoreException
 	 */
 	private void publishJar(int kind, int deltaKind, Properties p, IModule[] module, IProgressMonitor monitor) throws CoreException {
-		if (deltaKind == REMOVED) {
+		// Remove if requested or if previously published and are now serving without publishing
+		if (deltaKind == REMOVED || getTomcatServer().isServeModulesWithoutPublish()) {
 			try {
 				String publishPath = (String) p.get(module[1].getId());
 				new File(publishPath).delete();
@@ -340,9 +355,24 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	}
 
 	protected void publishFinish(IProgressMonitor monitor) throws CoreException {
-		// Publish context configuration for servers that support META-INF/context.xml
-		IStatus status = getTomcatConfiguration().publishContextConfig(
-				getRuntimeBaseDirectory(), getServerDeployDirectory(), monitor);
+		IStatus status;
+		IPath baseDir = getRuntimeBaseDirectory();
+		ITomcatVersionHandler tvh = getTomcatVersionHandler();
+		// Include or remove loader jar depending on state of serving directly 
+		status = tvh.prepareForServingDirectly(baseDir, getTomcatServer());
+		if (status.isOK()) {
+			// If serving modules directly, update server.xml accordingly (includes project context.xmls)
+			if (getTomcatServer().isServeModulesWithoutPublish()) {
+				status = getTomcatConfiguration().updateContextsToServeDirectly(
+						baseDir, tvh.getSharedLoader(baseDir), monitor);
+			}
+			// Else serving normally. Add project context.xmls to server.xml
+			else {
+				// Publish context configuration for servers that support META-INF/context.xml
+				status = getTomcatConfiguration().publishContextConfig(
+						baseDir, getServerDeployDirectory(), monitor);
+			}
+		}
 		if (!status.isOK())
 			throw new CoreException(status);
 	}
