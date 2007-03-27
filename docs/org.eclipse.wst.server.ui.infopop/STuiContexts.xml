@@ -134,6 +134,17 @@ The default setting is <b>Normal</b>.
 
 </description>
 </context>
+<context id="svcp0002">
+<description>
+This dialog box prompts different options depending on the status of the server in the Servers view:
+
+<b>Delete unused server configurations</b>: If server configuration files were created in the workspace under a server project, this option becomes available. Select this check box to remove the server configuration files from the workspace. 
+<b>Delete running servers</b> This option specifies to delete servers that are still running.  
+<b>Stop servers before deleting</b> This option is only available if the Delete running servers option is selected. This option specifies to stop running servers prior to removing them from the Servers view. If this option is cleared and the Delete running servers option is selected, no stop command is issued against the server, and as a result the server is left running after removing the server from the Servers view.
+
+Select the <b>OK</b> button to apply your delete options.
+</description>
+</context>
 <context id="swic0000">
 <description>Use to import a server configuration that is located outside of the workspace but is on the same machine.
 
