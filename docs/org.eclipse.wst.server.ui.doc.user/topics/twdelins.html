@@ -37,8 +37,41 @@ delete.</span></li>
 <li class="stepexpand"><span>Select  <strong>Delete</strong>. </span> The Delete Server dialog box
 opens.</li>
 
-<li class="stepexpand"><span>Select the <span class="uicontrol">OK</span> button to delete the server
-from the Servers view.</span></li>
+<li class="stepexpand"><span>The Delete Server dialog box opens and prompts different options
+depending on the status of the server in the Servers view:</span>
+
+<table class="choicetableborder" summary="" cellspacing="0" cellpadding="4" rules="rows" frame="hsides" border="1">
+<thead><tr><th valign="bottom" id="N10081-option" align="left">Option</th>
+<th valign="bottom" id="N10081-desc" align="left">Description</th></tr></thead>
+<tbody>
+<tr><td valign="top" headers="N10081-option" id="N1008B"><strong>Delete unused server configurations</strong></td>
+<td valign="top" headers="N10081-desc N1008B">If
+server configuration files were created in the workspace under a server project,
+this option becomes available. Select this check box to remove the server
+configuration files from the workspace.</td>
+</tr>
+
+<tr><td valign="top" headers="N10081-option" id="N1009A"><strong>Delete running servers</strong></td>
+<td valign="top" headers="N10081-desc N1009A">This option specifies
+to delete servers that are still running. </td>
+</tr>
+
+<tr><td valign="top" headers="N10081-option" id="N100A9"><strong>Stop servers before deleting</strong></td>
+<td valign="top" headers="N10081-desc N100A9">This option
+is only available if the <strong>Delete running servers</strong> option is selected.
+This option specifies to stop running servers prior to removing them from
+the Servers view. If this option is cleared and the <strong>Delete running servers</strong> option
+is selected, no stop command is issued against the server, and as a result
+the server is left running after removing the server from the Servers view.</td>
+
+</tr>
+
+</tbody></table>
+
+</li>
+
+<li class="stepexpand"><span>Select the <span class="uicontrol">OK</span> button to apply your delete
+options.</span></li>
 
 </ol>
 
