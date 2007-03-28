@@ -60,12 +60,6 @@ public class GenericServerClasspathRuntimeHandlerTest extends TestCase {
         super(name);
     }
 
-    public void testGetClasspathContainerLabel() {
-        GenericServerRuntimeTargetHandler handler = new GenericServerRuntimeTargetHandler();
-        String name = handler.getClasspathContainerLabel(fRuntime,null);
-        assertEquals(SERVER_DEF_NAME,name);
-    }
-
     public void testResolveClasspathContainer() {
         GenericServerRuntimeTargetHandler handler = new GenericServerRuntimeTargetHandler();
         IClasspathEntry[] entries = handler.resolveClasspathContainer(fRuntime,null);
