@@ -68,8 +68,11 @@ public class ServerProfiler {
 	public String getVMArgs() {
 		try {
 			ServerProfilerDelegate del = getDelegate();
-			if (del != null)
-				return del.getVMArguments();
+			if (del != null) {
+				String s = del.getVMArguments();
+				if (s != null)
+					return s;
+			}
 		} catch (Throwable t) {
 			Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + t.getMessage());
 		}

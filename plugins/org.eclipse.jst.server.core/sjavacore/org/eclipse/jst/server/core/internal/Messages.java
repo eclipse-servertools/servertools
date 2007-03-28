@@ -40,6 +40,11 @@ public class Messages extends NLS {
 	public static String artifactJNDI;
 	public static String artifactCactusTest;
 
+	public static String canModifyModules;
+	public static String errorNoProfiler;
+	public static String errorPublish;
+	public static String httpPort;
+
 	static {
 		NLS.initializeMessages(JavaServerPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);
 	}

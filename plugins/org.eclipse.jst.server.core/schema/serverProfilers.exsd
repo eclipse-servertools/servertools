@@ -66,14 +66,14 @@
          <attribute name="vmArgs" type="string">
             <annotation>
                <documentation>
-                  a VM argument used to launch the profiler
+                  a VM argument used to launch the profiler. If this attribute is specified there should be no class attribute
                </documentation>
             </annotation>
          </attribute>
          <attribute name="class" type="string">
             <annotation>
                <documentation>
-                  a class that extends org.eclipse.jst.server.core.ServerProfilerDelegate
+                  a class that extends org.eclipse.jst.server.core.ServerProfilerDelegate. If this attribute is specified there should be no vmArgs attribute
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.jst.server.core.ServerProfilerDelegate"/>
