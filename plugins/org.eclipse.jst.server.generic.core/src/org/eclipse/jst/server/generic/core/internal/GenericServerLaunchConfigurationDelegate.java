@@ -79,12 +79,24 @@ public class GenericServerLaunchConfigurationDelegate extends AbstractJavaLaunch
 
 			if (ILaunchManager.PROFILE_MODE.equals(mode)) {
 				ServerProfiler[] sp = JavaServerPlugin.getServerProfilers();
-				if (sp == null || sp.length==0 || runner == null) {
+				if (sp == null || sp.length == 0 || runner == null) {
 					genericServer.stopImpl();
 					throw new CoreException(new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, 0, GenericServerCoreMessages.noProfiler, null));
 				}
 				String vmArgs2 = sp[0].getVMArgs();
 				vmArgs = vmArgs + ' ' + vmArgs2;
+				
+				String[] env = sp[0].getEnvironmentVariables();
+				if (env != null && env.length > 0) {
+					if (envp == null)
+						envp = env;
+					else {
+						String[] s = new String[env.length + envp.length];
+						System.arraycopy(envp, 0, s, 0, envp.length);
+						System.arraycopy(env, 0, s, envp.length, env.length);
+						envp = s;
+					}
+				}
 			}
 			ExecutionArguments execArgs = new ExecutionArguments(vmArgs, pgmArgs);
 

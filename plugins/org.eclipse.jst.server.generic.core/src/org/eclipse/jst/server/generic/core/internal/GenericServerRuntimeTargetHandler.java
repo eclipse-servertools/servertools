@@ -16,7 +16,6 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jst.server.core.RuntimeClasspathProviderDelegate;
-import org.eclipse.jst.server.generic.servertype.definition.ServerRuntime;
 import org.eclipse.wst.server.core.IRuntime;
 /**
  * Provides the Classpath containers to be added into project classpaths.
@@ -26,26 +25,18 @@ import org.eclipse.wst.server.core.IRuntime;
 public class GenericServerRuntimeTargetHandler extends RuntimeClasspathProviderDelegate {
 
 	/* (non-Javadoc)
-	 * @see ClasspathRuntimeTargetHandler#getClasspathContainerLabel(IRuntime, java.lang.String)
-	 */
-	public String getClasspathContainerLabel(IRuntime runtime, String id) {
-		ServerRuntime definition= ServerTypeDefinitionUtil.getServerTypeDefinition(runtime);
-		return definition.getName();
-	}
-
-	/* (non-Javadoc)
 	 * @see ClasspathRuntimeTargetHandler#resolveClasspathContainer(IRuntime, java.lang.String)
 	 */
 	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime,String id){		
 		return resolveClasspathContainer(runtime);
 	}
+
 	/* (non-Javadoc)
 	 * @see ClasspathRuntimeTargetHandler#resolveClasspathContainer(IRuntime)
 	 */
 	public IClasspathEntry[] resolveClasspathContainer(IRuntime runtime){		
 		return ServerTypeDefinitionUtil.getServerClassPathEntry(runtime);
 	}
-    
 
 	/**
 	 * Read the classpath entries for the serverdef.
