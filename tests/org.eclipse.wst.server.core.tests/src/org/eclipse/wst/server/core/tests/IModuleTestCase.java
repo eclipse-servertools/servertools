@@ -45,6 +45,10 @@ public class IModuleTestCase extends TestCase {
 			public Object loadAdapter(Class adapter, IProgressMonitor monitor) {
 				return null;
 			}
+
+			public boolean isExternal() {
+				return false;
+			}
 		};
 		
 		module.getId();
