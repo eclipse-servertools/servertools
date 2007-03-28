@@ -533,7 +533,12 @@ public class Server extends Base implements IServer {
 	}
 
 	public void setExternalModules(IModule[] modules) {
-		externalModules = Arrays.asList(modules);
+		externalModules = new ArrayList();
+		if (modules != null) {
+			int size = modules.length;
+			for (int i = 0; i < size; i++)
+				externalModules.add(modules[i]);
+		}
 	}
 
 	protected List getExternalModules() {
