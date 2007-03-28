@@ -61,7 +61,7 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 		
 		if (ILaunchManager.PROFILE_MODE.equals(mode)) {
 			ServerProfiler[] sp = JavaServerPlugin.getServerProfilers();
-			if (sp == null || runner == null) {
+			if (sp == null || sp.length == 0 || runner == null) {
 				tomcatServer.stopImpl();
 				throw new CoreException(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, Messages.errorNoProfiler, null));
 			}
@@ -70,7 +70,7 @@ public class TomcatLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 				vmArgs = vmArgs + " " + vmArgs2;
 			
 			String[] env = sp[0].getEnvironmentVariables();
-			if (env != null) {
+			if (env != null && env.length > 0) {
 				if (envp == null)
 					envp = env;
 				else {
