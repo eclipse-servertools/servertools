@@ -536,6 +536,10 @@ public class Server extends Base implements IServer {
 		externalModules = Arrays.asList(modules);
 	}
 
+	protected List getExternalModules() {
+		return externalModules;
+ 	}
+
 	protected void handleModuleProjectChange(IModule module) {
 		Trace.trace(Trace.FINEST, "> handleDeployableProjectChange() " + this + " " + module);
 		
@@ -2203,17 +2207,18 @@ public class Server extends Base implements IServer {
 			}
 		}
 		
-		if (externalModules == null) {
+		List em = getExternalModules();
+		if (em == null || em.isEmpty()) {
 			IModule[] modules2 = new IModule[modules.size()];
 			modules.toArray(modules2);
 			return modules2;
 		}
 		
-		IModule[] modules2 = new IModule[modules.size() + externalModules.size()];
+		IModule[] modules2 = new IModule[modules.size() + em.size()];
 		modules.toArray(modules2);
 		
-		Object[] obj = externalModules.toArray();
-		System.arraycopy(obj, 0, modules2, modules.size(), externalModules.size());
+		Object[] obj = em.toArray();
+		System.arraycopy(obj, 0, modules2, modules.size(), em.size());
 		
 		return modules2;
 	}

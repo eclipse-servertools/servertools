@@ -72,6 +72,10 @@ public class DeletedModule implements IModule {
 		return true;
 	}
 
+	public boolean isExternal() {
+		return false;
+	}
+
 	public String toString() {
 		return "DeletedModule[" + name + "," + id + "]";
 	}

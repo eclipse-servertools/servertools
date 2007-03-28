@@ -30,6 +30,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.actions.ActionFactory;
@@ -594,13 +595,13 @@ public class ServerTableViewer extends TreeViewer {
 		});
 	}
 
-	/*public void doUpdateItem(Widget widget, Object element, boolean fullMap) {
+	public void doUpdateItem(Widget widget, Object element, boolean fullMap) {
 		if (widget instanceof TreeItem && color != null) {
 			TreeItem item = (TreeItem) widget;
 			if (element instanceof ModuleServer) {
 				ModuleServer ms = (ModuleServer) element;
 				IModule m = ms.module[ms.module.length-1];
-				if ("external".equals(m.getId()))
+				if (m.isExternal())
 					item.setForeground(color);
 				else
 					item.setForeground(null);
@@ -611,5 +612,5 @@ public class ServerTableViewer extends TreeViewer {
 			}
 		}
 		super.doUpdateItem(widget, element, fullMap);
-	}*/
+	}
 }

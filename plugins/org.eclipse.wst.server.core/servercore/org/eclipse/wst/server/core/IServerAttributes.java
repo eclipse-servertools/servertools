@@ -257,11 +257,11 @@ public interface IServerAttributes extends IAdaptable {
 	public IServerWorkingCopy createWorkingCopy();
 
 	/**
-	 * Returns an array of user modules that are currently configured on
-	 * the server. When the server is published, these are the projects
+	 * Returns an array of modules that are currently configured on
+	 * the server. When the server is published, these are the modules
 	 * that will be configured on the server. This method may not return
-	 * the list of projects that are currently on the server if a module
-	 * has been added since the last publish.
+	 * the list of modules that are currently on the server if a module
+	 * has been added or removed since the last publish.
 	 * <p>
 	 * This method returns the root modules, which are not parented within
 	 * another modules. Each of these may contain child modules, which are

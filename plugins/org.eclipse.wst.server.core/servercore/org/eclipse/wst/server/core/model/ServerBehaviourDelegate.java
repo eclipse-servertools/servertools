@@ -18,6 +18,7 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.internal.ExternalModule;
 import org.eclipse.wst.server.core.internal.Messages;
 import org.eclipse.wst.server.core.internal.ProgressUtil;
 import org.eclipse.wst.server.core.internal.Server;
@@ -214,10 +215,27 @@ public abstract class ServerBehaviourDelegate {
 	/**
 	 * Sets the server's external modules.
 	 *
-	 * @param module the root external module
+	 * @param modules the root external module
 	 */
-	protected final void setExternalModules(IModule[] module) {
-		server.setExternalModules(module);
+	protected final void setExternalModules(IModule[] modules) {
+		server.setExternalModules(modules);
+	}
+
+	/**
+	 * Creates an external module instance with the given static information. An external module is a unit of "content"
+	 * that is already published to the server, and that doesn't exist in the workspace
+	 *  
+	 * @param id the module id
+	 * @param name the module name
+	 * @param type the module type id
+	 * @param version the module version id
+	 * @param moduleDelegate the ModuleDelegate which will act as a helper of the module 
+	 * @return a module instance
+	 */
+	protected final IModule createExternalModule(String id, String name, String type, String version, ModuleDelegate moduleDelegate) {
+		IModule module = new ExternalModule(id, name, type, version, moduleDelegate);
+		setModulePublishState(new IModule [] {module}, IServer.PUBLISH_STATE_NONE);
+		return module;
 	}
 
 	/**

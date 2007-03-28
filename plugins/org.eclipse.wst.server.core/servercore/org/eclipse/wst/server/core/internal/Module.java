@@ -237,6 +237,13 @@ public class Module implements IModule {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.server.core.IModule#isExternal()
+	 */
+	public boolean isExternal() {
+		return false;
+	}
+
 	/**
 	 * Return a string representation of this object.
 	 * 

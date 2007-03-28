@@ -87,6 +87,15 @@ public interface IModule extends IAdaptable {
 	public IProject getProject();
 
 	/**
+	 * Returns <code>true</code> if the module is an external (non-workspace) module,
+	 * and <code>false</code> otherwise
+	 * 
+	 * @return <code>true</code> if the module is an external module,
+	 *   and <code>false</code> otherwise
+	 */
+	public boolean isExternal();
+
+	/**
 	 * Returns an object which is an instance of the given class
 	 * associated with this object. Returns <code>null</code> if
 	 * no such object can be found, or if the delegate is not

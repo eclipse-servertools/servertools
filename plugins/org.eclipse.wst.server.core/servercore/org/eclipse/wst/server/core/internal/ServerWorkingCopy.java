@@ -516,12 +516,18 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 			
 			if (remove != null) {
 				int size = remove.length;
+				externalModules = getExternalModules();
 				for (int i = 0; i < size; i++) {
 					if (modules.contains(remove[i])) {
 						modules.remove(remove[i]);
 						resetState(new IModule[] { remove[i] }, monitor);
 					}
+					if (externalModules.contains(remove[i])) {
+						externalModules.remove(remove[i]);
+						resetState(new IModule[] { remove[i] }, monitor);
+					}
 				}
+				
 			}
 			
 			// convert to attribute
@@ -714,6 +720,18 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error calling delegate importConfiguration() " + toString(), e);
 		}
+	}
+
+	public void setExternalModules(IModule[] modules) {
+		if (server != null)
+			server.setExternalModules(modules);
+		super.setExternalModules(modules);
+	}
+
+	public List getExternalModules() {
+		if (server != null)
+			return server.getExternalModules();
+		return super.getExternalModules();
 	}
 
 	public String toString() {

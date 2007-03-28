@@ -14,11 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
@@ -29,7 +33,7 @@ import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
 /**
  * A label provider for all server related objects.
  */
-public class ServerLabelProvider implements ILabelProvider {
+public class ServerLabelProvider implements ILabelProvider, IColorProvider {
 	private ILabelDecorator decorator;
 	protected transient List listeners;
 	protected ILabelProviderListener providerListener;
@@ -262,5 +266,22 @@ public class ServerLabelProvider implements ILabelProvider {
 	 */
 	public void dispose() {
 		decorator.removeListener(providerListener);
+	}
+
+	public Color getBackground(Object element) {		
+		return null;
+	}
+
+	public Color getForeground(Object element) {
+		if (element instanceof ModuleServer) {
+			ModuleServer ms = (ModuleServer)element;
+			
+			IModule module = ms.module[0];
+			if (module.isExternal()) {
+				Color c = Display.getCurrent().getSystemColor(SWT.COLOR_GRAY);
+				return c;
+			}
+		}
+		return null;
 	}
 }
