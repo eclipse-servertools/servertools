@@ -24,7 +24,6 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jst.j2ee.componentcore.util.EARArtifactEdit;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatPlugin;
 import org.eclipse.jst.server.tomcat.core.internal.Trace;
 import org.eclipse.wst.common.componentcore.ComponentCore;
@@ -38,7 +37,6 @@ import org.eclipse.wst.common.componentcore.internal.impl.PlatformURLModuleConne
 import org.eclipse.wst.common.componentcore.internal.resources.VirtualArchiveComponent;
 import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
-import org.eclipse.wst.common.componentcore.resources.IVirtualReference;
 import org.eclipse.wst.server.core.IModule;
 
 /**
@@ -94,7 +92,8 @@ public class ModuleTraverser {
     private static void traverseEarComponent(IVirtualComponent component,
             IModuleVisitor visitor, IProgressMonitor monitor)
             throws CoreException {
-        EARArtifactEdit earEdit = EARArtifactEdit
+    	// Currently the JST Server portion of WTP may not depend on the JST Enterprise portion of WTP
+/*        EARArtifactEdit earEdit = EARArtifactEdit
                 .getEARArtifactEditForRead(component);
         if (earEdit != null) {
             IVirtualReference[] j2eeComponents = earEdit.getJ2EEModuleReferences();
@@ -117,7 +116,7 @@ public class ModuleTraverser {
                 visitor.visitEarResource(null, getOSPath(dependentProject,
                         project, cpe.getOutputLocation()));
             }
-        }
+        }*/
         visitor.endVisitEarComponent(component);
     }
 
