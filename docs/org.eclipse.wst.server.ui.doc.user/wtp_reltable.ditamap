@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
-  "map.dtd">
+ "map.dtd">
 <map id="relationship">
 <reltable>
 <relheader>
@@ -46,6 +46,17 @@
 <relcell></relcell>
 <relcell></relcell>
 </relrow>
-</reltable><?Pub Caret1?>
+<relrow><?Pub Caret1?>
+<relcell></relcell>
+<relcell collection-type="family">
+<topicref href="topics/twsrvprf.dita" navtitle="Defining the server preferences">
+</topicref>
+<topicref href="topics/twpub.dita" navtitle="Publishing your application">
+</topicref>
+</relcell>
+<relcell></relcell>
+<relcell></relcell>
+</relrow>
+</reltable>
 </map>
-<?Pub *0000001422?>
+<?Pub *0000001722?>

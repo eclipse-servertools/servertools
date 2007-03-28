@@ -9,8 +9,8 @@
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta content="task" name="DC.Type" />
 <meta name="DC.Title" content="Publishing your application" />
-<meta name="abstract" content="Publishing involves copying files (projects, resource files, and server configurations) to the correct location for the server to find and use them. In the test environments, these files may already be in the correct location. In some cases, temporary copies of the server configurations may be created." />
-<meta name="description" content="Publishing involves copying files (projects, resource files, and server configurations) to the correct location for the server to find and use them. In the test environments, these files may already be in the correct location. In some cases, temporary copies of the server configurations may be created." />
+<meta name="abstract" content="Publishing involves copying files (projects, resource files, and server configurations) to the correct location for the server to find and use them. In the test environments, these files may already be in the correct location. In some cases, temporary copies of the server configurations may be created. You can either publish your application automatically or manually." />
+<meta name="description" content="Publishing involves copying files (projects, resource files, and server configurations) to the correct location for the server to find and use them. In the test environments, these files may already be in the correct location. In some cases, temporary copies of the server configurations may be created. You can either publish your application automatically or manually." />
 <meta content="servers, publishing applications, applications, publishing to servers, copying files to server" name="DC.subject" />
 <meta content="servers, publishing applications, applications, publishing to servers, copying files to server" name="keywords" />
 <meta content="XHTML" name="DC.Format" />
@@ -30,10 +30,10 @@
 resource files, and server configurations) to the correct location for the
 server to find and use them. In the test environments, these files may already
 be in the correct location. In some cases, temporary copies of the server
-configurations may be created.</p>
+configurations may be created. You can either publish your application automatically
+or manually.</p>
 
-<div class="section"><p id="twpub_wst__twpub_p1"><a name="twpub_wst__twpub_p1"><!-- --></a>You can either publish your application automatically
-or manually. If the  <span class="uicontrol">Automatically publish when starting servers</span> check
+<div class="section"><strong id="twpub_wst__twpub_autotitle"><a name="twpub_wst__twpub_autotitle"><!-- --></a>Automatically publishing to a server</strong><p id="twpub_wst__twpub_auto1"><a name="twpub_wst__twpub_auto1"><!-- --></a>If the <span class="uicontrol">Automatically publish when starting servers</span> check
 box on the Server preferences page (<span class="menucascade"><span class="uicontrol">Window</span>
  &gt; <span class="uicontrol">Preferences</span> &gt; <span class="uicontrol">Server</span> &gt; <span class="uicontrol">Launching</span>
 </span>) is selected, the server tools check to see if your project
@@ -41,17 +41,49 @@ and files on the server are synchronized. If they are not, the project and
 the files are automatically updated when the server is either started or restarted.</p>
 <p id="twpub_wst__twpub_p2"><a name="twpub_wst__twpub_p2"><!-- --></a>To publish your application manually you can complete one of
 the following in the Servers view:</p>
-</div>
+<div class="p" id="twpub_wst__twpub_auto2"><a name="twpub_wst__twpub_auto2"><!-- --></a>In the workbench,
+you have several options to choose for the <em>Automatic Publishing</em> settings.
+You can set these <em>Automatic Publishing</em> settings by going into the Servers
+view, right-click the server and select <span class="uicontrol">Open</span>. The Server
+editor opens. In the <em>Overview</em> page of the server editor, under the <span class="uicontrol">Automatic
+Publishing</span> settings, you are going to find the following settings:<ul>
+<li><strong>Use default publishing settings</strong>: Specifies to use the publishing
+settings as defined in the Preferences page (<span class="menucascade"><span class="uicontrol">Window</span>
+ &gt; <span class="uicontrol">Preferences</span> &gt; <span class="uicontrol">Server</span></span>).
+Refer to the <em>Defining the server preferences</em> topic for details on the
+publishing options in this preference page.</li>
 
-<ul>
-<li><span><span id="twpub_wst__twpub_steps_ph1"><a name="twpub_wst__twpub_steps_ph1"><!-- --></a>Select the server and then click the  <span class="uicontrol">Publish
-to the server</span></span> <img src="../images/launch_publish.gif" alt="This is an image of the Publish toolbar&#10;icon." /> <span id="twpub_wst__twpub_steps_ph2"><a name="twpub_wst__twpub_steps_ph2"><!-- --></a>icon located on the toolbar.</span></span>
-</li>
+<li><span class="uicontrol">Never publish automatically</span>: Specifies the workbench
+should never publish files to the server.</li>
 
-<li id="twpub_wst__twpub_steps_step2"><a name="twpub_wst__twpub_steps_step2"><!-- --></a><span>Right-click the server and then select  <span class="uicontrol">Publish</span>.</span>
-</li>
+<li><span class="uicontrol">Override default settings</span>: Specifies that a change
+to the files running on the server should automatically be published to the
+server in the next <em>seconds</em> interval, where <em>seconds</em> is the number
+of seconds you have specified in the <span class="uicontrol">Publishing interval</span> control.
+The default value for the publishing interval on a local server is 5 seconds
+and for a remote server is 60 seconds. If you set the publishing interval
+to 0 seconds, a change to the files running on the server should automatically
+request a publish command to occur.</li>
 
 </ul>
+</div>
+<p id="twpub_wst__twpub_auto3"><a name="twpub_wst__twpub_auto3"><!-- --></a>In the workbench, the default setting is the <strong>Override
+default settings</strong> option is enabled with a value set to the publishing
+interval.</p>
+<strong id="twpub_wst__twpub_manualtitle"><a name="twpub_wst__twpub_manualtitle"><!-- --></a>Manually publishing to a server</strong><p id="twpub_wst__twpub_manual1"><a name="twpub_wst__twpub_manual1"><!-- --></a>If you do not want to wait for the automatic publishing
+interval to pass, at anytime you can manually request the workbench to issue
+a publish command to the server. Each manual publish command causes a single
+publishing request to the server. To publish your application manually you
+can complete one of the following in the Servers view:</p>
+<div class="p"><ul>
+<li><span id="twpub_wst__twpub_steps_ph1"><a name="twpub_wst__twpub_steps_ph1"><!-- --></a>Select the server and then click the  <span class="uicontrol">Publish
+to the server</span></span> <img src="../images/launch_publish.gif" alt="This is an image of the Publish toolbar&#10;icon." /> <span id="twpub_wst__twpub_steps_ph2"><a name="twpub_wst__twpub_steps_ph2"><!-- --></a>icon located on the toolbar.</span></li>
+
+<li><span id="twpub_wst__twpub_steps_step2"><a name="twpub_wst__twpub_steps_step2"><!-- --></a>Right-click the server and then select  <span class="uicontrol">Publish</span>.</span></li>
+
+</ul>
+</div>
+</div>
 
 <div class="section"><p id="twpub_wst__twpub_p3"><a name="twpub_wst__twpub_p3"><!-- --></a>All the projects defined in the server configuration
 that are associated with the selected server are published. The resources
