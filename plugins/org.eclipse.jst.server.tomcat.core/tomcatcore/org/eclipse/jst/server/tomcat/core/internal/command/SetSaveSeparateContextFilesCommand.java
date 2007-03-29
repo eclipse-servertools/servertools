@@ -15,34 +15,34 @@ import org.eclipse.jst.server.tomcat.core.internal.Messages;
 /**
  * Command to enable or disable serving modules without publishing
  */
-public class SetServeModulesWithoutPublishCommand extends ServerCommand {
-	protected boolean smwp;
-	protected boolean oldSmwp;
+public class SetSaveSeparateContextFilesCommand extends ServerCommand {
+	protected boolean sscf;
+	protected boolean oldSscf;
 
 	/**
-	 * SetServeModulesWithoutPublishCommand constructor comment.
+	 * SetSeparateContextFilesCommand constructor comment.
 	 * 
 	 * @param server a Tomcat server
-	 * @param smwp <code>true</code> to enable serving modules without
-	 * publishing. Otherwise modules are served with standard publishing.
+	 * @param sscf <code>true</code> to enable saving separate context XML
+	 * files. Otherwise contexts are kept in server.xml when published.
 	 */
-	public SetServeModulesWithoutPublishCommand(ITomcatServerWorkingCopy server, boolean smwp) {
-		super(server, Messages.serverEditorActionSetServeWithoutPublish);
-		this.smwp = smwp;
+	public SetSaveSeparateContextFilesCommand(ITomcatServerWorkingCopy server, boolean sscf) {
+		super(server, Messages.serverEidtorActionSetSeparateContextFiles);
+		this.sscf = sscf;
 	}
 
 	/**
 	 * Execute the command.
 	 */
 	public void execute() {
-		oldSmwp = server.isServeModulesWithoutPublish();
-		server.setServeModulesWithoutPublish(smwp);
+		oldSscf = server.isSaveSeparateContextFiles();
+		server.setSaveSeparateContextFiles(sscf);
 	}
 
 	/**
 	 * Undo the command.
 	 */
 	public void undo() {
-		server.setServeModulesWithoutPublish(oldSmwp);
+		server.setSaveSeparateContextFiles(oldSscf);
 	}
 }

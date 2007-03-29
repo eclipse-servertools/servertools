@@ -233,6 +233,20 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	}
 	
 	/**
+	 * Returns true if contexts should be saved in separate files
+	 * during server publish.
+	 * 
+	 * @return boolean
+	 */
+	public boolean isSaveSeparateContextFiles() {
+		// If feature is supported, return current setting
+		if (versionHandler.supportsSeparateContextFiles())
+			return getAttribute(PROPERTY_SAVE_SEPARATE_CONTEXT_FILES, false);
+		return false;
+	}
+
+	
+	/**
 	 * Gets the base directory where the server instance runs.  This
 	 * path can vary depending on the configuration. Null may be returned
 	 * if a runtime hasn't been specified for the server.
@@ -420,6 +434,13 @@ public class TomcatServer extends ServerDelegate implements ITomcatServer, ITomc
 	 */
 	public void setServeModulesWithoutPublish(boolean b) {
 		setAttribute(PROPERTY_SERVE_MODULES_WITHOUT_PUBLISH, b);
+	}
+
+	/**
+	 * @see ITomcatServerWorkingCopy#setSaveSeparateContextFiles(boolean)
+	 */
+	public void setSaveSeparateContextFiles(boolean b) {
+		setAttribute(PROPERTY_SAVE_SEPARATE_CONTEXT_FILES, b);
 	}
 
 	/**

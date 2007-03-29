@@ -70,12 +70,13 @@ public class Messages extends NLS {
 	public static String serverEditorDeployDir;
 	public static String serverEditorTestEnvironment;
 	public static String serverEditorNoPublish;
+	public static String serverEditorSeparateContextFiles;
 	public static String serverEditorSecure;
 	public static String serverEditorDebugMode;
 	public static String serverEditorNotSupported;
 	public static String serverEditorDoesNotModify;
 	public static String serverEditorTakesControl;
-	public static String errorNoPublishServerMustBeStopped;
+	public static String errorServerMustBeStopped;
 	public static String errorServerDirIsRoot;
 	public static String errorServerDirUnderRoot;
 	public static String errorServerDirCustomNotMetadata;

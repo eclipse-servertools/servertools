@@ -185,7 +185,7 @@ public abstract class TomcatConfiguration implements ITomcatConfiguration, ITomc
 		return Status.OK_STATUS;
 	}
 	
-	protected IStatus cleanupServer(IPath confDir, IPath installDir, IProgressMonitor monitor) {
+	protected IStatus cleanupServer(IPath confDir, IPath installDir, boolean removeKeptContextFiles, IProgressMonitor monitor) {
 		// Default implementation assumes nothing to clean
 		return Status.OK_STATUS;
 	}

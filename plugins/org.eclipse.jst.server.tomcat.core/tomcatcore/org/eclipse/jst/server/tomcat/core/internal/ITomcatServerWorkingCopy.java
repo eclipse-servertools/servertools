@@ -54,4 +54,12 @@ public interface ITomcatServerWorkingCopy extends ITomcatServer {
 	 * @param b true if modules should be served without publishing
 	 */
 	public void setServeModulesWithoutPublish(boolean b);
+	
+	/**
+	 * Set this server to save contexts to separate context
+	 * files when publishing the server.
+	 * @param b true if contexts should be saved to separate files
+	 * when publishing the server
+	 */
+	public void setSaveSeparateContextFiles(boolean b);
 }

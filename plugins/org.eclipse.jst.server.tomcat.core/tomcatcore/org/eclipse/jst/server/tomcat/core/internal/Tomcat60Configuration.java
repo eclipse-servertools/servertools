@@ -630,9 +630,9 @@ public class Tomcat60Configuration extends TomcatConfiguration {
 	 * @param monitor a progress monitor or null
 	 * @return MultiStatus containing results of the cleanup operation
 	 */
-	protected IStatus cleanupServer(IPath baseDir, IPath installDir, IProgressMonitor monitor) {
+	protected IStatus cleanupServer(IPath baseDir, IPath installDir, boolean removeKeptContextFiles, IProgressMonitor monitor) {
 		List modules = getWebModules();
-		return TomcatVersionHelper.cleanupCatalinaServer(baseDir, installDir, modules, monitor);
+		return TomcatVersionHelper.cleanupCatalinaServer(baseDir, installDir, removeKeptContextFiles, modules, monitor);
 	}
 
 	/**

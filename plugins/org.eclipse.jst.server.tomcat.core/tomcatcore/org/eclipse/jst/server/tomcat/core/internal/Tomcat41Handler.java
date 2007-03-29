@@ -160,4 +160,15 @@ public class Tomcat41Handler implements ITomcatVersionHandler {
 	public boolean supportsDebugArgument() {
 		return true;
 	}
+
+	/**
+	 * While Tomcat 4.1.x does implement a form of separate
+	 * context files, these file are found outside of the
+	 * &quot;conf&quot; directory and is not practical to
+	 * support.
+	 * @see ITomcatVersionHandler#supportsSeparateContextFiles()
+	 */
+	public boolean supportsSeparateContextFiles() {
+		return false;
+	}
 }

@@ -16,9 +16,11 @@ import java.beans.PropertyChangeListener;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatServer;
+import org.eclipse.jst.server.tomcat.core.internal.ITomcatVersionHandler;
 import org.eclipse.jst.server.tomcat.core.internal.TomcatServer;
 import org.eclipse.jst.server.tomcat.core.internal.command.SetDebugModeCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.SetSecureCommand;
+import org.eclipse.jst.server.tomcat.core.internal.command.SetSaveSeparateContextFilesCommand;
 import org.eclipse.jst.server.tomcat.core.internal.command.SetServeModulesWithoutPublishCommand;
 import org.eclipse.jst.server.tomcat.ui.internal.ContextIds;
 import org.eclipse.jst.server.tomcat.ui.internal.Messages;
@@ -50,11 +52,13 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 	protected Button secure;
 	protected Button debug;
 	protected Button noPublish;
+	protected Button separateContextFiles;
 	protected boolean updating;
 
 	protected PropertyChangeListener listener;
 	
 	protected boolean noPublishChanged;
+	protected boolean separateContextFilesChanged;
 
 	/**
 	 * ServerGeneralEditorPart constructor comment.
@@ -83,6 +87,11 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 					ServerGeneralEditorSection.this.noPublish.setSelection(b.booleanValue());
 					// Indicate this setting has changed
 					noPublishChanged = true;
+				} else if (ITomcatServer.PROPERTY_SAVE_SEPARATE_CONTEXT_FILES.equals(event.getPropertyName())) {
+					Boolean b = (Boolean) event.getNewValue();
+					ServerGeneralEditorSection.this.separateContextFiles.setSelection(b.booleanValue());
+					// Indicate this setting has changed
+					separateContextFilesChanged = true;
 				}
 				updating = false;
 			}
@@ -138,6 +147,25 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		// TODO Address help
 //		whs.setHelp(noPublish, ContextIds.SERVER_EDITOR_SECURE);
 
+		// save separate context XML files
+		separateContextFiles = toolkit.createButton(composite, NLS.bind(Messages.serverEditorSeparateContextFiles, ""), SWT.CHECK);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		data.horizontalSpan = 3;
+		separateContextFiles.setLayoutData(data);
+		separateContextFiles.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent se) {
+				if (updating)
+					return;
+				updating = true;
+				execute(new SetSaveSeparateContextFilesCommand(tomcatServer, separateContextFiles.getSelection()));
+				// Indicate this setting has changed
+				separateContextFilesChanged = true;
+				updating = false;
+			}
+		});
+		// TODO Address help
+//		whs.setHelp(separateContextFiles, ContextIds.SERVER_EDITOR_SECURE);
+		
 		// security
 		secure = toolkit.createButton(composite, Messages.serverEditorSecure, SWT.CHECK);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -155,7 +183,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		whs.setHelp(secure, ContextIds.SERVER_EDITOR_SECURE);
 	
 		// debug mode
-		debug = toolkit.createButton(composite, Messages.serverEditorDebugMode, SWT.CHECK);
+		debug = toolkit.createButton(composite, NLS.bind(Messages.serverEditorDebugMode, ""), SWT.CHECK);
 		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.horizontalSpan = 3;
 		debug.setLayoutData(data);
@@ -201,19 +229,35 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 		if (secure == null || tomcatServer == null)
 			return;
 		updating = true;
+		ITomcatVersionHandler tvh = tomcatServer.getTomcatVersionHandler();
 		
-		boolean supported = tomcatServer.getTomcatVersionHandler().supportsServeModulesWithoutPublish();
-		String noPublishLabel = NLS.bind(Messages.serverEditorNoPublish,
+		boolean supported = tvh.supportsServeModulesWithoutPublish();
+		String label = NLS.bind(Messages.serverEditorNoPublish,
 				supported ? "" : Messages.serverEditorNotSupported);
-		noPublish.setText(noPublishLabel);
+		noPublish.setText(label);
 		noPublish.setSelection(tomcatServer.isServeModulesWithoutPublish());
 		if (readOnly || !supported)
 			noPublish.setEnabled(false);
 		else
 			noPublish.setEnabled(true);
 
+		supported = tvh.supportsSeparateContextFiles();
+		label = NLS.bind(Messages.serverEditorSeparateContextFiles,
+				supported ? "" : Messages.serverEditorNotSupported);
+		separateContextFiles.setText(label);
+		separateContextFiles.setSelection(tomcatServer.isSaveSeparateContextFiles());
+		if (readOnly || !supported)
+			separateContextFiles.setEnabled(false);
+		else
+			separateContextFiles.setEnabled(true);
+
 		secure.setSelection(tomcatServer.isSecure());
-		if (server.getRuntime() != null && server.getRuntime().getRuntimeType().getId().indexOf("32") >= 0 || readOnly)
+		
+		supported = tvh.supportsDebugArgument();
+		label = NLS.bind(Messages.serverEditorDebugMode,
+				supported ? "" : Messages.serverEditorNotSupported);
+		debug.setText(label);
+		if (readOnly || !supported)
 			debug.setEnabled(false);
 		else {
 			debug.setEnabled(true);
@@ -238,7 +282,7 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 			if (tomcatServer.getServer().getServerState() != IServer.STATE_STOPPED) {
 				return new IStatus [] {
 						new Status(IStatus.ERROR, TomcatUIPlugin.PLUGIN_ID,
-								NLS.bind(Messages.errorNoPublishServerMustBeStopped,
+								NLS.bind(Messages.errorServerMustBeStopped,
 										NLS.bind(Messages.serverEditorNoPublish, "").trim()))
 				};
 			}
@@ -246,6 +290,16 @@ public class ServerGeneralEditorSection extends ServerEditorSection {
 			PublishServerJob publishJob = new PublishServerJob(tomcatServer.getServer(), IServer.PUBLISH_CLEAN, false);
 			publishJob.schedule();
 			noPublishChanged = false;
+		}
+		if (separateContextFilesChanged) {
+			// If server is running, abort the save since contexts will be moving
+			if (tomcatServer.getServer().getServerState() != IServer.STATE_STOPPED) {
+				return new IStatus [] {
+						new Status(IStatus.ERROR, TomcatUIPlugin.PLUGIN_ID,
+								NLS.bind(Messages.errorServerMustBeStopped,
+										NLS.bind(Messages.serverEditorSeparateContextFiles, "").trim()))
+				};
+			}
 		}
 		// use default implementation to return success
 		return super.getSaveStatus();

@@ -15,17 +15,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
+import javax.xml.parsers.DocumentBuilder;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
@@ -38,12 +40,15 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.jst.server.tomcat.core.internal.wst.ModuleTraverser;
 import org.eclipse.jst.server.tomcat.core.internal.xml.Factory;
+import org.eclipse.jst.server.tomcat.core.internal.xml.XMLUtil;
 import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Context;
+import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Host;
 import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Server;
 import org.eclipse.jst.server.tomcat.core.internal.xml.server40.ServerInstance;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
@@ -191,6 +196,23 @@ public class TomcatVersionHelper {
 		if (serverFile.exists()) {
 			Server server = (Server) factory.loadDocument(new FileInputStream(serverFile));
 			serverInstance = new ServerInstance(server, serviceName, hostName);
+			
+			IPath contextPath = serverInstance.getContextXmlDirectory(serverXml.removeLastSegments(1));
+			File contextDir = contextPath.toFile();
+			if (contextDir.exists()) {
+				Map projectContexts = new HashMap();
+				loadSeparateContextFiles(contextPath.toFile(), factory, projectContexts);
+				
+				// add any separately saved contexts
+				Host host = serverInstance.getHost();
+				Collection contexts = projectContexts.values();
+				Iterator iter = contexts.iterator();
+				while (iter.hasNext()) {
+					Context context = (Context)iter.next();
+					host.importNode(context.getElementNode(), true);
+				}
+				// TODO Add handling for non-project contexts when there removal can be addressed  
+			}
 		}
 		return serverInstance;
 	}
@@ -203,18 +225,18 @@ public class TomcatVersionHelper {
 	 * 
 	 * @param oldServerInstance for server.xml from previous server publish
 	 * @param modules list of currently added modules
-	 * @return collection of Context paths that are not present in current modules
+	 * @param removedContextsMap Map to receive removed contexts mapped by path
+	 * @param keptContextsMap Map to receive kept contexts mapped by path
 	 */
-	public static Collection getRemovedCatalinaContexts(ServerInstance oldServerInstance, List modules) {
-		// Determine which contexts are going away
-		Set removedContextPaths = new HashSet();
+	public static void getRemovedKeptCatalinaContexts(ServerInstance oldServerInstance,
+			List modules, Map removedContextsMap, Map keptContextsMap) {
 		// Collect paths of old web modules managed by WTP
 		Context [] contexts = oldServerInstance.getContexts();
 		if (contexts != null) {
 			for (int i = 0; i < contexts.length; i++) {
 				String source = contexts[i].getSource();
 				if (source != null && source.length() > 0 )	{
-					removedContextPaths.add(contexts[i].getPath());
+					removedContextsMap.put(contexts[i].getPath(), contexts[i]);
 				}
 			}
 		}
@@ -223,27 +245,29 @@ public class TomcatVersionHelper {
 		int size = modules.size();
 		for (int i = 0; i < size; i++) {
 			WebModule module = (WebModule) modules.get(i);
-			removedContextPaths.remove(module.getPath());
+			Context context = (Context)removedContextsMap.remove(module.getPath());
+			if (context != null)
+				keptContextsMap.put(context.getPath(), context);
 		}
-		return removedContextPaths;
 	}
-
+	
 	/**
 	 * Cleanup server instance location in preparation for next server publish.
 	 * This currently involves deleting work directories for currently
-	 * existing Contexts which will not be included in the next publish.<br>
-	 * <br>
-	 * Note: This method is not used by Tomcat 5.0, because it may create
-	 * Context XML files under &quot;conf/Catalina/localhost&quot; for Contexts
-	 * in server.xml which requires additional cleanup.
+	 * existing Contexts which will not be included in the next publish.
+	 * In addition, Context XML files which may have been created for these
+	 * Contexts are also deleted. If requested, Context XML files for
+	 * kept Contexts will be deleted since they will be kept in server.xml.
 	 * 
 	 * @param baseDir path to server instance directory, i.e. catalina.base
 	 * @param installDir path to server installation directory (not currently used)
+	 * @param removeKeptContextFiles true if kept contexts should have a separate
+	 *  context XML file removed 
 	 * @param modules list of currently added modules
 	 * @param monitor a progress monitor or null
 	 * @return MultiStatus containing results of the cleanup operation
 	 */
-	public static IStatus cleanupCatalinaServer(IPath baseDir, IPath installDir, List modules, IProgressMonitor monitor) {
+	public static IStatus cleanupCatalinaServer(IPath baseDir, IPath installDir, boolean removeKeptContextFiles, List modules, IProgressMonitor monitor) {
 		MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, Messages.cleanupServerTask, null);
 		try {
 			monitor = ProgressUtil.getMonitorFor(monitor);
@@ -253,43 +277,98 @@ public class TomcatVersionHelper {
 			IPath serverXml = baseDir.append("conf").append("server.xml");
 			ServerInstance oldInstance = TomcatVersionHelper.getCatalinaServerInstance(serverXml, null, null);
 			if (oldInstance != null) {
-				Collection oldPaths = TomcatVersionHelper.getRemovedCatalinaContexts(oldInstance, modules);
+				Map removedContextsMap = new HashMap();
+				Map keptContextsMap = new HashMap();
+				TomcatVersionHelper.getRemovedKeptCatalinaContexts(oldInstance, modules, removedContextsMap, keptContextsMap);
 				monitor.worked(100);
-				if (oldPaths != null && oldPaths.size() > 0) {
-					// Delete work directories for managed web modules that have gone away
-					if (oldPaths.size() > 0 ) {
-						IProgressMonitor subMonitor = ProgressUtil.getSubMonitorFor(monitor, 100);
-						subMonitor.beginTask(Messages.deletingContextFilesTask, oldPaths.size() * 100);
+				if (removedContextsMap.size() > 0) {
+					// Delete context files and work directories for managed web modules that have gone away
+					IProgressMonitor subMonitor = ProgressUtil.getSubMonitorFor(monitor, 100);
+					subMonitor.beginTask(Messages.deletingContextFilesTask, removedContextsMap.size() * 200);
+					
+					Iterator iter = removedContextsMap.keySet().iterator();
+					while (iter.hasNext()) {
+						String oldPath = (String)iter.next();
+						Context ctx = (Context)removedContextsMap.get(oldPath);
 						
-						Iterator iter = oldPaths.iterator();
-						while (iter.hasNext()) {
-							String oldPath = (String)iter.next();
-							
-							// Delete work directory associated with the removed context if it is within confDir.
-							// If it is outside of confDir, assume user is going to manage it.
-							Context ctx = oldInstance.getContext(oldPath);
-							IPath ctxWorkPath = oldInstance.getContextWorkDirectory(baseDir, ctx);
-							if (baseDir.isPrefixOf(ctxWorkPath)) {
-								File ctxWorkDir = ctxWorkPath.toFile();
-								if (ctxWorkDir.exists() && ctxWorkDir.isDirectory()) {
-									IStatus [] results = PublishUtil.deleteDirectory(ctxWorkDir, ProgressUtil.getSubMonitorFor(monitor, 100));
-									if (results.length > 0) {
-										Trace.trace(Trace.SEVERE, "Could not delete work directory " + ctxWorkDir.getPath() + " for removed context " + oldPath);
-										for (int i = 0; i < results.length; i++) {
-											ms.add(results[i]);
-										}
+						// Delete the corresponding context file, if it exists
+						IPath ctxFilePath = oldInstance.getContextFilePath(baseDir, ctx);
+						if (ctxFilePath != null) {
+							File ctxFile = ctxFilePath.toFile();
+							if (ctxFile.exists()) {
+								subMonitor.subTask(NLS.bind(Messages.deletingContextFile, ctxFile.getName()));
+								if (ctxFile.delete()) {
+									if (Trace.isTraceEnabled())
+										Trace.trace(Trace.FINER, "Leftover context file " + ctxFile.getName() + " deleted.");
+									ms.add(new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0,
+											NLS.bind(Messages.deletedContextFile, ctxFile.getName()), null));
+								} else {
+									Trace.trace(Trace.SEVERE, "Could not delete obsolete context file " + ctxFilePath.toOSString());
+									ms.add(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0,
+											NLS.bind(Messages.errorCouldNotDeleteContextFile, ctxFilePath.toOSString()), null));
+								}
+							}
+						}
+						subMonitor.worked(100);
+						
+						// Delete work directory associated with the removed context if it is within confDir.
+						// If it is outside of confDir, assume user is going to manage it.
+						IPath ctxWorkPath = oldInstance.getContextWorkDirectory(baseDir, ctx);
+						if (baseDir.isPrefixOf(ctxWorkPath)) {
+							File ctxWorkDir = ctxWorkPath.toFile();
+							if (ctxWorkDir.exists() && ctxWorkDir.isDirectory()) {
+								IStatus [] results = PublishUtil.deleteDirectory(ctxWorkDir, ProgressUtil.getSubMonitorFor(monitor, 100));
+								if (results.length > 0) {
+									Trace.trace(Trace.SEVERE, "Could not delete work directory " + ctxWorkDir.getPath() + " for removed context " + oldPath);
+									for (int i = 0; i < results.length; i++) {
+										ms.add(results[i]);
 									}
 								}
-								else
-									subMonitor.worked(100);
 							}
 							else
 								subMonitor.worked(100);
 						}
-						subMonitor.done();
+						else
+							subMonitor.worked(100);
 					}
+					subMonitor.done();
 				}
 				monitor.worked(100);
+				
+				// If requested, remove any separate context XML files for contexts being kept
+				if (removeKeptContextFiles && keptContextsMap.size() > 0) {
+					// Delete context files and work directories for managed web modules that have gone away
+					IProgressMonitor subMonitor = ProgressUtil.getSubMonitorFor(monitor, 100);
+					// TODO Improve task name
+					subMonitor.beginTask(Messages.deletingContextFilesTask, keptContextsMap.size() * 100);
+					
+					Iterator iter = keptContextsMap.keySet().iterator();
+					while (iter.hasNext()) {
+						String keptPath = (String)iter.next();
+						Context ctx = (Context)keptContextsMap.get(keptPath);
+						
+						// Delete the corresponding context file, if it exists
+						IPath ctxFilePath = oldInstance.getContextFilePath(baseDir, ctx);
+						if (ctxFilePath != null) {
+							File ctxFile = ctxFilePath.toFile();
+							if (ctxFile.exists()) {
+								subMonitor.subTask(NLS.bind(Messages.deletingContextFile, ctxFile.getName()));
+								if (ctxFile.delete()) {
+									if (Trace.isTraceEnabled())
+										Trace.trace(Trace.FINER, "Leftover context file " + ctxFile.getName() + " deleted.");
+									ms.add(new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0,
+											NLS.bind(Messages.deletedContextFile, ctxFile.getName()), null));
+								} else {
+									Trace.trace(Trace.SEVERE, "Could not delete obsolete context file " + ctxFilePath.toOSString());
+									ms.add(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0,
+											NLS.bind(Messages.errorCouldNotDeleteContextFile, ctxFilePath.toOSString()), null));
+								}
+							}
+						}
+						subMonitor.worked(100);
+					}
+					subMonitor.done();
+				}
 			}
 			// Else no server.xml.  Assume first publish to new temp directory
 			else {
@@ -730,5 +809,135 @@ public class TomcatVersionHelper {
 			monitor.done();
 		}
 		return Status.OK_STATUS;
+	}
+	
+	/**
+	 * Moves contexts out of current published server.xml and into individual
+	 * context XML files.
+	 * 
+	 * @param baseDir directory where the Catalina instance is found
+	 * @param noPath true if path attribute should be removed from the context
+	 * @param monitor a progress monitor
+	 * @return result of operation
+	 */
+	public static IStatus moveContextsToSeparateFiles(IPath baseDir, boolean noPath, IProgressMonitor monitor) {
+		IPath confDir = baseDir.append("conf");
+		IPath serverXml = confDir.append("server.xml");
+		try {
+			monitor = ProgressUtil.getMonitorFor(monitor);
+			monitor.beginTask(Messages.publishConfigurationTask, 300);
+
+			monitor.subTask(Messages.publishContextConfigTask);
+			Factory factory = new Factory();
+			factory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server40");
+			Server publishedServer = (Server) factory.loadDocument(new FileInputStream(serverXml.toFile()));
+			ServerInstance publishedInstance = new ServerInstance(publishedServer, null, null);
+			monitor.worked(100);
+
+			boolean modified = false;
+
+			Host host = publishedInstance.getHost();
+			Context[] wtpContexts = publishedInstance.getContexts();
+			if (wtpContexts != null && wtpContexts.length > 0) {
+				IPath contextPath = publishedInstance.getContextXmlDirectory(serverXml.removeLastSegments(1));
+				File contextDir = contextPath.toFile();
+				if (!contextDir.exists()) {
+					contextDir.mkdirs();
+				}
+				// Process in reverse order, since contexts may be removed
+				for (int i = wtpContexts.length - 1; i >= 0; i--) {
+					Context context = wtpContexts[i];
+					// TODO Hande non-project contexts when their removal can be addressed
+					if (context.getSource() == null)
+						continue;
+					
+					String name = context.getPath();
+					if (name.startsWith("/")) {
+						name = name.substring(1);
+					}
+					// If the default context, adjust the file name
+					if (name.length() == 0) {
+						name = "ROOT";
+					}
+					
+					// TODO Determine circumstances, if any, where setting antiResourceLocking true can cause the original docBase content to be deleted.
+					if (Boolean.valueOf(context.getAttributeValue("antiResourceLocking")).booleanValue())
+						context.setAttributeValue("antiResourceLocking", "false");
+					
+					// If requested, remove path attribute
+					if (noPath)
+						context.removeAttribute("path");
+					
+					File contextFile = new File(contextDir, name + ".xml");
+					DocumentBuilder builder = XMLUtil.getDocumentBuilder();
+					Document contextDoc = builder.newDocument();
+					contextDoc.appendChild(contextDoc.importNode(context.getElementNode(), true));
+					XMLUtil.save(contextFile.getAbsolutePath(), contextDoc);
+
+					host.removeElement("Context", i);
+					modified = true;
+				}
+			}
+			monitor.worked(100);
+			if (modified) {
+				monitor.subTask(Messages.savingContextConfigTask);
+				factory.save(serverXml.toOSString());
+			}
+			monitor.worked(100);
+			if (Trace.isTraceEnabled())
+				Trace.trace(Trace.FINER, "Context docBase settings updated in server.xml.");
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Could not modify context configurations to serve directly for Tomcat configuration " + confDir.toOSString() + ": " + e.getMessage());
+			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPublishConfiguration, new String[] {e.getLocalizedMessage()}), e);
+		}
+		finally {
+			monitor.done();
+		}
+		return Status.OK_STATUS;
+	}
+	
+	private static void loadSeparateContextFiles(File contextDir, Factory factory, Map projectContexts) {
+		File[] contextFiles = contextDir.listFiles(new FilenameFilter() {
+			public boolean accept(File dir, String name) {
+				return name.toLowerCase().endsWith(".xml");
+			}
+		});
+
+		for (int j = 0; j < contextFiles.length; j++) {
+			File ctx = contextFiles[j];
+
+			FileInputStream fis = null;
+			Context context = null;
+			try {
+				fis = new FileInputStream(ctx);
+				context = (Context) factory.loadDocument(fis);
+			} catch (Exception e) {
+				// may be a spurious xml file in the host dir?
+				Trace.trace(Trace.FINER, "Unable to read context "
+						+ ctx.getAbsolutePath());
+			} finally {
+				try {
+					fis.close();
+				} catch (IOException e) {
+					// ignore
+				}
+			}
+			if (context != null) {
+				// TODO Handle non-project contexts when their removal can be addressed
+				String memento = context.getSource();
+				if (memento != null) {
+					String path = context.getPath();
+					// If path attribute is not set, derive from file name
+					if (path == null) {
+						String fileName = ctx.getName();
+						path = fileName.substring(0, fileName.length() - ".xml".length());
+						if ("ROOT".equals(path))
+							path = "";
+						context.setPath(path);
+					}
+					projectContexts.put(ctx, context);
+				}
+			}
+		}
 	}
 }

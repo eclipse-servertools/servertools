@@ -177,4 +177,11 @@ public class Tomcat50Handler implements ITomcatVersionHandler {
 	public boolean supportsDebugArgument() {
 		return false;
 	}
+
+	/**
+	 * @see ITomcatVersionHandler#supportsSeparateContextFiles()
+	 */
+	public boolean supportsSeparateContextFiles() {
+		return true;
+	}
 }

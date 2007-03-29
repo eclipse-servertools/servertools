@@ -38,6 +38,12 @@ public interface ITomcatServer extends IURLProvider {
 	 * publishing.
 	 */
 	public static final String PROPERTY_SERVE_MODULES_WITHOUT_PUBLISH = "serveModulesWithoutPublish";
+	
+	/**
+	 * Property which specifies contexts in the server.xml file should
+	 * be saved to separate context files.
+	 */
+	public static final String PROPERTY_SAVE_SEPARATE_CONTEXT_FILES = "saveSeparateContextFiles";
 
 	/**
 	 * Returns true if this is a test (publish and run code out of the
@@ -72,4 +78,12 @@ public interface ITomcatServer extends IURLProvider {
 	 * @return true if modules should not be published but served directly
 	 */
 	public boolean isServeModulesWithoutPublish();
+	
+	/**
+	 * Returns true if contexts should be saved to separate context
+	 * files instead of being kept within server.xml when the server
+	 * is published.
+	 * @return true if contexts should be saved to separate files
+	 */
+	public boolean isSaveSeparateContextFiles();
 }

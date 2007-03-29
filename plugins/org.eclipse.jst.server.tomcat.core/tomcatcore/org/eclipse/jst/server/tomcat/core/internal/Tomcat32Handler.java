@@ -179,4 +179,11 @@ public class Tomcat32Handler implements ITomcatVersionHandler {
 	public boolean supportsDebugArgument() {
 		return true;
 	}
+
+	/**
+	 * @see ITomcatVersionHandler#supportsSeparateContextFiles()
+	 */
+	public boolean supportsSeparateContextFiles() {
+		return false;
+	}
 }

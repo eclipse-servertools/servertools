@@ -161,4 +161,11 @@ public interface ITomcatVersionHandler {
 	 * @return true if debug argument is supported
 	 */
 	public boolean supportsDebugArgument();
+	
+	/**
+	 * Returns true if this server supports separate context files.
+	 * 
+	 * @return true if this server supports separate context files
+	 */
+	public boolean supportsSeparateContextFiles();
 }

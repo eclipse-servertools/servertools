@@ -17,7 +17,6 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,9 +26,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jst.server.core.PublishUtil;
 import org.eclipse.jst.server.tomcat.core.internal.xml.Factory;
 import org.eclipse.jst.server.tomcat.core.internal.xml.XMLUtil;
 import org.eclipse.jst.server.tomcat.core.internal.xml.server40.Connector;
@@ -625,7 +622,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 	/**
 	 * Cleanup the server instance.  This consists of deleting the work
 	 * directory associated with Contexts that are going away in the
-	 * up coming publish.  Also, Context XML files which may have been
+	 * up coming publish.  In addition, Context XML files which may have been
 	 * created for these Contexts are also deleted.
 	 * 
 	 * @param baseDir path to server instance directory, i.e. catalina.base
@@ -633,96 +630,9 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 	 * @param monitor a progress monitor or null
 	 * @return MultiStatus containing results of the cleanup operation
 	 */
-	protected IStatus cleanupServer(IPath baseDir, IPath installDir, IProgressMonitor monitor) {
-		MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, Messages.cleanupServerTask, null);
-		monitor = ProgressUtil.getMonitorFor(monitor);
-		monitor.beginTask(Messages.cleanupServerTask, 200);
-
-		try {
-			monitor.subTask(Messages.detectingRemovedProjects);
-
-			IPath serverXml = baseDir.append("conf").append("server.xml");
-			ServerInstance oldInstance = TomcatVersionHelper.getCatalinaServerInstance(serverXml, null, null);
-			if (oldInstance != null) {
-				List modules = getWebModules();
-				Collection oldPaths = TomcatVersionHelper.getRemovedCatalinaContexts(oldInstance, modules);
-				monitor.worked(100);
-				if (oldPaths != null && oldPaths.size() > 0) {
-					// Begin building path to context directory
-					IPath contextXmlDir = oldInstance.getContextXmlDirectory(baseDir.append("conf"));
-
-					// Delete context files and work directories for managed web modules that have gone away
-					if (oldPaths.size() > 0 ) {
-						IProgressMonitor subMonitor = ProgressUtil.getSubMonitorFor(monitor, 100);
-						subMonitor.beginTask(Messages.deletingContextFilesTask, oldPaths.size() * 200);
-						
-						Iterator iter = oldPaths.iterator();
-						while (iter.hasNext()) {
-							String oldPath = (String)iter.next();
-							// Derive the context file name from the path + ".xml", minus the leading '/'
-							String fileName;
-							if (oldPath.length() > 0)
-								fileName = oldPath.substring(1) + ".xml";
-							else
-								fileName = "ROOT.xml";
-							IPath contextPath = contextXmlDir.append(fileName);
-							File contextFile = contextPath.toFile();
-							if (contextFile.exists()) {
-								subMonitor.subTask(NLS.bind(Messages.deletingContextFile, fileName));
-								if (contextFile.delete()) {
-									if (Trace.isTraceEnabled())
-										Trace.trace(Trace.FINER, "Leftover context file " + fileName + " deleted.");
-									ms.add(new Status(IStatus.OK, TomcatPlugin.PLUGIN_ID, 0,
-											NLS.bind(Messages.deletedContextFile, fileName), null));
-								} else {
-									Trace.trace(Trace.SEVERE, "Could not delete obsolete context file " + contextPath.toOSString());
-									ms.add(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0,
-											NLS.bind(Messages.errorCouldNotDeleteContextFile, contextPath.toOSString()), null));
-								}
-								subMonitor.worked(100);
-							}
-							
-							// Delete work directory associated with the removed context if it is within confDir.
-							// If it is outside of confDir, assume user is going to manage it.
-							Context ctx = oldInstance.getContext(oldPath);
-							IPath ctxWorkPath = oldInstance.getContextWorkDirectory(baseDir, ctx);
-							if (baseDir.isPrefixOf(ctxWorkPath)) {
-								File ctxWorkDir = ctxWorkPath.toFile();
-								if (ctxWorkDir.exists() && ctxWorkDir.isDirectory()) {
-									IStatus [] results = PublishUtil.deleteDirectory(ctxWorkDir, ProgressUtil.getSubMonitorFor(monitor, 100));
-									if (results.length > 0) {
-										Trace.trace(Trace.SEVERE, "Could not delete work directory " + ctxWorkDir.getPath() + " for removed context " + oldPath);
-										for (int i = 0; i < results.length; i++) {
-											ms.add(results[i]);
-										}
-									}
-								}
-								else
-									monitor.worked(100);
-							}
-							else
-								monitor.worked(100);
-						}
-						subMonitor.done();
-					} else {
-						monitor.worked(100);
-					}
-				}
-			}
-			// Else no server.xml.  Assume first publish to new temp directory
-			else {
-				monitor.worked(200);
-			}
-			if (Trace.isTraceEnabled())
-				Trace.trace(Trace.FINER, "Server cleaned");
-		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Could not cleanup server at " + baseDir.toOSString() + ": " + e.getMessage());
-			ms.add(new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0,
-					NLS.bind(Messages.errorCleanupServer, new String[] {e.getLocalizedMessage()}), e));
-		}
-		
-		monitor.done();
-		return ms;
+	protected IStatus cleanupServer(IPath baseDir, IPath installDir, boolean removeKeptContextFiles, IProgressMonitor monitor) {
+		List modules = getWebModules();
+		return TomcatVersionHelper.cleanupCatalinaServer(baseDir, installDir, removeKeptContextFiles, modules, monitor);
 	}
 
 	/**

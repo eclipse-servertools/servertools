@@ -218,7 +218,8 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.beginTask(Messages.publishServerTask, 600);
 		
-		status = getTomcatConfiguration().cleanupServer(confDir, installDir, ProgressUtil.getSubMonitorFor(monitor, 100));
+		status = getTomcatConfiguration().cleanupServer(confDir, installDir,
+				!getTomcatServer().isSaveSeparateContextFiles(), ProgressUtil.getSubMonitorFor(monitor, 100));
 		if (status != null && !status.isOK())
 			throw new CoreException(status);
 		
@@ -357,12 +358,13 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 	protected void publishFinish(IProgressMonitor monitor) throws CoreException {
 		IStatus status;
 		IPath baseDir = getRuntimeBaseDirectory();
+		TomcatServer ts = getTomcatServer();
 		ITomcatVersionHandler tvh = getTomcatVersionHandler();
 		// Include or remove loader jar depending on state of serving directly 
 		status = tvh.prepareForServingDirectly(baseDir, getTomcatServer());
 		if (status.isOK()) {
 			// If serving modules directly, update server.xml accordingly (includes project context.xmls)
-			if (getTomcatServer().isServeModulesWithoutPublish()) {
+			if (ts.isServeModulesWithoutPublish()) {
 				status = getTomcatConfiguration().updateContextsToServeDirectly(
 						baseDir, tvh.getSharedLoader(baseDir), monitor);
 			}
@@ -371,6 +373,13 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 				// Publish context configuration for servers that support META-INF/context.xml
 				status = getTomcatConfiguration().publishContextConfig(
 						baseDir, getServerDeployDirectory(), monitor);
+			}
+			if (status.isOK() && ts.isSaveSeparateContextFiles()) {
+				// Determine if context's path attribute should be removed
+				String id = getServer().getServerType().getId();
+				boolean noPath = id.indexOf("55") > 0 || id.indexOf("60") > 0;
+				// TODO Add a monitor
+				TomcatVersionHelper.moveContextsToSeparateFiles(baseDir, noPath, null);
 			}
 		}
 		if (!status.isOK())

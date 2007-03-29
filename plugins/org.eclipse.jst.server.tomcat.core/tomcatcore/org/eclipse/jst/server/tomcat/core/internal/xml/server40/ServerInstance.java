@@ -413,6 +413,44 @@ public class ServerInstance {
 		return confDir.append(engineName).append(hostName);
 	}
 	
+	
+	/**
+	 * Gets the path for the context XML file that would be used
+	 * if this context were written to a separate files. This
+	 * method will return <b>null</b> if the selected Host is
+	 * not found in the server configuration. This method does
+	 * not verify if the specified Context currently exists
+	 * within the selected Host.
+	 * 
+	 * @param baseDir Path to the base directory for the server.
+	 * @param context Context whose context XML file path to return.
+	 * @return Returns the path to the context XML file for the specifed
+	 * Context. Returns <b>null</b> if the selected Host can not be
+	 * found or the context has no path attribute.
+	 */
+	public IPath getContextFilePath(IPath baseDir, Context context) {
+		if (context == null)
+			throw new IllegalArgumentException(Messages.errorXMLNullContextArg);
+		status = Status.OK_STATUS;
+		if (host == null && getHost() == null)
+			return null;
+
+		IPath contextFilePath = null;
+		IPath contextDir = getContextXmlDirectory(baseDir.append("conf"));
+		String name = context.getPath();
+		if (name != null) {
+			if (name.startsWith("/"))
+				name = name.substring(1);
+			if (name.length() == 0)
+				name = "ROOT";
+			contextFilePath = contextDir.append(name + ".xml");
+		}
+		else {
+			// TODO Set error status
+		}
+		return contextFilePath;
+	}
+	
 	/**
 	 * Gets the work directory associated with the specified 
 	 * Context. If the work directory obtained is relative,
@@ -430,7 +468,7 @@ public class ServerInstance {
 	 */
 	public IPath getContextWorkDirectory(IPath basePath, Context context) {
 		if (context == null)
-			throw new IllegalArgumentException("Context argument may not be null.");
+			throw new IllegalArgumentException(Messages.errorXMLNullContextArg);
 		status = Status.OK_STATUS;
 		if (host == null && getHost() == null)
 			return null;

@@ -83,6 +83,7 @@ public class Messages extends NLS {
 	public static String errorXMLContextNotFoundPath;
 	public static String errorXMLContextMangerNotFound;
 	public static String errorXMLContextNotFoundPath32;
+	public static String errorXMLNullContextArg;
 	public static String errorNoPublishNotSupported;
 	public static String errorPublishContextNotFound;
 	public static String errorPublishCouldNotRemoveModule;
@@ -104,6 +105,7 @@ public class Messages extends NLS {
 	public static String serverEditorActionSetServerDirectory;
 	public static String serverEditorActionSetDeployDirectory;
 	public static String serverEditorActionSetServeWithoutPublish;
+	public static String serverEidtorActionSetSeparateContextFiles;
 	public static String fixModuleContextRootDescription;
 	public static String fixModuleContextRoot;
 

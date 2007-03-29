@@ -345,6 +345,23 @@ public class XMLUtil {
 		}
 	}
 
+	public static void save(String filename, Node node) throws IOException {
+		PrintStream out = null;
+		try {
+			out = new PrintStream(new BufferedOutputStream(new FileOutputStream(filename)), true, "UTF-8");
+			print(out, node);
+		} catch (Exception ex) {
+			throw new IOException(ex.getLocalizedMessage());
+		} finally {
+			if (out != null)
+				try {
+					out.close();
+				} catch (Exception e) {
+					// ignore
+				}
+		}
+	}
+
 	/*
 	 * Set the value of the subnode
 	 *

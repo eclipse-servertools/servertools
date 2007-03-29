@@ -24,6 +24,10 @@ public class XMLElement {
 	public XMLElement() {
 		// do nothing
 	}
+	
+	public Element getElementNode() {
+		return xmlElement;
+	}
 
 	public Attr addAttribute(String s, String s1) {
 		Attr attr = factory.createAttribute(s, xmlElement);
@@ -243,7 +247,7 @@ public class XMLElement {
 		}
 	}
 	
-	void importNode(Node node, boolean deep) {
+	public void importNode(Node node, boolean deep) {
 		xmlElement.appendChild(xmlElement.getOwnerDocument().importNode(node, deep));
 	}
 }
