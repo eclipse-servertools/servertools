@@ -522,11 +522,12 @@ public class ServerWorkingCopy extends Server implements IServerWorkingCopy {
 						modules.remove(remove[i]);
 						resetState(new IModule[] { remove[i] }, monitor);
 					}
-					if (externalModules != null && externalModules.contains(remove[i])) {
+					if (externalModules.contains(remove[i])) {
 						externalModules.remove(remove[i]);
 						resetState(new IModule[] { remove[i] }, monitor);
 					}
 				}
+				
 			}
 			
 			// convert to attribute

@@ -1250,8 +1250,6 @@ public class Server extends Base implements IServer {
 		
 		try {
 			ILaunchConfiguration launchConfig = getLaunchConfiguration(true, monitor);
-			//if (launchConfig == null)
-			//	throw new CoreException();
 			ILaunch launch = launchConfig.launch(mode2, monitor); // , true); - causes workspace lock
 			Trace.trace(Trace.FINEST, "Launch: " + launch);
 		} catch (CoreException e) {
