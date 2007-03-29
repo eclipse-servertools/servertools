@@ -57,6 +57,9 @@ public class Messages extends NLS {
 	public static String serverEditorLocationsDescription2;
 	public static String serverEditorGeneralSection;
 	public static String serverEditorGeneralDescription;
+	public static String serverEditorServerDirMetadata;
+	public static String serverEditorServerDirInstall;
+	public static String serverEditorServerDirCustom;
 	public static String serverEditorSetInternalServerDirLink;
 	public static String serverEditorSetInternalServerDirLink2;
 	public static String serverEditorSetInstallServerDirLink;
@@ -70,9 +73,13 @@ public class Messages extends NLS {
 	public static String serverEditorSecure;
 	public static String serverEditorDebugMode;
 	public static String serverEditorNotSupported;
+	public static String serverEditorDoesNotModify;
+	public static String serverEditorTakesControl;
 	public static String errorNoPublishServerMustBeStopped;
 	public static String errorServerDirIsRoot;
 	public static String errorServerDirUnderRoot;
+	public static String errorServerDirCustomNotMetadata;
+	public static String errorServerDirCustomNotInstall;
 	public static String errorDeployDirNotSpecified;
 	public static String serverEditorBrowseServerMessage;
 	public static String serverEditorBrowseDeployMessage;

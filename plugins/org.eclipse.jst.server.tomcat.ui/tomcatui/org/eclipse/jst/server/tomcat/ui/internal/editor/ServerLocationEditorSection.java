@@ -64,13 +64,13 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 	protected Section section;
 	protected TomcatServer tomcatServer;
 
-	protected Hyperlink setInternalServerDir;
-	protected Hyperlink setRuntimeServerDir;
 	protected Hyperlink setDefaultDeployDir;
 	
-	protected boolean internalServerDirIsSet;
-	protected boolean installServerDirIsSet;
 	protected boolean defaultDeployDirIsSet;
+	
+	protected Button serverDirMetadata;
+	protected Button serverDirInstall;
+	protected Button serverDirCustom;
 	
 	protected Text serverDir;
 	protected Button serverDirBrowse;
@@ -85,6 +85,7 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 	
 	protected boolean allowRestrictedEditing;
 	protected IPath tempDirPath;
+	protected IPath installDirPath;
 
 	// Avoid hardcoding this at some point
 	private final static String METADATADIR = ".metadata";
@@ -106,6 +107,7 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 				updating = true;
 				if (ITomcatServer.PROPERTY_INSTANCE_DIR.equals(event.getPropertyName())
 						|| ITomcatServer.PROPERTY_TEST_ENVIRONMENT.equals(event.getPropertyName())) {
+					updateServerDirButtons();
 					updateServerDirFields();
 					validate();
 				}
@@ -130,14 +132,19 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 					// Update the state of the fields
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						public void run() {
-							if (!ServerLocationEditorSection.this.setInternalServerDir.isDisposed())
-								ServerLocationEditorSection.this.setInternalServerDir.setEnabled(allowRestrictedEditing);
-							if (!ServerLocationEditorSection.this.setRuntimeServerDir.isDisposed())
-								ServerLocationEditorSection.this.setRuntimeServerDir.setEnabled(allowRestrictedEditing);
+							boolean customServerDir = false;
+							if (!ServerLocationEditorSection.this.serverDirCustom.isDisposed())
+								customServerDir = ServerLocationEditorSection.this.serverDirCustom.getSelection();
+							if (!ServerLocationEditorSection.this.serverDirMetadata.isDisposed())
+								ServerLocationEditorSection.this.serverDirMetadata.setEnabled(allowRestrictedEditing);
+							if (!ServerLocationEditorSection.this.serverDirInstall.isDisposed())
+								ServerLocationEditorSection.this.serverDirInstall.setEnabled(allowRestrictedEditing);
+							if (!ServerLocationEditorSection.this.serverDirCustom.isDisposed())
+								ServerLocationEditorSection.this.serverDirCustom.setEnabled(allowRestrictedEditing);
 							if (!ServerLocationEditorSection.this.serverDir.isDisposed())
-								ServerLocationEditorSection.this.serverDir.setEnabled(allowRestrictedEditing);
+								ServerLocationEditorSection.this.serverDir.setEnabled(allowRestrictedEditing && customServerDir);
 							if (!ServerLocationEditorSection.this.serverDirBrowse.isDisposed())
-								ServerLocationEditorSection.this.serverDirBrowse.setEnabled(allowRestrictedEditing);
+								ServerLocationEditorSection.this.serverDirBrowse.setEnabled(allowRestrictedEditing && customServerDir);
 							if (!ServerLocationEditorSection.this.setDefaultDeployDir.isDisposed())
 								ServerLocationEditorSection.this.setDefaultDeployDir.setEnabled(allowRestrictedEditing);
 							if (!ServerLocationEditorSection.this.deployDir.isDisposed())
@@ -182,11 +189,15 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 
-		// server directory links
-		setInternalServerDir = toolkit.createHyperlink(composite,
-				NLS.bind(Messages.serverEditorSetInternalServerDirLink, ""), SWT.WRAP);
-		setInternalServerDir.addHyperlinkListener(new HyperlinkAdapter() {
-			public void linkActivated(HyperlinkEvent e) {
+		serverDirMetadata = toolkit.createButton(composite,
+				NLS.bind(Messages.serverEditorServerDirMetadata, Messages.serverEditorDoesNotModify), SWT.RADIO);
+		GridData data = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		data.horizontalSpan = 3;
+		serverDirMetadata.setLayoutData(data);
+		serverDirMetadata.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				if (updating || !serverDirMetadata.getSelection())
+					return;
 				updating = true;
 				execute(new SetTestEnvironmentCommand(tomcatServer, true));
 				updateServerDirFields();
@@ -194,14 +205,16 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 				validate();
 			}
 		});
-		GridData data = new GridData(SWT.FILL, SWT.CENTER, true, false);
-		data.horizontalSpan = 3;
-		setInternalServerDir.setLayoutData(data);
 
-		setRuntimeServerDir = toolkit.createHyperlink(composite,
-				NLS.bind(Messages.serverEditorSetInstallServerDirLink, ""), SWT.WRAP);
-		setRuntimeServerDir.addHyperlinkListener(new HyperlinkAdapter() {
-			public void linkActivated(HyperlinkEvent e) {
+		serverDirInstall = toolkit.createButton(composite,
+				NLS.bind(Messages.serverEditorServerDirInstall, Messages.serverEditorTakesControl), SWT.RADIO);
+		data = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		data.horizontalSpan = 3;
+		serverDirInstall.setLayoutData(data);
+		serverDirInstall.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				if (updating || !serverDirInstall.getSelection())
+					return;
 				updating = true;
 				execute(new SetTestEnvironmentCommand(tomcatServer, false));
 				updateServerDirFields();
@@ -209,10 +222,24 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 				validate();
 			}
 		});
+
+		serverDirCustom = toolkit.createButton(composite,
+				NLS.bind(Messages.serverEditorServerDirCustom, Messages.serverEditorDoesNotModify), SWT.RADIO);
 		data = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		data.horizontalSpan = 3;
-		setRuntimeServerDir.setLayoutData(data);
-		
+		serverDirCustom.setLayoutData(data);
+		serverDirCustom.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				if (updating || !serverDirCustom.getSelection())
+					return;
+				updating = true;
+				execute(new SetTestEnvironmentCommand(tomcatServer, true));
+				updateServerDirFields();
+				updating = false;
+				validate();
+			}
+		});
+
 		// server directory
 		Label label = createLabel(toolkit, composite, Messages.serverEditorServerDir);
 		data = new GridData(SWT.BEGINNING, SWT.CENTER, false, false);
@@ -249,6 +276,7 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 						selectedDirectory = path.toOSString();
 					}
 					execute(new SetInstanceDirectoryCommand(tomcatServer, selectedDirectory));
+					updateServerDirButtons();
 					updateServerDirFields();
 					updating = false;
 					validate();
@@ -362,7 +390,8 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 		// If not Tomcat 3.2, update description to mention catalina.base
 		if (runtime != null && runtime.getRuntimeType().getId().indexOf("32") < 0)
 			section.setDescription(Messages.serverEditorLocationsDescription2);
-		
+		installDirPath = runtime.getLocation();
+
 		// determine if editing of locations is allowed
 		allowRestrictedEditing = false;
 		IPath basePath = tomcatServer.getRuntimeBaseDirectory();
@@ -375,14 +404,14 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 				allowRestrictedEditing = true;
 			}
 		}
-
+		
 		// Update server related fields
+		updateServerDirButtons();
 		updateServerDirFields();
 
-		setInternalServerDir.setEnabled(allowRestrictedEditing);
-		setRuntimeServerDir.setEnabled(allowRestrictedEditing);
-		serverDir.setEnabled(allowRestrictedEditing);
-		serverDirBrowse.setEnabled(allowRestrictedEditing);
+		serverDirMetadata.setEnabled(allowRestrictedEditing);
+		serverDirInstall.setEnabled(allowRestrictedEditing);
+		serverDirCustom.setEnabled(allowRestrictedEditing);
 
 		// Update deployment related fields
 		updateDefaultDeployLink();
@@ -415,32 +444,34 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 		return dir;
 	}
 	
-	protected void updateServerDirFields() {
-		updateServerDir();
-		updateInternalServerDirLink();
-		updateInstallServerDirLink();
+	protected void updateServerDirButtons() {
+		if (tomcatServer.getInstanceDirectory() == null) {
+			IPath path = tomcatServer.getRuntimeBaseDirectory();
+			if (path.equals(installDirPath)) {
+				serverDirInstall.setSelection(true);
+				serverDirMetadata.setSelection(false);
+				serverDirCustom.setSelection(false);
+			}
+			else {
+				serverDirMetadata.setSelection(true);
+				serverDirInstall.setSelection(false);
+				serverDirCustom.setSelection(false);
+			}
+		}
+		else {
+			serverDirCustom.setSelection(true);
+			serverDirMetadata.setSelection(false);
+			serverDirInstall.setSelection(false);
+		}
 	}
 	
-	protected void updateInternalServerDirLink() {
-		boolean newState = tomcatServer.isTestEnvironment() && tomcatServer.getInstanceDirectory() == null;
-		if (newState != internalServerDirIsSet) {
-			setInternalServerDir.setText(
-					newState ? Messages.serverEditorSetInternalServerDirLink2
-							: Messages.serverEditorSetInternalServerDirLink);
-			internalServerDirIsSet = newState;
-		}
+	protected void updateServerDirFields() {
+		updateServerDir();
+		boolean customServerDir = serverDirCustom.getSelection();
+		serverDir.setEnabled(allowRestrictedEditing && customServerDir);
+		serverDirBrowse.setEnabled(allowRestrictedEditing && customServerDir);
 	}
-
-	protected void updateInstallServerDirLink() {
-		boolean newState = !tomcatServer.isTestEnvironment();
-		if (newState != installServerDirIsSet) {
-			setRuntimeServerDir.setText(
-					newState ? Messages.serverEditorSetInstallServerDirLink2
-							: Messages.serverEditorSetInstallServerDirLink);
-			installServerDirIsSet = newState;
-		}
-	}
-
+	
 	protected void updateServerDir() {
 		IPath path = tomcatServer.getRuntimeBaseDirectory();
 		if (workspacePath.isPrefixOf(path)) {
@@ -490,6 +521,21 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 								new Status(IStatus.ERROR, TomcatUIPlugin.PLUGIN_ID, NLS.bind(Messages.errorServerDirUnderRoot, METADATADIR))};
 					}
 				}
+				else if (installDirPath.equals(path))
+					return new IStatus [] {
+						new Status(IStatus.ERROR, TomcatUIPlugin.PLUGIN_ID,
+								NLS.bind(Messages.errorServerDirCustomNotInstall,
+										NLS.bind(Messages.serverEditorServerDirInstall, "").trim()))};
+			}
+			else {
+				IPath path = tomcatServer.getRuntimeBaseDirectory();
+				// If non-custom instance dir is not the install and metadata isn't the selection, return error
+				if (!path.equals(installDirPath) && !serverDirMetadata.getSelection()) {
+					return new IStatus [] {
+							new Status(IStatus.ERROR, TomcatUIPlugin.PLUGIN_ID,
+									NLS.bind(Messages.errorServerDirCustomNotMetadata, 
+											NLS.bind(Messages.serverEditorServerDirMetadata, "").trim()))};
+				}
 			}
 
 			// Check the deployment directory
@@ -523,6 +569,19 @@ public class ServerLocationEditorSection extends ServerEditorSection {
 						setErrorMessage(NLS.bind(Messages.errorServerDirUnderRoot, METADATADIR));
 						return;
 					}
+				}
+				else if (installDirPath.equals(path)) {
+					setErrorMessage(NLS.bind(Messages.errorServerDirCustomNotInstall,
+							NLS.bind(Messages.serverEditorServerDirInstall, "").trim()));
+					return;
+				}
+			}
+			else {
+				IPath path = tomcatServer.getRuntimeBaseDirectory();
+				// If non-custom instance dir is not the install and metadata isn't the selection, return error
+				if (!path.equals(installDirPath) && !serverDirMetadata.getSelection()) {
+					setErrorMessage(NLS.bind(Messages.errorServerDirCustomNotMetadata, 
+							NLS.bind(Messages.serverEditorServerDirMetadata, "").trim()));
 				}
 			}
 
