@@ -44,6 +44,7 @@ public class Messages extends NLS {
 	public static String errorNoProfiler;
 	public static String errorPublish;
 	public static String httpPort;
+	public static String errorPortInUse;
 
 	static {
 		NLS.initializeMessages(JavaServerPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);

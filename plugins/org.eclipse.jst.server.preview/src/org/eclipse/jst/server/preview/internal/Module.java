@@ -15,17 +15,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 /**
  * 
  */
 public class Module {
-	private IPath projectPath;
+	private String name;
+	private boolean isStatic;
+	private String context;
+	private String projectPath;
 	protected String contextRoot;
 	private Servlet[] servlets;
 	protected IPath[] outputPaths;
 
-	public Module(IPath projectPath) {
+	public Module(String name, boolean isStatic, String context, String projectPath) {
+		this.name = name;
+		this.isStatic = isStatic;
+		this.context = context;
 		this.projectPath = projectPath;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public boolean isStaticWeb() {
+		return isStatic;
+	}
+
+	public String getContext() {
+		return context;
+	}
+
+	public String getPath() {
+		return projectPath;
 	}
 
 	public void initialize() {
@@ -72,7 +95,7 @@ public class Module {
 	}
 
 	private void loadComponentFile() {
-		File f = projectPath.append(".settings").append(".component").toFile();
+		File f = new Path(projectPath).append(".settings").append(".component").toFile();
 		
 		if (!f.exists()) {
 			System.err.println("Could not find component file");
@@ -113,11 +136,11 @@ public class Module {
 			IMemento[] properties = module.getChildren("property");
 			size = properties.length;
 			for (int i = 0; i < size; i++) {
-				String name = properties[i].getString("name");
-				if ("context-root".equals(name))
+				String name2 = properties[i].getString("name");
+				if ("context-root".equals(name2))
 					contextRoot = properties[i].getString("value");
-				else if ("java-output-path".equals(name))
-					outputPaths = new IPath[] { projectPath.append(properties[i].getString("value")) };
+				else if ("java-output-path".equals(name2))
+					outputPaths = new IPath[] { new Path(projectPath).append(properties[i].getString("value")) };
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -135,10 +158,10 @@ public class Module {
 	}
 
 	public ClassLoader getClassloader() {
-		File f = projectPath.append("config").toFile();
+		File f = new Path(projectPath).append("config").toFile();
 		
 		if (!f.exists()) {
-			System.err.println("Config doesn't exist at " + projectPath.toOSString());
+			System.err.println("Config doesn't exist at " + projectPath);
 			return null;
 		}
 		

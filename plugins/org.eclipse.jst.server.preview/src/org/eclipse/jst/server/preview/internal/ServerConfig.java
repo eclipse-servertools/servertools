@@ -14,32 +14,36 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-
-public class Server2 {
-	private IPath configPath;
+public class ServerConfig {
+	private String configPath;
 	private Module[] modules;
+	private int port = 8080;
 
-	public Server2(IPath configPath) {
+	public ServerConfig(String configPath) {
 		this.configPath = configPath;
 		init();
 	}
 
 	private void init() {
-		File f = configPath.toFile();
+		File f = new File(configPath);
 		if (!f.exists())
-			System.err.println("Config doesn't exist at " + configPath.toOSString());
+			System.err.println("Config doesn't exist at " + configPath);
 		else {
 			try {
 				IMemento memento = XMLMemento.loadMemento(f);
-				IMemento[] modules2 = memento.getChildren("modules");
+				Integer prt = memento.getInteger("port");
+				if (prt != null)
+					port = prt.intValue();
+				
+				IMemento[] modules2 = memento.getChildren("module");
 				int size = modules2.length;
 				List list = new ArrayList(size);
 				for (int i = 0; i < size; i++) {
-					//String name = modules2[i].getString("name");
+					String name = modules2[i].getString("name");
+					boolean isStatic = "static".equals(modules2[i].getString("type"));
 					String path = modules2[i].getString("path");
-					Module module = new Module(new Path(path));
+					String context = modules2[i].getString("context");
+					Module module = new Module(name, isStatic, context, path);
 					list.add(module);
 				}
 				
@@ -49,5 +53,13 @@ public class Server2 {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public int getPort() {
+		return port;
+	}
+
+	public Module[] getModules() {
+		return modules;
 	}
 }

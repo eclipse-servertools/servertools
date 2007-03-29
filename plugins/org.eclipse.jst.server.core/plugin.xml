@@ -192,4 +192,115 @@
       version="1.0"/>
   </extension>
 
+<extension point="org.eclipse.wst.server.core.runtimeTypes">
+    <runtimeType
+       id="org.eclipse.jst.server.core.preview.runtimeType"
+       name="%previewRuntimeTypeName"
+       description="%previewRuntimeTypeDescription"
+       class="org.eclipse.jst.server.core.internal.preview.PreviewRuntime">
+       <moduleType
+         types="wst.web"
+         versions="1.0"/>
+       <moduleType
+         types="jst.web"
+         versions="2.2,2.3,2.4,2.5"/>
+       <moduleType
+         types="jst.utility"
+         versions="1.0"/>
+    </runtimeType>
+  </extension>
+
+  <extension point="org.eclipse.wst.server.core.serverTypes">
+     <serverType
+       id="org.eclipse.jst.server.core.preview.serverType"
+       name="%previewServerTypeName"
+       description="%previewServerTypeDescription"
+       supportsRemoteHosts="false"
+       runtime="true"
+       initialState="stopped"
+       hasConfiguration="false"
+       launchModes="run,debug,profile"
+       launchConfigId="org.eclipse.jst.server.core.preview.launchConfigurationType"
+       runtimeTypeId="org.eclipse.jst.server.core.preview.runtimeType"
+       class="org.eclipse.jst.server.core.internal.preview.PreviewServer"
+       behaviourClass="org.eclipse.jst.server.core.internal.preview.PreviewServerBehaviour"/>
+  </extension>
+ 
+  <extension point="org.eclipse.jst.server.core.runtimeClasspathProviders">
+    <runtimeClasspathProvider
+      id="org.eclipse.jst.server.core.preview.runtimeTarget"
+      runtimeTypeIds="org.eclipse.jst.server.core.preview.runtimeType"
+      class="org.eclipse.jst.server.core.internal.preview.PreviewRuntimeClasspathProvider"/>
+  </extension>
+
+  <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
+    <runtime-component-type
+       id="org.eclipse.jst.server.core.preview.runtimeType"/>
+
+    <runtime-component-version
+       type="org.eclipse.jst.server.core.preview.runtimeType"
+       version="1.0"/>
+
+    <adapter>
+      <runtime-component
+         id="org.eclipse.jst.server.core.preview.runtimeType"/>
+      <factory
+         class="org.eclipse.jst.server.core.internal.RuntimeClasspathProvider$Factory"/>
+      <type
+         class="org.eclipse.jst.common.project.facet.core.IClasspathProvider"/>
+    </adapter>
+
+    <supported>
+      <runtime-component
+         id="org.eclipse.jst.server.core.preview.runtimeType"
+         version="1.0"/>
+      <facet
+         id="wst.web"
+         version="1.0"/>
+      <facet
+         id="jst.web"
+         version="2.2,2.3,2.4,2.5"/>
+      <facet
+         id="jst.utility"
+         version="1.0"/>
+    </supported>
+  </extension>
+
+  <extension point="org.eclipse.jst.server.core.runtimeFacetMappings">
+    <runtimeFacetMapping
+      runtimeTypeId="org.eclipse.jst.server.core.preview.runtimeType"
+      runtime-component="org.eclipse.jst.server.core.preview.runtimeType"
+      version="1.0"/>
+  </extension>
+
+<extension point="org.eclipse.debug.core.sourcePathComputers">
+     <sourcePathComputer
+        id="org.eclipse.jst.server.core.preview.sourcePathComputer"
+        class="org.eclipse.jst.server.core.internal.preview.PreviewSourcePathComputerDelegate"/>
+  </extension>
+
+  <extension point="org.eclipse.debug.core.launchConfigurationTypes">
+     <launchConfigurationType
+        id="org.eclipse.jst.server.core.preview.launchConfigurationType"
+        name="%previewLaunchConfigurationType"
+        delegate="org.eclipse.jst.server.core.internal.preview.PreviewLaunchConfigurationDelegate"
+        modes="run,debug,profile"
+        sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
+        sourcePathComputerId="org.eclipse.jst.server.core.preview.sourcePathComputer"/>
+  </extension>
+
+  <extension point="org.eclipse.wst.server.core.launchableAdapters">
+    <launchableAdapter
+      id="org.eclipse.jst.server.core.preview.serverType"
+      class="org.eclipse.jst.server.core.internal.preview.PreviewLaunchableAdapterDelegate"/>
+  </extension>
+
+<!--
+<extension point="org.eclipse.wst.server.core.internalStartup">
+  <startup
+    id="org.eclipse.jst.server.core.startup"
+    class="org.eclipse.jst.server.core.internal.preview.PreviewStartup"/>
+</extension>
+-->
+
 </plugin>
