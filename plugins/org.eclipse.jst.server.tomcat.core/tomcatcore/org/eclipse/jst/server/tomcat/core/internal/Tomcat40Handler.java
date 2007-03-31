@@ -92,7 +92,7 @@ public class Tomcat40Handler implements ITomcatVersionHandler {
 			list.add("-Dcatalina.base=\"" + installPath.toOSString() + "\"");
 		list.add("-Dcatalina.home=\"" + installPath.toOSString() + "\"");
 		// Include a system property for the configurable deploy location
-		list.add("-Dcatalina.deploy=\"" + deployPath.toOSString() + "\"");
+		list.add("-Dwtp.deploy=\"" + deployPath.toOSString() + "\"");
 		String endorsed = installPath.append("bin").toOSString() +
 			installPath.append("common").append("lib").toOSString();
 		list.add("-Djava.endorsed.dirs=\"" + endorsed + "\"");
