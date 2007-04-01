@@ -34,7 +34,9 @@ public class RestartModuleAction extends Action {
 		int size = module.length;
 		setText(NLS.bind(Messages.actionRestartModule, module[size - 1].getName()));
 		
-		setEnabled(server.canControlModule(module, null).isOK() && server.getModuleState(module) != IServer.STATE_STOPPED);
+		setEnabled(server.getServerState() == IServer.STATE_STARTED
+			&& server.getModuleState(module) != IServer.STATE_STOPPED
+			&& server.canControlModule(module, null).isOK());
 	}
 
 	/**
