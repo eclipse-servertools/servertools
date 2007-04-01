@@ -13,13 +13,11 @@ package org.eclipse.jst.server.preview.internal;
 import java.io.File;
 
 import org.mortbay.http.HttpContext;
+import org.mortbay.http.handler.ResourceHandler;
 import org.mortbay.jetty.*;
-import org.mortbay.jetty.servlet.ServletHandler;
 import org.mortbay.jetty.servlet.WebApplicationContext;
 
 public class PreviewStarter {
-	//public static final String ARG_CONFIG = "config";
-
 	protected String configPath;
 	protected Server server;
 
@@ -48,48 +46,28 @@ public class PreviewStarter {
 				System.out.println();
 			}
 			
-			/*String config = (String) context.getArguments().get(ARG_CONFIG);
-			
-			ServerConfig server = new ServerConfig(new Path(config));
-			
-			Hashtable map = new Hashtable();
-			map.put("http.port", new Integer(8080));
-			JettyConfigurator.startServer("preview", map);
-			
-			BundleContext context2 = PreviewServerPlugin.getInstance().context;
-			ServiceReference sr = context2.getServiceReference("org.osgi.service.cm.ManagedServiceFactory");
-			System.out.println("a " + sr);
-			ServiceReference sr2 = context2.getServiceReference("org.eclipse.equinox.http.jetty.JettyConfigurator.preview");
-			System.out.println("b " + sr2);
-			Object obj = context2.getService(sr);*/
-			
-			//ManagedServiceFactory
-			//factory.
-			
-			//System.out.println("c " + obj);
-			
-			//org.eclipse.equinox.http.jetty.internal.HttpServerManager 
-			
-			//HttpService service = (HttpService) obj; 
-			//System.out.println("Here: " + service);
-			
 			server = new Server();
 			server.addListener(":" + config.getPort());
 			
 			for (int i = 0; i < size; i++) {
 				Module module = m[i];
 				if (module.isStaticWeb()) {
-					HttpContext context = server.getContext(module.getContext());
-					ServletHandler handler = new ServletHandler();
-					handler.addServlet("Dump","/dump/*","org.mortbay.servlet.Dump");
-					context.addHandler(handler);
+					HttpContext context = new HttpContext();
+					context.setContextPath(module.getContext());
+					context.setResourceBase(module.getPath());
+					context.addHandler(new ResourceHandler());
+					server.addContext(context);
 				} else {
-					WebApplicationContext cont = server.addWebApplication(module.getContext(), module.getPath());
-					cont.setConfigurationClassNames(new String[] { "org.mortbay.jetty.servlet.XMLConfiguration" });
-					cont.setIgnoreWebJetty(true);
+					System.out.println(module.getContext() + "/" + module.getPath());
+					WebApplicationContext context = server.addWebApplication(module.getContext(), module.getPath() + "/");
+					/*context.setConfigurationClassNames(new String[] { "org.mortbay.jetty.servlet.XMLConfiguration" });
+					context.setResourceBase(module.getPath());
+					context.setIgnoreWebJetty(true);*/
+					System.out.println("context: " + context.getContextPath());
+					System.out.println("resource: " + context.getResourceBase());
+					//server.addContext(context);
 				}
 			}
-			
 			
 			/*WebApplicationContext cont = new WebApplicationContext("D:\\dev\\wtp\\runtime-workspace5\\170228\\WebContent");
 			cont.setTempDirectory(new File("C:/temp"));
@@ -137,6 +115,12 @@ public class PreviewStarter {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+		
+		//HttpServer server = new HttpServer();
+		/*SocketListener listener = new SocketListener();
+		listener.setPort(8080);
+		server.addListener(listener);*/
+		
 	}
 
 	public void stop() {
@@ -168,4 +152,6 @@ public class PreviewStarter {
 		}
 		return directory.delete();
 	}
+	
+	
 }

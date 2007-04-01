@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.jst.server.core.internal.JavaServerPlugin;
 import org.eclipse.jst.server.core.internal.Messages;
 import org.eclipse.jst.server.core.internal.Trace;
@@ -31,6 +32,7 @@ import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.model.IURLProvider;
 import org.eclipse.wst.server.core.model.ServerDelegate;
+import org.eclipse.wst.server.core.util.IStaticWeb;
 /**
  * Generic HTTP server.
  */
@@ -59,7 +61,7 @@ public class PreviewServer extends ServerDelegate implements IURLProvider {
 	/**
 	 * Return the root URL of this module.
 	 * 
-	 * @param module org.eclipse.wst.server.core.model.IModule
+	 * @param module a module
 	 * @return java.net.URL
 	 */
 	public URL getModuleRootURL(IModule module) {
@@ -67,10 +69,21 @@ public class PreviewServer extends ServerDelegate implements IURLProvider {
 			String base = "http://localhost";
 			
 			int port = getPort();
+			URL url = null;
 			if (port == 80)
-				return new URL(base + "/");
+				url = new URL(base + "/");
+			else
+				url = new URL(base + ":" + port + "/");
 			
-			return new URL(base + ":" + port + "/");
+			String type = module.getModuleType().getId();
+			if ("wst.web".equals(type)) {
+				IStaticWeb staticWeb = (IStaticWeb) module.loadAdapter(IStaticWeb.class, null);
+				return new URL(url, staticWeb.getContextRoot());
+			} else if ("jst.web".equals(type)) {
+				IWebModule webModule = (IWebModule) module.loadAdapter(IWebModule.class, null);
+				return new URL(url, webModule.getContextRoot());
+			}
+			return url;
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not get root URL", e);
 			return null;
