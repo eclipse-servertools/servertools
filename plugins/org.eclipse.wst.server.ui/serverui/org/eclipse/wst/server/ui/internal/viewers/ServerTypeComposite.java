@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.IServerType;
@@ -142,9 +143,22 @@ public class ServerTypeComposite extends AbstractTreeComposite {
 		return null;
 	}
 
+	private void closeWizard(Composite comp) {
+		if (comp == null)
+			return;
+		Composite c = comp.getParent();
+		if (c instanceof Shell) {
+			Shell s = (Shell) c;
+			s.close();
+		}
+		closeWizard(c);
+	}
+
 	protected void detailsSelected() {
 		if (ExtensionUtility.launchExtensionWizard(getShell(), Messages.wizNewInstallableServerTitle,
-				Messages.wizNewInstallableServerDescription))
-			refresh();
+				Messages.wizNewInstallableServerDescription)) {
+			//refresh();
+			closeWizard(this);
+		}
 	}
 }

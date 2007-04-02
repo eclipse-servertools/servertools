@@ -117,13 +117,15 @@ public class ExtensionWizard extends TaskWizard {
 			public IStatus run(IProgressMonitor monitor) {
 				try {
 					ExtensionUtility.install(feature, monitor);
-					promptRestart();
+					if (!monitor.isCanceled())
+						promptRestart();
 					return Status.OK_STATUS;
 				} catch (CoreException ce) {
 					return ce.getStatus();
 				}
 			}
 		};
+		job.setUser(true);
 		job.schedule();
 	}
 
