@@ -26,6 +26,8 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jst.server.core.internal.IMemento;
 import org.eclipse.jst.server.core.internal.JavaServerPlugin;
+import org.eclipse.jst.server.core.internal.RuntimeClasspathContainer;
+import org.eclipse.jst.server.core.internal.RuntimeClasspathContainerInitializer;
 import org.eclipse.jst.server.core.internal.Trace;
 import org.eclipse.jst.server.core.internal.XMLMemento;
 import org.eclipse.wst.server.core.IRuntime;
@@ -60,6 +62,8 @@ public abstract class RuntimeClasspathProviderDelegate {
 	private String extensionId;
 
 	private Map runtimePathMap = new HashMap();
+
+	private Map previousClasspath = new HashMap();
 
 	public RuntimeClasspathProviderDelegate() {
 		// default constructor
@@ -149,6 +153,19 @@ public abstract class RuntimeClasspathProviderDelegate {
 				}
 			}
 		}
+		
+		String key = project.getName() + "/" + runtime.getId();
+		IClasspathEntry[] previousEntries = (IClasspathEntry[]) previousClasspath.get(key);
+		
+		if ((previousEntries == null && entries != null) || (previousEntries != null && entries == null)
+				|| (previousEntries != null && entries != null && previousEntries.length != entries.length)) {
+			Trace.trace(Trace.FINEST, "Classpath update: " + key + " " + entries);
+			
+			IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER);
+			path = path.append(extensionId).append(runtime.getId());
+			RuntimeClasspathContainerInitializer.updateClasspath(runtime, path, null);
+		}
+		previousClasspath.put(key, entries);
 		
 		return entries;
 	}

@@ -84,7 +84,7 @@ public class RuntimeClasspathContainerInitializer extends ClasspathContainerInit
 		}
 	}
 
-	private void updateClasspath(final IRuntime runtime, final IPath containerPath, final IClasspathContainer containerSuggestion) {
+	public static void updateClasspath(final IRuntime runtime, final IPath containerPath, final IClasspathContainer containerSuggestion) {
 		class UpdateClasspathJob extends Job {
 			public UpdateClasspathJob() {
 				super(NLS.bind(Messages.updateClasspathContainers, runtime.getName()));
