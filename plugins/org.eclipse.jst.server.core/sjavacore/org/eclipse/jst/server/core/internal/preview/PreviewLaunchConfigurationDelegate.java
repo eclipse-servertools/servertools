@@ -37,7 +37,7 @@ import org.osgi.framework.Bundle;
 public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfigurationDelegate {
 	private static final String[] REQUIRED_BUNDLE_IDS = new String[] {
 		"org.eclipse.core.runtime",
-		"org.apache.commons_logging",
+		"org.apache.commons.logging",
 		"javax.servlet",
 		"javax.servlet.jsp",
 		"org.mortbay.jetty",
@@ -60,14 +60,16 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 		String[] jars = new String[size];
 		for (int i = 0; i < size; i++) {
 			Bundle b = Platform.getBundle(REQUIRED_BUNDLE_IDS[i]);
-			IPath path = PreviewRuntime.getPlugin(b);
+			IPath path = null;
+			if (b != null)
+				path = PreviewRuntime.getPlugin(b);
 			if (path == null)
 				throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, "Could not find required bundle " + REQUIRED_BUNDLE_IDS[i]));
 			jars[i] = path.toOSString();
 		}
-		// TODO - remove
-		jars[1] = jars[1] + "/lib/commons-logging-1.0.4.jar";
-		jars[5] = jars[5] + "/bin";
+		
+		if (new File(jars[5] + File.separator + "bin").exists())
+			jars[5] = jars[5] + "/bin";
 		
 		IVMInstall vm = verifyVMInstall(configuration);
 		
