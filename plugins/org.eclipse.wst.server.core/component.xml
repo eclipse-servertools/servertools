@@ -73,4 +73,7 @@
     <type name="IWizardHandle"/>
     <type name="WizardFragment"/>
   </package>
+
+  <plugin id="org.eclipse.wst.server.http.core" fragment="false"/>
+  <plugin id="org.eclipse.wst.server.http.ui" fragment="false"/>
 </component>
