@@ -20,13 +20,18 @@
 
   <plugin id="org.eclipse.jst.server.ui" fragment="false"/>
 
-  <plugin id="org.eclipse.jst.server.generic.core" fragment="false"/>
+  <plugin id="org.eclipse.jst.server.preview" fragment="false"/>
 
+  <plugin id="org.eclipse.jst.server.generic.core" fragment="false"/>
   <plugin id="org.eclipse.jst.server.generic.ui" fragment="false"/>
 
   <plugin id="org.eclipse.jst.server.tomcat.core" fragment="false"/>
-
   <plugin id="org.eclipse.jst.server.tomcat.ui" fragment="false"/>
 
+  <plugin id="org.eclipse.jst.server.installable" fragment="false"/>
+  <plugin id="org.eclipse.jst.server.generic.jboss" fragment="false"/>
+  <plugin id="org.eclipse.jst.server.generic.jonas" fragment="false"/>
+  <plugin id="org.eclipse.jst.server.generic.oc4j" fragment="false"/>
+  <plugin id="org.eclipse.jst.server.generic.weblogic" fragment="false"/>
   <plugin id="org.eclipse.jst.server.websphere.core" fragment="false"/>
 </component>
