@@ -60,6 +60,8 @@ public class ResourceManager {
 
 	private static boolean initialized;
 	private static boolean initializing;
+	
+	protected static List serverProjects = new ArrayList();
 
 	/**
 	 * Server resource change listener.
@@ -86,7 +88,7 @@ public class ResourceManager {
 		/**
 		 * Listen for projects being added or removed and act accordingly.
 		 * 
-		 * @param event org.eclipse.core.resources.IResourceChangeEvent
+		 * @param event a resource change event
 		 */
 		public void resourceChanged(IResourceChangeEvent event) {
 			IResourceDelta delta = event.getDelta();
@@ -133,20 +135,26 @@ public class ResourceManager {
 		/**
 		 * React to a change within a possible server project.
 		 *
-		 * @param delta org.eclipse.core.resources.IResourceDelta
+		 * @param project a project
+		 * @param delta a resource delta
 		 */
 		protected void projectChanged(IProject project, IResourceDelta delta) {
+			String projectName = project.getName();
 			if (!ServerPlugin.getProjectProperties(project).isServerProject()) {
-				Trace.trace(Trace.RESOURCES, "Not a server project: " + project.getName());
-				return;
-			}
+				if (!serverProjects.contains(projectName)) {
+					Trace.trace(Trace.RESOURCES, "Not a server project: " + project.getName());
+					return;
+				}
+				serverProjects.remove(projectName);
+			} else if (!serverProjects.contains(projectName))
+				serverProjects.add(projectName);
 			
 			IResourceDelta[] children = delta.getAffectedChildren();
-	
+			
 			int size = children.length;
 			for (int i = 0; i < size; i++) {
 				IResourceDelta child = children[i];
-
+				
 				// look for servers and server configurations
 				try {
 					child.accept(new IResourceDeltaVisitor() {
