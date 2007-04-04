@@ -16,8 +16,11 @@ import java.beans.PropertyChangeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
@@ -30,15 +33,15 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.wst.server.http.core.internal.HttpServer;
 import org.eclipse.wst.server.http.core.internal.command.ModifyPortCommand;
-import org.eclipse.wst.server.http.core.internal.command.ModifyPublishDirectoryCommand;
+import org.eclipse.wst.server.http.core.internal.command.ModifyPublishingCommand;
 import org.eclipse.wst.server.http.core.internal.command.ModifyURLPrefixCommand;
 import org.eclipse.wst.server.ui.editor.ServerEditorSection;
 
 public class HttpSection extends ServerEditorSection {
 	protected HttpServer httpServer;
 	protected boolean updating;
-	protected Text publishDirText;
 	protected Text urlPrefixText;
+	protected Button publishCheckBox;
 	protected Spinner portSpinner;
 	protected PropertyChangeListener listener;
 
@@ -55,14 +58,14 @@ public class HttpSection extends ServerEditorSection {
 				if (HttpServer.PROPERTY_PORT.equals(event.getPropertyName())) {
 					Integer i = (Integer) event.getNewValue();
 					portSpinner.setSelection(i.intValue());
-				} else if (HttpServer.PROPERTY_PUB_DIR.equals(event.getPropertyName())) {
-					String s = (String) event.getNewValue();
-					if (s != null)
-						publishDirText.setText(s);
 				} else if (HttpServer.PROPERTY_URL_PREFIX.equals(event.getPropertyName())) {
 					String s = (String) event.getNewValue();
 					if (s != null)
 						urlPrefixText.setText(s);
+				} else if (HttpServer.PROPERTY_IS_PUBLISHING.equals(event.getPropertyName())) {
+					Boolean b = (Boolean) event.getNewValue();
+					if (b != null)
+						publishCheckBox.setSelection(b.booleanValue());
 				}
 				updating = false;
 			}
@@ -89,35 +92,15 @@ public class HttpSection extends ServerEditorSection {
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 		
-		// publish directory
-		Label label = createLabel(toolkit, composite, Messages.editorPublishDir);
-		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 2;
-		label.setLayoutData(data);
-		
-		publishDirText = toolkit.createText(composite, "");
-		data = new GridData(GridData.FILL_HORIZONTAL);
-		data.horizontalSpan = 2;
-		publishDirText.setLayoutData(data);
-		publishDirText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				if (updating)
-					return;
-				updating = true;
-				execute(new ModifyPublishDirectoryCommand(httpServer, publishDirText.getText()));
-				updating = false;
-			}
-		});
-		
 		// URL prefix
-		label = createLabel(toolkit, composite, Messages.editorURLPrefix);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		data.horizontalSpan = 2;
+		Label label = createLabel(toolkit, composite, Messages.editorURLPrefix);
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		//data.horizontalSpan = 2;
 		label.setLayoutData(data);
 
 		urlPrefixText = toolkit.createText(composite, "");
 		data = new GridData(GridData.FILL_HORIZONTAL);
-		data.horizontalSpan = 2;
+		//data.horizontalSpan = 2;
 		urlPrefixText.setLayoutData(data);
 		urlPrefixText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
@@ -134,14 +117,32 @@ public class HttpSection extends ServerEditorSection {
 		
 		portSpinner = new Spinner(composite, SWT.BORDER);
 		portSpinner.setMinimum(0);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		portSpinner.setMinimum(999999);
+		data = new GridData(GridData.FILL_HORIZONTAL);
 		portSpinner.setLayoutData(data);
 		portSpinner.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				if (updating)
 					return;
 				updating = true;
-				execute(new ModifyPortCommand(httpServer, "", portSpinner.getSelection()));
+				execute(new ModifyPortCommand(httpServer, portSpinner.getSelection()));
+				updating = false;
+			}
+		});
+		
+		// is publishing
+		publishCheckBox = new Button(composite, SWT.CHECK);
+		publishCheckBox.setText(Messages.editorShouldPublish);
+		data = new GridData(GridData.FILL_HORIZONTAL);
+		data.horizontalSpan = 2;
+		publishCheckBox.setLayoutData(data);
+		publishCheckBox.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent se) {
+				Button b = (Button) se.getSource();
+				if (updating)
+					return;
+				updating = true;
+				execute(new ModifyPublishingCommand(httpServer, b.getSelection()));
 				updating = false;
 			}
 		});
@@ -175,14 +176,9 @@ public class HttpSection extends ServerEditorSection {
 	 * Initialize the fields in this editor.
 	 */
 	protected void initialize() {
-		if (publishDirText == null)
+		if (urlPrefixText == null)
 			return;
 		updating = true;
-		
-		String pubDir = httpServer.getPublishDirectory();
-		if (pubDir != null)
-			publishDirText.setText(pubDir);
-		publishDirText.setEnabled(!readOnly);
 		
 		String urlPrefix = httpServer.getURLPrefix();
 		if (urlPrefix != null)
@@ -191,6 +187,9 @@ public class HttpSection extends ServerEditorSection {
 		
 		portSpinner.setSelection(httpServer.getPort());
 		portSpinner.setEnabled(!readOnly);
+		
+		publishCheckBox.setSelection(httpServer.isPublishing());
+		publishCheckBox.setEnabled(!readOnly);
 		updating = false;
 	}
 }

@@ -32,13 +32,15 @@ import org.eclipse.wst.server.core.model.ServerDelegate;
  * Generic HTTP server.
  */
 public class HttpServer extends ServerDelegate implements IURLProvider {
-	public static final String PROPERTY_BASE_URL = "base_url";
-	public static final String PROPERTY_URL_PREFIX = "url_prefix";
+	public static final String PROPERTY_BASE_URL = "baseUrl";
+	public static final String PROPERTY_URL_PREFIX = "urlPrefix";
 	// public static final String DOCUMENT_ROOT = "document_root";
 	// public static final String PUBLISH = "publish";
 	public static final String PROPERTY_PORT = "port";
-	public static final String PROPERTY_PUB_DIR = "publish_directory";
-	public static final String ID = "org.eclipse.wst.server.http";
+	//public static final String PROPERTY_PUB_DIR = "publish_directory";
+	public static final String PROPERTY_IS_PUBLISHING = "isPublishing";
+
+	public static final String ID = "org.eclipse.wst.server.http.server";
 
 	/**
 	 * HttpServer.
@@ -51,6 +53,15 @@ public class HttpServer extends ServerDelegate implements IURLProvider {
 		// do nothing
 	}
 
+	/*
+	 * @see RuntimeDelegate#setDefaults(IProgressMonitor)
+	 */
+	public void setDefaults(IProgressMonitor monitor) {
+		setPort(80);
+		setURLPrefix("");
+		setPublishing(true);
+	}
+
 	public HttpRuntime getHttpRuntime() {
 		if (getServer().getRuntime() == null)
 			return null;
@@ -58,7 +69,7 @@ public class HttpServer extends ServerDelegate implements IURLProvider {
 		return (HttpRuntime) getServer().getRuntime().loadAdapter(HttpRuntime.class, null);
 	}
 
-	public void importRuntimeConfiguration(IRuntime arg0, IProgressMonitor arg1) throws CoreException {
+	/*public void importRuntimeConfiguration(IRuntime arg0, IProgressMonitor arg1) throws CoreException {
 		if (getHttpRuntime() != null) {
 			if (!getHttpRuntime().publishToDirectory()) {
 				setAttribute("auto-publish-setting", 1);
@@ -66,11 +77,9 @@ public class HttpServer extends ServerDelegate implements IURLProvider {
 				setAttribute("auto-publish-setting", 2);
 				setAttribute("auto-publish-time", 1);
 			}
-			setURLPrefix(getHttpRuntime().getPrefixPath());
-			setPort(getHttpRuntime().getPort());
-			setPublishDirectory(getHttpRuntime().getPublishLocation());
+			//setPublishDirectory(getHttpRuntime().getPublishLocation());
 		}
-	}
+	}*/
 
 	public String getBaseURL() {
 		return getAttribute(HttpServer.PROPERTY_BASE_URL, "");
@@ -168,9 +177,15 @@ public class HttpServer extends ServerDelegate implements IURLProvider {
 	}
 
 	public String getURLPrefix() {
-		if (getHttpRuntime() != null)
-			return getAttribute(HttpServer.PROPERTY_URL_PREFIX, getHttpRuntime().getPrefixPath());
 		return getAttribute(HttpServer.PROPERTY_URL_PREFIX, "");
+	}
+
+	public boolean isPublishing() {
+		return getAttribute(PROPERTY_IS_PUBLISHING, false);
+	}
+
+	public void setPublishing(boolean shouldPublish) {
+		setAttribute(PROPERTY_IS_PUBLISHING, shouldPublish);
 	}
 
 	public static IServer createHttpServer(String serverName, String baseURL) {
@@ -217,7 +232,7 @@ public class HttpServer extends ServerDelegate implements IURLProvider {
 		return null;
 	}
 
-	public void setPublishDirectory(String pubDir) {
+	/*public void setPublishDirectory(String pubDir) {
 		setAttribute(PROPERTY_PUB_DIR, pubDir);
 	}
 
@@ -225,7 +240,7 @@ public class HttpServer extends ServerDelegate implements IURLProvider {
 		if (getHttpRuntime() != null)
 			return getAttribute(PROPERTY_PUB_DIR, getHttpRuntime().getPublishLocation());
 		return getAttribute(PROPERTY_PUB_DIR, "");
-	}
+	}*/
 
 	/*
 	 * public static void updateBaseURL(String id, String baseURL) {

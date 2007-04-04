@@ -100,10 +100,7 @@ public class HttpRuntimeLocator extends RuntimeLocatorDelegate {
 				String id = absolutePath.replace(File.separatorChar, '_').replace(':', '-');
 				IRuntimeWorkingCopy runtime = runtimeType.createRuntime(id, monitor);
 				runtime.setName(dir.getName());
-				runtime.setLocation(new Path(absolutePath));
-				HttpRuntime wc = (HttpRuntime) runtime.loadAdapter(HttpRuntime.class, monitor);
-				// wc.setBaseURL("http://localhost");
-				wc.setPublishLocation(new Path(absolutePath).append("htdocs").toString());
+				runtime.setLocation(new Path(absolutePath).append("htdocs"));
 				IStatus status = runtime.validate(monitor);
 				if (status == null || status.getSeverity() != IStatus.ERROR)
 					return runtime;

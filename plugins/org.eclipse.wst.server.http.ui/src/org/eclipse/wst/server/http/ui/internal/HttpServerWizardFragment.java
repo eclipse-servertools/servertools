@@ -10,23 +10,22 @@
  *******************************************************************************/
 package org.eclipse.wst.server.http.ui.internal;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 /**
- * HTTP runtime wizard fragment.
+ * HTTP server wizard fragment.
  */
-public class HttpRuntimeWizardFragment extends WizardFragment {
-	protected HttpRuntimeComposite comp;
+public class HttpServerWizardFragment extends WizardFragment {
+	protected HttpServerComposite comp;
 
 	/**
 	 * ServerWizardFragment constructor
 	 */
-	public HttpRuntimeWizardFragment() {
-		// do nothing
+	public HttpServerWizardFragment() {
+		setComplete(true);
 	}
 
 	public boolean hasComposite() {
@@ -39,7 +38,7 @@ public class HttpRuntimeWizardFragment extends WizardFragment {
 	 * @see org.eclipse.wst.server.ui.task.WizardFragment#createComposite()
 	 */
 	public Composite createComposite(Composite parent, IWizardHandle wizard) {
-		comp = new HttpRuntimeComposite(parent, wizard);
+		comp = new HttpServerComposite(parent, wizard);
 		return comp;
 	}
 
@@ -48,16 +47,8 @@ public class HttpRuntimeWizardFragment extends WizardFragment {
 	 */
 	public void enter() {
 		if (comp != null) {
-			IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
-			comp.setRuntime(runtime);
+			IServerWorkingCopy runtime = (IServerWorkingCopy) getTaskModel().getObject(TaskModel.TASK_SERVER);
+			comp.setServer(runtime);
 		}
-	}
-
-	public boolean isComplete() {
-		IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
-		if (runtime == null)
-			return false;
-		IStatus status = runtime.validate(null);
-		return (status == null || status.getSeverity() != IStatus.ERROR);
 	}
 }

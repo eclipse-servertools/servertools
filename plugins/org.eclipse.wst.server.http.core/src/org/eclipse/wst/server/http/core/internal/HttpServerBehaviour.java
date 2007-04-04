@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.IModuleResource;
@@ -66,6 +65,9 @@ public class HttpServerBehaviour extends ServerBehaviourDelegate {
 	 * Publishes the given module to the server.
 	 */
 	protected void publishModule(int kind, int deltaKind, IModule[] moduleTree, IProgressMonitor monitor) throws CoreException {
+		if (!getHttpServer().isPublishing())
+			return;
+		
 		String contextRoot = null;
 		IModule module = moduleTree[moduleTree.length - 1]; 
 		IStaticWeb sw = (IStaticWeb) module.loadAdapter(IStaticWeb.class, monitor);
@@ -74,7 +76,7 @@ public class HttpServerBehaviour extends ServerBehaviourDelegate {
 		else
 			contextRoot = module.getName();
 		
-		IPath to = new Path(getHttpServer().getPublishDirectory());
+		IPath to = getServer().getRuntime().getLocation();
 		if (contextRoot != null && !contextRoot.equals(""))
 			to = to.append(contextRoot);
 		

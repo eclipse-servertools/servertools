@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.server.http.ui.internal;
 
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
@@ -21,40 +22,29 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.ServerCore;
-import org.eclipse.wst.server.http.core.internal.IHttpRuntimeWorkingCopy;
+import org.eclipse.wst.server.http.core.internal.HttpRuntime;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 /**
  * Wizard page to set the server install directory.
  */
 public class HttpRuntimeComposite extends Composite {
 	protected IRuntimeWorkingCopy runtimeWC;
-	protected IHttpRuntimeWorkingCopy runtime;
+	protected HttpRuntime runtime;
 	protected Text name;
-	protected Text prefix;
-	protected Text port;
-	protected Combo combo;
-	protected Button publishCheckBox;
 	protected Text publishDir;
 	protected Button browseButton;
-	protected Label locationLabel;
-	protected Label portLabel;
-	protected Label prefixLabel;
-	//private ValuesCache originalValuesCache = new ValuesCache();
-	//protected ValuesCache modifiedValuesCache;
 	protected IWizardHandle wizard;
 
 	/**
-	 * ServerCompositeFragment
+	 * HttpRuntimeComposite
 	 * 
 	 * @param parent the parent composite
 	 * @param wizard the wizard handle
@@ -75,7 +65,7 @@ public class HttpRuntimeComposite extends Composite {
 			runtime = null;
 		} else {
 			runtimeWC = newRuntime;
-			runtime = (IHttpRuntimeWorkingCopy) newRuntime.loadAdapter(IHttpRuntimeWorkingCopy.class, null);
+			runtime = (HttpRuntime) newRuntime.loadAdapter(HttpRuntime.class, null);
 		}
 		
 		init();
@@ -89,21 +79,25 @@ public class HttpRuntimeComposite extends Composite {
 		GridLayout layout = new GridLayout(1, true);
 		setLayout(layout);
 		setLayoutData(new GridData(GridData.FILL_BOTH));
-
+		
 		Composite nameGroup = new Composite(this, SWT.NONE);
 		layout = new GridLayout();
 		layout.numColumns = 2;
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
 		nameGroup.setLayout(layout);
 		nameGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, ContextIds.RUNTIME_COMPOSITE);
-
+		
 		Label label = new Label(nameGroup, SWT.NONE);
 		label.setText(Messages.runtimeName);
-		GridData data = new GridData();
+		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_END);
+		data.horizontalSpan = 2;
 		label.setLayoutData(data);
-
+		
 		name = new Text(nameGroup, SWT.BORDER);
 		data = new GridData(GridData.FILL_HORIZONTAL);
+		data.horizontalSpan = 2;
 		name.setLayoutData(data);
 		name.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
@@ -111,14 +105,14 @@ public class HttpRuntimeComposite extends Composite {
 				validate();
 			}
 		});
-
-		createServerInfoGroup(this);
-		createPublishInfoGroup(this);
+		
+		createPublishLocationGroup(nameGroup);
+		
 		init();
 		validate();
-
+		
 		Dialog.applyDialogFont(this);
-
+		
 		name.forceFocus();
 	}
 
@@ -127,15 +121,8 @@ public class HttpRuntimeComposite extends Composite {
 			return;
 		
 		name.setText(runtimeWC.getName());
-		publishDir.setText(runtime.getPublishLocation());
-		port.setText(runtime.getPort() + "");
-		prefix.setText(runtime.getPrefixPath());
-		
-		boolean canPublish = runtime.publishToDirectory();
-		publishCheckBox.setSelection(canPublish);
-		publishDir.setEnabled(canPublish);
-		browseButton.setEnabled(canPublish);
-		locationLabel.setEnabled(canPublish);
+		if (runtimeWC.getLocation() != null)
+			publishDir.setText(runtimeWC.getLocation().toOSString());
 	}
 
 	protected void validate() {
@@ -159,111 +146,24 @@ public class HttpRuntimeComposite extends Composite {
 		}
 	}
 
-	private void createServerInfoGroup(Composite parent) {
-		Font font = parent.getFont();
-		// Server information group
-		Group serverInfoGroup = new Group(parent, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		serverInfoGroup.setLayout(layout);
-		serverInfoGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		serverInfoGroup.setFont(font);
-		serverInfoGroup.setText("Server Information");
-		
-		// port label
-		portLabel = new Label(serverInfoGroup, SWT.NONE);
-		portLabel.setFont(font);
-		portLabel.setText("HTTP Port:");
-		
-		// port entry field
-		port = new Text(serverInfoGroup, SWT.BORDER);
-		GridData data = new GridData(GridData.FILL_HORIZONTAL);
-		data.widthHint = 305;
-		port.setLayoutData(data);
-		port.setFont(font);
-		port.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				if (runtime != null)
-					try {
-						runtime.setPort(Integer.parseInt(port.getText()));
-					} catch (Exception ex) {
-						// ignore
-					}
-				validate();
-			}
-		});
-
-		// prefix label
-		prefixLabel = new Label(serverInfoGroup, SWT.NONE);
-		prefixLabel.setFont(font);
-		prefixLabel.setText("URL Prefix Path:");
-
-		// prefix entry field
-		prefix = new Text(serverInfoGroup, SWT.BORDER);
-		data = new GridData(GridData.FILL_HORIZONTAL);
-		data.widthHint = 305;
-		prefix.setLayoutData(data);
-		prefix.setFont(font);
-		prefix.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				runtime.setPrefixPath(prefix.getText());
-				validate();
-			}
-		});
-	}
-
-	private final void createPublishInfoGroup(Composite parent) {
-		Font font = parent.getFont();
-		// publish information group
-		Group publishInfoGroup = new Group(parent, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 3;
-		publishInfoGroup.setLayout(layout);
-		publishInfoGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		publishInfoGroup.setFont(font);
-		publishInfoGroup.setText("Publish Information");
-
-		publishCheckBox = new Button(publishInfoGroup, SWT.CHECK | SWT.RIGHT);
-		publishCheckBox.setText("Publish Projects to this Server");
-		publishCheckBox.setFont(font);
-
-		publishCheckBox.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent se) {
-				Button b = (Button) se.getSource();
-				boolean selected = b.getSelection();
-
-				publishDir.setEnabled(selected);
-				browseButton.setEnabled(selected);
-				locationLabel.setEnabled(selected);
-				//publishDir.setText("");
-				runtime.setPublishToDirectory(selected);
-				validate();
-			}
-		});
-
-		GridData buttonData = new GridData();
-		buttonData.horizontalSpan = 3;
-		publishCheckBox.setLayoutData(buttonData);
-
-		createPublishLocationGroup(publishInfoGroup);
-	}
-
 	private void createPublishLocationGroup(Composite publishInfoGroup) {
 		Font font = publishInfoGroup.getFont();
 		// location label
-		locationLabel = new Label(publishInfoGroup, SWT.NONE);
+		Label locationLabel = new Label(publishInfoGroup, SWT.NONE);
 		locationLabel.setFont(font);
-		locationLabel.setText("Directory:");
-
+		locationLabel.setText(Messages.publishDir);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_END);
+		data.horizontalSpan = 2;
+		locationLabel.setLayoutData(data);
+		
 		// project location entry field
 		publishDir = new Text(publishInfoGroup, SWT.BORDER);
-		GridData data = new GridData(GridData.FILL_HORIZONTAL);
-		data.widthHint = 305;
+		data = new GridData(GridData.FILL_HORIZONTAL);
 		publishDir.setLayoutData(data);
 		publishDir.setFont(font);
 		publishDir.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				runtime.setPublishLocation(publishDir.getText());
+				runtimeWC.setLocation(new Path(publishDir.getText()));
 				validate();
 			}
 		});

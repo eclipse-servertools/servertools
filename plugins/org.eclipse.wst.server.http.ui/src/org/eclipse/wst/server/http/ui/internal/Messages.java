@@ -17,6 +17,10 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	public static String browse;
 	public static String runtimeName;
+	public static String port;
+	public static String URLPrefix;
+	public static String shouldPublish;
+	public static String publishDir;
 	public static String selectInstallDir;
 	public static String wizardDescription;
 	public static String wizardDuplicateName;
@@ -24,9 +28,9 @@ public class Messages extends NLS {
 	public static String wizardTitle;
 	public static String editorSectionTitle;
 	public static String editorSectionDescription;
-	public static String editorPublishDir;
 	public static String editorURLPrefix;
 	public static String editorPort;
+	public static String editorShouldPublish;
 
 	static {
 		NLS.initializeMessages(HttpUIPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);

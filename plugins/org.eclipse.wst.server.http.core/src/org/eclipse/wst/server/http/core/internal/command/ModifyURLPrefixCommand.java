@@ -24,7 +24,7 @@ public class ModifyURLPrefixCommand extends ServerCommand {
 	 * @param prefix a new prefix
 	 */
 	public ModifyURLPrefixCommand(HttpServer server, String prefix) {
-		super(server, Messages.configurationEditorActionModifyPort);
+		super(server, Messages.actionModifyPrefixURL);
 		this.prefix = prefix;
 	}
 

@@ -17,7 +17,6 @@ import org.eclipse.wst.server.http.core.internal.Messages;
  * Command to change the port.
  */
 public class ModifyPortCommand extends ServerCommand {
-	protected String id;
 	protected int port;
 	protected int oldPort;
 
@@ -25,12 +24,10 @@ public class ModifyPortCommand extends ServerCommand {
 	 * ModifyPortCommand constructor.
 	 * 
 	 * @param server a server
-	 * @param id a port id
 	 * @param port new port number
 	 */
-	public ModifyPortCommand(HttpServer server, String id, int port) {
-		super(server, Messages.configurationEditorActionModifyPort);
-		this.id = id;
+	public ModifyPortCommand(HttpServer server, int port) {
+		super(server, Messages.actionModifyPort);
 		this.port = port;
 	}
 
@@ -40,8 +37,7 @@ public class ModifyPortCommand extends ServerCommand {
 	public void execute() {
 		// find old port number
 		ServerPort temp = server.getServerPorts()[0];
-		if (id.equals(temp.getId()))
-			oldPort = temp.getPort();
+		oldPort = temp.getPort();
 		
 		// make the change
 		server.setPort(port);

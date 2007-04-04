@@ -15,10 +15,12 @@ import org.eclipse.osgi.util.NLS;
  * Translated messages.
  */
 public class Messages extends NLS {
-	public static String configurationEditorActionModifyPort;
 	public static String errorPublish;
 	public static String canModifyModules;
 	public static String httpPort;
+	public static String actionModifyPort;
+	public static String actionModifyPrefixURL;
+	public static String actionModifyPublishing;
 
 	static {
 		NLS.initializeMessages(HttpCorePlugin.PLUGIN_ID + ".internal.Messages", Messages.class);
