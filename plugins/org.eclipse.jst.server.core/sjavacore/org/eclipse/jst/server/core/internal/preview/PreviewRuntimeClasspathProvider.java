@@ -40,7 +40,7 @@ public class PreviewRuntimeClasspathProvider extends RuntimeClasspathProviderDel
 		int size = REQUIRED_BUNDLE_IDS.length;
 		for (int i = 0; i < size; i++) {
 			Bundle b = Platform.getBundle(REQUIRED_BUNDLE_IDS[i]);
-			IPath path = PreviewRuntime.getPlugin(b);
+			IPath path = PreviewRuntime.getJarredPluginPath(b);
 			if (path != null)
 				list.add(JavaCore.newLibraryEntry(path, null, null));
 		}

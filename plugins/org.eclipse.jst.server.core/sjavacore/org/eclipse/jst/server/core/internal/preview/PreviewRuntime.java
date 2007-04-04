@@ -42,7 +42,7 @@ public class PreviewRuntime extends RuntimeDelegate implements IJavaRuntime {
 	 * 
 	 * @return a path
 	 */
-	protected static Path getPlugin(Bundle bundle) {
+	protected static Path getPluginPath(Bundle bundle) {
 		try {
 			URL installURL = bundle.getEntry("/");
 			URL localURL = FileLocator.toFileURL(installURL);
@@ -50,6 +50,26 @@ public class PreviewRuntime extends RuntimeDelegate implements IJavaRuntime {
 		} catch (IOException ioe) {
 			return null;
 		}
+	}
+
+	protected static IPath getJarredPluginPath(Bundle bundle) {
+		Path runtimeLibFullPath = null;
+		String jarPluginLocation = bundle.getLocation().substring(7);
+		
+		// handle case where jars are installed outside of eclipse installation
+		Path jarPluginPath = new Path(jarPluginLocation);
+		if (jarPluginPath.isAbsolute())
+			runtimeLibFullPath = jarPluginPath;
+		// handle normal case where all plugins under eclipse install
+		else {
+			int ind = jarPluginLocation.lastIndexOf(":");
+			if (ind > 0)
+				jarPluginLocation = jarPluginLocation.substring(ind+1);
+			
+			String installPath = Platform.getInstallLocation().getURL().getPath();
+			runtimeLibFullPath = new Path(installPath+"/"+jarPluginLocation);
+		}
+		return runtimeLibFullPath;
 	}
 
 	protected String getVMInstallTypeId() {

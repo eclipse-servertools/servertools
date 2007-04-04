@@ -58,13 +58,15 @@ public class PreviewStarter {
 					context.addHandler(new ResourceHandler());
 					server.addContext(context);
 				} else {
-					System.out.println(module.getContext() + "/" + module.getPath());
-					WebApplicationContext context = server.addWebApplication(module.getContext(), module.getPath() + "/");
+					//System.out.println(module.getContext() + " - " + module.getPath());
+					WebApplicationContext context = server.addWebApplication(module.getContext(), module.getPath() + File.separator);
+					context.setResourceBase(module.getPath() + File.separator);
+					//WebApplicationContext context = server.addWebApplication("/", module.getPath() + "/");
 					/*context.setConfigurationClassNames(new String[] { "org.mortbay.jetty.servlet.XMLConfiguration" });
 					context.setResourceBase(module.getPath());
 					context.setIgnoreWebJetty(true);*/
-					System.out.println("context: " + context.getContextPath());
-					System.out.println("resource: " + context.getResourceBase());
+					//System.out.println("context: " + context.getContextPath());
+					//System.out.println("resource: " + context.getResourceBase());
 					//server.addContext(context);
 				}
 			}
@@ -120,7 +122,6 @@ public class PreviewStarter {
 		/*SocketListener listener = new SocketListener();
 		listener.setPort(8080);
 		server.addListener(listener);*/
-		
 	}
 
 	public void stop() {
@@ -152,6 +153,4 @@ public class PreviewStarter {
 		}
 		return directory.delete();
 	}
-	
-	
 }

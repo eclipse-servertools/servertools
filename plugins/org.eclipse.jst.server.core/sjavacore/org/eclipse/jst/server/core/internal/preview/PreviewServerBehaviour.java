@@ -271,14 +271,14 @@ public class PreviewServerBehaviour extends ServerBehaviourDelegate {
 	protected void terminate() {
 		if (getServer().getServerState() == IServer.STATE_STOPPED)
 			return;
-
+		
 		try {
 			setServerState(IServer.STATE_STOPPING);
 			Trace.trace(Trace.FINEST, "Killing the HTTP process");
-			if (process != null && !process.isTerminated()) {
+			if (process != null && !process.isTerminated())
 				process.terminate();
-				stopImpl();
-			}
+			
+			stopImpl();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error killing the process", e);
 		}

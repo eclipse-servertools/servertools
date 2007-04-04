@@ -62,14 +62,14 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 			Bundle b = Platform.getBundle(REQUIRED_BUNDLE_IDS[i]);
 			IPath path = null;
 			if (b != null)
-				path = PreviewRuntime.getPlugin(b);
+				path = PreviewRuntime.getJarredPluginPath(b);
 			if (path == null)
 				throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, "Could not find required bundle " + REQUIRED_BUNDLE_IDS[i]));
 			jars[i] = path.toOSString();
 		}
 		
-		if (new File(jars[5] + File.separator + "bin").exists())
-			jars[5] = jars[5] + "/bin";
+		if (new File(jars[5] + "bin").exists())
+			jars[5] = jars[5] + "bin";
 		
 		IVMInstall vm = verifyVMInstall(configuration);
 		
