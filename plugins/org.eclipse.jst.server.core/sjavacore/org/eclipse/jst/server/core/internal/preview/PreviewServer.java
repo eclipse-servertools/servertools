@@ -37,7 +37,8 @@ import org.eclipse.wst.server.core.util.IStaticWeb;
  * Generic HTTP server.
  */
 public class PreviewServer extends ServerDelegate implements IURLProvider {
-	public static final String ID = "org.eclipse.jst.server.core.preview.serverType";
+	public static final String ID = "org.eclipse.jst.server.preview.server";
+
 	public static final String PROPERTY_PORT = "port";
 
 	/**

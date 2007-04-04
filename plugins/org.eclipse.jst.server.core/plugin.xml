@@ -194,7 +194,7 @@
 
 <extension point="org.eclipse.wst.server.core.runtimeTypes">
     <runtimeType
-       id="org.eclipse.jst.server.core.preview.runtimeType"
+       id="org.eclipse.jst.server.preview.runtime"
        name="%previewRuntimeTypeName"
        description="%previewRuntimeTypeDescription"
        class="org.eclipse.jst.server.core.internal.preview.PreviewRuntime">
@@ -212,7 +212,7 @@
 
   <extension point="org.eclipse.wst.server.core.serverTypes">
      <serverType
-       id="org.eclipse.jst.server.core.preview.serverType"
+       id="org.eclipse.jst.server.preview.server"
        name="%previewServerTypeName"
        description="%previewServerTypeDescription"
        supportsRemoteHosts="false"
@@ -221,29 +221,29 @@
        hasConfiguration="false"
        launchModes="run,debug,profile"
        launchConfigId="org.eclipse.jst.server.core.preview.launchConfigurationType"
-       runtimeTypeId="org.eclipse.jst.server.core.preview.runtimeType"
+       runtimeTypeId="org.eclipse.jst.server.preview.runtime"
        class="org.eclipse.jst.server.core.internal.preview.PreviewServer"
        behaviourClass="org.eclipse.jst.server.core.internal.preview.PreviewServerBehaviour"/>
   </extension>
  
   <extension point="org.eclipse.jst.server.core.runtimeClasspathProviders">
     <runtimeClasspathProvider
-      id="org.eclipse.jst.server.core.preview.runtimeTarget"
-      runtimeTypeIds="org.eclipse.jst.server.core.preview.runtimeType"
+      id="org.eclipse.jst.server.preview.runtimeTarget"
+      runtimeTypeIds="org.eclipse.jst.server.preview.runtime"
       class="org.eclipse.jst.server.core.internal.preview.PreviewRuntimeClasspathProvider"/>
   </extension>
 
   <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
     <runtime-component-type
-       id="org.eclipse.jst.server.core.preview.runtimeType"/>
+       id="org.eclipse.jst.server.preview.runtime"/>
 
     <runtime-component-version
-       type="org.eclipse.jst.server.core.preview.runtimeType"
+       type="org.eclipse.jst.server.preview.runtime"
        version="1.0"/>
 
     <adapter>
       <runtime-component
-         id="org.eclipse.jst.server.core.preview.runtimeType"/>
+         id="org.eclipse.jst.server.preview.runtime"/>
       <factory
          class="org.eclipse.jst.server.core.internal.RuntimeClasspathProvider$Factory"/>
       <type
@@ -252,7 +252,7 @@
 
     <supported>
       <runtime-component
-         id="org.eclipse.jst.server.core.preview.runtimeType"
+         id="org.eclipse.jst.server.preview.runtime"
          version="1.0"/>
       <facet
          id="wst.web"
@@ -268,8 +268,8 @@
 
   <extension point="org.eclipse.jst.server.core.runtimeFacetMappings">
     <runtimeFacetMapping
-      runtimeTypeId="org.eclipse.jst.server.core.preview.runtimeType"
-      runtime-component="org.eclipse.jst.server.core.preview.runtimeType"
+      runtimeTypeId="org.eclipse.jst.server.preview.runtime"
+      runtime-component="org.eclipse.jst.server.preview.runtime"
       version="1.0"/>
   </extension>
 
@@ -291,7 +291,7 @@
 
   <extension point="org.eclipse.wst.server.core.launchableAdapters">
     <launchableAdapter
-      id="org.eclipse.jst.server.core.preview.serverType"
+      id="org.eclipse.jst.server.core.preview.server"
       class="org.eclipse.jst.server.core.internal.preview.PreviewLaunchableAdapterDelegate"/>
   </extension>
 

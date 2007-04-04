@@ -26,7 +26,8 @@ import org.osgi.framework.Bundle;
  * 
  */
 public class PreviewRuntime extends RuntimeDelegate implements IJavaRuntime {
-	public static final String ID = "org.eclipse.jst.server.core.preview.runtimeType";
+	public static final String ID = "org.eclipse.jst.server.preview.runtime";
+
 	protected static final String PROP_VM_INSTALL_TYPE_ID = "vm-install-type-id";
 	protected static final String PROP_VM_INSTALL_ID = "vm-install-id";
 

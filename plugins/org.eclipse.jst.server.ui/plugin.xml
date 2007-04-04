@@ -102,18 +102,18 @@
   <extension point="org.eclipse.wst.server.ui.serverImages">
      <image
         id="org.eclipse.jst.server.ui"
-        typeIds="org.eclipse.jst.server.core.preview.runtimeType,org.eclipse.jst.server.core.preview.serverType"
+        typeIds="org.eclipse.jst.server.preview.runtime,org.eclipse.jst.server.preview.server"
         icon="icons/obj16/preview.gif"/>
   </extension>
 
   <extension point="org.eclipse.wst.common.project.facet.ui.images">
-    <image runtime-component-type="org.eclipse.jst.server.preview.core.runtimeType"
+    <image runtime-component-type="org.eclipse.jst.server.preview.runtime"
        path="icons/obj16/preview.gif"/>
   </extension>
 
   <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
     <adapter>
-      <runtime-component id="org.eclipse.jst.server.preview.core.runtimeType"/>
+      <runtime-component id="org.eclipse.jst.server.preview.runtime"/>
       <factory class="org.eclipse.jst.server.ui.internal.RuntimeLabelProvider$Factory"/>
       <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
     </adapter>
@@ -137,7 +137,7 @@
 
   <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
     <adapter>
-      <runtime-component id="org.eclipse.jst.server.core.preview.runtimeType"/>
+      <runtime-component id="org.eclipse.jst.server.preview.runtime"/>
       <factory class="org.eclipse.jst.server.ui.internal.RuntimeLabelProvider$Factory"/>
       <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
     </adapter>
