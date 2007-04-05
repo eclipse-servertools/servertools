@@ -49,11 +49,11 @@
 </context>
 
 <context id="spge0002">
-<description>Specifies that all the files should automatically be published to the local server at every <b>seconds</b> intervals, where <b>seconds</b> is the number of seconds you have specified in the control.  The minimum value for the publishing interval is ten seconds.
+<description>Specifies that all the files should automatically be published to the local server at every <b>seconds</b> intervals, where <b>seconds</b> is the number of seconds you have specified in the control.
 </description>
 </context>
 <context id="spge0006">
-<description>Specifies that all the files should automatically be published to the remote server at every <b>seconds</b> intervals, where <b>seconds</b> is the number of seconds you have specified in the control.  The minimum value for the publishing interval is ten seconds.
+<description>Specifies that all the files should automatically be published to the remote server at every <b>seconds</b> intervals, where <b>seconds</b> is the number of seconds you have specified in the control.
 </description>
 </context>
 <context id="spge0012">
