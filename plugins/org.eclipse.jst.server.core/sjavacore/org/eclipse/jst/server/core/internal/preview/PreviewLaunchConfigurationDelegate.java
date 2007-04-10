@@ -23,9 +23,8 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.launching.*;
+import org.eclipse.jst.server.core.ServerProfilerDelegate;
 import org.eclipse.jst.server.core.internal.JavaServerPlugin;
-import org.eclipse.jst.server.core.internal.Messages;
-import org.eclipse.jst.server.core.internal.ServerProfiler;
 import org.eclipse.jst.server.core.internal.Trace;
 
 import org.eclipse.wst.server.core.IServer;
@@ -88,28 +87,6 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 		String vmArgs = getVMArguments(configuration);
 		String[] envp = getEnvironment(configuration);
 		
-		if (ILaunchManager.PROFILE_MODE.equals(mode)) {
-			ServerProfiler[] sp = JavaServerPlugin.getServerProfilers();
-			if (sp == null || sp.length == 0 || runner == null)
-				throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, Messages.errorNoProfiler, null));
-			
-			String vmArgs2 = sp[0].getVMArgs();
-			if (vmArgs2 != null)
-				vmArgs = vmArgs + " " + vmArgs2;
-			
-			String[] env = sp[0].getEnvironmentVariables();
-			if (env != null && env.length > 0) {
-				if (envp == null)
-					envp = env;
-				else {
-					String[] s = new String[env.length + envp.length];
-					System.arraycopy(envp, 0, s, 0, envp.length);
-					System.arraycopy(env, 0, s, envp.length, env.length);
-					envp = s;
-				}
-			}
-		}
-		
 		ExecutionArguments execArgs = new ExecutionArguments(vmArgs, pgmArgs);
 		
 		// VM-specific attributes
@@ -128,7 +105,7 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 		runConfig.setWorkingDirectory(workingDirName);
 		runConfig.setEnvironment(envp);
 		runConfig.setVMSpecificAttributesMap(vmAttributesMap);
-
+		
 		// Bootpath
 		String[] bootpath = getBootpath(configuration);
 		if (bootpath != null && bootpath.length > 0)
@@ -138,6 +115,10 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 		
 		// Launch the configuration
 		previewServer.setupLaunch(launch, mode, monitor);
+		
+		if (ILaunchManager.PROFILE_MODE.equals(mode))
+			ServerProfilerDelegate.configureProfiling(launch, vm, runConfig, monitor);
+		
 		try {
 			runner.run(runConfig, launch, monitor);
 			previewServer.setProcess(launch.getProcesses()[0]);

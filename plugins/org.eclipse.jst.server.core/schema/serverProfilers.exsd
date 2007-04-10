@@ -44,9 +44,6 @@
          <appInfo>
             <meta.element labelAttribute="name"/>
          </appInfo>
-         <documentation>
-            extensions must contain either a vmArgs or a class argument
-         </documentation>
       </annotation>
       <complexType>
          <attribute name="id" type="string">
@@ -63,17 +60,10 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="vmArgs" type="string">
+         <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  a VM argument used to launch the profiler. If this attribute is specified there should be no class attribute
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="class" type="string">
-            <annotation>
-               <documentation>
-                  a class that extends org.eclipse.jst.server.core.ServerProfilerDelegate. If this attribute is specified there should be no vmArgs attribute
+                  a class that extends org.eclipse.jst.server.core.ServerProfilerDelegate
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.jst.server.core.ServerProfilerDelegate"/>

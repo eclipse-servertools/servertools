@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,10 @@
 package org.eclipse.jst.server.core.internal;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.jdt.launching.IVMInstall;
+import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.eclipse.jst.server.core.ServerProfilerDelegate;
 /**
  * 
@@ -62,33 +66,21 @@ public class ServerProfiler {
 	}
 
 	/**
-	 * 
+	 * @deprecated Switch to new API via TODO
 	 * @return the VM args
 	 */
 	public String getVMArgs() {
-		try {
-			ServerProfilerDelegate del = getDelegate();
-			if (del != null) {
-				String s = del.getVMArguments();
-				if (s != null)
-					return s;
-			}
-		} catch (Throwable t) {
-			Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + t.getMessage());
-		}
-		
-		return element.getAttribute("vmArgs");
+		return null;
 	}
 
-	public String[] getEnvironmentVariables() {
+	public void process(ILaunch launch, IVMInstall vmInstall, VMRunnerConfiguration vmConfig, IProgressMonitor monitor) {
 		try {
 			ServerProfilerDelegate del = getDelegate();
 			if (del != null)
-				return del.getEnvironmentVariables();
+				del.process(launch, vmInstall, vmConfig, monitor);
 		} catch (Throwable t) {
 			Trace.trace(Trace.SEVERE, "Could not create delegate " + toString() + ": " + t.getMessage());
 		}
-		return null;
 	}
 
 	public String toString() {

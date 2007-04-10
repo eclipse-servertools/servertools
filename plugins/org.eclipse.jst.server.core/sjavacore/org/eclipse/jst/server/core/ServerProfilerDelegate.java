@@ -9,6 +9,13 @@
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
 package org.eclipse.jst.server.core;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.jdt.launching.IVMInstall;
+import org.eclipse.jdt.launching.VMRunnerConfiguration;
+import org.eclipse.jst.server.core.internal.JavaServerPlugin;
 /**
  * A server profiler delegate.
  * <p>
@@ -20,29 +27,36 @@ package org.eclipse.jst.server.core;
  */
 public abstract class ServerProfilerDelegate {
 	/**
-	 * Create a new server profiler delegate.
+	 * Create a new server profiler delegate. This class must have a public default constructor.
 	 */
 	public ServerProfilerDelegate() {
 		// ignore
 	}
 
-	/** 
-	 * Returns an array of environment variables to be used when launching the profiler,
-	 * or <code>null</code> if none are required.
+	/**
+	 * Processes the Java launch configuration about to be run to support profiling.
+	 * VM args or environment variables can be set to allow profiling.
 	 * 
-	 * @return an array of environment variables, or <code>null</code>
-	 */	
-	public String[] getEnvironmentVariables() {
-		return null;
-	}
+	 * @param launch the launch
+	 * @param vmInstall the vm install being run against
+	 * @param vmConfig the configuration to process
+	 * @param monitor a progress monitor
+	 * @throws CoreException if there is a problem during configuration
+	 */
+	public abstract void process(ILaunch launch, IVMInstall vmInstall, VMRunnerConfiguration vmConfig, IProgressMonitor monitor) throws CoreException;
 
 	/**
-	 * Returns the VM arguments to be used when launching the profiler, or
-	 * <code>null</code> if none are required.
+	 * Processes the Java launch configuration about to be run to support profiling.
+	 * VM args or environment variables can be set to allow profiling.
 	 * 
-	 * @return the VM arguments for the profiler, or <code>null</code>
+	 * @param launch the launch
+	 * @param vmInstall the vm install being run against
+	 * @param vmConfig the configuration to process
+	 * @param monitor a progress monitor
+	 * @throws CoreException if there are no profilers configured or there is a problem
+	 *   configuring the launch
 	 */
-	public String getVMArguments() {
-		return null;
+	public static void configureProfiling(ILaunch launch, IVMInstall vmInstall, VMRunnerConfiguration vmConfig, IProgressMonitor monitor) throws CoreException {
+		JavaServerPlugin.configureProfiling(launch, vmInstall, vmConfig, monitor);
 	}
 }

@@ -18,10 +18,13 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.debug.core.ILaunch;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.launching.IVMInstall;
+import org.eclipse.jdt.launching.VMRunnerConfiguration;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeLifecycleListener;
@@ -426,5 +429,13 @@ public class JavaServerPlugin extends Plugin {
 		serverProfilers = list;
 		
 		Trace.trace(Trace.CONFIG, "-<- Done loading .serverProfilers extension point -<-");
+	}
+
+	public static void configureProfiling(ILaunch launch, IVMInstall vmInstall, VMRunnerConfiguration vmConfig, IProgressMonitor monitor) throws CoreException {
+		ServerProfiler[] sp = JavaServerPlugin.getServerProfilers();
+		if (sp == null || sp.length == 0)
+			throw new CoreException(new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, Messages.errorNoProfiler, null));
+		
+		sp[0].process(launch, vmInstall, vmConfig, monitor);
 	}
 }
