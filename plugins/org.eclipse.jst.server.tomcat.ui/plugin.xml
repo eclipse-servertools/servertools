@@ -181,7 +181,7 @@
       <action 
         class="org.eclipse.jst.server.tomcat.ui.internal.actions.CleanWorkDirAction"
         enablesFor="1"
-        id="org.eclipse.jst.server.tomcat.ui.clearworkdir"
+        id="org.eclipse.jst.server.tomcat.ui.cleanserverworkdir"
         label="%cleanTomcatWorkDir">
       </action>
     </objectContribution>
@@ -202,7 +202,7 @@
       <action
         class="org.eclipse.jst.server.tomcat.ui.internal.actions.CleanWorkDirAction"
         enablesFor="1"
-        id="org.eclipse.jst.server.tomcat.ui.clearworkdir"
+        id="org.eclipse.jst.server.tomcat.ui.cleanmoduleworkdir"
         label="%cleanTomcatModuleWorkDir">
       </action>
     </objectContribution>
