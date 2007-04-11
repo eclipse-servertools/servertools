@@ -10,6 +10,7 @@
 
 package org.eclipse.jst.server.generic.internal.xml;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -63,6 +64,7 @@ public class Resolver {
 				value = value.replace('\\','/');
 			 cache.put(element.getId(), value);
 		}
+		cache.put("pathChar", File.pathSeparator); //$NON-NLS-1$
 		String str = resolvePropertiesFromCache(proppedString, cache);
 		str = fixPassthroughProperties(str);
 		return str;
