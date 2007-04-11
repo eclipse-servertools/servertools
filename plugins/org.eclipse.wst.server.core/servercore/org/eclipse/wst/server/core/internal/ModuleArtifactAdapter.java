@@ -180,7 +180,7 @@ public class ModuleArtifactAdapter {
 		try {
 			return getDelegate().getModuleArtifacts(obj);
 		} catch (Exception e) {
-			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString() + ": " + e.getMessage());
+			Trace.trace(Trace.SEVERE, "Error calling delegate " + toString(), e);
 			return null;
 		}
 	}

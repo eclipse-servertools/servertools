@@ -158,8 +158,12 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 	 * Run the resource on a server.
 	 */
 	protected void run() {
-//		final String launchMode2 = getLaunchMode();
 		IModuleArtifact[] moduleArtifacts = ServerPlugin.getModuleArtifacts(selection);
+		if (moduleArtifacts == null || moduleArtifacts.length == 0 || moduleArtifacts[0] == null) {
+			EclipseUtil.openError(Messages.errorNoArtifact);
+			Trace.trace(Trace.FINEST, "No module artifact found");
+			return;
+		}
 		// TODO - multiple module artifacts
 		final IModuleArtifact moduleArtifact = moduleArtifacts[0];
 		
@@ -177,11 +181,6 @@ public class RunOnServerActionDelegate implements IWorkbenchWindowActionDelegate
 		}
 		final Shell shell = shell2;
 		
-		if (moduleArtifact == null) {
-			EclipseUtil.openError(Messages.errorNoArtifact);
-			Trace.trace(Trace.FINEST, "No module artifact found");
-			return;
-		}
 		if (moduleArtifact.getModule() == null) { // 149425
 			EclipseUtil.openError(Messages.errorNoModules);
 			Trace.trace(Trace.FINEST, "Module artifact not contained in a module");
