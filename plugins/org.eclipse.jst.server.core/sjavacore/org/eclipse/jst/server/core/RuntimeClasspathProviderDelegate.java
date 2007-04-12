@@ -158,23 +158,28 @@ public abstract class RuntimeClasspathProviderDelegate {
 		}
 		
 		String key = project.getName() + "/" + runtime.getId();
-		IClasspathEntry[] previousEntries = (IClasspathEntry[]) previousClasspath.get(key);
 		
-		if ((previousEntries == null && entries != null) || (previousEntries != null && entries == null)
-				|| (previousEntries != null && entries != null && previousEntries.length != entries.length)) {
-			Trace.trace(Trace.FINEST, "Classpath update: " + key + " " + entries);
+		if (!previousClasspath.containsKey(key))
+			previousClasspath.put(key, entries);
+		else {
+			IClasspathEntry[] previousEntries = (IClasspathEntry[]) previousClasspath.get(key);
 			
-			IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER);
-			path = path.append(extensionId).append(runtime.getId());
-			try {
-				IJavaProject javaProject = JavaCore.create(project);
-				JavaCore.setClasspathContainer(path, new IJavaProject[] { javaProject },
-						new IClasspathContainer[] { null }, new NullProgressMonitor());
-			} catch (JavaModelException jme) {
-				Trace.trace(Trace.WARNING, "Error updating classpath", jme);
+			if ((previousEntries == null && entries != null) || (previousEntries != null && entries == null)
+					|| (previousEntries != null && entries != null && previousEntries.length != entries.length)) {
+				Trace.trace(Trace.FINEST, "Classpath update: " + key + " " + entries);
+				previousClasspath.put(key, entries);
+				
+				IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER);
+				path = path.append(extensionId).append(runtime.getId());
+				try {
+					IJavaProject javaProject = JavaCore.create(project);
+					JavaCore.setClasspathContainer(path, new IJavaProject[] { javaProject },
+							new IClasspathContainer[] { null }, new NullProgressMonitor());
+				} catch (JavaModelException jme) {
+					Trace.trace(Trace.WARNING, "Error updating classpath", jme);
+				}
 			}
 		}
-		previousClasspath.put(key, entries);
 		
 		return entries;
 	}
