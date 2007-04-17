@@ -31,6 +31,7 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -70,13 +71,27 @@ public class ServersView extends ViewPart {
 		super();
 	}
 
+	protected SelectionListener getHeaderListener(final int col) {
+		return new SelectionAdapter() {
+			/**
+			 * Handles the case of user selecting the header area.
+			 */
+			public void widgetSelected(SelectionEvent e) {
+				if (tableViewer == null)
+					return;
+				TreeColumn column = (TreeColumn) e.widget;
+				tableViewer.resortTable(column, col);
+			}
+		};
+	}
+
 	/**
 	 * createPartControl method comment.
 	 * 
 	 * @param parent a parent composite
 	 */
 	public void createPartControl(Composite parent) {
-		treeTable = new Tree(parent, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.NONE);
+		treeTable = new Tree(parent, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL);
 		treeTable.setHeaderVisible(true);
 		treeTable.setLinesVisible(false);
 		treeTable.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -87,14 +102,19 @@ public class ServersView extends ViewPart {
 		TreeColumn column = new TreeColumn(treeTable, SWT.SINGLE);
 		column.setText(Messages.viewServer);
 		column.setWidth(cols[0]);
+		column.addSelectionListener(getHeaderListener(0));
+		treeTable.setSortColumn(column);
+		treeTable.setSortDirection(SWT.UP);
 		
 		TreeColumn column2 = new TreeColumn(treeTable, SWT.SINGLE);
 		column2.setText(Messages.viewState);
 		column2.setWidth(cols[1]);
+		column2.addSelectionListener(getHeaderListener(1));
 		
 		TreeColumn column3 = new TreeColumn(treeTable, SWT.SINGLE);
 		column3.setText(Messages.viewStatus);
 		column3.setWidth(cols[2]);
+		column3.addSelectionListener(getHeaderListener(2));
 		
 		deferInitialization();
 	}

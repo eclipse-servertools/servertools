@@ -30,9 +30,11 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 /**
  * Tree view showing servers and their associations.
@@ -250,21 +252,7 @@ public class ServerTableViewer extends TreeViewer {
 			}
 		});
 		setLabelProvider(labelProvider);
-		setComparator(new ViewerComparator() {
-			public int compare(Viewer viewer, Object e1, Object e2) {
-				if (e1 instanceof IServer && e2 instanceof IServer) {
-					IServer s1 = (IServer) e1;
-					IServer s2 = (IServer) e2;
-					return (s1.getName().compareToIgnoreCase(s2.getName()));
-				} else if (e1 instanceof ModuleServer && e2 instanceof ModuleServer) {
-					ModuleServer s1 = (ModuleServer) e1;
-					ModuleServer s2 = (ModuleServer) e2;
-					return (s1.module[s1.module.length - 1].getName().compareToIgnoreCase(s2.module[s2.module.length - 1].getName()));
-				}
-				
-				return super.compare(viewer, e1, e2);
-			}
-		});
+		setComparator(new ServerViewerComparator(labelProvider));
 		
 		setInput(ROOT);
 		addListeners();
@@ -335,6 +323,42 @@ public class ServerTableViewer extends TreeViewer {
 				fd[i].setStyle(SWT.ITALIC);
 			font = new Font(display, fd);
 		}
+	}
+
+	/**
+	 * Resort the table based on field.
+	 * 
+	 * @param column the column being updated
+	 * @param col
+	 */
+	protected void resortTable(final TreeColumn column, int col) {
+		ServerViewerComparator sorter = (ServerViewerComparator) getComparator();
+		
+		if (col == sorter.getTopPriority())
+			sorter.reverseTopPriority();
+		else
+			sorter.setTopPriority(col);
+		
+		PlatformUI.getWorkbench().getDisplay().asyncExec(
+			new Runnable() {
+				public void run() {
+					refresh();
+					updateDirectionIndicator(column);
+				}
+			});
+	}
+
+	/**
+	 * Update the direction indicator as column is now the primary column.
+	 * 
+	 * @param column
+	 */
+	protected void updateDirectionIndicator(TreeColumn column) {
+		getTree().setSortColumn(column);
+		if (((ServerViewerComparator) getComparator()).getTopPriorityDirection() == ServerViewerComparator.ASCENDING)
+			getTree().setSortDirection(SWT.UP);
+		else
+			getTree().setSortDirection(SWT.DOWN);
 	}
 
 	protected Object[] adaptLabelChangeObjects(Object[] obj) {

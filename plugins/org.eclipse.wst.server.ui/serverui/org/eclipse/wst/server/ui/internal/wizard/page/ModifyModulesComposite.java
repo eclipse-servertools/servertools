@@ -34,8 +34,13 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -43,6 +48,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.*;
 import org.eclipse.wst.server.ui.ServerUICore;
@@ -54,6 +61,8 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
  */
 public class ModifyModulesComposite extends Composite {
 	private static final String ROOT = "root";
+	protected static Color color;
+	protected static Font font;
 
 	protected IWizardHandle wizard;
 
@@ -403,6 +412,20 @@ public class ModifyModulesComposite extends Composite {
 		setFont(getParent().getFont());
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, ContextIds.MODIFY_MODULES_COMPOSITE);
 		
+		Display display = getDisplay();
+		color = display.getSystemColor(SWT.COLOR_DARK_GRAY);
+		FontData[] fd = getFont().getFontData();
+		int size2 = fd.length;
+		for (int i = 0; i < size2; i++)
+			fd[i].setStyle(SWT.ITALIC);
+		font = new Font(display, fd);
+		addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent e) {
+				font.dispose();
+				color.dispose();
+			}
+		});
+		
 		Label label = new Label(this, SWT.NONE);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
 		data.horizontalSpan = 3;
@@ -523,7 +546,26 @@ public class ModifyModulesComposite extends Composite {
 		data.widthHint = 150;
 		deployedTree.setLayoutData(data);
 		
-		deployedTreeViewer = new TreeViewer(deployedTree);
+		deployedTreeViewer = new TreeViewer(deployedTree) {
+			public void doUpdateItem(Widget widget, Object element, boolean fullMap) {
+				if (widget instanceof TreeItem && color != null) {
+					TreeItem item = (TreeItem) widget;
+					if (element instanceof ModuleServer) {
+						ModuleServer ms = (ModuleServer) element;
+						IModule m = ms.module[ms.module.length-1];
+						if (m.isExternal())
+							item.setForeground(color);
+						else
+							item.setForeground(null);
+						if (!(server instanceof IServer) || ((IServer)server).getModulePublishState(ms.module) != IServer.PUBLISH_STATE_NONE)
+							item.setFont(font);
+						else
+							item.setFont(null);
+					}
+				}
+				super.doUpdateItem(widget, element, fullMap);
+			}
+		};
 		labelProvider = ServerUICore.getLabelProvider();
 		labelProvider.addListener(new ILabelProviderListener() {
 			public void labelProviderChanged(LabelProviderChangedEvent event) {
