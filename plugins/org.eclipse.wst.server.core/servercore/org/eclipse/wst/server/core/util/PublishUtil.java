@@ -236,7 +236,7 @@ public final class PublishUtil {
 				}
 			}
 		}
-		if (!foundExistingDir && !toDir.mkdir()) {
+		if (!foundExistingDir && !toDir.mkdirs()) {
 			status.add(new Status(IStatus.ERROR, ServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorMkdir, toDir.getAbsolutePath()), null));
 			IStatus[] stat = new IStatus[status.size()];
 			status.toArray(stat);

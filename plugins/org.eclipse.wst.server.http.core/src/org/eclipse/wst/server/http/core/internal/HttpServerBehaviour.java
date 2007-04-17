@@ -95,7 +95,7 @@ public class HttpServerBehaviour extends ServerBehaviourDelegate {
 	 * @throws CoreException
 	 */
 	private static void throwException(IStatus[] status) throws CoreException {
-		if (status == null)
+		if (status == null || status.length == 0)
 			return;
 		
 		if (status.length == 1)

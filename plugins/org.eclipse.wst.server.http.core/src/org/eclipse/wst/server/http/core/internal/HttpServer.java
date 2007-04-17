@@ -15,7 +15,6 @@ import java.net.URL;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IRuntime;
@@ -28,16 +27,13 @@ import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.core.ServerPort;
 import org.eclipse.wst.server.core.model.IURLProvider;
 import org.eclipse.wst.server.core.model.ServerDelegate;
+import org.eclipse.wst.server.core.util.IStaticWeb;
 /**
  * Generic HTTP server.
  */
 public class HttpServer extends ServerDelegate implements IURLProvider {
-	public static final String PROPERTY_BASE_URL = "baseUrl";
 	public static final String PROPERTY_URL_PREFIX = "urlPrefix";
-	// public static final String DOCUMENT_ROOT = "document_root";
-	// public static final String PUBLISH = "publish";
 	public static final String PROPERTY_PORT = "port";
-	//public static final String PROPERTY_PUB_DIR = "publish_directory";
 	public static final String PROPERTY_IS_PUBLISHING = "isPublishing";
 
 	public static final String ID = "org.eclipse.wst.server.http.server";
@@ -81,16 +77,8 @@ public class HttpServer extends ServerDelegate implements IURLProvider {
 		}
 	}*/
 
-	public String getBaseURL() {
-		return getAttribute(HttpServer.PROPERTY_BASE_URL, "");
-	}
-
 	public boolean dontPublish() {
 		return getAttribute("auto-publish-setting", "2").equals("1");
-	}
-
-	public void setBaseURL(String url) {
-		setAttribute(HttpServer.PROPERTY_BASE_URL, url);
 	}
 
 	// public void setDocumentRoot(String docRoot) {
@@ -112,20 +100,29 @@ public class HttpServer extends ServerDelegate implements IURLProvider {
 	/**
 	 * Return the root URL of this module.
 	 * 
-	 * @param module org.eclipse.wst.server.core.model.IModule
-	 * @return java.net.URL
+	 * @param module a module
+	 * @return the root URL
 	 */
 	public URL getModuleRootURL(IModule module) {
 		try {
-			String base = getBaseURL();
+			String base = "http://" + getServer().getHost();
+			
 			if (base.equals(""))
 				base = "http://" + getServer().getHost();
-
-			int port = getPort();
-			if (port == 80)
-				return new URL(base + "/");
 			
-			return new URL(base + ":" + port + "/");
+			int port = getPort();
+			URL url = null;
+			if (port == 80)
+				url = new URL(base + "/");
+			else
+				url = new URL(base + ":" + port + "/");
+			
+			String prefix = getURLPrefix();
+			if (prefix != null && prefix.length() > 0)
+				url = new URL(url, prefix + "/");
+			
+			IStaticWeb staticWeb = (IStaticWeb) module.loadAdapter(IStaticWeb.class, null);
+			return new URL(url, staticWeb.getContextRoot());
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not get root URL", e);
 			return null;
@@ -188,19 +185,8 @@ public class HttpServer extends ServerDelegate implements IURLProvider {
 		setAttribute(PROPERTY_IS_PUBLISHING, shouldPublish);
 	}
 
-	public static IServer createHttpServer(String serverName, String baseURL) {
-		String host = baseURL;
-		if (baseURL.startsWith("http://"))
-			host = host.substring(7);
-		int index = host.indexOf("/");
-		if (index != -1)
-			host = host.substring(0, index - 1);
-		index = host.indexOf(":");
-		if (index != -1)
-			host = host.substring(0, index - 1);
-
+	public static IServer createHttpServer(String host, String serverName, IProgressMonitor monitor) {
 		try {
-			NullProgressMonitor monitor = new NullProgressMonitor();
 			IRuntimeType runtimeType = ServerCore.findRuntimeType(HttpRuntime.ID);
 			IRuntimeWorkingCopy runtimeCopy = runtimeType.createRuntime(HttpRuntime.ID, monitor);
 			IRuntime runtime = runtimeCopy.save(true, monitor);
@@ -210,10 +196,6 @@ public class HttpServer extends ServerDelegate implements IURLProvider {
 			workingCopy.setName(serverName);
 			workingCopy.setHost(host);
 			
-			HttpServer hs = (HttpServer) workingCopy.loadAdapter(HttpServer.class, null);
-
-			hs.setBaseURL(baseURL);
-			hs.saveConfiguration(null);
 			return workingCopy.save(true, monitor);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error creating server", e);
