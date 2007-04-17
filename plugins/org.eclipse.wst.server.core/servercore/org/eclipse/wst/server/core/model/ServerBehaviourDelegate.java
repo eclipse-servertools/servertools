@@ -608,7 +608,9 @@ public abstract class ServerBehaviourDelegate {
 		while (iterator.hasNext()) {
 			IModule[] module = (IModule[]) iterator.next();
 			if (hasBeenPublished(module)) {
-				if (getPublishedResourceDelta(module).length == 0)
+				IModule m = module[module.length - 1];
+				if ((m.getProject() != null && !m.getProject().isAccessible())
+						|| getPublishedResourceDelta(module).length == 0)
 					deltaKindList.add(new Integer(ServerBehaviourDelegate.NO_CHANGE));
 				else
 					deltaKindList.add(new Integer(ServerBehaviourDelegate.CHANGED));
@@ -824,7 +826,13 @@ public abstract class ServerBehaviourDelegate {
 			if (monitor.isCanceled())
 				return;
 			
-			IStatus status = publishModule(kind, (IModule[]) modules.get(i), ((Integer)deltaKind.get(i)).intValue(), ProgressUtil.getSubMonitorFor(monitor, 3000));
+			// skip closed projects
+			IModule[] module = (IModule[]) modules.get(i);
+			IModule m = module[module.length - 1];
+			if (m.getProject() != null && !m.getProject().isAccessible())
+				continue;
+			
+			IStatus status = publishModule(kind, module, ((Integer)deltaKind.get(i)).intValue(), ProgressUtil.getSubMonitorFor(monitor, 3000));
 			if (status != null && !status.isOK())
 				multi.add(status);
 		}

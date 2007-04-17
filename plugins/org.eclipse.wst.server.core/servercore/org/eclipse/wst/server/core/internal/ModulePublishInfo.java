@@ -26,6 +26,8 @@ import org.eclipse.wst.server.core.model.ModuleDelegate;
  * Publish information for a specific module on a specific server.
  */
 public class ModulePublishInfo {
+	private static final IModuleResource[] EMPTY_MODULE_RESOURCE = new IModuleResource[0];
+	private static final IModuleResourceDelta[] EMPTY_MODULE_RESOURCE_DELTA = new IModuleResourceDelta[0];
 	private static final String MODULE_ID = "module-ids";
 	private static final String NAME = "name";
 	private static final String MODULE_TYPE_ID = "module-type-id";
@@ -36,7 +38,7 @@ public class ModulePublishInfo {
 
 	private String moduleId;
 	private String name;
-	private IModuleResource[] resources = new IModuleResource[0];
+	private IModuleResource[] resources = EMPTY_MODULE_RESOURCE;
 	private IModuleType moduleType;
 
 	private boolean useCache;
@@ -127,7 +129,7 @@ public class ModulePublishInfo {
 	 */
 	protected IModuleResource[] loadResource(IMemento memento, IPath path) {
 		if (memento == null)
-			return new IModuleResource[0];
+			return EMPTY_MODULE_RESOURCE;
 		
 		List list = new ArrayList(10);
 		
@@ -271,21 +273,21 @@ public class ModulePublishInfo {
 		
 		try {
 			long time = System.currentTimeMillis();
-			int size = module.length;
-			ModuleDelegate pm = (ModuleDelegate) module[size - 1].loadAdapter(ModuleDelegate.class, null);
-			if (pm != null)
-				currentResources = pm.members();
+			IModule m = module[module.length - 1];
+			ModuleDelegate pm = (ModuleDelegate) m.loadAdapter(ModuleDelegate.class, null);
+			if (pm == null || (m.getProject() != null && !m.getProject().isAccessible()))
+				currentResources = EMPTY_MODULE_RESOURCE;
 			else
-				currentResources = new IModuleResource[0];
+				currentResources = pm.members();
 			
 			delta = ServerPublishInfo.getDelta(resources, currentResources);
 			hasDelta = (delta != null && delta.length > 0);
-			Trace.trace(Trace.PERFORMANCE, "Filling publish cache for " + module[size-1].getName() + ": " + (System.currentTimeMillis() - time));
+			Trace.trace(Trace.PERFORMANCE, "Filling publish cache for " + m.getName() + ": " + (System.currentTimeMillis() - time));
 		} catch (CoreException ce) {
 			Trace.trace(Trace.WARNING, "Couldn't fill publish cache for " + module);
 		}
 		if (delta == null)
-			delta = new IModuleResourceDelta[0];
+			delta = EMPTY_MODULE_RESOURCE_DELTA;
 	}
 
 	protected void clearCache() {
@@ -297,48 +299,52 @@ public class ModulePublishInfo {
 
 	protected IModuleResource[] getModuleResources(IModule[] module) {
 		if (module == null)
-			return new IModuleResource[0];
+			return EMPTY_MODULE_RESOURCE;
 		
 		if (useCache) {
 			fillCache(module);
 			return currentResources;
 		}
 		
-		long time = System.currentTimeMillis();
-		
 		int size = module.length;
-		ModuleDelegate pm = (ModuleDelegate) module[size - 1].loadAdapter(ModuleDelegate.class, null);
-		IModuleResource[] x = new IModuleResource[0];
+		IModule m = module[size - 1];
+		ModuleDelegate pm = (ModuleDelegate) m.loadAdapter(ModuleDelegate.class, null);
+		if (pm == null || (m.getProject() != null && !m.getProject().isAccessible()))
+			return EMPTY_MODULE_RESOURCE;
+		
 		try {
-			if (pm != null)
-				x = pm.members();
+			long time = System.currentTimeMillis();
+			IModuleResource[] x = pm.members();
+			Trace.trace(Trace.PERFORMANCE, "Time to get members() for " + module[size - 1].getName() + ": " + (System.currentTimeMillis() - time));
+			return x;
 		} catch (CoreException ce) {
 			// ignore
 		}
-		Trace.trace(Trace.PERFORMANCE, "Time to get members() for " + module[size - 1].getName() + ": " + (System.currentTimeMillis() - time));
-		return x;
+		return EMPTY_MODULE_RESOURCE;
 	}
 
 	protected IModuleResourceDelta[] getDelta(IModule[] module) {
 		if (module == null)
-			return new IModuleResourceDelta[0];
+			return EMPTY_MODULE_RESOURCE_DELTA;
 		
 		if (useCache) {
 			fillCache(module);
 			return delta;
 		}
 		
-		int size = module.length;
-		ModuleDelegate pm = (ModuleDelegate) module[size - 1].loadAdapter(ModuleDelegate.class, null);
+		IModule m = module[module.length - 1];
+		ModuleDelegate pm = (ModuleDelegate) m.loadAdapter(ModuleDelegate.class, null);
+		if (pm == null || (m.getProject() != null && !m.getProject().isAccessible()))
+			return EMPTY_MODULE_RESOURCE_DELTA;
+		
 		IModuleResource[] resources2 = null;
 		try {
-			if (pm != null)
-				resources2 = pm.members();
+			resources2 = pm.members();
 		} catch (CoreException ce) {
 			// ignore
 		}
 		if (resources2 == null)
-			resources2 = new IModuleResource[0];
+			resources2 = EMPTY_MODULE_RESOURCE;
 		return ServerPublishInfo.getDelta(getResources(), resources2);
 	}
 
@@ -351,17 +357,19 @@ public class ModulePublishInfo {
 			return hasDelta;
 		}
 		
-		int size = module.length;
-		ModuleDelegate pm = (ModuleDelegate) module[size - 1].loadAdapter(ModuleDelegate.class, null);
+		IModule m = module[module.length - 1];
+		ModuleDelegate pm = (ModuleDelegate) m.loadAdapter(ModuleDelegate.class, null);
 		IModuleResource[] resources2 = null;
+		if (pm == null || (m.getProject() != null && !m.getProject().isAccessible()))
+			return false;
+		
 		try {
-			if (pm != null)
-				resources2 = pm.members();
+			resources2 = pm.members();
 		} catch (CoreException ce) {
 			// ignore
 		}
 		if (resources2 == null)
-			resources2 = new IModuleResource[0];
+			resources2 = EMPTY_MODULE_RESOURCE;
 		return ServerPublishInfo.hasDelta(getResources(), resources2);
 	}
 
@@ -375,11 +383,12 @@ public class ModulePublishInfo {
 			return;
 		}
 		
-		int size = module.length;
-		ModuleDelegate pm = (ModuleDelegate) module[size - 1].loadAdapter(ModuleDelegate.class, null);
+		IModule m = module[module.length - 1];
+		ModuleDelegate pm = (ModuleDelegate) m.loadAdapter(ModuleDelegate.class, null);
+		if (pm == null || (m.getProject() != null && !m.getProject().isAccessible()))
+			setResources(EMPTY_MODULE_RESOURCE);
 		try {
-			if (pm != null)
-				setResources(pm.members());
+			setResources(pm.members());
 		} catch (CoreException ce) {
 			// ignore
 		}
