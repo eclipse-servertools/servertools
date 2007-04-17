@@ -116,8 +116,9 @@ public class RuntimeTypeComposite extends AbstractTreeComposite {
 	}
 
 	private void closeWizard(Composite comp) {
-		if (comp == null)
+		if (comp == null || comp.isDisposed())
 			return;
+		
 		Composite c = comp.getParent();
 		if (c instanceof Shell) {
 			Shell s = (Shell) c;
