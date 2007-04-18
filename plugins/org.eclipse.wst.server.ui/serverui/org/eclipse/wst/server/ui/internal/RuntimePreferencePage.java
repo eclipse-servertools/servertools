@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.PreferencePage;
@@ -160,13 +159,8 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		remove.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				IRuntime runtime = runtimeComp.getSelectedRuntime();
-				if (shouldRemoveRuntime(runtime))
-					try {
-						runtime.delete();
-						runtimeComp.remove(runtime);
-					} catch (Exception ex) {
-						// ignore
-					}
+				if (removeRuntime(runtime))
+					runtimeComp.remove(runtime);
 			}
 		});
 		
@@ -279,19 +273,18 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 		return composite;
 	}
 	
-	protected boolean shouldRemoveRuntime(IRuntime runtime) {
+	protected boolean removeRuntime(IRuntime runtime) {
 		if (runtime == null)
 			return false;
 
 		// check for use
-		boolean inUse = false;
-	
 		IServer[] servers = ServerCore.getServers();
+		List list = new ArrayList();
 		if (servers != null) {
 			int size = servers.length;
 			for (int i = 0; i < size; i++) {
 				if (runtime.equals(servers[i].getRuntime()))
-					inUse = true;
+					list.add(servers[i]);
 			}
 		}
 		
@@ -305,11 +298,29 @@ public class RuntimePreferencePage extends PreferencePage implements IWorkbenchP
 			}
 		}*/
 		
-		if (inUse) {
-			if (!MessageDialog.openConfirm(getShell(), Messages.defaultDialogTitle, Messages.dialogRuntimeInUse))
+		if (!list.isEmpty()) {
+			DeleteRuntimeDialog dialog = new DeleteRuntimeDialog(getShell(), !list.isEmpty());
+			if (dialog.open() != 0)
 				return false;
+			
+			if (dialog.isDeleteServers()) {
+				Iterator iter = list.iterator();
+				while (iter.hasNext()) {
+					try {
+						IServer server = (IServer) iter.next();
+						server.delete();
+					} catch (Exception e) {
+						Trace.trace(Trace.SEVERE, "Error deleting server", e);
+					}
+				}
+			}
 		}
 		
+		try {
+			runtime.delete();
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error deleting runtime", e);
+		}
 		return true;
 	}
 	

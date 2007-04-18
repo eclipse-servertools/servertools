@@ -84,6 +84,7 @@ public class Messages extends NLS {
 	public static String wizEditRuntimeWizardTitle;
 	public static String preferenceRuntimesTable;
 	public static String dialogRuntimeInUse;
+	public static String dialogRuntimeDeleteServers;
 	public static String defaultDialogTitle;
 	public static String preferenceRuntimesTitleLong;
 	public static String prefAutoPublish;
