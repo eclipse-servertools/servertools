@@ -349,8 +349,10 @@ public class NewManualServerComposite extends Composite {
 
 	protected void setRuntime(IRuntime runtime2) {
 		runtime = runtime2;
-		if (server != null)
+		if (server != null) {
 			server.setRuntime(runtime);
+			ServerUtil.setServerDefaultName(server);
+		}
 		listener.runtimeSelected(runtime);
 	}
 

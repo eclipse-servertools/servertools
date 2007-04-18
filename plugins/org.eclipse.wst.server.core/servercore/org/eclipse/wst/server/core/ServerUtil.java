@@ -400,7 +400,7 @@ public class ServerUtil {
 		
 		String name = NLS.bind(Messages.defaultRuntimeName, typeName);
 		int i = 2;
-		while (isNameInUse(name)) {
+		while (isNameInUse(runtime.getOriginal(), name)) {
 			name = NLS.bind(Messages.defaultRuntimeName2, new String[] {typeName, i + ""});
 			i++;
 		}
@@ -419,9 +419,18 @@ public class ServerUtil {
 		String typeName = server.getServerType().getName();
 		String host = server.getHost();
 		
+		// base the name on the runtime if it exists and has been changed from the default
+		IRuntime runtime = server.getRuntime();
+		if (runtime != null) {
+			IRuntimeWorkingCopy wc = runtime.createWorkingCopy();
+			setRuntimeDefaultName(wc);
+			if (!wc.getName().equals(runtime.getName()))
+				typeName = runtime.getName();
+		}
+		
 		String name = NLS.bind(Messages.defaultServerName, new String[] {typeName, host});
 		int i = 2;
-		while (isNameInUse(name)) {
+		while (isNameInUse(server.getOriginal(), name)) {
 			name = NLS.bind(Messages.defaultServerName2, new String[] {typeName, host, i + ""});
 			i++;
 		}
@@ -507,7 +516,7 @@ public class ServerUtil {
 	 * @return <code>true</code> if the name is in use, and <code>false</code>
 	 *    otherwise
 	 */
-	private static boolean isNameInUse(String name) {
+	private static boolean isNameInUse(Object element, String name) {
 		if (name == null)
 			return true;
 	
@@ -515,7 +524,10 @@ public class ServerUtil {
 		
 		addAll(list, ServerCore.getRuntimes());
 		addAll(list, ServerCore.getServers());
-
+		
+		if (element != null && list.contains(element))
+			list.remove(element);
+		
 		Iterator iterator = list.iterator();
 		while (iterator.hasNext()) {
 			Object obj = iterator.next();
