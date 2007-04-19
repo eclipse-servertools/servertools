@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -36,7 +37,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
@@ -45,7 +45,7 @@ import org.eclipse.wst.server.core.internal.ServerSchedulingRule;
 /**
  * Dialog that prompts a user to delete server(s) and/or server configuration(s).
  */
-public class DeleteServerDialog extends Dialog {
+public class DeleteServerDialog extends MessageDialog {
 	protected IServer[] servers;
 	protected IFolder[] configs;
 
@@ -63,7 +63,8 @@ public class DeleteServerDialog extends Dialog {
 	 * @param configs an array of server configurations
 	 */
 	public DeleteServerDialog(Shell parentShell, IServer[] servers, IFolder[] configs) {
-		super(parentShell);
+		super(parentShell, Messages.deleteServerDialogTitle, null, null, QUESTION,
+				new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 		
 		if (servers == null || configs == null)
 			throw new IllegalArgumentException();
@@ -76,22 +77,17 @@ public class DeleteServerDialog extends Dialog {
 			if (servers[i].getServerState() != IServer.STATE_STOPPED)
 				runningServersList.add(servers[i]);
 		}
-
-		setBlockOnOpen(true);
-	}
-
-	/**
-	 *
-	 */
-	protected void configureShell(Shell newShell) {
-		super.configureShell(newShell);
-		newShell.setText(Messages.deleteServerDialogTitle);
+		
+		if (servers.length == 1)
+			message = NLS.bind(Messages.deleteServerDialogMessage, servers[0].getName());
+		else
+			message = NLS.bind(Messages.deleteServerDialogMessageMany, servers.length + "");
 	}
 
 	/**
 	 * 
 	 */
-	protected Control createDialogArea(Composite parent) {
+	protected Control createCustomArea(Composite parent) {
 		// create a composite with standard margins and spacing
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -103,13 +99,6 @@ public class DeleteServerDialog extends Dialog {
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		composite.setFont(parent.getFont());
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, ContextIds.DELETE_SERVER_DIALOG);
-	
-		Label label = new Label(composite, SWT.NONE);
-		if (servers.length == 1)
-			label.setText(NLS.bind(Messages.deleteServerDialogMessage, servers[0].getName()));
-		else
-			label.setText(NLS.bind(Messages.deleteServerDialogMessageMany, servers.length + ""));
-		//label.setLayoutData(new GridData());
 		
 		if (configs.length > 0) {
 			checkDeleteConfigs = new Button(composite, SWT.CHECK);
