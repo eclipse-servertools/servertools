@@ -118,6 +118,9 @@ public class JavaServerPlugin extends Plugin {
 		
 		Trace.trace(Trace.FINEST, "Possible runtime change: " + runtime);
 		
+		if (runtime.getRuntimeType() == null)
+			return;
+		
 		final RuntimeClasspathProviderWrapper rcpw = findRuntimeClasspathProvider(runtime.getRuntimeType());
 		if (rcpw != null && (rcpw.hasRuntimeClasspathChanged(runtime) || act != 1)) {
 			final IPath serverContainerPath = new Path(RuntimeClasspathContainer.SERVER_CONTAINER)
