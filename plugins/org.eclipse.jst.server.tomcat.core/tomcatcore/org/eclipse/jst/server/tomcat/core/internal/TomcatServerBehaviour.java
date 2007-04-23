@@ -227,8 +227,10 @@ public class TomcatServerBehaviour extends ServerBehaviourDelegate implements IT
 		if (status != null && !status.isOK())
 			throw new CoreException(status);
 		
-		getTomcatConfiguration().localizeConfiguration(confDir, getServerDeployDirectory(),
+		status = getTomcatConfiguration().localizeConfiguration(confDir, getServerDeployDirectory(),
 				getTomcatServer(), ProgressUtil.getSubMonitorFor(monitor, 100));
+		if (status != null && !status.isOK())
+			throw new CoreException(status);
 		
 		monitor.done();
 		

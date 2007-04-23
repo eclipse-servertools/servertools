@@ -58,6 +58,7 @@ public class Messages extends NLS {
 	public static String checkingContextTask;
 	public static String serverPostProcessingComplete;
 	public static String errorPublishConfiguration;
+	public static String errorPublishServer;
 	public static String cleanupServerTask;
 	public static String detectingRemovedProjects;
 	public static String deletingContextFilesTask;
@@ -90,6 +91,9 @@ public class Messages extends NLS {
 	public static String errorPublishURLConvert;
 	public static String errorPublishCantDeleteLoaderJar;
 	public static String errorPublishCatalinaProps;
+	public static String errorPublishPathDup;
+	public static String errorPublishPathConflict;
+	public static String errorPublishPathMissing;
 
 	public static String configurationEditorActionModifyPort;
 	public static String configurationEditorActionModifyMimeMapping;

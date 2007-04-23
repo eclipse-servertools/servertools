@@ -12,9 +12,11 @@ package org.eclipse.jst.server.tomcat.core.internal;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
@@ -499,11 +501,59 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 			boolean addRootWebapp = server2.isTestEnvironment();
 			
 			// If not deploying to "webapps", context docBase attributes need updating
-			if (!"webapps".equals(server2.getDeployDirectory())) {
-				Context [] contexts = config.serverInstance.getContexts();
-				if (contexts != null) {
-					for (int i = 0; i < contexts.length; i++) {
-						Context context = contexts[i];
+			boolean deployingToWebapps = "webapps".equals(server2.getDeployDirectory());
+			
+			Map pathMap = new HashMap();
+			
+			MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, 
+					NLS.bind(Messages.errorPublishServer, server2.getServer().getName()), null);
+			Context [] contexts = config.serverInstance.getContexts();
+			if (contexts != null) {
+				for (int i = 0; i < contexts.length; i++) {
+					Context context = contexts[i];
+
+					// Normalize path and check for duplicates
+					String path = context.getPath();
+					if (path != null) {
+						// Save a copy of original in case it's "/"
+						String origPath = path;
+						// Normalize "/" to ""
+						if ("/".equals(path)) {
+							if (Trace.isTraceEnabled())
+								Trace.trace(Trace.FINER, "Context path is being changed from \"/\" to \"\".");
+							path = "";
+							context.setPath(path);
+							config.isServerDirty = true;
+						}
+
+						// Context paths that are the same or differ only in case are not allowed
+						String lcPath = path.toLowerCase();
+						if (!pathMap.containsKey(lcPath)) {
+							pathMap.put(lcPath, origPath);
+						}
+						else {
+							String otherPath = (String)pathMap.get(lcPath);
+							IStatus s = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID,
+									origPath.equals(otherPath) ? NLS.bind(Messages.errorPublishPathDup, origPath) 
+											: NLS.bind(Messages.errorPublishPathConflict, origPath, otherPath));
+							ms.add(s);
+						}
+					}
+					else {
+						IStatus s = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID,
+								Messages.errorPublishPathMissing);
+						ms.add(s);
+					}
+
+					// If default webapp has not been found, check this one
+					// TODO Need to add a root context if deploying to webapps but with auto-deploy off
+					if (addRootWebapp && "".equals(context.getPath())) {
+						// A default webapp is being deployed, don't add one
+						addRootWebapp = false;
+					}
+
+					// If not deploying to "webapps", convert to absolute path under deploy dir
+					if (!deployingToWebapps) {
 						String source = context.getSource();
 						if (source != null && source.length() > 0 )	{
 							String name = context.getDocBase();
@@ -514,15 +564,12 @@ public class Tomcat32Configuration extends TomcatConfiguration {
 								config.isServerDirty = true;
 							}
 						}
-						// If default webapp has not been found, check this one
-						if (addRootWebapp && "".equals(context.getPath())) {
-							// A default webapp is being deployed, don't add one
-							addRootWebapp = false;
-						}
-						
 					}
 				}
 			}
+			// If errors are present, return status
+			if (!ms.isOK())
+				return ms;
 
 			if (addRootWebapp) {
 				// Add a context for the default webapp

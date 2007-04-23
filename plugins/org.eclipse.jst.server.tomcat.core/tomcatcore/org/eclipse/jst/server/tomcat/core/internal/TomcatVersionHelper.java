@@ -609,76 +609,121 @@ public class TomcatVersionHelper {
 	 * @return result of operation
 	 */
 	public static IStatus localizeConfiguration(IPath baseDir, IPath deployDir, TomcatServer server, IProgressMonitor monitor) {
-		// If not deploying to "webapps", context docBase attributes need updating
-		// TODO Improve to compare with appBase value instead of hardcoded "webapps"
-		// TODO Need to add a root context if deploying to webapps but with auto-deploy off
-		if (!"webapps".equals(server.getDeployDirectory())) {
-			try {
-				if (Trace.isTraceEnabled())
-					Trace.trace(Trace.FINER, "Localizing configuration at " + baseDir);
-				monitor = ProgressUtil.getMonitorFor(monitor);
-				monitor.beginTask(Messages.publishConfigurationTask, 300);
+		try {
+			if (Trace.isTraceEnabled())
+				Trace.trace(Trace.FINER, "Localizing configuration at " + baseDir);
+			monitor = ProgressUtil.getMonitorFor(monitor);
+			monitor.beginTask(Messages.publishConfigurationTask, 300);
 
-				IPath serverXml = baseDir.append("conf/server.xml");
-				Factory factory = new Factory();
-				factory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server40");
-				Server publishedServer = (Server)factory.loadDocument(
-						new FileInputStream(serverXml.toFile()));
-				ServerInstance publishedInstance = new ServerInstance(publishedServer, null, null);
-				monitor.worked(100);
+			IPath serverXml = baseDir.append("conf/server.xml");
+			Factory factory = new Factory();
+			factory.setPackageName("org.eclipse.jst.server.tomcat.core.internal.xml.server40");
+			Server publishedServer = (Server)factory.loadDocument(
+					new FileInputStream(serverXml.toFile()));
+			ServerInstance publishedInstance = new ServerInstance(publishedServer, null, null);
+			monitor.worked(100);
 
-				if (monitor.isCanceled())
-					return Status.CANCEL_STATUS;
-				
-				boolean modified = false;
+			if (monitor.isCanceled())
+				return Status.CANCEL_STATUS;
+			
+			boolean modified = false;
 
-				// Only add root module if running in a test env (i.e. not on the installation)
-				boolean addRootWebapp = server.isTestEnvironment();
-				
-				Context [] contexts = publishedInstance.getContexts();
-				if (contexts != null) {
-					for (int i = 0; i < contexts.length; i++) {
-						Context context = contexts[i];
+			// Only add root module if running in a test env (i.e. not on the installation)
+			boolean addRootWebapp = server.isTestEnvironment();
+			
+			// If not deploying to "webapps", context docBase attributes need updating
+			// TODO Improve to compare with appBase value instead of hardcoded "webapps"
+			boolean deployingToAppBase = "webapps".equals(server.getDeployDirectory());
+			
+			Map pathMap = new HashMap();
+			
+			MultiStatus ms = new MultiStatus(TomcatPlugin.PLUGIN_ID, 0, 
+					NLS.bind(Messages.errorPublishServer, server.getServer().getName()), null);
+			Context [] contexts = publishedInstance.getContexts();
+			if (contexts != null) {
+				for (int i = 0; i < contexts.length; i++) {
+					Context context = contexts[i];
+					// Normalize path and check for duplicates
+					String path = context.getPath();
+					if (path != null) {
+						// Save a copy of original in case it's "/"
+						String origPath = path;
+						// Normalize "/" to ""
+						if ("/".equals(path)) {
+							if (Trace.isTraceEnabled())
+								Trace.trace(Trace.FINER, "Context path is being changed from \"/\" to \"\".");
+							path = "";
+							context.setPath(path);
+							modified = true;
+						}
+
+						// Context paths that are the same or differ only in case are not allowed
+						String lcPath = path.toLowerCase();
+						if (!pathMap.containsKey(lcPath)) {
+							pathMap.put(lcPath, origPath);
+						}
+						else {
+							String otherPath = (String)pathMap.get(lcPath);
+							IStatus s = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID,
+									origPath.equals(otherPath) ? NLS.bind(Messages.errorPublishPathDup, origPath) 
+											: NLS.bind(Messages.errorPublishPathConflict, origPath, otherPath));
+							ms.add(s);
+						}
+					}
+					else {
+						IStatus s = new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID,
+								Messages.errorPublishPathMissing);
+						ms.add(s);
+					}
+
+					// If default webapp has not been found, check this one
+					// TODO Need to add a root context if deploying to webapps but with auto-deploy off
+					if (addRootWebapp && "".equals(context.getPath())) {
+						// A default webapp is being deployed, don't add one
+						addRootWebapp = false;
+					}
+
+					// If not deploying to appBase, convert to absolute path under deploy dir
+					if (!deployingToAppBase) {
 						String source = context.getSource();
 						if (source != null && source.length() > 0 )	{
 							context.setDocBase(deployDir.append(context.getDocBase()).toOSString());
 							modified = true;
 						}
-						// If default webapp has not been found, check this one
-						if (addRootWebapp && "".equals(context.getPath())) {
-							// A default webapp is being deployed, don't add one
-							addRootWebapp = false;
-						}
 					}
 				}
-				if (addRootWebapp) {
-					// Add a context for the default webapp
-					Context rootContext = publishedInstance.createContext(0);
-					rootContext.setPath("");
-					rootContext.setDocBase(deployDir.append("ROOT").toOSString());
-					rootContext.setReloadable("false");
-					modified = true;
-				}
-				monitor.worked(100);
+			}
+			// If errors are present, return status
+			if (!ms.isOK())
+				return ms;
+			
+			if (addRootWebapp) {
+				// Add a context for the default webapp
+				Context rootContext = publishedInstance.createContext(0);
+				rootContext.setPath("");
+				rootContext.setDocBase(deployDir.append("ROOT").toOSString());
+				rootContext.setReloadable("false");
+				modified = true;
+			}
+			monitor.worked(100);
 
-				if (monitor.isCanceled())
-					return Status.CANCEL_STATUS;
-				
-				if (modified) {
-					monitor.subTask(Messages.savingContextConfigTask);
-					factory.save(serverXml.toOSString());
-				}
-				monitor.worked(100);
-				if (Trace.isTraceEnabled())
-					Trace.trace(Trace.FINER, "Context docBase settings updated in server.xml.");
+			if (monitor.isCanceled())
+				return Status.CANCEL_STATUS;
+			
+			if (modified) {
+				monitor.subTask(Messages.savingContextConfigTask);
+				factory.save(serverXml.toOSString());
 			}
-			catch (Exception e) {
-				Trace.trace(Trace.WARNING, "Could not localize server configuration published to " + baseDir.toOSString() + ": " + e.getMessage());
-				return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPublishConfiguration, new String[] {e.getLocalizedMessage()}), e);
-			}
-			finally {
-				monitor.done();
-			}
+			monitor.worked(100);
+			if (Trace.isTraceEnabled())
+				Trace.trace(Trace.FINER, "Context docBase settings updated in server.xml.");
+		}
+		catch (Exception e) {
+			Trace.trace(Trace.WARNING, "Could not localize server configuration published to " + baseDir.toOSString() + ": " + e.getMessage());
+			return new Status(IStatus.ERROR, TomcatPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorPublishConfiguration, new String[] {e.getLocalizedMessage()}), e);
+		}
+		finally {
+			monitor.done();
 		}
 		return Status.OK_STATUS;
 	}
