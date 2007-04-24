@@ -50,6 +50,7 @@ public class DeleteServerDialog extends MessageDialog {
 	protected IFolder[] configs;
 
 	protected List runningServersList;
+	protected boolean runningServerCanStop;
 
 	protected Button checkDeleteConfigs;
 	protected Button checkDeleteRunning;
@@ -76,6 +77,9 @@ public class DeleteServerDialog extends MessageDialog {
 		for (int i = 0 ; i < servers.length ; ++i) {
 			if (servers[i].getServerState() != IServer.STATE_STOPPED)
 				runningServersList.add(servers[i]);
+			
+			if (servers[i].canStop().isOK())
+				runningServerCanStop = true;
 		}
 		
 		if (servers.length == 1)
@@ -110,21 +114,23 @@ public class DeleteServerDialog extends MessageDialog {
 		int size = runningServersList.size();
 		if (size > 0) {
 			checkDeleteRunning = new Button(composite, SWT.CHECK);
-			checkDeleteRunning.setText(NLS.bind(Messages.deleteServerDialogRunningServer, ((IServer)runningServersList.get(0)).getName()));
+			checkDeleteRunning.setText(Messages.deleteServerDialogRunningServer);
 			checkDeleteRunning.setSelection(true);
 			
-			checkDeleteRunningStop = new Button(composite, SWT.CHECK);
-			checkDeleteRunningStop.setText(NLS.bind(Messages.deleteServerDialogRunningServerStop, ((IServer)runningServersList.get(0)).getName()));
-			checkDeleteRunningStop.setSelection(true);
-			GridData data = new GridData();
-			data.horizontalIndent = 15;
-			checkDeleteRunningStop.setLayoutData(data);
-			
-			checkDeleteRunning.addSelectionListener(new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent e) {
-					checkDeleteRunningStop.setEnabled(checkDeleteRunning.getSelection());
-				}
-			});
+			if (runningServerCanStop) {
+				checkDeleteRunningStop = new Button(composite, SWT.CHECK);
+				checkDeleteRunningStop.setText(Messages.deleteServerDialogRunningServerStop);
+				checkDeleteRunningStop.setSelection(true);
+				GridData data = new GridData();
+				data.horizontalIndent = 15;
+				checkDeleteRunningStop.setLayoutData(data);
+				
+				checkDeleteRunning.addSelectionListener(new SelectionAdapter() {
+					public void widgetSelected(SelectionEvent e) {
+						checkDeleteRunningStop.setEnabled(checkDeleteRunning.getSelection());
+					}
+				});
+			}
 		}
 		
 		Dialog.applyDialogFont(composite);
@@ -191,7 +197,7 @@ public class DeleteServerDialog extends MessageDialog {
 		// converts servers & configs to list to facilitate removal
 		List serversList = new LinkedList(Arrays.asList(servers));
 		List configsList = new LinkedList(Arrays.asList(configs));
-		if (deleteRunning == false) {
+		if (!deleteRunning) {
 			// don't delete servers or configurations
 			int size = runningServersList.size();
 			for (int i = 0; i < size; i++) {
