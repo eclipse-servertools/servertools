@@ -238,9 +238,6 @@ public class ModifyModulesComposite extends Composite {
 	}
 
 	public void setServer(IServerAttributes server) {
-		if (server == this.server)
-			return;
-
 		this.server = server;
 		originalModules = new ArrayList();
 		deployed = new ArrayList();
@@ -274,6 +271,7 @@ public class ModifyModulesComposite extends Composite {
 			} catch (CoreException ce) {
 				// ignore
 				//errorMap.put(newModule, ce.getStatus());
+				Trace.trace(Trace.INFO, "A possible server implementation error", ce);
 			} catch (Exception e) {
 				Trace.trace(Trace.WARNING, "Could not find root module", e);
 			}
@@ -441,7 +439,7 @@ public class ModifyModulesComposite extends Composite {
 		label = new Label(this, SWT.NONE);
 		label.setText(Messages.wizModuleDeployedList);
 		
-		Tree availableTree = new Tree(this, SWT.BORDER);
+		Tree availableTree = new Tree(this, SWT.BORDER | SWT.MULTI);
 		data = new GridData(GridData.FILL_BOTH);
 		data.heightHint = 200;
 		data.widthHint = 150;
@@ -541,7 +539,7 @@ public class ModifyModulesComposite extends Composite {
 			}
 		});
 		
-		Tree deployedTree = new Tree(this, SWT.BORDER);
+		Tree deployedTree = new Tree(this, SWT.BORDER | SWT.MULTI);
 		data = new GridData(GridData.FILL_BOTH);
 		data.widthHint = 150;
 		deployedTree.setLayoutData(data);
@@ -613,14 +611,24 @@ public class ModifyModulesComposite extends Composite {
 		Dialog.applyDialogFont(this);
 	}
 
-	protected ModuleServer getAvailableSelection() {
+	protected ModuleServer[] getAvailableSelection() {
 		IStructuredSelection sel = (IStructuredSelection) availableTreeViewer.getSelection();
-		return (ModuleServer) sel.getFirstElement();
+		if (sel.isEmpty())
+			return new ModuleServer[0];
+			
+		ModuleServer []  mss = new ModuleServer[sel.size()];
+		System.arraycopy(sel.toArray(), 0, mss, 0, sel.size());
+		return mss;
 	}
 
-	protected ModuleServer getDeployedSelection() {
+	protected ModuleServer[] getDeployedSelection() {
 		IStructuredSelection sel = (IStructuredSelection) deployedTreeViewer.getSelection();
-		return (ModuleServer) sel.getFirstElement();
+		if (sel.isEmpty())
+			return new ModuleServer[0];
+		
+		ModuleServer []  mss = new ModuleServer[sel.size()];
+		System.arraycopy(sel.toArray(), 0, mss, 0, sel.size());
+		return mss;
 	}
 
 	protected static IModule getModule(ModuleServer ms) {
@@ -630,8 +638,17 @@ public class ModifyModulesComposite extends Composite {
 		return modules2[modules2.length - 1];
 	}
 
+	protected static IModule[] getModules(ModuleServer[] ms) {
+		if (ms == null)
+			return null;
+		IModule[] modules2 = new IModule[ms.length];
+		for (int i = 0; i < ms.length; i++)
+			modules2[i] = getModule(ms[i]);
+		
+		return modules2;
+	}
+
 	protected void setEnablement() {
-		boolean enabled = false;
 		wizard.setMessage(null, IMessageProvider.NONE);
 		
 		int count = 0;
@@ -660,44 +677,48 @@ public class ModifyModulesComposite extends Composite {
 		}
 		
 		// selection specific messages
-		ModuleServer ms = getAvailableSelection();
-		if (ms == null || ms.module == null ||  ms.module.length > 1) {
+		ModuleServer[] ms = getAvailableSelection();
+		if (ms == null ||  ms.length == 0) {
 			add.setEnabled(false);
 		} else {
-			IModule module = getModule(ms);
-			if (module != null) {
-				try {
-					IStatus status = (IStatus) errorMap.get(module);
-					if (modules.contains(module)) {
-						if (status == null)
-							enabled = true;
-						else if (status.getSeverity() == IStatus.ERROR)
-							wizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
-						else if (status.getSeverity() == IStatus.WARNING)
-							wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
-						else if (status.getSeverity() == IStatus.INFO)
-							wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
+			boolean enabled = true;
+			for (int i = 0; i < ms.length; i++) {
+				IModule module = getModule(ms[i]);
+				if (module != null) {
+					try {
+						IStatus status = (IStatus) errorMap.get(module);
+						if (modules.contains(module) && status != null) {
+							if (status.getSeverity() == IStatus.ERROR) {
+								enabled = false;
+								wizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
+							} else if (status.getSeverity() == IStatus.WARNING)
+								wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
+							else if (status.getSeverity() == IStatus.INFO)
+								wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
+						}
+					} catch (Exception e) {
+						Trace.trace(Trace.INFO,"Unable to handle error map for module:" + module); 
 					}
-				} catch (Exception e) {
-					// ignore
 				}
 			}
 			add.setEnabled(enabled);
 		}
 		addAll.setEnabled(modules.size() > 0);
 		
-		enabled = true;
 		ms = getDeployedSelection();
-		if (ms == null || ms.module == null ||  ms.module.length > 1) {
+		if (ms == null ||  ms.length == 0) {
 			remove.setEnabled(false);
 		} else {
-			IModule module = getModule(ms);
-			if (module != null && deployed.contains(module)) {
-				// provide error about removing required single module
-				if (requiredModules != null && requiredModules.length == 1 &&
-						requiredModules[0].equals(module)) {
-					wizard.setMessage(NLS.bind(Messages.wizModuleRequiredModule, module.getName()), IMessageProvider.ERROR);
-					enabled = false;
+			boolean enabled = true;
+			for (int i = 0; i < ms.length; i++) {
+				IModule module = getModule(ms[i]);
+				if (module != null && deployed.contains(module)) {
+					// provide error about removing required single module
+					if (requiredModules != null && requiredModules.length == 1 &&
+							requiredModules[0].equals(module)) {
+						wizard.setMessage(NLS.bind(Messages.wizModuleRequiredModule, module.getName()), IMessageProvider.ERROR);
+						enabled = false;
+					}
 				}
 			}
 			remove.setEnabled(enabled);
@@ -715,7 +736,7 @@ public class ModifyModulesComposite extends Composite {
 			modules.toArray(modules2);
 			moveAll(modules2, true);
 		} else
-			moveAll(new IModule[] { getModule(getAvailableSelection()) }, true);
+			moveAll(getModules(getAvailableSelection()), true);
 		updateTaskModel();
 	}
 
@@ -740,7 +761,7 @@ public class ModifyModulesComposite extends Composite {
 			
 			moveAll(modules2, false);
 		} else
-			moveAll(new IModule[] { getModule(getDeployedSelection()) }, false);
+			moveAll(getModules(getDeployedSelection()), false);
 		updateTaskModel();
 	}
 
