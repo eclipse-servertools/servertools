@@ -87,7 +87,7 @@ public class RunOnServerLaunchConfigurationDelegate extends LaunchConfigurationD
 			throw new CoreException(new Status(IStatus.ERROR, ServerUIPlugin.PLUGIN_ID, Messages.errorLaunchConfig));
 		
 		final Shell[] shell2 = new Shell[1];
-		Display.getDefault().asyncExec(new Runnable() {
+		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
 				shell2[0] = EclipseUtil.getShell();
 			}
