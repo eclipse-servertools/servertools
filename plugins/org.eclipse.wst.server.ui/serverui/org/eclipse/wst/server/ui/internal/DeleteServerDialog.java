@@ -138,52 +138,53 @@ public class DeleteServerDialog extends MessageDialog {
 		return composite;
 	}
 
-	protected void okPressed() {
-		final boolean checked = (checkDeleteConfigs != null && checkDeleteConfigs.getSelection());
-		final boolean deleteRunning = (checkDeleteRunning != null && checkDeleteRunning.getSelection());
-		final boolean deleteRunningStop = (checkDeleteRunningStop != null && checkDeleteRunningStop.getSelection());
-		
-		Job job = new Job(Messages.deleteServerTask) {
-			protected IStatus run(IProgressMonitor monitor) {
-				if (runningServersList.size() > 0) {
-					// stop servers and/or updates servers' list
-					prepareForDeletion(deleteRunning, deleteRunningStop);
-				}
-				
-				if (servers.length == 0) {
-					// all servers have been deleted from list
+	protected void buttonPressed(int buttonId) {
+		if (buttonId == OK) {
+			final boolean checked = (checkDeleteConfigs != null && checkDeleteConfigs.getSelection());
+			final boolean deleteRunning = (checkDeleteRunning != null && checkDeleteRunning.getSelection());
+			final boolean deleteRunningStop = (checkDeleteRunningStop != null && checkDeleteRunningStop.getSelection());
+			
+			Job job = new Job(Messages.deleteServerTask) {
+				protected IStatus run(IProgressMonitor monitor) {
+					if (runningServersList.size() > 0) {
+						// stop servers and/or updates servers' list
+						prepareForDeletion(deleteRunning, deleteRunningStop);
+					}
+					
+					if (servers.length == 0) {
+						// all servers have been deleted from list
+						return Status.OK_STATUS;
+					}
+					try {
+						int size = servers.length;
+						for (int i = 0; i < size; i++)
+							servers[i].delete();
+						
+						if (checked) {
+							size = configs.length;
+							for (int i = 0; i < size; i++)
+								configs[i].delete(true, true, monitor);
+						}
+					} catch (Exception e) {
+						Trace.trace(Trace.SEVERE, "Error while deleting resources", e);
+					}
+							
 					return Status.OK_STATUS;
 				}
-				try {
-					int size = servers.length;
-					for (int i = 0; i < size; i++)
-						servers[i].delete();
-					
-					if (checked) {
-						size = configs.length;
-						for (int i = 0; i < size; i++)
-							configs[i].delete(true, true, monitor);
-					}
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error while deleting resources", e);
-				}
-						
-				return Status.OK_STATUS;
-			}
-		};
-		
-		// set rule for workspace and servers
-		int size = servers.length;
-		ISchedulingRule[] rules = new ISchedulingRule[size+1];
-		for (int i = 0; i < size; i++)
-			rules[i] = new ServerSchedulingRule(servers[i]);
-		IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
-		rules[size] = ruleFactory.createRule(ResourcesPlugin.getWorkspace().getRoot());
-		job.setRule(MultiRule.combine(rules));
-		
-		job.schedule();
-		
-		super.okPressed();
+			};
+			
+			// set rule for workspace and servers
+			int size = servers.length;
+			ISchedulingRule[] rules = new ISchedulingRule[size+1];
+			for (int i = 0; i < size; i++)
+				rules[i] = new ServerSchedulingRule(servers[i]);
+			IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
+			rules[size] = ruleFactory.createRule(ResourcesPlugin.getWorkspace().getRoot());
+			job.setRule(MultiRule.combine(rules));
+			
+			job.schedule();
+		}
+		super.buttonPressed(buttonId);
 	}
 
 	/**
