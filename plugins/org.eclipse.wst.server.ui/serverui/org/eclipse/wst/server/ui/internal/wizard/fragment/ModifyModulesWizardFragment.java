@@ -29,17 +29,17 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
  */
 public class ModifyModulesWizardFragment extends WizardFragment {
 	protected ModifyModulesComposite comp;
-	
+
 	protected IModule module;
 
 	public ModifyModulesWizardFragment() {
 		// do nothing
 	}
-	
+
 	public ModifyModulesWizardFragment(IModule module) {
 		this.module = module;
 	}
-	
+
 	public boolean hasComposite() {
 		return true;
 	}
@@ -51,13 +51,13 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 		comp = new ModifyModulesComposite(parent, handle, module);
 		return comp;
 	}
-	
+
 	public void setTaskModel(TaskModel taskModel) {
 		super.setTaskModel(taskModel);
 		if (comp != null)
 			comp.setTaskModel(taskModel);
 	}
-	
+
 	public List getChildFragments() {
 		updateModules();
 		return super.getChildFragments();
@@ -66,7 +66,7 @@ public class ModifyModulesWizardFragment extends WizardFragment {
 	public void enter() {
 		updateModules();
 	}
-	
+
 	protected void updateModules() {
 		if (comp != null) {
 			IServerAttributes server = (IServerAttributes) getTaskModel().getObject(TaskModel.TASK_SERVER);

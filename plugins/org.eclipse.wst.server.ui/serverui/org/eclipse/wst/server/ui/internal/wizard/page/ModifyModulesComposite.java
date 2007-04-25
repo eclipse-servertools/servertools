@@ -238,6 +238,9 @@ public class ModifyModulesComposite extends Composite {
 	}
 
 	public void setServer(IServerAttributes server) {
+		if (isVisible())
+			return;
+		
 		this.server = server;
 		originalModules = new ArrayList();
 		deployed = new ArrayList();
@@ -363,8 +366,11 @@ public class ModifyModulesComposite extends Composite {
 			}
 		}
 		
-		//if (availableTreeViewer != null && add != null && add.isVisible())
-		/*if (availableTreeViewer != null)
+		updateTaskModel();
+	}
+
+	public void setVisible(boolean b) {
+		if (b) {
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
 					try { // update trees if we can
@@ -375,22 +381,8 @@ public class ModifyModulesComposite extends Composite {
 						// ignore
 					}
 				}
-			});*/
-		updateTaskModel();
-	}
-
-	public void setVisible(boolean b) {
-		Display.getDefault().syncExec(new Runnable() {
-			public void run() {
-				try { // update trees if we can
-					availableTreeViewer.refresh();
-					deployedTreeViewer.refresh();
-					setEnablement();
-				} catch (Exception e) {
-					// ignore
-				}
-			}
-		});
+			});
+		}
 		super.setVisible(b);
 	}
 
