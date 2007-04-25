@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.eclipse.jst.server.preview; singleton:=true
+Bundle-SymbolicName: org.eclipse.wst.server.preview; singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.eclipse.jst.server.preview.internal.PreviewServerPlugin
+Bundle-Activator: org.eclipse.wst.server.preview.internal.PreviewServerPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.jst.server.preview.internal
+Export-Package: org.eclipse.wst.server.preview.internal
 Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)",
  org.mortbay.jetty
 Eclipse-LazyStart: true

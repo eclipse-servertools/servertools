@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.server.core.internal.preview;
+package org.eclipse.wst.server.http.core.internal.preview;
 
 import java.net.URL;
 
@@ -17,10 +17,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jst.server.core.IWebModule;
-import org.eclipse.jst.server.core.internal.JavaServerPlugin;
-import org.eclipse.jst.server.core.internal.Messages;
-import org.eclipse.jst.server.core.internal.Trace;
+import org.eclipse.wst.server.http.core.internal.HttpCorePlugin;
+import org.eclipse.wst.server.http.core.internal.Messages;
+import org.eclipse.wst.server.http.core.internal.Trace;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
@@ -80,9 +79,6 @@ public class PreviewServer extends ServerDelegate implements IURLProvider {
 			if ("wst.web".equals(type)) {
 				IStaticWeb staticWeb = (IStaticWeb) module.loadAdapter(IStaticWeb.class, null);
 				return new URL(url, staticWeb.getContextRoot());
-			} else if ("jst.web".equals(type)) {
-				IWebModule webModule = (IWebModule) module.loadAdapter(IWebModule.class, null);
-				return new URL(url, webModule.getContextRoot());
 			}
 			return url;
 		} catch (Exception e) {
@@ -114,7 +110,7 @@ public class PreviewServer extends ServerDelegate implements IURLProvider {
 	 * @return the status
 	 */
 	public IStatus canModifyModules(IModule[] add, IModule[] remove) {
-		return new Status(IStatus.OK, JavaServerPlugin.PLUGIN_ID, 0, Messages.canModifyModules, null);
+		return new Status(IStatus.OK, HttpCorePlugin.PLUGIN_ID, 0, Messages.canModifyModules, null);
 	}
 
 	public ServerPort[] getServerPorts() {

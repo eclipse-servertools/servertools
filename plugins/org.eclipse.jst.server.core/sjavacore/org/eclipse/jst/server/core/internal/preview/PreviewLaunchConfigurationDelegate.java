@@ -40,10 +40,10 @@ public class PreviewLaunchConfigurationDelegate extends AbstractJavaLaunchConfig
 		"javax.servlet",
 		"javax.servlet.jsp",
 		"org.mortbay.jetty",
-		"org.eclipse.jst.server.preview"
+		"org.eclipse.wst.server.preview"
 	};
 
-	private static final String MAIN_CLASS = "org.eclipse.jst.server.preview.internal.PreviewStarter";
+	private static final String MAIN_CLASS = "org.eclipse.wst.server.preview.internal.PreviewStarter";
 
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		IServer server = ServerUtil.getServer(configuration);

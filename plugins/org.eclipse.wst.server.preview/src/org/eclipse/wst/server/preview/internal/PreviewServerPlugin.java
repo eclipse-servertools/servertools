@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.server.preview.internal;
+package org.eclipse.wst.server.preview.internal;
 
 import org.eclipse.core.runtime.*;
 import org.osgi.framework.BundleContext;
@@ -16,7 +16,7 @@ import org.osgi.framework.BundleContext;
  * 
  */
 public class PreviewServerPlugin extends Plugin {
-	public static final String PLUGIN_ID = "org.eclipse.jst.server.preview.core";
+	public static final String PLUGIN_ID = "org.eclipse.wst.server.preview";
 
 	// singleton instance of this class
 	private static PreviewServerPlugin singleton;
@@ -54,13 +54,4 @@ public class PreviewServerPlugin extends Plugin {
 	public void stop(BundleContext context2) throws Exception {
 		super.stop(context2);
 	}
-
-	/* D:\jres\jdk1.5.0_01\bin\javaw.exe -Xms40m -Xmx256m 
-	 * -classpath D:\dev\wtp\eclipse\plugins\org.eclipse.equinox.launcher_1.0.0.v20070208a.jar
-	 *  org.eclipse.equinox.launcher.Main -launcher D:\dev\wtp\eclipse\eclipse -name Eclipse
-	 *   -showsplash 600 -product org.eclipse.sdk.ide -data D:\dev\wtp\runtime-workspace5
-	 *    -configuration file:D:/dev/wtp/workspace/.metadata/.plugins/org.eclipse.pde.core/New_configuration/
-	 *     -dev file:D:/dev/wtp/workspace/.metadata/.plugins/org.eclipse.pde.core/New_configuration/dev.properties
-	 *      -pdelaunch -debug D:\dev\wtp\workspace\.metadata\.plugins\org.eclipse.pde.core\New_configuration/.options
-	 *       -os win32 -ws win32 -arch x86 -consolelog*/
 }

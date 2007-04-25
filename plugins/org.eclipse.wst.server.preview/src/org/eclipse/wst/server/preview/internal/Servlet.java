@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - Initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.server.preview.internal;
+package org.eclipse.wst.server.preview.internal;
 
 public class Servlet {
 	protected String name;

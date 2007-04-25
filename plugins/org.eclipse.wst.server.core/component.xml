@@ -76,4 +76,6 @@
 
   <plugin id="org.eclipse.wst.server.http.core" fragment="false"/>
   <plugin id="org.eclipse.wst.server.http.ui" fragment="false"/>
+
+  <plugin id="org.eclipse.wst.server.preview" fragment="false"/>
 </component>

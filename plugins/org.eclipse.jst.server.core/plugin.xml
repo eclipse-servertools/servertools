@@ -192,7 +192,7 @@
       version="1.0"/>
   </extension>
 
-<extension point="org.eclipse.wst.server.core.runtimeTypes">
+  <extension point="org.eclipse.wst.server.core.runtimeTypes">
     <runtimeType
        id="org.eclipse.jst.server.preview.runtime"
        name="%previewRuntimeTypeName"
@@ -273,7 +273,7 @@
       version="1.0"/>
   </extension>
 
-<extension point="org.eclipse.debug.core.sourcePathComputers">
+  <extension point="org.eclipse.debug.core.sourcePathComputers">
      <sourcePathComputer
         id="org.eclipse.jst.server.core.preview.sourcePathComputer"
         class="org.eclipse.jst.server.core.internal.preview.PreviewSourcePathComputerDelegate"/>

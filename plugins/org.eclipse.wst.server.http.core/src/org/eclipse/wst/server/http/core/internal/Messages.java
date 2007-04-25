@@ -22,6 +22,8 @@ public class Messages extends NLS {
 	public static String actionModifyPrefixURL;
 	public static String actionModifyPublishing;
 
+	public static String errorPortInUse;
+
 	static {
 		NLS.initializeMessages(HttpCorePlugin.PLUGIN_ID + ".internal.Messages", Messages.class);
 	}
