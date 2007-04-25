@@ -225,6 +225,9 @@ public class ModifyModulesComposite extends Composite {
 	}
 
 	public void setServer(IServerAttributes server) {
+		if (isVisible())
+			return;
+		
 		this.server = server;
 		originalModules = new ArrayList();
 		deployed = new ArrayList();
