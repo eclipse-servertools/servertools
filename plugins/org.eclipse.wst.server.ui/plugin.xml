@@ -57,7 +57,7 @@
       <keywordReference id="org.eclipse.wst.server.preferenceKeywords"/>
   </page>
   <page
-    id="org.eclipse.wst.server.ui.preferencePage"
+    id="org.eclipse.wst.server.ui.launching.preferencePage"
     name="%preferenceLaunchingTitle"
     category="org.eclipse.wst.server.ui.preferencePage"
     class="org.eclipse.wst.server.ui.internal.LaunchingPreferencePage">

@@ -22,12 +22,7 @@ import java.util.*;
  */
 public class GenericUiPlugin extends AbstractUIPlugin {
 	
-	/**
-	 * Plug-in ID
-	 */
-	public static final String PLUGIN_ID = "org.eclipse.jst.server.generic.ui"; //$NON-NLS-1$
-	
-    public static final String WIZBAN_IMAGE = "genericlogo"; //$NON-NLS-1$
+    public static final String WIZBAN_IMAGE = "genericlogo";
     //The shared instance.
 	private static GenericUiPlugin plugin;
 	//Resource bundle.
@@ -40,7 +35,7 @@ public class GenericUiPlugin extends AbstractUIPlugin {
 		super();
 		plugin = this;
 		try {
-			resourceBundle = ResourceBundle.getBundle("org.eclipse.jst.server.generic.ui.GenericUiPluginResources"); //$NON-NLS-1$
+			resourceBundle = ResourceBundle.getBundle("org.eclipse.jst.server.generic.ui.GenericUiPluginResources");
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		}
@@ -82,7 +77,7 @@ public class GenericUiPlugin extends AbstractUIPlugin {
 
     protected ImageRegistry createImageRegistry() {
         ImageRegistry registry = new ImageRegistry();
-        ImageDescriptor desc = ImageDescriptor.createFromURL(getDefault().getBundle().getEntry("/icons/wizban/new_server_wiz.gif")); //$NON-NLS-1$
+        ImageDescriptor desc = ImageDescriptor.createFromURL(getDefault().getBundle().getEntry("/icons/wizban/new_server_wiz.gif"));
         registry.put(WIZBAN_IMAGE,desc);
         return registry;
     }

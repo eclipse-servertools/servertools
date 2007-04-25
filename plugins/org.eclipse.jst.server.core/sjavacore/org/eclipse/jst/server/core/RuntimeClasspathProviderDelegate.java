@@ -19,13 +19,18 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IAccessRule;
 import org.eclipse.jdt.core.IClasspathAttribute;
+import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jst.server.core.internal.IMemento;
 import org.eclipse.jst.server.core.internal.JavaServerPlugin;
+import org.eclipse.jst.server.core.internal.RuntimeClasspathContainer;
 import org.eclipse.jst.server.core.internal.Trace;
 import org.eclipse.jst.server.core.internal.XMLMemento;
 import org.eclipse.wst.server.core.IRuntime;
@@ -60,6 +65,8 @@ public abstract class RuntimeClasspathProviderDelegate {
 	private String extensionId;
 
 	private Map runtimePathMap = new HashMap();
+
+	private Map previousClasspath = new HashMap();
 
 	public RuntimeClasspathProviderDelegate() {
 		// default constructor
@@ -146,6 +153,30 @@ public abstract class RuntimeClasspathProviderDelegate {
 				SourceAttachmentUpdate sau = (SourceAttachmentUpdate) sourceAttachments.get(j);
 				if (sau.runtimeId.equals(runtime.getId()) && sau.entry.equals(entries[i].getPath())) {
 					entries[i] = JavaCore.newLibraryEntry(entries[i].getPath(), sau.sourceAttachmentPath, sau.sourceAttachmentRootPath, new IAccessRule[0], sau.attributes, false);
+				}
+			}
+		}
+		
+		String key = project.getName() + "/" + runtime.getId();
+		
+		if (!previousClasspath.containsKey(key))
+			previousClasspath.put(key, entries);
+		else {
+			IClasspathEntry[] previousEntries = (IClasspathEntry[]) previousClasspath.get(key);
+			
+			if ((previousEntries == null && entries != null) || (previousEntries != null && entries == null)
+					|| (previousEntries != null && entries != null && previousEntries.length != entries.length)) {
+				Trace.trace(Trace.FINEST, "Classpath update: " + key + " " + entries);
+				previousClasspath.put(key, entries);
+				
+				IPath path = new Path(RuntimeClasspathContainer.SERVER_CONTAINER);
+				path = path.append(extensionId).append(runtime.getId());
+				try {
+					IJavaProject javaProject = JavaCore.create(project);
+					JavaCore.setClasspathContainer(path, new IJavaProject[] { javaProject },
+							new IClasspathContainer[] { null }, new NullProgressMonitor());
+				} catch (JavaModelException jme) {
+					Trace.trace(Trace.WARNING, "Error updating classpath", jme);
 				}
 			}
 		}

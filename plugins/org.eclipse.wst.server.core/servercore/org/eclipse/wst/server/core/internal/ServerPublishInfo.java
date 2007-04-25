@@ -32,6 +32,8 @@ import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
  * were published and when) for a single server.
  */
 public class ServerPublishInfo {
+	private static final String VERSION = "version";
+
 	protected IPath path;
 
 	// map of module ids to ModulePublishInfo
@@ -222,6 +224,10 @@ public class ServerPublishInfo {
 
 		try {
 			IMemento memento2 = XMLMemento.loadMemento(filename);
+			Float f = memento2.getFloat(VERSION);
+			if (f != null && f.floatValue() >= 3)
+				return;
+			
 			IMemento[] children = memento2.getChildren("module");
 	
 			int size = children.length;
@@ -243,7 +249,8 @@ public class ServerPublishInfo {
 	
 		try {
 			XMLMemento memento = XMLMemento.createWriteRoot("server");
-
+			memento.putString(VERSION, "1.0");
+			
 			Iterator iterator = modulePublishInfo.keySet().iterator();
 			while (iterator.hasNext()) {
 				String controlRef = (String) iterator.next();
