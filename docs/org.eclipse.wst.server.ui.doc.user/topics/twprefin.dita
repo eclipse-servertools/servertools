@@ -7,8 +7,8 @@
 <shortdesc id="shortdesc">A default server is the server that you want to
 use when a project has more than one server defined.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>setting default on a project<?Pub Caret?></indexterm></indexterm>
-<indexterm>projects<indexterm>setting a default server</indexterm></indexterm>
+<keywords id="index"><indexterm>projects<indexterm>setting default servers</indexterm></indexterm>
+<indexterm>servers<indexterm>setting project defaults</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

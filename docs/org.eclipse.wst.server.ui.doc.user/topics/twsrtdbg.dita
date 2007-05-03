@@ -7,10 +7,10 @@
 <shortdesc id="twsrtdbg_shortdesc">If you want to debug your projects while
 a server runs, you can start a server in debug mode.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<?Pub Caret?><indexterm>starting in
-debug mode</indexterm></indexterm><indexterm>applications<indexterm>running
-on a server in debug mode</indexterm></indexterm><indexterm>projects<indexterm>running
-on a server in debug mode</indexterm></indexterm></keywords>
+<keywords id="index"><indexterm>applications<indexterm>running on servers in debug mode</indexterm></indexterm>
+<indexterm>projects<indexterm>running on servers in debug mode</indexterm></indexterm>
+<indexterm>servers<indexterm>starting in debug mode</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <prereq id="twsrtdbg_prereq"><b>Prerequisites:</b><ul>

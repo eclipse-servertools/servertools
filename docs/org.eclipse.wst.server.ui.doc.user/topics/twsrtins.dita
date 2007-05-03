@@ -9,9 +9,9 @@ you must start a server. In some situations, listed below, the server tools
 start a server for you automatically. For more information on which test server
 will start, refer to the list of related topics at the end of this topic.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>starting</indexterm></indexterm>
-<indexterm>projects<indexterm>starting server for testing</indexterm></indexterm>
-<indexterm>applications<indexterm>starting server for testing</indexterm></indexterm>
+<keywords id="index"><indexterm>applications<indexterm>starting servers for testing</indexterm></indexterm>
+<indexterm>projects<indexterm>starting servers for testing</indexterm></indexterm>
+<indexterm>servers<indexterm>starting for testing</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
@@ -31,7 +31,7 @@ things happen:<ul>
 <li>If you have selected the  <uicontrol>Automatically publish when starting
 servers</uicontrol> check box on the Server preferences page (<menucascade>
 <uicontrol>Window</uicontrol><uicontrol> Preferences</uicontrol><uicontrol>Server</uicontrol>
-<uicontrol>Launching<?Pub Caret?></uicontrol></menucascade> ), the workbench
+<uicontrol>Launching</uicontrol></menucascade> ), the workbench
 checks to see if your project and files on the server are synchronized prior
 to starting the server. If they are not, the project and the files are automatically
 updated on the remote server when it is started.</li>

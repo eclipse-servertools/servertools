@@ -9,9 +9,9 @@ environment that you want to use for testing your project resources. The term <i
 a server</i> defines creating a pointer from the workbench to an existing
 installation of an application server</ph>.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>creating</indexterm><indexterm>creating
-a <?Pub Caret?>pointer</indexterm></indexterm><indexterm>wizards<indexterm>New
-Server</indexterm></indexterm><indexterm>New Server wizard</indexterm></keywords>
+<keywords id="index"><indexterm>servers<indexterm>creating</indexterm></indexterm>
+<indexterm>runtime environments<indexterm>creating servers</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context id="context">To create a server:</context>

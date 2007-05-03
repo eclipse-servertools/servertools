@@ -10,14 +10,8 @@ and publishing tools provides runtime environments where you can test JSP
 files, servlets, HTML files,</ph> <ph id="cwover_shortdesc_ph2">and <tm tmclass="special"
 tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="Java">Java</tm> classes.</ph></shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>testing</indexterm><indexterm>publishing</indexterm></indexterm>
-<indexterm>JSP files<indexterm>testing and publishing on a server</indexterm></indexterm>
-<indexterm>servlets<indexterm>testing and publishing on a server</indexterm></indexterm>
-<indexterm>Dynamic Web projects<indexterm>testing and publishing on a server</indexterm></indexterm>
-<indexterm>Static Web projects<indexterm>testing and publishing on a server</indexterm></indexterm>
-<indexterm>Enterprise Applications projects<indexterm>testing and publishing
-on a server</indexterm></indexterm><indexterm><?Pub Caret1?>Application Client
-Projects<indexterm>testing and publishing on a server</indexterm></indexterm>
+<keywords id="index"><indexterm>application client projects<indexterm>testing on servers</indexterm></indexterm>
+<indexterm>servers<indexterm>testing project resources</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <conbody>

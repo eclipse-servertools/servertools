@@ -10,9 +10,10 @@ you can define the preferences that the servers use when starting or switching
 server modes. Switching server modes occurs when you use the <uicontrol>Run
 on Server</uicontrol></ph><ph id="shortdesc_ph2"> or <uicontrol>Debug on Server</uicontrol> commands.</ph></shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>preferences<indexterm>launching for servers</indexterm></indexterm>
-<indexterm>servers<indexterm>launching</indexterm></indexterm><indexterm>workbench<indexterm>defining
-launching preferences for servers</indexterm></indexterm></keywords>
+<keywords id="index"><indexterm>preferences<indexterm>server launches</indexterm></indexterm>
+<indexterm>servers<indexterm>launching preferences</indexterm></indexterm>
+<indexterm>workbench<indexterm>server launching preferences</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <prereq></prereq>
@@ -57,7 +58,7 @@ when you switch the server to run in a different mode</li>
 <chrow><choption id="choption2">When switching the server out of debug mode<!--context id = .spge0031--></choption>
 <chdesc><ph id="chdesc2_ph1">When you finish running the server in debug mode
 and switch out, for example using the <menucascade><uicontrol>Run As</uicontrol>
-<uicontrol>Run on Server</uicontrol></menucascade></ph><ph id="chdesc2_ph2"> <?Pub Caret1?>command,
+<uicontrol>Run on Server</uicontrol></menucascade></ph><ph id="chdesc2_ph2"> command,
 specify the next action of the server by selecting one of the following options:</ph><ul
 id="chdesc2_ul1">
 <li>Restart - specifies the workbench to stop and restart the server</li>

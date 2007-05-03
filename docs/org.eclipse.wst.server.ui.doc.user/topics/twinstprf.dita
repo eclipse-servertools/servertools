@@ -10,15 +10,11 @@ to use a specific runtime environment of an application server for compiling
 your application. You can complete this by defining the installation directory
 of the server:</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>preferences<indexterm>installed server runtime
-environments<indexterm>defining</indexterm></indexterm></indexterm><indexterm>servers<indexterm>runtime
-environment<indexterm>defining</indexterm></indexterm></indexterm><indexterm>runtime
-environment<indexterm>defining</indexterm></indexterm><indexterm>workbench<indexterm>defining
-server runtime environment</indexterm></indexterm><indexterm>wizards<indexterm>New
-Server Runtime</indexterm></indexterm><indexterm>applications<indexterm>defining
-server runtime environment</indexterm></indexterm><indexterm>New Server Runtime
-wizard</indexterm><indexterm>installed server runtime environments<indexterm>setting
-preferences<?Pub Caret?></indexterm></indexterm></keywords>
+<keywords id="index"><indexterm>applications<indexterm>server runtime environments</indexterm></indexterm>
+<indexterm>runtime environments<indexterm>preferences</indexterm></indexterm>
+<indexterm>servers<indexterm>runtime environments</indexterm></indexterm>
+<indexterm>workbench<indexterm>server runtime environments</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <steps id="steps">

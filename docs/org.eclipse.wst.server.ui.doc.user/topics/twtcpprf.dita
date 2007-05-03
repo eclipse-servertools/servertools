@@ -3,13 +3,14 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="twtcpprf_wst" xml:lang="en-us">
-<title id="title">Defining the TCP/IP Monitor preferences<?Pub Caret?></title>
+<title id="title">Defining the TCP/IP Monitor preferences</title>
 <shortdesc id="shortdesc">Using the Preferences page, you can define the TCP/IP
 Monitor attributes. To define these preferences, complete the following:</shortdesc>
 <prolog><metadata>
 <keywords id="index"><indexterm>preferences<indexterm>TCP/IP Monitor</indexterm></indexterm>
-<indexterm>TCP/IP<indexterm>preferences</indexterm></indexterm><indexterm>views<indexterm>TCP/IP
-Monitor<indexterm>preferences</indexterm></indexterm></indexterm></keywords>
+<indexterm>TCP/IP<indexterm>preferences</indexterm></indexterm>
+<indexterm>views<indexterm>TCP/IP Monitor preferences</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context></context>

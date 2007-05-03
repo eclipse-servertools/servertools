@@ -8,11 +8,10 @@
 <shortdesc id="tmetasrv_wst_shortdesc">On the workbench, you have the option
 to display or hide the metadata of the server.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>displaying metadata</indexterm><indexterm>hiding
-metadata</indexterm></indexterm><indexterm>workbench<indexterm>displaying
-server metadata</indexterm><indexterm>hiding server metadata</indexterm></indexterm>
-<indexterm>serverName.server file<indexterm>displaying on workbench</indexterm><indexterm>hiding
-from workbench<?Pub Caret?></indexterm></indexterm></keywords>
+<keywords id="index"><indexterm>serverName.server file<indexterm>displaying on workbench</indexterm></indexterm>
+<indexterm>servers<indexterm>displaying metadata</indexterm></indexterm>
+<indexterm>workbench<indexterm>displaying server metadata</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context id="tmetasrv_wst_context"><p id="tmetasrv_wst_p1">The <i>metadata</i> contains

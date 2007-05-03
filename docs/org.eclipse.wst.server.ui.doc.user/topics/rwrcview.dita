@@ -11,10 +11,8 @@ your servers and configurations that are associated with that server. You
 can use this view to start, start in debug mode,</ph><ph id="rwrcview_ph2"> restart,
 or stop the servers.</ph></shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>views<indexterm>Servers</indexterm></indexterm>
-<indexterm>servers<indexterm>displaying status</indexterm><indexterm>displaying
-state</indexterm><indexterm>displaying configurations</indexterm><indexterm>managing
-using the Servers view</indexterm></indexterm><indexterm>Servers view</indexterm>
+<keywords id="index"><indexterm>servers<indexterm>managing using the Servers view</indexterm></indexterm>
+<indexterm>views<indexterm>Servers</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <refbody>
@@ -50,7 +48,7 @@ for possible actions that you may want to take. For example, if the workbench
 detects that a file defined to run on a particular server has changed, and
 the  <uicontrol>Automatically restart servers when necessary</uicontrol> check
 box has been selected on the Server preferences page ( <uicontrol>Window >
-Preferences > Server > Launching</uicontrol><?Pub Caret1?>), the server tools
+Preferences > Server > Launching</uicontrol>), the server tools
 automatically restart that server. The  <uicontrol>Status</uicontrol> column
 in the Servers view changes from  <varname>Started</varname> to  <varname>Stopped</varname> to
  <varname>Started</varname>. However, if this check box is not selected, the

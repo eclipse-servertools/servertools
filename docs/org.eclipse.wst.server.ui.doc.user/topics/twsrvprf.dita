@@ -3,14 +3,14 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="twsrvprf_wst" xml:lang="en-us">
-<title id="title">Defining the s<?Pub Caret?>erver preferences</title>
+<title id="title">Defining the server preferences</title>
 <shortdesc id="shortdesc">Using the Preferences page, you can define attributes
 used for testing projects by the servers. To define these preferences, complete
 the following:</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>defining preferences</indexterm><indexterm>setting
-publishing preferences</indexterm><indexterm>setting timeout delays</indexterm></indexterm>
-<indexterm>preferences<indexterm>servers</indexterm></indexterm><indexterm>views<indexterm>Servers<indexterm>preferences</indexterm></indexterm></indexterm>
+<keywords id="index"><indexterm>preferences<indexterm>servers<indexterm>testing</indexterm></indexterm></indexterm>
+<indexterm>servers<indexterm>preferences</indexterm></indexterm>
+<indexterm>views<indexterm>server preferences</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

@@ -3,7 +3,7 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="twpub_wst" xml:lang="en-us">
-<title id="twpub_title">Publishing your application<?Pub Caret?></title>
+<title id="twpub_title">Publishing your application</title>
 <shortdesc id="twpub_shortdesc"><i>Publishing</i> involves copying files (projects,
 resource files, and server configurations) to the correct location for the
 server to find and use them. In the test environments, these files may already
@@ -11,9 +11,9 @@ be in the correct location. In some cases, temporary copies of the server
 configurations may be created. You can either publish your application automatically
 or manually.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>publishing applications</indexterm></indexterm>
-<indexterm>applications<indexterm>publishing to servers</indexterm><indexterm>copying
-files to server</indexterm></indexterm></keywords>
+<keywords id="index"><indexterm>applications<indexterm>publishing to servers</indexterm></indexterm>
+<indexterm>servers<indexterm>publishing applications</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context><b id="twpub_autotitle">Automatically publishing to a server</b><p

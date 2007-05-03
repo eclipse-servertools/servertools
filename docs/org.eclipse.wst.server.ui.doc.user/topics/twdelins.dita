@@ -7,8 +7,7 @@
 <shortdesc id="shortdesc">You may delete a server from the Servers view.</shortdesc>
 <prolog><metadata>
 <keywords id="index"><indexterm>servers<indexterm>deleting</indexterm></indexterm>
-<indexterm>wizards<indexterm>Delete Server</indexterm></indexterm><indexterm>Delete
-Server wizard</indexterm></keywords>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context id="context">To delete a server:</context>
@@ -36,7 +35,7 @@ the server is left running after removing the server from the Servers view.</chd
 </choicetable>
 </step>
 <step><cmd>Select the <uicontrol>OK</uicontrol> button to apply your delete
-options.</cmd></step><?Pub Caret?>
+options.</cmd></step>
 </steps>
 </taskbody>
 </task>

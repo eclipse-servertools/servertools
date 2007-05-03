@@ -7,8 +7,8 @@
 <shortdesc id="tpref_shortdesc">The server tools allow you to define the following
 preferences:</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>defining preferences</indexterm></indexterm>
-<indexterm>preferences<indexterm>servers</indexterm></indexterm><?Pub Caret1?>
+<keywords id="index"><indexterm>preferences<indexterm>servers<indexterm>overview</indexterm></indexterm></indexterm>
+<indexterm>servers<indexterm>preferences</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody></taskbody>

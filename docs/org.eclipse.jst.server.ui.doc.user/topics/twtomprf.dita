@@ -8,11 +8,10 @@
 server runtime definitions for the Apache Tomcat server. To define these definitions,
 complete the following: </shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>runtime environments<indexterm>A<?Pub Caret1?>pache
-Tomcat</indexterm></indexterm></indexterm><indexterm>Apache Tomcat<indexterm>defining
-runtime environment</indexterm></indexterm><indexterm>runtime environment<indexterm>defining<indexterm>Apache
-Tomcat</indexterm></indexterm></indexterm><indexterm>workbench<indexterm>defining
-server runtime environment <indexterm>Apache Tomcat</indexterm></indexterm></indexterm>
+<keywords id="index"><indexterm>Apache Tomcat<indexterm>runtime environments</indexterm></indexterm>
+<indexterm>runtime environments<indexterm>defining Apache Tomcat</indexterm></indexterm>
+<indexterm>servers<indexterm>runtime environments</indexterm></indexterm>
+<indexterm>workbench<indexterm>server runtime environments</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

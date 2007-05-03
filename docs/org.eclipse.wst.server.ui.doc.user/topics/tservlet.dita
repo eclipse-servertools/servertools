@@ -10,10 +10,11 @@ of your program by setting breakpoints, suspending threads, stepping through
 the code, and examining the contents of the variables. You can debug a servlet
 on a server without losing the state of your application.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servlets<indexterm>debugging on a server</indexterm></indexterm>
-<indexterm>servers<indexterm>debugging servlets</indexterm></indexterm><indexterm>breakpoints<indexterm>adding
-to servlets</indexterm></indexterm><indexterm>threads<indexterm>suspending
-in a servlet</indexterm></indexterm><?Pub Caret?></keywords>
+<keywords id="index"><indexterm>breakpoints<indexterm>adding to servlets</indexterm></indexterm>
+<indexterm>servers<indexterm>debugging servlets</indexterm></indexterm>
+<indexterm>servlets<indexterm>debugging on servers</indexterm></indexterm>
+<indexterm>threads<indexterm>suspending in servlets</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context id="tservlet_context">To debug a servlet on a server:</context>

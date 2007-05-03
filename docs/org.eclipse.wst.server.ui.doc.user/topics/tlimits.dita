@@ -4,7 +4,7 @@
  "task.dtd">
 <task id="tlimits_wst" xml:lang="en-us">
 <title id="title">Limitations and restrictions</title>
-<shortdesc id="shortdesc"><?Pub Caret?>This section describes known server
+<shortdesc id="shortdesc">This section describes known server
 tools limitations and problems along with their solutions.</shortdesc>
 <taskbody>
 <context></context>

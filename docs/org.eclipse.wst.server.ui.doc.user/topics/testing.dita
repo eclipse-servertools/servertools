@@ -7,9 +7,8 @@
 <shortdesc id="testing_shortdesc">You can use the workbench to test one or
 more application artifacts on a server.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>testing artifacts</indexterm></indexterm>
-<indexterm>artifacts<indexterm>testing on server</indexterm></indexterm><indexterm>wizards<indexterm>Run
-on Server</indexterm></indexterm><indexterm>Run on Server wizard</indexterm>
+<keywords id="index"><indexterm>artifacts<indexterm>testing on servers</indexterm></indexterm>
+<indexterm>servers<indexterm>testing artifacts</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
@@ -55,7 +54,7 @@ the default name to hold the generated server configuration files.</li>
 server settings.)</li>
 <li id="testing_li5">If the  <uicontrol>Automatically publish when starting
 servers</uicontrol> check box on the Server preferences page (<menucascade>
-<uicontrol>Window > Preferences > Server > Launching<?Pub Caret?></uicontrol>
+<uicontrol>Window > Preferences > Server > Launching</uicontrol>
 </menucascade>) is selected, the workbench checks to see if your project and
 files on the server are synchronized. If they are not, the project and the
 files are automatically updated when the server is restarted.</li>

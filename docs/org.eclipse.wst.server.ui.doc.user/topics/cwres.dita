@@ -7,13 +7,10 @@
 <shortdesc id="cwres_shortdesc">To test and publish on your server, you need
 to define one or more of the following resources:</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>overview</indexterm><indexterm>creating
-projects</indexterm><indexterm>runtime environment<indexterm>description</indexterm></indexterm></indexterm>
-<indexterm>server projects<indexterm>overview</indexterm></indexterm><indexterm>server
-configurations<indexterm>overview</indexterm></indexterm><indexterm>preferences<indexterm>installed
-server runtime environments<indexterm>description</indexterm></indexterm></indexterm>
-<indexterm>runtime environment<indexterm>description</indexterm></indexterm>
-<indexterm>applications<indexterm>compiling</indexterm></indexterm></keywords><?Pub Caret1?>
+<keywords id="index"><indexterm>preferences<indexterm>installed server runtime environments</indexterm></indexterm>
+<indexterm>runtime environments<indexterm>description</indexterm></indexterm>
+<indexterm>servers<indexterm>testing applications</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <conbody>
 <ul id="cwres_ul">

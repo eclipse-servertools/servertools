@@ -7,8 +7,8 @@
 <shortdesc id="shortdesc">You can use the workbench to test one or more projects
 on a server. </shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>testing applications</indexterm></indexterm>
-<indexterm>applications<indexterm>testing on server<?Pub Caret?></indexterm></indexterm>
+<keywords id="index"><indexterm>applications<indexterm>testing on servers</indexterm></indexterm>
+<indexterm>servers<indexterm>testing applications</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody></taskbody>

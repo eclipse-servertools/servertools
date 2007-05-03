@@ -22,8 +22,7 @@ href="../images/launch_profile.gif"><alt>This is an image of the Start the
 server in profiling mode icon.</alt></image><ph id="cwflow_shortdesc_ph4"> icon.</ph></shortdesc>
 <prolog><metadata>
 <keywords id="index"><indexterm>servers<indexterm>starting</indexterm></indexterm>
-<indexterm>Run on Server wizard<?Pub Caret?></indexterm><indexterm>wizards<indexterm>Run
-on Server</indexterm></indexterm></keywords>
+</keywords>
 </metadata></prolog>
 <conbody>
 <p id="cwflow_p1">When you run a file or project, the Server Tools first verify

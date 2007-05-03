@@ -7,8 +7,7 @@
 <shortdesc id="twstpins_shortdesc">You can stop the server from the Servers
 view.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>servers<indexterm>stopping</indexterm><indexterm>process
-(stopping)</indexterm><indexterm>terminating</indexterm><?Pub Caret1?></indexterm>
+<keywords id="index"><indexterm>servers<indexterm>stopping</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

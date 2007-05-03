@@ -3,13 +3,13 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="tprefaud_wst" xml:lang="en-us">
-<title id="title">Defining the audio preferences<?Pub Caret?></title>
+<title id="title">Defining the audio preferences</title>
 <shortdesc id="shortdesc">Using the Preferences page, you can define the preferences
 that servers will use for audio purposes.</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>preferences<indexterm>audio for servers</indexterm></indexterm>
-<indexterm>audio<indexterm>defining preferences for servers</indexterm></indexterm>
-<indexterm>workbench<indexterm>defining audio preferences for servers</indexterm></indexterm>
+<keywords id="index"><indexterm>audio preferences<indexterm>setting</indexterm></indexterm>
+<indexterm>preferences<indexterm>server audio</indexterm></indexterm>
+<indexterm>workbench<indexterm>server audio preferences</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

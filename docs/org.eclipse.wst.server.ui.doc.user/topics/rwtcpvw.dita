@@ -11,14 +11,9 @@ the  <uicontrol>Show TCP/IP Monitor view when there is activity</uicontrol> chec
 box on the TCPIP/IP Monitor preferences page (  <menucascade><uicontrol>Window </uicontrol>
 <uicontrol>Run/Debug</uicontrol><uicontrol>TCP/IP Monitor</uicontrol></menucascade>).</shortdesc>
 <prolog><metadata>
-<keywords id="index"><indexterm>views<indexterm>TCP/IP Monitor</indexterm></indexterm>
-<indexterm>TCP/IP<indexterm>monitoring requests and responses</indexterm></indexterm>
-<indexterm>servers<indexterm>monitoring requests and responses to and from
-Web browser</indexterm><indexterm>TCP/IP monitoring</indexterm></indexterm>
-<indexterm>Web browsers<indexterm>monitoring requests and responses to and
-from servers</indexterm><indexterm>TCP/IP monitoring</indexterm><?Pub Caret?></indexterm>
-<indexterm>JSP files<indexterm>TCP/IP monitoring</indexterm></indexterm><indexterm>servlets<indexterm>TCP/IP
-monitoring</indexterm></indexterm><indexterm>URLs<indexterm>TCP/IP monitoring</indexterm></indexterm>
+<keywords id="index"><indexterm>servers<indexterm>TCP/IP monitors</indexterm></indexterm>
+<indexterm>TCP/IP monitors<indexterm>overview</indexterm></indexterm>
+<indexterm>views<indexterm>TCP/IP monitors</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <refbody>
