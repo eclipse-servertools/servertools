@@ -140,7 +140,7 @@ public class Tomcat60Configuration extends TomcatConfiguration {
 						advanced = false;
 					String portId;
 					if (instanceServiceName != null && instanceServiceName.equals(service.getName()))
-						portId = Integer.toString(i);
+						portId = Integer.toString(j);
 					else
 						portId = i +"/" + j;
 					ports.add(new ServerPort(portId, name, port, protocol2, contentTypes, advanced));

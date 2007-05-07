@@ -157,7 +157,7 @@ public class Tomcat41Configuration extends TomcatConfiguration {
 						name = "Apache Connector";
 					String portId;
 					if (instanceServiceName != null && instanceServiceName.equals(service.getName()))
-						portId = Integer.toString(i);
+						portId = Integer.toString(j);
 					else
 						portId = i +"/" + j;
 					if (className != null && className.length() > 0)

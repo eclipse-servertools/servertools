@@ -46,7 +46,8 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 	protected static final String HTTP_CONNECTOR = "org.apache.catalina.connector.http.HttpConnector";
 	protected static final String SSL_SOCKET_FACTORY = "org.apache.catalina.net.SSLServerSocketFactory";
 	protected static final String TEST_CONNECTOR = "org.apache.catalina.connector.test.HttpConnector";
-	protected static final String APACHE_CONNECTOR = "org.apache.catalina.connector.warp.WarpConnector";
+	protected static final String AJP_CONNECTOR = "org.apache.ajp.tomcat4.Ajp13Connector";
+	protected static final String WARP_CONNECTOR = "org.apache.catalina.connector.warp.WarpConnector";
 
 	protected Server server;
 	protected ServerInstance serverInstance;
@@ -143,11 +144,13 @@ public class Tomcat40Configuration extends TomcatConfiguration {
 						}
 						if ("HTTP".equals(protocol))
 							advanced = false;
-					} else if (APACHE_CONNECTOR.equals(className))
-						name = "Apache Connector";
+					} else if (AJP_CONNECTOR.equals(className))
+						name = "AJP Connector";
+					else if (WARP_CONNECTOR.equals(className))
+						name = "Warp Connector";
 					String portId;
 					if (instanceServiceName != null && instanceServiceName.equals(service.getName()))
-						portId = Integer.toString(i);
+						portId = Integer.toString(j);
 					else
 						portId = i +"/" + j;
 					if (className != null && className.length() > 0)
