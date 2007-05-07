@@ -127,6 +127,9 @@ public class GenericServerWizardFragment extends
     }
 
     public void enter() {
+        if(fDecorators == null ){
+            return;
+        }
         getServer().setName( createName() );
         for( int i = 0; i < fDecorators.length; i++ )
         {
@@ -136,6 +139,9 @@ public class GenericServerWizardFragment extends
     }
 
     public void exit() {
+        if(fDecorators == null ){
+            return;
+        }
         // validate needed to save the latest values.
         for( int i = 0; i < fDecorators.length; i++ )
         {
