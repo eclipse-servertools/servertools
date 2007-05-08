@@ -23,6 +23,7 @@
 	<toc file="wtp_create.xml" /> 
 	<toc file="wtp_manage.xml" /> 
 	<toc file="wtp_pref.xml" />
+       <index path="index/"/>
 </extension>
 <extension
       point="org.eclipse.help.index">
