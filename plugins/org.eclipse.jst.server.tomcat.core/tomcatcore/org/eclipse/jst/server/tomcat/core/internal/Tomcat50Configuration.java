@@ -632,7 +632,7 @@ public class Tomcat50Configuration extends TomcatConfiguration {
 	 */
 	protected IStatus cleanupServer(IPath baseDir, IPath installDir, boolean removeKeptContextFiles, IProgressMonitor monitor) {
 		List modules = getWebModules();
-		return TomcatVersionHelper.cleanupCatalinaServer(baseDir, installDir, removeKeptContextFiles, modules, monitor);
+		return TomcatVersionHelper.cleanupCatalinaServer(baseDir, installDir, false, modules, monitor);
 	}
 
 	/**
