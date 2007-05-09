@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,23 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jst.server.core;
 
-import java.util.Iterator;
-import java.util.Set;
-
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jst.server.core.internal.JavaServerPlugin;
-import org.eclipse.jst.server.core.internal.Messages;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.wst.common.project.facet.core.IFacetedProject;
-import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
-import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
-import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ServerCore;
 /**
  * Utility class for converting between facet runtimes and server runtimes.
  * <p>
@@ -57,21 +44,7 @@ public final class FacetUtil {
 	 *    <code>null</code> if none could be found.
 	 */
 	public static IRuntime getRuntime(org.eclipse.wst.common.project.facet.core.runtime.IRuntime runtime) {
-		if (runtime == null)
-			throw new IllegalArgumentException();
-		
-		String id = runtime.getProperty("id");
-		if (id == null)
-			return null;
-		
-		IRuntime[] runtimes = ServerCore.getRuntimes();
-		int size = runtimes.length;
-		for (int i = 0; i < size; i++) {
-			if (id.equals(runtimes[i].getId()))
-				return runtimes[i];
-		}
-		
-		return null;
+		return org.eclipse.wst.server.core.internal.facets.FacetUtil.getRuntime(runtime);
 	}
 
 	/**
@@ -83,21 +56,7 @@ public final class FacetUtil {
 	 *    <code>null</code> if none could be found.
 	 */
 	public static org.eclipse.wst.common.project.facet.core.runtime.IRuntime getRuntime(IRuntime runtime) {
-		if (runtime == null)
-			throw new IllegalArgumentException();
-		
-		String id = runtime.getId();
-		if (id == null)
-			return null;
-		
-		Set runtimes = RuntimeManager.getRuntimes();
-		Iterator iterator = runtimes.iterator();
-		while (iterator.hasNext()) {
-			org.eclipse.wst.common.project.facet.core.runtime.IRuntime runtime2 = (org.eclipse.wst.common.project.facet.core.runtime.IRuntime) iterator.next();
-			if (id.equals(runtime2.getProperty("id")))
-				return runtime2;
-		}
-		return null;
+		return org.eclipse.wst.server.core.internal.facets.FacetUtil.getRuntime(runtime);
 	}
 
 	/**
@@ -111,28 +70,6 @@ public final class FacetUtil {
 	 *    ERROR status (with message) if it doesn't
 	 */
 	public static final IStatus verifyFacets(IProject project, IServer server) {
-		if (server == null)
-			return new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, Messages.errorNoRuntime, null);
-		IRuntime runtime = server.getRuntime();
-		if (runtime == null)
-			return new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, Messages.errorNoRuntime, null);
-		
-		org.eclipse.wst.common.project.facet.core.runtime.IRuntime runtime2 = getRuntime(runtime);
-		
-		if (runtime2 == null) // bug 150194 - what do we do if the facet runtime doesn't exist yet
-			return Status.OK_STATUS;
-		
-		try {
-			IFacetedProject facetedProject = ProjectFacetsManager.create(project);
-			Iterator iterator = facetedProject.getProjectFacets().iterator();
-			while (iterator.hasNext()) {
-				IProjectFacetVersion facet = (IProjectFacetVersion) iterator.next();
-				if (!runtime2.supports(facet))
-					return new Status(IStatus.ERROR, JavaServerPlugin.PLUGIN_ID, 0, NLS.bind(Messages.errorFacet, facet.getProjectFacet().getLabel(), facet.getVersionString()), null);
-			}
-		} catch (CoreException ce) {
-			return ce.getStatus();
-		}
-		return Status.OK_STATUS;
+		return org.eclipse.wst.server.core.internal.facets.FacetUtil.verifyFacets(project, server);
 	}
 }
