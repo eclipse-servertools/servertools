@@ -1,0 +1,7 @@
+# Debugging options for the org.eclipse.jst.server.core plugin
+
+# Turn on general debugging
+org.eclipse.jst.server.core/debug=true
+
+# Turn on general debugging
+org.eclipse.jst.server.core/publishing=false
