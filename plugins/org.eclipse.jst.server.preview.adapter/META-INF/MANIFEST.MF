@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.eclipse.jst.server.adapter.preview;singleton:=true
+Bundle-SymbolicName: org.eclipse.jst.server.preview.adapter;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.jst.server.preview.internal.PreviewPlugin
 Bundle-Vendor: %providerName
