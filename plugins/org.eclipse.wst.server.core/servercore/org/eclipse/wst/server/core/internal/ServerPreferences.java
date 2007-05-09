@@ -164,7 +164,7 @@ public class ServerPreferences {
 	 * @return int
 	 */
 	public boolean getDefaultAutoPublishLocal() {
-		return false;
+		return true;
 	}
 
 	/**
@@ -185,14 +185,14 @@ public class ServerPreferences {
 		preferences.setValue(PREF_AUTO_PUBLISH_LOCAL, auto);
 		ServerPlugin.getInstance().savePluginPreferences();
 	}
-	
+
 	/**
 	 * Returns the default setting for local auto-publishing.
 	 * 
 	 * @return int
 	 */
 	public int getDefaultAutoPublishLocalTime() {
-		return 15;
+		return 5;
 	}
 
 	/**
@@ -220,7 +220,7 @@ public class ServerPreferences {
 	 * @return int
 	 */
 	public boolean getDefaultAutoPublishRemote() {
-		return false;
+		return true;
 	}
 
 	/**

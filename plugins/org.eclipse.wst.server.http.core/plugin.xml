@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   	<extension point="org.eclipse.wst.server.core.runtimeTypes">
+   <extension point="org.eclipse.wst.server.core.runtimeTypes">
 	    <runtimeType
 	       id="org.eclipse.wst.server.http.runtime"
 	       name="%runtimeTypeHttpLabel"
 	       description="%runtimeTypeHttpDescription"
+	       facetRuntimeComponent="org.eclipse.wst.server.http.runtime"
+	       facetRuntimeVersion="1.0"
 	       class="org.eclipse.wst.server.http.core.internal.HttpRuntime">
 	       <moduleType
 	         types="PHP"
@@ -53,88 +55,10 @@
 	    </supported>
   	</extension>
 
-  	<extension point="org.eclipse.jst.server.core.runtimeFacetMappings">
-	   <runtimeFacetMapping
-	      runtimeTypeId="org.eclipse.wst.server.http.runtime"
-	      runtime-component="org.eclipse.wst.server.http.runtime"
-	      version="1.0"/>
-  	</extension>
-
    <extension point="org.eclipse.wst.server.core.launchableAdapters">
       <launchableAdapter
         id="org.eclipse.wst.server.http.web"
         class="org.eclipse.wst.server.http.core.internal.HttpLaunchableAdapterDelegate"
         typeIds="org.eclipse.wst.server.http.server"/>
    </extension>
-
-
-
-
-
-  <extension point="org.eclipse.wst.server.core.runtimeTypes">
-    <runtimeType
-       id="org.eclipse.wst.server.preview.runtime"
-       name="%previewRuntimeTypeName"
-       description="%previewRuntimeTypeDescription"
-       class="org.eclipse.wst.server.http.core.internal.preview.PreviewRuntime">
-       <moduleType
-         types="wst.web"
-         versions="1.0"/>
-    </runtimeType>
-  </extension>
-
-  <extension point="org.eclipse.wst.server.core.serverTypes">
-     <serverType
-       id="org.eclipse.wst.server.preview.server"
-       name="%previewServerTypeName"
-       description="%previewServerTypeDescription"
-       supportsRemoteHosts="false"
-       runtime="true"
-       initialState="stopped"
-       hasConfiguration="false"
-       launchModes="run,debug,profile"
-       launchConfigId="org.eclipse.wst.server.core.preview.launchConfigurationType"
-       runtimeTypeId="org.eclipse.wst.server.preview.runtime"
-       class="org.eclipse.wst.server.http.core.internal.preview.PreviewServer"
-       behaviourClass="org.eclipse.wst.server.http.core.internal.preview.PreviewServerBehaviour"/>
-  </extension>
-
-  <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
-    <runtime-component-type
-       id="org.eclipse.wst.server.preview.runtime"/>
-
-    <runtime-component-version
-       type="org.eclipse.wst.server.preview.runtime"
-       version="1.0"/>
-
-    <supported>
-      <runtime-component
-         id="org.eclipse.wst.server.preview.runtime"
-         version="1.0"/>
-      <facet
-         id="wst.web"
-         version="1.0"/>
-    </supported>
-  </extension>
-
-  <extension point="org.eclipse.jst.server.core.runtimeFacetMappings">
-	  <runtimeFacetMapping
-	      runtimeTypeId="org.eclipse.wst.server.preview.runtime"
-	      runtime-component="org.eclipse.wst.server.preview.runtime"
-	      version="1.0"/>
-  </extension>
-
-  <extension point="org.eclipse.debug.core.launchConfigurationTypes">
-     <launchConfigurationType
-        id="org.eclipse.wst.server.core.preview.launchConfigurationType"
-        name="%previewLaunchConfigurationType"
-        delegate="org.eclipse.wst.server.http.core.internal.preview.PreviewLaunchConfigurationDelegate"
-        modes="run,debug,profile"/>
-  </extension>
-
-  <extension point="org.eclipse.wst.server.core.launchableAdapters">
-    <launchableAdapter
-      id="org.eclipse.wst.server.core.preview.server"
-      class="org.eclipse.wst.server.http.core.internal.preview.PreviewLaunchableAdapterDelegate"/>
-  </extension>
 </plugin>

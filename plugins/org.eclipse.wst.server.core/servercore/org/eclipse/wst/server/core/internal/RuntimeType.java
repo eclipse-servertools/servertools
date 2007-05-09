@@ -86,7 +86,23 @@ public class RuntimeType implements IRuntimeType {
 		}
 		return Messages.defaultVersion;
 	}
-	
+
+	public String getFacetRuntimeComponent() {
+		try {
+			return element.getAttribute("facetRuntimeComponent");
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public String getFacetRuntimeVersion() {
+		try {
+			return element.getAttribute("facetRuntimeVersion");
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
 	protected RuntimeDelegate createRuntimeDelegate() throws CoreException {
 		try {
 			return (RuntimeDelegate) element.createExecutableExtension("class");

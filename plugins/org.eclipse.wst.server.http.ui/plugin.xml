@@ -9,14 +9,15 @@
    </extension>
  
    <extension point="org.eclipse.wst.common.project.facet.ui.images">
-    <image runtime-component-type="org.eclipse.wst.server.http.runtime"
+     <image runtime-component-type="org.eclipse.wst.server.http.runtime"
        path="icons/obj16/server.gif"/>
    </extension>
 
    <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
      <adapter>
        <runtime-component id="org.eclipse.wst.server.http.runtime"/>
-       <factory class="org.eclipse.wst.server.http.ui.internal.preview.RuntimeLabelProvider$Factory"/>
+       <!--<factory class="org.eclipse.wst.server.http.ui.internal.RuntimeLabelProvider$Factory"/>-->
+       <factory class="org.eclipse.wst.server.ui.internal.facets.RuntimeLabelProvider$Factory"/>
        <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
      </adapter>
    </extension>
@@ -43,41 +44,4 @@
          typeIds="org.eclipse.wst.server.http.server"
          class="org.eclipse.wst.server.http.ui.internal.HttpSection"/>
    </extension>
-   
-   
-  <extension point="org.eclipse.wst.server.ui.serverImages">
-     <image
-        id="org.eclipse.wst.server.http.ui"
-        typeIds="org.eclipse.wst.server.preview.runtime,org.eclipse.wst.server.preview.server"
-        icon="icons/obj16/preview.gif"/>
-  </extension>
-
-  <extension point="org.eclipse.wst.common.project.facet.ui.images">
-    <image runtime-component-type="org.eclipse.wst.server.preview.runtime"
-       path="icons/obj16/preview.gif"/>
-  </extension>
-
-  <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
-    <adapter>
-      <runtime-component id="org.eclipse.wst.server.preview.runtime"/>
-      <factory class="org.eclipse.wst.server.http.ui.internal.preview.RuntimeLabelProvider$Factory"/>
-      <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
-    </adapter>
-  </extension>
-  
-  <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
-    <launchConfigurationTypeImage
-      id="org.eclipse.wst.server.ui.preview.launchConfigurationTypeImage"
-      configTypeID="org.eclipse.wst.server.core.preview.launchConfigurationType"
-      icon="icons/obj16/preview.gif">
-    </launchConfigurationTypeImage>
-  </extension>
-
-  <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
-    <launchConfigurationTabGroup
-      id="org.eclipse.wst.server.ui.preview.launchConfigurationTabGroup"
-      type="org.eclipse.wst.server.core.preview.launchConfigurationType"
-      class="org.eclipse.wst.server.http.ui.internal.preview.PreviewLaunchConfigurationTabGroup">
-    </launchConfigurationTabGroup>
-  </extension>
 </plugin>

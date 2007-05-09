@@ -73,6 +73,9 @@ public class Messages extends NLS {
 	public static String errorRename;
 	public static String errorNotADirectory;
 
+	public static String errorNoRuntime;
+	public static String errorFacet;
+
 	static {
 		NLS.initializeMessages(ServerPlugin.PLUGIN_ID + ".internal.Messages", Messages.class);
 	}

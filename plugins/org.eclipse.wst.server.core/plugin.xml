@@ -17,6 +17,7 @@
   <extension-point id="internalStartup" name="%extensionPointServerStartup" schema="schema/startup.exsd"/>
   <extension-point id="installableServers" name="%extensionPointInstallableServers" schema="schema/installableServers.exsd"/>
   <extension-point id="installableRuntimes" name="%extensionPointInstallableRuntimes" schema="schema/installableRuntimes.exsd"/>
+  <extension-point id="runtimeFacetComponentProviders" name="%extensionPointRuntimeFacetComponentProviders" schema="schema/runtimeFacetComponentProviders.exsd"/>
 
   <extension point="org.eclipse.wst.server.core.moduleTypes">
     <moduleType
@@ -25,5 +26,11 @@
     <moduleType
        id="wst.web"
        name="%moduleTypeStaticWebName"/>
+  </extension>
+
+  <extension point="org.eclipse.wst.common.project.facet.core.runtimeBridges">
+    <bridge
+      id="org.eclipse.wst.server.core.default"
+      class="org.eclipse.wst.server.core.internal.facets.RuntimeBridge"/>
   </extension>
 </plugin>

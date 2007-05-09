@@ -108,6 +108,20 @@ Runtime instances of this type will delegate to instances of this class. Delegat
                </appInfo>
             </annotation>
          </attribute>
+         <attribute name="facetRuntimeComponent" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="facetRuntimeVersion" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
