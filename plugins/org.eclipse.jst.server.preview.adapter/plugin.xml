@@ -7,7 +7,7 @@
        id="org.eclipse.jst.server.preview.runtime"
        name="%previewRuntimeTypeName"
        description="%previewRuntimeTypeDescription"
-       class="org.eclipse.jst.server.preview.internal.core.PreviewRuntime">
+       class="org.eclipse.jst.server.preview.adapter.internal.core.PreviewRuntime">
        <moduleType
          types="wst.web"
          versions="1.0"/>
@@ -30,17 +30,17 @@
        initialState="stopped"
        hasConfiguration="false"
        launchModes="run,debug,profile"
-       launchConfigId="org.eclipse.jst.server.core.preview.launchConfigurationType"
+       launchConfigId="org.eclipse.jst.server.preview.launchConfigurationType"
        runtimeTypeId="org.eclipse.jst.server.preview.runtime"
-       class="org.eclipse.jst.server.preview.internal.core.PreviewServer"
-       behaviourClass="org.eclipse.jst.server.preview.internal.core.PreviewServerBehaviour"/>
+       class="org.eclipse.jst.server.preview.adapter.internal.core.PreviewServer"
+       behaviourClass="org.eclipse.jst.server.preview.adapter.internal.core.PreviewServerBehaviour"/>
   </extension>
- 
+
   <extension point="org.eclipse.jst.server.core.runtimeClasspathProviders">
     <runtimeClasspathProvider
       id="org.eclipse.jst.server.preview.runtimeTarget"
       runtimeTypeIds="org.eclipse.jst.server.preview.runtime"
-      class="org.eclipse.jst.server.preview.internal.core.PreviewRuntimeClasspathProvider"/>
+      class="org.eclipse.jst.server.preview.adapter.internal.core.PreviewRuntimeClasspathProvider"/>
   </extension>
 
   <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
@@ -86,14 +86,14 @@
   <extension point="org.eclipse.debug.core.sourcePathComputers">
      <sourcePathComputer
         id="org.eclipse.jst.server.preview.sourcePathComputer"
-        class="org.eclipse.jst.server.preview.internal.core.PreviewSourcePathComputerDelegate"/>
+        class="org.eclipse.jst.server.preview.adapter.internal.core.PreviewSourcePathComputerDelegate"/>
   </extension>
 
   <extension point="org.eclipse.debug.core.launchConfigurationTypes">
      <launchConfigurationType
         id="org.eclipse.jst.server.preview.launchConfigurationType"
         name="%previewLaunchConfigurationType"
-        delegate="org.eclipse.jst.server.preview.internal.core.PreviewLaunchConfigurationDelegate"
+        delegate="org.eclipse.jst.server.preview.adapter.internal.core.PreviewLaunchConfigurationDelegate"
         modes="run,debug,profile"
         sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
         sourcePathComputerId="org.eclipse.jst.server.preview.sourcePathComputer"/>
@@ -102,7 +102,7 @@
   <extension point="org.eclipse.wst.server.core.launchableAdapters">
     <launchableAdapter
       id="org.eclipse.jst.server.preview"
-      class="org.eclipse.jst.server.preview.internal.core.PreviewLaunchableAdapterDelegate"/>
+      class="org.eclipse.jst.server.preview.adapter.internal.core.PreviewLaunchableAdapterDelegate"/>
   </extension>
 
 <!--
@@ -129,11 +129,11 @@
   <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
     <adapter>
       <runtime-component id="org.eclipse.jst.server.preview.runtime"/>
-      <factory class="org.eclipse.wst.server.ui.internal.facets.RuntimeLabelProvider$Factory"/>
+      <factory class="org.eclipse.wst.server.ui.FacetRuntimeComponentLabelProvider"/>
       <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
     </adapter>
   </extension>
-  
+
   <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
     <launchConfigurationTypeImage
       id="org.eclipse.jst.server.preview.launchConfigurationTypeImage"
@@ -146,7 +146,7 @@
     <launchConfigurationTabGroup
       id="org.eclipse.jst.server.preview.launchConfigurationTabGroup"
       type="org.eclipse.jst.server.preview.launchConfigurationType"
-      class="org.eclipse.jst.server.preview.internal.ui.PreviewLaunchConfigurationTabGroup">
+      class="org.eclipse.jst.server.preview.adapter.internal.ui.PreviewLaunchConfigurationTabGroup">
     </launchConfigurationTabGroup>
   </extension>
 </plugin>

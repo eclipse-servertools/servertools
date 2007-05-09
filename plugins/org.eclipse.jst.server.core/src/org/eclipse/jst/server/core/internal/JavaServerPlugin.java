@@ -47,12 +47,6 @@ public class JavaServerPlugin extends Plugin {
 	//	cached copy of all runtime classpath providers
 	private static List runtimeClasspathProviders;
 
-	//	cached copy of all runtime component providers
-	private static List runtimeComponentProviders;
-
-	//	cached copy of all runtime facet mappings
-	private static List runtimeFacetMappings;
-
 	// cached copy of all server profilers
 	private static List serverProfilers;
 	
@@ -191,10 +185,6 @@ public class JavaServerPlugin extends Plugin {
 		getInstance().getLog().log(status);
 	}
 
-	/*public static void logError(String msg) {
-		log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, msg, null));
-	}*/
-
 	public static void logWarning(String msg) {
 		log(new Status(IStatus.WARNING, PLUGIN_ID, IStatus.OK, msg, null));
 	}
@@ -296,101 +286,7 @@ public class JavaServerPlugin extends Plugin {
 		
 		Trace.trace(Trace.CONFIG, "-<- Done loading .runtimeClasspathProviders extension point -<-");
 	}
-	
-	/**
-	 * Returns an array of all known runtime classpath provider instances.
-	 * <p>
-	 * A new array is returned on each call, so clients may store or modify the result.
-	 * </p>
-	 * 
-	 * @return a possibly-empty array of runtime classpath provider instances
-	 *    {@link RuntimeClasspathProviderWrapper}
-	 */
-	public static RuntimeFacetMapping[] getRuntimeFacetMapping() {
-		if (runtimeFacetMappings == null)
-			loadRuntimeFacetMapping();
-		
-		RuntimeFacetMapping[] rfm = new RuntimeFacetMapping[runtimeFacetMappings.size()];
-		runtimeFacetMappings.toArray(rfm);
-		return rfm;
-	}
 
-	/**
-	 * Returns the runtime component provider that supports the given runtime type, or <code>null</code>
-	 * if none. This convenience method searches the list of known runtime
-	 * component providers for the one with a matching runtime type.
-	 * The runtimeType may not be null.
-	 *
-	 * @param runtimeType a runtime type
-	 * @return the runtime component provider instance, or <code>null</code> if
-	 *   there is no runtime component provider with the given id
-	 */
-	public static RuntimeComponentProviderWrapper findRuntimeComponentProvider(IRuntimeType runtimeType) {
-		if (runtimeType == null)
-			throw new IllegalArgumentException();
-
-		if (runtimeComponentProviders == null)
-			loadRuntimeComponentProviders();
-		
-		Iterator iterator = runtimeComponentProviders.iterator();
-		while (iterator.hasNext()) {
-			RuntimeComponentProviderWrapper runtimeComponentProvider = (RuntimeComponentProviderWrapper) iterator.next();
-			if (runtimeComponentProvider.supportsRuntimeType(runtimeType))
-				return runtimeComponentProvider;
-		}
-		return null;
-	}
-
-	/**
-	 * Load the runtime component providers.
-	 */
-	private static synchronized void loadRuntimeComponentProviders() {
-		if (runtimeComponentProviders != null)
-			return;
-		Trace.trace(Trace.CONFIG, "->- Loading .runtimeComponentProviders extension point ->-");
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(JavaServerPlugin.PLUGIN_ID, "internalRuntimeComponentProviders");
-		
-		int size = cf.length;
-		List list = new ArrayList(size);
-		for (int i = 0; i < size; i++) {
-			try {
-				list.add(new RuntimeComponentProviderWrapper(cf[i]));
-				Trace.trace(Trace.CONFIG, "  Loaded runtimeComponentProviders: " + cf[i].getAttribute("id"));
-			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load runtimeComponentProvider: " + cf[i].getAttribute("id"), t);
-			}
-		}
-		runtimeComponentProviders = list;
-		
-		Trace.trace(Trace.CONFIG, "-<- Done loading .runtimeComponentProviders extension point -<-");
-	}
-
-	/**
-	 * Load the runtime facet mappings.
-	 */
-	private static synchronized void loadRuntimeFacetMapping() {
-		if (runtimeFacetMappings != null)
-			return;
-		Trace.trace(Trace.CONFIG, "->- Loading .runtimeFacetMapping extension point ->-");
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] cf = registry.getConfigurationElementsFor(JavaServerPlugin.PLUGIN_ID, "runtimeFacetMappings");
-
-		int size = cf.length;
-		List list = new ArrayList(size);
-		for (int i = 0; i < size; i++) {
-			try {
-				list.add(new RuntimeFacetMapping(cf[i]));
-				Trace.trace(Trace.CONFIG, "  Loaded runtimeFacetMapping: " + cf[i].getAttribute("runtimeTypeId"));
-			} catch (Throwable t) {
-				Trace.trace(Trace.SEVERE, "  Could not load runtimeFacetMapping: " + cf[i].getAttribute("id"), t);
-			}
-		}
-		runtimeFacetMappings = list;
-		
-		Trace.trace(Trace.CONFIG, "-<- Done loading .runtimeFacetMapping extension point -<-");
-	}
-	
 	/**
 	 * Returns an array of all known server profiler instances.
 	 * <p>

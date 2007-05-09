@@ -7,7 +7,7 @@
          icon="icons/obj16/server.gif"
          typeIds="org.eclipse.wst.server.http.runtime,org.eclipse.wst.server.http.server"/>
    </extension>
- 
+
    <extension point="org.eclipse.wst.common.project.facet.ui.images">
      <image runtime-component-type="org.eclipse.wst.server.http.runtime"
        path="icons/obj16/server.gif"/>
@@ -16,8 +16,7 @@
    <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
      <adapter>
        <runtime-component id="org.eclipse.wst.server.http.runtime"/>
-       <!--<factory class="org.eclipse.wst.server.http.ui.internal.RuntimeLabelProvider$Factory"/>-->
-       <factory class="org.eclipse.wst.server.ui.internal.facets.RuntimeLabelProvider$Factory"/>
+       <factory class="org.eclipse.wst.server.ui.FacetRuntimeComponentLabelProvider"/>
        <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
      </adapter>
    </extension>

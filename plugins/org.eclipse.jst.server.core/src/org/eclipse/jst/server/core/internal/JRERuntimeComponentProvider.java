@@ -78,10 +78,17 @@ public class JRERuntimeComponentProvider extends RuntimeComponentProviderDelegat
 			
 			if (rcv != null) {
 				Map properties = new HashMap(3);
+				String name = "-";
 				if (vmInstallName != null)
-					properties.put("name", vmInstallName);
-				else
-					properties.put("name", "-");
+					name = vmInstallName;
+				properties.put("name", name);
+				
+				StringBuffer buf = new StringBuffer();
+				buf.append("JRE ");
+				buf.append(rcv.getVersionString());
+				buf.append(": ");
+				buf.append(name);
+				properties.put("type", buf.toString());
 				
 				if (vmInstall == null) {
 					// no classpath

@@ -138,12 +138,7 @@ public class RuntimeBridge implements IRuntimeBridge {
 				}
 			}
 			
-			RuntimeComponentProviderWrapper componentProvider = FacetMappingUtil.findRuntimeFacetComponentProvider(runtime.getRuntimeType());
-			if (componentProvider != null) {
-				List list = componentProvider.getComponents(runtime);
-				if (list != null)
-					components.addAll(list);
-			}
+			FacetMappingUtil.addFacetRuntimeComponents(runtime, components);
 			
 			return components;
 		}

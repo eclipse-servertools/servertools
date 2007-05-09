@@ -7,12 +7,14 @@ Bundle-Activator: org.eclipse.wst.server.ui.internal.ServerUIPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.server.ui,
+ org.eclipse.wst.server.ui.actions,
  org.eclipse.wst.server.ui.editor,
  org.eclipse.wst.server.ui.internal;x-internal:=true,
  org.eclipse.wst.server.ui.internal.actions;x-internal:=true,
  org.eclipse.wst.server.ui.internal.audio;x-internal:=true,
  org.eclipse.wst.server.ui.internal.command;x-internal:=true,
  org.eclipse.wst.server.ui.internal.editor;x-internal:=true,
+ org.eclipse.wst.server.ui.internal.extension;x-internal:=true,
  org.eclipse.wst.server.ui.internal.provisional;x-internal:=true,
  org.eclipse.wst.server.ui.internal.view.servers;x-internal:=true,
  org.eclipse.wst.server.ui.internal.viewers;x-internal:=true,

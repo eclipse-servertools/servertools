@@ -62,7 +62,7 @@
   <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
     <adapter>
       <runtime-component id="standard.jre"/>
-      <factory class="org.eclipse.jst.server.ui.internal.StandardJreLabelProvider$Factory"/>
+      <factory class="org.eclipse.wst.server.ui.FacetRuntimeComponentLabelProvider"/>
       <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
     </adapter>
   </extension>
@@ -85,7 +85,7 @@
   <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
     <adapter>
       <runtime-component id="org.eclipse.jst.server.core.runtimeType"/>
-      <factory class="org.eclipse.jst.server.ui.internal.RuntimeLabelProvider$Factory"/>
+      <factory class="org.eclipse.wst.server.ui.FacetRuntimeComponentLabelProvider"/>
       <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
     </adapter>
   </extension>

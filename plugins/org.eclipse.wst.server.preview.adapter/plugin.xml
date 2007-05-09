@@ -8,7 +8,7 @@
        description="%previewRuntimeTypeDescription"
        facetRuntimeComponent="org.eclipse.wst.server.preview.runtime"
 	    facetRuntimeVersion="1.0"
-       class="org.eclipse.wst.server.preview.internal.core.PreviewRuntime">
+       class="org.eclipse.wst.server.preview.adapter.internal.core.PreviewRuntime">
        <moduleType
          types="wst.web"
          versions="1.0"/>
@@ -27,8 +27,8 @@
        launchModes="run,debug,profile"
        launchConfigId="org.eclipse.wst.server.preview.launchConfigurationType"
        runtimeTypeId="org.eclipse.wst.server.preview.runtime"
-       class="org.eclipse.wst.server.preview.internal.core.PreviewServer"
-       behaviourClass="org.eclipse.wst.server.preview.internal.core.PreviewServerBehaviour"/>
+       class="org.eclipse.wst.server.preview.adapter.internal.core.PreviewServer"
+       behaviourClass="org.eclipse.wst.server.preview.adapter.internal.core.PreviewServerBehaviour"/>
   </extension>
 
   <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
@@ -53,14 +53,14 @@
      <launchConfigurationType
         id="org.eclipse.wst.server.preview.launchConfigurationType"
         name="%previewLaunchConfigurationType"
-        delegate="org.eclipse.wst.server.preview.internal.core.PreviewLaunchConfigurationDelegate"
+        delegate="org.eclipse.wst.server.preview.adapter.internal.core.PreviewLaunchConfigurationDelegate"
         modes="run,debug,profile"/>
   </extension>
 
   <extension point="org.eclipse.wst.server.core.launchableAdapters">
     <launchableAdapter
       id="org.eclipse.wst.server.preview"
-      class="org.eclipse.wst.server.preview.internal.core.PreviewLaunchableAdapterDelegate"/>
+      class="org.eclipse.wst.server.preview.adapter.internal.core.PreviewLaunchableAdapterDelegate"/>
   </extension>
 
 
@@ -79,7 +79,7 @@
   <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
     <adapter>
       <runtime-component id="org.eclipse.wst.server.preview.runtime"/>
-      <factory class="org.eclipse.wst.server.ui.internal.facets.RuntimeLabelProvider$Factory"/>
+      <factory class="org.eclipse.wst.server.ui.FacetRuntimeComponentLabelProvider"/>
       <type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider"/>
     </adapter>
   </extension>
@@ -96,7 +96,7 @@
     <launchConfigurationTabGroup
       id="org.eclipse.wst.server.preview.launchConfigurationTabGroup"
       type="org.eclipse.wst.server.core.preview.launchConfigurationType"
-      class="org.eclipse.wst.server.preview.internal.ui.PreviewLaunchConfigurationTabGroup">
+      class="org.eclipse.wst.server.preview.adapter.internal.ui.PreviewLaunchConfigurationTabGroup">
     </launchConfigurationTabGroup>
   </extension>
 </plugin>
